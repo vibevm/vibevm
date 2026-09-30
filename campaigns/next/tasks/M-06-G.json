@@ -1,0 +1,204 @@
+{
+  "id": "M-06-G",
+  "tasks": [
+    {
+      "id": "M-06-G.1",
+      "title": "Verify cross-package normal directives and authored boot semantics",
+      "goal": "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+        "crates/vibe-spec/src/directives.rs",
+        "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+        "crates/vibe-workspace/src/boot_artifacts/",
+        "docs/"
+      ],
+      "write_paths": [
+        "crates/vibe-spec/src/directives.rs",
+        "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+        "crates/vibe-workspace/src/boot_artifacts/",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+        "docs/"
+      ],
+      "steps": [
+        "Build a disposable XML consumer with a normal-format umbrella and two statically required normal packages; test cross-package #use root/solution, #source transit and unresolved-address typed failure.",
+        "Compare the same authored snippet under simple format, where #use remains literal by contract, and verify #embed behavior without conflating the two formats.",
+        "Document that a project-owned static boot file named by INDEX is read as authored instructions rather than compiled as a package snippet; specify #source placement from parser behavior, including section/top-level versus last-line rule."
+      ],
+      "positive_cases": [
+        "Normal cross-package #use inlines the exact target and source closure once; simple retains literal text.",
+        "An unresolved normal #use refuses before committing a changed boot lane."
+      ],
+      "negative_cases": [
+        "The simple literal observation is labeled a confirmed normal-format bug.",
+        "A #source paragraph is silently accepted or relocated without its actual syntax rule."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+        "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+        "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+      ],
+      "acceptance": [
+        "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.1",
+        "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.",
+        "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+      ],
+      "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+      "commit_subject": "test(boot): distinguish normal directive reach",
+      "notes": [
+        "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+        "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+      ]
+    },
+    {
+      "id": "M-06-G.2",
+      "title": "Preserve XML host dialect and derived dependency state during init",
+      "goal": "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+        "crates/vibe-cli/src/commands/init/",
+        "crates/vibe-workspace/src/install/bootgen/",
+        "crates/vibe-workspace/src/vibedeps/",
+        "crates/vibe-workspace/src/boot_artifacts/"
+      ],
+      "write_paths": [
+        "crates/vibe-cli/src/commands/init/",
+        "crates/vibe-workspace/src/install/bootgen/",
+        "crates/vibe-workspace/src/vibedeps/",
+        "crates/vibe-workspace/src/boot_artifacts/",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml"
+      ],
+      "steps": [
+        "Reproduce init package in a disposable xml-spec_format project with existing STATIC.xml/INDEX and generated instruction blocks; capture host and derived dependency bytes before the command.",
+        "Carry the selected host dialect into boot regeneration or skip it when unnecessary; never default this path to Mixed/STATIC.md and never treat a vibedeps slot as a write target.",
+        "Characterize scaffold tool format/link defaults and static marker spelling against declared options and update only their documented mismatch."
+      ],
+      "positive_cases": [
+        "The new package slot is present; host STATIC.xml and instruction blocks still name XML, and vibedeps remains byte-identical.",
+        "The same command remains correct for a Markdown-lane host."
+      ],
+      "negative_cases": [
+        "Init package removes STATIC.xml or rewrites a dependency slot boot lane.",
+        "A quiet successful command hides a host dialect change or writes into derived dependencies."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+        "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+        "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+      ],
+      "acceptance": [
+        "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2",
+        "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
+        "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+      ],
+      "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+      "commit_subject": "fix(init): preserve XML host boot dialect",
+      "notes": [
+        "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+        "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+      ]
+    },
+    {
+      "id": "M-06-G.3",
+      "title": "Exclude generated slot lanes and protect authored workspace members",
+      "goal": "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+        "crates/vibe-workspace/src/boot_artifacts/",
+        "crates/vibe-workspace/src/install/bootgen/",
+        "crates/vibe-workspace/src/vibedeps/",
+        "crates/vibe-workspace/src/install/",
+        "crates/vibe-spec/src/directives.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/boot_artifacts/",
+        "crates/vibe-workspace/src/install/bootgen/",
+        "crates/vibe-workspace/src/vibedeps/",
+        "crates/vibe-workspace/src/install/",
+        "crates/vibe-spec/src/directives.rs"
+      ],
+      "steps": [
+        "Reproduce a simple package with static requires under an XML consumer, nested static zones and a multi-fragment zone; compare the current next tree with the reported main-only fixpoint behavior.",
+        "Classify generated slot boot/STATIC.*, INDEX.md and .vibe-boot-* as derived artifacts outside authored package traversal and #use targets; retain every authored fragment exactly once, including static_boot_count greater than one.",
+        "In a disposable workspace whose members are source package slots, snapshot each member and run install/check; either prove no source mutation or fix output placement so generated host lanes and lock records stay in the consumer-owned derived location."
+      ],
+      "positive_cases": [
+        "XML and Markdown consumers install the same authored static closure without parsing a generated multi-document lane as one spec.",
+        "Source member directories remain byte-identical after consumer install; package check does not read a generated lane as an authored single document."
+      ],
+      "negative_cases": [
+        "A generated slot STATIC.xml/INDEX/.vibe-boot file enters simple package content or becomes a #use target.",
+        "Dropping a substituted multi-fragment unit loses authored content; install writes host cache files into vibepacks source members."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+        "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+        "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+      ],
+      "acceptance": [
+        "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.3",
+        "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.",
+        "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+      ],
+      "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+      "commit_subject": "fix(boot): exclude generated slot lanes",
+      "notes": [
+        "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+        "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+      ]
+    },
+    {
+      "id": "M-06-G.4",
+      "title": "Support long Windows materialization paths with truthful diagnostics",
+      "goal": "Make package materialization usable from a long Windows project root and report exact path-length limits where the host cannot support a path.",
+      "read_paths": [
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+        "crates/vibe-workspace/src/vibedeps/",
+        "crates/vibe-workspace/src/install/",
+        "crates/vibe-workspace/src/lib.rs"
+      ],
+      "write_paths": [
+        "crates/vibe-workspace/src/vibedeps/",
+        "crates/vibe-workspace/src/install/",
+        "crates/vibe-workspace/src/lib.rs",
+        "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml"
+      ],
+      "steps": [
+        "Reproduce a long-root, long-spec-filename package install in a disposable native Windows project; record the exact output path and failure stage, while keeping Linux/macOS paths usable.",
+        "Use supported Windows verbatim-path/no-follow operations for materialization where possible; otherwise refuse before partial install with an actionable diagnostic naming the path and needed root shortening.",
+        "Verify nested vibedeps/<group>.<name>/<version>/vibevm/vibespecs overhead and cleanup/retry truth after a failed materialization."
+      ],
+      "positive_cases": [
+        "The native Windows long-root fixture installs or gives a correct pre-effect path-length refusal with a practical remedy.",
+        "The ordinary short-root fixture and Linux/macOS code path remain usable."
+      ],
+      "negative_cases": [
+        "A path-length failure is reported as PROP-007 nesting/missing file with no length clue.",
+        "A portability limitation globally disables Linux or leaves a partly materialized slot reported as success."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+        "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+        "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+      ],
+      "acceptance": [
+        "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.4",
+        "Make package materialization usable from a long Windows project root and report exact path-length limits where the host cannot support a path.",
+        "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+      ],
+      "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+      "commit_subject": "fix(workspace): support long Windows materialization paths",
+      "notes": [
+        "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+        "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+      ]
+    }
+  ]
+}

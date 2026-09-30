@@ -52,14 +52,14 @@ id = "D-006"
 source = "refined-plan:revision-4:decision:D-006"
 text = "Никаких лимитов/квот/порогов допуска по размеру или tokens бутлейна. Калькулятор и диагностика, включая marginal static/dynamic вклад до установки"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2"]
 
 [[mandate]]
 id = "D-007"
 source = "refined-plan:revision-4:decision:D-007"
 text = "Сначала интерактивный debugger существующего представления: состав, why-included, provenance, сравнение/what-if; versioned machine input/output/errors/progress/snapshot IDs для IDE"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2"]
 
 [[mandate]]
 id = "D-008"
@@ -108,7 +108,7 @@ id = "D-014"
 source = "refined-plan:revision-4:decision:D-014"
 text = "Structured ordinary Markdown обязателен сейчас; XML может быть обычными данными. Foreign bridge contents по умолчанию не интерпретируются как Vibe specs. Это жизненно необходимая bridge machinery"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2"]
 
 [[mandate]]
 id = "D-015"
@@ -262,7 +262,7 @@ id = "F-013"
 source = "project-review:revision-4:F-013"
 text = "· P1 · Prepare helper может hydrate/cache"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2"]
 
 [[mandate]]
 id = "F-014"
@@ -304,14 +304,14 @@ id = "F-016"
 source = "project-review:revision-4:F-016"
 text = "· P2 · Boot debugger должен объяснять точный состав без навязанного бюджета"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2"]
 
 [[mandate]]
 id = "F-017"
 source = "project-review:revision-4:F-017"
 text = "· P2 · XML→Markdown — existing pivot, не raw map или semantic identity"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2"]
 
 [[mandate]]
 id = "F-018"
@@ -325,21 +325,21 @@ id = "F-019"
 source = "project-review:revision-4:F-019"
 text = "· P2 · Обязательные local derivatives требуют собственной identity и отдельной activation authority"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2"]
 
 [[mandate]]
 id = "F-020"
 source = "project-review:revision-4:F-020"
 text = "· P2 · Portfolio должен проверять seams до умножения систем"
 disposition = "owned"
-nodes = ["M-13","M-13-A","M-13-A.1","M-13-A.2","M-13-B","M-13-B.1","M-13-B.2","M-13-C","M-13-C.1","M-13-C.2","M-13-D","M-13-D.1","M-13-D.2","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-03","M-03-A","M-03-A.1","M-03-A.2","M-03-B","M-03-B.1","M-03-B.2","M-03-B.3","M-03-C","M-03-C.1","M-03-C.2","M-03-D","M-03-D.1","M-03-D.2","M-03-E","M-03-E.1","M-03-E.2","M-11","M-11-D","M-11-D.1","M-11-D.2","M-11-D.3","M-11-A","M-11-A.1","M-11-A.2","M-11-B","M-11-B.1","M-11-B.2","M-11-C","M-11-C.1","M-11-C.2","M-11-E","M-11-E.1","M-11-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2","M-09","M-09-A","M-09-A.1","M-09-A.2","M-09-B","M-09-B.1","M-09-B.2","M-09-C","M-09-C.1","M-09-C.2","M-09-D","M-09-D.1","M-09-D.2","M-09-E","M-09-E.1","M-09-E.2","M-12","M-12-A","M-12-A.1","M-12-A.2","M-12-B","M-12-B.1","M-12-B.2","M-12-C","M-12-C.1","M-12-C.2","M-12-D","M-12-D.1","M-12-D.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
+nodes = ["M-13","M-13-A","M-13-A.1","M-13-A.2","M-13-B","M-13-B.1","M-13-B.2","M-13-C","M-13-C.1","M-13-C.2","M-13-D","M-13-D.1","M-13-D.2","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-03","M-03-A","M-03-A.1","M-03-A.2","M-03-B","M-03-B.1","M-03-B.2","M-03-B.3","M-03-C","M-03-C.1","M-03-C.2","M-03-D","M-03-D.1","M-03-D.2","M-03-E","M-03-E.1","M-03-E.2","M-11","M-11-D","M-11-D.1","M-11-D.2","M-11-D.3","M-11-A","M-11-A.1","M-11-A.2","M-11-B","M-11-B.1","M-11-B.2","M-11-C","M-11-C.1","M-11-C.2","M-11-E","M-11-E.1","M-11-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-08","M-08-A","M-08-A.1","M-08-A.2","M-08-B","M-08-B.1","M-08-B.2","M-08-C","M-08-C.1","M-08-C.2","M-08-C.3","M-08-D","M-08-D.1","M-08-D.2","M-08-E","M-08-E.1","M-08-E.2","M-09","M-09-A","M-09-A.1","M-09-A.2","M-09-B","M-09-B.1","M-09-B.2","M-09-C","M-09-C.1","M-09-C.2","M-09-D","M-09-D.1","M-09-D.2","M-09-E","M-09-E.1","M-09-E.2","M-12","M-12-A","M-12-A.1","M-12-A.2","M-12-B","M-12-B.1","M-12-B.2","M-12-C","M-12-C.1","M-12-C.2","M-12-D","M-12-D.1","M-12-D.2","M-15","M-15-K","M-15-K.1","M-15-K.2","M-15-K.3","M-15-A","M-15-A.1","M-15-A.2","M-15-A.3","M-15-B","M-15-B.1","M-15-B.2","M-15-C","M-15-C.1","M-15-C.2","M-15-C.3","M-15-D","M-15-D.1","M-15-D.2","M-15-E","M-15-E.1","M-15-E.2","M-15-E.3","M-15-F","M-15-F.1","M-15-F.2","M-15-G","M-15-G.1","M-15-G.2","M-15-G.3","M-15-H","M-15-H.1","M-15-H.2","M-15-H.3","M-15-I","M-15-I.1","M-15-I.2","M-15-I.3","M-15-I.4","M-15-J","M-15-J.1","M-15-J.2"]
 
 [[mandate]]
 id = "F-021"
 source = "project-review:revision-4:F-021"
 text = "· P1 · Foreign XML/Markdown ошибочно получают Vibe semantics по suffix"
 disposition = "owned"
-nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-09","M-09-A","M-09-A.1","M-09-A.2","M-09-B","M-09-B.1","M-09-B.2","M-09-C","M-09-C.1","M-09-C.2","M-09-D","M-09-D.1","M-09-D.2","M-09-E","M-09-E.1","M-09-E.2"]
+nodes = ["M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-01","M-01-A","M-01-A.1","M-01-A.2","M-01-A.3","M-01-B","M-01-B.1","M-01-B.2","M-01-C","M-01-C.1","M-01-C.2","M-01-C.3","M-01-C.4","M-01-D","M-01-D.1","M-01-D.2","M-01-E","M-01-E.1","M-01-E.2","M-10","M-10-A","M-10-A.1","M-10-A.2","M-10-B","M-10-B.1","M-10-B.2","M-10-C","M-10-C.1","M-10-C.2","M-10-D","M-10-D.1","M-10-D.2","M-09","M-09-A","M-09-A.1","M-09-A.2","M-09-B","M-09-B.1","M-09-B.2","M-09-C","M-09-C.1","M-09-C.2","M-09-D","M-09-D.1","M-09-D.2","M-09-E","M-09-E.1","M-09-E.2"]
 
 [[mandate]]
 id = "F-022"
@@ -402,7 +402,7 @@ id = "F-030"
 source = "project-review:revision-4:F-030"
 text = "· P1 · Current package tree is a useful summary, not a complete source/reference snapshot"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
 
 [[mandate]]
 id = "F-031"
@@ -430,7 +430,7 @@ id = "F-034"
 source = "project-review:revision-4:F-034"
 text = "· P2 · Existing compiler trace is a foundation, not total observability"
 disposition = "owned"
-nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
+nodes = ["M-16","M-16-A","M-16-A.1","M-16-A.2","M-16-B","M-16-B.1","M-16-B.2","M-16-B.3","M-16-C","M-16-C.1","M-16-C.2","M-16-C.2.1","M-16-C.2.2","M-16-C.2.3","M-16-C.2.4","M-16-C.3","M-16-C.4","M-16-D","M-16-D.1","M-16-D.2","M-16-D.3","M-06","M-06-A","M-06-A.1","M-06-A.2","M-06-A.3","M-06-A.4","M-06-G","M-06-G.1","M-06-G.2","M-06-G.3","M-06-G.4","M-06-B","M-06-B.1","M-06-B.2","M-06-C","M-06-C.1","M-06-C.2","M-06-D","M-06-D.1","M-06-D.2","M-06-E","M-06-E.1","M-06-E.2","M-06-F","M-06-F.1","M-06-F.2","M-17","M-17-A","M-17-A.1","M-17-A.2","M-17-A.3","M-17-A.4","M-17-B","M-17-B.1","M-17-B.2","M-17-B.3","M-17-C","M-17-C.1","M-17-C.2","M-17-C.3","M-17-D","M-17-D.1","M-17-D.2"]
 
 [[mandate]]
 id = "NEXT-PLAN-ONLY"
@@ -1470,6 +1470,81 @@ contract = "repo:campaigns/next/tasks/M-06-F.json#M-06-F.2"
 contract_sha256 = "1146782656481eb5706ba86c3ea645cb19b96c35906e1de77be7a45c6dc1a697"
 
 [[node]]
+id = "M-06-G"
+parent = "M-06"
+order = 170
+kind = "group"
+title = "Close boot and package-materialization regressions across supported platforms"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-06-A"]
+mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-021","F-030","F-034"]
+acceptance = ["All four required regression investigations and applicable fixes are reviewed; FPF-specific publication workflow is out of scope.","No generated package state is mistaken for authored content or written into foreign source slots."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-06-G.json"
+contract_sha256 = "55c4cf284d3c4e0ece120b8c7ff23c10c8e3b49347a53bb5beb0abcd4a733432"
+
+[[node]]
+id = "M-06-G.1"
+parent = "M-06-G"
+order = 171
+kind = "atom"
+title = "Verify cross-package normal directives and authored boot semantics"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-06-A.4"]
+mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-021","F-030","F-034"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.1", "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.", "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-06-G.json#M-06-G.1"
+contract_sha256 = "55c4cf284d3c4e0ece120b8c7ff23c10c8e3b49347a53bb5beb0abcd4a733432"
+
+[[node]]
+id = "M-06-G.2"
+parent = "M-06-G"
+order = 172
+kind = "atom"
+title = "Preserve XML host dialect and derived dependency state during init"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-06-G.1"]
+mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-021","F-030","F-034"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2", "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.", "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-06-G.json#M-06-G.2"
+contract_sha256 = "55c4cf284d3c4e0ece120b8c7ff23c10c8e3b49347a53bb5beb0abcd4a733432"
+
+[[node]]
+id = "M-06-G.3"
+parent = "M-06-G"
+order = 173
+kind = "atom"
+title = "Exclude generated slot lanes and protect authored workspace members"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-06-G.2"]
+mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-021","F-030","F-034"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.3", "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.", "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-06-G.json#M-06-G.3"
+contract_sha256 = "55c4cf284d3c4e0ece120b8c7ff23c10c8e3b49347a53bb5beb0abcd4a733432"
+
+[[node]]
+id = "M-06-G.4"
+parent = "M-06-G"
+order = 174
+kind = "atom"
+title = "Support long Windows materialization paths with truthful diagnostics"
+state = "planned"
+zoom = "summary"
+depends_on = ["M-06-G.3"]
+mandates = ["D-006","D-007","D-014","F-013","F-016","F-017","F-019","F-020","F-021","F-030","F-034"]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.4", "Make package materialization usable from a long Windows project root and report exact path-length limits where the host cannot support a path.", "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."]
+evidence = []
+contract = "repo:campaigns/next/tasks/M-06-G.json#M-06-G.4"
+contract_sha256 = "55c4cf284d3c4e0ece120b8c7ff23c10c8e3b49347a53bb5beb0abcd4a733432"
+
+[[node]]
 id = "NEXT-GATE-M-06"
 parent = "M-06"
 order = 99999
@@ -1477,7 +1552,7 @@ kind = "gate"
 title = "Review M-06 with affected integration checks"
 state = "planned"
 zoom = "summary"
-depends_on = ["M-06-A","M-06-B","M-06-C","M-06-D","M-06-E","M-06-F"]
+depends_on = ["M-06-A","M-06-B","M-06-C","M-06-D","M-06-E","M-06-F","M-06-G"]
 mandates = ["NEXT-PREVIEW-MIGRATION-DOCS","NEXT-VERIFICATION-ECONOMY"]
 acceptance = ["Review the complete diff and parent scope/negative cases, reciprocal requirement/evidence coverage and accepted permanent-source anchors.","Promote durable findings and update actual local plan bottom-up; no producer PASS or metadata counter substitutes for acceptance.","Reconcile actual accepted contributions and interface/capability deltas with permanent release-impact evidence and separate justified user/documentation dispositions; carry unresolved documentation updates explicitly to the final documentation gate.","Review the actual workstream delta and affected contract consumers; bind and execute sufficient targeted integration checks, preserving applicable negative/invariant/wire/codegen proof. Reuse only matching-subject evidence. Workstream completion alone does not require the full product panel; record any concrete reason to broaden and the actual checked scope."]
 evidence = []
