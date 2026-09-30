@@ -28,6 +28,12 @@ use vibe_extension_registry::{
 use vibe_wire::generated::artifact_record::ArtifactShape;
 
 mod error;
+#[allow(
+    dead_code,
+    unused_imports,
+    reason = "protected Cargo effect composition follows owner intent"
+)]
+pub(crate) mod journal;
 mod native;
 mod record;
 
@@ -207,7 +213,7 @@ fn execute_targets(
         let Some(target) = execution.targets.get(index) else {
             continue;
         };
-        outcomes.push(execute_one(execution, target, prepared)?);
+        outcomes.push(execute_one(execution, target, prepared, None)?);
     }
     Ok(outcomes)
 }
@@ -217,6 +223,7 @@ fn execute_one(
     execution: &BuildExecution<'_>,
     target: &ArtifactBuildTarget,
     prepared: Option<&crate::native::PreparedNativeMechanisms>,
+    bound: Option<&journal::BoundCargo<'_>>,
 ) -> Result<BuildOutcome, BuildError> {
     let selection = resolve_mechanism(
         execution.registry,
@@ -293,8 +300,23 @@ fn execute_one(
     };
     let provider = CargoProvider;
     let plan = provider.plan(&request)?;
-    let toolchain = provider.fingerprint(&request)?;
-    let selected = provider.apply(&request, &plan)?;
+    let toolchain = if let Some(bound) = bound {
+        journal::verify_bound_sources(bound)?;
+        provider.fingerprint_protected(&request, &bound.environment())?
+    } else {
+        provider.fingerprint(&request)?
+    };
+    let selected = if let Some(bound) = bound {
+        journal::verify_bound_sources(bound)?;
+        provider.apply_protected(&request, &plan, &bound.environment())?
+    } else {
+        provider.apply(&request, &plan)?
+    };
+    if let Some(bound) = bound {
+        if let Some(after_apply) = bound.after_apply {
+            after_apply();
+        }
+    }
     let produced = record_all(
         execution, &request, &provider, &plan, &toolchain, &selected, &pin,
     )?;

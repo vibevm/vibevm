@@ -120,6 +120,33 @@ pub(crate) struct VerifiedArtifact {
 #[derive(Debug, Clone, Copy, Default)]
 pub(crate) struct CargoProvider;
 
+/// Controlled environment for the one protected offline fixture. Cargo's
+/// cache is confined to this root; host PATH/rustup remain observed external
+/// toolchain state and are reported as such by the owner journal.
+pub(crate) struct ProtectedCargoEnvironment<'a> {
+    pub cargo_home: &'a Path,
+    pub on_spawn: Option<&'a dyn Fn(&str, &[String])>,
+}
+
+impl CargoProvider {
+    pub(crate) fn fingerprint_protected(
+        &self,
+        request: &BuildTargetRequest<'_>,
+        environment: &ProtectedCargoEnvironment<'_>,
+    ) -> Result<ToolchainIdentity, MechanismError> {
+        fingerprint_with(request, Some(environment))
+    }
+
+    pub(crate) fn apply_protected(
+        &self,
+        request: &BuildTargetRequest<'_>,
+        plan: &BuildPlan,
+        environment: &ProtectedCargoEnvironment<'_>,
+    ) -> Result<Vec<SelectedArtifact>, MechanismError> {
+        apply_with(request, plan, Some(environment))
+    }
+}
+
 impl BuildProvider for CargoProvider {
     fn descriptor(&self) -> ProviderDescriptor {
         ProviderDescriptor {
@@ -177,29 +204,7 @@ impl BuildProvider for CargoProvider {
         &self,
         request: &BuildTargetRequest<'_>,
     ) -> Result<ToolchainIdentity, MechanismError> {
-        let workdir = request.workdir();
-        let cargo = run(&request.target.id, &workdir, &["-Vv".to_owned()], "cargo")?;
-        let rustc = run(&request.target.id, &workdir, &["-V".to_owned()], "rustc")?;
-        let cargo_version = first_line(&cargo);
-        let rustc_version = first_line(&rustc);
-        let host = cargo
-            .lines()
-            .find_map(|line| line.trim().strip_prefix("host:"))
-            .map(|value| value.trim().to_owned())
-            .filter(|value| !value.is_empty());
-        let mut hash = Sha256::new();
-        hash.update(b"cargo\x00");
-        hash.update(cargo_version.as_bytes());
-        hash.update(b"\x00rustc\x00");
-        hash.update(rustc_version.as_bytes());
-        hash.update(b"\x00host\x00");
-        hash.update(host.as_deref().unwrap_or("").as_bytes());
-        Ok(ToolchainIdentity {
-            cargo: cargo_version,
-            rustc: rustc_version,
-            host,
-            digest: format!("{:x}", hash.finalize()),
-        })
+        fingerprint_with(request, None)
     }
 
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
@@ -208,40 +213,7 @@ impl BuildProvider for CargoProvider {
         request: &BuildTargetRequest<'_>,
         plan: &BuildPlan,
     ) -> Result<Vec<SelectedArtifact>, MechanismError> {
-        let target = &request.target.id;
-        let metadata_stdout = run(target, &plan.workdir, &plan.metadata_argv, "cargo")?;
-        let metadata = message::parse_metadata(target, &metadata_stdout)?;
-        for output in &plan.outputs {
-            message::confirm_against_metadata(target, &output.id, &output.select, &metadata)?;
-        }
-        let build_stdout = run(target, &plan.workdir, &plan.build_argv, "cargo")?;
-        let messages = message::parse_stream(target, &build_stdout)?;
-        let mut selected = Vec::with_capacity(plan.outputs.len());
-        for output in &plan.outputs {
-            let chosen = message::select_message(target, &output.id, &output.select, &messages)?;
-            let Some(executable) = chosen.executable.as_deref() else {
-                // `select_message` already refused a null executable; this
-                // branch cannot be reached and refuses rather than unwraps.
-                return Err(MechanismError::NoExecutable {
-                    target: target.clone(),
-                    output: output.id.clone(),
-                    bin: output.select.describe(),
-                });
-            };
-            selected.push(SelectedArtifact {
-                output_id: output.id.clone(),
-                kind: output.kind,
-                executable: PathBuf::from(executable),
-                fresh: chosen.fresh.unwrap_or(false),
-                package_id: chosen.package_id.clone().unwrap_or_default(),
-                bin: chosen
-                    .target
-                    .as_ref()
-                    .map(|value| value.name.clone())
-                    .unwrap_or_default(),
-            });
-        }
-        Ok(selected)
+        apply_with(request, plan, None)
     }
 
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
@@ -253,9 +225,6 @@ impl BuildProvider for CargoProvider {
         let target = &request.target.id;
         let absolute = selected.executable.clone();
         let target_dir = request.target_dir();
-        // The engine-owned root first: an artifact outside it has no
-        // project-relative identity the engine is willing to mint, and
-        // that is the refusal worth naming.
         let outside = || MechanismError::OutputOutsideBuildRoot {
             target: target.clone(),
             output: selected.output_id.clone(),
@@ -275,6 +244,100 @@ impl BuildProvider for CargoProvider {
             bytes,
         })
     }
+}
+
+fn fingerprint_with(
+    request: &BuildTargetRequest<'_>,
+    environment: Option<&ProtectedCargoEnvironment<'_>>,
+) -> Result<ToolchainIdentity, MechanismError> {
+    let workdir = request.workdir();
+    let cargo = run(
+        &request.target.id,
+        &workdir,
+        &["-Vv".to_owned()],
+        "cargo",
+        environment,
+    )?;
+    let rustc = run(
+        &request.target.id,
+        &workdir,
+        &["-V".to_owned()],
+        "rustc",
+        environment,
+    )?;
+    let cargo_version = first_line(&cargo);
+    let rustc_version = first_line(&rustc);
+    let host = cargo
+        .lines()
+        .find_map(|line| line.trim().strip_prefix("host:"))
+        .map(|value| value.trim().to_owned())
+        .filter(|value| !value.is_empty());
+    let mut hash = Sha256::new();
+    hash.update(b"cargo\x00");
+    hash.update(cargo_version.as_bytes());
+    hash.update(b"\x00rustc\x00");
+    hash.update(rustc_version.as_bytes());
+    hash.update(b"\x00host\x00");
+    hash.update(host.as_deref().unwrap_or("").as_bytes());
+    Ok(ToolchainIdentity {
+        cargo: cargo_version,
+        rustc: rustc_version,
+        host,
+        digest: format!("{:x}", hash.finalize()),
+    })
+}
+
+fn apply_with(
+    request: &BuildTargetRequest<'_>,
+    plan: &BuildPlan,
+    environment: Option<&ProtectedCargoEnvironment<'_>>,
+) -> Result<Vec<SelectedArtifact>, MechanismError> {
+    let target = &request.target.id;
+    let metadata_stdout = run(
+        target,
+        &plan.workdir,
+        &plan.metadata_argv,
+        "cargo",
+        environment,
+    )?;
+    let metadata = message::parse_metadata(target, &metadata_stdout)?;
+    for output in &plan.outputs {
+        message::confirm_against_metadata(target, &output.id, &output.select, &metadata)?;
+    }
+    let build_stdout = run(
+        target,
+        &plan.workdir,
+        &plan.build_argv,
+        "cargo",
+        environment,
+    )?;
+    let messages = message::parse_stream(target, &build_stdout)?;
+    let mut selected = Vec::with_capacity(plan.outputs.len());
+    for output in &plan.outputs {
+        let chosen = message::select_message(target, &output.id, &output.select, &messages)?;
+        let Some(executable) = chosen.executable.as_deref() else {
+            // `select_message` already refused a null executable; this
+            // branch cannot be reached and refuses rather than unwraps.
+            return Err(MechanismError::NoExecutable {
+                target: target.clone(),
+                output: output.id.clone(),
+                bin: output.select.describe(),
+            });
+        };
+        selected.push(SelectedArtifact {
+            output_id: output.id.clone(),
+            kind: output.kind,
+            executable: PathBuf::from(executable),
+            fresh: chosen.fresh.unwrap_or(false),
+            package_id: chosen.package_id.clone().unwrap_or_default(),
+            bin: chosen
+                .target
+                .as_ref()
+                .map(|value| value.name.clone())
+                .unwrap_or_default(),
+        });
+    }
+    Ok(selected)
 }
 
 /// Stream one produced artifact and digest its exact bytes, through the
@@ -365,17 +428,33 @@ fn run(
     workdir: &Path,
     argv: &[String],
     program: &str,
+    environment: Option<&ProtectedCargoEnvironment<'_>>,
 ) -> Result<String, MechanismError> {
-    let output = Command::new(program)
+    let mut command = Command::new(program);
+    command
         .args(argv)
         .current_dir(workdir)
-        .env_remove("CARGO_TARGET_DIR")
-        .output()
-        .map_err(|error| MechanismError::Spawn {
-            target: target.to_owned(),
-            program: format!("{program} {}", argv.join(" ")),
-            reason: error.to_string(),
-        })?;
+        .env_remove("CARGO_TARGET_DIR");
+    if let Some(environment) = environment {
+        for (key, _) in std::env::vars_os() {
+            let upper = key.to_string_lossy().to_ascii_uppercase();
+            if upper.starts_with("CARGO_") || (upper.starts_with("RUST") && upper != "RUSTUP_HOME")
+            {
+                command.env_remove(key);
+            }
+        }
+        command
+            .env("CARGO_HOME", environment.cargo_home)
+            .env("CARGO_NET_OFFLINE", "true");
+        if let Some(on_spawn) = environment.on_spawn {
+            on_spawn(program, argv);
+        }
+    }
+    let output = command.output().map_err(|error| MechanismError::Spawn {
+        target: target.to_owned(),
+        program: format!("{program} {}", argv.join(" ")),
+        reason: error.to_string(),
+    })?;
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
         let tail: String = stderr

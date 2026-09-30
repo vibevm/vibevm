@@ -33,6 +33,9 @@ use crate::mechanism::record::RecordError;
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
 #[derive(Debug, Error)]
 pub enum BuildError {
+    /// A protected, source-bound build observed drift before a Cargo process.
+    #[error("protected Cargo build `{target}` source or owner changed before effect: {reason}")]
+    ProtectedSource { target: String, reason: String },
     /// §3.1's four-step law refused to select a provider.
     #[error(transparent)]
     Resolution(#[from] MechanismResolutionError),
