@@ -8,11 +8,13 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use clap::{Args, Subcommand};
 use vibe_core::Group;
-use vibe_core::manifest::Lockfile;
+use vibe_core::manifest::{Lockfile, Manifest, SourceSelector, SpecFormat};
 use vibe_facts::{
-    FactEntry, FactOrigin, FactStatus, Registry, SourceKind, adoption_counts, host_package,
-    orphans, remove_package_file, scan_authored_facts, sync,
+    AuthoredFact, CapturedDeclaredDocument, FactEntry, FactOrigin, FactStatus, Registry,
+    SourceFileWitness, SourceKind, adoption_counts, host_package, observe_declared_source, orphans,
+    remove_package_file, scan_authored_facts, sync,
 };
+use vibe_safefs::Project;
 use vibe_workspace::{Workspace, vibedeps};
 
 use crate::{cli::ProgressCheckArgs, output};
@@ -190,7 +192,7 @@ fn rederive_or_defer(root: &Path, package: Option<&str>) -> Result<()> {
 
 fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
     let slot = installed_slot(root, package)?;
-    let authored = scan_authored_facts(&slot, package, SourceKind::Package)?;
+    let authored = authored_for_adopt(&slot, package)?;
 
     let mut registry = Registry::load(root)?;
     let mut added = 0usize;
@@ -220,6 +222,113 @@ fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
     }
     println!("facts adopt {package}: added={added} kept={kept}");
     rederive_or_defer(root, Some(package))?;
+    Ok(())
+}
+
+const ADOPT_MANIFEST_MAX_BYTES: usize = 1024 * 1024;
+const ADOPT_SOURCE_MAX_BYTES: usize = 16 * 1024 * 1024;
+
+/// Explicit descriptors are opt-in. An old package with no declarations keeps
+/// the original suffix scanner; a declared package never falls back to it.
+fn authored_for_adopt(slot: &Path, package: &str) -> Result<Vec<AuthoredFact>> {
+    let pinned = Project::open(slot)
+        .with_context(|| format!("pinning package slot `{}`", slot.display()))?;
+    let manifest_bytes = pinned
+        .read_file_bounded("vibe.toml", ADOPT_MANIFEST_MAX_BYTES)?
+        .context("installed package has no vibe.toml")?;
+    let manifest_text =
+        std::str::from_utf8(&manifest_bytes).context("installed package manifest is not UTF-8")?;
+    let manifest = Manifest::parse_str(manifest_text)?;
+    let meta = manifest.require_package()?;
+    ensure_package_coordinate(meta, package)?;
+    if meta.sources.is_empty() {
+        return scan_authored_facts(slot, package, SourceKind::Package).map_err(Into::into);
+    }
+    if meta
+        .sources
+        .iter()
+        .any(|descriptor| matches!(descriptor.selector(), SourceSelector::Directory(_)))
+    {
+        bail!("declared directory sources need a complete captured census before facts adopt");
+    }
+    let record_before = pinned
+        .read_file_bounded(vibedeps::SLOT_RECORD_FILENAME, ADOPT_MANIFEST_MAX_BYTES)?
+        .context("declared package has no slot provenance record")?;
+    let record = vibedeps::read_slot_record(slot).map_err(|reason| anyhow::anyhow!(reason))?;
+    let record_after = pinned
+        .read_file_bounded(vibedeps::SLOT_RECORD_FILENAME, ADOPT_MANIFEST_MAX_BYTES)?
+        .context("declared package slot record disappeared")?;
+    if record_before != record_after || record.spec_format != SpecFormat::Mixed {
+        bail!(
+            "declared facts adopt requires an unchanged Mixed slot record and original source bytes"
+        );
+    }
+    verify_slot_source(&record, "vibe.toml", &manifest_bytes)?;
+    let mut held = Vec::with_capacity(meta.sources.len());
+    let mut captured_paths = BTreeSet::new();
+    for descriptor in &meta.sources {
+        let SourceSelector::File(path) = descriptor.selector() else {
+            unreachable!()
+        };
+        if !captured_paths.insert(path.as_str()) {
+            continue;
+        }
+        let bytes = pinned
+            .read_file_bounded(path, ADOPT_SOURCE_MAX_BYTES)
+            .with_context(|| format!("capturing declared package source `{path}`"))?;
+        if let Some(raw) = bytes.as_deref() {
+            verify_slot_source(&record, path, raw)?;
+        }
+        held.push((path.as_str(), bytes));
+    }
+    let inventory = held
+        .iter()
+        .map(|(path, bytes)| CapturedDeclaredDocument {
+            path,
+            bytes: bytes.as_deref(),
+        })
+        .collect::<Vec<_>>();
+    let observed = observe_declared_source(meta, &inventory)
+        .map_err(|reason| anyhow::anyhow!("declared source walk refused: {reason:?}"))?;
+    if !observed.complete {
+        let path = observed
+            .documents
+            .iter()
+            .find(|(_, row)| {
+                !matches!(
+                    row,
+                    vibe_facts::DeclaredDocumentObservation::Facts { .. }
+                        | vibe_facts::DeclaredDocumentObservation::Raw { .. }
+                )
+            })
+            .map(|(path, _)| path.as_str())
+            .unwrap_or("<unknown>");
+        bail!("declared source `{path}` is incomplete; facts adopt made no registry change");
+    }
+    Ok(observed.facts)
+}
+
+fn ensure_package_coordinate(
+    meta: &vibe_core::manifest::PackageMeta,
+    selected: &str,
+) -> Result<()> {
+    let observed = format!("{}/{}", meta.group, meta.name);
+    if observed != selected {
+        bail!("installed package coordinate `{observed}` differs from selected `{selected}`");
+    }
+    Ok(())
+}
+
+fn verify_slot_source(record: &vibedeps::SlotRecord, path: &str, bytes: &[u8]) -> Result<()> {
+    let witness = SourceFileWitness::of(path, bytes);
+    let row = record
+        .files
+        .iter()
+        .find(|row| row.path == path)
+        .with_context(|| format!("slot record has no declared source `{path}`"))?;
+    if witness.digest.strip_prefix("sha256:") != Some(row.sha256.as_str()) {
+        bail!("declared source `{path}` differs from recorded slot payload");
+    }
     Ok(())
 }
 
