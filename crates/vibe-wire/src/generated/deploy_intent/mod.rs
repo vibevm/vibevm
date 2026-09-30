@@ -34,6 +34,11 @@ pub struct DeployIntent {
     /// optional package, profile, target id and generation.
     pub target: DeployTargetIdentity,
 
+    /// Host-issued opt-in environment binding. Absent keeps the legacy local
+    /// journal bytes and meaning.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub operation_binding: Option<EnvironmentOperationBinding>,
+
     /// The generation of the prior receipt this deploy supersedes; absent for a
     /// first deployment with no prior receipt.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -66,6 +71,14 @@ pub struct DeployTargetIdentity {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub package: Option<String>,
 }
+
+pub use crate::generated::shared::EnvironmentOperationBindingRootBinding;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetOs;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetRole;
+
+pub use crate::generated::shared::EnvironmentOperationBinding;
 
 /// One planned resource: its identity, the digest the plan wants it at, and the
 /// digest the prior receipt recorded (absent when the resource is new).

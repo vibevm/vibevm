@@ -1411,3 +1411,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/environment-realization-error/e1"
 sunset = "none"
+
+[format.environment-operation-binding]
+epoch = 1
+schema = "schemas/environment/e1/operation_binding.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/environment-operation-binding/e1"
+sunset = "none"

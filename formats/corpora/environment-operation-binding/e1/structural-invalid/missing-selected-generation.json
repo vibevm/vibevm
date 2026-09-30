@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "binding": {
+    "binding_epoch": 1,
+    "binding_id": "binding-a",
+    "host_context_id": "context-a",
+    "instance_ref": "instance-a",
+    "target_role": "produced_tool_runtime",
+    "target_os": "linux",
+    "target_architecture": "x86_64",
+    "target_abi": "gnu",
+    "target_libc": "glibc",
+    "principal_ref": "principal-a",
+    "storage_binding_ref": "storage-a",
+    "root_bindings": [
+      {
+        "root_role": "project",
+        "capability_ref": "root-project-a"
+      },
+      {
+        "root_role": "settings",
+        "capability_ref": "root-settings-a"
+      }
+    ],
+    "admission_epoch": 1
+  }
+}

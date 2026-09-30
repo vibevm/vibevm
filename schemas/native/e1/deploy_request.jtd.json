@@ -105,6 +105,28 @@
         "mechanism": { "type": "string" },
         "target": { "type": "string" },
         "profile": { "type": "string" }
+      },
+      "optionalProperties": {
+        "operation_binding": { "ref": "native_operation_binding", "metadata": { "x-default": null } }
+      }
+    },
+    "native_operation_binding": {
+      "metadata": {"description": "Native request copy of the host-issued binding shape; kept separate because native requests are foreign-parser permissive while retained deploy records are strict."},
+      "properties": {
+        "binding_epoch": {"type":"uint16"},
+        "binding_id": {"type":"string"},
+        "host_context_id": {"type":"string"},
+        "instance_ref": {"type":"string"},
+        "selected_generation_ref": {"type":"string","nullable":true},
+        "target_role": {"enum":["executor","produced_tool_runtime","emitted_code_target"],"metadata":{"x-vocabulary":"closed"}},
+        "target_os": {"enum":["windows","linux","macos"],"metadata":{"x-vocabulary":"closed"}},
+        "target_architecture": {"type":"string"},
+        "target_abi": {"type":"string","nullable":true},
+        "target_libc": {"type":"string","nullable":true},
+        "principal_ref": {"type":"string"},
+        "storage_binding_ref": {"type":"string"},
+        "root_bindings": {"elements":{"properties":{"root_role":{"type":"string"},"capability_ref":{"type":"string"}}},"metadata":{"x-empty":"emit"}},
+        "admission_epoch": {"type":"uint32"}
       }
     },
     "deploy_artifact": {

@@ -209,11 +209,82 @@ pub struct InvocationIdentity {
     pub provider: String,
 
     pub target: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub operation_binding: Option<NativeOperationBinding>,
 }
 
 pub use crate::generated::shared::NativeDeployArtifactKind;
 
 pub use crate::generated::shared::NativeDeployArtifactShape;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct NativeOperationBindingRootBinding {
+    pub capability_ref: String,
+
+    pub root_role: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeOperationBindingTargetOs {
+    #[serde(rename = "linux")]
+    Linux,
+
+    #[serde(rename = "macos")]
+    Macos,
+
+    #[serde(rename = "windows")]
+    Windows,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativeOperationBindingTargetRole {
+    #[serde(rename = "emitted_code_target")]
+    EmittedCodeTarget,
+
+    #[serde(rename = "executor")]
+    Executor,
+
+    #[serde(rename = "produced_tool_runtime")]
+    ProducedToolRuntime,
+}
+
+/// Native request copy of the host-issued binding shape; kept separate because
+/// native requests are foreign-parser permissive while retained deploy records
+/// are strict.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct NativeOperationBinding {
+    pub admission_epoch: u32,
+
+    pub binding_epoch: u16,
+
+    pub binding_id: String,
+
+    pub host_context_id: String,
+
+    pub instance_ref: String,
+
+    pub principal_ref: String,
+
+    pub root_bindings: Vec<NativeOperationBindingRootBinding>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub selected_generation_ref: Option<String>,
+
+    pub storage_binding_ref: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub target_abi: Option<String>,
+
+    pub target_architecture: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub target_libc: Option<String>,
+
+    pub target_os: NativeOperationBindingTargetOs,
+
+    pub target_role: NativeOperationBindingTargetRole,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ObservedResource {

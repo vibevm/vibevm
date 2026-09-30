@@ -8,7 +8,8 @@ use chrono::TimeZone;
 
 use crate::behaviour::deploy_records::{
     DeployIntentError, DeployReceiptError, INTENT_EPOCH, RECEIPT_EPOCH, validate_intent,
-    validate_receipt,
+    validate_native_operation_binding, validate_operation_binding_pair,
+    validate_operation_binding_root, validate_receipt,
 };
 use crate::generated::deploy_intent::{
     DeployIntent, DeployTargetIdentity, PlannedResource, Rfc3339Timestamp as IntentTimestamp,
@@ -17,6 +18,9 @@ use crate::generated::deploy_receipt::{
     DeployIdentity, DeployReceipt, DestinationScope, OwnedResource, ProviderIdentity,
     ReceiptStatus, Rfc3339Timestamp as ReceiptTimestamp,
 };
+use crate::generated::environment::e1::operation_binding::OperationBinding;
+use crate::generated::native::e1::deploy_request::NativeOperationBinding;
+use crate::generated::shared::EnvironmentOperationBinding;
 
 const HEX64: &str = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff";
 
@@ -47,6 +51,7 @@ fn intent_base() -> DeployIntent {
         }],
         started_at: ts(),
         prior_generation: None,
+        operation_binding: None,
     }
 }
 
@@ -80,7 +85,197 @@ fn receipt_base() -> DeployReceipt {
         status: ReceiptStatus::Applied,
         evidence: None,
         prior_state_handle: None,
+        operation_binding: None,
     }
+}
+
+fn binding_base() -> EnvironmentOperationBinding {
+    serde_json::from_value(serde_json::json!({
+        "binding_epoch":1,"binding_id":"binding-a","host_context_id":"context-a",
+        "instance_ref":"instance-a","selected_generation_ref":null,
+        "target_role":"produced_tool_runtime","target_os":"linux",
+        "target_architecture":"x86_64","target_abi":"gnu","target_libc":"glibc",
+        "principal_ref":"principal-a","storage_binding_ref":"storage-a",
+        "root_bindings":[{"root_role":"project","capability_ref":"root-project-a"}],
+        "admission_epoch":1
+    }))
+    .unwrap()
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
+    r = 2
+)]
+fn bound_intent_receipt_and_native_copy_agree_without_granting_effects() {
+    let binding = binding_base();
+    let mut intent = intent_base();
+    let mut receipt = receipt_base();
+    intent.operation_binding = Some(binding.clone());
+    receipt.operation_binding = Some(binding.clone());
+    validate_intent(&intent).unwrap();
+    validate_receipt(&receipt).unwrap();
+    validate_operation_binding_pair(&intent, &receipt).unwrap();
+    let native: NativeOperationBinding =
+        serde_json::from_value(serde_json::to_value(&binding).unwrap()).unwrap();
+    validate_native_operation_binding(&native, &binding).unwrap();
+    let mut changed = native;
+    changed.principal_ref = "foreign-principal".into();
+    assert!(validate_native_operation_binding(&changed, &binding).is_err());
+    receipt.operation_binding.as_mut().unwrap().instance_ref = "other-instance".into();
+    assert!(validate_operation_binding_pair(&intent, &receipt).is_err());
+    receipt.operation_binding = None;
+    assert!(validate_operation_binding_pair(&intent, &receipt).is_err());
+    let mut intent = intent_base();
+    intent.operation_binding = Some(binding);
+    intent.operation_binding.as_mut().unwrap().binding_id = " binding-a".into();
+    assert!(
+        matches!(validate_intent(&intent), Err(DeployIntentError::InvalidBinding { field }) if field == "binding_id")
+    );
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
+    r = 2
+)]
+fn native_six_arms_share_one_bound_invocation_identity() {
+    let path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../schemas/native/e1/deploy_request.jtd.json"
+    );
+    let schema: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+    for arm in [
+        "plan",
+        "fingerprint",
+        "apply",
+        "verify",
+        "remove",
+        "recover",
+    ] {
+        assert_eq!(
+            schema["mapping"][arm]["properties"]["identity"]["ref"], "invocation_identity",
+            "{arm}"
+        );
+    }
+    assert_eq!(
+        schema["definitions"]["invocation_identity"]["optionalProperties"]["operation_binding"]["ref"],
+        "native_operation_binding"
+    );
+    let vocab_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../formats/vocabularies.json"
+    );
+    let vocab: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(vocab_path).unwrap()).unwrap();
+    assert_eq!(
+        schema["definitions"]["native_operation_binding"]["properties"],
+        vocab["environment_operation_binding"]["properties"],
+        "native copy must match strict binding fields"
+    );
+    let native: NativeOperationBinding =
+        serde_json::from_value(serde_json::to_value(binding_base()).unwrap()).unwrap();
+    let identity = crate::generated::native::e1::deploy_request::InvocationIdentity {
+        provider: "provider-a".into(),
+        mechanism: "deploy:tool".into(),
+        target: "target-a".into(),
+        profile: "local".into(),
+        operation_binding: Some(native),
+    };
+    assert!(
+        serde_json::to_value(identity)
+            .unwrap()
+            .get("operation_binding")
+            .is_some()
+    );
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
+    r = 2
+)]
+fn bound_root_epoch_and_required_nullable_fields_refuse() {
+    let binding = binding_base();
+    validate_operation_binding_root(&OperationBinding {
+        schema: 1,
+        binding: binding.clone(),
+    })
+    .unwrap();
+    assert!(
+        validate_operation_binding_root(&OperationBinding {
+            schema: 2,
+            binding: binding.clone()
+        })
+        .is_err()
+    );
+    let mut duplicate = binding.clone();
+    duplicate
+        .root_bindings
+        .push(duplicate.root_bindings[0].clone());
+    let mut intent = intent_base();
+    intent.operation_binding = Some(duplicate);
+    assert!(
+        matches!(validate_intent(&intent), Err(DeployIntentError::InvalidBinding { field }) if field == "root_bindings.root_role")
+    );
+    let mut raw = serde_json::to_value(binding).unwrap();
+    raw.as_object_mut()
+        .unwrap()
+        .remove("selected_generation_ref");
+    assert!(serde_json::from_value::<EnvironmentOperationBinding>(raw).is_err());
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-OPERATION-BINDING",
+    r = 2
+)]
+fn registered_binding_corpus_distinguishes_shape_and_semantic_refusals() {
+    let base = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../formats/corpora/environment-operation-binding/e1/"
+    );
+    let read = |class: &str, name: &str| -> serde_json::Value {
+        let path = format!("{base}{class}/{name}.json");
+        serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap()
+    };
+    let value: OperationBinding = serde_json::from_value(read("valid", "local")).unwrap();
+    validate_operation_binding_root(&value).unwrap();
+    for name in ["unknown-root", "missing-selected-generation"] {
+        assert!(
+            serde_json::from_value::<OperationBinding>(read("structural-invalid", name)).is_err(),
+            "{name}"
+        );
+    }
+    for name in ["unsupported-binding-epoch", "duplicate-root-role"] {
+        let value: OperationBinding =
+            serde_json::from_value(read("semantic-invalid", name)).unwrap();
+        assert!(validate_operation_binding_root(&value).is_err(), "{name}");
+    }
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LEGACY-LOCAL-OPERATION",
+    r = 1
+)]
+fn legacy_none_omits_binding_and_preserves_pair() {
+    let intent = intent_base();
+    let receipt = receipt_base();
+    validate_operation_binding_pair(&intent, &receipt).unwrap();
+    assert!(
+        serde_json::to_value(&intent)
+            .unwrap()
+            .get("operation_binding")
+            .is_none()
+    );
+    assert!(
+        serde_json::to_value(&receipt)
+            .unwrap()
+            .get("operation_binding")
+            .is_none()
+    );
 }
 
 #[test]

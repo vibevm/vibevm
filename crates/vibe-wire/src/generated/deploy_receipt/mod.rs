@@ -79,6 +79,11 @@ pub struct DeployReceipt {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub finalized_at: Option<Rfc3339Timestamp>,
 
+    /// Host-issued opt-in environment binding. Absent keeps legacy local
+    /// receipt bytes and meaning.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub operation_binding: Option<EnvironmentOperationBinding>,
+
     /// The handle under which the prior state survives for rollback; absent
     /// when there was none or the deployment is irreversible. Non-blank;
     /// validated by the behaviour cell.
@@ -118,6 +123,14 @@ pub enum DestinationScope {
     #[serde(rename = "workspace")]
     Workspace,
 }
+
+pub use crate::generated::shared::EnvironmentOperationBindingRootBinding;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetOs;
+
+pub use crate::generated::shared::EnvironmentOperationBindingTargetRole;
+
+pub use crate::generated::shared::EnvironmentOperationBinding;
 
 /// One resource this deployment owns after apply, at its post-apply digest.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

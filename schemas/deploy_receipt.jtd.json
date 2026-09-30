@@ -1,5 +1,6 @@
 {
   "metadata": {
+    "x-vocabularies": ["environment_operation_binding"],
     "description": "Epoch-1 deploy receipt (R8A2): the schema-versioned record written in the user VibeVM state home after an applied deploy target — identity, provider, digests, scope, every owned resource with its post-apply digest, evidence, reversibility, prior-state handle, timestamps and final status (campaigns/packages-2026-09 architecture §7.2's exact list). `undeploy` removes only receipt-owned state. The receipt NEVER carries secrets: no prompts, no responses, no credential-bearing members exist on this shape. Generated Rust is the runtime receipt type.",
     "rustOptions": {
       "package": "vibe_wire::deploy_receipt"
@@ -87,6 +88,10 @@
     }
   },
   "optionalProperties": {
+    "operation_binding": {
+      "ref": "environment_operation_binding",
+      "metadata": {"x-default": null, "description": "Host-issued opt-in environment binding. Absent keeps legacy local receipt bytes and meaning."}
+    },
     "evidence": {
       "type": "string",
       "metadata": {
