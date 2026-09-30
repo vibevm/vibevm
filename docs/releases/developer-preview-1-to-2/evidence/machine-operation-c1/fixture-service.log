@@ -1,0 +1,473 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:262:12
+    |
+262 |     pub fn during(_: &crate::Pinned, _: &str) {}
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-lifecycle v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle)
+warning: function `execute_host_admitted_bound_vibe_bin` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy.rs:106:15
+    |
+106 | pub(crate) fn execute_host_admitted_bound_vibe_bin(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `resolve_bound_project_artifact` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs:104:15
+    |
+104 | pub(crate) fn resolve_bound_project_artifact(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `TrustedLocalDeployFacts` is never constructed
+  --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:21:19
+   |
+21 | pub(crate) struct TrustedLocalDeployFacts<'a> {
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `LocalAdmissionError` is never used
+  --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:44:17
+   |
+44 | pub(crate) enum LocalAdmissionError {
+   |                 ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `RootWitness` is never constructed
+  --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:71:8
+   |
+71 | struct RootWitness {
+   |        ^^^^^^^^^^^
+
+warning: function `observed_identity` is never used
+  --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:80:4
+   |
+80 | fn observed_identity(
+   |    ^^^^^^^^^^^^^^^^^
+
+warning: function `is_alias` is never used
+  --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:95:4
+   |
+95 | fn is_alias(metadata: &std::fs::Metadata) -> bool {
+   |    ^^^^^^^^
+
+warning: function `has_alias_component` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:112:4
+    |
+112 | fn has_alias_component(path: &Path) -> Result<bool, std::io::Error> {
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `open` and `reobserve` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:136:8
+    |
+135 | impl RootWitness {
+    | ---------------- associated items in this implementation
+136 |     fn open(
+    |        ^^^^
+...
+211 |     fn reobserve(&self) -> Result<(), LocalAdmissionError> {
+    |        ^^^^^^^^^
+
+warning: function `opaque` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:219:4
+    |
+219 | fn opaque(domain: &'static [u8], values: &[&str]) -> String {
+    |    ^^^^^^
+
+warning: function `host_os` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:229:4
+    |
+229 | fn host_os() -> Option<Os> {
+    |    ^^^^^^^
+
+warning: struct `AdmittedLocalDeployBinding` is never constructed
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:239:19
+    |
+239 | pub(crate) struct AdmittedLocalDeployBinding {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:251:19
+    |
+246 | impl AdmittedLocalDeployBinding {
+    | ------------------------------- associated items in this implementation
+...
+251 |     pub(crate) fn issue(facts: TrustedLocalDeployFacts<'_>) -> Result<Self, LocalAdmissionError> {
+    |                   ^^^^^
+...
+377 |     pub(crate) fn binding(&self) -> &EnvironmentOperationBinding {
+    |                   ^^^^^^^
+...
+380 |     pub(crate) fn project(&self) -> &Project {
+    |                   ^^^^^^^
+...
+383 |     pub(crate) fn settings(&self) -> &Project {
+    |                   ^^^^^^^^
+...
+386 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+389 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+...
+396 |     pub(crate) fn reobserve_roots(&self) -> Result<(), LocalAdmissionError> {
+    |                   ^^^^^^^^^^^^^^^
+...
+405 |     fn require_current_generation(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+417 |     pub(crate) fn preflight(
+    |                   ^^^^^^^^^
+...
+462 |     pub(crate) fn acquire_destination(
+    |                   ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `NamedRootWitness` is never constructed
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:505:8
+    |
+505 | struct NamedRootWitness {
+    |        ^^^^^^^^^^^^^^^^
+
+warning: method `reobserve` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:513:8
+    |
+512 | impl NamedRootWitness {
+    | --------------------- method in this implementation
+513 |     fn reobserve(&self) -> Result<(), LocalAdmissionError> {
+    |        ^^^^^^^^^
+
+warning: struct `LockedLocalDeployBinding` is never constructed
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:521:19
+    |
+521 | pub(crate) struct LockedLocalDeployBinding {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:529:19
+    |
+528 | impl LockedLocalDeployBinding {
+    | ----------------------------- methods in this implementation
+529 |     pub(crate) fn binding(&self) -> &EnvironmentOperationBinding {
+    |                   ^^^^^^^
+...
+532 |     pub(crate) fn project(&self) -> &Project {
+    |                   ^^^^^^^
+...
+535 |     pub(crate) fn settings(&self) -> &Project {
+    |                   ^^^^^^^^
+...
+538 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+541 |     pub(crate) fn destination(&self) -> &BoundDestinationLock {
+    |                   ^^^^^^^^^^^
+...
+544 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+...
+554 |     pub(crate) fn reobserve_before_commit(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `refuse_foreign_ownership_bound` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs:118:15
+    |
+118 | pub(crate) fn refuse_foreign_ownership_bound(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `bound` is never read
+   --> crates/vibe-lifecycle/src/mechanism/deploy/state.rs:218:5
+    |
+215 | pub(crate) struct DeployState {
+    |                   ----------- field in this struct
+...
+218 |     bound: bool,
+    |     ^^^^^
+    |
+    = note: `DeployState` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: associated items `open_bound`, `verify_bound_home`, and `receipts_bound` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/state.rs:246:19
+    |
+221 | impl DeployState {
+    | ---------------- associated items in this implementation
+...
+246 |     pub(crate) fn open_bound(settings: &Project) -> Result<Self, DeployError> {
+    |                   ^^^^^^^^^^
+...
+264 |     pub(crate) fn verify_bound_home(&self, settings: &Project) -> Result<(), DeployError> {
+    |                   ^^^^^^^^^^^^^^^^^
+...
+662 |     pub(crate) fn receipts_bound(&self) -> Result<Vec<(String, DeployReceipt)>, DeployError> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: function `bound_state_components` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/state.rs:809:15
+    |
+809 | pub(super) fn bound_state_components() -> Vec<&'static str> {
+    |               ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `apply_bound` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs:208:19
+    |
+104 | impl Transaction<'_> {
+    | -------------------- method in this implementation
+...
+208 |     pub(crate) fn apply_bound(
+    |                   ^^^^^^^^^^^
+
+warning: associated function `open_bound` is never used
+  --> crates/vibe-lifecycle/src/mechanism/deploy/view.rs:93:19
+   |
+54 | impl DeployStateView {
+   | -------------------- associated function in this implementation
+...
+93 |     pub(crate) fn open_bound(settings: &Project) -> Result<Self, DeployError> {
+   |                   ^^^^^^^^^^
+
+warning: enum `BoundVibeBinError` is never used
+  --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:20:17
+   |
+20 | pub(crate) enum BoundVibeBinError {
+   |                 ^^^^^^^^^^^^^^^^^
+
+warning: struct `BoundProjectArtifact` is never constructed
+  --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:62:19
+   |
+62 | pub(crate) struct BoundProjectArtifact {
+   |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `from_record` and `matches_resolved` are never used
+  --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:69:19
+   |
+68 | impl BoundProjectArtifact {
+   | ------------------------- associated items in this implementation
+69 |     pub(crate) fn from_record(
+   |                   ^^^^^^^^^^^
+...
+89 |     pub(crate) fn matches_resolved(&self, relative: &str, digest: &str, bytes: u64) -> bool {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: struct `BoundDestinationLock` is never constructed
+  --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:96:19
+   |
+96 | pub(crate) struct BoundDestinationLock {
+   |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `acquire`, `settings`, `validate_children`, `child`, `bin_child`, and `store_child` are never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:106:19
+    |
+105 | impl BoundDestinationLock {
+    | ------------------------- associated items in this implementation
+106 |     pub(crate) fn acquire(settings: Project) -> Result<Self, BoundVibeBinError> {
+    |                   ^^^^^^^
+...
+181 |     pub(crate) fn settings(&self) -> &Project {
+    |                   ^^^^^^^^
+...
+185 |     pub(crate) fn validate_children(&self) -> Result<(), BoundVibeBinError> {
+    |                   ^^^^^^^^^^^^^^^^^
+...
+206 |     fn child<'a>(&'a self, relative: &'a str) -> Result<(&'a Project, &'a str), BoundVibeBinError> {
+    |        ^^^^^
+...
+217 |     fn bin_child<'a>(
+    |        ^^^^^^^^^
+...
+227 |     fn store_child(&self) -> Result<&Project, BoundVibeBinError> {
+    |        ^^^^^^^^^^^
+
+warning: constant `PHYSICAL_LOCK` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:233:7
+    |
+233 | const PHYSICAL_LOCK: &str = "bound-vibe-bin-physical.lock";
+    |       ^^^^^^^^^^^^^
+
+warning: function `acquire_child` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:235:4
+    |
+235 | fn acquire_child(
+    |    ^^^^^^^^^^^^^
+
+warning: function `setup_error` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:267:4
+    |
+267 | fn setup_error(phase: &'static str, created: &[&'static str], reason: String) -> BoundVibeBinError {
+    |    ^^^^^^^^^^^
+
+warning: function `direct_child` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:279:4
+    |
+279 | fn direct_child<'a>(relative: &'a str, prefix: &str) -> Option<&'a str> {
+    |    ^^^^^^^^^^^^
+
+warning: function `after_read_observation` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:307:10
+    |
+307 | const fn after_read_observation() {}
+    |          ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `BoundVibeBinStore` is never constructed
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:311:19
+    |
+311 | pub(crate) struct BoundVibeBinStore<'a> {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:319:19
+    |
+316 | impl<'a> BoundVibeBinStore<'a> {
+    | ------------------------------ associated items in this implementation
+...
+319 |     pub(crate) fn from_locked_admission(admission: &'a LockedLocalDeployBinding) -> Self {
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+339 |     pub(crate) fn place_payload(
+    |                   ^^^^^^^^^^^^^
+...
+401 |     pub(crate) fn classify_launcher(&self, relative: &str) -> Result<Occupant, BoundVibeBinError> {
+    |                   ^^^^^^^^^^^^^^^^^
+...
+414 |     pub(crate) fn prior_pointer(
+    |                   ^^^^^^^^^^^^^
+...
+433 |     pub(crate) fn write_resource(
+    |                   ^^^^^^^^^^^^^^
+...
+458 |     pub(crate) fn state(
+    |                   ^^^^^
+...
+471 |     pub(crate) fn remove_resource(&self, relative: &str) -> Result<bool, BoundVibeBinError> {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: function `matches_payload` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:487:4
+    |
+487 | fn matches_payload(
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `executable_mode` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:498:4
+    |
+498 | fn executable_mode(flavour: LauncherFlavour) -> Option<u32> {
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `resource_mode` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:507:4
+    |
+507 | fn resource_mode(executable: bool) -> Option<u32> {
+    |    ^^^^^^^^^^^^^
+
+warning: struct `BoundVibeBinProvider` is never constructed
+  --> crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs:21:19
+   |
+21 | pub(crate) struct BoundVibeBinProvider<'a> {
+   |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `BoundView` is never used
+  --> crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs:27:6
+   |
+27 | enum BoundView<'a> {
+   |      ^^^^^^^^^
+
+warning: associated items `for_preplan`, `for_locked`, `admit`, `observe`, `classify_launcher`, and `pointer_present` are never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs:35:19
+    |
+ 34 | impl<'a> BoundVibeBinProvider<'a> {
+    | --------------------------------- associated items in this implementation
+ 35 |     pub(crate) fn for_preplan(settings: &'a Project, artifact: &'a BoundProjectArtifact) -> Self {
+    |                   ^^^^^^^^^^^
+...
+ 42 |     pub(crate) fn for_locked(
+    |                   ^^^^^^^^^^
+...
+ 52 |     fn admit<'b>(
+    |        ^^^^^
+...
+ 76 |     fn observe(
+    |        ^^^^^^^
+...
+103 |     fn classify_launcher(
+    |        ^^^^^^^^^^^^^^^^^
+...
+130 |     fn pointer_present(
+    |        ^^^^^^^^^^^^^^^
+
+warning: function `observation_error` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs:155:4
+    |
+155 | fn observation_error(
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: function `write_error` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs:167:4
+    |
+167 | fn write_error(
+    |    ^^^^^^^^^^^
+
+warning: function `effect_not_ready` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs:179:4
+    |
+179 | fn effect_not_ready(request: &DeployTargetRequest<'_>, operation: &'static str) -> MechanismError {
+    |    ^^^^^^^^^^^^^^^^
+
+   Compiling vibe-test-support v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-test-support)
+   Compiling vibe-install v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-install)
+warning: `vibe-lifecycle` (lib) generated 44 warnings
+   Compiling vibe-orchestrator v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-orchestrator)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.36s
+     Running unittests src/lib.rs (target/debug/deps/vibe_orchestrator-8fed174f29efa74a)
+
+running 9 tests
+test machine_submission::tests::created_reservation_refuses_preexisting_journal_identity ... ok
+test machine_submission::tests::prepared_journal_crash_window_reconciles_without_invocation ... ok
+test machine_submission::tests::reservation_without_journal_recovers_exact_identity_but_does_not_invoke ... ok
+test machine_submission::tests::effect_callback_observes_durable_journal_ready_before_invocation ... ok
+test machine_submission::tests::different_payload_refuses_and_lost_response_replays_journal ... ok
+test machine_submission::tests::unavailable_retained_result_requires_recovery_without_second_effect ... ok
+test machine_submission::tests::retired_namespace_replays_existing_outcome_but_refuses_new_key ... ok
+test machine_submission::tests::missing_or_conflicting_journal_after_ready_refuses_without_rerun ... ok
+test machine_submission::tests::eight_same_key_submitters_invoke_one_fixture_effect ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.01s
