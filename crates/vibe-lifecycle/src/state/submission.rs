@@ -5,7 +5,7 @@
 //! caller may dispatch an effect only after `Created` has been durably
 //! returned, while `Existing` and `Retired` are observation/recovery paths.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -87,6 +87,8 @@ pub enum SubmissionError {
     KeyConflict,
     #[error("submission reservation does not match its namespace, key or domain run")]
     ReservationMismatch,
+    #[error("domain run `{domain_run_id}` is already reserved by another submission")]
+    DomainRunConflict { domain_run_id: String },
     #[error("submission index is malformed or over its size bound: {0}")]
     InvalidIndex(String),
     #[error("submission index I/O refused: {0}")]
@@ -177,6 +179,7 @@ fn read(lease: &LifecycleLease) -> Result<Index, SubmissionError> {
         )));
     }
     // Never overwrite a syntactically valid but semantically unsafe index.
+    let mut domain_run_ids = BTreeSet::new();
     for (id, namespace) in &index.namespaces {
         if !valid_namespace_id(id)
             || u64::from_str_radix(&id[..16], 16).ok() != Some(namespace.epoch)
@@ -201,6 +204,13 @@ fn read(lease: &LifecycleLease) -> Result<Index, SubmissionError> {
             return Err(SubmissionError::InvalidIndex(
                 "invalid namespace or reservation row".into(),
             ));
+        }
+        for reservation in namespace.keys.values() {
+            if !domain_run_ids.insert(reservation.domain_run_id.clone()) {
+                return Err(SubmissionError::InvalidIndex(
+                    "one domain run ID is reserved by more than one submission".into(),
+                ));
+            }
         }
     }
     Ok(index)
@@ -342,6 +352,12 @@ impl SubmissionReservations {
             ));
         }
         let mut index = read(lease)?;
+        let run_id_reserved = index.namespaces.values().any(|namespace| {
+            namespace
+                .keys
+                .values()
+                .any(|reservation| reservation.domain_run_id == domain_run_id)
+        });
         let row = index
             .namespaces
             .get_mut(namespace.id())
@@ -392,6 +408,16 @@ impl SubmissionReservations {
             }
             return Ok(ReservationDecision::Retired {
                 domain_run_id: None,
+            });
+        }
+        if run_id_reserved {
+            // The lease serializes this check with the insertion. Preserve
+            // any observed clock watermark before refusing a second owner.
+            if must_publish {
+                publish(lease, &index)?;
+            }
+            return Err(SubmissionError::DomainRunConflict {
+                domain_run_id: domain_run_id.to_owned(),
             });
         }
         row.keys.insert(
@@ -597,6 +623,211 @@ mod tests {
                 Err(SubmissionError::KeyConflict)
             ));
         }
+    }
+
+    #[test]
+    fn different_key_cannot_reuse_reserved_run_before_journal_exists() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let namespace = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        assert!(matches!(
+            SubmissionReservations::reserve_at(
+                &lease,
+                &namespace,
+                &scope(),
+                11,
+                "key-a",
+                b"request-a",
+                b"plan-a",
+                "run-a",
+            ),
+            Ok(ReservationDecision::Created { .. })
+        ));
+        assert!(matches!(
+            SubmissionReservations::reserve_at(
+                &lease, &namespace, &scope(), 12, "key-b", b"request-b", b"plan-b", "run-a",
+            ),
+            Err(SubmissionError::DomainRunConflict { domain_run_id }) if domain_run_id == "run-a"
+        ));
+        let index = read(&lease).unwrap();
+        assert_eq!(index.namespaces[namespace.id()].keys.len(), 1);
+        assert!(!index.namespaces[namespace.id()].keys["key-a"].journal_ready);
+    }
+
+    #[test]
+    fn post_publish_reservation_fault_never_returns_created_and_retry_keeps_run() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let namespace = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        vibe_safefs::fail_after_publish(Some(FILE));
+        let first = SubmissionReservations::reserve_at(
+            &lease,
+            &namespace,
+            &scope(),
+            11,
+            "key",
+            b"request",
+            b"plan",
+            "run-a",
+        );
+        vibe_safefs::fail_after_publish(None);
+        assert!(matches!(
+            first,
+            Err(SubmissionError::UncertainPublication(_))
+        ));
+        let index = read(&lease).unwrap();
+        assert_eq!(
+            index.namespaces[namespace.id()].keys["key"].domain_run_id,
+            "run-a"
+        );
+        assert!(!index.namespaces[namespace.id()].keys["key"].journal_ready);
+        assert_eq!(
+            SubmissionReservations::reserve_at(
+                &lease,
+                &namespace,
+                &scope(),
+                12,
+                "key",
+                b"request",
+                b"plan",
+                "run-b",
+            )
+            .unwrap(),
+            ReservationDecision::Existing {
+                domain_run_id: "run-a".into()
+            }
+        );
+    }
+
+    #[test]
+    fn post_publish_ready_fault_never_claims_success_and_retry_reconciles_marker() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let namespace = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        SubmissionReservations::reserve_at(
+            &lease,
+            &namespace,
+            &scope(),
+            11,
+            "key",
+            b"request",
+            b"plan",
+            "run-a",
+        )
+        .unwrap();
+        vibe_safefs::fail_after_publish(Some(FILE));
+        let ready = SubmissionReservations::mark_journal_ready(
+            &lease,
+            &namespace,
+            &scope(),
+            "key",
+            "run-a",
+        );
+        vibe_safefs::fail_after_publish(None);
+        assert!(matches!(
+            ready,
+            Err(SubmissionError::UncertainPublication(_))
+        ));
+        assert_eq!(
+            SubmissionReservations::reserve_at(
+                &lease,
+                &namespace,
+                &scope(),
+                12,
+                "key",
+                b"request",
+                b"plan",
+                "run-b",
+            )
+            .unwrap(),
+            ReservationDecision::Existing {
+                domain_run_id: "run-a".into()
+            }
+        );
+        assert_eq!(
+            SubmissionReservations::journal_admission(&lease, &namespace, &scope(), "key", "run-a")
+                .unwrap(),
+            JournalAdmission::Ready
+        );
+        SubmissionReservations::mark_journal_ready(&lease, &namespace, &scope(), "key", "run-a")
+            .unwrap();
+        assert_eq!(
+            read(&lease).unwrap().namespaces[namespace.id()].keys.len(),
+            1
+        );
+    }
+
+    #[test]
+    fn duplicate_persisted_run_id_refuses_index_read() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let first = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        let second = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        SubmissionReservations::reserve_at(
+            &lease,
+            &first,
+            &scope(),
+            11,
+            "key-a",
+            b"request-a",
+            b"plan-a",
+            "run-a",
+        )
+        .unwrap();
+        let mut index = read(&lease).unwrap();
+        index.namespaces.get_mut(second.id()).unwrap().keys.insert(
+            "key-b".into(),
+            ReservationRow {
+                request_sha256: digest(b"request-b"),
+                plan_sha256: digest(b"plan-b"),
+                domain_run_id: "run-a".into(),
+                journal_ready: false,
+            },
+        );
+        publish(&lease, &index).unwrap();
+        assert!(matches!(
+            read(&lease),
+            Err(SubmissionError::InvalidIndex(reason)) if reason.contains("more than one submission")
+        ));
+        assert!(matches!(
+            SubmissionReservations::reserve_at(
+                &lease,
+                &first,
+                &scope(),
+                12,
+                "key-a",
+                b"request-a",
+                b"plan-a",
+                "run-b",
+            ),
+            Err(SubmissionError::InvalidIndex(_))
+        ));
+    }
+
+    #[test]
+    fn valid_looking_unissued_token_cannot_reserve_or_renew_namespace() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let forged = SubmissionNamespace::from_host_token(
+            "0000000000000001-00000000000000000000000000000000".into(),
+        )
+        .unwrap();
+        assert!(matches!(
+            SubmissionReservations::reserve_at(
+                &lease,
+                &forged,
+                &scope(),
+                11,
+                "key",
+                b"request",
+                b"plan",
+                "run-a",
+            ),
+            Err(SubmissionError::UnknownNamespace)
+        ));
+        let issued = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        assert_eq!(&issued.id()[..16], "0000000000000001");
+        assert_ne!(issued.id(), forged.id());
     }
 
     #[test]
