@@ -2,9 +2,116 @@
 
 use super::*;
 use vibe_core::manifest::SpecFormat;
+use vibe_lifecycle::process::capture_package_tree_witness;
+
+fn local_package() -> (tempfile::TempDir, PackageTreeWitness) {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(
+        dir.path().join("vibe.toml"),
+        "[package]\ngroup = 'org.example'\nname = 'fixture'\nkind = 'flow'\nversion = '1.1.0'\n",
+    )
+    .unwrap();
+    std::fs::write(dir.path().join("README.md"), b"source\n").unwrap();
+    let pin = vibe_core::PackageRef::parse("flow:org.example/fixture@=1.1.0").unwrap();
+    let source =
+        capture_package_tree_witness(dir.path(), &pin, &["vibe.toml", "README.md"]).unwrap();
+    (dir, source)
+}
+
+#[test]
+fn source_bound_install_has_separate_v3_bytes_and_no_opaque_identity() {
+    let (dir, source) = local_package();
+    let selected = SelectedManifestLockWitness {
+        manifest: witness(b'a'),
+        lock: None,
+    };
+    let policy = InstallPolicy::default();
+    let install = InstallInputs::default();
+    let mode = RunAgentMode::Cli;
+    let mut input = model(dir.path(), &selected, &policy, &install, &mode);
+    input.requested = Phase::Install;
+    let v2 = canonical_lifecycle_pre_effect_plan(&input).unwrap();
+    input.package_source = Some(&source);
+    let v3 = canonical_lifecycle_pre_effect_plan(&input).unwrap();
+    assert_ne!(v2, v3);
+    let value: Value = serde_json::from_slice(&v3).unwrap();
+    assert_eq!(value["format"], FORMAT_SOURCE_V3);
+    assert_eq!(
+        value["source"]["package_pin"],
+        source.package_pin.to_string()
+    );
+    assert_eq!(value["source"]["tree_sha256"], source.tree_sha256);
+    assert_eq!(value["source"]["files"][0]["path"], "README.md");
+    assert_eq!(value["source"]["files"][1]["path"], "vibe.toml");
+    assert_eq!(
+        value["source"]["tree_recipe"],
+        "vibevm.lifecycle.package-tree/1"
+    );
+    assert!(value["source"].get("root_identity").is_none());
+    assert!(value["source"]["root"].is_object());
+    std::fs::write(dir.path().join("README.md"), b"Source\n").unwrap();
+    let changed =
+        capture_package_tree_witness(dir.path(), &source.package_pin, &["vibe.toml", "README.md"])
+            .unwrap();
+    input.package_source = Some(&changed);
+    assert_ne!(canonical_lifecycle_pre_effect_plan(&input).unwrap(), v3);
+}
+
+#[test]
+fn source_bound_plan_refuses_other_phase_and_fabricated_digest() {
+    let (dir, source) = local_package();
+    let mut fabricated = source.clone();
+    fabricated.tree_sha256 = format!("sha256:{}", "0".repeat(64));
+    let selected = SelectedManifestLockWitness {
+        manifest: witness(b'a'),
+        lock: None,
+    };
+    let policy = InstallPolicy::default();
+    let install = InstallInputs::default();
+    let mode = RunAgentMode::Cli;
+    let mut input = model(dir.path(), &selected, &policy, &install, &mode);
+    input.package_source = Some(&source);
+    assert!(
+        canonical_lifecycle_pre_effect_plan(&input)
+            .unwrap_err()
+            .to_string()
+            .contains("only valid for Install")
+    );
+    input.requested = Phase::Install;
+    input.package_source = Some(&fabricated);
+    assert!(
+        canonical_lifecycle_pre_effect_plan(&input)
+            .unwrap_err()
+            .to_string()
+            .contains("tree digest")
+    );
+}
 
 fn witness(byte: u8) -> SelectedFileWitness {
     SelectedFileWitness::from_bytes(vec![byte])
+}
+
+#[test]
+fn v2_bytes_remain_exact_without_package_source() {
+    let root = Path::new("/vibevm/fixture");
+    let sources = SelectedManifestLockWitness {
+        manifest: witness(b'a'),
+        lock: None,
+    };
+    let policy = InstallPolicy::default();
+    let install = InstallInputs::default();
+    let mode = RunAgentMode::Cli;
+    let bytes =
+        canonical_lifecycle_pre_effect_plan(&model(root, &sources, &policy, &install, &mode))
+            .unwrap();
+    const EXPECTED: &str = r#"{"agent_mode":"cli","assume_yes":false,"chain":["validate","install","generate","build","test","create"],"effective_trace":false,"force":false,"format":"vibevm.lifecycle.pre-effect-plan/2","install":{"all_features":false,"exact":false,"features":[],"language":null,"no_default_features":false,"packages":[]},"lease_root":{"encoding":"unix-bytes-hex","value":"2f76696265766d2f66697874757265"},"lock":null,"manifest":{"sha256":"sha256:ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb","size":1},"policy":{"offline":false,"slot_integrity":"trust-presence","spec_format_default":null},"requested":"create","selected_node":".","selected_root":{"encoding":"unix-bytes-hex","value":"2f76696265766d2f66697874757265"},"trace_flag":false,"workspace_lock":null,"workspace_manifest":{"sha256":"sha256:ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb","size":1}}"#;
+    #[cfg(unix)]
+    assert_eq!(bytes, EXPECTED.as_bytes());
+    #[cfg(not(unix))]
+    assert_eq!(
+        serde_json::from_slice::<Value>(&bytes).unwrap()["format"],
+        FORMAT_V2
+    );
 }
 
 fn model<'a>(
@@ -20,6 +127,7 @@ fn model<'a>(
         selected_node: ".",
         witness: sources,
         workspace_witness: sources,
+        package_source: None,
         requested: Phase::Create,
         agent_mode: mode,
         trace_flag: false,
@@ -50,6 +158,7 @@ fn same_inputs_have_same_bytes_and_no_identity_or_clock_field() {
         selected_node,
         witness,
         workspace_witness,
+        package_source,
         requested,
         agent_mode,
         trace_flag,
@@ -65,6 +174,7 @@ fn same_inputs_have_same_bytes_and_no_identity_or_clock_field() {
         selected_node,
         witness,
         workspace_witness,
+        package_source,
         requested,
         agent_mode,
         trace_flag,
@@ -80,8 +190,8 @@ fn same_inputs_have_same_bytes_and_no_identity_or_clock_field() {
     assert_eq!(first, second);
     assert!(first.starts_with(b"{\"agent_mode\":\"cli\","));
     assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), before);
-        let parsed: Value = serde_json::from_slice(&first).unwrap();
-        assert_eq!(parsed["format"], "vibevm.lifecycle.pre-effect-plan/2");
+    let parsed: Value = serde_json::from_slice(&first).unwrap();
+    assert_eq!(parsed["format"], "vibevm.lifecycle.pre-effect-plan/2");
     assert_eq!(parsed["chain"][0], "validate");
     assert_eq!(parsed["requested"], "create");
     assert_eq!(parsed["manifest"], parsed["workspace_manifest"]);

@@ -13,12 +13,15 @@ use serde_json::{Value, json};
 use vibe_core::lifecycle::Phase;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::inclusive_chain;
-use vibe_lifecycle::process::{SelectedFileWitness, SelectedManifestLockWitness};
+use vibe_lifecycle::process::{
+    PackageTreeWitness, SelectedFileWitness, SelectedManifestLockWitness,
+};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::install::{InstallInputs, InstallPolicy};
 
-const FORMAT: &str = "vibevm.lifecycle.pre-effect-plan/2";
+const FORMAT_V2: &str = "vibevm.lifecycle.pre-effect-plan/2";
+const FORMAT_SOURCE_V3: &str = "vibevm.lifecycle.pre-effect-plan/3";
 const FILE_CAP: u64 = 8 * 1024 * 1024;
 const PATH_CAP: usize = 128 * 1024;
 const SELECTED_CAP: usize = 128 * 1024;
@@ -39,6 +42,9 @@ pub(crate) struct LifecyclePreEffectPlanInput<'a> {
     pub witness: &'a SelectedManifestLockWitness,
     /// Exact workspace-root files, including the effective-world lock.
     pub workspace_witness: &'a SelectedManifestLockWitness,
+    /// Present only for a separately captured and later rechecked local
+    /// package fixture. Opaque filesystem identity stays outside wire bytes.
+    pub package_source: Option<&'a PackageTreeWitness>,
     pub requested: Phase,
     pub agent_mode: &'a RunAgentMode,
     pub trace_flag: bool,
@@ -96,8 +102,8 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
         SlotIntegrity::TrustPresence => "trust-presence",
         SlotIntegrity::Verify => "verify",
     };
-    let value = json!({
-        "format": FORMAT,
+    let mut value = json!({
+        "format": if input.package_source.is_some() { FORMAT_SOURCE_V3 } else { FORMAT_V2 },
         "lease_root": lease_root,
         "selected_root": selected_root,
         "selected_node": input.selected_node,
@@ -126,10 +132,43 @@ pub(crate) fn canonical_lifecycle_pre_effect_plan(
             "exact": input.install_inputs.exact,
         },
     });
+    if let Some(source) = input.package_source {
+        ensure!(
+            input.requested == Phase::Install,
+            "package source is only valid for Install"
+        );
+        source.validate()?;
+        value
+            .as_object_mut()
+            .expect("fixed pre-effect plan is a JSON object")
+            .insert("source".into(), package_source_value(source)?);
+    }
     let mut bytes = Vec::new();
     write_canonical(&value, &mut bytes)?;
     bounded("canonical_plan", bytes.len(), PLAN_CAP)?;
     Ok(bytes)
+}
+
+fn package_source_value(source: &PackageTreeWitness) -> Result<Value> {
+    let root = path_value(&source.root, "source.root")?;
+    let files: Vec<Value> = source
+        .files
+        .iter()
+        .map(|file| {
+            json!({
+                "path": file.relative_path,
+                "size": file.bytes,
+                "sha256": file.sha256,
+            })
+        })
+        .collect();
+    Ok(json!({
+        "package_pin": source.package_pin.to_string(),
+        "root": root,
+        "tree_recipe": "vibevm.lifecycle.package-tree/1",
+        "tree_sha256": source.tree_sha256,
+        "files": files,
+    }))
 }
 
 // Sort every object key independently of serde_json's optional map backend.

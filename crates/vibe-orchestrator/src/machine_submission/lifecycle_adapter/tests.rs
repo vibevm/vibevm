@@ -264,6 +264,7 @@ fn pending_reservation_precedes_header_and_never_allocates_scratch() {
         selected_node: ".",
         witness: &witness,
         workspace_witness: &witness,
+        package_source: None,
         requested: Phase::Validate,
         agent_mode: &RunAgentMode::Cli,
         trace_flag: false,
