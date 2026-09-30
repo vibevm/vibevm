@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "description": "Epoch-one per-run lifecycle outcome marker. This owner-written record is separate from the current-run freshness state and from the CLI report payload.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lifecycle_outcome_marker"
+    }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "run_id": {
+      "type": "string",
+      "metadata": {
+        "description": "Reserved domain run ID. The owner validates exactly 32 lowercase hexadecimal characters and compares it with the reservation and the derived marker filename."
+      }
+    },
+    "reservation_ref": {
+      "type": "string",
+      "metadata": {
+        "description": "Opaque sha256:<64-lowerhex> digest of the exact C.1 namespace, scope, key, canonical request and plan, and reserved run binding. It is a comparison value, never an effect grant."
+      }
+    },
+    "outcome": {
+      "enum": ["completed", "parked", "failed", "uncertain"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The lifecycle owner's actual result. A parked run is not terminal completion; an uncertain run never becomes success from a freshness header or EOF."
+      }
+    },
+    "effect_state": {
+      "enum": ["none", "landed", "uncertain"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Effect truth independent of the outcome: a failed or parked run may already have landed effects."
+      }
+    },
+    "report": { "ref": "report_evidence" }
+  },
+  "definitions": {
+    "report_evidence": {
+      "discriminator": "availability",
+      "mapping": {
+        "available": {
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "metadata": {
+                "description": "SHA-256 of the exact persisted report bytes, checked after a no-follow bounded reread before this marker is committed."
+              }
+            },
+            "bytes": { "type": "uint32" }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "enum": ["not_produced", "publication_uncertain", "validation_failed", "payload_unavailable"],
+              "metadata": {
+                "x-vocabulary": "closed",
+                "description": "Typed reason the owner cannot furnish a validated durable report payload. This never implies completed execution."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

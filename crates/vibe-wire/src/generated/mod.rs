@@ -45,6 +45,7 @@ pub mod install_plan;
 pub mod install_report;
 pub mod journal;
 pub mod lifecycle;
+pub mod lifecycle_outcome_marker;
 pub mod lifecycle_plan;
 pub mod lifecycle_report;
 pub mod lifecycle_state;

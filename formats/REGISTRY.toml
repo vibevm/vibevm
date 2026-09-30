@@ -224,6 +224,15 @@ foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
+# Per-run owner truth cannot be rebuilt from the mutable freshness header.
+[format.lifecycle-outcome-marker]
+epoch = 1
+schema = "schemas/lifecycle_outcome_marker.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/lifecycle_outcome_marker/e1"
+sunset = "none"
+
 # ── Native extension ABI wire contracts (3 JTD), PROP-054 §8/§14.4 ────────
 # Context is authored by the host and read by foreign SDKs; manifests are
 # foreign-authored declarations. Both therefore retain forward-compatible

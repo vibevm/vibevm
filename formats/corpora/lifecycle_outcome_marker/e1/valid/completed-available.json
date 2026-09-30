@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "run_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "reservation_ref": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "outcome": "completed",
+  "effect_state": "landed",
+  "report": {
+    "availability": "available",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "bytes": 231
+  }
+}

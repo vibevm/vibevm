@@ -97,6 +97,7 @@ pub enum FormatId {
     IndexRepomd,
     Journal,
     LifecycleContext,
+    LifecycleOutcomeMarker,
     LifecycleReply,
     LifecycleState,
     LlmOpenaiCompatibleAgentResult,
