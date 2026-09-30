@@ -264,9 +264,7 @@
         "probe_id": "launch",
         "target": "x86_64-pc-windows-msvc",
         "status": "skipped",
-        "tested_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
-        "runner_ref": "runner-fixture/e1",
-        "evidence_ref": "not-run"
+        "evidence_ref": "reason=explicit-operator-skip;host=linux/x86_64"
       },
       {
         "probe_id": "launch",

@@ -75,6 +75,9 @@ fn skipped_failed_and_unavailable_remain_distinct_subjects_but_not_default_ready
     );
     let mut failed = skipped.clone();
     failed.smoke.probes[0].status = PublicationSmokeProbeStatus::Failed;
+    failed.smoke.probes[0].tested_sha256 = Some(failed.targets[0].bundle.sha256.clone());
+    failed.smoke.probes[0].runner_ref = Some("runner-fixture/e1".to_string());
+    failed.smoke.probes[0].evidence_ref = Some("evidence/failed-windows-launch".to_string());
     let failed_digest = publication_subject_digest(&failed, &expected()).unwrap();
     assert_ne!(failed_digest, skipped_digest);
     assert!(require_apply_ready_default_smoke(&failed, &expected()).is_err());
@@ -84,6 +87,40 @@ fn skipped_failed_and_unavailable_remain_distinct_subjects_but_not_default_ready
     assert_ne!(unavailable_digest, failed_digest);
     assert_ne!(unavailable_digest, skipped_digest);
     assert!(require_apply_ready_default_smoke(&unavailable, &expected()).is_err());
+}
+
+#[test]
+fn nonexecuted_smoke_cannot_claim_tested_bytes_or_a_runner() {
+    for status in [
+        PublicationSmokeProbeStatus::Skipped,
+        PublicationSmokeProbeStatus::Unavailable,
+    ] {
+        let mut candidate = parsed("readiness-invalid", "skipped-smoke");
+        candidate.smoke.probes[0].status = status;
+        candidate.smoke.probes[0].tested_sha256 = Some(candidate.targets[0].bundle.sha256.clone());
+        let refusal = validate_publication_subject(&candidate, &expected()).unwrap_err();
+        assert!(refusal.to_string().contains("cannot claim tested bytes"));
+
+        candidate.smoke.probes[0].tested_sha256 = None;
+        candidate.smoke.probes[0].runner_ref = Some("runner-that-did-not-run".to_string());
+        let refusal = validate_publication_subject(&candidate, &expected()).unwrap_err();
+        assert!(refusal.to_string().contains("cannot claim tested bytes"));
+    }
+}
+
+#[test]
+fn nonexecuted_smoke_requires_bounded_reason_and_host() {
+    for evidence in [
+        None,
+        Some("".to_string()),
+        Some("not-run".to_string()),
+        Some("reason=operator-skip;host=".to_string()),
+        Some(format!("reason={};host=linux/x86_64", "x".repeat(512))),
+    ] {
+        let mut candidate = parsed("readiness-invalid", "skipped-smoke");
+        candidate.smoke.probes[0].evidence_ref = evidence;
+        validate_publication_subject(&candidate, &expected()).unwrap_err();
+    }
 }
 
 #[test]

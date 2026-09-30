@@ -28,7 +28,7 @@
       ],
       "steps": [
         "Extract the current native target list and archive/install route from existing distribution code; do not invent a target list or CLI flags.",
-        "For each target, unpack the subject-bound bundle into a fresh isolated home and invoke the installed executable through a harness port; retain target/runtime/bundle identity and bounded output.",
+        "For each target with a compatible native executor, unpack the subject-bound bundle into a fresh isolated home and invoke the installed executable through a harness port; retain target/runtime/bundle identity and bounded output. A missing or foreign executor yields an explicit unavailable row without claiming a run.",
         "Add native harness fixtures and a machine report for pass/fail/unavailable; foreign-host jobs remain unavailable until actually executed on that target."
       ],
       "positive_cases": [
@@ -50,7 +50,7 @@
         "git diff --check"
       ],
       "acceptance": [
-        "All four native targets have distinct evidence rows; missing hosts remain outstanding obligations.",
+        "All five supported bundle targets, including both Linux GNU and musl, have distinct evidence rows; missing native hosts remain outstanding obligations.",
         "Harness proves actual installed artifact identity and leaves the real home unchanged."
       ],
       "safe_stop": "Harness and runnable local smoke are ready; unavailable target evidence is explicitly pending.",
@@ -92,7 +92,7 @@
       ],
       "positive_cases": [
         "Default preparation executes artifact smoke.",
-        "An explicit skip produces a new plan with skipped status while still validating archive/subject identity."
+        "An explicit skip produces a new inspectable plan with skipped status while still validating archive/subject identity; default policy does not treat it as apply-ready."
       ],
       "negative_cases": [
         "Failed smoke never becomes passed by changing a presentation flag.",

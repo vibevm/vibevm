@@ -305,6 +305,10 @@ fn nonempty_cleanup_needs_a_post_upload_observation() {
 fn skipped_smoke_is_inspectable_but_not_apply_ready() {
     let (mut plan, mut subject) = prepared(NEW);
     subject.smoke.probes[0].status = PublicationSmokeProbeStatus::Skipped;
+    subject.smoke.probes[0].tested_sha256 = None;
+    subject.smoke.probes[0].runner_ref = None;
+    subject.smoke.probes[0].evidence_ref =
+        Some("reason=explicit-operator-skip;host=linux/x86_64".into());
     plan.subject_sha256 = publication_subject_digest(&subject, &subject_expected()).unwrap();
     validate_publication_effect_plan(&plan, &subject, &plan_expected()).unwrap();
     assert!(publication_effect_plan_digest(&plan, &subject, &plan_expected()).is_ok());
