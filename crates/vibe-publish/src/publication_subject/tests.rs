@@ -124,6 +124,21 @@ fn nonexecuted_smoke_requires_bounded_reason_and_host() {
 }
 
 #[test]
+fn nonexecuted_smoke_can_bind_exact_persisted_report_without_claiming_a_run() {
+    let mut candidate = parsed("readiness-invalid", "skipped-smoke");
+    let evidence = format!(
+        "reason=foreign-native-target;host=linux/x86_64/gnu;report=sha256:{}",
+        "a".repeat(64)
+    );
+    candidate.smoke.probes[0].evidence_ref = Some(evidence.clone());
+    validate_publication_subject(&candidate, &expected()).unwrap();
+    assert!(require_apply_ready_default_smoke(&candidate, &expected()).is_err());
+    candidate.smoke.probes[0].evidence_ref =
+        Some("reason=foreign-native-target;host=linux/x86_64/gnu;report=sha256:bad".into());
+    validate_publication_subject(&candidate, &expected()).unwrap_err();
+}
+
+#[test]
 fn exact_subject_digest_is_stable_and_changes_with_the_committed_lock() {
     let complete = parsed("valid", "complete-five-targets");
     let changed_lock = parsed("valid", "changed-committed-lock");

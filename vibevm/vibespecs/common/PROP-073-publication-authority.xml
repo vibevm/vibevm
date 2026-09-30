@@ -110,7 +110,9 @@
       explicit reason and remain bound to the exact bundle through the subject;
       they never claim a tested digest. A skip, unavailable runner, missing
       target, stale result or test against different bytes never becomes
-      passed by omission. The pure
+      passed by omission. Once a machine smoke report is saved and reread, the
+      subject's evidence reference binds its exact report digest and target;
+      the report does not contain the subject digest, avoiding a cycle. The pure
       plan states which results are required before an apply-ready or
       publish-ready verdict; a policy may explicitly allow a skip only by a
       named rule bound into the plan identity. Current optional build gates
