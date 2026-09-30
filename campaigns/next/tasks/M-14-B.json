@@ -94,7 +94,8 @@
         "crates/vibe-lifecycle/Cargo.toml",
         "crates/vibe-lifecycle/src/lib.rs",
         "crates/vibe-lifecycle/src/mechanism.rs",
-        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
       ],
       "write_paths": [
         "crates/vibe-core/src/environment/",
@@ -109,7 +110,8 @@
         "crates/vibe-lifecycle/Cargo.toml",
         "crates/vibe-lifecycle/src/lib.rs",
         "crates/vibe-lifecycle/src/mechanism.rs",
-        "crates/vibe-lifecycle/src/mechanism/vibebin.rs"
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
       ],
       "steps": [
         "Create representative old records from the characterized schema and state which fields cannot be inferred; mark them legacy rather than synthesizing target or hermetic proof.",
@@ -141,7 +143,8 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Actual mirror served_by/origin persistence belongs to M-15-B.2; this atom proves pure legacy classification and substitution policy without claiming the current transport retains the serving mirror."
       ]
     }
   ]

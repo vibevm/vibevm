@@ -1789,7 +1789,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Meet baseline work-package scope: Generated schemas/hash frames for exact lock/realization/payload inventory and backend-native closure; dependency roles and target filesystem semantics; legacy readers/migration fixtures, input/output/prefix identities and mirror/substitution policy","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-B.json"
-contract_sha256 = "c0c2a1eeb303a01589a2c9255c019b9eebb6c22d33ae99ac7a2d4f384723cfab"
+contract_sha256 = "c7efc56ea150e65c426e91b433d5617fa40f04238814b2426bc242ffe1cad508"
 
 [[node]]
 id = "M-14-B.1"
@@ -1804,7 +1804,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-B.json#M-14-B.1","Generated types and retained records use one schema source and explicit epochs.","Metadata capabilities are explicit; unsupported privileged nodes cannot be silently dropped."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-B.json#M-14-B.1"
-contract_sha256 = "c0c2a1eeb303a01589a2c9255c019b9eebb6c22d33ae99ac7a2d4f384723cfab"
+contract_sha256 = "c7efc56ea150e65c426e91b433d5617fa40f04238814b2426bc242ffe1cad508"
 
 [[node]]
 id = "M-14-B.2"
@@ -1819,7 +1819,7 @@ mandates = ["D-020","F-022","F-023","F-025","F-026","F-027","F-028"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-14-B.json#M-14-B.2","Every migration has explicit unavailable/needs-input outcomes for absent proof.","No source/registry/cache transport requires GitHub by contract."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-14-B.json#M-14-B.2"
-contract_sha256 = "c0c2a1eeb303a01589a2c9255c019b9eebb6c22d33ae99ac7a2d4f384723cfab"
+contract_sha256 = "c7efc56ea150e65c426e91b433d5617fa40f04238814b2426bc242ffe1cad508"
 
 [[node]]
 id = "M-14-C"
