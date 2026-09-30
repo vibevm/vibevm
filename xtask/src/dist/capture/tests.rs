@@ -13,6 +13,7 @@ use vibe_wire::generated::publication_subject::{
 };
 
 use super::{PreparedSubjectCapture, capture_prepared_subject};
+use crate::dist::archive::{ArchiveEntry, read_zip, write_stored_zip, write_zip};
 use crate::dist::snapshot;
 
 fn run_git(root: &Path, args: &[&str]) {
@@ -91,7 +92,12 @@ impl World {
             };
             let vibe = format!("vibe component {target}").into_bytes();
             let index = format!("index component {target}").into_bytes();
-            let bundle = format!("bundle {target}").into_bytes();
+            let source_zip = write_stored_zip(&[ArchiveEntry {
+                name: "Cargo.lock".into(),
+                bytes: b"source bytes".to_vec(),
+                mode: 0o644,
+            }])
+            .unwrap();
             let manifest = BundleDistributionManifest::new(
                 semver::Version::new(1, 1, 0),
                 identity.commit.clone(),
@@ -112,11 +118,44 @@ impl World {
                 ],
                 DistributionSourceArchive {
                     path: DISTRIBUTION_SOURCE_ARCHIVE_FILENAME.into(),
-                    size: 12,
-                    digest: sha(b"source bytes"),
+                    size: source_zip.len() as u64,
+                    digest: sha(&source_zip),
                     tree_oid: identity.tree.clone(),
                 },
             )
+            .unwrap();
+            let bundle = write_zip(&[
+                ArchiveEntry {
+                    name: format!("vibe{suffix}"),
+                    bytes: vibe.clone(),
+                    mode: 0o755,
+                },
+                ArchiveEntry {
+                    name: format!("vibe-index{suffix}"),
+                    bytes: index,
+                    mode: 0o755,
+                },
+                ArchiveEntry {
+                    name: DISTRIBUTION_SOURCE_ARCHIVE_FILENAME.into(),
+                    bytes: source_zip,
+                    mode: 0o644,
+                },
+                ArchiveEntry {
+                    name: "LICENSE.md".into(),
+                    bytes: b"fixture license".to_vec(),
+                    mode: 0o644,
+                },
+                ArchiveEntry {
+                    name: "README.md".into(),
+                    bytes: b"fixture readme".to_vec(),
+                    mode: 0o644,
+                },
+                ArchiveEntry {
+                    name: "DISTRIBUTION.json".into(),
+                    bytes: manifest.to_json_bytes().unwrap(),
+                    mode: 0o644,
+                },
+            ])
             .unwrap();
             let bundle_name = format!("vibevm-1.1.0-{target}.zip");
             let bootstrap_name = format!("vibe-bootstrap-{target}{suffix}");
@@ -222,6 +261,47 @@ fn changed_bundle_and_missing_fragment_refuse_without_mutating_output() {
         }
         let before = output_bytes(&world.out);
         assert!(world.capture().is_err(), "{change}");
+        assert_eq!(output_bytes(&world.out), before);
+    }
+}
+
+#[test]
+fn missing_or_corrupt_embedded_source_archive_refuses_even_when_outer_digest_is_updated() {
+    for change in ["missing", "corrupt"] {
+        let world = World::new();
+        let target = SUPPORTED_DISTRIBUTION_TARGETS[0];
+        let bundle_path = world.out.join(format!("vibevm-1.1.0-{target}.zip"));
+        let fragment_path = world
+            .out
+            .join(format!("vibevm-1.1.0-{target}.fragment.json"));
+        let mut entries = read_zip(&std::fs::read(&bundle_path).unwrap()).unwrap();
+        if change == "missing" {
+            entries.retain(|entry| entry.name != DISTRIBUTION_SOURCE_ARCHIVE_FILENAME);
+        } else {
+            entries
+                .iter_mut()
+                .find(|entry| entry.name == DISTRIBUTION_SOURCE_ARCHIVE_FILENAME)
+                .unwrap()
+                .bytes = b"wrong source archive".to_vec();
+        }
+        let rebuilt = write_zip(&entries).unwrap();
+        let mut fragment =
+            PlatformDistributionFragment::from_json_slice(&std::fs::read(&fragment_path).unwrap())
+                .unwrap();
+        fragment.asset.size = rebuilt.len() as u64;
+        fragment.asset.digest = sha(&rebuilt);
+        std::fs::write(&bundle_path, rebuilt).unwrap();
+        std::fs::write(&fragment_path, fragment.to_json_bytes().unwrap()).unwrap();
+        let before = output_bytes(&world.out);
+        let error = world
+            .capture()
+            .err()
+            .expect("embedded source damage refuses");
+        assert!(
+            format!("{error:#}").contains("vibevm-source.zip")
+                || format!("{error:#}").contains("source archive"),
+            "{change}: {error:#}"
+        );
         assert_eq!(output_bytes(&world.out), before);
     }
 }

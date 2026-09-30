@@ -73,6 +73,31 @@ pub struct CapturedDistribution {
     targets: Vec<CapturedTarget>,
 }
 
+impl CapturedDistribution {
+    /// Borrow the exact stable observations produced by the held local
+    /// capture. A caller may re-read and verify embedded bundle bytes, but
+    /// cannot replace a witness or construct a captured target from claims.
+    pub fn exact_targets(
+        &self,
+    ) -> impl Iterator<
+        Item = (
+            &PlatformDistributionFragment,
+            &StableFileState,
+            &StableFileState,
+            &StableFileState,
+        ),
+    > {
+        self.targets.iter().map(|target| {
+            (
+                &target.fragment,
+                &target.fragment_state,
+                &target.bundle_state,
+                &target.bootstrap_state,
+            )
+        })
+    }
+}
+
 /// Claimed bytes and source IDs supplied by a caller. This type does not
 /// authenticate provenance: the xtask caller must prove that Cargo.lock and
 /// all three installer byte strings came from the selected commit through

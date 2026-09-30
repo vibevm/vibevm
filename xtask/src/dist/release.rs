@@ -463,7 +463,7 @@ fn validate_remote_metadata(
     Ok(())
 }
 
-fn verify_platform_bytes(
+pub(super) fn verify_platform_bytes(
     fragment: &PlatformDistributionFragment,
     bundle_bytes: &[u8],
     bootstrap_bytes: &[u8],
