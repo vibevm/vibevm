@@ -9,6 +9,7 @@ use clap::Subcommand;
 
 mod archive;
 mod build;
+mod capture;
 mod release;
 mod snapshot;
 
