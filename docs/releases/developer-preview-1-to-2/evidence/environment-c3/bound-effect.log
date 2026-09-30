@@ -1,0 +1,93 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-lifecycle v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-lifecycle)
+warning: method `user_home` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:386:19
+    |
+246 | impl AdmittedLocalDeployBinding {
+    | ------------------------------- method in this implementation
+...
+386 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `alias_note` is never read
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:510:5
+    |
+505 | struct NamedRootWitness {
+    |        ---------------- field in this struct
+...
+510 |     alias_note: Option<String>,
+    |     ^^^^^^^^^^
+
+warning: methods `user_home` and `alias_warnings` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:538:19
+    |
+528 | impl LockedLocalDeployBinding {
+    | ----------------------------- methods in this implementation
+...
+538 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+544 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: `vibe-lifecycle` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.19s
+     Running unittests src/lib.rs (target/debug/deps/vibe_lifecycle-1f5a78475863519a)
+
+running 3 tests
+test mechanism::deploy::bound_effect_tests::changed_body_or_stale_host_generation_refuses_before_effect ... ok
+test mechanism::deploy::bound_effect_tests::generation_drift_after_publication_retains_bound_intent_and_reports_uncertain ... ok
+test mechanism::deploy::bound_effect_tests::two_admitted_homes_publish_physical_builtin_and_distinct_bound_receipts ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 729 filtered out; finished in 0.03s
