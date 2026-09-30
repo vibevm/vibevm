@@ -346,6 +346,7 @@
         "crates/vibe-workspace/src/extension_world/tests.rs",
         "crates/vibe-cli/src/commands/init/helpers.rs",
         "crates/vibe-facts/src/tests.rs",
+        "crates/vibe-facts/src/tests_sync.rs",
         "crates/vibe-spec/src/resolver/",
         "crates/vibe-workspace/src/vibedeps/derived.rs",
         "crates/vibe-workspace/src/vibedeps/slot_record.rs",
