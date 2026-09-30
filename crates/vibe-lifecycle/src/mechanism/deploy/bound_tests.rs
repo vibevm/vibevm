@@ -215,6 +215,10 @@ fn bound_receipts_stay_distinct_and_copied_legacy_receipt_refuses() {
     );
     let rows = state.receipts().unwrap();
     assert_eq!(rows.len(), 3);
+    let pinned_state =
+        DeployState::open_bound(&Project::open(execution.settings_root).unwrap()).unwrap();
+    let pinned_rows = pinned_state.receipts_bound().unwrap();
+    assert_eq!(pinned_rows, rows);
     assert_eq!(
         rows.iter()
             .find(|(id, _)| id == a.id())
@@ -255,6 +259,30 @@ fn bound_receipts_stay_distinct_and_copied_legacy_receipt_refuses() {
         state.receipts(),
         Err(DeployError::BindingMismatch { .. })
     ));
+}
+
+#[test]
+fn bound_receipt_listing_refuses_non_directory_or_alias_entries() {
+    let fixture = Fixture::new("helper-bytes");
+    let targets = [target("local-helper", "helper.exe", &[])];
+    let selection = selection("local", &["local-helper"]);
+    let root = fixture.state_home();
+    let execution = fixture.execution(&targets, &selection, &root);
+    let state = DeployState::open_bound(&Project::open(execution.settings_root).unwrap()).unwrap();
+    std::fs::write(root.join("foreign-file"), b"not a deployment").unwrap();
+    assert!(matches!(
+        state.receipts_bound(),
+        Err(DeployError::StateRead { .. })
+    ));
+    std::fs::remove_file(root.join("foreign-file")).unwrap();
+    #[cfg(unix)]
+    {
+        std::os::unix::fs::symlink(fixture.destination.path(), root.join("foreign-alias")).unwrap();
+        assert!(matches!(
+            state.receipts_bound(),
+            Err(DeployError::StateRead { .. })
+        ));
+    }
 }
 
 #[test]

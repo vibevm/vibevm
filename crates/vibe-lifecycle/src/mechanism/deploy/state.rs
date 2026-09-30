@@ -215,6 +215,7 @@ impl DeploymentHome {
 pub(crate) struct DeployState {
     project: Project,
     root: PathBuf,
+    bound: bool,
 }
 
 impl DeployState {
@@ -235,6 +236,7 @@ impl DeployState {
         Ok(Self {
             project,
             root: root.to_path_buf(),
+            bound: false,
         })
     }
 
@@ -249,7 +251,11 @@ impl DeployState {
                 path: rendered(&root),
                 reason: format!("{error:#}"),
             })?;
-        Ok(Self { project, root })
+        Ok(Self {
+            project,
+            root,
+            bound: true,
+        })
     }
 
     /// Compare the currently named child with this held state capability.
@@ -622,6 +628,118 @@ impl DeployState {
             let Some(receipt) = self.read::<DeployReceipt>(&relative)? else {
                 continue;
             };
+            let receipt = checked_receipt(receipt)?;
+            let expected = if let Some(binding) = &receipt.operation_binding {
+                DeploymentHome::new_bound(
+                    &self.root,
+                    &receipt.identity.project,
+                    receipt.identity.package.as_deref(),
+                    &receipt.target,
+                    binding,
+                )?
+            } else {
+                DeploymentHome::new(
+                    &self.root,
+                    &receipt.identity.project,
+                    receipt.identity.package.as_deref(),
+                    &receipt.target,
+                )
+            };
+            if expected.id() != id {
+                return Err(DeployError::BindingMismatch {
+                    record: RECEIPT_FILE,
+                });
+            }
+            rows.push((id, receipt));
+        }
+        Ok(rows)
+    }
+
+    /// List bound-state receipts through the held state-home capability.
+    /// A listed child must remain the same no-follow directory before and
+    /// after its receipt is read; aliases and wrong-type entries refuse.
+    /// Legacy `receipts` keeps its historical treatment of stray files.
+    pub(crate) fn receipts_bound(&self) -> Result<Vec<(String, DeployReceipt)>, DeployError> {
+        if !self.bound {
+            return Err(DeployError::StateHome {
+                path: rendered(&self.root),
+                reason: "pinned bound receipt listing requires open_bound state".into(),
+            });
+        }
+        let root = self
+            .project
+            .root_dir()
+            .map_err(|error| DeployError::StateHome {
+                path: rendered(&self.root),
+                reason: format!("{error:#}"),
+            })?;
+        let mut ids = self
+            .project
+            .child_names(&root)
+            .map_err(|error| DeployError::StateHome {
+                path: rendered(&self.root),
+                reason: format!("{error:#}"),
+            })?;
+        ids.retain(|id| id != ".vibe");
+        ids.sort_unstable();
+        let mut rows = Vec::with_capacity(ids.len());
+        for id in ids {
+            let child = root
+                .open_child_checked(&id)
+                .map_err(|error| DeployError::StateRead {
+                    path: id.clone(),
+                    reason: format!("listed deployment is not a no-follow directory: {error:#}"),
+                })?
+                .ok_or_else(|| DeployError::StateRead {
+                    path: id.clone(),
+                    reason: "listed deployment disappeared before it could be pinned".into(),
+                })?;
+            let identity = child.identity().map_err(|error| DeployError::StateRead {
+                path: id.clone(),
+                reason: format!("cannot identify listed deployment: {error:#}"),
+            })?;
+            let held = self
+                .project
+                .subproject(&[&id])
+                .map_err(|error| DeployError::StateRead {
+                    path: id.clone(),
+                    reason: format!("cannot retain listed deployment: {error:#}"),
+                })?;
+            if held
+                .root_identity()
+                .map_err(|error| DeployError::StateRead {
+                    path: id.clone(),
+                    reason: format!("cannot identify retained deployment: {error:#}"),
+                })?
+                != identity
+            {
+                return Err(DeployError::StateRead {
+                    path: id,
+                    reason: "listed deployment changed while it was pinned".into(),
+                });
+            }
+            let receipt = read_record::<DeployReceipt>(&held, RECEIPT_FILE)?;
+            let named = root
+                .open_child_checked(&id)
+                .map_err(|error| DeployError::StateRead {
+                    path: id.clone(),
+                    reason: format!("deployment name changed after receipt read: {error:#}"),
+                })?
+                .ok_or_else(|| DeployError::StateRead {
+                    path: id.clone(),
+                    reason: "deployment name disappeared after receipt read".into(),
+                })?;
+            if named.identity().map_err(|error| DeployError::StateRead {
+                path: id.clone(),
+                reason: format!("cannot reidentify deployment after receipt read: {error:#}"),
+            })? != identity
+            {
+                return Err(DeployError::StateRead {
+                    path: id,
+                    reason: "deployment name changed after receipt read".into(),
+                });
+            }
+            let Some(receipt) = receipt else { continue };
             let receipt = checked_receipt(receipt)?;
             let expected = if let Some(binding) = &receipt.operation_binding {
                 DeploymentHome::new_bound(
