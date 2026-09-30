@@ -40,6 +40,10 @@ pub(super) use native_managed::emit_package_units_bound;
 mod zone_projection;
 use zone_projection::{unit_provenance, zone_to_effective};
 
+#[cfg(test)]
+#[path = "hybrid_emit/descriptor_map_tests.rs"]
+mod descriptor_map_tests;
+
 /// Build the per-unit table (PROP-038 §2.1) from the resolution: every
 /// materialised package becomes a [`UnitInput`] whose edges carry the link
 /// mode from **that package's own manifest** (§2.2) — the fix for the
