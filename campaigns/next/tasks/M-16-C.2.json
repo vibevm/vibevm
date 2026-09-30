@@ -200,6 +200,14 @@
       "goal": "Give remote publication its own pre-effect run journal and retained partial result, then prove cross-domain attach/EOF/crash semantics without a daemon.",
       "read_paths": [
         "crates/vibe-publish/src/",
+        "xtask/src/dist/mod.rs",
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/release/local.rs",
+        "xtask/src/dist/release/tests.rs",
+        "xtask/src/dist/release/tests/concurrency.rs",
+        "xtask/src/dist/capture.rs",
+        "xtask/src/dist/snapshot.rs",
+        "xtask/Cargo.toml",
         "crates/vibe-publish/Cargo.toml",
         "Cargo.lock",
         "crates/vibe-orchestrator/src/",
@@ -215,6 +223,14 @@
       ],
       "write_paths": [
         "crates/vibe-publish/src/",
+        "xtask/src/dist/mod.rs",
+        "xtask/src/dist/release.rs",
+        "xtask/src/dist/release/local.rs",
+        "xtask/src/dist/release/tests.rs",
+        "xtask/src/dist/release/tests/concurrency.rs",
+        "xtask/src/dist/capture.rs",
+        "xtask/src/dist/snapshot.rs",
+        "xtask/Cargo.toml",
         "crates/vibe-publish/Cargo.toml",
         "Cargo.lock",
         "crates/vibe-orchestrator/src/",
@@ -256,6 +272,7 @@
       "notes": [
         "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
         "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication.",
+        "The existing xtask dist prepare mutates remote tag/release before the five-target PROP-073 subject exists. An all-assets-ready protected route must capture and validate all target outputs first, then reserve one exact plan before any tag/release/asset/visibility effect. Keep live public Git publication disabled for this 1.1.0 campaign; use only fake hosts and local proof until explicit owner publication instruction.",
         "Prerequisite: accepted M-07-A.1 exact publication subject/effect plan; journal work never authorizes public Git or release."
       ]
     }
