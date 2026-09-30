@@ -40,6 +40,7 @@ pub mod github_release;
 pub mod gitverse;
 mod orchestrator;
 pub mod post_hook;
+pub mod publication_effect_plan;
 pub mod publication_subject;
 pub mod redirect_sync;
 pub mod release_manifest;
