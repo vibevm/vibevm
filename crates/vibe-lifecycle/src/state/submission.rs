@@ -543,6 +543,21 @@ impl SubmissionReservations {
         })
     }
 
+    /// Read the original reserved plan digest for a matched domain run.
+    /// This is correlation evidence for a domain-owned intent, never an
+    /// effect grant or a substitute for inspecting that owner's journal.
+    pub fn inspect_reserved_plan_sha256(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        domain_run_id: &str,
+    ) -> Result<String, SubmissionError> {
+        let index = read(lease)?;
+        let row = reservation(&index, namespace, scope, key, domain_run_id)?;
+        Ok(format!("sha256:{}", row.plan_sha256))
+    }
+
     /// Stable correlation with one exact, journal-ready reservation. This
     /// value carries no effect permission: the domain owner must still prove
     /// its own journal and outcome. Retired rows remain readable so a lost
