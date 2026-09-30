@@ -49,6 +49,34 @@ fn nonblank(field: &str, value: &str) -> Result<(), PublicationSubjectError> {
     Ok(())
 }
 
+const SMOKE_EVIDENCE_REF_MAX_BYTES: usize = 512;
+
+fn nonexecution_evidence(field: &str, value: &str) -> Result<(), PublicationSubjectError> {
+    nonblank(field, value)?;
+    if value.len() > SMOKE_EVIDENCE_REF_MAX_BYTES {
+        return Err(invalid(
+            field,
+            "non-execution evidence reference exceeds 512 bytes",
+        ));
+    }
+    let Some((reason, host)) = value
+        .strip_prefix("reason=")
+        .and_then(|rest| rest.split_once(";host="))
+    else {
+        return Err(invalid(
+            field,
+            "non-execution evidence must identify reason and host",
+        ));
+    };
+    if reason.is_empty() || host.is_empty() || reason.contains(';') || host.contains(';') {
+        return Err(invalid(
+            field,
+            "non-execution evidence must identify reason and host",
+        ));
+    }
+    Ok(())
+}
+
 fn git_oid(field: &str, value: &str) -> Result<(), PublicationSubjectError> {
     if !matches!(value.len(), 40 | 64) || !lower_hex(value) {
         return Err(invalid(field, "expected a full lowercase Git object ID"));
@@ -328,20 +356,37 @@ pub fn validate_publication_subject(
         if let Some(runner) = probe.runner_ref.as_deref() {
             nonblank(&format!("smoke.probes[{index}].runner_ref"), runner)?;
         }
-        if let Some(evidence) = probe.evidence_ref.as_deref() {
-            nonblank(&format!("smoke.probes[{index}].evidence_ref"), evidence)?;
-        }
-        if matches!(
-            &probe.status,
-            PublicationSmokeProbeStatus::Passed | PublicationSmokeProbeStatus::Failed
-        ) && (probe.tested_sha256.is_none()
-            || probe.runner_ref.is_none()
-            || probe.evidence_ref.is_none())
-        {
-            return Err(invalid(
-                format!("smoke.probes[{index}]"),
-                "an executed probe lacks exact bundle, runner or evidence witness",
-            ));
+        match &probe.status {
+            PublicationSmokeProbeStatus::Passed | PublicationSmokeProbeStatus::Failed => {
+                let Some(evidence) = probe.evidence_ref.as_deref() else {
+                    return Err(invalid(
+                        format!("smoke.probes[{index}]"),
+                        "an executed probe lacks exact bundle, runner or evidence witness",
+                    ));
+                };
+                nonblank(&format!("smoke.probes[{index}].evidence_ref"), evidence)?;
+                if probe.tested_sha256.is_none() || probe.runner_ref.is_none() {
+                    return Err(invalid(
+                        format!("smoke.probes[{index}]"),
+                        "an executed probe lacks exact bundle, runner or evidence witness",
+                    ));
+                }
+            }
+            PublicationSmokeProbeStatus::Skipped | PublicationSmokeProbeStatus::Unavailable => {
+                if probe.tested_sha256.is_some() || probe.runner_ref.is_some() {
+                    return Err(invalid(
+                        format!("smoke.probes[{index}]"),
+                        "a probe that did not execute cannot claim tested bytes or a runner",
+                    ));
+                }
+                let evidence = probe.evidence_ref.as_deref().ok_or_else(|| {
+                    invalid(
+                        format!("smoke.probes[{index}].evidence_ref"),
+                        "non-execution evidence must identify reason and host",
+                    )
+                })?;
+                nonexecution_evidence(&format!("smoke.probes[{index}].evidence_ref"), evidence)?;
+            }
         }
     }
     Ok(())

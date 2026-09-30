@@ -823,7 +823,8 @@ mod tests {
         subject.smoke.probes[0].status = PublicationSmokeProbeStatus::Skipped;
         subject.smoke.probes[0].tested_sha256 = None;
         subject.smoke.probes[0].runner_ref = None;
-        subject.smoke.probes[0].evidence_ref = None;
+        subject.smoke.probes[0].evidence_ref =
+            Some("reason=operator-skip;host=linux/x86_64".into());
         // The subject digest now differs, so the first refusal is plan
         // identity. Even if replanned, the apply-ready smoke gate refuses.
         assert_eq!(

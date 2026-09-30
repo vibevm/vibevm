@@ -104,10 +104,13 @@
       <p><PUBLICATION-SMOKE-POLICY-LAW fact="true" status="spec/plan">The
       selected smoke policy has its own versioned identity, ordered required
       probes, platform scope and applicability rule. For each probe the owner
-      records passed, failed, skipped or unavailable separately, with the
-      tested subject/asset digest, tool or runner identity and bounded evidence
-      reference. A skip, unavailable runner, missing target, stale result or
-      test against different bytes never becomes passed by omission. The pure
+      records passed, failed, skipped or unavailable separately. Passed and
+      failed runs carry the tested subject/asset digest, tool or runner identity
+      and bounded evidence reference. Skipped and unavailable probes carry an
+      explicit reason and remain bound to the exact bundle through the subject;
+      they never claim a tested digest. A skip, unavailable runner, missing
+      target, stale result or test against different bytes never becomes
+      passed by omission. The pure
       plan states which results are required before an apply-ready or
       publish-ready verdict; a policy may explicitly allow a skip only by a
       named rule bound into the plan identity. Current optional build gates

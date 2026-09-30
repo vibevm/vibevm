@@ -54,7 +54,9 @@ fn smoke() -> PublicationSmoke {
                 status: PublicationSmokeProbeStatus::Skipped,
                 tested_sha256: None,
                 runner_ref: None,
-                evidence_ref: None,
+                evidence_ref: Some(
+                    "reason=not-executed-in-capture-fixture;host=fixture/none".into(),
+                ),
             })
             .collect(),
     }

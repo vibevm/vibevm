@@ -3977,7 +3977,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Meet baseline work-package scope: Four native bundle smokes default-on; explicit skip parameter/scoped status, no full-tests side effect; standalone preparation reports","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json"
-contract_sha256 = "0389adb21b83acb4bf7fdc2d6d0ead9f846395dec7921aef3089435e648b586b"
+contract_sha256 = "5f1db8c7246f366ea06de43e33db48b502e0b1052f6ddf982e82afdd4f7cea54"
 
 [[node]]
 id = "M-07-B.1"
@@ -3989,10 +3989,10 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-07-A","NEXT-P0-GATE","NEXT-NATIVE-RESOURCES","NEXT-PREVIEW-BASE.3"]
 mandates = ["D-010","D-011","D-015","F-010","F-011"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-07-B.json#M-07-B.1","All four native targets have distinct evidence rows; missing hosts remain outstanding obligations.","Harness proves actual installed artifact identity and leaves the real home unchanged."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-07-B.json#M-07-B.1","All five supported bundle targets, including both Linux GNU and musl, have distinct evidence rows; missing native hosts remain outstanding obligations.","Harness proves actual installed artifact identity and leaves the real home unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json#M-07-B.1"
-contract_sha256 = "0389adb21b83acb4bf7fdc2d6d0ead9f846395dec7921aef3089435e648b586b"
+contract_sha256 = "5f1db8c7246f366ea06de43e33db48b502e0b1052f6ddf982e82afdd4f7cea54"
 
 [[node]]
 id = "M-07-B.2"
@@ -4007,7 +4007,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-B.json#M-07-B.2","CLI and machine preparation return equivalent smoke policy/status.","Existing accepted skipped path is represented without a false execution claim."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json#M-07-B.2"
-contract_sha256 = "0389adb21b83acb4bf7fdc2d6d0ead9f846395dec7921aef3089435e648b586b"
+contract_sha256 = "5f1db8c7246f366ea06de43e33db48b502e0b1052f6ddf982e82afdd4f7cea54"
 
 [[node]]
 id = "M-07-C"
