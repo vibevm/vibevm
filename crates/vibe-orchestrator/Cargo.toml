@@ -23,6 +23,7 @@ vibe-agent-projection.workspace = true
 vibe-core.workspace = true
 vibe-install.workspace = true
 vibe-lifecycle.workspace = true
+vibe-registry.workspace = true
 toml.workspace = true
 vibe-resolver.workspace = true
 vibe-wire.workspace = true

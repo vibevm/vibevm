@@ -56,6 +56,7 @@ use crate::command::{
     DefaultLifecyclePorts, DefaultLifecycleRequest, LeasedDefaultLifecycle,
     lease_default_lifecycle, prepare_default_lifecycle_with_identity,
 };
+use crate::install::source_attestation::AttestingFactory;
 use crate::install::{PreparedSelection, SelectedManifest};
 use crate::phase::PhaseOutcome;
 use crate::ports::{
@@ -665,10 +666,15 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 selection,
                 self.identity.clone(),
             )?;
+            let attested_factory = self
+                .fixture
+                .as_ref()
+                .map(|fixture| AttestingFactory::new(fixture.factory, &fixture.witness))
+                .transpose()?;
             let ports = if self.phase == Phase::Validate {
                 validate_ports()
-            } else if let Some(fixture) = &self.fixture {
-                install::one_package_fixture_ports(fixture.factory)
+            } else if let Some(factory) = attested_factory.as_ref() {
+                install::one_package_fixture_ports(factory)
             } else {
                 install::empty_install_ports()
             };

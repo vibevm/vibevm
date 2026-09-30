@@ -26,6 +26,7 @@ mod outcome;
 mod ready;
 mod resume;
 mod selection;
+pub(crate) mod source_attestation;
 mod world_projection;
 
 pub use world_projection::provisional_world;

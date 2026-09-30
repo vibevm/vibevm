@@ -104,6 +104,27 @@ impl PackageTreeWitness {
         }
         Ok(())
     }
+
+    /// Pure content comparison of two separately captured trees. A cache copy
+    /// has a different root identity; exact pin, paths, sizes and digests are
+    /// the portable equality claim. This does not assert when either tree was
+    /// read or whether a writer changed it after capture.
+    pub fn validate_copy_content(
+        &self,
+        copy: &PackageTreeWitness,
+    ) -> Result<(), PackageTreeWitnessError> {
+        self.validate()?;
+        copy.validate()?;
+        if self.package_pin != copy.package_pin
+            || self.files != copy.files
+            || self.tree_sha256 != copy.tree_sha256
+        {
+            return Err(PackageTreeWitnessError::Drift(
+                "copy package pin, file census or bytes differ from selected source".into(),
+            ));
+        }
+        Ok(())
+    }
 }
 
 #[derive(Debug, Error)]
@@ -174,6 +195,26 @@ pub fn recheck_package_tree_witness(
         ));
     }
     Ok(())
+}
+
+/// Compare a materialized/cache copy with the expected source's exact file
+/// content. The copy has a different root identity by construction; compare
+/// the full bounded file census and package pin, never the source root handle.
+/// A mismatch may follow an already-published cache effect and cannot be
+/// reported as a pre-effect refusal.
+pub fn attest_package_tree_copy(
+    expected: &PackageTreeWitness,
+    copy_root: &Path,
+) -> Result<PackageTreeWitness, PackageTreeWitnessError> {
+    expected.validate()?;
+    let allowed: Vec<&str> = expected
+        .files
+        .iter()
+        .map(|file| file.relative_path.as_str())
+        .collect();
+    let observed = capture_package_tree_witness(copy_root, &expected.package_pin, &allowed)?;
+    expected.validate_copy_content(&observed)?;
+    Ok(observed)
 }
 
 fn validate_selection(
