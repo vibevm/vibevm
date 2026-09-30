@@ -103,6 +103,29 @@ pub(crate) fn capture_prepared_subject(
     smoke: PublicationSmoke,
 ) -> Result<PreparedSubjectCapture> {
     let identity = snapshot::committed_identity(repo_root, true)?;
+    let output_root = build::absolute_out_dir(repo_root, out_dir);
+    let output = Project::open(&output_root)
+        .with_context(|| format!("pinning distribution output `{}`", output_root.display()))?;
+    capture_prepared_subject_at_identity(repo_root, &output, identity, smoke)
+}
+
+/// Reuse one pinned output capability across provisional and final capture.
+/// The wrapper above retains its original path-taking interface.
+pub(crate) fn capture_prepared_subject_in(
+    repo_root: &Path,
+    output: &Project,
+    smoke: PublicationSmoke,
+) -> Result<PreparedSubjectCapture> {
+    let identity = snapshot::committed_identity(repo_root, true)?;
+    capture_prepared_subject_at_identity(repo_root, output, identity, smoke)
+}
+
+fn capture_prepared_subject_at_identity(
+    repo_root: &Path,
+    output: &Project,
+    identity: GitIdentity,
+    smoke: PublicationSmoke,
+) -> Result<PreparedSubjectCapture> {
     let version = build::workspace_version_at_commit(repo_root, &identity)?;
     if version != Version::new(1, 1, 0) {
         bail!("prepared publication requires the current mutable 1.1.0 source, found `{version}`");
@@ -116,10 +139,7 @@ pub(crate) fn capture_prepared_subject(
     let powershell = committed("distribution/install/install.ps1", INSTALLER_MAX_BYTES)?;
     let cmd = committed("distribution/install/install.cmd", INSTALLER_MAX_BYTES)?;
 
-    let output_root = build::absolute_out_dir(repo_root, out_dir);
-    let output = Project::open(&output_root)
-        .with_context(|| format!("pinning distribution output `{}`", output_root.display()))?;
-    let captured = capture_distribution(&output, "1.1.0")
+    let captured = capture_distribution(output, "1.1.0")
         .context("capturing five exact local distribution outputs")?;
     // The compact stable witnesses alone do not prove what each ZIP embeds.
     // Re-read only through the same pinned root, join each byte string to its
@@ -128,7 +148,7 @@ pub(crate) fn capture_prepared_subject(
     for (fragment, fragment_state, bundle_state, bootstrap_state) in captured.exact_targets() {
         let fragment_name = build::fragment_asset_name(&version, &fragment.target);
         let fragment_bytes = reread_exact(
-            &output,
+            output,
             &fragment_name,
             vibe_publish::DISTRIBUTION_MANIFEST_MAX_BYTES,
             fragment_state,
@@ -139,13 +159,13 @@ pub(crate) fn capture_prepared_subject(
             bail!("fragment `{fragment_name}` changed after its stable capture");
         }
         let bundle = reread_exact(
-            &output,
+            output,
             &fragment.asset.name,
             vibe_publish::DISTRIBUTION_BUNDLE_MAX_BYTES,
             bundle_state,
         )?;
         let bootstrap = reread_exact(
-            &output,
+            output,
             &fragment.bootstrap.name,
             vibe_publish::DISTRIBUTION_BOOTSTRAP_MAX_BYTES,
             bootstrap_state,
