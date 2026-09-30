@@ -33,6 +33,8 @@ pub(crate) const REASON_REGISTRY_ONLY: &str = "registry-only-adoption-entries";
 pub(crate) const REASON_DECLARED_UNVERIFIED: &str = "declared-slot-unverified";
 pub(crate) const REASON_DECLARED_TRANSFORMED: &str = "declared-original-unavailable";
 pub(crate) const REASON_DECLARED_INCOMPLETE: &str = "declared-source-incomplete";
+pub(crate) const REASON_DECLARED_UNREADABLE: &str = "declared-source-unreadable";
+pub(crate) const REASON_DECLARED_LIMIT: &str = "declared-source-limit";
 
 const MANIFEST_CAP: usize = 1024 * 1024;
 const RECORD_CAP: usize = 8 * 1024 * 1024;
