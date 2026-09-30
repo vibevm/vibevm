@@ -44,6 +44,8 @@ pub use plan::plan_deploy_targets;
 use super::error::deploy::native_transport;
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
 use super::vibebin::VibeBinProvider;
+use super::vibebin::bound::BoundVibeBinStore;
+use super::vibebin::bound_provider::BoundVibeBinProvider;
 use super::{
     BUILTIN_VIBE_BIN_NAME, BUILTIN_VIBE_OPT_LAUNCHER_NAME, DeployProvider, DeployTargetRequest,
 };
@@ -51,14 +53,19 @@ use opt_launcher::VibeOptLauncherProvider;
 use plugin::{ClientPluginProvider, PluginClient};
 use skill::SkillDeployProvider;
 // The inverse path lives in its own cell and is re-exported here.
+use binding::AdmittedLocalDeployBinding;
 pub(crate) use inverse::undeploy_resolved;
 use inverse_resume::resume_inverses;
 use model::row;
-use ownership::{ownership_of, refuse_changed_ownership, refuse_foreign_ownership};
+use ownership::{
+    ownership_of, refuse_changed_ownership, refuse_foreign_ownership,
+    refuse_foreign_ownership_bound,
+};
 use preplan::{Preplanned, preplan};
 use saga::unwind;
 use state::{DeployState, DeploymentHome};
 use transaction::Transaction;
+use view::DeployStateView;
 
 /// Deploy every selected target in dependency order.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
@@ -87,6 +94,195 @@ pub fn execute_bound_deploy_targets(
     Err(DeployError::BoundRootAdmissionUnavailable {
         binding: binding.binding_id.clone(),
     })
+}
+
+/// First effectful environment route. Only a trusted host can supply the
+/// non-cloneable admission and a fresh generation observation. The public
+/// wire-only entry above deliberately cannot reach this function.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-BOUND-BUILTIN",
+    r = 1
+)]
+pub(crate) fn execute_host_admitted_bound_vibe_bin(
+    execution: &DeployExecution<'_>,
+    request_binding: &EnvironmentOperationBinding,
+    admitted: AdmittedLocalDeployBinding,
+    principal: &str,
+    current_generation: &mut dyn FnMut() -> Result<Option<String>, DeployError>,
+) -> Result<Vec<DeployOutcome>, DeployError> {
+    let [target_id] = execution.selection.targets.as_slice() else {
+        return Err(DeployError::BoundScopeUnsupported {
+            reason: "the first bound route requires exactly one selected target".into(),
+        });
+    };
+    let current = current_generation()?;
+    admitted
+        .preflight(execution, request_binding, principal, current.as_deref())
+        .map_err(|error| DeployError::BoundGrantChanged {
+            target: target_id.clone(),
+            reason: error.to_string(),
+        })?;
+    let target = execution
+        .targets
+        .iter()
+        .find(|candidate| candidate.id == *target_id)
+        .ok_or_else(|| DeployError::UnknownTarget {
+            profile: execution.selection.profile.clone(),
+            target: target_id.clone(),
+            declared: declared(execution.targets),
+        })?;
+    if target.mechanism.to_string() != "deploy:vibe-bin"
+        || target
+            .depends_on
+            .as_ref()
+            .is_some_and(|deps| !deps.is_empty())
+    {
+        return Err(DeployError::BoundScopeUnsupported {
+            reason: "the first bound route accepts only an independent deploy:vibe-bin target"
+                .into(),
+        });
+    }
+    let selection = resolve_mechanism(
+        execution.registry,
+        &target.mechanism,
+        target.provider.as_ref(),
+        execution.routes,
+    )?;
+    if !matches!(selection.row().handler(), ExtensionHandler::Builtin { name } if name == BUILTIN_VIBE_BIN_NAME)
+    {
+        return Err(DeployError::BoundScopeUnsupported {
+            reason: "the selected provider is not the builtin vibe-bin handler".into(),
+        });
+    }
+    let pin = selection.row().pin().to_string();
+    let via = selection.via().to_string();
+    let displaced_default = displaced(&selection);
+    let binding = admitted.binding().clone();
+    let home = DeploymentHome::new_bound(
+        execution.state_home,
+        execution.project,
+        execution.package,
+        target_id,
+        &binding,
+    )?;
+    let state_view = DeployStateView::open_bound(admitted.settings())?;
+    for (record, present) in [
+        ("intent", state_view.read_intent(&home)?.is_some()),
+        ("receipt", state_view.read_receipt(&home)?.is_some()),
+        (
+            "lock-resources",
+            state_view.read_lock_resources(&home)?.is_some(),
+        ),
+    ] {
+        if present {
+            return Err(DeployError::BoundPriorGenerationUnavailable {
+                target: target_id.clone(),
+                record,
+            });
+        }
+    }
+    let (artifact, bound_artifact) =
+        artifact::resolve_bound_project_artifact(admitted.project(), target)?;
+    let preplan_provider = BoundVibeBinProvider::for_preplan(admitted.settings(), &bound_artifact);
+    let request = DeployTargetRequest {
+        target,
+        profile: &execution.selection.profile,
+        project_root: execution.project_root,
+        settings_root: execution.settings_root,
+        user_home: execution.user_home,
+        clients: execution.clients,
+        prior_receipt: None,
+        recovery_intent: None,
+        artifact: Some(&artifact),
+        staging: None,
+    };
+    let plan = preplan_provider.plan(&request)?;
+    // The descriptor belongs to the selected builtin; the plan was produced
+    // through its pinned bound adapter. Reuse the incumbent resource laws.
+    let selected = Selected {
+        target,
+        provider: Box::new(VibeBinProvider),
+        pin: pin.clone(),
+        via: selection.via(),
+        displaced: displaced_default.clone(),
+    };
+    preplan::validate_lock_set(&selected, &plan)?;
+    preplan::judge_resources(&[preplan::Participant {
+        selected: &selected,
+        plan: &plan,
+    }])?;
+
+    let current = current_generation()?;
+    let locked = admitted
+        .acquire_destination(current.as_deref())
+        .map_err(|error| DeployError::BoundGrantChanged {
+            target: target_id.clone(),
+            reason: error.to_string(),
+        })?;
+    let state = DeployState::open_bound(locked.settings())?;
+    state.verify_bound_home(locked.settings())?;
+    let _deployment = state.lock_deployment(&home)?;
+    for (record, present) in [
+        ("intent", state.read_intent(&home)?.is_some()),
+        ("receipt", state.read_receipt(&home)?.is_some()),
+        (
+            "lock-resources",
+            state.read_lock_resources(&home)?.is_some(),
+        ),
+        ("inverse", state.read_inverse(&home)?.is_some()),
+    ] {
+        if present {
+            return Err(DeployError::BoundPriorGenerationUnavailable {
+                target: target_id.clone(),
+                record,
+            });
+        }
+    }
+    let _resource_guards = state.lock_destinations(&plan.lock_resources)?;
+    let resources: Vec<String> = plan
+        .resources
+        .iter()
+        .map(|owned| owned.resource.clone())
+        .collect();
+    refuse_foreign_ownership_bound(&state, &home, target_id, &resources)?;
+    let store = BoundVibeBinStore::from_locked_admission(&locked);
+    let provider = BoundVibeBinProvider::for_locked(&store, &bound_artifact);
+    let locked_plan = provider.plan(&request)?;
+    if locked_plan != plan {
+        return Err(DeployError::BoundGrantChanged {
+            target: target_id.clone(),
+            reason: "the bound provider plan changed after the physical lock was acquired".into(),
+        });
+    }
+    let identity = identity_of(execution);
+    let transaction = Transaction {
+        state: &state,
+        home: &home,
+        identity: &identity,
+        provider_pin: &pin,
+        scope: provider.descriptor().scope(),
+        created_at: execution.created_at,
+    };
+    let applied =
+        transaction.apply_bound(&provider, &request, &plan, &locked, current_generation)?;
+    Ok(vec![DeployOutcome {
+        target: target_id.clone(),
+        mechanism: target.mechanism.to_string(),
+        provider: pin,
+        via,
+        displaced_default,
+        generation: applied.generation,
+        reversible: applied.reversible,
+        resources: applied
+            .resources
+            .into_iter()
+            .map(|owned| DeployedResource {
+                resource: owned.resource,
+                post_digest: owned.post_digest,
+            })
+            .collect(),
+        settlement: applied.settlement.as_str().to_owned(),
+    }])
 }
 
 pub(crate) fn execute_prepared_deploy_targets(
@@ -609,3 +805,7 @@ mod bound_tests;
 #[cfg(test)]
 #[path = "deploy/binding_tests.rs"]
 mod binding_tests;
+
+#[cfg(test)]
+#[path = "deploy/bound_effect_tests.rs"]
+mod bound_effect_tests;

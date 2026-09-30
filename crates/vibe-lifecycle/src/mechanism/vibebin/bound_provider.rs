@@ -169,7 +169,7 @@ fn write_error(
     resource: &str,
     error: BoundVibeBinError,
 ) -> DeployProviderError {
-    DeployProviderError::Write {
+    DeployProviderError::BoundWrite {
         target: request.target.id.clone(),
         path: resource.into(),
         reason: error.to_string(),

@@ -182,6 +182,17 @@ pub enum DeployProviderError {
         reason: String,
     },
 
+    /// A pinned bound effect failed. The transaction reports whether a
+    /// publication may have landed; no automatic bound recovery is implied.
+    #[error(
+        "[[deploy.target]] `{target}` could not publish bound resource `{path}`: {reason}; inspect the retained bound operation before a host-admitted retry"
+    )]
+    BoundWrite {
+        target: String,
+        path: String,
+        reason: String,
+    },
+
     /// A staging-requiring write was reached with no staging directory.
     /// Always a defect in this engine: the descriptor declares
     /// `atomic_replacement`, so apply and recover are always offered one.
