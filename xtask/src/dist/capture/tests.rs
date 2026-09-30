@@ -3,16 +3,25 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use sha2::{Digest, Sha256};
+use vibe_publish::publication_effect_plan::CapturedPublicationRemote;
 use vibe_publish::release_manifest::{
     BundleDistributionManifest, DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, DistributionAsset,
     DistributionComponent, DistributionComponentName, DistributionSourceArchive,
     PlatformDistributionFragment, SUPPORTED_DISTRIBUTION_TARGETS,
 };
+use vibe_wire::generated::publication_effect_plan::{
+    PublicationObservedAsset, PublicationObservedRelease, PublicationObservedReleaseAbsent,
+    PublicationObservedReleasePresent, PublicationObservedTag, PublicationObservedTagAbsent,
+    PublicationObservedTagPresent, PublicationPartition, PublicationPartitionReleaseAction,
+};
 use vibe_wire::generated::publication_subject::{
     PublicationSmoke, PublicationSmokeProbe, PublicationSmokeProbeStatus,
 };
 
-use super::{PreparedSubjectCapture, capture_prepared_subject};
+use super::{
+    PreparedSubjectCapture, PublicationVisibilityChoice, PublishedReplacementChoice,
+    capture_prepared_subject, plan_captured_subject,
+};
 use crate::dist::archive::{ArchiveEntry, read_zip, write_stored_zip, write_zip};
 use crate::dist::snapshot;
 
@@ -203,6 +212,38 @@ fn output_bytes(root: &Path) -> BTreeMap<String, Vec<u8>> {
         .collect()
 }
 
+fn absent_remote() -> CapturedPublicationRemote {
+    CapturedPublicationRemote {
+        generation_ref: "fixture-remote-absent".into(),
+        tag: PublicationObservedTag::Absent(Box::new(PublicationObservedTagAbsent {})),
+        release: PublicationObservedRelease::Absent(Box::new(PublicationObservedReleaseAbsent {})),
+    }
+}
+
+fn old_draft_remote(commit: &str, release_id: &str, generation: &str) -> CapturedPublicationRemote {
+    CapturedPublicationRemote {
+        generation_ref: generation.into(),
+        tag: PublicationObservedTag::Present(Box::new(PublicationObservedTagPresent {
+            reference: "refs/tags/v1.1.0".into(),
+            object_kind: "commit".into(),
+            object_sha: commit.into(),
+        })),
+        release: PublicationObservedRelease::Present(Box::new(PublicationObservedReleasePresent {
+            release_id: release_id.into(),
+            generation_ref: generation.into(),
+            tag: "v1.1.0".into(),
+            draft: true,
+            inventory_complete: true,
+            assets: vec![PublicationObservedAsset {
+                asset_id: "7".into(),
+                name: "old-bundle.zip".into(),
+                size_bytes: "3".into(),
+                sha256: sha(b"old"),
+            }],
+        })),
+    }
+}
+
 #[test]
 fn committed_source_and_five_local_assets_join_without_output_writes() {
     let world = World::new();
@@ -224,6 +265,158 @@ fn committed_source_and_five_local_assets_join_without_output_writes() {
     );
     assert_eq!(first.subject.targets.len(), 5);
     assert_eq!(output_bytes(&world.out), before);
+}
+
+#[test]
+fn absent_remote_plan_uses_exact_captured_subject_assets_without_writes() {
+    let world = World::new();
+    let output_before = output_bytes(&world.out);
+    let source_before = std::fs::read(world.repo.path().join("Cargo.lock")).unwrap();
+    let capture = world.capture().unwrap();
+    let subject_digest = capture.subject_digest.clone();
+    let prepared = plan_captured_subject(
+        capture,
+        &absent_remote(),
+        PublicationVisibilityChoice::RetainDraft,
+        PublishedReplacementChoice::Refuse,
+    )
+    .unwrap();
+    assert_eq!(prepared.plan.subject_sha256, subject_digest);
+    assert_eq!(prepared.plan.target.host, "github.com");
+    assert_eq!(prepared.plan.target.owner, "vibevm");
+    assert_eq!(prepared.plan.target.repository, "vibevm");
+    assert_eq!(prepared.plan.partitions.len(), 10);
+    for (index, target) in prepared.capture.subject.targets.iter().enumerate() {
+        let PublicationPartition::PlatformAssets(step) = &prepared.plan.partitions[index + 2]
+        else {
+            panic!("platform partition {index} missing")
+        };
+        assert_eq!(step.target, target.target);
+        for (effect, asset) in
+            step.assets
+                .iter()
+                .zip([&target.bundle, &target.bootstrap, &target.fragment])
+        {
+            assert_eq!(effect.name, asset.name);
+            assert_eq!(effect.desired_sha256, asset.sha256);
+            assert_eq!(effect.desired_size_bytes, asset.size_bytes);
+        }
+    }
+    let PublicationPartition::FinalAssets(final_assets) = &prepared.plan.partitions[8] else {
+        panic!("final asset partition missing")
+    };
+    for (effect, asset) in final_assets.assets.iter().zip(
+        std::iter::once(&prepared.capture.subject.aggregate).chain(
+            prepared
+                .capture
+                .subject
+                .installers
+                .iter()
+                .map(|row| &row.asset),
+        ),
+    ) {
+        assert_eq!(effect.name, asset.name);
+        assert_eq!(effect.desired_sha256, asset.sha256);
+    }
+    assert_eq!(output_bytes(&world.out), output_before);
+    assert_eq!(
+        std::fs::read(world.repo.path().join("Cargo.lock")).unwrap(),
+        source_before
+    );
+}
+
+#[test]
+fn old_draft_remote_identity_and_visibility_change_pure_plan_digest() {
+    let world = World::new();
+    let output_before = output_bytes(&world.out);
+    let capture = world.capture().unwrap();
+    let commit = capture.identity.commit.clone();
+    let first = plan_captured_subject(
+        capture,
+        &old_draft_remote(&commit, "41", "generation-a"),
+        PublicationVisibilityChoice::RetainDraft,
+        PublishedReplacementChoice::Refuse,
+    )
+    .unwrap();
+    let PublicationObservedRelease::Present(observed) = &first.plan.observed_release else {
+        panic!("complete old draft was not retained")
+    };
+    assert_eq!(observed.release_id, "41");
+    let PublicationPartition::Release(release) = &first.plan.partitions[1] else {
+        panic!("release partition missing")
+    };
+    assert_eq!(release.action, PublicationPartitionReleaseAction::Replace);
+    let different_id = plan_captured_subject(
+        world.capture().unwrap(),
+        &old_draft_remote(&commit, "42", "generation-a"),
+        PublicationVisibilityChoice::RetainDraft,
+        PublishedReplacementChoice::Refuse,
+    )
+    .unwrap();
+    let different_generation = plan_captured_subject(
+        world.capture().unwrap(),
+        &old_draft_remote(&commit, "41", "generation-b"),
+        PublicationVisibilityChoice::RetainDraft,
+        PublishedReplacementChoice::Refuse,
+    )
+    .unwrap();
+    let different_visibility = plan_captured_subject(
+        world.capture().unwrap(),
+        &old_draft_remote(&commit, "41", "generation-a"),
+        PublicationVisibilityChoice::Publish,
+        PublishedReplacementChoice::Refuse,
+    )
+    .unwrap();
+    assert_ne!(first.plan_digest, different_id.plan_digest);
+    assert_ne!(first.plan_digest, different_generation.plan_digest);
+    assert_ne!(first.plan_digest, different_visibility.plan_digest);
+    for changed in [&different_id, &different_generation, &different_visibility] {
+        assert_eq!(
+            first.capture.identity.commit,
+            changed.capture.identity.commit
+        );
+        assert_eq!(first.capture.identity.tree, changed.capture.identity.tree);
+    }
+    assert_eq!(output_bytes(&world.out), output_before);
+}
+
+#[test]
+fn published_mutable_release_requires_explicit_plan_replacement_choice() {
+    let world = World::new();
+    let output_before = output_bytes(&world.out);
+    let capture = world.capture().unwrap();
+    let mut remote = old_draft_remote(&capture.identity.commit, "51", "published-generation");
+    let PublicationObservedRelease::Present(release) = &mut remote.release else {
+        unreachable!()
+    };
+    release.draft = false;
+    assert!(
+        plan_captured_subject(
+            capture,
+            &remote,
+            PublicationVisibilityChoice::RetainDraft,
+            PublishedReplacementChoice::Refuse,
+        )
+        .is_err()
+    );
+    let selected = plan_captured_subject(
+        world.capture().unwrap(),
+        &remote,
+        PublicationVisibilityChoice::RetainDraft,
+        PublishedReplacementChoice::PlanReplacement,
+    )
+    .unwrap();
+    assert_eq!(selected.capture.subject.version, "1.1.0");
+    let PublicationObservedRelease::Present(observed) = &selected.plan.observed_release else {
+        panic!("selected published release identity missing")
+    };
+    assert_eq!(observed.release_id, "51");
+    assert!(!observed.draft);
+    let PublicationPartition::Release(step) = &selected.plan.partitions[1] else {
+        panic!("replacement partition missing")
+    };
+    assert_eq!(step.action, PublicationPartitionReleaseAction::Replace);
+    assert_eq!(output_bytes(&world.out), output_before);
 }
 
 #[test]

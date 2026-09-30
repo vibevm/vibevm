@@ -11,8 +11,13 @@ use semver::Version;
 use vibe_publish::publication_capture::{
     CommittedInputBytes, capture_distribution, subject_from_captured,
 };
+use vibe_publish::publication_effect_plan::{
+    CapturedPublicationRemote, PublicationEffectPlanExpectations, plan_from_captured_remote,
+};
+use vibe_publish::publication_subject::PublicationSubjectExpectations;
 use vibe_publish::sha256_digest;
 use vibe_safefs::{Project, StableFileState};
+use vibe_wire::generated::publication_effect_plan::PublicationEffectPlan;
 use vibe_wire::generated::publication_subject::{PublicationSmoke, PublicationSubject};
 
 use super::build;
@@ -28,6 +33,65 @@ pub(crate) struct PreparedSubjectCapture {
     pub(crate) subject: PublicationSubject,
     pub(crate) subject_digest: String,
     pub(crate) aggregate_bytes: Vec<u8>,
+}
+
+/// Requested visibility of a future release. This is a plan input, never
+/// authorization to change a remote draft or its latest-release posture.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum PublicationVisibilityChoice {
+    RetainDraft,
+    Publish,
+}
+
+/// Owner-selected permission to *describe* replacement of an already
+/// published mutable 1.1.0 release. This is plan data, not approval to
+/// delete that release or perform any remote effect.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum PublishedReplacementChoice {
+    Refuse,
+    PlanReplacement,
+}
+
+/// One inspectable local subject paired with an exact pure remote effect
+/// plan. Its digest comparison values do not admit any remote mutation.
+pub(crate) struct PreparedPublicationComposition {
+    pub(crate) capture: PreparedSubjectCapture,
+    pub(crate) plan: PublicationEffectPlan,
+    pub(crate) plan_digest: String,
+}
+
+/// Bind an owner-supplied typed remote observation to already captured local
+/// bytes. The destination is fixed to vibevm/vibevm on github.com; this does
+/// not load credentials, reobserve a host, approve effects or contact it.
+pub(crate) fn plan_captured_subject(
+    capture: PreparedSubjectCapture,
+    remote: &CapturedPublicationRemote,
+    visibility: PublicationVisibilityChoice,
+    replace_published: PublishedReplacementChoice,
+) -> Result<PreparedPublicationComposition> {
+    let expected = PublicationEffectPlanExpectations {
+        subject: PublicationSubjectExpectations {
+            version: "1.1.0",
+            repository: "vibevm/vibevm",
+            smoke_policy_id: "distribution-smoke/e1",
+            smoke_policy_epoch: 1,
+        },
+        host: "github.com",
+        owner: "vibevm",
+        repository: "vibevm",
+        publish: visibility == PublicationVisibilityChoice::Publish,
+        allow_replace_published: replace_published == PublishedReplacementChoice::PlanReplacement,
+    };
+    let prepared = plan_from_captured_remote(&capture.subject, &expected, remote)
+        .context("constructing inspectable remote publication partitions")?;
+    if prepared.plan.subject_sha256 != capture.subject_digest {
+        bail!("pure publication plan differs from captured subject digest");
+    }
+    Ok(PreparedPublicationComposition {
+        capture,
+        plan: prepared.plan,
+        plan_digest: prepared.digest,
+    })
 }
 
 /// Capture from a fully committed HEAD and one held output directory.
