@@ -57,6 +57,10 @@ mod publication;
 mod recovery;
 
 #[cfg(test)]
+#[path = "tests/reservation_identity.rs"]
+mod reservation_identity;
+
+#[cfg(test)]
 #[path = "tests/run_journal.rs"]
 mod run_journal;
 

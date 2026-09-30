@@ -131,6 +131,64 @@ pub fn select_run_identity(
     current_request: bool,
     fresh_started: String,
 ) -> Result<RunIdentity, LifecycleStateError> {
+    select_run_identity_with(
+        lease,
+        allocation_root,
+        requested,
+        chain,
+        selected,
+        agent_mode,
+        force,
+        current_request,
+        fresh_started,
+        crate::process::allocate_run_id,
+    )
+}
+
+/// Select the same leased identity as [`select_run_identity`] without creating
+/// a scratch run directory. A fresh identity is only a CSPRNG proposal; its
+/// caller must reserve it and establish the matching journal before any effect.
+/// An adopted parked identity retains its original run ID and start time.
+#[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION")]
+pub fn select_run_identity_for_reservation(
+    lease: &crate::lease::LifecycleLease,
+    allocation_root: &Path,
+    requested: &str,
+    chain: &[String],
+    selected: &str,
+    agent_mode: RunAgentMode,
+    force: bool,
+    current_request: bool,
+    fresh_started: String,
+) -> Result<RunIdentity, LifecycleStateError> {
+    select_run_identity_with(
+        lease,
+        allocation_root,
+        requested,
+        chain,
+        selected,
+        agent_mode,
+        force,
+        current_request,
+        fresh_started,
+        crate::process::propose_run_id,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn select_run_identity_with(
+    lease: &crate::lease::LifecycleLease,
+    allocation_root: &Path,
+    requested: &str,
+    chain: &[String],
+    selected: &str,
+    agent_mode: RunAgentMode,
+    force: bool,
+    current_request: bool,
+    fresh_started: String,
+    fresh_id: impl FnOnce(&Path) -> Result<String, crate::process::ScratchError>,
+) -> Result<RunIdentity, LifecycleStateError> {
     let prior =
         io::read_prior(lease.project(), &io::state_path(lease.root()))?.map(|prior| prior.state);
     let parked = prior.as_ref().is_some_and(|state| {
@@ -208,7 +266,7 @@ pub fn select_run_identity(
             .flatten()
     });
     Ok(RunIdentity {
-        run_id: crate::process::allocate_run_id(allocation_root)
+        run_id: fresh_id(allocation_root)
             .map_err(|source| allocate_failed(allocation_root, source))?,
         started: fresh_started,
         adopted: false,
