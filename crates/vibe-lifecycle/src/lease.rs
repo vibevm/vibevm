@@ -233,6 +233,14 @@ impl LifecycleLease {
     pub(crate) fn project(&self) -> &Project {
         &self.project
     }
+
+    /// Borrow the same pinned project for the publication owner's C.1
+    /// operation journal. The publication owner confines its records under
+    /// `.vibe/publication-operations`; this does not mint another lease or
+    /// grant a remote effect by itself.
+    pub fn publication_journal_project(&self) -> &Project {
+        &self.project
+    }
 }
 
 #[cfg(test)]
