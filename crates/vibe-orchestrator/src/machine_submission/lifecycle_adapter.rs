@@ -129,6 +129,7 @@ pub(crate) fn submit_validate_lifecycle(
         selected_root: &selected_root,
         selected_node: &selected,
         witness: &witness,
+        workspace_witness: &witness,
         requested: Phase::Validate,
         agent_mode: &request.agent_mode,
         trace_flag: false,

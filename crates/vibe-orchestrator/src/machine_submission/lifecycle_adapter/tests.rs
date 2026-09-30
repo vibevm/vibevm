@@ -109,6 +109,7 @@ fn pending_reservation_precedes_header_and_never_allocates_scratch() {
         selected_root: dir.path(),
         selected_node: ".",
         witness: &witness,
+        workspace_witness: &witness,
         requested: Phase::Validate,
         agent_mode: &RunAgentMode::Cli,
         trace_flag: false,
