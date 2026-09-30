@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "inventory_owner": "producer-a",
+  "target": {
+    "role": "produced_tool_runtime",
+    "os": "linux",
+    "architecture": "x86_64",
+    "abi": "gnu",
+    "libc": "glibc"
+  },
+  "path_policy": "linux-bytes",
+  "entries": [
+    {
+      "path_components_hex": [
+        "757372",
+        "62696e",
+        "617070"
+      ],
+      "kind": "regular_file",
+      "producing_dependency_role": "runtime:app",
+      "content_digest_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "link_target_bytes_hex": null,
+      "mode": 493,
+      "principal": {
+        "kind": "linux_uid_gid",
+        "uid": 0,
+        "gid": 0
+      },
+      "metadata_status": "supported",
+      "metadata_reason": null
+    }
+  ],
+  "completeness": "complete",
+  "reason": null
+}

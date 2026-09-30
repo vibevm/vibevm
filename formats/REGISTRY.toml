@@ -1354,3 +1354,60 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-session-frame/e1"
 sunset = "none"
+
+# Environment recipe and produced-generation values (PROP-076). Shape readers
+# are strict; producer-owned semantic proof and target admission are separate.
+
+[format.environment-definition]
+epoch = 1
+schema = "schemas/environment/e1/definition.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/environment-definition/e1"
+sunset = "none"
+
+[format.environment-exact-lock]
+epoch = 1
+schema = "schemas/environment/e1/exact_lock.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/environment-exact-lock/e1"
+sunset = "none"
+
+[format.environment-realization-request]
+epoch = 1
+schema = "schemas/environment/e1/realization_request.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/environment-realization-request/e1"
+sunset = "none"
+
+[format.environment-payload-inventory]
+epoch = 1
+schema = "schemas/environment/e1/payload_inventory.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/environment-payload-inventory/e1"
+sunset = "none"
+
+[format.environment-generation-receipt]
+epoch = 1
+schema = "schemas/environment/e1/generation_receipt.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/environment-generation-receipt/e1"
+sunset = "none"
+
+[format.environment-realization-error]
+epoch = 1
+schema = "schemas/environment/e1/realization_error.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/environment-realization-error/e1"
+sunset = "none"

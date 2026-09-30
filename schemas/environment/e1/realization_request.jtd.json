@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "description": "Requested realization has distinct executor and payload-target roles; physical admission remains outside this value.",
+    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-FORMAT-EPOCHS", "r": 1},
+    "rustOptions": {"package": "vibe_wire::environment::e1::realization_request"}
+  },
+  "properties": {
+    "schema": {"type": "uint8"}, "request_owner": {"type": "string"},
+    "request_id": {"type": "string"}, "lock_owner": {"type": "string"},
+    "lock_digest_sha256": {"type": "string"}, "recipe_epoch": {"type": "uint16"},
+    "executor": {"ref": "target"}, "payload_target": {"ref": "target"},
+    "emitted_code_target": {"ref": "target", "nullable": true},
+    "target_mode": {"enum": ["workspace", "user_profile", "offline_rootfs", "image", "live_system"], "metadata": {"x-vocabulary": "closed"}},
+    "instance_ref": {"type": "string"}, "admission_ref": {"type": "string"},
+    "output_prefix_ref": {"type": "string", "nullable": true}
+  },
+  "definitions": {
+    "target": {"properties": {
+      "role": {"enum": ["executor", "produced_tool_runtime", "emitted_code_target"], "metadata": {"x-vocabulary": "closed"}},
+      "os": {"type": "string"}, "architecture": {"type": "string"},
+      "abi": {"type": "string", "nullable": true}, "libc": {"type": "string", "nullable": true}
+    }}
+  }
+}

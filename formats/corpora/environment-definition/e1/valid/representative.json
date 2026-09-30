@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "definition_owner": "owner-a",
+  "definition_ref": "definition-a",
+  "package_roots": [
+    "root-a"
+  ],
+  "feature_choices": [
+    {
+      "name": "feature-a",
+      "value": "enabled"
+    }
+  ],
+  "target_constraints": {
+    "role": "produced_tool_runtime",
+    "os": "linux",
+    "architecture": "x86_64",
+    "abi": "gnu",
+    "libc": "glibc"
+  },
+  "tool_exports": [],
+  "service_exports": [],
+  "runtime_bindings": []
+}

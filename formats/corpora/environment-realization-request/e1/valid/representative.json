@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "request_owner": "client-a",
+  "request_id": "request-a",
+  "lock_owner": "resolver-a",
+  "lock_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "recipe_epoch": 1,
+  "executor": {
+    "role": "executor",
+    "os": "windows",
+    "architecture": "x86_64",
+    "abi": "msvc",
+    "libc": null
+  },
+  "payload_target": {
+    "role": "produced_tool_runtime",
+    "os": "linux",
+    "architecture": "x86_64",
+    "abi": "gnu",
+    "libc": "glibc"
+  },
+  "emitted_code_target": null,
+  "target_mode": "offline_rootfs",
+  "instance_ref": "instance-a",
+  "admission_ref": "admission-a",
+  "output_prefix_ref": null
+}
