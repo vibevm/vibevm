@@ -15,6 +15,94 @@ fn project() -> tempfile::TempDir {
     dir
 }
 
+fn script_project() -> tempfile::TempDir {
+    let dir = project();
+    std::fs::write(dir.path().join("vibe.toml"), ONE_SCRIPT_VALIDATE_MANIFEST).unwrap();
+    std::fs::write(dir.path().join("run.sh"), b"echo one\n").unwrap();
+    dir
+}
+
+#[test]
+fn one_script_preflight_binds_selected_handler_and_exact_source_without_effect() {
+    let dir = script_project();
+    let admitted =
+        admit_one_script_validate_fixture(dir.path(), &request(), TargetOs::Linux).unwrap();
+    assert_eq!(admitted.source.script_relative, "run.sh");
+    assert_eq!(admitted.source.source.bytes, b"echo one\n");
+    assert!(admitted.execution_key.contains("once"));
+    assert!(!admitted.provider.is_empty());
+    let request_value: serde_json::Value =
+        serde_json::from_slice(&admitted.canonical_request).unwrap();
+    let plan_value: serde_json::Value = serde_json::from_slice(&admitted.canonical_plan).unwrap();
+    assert_eq!(plan_value["format"], "vibevm.lifecycle.pre-effect-plan/4");
+    assert_eq!(request_value["script_source"], plan_value["script_source"]);
+    assert!(!dir.path().join(".vibe/lifecycle.toml").exists());
+    assert!(!dir.path().join(".vibe/machine-submissions.json").exists());
+    assert!(!dir.path().join(".vibe/lifecycle-outcomes").exists());
+}
+
+#[test]
+fn one_script_preflight_refuses_changed_source_or_second_provider() {
+    let dir = script_project();
+    let first = admit_one_script_validate_fixture(dir.path(), &request(), TargetOs::Linux).unwrap();
+    std::fs::write(dir.path().join("run.sh"), b"echo two\n").unwrap();
+    assert!(vibe_lifecycle::process::recheck_script_source_witness(&first.source).is_err());
+    let second =
+        admit_one_script_validate_fixture(dir.path(), &request(), TargetOs::Linux).unwrap();
+    assert_ne!(first.canonical_request, second.canonical_request);
+    assert_ne!(first.canonical_plan, second.canonical_plan);
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let lease = LifecycleLease::acquire(dir.path()).unwrap();
+    let run_id = vibe_lifecycle::process::propose_run_id(dir.path()).unwrap();
+    SubmissionReservations::reserve(
+        &lease,
+        &namespace,
+        &scope,
+        "script",
+        &first.canonical_request,
+        &first.canonical_plan,
+        &run_id,
+    )
+    .unwrap();
+    let before = std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap();
+    let conflict = SubmissionReservations::inspect_existing_request(
+        &lease,
+        &namespace,
+        &scope,
+        "script",
+        &second.canonical_request,
+    )
+    .unwrap_err();
+    assert!(matches!(
+        conflict,
+        vibe_lifecycle::SubmissionError::KeyConflict
+    ));
+    assert_eq!(
+        std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap(),
+        before
+    );
+    std::fs::write(dir.path().join("vibe.toml"), format!("{ONE_SCRIPT_VALIDATE_MANIFEST}[[extension]]\nid='extra'\npoint='phase:validate'\nhandler={{kind='script',base='other'}}\n")).unwrap();
+    assert!(admit_one_script_validate_fixture(dir.path(), &request(), TargetOs::Linux).is_err());
+}
+
+#[cfg(unix)]
+#[test]
+fn one_script_preflight_refuses_symlinked_script_before_reservation() {
+    use std::os::unix::fs::symlink;
+
+    let dir = script_project();
+    std::fs::rename(dir.path().join("run.sh"), dir.path().join("actual.sh")).unwrap();
+    symlink("actual.sh", dir.path().join("run.sh")).unwrap();
+    let error = admit_one_script_validate_fixture(dir.path(), &request(), TargetOs::Linux)
+        .err()
+        .expect("symlinked script must refuse")
+        .to_string();
+    assert!(error.contains("script"), "{error}");
+    assert!(!dir.path().join(".vibe/machine-submissions.json").exists());
+    assert!(!dir.path().join(".vibe/lifecycle.toml").exists());
+}
+
 fn scope() -> SubmissionScope {
     SubmissionScope {
         context: "context".into(),
@@ -431,6 +519,7 @@ fn pending_reservation_attaches_read_only_without_header_or_scratch() {
         witness: &witness,
         workspace_witness: &witness,
         package_source: None,
+        script_source: None,
         requested: Phase::Validate,
         agent_mode: &RunAgentMode::Cli,
         trace_flag: false,
