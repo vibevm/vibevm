@@ -23,5 +23,6 @@ Artifact SHA-256:
 - fragment JSON: `37a782366c2023d2f95c1b84e5465946015ef5a4a38159f4effc256d2e825f78`
 
 This is one native bundle proof, not a five-target apply-ready subject. Linux
-musl, Windows x64 and both macOS targets remain unrun on their native hosts.
+musl was proved separately in `distribution-b1-native-linux-musl.md`; Windows
+x64 and both macOS targets remain unrun on their native hosts.
 No release host, public Git or image registry was touched.
