@@ -209,7 +209,10 @@
         "crates/vibe-workspace/src/install/bootgen.rs",
         "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
         "crates/vibe-workspace/src/install/bootgen/hybrid_emit/",
+        "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+        "crates/vibe-workspace/src/install/bootgen/analyze.rs",
         "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs",
+        "crates/vibe-workspace/src/install/bootgen/replay_prepare/",
         "crates/vibe-spec/src/resolver/",
         "crates/vibe-spec/tests/resolve.rs",
         "crates/vibe-specdoc/Cargo.toml",
@@ -261,6 +264,7 @@
         "The validated slot record must be parsed from the same bounded no-follow bytes captured by the descriptor map builder. A narrow `slot_record` byte-reader extraction is in scope; do not duplicate its schema/semantic validator or change the slot-record wire format merely for this host join.",
         "The install-only boot renderer must carry exact selected slot version/source_hash/spec_format from ResolvedDep through bootgen/hybrid_emit into a descriptor-map-aware FileResolver. A descriptor-owned row with absent selected source_hash refuses; deriving the expected hash from the slot record itself is circular. Public standalone legacy rendering remains unchanged until it has an independent selected witness.",
         "A focused test under the hybrid emitter's bounded sibling module must traverse the actual `emit_package_units` selected-slot carrier rather than only calling the descriptor-aware static renderer directly; pin the absent-hash refusal and no-descriptor byte-compatible route.",
+        "Native-managed, explicit custom backend and sealed replay boot readers also receive selected witnesses from their install owners: resolution is available at native_managed/hybrid_emit, and analyze has independent lock-derived resolution. Thread exact witness sets without inferring from slot metadata; replay candidates lacking a selected hash refuse descriptor-owned reads. The native_managed and analyze files are included for these carrier edges; standalone public render remains legacy until independently bound.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
       ]
