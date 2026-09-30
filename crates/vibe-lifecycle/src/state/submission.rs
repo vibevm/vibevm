@@ -75,6 +75,20 @@ pub enum JournalAdmission {
     Ready,
 }
 
+/// Read-only answer for a previously submitted request. It is correlation
+/// evidence only: neither variant grants effect dispatch or recreates a plan.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ExistingSubmissionInspection {
+    Absent,
+    RetiredUnreserved,
+    Reserved {
+        domain_run_id: String,
+        journal_admission: JournalAdmission,
+        reservation_ref: Option<String>,
+        retired: bool,
+    },
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum SubmissionError {
     #[error("invalid submission {0}")]
@@ -247,6 +261,79 @@ fn publish(lease: &LifecycleLease, index: &Index) -> Result<(), SubmissionError>
 pub struct SubmissionReservations;
 
 impl SubmissionReservations {
+    /// Find an existing reservation by its original canonical request before
+    /// inspecting current product files. The stored plan digest is used only
+    /// inside the reservation ref; current post-effect files cannot become a
+    /// replacement plan. This never mutates the index or admits an effect.
+    pub fn inspect_existing_request(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        canonical_request: &[u8],
+    ) -> Result<ExistingSubmissionInspection, SubmissionError> {
+        Self::inspect_existing_request_at(
+            lease,
+            namespace,
+            scope,
+            now_ms()?,
+            key,
+            canonical_request,
+        )
+    }
+
+    fn inspect_existing_request_at(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        now_ms: u64,
+        key: &str,
+        canonical_request: &[u8],
+    ) -> Result<ExistingSubmissionInspection, SubmissionError> {
+        if !valid_field(key) || canonical_request.len() > CAP {
+            return Err(SubmissionError::InvalidInput(
+                "key or request payload bound",
+            ));
+        }
+        let index = read(lease)?;
+        let owner = index
+            .namespaces
+            .get(namespace.id())
+            .ok_or(SubmissionError::UnknownNamespace)?;
+        if owner.context != scope.context
+            || owner.target != scope.target
+            || owner.principal != scope.principal
+        {
+            return Err(SubmissionError::ForeignScope);
+        }
+        if now_ms < owner.observed_at_ms {
+            return Err(SubmissionError::InvalidInput("host clock rolled back"));
+        }
+        let retired = owner.retired || now_ms >= owner.expires_at_ms;
+        let Some(row) = owner.keys.get(key) else {
+            return Ok(if retired {
+                ExistingSubmissionInspection::RetiredUnreserved
+            } else {
+                ExistingSubmissionInspection::Absent
+            });
+        };
+        if row.request_sha256 != digest(canonical_request) {
+            return Err(SubmissionError::KeyConflict);
+        }
+        Ok(ExistingSubmissionInspection::Reserved {
+            domain_run_id: row.domain_run_id.clone(),
+            journal_admission: if row.journal_ready {
+                JournalAdmission::Ready
+            } else {
+                JournalAdmission::Pending
+            },
+            reservation_ref: row
+                .journal_ready
+                .then(|| reservation_ref_of(namespace.id(), owner, key, row)),
+            retired,
+        })
+    }
+
     /// Issue a finite namespace after a host has authenticated its scope.
     /// The lifecycle owner reads host wall time and caps the requested TTL.
     /// A wall-clock jump between unobserved calls cannot be proven away;
@@ -480,24 +567,7 @@ impl SubmissionReservations {
             .namespaces
             .get(namespace.id())
             .ok_or(SubmissionError::UnknownNamespace)?;
-        let mut hash = Sha256::new();
-        for (tag, value) in [
-            ("domain", "vibevm/submission-reservation-ref/e1"),
-            ("namespace", namespace.id()),
-            ("context", owner.context.as_str()),
-            ("target", owner.target.as_str()),
-            ("principal", owner.principal.as_str()),
-            ("key", key),
-            ("request_sha256", reserved.request_sha256.as_str()),
-            ("plan_sha256", reserved.plan_sha256.as_str()),
-            ("domain_run_id", reserved.domain_run_id.as_str()),
-        ] {
-            hash.update((tag.len() as u16).to_be_bytes());
-            hash.update(tag.as_bytes());
-            hash.update((value.len() as u64).to_be_bytes());
-            hash.update(value.as_bytes());
-        }
-        Ok(format!("sha256:{:x}", hash.finalize()))
+        Ok(reservation_ref_of(namespace.id(), owner, key, reserved))
     }
 
     /// Record that the owner has re-read and proven the exact durable domain
@@ -552,6 +622,32 @@ impl SubmissionReservations {
     }
 }
 
+fn reservation_ref_of(
+    namespace_id: &str,
+    owner: &NamespaceRow,
+    key: &str,
+    reserved: &ReservationRow,
+) -> String {
+    let mut hash = Sha256::new();
+    for (tag, value) in [
+        ("domain", "vibevm/submission-reservation-ref/e1"),
+        ("namespace", namespace_id),
+        ("context", owner.context.as_str()),
+        ("target", owner.target.as_str()),
+        ("principal", owner.principal.as_str()),
+        ("key", key),
+        ("request_sha256", reserved.request_sha256.as_str()),
+        ("plan_sha256", reserved.plan_sha256.as_str()),
+        ("domain_run_id", reserved.domain_run_id.as_str()),
+    ] {
+        hash.update((tag.len() as u16).to_be_bytes());
+        hash.update(tag.as_bytes());
+        hash.update((value.len() as u64).to_be_bytes());
+        hash.update(value.as_bytes());
+    }
+    format!("sha256:{:x}", hash.finalize())
+}
+
 fn reservation<'a>(
     index: &'a Index,
     namespace: &SubmissionNamespace,
@@ -589,6 +685,108 @@ mod tests {
             target: "target".into(),
             principal: "principal".into(),
         }
+    }
+
+    #[test]
+    fn existing_request_inspection_binds_request_and_never_mutates_index() {
+        let root = tempfile::tempdir().unwrap();
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let namespace = SubmissionReservations::issue_at(&lease, &scope(), 10, 10).unwrap();
+        assert_eq!(
+            SubmissionReservations::inspect_existing_request_at(
+                &lease,
+                &namespace,
+                &scope(),
+                11,
+                "key",
+                b"request"
+            )
+            .unwrap(),
+            ExistingSubmissionInspection::Absent
+        );
+        SubmissionReservations::reserve_at(
+            &lease,
+            &namespace,
+            &scope(),
+            11,
+            "key",
+            b"request",
+            b"original plan",
+            "run-a",
+        )
+        .unwrap();
+        let before = std::fs::read(root.path().join(FILE)).unwrap();
+        assert!(matches!(
+            SubmissionReservations::inspect_existing_request_at(
+                &lease, &namespace, &scope(), 12, "key", b"request"
+            )
+            .unwrap(),
+            ExistingSubmissionInspection::Reserved {
+                domain_run_id,
+                journal_admission: JournalAdmission::Pending,
+                reservation_ref: None,
+                retired: false,
+            } if domain_run_id == "run-a"
+        ));
+        assert!(matches!(
+            SubmissionReservations::inspect_existing_request_at(
+                &lease,
+                &namespace,
+                &scope(),
+                12,
+                "key",
+                b"changed"
+            ),
+            Err(SubmissionError::KeyConflict)
+        ));
+        let foreign = SubmissionScope {
+            principal: "other".into(),
+            ..scope()
+        };
+        assert!(matches!(
+            SubmissionReservations::inspect_existing_request_at(
+                &lease, &namespace, &foreign, 12, "key", b"request"
+            ),
+            Err(SubmissionError::ForeignScope)
+        ));
+        assert_eq!(std::fs::read(root.path().join(FILE)).unwrap(), before);
+
+        SubmissionReservations::mark_journal_ready(&lease, &namespace, &scope(), "key", "run-a")
+            .unwrap();
+        let ready_before = std::fs::read(root.path().join(FILE)).unwrap();
+        let expected_ref =
+            SubmissionReservations::reservation_ref(&lease, &namespace, &scope(), "key", "run-a")
+                .unwrap();
+        assert_eq!(
+            SubmissionReservations::inspect_existing_request_at(
+                &lease,
+                &namespace,
+                &scope(),
+                21,
+                "key",
+                b"request"
+            )
+            .unwrap(),
+            ExistingSubmissionInspection::Reserved {
+                domain_run_id: "run-a".into(),
+                journal_admission: JournalAdmission::Ready,
+                reservation_ref: Some(expected_ref),
+                retired: true,
+            }
+        );
+        assert_eq!(
+            SubmissionReservations::inspect_existing_request_at(
+                &lease,
+                &namespace,
+                &scope(),
+                21,
+                "new-key",
+                b"request"
+            )
+            .unwrap(),
+            ExistingSubmissionInspection::RetiredUnreserved
+        );
+        assert_eq!(std::fs::read(root.path().join(FILE)).unwrap(), ready_before);
     }
 
     #[test]

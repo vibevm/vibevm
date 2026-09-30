@@ -9,12 +9,13 @@ use std::sync::Arc;
 
 use anyhow::{Context, Result, bail, ensure};
 use vibe_core::manifest::TargetOs;
+use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::process::{SelectedManifestLockWitness, recheck_selected_manifest_lock};
 use vibe_lifecycle::{
-    AgentBackend, JournalAdmission, LifecycleLease, LifecycleOutcomeInspection,
-    LifecycleOutcomeRecoveryReason, LifecycleReportPayload, LifecycleRunJournalObservation,
-    LifecycleStateStore, Phase, RunIdentity, RunMetadata, SubmissionNamespace,
-    SubmissionReservations, SubmissionScope, create_lifecycle_outcome_marker,
+    AgentBackend, ExistingSubmissionInspection, JournalAdmission, LifecycleLease,
+    LifecycleOutcomeInspection, LifecycleOutcomeRecoveryReason, LifecycleReportPayload,
+    LifecycleRunJournalObservation, LifecycleStateStore, Phase, RunIdentity, RunMetadata,
+    SubmissionNamespace, SubmissionReservations, SubmissionScope, create_lifecycle_outcome_marker,
     inspect_reserved_lifecycle_run, inspect_retained_lifecycle_outcome,
     publish_install_entered_stage, retain_lifecycle_outcome, select_run_identity_for_reservation,
 };
@@ -27,13 +28,24 @@ use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
 use vibe_wire::generated::shared::Timestamp;
 
 use super::lifecycle_plan::{LifecyclePreEffectPlanInput, canonical_lifecycle_pre_effect_plan};
-use super::{JournalState, SubmissionJournal, SubmissionOutcome, submit};
+use super::{JournalState, SubmissionFailure, SubmissionJournal, SubmissionOutcome, submit};
 use crate::RitualPlan;
 
-// The only command this internal entry point can express. Effective posture
-// and source identity belong to the separately canonicalized owner plan.
-const VALIDATE_REQUEST: &[u8] = b"{\"operation\":\"lifecycle.validate\",\"schema\":1}";
-const EMPTY_INSTALL_REQUEST: &[u8] = b"{\"operation\":\"lifecycle.install-empty\",\"schema\":1}";
+// The target OS changes lifecycle behavior and belongs in this fixed
+// request. `observed_at` is execution evidence: retries retain the first
+// report timestamp instead of treating a fresh clock reading as new intent.
+const VALIDATE_LINUX: &[u8] =
+    b"{\"operation\":\"lifecycle.validate\",\"schema\":1,\"target_os\":\"linux\"}";
+const VALIDATE_MACOS: &[u8] =
+    b"{\"operation\":\"lifecycle.validate\",\"schema\":1,\"target_os\":\"macos\"}";
+const VALIDATE_WINDOWS: &[u8] =
+    b"{\"operation\":\"lifecycle.validate\",\"schema\":1,\"target_os\":\"windows\"}";
+const EMPTY_INSTALL_LINUX: &[u8] =
+    b"{\"operation\":\"lifecycle.install-empty\",\"schema\":1,\"target_os\":\"linux\"}";
+const EMPTY_INSTALL_MACOS: &[u8] =
+    b"{\"operation\":\"lifecycle.install-empty\",\"schema\":1,\"target_os\":\"macos\"}";
+const EMPTY_INSTALL_WINDOWS: &[u8] =
+    b"{\"operation\":\"lifecycle.install-empty\",\"schema\":1,\"target_os\":\"windows\"}";
 use crate::command::{
     DefaultLifecyclePorts, DefaultLifecycleRequest, LeasedDefaultLifecycle,
     lease_default_lifecycle, prepare_default_lifecycle_with_identity,
@@ -108,6 +120,13 @@ pub(super) fn submit_protected_lifecycle(
         "protected slice refuses force and trace"
     );
     ensure!(
+        request.assume_yes
+            && !request.policy.offline
+            && request.policy.slot_integrity == SlotIntegrity::TrustPresence
+            && request.policy.spec_format_default.is_none(),
+        "protected fixed request refuses variable confirmation or install policy"
+    );
+    ensure!(
         request.install_inputs.packages.is_empty()
             && request.install_inputs.features.is_empty()
             && !request.install_inputs.no_default_features
@@ -118,6 +137,15 @@ pub(super) fn submit_protected_lifecycle(
     );
     let leased = lease_default_lifecycle(path)?;
     let lease = leased.retain_lease();
+    if let Some(attached) = attach_existing_lifecycle(
+        &lease,
+        namespace,
+        scope,
+        key,
+        request_bytes(phase, target_os),
+    )? {
+        return Ok(attached);
+    }
     let selected_root = leased.selected_root().to_path_buf();
     let (snapshot, witness) = SelectedManifest::read_witnessed(&selected_root)?;
     let selection = snapshot.prepare();
@@ -195,17 +223,109 @@ pub(super) fn submit_protected_lifecycle(
         namespace,
         scope,
         key,
-        request_bytes(phase),
+        request_bytes(phase, target_os),
         &plan,
         &mut journal,
     )
     .map_err(anyhow::Error::new)
 }
 
-fn request_bytes(phase: Phase) -> &'static [u8] {
-    match phase {
-        Phase::Validate => VALIDATE_REQUEST,
-        Phase::Install => EMPTY_INSTALL_REQUEST,
+/// Read-only existing-key route before any post-effect manifest/lock snapshot.
+/// It returns only the original retained run's outcome; it never treats the
+/// current files as that run's pre-effect plan or grants another dispatch.
+fn attach_existing_lifecycle(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    canonical_request: &[u8],
+) -> Result<Option<SubmissionOutcome<RetainedLifecycleResult>>> {
+    let inspected = SubmissionReservations::inspect_existing_request(
+        lease,
+        namespace,
+        scope,
+        key,
+        canonical_request,
+    )?;
+    match inspected {
+        ExistingSubmissionInspection::Absent => Ok(None),
+        ExistingSubmissionInspection::RetiredUnreserved => {
+            Ok(Some(SubmissionOutcome::Retired { run_id: None }))
+        }
+        ExistingSubmissionInspection::Reserved {
+            domain_run_id,
+            journal_admission: JournalAdmission::Pending,
+            retired,
+            ..
+        } => Ok(Some(if retired {
+            SubmissionOutcome::Retired {
+                run_id: Some(domain_run_id),
+            }
+        } else {
+            SubmissionOutcome::RecoveryRequired {
+                run_id: domain_run_id,
+            }
+        })),
+        ExistingSubmissionInspection::Reserved {
+            domain_run_id,
+            journal_admission: JournalAdmission::Ready,
+            reservation_ref: Some(reservation_ref),
+            ..
+        } => {
+            let inspection =
+                inspect_retained_lifecycle_outcome(lease, &domain_run_id, &reservation_ref)?;
+            match inspection {
+                LifecycleOutcomeInspection::Validated {
+                    marker,
+                    report_bytes,
+                } => Ok(Some(SubmissionOutcome::Replayed {
+                    run_id: domain_run_id,
+                    outcome: RetainedLifecycleResult {
+                        marker,
+                        report_bytes,
+                    },
+                })),
+                LifecycleOutcomeInspection::Absent => {
+                    Err(anyhow::Error::new(SubmissionFailure::MissingJournal {
+                        run_id: domain_run_id,
+                    }))
+                }
+                LifecycleOutcomeInspection::RecoveryRequired { reason }
+                    if matches!(
+                        reason,
+                        LifecycleOutcomeRecoveryReason::CurrentRunHeaderWithoutMarker
+                            | LifecycleOutcomeRecoveryReason::MarkerMissing
+                    ) =>
+                {
+                    Ok(Some(SubmissionOutcome::RecoveryRequired {
+                        run_id: domain_run_id,
+                    }))
+                }
+                LifecycleOutcomeInspection::RecoveryRequired { reason } => {
+                    Err(anyhow::Error::new(SubmissionFailure::UncertainJournal {
+                        run_id: domain_run_id,
+                        reason: format!("{reason:?}"),
+                    }))
+                }
+            }
+        }
+        ExistingSubmissionInspection::Reserved { domain_run_id, .. } => {
+            Err(anyhow::Error::new(SubmissionFailure::UncertainJournal {
+                run_id: domain_run_id,
+                reason: "ready reservation has no correlation ref".into(),
+            }))
+        }
+    }
+}
+
+fn request_bytes(phase: Phase, target_os: TargetOs) -> &'static [u8] {
+    match (phase, target_os) {
+        (Phase::Validate, TargetOs::Linux) => VALIDATE_LINUX,
+        (Phase::Validate, TargetOs::Macos) => VALIDATE_MACOS,
+        (Phase::Validate, TargetOs::Windows) => VALIDATE_WINDOWS,
+        (Phase::Install, TargetOs::Linux) => EMPTY_INSTALL_LINUX,
+        (Phase::Install, TargetOs::Macos) => EMPTY_INSTALL_MACOS,
+        (Phase::Install, TargetOs::Windows) => EMPTY_INSTALL_WINDOWS,
         _ => unreachable!("protected entry points admit only Validate and Install"),
     }
 }
@@ -419,7 +539,7 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                     self.scope,
                     self.key,
                     run_id,
-                    request_bytes(self.phase),
+                    request_bytes(self.phase, self.target_os),
                     self.canonical_plan,
                     root,
                     &self.witness,

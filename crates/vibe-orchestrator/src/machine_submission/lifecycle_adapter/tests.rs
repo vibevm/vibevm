@@ -113,6 +113,141 @@ fn empty_world_install_writes_boot_after_stage_and_replays_exact_result() {
 }
 
 #[test]
+fn empty_install_attach_after_lock_change_reads_original_marker_only() {
+    let dir = project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let first = call_install(dir.path(), &namespace, &scope, "install-one").unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("first empty install must invoke")
+    };
+    let boot = dir.path().join("vibevm/vibespecs/boot/INDEX.md");
+    std::fs::write(&boot, b"first-run sentinel").unwrap();
+    let state_before = std::fs::read(dir.path().join(".vibe/lifecycle.toml")).unwrap();
+    let index_before = std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap();
+    let mut lock = vibe_core::manifest::Lockfile::empty("vibe 1.1.0", "2026-09-30T00:00:00Z");
+    lock.meta
+        .root_dependencies
+        .push(vibe_core::PackageRef::parse("org.demo/changed@=1.1.0").unwrap());
+    lock.write(dir.path().join("vibe.lock")).unwrap();
+    assert_eq!(
+        call_install(dir.path(), &namespace, &scope, "install-one").unwrap(),
+        SubmissionOutcome::Replayed { run_id, outcome }
+    );
+    assert_eq!(std::fs::read(&boot).unwrap(), b"first-run sentinel");
+    assert_eq!(
+        std::fs::read(dir.path().join(".vibe/lifecycle.toml")).unwrap(),
+        state_before
+    );
+    assert_eq!(
+        std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap(),
+        index_before
+    );
+    let fresh = call_install(dir.path(), &namespace, &scope, "install-two")
+        .unwrap_err()
+        .to_string();
+    assert!(fresh.contains("preexisting lock dependencies"), "{fresh}");
+}
+
+#[test]
+fn early_attach_rejects_changed_request_and_foreign_scope_without_writes() {
+    let dir = project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    assert!(matches!(
+        call(dir.path(), &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::Invoked { .. }
+    ));
+    let index_before = std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap();
+    let lease = LifecycleLease::acquire(dir.path()).unwrap();
+    let mismatch = attach_existing_lifecycle(&lease, &namespace, &scope, "one", b"changed")
+        .unwrap_err()
+        .to_string();
+    assert!(mismatch.contains("different request or plan"), "{mismatch}");
+    let foreign = SubmissionScope {
+        principal: "other".into(),
+        ..scope.clone()
+    };
+    let refused = attach_existing_lifecycle(&lease, &namespace, &foreign, "one", VALIDATE_LINUX)
+        .unwrap_err()
+        .to_string();
+    assert!(refused.contains("another context"), "{refused}");
+    assert_eq!(
+        std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap(),
+        index_before
+    );
+}
+
+#[test]
+fn different_target_conflicts_but_new_observation_time_replays_original() {
+    let dir = project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    let first = call(dir.path(), &namespace, &scope, "one").unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("first Validate must invoke")
+    };
+    let index_before = std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap();
+    let wrong_target = submit_validate_lifecycle(
+        dir.path(),
+        &namespace,
+        &scope,
+        "one",
+        request(),
+        TargetOs::Macos,
+        "2026-10-01T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(
+        wrong_target.contains("different request or plan"),
+        "{wrong_target}"
+    );
+    assert_eq!(
+        submit_validate_lifecycle(
+            dir.path(),
+            &namespace,
+            &scope,
+            "one",
+            request(),
+            TargetOs::Linux,
+            "2026-10-01T00:00:05Z".parse().unwrap(),
+        )
+        .unwrap(),
+        SubmissionOutcome::Replayed { run_id, outcome }
+    );
+    assert_eq!(
+        std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap(),
+        index_before
+    );
+}
+
+#[test]
+fn variable_policy_cannot_alias_a_fixed_existing_request() {
+    let dir = project();
+    let scope = scope();
+    let namespace = issue(dir.path(), &scope);
+    assert!(matches!(
+        call(dir.path(), &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::Invoked { .. }
+    ));
+    let mut altered = request();
+    altered.policy.offline = true;
+    let refused = submit_validate_lifecycle(
+        dir.path(),
+        &namespace,
+        &scope,
+        "one",
+        altered,
+        TargetOs::Linux,
+        "2026-10-01T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(refused.contains("fixed request refuses"), "{refused}");
+}
+
+#[test]
 fn empty_install_marker_loss_requires_recovery_and_never_regenerates_boot() {
     let dir = project();
     let scope = scope();
@@ -140,12 +275,14 @@ fn empty_install_marker_loss_requires_recovery_and_never_regenerates_boot() {
 }
 
 #[test]
-fn empty_install_changed_plan_and_foreign_header_refuse_second_boot_write() {
+fn empty_install_same_key_attaches_original_after_manifest_change_without_boot_write() {
     let dir = project();
     let scope = scope();
     let namespace = issue(dir.path(), &scope);
     let first = call_install(dir.path(), &namespace, &scope, "install-one").unwrap();
-    assert!(matches!(first, SubmissionOutcome::Invoked { .. }));
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("first empty install must invoke")
+    };
     let boot = dir.path().join("vibevm/vibespecs/boot/INDEX.md");
     std::fs::write(&boot, b"sentinel after first install").unwrap();
     let state_before = std::fs::read(dir.path().join(".vibe/lifecycle.toml")).unwrap();
@@ -154,10 +291,15 @@ fn empty_install_changed_plan_and_foreign_header_refuse_second_boot_write() {
         "[project]\nname = 'changed'\nversion = '1.1.0'\n",
     )
     .unwrap();
-    let same_key = call_install(dir.path(), &namespace, &scope, "install-one")
-        .unwrap_err()
-        .to_string();
-    assert!(same_key.contains("different request or plan"), "{same_key}");
+    let index_before = std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap();
+    assert_eq!(
+        call_install(dir.path(), &namespace, &scope, "install-one").unwrap(),
+        SubmissionOutcome::Replayed { run_id, outcome }
+    );
+    assert_eq!(
+        std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap(),
+        index_before
+    );
     let new_key = call_install(dir.path(), &namespace, &scope, "install-two")
         .unwrap_err()
         .to_string();
@@ -239,7 +381,7 @@ fn validate_result_is_retained_and_lost_response_replays_exact_bytes() {
 }
 
 #[test]
-fn pending_reservation_precedes_header_and_never_allocates_scratch() {
+fn pending_reservation_attaches_read_only_without_header_or_scratch() {
     let dir = project();
     let scope = scope();
     let lease = Arc::new(LifecycleLease::acquire(dir.path()).unwrap());
@@ -281,7 +423,7 @@ fn pending_reservation_precedes_header_and_never_allocates_scratch() {
         &namespace,
         &scope,
         "one",
-        VALIDATE_REQUEST,
+        VALIDATE_LINUX,
         &plan,
         &id.run_id,
     )
@@ -298,17 +440,17 @@ fn pending_reservation_precedes_header_and_never_allocates_scratch() {
         replay,
         SubmissionOutcome::RecoveryRequired { run_id: id.run_id }
     );
-    assert!(dir.path().join(".vibe/lifecycle.toml").exists());
+    assert!(!dir.path().join(".vibe/lifecycle.toml").exists());
     assert!(!dir.path().join(".vibe/lifecycle").exists());
 }
 
 #[test]
-fn changed_witness_and_foreign_header_do_not_start_another_run() {
+fn changed_witness_same_key_attaches_original_and_fresh_key_refuses() {
     let dir = project();
     let scope = scope();
     let namespace = issue(dir.path(), &scope);
     let first = call(dir.path(), &namespace, &scope, "one").unwrap();
-    let SubmissionOutcome::Invoked { run_id, .. } = first else {
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
         panic!("first run");
     };
     let state_before = std::fs::read(dir.path().join(".vibe/lifecycle.toml")).unwrap();
@@ -317,10 +459,13 @@ fn changed_witness_and_foreign_header_do_not_start_another_run() {
         "[project]\nname = 'changed'\nversion = '1.1.0'\n",
     )
     .unwrap();
-    let same_key = call(dir.path(), &namespace, &scope, "one")
-        .unwrap_err()
-        .to_string();
-    assert!(same_key.contains("different request or plan"), "{same_key}");
+    assert_eq!(
+        call(dir.path(), &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::Replayed {
+            run_id: run_id.clone(),
+            outcome
+        }
+    );
     let new_key = call(dir.path(), &namespace, &scope, "two")
         .unwrap_err()
         .to_string();
