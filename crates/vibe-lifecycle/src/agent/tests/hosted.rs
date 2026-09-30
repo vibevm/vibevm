@@ -233,6 +233,7 @@ fn a_hosted_row_parks_through_the_real_engine_without_spend_or_writes() {
         agent: &backend,
         probe: &SystemProbe,
         streams: StreamMode::Capture,
+        protected_script: None,
     };
     let transition = run
         .execute_one(&handler, "create", ExecutionReuse::FreshnessAware, &rt)

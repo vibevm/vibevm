@@ -106,6 +106,7 @@ fn runtime(backend: &RecordingBackend) -> HandlerRuntime<'_> {
         agent: backend,
         probe: &SystemProbe,
         streams: StreamMode::Capture,
+        protected_script: None,
     }
 }
 

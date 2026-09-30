@@ -5,11 +5,13 @@
 //! edits in the final interval before a process opens its script path.
 
 use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 use vibe_safefs::{FileIdentity, Project, PublishStage, StableFileSnapshot};
+use vibe_wire::generated::lifecycle::e1::context::Context;
 
 use super::run_journal::{LifecycleRunJournalObservation, inspect_reserved_lifecycle_run};
 use super::submission::{
@@ -25,7 +27,7 @@ const STAGE_CAP: usize = 16 * 1024;
 const FIELD_CAP: usize = 4096;
 
 #[derive(Debug, Error)]
-pub(crate) enum ScriptSourceStageError {
+pub enum ScriptSourceStageError {
     #[error("invalid protected script source-stage input: {0}")]
     InvalidInput(&'static str),
     #[error("script source cannot be witnessed before invocation: {0}")]
@@ -55,14 +57,89 @@ struct StageRecord {
 /// A one-run, one-execution source observation. The eventual handler must
 /// consume a successful immediate recheck before process spawn; this value
 /// alone never grants an effect or makes a retry safe.
-pub(crate) struct ScriptSourceStage {
+pub struct ScriptSourceStage {
+    run_id: String,
+    phase: String,
+    execution_key: String,
+    provider: String,
     provider_root: PathBuf,
     provider_root_identity: FileIdentity,
     script_relative: String,
     source: StableFileSnapshot,
+    begun: AtomicBool,
 }
 
 impl ScriptSourceStage {
+    pub(crate) fn claim_for_execution<'a>(
+        &'a self,
+        context: &Context,
+        execution_key: &str,
+        provider: &str,
+        provider_root: &Path,
+    ) -> Result<ScriptSourceAttempt<'a>, ScriptSourceStageError> {
+        let run_id = Path::new(&context.io.scratch)
+            .parent()
+            .and_then(Path::file_name)
+            .and_then(|name| name.to_str())
+            .unwrap_or("");
+        self.claim(
+            run_id,
+            &context.run.phase,
+            execution_key,
+            provider,
+            provider_root,
+        )
+    }
+
+    /// Spend this stage at dispatch entry, including attempts that later fail
+    /// before choosing an interpreter or discovering the script path.
+    pub(crate) fn begin<'a>(
+        &'a self,
+        run_id: &str,
+        phase: &str,
+        execution_key: &str,
+        provider: &str,
+        provider_root: &Path,
+        resolved_script: &Path,
+    ) -> Result<ScriptSourceInvocation<'a>, ScriptSourceStageError> {
+        self.claim(run_id, phase, execution_key, provider, provider_root)?
+            .match_resolved(provider_root, resolved_script)
+    }
+
+    fn claim<'a>(
+        &'a self,
+        run_id: &str,
+        phase: &str,
+        execution_key: &str,
+        provider: &str,
+        provider_root: &Path,
+    ) -> Result<ScriptSourceAttempt<'a>, ScriptSourceStageError> {
+        if self.begun.swap(true, Ordering::AcqRel) {
+            return Err(ScriptSourceStageError::RecoveryRequired(
+                "script source stage was already consumed".into(),
+            ));
+        }
+        let root = Project::open(provider_root).map_err(|error| {
+            ScriptSourceStageError::RecoveryRequired(format!("selected provider root: {error:#}"))
+        })?;
+        let current_root = root.root_identity().map_err(|error| {
+            ScriptSourceStageError::RecoveryRequired(format!(
+                "selected provider identity: {error:#}"
+            ))
+        })?;
+        if run_id != self.run_id
+            || phase != self.phase
+            || execution_key != self.execution_key
+            || provider != self.provider
+            || current_root != self.provider_root_identity
+        {
+            return Err(ScriptSourceStageError::RecoveryRequired(
+                "selected provider or execution differs from the stage".into(),
+            ));
+        }
+        Ok(ScriptSourceAttempt { stage: self })
+    }
+
     pub(crate) fn recheck_before_spawn(&self) -> Result<(), ScriptSourceStageError> {
         let provider = Project::open(&self.provider_root).map_err(|error| {
             ScriptSourceStageError::RecoveryRequired(format!("provider root: {error:#}"))
@@ -94,6 +171,48 @@ impl ScriptSourceStage {
     }
 }
 
+/// A spent attempt; even an interpreter-selection failure drops this without
+/// restoring permission to use the durable stage again.
+pub(crate) struct ScriptSourceAttempt<'a> {
+    stage: &'a ScriptSourceStage,
+}
+
+impl<'a> ScriptSourceAttempt<'a> {
+    pub(crate) fn match_resolved(
+        self,
+        provider_root: &Path,
+        resolved_script: &Path,
+    ) -> Result<ScriptSourceInvocation<'a>, ScriptSourceStageError> {
+        let canonical_root = provider_root.canonicalize().map_err(|error| {
+            ScriptSourceStageError::RecoveryRequired(format!("canonical provider root: {error}"))
+        })?;
+        let relative = resolved_script.strip_prefix(&canonical_root).map_err(|_| {
+            ScriptSourceStageError::RecoveryRequired(
+                "resolved script is outside the staged provider".into(),
+            )
+        })?;
+        if relative != Path::new(&self.stage.script_relative) {
+            return Err(ScriptSourceStageError::RecoveryRequired(
+                "resolved script differs from the stage".into(),
+            ));
+        }
+        self.stage.recheck_before_spawn()?;
+        Ok(ScriptSourceInvocation { stage: self.stage })
+    }
+}
+
+/// A one-use gate after the pre-scratch check. The last source recheck must
+/// happen immediately before the process runner receives its specification.
+pub(crate) struct ScriptSourceInvocation<'a> {
+    stage: &'a ScriptSourceStage,
+}
+
+impl ScriptSourceInvocation<'_> {
+    pub(crate) fn before_spawn(self) -> Result<(), ScriptSourceStageError> {
+        self.stage.recheck_before_spawn()
+    }
+}
+
 /// Publish one immutable `invoke-may-effect` record beneath the held lifecycle
 /// lease. The exact C.1 request and plan are re-matched against the existing
 /// reservation before the stage is created; a Ready flag alone is insufficient.
@@ -101,7 +220,7 @@ impl ScriptSourceStage {
     clippy::too_many_arguments,
     reason = "every argument is an exact owner identity"
 )]
-pub(crate) fn publish_script_source_stage(
+pub fn publish_script_source_stage(
     lease: &LifecycleLease,
     namespace: &SubmissionNamespace,
     scope: &SubmissionScope,
@@ -241,10 +360,15 @@ pub(crate) fn publish_script_source_stage(
         ));
     }
     Ok(ScriptSourceStage {
+        run_id: run_id.into(),
+        phase: phase.into(),
+        execution_key: execution_key.into(),
+        provider: provider.into(),
         provider_root: provider_root.to_path_buf(),
         provider_root_identity,
         script_relative: script_relative.into(),
         source,
+        begun: AtomicBool::new(false),
     })
 }
 

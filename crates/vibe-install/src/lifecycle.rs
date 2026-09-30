@@ -270,6 +270,7 @@ impl InstallSlotLifecycle {
             agent: self.agent.as_ref(),
             probe: &SystemProbe,
             streams: self.streams,
+            protected_script: None,
         };
         let result = run.execute_one(&execution, "install", ExecutionReuse::Always, &runtime);
         drop(run);

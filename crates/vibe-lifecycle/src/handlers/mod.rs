@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use thiserror::Error;
-use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
+use vibe_core::lifecycle::ExtensionPoint;
 use vibe_core::manifest::ExtensionHandler;
 use vibe_wire::generated::lifecycle::e1::context::Context;
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
@@ -20,12 +20,14 @@ use crate::{ExtensionProvider, ExtensionRegistryRow, HandlerExecution, SlotTarge
 const REPLY_CAP: usize = 1024 * 1024;
 
 mod backends;
+mod environment;
 mod native;
 mod reply;
 pub use backends::{
     BinaryBackend, NativeBackend, NativeBackendRequest, NoBinaryBackend, NoNativeBackend,
     NoPackageBindingBackend, PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
 };
+use environment::script_env;
 use native::{lifecycle_reply, native_context};
 use reply::parse_reply;
 pub(crate) use reply::validate_reply;
@@ -71,6 +73,8 @@ pub enum HandlerError {
           fix: make the selected executable spawnable in its declared provider)"
     )]
     Process { key: String, reason: String },
+    #[error("extension `{key}` protected script source refused: {reason}")]
+    SourceStage { key: String, reason: String },
     #[error(
         "extension `{key}` exited nonzero ({code:?}); reply is ignored{stderr} \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE; \
@@ -176,6 +180,8 @@ pub struct HandlerRuntime<'a> {
     pub agent: &'a dyn AgentBackend,
     pub probe: &'a dyn InterpreterProbe,
     pub streams: StreamMode,
+    /// Present only for one pre-journaled script execution.
+    pub protected_script: Option<&'a crate::ScriptSourceStage>,
 }
 
 impl HandlerRuntime<'_> {
@@ -214,9 +220,33 @@ impl HandlerRuntime<'_> {
         context: &Context,
         prepared: Option<&PreparedAgent>,
     ) -> Result<(Reply, HandlerStreams), HandlerError> {
+        let attempt = self
+            .protected_script
+            .map(|stage| {
+                stage
+                    .claim_for_execution(
+                        context,
+                        execution_key,
+                        &row.provider().to_string(),
+                        provider_root(row),
+                    )
+                    .map_err(|error| HandlerError::SourceStage {
+                        key: execution_key.into(),
+                        reason: error.to_string(),
+                    })
+            })
+            .transpose()?;
+        if attempt.is_some()
+            && !matches!(row.declaration().handler, ExtensionHandler::Script { .. })
+        {
+            return Err(HandlerError::SourceStage {
+                key: execution_key.into(),
+                reason: "protected script stage cannot authorize another handler kind".into(),
+            });
+        }
         match &row.declaration().handler {
             ExtensionHandler::Script { base } => {
-                self.script(row, target, execution_key, context, base)
+                self.script(row, target, execution_key, context, base, attempt)
             }
             ExtensionHandler::Binary { name } => {
                 self.binary(row, target, execution_key, context, name)
@@ -286,6 +316,7 @@ impl HandlerRuntime<'_> {
         execution_key: &str,
         context: &Context,
         base: &Path,
+        attempt: Option<crate::state::ScriptSourceAttempt<'_>>,
     ) -> Result<(Reply, HandlerStreams), HandlerError> {
         let key = execution_key.to_string();
         let provider = provider_root(row);
@@ -295,6 +326,16 @@ impl HandlerRuntime<'_> {
                 base: base.display().to_string(),
             })?;
         let script = contained_existing(provider, &invocation.script, &key)?;
+        let gate = attempt
+            .map(|stage| {
+                stage
+                    .match_resolved(provider, &script)
+                    .map_err(|error| HandlerError::SourceStage {
+                        key: key.clone(),
+                        reason: error.to_string(),
+                    })
+            })
+            .transpose()?;
         let scratch = verified_scratch(context, &key)?;
         let context_path = write_atomic_json(&scratch, "context.json", context)
             .map_err(|error| scratch_error(&key, error))?;
@@ -322,6 +363,13 @@ impl HandlerRuntime<'_> {
                 vec![script.into_os_string()],
             )
         };
+        if let Some(gate) = gate {
+            gate.before_spawn()
+                .map_err(|error| HandlerError::SourceStage {
+                    key: key.clone(),
+                    reason: error.to_string(),
+                })?;
+        }
         let output = self
             .process
             .run(&ProcessSpec {
@@ -508,65 +556,6 @@ fn contained_existing(root: &Path, path: &Path, key: &str) -> Result<PathBuf, Ha
     Ok(path)
 }
 
-fn script_env(
-    row: &ExtensionRegistryRow,
-    target: Option<&SlotTarget>,
-    context: &Context,
-    context_path: &Path,
-    reply: &Path,
-) -> std::collections::BTreeMap<std::ffi::OsString, std::ffi::OsString> {
-    let executable = std::env::current_exe()
-        .map(|path| machine_path(&path))
-        .unwrap_or_else(|_| "vibe".to_string());
-    let (group, name, version, kind, dir) = if let Some(target) = target {
-        (
-            target.group.clone(),
-            target.name.clone(),
-            target.version.clone(),
-            target.kind.clone(),
-            target.root.clone(),
-        )
-    } else {
-        match row.provider() {
-            ExtensionProvider::Dependency(provider) => (
-                provider.id.group().to_string(),
-                provider.id.name().to_string(),
-                provider.version.clone(),
-                provider.kind.to_string(),
-                machine_path(&provider.root),
-            ),
-            ExtensionProvider::Host(provider) => (
-                "__host__".into(),
-                provider.identity.to_string(),
-                provider.version.clone(),
-                provider
-                    .kind
-                    .map(|kind| kind.to_string())
-                    .unwrap_or_else(|| "project".into()),
-                machine_path(&provider.root),
-            ),
-        }
-    };
-    let hook_phase = match row.declaration().point {
-        ExtensionPoint::Slot(SlotPoint::PreInstall) => "pre-install",
-        ExtensionPoint::Slot(SlotPoint::PostInstall) => "post-install",
-        _ => "phase",
-    };
-    minimal_environment([
-        ("VIBE_PACKAGE_GROUP".into(), group),
-        ("VIBE_PACKAGE_NAME".into(), name),
-        ("VIBE_PACKAGE_VERSION".into(), version),
-        ("VIBE_PACKAGE_KIND".into(), kind),
-        ("VIBE_PACKAGE_DIR".into(), dir),
-        ("VIBE_HOOK_PHASE".into(), hook_phase.into()),
-        ("VIBE_PROJECT_ROOT".into(), context.project.root.clone()),
-        ("VIBE_EXECUTABLE".into(), executable),
-        ("VIBE_EXTENSION_PROVIDER".into(), row.provider().to_string()),
-        ("VIBE_CONTEXT".into(), machine_path(context_path)),
-        ("VIBE_REPLY".into(), machine_path(reply)),
-    ])
-}
-
 fn streams(output: ProcessOutput) -> HandlerStreams {
     HandlerStreams {
         stdout: String::from_utf8_lossy(&output.stdout).into_owned(),
@@ -581,10 +570,6 @@ fn scratch_error(key: &str, error: ScratchError) -> HandlerError {
         key: key.into(),
         reason: error.to_string(),
     }
-}
-
-fn machine_path(path: &Path) -> String {
-    path.to_string_lossy().replace('\\', "/")
 }
 
 #[cfg(test)]
