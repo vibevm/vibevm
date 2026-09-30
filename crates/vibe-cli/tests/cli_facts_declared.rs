@@ -243,3 +243,23 @@ fn foreign_slot_source_hash_and_changed_selected_bytes_refuse_both_consumers() {
     }
     assert!(!world.registry_file().exists());
 }
+
+#[test]
+fn removed_descriptor_rows_in_materialized_slot_never_downgrade_to_suffix_facts() {
+    let world = World::new(DECLARED, "mixed", true);
+    let manifest = world.slot().join("vibe.toml");
+    fs::write(
+        manifest,
+        "[package]\ngroup='org.example'\nname='declared-facts'\nkind='flow'\nversion='1.1.0'\nepoch=1\n",
+    )
+    .unwrap();
+    for outcome in [world.adopt(), world.report()] {
+        assert!(!outcome.status.success());
+        assert!(
+            String::from_utf8_lossy(&outcome.stderr).contains("differs from recorded slot payload"),
+            "{}",
+            String::from_utf8_lossy(&outcome.stderr)
+        );
+    }
+    assert!(!world.registry_file().exists());
+}
