@@ -1,5 +1,5 @@
-//! The source universe: one discovery epoch, then typed per-source
-//! results over the A2a one-read seams.
+//! The source universe: one discovery epoch, then typed per-source results
+//! from pinned declared bytes or the legacy A2a one-read seam.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT");
 
@@ -19,6 +19,9 @@ use vibe_workspace::SelectedWorkspace;
 use crate::QueryError;
 use crate::digest::source_result_digest;
 
+mod declared;
+use declared::observe_selected_declared;
+
 /// Fixed, bounded machine reasons — the wire's `reason_code` is one
 /// bounded string per state, decided here so two runs of the same query
 /// can never differ in wording.
@@ -27,6 +30,13 @@ pub(crate) const REASON_UNREADABLE: &str = "source-unreadable";
 pub(crate) const REASON_NO_SLOT: &str = "no-materialised-slot";
 pub(crate) const REASON_NO_SLOT_WITH_ENTRIES: &str = "no-materialised-slot-with-adoption-entries";
 pub(crate) const REASON_REGISTRY_ONLY: &str = "registry-only-adoption-entries";
+pub(crate) const REASON_DECLARED_UNVERIFIED: &str = "declared-slot-unverified";
+pub(crate) const REASON_DECLARED_TRANSFORMED: &str = "declared-original-unavailable";
+pub(crate) const REASON_DECLARED_INCOMPLETE: &str = "declared-source-incomplete";
+
+const MANIFEST_CAP: usize = 1024 * 1024;
+const RECORD_CAP: usize = 8 * 1024 * 1024;
+const SOURCE_CAP: usize = 16 * 1024 * 1024;
 
 /// One enumerated source: its wire kind, coordinate and — when the
 /// source physically exists here — the root the A2a scanner walks.
@@ -41,6 +51,10 @@ pub(crate) struct SourceCoord {
     pub root: Option<PathBuf>,
     pub locked: bool,
     pub content_hash: Option<String>,
+    /// Exact lock-selected package version; absent for host/orphans.
+    pub selected_version: Option<String>,
+    /// An in-place lock row may legitimately have no materialized slot record.
+    pub in_place: bool,
 }
 
 /// One source's contribution to the report: its typed result and, when
@@ -116,6 +130,8 @@ pub(crate) fn enumerate(
             root: Some(selected_root.to_path_buf()),
             locked: false,
             content_hash: None,
+            selected_version: None,
+            in_place: false,
         },
     );
 
@@ -169,6 +185,8 @@ pub(crate) fn enumerate(
                     // carried-map trust needs it precisely for the
                     // missing/unmaterialised cases too).
                     content_hash: Some(locked.content_hash.to_string()),
+                    selected_version: Some(locked.version.to_string()),
+                    in_place: locked.materialization.is_in_place(),
                 },
             );
         }
@@ -198,6 +216,8 @@ pub(crate) fn enumerate(
                 root: None,
                 locked: false,
                 content_hash: None,
+                selected_version: None,
+                in_place: false,
             },
         );
     }
@@ -238,6 +258,11 @@ pub(crate) fn observe(coord: &SourceCoord) -> Result<SourceOutcome, QueryError> 
         RequirementSourceKind::Host => FactsKind::Host,
         RequirementSourceKind::Package => FactsKind::Package,
     };
+    if coord.kind == RequirementSourceKind::Package {
+        if let Some(outcome) = observe_selected_declared(coord, root) {
+            return Ok(outcome);
+        }
+    }
     match observe_authored_source(root, &coord.package, kind) {
         Ok(AuthoredSourceObservation::Available { facts, documents }) => Ok(SourceOutcome {
             result: source_result(
