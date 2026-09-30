@@ -2,6 +2,9 @@
 
 use super::*;
 
+#[path = "tests/fixture.rs"]
+mod fixture;
+
 fn project() -> tempfile::TempDir {
     let dir = tempfile::tempdir().unwrap();
     std::fs::write(

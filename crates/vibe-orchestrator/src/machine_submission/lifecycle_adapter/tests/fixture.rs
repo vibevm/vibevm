@@ -1,0 +1,459 @@
+//! Actual one-package install through a controlled local fixture source.
+//! The production package-source port does not expose a source-root proof, so
+//! this route remains test-only even when the local effect itself passes.
+
+use super::*;
+use std::collections::BTreeSet;
+use std::path::PathBuf;
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+use vibe_core::PackageRef;
+use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_install::InstallSource;
+use vibe_package_source::{
+    InstallResolver, PackageQualifier, PackageSourceOptions, RegistryPackageSource,
+    build_install_resolver_with_progress,
+};
+use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
+use vibe_resolver::{ResolvedGraph, SolveError};
+
+fn setup() -> (tempfile::TempDir, PathBuf, PathBuf) {
+    let dir = tempfile::tempdir().unwrap();
+    let project = dir.path().join("consumer");
+    let registry = dir.path().join("registry");
+    let source = registry.join("org.example/fixture/v1.1.0");
+    std::fs::create_dir_all(&project).unwrap();
+    std::fs::create_dir_all(&source).unwrap();
+    std::fs::write(project.join("vibe.toml"), install::FIXTURE_PROJECT_MANIFEST).unwrap();
+    std::fs::write(source.join("vibe.toml"), install::FIXTURE_PACKAGE_MANIFEST).unwrap();
+    std::fs::write(source.join("README.md"), b"# Fixture\n").unwrap();
+    (dir, project, source)
+}
+
+fn fixture_request() -> DefaultLifecycleRequest {
+    let mut request = install_request();
+    request.policy.offline = true;
+    request.policy.slot_integrity = SlotIntegrity::Verify;
+    request
+}
+
+fn fixture_call(
+    project: &Path,
+    source: &Path,
+    factory: &FixtureFactory,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_one_package_fixture_install(
+        project,
+        source,
+        factory,
+        namespace,
+        scope,
+        key,
+        fixture_request(),
+        TargetOs::current().expect("supported fixture platform"),
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+    )
+}
+
+struct ExactQualifier;
+impl PackageQualifier for ExactQualifier {
+    fn qualify(
+        &self,
+        _resolver: &InstallResolver,
+        pkgref: &PackageRef,
+        _locked: &Lockfile,
+    ) -> Result<PackageRef> {
+        ensure!(
+            pkgref.to_string() == install::FIXTURE_PIN,
+            "fixture qualifier refused a nonfixed pin"
+        );
+        Ok(pkgref.clone())
+    }
+}
+
+struct FixtureFactory {
+    registry_root: PathBuf,
+    source_root: PathBuf,
+    builds: AtomicUsize,
+    fetches: Arc<AtomicUsize>,
+    fail_after_fetch: bool,
+}
+
+impl FixtureFactory {
+    fn new(registry_root: PathBuf) -> Self {
+        let source_root = registry_root.join("org.example/fixture/v1.1.0");
+        Self {
+            registry_root,
+            source_root,
+            builds: AtomicUsize::new(0),
+            fetches: Arc::new(AtomicUsize::new(0)),
+            fail_after_fetch: false,
+        }
+    }
+}
+
+impl install::ControlledFixtureFactory for FixtureFactory {
+    fn serving_source_root(&self) -> &Path {
+        &self.source_root
+    }
+}
+
+impl PackageSourceFactory for FixtureFactory {
+    fn build(&self, input: PackageSourceBuild<'_>) -> Result<Box<dyn PackageSource>> {
+        ensure!(input.offline, "fixture source must be offline");
+        self.builds.fetch_add(1, Ordering::SeqCst);
+        let options = PackageSourceOptions {
+            registry: Some(self.registry_root.clone()),
+            no_default_registry: true,
+            no_prefer_local: true,
+            ..Default::default()
+        };
+        let resolver = build_install_resolver_with_progress(
+            &options,
+            input.manifest,
+            input.embedded_root,
+            input.project_root,
+            input.global,
+            input.offline,
+            input.locked,
+            input.progress,
+        )?;
+        Ok(Box::new(FixtureSource {
+            inner: RegistryPackageSource::new(resolver, Box::new(ExactQualifier)),
+            fetches: Arc::clone(&self.fetches),
+            fail_after_fetch: self.fail_after_fetch,
+            project_root: input.project_root.to_path_buf(),
+        }))
+    }
+}
+
+struct FixtureSource {
+    inner: RegistryPackageSource,
+    fetches: Arc<AtomicUsize>,
+    fail_after_fetch: bool,
+    project_root: PathBuf,
+}
+
+impl PackageSource for FixtureSource {
+    fn qualify(&self, pkgref: &PackageRef, _locked: &Lockfile) -> Result<PackageRef> {
+        ensure!(
+            pkgref.to_string() == install::FIXTURE_PIN,
+            "fixture source refused a nonfixed pin"
+        );
+        Ok(pkgref.clone())
+    }
+}
+
+impl InstallSource for FixtureSource {
+    fn resolve_and_fetch(
+        &self,
+        pkgref: &PackageRef,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+    ) -> std::result::Result<CachedPackage, RegistryError> {
+        let entered = self.project_root.join(".vibe/lifecycle-outcomes");
+        let stage_present = std::fs::read_dir(&entered).ok().is_some_and(|entries| {
+            entries.flatten().any(|entry| {
+                entry
+                    .file_name()
+                    .to_string_lossy()
+                    .ends_with(".install-entered.json")
+            })
+        });
+        if !stage_present {
+            return Err(RegistryError::Io {
+                path: entered,
+                source: std::io::Error::other("source fetch preceded install-entered stage"),
+            });
+        }
+        let cached = self
+            .inner
+            .resolve_and_fetch(pkgref, store_root, expected_hash)?;
+        self.fetches.fetch_add(1, Ordering::SeqCst);
+        if self.fail_after_fetch {
+            return Err(RegistryError::Io {
+                path: store_root.to_path_buf(),
+                source: std::io::Error::other("fixture response lost after cache fetch"),
+            });
+        }
+        Ok(cached)
+    }
+
+    fn solve(&self, roots: &[PackageRef]) -> std::result::Result<ResolvedGraph, SolveError> {
+        self.inner.solve(roots)
+    }
+
+    fn manifest_of(&self, pkg: &PackageRef) -> std::result::Result<Manifest, SolveError> {
+        self.inner.manifest_of(pkg)
+    }
+
+    fn solve_masked(
+        &self,
+        roots: &[PackageRef],
+        blocked: &BTreeSet<(String, String)>,
+    ) -> std::result::Result<ResolvedGraph, SolveError> {
+        self.inner.solve_masked(roots, blocked)
+    }
+
+    fn materialise_in_place(
+        &self,
+        pkgref: &PackageRef,
+        slot: &Path,
+    ) -> std::result::Result<InPlaceMaterialised, RegistryError> {
+        self.inner.materialise_in_place(pkgref, slot)
+    }
+}
+
+#[test]
+fn source_drift_after_stage_refuses_before_factory_or_install_effect() {
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let factory = FixtureFactory::new(registry);
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let drift = || std::fs::write(source.join("README.md"), b"changed after stage\n").unwrap();
+    let result = install::submit_one_package_fixture_install_with_hook(
+        &project,
+        &source,
+        &factory,
+        &namespace,
+        &scope,
+        "one",
+        fixture_request(),
+        TargetOs::current().expect("supported fixture platform"),
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+        Some(&drift),
+    )
+    .unwrap();
+    let SubmissionOutcome::RecoveryRequired { run_id } = result else {
+        panic!("source drift after stage must retain recovery ID: {result:?}")
+    };
+    assert!(
+        project
+            .join(".vibe/lifecycle-outcomes")
+            .join(format!("{run_id}.install-entered.json"))
+            .is_file()
+    );
+    assert_eq!(factory.builds.load(Ordering::SeqCst), 0);
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 0);
+    assert!(!project.join("vibe.lock").exists());
+    assert!(
+        !project
+            .join("vibevm/vibedeps/org.example.fixture/1.1.0")
+            .exists()
+    );
+    assert!(!project.join("vibevm/vibespecs/boot/INDEX.md").exists());
+    std::fs::write(source.join("README.md"), b"# Fixture\n").unwrap();
+    assert_eq!(
+        fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::RecoveryRequired { run_id }
+    );
+    assert_eq!(factory.builds.load(Ordering::SeqCst), 0);
+}
+
+#[test]
+fn failure_after_cache_fetch_is_retained_uncertain_and_never_refetched() {
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let mut factory = FixtureFactory::new(registry);
+    factory.fail_after_fetch = true;
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let first = fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("failed domain run should retain an uncertain marker: {first:?}")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+    assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    assert!(
+        project
+            .join(".vibe/lifecycle-outcomes")
+            .join(format!("{run_id}.install-entered.json"))
+            .is_file()
+    );
+    let cache = vibe_registry::store::store_root().unwrap();
+    assert!(cache.join("org.example/fixture/v1.1.0/README.md").is_file());
+    assert!(!project.join("vibe.lock").exists());
+    assert!(
+        !project
+            .join("vibevm/vibedeps/org.example.fixture/1.1.0")
+            .exists()
+    );
+    assert_eq!(
+        fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::Replayed { run_id, outcome }
+    );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn one_package_install_is_staged_then_retained_and_replayed_without_second_effect() {
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    let factory = FixtureFactory::new(
+        source
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .to_path_buf(),
+    );
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let first = fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("one-package fixture must invoke")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Completed);
+    assert!(
+        project
+            .join(".vibe/lifecycle-outcomes")
+            .join(format!("{run_id}.install-entered.json"))
+            .is_file()
+    );
+    assert!(
+        project
+            .join("vibevm/vibedeps/org.example.fixture/1.1.0/README.md")
+            .is_file()
+    );
+    assert!(project.join("vibe.lock").is_file());
+    assert!(project.join("vibevm/vibespecs/boot/INDEX.md").is_file());
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    let lock_before = std::fs::read(project.join("vibe.lock")).unwrap();
+    let boot = project.join("vibevm/vibespecs/boot/INDEX.md");
+    std::fs::write(&boot, b"after-first-run sentinel").unwrap();
+    assert_eq!(
+        fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::Replayed { run_id, outcome }
+    );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    assert_eq!(
+        std::fs::read(project.join("vibe.lock")).unwrap(),
+        lock_before
+    );
+    assert_eq!(std::fs::read(&boot).unwrap(), b"after-first-run sentinel");
+}
+
+#[test]
+fn changed_source_subject_conflicts_with_same_key_without_second_fetch() {
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let factory = FixtureFactory::new(registry);
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    assert!(matches!(
+        fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::Invoked { .. }
+    ));
+    std::fs::write(source.join("README.md"), b"changed fixture source\n").unwrap();
+    let mismatch = fixture_call(&project, &source, &factory, &namespace, &scope, "one")
+        .unwrap_err()
+        .to_string();
+    assert!(mismatch.contains("different request or plan"), "{mismatch}");
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn nonfixed_root_manifest_refuses_before_reservation_or_source_port() {
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    std::fs::write(
+        project.join("vibe.toml"),
+        install::FIXTURE_PROJECT_MANIFEST.replace("name = 'consumer'", "name = 'other'"),
+    )
+    .unwrap();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let factory = FixtureFactory::new(registry);
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let refused = fixture_call(&project, &source, &factory, &namespace, &scope, "one")
+        .unwrap_err()
+        .to_string();
+    assert!(refused.contains("unreviewed root manifest"), "{refused}");
+    assert_eq!(factory.builds.load(Ordering::SeqCst), 0);
+    assert!(!project.join(".vibe/lifecycle-outcomes").exists());
+    assert!(!project.join("vibe.lock").exists());
+}
+
+#[test]
+fn source_hook_declaration_refuses_before_reservation_or_fetch() {
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    std::fs::write(
+        source.join("vibe.toml"),
+        format!(
+            "{}\n[hooks]\npre-install = 'hooks/prepare'\n",
+            install::FIXTURE_PACKAGE_MANIFEST
+        ),
+    )
+    .unwrap();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let factory = FixtureFactory::new(registry);
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let refused = fixture_call(&project, &source, &factory, &namespace, &scope, "one")
+        .unwrap_err()
+        .to_string();
+    assert!(refused.contains("unreviewed declarations"), "{refused}");
+    assert_eq!(factory.builds.load(Ordering::SeqCst), 0);
+    assert!(!project.join(".vibe/lifecycle-outcomes").exists());
+}
+
+#[test]
+fn factory_bound_to_another_source_root_refuses_before_reservation() {
+    let (_dir, project, source) = setup();
+    let foreign = tempfile::tempdir().unwrap();
+    let factory = FixtureFactory::new(foreign.path().to_path_buf());
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let refused = fixture_call(&project, &source, &factory, &namespace, &scope, "one")
+        .unwrap_err()
+        .to_string();
+    assert!(refused.contains("differs from witnessed root"), "{refused}");
+    assert_eq!(factory.builds.load(Ordering::SeqCst), 0);
+    assert!(!project.join(".vibe/lifecycle-outcomes").exists());
+}
