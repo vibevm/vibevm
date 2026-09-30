@@ -252,6 +252,56 @@ pub(crate) fn read_commit_file(repo_root: &Path, commit: &str, relative: &str) -
         .with_context(|| format!("reading committed release asset `{relative}`"))
 }
 
+/// Independent upper bound for the committed Cargo.lock witness. The lock is
+/// read from one immutable Git object, never from the mutable working tree.
+pub(crate) const COMMITTED_CARGO_LOCK_MAX_BYTES: u64 = 8 * 1024 * 1024;
+
+/// Read one fixed, repository-owned release input from a pinned commit.
+/// `git cat-file -s` inspects the immutable object without creating or
+/// changing any working-tree file; its size gate runs before the buffering
+/// `git show`, and the returned byte count must match that same object.
+/// Callers pass a fixed path, never a request-body path.
+pub(crate) fn read_commit_file_bounded(
+    repo_root: &Path,
+    pinned_commit: &str,
+    fixed_relative: &str,
+    max: u64,
+) -> Result<Vec<u8>> {
+    validate_oid("pinned commit", pinned_commit)?;
+    if !matches!(
+        fixed_relative,
+        "Cargo.lock"
+            | "distribution/install/install.sh"
+            | "distribution/install/install.ps1"
+            | "distribution/install/install.cmd"
+    ) {
+        bail!("bounded committed release input must name a fixed Cargo.lock or installer path");
+    }
+    if max == 0 {
+        bail!("bounded committed input requires a nonzero byte cap");
+    }
+    let object = format!("{pinned_commit}:{fixed_relative}");
+    let size_text = git_text(repo_root, &["cat-file", "-s", &object])
+        .with_context(|| format!("sizing committed release input `{fixed_relative}`"))?;
+    let size = size_text
+        .parse::<u64>()
+        .with_context(|| format!("committed `{fixed_relative}` has no unsigned byte size"))?;
+    if size.to_string() != size_text || size > max {
+        bail!(
+            "committed `{fixed_relative}` declares {size_text} bytes, exceeding its {max}-byte cap or using a noncanonical size"
+        );
+    }
+    let bytes = git_bytes(repo_root, &["show", &object])
+        .with_context(|| format!("reading bounded committed release input `{fixed_relative}`"))?;
+    if u64::try_from(bytes.len()).ok() != Some(size) {
+        bail!(
+            "committed `{fixed_relative}` changed size between `cat-file` and `show`: expected {size}, read {}",
+            bytes.len()
+        );
+    }
+    Ok(bytes)
+}
+
 fn tracked_files(repo_root: &Path, commit: &str) -> Result<BTreeMap<String, u32>> {
     let bytes = git_bytes(repo_root, &["ls-tree", "-r", "-z", "--full-tree", commit])?;
     parse_ls_tree(&bytes)
@@ -379,6 +429,111 @@ mod tests {
             "git {} failed: {}",
             args.join(" "),
             String::from_utf8_lossy(&output.stderr)
+        );
+    }
+
+    fn committed_lock_fixture() -> tempfile::TempDir {
+        let repository = tempfile::tempdir().unwrap();
+        run_git(
+            repository.path(),
+            &["init", "--quiet", "--initial-branch=main"],
+        );
+        run_git(repository.path(), &["config", "user.name", "Test"]);
+        run_git(
+            repository.path(),
+            &["config", "user.email", "test@example.invalid"],
+        );
+        fs::write(repository.path().join("Cargo.lock"), b"version = 3\n").unwrap();
+        run_git(repository.path(), &["add", "Cargo.lock"]);
+        run_git(
+            repository.path(),
+            &["commit", "--quiet", "-m", "fixture lock"],
+        );
+        repository
+    }
+
+    #[test]
+    fn bounded_committed_lock_ignores_dirty_worktree_and_later_head() {
+        let repository = committed_lock_fixture();
+        let first = committed_identity(repository.path(), true).unwrap();
+        let first_bytes = read_commit_file_bounded(
+            repository.path(),
+            &first.commit,
+            "Cargo.lock",
+            COMMITTED_CARGO_LOCK_MAX_BYTES,
+        )
+        .unwrap();
+        assert_eq!(first_bytes, b"version = 3\n");
+
+        fs::write(repository.path().join("Cargo.lock"), b"dirty live lock\n").unwrap();
+        assert!(committed_identity(repository.path(), true).is_err());
+        assert_eq!(
+            read_commit_file_bounded(
+                repository.path(),
+                &first.commit,
+                "Cargo.lock",
+                COMMITTED_CARGO_LOCK_MAX_BYTES,
+            )
+            .unwrap(),
+            first_bytes
+        );
+
+        run_git(repository.path(), &["add", "Cargo.lock"]);
+        run_git(repository.path(), &["commit", "--quiet", "-m", "next lock"]);
+        let second = committed_identity(repository.path(), true).unwrap();
+        assert_ne!(first.commit, second.commit);
+        assert_eq!(
+            read_commit_file_bounded(
+                repository.path(),
+                &first.commit,
+                "Cargo.lock",
+                COMMITTED_CARGO_LOCK_MAX_BYTES,
+            )
+            .unwrap(),
+            first_bytes
+        );
+        assert_eq!(
+            read_commit_file_bounded(
+                repository.path(),
+                &second.commit,
+                "Cargo.lock",
+                COMMITTED_CARGO_LOCK_MAX_BYTES,
+            )
+            .unwrap(),
+            b"dirty live lock\n"
+        );
+    }
+
+    #[test]
+    fn bounded_committed_lock_refuses_oversize_before_buffering() {
+        let repository = committed_lock_fixture();
+        let identity = committed_identity(repository.path(), true).unwrap();
+        let error = read_commit_file_bounded(repository.path(), &identity.commit, "Cargo.lock", 4)
+            .unwrap_err();
+        assert!(
+            error.to_string().contains("exceeding its 4-byte cap"),
+            "{error:#}"
+        );
+    }
+
+    #[test]
+    fn bounded_committed_reader_refuses_unsafe_or_unowned_paths() {
+        let repository = committed_lock_fixture();
+        let identity = committed_identity(repository.path(), true).unwrap();
+        for path in [
+            "../Cargo.lock",
+            "/Cargo.lock",
+            "Cargo.lock:other",
+            "src/main.rs",
+        ] {
+            assert!(
+                read_commit_file_bounded(repository.path(), &identity.commit, path, 1024).is_err(),
+                "{path} must not be accepted as a fixed release input"
+            );
+        }
+        assert!(
+            read_commit_file_bounded(repository.path(), "not-a-commit", "Cargo.lock", 1024)
+                .is_err()
         );
     }
 
