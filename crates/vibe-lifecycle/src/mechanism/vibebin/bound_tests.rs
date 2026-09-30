@@ -39,7 +39,7 @@ fn pinned_store_copies_once_and_handles_launcher_pointer_and_remove() {
     let settings_path = settings.path().to_path_buf();
     let destination =
         BoundDestinationLock::acquire(Project::open(&settings_path).unwrap()).unwrap();
-    let bound = BoundVibeBinStore::new(&source, &destination);
+    let bound = BoundVibeBinStore::for_test(&source, &destination);
     let flavour = launcher::LauncherFlavour::NATIVE;
     assert_eq!(
         bound.place_payload(&artifact, flavour).unwrap(),
@@ -132,7 +132,7 @@ fn pinned_store_refuses_nonproject_source_changed_bytes_and_cas_third_state() {
     let source = Project::open(source.path()).unwrap();
     let destination =
         BoundDestinationLock::acquire(Project::open(settings.path()).unwrap()).unwrap();
-    let bound = BoundVibeBinStore::new(&source, &destination);
+    let bound = BoundVibeBinStore::for_test(&source, &destination);
     std::fs::write(source.root_path().join("artifact.bin"), b"changed").unwrap();
     assert!(matches!(
         bound.place_payload(&artifact, launcher::LauncherFlavour::NATIVE),
@@ -169,7 +169,7 @@ fn postpublication_fault_is_uncertain_then_matching_replay_is_noop() {
     let source = Project::open(source.path()).unwrap();
     let destination =
         BoundDestinationLock::acquire(Project::open(settings.path()).unwrap()).unwrap();
-    let bound = BoundVibeBinStore::new(&source, &destination);
+    let bound = BoundVibeBinStore::for_test(&source, &destination);
     let flavour = launcher::LauncherFlavour::NATIVE;
     let relative = store::payload_relative(flavour, &record.digest.value);
     vibe_safefs::fail_after_publish(relative.strip_prefix("store/"));
@@ -238,7 +238,7 @@ fn child_retarget_after_possible_publication_is_detected_without_redirecting_io(
     let source = Project::open(source.path()).unwrap();
     let destination =
         BoundDestinationLock::acquire(Project::open(settings.path()).unwrap()).unwrap();
-    let bound = BoundVibeBinStore::new(&source, &destination);
+    let bound = BoundVibeBinStore::for_test(&source, &destination);
     let flavour = launcher::LauncherFlavour::NATIVE;
     let relative = store::payload_relative(flavour, &record.digest.value);
     vibe_safefs::fail_after_publish(relative.strip_prefix("store/"));
@@ -284,7 +284,7 @@ fn child_retarget_between_held_read_and_return_refuses_stale_observation() {
     let source = Project::open(source.path()).unwrap();
     let destination =
         BoundDestinationLock::acquire(Project::open(settings.path()).unwrap()).unwrap();
-    let bound = BoundVibeBinStore::new(&source, &destination);
+    let bound = BoundVibeBinStore::for_test(&source, &destination);
     let flavour = launcher::LauncherFlavour::NATIVE;
     bound.place_payload(&artifact, flavour).unwrap();
     let relative = store::payload_relative(flavour, &record.digest.value);

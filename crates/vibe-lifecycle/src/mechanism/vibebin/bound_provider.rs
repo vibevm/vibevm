@@ -1,9 +1,8 @@
-//! The pinned planning and observation half of the builtin provider.
+//! The pinned builtin provider for the first host-admitted local effect.
 //!
-//! It implements the incumbent provider protocol, but its effect verbs
-//! refuse until the engine binds the before-image, checkpoint and inverse
-//! journals to the host admission. That keeps a future bound route on ONE
-//! provider/transaction protocol without claiming a safe effect today.
+//! Its locked form uses only held project and destination capabilities.
+//! The engine must supply the binding-aware durable intent before `apply`;
+//! this adapter does not grant an effect from a pathname or wire value.
 
 use super::bound::{BoundProjectArtifact, BoundVibeBinError, BoundVibeBinStore};
 use super::launcher;
@@ -127,6 +126,30 @@ impl<'a> BoundVibeBinProvider<'a> {
                 }),
         }
     }
+
+    fn pointer_present(
+        &self,
+        request: &DeployTargetRequest<'_>,
+        relative: &str,
+    ) -> Result<bool, MechanismError> {
+        match self.view {
+            BoundView::Locked(store) => store
+                .state(relative)
+                .map(|state| state.is_some())
+                .map_err(|error| observation_error(request, relative, error).into()),
+            BoundView::Preplan(settings) => settings
+                .read_file_bounded(relative, 128)
+                .map(|bytes| bytes.is_some())
+                .map_err(|error| {
+                    DeployProviderError::Observe {
+                        target: request.target.id.clone(),
+                        resource: relative.into(),
+                        reason: format!("{error:#}"),
+                    }
+                    .into()
+                }),
+        }
+    }
 }
 
 fn observation_error(
@@ -137,6 +160,18 @@ fn observation_error(
     DeployProviderError::Observe {
         target: request.target.id.clone(),
         resource: resource.into(),
+        reason: error.to_string(),
+    }
+}
+
+fn write_error(
+    request: &DeployTargetRequest<'_>,
+    resource: &str,
+    error: BoundVibeBinError,
+) -> DeployProviderError {
+    DeployProviderError::Write {
+        target: request.target.id.clone(),
+        path: resource.into(),
         reason: error.to_string(),
     }
 }
@@ -155,9 +190,20 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
     }
 
     fn plan(&self, request: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {
+        if request.prior_receipt.is_some() || request.recovery_intent.is_some() {
+            return Err(effect_not_ready(request, "update or recovery"));
+        }
         let (destination, artifact) = self.admit(request)?;
         let occupant = self.classify_launcher(request, &destination.launcher)?;
         launcher::refuse_collision(&request.target.id, &destination.launcher, occupant)?;
+        if occupant != launcher::Occupant::Vacant
+            || self.pointer_present(request, &destination.pointer)?
+        {
+            return Err(effect_not_ready(
+                request,
+                "update of an unowned destination",
+            ));
+        }
         let resources = vec![
             PlannedDeployResource {
                 desired_digest: digest_of(&destination.body),
@@ -184,7 +230,8 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
             resources,
             lock_resources,
             config_digest: destination.config_digest(),
-            reversible: true,
+            // The first bound route has no admitted remove or inverse replay.
+            reversible: false,
         })
     }
 
@@ -199,10 +246,95 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
     fn apply(
         &self,
         request: &DeployTargetRequest<'_>,
-        _plan: &DeployPlan,
-        _checkpoint: &mut CheckpointLedger<'_>,
+        plan: &DeployPlan,
+        checkpoint: &mut CheckpointLedger<'_>,
     ) -> Result<ApplyReport, MechanismError> {
-        Err(effect_not_ready(request, "apply"))
+        let BoundView::Locked(store) = self.view else {
+            return Err(effect_not_ready(request, "apply"));
+        };
+        if request.prior_receipt.is_some() || request.recovery_intent.is_some() {
+            return Err(effect_not_ready(request, "update or recovery"));
+        }
+        let (destination, artifact) = self.admit(request)?;
+        let expected = [
+            PlannedDeployResource {
+                desired_digest: digest_of(&destination.body),
+                resource: destination.launcher.clone(),
+            },
+            PlannedDeployResource {
+                desired_digest: digest_of(&launcher::pointer_body(&artifact.digest)),
+                resource: destination.pointer.clone(),
+            },
+        ];
+        if plan.resources.as_slice() != expected
+            || plan.lock_resources != [destination.launcher.clone(), destination.pointer.clone()]
+            || plan.config_digest != destination.config_digest()
+            || plan.reversible
+        {
+            return Err(DeployProviderError::Observe {
+                target: request.target.id.clone(),
+                resource: destination.launcher,
+                reason: "the admitted bound plan differs from the effect's exact resources".into(),
+            }
+            .into());
+        }
+        let occupant = store
+            .classify_launcher(&destination.launcher)
+            .map_err(|error| observation_error(request, &destination.launcher, error))?;
+        launcher::refuse_collision(&request.target.id, &destination.launcher, occupant)?;
+        if occupant != launcher::Occupant::Vacant
+            || store
+                .prior_pointer(&destination.pointer)
+                .map_err(|error| observation_error(request, &destination.pointer, error))?
+                .is_some()
+        {
+            return Err(effect_not_ready(
+                request,
+                "update of an unowned destination",
+            ));
+        }
+        let payload = store::payload_relative(destination.flavour, &artifact.digest);
+        let placement = store
+            .place_payload(self.artifact, destination.flavour)
+            .map_err(|error| write_error(request, &payload, error))?;
+        checkpoint.completed(&payload)?;
+        // Recheck the collision after the payload step. The physical lock
+        // coordinates participating writers; this still detects other edits.
+        let occupant = store
+            .classify_launcher(&destination.launcher)
+            .map_err(|error| observation_error(request, &destination.launcher, error))?;
+        launcher::refuse_collision(&request.target.id, &destination.launcher, occupant)?;
+        if occupant != launcher::Occupant::Vacant {
+            return Err(effect_not_ready(
+                request,
+                "update of an unowned destination",
+            ));
+        }
+        store
+            .write_resource(
+                &destination.launcher,
+                &destination.body,
+                destination.flavour.needs_executable_bit(),
+            )
+            .map_err(|error| write_error(request, &destination.launcher, error))?;
+        checkpoint.completed(&destination.launcher)?;
+        // Publish the pointer last, after the launcher is durable.
+        let pointer = launcher::pointer_body(&artifact.digest);
+        store
+            .write_resource(&destination.pointer, &pointer, false)
+            .map_err(|error| write_error(request, &destination.pointer, error))?;
+        checkpoint.completed(&destination.pointer)?;
+        Ok(ApplyReport {
+            prior_state_handle: None,
+            evidence: format!(
+                "bound vibe-bin installed `{}` ({} flavour): payload {} at {payload}, launcher {}, pointer {}",
+                destination.command,
+                destination.flavour.as_str(),
+                placement.as_str(),
+                destination.launcher,
+                destination.pointer,
+            ),
+        })
     }
 
     fn verify(
