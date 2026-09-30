@@ -23,6 +23,7 @@ pub mod capability_coverage;
 pub mod compile_trace_report;
 pub mod compiler_trace_index;
 pub mod deploy_records;
+pub mod environment;
 pub mod extensions_analyze;
 pub mod machine_view;
 pub mod native_backend;

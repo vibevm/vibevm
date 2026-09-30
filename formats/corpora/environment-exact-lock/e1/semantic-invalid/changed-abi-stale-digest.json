@@ -3,7 +3,6 @@
   "recipe_epoch": 1,
   "lock_owner": "resolver-a",
   "definition_ref": "definition-a",
-  "definition_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "target": {
     "role": "produced_tool_runtime",
     "os": "linux",
@@ -15,17 +14,18 @@
     {
       "source_capture_ref": "capture-a",
       "capture_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "configuration_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "selected_root": "root-a",
       "package_kind": "flow",
       "package_group": "org.example",
       "package_name": "app",
       "exact_version": "1.1.0",
-      "content_hash_recipe": "vibe-content-hash-v1",
+      "content_hash_recipe": "sha256-tree/1",
       "content_hash_value": "content-a",
       "role": "build_and_runtime",
       "capture_owner": "source-owner-a",
-      "configuration_ref": "config-a"
+      "configuration_ref": "config-a",
+      "configuration_owner": "config-owner-a",
+      "configuration_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
   ],
   "dependency_closure": [
@@ -33,13 +33,21 @@
       "role": "build",
       "name": "toolchain",
       "closure_owner": "cargo",
-      "closure_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "closure_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "closure_ref": "closure-toolchain",
+      "configuration_ref": "config-toolchain",
+      "configuration_owner": "config-owner-a",
+      "configuration_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     },
     {
       "role": "runtime",
       "name": "libc",
       "closure_owner": "native",
-      "closure_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "closure_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "closure_ref": "closure-libc",
+      "configuration_ref": "config-libc",
+      "configuration_owner": "config-owner-a",
+      "configuration_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
   ],
   "lock_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

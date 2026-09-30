@@ -9,8 +9,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ExactLock {
-    pub definition_digest_sha256: String,
-
     pub definition_ref: String,
 
     pub dependency_closure: Vec<Dependency>,
@@ -36,6 +34,8 @@ pub struct Capture {
     pub capture_owner: String,
 
     pub configuration_digest_sha256: String,
+
+    pub configuration_owner: String,
 
     pub configuration_ref: String,
 
@@ -65,6 +65,14 @@ pub struct Dependency {
     pub closure_digest_sha256: String,
 
     pub closure_owner: String,
+
+    pub closure_ref: String,
+
+    pub configuration_digest_sha256: String,
+
+    pub configuration_owner: String,
+
+    pub configuration_ref: String,
 
     pub name: String,
 

@@ -1,13 +1,12 @@
 {
   "metadata": {
     "description": "Selected package and backend recipe projection. JTD validates shape only: exact package identity, capture content, normalization, closure and the producer-computed lock digest require semantic validation. Source/capture references alone are not authenticated bytes.",
-    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-EXACT-LOCK-IDENTITY", "r": 1},
+    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-EXACT-LOCK-IDENTITY", "r": 2},
     "rustOptions": {"package": "vibe_wire::environment::e1::exact_lock"}
   },
   "properties": {
     "schema": {"type": "uint8"}, "recipe_epoch": {"type": "uint16"},
     "lock_owner": {"type": "string"}, "definition_ref": {"type": "string"},
-    "definition_digest_sha256": {"type": "string"},
     "target": {"ref": "target"},
     "selected_captures": {"elements": {"ref": "capture"}, "metadata": {"x-empty": "emit"}},
     "dependency_closure": {"elements": {"ref": "dependency"}, "metadata": {"x-empty": "emit"}},
@@ -28,12 +27,17 @@
       "source_capture_ref": {"type": "string"}, "capture_owner": {"type": "string"},
       "capture_digest_sha256": {"type": "string"},
       "configuration_ref": {"type": "string"},
+      "configuration_owner": {"type": "string"},
       "configuration_digest_sha256": {"type": "string"}
     }},
     "dependency_role": {"enum": ["build", "runtime", "build_and_runtime"], "metadata": {"x-vocabulary": "closed"}},
     "dependency": {"properties": {
       "role": {"ref": "dependency_role"},
-      "name": {"type": "string"}, "closure_owner": {"type": "string"},
+      "name": {"type": "string"}, "closure_ref": {"type": "string"},
+      "configuration_ref": {"type": "string"},
+      "configuration_owner": {"type": "string"},
+      "configuration_digest_sha256": {"type": "string"},
+      "closure_owner": {"type": "string"},
       "closure_digest_sha256": {"type": "string"}
     }}
   }
