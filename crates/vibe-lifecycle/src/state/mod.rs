@@ -5,6 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME
 mod error;
 mod fingerprint;
 mod identity;
+mod install_stage;
 mod io;
 mod outcome_marker;
 mod outcome_store;
@@ -34,6 +35,13 @@ pub(crate) use fingerprint::{
 };
 pub use identity::{
     RunIdentity, SupersededTrace, select_run_identity, select_run_identity_for_reservation,
+};
+#[allow(
+    unused_imports,
+    reason = "protected Generate activation follows this owner stage"
+)]
+pub(crate) use install_stage::{
+    InstallEnteredStage, InstallStageError, publish_install_entered_stage,
 };
 #[allow(
     unused_imports,
