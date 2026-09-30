@@ -124,6 +124,7 @@ pub struct LegacyArtifactView {
 pub enum LegacyArtifactVerification {
     VerifiedAtProduction,
     UnverifiedAtProduction,
+    FailedAtProduction,
 }
 
 pub fn classify_legacy_artifact(view: &LegacyArtifactView) -> LegacyClassification {

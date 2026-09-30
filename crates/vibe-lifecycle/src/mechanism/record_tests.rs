@@ -169,6 +169,149 @@ fn the_reader_finds_a_written_record_and_reports_absence_as_absence() {
 }
 
 #[test]
+fn legacy_reader_preserves_full_record_and_historical_verification_only() {
+    let project = temp();
+    let mechanism = key("build:cargo");
+    let absolute = absolute();
+    let produced = digest_of(0xab);
+    let config = digest_of(0x01);
+    let toolchain = digest_of(0xcd);
+    let record = build_record(&inputs(
+        &mechanism,
+        &absolute,
+        &produced,
+        &config,
+        &toolchain,
+        "2026-08-30T12:34:56Z",
+    ))
+    .unwrap();
+    write_record(project.path(), &record).unwrap();
+    let before = std::fs::read(
+        project
+            .path()
+            .join(ARTIFACT_RECORD_DIR)
+            .join("vibe-helper.exe.json"),
+    )
+    .unwrap();
+    let LegacyArtifactRead::Retained(found) =
+        read_legacy_artifact(project.path(), "vibe-helper.exe").unwrap()
+    else {
+        panic!("written historical record must be retained");
+    };
+    assert_eq!(found.original, record);
+    assert_eq!(
+        found.view.verification_at_production,
+        Some(LegacyArtifactVerification::VerifiedAtProduction)
+    );
+    assert_eq!(
+        found.view.digest.as_deref(),
+        Some(format!("sha256:{produced}").as_str())
+    );
+    let LegacyClassification::Legacy { missing_for_exact } = found.classification else {
+        panic!("historical verified-at-production is still legacy");
+    };
+    assert!(
+        missing_for_exact.contains(&vibe_core::environment::MissingLegacyInput::CurrentOutputBytes)
+    );
+    assert_eq!(
+        std::fs::read(
+            project
+                .path()
+                .join(ARTIFACT_RECORD_DIR)
+                .join("vibe-helper.exe.json")
+        )
+        .unwrap(),
+        before
+    );
+    assert!(
+        !project.path().join("target/debug/vibe-helper.exe").exists(),
+        "the reader did not inspect or synthesize current output bytes"
+    );
+}
+
+#[test]
+fn legacy_reader_distinguishes_absence_corruption_and_bad_output_id() {
+    let project = temp();
+    assert!(matches!(
+        read_legacy_artifact(project.path(), "missing"),
+        Ok(LegacyArtifactRead::Absent)
+    ));
+    assert!(matches!(
+        read_legacy_artifact(project.path(), "../escape"),
+        Err(LegacyArtifactReadError::InvalidOutputId)
+    ));
+    let dir = project.path().join(ARTIFACT_RECORD_DIR);
+    std::fs::create_dir_all(&dir).unwrap();
+    std::fs::write(dir.join("broken.json"), b"not-json").unwrap();
+    assert!(matches!(
+        read_legacy_artifact(project.path(), "broken"),
+        Err(LegacyArtifactReadError::Unavailable(_))
+    ));
+    let mechanism = key("build:cargo");
+    let absolute = absolute();
+    let produced = digest_of(0xab);
+    let config = digest_of(0x01);
+    let toolchain = digest_of(0xcd);
+    let record = build_record(&inputs(
+        &mechanism,
+        &absolute,
+        &produced,
+        &config,
+        &toolchain,
+        "2026-08-30T12:34:56Z",
+    ))
+    .unwrap();
+    std::fs::write(dir.join("other.json"), serde_json::to_vec(&record).unwrap()).unwrap();
+    assert!(matches!(
+        read_legacy_artifact(project.path(), "other"),
+        Err(LegacyArtifactReadError::Unavailable(_))
+    ));
+}
+
+#[test]
+fn legacy_reader_preserves_failed_and_unverified_production_verdicts() {
+    let project = temp();
+    let mechanism = key("build:cargo");
+    let absolute = absolute();
+    let produced = digest_of(0xab);
+    let config = digest_of(0x01);
+    let toolchain = digest_of(0xcd);
+    let mut record = build_record(&inputs(
+        &mechanism,
+        &absolute,
+        &produced,
+        &config,
+        &toolchain,
+        "2026-08-30T12:34:56Z",
+    ))
+    .unwrap();
+    for (status, expected) in [
+        (
+            VerificationStatus::Unverified,
+            LegacyArtifactVerification::UnverifiedAtProduction,
+        ),
+        (
+            VerificationStatus::Failed,
+            LegacyArtifactVerification::FailedAtProduction,
+        ),
+    ] {
+        record.verification.status = status.clone();
+        write_record(project.path(), &record).unwrap();
+        let LegacyArtifactRead::Retained(found) =
+            read_legacy_artifact(project.path(), "vibe-helper.exe").unwrap()
+        else {
+            panic!("record must remain readable");
+        };
+        assert_eq!(found.original.verification.status, status);
+        assert_eq!(found.view.verification_at_production, Some(expected));
+        assert!(matches!(
+            found.classification,
+            LegacyClassification::NeedsInput { .. }
+        ));
+    }
+}
+
+#[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY")]
 fn a_record_that_does_not_validate_is_never_written() {
     let (absolute, produced, config, toolchain) = (

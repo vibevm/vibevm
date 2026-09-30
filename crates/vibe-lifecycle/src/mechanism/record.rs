@@ -30,6 +30,9 @@ use std::path::Path;
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use thiserror::Error;
+use vibe_core::environment::{
+    LegacyArtifactVerification, LegacyArtifactView, LegacyClassification, classify_legacy_artifact,
+};
 use vibe_core::manifest::{ArtifactKind, MechanismKey};
 use vibe_safefs::Project;
 use vibe_wire::behaviour::artifact_record::validate;
@@ -283,6 +286,82 @@ pub(crate) fn read_record(
         serde_json::from_slice(&bytes).map_err(|error| error.to_string())?;
     validate(&record).map_err(|error| error.to_string())?;
     Ok(Some(record))
+}
+
+/// The old owner's full artifact record plus a weaker environment migration
+/// proposal. The original generated value remains authoritative for every
+/// field this view does not project; neither value proves current output
+/// bytes or target ABI/prefix identity.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LegacyArtifactEvidence {
+    pub original: ArtifactRecord,
+    pub view: LegacyArtifactView,
+    pub classification: LegacyClassification,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum LegacyArtifactRead {
+    Absent,
+    Retained(LegacyArtifactEvidence),
+}
+
+#[derive(Debug, Error)]
+pub enum LegacyArtifactReadError {
+    #[error("artifact output ID is outside the incumbent portable-token grammar")]
+    InvalidOutputId,
+    #[error("legacy artifact record is unavailable: {0}")]
+    Unavailable(String),
+}
+
+/// Read through the incumbent no-follow project cell and scalar validator,
+/// then classify historical evidence without rehashing the output. A missing
+/// record is distinct from a malformed/unsafe record. The public ID gate
+/// precedes the incumbent reader's path construction.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-LEGACY-RECORD-MIGRATION",
+    r = 1
+)]
+pub fn read_legacy_artifact(
+    project_root: &Path,
+    output_id: &str,
+) -> Result<LegacyArtifactRead, LegacyArtifactReadError> {
+    if !vibe_core::manifest::is_portable_token(output_id) {
+        return Err(LegacyArtifactReadError::InvalidOutputId);
+    }
+    let Some(original) =
+        read_record(project_root, output_id).map_err(LegacyArtifactReadError::Unavailable)?
+    else {
+        return Ok(LegacyArtifactRead::Absent);
+    };
+    if original.id != output_id {
+        return Err(LegacyArtifactReadError::Unavailable(
+            "record identity differs from requested output ID".into(),
+        ));
+    }
+    let verification_at_production = match original.verification.status {
+        VerificationStatus::Verified => LegacyArtifactVerification::VerifiedAtProduction,
+        VerificationStatus::Unverified => LegacyArtifactVerification::UnverifiedAtProduction,
+        VerificationStatus::Failed => LegacyArtifactVerification::FailedAtProduction,
+    };
+    let algorithm = match original.digest.algorithm {
+        DigestAlgorithm::Sha256 => "sha256",
+        DigestAlgorithm::Sha256Tree => "sha256-tree/1",
+    };
+    let view = LegacyArtifactView {
+        schema: original.schema,
+        output_id: original.id.clone(),
+        producer_target: original.producer.target.clone(),
+        producer_provider: original.producer.provider.key.clone(),
+        digest: Some(format!("{algorithm}:{}", original.digest.value)),
+        verification_at_production: Some(verification_at_production),
+        path_relative: Some(original.path_relative.path.clone()),
+    };
+    let classification = classify_legacy_artifact(&view);
+    Ok(LegacyArtifactRead::Retained(LegacyArtifactEvidence {
+        original,
+        view,
+        classification,
+    }))
 }
 
 /// One target-config fingerprint over everything the engine chose for a

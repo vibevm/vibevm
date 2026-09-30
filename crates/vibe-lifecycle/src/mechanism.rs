@@ -73,7 +73,10 @@ pub use error::{DeployProviderError, MechanismError};
 pub use package::{
     PackageError, PackageExecution, PackageOutcome, PackagedArtifact, execute_package_targets,
 };
-pub use record::{ARTIFACT_RECORD_DIR, RecordError};
+pub use record::{
+    ARTIFACT_RECORD_DIR, LegacyArtifactEvidence, LegacyArtifactRead, LegacyArtifactReadError,
+    RecordError, read_legacy_artifact,
+};
 
 // The deploy role's protocol lives beside its value types; it is named
 // here so every use site keeps spelling it `crate::mechanism::…`.
