@@ -52,6 +52,7 @@ use crate::mechanism::{
     PrivilegeNeed, ProviderDescriptor, ProviderOperation, Reversibility,
 };
 
+pub(crate) mod bound;
 pub(crate) mod config;
 pub(crate) mod launcher;
 pub(crate) mod store;
