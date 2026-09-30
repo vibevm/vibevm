@@ -1,0 +1,92 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Blocking waiting for file lock on build directory
+   Compiling vibe-safefs v1.1.0 (/home/olegchir/git/v/vibevm-next/crates/vibe-safefs)
+warning: unused imports: `CleanupPreparation`, `OwnedTreeCleanupError`, `OwnedTreeCleanupProgress`, `OwnedTreeObservation`, `arm_after_owned_tree_publish_move`, `arm_after_rename_source_check`, `arm_before_owned_tree_check`, `arm_before_owned_tree_publish`, `arm_before_rename_noreplace`, `arm_between_manifest_passes`, `arm_during_manifest_lease`, and `arm_during_native_mutation`
+ --> crates/vibe-safefs/src/transaction/tests.rs:5:5
+  |
+5 |     CleanupPreparation, DirectoryDurability, ExternalStore, OwnedTreeCleanupError,
+  |     ^^^^^^^^^^^^^^^^^^                                      ^^^^^^^^^^^^^^^^^^^^^
+6 |     OwnedTreeCleanupProgress, OwnedTreeObservation, Project, RenameError,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+7 |     arm_after_owned_tree_publish_move, arm_after_rename_source_check, arm_before_owned_tree_check,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+8 |     arm_before_owned_tree_publish, arm_before_rename_noreplace, arm_between_manifest_passes,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+9 |     arm_during_manifest_lease, arm_during_native_mutation, arm_same_filesystem_check,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib test) generated 5 warnings (run `cargo fix --lib -p vibe-safefs --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.37s
+     Running unittests src/lib.rs (target/debug/deps/vibe_safefs-099977a1f5801505)
+
+running 18 tests
+test project::race_tests::a_loser_refuses_a_link_planted_by_the_winner ... ok
+test project::race_tests::a_creator_that_loses_the_race_reports_that_it_did_not_create ... ok
+test project::race_tests::invalid_project_lock_name_refuses_before_creating_vibe_directory ... ok
+test project::race_tests::exclusive_creation_distinguishes_all_three_outcomes ... ok
+test project::race_tests::exactly_one_of_two_creators_claims_ownership ... ok
+test project::race_tests::a_post_lock_identity_mismatch_recontends_deterministically ... ok
+test project::race_tests::an_exclusive_lock_admits_one_holder_at_a_time ... ok
+test project::race_tests::invalid_subproject_suffix_creates_nothing ... ok
+test project::race_tests::a_lock_file_replaced_before_the_lock_is_not_accepted ... ok
+test project::race_tests::pinned_directory_handles_contend_on_one_physical_lock_file ... ok
+test project::race_tests::the_after_create_hook_fires_before_the_reopen ... ok
+test project::race_tests::explicit_ancestor_identity_check_distinguishes_retargeted_child ... ok
+test project::race_tests::subproject_refuses_link_or_reparse_child ... ok
+test project::race_tests::pinned_lock_replacement_retries_then_covers_current_name ... ok
+test project::race_tests::pinned_lock_repeated_identity_mismatch_refuses_without_guard ... ok
+test project::race_tests::pinned_disjoint_roots_take_same_spelling_independently ... ok
+test project::race_tests::the_created_not_reopened_diagnostic_claims_only_what_it_proved ... ok
+test project::race_tests::subproject_from_held_root_retains_descendant_identity ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 124 filtered out; finished in 0.00s
