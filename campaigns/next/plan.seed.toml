@@ -3977,7 +3977,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Meet baseline work-package scope: Four native bundle smokes default-on; explicit skip parameter/scoped status, no full-tests side effect; standalone preparation reports","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json"
-contract_sha256 = "5f1db8c7246f366ea06de43e33db48b502e0b1052f6ddf982e82afdd4f7cea54"
+contract_sha256 = "e6f22e79e3aa4ba82db82228dbbb0217dde9b56181fedd8c3d11d7fadeb0a506"
 
 [[node]]
 id = "M-07-B.1"
@@ -3992,7 +3992,7 @@ mandates = ["D-010","D-011","D-015","F-010","F-011"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-07-B.json#M-07-B.1","All five supported bundle targets, including both Linux GNU and musl, have distinct evidence rows; missing native hosts remain outstanding obligations.","Harness proves actual installed artifact identity and leaves the real home unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json#M-07-B.1"
-contract_sha256 = "5f1db8c7246f366ea06de43e33db48b502e0b1052f6ddf982e82afdd4f7cea54"
+contract_sha256 = "e6f22e79e3aa4ba82db82228dbbb0217dde9b56181fedd8c3d11d7fadeb0a506"
 
 [[node]]
 id = "M-07-B.2"
@@ -4004,10 +4004,10 @@ state = "planned"
 zoom = "summary"
 depends_on = ["M-07-B.1"]
 mandates = ["D-010","D-011","D-015","F-010","F-011"]
-acceptance = ["Read complete task contract campaigns/next/tasks/M-07-B.json#M-07-B.2","CLI and machine preparation return equivalent smoke policy/status.","Existing accepted skipped path is represented without a false execution claim."]
+acceptance = ["Read complete task contract campaigns/next/tasks/M-07-B.json#M-07-B.2","CLI and machine preparation return equivalent smoke policy/status.","An explicitly skipped path is inspectable without a false execution claim and remains not apply-ready under the default e1 policy."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-07-B.json#M-07-B.2"
-contract_sha256 = "5f1db8c7246f366ea06de43e33db48b502e0b1052f6ddf982e82afdd4f7cea54"
+contract_sha256 = "e6f22e79e3aa4ba82db82228dbbb0217dde9b56181fedd8c3d11d7fadeb0a506"
 
 [[node]]
 id = "M-07-C"
