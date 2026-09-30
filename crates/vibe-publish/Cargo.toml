@@ -25,6 +25,7 @@ walkdir.workspace = true
 chrono.workspace = true
 vibe-core.workspace = true
 vibe-registry.workspace = true
+vibe-lifecycle.workspace = true
 vibe-safefs.workspace = true
 vibe-wire.workspace = true
 

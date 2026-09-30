@@ -4921,6 +4921,7 @@ dependencies = [
  "tokio",
  "tracing",
  "vibe-core",
+ "vibe-lifecycle",
  "vibe-registry",
  "vibe-safefs",
  "vibe-wire",
