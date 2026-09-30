@@ -513,6 +513,10 @@ pub(crate) fn submit_fixed_one_script_validate(
     target_os: TargetOs,
     observed_at: Timestamp,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    ensure!(
+        TargetOs::current() == Some(target_os),
+        "fixed script target OS differs from the current host"
+    );
     static PROCESS: SystemProcessRunner = SystemProcessRunner;
     static PROBE: SystemProbe = SystemProbe;
     submit_one_script_validate_internal(
@@ -609,6 +613,10 @@ pub(crate) fn submit_fixed_one_agent_validate(
     target_os: TargetOs,
     observed_at: Timestamp,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    ensure!(
+        TargetOs::current() == Some(target_os),
+        "fixed agent target OS differs from the current host"
+    );
     submit_one_agent_validate_internal(
         path,
         namespace,

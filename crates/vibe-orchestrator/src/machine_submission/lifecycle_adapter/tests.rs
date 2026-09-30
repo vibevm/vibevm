@@ -209,6 +209,53 @@ fn fixed_agent_internal_entry_parks_and_replays() {
 }
 
 #[test]
+fn fixed_effect_entries_refuse_a_foreign_target_os_before_reservation() {
+    let current = TargetOs::current().expect("supported fixture host");
+    let foreign = if current == TargetOs::Windows {
+        TargetOs::Linux
+    } else {
+        TargetOs::Windows
+    };
+    let scope = scope();
+
+    let script = script_project();
+    let namespace = issue(script.path(), &scope);
+    let index = script.path().join(".vibe/machine-submissions.json");
+    let before = std::fs::read(&index).unwrap();
+    let error = submit_fixed_one_script_validate(
+        script.path(),
+        &namespace,
+        &scope,
+        "foreign-script-os",
+        request(),
+        foreign,
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("current host"), "{error}");
+    assert_eq!(std::fs::read(index).unwrap(), before);
+
+    let agent = agent_project();
+    let namespace = issue(agent.path(), &scope);
+    let index = agent.path().join(".vibe/machine-submissions.json");
+    let before = std::fs::read(&index).unwrap();
+    let error = submit_fixed_one_agent_validate(
+        agent.path(),
+        &namespace,
+        &scope,
+        "foreign-agent-os",
+        agent_request(),
+        foreign,
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("current host"), "{error}");
+    assert_eq!(std::fs::read(index).unwrap(), before);
+}
+
+#[test]
 fn one_agent_changed_prompt_or_foreign_scope_cannot_repark() {
     let dir = agent_project();
     let scope = scope();
