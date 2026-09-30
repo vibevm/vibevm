@@ -2,7 +2,8 @@ use std::path::PathBuf;
 
 use sha2::{Digest, Sha256};
 use vibe_wire::generated::lifecycle_outcome_marker::{
-    LifecycleOutcomeMarker, LifecycleOutcomeMarkerOutcome as Outcome, ReportEvidence,
+    LifecycleOutcomeMarker, LifecycleOutcomeMarkerEffectState as EffectState,
+    LifecycleOutcomeMarkerOutcome as Outcome, ReportEvidence,
 };
 
 use super::super::outcome_marker::{
@@ -160,6 +161,24 @@ fn completed_parked_failed_and_uncertain_are_distinct_from_report_ok() {
     validate_lifecycle_outcome_marker(&case, &case.run_id, &case.reservation_ref, Some(&bytes))
         .unwrap();
     assert_eq!(case.outcome, Outcome::Uncertain);
+}
+
+#[test]
+fn completed_execution_may_have_uncertain_physical_effect_but_still_needs_complete_report() {
+    let mut case = marker("valid", "completed-available");
+    case.effect_state = EffectState::Uncertain;
+    let bytes = report(&case.run_id, false);
+    validate_lifecycle_outcome_marker(&case, &case.run_id, &case.reservation_ref, Some(&bytes))
+        .unwrap();
+
+    let mut incomplete = serde_json::from_slice::<serde_json::Value>(&bytes).unwrap();
+    incomplete["chain"] = serde_json::json!(["validate", "build"]);
+    assert_semantic_report_refusal(&mut case, incomplete);
+
+    let mut failed = serde_json::from_slice::<serde_json::Value>(&bytes).unwrap();
+    failed["ok"] = false.into();
+    failed["steps"][0]["status"] = "fail".into();
+    assert_semantic_report_refusal(&mut case, failed);
 }
 
 #[test]

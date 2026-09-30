@@ -8,8 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSI
 
 use sha2::{Digest, Sha256};
 use vibe_wire::generated::lifecycle_outcome_marker::{
-    LifecycleOutcomeMarker, LifecycleOutcomeMarkerEffectState as EffectState,
-    LifecycleOutcomeMarkerOutcome as Outcome, ReportEvidence,
+    LifecycleOutcomeMarker, LifecycleOutcomeMarkerOutcome as Outcome, ReportEvidence,
 };
 use vibe_wire::generated::lifecycle_report::LifecycleReport;
 
@@ -116,7 +115,6 @@ fn validate_report(
         Outcome::Completed => {
             if !report.ok
                 || report.delegation.is_some()
-                || marker.effect_state == EffectState::Uncertain
                 || report.steps.len() != report.chain.len()
                 || !steps_match_prefix(report)
                 || !report
