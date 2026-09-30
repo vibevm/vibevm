@@ -163,6 +163,24 @@ struct FixtureSource {
     project_root: PathBuf,
 }
 
+struct MutatingConfirm {
+    cache_file: PathBuf,
+    calls: AtomicUsize,
+}
+
+impl ConfirmGate for MutatingConfirm {
+    fn confirm_install(&self, packages: usize) -> Result<()> {
+        ensure!(packages == 1, "fixture confirmation expected one package");
+        ensure!(
+            self.cache_file.is_file(),
+            "cache was not fetched before confirmation"
+        );
+        self.calls.fetch_add(1, Ordering::SeqCst);
+        std::fs::write(&self.cache_file, b"changed after fetch before apply\n")?;
+        Ok(())
+    }
+}
+
 impl PackageSource for FixtureSource {
     fn qualify(&self, pkgref: &PackageRef, _locked: &Lockfile) -> Result<PackageRef> {
         ensure!(
@@ -286,6 +304,7 @@ fn source_drift_after_stage_refuses_before_factory_or_install_effect() {
         TargetOs::current().expect("supported fixture platform"),
         "2026-09-30T00:00:05Z".parse().unwrap(),
         Some(&drift),
+        None,
     )
     .unwrap();
     let SubmissionOutcome::RecoveryRequired { run_id } = result else {
@@ -445,6 +464,70 @@ fn forged_registry_content_hash_refuses_before_lock_and_slot() {
         fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap(),
         SubmissionOutcome::Replayed { run_id, outcome }
     );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn cache_drift_at_confirm_is_uncertain_before_apply_and_never_retried() {
+    let _guard = fixture_guard();
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let factory = FixtureFactory::new(registry);
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let cache_file = vibe_registry::store::store_root()
+        .unwrap()
+        .join("org.example/fixture/v1.1.0/README.md");
+    let confirm = MutatingConfirm {
+        cache_file,
+        calls: AtomicUsize::new(0),
+    };
+    let first = install::submit_one_package_fixture_install_with_hook(
+        &project,
+        &source,
+        &factory,
+        &namespace,
+        &scope,
+        "one",
+        fixture_request(),
+        TargetOs::current().expect("supported fixture platform"),
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+        None,
+        Some(&confirm),
+    )
+    .unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("post-fetch drift must retain an uncertain result: {first:?}")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Uncertain);
+    assert_eq!(outcome.marker.effect_state, EffectState::Uncertain);
+    assert_eq!(confirm.calls.load(Ordering::SeqCst), 1);
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    assert!(
+        project
+            .join(".vibe/lifecycle-outcomes")
+            .join(format!("{run_id}.install-entered.json"))
+            .is_file()
+    );
+    assert!(!project.join("vibe.lock").exists());
+    assert!(
+        !project
+            .join("vibevm/vibedeps/org.example.fixture/1.1.0")
+            .exists()
+    );
+    assert!(!project.join("vibevm/vibespecs/boot/INDEX.md").exists());
+    assert_eq!(
+        fixture_call(&project, &source, &factory, &namespace, &scope, "one").unwrap(),
+        SubmissionOutcome::Replayed { run_id, outcome }
+    );
+    assert_eq!(confirm.calls.load(Ordering::SeqCst), 1);
     assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
 }
 

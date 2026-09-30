@@ -45,6 +45,7 @@ pub(crate) fn submit_one_package_fixture_install<F: ControlledFixtureFactory>(
         target_os,
         observed_at,
         None,
+        None,
     )
 }
 
@@ -61,6 +62,7 @@ pub(crate) fn submit_one_package_fixture_install_with_hook<'a, F: ControlledFixt
     target_os: TargetOs,
     observed_at: Timestamp,
     after_stage: Option<&'a dyn Fn()>,
+    confirm: Option<&'a dyn ConfirmGate>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     ensure!(
         factory.serving_source_root() == source_root,
@@ -78,6 +80,7 @@ pub(crate) fn submit_one_package_fixture_install_with_hook<'a, F: ControlledFixt
             source_root,
             factory,
             after_stage,
+            confirm,
         }),
     )
 }
@@ -221,12 +224,13 @@ impl ConfirmGate for AcceptOneFixture {
 
 pub(super) fn one_package_fixture_ports<'a>(
     factory: &'a dyn PackageSourceFactory,
+    confirm: Option<&'a dyn ConfirmGate>,
 ) -> DefaultLifecyclePorts<'a> {
     let agent: Arc<dyn AgentBackend> = Arc::new(vibe_lifecycle::NoAgentBackend);
     DefaultLifecyclePorts {
         observer: &SilentRun,
         install_observer: &SilentInstall,
-        confirm_gate: &AcceptOneFixture,
+        confirm_gate: confirm.unwrap_or(&AcceptOneFixture),
         sources: factory,
         environment: &ReadOnlyEmptyEnvironment,
         manifest_mutation: &NoManifestMutation,

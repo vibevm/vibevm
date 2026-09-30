@@ -82,12 +82,14 @@ struct FixtureSourcePort<'a> {
     source_root: &'a Path,
     factory: &'a dyn PackageSourceFactory,
     after_stage: Option<&'a dyn Fn()>,
+    confirm: Option<&'a dyn ConfirmGate>,
 }
 
 struct FixtureRuntime<'a> {
     witness: PackageTreeWitness,
     factory: &'a dyn PackageSourceFactory,
     after_stage: Option<&'a dyn Fn()>,
+    confirm: Option<&'a dyn ConfirmGate>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -226,6 +228,7 @@ fn submit_protected_lifecycle_inner<'a>(
                 witness,
                 factory: fixture.factory,
                 after_stage: fixture.after_stage,
+                confirm: fixture.confirm,
             })
         })
         .transpose()?;
@@ -674,7 +677,10 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             let ports = if self.phase == Phase::Validate {
                 validate_ports()
             } else if let Some(factory) = attested_factory.as_ref() {
-                install::one_package_fixture_ports(factory)
+                install::one_package_fixture_ports(
+                    factory,
+                    self.fixture.as_ref().and_then(|f| f.confirm),
+                )
             } else {
                 install::empty_install_ports()
             };

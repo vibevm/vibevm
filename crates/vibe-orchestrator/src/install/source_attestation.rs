@@ -6,6 +6,8 @@
 
 use std::collections::BTreeSet;
 use std::path::Path;
+use std::path::PathBuf;
+use std::sync::Mutex;
 
 use anyhow::{Context, Result, ensure};
 use vibe_core::PackageRef;
@@ -17,6 +19,7 @@ use vibe_lifecycle::process::{
 };
 use vibe_registry::{BoundedContentFile, CachedPackage, InPlaceMaterialised, RegistryError};
 use vibe_resolver::{DepProviderError, ResolvedGraph, SolveError};
+use vibe_workspace::install::ResolvedDep;
 
 use crate::ports::{PackageSource, PackageSourceBuild, PackageSourceFactory};
 
@@ -71,6 +74,7 @@ impl PackageSourceFactory for AttestingFactory<'_> {
             inner: self.inner.build(input)?,
             expected: self.expected.clone(),
             manifest: self.manifest.clone(),
+            receipt: Mutex::new(None),
         }))
     }
 }
@@ -79,6 +83,45 @@ struct AttestingSource {
     inner: Box<dyn PackageSource>,
     expected: PackageTreeWitness,
     manifest: Manifest,
+    receipt: Mutex<Option<AttestedCacheReceipt>>,
+}
+
+#[derive(Clone)]
+struct AttestedCacheReceipt {
+    cache_dir: PathBuf,
+    content_hash: String,
+}
+
+fn validate_ready_resolution(
+    expected: &PackageTreeWitness,
+    manifest: &Manifest,
+    receipt: &AttestedCacheReceipt,
+    resolution: &[ResolvedDep],
+) -> Result<()> {
+    ensure!(
+        resolution.len() == 1,
+        "protected Ready plan is not one package"
+    );
+    let package = manifest.require_package()?;
+    let row = &resolution[0];
+    ensure!(
+        row.kind == package.kind
+            && row.group == package.group
+            && row.name == package.name
+            && row.version == package.version
+            && row.content_dir == receipt.cache_dir
+            && row.manifest == *manifest
+            && row.requires.is_empty()
+            && row.embedded_sources.is_empty()
+            && row.in_place_changed.is_none()
+            && row.source_hash.as_ref().map(|hash| hash.as_str())
+                == Some(receipt.content_hash.as_str())
+            && expected.package_pin.group.as_ref() == Some(&row.group)
+            && expected.package_pin.name.as_str() == row.name
+            && expected.package_pin.version.matches(&row.version),
+        "protected Ready resolution differs from attested cache receipt"
+    );
+    Ok(())
 }
 
 impl AttestingSource {
@@ -151,6 +194,18 @@ impl AttestingSource {
             "fetched content_hash differs from bounded recipe-zero replay"
         );
         recheck_package_tree_witness(&self.expected)?;
+        let mut receipt = self
+            .receipt
+            .lock()
+            .map_err(|_| anyhow::anyhow!("attested cache receipt lock poisoned"))?;
+        ensure!(
+            receipt.is_none(),
+            "one-package source attempted a second fetch"
+        );
+        *receipt = Some(AttestedCacheReceipt {
+            cache_dir: cached.cache_dir.clone(),
+            content_hash: replayed.as_str().to_owned(),
+        });
         Ok(())
     }
 
@@ -171,6 +226,45 @@ impl PackageSource for AttestingSource {
             "attested source refuses a different package pin"
         );
         Ok(pkgref.clone())
+    }
+
+    fn recheck_before_apply(&self, resolution: &[ResolvedDep]) -> Result<()> {
+        let check = || -> Result<()> {
+            let receipt = self
+                .receipt
+                .lock()
+                .map_err(|_| anyhow::anyhow!("attested cache receipt lock poisoned"))?
+                .clone()
+                .context("protected source has no post-fetch receipt")?;
+            validate_ready_resolution(&self.expected, &self.manifest, &receipt, resolution)?;
+            attest_package_tree_copy(&self.expected, &receipt.cache_dir)?;
+            let rows: Vec<BoundedContentFile> = self
+                .expected
+                .files
+                .iter()
+                .map(|file| BoundedContentFile {
+                    relative_path: file.relative_path.clone(),
+                    bytes: file.bytes,
+                    sha256: file.sha256.clone(),
+                })
+                .collect();
+            let replayed = vibe_registry::compute_content_hash_legacy0_bounded_exact(
+                &receipt.cache_dir,
+                &self.expected.package_pin,
+                &rows,
+            )?;
+            ensure!(
+                replayed.as_str() == receipt.content_hash,
+                "pre-apply cache hash differs from the post-fetch receipt"
+            );
+            recheck_package_tree_witness(&self.expected)?;
+            Ok(())
+        };
+        check().map_err(|error| {
+            anyhow::anyhow!(
+                "pre-apply cache attestation failed after possible global-cache effect; recovery required: {error:#}"
+            )
+        })
     }
 }
 
@@ -262,5 +356,50 @@ impl InstallSource for AttestingSource {
         _slot: &Path,
     ) -> std::result::Result<InPlaceMaterialised, RegistryError> {
         Err(self.registry_failure("in-place source is outside one-package attestation"))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use vibe_core::ContentHash;
+    use vibe_lifecycle::process::capture_package_tree_witness;
+
+    #[test]
+    fn foreign_ready_resolution_row_refuses_without_cache_io() {
+        let root = tempfile::tempdir().unwrap();
+        let body = "[package]\ngroup='org.example'\nname='fixture'\nkind='flow'\nversion='1.1.0'\n";
+        std::fs::write(root.path().join("vibe.toml"), body).unwrap();
+        std::fs::write(root.path().join("README.md"), b"source\n").unwrap();
+        let pin = PackageRef::parse("flow:org.example/fixture@=1.1.0").unwrap();
+        let witness =
+            capture_package_tree_witness(root.path(), &pin, &["vibe.toml", "README.md"]).unwrap();
+        let manifest = Manifest::parse_str(body).unwrap();
+        let package = manifest.require_package().unwrap();
+        let receipt = AttestedCacheReceipt {
+            cache_dir: root.path().to_path_buf(),
+            content_hash: "sha256:aa".into(),
+        };
+        let mut row = ResolvedDep {
+            kind: package.kind,
+            group: package.group.clone(),
+            name: package.name.clone(),
+            version: package.version.clone(),
+            content_dir: receipt.cache_dir.clone(),
+            source_hash: Some(ContentHash::parse(&receipt.content_hash).unwrap()),
+            embedded_sources: Vec::new(),
+            manifest: manifest.clone(),
+            requires: Vec::new(),
+            admitted_by: Some("root-edge".into()),
+            via_override: None,
+            source_mutable: false,
+            in_place_changed: None,
+        };
+        validate_ready_resolution(&witness, &manifest, &receipt, &[row.clone()]).unwrap();
+        row.name = "foreign".into();
+        assert!(validate_ready_resolution(&witness, &manifest, &receipt, &[row.clone()]).is_err());
+        row.name = package.name.clone();
+        row.content_dir = root.path().join("foreign-cache");
+        assert!(validate_ready_resolution(&witness, &manifest, &receipt, &[row]).is_err());
     }
 }

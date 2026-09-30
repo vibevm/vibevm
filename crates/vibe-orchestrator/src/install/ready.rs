@@ -75,6 +75,11 @@ pub(super) fn apply(
 
     confirm_gate.confirm_install(planned.resolution.len())?;
 
+    // The last caller-owned read-only checkpoint before apply can mutate a
+    // slot, lock or boot output. Protected sources reobserve the fetched
+    // cache here; ordinary sources keep their default no-op port behavior.
+    resolver.recheck_before_apply(&planned.resolution)?;
+
     // PROP-054 ##INSTALL-IS-CONSENT: `[hooks]` is translated to
     // `slot:` contributions and runs through the lifecycle handler
     // engine. The install confirmation above is the sole trust
