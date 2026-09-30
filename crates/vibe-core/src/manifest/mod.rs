@@ -90,7 +90,7 @@ pub use redirect::{RedirectFile, RedirectSection, RefPolicy, parse_redirect_byte
 pub use run_command::{RunCommandDecl, RunCommandHandler};
 pub use source_descriptor::{
     SelectedSource, SourceDescriptor, SourceInterpretation, SourceLoading, SourceRole,
-    SourceSelectionError, SourceSelector,
+    SourceSelectionError, SourceSelector, select_source_rows,
 };
 pub use subskill::{
     ActivationRules, DeliveryMode, SubskillConflicts, SubskillContent, SubskillManifest,

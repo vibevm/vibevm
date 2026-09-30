@@ -35,6 +35,60 @@ version = "0.1.0"
     // A groupless project serializes without a `group` key.
     let rendered = toml::to_string(&p).unwrap();
     assert!(!rendered.contains("group"));
+    assert!(p.sources.is_empty());
+    assert!(!rendered.contains("sources"));
+}
+
+#[test]
+fn project_sources_use_the_shared_exact_and_directory_precedence() {
+    let manifest = crate::manifest::Manifest::parse_str(
+        "[project]\nname='demo'\ngroup='org.example'\nversion='1.1.0'\n\
+         [[project.sources]]\ndirectory='docs'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
+         [[project.sources]]\nfile='docs/contract.md'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
+    ).unwrap();
+    let project = manifest.project.unwrap();
+    let selected = crate::manifest::select_source_rows(
+        "org.example/demo",
+        &project.sources,
+        "docs/contract.md",
+    )
+    .unwrap();
+    assert!(
+        matches!(selected, crate::manifest::SelectedSource::Descriptor {
+        identity, declaration_index: 1, descriptor,
+    } if identity == "org.example/demo:docs/contract.md"
+        && descriptor.interpretation() == crate::manifest::SourceInterpretation::VibeSpec)
+    );
+    assert!(matches!(
+        crate::manifest::select_source_rows("org.example/demo", &project.sources, "docs/guide.md")
+            .unwrap(),
+        crate::manifest::SelectedSource::Descriptor {
+            declaration_index: 0,
+            ..
+        }
+    ));
+    let rendered = toml::to_string(&project).unwrap();
+    assert_eq!(
+        toml::from_str::<ProjectSection>(&rendered).unwrap(),
+        project
+    );
+}
+
+#[test]
+fn project_sources_reject_authored_trust_and_incompatible_media() {
+    for (media, extra) in [
+        ("application/xml", "trust='verified'"),
+        ("text/markdown", ""),
+    ] {
+        let text = format!(
+            "name='demo'\ngroup='org.example'\nversion='1.1.0'\n\
+             [[sources]]\nfile='docs/data.xml'\nmedia='{media}'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n{extra}\n"
+        );
+        assert!(
+            toml::from_str::<ProjectSection>(&text).is_err(),
+            "{media}/{extra}"
+        );
+    }
 }
 
 #[test]

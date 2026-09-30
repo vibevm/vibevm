@@ -306,6 +306,7 @@ pub(super) fn ensure_project_manifest(
             group: None,
             version: "0.0.1".to_string(),
             spec_format: None,
+            sources: Vec::new(),
             authors: authors.to_vec(),
         }),
         active: stack.map(|s| ActiveSection {
