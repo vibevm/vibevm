@@ -53,7 +53,7 @@ use crate::boot::EffectiveBoot;
 use crate::compile_trace::{ScopeAcquisition, TraceRun};
 use crate::{WorkspaceError, layout_paths};
 
-mod descriptor_reader;
+pub(crate) mod descriptor_reader;
 pub(crate) use descriptor_reader::{SelectedSlotWitness, render_static_observed_selected};
 
 /// `normal + static` compilation — the branch that compiles a `normal`

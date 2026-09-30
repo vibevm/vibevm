@@ -34,6 +34,7 @@ pub(crate) fn compile_static_owner_managed_with_source<P: OwnerNativeCompileProv
         provider,
         Some(source),
         Some(overlay),
+        None,
         finalize_compiler_pending_artifact,
     )
 }

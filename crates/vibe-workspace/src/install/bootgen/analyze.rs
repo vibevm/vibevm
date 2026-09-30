@@ -32,7 +32,7 @@ use crate::extension_world::{
     ExtensionWorldEpoch, OwnerNativeCompileProvider, OwnerRuntimeEpoch, OwnerRuntimeLowering,
     OwnerRuntimeRunFacts, lower_owner_runtimes,
 };
-use crate::{Workspace, boot_artifacts};
+use crate::{Workspace, boot_artifacts, vibedeps};
 
 use super::ResolvedDep;
 use super::hybrid_emit::{append_hoisted, with_static_set};
@@ -318,13 +318,37 @@ pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
         append_hoisted(&mut effective, &shared, &table, &pulls);
     }
     desubstitute_covered_units(&mut effective, &table);
-    boot_artifacts::native_managed::compile_backend_owner_managed(
+    let selected = resolution
+        .iter()
+        .map(|dep| {
+            let in_place = dep
+                .manifest
+                .package
+                .as_ref()
+                .is_some_and(|package| package.materialization.is_in_place());
+            let slot = if in_place {
+                vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
+            } else {
+                vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
+            };
+            boot_artifacts::SelectedSlotWitness {
+                group: dep.group.clone(),
+                name: dep.name.clone(),
+                version: dep.version.clone(),
+                root: root.join(slot),
+                source_hash: dep.source_hash.clone(),
+                spec_format,
+            }
+        })
+        .collect::<Vec<_>>();
+    boot_artifacts::native_managed::compile_backend_owner_managed_selected(
         &effective,
         &root,
         &self_coord,
         backend,
         epoch.selected()?,
         provider,
+        &selected,
     )
 }
 

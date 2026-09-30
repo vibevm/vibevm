@@ -26,7 +26,7 @@ pub(crate) struct SelectedSlotWitness {
     pub spec_format: SpecFormat,
 }
 
-pub(super) fn selected_resolver(
+pub(crate) fn selected_resolver(
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     witnesses: &[SelectedSlotWitness],
