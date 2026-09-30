@@ -18,8 +18,12 @@
 //! of the pivot, each pinned to its exact refusal; it is EMPTY today, and
 //! the machinery stays for the next page written ahead of its reader.
 //! [`NOT_CANONICAL`] names the pages that parse but whose own bytes are
-//! not what the writer emits. Both are tripwires: repair a page and the
-//! test that guards its entry fails, which is how the entry gets deleted.
+//! not what the writer emits. [`PLAIN_PAGES`] names the pages that carry
+//! no construct of the genre at all, so the two genre laws cannot tell
+//! them from a spec. [`UNPARSABLE_PROJECTIONS`] names the pages whose
+//! Markdown projection quotes the markup itself and so does not re-parse.
+//! All four are tripwires: repair a page and the test that guards its
+//! entry fails, which is how the entry gets deleted.
 //!
 //! This is the counterpart of `redbook_roundtrip.rs`, which holds the same
 //! laws for the spec vocabulary on a `flow` package.
@@ -93,6 +97,10 @@ const NOT_CANONICAL: &[(&str, &str)] = &[
         "compact <tr> rows",
     ),
     ("start/what-a-project-contains.xml", "compact <tr> rows"),
+    ("start/first-project.xml", "compact <tr> rows"),
+    ("tutorials/ai-native-rust.xml", "compact <tr> rows"),
+    ("tutorials/markdown-and-xml.xml", "compact <tr> rows"),
+    ("tutorials/obsidian-to-project.xml", "compact <tr> rows"),
     // A literal apostrophe in an attribute value; the writer spells it
     // `&apos;` so no parser can normalise it away.
     (
@@ -106,6 +114,35 @@ const NOT_CANONICAL: &[(&str, &str)] = &[
     ),
 ];
 
+/// Pages that carry NO construct of the genre — no example, no rule, no
+/// prompt, no derived reference — only sections and paragraphs. Nothing in
+/// such a page is documentation vocabulary, so the two genre laws cannot
+/// hold for it: the default spec reader ACCEPTS it (there is no `doc`
+/// element to refuse), and its Markdown projection re-parses to the same
+/// IR (there is nothing one-way to lose). The entry records the reason and
+/// is a tripwire: `plain_pages_still_carry_no_genre_construct` fails the
+/// moment the page cites a rule or gains an example, and the line is
+/// deleted with it. The page itself is not wrong; the decision it states
+/// has no spec anchor to cite yet, which is the owner's to write.
+const PLAIN_PAGES: &[(&str, &str)] = &[(
+    "legal/applicable-law.xml",
+    "a legal notice with no rule to cite and no command to run: sections and paragraphs only",
+)];
+
+/// Pages whose Markdown projection does not even re-parse, with the
+/// scanner's own reason. The genre's projection is one way by law; these
+/// pages go one step further because they QUOTE the dialect's markup in
+/// inline code, and the Markdown scanner reads a code-span quotation as a
+/// definition (a fence it skips; a code span it does not). The entry is a
+/// tripwire: `unparsable_projections_still_fail_for_the_recorded_reason`
+/// fails the moment the projection parses again — because the page was
+/// rephrased or the scanner learned to skip code spans — and the line is
+/// deleted with it.
+const UNPARSABLE_PROJECTIONS: &[(&str, &str)] = &[(
+    "tutorials/markdown-and-xml.xml",
+    "fact id `@fact:ONE-IDEA` is defined twice",
+)];
+
 /// The corpus: every page of the documentation package the pivot can read,
 /// by relative path — [`QUARANTINED`] pages excluded, and counted.
 ///
@@ -118,7 +155,7 @@ fn corpus() -> Vec<(String, String)> {
     files.retain(|(rel, _)| !QUARANTINED.iter().any(|(q, _)| q == rel));
     assert_eq!(
         files.len(),
-        49 - QUARANTINED.len(),
+        54 - QUARANTINED.len(),
         "every page but the quarantined ones"
     );
     files
@@ -127,7 +164,7 @@ fn corpus() -> Vec<(String, String)> {
 /// Every page on disk, quarantine included.
 fn all_pages() -> Vec<(String, String)> {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs");
+        .join("../../vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs");
     let mut files = Vec::new();
     let mut stack = vec![root.clone()];
     while let Some(dir) = stack.pop() {
@@ -154,8 +191,8 @@ fn all_pages() -> Vec<(String, String)> {
     files.sort();
     assert_eq!(
         files.len(),
-        49,
-        "the documentation package carries 49 pages; a page added or removed \
+        54,
+        "the documentation package carries 54 pages; a page added or removed \
          is a deliberate edit, so update this count with it"
     );
     files
@@ -268,6 +305,67 @@ fn quarantined_pages_still_carry_exactly_the_recorded_defect() {
     }
 }
 
+/// The plain list is honest: each page named in [`PLAIN_PAGES`] still
+/// carries no construct of the genre — the spec reader accepts it, the
+/// counted shape is all zeros, and its Markdown projection is not one-way
+/// — so the two genre laws are right to skip it. Give the page one
+/// `<rule>` or one example and this fails, which is how the entry gets
+/// deleted.
+#[test]
+fn plain_pages_still_carry_no_genre_construct() {
+    for (rel, reason) in PLAIN_PAGES {
+        let (_, xml) = all_pages()
+            .into_iter()
+            .find(|(p, _)| p == rel)
+            .unwrap_or_else(|| panic!("{rel}: plain page is gone — delete the entry"));
+        assert!(
+            from_xml(&xml).is_ok(),
+            "{rel}: the spec reader refuses the page, so it carries genre vocabulary — \
+             delete its PLAIN_PAGES entry ({reason})"
+        );
+        let ir = from_xml_with(&xml, Vocabulary::Doc).unwrap_or_else(|e| panic!("{rel}: {e}"));
+        let s = Stats::of(&ir);
+        assert_eq!(
+            (
+                s.examples, s.rules, s.prompts, s.derived, s.notes, s.figures
+            ),
+            (0, 0, 0, 0, 0, 0),
+            "{rel}: a genre construct appeared — delete its PLAIN_PAGES entry ({reason})"
+        );
+        let verdict = convert_with(&xml, Direction::ToMarkdown, Vocabulary::Doc)
+            .unwrap_or_else(|e| panic!("{rel}: {e}"));
+        assert!(
+            !matches!(verdict, Conversion::IrDivergent { .. }),
+            "{rel}: the projection is one-way now, so the page has genre content — \
+             delete its PLAIN_PAGES entry"
+        );
+    }
+}
+
+/// The unparsable list is honest: each page named in
+/// [`UNPARSABLE_PROJECTIONS`] still projects to Markdown that the scanner
+/// refuses, and still for exactly the recorded reason.
+#[test]
+fn unparsable_projections_still_fail_for_the_recorded_reason() {
+    for (rel, expected) in UNPARSABLE_PROJECTIONS {
+        let (_, xml) = all_pages()
+            .into_iter()
+            .find(|(p, _)| p == rel)
+            .unwrap_or_else(|| panic!("{rel}: listed page is gone — delete the entry"));
+        let ir = from_xml_with(&xml, Vocabulary::Doc).unwrap_or_else(|e| panic!("{rel}: {e}"));
+        match from_markdown(&to_markdown(&ir)) {
+            Ok(_) => panic!(
+                "{rel}: the projection parses again — delete its UNPARSABLE_PROJECTIONS entry"
+            ),
+            Err(e) => assert!(
+                e.to_string().contains(expected),
+                "{rel}: listed for `{expected}`, refused for `{e}` — a DIFFERENT defect is \
+                 hiding behind the entry"
+            ),
+        }
+    }
+}
+
 /// The law the packet names: every page is byte-idempotent through the
 /// pivot, so the genre's writer is as canonical as the dialect's.
 #[test]
@@ -339,6 +437,9 @@ fn non_canonical_pages_are_exactly_the_recorded_ones() {
 #[test]
 fn every_page_is_refused_by_the_spec_reader() {
     for (rel, xml) in corpus() {
+        if PLAIN_PAGES.iter().any(|(p, _)| *p == rel) {
+            continue; // no genre construct to refuse: pinned in PLAIN_PAGES
+        }
         let Err(err) = from_xml(&xml) else {
             panic!("{rel}: the spec reader accepted a documentation page");
         };
@@ -359,6 +460,9 @@ fn every_page_is_refused_by_the_spec_reader() {
 fn doc_genre_is_not_round_trippable_through_markdown() {
     let mut divergent = 0usize;
     for (rel, xml) in corpus() {
+        if PLAIN_PAGES.iter().any(|(p, _)| *p == rel) {
+            continue; // nothing one-way to lose: pinned in PLAIN_PAGES
+        }
         let verdict = convert_with(&xml, Direction::ToMarkdown, Vocabulary::Doc)
             .unwrap_or_else(|e| panic!("{rel}: {e}"));
         assert!(
@@ -367,7 +471,11 @@ fn doc_genre_is_not_round_trippable_through_markdown() {
              converter must say so: {verdict:?}"
         );
         divergent += 1;
-        // The projection must still PARSE — the scanners read it.
+        // The projection must still PARSE — the scanners read it — unless
+        // the page quotes the markup itself (pinned in UNPARSABLE_PROJECTIONS).
+        if UNPARSABLE_PROJECTIONS.iter().any(|(p, _)| *p == rel) {
+            continue;
+        }
         let ir = from_xml_with(&xml, Vocabulary::Doc).expect("reads");
         let md = to_markdown(&ir);
         from_markdown(&md)
@@ -375,8 +483,8 @@ fn doc_genre_is_not_round_trippable_through_markdown() {
     }
     assert_eq!(
         divergent,
-        49 - QUARANTINED.len(),
-        "every page, not just the ones with examples"
+        54 - QUARANTINED.len() - PLAIN_PAGES.len(),
+        "every page but the plain ones, not just the ones with examples"
     );
 }
 
@@ -401,12 +509,12 @@ fn docs_corpus_shape_is_counted() {
         totals.guarded_slots += s.guarded_slots;
         totals.guarded_sections += s.guarded_sections;
     }
-    // The whole corpus: 49 pages, none quarantined.
-    assert_eq!(totals.examples, 62, "the pages carry 62 examples");
-    assert_eq!(totals.rules, 795, "the pages cite 795 rules");
-    assert_eq!(totals.derived, 76, "the pages derive 76 references");
-    assert_eq!(totals.prompts, 20, "20 scenario pages open with a prompt");
-    assert_eq!(totals.asserts, 41, "those prompts carry 41 asserts");
+    // The whole corpus: 54 pages, none quarantined, one plain.
+    assert_eq!(totals.examples, 75, "the pages carry 75 examples");
+    assert_eq!(totals.rules, 866, "the pages cite 866 rules");
+    assert_eq!(totals.derived, 77, "the pages derive 77 references");
+    assert_eq!(totals.prompts, 30, "30 scenario pages open with a prompt");
+    assert_eq!(totals.asserts, 65, "those prompts carry 65 asserts");
     assert_eq!(
         totals.guarded_sections, 1,
         "one section is guarded by `when` (`os:windows`, in install-vibe)"
