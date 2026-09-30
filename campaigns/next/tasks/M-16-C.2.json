@@ -201,6 +201,7 @@
       "read_paths": [
         "crates/vibe-publish/src/",
         "crates/vibe-publish/Cargo.toml",
+        "Cargo.lock",
         "crates/vibe-orchestrator/src/",
         "crates/vibe-lifecycle/src/state/",
         "crates/vibe-index/src/journal/",
@@ -212,6 +213,7 @@
       "write_paths": [
         "crates/vibe-publish/src/",
         "crates/vibe-publish/Cargo.toml",
+        "Cargo.lock",
         "crates/vibe-orchestrator/src/",
         "crates/vibe-lifecycle/src/state/",
         "crates/vibe-index/src/journal/",
