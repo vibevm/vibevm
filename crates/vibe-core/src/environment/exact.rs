@@ -88,7 +88,7 @@ impl Frames {
         self.bytes(tag, &[u8::from(present)]);
     }
     fn finish(self) -> String {
-        format!("sha256:{:x}", self.0.finalize())
+        format!("{:x}", self.0.finalize())
     }
 }
 
@@ -794,10 +794,15 @@ mod tests {
         let b = definition(true, "gnu");
         let la = lock(&a, false, b"one", b"two");
         let lb = lock(&b, true, b"one", b"two");
-        assert_eq!(
-            digest(&a, &la, b"one", b"two"),
-            digest(&b, &lb, b"one", b"two")
+        let wire_digest = digest(&a, &la, b"one", b"two");
+        assert_eq!(wire_digest.as_str().len(), 64);
+        assert!(
+            wire_digest
+                .as_str()
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
         );
+        assert_eq!(wire_digest, digest(&b, &lb, b"one", b"two"));
         let changed = definition(false, "musl");
         let lc = lock(&changed, false, b"one", b"two");
         assert_ne!(
