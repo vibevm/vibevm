@@ -82,6 +82,7 @@ fn package_meta_as_package_ref_pins_exact() {
         epoch: None,
         spec_format: None,
         sources: vec![],
+        source_exports: vec![],
         frozen: false,
         authors: vec![],
         license: None,
@@ -104,6 +105,65 @@ fn package_meta_as_package_ref_pins_exact() {
     assert_eq!(r.name, "wal");
     assert!(r.version.matches(&semver::Version::parse("0.3.0").unwrap()));
     assert!(!r.version.matches(&semver::Version::parse("0.3.1").unwrap()));
+}
+
+#[test]
+fn source_exports_parse_strictly_and_roundtrip_without_changing_legacy() {
+    let base = "name = 'notes'\ngroup = 'org.example'\nkind = 'doc'\nversion = '1.1.0'\n";
+    let legacy: PackageMeta = toml::from_str(base).unwrap();
+    assert!(legacy.source_exports.is_empty());
+    assert!(!toml::to_string(&legacy).unwrap().contains("source_exports"));
+
+    let authored = format!(
+        "{base}\n[[source_exports]]\nname = 'intro'\nfile = 'docs/guide.md'\nheadings = ['Guide', 'Introduction']\n\n[[source_exports]]\nname = 'advanced.v1'\nfile = 'docs/guide.md'\nheadings = ['Guide', 'Advanced']\n"
+    );
+    let package: PackageMeta = toml::from_str(&authored).unwrap();
+    assert_eq!(package.source_exports[0].name(), "intro");
+    assert_eq!(package.source_exports[0].file(), "docs/guide.md");
+    assert_eq!(
+        package.source_exports[0].headings(),
+        ["Guide", "Introduction"]
+    );
+    let rendered = toml::to_string(&package).unwrap();
+    assert_eq!(toml::from_str::<PackageMeta>(&rendered).unwrap(), package);
+    let mut duplicated = package.clone();
+    duplicated
+        .source_exports
+        .push(package.source_exports[0].clone());
+    assert!(toml::to_string(&duplicated).is_err());
+
+    let manifest_text = format!(
+        "[package]\n{base}\n[[package.source_exports]]\nname = 'intro'\nfile = 'docs/guide.md'\nheadings = ['Guide', 'Introduction']\n"
+    );
+    let manifest: crate::manifest::Manifest = toml::from_str(&manifest_text).unwrap();
+    assert_eq!(
+        manifest.package.as_ref().unwrap().source_exports[0].name(),
+        "intro"
+    );
+}
+
+#[test]
+fn source_exports_refuse_malformed_name_path_heading_and_duplicate_name() {
+    let base = "name = 'notes'\ngroup = 'org.example'\nkind = 'flow'\nversion = '1.1.0'\n";
+    let row =
+        "\n[[source_exports]]\nname = 'intro'\nfile = 'docs/guide.md'\nheadings = ['Guide']\n";
+    for bad in [
+        row.replace("name = 'intro'", "name = '1intro'"),
+        row.replace("docs/guide.md", "docs/../guide.md"),
+        row.replace("headings = ['Guide']", "headings = []"),
+        row.replace("headings = ['Guide']", "headings = [' Guide']"),
+        row.replace("headings = ['Guide']", "headings = ['Guide', '']"),
+        row.replace(
+            "headings = ['Guide']",
+            "headings = ['Guide']\ntrusted = true",
+        ),
+        format!("{row}{row}"),
+    ] {
+        assert!(
+            toml::from_str::<PackageMeta>(&format!("{base}{bad}")).is_err(),
+            "accepted {bad}"
+        );
+    }
 }
 
 #[test]

@@ -3,7 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use super::super::purl::Purl;
-use super::{Authorship, Materialization, PackageFormat, PublishPosture};
+use super::{Authorship, Materialization, PackageFormat, PublishPosture, SourceExport};
 use crate::manifest::SpecFormat;
 use crate::manifest::source_descriptor::SourceDescriptor;
 use crate::package_ref::{Group, PackageKind};
@@ -57,6 +57,9 @@ pub struct PackageMeta {
     /// Authored per-resource interpretation declarations. Absence grants no
     /// source semantics; consumers select one descriptor before dispatch.
     pub sources: Vec<SourceDescriptor>,
+    /// Authored names for exact ordinary CommonMark sections. Resolution
+    /// requires a selected descriptor and one captured source snapshot.
+    pub source_exports: Vec<SourceExport>,
     /// `[package].frozen` — the PROP-044 §2a immutability flag. Absence
     /// (`false`) means the version is a **snapshot**: its content may
     /// still flow under the same version string, and a hash mismatch is
