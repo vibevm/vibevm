@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "subject_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "subject_sha256": "sha256:6fae78326b4d97adeb0dcb7fa4684cbe7a466c009c01a3bcdd6f55b4df215394",
   "target": {
     "host": "github.com",
     "owner": "vibevm",
