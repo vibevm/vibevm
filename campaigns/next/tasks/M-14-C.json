@@ -104,7 +104,15 @@
         "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
         "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
         "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
-        "crates/vibe-cli/src/commands/deploy.rs"
+        "crates/vibe-cli/src/commands/deploy.rs",
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+        "crates/vibe-safefs/src/project.rs",
+        "crates/vibe-safefs/src/project/pinned.rs",
+        "crates/vibe-safefs/src/file/project_methods.rs",
+        "crates/vibe-safefs/src/file/stable.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs"
       ],
       "write_paths": [
         "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
@@ -156,7 +164,9 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Portable contract is PROP-076 #ENVIRONMENT-PHYSICAL-TARGET-FENCE/#ENVIRONMENT-BOUND-BUILTIN/#ENVIRONMENT-PORTABLE-OBSERVATION-LIMIT. Linux/macOS/Windows remain usable under cooperating-writer locks; detected drift becomes typed refusal or partial/uncertain after possible publication. Never claim hostile-writer content CAS.",
+        "First bound effect is local-host-OS UserProfile builtin deploy:vibe-bin with project-root artifact evidence; bound native/plugin/skill and slot/store-relative artifacts remain unavailable until equivalent owner admission. Keep root handles pinned through provider I/O and physical destination lock."
       ]
     }
   ]
