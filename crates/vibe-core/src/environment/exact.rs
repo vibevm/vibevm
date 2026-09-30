@@ -48,6 +48,76 @@ impl ExactLockDigest {
     }
 }
 
+/// The resolver's explicit selection among three independent platform roles.
+/// The role is part of exact identity even if two roles have equal facts.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LockTargetRole {
+    Executor,
+    ProducedToolRuntime,
+    EmittedCodeTarget,
+}
+
+pub struct SelectedLockTarget<'a> {
+    role: LockTargetRole,
+    platform: &'a PlatformFacts,
+}
+
+impl<'a> SelectedLockTarget<'a> {
+    /// Select one declared role. An absent compiler-output role is a refusal,
+    /// never an implicit fallback to the build executor or runtime role.
+    pub fn from_toolchain(
+        toolchain: &'a ToolchainPlatforms,
+        role: LockTargetRole,
+    ) -> Result<Self, EnvironmentError> {
+        let platform = match role {
+            LockTargetRole::Executor => toolchain.build_executor(),
+            LockTargetRole::ProducedToolRuntime => toolchain.produced_tool_runtime(),
+            LockTargetRole::EmittedCodeTarget => toolchain
+                .compiler_output()
+                .ok_or_else(|| invalid("exact.target", "emitted-code target role is absent"))?,
+        };
+        Ok(Self { role, platform })
+    }
+
+    pub fn role(&self) -> LockTargetRole {
+        self.role
+    }
+    pub fn platform(&self) -> &PlatformFacts {
+        self.platform
+    }
+}
+
+fn lock_target_role(role: LockTargetRole) -> &'static str {
+    match role {
+        LockTargetRole::Executor => "executor",
+        LockTargetRole::ProducedToolRuntime => "produced_tool_runtime",
+        LockTargetRole::EmittedCodeTarget => "emitted_code_target",
+    }
+}
+
+fn validate_lock_target(
+    constraints: &PlatformConstraints,
+    target: &SelectedLockTarget<'_>,
+) -> Result<(), EnvironmentError> {
+    if !matches!(target.platform.os(), Fact::Known(_))
+        || !matches!(target.platform.architecture(), Fact::Known(_))
+        || matches!(target.platform.abi(), Fact::Unknown)
+        || matches!(target.platform.libc(), Fact::Unknown)
+    {
+        return Err(invalid(
+            "exact.target",
+            "selected OS and architecture must be known; ABI/libc must be known or explicitly inapplicable",
+        ));
+    }
+    if !constraints.compare(target.platform).is_satisfied() {
+        return Err(invalid(
+            "exact.target",
+            "selected target conflicts with authored constraints",
+        ));
+    }
+    Ok(())
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExactGenerationDigest(String);
 impl ExactGenerationDigest {
@@ -233,16 +303,18 @@ fn tree_recipe_one(files: &[CapturedFile<'_>]) -> Result<String, EnvironmentErro
     Ok(format!("sha256-tree/1:{:x}", hash.finalize()))
 }
 
-/// Hash a complete typed definition and exact selected closure. All package
+/// Hash a complete typed definition, explicit selected target role and exact
+/// selected closure. All package
 /// and external members require captured-byte evidence; URL/version text is
 /// never evidence. `EnvironmentLock::id` remains an A.1 opaque reference.
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-EXACT-LOCK-IDENTITY",
-    r = 1
+    r = 2
 )]
 pub fn exact_lock_digest(
     definition: &EnvironmentDefinition,
     lock: &EnvironmentLock,
+    target: &SelectedLockTarget<'_>,
     packages: &[PackageCapture<'_>],
     external: &[ExternalCapture<'_>],
 ) -> Result<ExactLockDigest, EnvironmentError> {
@@ -254,6 +326,7 @@ pub fn exact_lock_digest(
             "definition and selected lock disagree",
         ));
     }
+    validate_lock_target(&definition.composition().target_constraints, target)?;
     let mut captures = BTreeMap::new();
     for entry in packages {
         if captures.insert(entry.capture.as_str(), entry).is_some() {
@@ -312,6 +385,8 @@ pub fn exact_lock_digest(
         reference(&mut hash, "choice.value", &row.value)?;
     }
     constraints(&mut hash, &composition.target_constraints)?;
+    hash.text("lock.target.role", lock_target_role(target.role()))?;
+    platform(&mut hash, target.platform())?;
     let mut bindings = composition.runtime_bindings.iter().collect::<Vec<_>>();
     bindings.sort_by_key(|row| row.name.as_str());
     hash.count("definition.runtime.count", bindings.len());
@@ -777,7 +852,35 @@ mod tests {
         b: &[u8],
     ) -> ExactLockDigest {
         let owner = r("capture-owner");
-        exact_lock_digest(definition, lock, &evidence(lock, &owner, a, b), &[]).unwrap()
+        let toolchain = target_for(definition);
+        let target =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
+        exact_lock_digest(
+            definition,
+            lock,
+            &target,
+            &evidence(lock, &owner, a, b),
+            &[],
+        )
+        .unwrap()
+    }
+    fn chosen<T: Clone>(requirement: &Requirement<T>, fallback: T) -> Fact<T> {
+        match requirement {
+            Requirement::Exact(value) => Fact::Known(value.clone()),
+            Requirement::Any => Fact::Known(fallback),
+            Requirement::NotApplicable => Fact::NotApplicable,
+        }
+    }
+    fn target_for(definition: &EnvironmentDefinition) -> ToolchainPlatforms {
+        let constraints = &definition.composition().target_constraints;
+        let platform = PlatformFacts::new(
+            chosen(constraints.os_requirement(), TargetOs::Linux),
+            chosen(constraints.architecture_requirement(), r("x86_64")),
+            chosen(constraints.abi_requirement(), r("gnu")),
+            chosen(constraints.libc_requirement(), r("glibc")),
+        );
+        ToolchainPlatforms::new(platform.clone(), platform, None)
     }
     fn linux() -> PlatformFacts {
         PlatformFacts::new(
@@ -809,10 +912,15 @@ mod tests {
             digest(&a, &la, b"one", b"two"),
             digest(&changed, &lc, b"one", b"two")
         );
+        let toolchain = target_for(&a);
+        let target =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
         assert!(
             exact_lock_digest(
                 &a,
                 &la,
+                &target,
                 &evidence(&la, &r("owner"), b"changed", b"two"),
                 &[]
             )
@@ -831,7 +939,11 @@ mod tests {
         let l = lock(&d, false, b"a", b"b");
         let owner = r("capture-owner");
         let captures = evidence(&l, &owner, b"a", b"b");
-        assert!(exact_lock_digest(&d, &l, &captures[..1], &[]).is_err());
+        let toolchain = target_for(&d);
+        let target =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
+        assert!(exact_lock_digest(&d, &l, &target, &captures[..1], &[]).is_err());
         let extra = r("unknown");
         let mut captures = captures;
         captures.push(PackageCapture {
@@ -842,7 +954,7 @@ mod tests {
                 bytes: b"x",
             }],
         });
-        assert!(exact_lock_digest(&d, &l, &captures, &[]).is_err());
+        assert!(exact_lock_digest(&d, &l, &target, &captures, &[]).is_err());
         let mut legacy_closure = l.closure().clone();
         let mut legacy_facts = legacy_closure.packages[0].facts().clone();
         legacy_facts.content = ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap();
@@ -854,7 +966,101 @@ mod tests {
         )
         .unwrap();
         assert!(
-            exact_lock_digest(&d, &legacy, &evidence(&legacy, &owner, b"a", b"b"), &[]).is_err()
+            exact_lock_digest(
+                &d,
+                &legacy,
+                &target,
+                &evidence(&legacy, &owner, b"a", b"b"),
+                &[]
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn authored_any_selects_concrete_target_and_role_in_exact_identity() {
+        let baseline = definition(false, "gnu");
+        let mut composition = baseline.composition().clone();
+        composition.target_constraints = PlatformConstraints::new(
+            Requirement::Any,
+            Requirement::Any,
+            Requirement::Any,
+            Requirement::Any,
+        );
+        let definition = EnvironmentDefinition::new(baseline.id().clone(), composition).unwrap();
+        let lock = lock(&definition, false, b"one", b"two");
+        let owner = r("capture-owner");
+        let captures = evidence(&lock, &owner, b"one", b"two");
+        let macos = PlatformFacts::new(
+            Fact::Known(TargetOs::Macos),
+            Fact::Known(r("aarch64")),
+            Fact::Known(r("darwin")),
+            Fact::NotApplicable,
+        );
+        let toolchain = ToolchainPlatforms::new(linux(), macos, None);
+        let executor =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::Executor).unwrap();
+        let runtime =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
+        let executor_digest =
+            exact_lock_digest(&definition, &lock, &executor, &captures, &[]).unwrap();
+        let runtime_digest =
+            exact_lock_digest(&definition, &lock, &runtime, &captures, &[]).unwrap();
+        assert_ne!(executor_digest, runtime_digest);
+        let same_facts = ToolchainPlatforms::new(linux(), linux(), None);
+        let executor =
+            SelectedLockTarget::from_toolchain(&same_facts, LockTargetRole::Executor).unwrap();
+        let runtime =
+            SelectedLockTarget::from_toolchain(&same_facts, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
+        assert_ne!(
+            exact_lock_digest(&definition, &lock, &executor, &captures, &[]).unwrap(),
+            exact_lock_digest(&definition, &lock, &runtime, &captures, &[]).unwrap(),
+        );
+        assert!(
+            SelectedLockTarget::from_toolchain(&same_facts, LockTargetRole::EmittedCodeTarget)
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn exact_constraint_mismatch_and_unknown_selected_facts_refuse() {
+        let definition = definition(false, "gnu");
+        let lock = lock(&definition, false, b"one", b"two");
+        let owner = r("capture-owner");
+        let captures = evidence(&lock, &owner, b"one", b"two");
+        let wrong = PlatformFacts::new(
+            Fact::Known(TargetOs::Macos),
+            Fact::Known(r("x86_64")),
+            Fact::Known(r("gnu")),
+            Fact::Known(r("glibc")),
+        );
+        let toolchain = ToolchainPlatforms::new(wrong.clone(), wrong, None);
+        let selected =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
+        assert_eq!(
+            exact_lock_digest(&definition, &lock, &selected, &captures, &[])
+                .unwrap_err()
+                .field,
+            "exact.target"
+        );
+        let unknown = PlatformFacts::new(
+            Fact::Unknown,
+            Fact::Known(r("x86_64")),
+            Fact::Known(r("gnu")),
+            Fact::Known(r("glibc")),
+        );
+        let toolchain = ToolchainPlatforms::new(unknown.clone(), unknown, None);
+        let selected =
+            SelectedLockTarget::from_toolchain(&toolchain, LockTargetRole::ProducedToolRuntime)
+                .unwrap();
+        assert_eq!(
+            exact_lock_digest(&definition, &lock, &selected, &captures, &[])
+                .unwrap_err()
+                .field,
+            "exact.target"
         );
     }
 
