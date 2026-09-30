@@ -13,6 +13,7 @@ use vibe_wire::generated::shared::EnvironmentOperationBinding;
 
 pub(crate) mod artifact;
 pub(crate) mod binding;
+pub(crate) mod bridge;
 pub(crate) mod error;
 pub(crate) mod inverse;
 mod inverse_resume;
@@ -109,6 +110,31 @@ pub(crate) fn execute_host_admitted_bound_vibe_bin(
     admitted: AdmittedLocalDeployBinding,
     principal: &str,
     current_generation: &mut dyn FnMut() -> Result<Option<String>, DeployError>,
+) -> Result<Vec<DeployOutcome>, DeployError> {
+    execute_host_admitted_bound_vibe_bin_with_hook(
+        execution,
+        request_binding,
+        admitted,
+        principal,
+        current_generation,
+        None,
+    )
+}
+
+fn execute_host_admitted_bound_vibe_bin_with_hook(
+    execution: &DeployExecution<'_>,
+    request_binding: &EnvironmentOperationBinding,
+    admitted: AdmittedLocalDeployBinding,
+    principal: &str,
+    current_generation: &mut dyn FnMut() -> Result<Option<String>, DeployError>,
+    mut before_acquire: Option<
+        &mut dyn FnMut(
+            &DeploymentHome,
+            &DeployTargetRequest<'_>,
+            &crate::mechanism::deploy::protocol::DeployPlan,
+            &str,
+        ) -> Result<(), DeployError>,
+    >,
 ) -> Result<Vec<DeployOutcome>, DeployError> {
     let [target_id] = execution.selection.targets.as_slice() else {
         return Err(DeployError::BoundScopeUnsupported {
@@ -213,6 +239,9 @@ pub(crate) fn execute_host_admitted_bound_vibe_bin(
     }])?;
 
     let current = current_generation()?;
+    if let Some(callback) = before_acquire.as_deref_mut() {
+        callback(&home, &request, &plan, &pin)?;
+    }
     let locked = admitted
         .acquire_destination(current.as_deref())
         .map_err(|error| DeployError::BoundGrantChanged {

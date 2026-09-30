@@ -41,6 +41,9 @@ use crate::mechanism::MechanismError;
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 #[derive(Debug, Error)]
 pub enum DeployError {
+    /// C.1 reservation or domain bridge could not be proven before the first effect.
+    #[error("protected bound deployment reservation refused: {reason}")]
+    ProtectedReservation { reason: String },
     /// A shaped operation binding is not physical root/effect authority.
     #[error(
         "bound deploy refused before effects: the host has not admitted pinned root handles and an exact effect grant for binding `{binding}`"
