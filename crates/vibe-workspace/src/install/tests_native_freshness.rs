@@ -160,6 +160,38 @@ fn native_graph_with(middle_extension: &str, leaf_extension: &str) -> NativeGrap
     native_graph_full("", "", middle_extension, leaf_extension)
 }
 
+/// A second static contribution for `top`, spliced into its manifest right
+/// after `[boot_snippet]`.
+const TOP_SECOND_CONTRIBUTION: &str = "[[boot_snippet.fragment]]\nsource='boot/top-more.md'\n\n";
+
+/// The native graph whose `top` ships two static contributions.
+///
+/// A unit with several static files keeps its compiled artifact in every
+/// consumer's lane — one `BootEntry` cannot stand for several authored
+/// files, so the once-each pass never rolls it back — and that is the one
+/// standing reason a node depends on a generated unit artifact. With a
+/// single snippet per unit the nested zone top → middle → leaf is covered
+/// in the node's lane and collapses at the de-substitution fixpoint, which
+/// leaves the node independent of every unit.
+pub(crate) fn native_graph_keeping_top(
+    root_extension: &str,
+    top_extension: &str,
+    middle_extension: &str,
+) -> NativeGraph {
+    let graph = native_graph_full(
+        root_extension,
+        &format!("{TOP_SECOND_CONTRIBUTION}{top_extension}"),
+        middle_extension,
+        "",
+    );
+    write(
+        &crate::vibedeps::slot_abs_path(&graph.workspace.root, &group(), "top", &version())
+            .join("boot/top-more.md"),
+        "# top, continued\n",
+    );
+    graph
+}
+
 pub(crate) fn native_graph_full(
     root_extension: &str,
     top_extension: &str,

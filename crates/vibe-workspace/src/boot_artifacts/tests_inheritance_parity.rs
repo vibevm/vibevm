@@ -342,3 +342,97 @@ fn desubstitution_over_a_mixed_md_xml_lane_matches_the_pure_md_twin() {
         "{pure_lane}"
     );
 }
+
+// ---- (d) nested boot-bearing substitution: umbrella -> member -> base ------
+
+/// A suite umbrella U statically links a boot-bearing member M, and M itself
+/// statically links a shared base B (the FPF package shape: every DPF requires
+/// `fpf-common`, the suite umbrella requires the DPFs). The consumer's lane
+/// carries U and M substituted up to their unit-STATICs and B individually.
+/// In the first snapshot M is still substituted, so U's zone reads as
+/// uncovered; the pass must run to a fixpoint so that U is rolled back once M
+/// has been — otherwise the consumer's compile reads U's compiled `STATIC`
+/// as a document and fails (the PROP-038 §2.1 substitution is only ever a
+/// stand-in for members the lane does not carry individually).
+#[test]
+fn a_nested_boot_bearing_zone_de_substitutes_to_a_fixpoint() {
+    const U_MD: &str = "# U rules {#root}
+
+@fact:UFACT the umbrella rule @status:spec/work
+
+";
+    const M_MD: &str = "# M rules {#root}
+
+@fact:MFACT the member rule @status:spec/work
+
+";
+    const B_MD: &str = "# B rules {#root}
+
+@fact:BFACT the base rule @status:impl/done
+
+";
+
+    let ws = TempDir::new().unwrap();
+    let u_md = write_parity_snippet(ws.path(), "org.demo.u", U_MD, Form::Md);
+    let m_md = write_parity_snippet(ws.path(), "org.demo.m", M_MD, Form::Md);
+    let b_md = write_parity_snippet(ws.path(), "org.demo.b", B_MD, Form::Md);
+
+    let mut table = HashMap::new();
+    insert(
+        &mut table,
+        "u",
+        Some(&u_md),
+        vec![edge("m", LinkType::Static), edge("b", LinkType::Static)],
+    );
+    insert(
+        &mut table,
+        "m",
+        Some(&m_md),
+        vec![edge("b", LinkType::Static)],
+    );
+    insert(&mut table, "b", Some(&b_md), vec![]);
+
+    let mut eff = boot(vec![
+        entry_sub(
+            crate::layout_paths::slot_specs(
+                crate::layout_paths::vibedeps("org.demo.u/1.0.0"),
+                "boot/STATIC.md",
+            ),
+            &pkgref("u"),
+        ),
+        entry_sub(
+            crate::layout_paths::slot_specs(
+                crate::layout_paths::vibedeps("org.demo.m/1.0.0"),
+                "boot/STATIC.md",
+            ),
+            &pkgref("m"),
+        ),
+        entry(&b_md, LinkType::Static, &pkgref("b")),
+    ]);
+    desubstitute_covered_units(&mut eff, &table);
+
+    let u_entry = &eff.entries[0];
+    let m_entry = &eff.entries[1];
+    assert!(
+        !m_entry.unit_substituted,
+        "M's zone (B) is covered: M rolls back"
+    );
+    assert_eq!(m_entry.path, m_md);
+    assert!(
+        !u_entry.unit_substituted,
+        "U's zone (M, B) is covered once M has rolled back: the pass must reach the fixpoint"
+    );
+    assert_eq!(u_entry.path, u_md);
+    assert!(!u_entry.elided && !m_entry.elided);
+
+    // The lane renders each origin once, in order, with nothing substituted.
+    let text = render_static(&eff, ws.path(), &coord()).unwrap().unwrap();
+    for needle in ["the umbrella rule", "the member rule", "the base rule"] {
+        assert_eq!(
+            text.matches(needle).count(),
+            1,
+            "{needle} once:
+{text}"
+        );
+    }
+}

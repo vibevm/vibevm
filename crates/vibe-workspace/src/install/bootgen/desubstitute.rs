@@ -23,13 +23,17 @@ use crate::boot::{BootEntry, EffectiveBoot};
 /// but never at the cost of losing coverage (PROP-038 §2.1).
 ///
 /// The decision is a pure function of the entry set and the unit table: a
-/// snapshot of the entries is taken once, and every substituted entry is
+/// snapshot of the entries is taken per pass, and every substituted entry is
 /// decided against that snapshot — the order of entries and the count of
 /// consumers (static / static-transitive / static-hard in any mix) do not
-/// affect the verdict. One pass (not a fixpoint) suffices for the
-/// nested-umbrella shapes the contract targets, because a contentless
-/// umbrella is never a boot-bearing member of its parent's zone, so it
-/// cannot gate its parent's elision.
+/// affect the verdict. The pass runs to a fixpoint: a boot-bearing member
+/// that itself statically links a child (a DPF requiring a shared base
+/// package under a suite umbrella) is substituted in the first snapshot, so
+/// its umbrella's zone reads as uncovered until the member has been rolled
+/// back; the next pass then sees the member present and rolls the umbrella
+/// back too. Every pass either rolls back or elides at least one entry or
+/// ends the loop, so the fixpoint is reached in at most as many passes as
+/// there are substituted entries.
 ///
 /// `pub` (re-exported at [`crate::install::desubstitute_covered_units`]) so
 /// the once-each topology can be exercised at the unit level without a full
@@ -47,51 +51,57 @@ pub fn desubstitute_covered_units(
         .iter()
         .map(|(id, u)| (u.origin.as_str(), id))
         .collect();
-    // Decide every entry against the ORIGINAL snapshot. A rolled-back entry
-    // does not retroactively count as "present" for a sibling decided later
-    // in the same pass — the verdict depends only on the pre-pass set.
-    let snapshot: Vec<BootEntry> = effective.entries.clone();
+    loop {
+        // Decide every entry against the snapshot taken at the start of this
+        // pass. A rolled-back entry does not retroactively count as "present"
+        // for a sibling decided later in the same pass — the verdict depends
+        // only on the pre-pass set; the next pass sees it.
+        let snapshot: Vec<BootEntry> = effective.entries.clone();
+        let mut changed = false;
 
-    for entry in &mut effective.entries {
-        if !(entry.unit_substituted && entry.link == LinkType::Static) {
-            continue;
-        }
-        let Some(id) = by_origin.get(entry.origin.as_str()).copied() else {
-            continue;
-        };
-        let zone = resolve_zone(id, table);
-        // The boot-bearing members of this unit's static zone, other than the
-        // unit itself — members that actually carry boot content. A boot-less
-        // umbrella threads the order but contributes no text, so it is never
-        // required; that is why a single pass collapses nested umbrellas. The
-        // unit itself is dropped here (its own snippet is handled by the
-        // de-substitute / elide branches below), so a zone whose only
-        // boot-bearing member is itself is vacuously covered. Collected by
-        // value to keep the `present` lookups free of reference-level dance.
-        let boot_bearing: Vec<UnitId> = zone
-            .static_members
-            .iter()
-            .filter(|m| *m != id && table.get(*m).is_some_and(|u| u.has_static_boot()))
-            .cloned()
-            .collect();
-        let covered = boot_bearing
-            .iter()
-            .all(|m| present(&snapshot, &table[m].origin));
-        if !covered {
-            continue;
-        }
-        let unit = &table[id];
-        if unit.static_boot_count() > 1 {
-            // One BootEntry cannot represent several authored files. Keep the
-            // compiled unit artifact so every fragment remains present once.
-            continue;
-        }
-        match unit.single_static_boot_path() {
-            Some(snippet) => {
-                entry.path = snippet.to_string();
-                entry.unit_substituted = false;
+        for entry in &mut effective.entries {
+            if !(entry.unit_substituted && entry.link == LinkType::Static) || entry.elided {
+                continue;
             }
-            None => entry.elided = true,
+            let Some(id) = by_origin.get(entry.origin.as_str()).copied() else {
+                continue;
+            };
+            let zone = resolve_zone(id, table);
+            // The boot-bearing members of this unit's static zone, other than the
+            // unit itself — members that actually carry boot content. A boot-less
+            // umbrella threads the order but contributes no text, so it is never
+            // required. The unit itself is dropped here (its own snippet is
+            // handled by the de-substitute / elide branches below), so a zone
+            // whose only boot-bearing member is itself is vacuously covered.
+            let boot_bearing: Vec<UnitId> = zone
+                .static_members
+                .iter()
+                .filter(|m| *m != id && table.get(*m).is_some_and(|u| u.has_static_boot()))
+                .cloned()
+                .collect();
+            let covered = boot_bearing
+                .iter()
+                .all(|m| present(&snapshot, &table[m].origin));
+            if !covered {
+                continue;
+            }
+            let unit = &table[id];
+            if unit.static_boot_count() > 1 {
+                // One BootEntry cannot represent several authored files. Keep the
+                // compiled unit artifact so every fragment remains present once.
+                continue;
+            }
+            match unit.single_static_boot_path() {
+                Some(snippet) => {
+                    entry.path = snippet.to_string();
+                    entry.unit_substituted = false;
+                }
+                None => entry.elided = true,
+            }
+            changed = true;
+        }
+        if !changed {
+            break;
         }
     }
 }

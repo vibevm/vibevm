@@ -17,7 +17,8 @@ use crate::extension_world::{
     lower_owner_runtimes,
 };
 use crate::install::tests_epoch_world::native_freshness::{
-    COMPILE_NATIVE, NativeGraph, native_graph, native_graph_full, regenerate, unit_file,
+    COMPILE_NATIVE, NativeGraph, native_graph, native_graph_full, native_graph_keeping_top,
+    regenerate, unit_file,
 };
 use crate::install::tests_epoch_world::{locked, resolved, slot, write, write_lock};
 
@@ -30,7 +31,7 @@ macro_rules! ok {
     };
 }
 type PolicyMap = BTreeMap<OwnerRuntimeId, CompilerNativePolicy>;
-fn owner(graph: &NativeGraph, name: &str) -> OwnerRuntimeId {
+pub(super) fn owner(graph: &NativeGraph, name: &str) -> OwnerRuntimeId {
     let provider = graph
         .epoch
         .lowered()
@@ -158,7 +159,7 @@ fn diamond_graph(reverse: bool) -> NativeGraph {
     graph
 }
 
-fn node_file(graph: &NativeGraph, file: &str) -> PathBuf {
+pub(super) fn node_file(graph: &NativeGraph, file: &str) -> PathBuf {
     graph
         .workspace
         .root
@@ -214,7 +215,7 @@ fn artifact_state(
         .collect()
 }
 
-fn collect_replay(graph: &NativeGraph, provider: &mut FakeProvider) -> BootReplaySet {
+pub(super) fn collect_replay(graph: &NativeGraph, provider: &mut FakeProvider) -> BootReplaySet {
     ok!(
         regenerate(graph, provider).into_replay_set(&graph.epoch),
         "seal replay"
@@ -263,7 +264,7 @@ fn empty_replay_is_zero_factory_and_exact_epoch_is_mandatory() {
 
 #[test]
 fn direct_unit_static_closure_and_node_prepare_from_overlay_without_writes() {
-    let graph = native_graph();
+    let graph = native_graph_keeping_top("", "", COMPILE_NATIVE);
     let middle = owner(&graph, "middle");
     let top = owner(&graph, "top");
     let root = root_owner();
@@ -401,7 +402,7 @@ fn replay_policies_are_resolve_fail_never_collect_and_terminal() {
 
 #[test]
 fn two_pending_owners_cannot_swap_and_prepare_once_in_dependency_order() {
-    let graph = native_graph_full("", COMPILE_NATIVE, COMPILE_NATIVE, "");
+    let graph = native_graph_keeping_top("", COMPILE_NATIVE, COMPILE_NATIVE);
     let middle = owner(&graph, "middle");
     let top = owner(&graph, "top");
     let root = root_owner();
@@ -480,7 +481,7 @@ fn direct_node_is_independent_and_last_lane_failure_leaves_disk_and_journals_abs
     assert_eq!(prepared.publications().len(), 1);
     assert_eq!(prepared.publications()[0].owner(), &root_owner());
 
-    let graph = native_graph_full(COMPILE_NATIVE, TOP_SELECTOR, COMPILE_NATIVE, "");
+    let graph = native_graph_keeping_top(COMPILE_NATIVE, TOP_SELECTOR, COMPILE_NATIVE);
     let root = root_owner();
     let owners = [owner(&graph, "middle"), owner(&graph, "top"), root.clone()];
     let mut collect = FakeProvider::new(Reply::Missing).with_reply(root.clone(), Reply::Skip);
