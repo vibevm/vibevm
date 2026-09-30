@@ -1,0 +1,15 @@
+{
+  "schema": 2,
+  "error_owner": "producer-a",
+  "request_id": "request-a",
+  "code": "unsupported_metadata",
+  "message": "target ACL cannot be represented",
+  "target": {
+    "role": "produced_tool_runtime",
+    "os": "macos",
+    "architecture": "aarch64",
+    "abi": "darwin",
+    "libc": null
+  },
+  "evidence_ref": null
+}

@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "description": "Typed refusal before a generation identity can be published; no digest field can masquerade as a receipt.",
+    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-FORMAT-EPOCHS", "r": 1},
+    "rustOptions": {"package": "vibe_wire::environment::e1::realization_error"}
+  },
+  "properties": {
+    "schema": {"type": "uint8"}, "error_owner": {"type": "string"},
+    "request_id": {"type": "string", "nullable": true},
+    "code": {"enum": ["unsupported_epoch", "wrong_target_role", "missing_closure_evidence", "unsupported_metadata", "unavailable_proof", "invalid_payload", "incompatible_target"], "metadata": {"x-vocabulary": "closed"}},
+    "message": {"type": "string"}, "target": {"ref": "target", "nullable": true},
+    "evidence_ref": {"type": "string", "nullable": true}
+  },
+  "definitions": {
+    "target": {"properties": {
+      "role": {"enum": ["executor", "produced_tool_runtime", "emitted_code_target"], "metadata": {"x-vocabulary": "closed"}},
+      "os": {"type": "string"}, "architecture": {"type": "string"},
+      "abi": {"type": "string", "nullable": true}, "libc": {"type": "string", "nullable": true}
+    }}
+  }
+}

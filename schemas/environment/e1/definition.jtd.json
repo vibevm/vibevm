@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "description": "Portable desired environment composition; no selected or physical authority follows from this value.",
+    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-DEFINITION", "r": 1},
+    "rustOptions": {"package": "vibe_wire::environment::e1::definition"}
+  },
+  "properties": {
+    "schema": {"type": "uint8"},
+    "definition_owner": {"type": "string"},
+    "definition_ref": {"type": "string"},
+    "package_roots": {"elements": {"type": "string"}, "metadata": {"x-empty": "emit"}},
+    "feature_choices": {"elements": {"ref": "named_selection"}, "metadata": {"x-empty": "emit"}},
+    "target_constraints": {"ref": "target"},
+    "tool_exports": {"elements": {"type": "string"}, "metadata": {"x-empty": "emit"}},
+    "service_exports": {"elements": {"type": "string"}, "metadata": {"x-empty": "emit"}},
+    "runtime_bindings": {"elements": {"type": "string"}, "metadata": {"x-empty": "emit"}}
+  },
+  "definitions": {
+    "named_selection": {"properties": {"name": {"type": "string"}, "value": {"type": "string"}}},
+    "target": {"properties": {
+      "role": {"enum": ["executor", "produced_tool_runtime", "emitted_code_target"], "metadata": {"x-vocabulary": "closed"}},
+      "os": {"type": "string"}, "architecture": {"type": "string"},
+      "abi": {"type": "string", "nullable": true}, "libc": {"type": "string", "nullable": true}
+    }}
+  }
+}

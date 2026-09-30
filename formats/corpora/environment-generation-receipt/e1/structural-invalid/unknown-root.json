@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "recipe_epoch": 1,
+  "generation_owner": "producer-a",
+  "request_id": "request-a",
+  "lock_owner": "resolver-a",
+  "lock_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "target": {
+    "role": "produced_tool_runtime",
+    "os": "linux",
+    "architecture": "x86_64",
+    "abi": "gnu",
+    "libc": "glibc"
+  },
+  "inventory_digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "dependency_closure_digests_sha256": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  ],
+  "generated_output_digests_sha256": [
+    {
+      "role": "boot",
+      "name": "boot-a",
+      "digest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "generation_digest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "unknown": true
+}

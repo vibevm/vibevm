@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "description": "Target-relative realized payload inventory; bytes, metadata and unsupported nodes require semantic proof before completeness.",
+    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-PAYLOAD-INVENTORY", "r": 1},
+    "rustOptions": {"package": "vibe_wire::environment::e1::payload_inventory"}
+  },
+  "properties": {
+    "schema": {"type": "uint8"}, "inventory_owner": {"type": "string"},
+    "target": {"ref": "target"}, "path_policy": {"type": "string"},
+    "entries": {"elements": {"ref": "entry"}, "metadata": {"x-empty": "emit"}},
+    "completeness": {"enum": ["complete", "unavailable", "unsupported"], "metadata": {"x-vocabulary": "closed"}},
+    "reason": {"type": "string", "nullable": true}
+  },
+  "definitions": {
+    "target": {"properties": {
+      "role": {"enum": ["executor", "produced_tool_runtime", "emitted_code_target"], "metadata": {"x-vocabulary": "closed"}},
+      "os": {"type": "string"}, "architecture": {"type": "string"},
+      "abi": {"type": "string", "nullable": true}, "libc": {"type": "string", "nullable": true}
+    }},
+    "entry": {"properties": {
+      "path_components_hex": {"elements": {"type": "string"}, "metadata": {"x-empty": "emit"}},
+      "kind": {"enum": ["regular_file", "directory", "link", "special_node"], "metadata": {"x-vocabulary": "closed"}},
+      "producing_dependency_role": {"type": "string"},
+      "content_digest_sha256": {"type": "string", "nullable": true},
+      "link_target_bytes_hex": {"type": "string", "nullable": true},
+      "mode": {"type": "uint32", "nullable": true},
+      "principal": {"ref": "principal"},
+      "metadata_status": {"enum": ["supported", "unavailable", "unsupported"], "metadata": {"x-vocabulary": "closed"}},
+      "metadata_reason": {"type": "string", "nullable": true}
+    }},
+    "principal": {"discriminator": "kind", "mapping": {
+      "linux_uid_gid": {"properties": {"uid": {"type": "uint32"}, "gid": {"type": "uint32"}}},
+      "macos_uid_gid": {"properties": {"uid": {"type": "uint32"}, "gid": {"type": "uint32"}}},
+      "windows_identity": {"properties": {"sid": {"type": "string"}, "acl_digest_sha256": {"type": "string"}}},
+      "unavailable": {"properties": {"reason": {"type": "string"}}},
+      "unsupported": {"properties": {"reason": {"type": "string"}}}
+    }}
+  }
+}

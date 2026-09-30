@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "description": "Durable produced-generation success receipt; output digest is distinct from exact-lock recipe digest and never admits activation.",
+    "spec": {"implements": "spec://org.vibevm.core/vibevm/common/PROP-076#ENVIRONMENT-GENERATION-IDENTITY", "r": 1},
+    "rustOptions": {"package": "vibe_wire::environment::e1::generation_receipt"}
+  },
+  "properties": {
+    "schema": {"type": "uint8"}, "recipe_epoch": {"type": "uint16"},
+    "generation_owner": {"type": "string"}, "request_id": {"type": "string"},
+    "lock_owner": {"type": "string"}, "lock_digest_sha256": {"type": "string"},
+    "target": {"ref": "target"}, "inventory_digest_sha256": {"type": "string"},
+    "dependency_closure_digests_sha256": {"elements": {"type": "string"}, "metadata": {"x-empty": "emit"}},
+    "generated_output_digests_sha256": {"elements": {"ref": "generated_output"}, "metadata": {"x-empty": "emit"}},
+    "generation_digest_sha256": {"type": "string"}
+  },
+  "definitions": {
+    "target": {"properties": {
+      "role": {"enum": ["executor", "produced_tool_runtime", "emitted_code_target"], "metadata": {"x-vocabulary": "closed"}},
+      "os": {"type": "string"}, "architecture": {"type": "string"},
+      "abi": {"type": "string", "nullable": true}, "libc": {"type": "string", "nullable": true}
+    }},
+    "generated_output": {"properties": {
+      "role": {"enum": ["boot", "adapter", "service_catalog"], "metadata": {"x-vocabulary": "closed"}},
+      "name": {"type": "string"}, "digest_sha256": {"type": "string"}
+    }}
+  }
+}
