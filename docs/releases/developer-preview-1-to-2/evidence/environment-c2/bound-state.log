@@ -1,0 +1,112 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+warning: methods `project`, `settings`, and `user_home` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:380:19
+    |
+246 | impl AdmittedLocalDeployBinding {
+    | ------------------------------- methods in this implementation
+...
+380 |     pub(crate) fn project(&self) -> &Project {
+    |                   ^^^^^^^
+...
+383 |     pub(crate) fn settings(&self) -> &Project {
+    |                   ^^^^^^^^
+...
+386 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `alias_note` is never read
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:510:5
+    |
+505 | struct NamedRootWitness {
+    |        ---------------- field in this struct
+...
+510 |     alias_note: Option<String>,
+    |     ^^^^^^^^^^
+
+warning: methods `binding`, `project`, `user_home`, `destination`, and `alias_warnings` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:529:19
+    |
+528 | impl LockedLocalDeployBinding {
+    | ----------------------------- methods in this implementation
+529 |     pub(crate) fn binding(&self) -> &EnvironmentOperationBinding {
+    |                   ^^^^^^^
+...
+532 |     pub(crate) fn project(&self) -> &Project {
+    |                   ^^^^^^^
+...
+538 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+541 |     pub(crate) fn destination(&self) -> &BoundDestinationLock {
+    |                   ^^^^^^^^^^^
+...
+544 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: `vibe-lifecycle` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.18s
+     Running unittests src/lib.rs (target/debug/deps/vibe_lifecycle-1f5a78475863519a)
+
+running 9 tests
+test mechanism::deploy::bound_tests::bound_read_view_absent_is_no_create_and_malformed_refuses ... ok
+test mechanism::deploy::bound_tests::retargeted_bound_state_name_refuses_and_held_write_stays_on_original ... ok
+test mechanism::deploy::bound_tests::bound_apply_refuses_before_selection_or_state_creation ... ok
+test mechanism::deploy::bound_tests::bound_homes_are_instance_keyed_and_never_legacy_keys ... ok
+test mechanism::deploy::bound_tests::bound_state_home_from_two_held_settings_handles_shares_records ... ok
+test mechanism::deploy::bound_tests::bound_home_refuses_unbound_intent_before_it_is_written ... ok
+test mechanism::deploy::bound_tests::bound_plan_hash_changes_with_principal_instance_and_mode ... ok
+test mechanism::deploy::bound_tests::bound_sidecars_checkpoints_and_inverse_refuse_copied_or_legacy_identity ... ok
+test mechanism::deploy::bound_tests::bound_receipts_stay_distinct_and_copied_legacy_receipt_refuses ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 718 filtered out; finished in 0.01s
