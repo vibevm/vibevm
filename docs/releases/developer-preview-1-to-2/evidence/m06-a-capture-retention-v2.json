@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "purpose": "Immutable M-06-A before/after candidate capture evidence; contribution coverage remains open.",
+  "capture_ids": {
+    "before": "m06-a-before-46949f643-v2",
+    "after": "m06-a-after-424ed24cd-v2"
+  },
+  "files": [
+    {
+      "side": "before",
+      "kind": "template",
+      "source": "evidence/m06-a-before-46949f643-compact-template-e1.json",
+      "bytes": 63389,
+      "sha256": "51435f494b8e3c4c1a53acae017a1f8bfb9b43cc225172000c254cdabf96961f"
+    },
+    {
+      "side": "before",
+      "kind": "raw",
+      "source": "evidence/m06-a-before-46949f643-v2-source-capture.json",
+      "bytes": 39720,
+      "sha256": "6ea44edd7b304aec4e01e2bd068608a014629d2b43c227e5364eda1fcdb918a3"
+    },
+    {
+      "side": "before",
+      "kind": "normalized",
+      "source": "evidence/m06-a-before-46949f643-v2-capture-e1.json",
+      "bytes": 64115,
+      "sha256": "ce046154b7fcb70a233fa19dbf06a0428e9e60723dd4130f9350f41e92fcf61b"
+    },
+    {
+      "side": "after",
+      "kind": "template",
+      "source": "evidence/m06-a-after-424ed24cd-compact-template-e1.json",
+      "bytes": 82706,
+      "sha256": "8b64126cee74079480b920fc9e332adbee380e5025788d60df87a1aeb05a8e2a"
+    },
+    {
+      "side": "after",
+      "kind": "raw",
+      "source": "evidence/m06-a-after-424ed24cd-v2-source-capture.json",
+      "bytes": 45020,
+      "sha256": "874b128b9134055164e8e03e84069c16115ae6ee86e9b5c86d19013dd7c3f454"
+    },
+    {
+      "side": "after",
+      "kind": "normalized",
+      "source": "evidence/m06-a-after-424ed24cd-v2-capture-e1.json",
+      "bytes": 83427,
+      "sha256": "35fb13d3c4031e25b57bb4db3ef8e8c8aff9a9453dd0994cc4b861ea9b4a3608"
+    }
+  ],
+  "limits": [
+    "Selected Git bytes and source linkage verified; semantic interface review remains open.",
+    "29 interleaved product commits are not covered by the four M-06-A impact drafts."
+  ]
+}
