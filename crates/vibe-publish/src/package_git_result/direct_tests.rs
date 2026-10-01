@@ -8,7 +8,7 @@ use crate::package_git_plan::{
 };
 use crate::package_git_push::tests::local_bare_tests::{bounded_output, porcelain_receipt};
 use crate::package_git_push::tests::{
-    FakePushPort, FakeRun, PushRequest, Snapshot, drive_fake_run,
+    FakePushPort, FakeRun, PushPortError, PushRequest, Snapshot, drive_fake_run,
 };
 use crate::package_git_ready::ReadyLimits;
 use crate::package_git_tree::git::LocalGit;
@@ -231,75 +231,91 @@ impl<'a> DirectPort<'a> {
 }
 
 impl FakePushPort for DirectPort<'_> {
-    fn observe(&mut self) -> Result<Snapshot, String> {
-        self.observations += 1;
-        Ok(Snapshot {
-            repository: RepositoryObservation::Present(self.identity.clone()),
-            refs: self.read_refs()?,
-        })
+    fn observe(
+        &mut self,
+        repository: &RepositoryIdentity,
+        version_tag_ref: &str,
+    ) -> Result<Snapshot, PushPortError> {
+        (|| -> Result<Snapshot, String> {
+            if repository != &self.identity || version_tag_ref != self.version_tag_ref {
+                return Err("foreign observation target".into());
+            }
+            self.observations += 1;
+            Ok(Snapshot {
+                repository: RepositoryObservation::Present(self.identity.clone()),
+                refs: self.read_refs()?,
+            })
+        })()
+        .map_err(|_| PushPortError::Uncertain)
     }
     fn atomic_push(
         &mut self,
         request: PushRequest<'_>,
-    ) -> Result<crate::package_git_push::PushReceipt, String> {
-        self.calls += 1;
-        if request.repository != &self.identity || request.version_tag_ref != self.version_tag_ref {
-            return Err("foreign selected DirectGitExisting target".into());
-        }
-        if let Some(selected) = self.drift_on_push {
-            self.inject_ref_drift(selected)?;
-        }
-        let before_main = match &request.before_refs.main {
-            RawRef::Absent => "",
-            RawRef::Present { oid } => oid,
-        };
-        let before_tag = match &request.before_refs.version_tag {
-            TagRef::Absent => "",
-            TagRef::Present { raw_oid, .. } => raw_oid,
-        };
-        let main_lease = format!("--force-with-lease=refs/heads/main:{before_main}");
-        let tag_lease = format!(
-            "--force-with-lease={}:{}",
-            request.version_tag_ref, before_tag
-        );
-        let main_refspec = format!("{}:refs/heads/main", request.commit_oid);
-        let tag_refspec = format!("{}:{}", request.tag_oid, request.version_tag_ref);
-        let command = self
-            .git()
-            .command(
-                &[
-                    "push",
-                    "--porcelain",
-                    "--atomic",
-                    &main_lease,
-                    &tag_lease,
-                    "--",
-                    self.remote_path(),
-                    &main_refspec,
-                    &tag_refspec,
-                ],
-                true,
-            )
-            .map_err(|e| e.to_string())?;
-        let (status, stdout, _) = bounded_output(command, 4096)?;
-        self.root_unchanged()?;
-        if !status.success() {
-            return Err(format!("direct atomic push exited {status}"));
-        }
-        let receipt = porcelain_receipt(
-            &stdout,
-            "refs/heads/main",
-            request.version_tag_ref,
-            request.commit_oid,
-            request.tag_oid,
-        )?;
-        if self.read_refs()? != *request.desired_refs {
-            return Err("direct post refs differ".into());
-        }
-        if self.lose_reply {
-            return Err("injected lost direct push response".into());
-        }
-        Ok(receipt)
+    ) -> Result<crate::package_git_push::PushReceipt, PushPortError> {
+        (|| -> Result<crate::package_git_push::PushReceipt, String> {
+            self.calls += 1;
+            if request.repository != &self.identity
+                || request.version_tag_ref != self.version_tag_ref
+            {
+                return Err("foreign selected DirectGitExisting target".into());
+            }
+            if let Some(selected) = self.drift_on_push {
+                self.inject_ref_drift(selected)?;
+            }
+            let before_main = match &request.before_refs.main {
+                RawRef::Absent => "",
+                RawRef::Present { oid } => oid,
+            };
+            let before_tag = match &request.before_refs.version_tag {
+                TagRef::Absent => "",
+                TagRef::Present { raw_oid, .. } => raw_oid,
+            };
+            let main_lease = format!("--force-with-lease=refs/heads/main:{before_main}");
+            let tag_lease = format!(
+                "--force-with-lease={}:{}",
+                request.version_tag_ref, before_tag
+            );
+            let main_refspec = format!("{}:refs/heads/main", request.commit_oid);
+            let tag_refspec = format!("{}:{}", request.tag_oid, request.version_tag_ref);
+            let git = LocalGit::new(self.binary, request.objects, self.oid_len)
+                .map_err(|e| e.to_string())?;
+            let command = git
+                .command(
+                    &[
+                        "push",
+                        "--porcelain",
+                        "--atomic",
+                        &main_lease,
+                        &tag_lease,
+                        "--",
+                        self.remote_path(),
+                        &main_refspec,
+                        &tag_refspec,
+                    ],
+                    true,
+                )
+                .map_err(|e| e.to_string())?;
+            let (status, stdout, _) = bounded_output(command, 4096)?;
+            self.root_unchanged()?;
+            if !status.success() {
+                return Err(format!("direct atomic push exited {status}"));
+            }
+            let receipt = porcelain_receipt(
+                &stdout,
+                "refs/heads/main",
+                request.version_tag_ref,
+                request.commit_oid,
+                request.tag_oid,
+            )?;
+            if self.read_refs()? != *request.desired_refs {
+                return Err("direct post refs differ".into());
+            }
+            if self.lose_reply {
+                return Err("injected lost direct push response".into());
+            }
+            Ok(receipt)
+        })()
+        .map_err(|_| PushPortError::Uncertain)
     }
 }
 

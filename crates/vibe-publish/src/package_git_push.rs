@@ -1,5 +1,6 @@
 //! Private atomic package-Git push journal. Production exposes retained
-//! inspection only; no public-host push port is connected in this campaign.
+//! inspection and an unconnected private owner; no public-host push port is
+//! connected in this campaign.
 
 use std::path::Path;
 
@@ -21,6 +22,8 @@ use journal::{
     ATOMIC_PUSH_FORMAT, ATOMIC_PUSH_PENDING_FORMAT, AtomicPushLanded, AtomicPushPending,
     RefUpdateKind, sha,
 };
+
+pub(crate) mod driver;
 
 const PENDING: &str = "atomic-push-pending";
 const LANDED: &str = "atomic-push";

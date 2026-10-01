@@ -5,26 +5,9 @@ use crate::package_git_repo_create::tests::{
 };
 use std::fs;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct Snapshot {
-    pub(crate) repository: RepositoryObservation,
-    pub(crate) refs: RefSnapshot,
-}
-
-#[derive(Debug)]
-pub(crate) struct PushRequest<'a> {
-    pub(crate) repository: &'a RepositoryIdentity,
-    pub(crate) before_refs: &'a RefSnapshot,
-    pub(crate) desired_refs: &'a RefSnapshot,
-    pub(crate) version_tag_ref: &'a str,
-    pub(crate) commit_oid: &'a str,
-    pub(crate) tag_oid: &'a str,
-}
-
-pub(crate) trait FakePushPort {
-    fn observe(&mut self) -> Result<Snapshot, String>;
-    fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, String>;
-}
+pub(crate) use super::driver::{
+    AtomicPushPort as FakePushPort, PushPortError, PushRequest, Snapshot,
+};
 
 /// Held test-only inputs for the same owner driver on HostedCreate and DirectGitExisting.
 pub(crate) struct FakeRun<'a> {
@@ -103,168 +86,19 @@ pub(crate) fn drive_fake_profile(
     approval_id: &str,
     port: &mut impl FakePushPort,
 ) -> PushInspection {
-    let proof = match proved_profile(
-        input.home,
-        input.lease,
-        input.namespace,
-        input.scope,
-        input.key,
-        Some(input.package_source),
-        input.binary,
-        input.profile,
-        approval_id,
-    ) {
-        Ok(value) => value,
-        Err(status) => return status,
-    };
-    let run = proof.run();
-    let pending_before = journal::read_bytes(input.lease, run, PENDING);
-    let landed_before = journal::read_bytes(input.lease, run, LANDED);
-    if !matches!((&pending_before, &landed_before), (Ok(None), Ok(None))) {
-        return inspect_cold_profile(
-            input.home,
-            input.lease,
-            input.namespace,
-            input.scope,
-            input.key,
-            Some(input.package_source),
-            input.binary,
-            input.profile,
+    super::driver::drive(
+        &super::driver::PushRun {
+            home: input.home,
+            lease: input.lease,
+            namespace: input.namespace,
+            scope: input.scope,
+            key: input.key,
+            package_source: input.package_source,
+            git_binary: input.binary,
+            profile: input.profile,
             approval_id,
-        );
-    }
-    let baseline = Snapshot {
-        repository: RepositoryObservation::Present(proof.repository.clone()),
-        refs: proof.plan.before_refs.clone(),
-    };
-    let first = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("first pre-observation: {e}")),
-    };
-    let second = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("second pre-observation: {e}")),
-    };
-    if first != baseline || second != baseline {
-        return recovery(
-            Some(run),
-            "raw repository/main/tag preconditions differ before Pending",
-        );
-    }
-    let pending = expected_pending(&proof);
-    let pending_bytes = match journal::publish(input.lease, run, PENDING, &pending) {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("atomic-push Pending uncertain: {e:#}")),
-    };
-    if !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
-    {
-        return recovery(Some(run), "atomic-push Pending changed before dispatch");
-    }
-    let immediate = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("last pre-observation: {e}")),
-    };
-    if immediate != baseline {
-        return recovery(
-            Some(run),
-            "raw refs changed after Pending before atomic push",
-        );
-    }
-    let reproved = match proved_profile(
-        input.home,
-        input.lease,
-        input.namespace,
-        input.scope,
-        input.key,
-        Some(input.package_source),
-        input.binary,
-        input.profile,
-        approval_id,
-    ) {
-        Ok(value) => value,
-        Err(status) => return status,
-    };
-    if reproved != proof
-        || !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
-    {
-        return recovery(
-            Some(run),
-            "local Ready/approval/repo-create/Pending changed before push",
-        );
-    }
-    let request = PushRequest {
-        repository: &proof.repository,
-        before_refs: &proof.plan.before_refs,
-        desired_refs: &proof.desired_refs,
-        version_tag_ref: &proof.plan.version_tag_ref,
-        commit_oid: &proof.seal.selected_commit_oid,
-        tag_oid: &proof.seal.selected_tag_oid,
-    };
-    let receipt = match port.atomic_push(request) {
-        Ok(value) if exact_updates(&proof.plan, value) => value,
-        Ok(_) => {
-            return recovery(
-                Some(run),
-                "atomic-push callback did not prove both exact ref updates",
-            );
-        }
-        Err(e) => return recovery(Some(run), format!("atomic-push callback uncertain: {e}")),
-    };
-    let after = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("first post-observation: {e}")),
-    };
-    let after_again = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("second post-observation: {e}")),
-    };
-    let desired = Snapshot {
-        repository: RepositoryObservation::Present(proof.repository.clone()),
-        refs: proof.desired_refs.clone(),
-    };
-    if after != desired || after_again != desired {
-        return recovery(
-            Some(run),
-            "atomic push post-observation is not exact desired refs",
-        );
-    }
-    if !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
-    {
-        return recovery(Some(run), "atomic-push Pending changed before Landed");
-    }
-    let landed = AtomicPushLanded {
-        format: ATOMIC_PUSH_FORMAT.into(),
-        run_id: run.into(),
-        pending_sha256: sha(&pending_bytes),
-        callback_exit_zero: true,
-        main_update: receipt.main_update,
-        tag_update: receipt.tag_update,
-        observed_repository: after.repository,
-        observed_refs: after.refs,
-    };
-    if let Err(e) = journal::publish(input.lease, run, LANDED, &landed) {
-        return recovery(Some(run), format!("atomic-push Landed uncertain: {e:#}"));
-    }
-    let cold_profile = match input.profile {
-        ReadyProfile::NoGitlinks { limits, .. } => ReadyProfile::NoGitlinks {
-            limits,
-            local_bare_source: None,
         },
-        ReadyProfile::ParentlessPopulated { limits, .. } => ReadyProfile::ParentlessPopulated {
-            limits,
-            approved_gitdirs: None,
-        },
-    };
-    inspect_cold_profile(
-        input.home,
-        input.lease,
-        input.namespace,
-        input.scope,
-        input.key,
-        None,
-        input.binary,
-        cold_profile,
-        approval_id,
+        port,
     )
 }
 
@@ -286,6 +120,8 @@ pub(crate) struct Fake {
     calls: usize,
     observations: usize,
     lose_reply: bool,
+    replace_objects_on_push: bool,
+    wrong_receipt: bool,
     third_state_before_pending: bool,
     third_state_after_pending: bool,
     third_state_after_push: bool,
@@ -314,6 +150,8 @@ impl Fake {
             calls: 0,
             observations: 0,
             lose_reply: false,
+            replace_objects_on_push: false,
+            wrong_receipt: false,
             third_state_before_pending: false,
             third_state_after_pending: false,
             third_state_after_push: false,
@@ -333,44 +171,69 @@ impl Fake {
     }
 }
 impl FakePushPort for Fake {
-    fn observe(&mut self) -> Result<Snapshot, String> {
-        self.observations += 1;
-        if self.observations == 3
-            && let Some(path) = &self.tamper_on_third_observation
-        {
-            fs::write(path, b"not-json").map_err(|e| e.to_string())?;
-        }
-        if (self.third_state_before_pending && self.observations == 2)
-            || (self.third_state_after_pending && self.observations == 3)
-            || (self.third_state_after_push && self.observations == 4)
-        {
-            let mut foreign = self.observed.clone();
-            foreign.refs.main = crate::package_git_plan::RawRef::Present {
-                oid: "a".repeat(40),
-            };
-            return Ok(foreign);
-        }
-        Ok(self.observed.clone())
+    fn observe(
+        &mut self,
+        repository: &RepositoryIdentity,
+        version_tag_ref: &str,
+    ) -> Result<Snapshot, PushPortError> {
+        (|| -> Result<Snapshot, String> {
+            assert_eq!(
+                self.observed.repository,
+                RepositoryObservation::Present(repository.clone())
+            );
+            assert_eq!(version_tag_ref, "refs/tags/v1.1.0");
+            self.observations += 1;
+            if self.observations == 3
+                && let Some(path) = &self.tamper_on_third_observation
+            {
+                fs::write(path, b"not-json").map_err(|e| e.to_string())?;
+            }
+            if (self.third_state_before_pending && self.observations == 2)
+                || (self.third_state_after_pending && self.observations == 3)
+                || (self.third_state_after_push && self.observations == 4)
+            {
+                let mut foreign = self.observed.clone();
+                foreign.refs.main = crate::package_git_plan::RawRef::Present {
+                    oid: "a".repeat(40),
+                };
+                return Ok(foreign);
+            }
+            Ok(self.observed.clone())
+        })()
+        .map_err(|_| PushPortError::Uncertain)
     }
-    fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, String> {
-        self.calls += 1;
-        assert_eq!(
-            self.observed.repository,
-            RepositoryObservation::Present(request.repository.clone())
-        );
-        assert_eq!(&self.observed.refs, request.before_refs);
-        assert_eq!(request.version_tag_ref, "refs/tags/v1.1.0");
-        assert_eq!(request.commit_oid.len(), 40);
-        assert_eq!(request.tag_oid.len(), 40);
-        self.observed.refs = request.desired_refs.clone();
-        if self.lose_reply {
-            Err("injected response loss".into())
-        } else {
-            Ok(PushReceipt {
-                main_update: RefUpdateKind::New,
-                tag_update: RefUpdateKind::New,
-            })
-        }
+    fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, PushPortError> {
+        (|| -> Result<PushReceipt, String> {
+            assert!(request.objects.root_dir().is_ok());
+            self.calls += 1;
+            assert_eq!(
+                self.observed.repository,
+                RepositoryObservation::Present(request.repository.clone())
+            );
+            assert_eq!(&self.observed.refs, request.before_refs);
+            assert_eq!(request.version_tag_ref, "refs/tags/v1.1.0");
+            assert_eq!(request.commit_oid.len(), 40);
+            assert_eq!(request.tag_oid.len(), 40);
+            self.observed.refs = request.desired_refs.clone();
+            if self.replace_objects_on_push {
+                let root = request.objects.root_path();
+                fs::rename(root, root.with_extension("displaced")).map_err(|e| e.to_string())?;
+                fs::create_dir(root).map_err(|e| e.to_string())?;
+            }
+            if self.lose_reply {
+                Err("injected response loss".into())
+            } else {
+                Ok(PushReceipt {
+                    main_update: if self.wrong_receipt {
+                        RefUpdateKind::FastForward
+                    } else {
+                        RefUpdateKind::New
+                    },
+                    tag_update: RefUpdateKind::New,
+                })
+            }
+        })()
+        .map_err(|_| PushPortError::Uncertain)
     }
 }
 
@@ -483,6 +346,69 @@ fn local_authority_drift_after_pending_prevents_push_dispatch() {
             .unwrap()
             .is_none()
     );
+}
+
+#[test]
+fn replaced_retained_object_root_during_callback_never_lands_or_replays() {
+    let Some(binary) = binary() else { return };
+    for lose_reply in [false, true] {
+        let (world, id) = ready_world(&binary);
+        let mut fake = Fake::new(&world, &id);
+        fake.replace_objects_on_push = true;
+        fake.lose_reply = lose_reply;
+        let result = drive_fake(&world, &id, &mut fake);
+        assert!(
+            matches!(result, PushInspection::RecoveryRequired { ref reason, .. }
+            if reason == "retained object root changed during push"),
+            "{result:?}"
+        );
+        assert_eq!(fake.calls, 1);
+        assert_eq!(fake.observations, 3);
+        assert!(
+            journal::read_bytes(&world.lease, &world.run_id, PENDING)
+                .unwrap()
+                .is_some()
+        );
+        assert!(
+            journal::read_bytes(&world.lease, &world.run_id, LANDED)
+                .unwrap()
+                .is_none()
+        );
+        assert!(matches!(
+            drive_fake(&world, &id, &mut fake),
+            PushInspection::RecoveryRequired { .. }
+        ));
+        assert_eq!(fake.calls, 1);
+    }
+}
+
+#[test]
+fn incorrect_actual_update_kind_with_desired_refs_never_lands() {
+    let Some(binary) = binary() else { return };
+    let (world, id) = ready_world(&binary);
+    let mut fake = Fake::new(&world, &id);
+    fake.wrong_receipt = true;
+    assert!(matches!(
+        drive_fake(&world, &id, &mut fake),
+        PushInspection::RecoveryRequired { .. }
+    ));
+    assert_eq!(fake.calls, 1);
+    assert_eq!(fake.observations, 3);
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, PENDING)
+            .unwrap()
+            .is_some()
+    );
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, LANDED)
+            .unwrap()
+            .is_none()
+    );
+    assert!(matches!(
+        drive_fake(&world, &id, &mut fake),
+        PushInspection::PendingRecoveryRequired { .. }
+    ));
+    assert_eq!(fake.calls, 1);
 }
 
 #[path = "local_bare_tests.rs"]

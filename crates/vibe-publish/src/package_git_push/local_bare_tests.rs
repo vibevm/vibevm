@@ -340,83 +340,98 @@ impl LocalBarePort {
 }
 
 impl FakePushPort for LocalBarePort {
-    fn observe(&mut self) -> Result<Snapshot, String> {
-        self.observations += 1;
-        if self.observations == 3
-            && let Some(reference) = self.external_ref
-        {
-            self.external_move(reference)?;
-        }
-        Ok(Snapshot {
-            repository: RepositoryObservation::Present(self.identity.clone()),
-            refs: self.read_refs()?,
-        })
+    fn observe(
+        &mut self,
+        repository: &RepositoryIdentity,
+        version_tag_ref: &str,
+    ) -> Result<Snapshot, PushPortError> {
+        (|| -> Result<Snapshot, String> {
+            if repository != &self.identity || version_tag_ref != self.version_tag_ref {
+                return Err("foreign observation target".into());
+            }
+            self.observations += 1;
+            if self.observations == 3
+                && let Some(reference) = self.external_ref
+            {
+                self.external_move(reference)?;
+            }
+            Ok(Snapshot {
+                repository: RepositoryObservation::Present(self.identity.clone()),
+                refs: self.read_refs()?,
+            })
+        })()
+        .map_err(|_| PushPortError::Uncertain)
     }
-    fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, String> {
-        self.calls += 1;
-        if request.repository != &self.identity || request.version_tag_ref != self.version_tag_ref {
-            return Err("foreign local target".into());
-        }
-        if let Some(reference) = self.external_before_protected_push {
-            self.external_move(reference)?;
-        }
-        if let Some(reference) = self.desired_before_protected_push {
-            self.desired_move(reference)?;
-        }
-        let main_before = match &request.before_refs.main {
-            RawRef::Absent => "",
-            RawRef::Present { oid } => oid,
-        };
-        let tag_before = match &request.before_refs.version_tag {
-            TagRef::Absent => "",
-            TagRef::Present { raw_oid, .. } => raw_oid,
-        };
-        let main_lease = format!("--force-with-lease=refs/heads/main:{main_before}");
-        let tag_lease = format!(
-            "--force-with-lease={}:{}",
-            request.version_tag_ref, tag_before
-        );
-        let main_refspec = format!("{}:refs/heads/main", request.commit_oid);
-        let tag_refspec = format!("{}:{}", request.tag_oid, request.version_tag_ref);
-        let command = self
-            .git()
-            .command(
-                &[
-                    "push",
-                    "--porcelain",
-                    "--atomic",
-                    &main_lease,
-                    &tag_lease,
-                    "--",
-                    self.remote_path(),
-                    &main_refspec,
-                    &tag_refspec,
-                ],
-                true,
+    fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, PushPortError> {
+        (|| -> Result<PushReceipt, String> {
+            self.calls += 1;
+            if request.repository != &self.identity
+                || request.version_tag_ref != self.version_tag_ref
+            {
+                return Err("foreign local target".into());
+            }
+            if let Some(reference) = self.external_before_protected_push {
+                self.external_move(reference)?;
+            }
+            if let Some(reference) = self.desired_before_protected_push {
+                self.desired_move(reference)?;
+            }
+            let main_before = match &request.before_refs.main {
+                RawRef::Absent => "",
+                RawRef::Present { oid } => oid,
+            };
+            let tag_before = match &request.before_refs.version_tag {
+                TagRef::Absent => "",
+                TagRef::Present { raw_oid, .. } => raw_oid,
+            };
+            let main_lease = format!("--force-with-lease=refs/heads/main:{main_before}");
+            let tag_lease = format!(
+                "--force-with-lease={}:{}",
+                request.version_tag_ref, tag_before
+            );
+            let main_refspec = format!("{}:refs/heads/main", request.commit_oid);
+            let tag_refspec = format!("{}:{}", request.tag_oid, request.version_tag_ref);
+            let git = LocalGit::new(&self.binary, request.objects, self.oid_len)
+                .map_err(|e| e.to_string())?;
+            let command = git
+                .command(
+                    &[
+                        "push",
+                        "--porcelain",
+                        "--atomic",
+                        &main_lease,
+                        &tag_lease,
+                        "--",
+                        self.remote_path(),
+                        &main_refspec,
+                        &tag_refspec,
+                    ],
+                    true,
+                )
+                .map_err(|e| e.to_string())?;
+            let (status, stdout, _stderr) = bounded_output(command, 4096)?;
+            self.last_push_exit_zero = Some(status.success());
+            self.last_porcelain = Some(stdout.clone());
+            self.root_unchanged()?;
+            if !status.success() {
+                return Err(format!("atomic local push exited {status}"));
+            }
+            let receipt = porcelain_receipt(
+                &stdout,
+                "refs/heads/main",
+                request.version_tag_ref,
+                request.commit_oid,
+                request.tag_oid,
             )
-            .map_err(|e| e.to_string())?;
-        let (status, stdout, _stderr) = bounded_output(command, 4096)?;
-        self.last_push_exit_zero = Some(status.success());
-        self.last_porcelain = Some(stdout.clone());
-        self.root_unchanged()?;
-        if !status.success() {
-            return Err(format!("atomic local push exited {status}"));
-        }
-        let receipt = porcelain_receipt(
-            &stdout,
-            "refs/heads/main",
-            request.version_tag_ref,
-            request.commit_oid,
-            request.tag_oid,
-        )
-        .map_err(|e| format!("{e}; porcelain={}", String::from_utf8_lossy(&stdout)))?;
-        if self.read_refs()? != *request.desired_refs {
-            return Err("local push did not produce desired refs".into());
-        }
-        Ok(receipt)
+            .map_err(|e| format!("{e}; porcelain={}", String::from_utf8_lossy(&stdout)))?;
+            if self.read_refs()? != *request.desired_refs {
+                return Err("local push did not produce desired refs".into());
+            }
+            Ok(receipt)
+        })()
+        .map_err(|_| PushPortError::Uncertain)
     }
 }
-
 #[test]
 fn retained_bare_objects_push_exact_oid_refs_atomically_without_local_source_refs() {
     let Some(binary) = binary() else { return };
@@ -430,7 +445,6 @@ fn retained_bare_objects_push_exact_oid_refs_atomically_without_local_source_ref
     assert_eq!(local.calls, 1);
     assert_eq!(local.observations, 5);
 }
-
 #[test]
 fn concurrent_local_bare_main_or_tag_drift_after_pending_blocks_owner_push() {
     let Some(binary) = binary() else { return };
@@ -457,7 +471,6 @@ fn concurrent_local_bare_main_or_tag_drift_after_pending_blocks_owner_push() {
         );
     }
 }
-
 #[test]
 fn exact_raw_leases_reject_concurrent_ref_move_inside_atomic_push() {
     let Some(binary) = binary() else { return };
@@ -506,7 +519,6 @@ fn exact_raw_leases_reject_concurrent_ref_move_inside_atomic_push() {
         );
     }
 }
-
 #[test]
 fn desired_oid_race_is_noop_for_one_ref_and_never_attributed_to_owner() {
     let Some(binary) = binary() else { return };
@@ -552,7 +564,6 @@ fn desired_oid_race_is_noop_for_one_ref_and_never_attributed_to_owner() {
         );
     }
 }
-
 #[test]
 fn porcelain_requires_two_distinct_exact_updating_rows() {
     let main = "*\ta:refs/heads/main\t[new branch]\n";
