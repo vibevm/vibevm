@@ -8,8 +8,10 @@ use crate::package_git_operation::{PendingInspection, prepare_pending};
 use crate::package_git_payload::{PayloadLimits, capture_source_identity};
 use crate::package_git_plan::{
     CommitMetadata, CreationOptions, GitPerson, HostedRepository, PackageCoordinate,
-    PackageGitPlan, RefSnapshot, RepositoryIdentity, RepositoryTarget, StagedObjects, TagMetadata,
+    PackageGitPlan, RawRef, RefSnapshot, RepositoryIdentity, RepositoryObservation,
+    RepositoryTarget, StagedCommit, StagedObjects, TagMetadata, TagRef,
 };
+use crate::package_git_provenance::{self, ProvenanceInspection};
 use crate::package_git_tree::{self, TreeInspection};
 use vibe_lifecycle::{JournalAdmission, SubmissionReservations};
 

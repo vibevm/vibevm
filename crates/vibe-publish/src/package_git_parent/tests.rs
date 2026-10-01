@@ -483,6 +483,24 @@ fn reused_main_noop_requires_exact_fetched_tree_and_peeled_tag() {
         .unwrap();
     assert_eq!(receipt.parent_tree_oid, world.plan.staged.git_tree_oid);
     assert_eq!(receipt.parent_tree_oid, world.origin.tree);
+    assert!(matches!(
+        crate::package_git_objects::stage_existing_main_objects_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        crate::package_git_objects::ObjectInspection::Unavailable { .. }
+    ));
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, "objects")
+            .unwrap()
+            .is_none()
+    );
 }
 
 #[test]
