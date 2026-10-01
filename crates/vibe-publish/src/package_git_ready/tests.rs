@@ -270,6 +270,21 @@ fn parentless_ready_seal_survives_cold_reopen_and_is_not_effect_permission() {
         .unwrap()
         .unwrap();
     assert_eq!(sha(&bytes), seal_sha256);
+    let seal: journal::ReadySeal = serde_json::from_slice(&bytes).unwrap();
+    assert_eq!(seal.format, journal::READY_FORMAT);
+    assert_eq!(
+        seal.provenance,
+        journal::ReadyProvenance::NoGitlinks {
+            pending_sha256: sha(
+                &journal::read_bytes(&world.lease, &run_id, "provenance-pending")
+                    .unwrap()
+                    .unwrap()
+            ),
+            landed_sha256: sha(&journal::read_bytes(&world.lease, &run_id, "provenance")
+                .unwrap()
+                .unwrap()),
+        }
+    );
     assert!(matches!(
         prepare_pending(&world.lease, &world.namespace, &world.scope, "ready", &world.source, &world.plan, payload_limits()).unwrap(),
         PendingInspection::ReadyRetainedNeedsColdProof { run_id: same } if same == run_id
@@ -465,4 +480,51 @@ fn foreign_scope_or_key_cannot_read_ready_seal() {
         ),
         ReadyInspection::ReadyForApproval { .. }
     ));
+}
+
+#[test]
+fn historical_e1_ready_seal_never_decodes_or_upgrades_as_e2() {
+    let Some(binary) = binary() else { return };
+    let world = world(&binary);
+    assert!(matches!(
+        seal_local_ready(
+            &world.lease,
+            world.namespace.id(),
+            &world.scope,
+            "ready",
+            &world.source,
+            None,
+            &binary,
+            limits()
+        ),
+        ReadyInspection::ReadyForApproval { .. }
+    ));
+    let bytes = journal::read_bytes(&world.lease, &world.run_id, SEAL)
+        .unwrap()
+        .unwrap();
+    let mut old: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+    old["format"] = serde_json::Value::String("vibevm.package-git-ready-seal/e1".into());
+    old.as_object_mut().unwrap().remove("provenance");
+    old["no_gitlinks_pending_sha256"] = serde_json::Value::String(sha(b"old pending"));
+    old["no_gitlinks_landed_sha256"] = serde_json::Value::String(sha(b"old landed"));
+    let old_bytes = serde_json::to_vec(&old).unwrap();
+    let path = world.root.path().join(format!(
+        ".vibe/package-git-operations/{}.package-git-ready.json",
+        world.run_id
+    ));
+    fs::write(&path, &old_bytes).unwrap();
+    assert!(matches!(
+        inspect_ready_seal_cold(
+            &world.lease,
+            world.namespace.id(),
+            &world.scope,
+            "ready",
+            None,
+            None,
+            &binary,
+            limits()
+        ),
+        ReadyInspection::RecoveryRequired { .. }
+    ));
+    assert_eq!(fs::read(path).unwrap(), old_bytes);
 }

@@ -1,5 +1,4 @@
-//! Local package-Git C.1 journal seal. Ready means bytes are retained and
-//! inspectable; it is never approval to create a repository or push refs.
+//! C.1 Ready retains exact local bytes; it never grants repository or Git effects.
 
 use std::path::Path;
 
@@ -9,8 +8,8 @@ use vibe_lifecycle::{
 use vibe_safefs::Project;
 
 use crate::package_git_gitlink::{self, CensusLimits, GitIndexCensus};
-use crate::package_git_objects::{self, ObjectInspection};
-use crate::package_git_operation::journal::{self, ObjectReceipt, ReadySeal, sha};
+use crate::package_git_objects::{self, ObjectInspection, ObjectProvenance};
+use crate::package_git_operation::journal::{self, ObjectReceipt, ReadyProvenance, ReadySeal, sha};
 use crate::package_git_operation::{self, PendingInspection, PendingProof};
 use crate::package_git_parent::ParentLimits;
 use crate::package_git_plan::{
@@ -170,10 +169,7 @@ fn local_proof(
             ));
         }
         status @ ProvenanceInspection::NotReady { .. } if package_source.is_some() => {
-            // A populated-link run has no no-Gitlinks receipt by design. Classify
-            // that current source shape without mistaking its valid aggregate
-            // provenance for a damaged no-Gitlinks receipt. This is refusal,
-            // never proof of the retained aggregate or an effect grant.
+            // A populated run has no no-Gitlinks receipt; this only classifies refusal.
             if matches!(
                 package_git_gitlink::census(package_source.unwrap(), binary, limits.census),
                 GitIndexCensus::PopulatedCandidate { .. }
@@ -359,6 +355,10 @@ fn expected_seal(
                 _ => None,
             }
         || object_row.parent_receipt_sha256 != parent.as_ref().map(|(_, landed)| sha(landed))
+        || object_row.provenance
+            != (ObjectProvenance::NoGitlinks {
+                landed_sha256: sha(&no_gitlinks_landed),
+            })
         || serde_json::to_vec(&object_row).ok().as_deref() != Some(objects.as_slice())
     {
         return Err(recovery(
@@ -388,8 +388,10 @@ fn expected_seal(
         payload_manifest_sha256: proof.payload_manifest_sha256.clone(),
         stage_receipt_sha256: sha(&stage),
         tree_receipt_sha256: sha(&tree),
-        no_gitlinks_pending_sha256: sha(&no_gitlinks_pending),
-        no_gitlinks_landed_sha256: sha(&no_gitlinks_landed),
+        provenance: ReadyProvenance::NoGitlinks {
+            pending_sha256: sha(&no_gitlinks_pending),
+            landed_sha256: sha(&no_gitlinks_landed),
+        },
         parent_pending_sha256: parent.as_ref().map(|(pending, _)| sha(pending)),
         parent_landed_sha256: parent.as_ref().map(|(_, landed)| sha(landed)),
         object_receipt_sha256: sha(&objects),
