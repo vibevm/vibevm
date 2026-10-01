@@ -516,3 +516,6 @@ fn eof_or_lost_reply_after_pending_is_uncertain_and_cold_attach_never_replays() 
         assert!(world.record(calls[1].ordinal, "landed").is_none());
     }
 }
+
+#[path = "terminal_tests.rs"]
+mod terminal_tests;

@@ -64,6 +64,17 @@ pub(crate) enum Inspection {
     JournalReady {
         run_id: String,
     },
+    CallChainReady {
+        run_id: String,
+        calls: usize,
+    },
+    CallChainCompleted {
+        run_id: String,
+        calls: usize,
+    },
+    CallChainUncertain {
+        run_id: String,
+    },
     Completed {
         run_id: String,
         partitions: usize,
