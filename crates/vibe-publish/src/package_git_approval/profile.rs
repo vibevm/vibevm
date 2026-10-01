@@ -97,6 +97,65 @@ impl ApprovalHome {
             host_now()?,
         )
     }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn link_mode_a_populated(
+        &self,
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        package_source: Option<&Project>,
+        approved_gitdirs: Option<&[ApprovedGitdir<'_>]>,
+        git_binary: &Path,
+        limits: SubmoduleLimits,
+        verified: &VerifiedApproval,
+    ) -> LinkInspection {
+        self.link_inner_profile(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            git_binary,
+            ReadyProfile::ParentlessPopulated {
+                limits,
+                approved_gitdirs,
+            },
+            verified,
+            None,
+            false,
+            false,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn inspect_link_populated_cold(
+        &self,
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        package_source: Option<&Project>,
+        approved_gitdirs: Option<&[ApprovedGitdir<'_>]>,
+        git_binary: &Path,
+        limits: SubmoduleLimits,
+        approval_id: &str,
+    ) -> LinkInspection {
+        self.inspect_link_cold_profile(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            git_binary,
+            ReadyProfile::ParentlessPopulated {
+                limits,
+                approved_gitdirs,
+            },
+            approval_id,
+        )
+    }
 }
 
 #[cfg(test)]

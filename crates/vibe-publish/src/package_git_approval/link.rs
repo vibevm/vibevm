@@ -6,6 +6,7 @@ use super::*;
 use crate::package_git_operation::journal::{
     APPROVAL_LINK_FORMAT, APPROVAL_LINK_PENDING_FORMAT, ApprovalLinkLanded, ApprovalLinkPending,
 };
+use crate::package_git_ready::profile::ReadyProfile;
 
 const PENDING: &str = "approval-link-pending";
 const LANDED: &str = "approval-link";
@@ -145,15 +146,47 @@ impl ApprovalHome {
         lose_reply: bool,
         stop_after_pending: bool,
     ) -> LinkInspection {
-        let ready = match self.ready(
+        self.link_inner_profile(
             lease,
             namespace,
             scope,
             key,
             package_source,
-            local_bare_source,
             git_binary,
-            limits,
+            ReadyProfile::NoGitlinks {
+                limits,
+                local_bare_source,
+            },
+            verified,
+            now_override,
+            lose_reply,
+            stop_after_pending,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(super) fn link_inner_profile(
+        &self,
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        package_source: Option<&Project>,
+        git_binary: &Path,
+        profile: ReadyProfile<'_>,
+        verified: &VerifiedApproval,
+        now_override: Option<u64>,
+        lose_reply: bool,
+        stop_after_pending: bool,
+    ) -> LinkInspection {
+        let ready = match self.ready_profile(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            git_binary,
+            profile,
         ) {
             Ok(value) => value,
             Err(error) => return recovery(None, error.to_string()),
@@ -182,15 +215,14 @@ impl ApprovalHome {
                 Err(error) => return recovery(Some(run), error.to_string()),
             },
         };
-        let selected = match self.load_at(
+        let selected = match self.load_at_profile(
             lease,
             namespace,
             scope,
             key,
             package_source,
-            local_bare_source,
             git_binary,
-            limits,
+            profile,
             now,
         ) {
             Ok(value)
@@ -235,15 +267,14 @@ impl ApprovalHome {
         if stop_after_pending {
             return recovery(Some(run), "injected stop after approval-link Pending");
         }
-        let redeemed = match self.redeem_at(
+        let redeemed = match self.redeem_at_profile(
             lease,
             namespace,
             scope,
             key,
             package_source,
-            local_bare_source,
             git_binary,
-            limits,
+            profile,
             &selected,
             now_override,
             lose_reply,
@@ -263,15 +294,14 @@ impl ApprovalHome {
             marker_sha256: &expected.expected_marker_sha256,
         };
         if self
-            .inspect_redemption_cold(
+            .inspect_redemption_cold_profile(
                 lease,
                 namespace,
                 scope,
                 key,
                 package_source,
-                local_bare_source,
                 git_binary,
-                limits,
+                profile,
                 &cold,
             )
             .is_err()
@@ -298,15 +328,14 @@ impl ApprovalHome {
                 format!("approval-link Landed uncertain: {error:#}"),
             );
         }
-        self.inspect_link_cold(
+        self.inspect_link_cold_profile(
             lease,
             namespace,
             scope,
             key,
             package_source,
-            local_bare_source,
             git_binary,
-            limits,
+            profile,
             &selected.record.approval_id,
         )
     }
@@ -324,15 +353,41 @@ impl ApprovalHome {
         limits: ReadyLimits,
         approval_id: &str,
     ) -> LinkInspection {
-        let ready = match self.ready(
+        self.inspect_link_cold_profile(
             lease,
             namespace,
             scope,
             key,
             package_source,
-            local_bare_source,
             git_binary,
-            limits,
+            ReadyProfile::NoGitlinks {
+                limits,
+                local_bare_source,
+            },
+            approval_id,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(super) fn inspect_link_cold_profile(
+        &self,
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        package_source: Option<&Project>,
+        git_binary: &Path,
+        profile: ReadyProfile<'_>,
+        approval_id: &str,
+    ) -> LinkInspection {
+        let ready = match self.ready_profile(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            git_binary,
+            profile,
         ) {
             Ok(value) => value,
             Err(error) => return recovery(None, error.to_string()),
@@ -411,15 +466,14 @@ impl ApprovalHome {
             approval_record_sha256: &pending.approval_record_sha256,
             marker_sha256: &pending.expected_marker_sha256,
         };
-        if let Err(error) = self.inspect_redemption_cold(
+        if let Err(error) = self.inspect_redemption_cold_profile(
             lease,
             namespace,
             scope,
             key,
             package_source,
-            local_bare_source,
             git_binary,
-            limits,
+            profile,
             &cold,
         ) {
             return recovery(Some(run), format!("historical marker: {error}"));

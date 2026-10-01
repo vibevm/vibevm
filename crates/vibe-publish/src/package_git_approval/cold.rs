@@ -1,18 +1,20 @@
 //! Historical package-Git approval marker inspection. No new authority.
 use super::*;
+use crate::package_git_provenance_populated::ApprovedGitdir;
+use crate::package_git_ready::profile::ReadyProfile;
+use crate::package_git_submodule::SubmoduleLimits;
 
 impl ApprovalHome {
     #[allow(clippy::too_many_arguments)]
-    pub(crate) fn inspect_redemption_cold(
+    pub(super) fn inspect_redemption_cold_profile(
         &self,
         lease: &LifecycleLease,
         namespace: &SubmissionNamespace,
         scope: &SubmissionScope,
         key: &str,
         package_source: Option<&Project>,
-        local_bare_source: Option<&Project>,
         git_binary: &Path,
-        limits: ReadyLimits,
+        profile: ReadyProfile<'_>,
         expected: &ColdExpectation<'_>,
     ) -> Result<RedemptionReceipt, ApprovalError> {
         if !valid_human(expected.approval_id)
@@ -23,15 +25,14 @@ impl ApprovalHome {
                 "invalid cold marker identity".into(),
             ));
         }
-        let ready = self.ready(
+        let ready = self.ready_profile(
             lease,
             namespace,
             scope,
             key,
             package_source,
-            local_bare_source,
             git_binary,
-            limits,
+            profile,
         )?;
         let settings_root = self.checked_settings_root()?;
         let redeemed = self
@@ -82,5 +83,60 @@ impl ApprovalHome {
             marker_sha256: expected.marker_sha256.into(),
             approval_record_sha256: expected.approval_record_sha256.into(),
         })
+    }
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn inspect_redemption_cold(
+        &self,
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        package_source: Option<&Project>,
+        local_bare_source: Option<&Project>,
+        git_binary: &Path,
+        limits: ReadyLimits,
+        expected: &ColdExpectation<'_>,
+    ) -> Result<RedemptionReceipt, ApprovalError> {
+        self.inspect_redemption_cold_profile(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            git_binary,
+            ReadyProfile::NoGitlinks {
+                limits,
+                local_bare_source,
+            },
+            expected,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn inspect_redemption_populated_cold(
+        &self,
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        package_source: Option<&Project>,
+        approved_gitdirs: Option<&[ApprovedGitdir<'_>]>,
+        git_binary: &Path,
+        limits: SubmoduleLimits,
+        expected: &ColdExpectation<'_>,
+    ) -> Result<RedemptionReceipt, ApprovalError> {
+        self.inspect_redemption_cold_profile(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            git_binary,
+            ReadyProfile::ParentlessPopulated {
+                limits,
+                approved_gitdirs,
+            },
+            expected,
+        )
     }
 }
