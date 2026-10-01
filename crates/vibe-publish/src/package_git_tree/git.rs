@@ -12,9 +12,9 @@ use crate::package_git_operation::journal::TreeFile;
 use crate::package_git_payload::FileRow;
 
 pub(crate) struct LocalGit<'a> {
-    binary: &'a Path,
-    objects: &'a Project,
-    oid_len: usize,
+    pub(crate) binary: &'a Path,
+    pub(crate) objects: &'a Project,
+    pub(crate) oid_len: usize,
 }
 
 impl<'a> LocalGit<'a> {
@@ -71,7 +71,7 @@ impl<'a> LocalGit<'a> {
         })
     }
 
-    fn command(&self, args: &[&str], initialized: bool) -> Result<Command> {
+    pub(crate) fn command(&self, args: &[&str], initialized: bool) -> Result<Command> {
         let named = Project::open(self.objects.root_path())?;
         if named.root_correlation_token()? != self.objects.root_correlation_token()? {
             bail!("Git object-root pathname changed");
@@ -85,6 +85,7 @@ impl<'a> LocalGit<'a> {
             .env("GIT_TERMINAL_PROMPT", "0")
             .env("GIT_CONFIG_NOSYSTEM", "1")
             .env("GIT_NO_REPLACE_OBJECTS", "1")
+            .env("GIT_NO_LAZY_FETCH", "1")
             .env("GIT_OPTIONAL_LOCKS", "0")
             .env(
                 "GIT_CONFIG_GLOBAL",
@@ -147,7 +148,7 @@ impl<'a> LocalGit<'a> {
         Ok(output)
     }
 
-    fn output(&self, args: &[&str], input: &[u8], cap: usize) -> Result<Vec<u8>> {
+    pub(crate) fn output(&self, args: &[&str], input: &[u8], cap: usize) -> Result<Vec<u8>> {
         let mut child = self.command(args, true)?.spawn()?;
         let Some(mut stdin) = child.stdin.take() else {
             let _ = child.kill();
@@ -164,7 +165,7 @@ impl<'a> LocalGit<'a> {
         self.finish(child, cap)
     }
 
-    fn oid(&self, output: &[u8]) -> Result<String> {
+    pub(crate) fn oid(&self, output: &[u8]) -> Result<String> {
         let text = std::str::from_utf8(output)?;
         let Some(oid) = text.strip_suffix('\n') else {
             bail!("Git returned no single OID line");

@@ -79,23 +79,49 @@ fn valid_message(message: &str) -> bool {
             .any(|ch| ch == '\0' || ch == '\r' || (ch.is_control() && ch != '\n' && ch != '\t'))
 }
 
-fn object_oid(kind: &str, bytes: &[u8], len: usize) -> Result<String, PlanError> {
-    let header = format!("{kind} {}\0", bytes.len());
-    match len {
-        40 => {
-            let mut hash = Sha1::new();
-            hash.update(header.as_bytes());
-            hash.update(bytes);
-            Ok(format!("{:x}", hash.finalize()))
+pub(crate) enum GitObjectHasher {
+    Sha1(Sha1),
+    Sha256(Sha256),
+}
+
+impl GitObjectHasher {
+    pub(crate) fn new(kind: &str, size: u64, len: usize) -> Result<Self, PlanError> {
+        if !matches!(kind, "blob" | "tree" | "commit" | "tag") {
+            return Err(invalid("Git object type"));
         }
-        64 => {
-            let mut hash = Sha256::new();
-            hash.update(header.as_bytes());
-            hash.update(bytes);
-            Ok(format!("{:x}", hash.finalize()))
+        let header = format!("{kind} {size}\0");
+        match len {
+            40 => {
+                let mut hash = Sha1::new();
+                hash.update(header.as_bytes());
+                Ok(Self::Sha1(hash))
+            }
+            64 => {
+                let mut hash = Sha256::new();
+                hash.update(header.as_bytes());
+                Ok(Self::Sha256(hash))
+            }
+            _ => Err(invalid("Git object algorithm")),
         }
-        _ => Err(invalid("Git object algorithm")),
     }
+    pub(crate) fn update(&mut self, bytes: &[u8]) {
+        match self {
+            Self::Sha1(hash) => hash.update(bytes),
+            Self::Sha256(hash) => hash.update(bytes),
+        }
+    }
+    pub(crate) fn finish(self) -> String {
+        match self {
+            Self::Sha1(hash) => format!("{:x}", hash.finalize()),
+            Self::Sha256(hash) => format!("{:x}", hash.finalize()),
+        }
+    }
+}
+
+fn object_oid(kind: &str, bytes: &[u8], len: usize) -> Result<String, PlanError> {
+    let mut hash = GitObjectHasher::new(kind, bytes.len() as u64, len)?;
+    hash.update(bytes);
+    Ok(hash.finish())
 }
 
 impl PackageGitPlan {
