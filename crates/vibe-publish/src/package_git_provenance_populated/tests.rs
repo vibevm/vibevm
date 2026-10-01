@@ -45,7 +45,7 @@ pub(crate) fn git(binary: &Path, cwd: &Path, args: &[&str]) -> String {
     );
     String::from_utf8(out.stdout).unwrap().trim().into()
 }
-fn payload_limits() -> PayloadLimits {
+pub(crate) fn payload_limits() -> PayloadLimits {
     PayloadLimits {
         max_files: 16,
         max_directories: 16,

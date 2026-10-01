@@ -382,6 +382,32 @@ pub(crate) fn inspect_parentless_populated_objects_cold(
     )
 }
 
+pub(crate) fn inspect_parentless_populated_objects_ready_cold(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    approved: Option<&[ApprovedGitdir<'_>]>,
+    git_binary: &Path,
+    limits: SubmoduleLimits,
+) -> ObjectInspection {
+    inspect_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        limits.census,
+        None,
+        None,
+        Some(limits),
+        approved,
+        true,
+    )
+}
+
 pub(crate) fn inspect_existing_main_objects_cold(
     lease: &LifecycleLease,
     namespace_token: &str,
