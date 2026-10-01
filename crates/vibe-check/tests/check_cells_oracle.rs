@@ -73,6 +73,125 @@ url = "https://example/vibespecs"
         .unwrap();
 }
 
+#[test]
+fn declared_host_boot_checks_only_selected_vibe_not_raw_same_stem_data() {
+    let project = tempdir().unwrap();
+    write_minimal_project(project.path());
+    let boot = vibe_core::layout::current_boot_dir();
+    let wire = |name: &str| boot.join(name).to_string_lossy().replace('\\', "/");
+    fs::write(project.path().join("vibe.toml"), format!(
+        "[project]\ngroup='org.example'\nname='host'\nversion='1.1.0'\n\
+         [[project.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='scan'\n\
+         [[project.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
+         [[project.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+         [[project.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-doc'\nrole='documentation'\nloading='scan'\n",
+        wire("raw.xml"), wire("raw.md"), wire("selected.xml"), wire("doc.xml")
+    )).unwrap();
+    fs::write(
+        project.path().join(boot.join("raw.xml")),
+        b"<data><ordinary/></data>",
+    )
+    .unwrap();
+    fs::write(
+        project.path().join(boot.join("raw.md")),
+        b"# ordinary\n\n#use is literal\n",
+    )
+    .unwrap();
+    let selected = project.path().join(boot.join("selected.xml"));
+    fs::write(
+        &selected,
+        b"<spec xmlns='https://vibevm.org/spec/1'><p><RULE fact='true'>selected</RULE></p></spec>",
+    )
+    .unwrap();
+    fs::write(
+        project.path().join(boot.join("doc.xml")),
+        b"<spec xmlns='https://vibevm.org/spec/1'><note kind='tip'>Doc-only element.</note></spec>",
+    )
+    .unwrap();
+    let run = || {
+        let mut report = CheckReport::default();
+        BootDirectoryCheck.run(project.path(), &opts(), &mut report);
+        report.findings
+    };
+    let clean = run();
+    assert!(
+        clean.is_empty(),
+        "ordinary same-stem sources stay raw: {clean:?}"
+    );
+
+    fs::write(&selected, b"<data><foreign/></data>").unwrap();
+    let invalid = run();
+    assert!(
+        invalid
+            .iter()
+            .any(|finding| finding.check == CheckId::BootDirectory
+                && finding.severity == Severity::Error
+                && finding
+                    .message
+                    .contains("selected Vibe boot source is invalid")),
+        "{invalid:?}"
+    );
+    fs::write(
+        &selected,
+        b"<spec xmlns='https://vibevm.org/spec/1'><note kind='tip'>Wrong vocabulary.</note></spec>",
+    )
+    .unwrap();
+    let wrong_vocabulary = run();
+    assert!(
+        wrong_vocabulary
+            .iter()
+            .any(|finding| finding.message.contains("documentation vocabulary")),
+        "{wrong_vocabulary:?}"
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn declared_host_boot_refuses_symlinked_or_ambiguous_selected_source() {
+    use std::os::unix::fs::symlink;
+
+    let project = tempdir().unwrap();
+    let outside = tempdir().unwrap();
+    write_minimal_project(project.path());
+    let boot = vibe_core::layout::current_boot_dir();
+    let selected_rel = boot
+        .join("selected.xml")
+        .to_string_lossy()
+        .replace('\\', "/");
+    let row = format!(
+        "[[project.sources]]\nfile='{selected_rel}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n"
+    );
+    let manifest = format!("[project]\ngroup='org.example'\nname='host'\nversion='1.1.0'\n{row}");
+    fs::write(project.path().join("vibe.toml"), &manifest).unwrap();
+    let selected = project.path().join(&selected_rel);
+    fs::write(outside.path().join("selected.xml"), b"<spec/>").unwrap();
+    symlink(outside.path().join("selected.xml"), &selected).unwrap();
+    let mut report = CheckReport::default();
+    BootDirectoryCheck.run(project.path(), &opts(), &mut report);
+    assert!(
+        report
+            .findings
+            .iter()
+            .any(|finding| finding.message.contains("cannot be classified")),
+        "{:?}",
+        report.findings
+    );
+
+    fs::remove_file(&selected).unwrap();
+    fs::write(&selected, b"<spec xmlns='https://vibevm.org/spec/1'/>").unwrap();
+    fs::write(project.path().join("vibe.toml"), format!("{manifest}[[project.sources]]\nfile='{selected_rel}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='scan'\n")).unwrap();
+    let mut report = CheckReport::default();
+    BootDirectoryCheck.run(project.path(), &opts(), &mut report);
+    assert!(
+        report
+            .findings
+            .iter()
+            .any(|finding| finding.message.contains("ambiguous descriptors")),
+        "{:?}",
+        report.findings
+    );
+}
+
 /// Every cell answers with its own [`CheckId`] — the manifest-to-id
 /// mapping each `#[cell(variant = …)]` claims.
 #[test]

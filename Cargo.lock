@@ -4469,6 +4469,7 @@ dependencies = [
  "vibe-facts",
  "vibe-registry",
  "vibe-resolver",
+ "vibe-safefs",
  "vibe-specdoc",
  "walkdir",
 ]
