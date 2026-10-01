@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Tool: bounded Codex subagents</title>
+  <status stage="spec" state="done"/>
+  <contract title="Installed tool pointer">
+    <p><CODEX-SUBAGENTS fact="true" status="spec/done">
+    This project installs tool:org.vibevm.world/codex-subagents. Before commissioning a
+    worker, read the complete protocol and packet template at
+    @spec://org.vibevm.world/codex-subagents/flows/codex-subagents/CODEX-SUBAGENTS-PROTOCOL#root
+    and @spec://org.vibevm.world/codex-subagents/flows/codex-subagents/packet-template#root.
+    Do not preload those files merely because this pointer is in boot.
+    </CODEX-SUBAGENTS></p>
+    <p><QUIET-CONTRACT fact="true" status="spec/done">
+    Parent loads governing rules and names the exact task subset. Worker packet and pointer
+    begin with ##subagent-quiet-clause. CLI exec suppresses automatic boot with
+    --strict-config --ignore-user-config and project_doc_max_bytes=0. Missing necessary rules
+    are packet defects requiring parent amendment. This is instruction loading, not a
+    filesystem read sandbox; native harness support must be confirmed separately.
+    </QUIET-CONTRACT></p>
+    <p><LAUNCH-DEFAULTS fact="true" status="spec/done">
+    Receipt-deployed codex-worker uses required absolute isolated CODEX_WORKER_HOME, defaults
+    gpt-6.1-sol/medium, file ChatGPT auth, workspace-write/approval never for exec, and
+    optional read-only review. Retain exact process/cwd/home/thread identity. Parent alone
+    accepts; preserve partial work and never duplicate a writer on observation timeout. Deploy
+    explicitly with posix or windows against the resolved package slot.
+    </LAUNCH-DEFAULTS></p>
+  </contract>
+</spec>

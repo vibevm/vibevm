@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# vibe:codex-subagents launcher epoch=1 owner=org.vibevm.world/codex-subagents
+set -euo pipefail
+umask 077
+
+fail() { printf 'codex-worker: %s\n' "$1" >&2; exit 2; }
+mode="${1:-}"
+case "$mode" in login|status|interactive|exec) shift ;; *)
+  fail 'usage: codex-worker {login|status|interactive|exec} [Codex arguments]';;
+esac
+worker_home="${CODEX_WORKER_HOME:-}"
+[[ "$worker_home" == /* ]] || fail 'CODEX_WORKER_HOME must name an explicit absolute isolated directory'
+cli_requested="${CODEX_WORKER_BIN:-codex}"
+cli="$(command -v -- "$cli_requested")" || fail 'Codex CLI executable was not found'
+model="${CODEX_WORKER_MODEL:-gpt-6.1-sol}"
+effort="${CODEX_WORKER_EFFORT:-medium}"
+case "$effort" in low|medium|high|xhigh|max) ;; *) fail 'unsupported requested reasoning effort';; esac
+
+# Keep boot suppression and file-based account selection fixed. Model, effort,
+# sandbox and other ordinary task options remain explicit parent overrides.
+config_next=false
+model_given=false
+sandbox_given=false
+json_given=false
+color_given=false
+for argument in "$@"; do
+  [[ "$argument" != -- ]] || break
+  case "$argument" in
+    -m|--model|--model=*|-m?*) model_given=true ;;
+    -s|--sandbox|--sandbox=*|-s?*) sandbox_given=true ;;
+    --json) json_given=true ;;
+    --color|--color=*) color_given=true ;;
+  esac
+  config_value=''
+  if "$config_next"; then config_value="$argument"; config_next=false
+  else
+    case "$argument" in
+      -c|--config) config_next=true ;;
+      --config=*) config_value="${argument#--config=}" ;;
+      -c?*) config_value="${argument#-c}" ;;
+      -p|--profile|--profile=*|-p?*)
+        [[ "$mode" != exec ]] || fail 'quiet exec does not load configuration profiles';;
+    esac
+  fi
+  config_key="${config_value%%=*}"
+  config_key="${config_key//[[:space:]]/}"
+  config_key="${config_key//\"/}"
+  config_key="${config_key//\'/}"
+  case "$config_key" in
+    cli_auth_credentials_store|forced_login_method)
+      fail 'account-selection settings belong to this launcher';;
+    project_doc_max_bytes)
+      [[ "$mode" != exec ]] || fail 'quiet exec fixes project_doc_max_bytes=0';;
+  esac
+done
+
+mkdir -p -- "$worker_home"
+worker_home="$(cd -- "$worker_home" && pwd -P)"
+if [[ -n "${HOME:-}" && -d "$HOME/.codex" ]]; then
+  primary_home="$(cd -- "$HOME/.codex" && pwd -P)"
+  [[ "$worker_home" != "$primary_home" ]] || fail 'worker state must differ from the default Codex home'
+fi
+chmod 700 -- "$worker_home"
+isolation_args=()
+while IFS= read -r variable_name; do
+  case "$variable_name" in
+    CODEX_CA_CERTIFICATE) ;;
+    CODEX_*|OPENAI_*) isolation_args+=(-u "$variable_name");;
+  esac
+done < <(compgen -e)
+
+child_args=(--no-daemon -c 'cli_auth_credentials_store="file"' -c 'forced_login_method="chatgpt"')
+case "$mode" in
+  login) child_args+=(login) ;;
+  status) child_args+=(login status) ;;
+  interactive)
+    "$model_given" || child_args+=(--model "$model")
+    child_args+=(-c "model_reasoning_effort=\"$effort\"") ;;
+  exec) child_args+=(exec --strict-config --ignore-user-config -c project_doc_max_bytes=0
+    -c "model_reasoning_effort=\"$effort\"" -c 'approval_policy="never"')
+    "$model_given" || child_args+=(--model "$model")
+    "$sandbox_given" || child_args+=(--sandbox workspace-write)
+    "$json_given" || child_args+=(--json)
+    "$color_given" || child_args+=(--color never) ;;
+esac
+exec env "${isolation_args[@]}" "CODEX_HOME=$worker_home" "$cli" "${child_args[@]}" "$@"
