@@ -4,9 +4,9 @@ use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::mpsc::{self, Receiver, Sender};
 use vibe_lifecycle::process::{ProcessError, ProcessOutput, ProcessSpec};
 
-struct BlockingProcess {
+pub(super) struct BlockingProcess {
     root: PathBuf,
-    count: AtomicUsize,
+    pub(super) count: AtomicUsize,
     entered: Sender<()>,
     release: Mutex<Receiver<()>>,
     panic_after_ready: bool,
@@ -40,14 +40,14 @@ impl ProcessRunner for BlockingProcess {
         })
     }
 }
-struct Setup {
+pub(super) struct Setup {
     _dir: tempfile::TempDir,
-    coordinates: HostCoordinates,
-    process: Arc<BlockingProcess>,
+    pub(super) coordinates: HostCoordinates,
+    pub(super) process: Arc<BlockingProcess>,
     entered: Receiver<()>,
     release: Sender<()>,
 }
-fn setup(panic_after_ready: bool) -> Setup {
+pub(super) fn setup(panic_after_ready: bool) -> Setup {
     let dir = tempfile::tempdir().unwrap();
     std::fs::write(dir.path().join("vibe.toml"), ONE_SCRIPT_VALIDATE_MANIFEST).unwrap();
     let script = if TargetOs::current() == Some(TargetOs::Windows) {
@@ -98,7 +98,7 @@ fn request() -> DefaultLifecycleRequest {
         policy: Default::default(),
     }
 }
-fn begin(
+pub(super) fn begin(
     s: &Setup,
     hook: Option<Arc<dyn Fn(&Binding) + Send + Sync>>,
 ) -> (LiveOwner, Observer, Binding) {
@@ -123,7 +123,7 @@ fn begin(
     s.entered.recv_timeout(Duration::from_secs(10)).unwrap();
     (owner, observer, binding)
 }
-fn finish(owner: &LiveOwner, s: &Setup) {
+pub(super) fn finish(owner: &LiveOwner, s: &Setup) {
     s.release.send(()).unwrap();
     let record = owner.shared.record.lock().unwrap();
     let (record, timeout) = owner
