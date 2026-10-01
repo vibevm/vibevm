@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "context_id": "context:one",
+  "target_id": null,
+  "operation_id": "rust:domain:operation",
+  "run_id": "run:one",
+  "stream_id": "stream:one",
+  "body": {
+    "kind": "event",
+    "event": {
+      "sequence": "1",
+      "payload": {
+        "type": "terminal_reference",
+        "result_ref": "result:one",
+        "effect_state": "no_effects"
+      }
+    }
+  }
+}

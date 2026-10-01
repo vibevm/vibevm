@@ -1,0 +1,344 @@
+{
+  "metadata": {
+    "description": "Pure scoped stream value contract. Generated decoding checks shape; owner-selected binding and semantic validation do not admit, dispatch, grant authority or prove domain completion. No streaming, replay or control capability is established.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STREAM",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::operation_stream_message"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "operation_id": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "stream_id": {
+      "type": "string"
+    },
+    "body": {
+      "ref": "body"
+    }
+  },
+  "definitions": {
+    "body": {
+      "discriminator": "kind",
+      "mapping": {
+        "event": {
+          "properties": {
+            "event": {
+              "ref": "event_record"
+            }
+          }
+        },
+        "gap": {
+          "properties": {
+            "from_sequence": {
+              "type": "string"
+            },
+            "to_sequence": {
+              "type": "string"
+            },
+            "reason": {
+              "enum": [
+                "evicted",
+                "expired",
+                "oversize",
+                "queue_full"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "terminal_ref": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "replay_request": {
+          "properties": {
+            "after_sequence": {
+              "type": "string"
+            },
+            "max_events": {
+              "type": "uint16"
+            },
+            "max_bytes": {
+              "type": "uint32"
+            }
+          }
+        },
+        "replay_reply": {
+          "properties": {
+            "after_sequence": {
+              "type": "string"
+            },
+            "newest_sequence": {
+              "type": "string",
+              "nullable": true
+            },
+            "events": {
+              "elements": {
+                "ref": "event_record"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "gap": {
+              "ref": "gap",
+              "nullable": true
+            },
+            "terminal_ref": {
+              "type": "string",
+              "nullable": true
+            },
+            "expired": {
+              "type": "boolean"
+            }
+          }
+        },
+        "control_request": {
+          "properties": {
+            "request_id": {
+              "type": "string"
+            },
+            "action": {
+              "enum": [
+                "cancel",
+                "detach"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "after_sequence": {
+              "type": "string"
+            }
+          }
+        },
+        "control_reply": {
+          "properties": {
+            "request_id": {
+              "type": "string"
+            },
+            "action": {
+              "enum": [
+                "cancel",
+                "detach"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "status": {
+              "enum": [
+                "requested",
+                "reached_safe_stop",
+                "unavailable",
+                "already_terminal",
+                "detached"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "operation_effect_state": {
+              "enum": [
+                "no_effects",
+                "completed",
+                "uncertain"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "result_ref": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        }
+      }
+    },
+    "event_record": {
+      "properties": {
+        "sequence": {
+          "type": "string"
+        },
+        "payload": {
+          "ref": "payload"
+        }
+      }
+    },
+    "payload": {
+      "discriminator": "type",
+      "mapping": {
+        "state": {
+          "properties": {
+            "observed": {
+              "enum": [
+                "journal_ready",
+                "running",
+                "owner_stopped",
+                "result_available"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "effect_state": {
+              "enum": [
+                "no_effects",
+                "completed",
+                "uncertain"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "result_ref": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "phase": {
+          "properties": {
+            "phase": {
+              "type": "string"
+            },
+            "transition": {
+              "enum": [
+                "started",
+                "finished"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "status": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "progress": {
+          "properties": {
+            "current": {
+              "type": "string"
+            },
+            "total": {
+              "type": "string",
+              "nullable": true
+            },
+            "unit": {
+              "enum": [
+                "work_units",
+                "bytes"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            }
+          }
+        },
+        "diagnostic": {
+          "properties": {
+            "severity": {
+              "enum": [
+                "info",
+                "warning",
+                "error"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "raw_output": {
+          "properties": {
+            "origin": {
+              "enum": [
+                "stdout",
+                "stderr"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "hex_bytes": {
+              "type": "string"
+            },
+            "byte_count": {
+              "type": "uint32"
+            },
+            "truncated": {
+              "type": "boolean"
+            }
+          }
+        },
+        "terminal_reference": {
+          "properties": {
+            "result_ref": {
+              "type": "string"
+            },
+            "effect_state": {
+              "enum": [
+                "no_effects",
+                "completed",
+                "uncertain"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            }
+          }
+        }
+      }
+    },
+    "gap": {
+      "properties": {
+        "from_sequence": {
+          "type": "string"
+        },
+        "to_sequence": {
+          "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "evicted",
+            "expired",
+            "oversize",
+            "queue_full"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "terminal_ref": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    }
+  }
+}

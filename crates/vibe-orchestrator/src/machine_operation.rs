@@ -327,6 +327,7 @@ mod coverage;
 mod discovery;
 pub mod exchange;
 mod publication;
+pub mod stream_message;
 pub use coverage::*;
 pub use publication::MachineEnvelopeValidationError;
 

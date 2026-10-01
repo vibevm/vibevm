@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "context_id": "context:one",
+  "target_id": null,
+  "operation_id": "rust:domain:operation",
+  "run_id": "run:one",
+  "stream_id": "stream:one",
+  "body": {
+    "kind": "replay_reply",
+    "after_sequence": "0",
+    "newest_sequence": "3",
+    "events": [
+      {
+        "sequence": "3",
+        "payload": {
+          "type": "diagnostic",
+          "severity": "info",
+          "message": "retained observation"
+        }
+      }
+    ],
+    "gap": {
+      "from_sequence": "1",
+      "to_sequence": "2",
+      "reason": "evicted",
+      "terminal_ref": null
+    },
+    "terminal_ref": "result:one",
+    "expired": false
+  }
+}
