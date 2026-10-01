@@ -14,8 +14,8 @@ use crate::package_git_payload::{
 };
 use crate::package_git_tree::git::LocalGit;
 
-mod git;
-mod tree;
+pub(crate) mod git;
+pub(crate) mod tree;
 use git::trusted_binary;
 
 #[derive(Debug, Clone, Copy)]

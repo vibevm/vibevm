@@ -17,6 +17,8 @@ pub(crate) const PROVENANCE_PENDING_FORMAT: &str = "vibevm.package-git-no-gitlin
 pub(crate) const OBJECT_FORMAT: &str = "vibevm.package-git-control-objects/e2";
 pub(crate) const PARENT_PENDING_FORMAT: &str = "vibevm.package-git-parent-pending/e1";
 pub(crate) const PARENT_FORMAT: &str = "vibevm.package-git-parent/e1";
+pub(crate) const GITLINK_PENDING_FORMAT: &str = "vibevm.package-git-link-pending/e1";
+pub(crate) const GITLINK_FORMAT: &str = "vibevm.package-git-link/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -181,6 +183,60 @@ pub(crate) struct ParentReceipt {
     pub closure_bytes: u64,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct GitlinkMetadataRow {
+    pub path: String,
+    pub git_oid: String,
+    pub sha256: String,
+    pub size_bytes: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct GitlinkPending {
+    pub format: String,
+    pub run_id: String,
+    pub path: String,
+    pub path_sha256: String,
+    pub indexed_commit_oid: String,
+    pub index_sha256: String,
+    pub index_gitlink_count: usize,
+    pub index_repository_root_token: String,
+    pub index_package_prefix: String,
+    pub source_root_token: String,
+    pub git_dir_root_token: String,
+    pub c1_plan_sha256: String,
+    pub semantic_plan_sha256: String,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+    pub tree_receipt_sha256: String,
+    pub commit_tree_oid: String,
+    pub commit_sha256: String,
+    pub vault_subtree_sha256: String,
+    pub files: usize,
+    pub directories: usize,
+    pub total_raw_bytes: u64,
+    pub omitted_gitmodules: Vec<GitlinkMetadataRow>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct GitlinkLanded {
+    pub format: String,
+    pub pending_sha256: String,
+    pub run_id: String,
+    pub path_sha256: String,
+    pub indexed_commit_oid: String,
+    pub store_root_token: String,
+    pub imported_objects: usize,
+    pub imported_total_bytes: u64,
+    pub commit_tree_oid: String,
+    pub commit_sha256: String,
+    pub vault_subtree_sha256: String,
+    pub omitted_gitmodules: Vec<GitlinkMetadataRow>,
+}
+
 pub(crate) fn sha(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
 }
@@ -265,6 +321,32 @@ pub(crate) fn objects(
     }
     let project = lease.package_git_journal_project();
     let name = format!("{run_id}.objects");
+    let path = [HOME[0], HOME[1], name.as_str()];
+    if create {
+        Ok(Some(project.ensure_subproject(&path)?))
+    } else if project.dir_if_present(&path)?.is_none() {
+        Ok(None)
+    } else {
+        project.subproject(&path).map(Some)
+    }
+}
+
+pub(crate) fn gitlink_store(
+    lease: &LifecycleLease,
+    run_id: &str,
+    path_sha256: &str,
+    create: bool,
+) -> anyhow::Result<Option<vibe_safefs::Project>> {
+    if !is_valid_run_id(run_id)
+        || path_sha256.len() != 64
+        || !path_sha256
+            .bytes()
+            .all(|b| b.is_ascii_digit() || matches!(b, b'a'..=b'f'))
+    {
+        anyhow::bail!("invalid package Gitlink run/path identity");
+    }
+    let project = lease.package_git_journal_project();
+    let name = format!("{run_id}.gitlink-{path_sha256}.objects");
     let path = [HOME[0], HOME[1], name.as_str()];
     if create {
         Ok(Some(project.ensure_subproject(&path)?))
