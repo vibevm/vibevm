@@ -21,7 +21,7 @@ use crate::publication_effect_plan::{
 
 mod journal;
 mod transition;
-use journal::{FinalResult, Intent, Step, landed_name, pending_name, sha};
+use journal::{FinalResult, InputCapsule, Intent, Step, landed_name, pending_name, sha};
 
 const C1_CAP: usize = 1024 * 1024;
 
@@ -141,6 +141,8 @@ fn select(
         "semantic_plan_sha256": semantic_plan_sha256,
         "remote_generation_ref": plan.remote_generation_ref,
         "partition_sha256": partition_sha256,
+        "publish": expected.publish,
+        "allow_replace_published": expected.allow_replace_published,
     }))?;
     if request.len() > C1_CAP || plan_bytes.len() > C1_CAP {
         return Err(Error::Refused("C.1 payload cap".into()));
@@ -304,6 +306,71 @@ fn inspect(
     })
 }
 
+/// Reattach from host-retained namespace/scope/key after the original caller
+/// and its prepared subject/plan values are gone. This is inspection only:
+/// the C.1 digest lookup and immutable input capsule never grant an effect.
+/// The capsule is protected local evidence because authored smoke references
+/// may contain sensitive text even though no asset bytes or token field live
+/// in this record.
+pub(crate) fn inspect_fake_full_plan_cold(
+    lease: &LifecycleLease,
+    host_namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+) -> Result<Inspection> {
+    let namespace = SubmissionNamespace::from_host_token(host_namespace_token.to_owned())?;
+    let row = SubmissionReservations::inspect_existing_key(lease, &namespace, scope, key)?
+        .ok_or_else(|| Error::Refused("host key has no retained C.1 reservation".into()))?;
+    let run_id = row.domain_run_id;
+    let capsule = match journal::read_input(lease, &run_id) {
+        Ok(Some(capsule)) => capsule,
+        Ok(None) | Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
+    };
+    if capsule.format != journal::INPUT_FORMAT
+        || capsule.run_id != run_id
+        || capsule.context != scope.context
+        || capsule.target != scope.target
+        || capsule.principal != scope.principal
+        || capsule.key_sha256 != sha(key.as_bytes())
+    {
+        return Ok(Inspection::RecoveryRequired { run_id });
+    }
+    let expected = PublicationEffectPlanExpectations {
+        subject: crate::publication_subject::PublicationSubjectExpectations {
+            version: "1.1.0",
+            repository: "vibevm/vibevm",
+            smoke_policy_id: "distribution-smoke/e1",
+            smoke_policy_epoch: 1,
+        },
+        host: "github.com",
+        owner: "vibevm",
+        repository: "vibevm",
+        publish: capsule.publish,
+        allow_replace_published: capsule.allow_replace_published,
+    };
+    let selected = match select(scope, &capsule.subject, &capsule.plan, &expected) {
+        Ok(selected) => selected,
+        Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
+    };
+    if capsule.request_json.as_bytes() != selected.request
+        || row.request_sha256 != sha(&selected.request)
+        || row.plan_sha256 != sha(&selected.plan_bytes)
+    {
+        return Ok(Inspection::RecoveryRequired { run_id });
+    }
+    inspect(
+        lease,
+        &namespace,
+        scope,
+        key,
+        &selected,
+        &capsule.plan,
+        run_id,
+        row.journal_admission,
+        row.reservation_ref,
+    )
+}
+
 /// Fake-only full plan. A duplicate never calls the port, including after
 /// response loss or an owner process exit. Later partitions remain absent
 /// after uncertainty and cannot be inferred from matching remote bytes.
@@ -328,23 +395,8 @@ pub(crate) fn submit_fake_full_plan(
         ExistingSubmissionInspection::RetiredUnreserved => {
             return Ok(Inspection::Retired { run_id: None });
         }
-        ExistingSubmissionInspection::Reserved {
-            domain_run_id,
-            journal_admission,
-            reservation_ref,
-            ..
-        } => {
-            return inspect(
-                lease,
-                namespace,
-                scope,
-                key,
-                &selected,
-                plan,
-                domain_run_id,
-                journal_admission,
-                reservation_ref,
-            );
+        ExistingSubmissionInspection::Reserved { .. } => {
+            return inspect_fake_full_plan_cold(lease, namespace.id(), scope, key);
         }
         ExistingSubmissionInspection::Absent => {}
     }
@@ -365,7 +417,23 @@ pub(crate) fn submit_fake_full_plan(
     }
     let mut intent = selected.intent;
     intent.run_id = run_id.clone();
-    if journal::publish(lease, &run_id, "intent", &intent).is_err()
+    let request_json = String::from_utf8(selected.request).map_err(Error::io)?;
+    let capsule = InputCapsule {
+        format: journal::INPUT_FORMAT.into(),
+        run_id: run_id.clone(),
+        context: scope.context.clone(),
+        target: scope.target.clone(),
+        principal: scope.principal.clone(),
+        key_sha256: sha(key.as_bytes()),
+        request_json,
+        subject: subject.clone(),
+        plan: plan.clone(),
+        publish: expected.publish,
+        allow_replace_published: expected.allow_replace_published,
+    };
+    if journal::publish_input(lease, &run_id, &capsule).is_err()
+        || !matches!(journal::read_input(lease, &run_id), Ok(Some(ref row)) if row == &capsule)
+        || journal::publish(lease, &run_id, "intent", &intent).is_err()
         || !matches!(journal::read::<Intent>(lease, &run_id, "intent"), Ok(Some(ref row)) if row == &intent)
         || SubmissionReservations::mark_journal_ready(lease, namespace, scope, key, &run_id)
             .is_err()

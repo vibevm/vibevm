@@ -4,15 +4,39 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use vibe_lifecycle::LifecycleLease;
 use vibe_lifecycle::process::is_valid_run_id;
+use vibe_wire::generated::publication_effect_plan::PublicationEffectPlan;
+use vibe_wire::generated::publication_subject::PublicationSubject;
 
 use super::{Error, RemoteObservation, Result};
 
 const HOME: [&str; 2] = [".vibe", "publication-operations"];
 const CAP: usize = 128 * 1024;
+const INPUT_CAP: usize = 1024 * 1024;
 
 pub(super) const INTENT_FORMAT: &str = "vibevm.publication.full-plan-intent/1";
 pub(super) const STEP_FORMAT: &str = "vibevm.publication.full-plan-step/1";
 pub(super) const RESULT_FORMAT: &str = "vibevm.publication.full-plan-result/1";
+pub(super) const INPUT_FORMAT: &str = "vibevm.publication.full-plan-input/1";
+
+/// Canonical request and selected metadata, without asset payload bytes or an
+/// explicit token field. Smoke runner/evidence references are caller-supplied
+/// nonblank strings and may themselves contain sensitive information. Protect
+/// this capsule as local operation evidence; never publish or echo it whole.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct InputCapsule {
+    pub format: String,
+    pub run_id: String,
+    pub context: String,
+    pub target: String,
+    pub principal: String,
+    pub key_sha256: String,
+    pub request_json: String,
+    pub subject: PublicationSubject,
+    pub plan: PublicationEffectPlan,
+    pub publish: bool,
+    pub allow_replace_published: bool,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -111,6 +135,50 @@ pub(super) fn publish<T: Serialize>(
         return Err(Error::Refused("owner record changed on readback".into()));
     }
     Ok(bytes)
+}
+
+pub(super) fn read_input(lease: &LifecycleLease, run_id: &str) -> Result<Option<InputCapsule>> {
+    let project = lease.publication_journal_project();
+    let Some(dir) = project.dir_if_present(&HOME).map_err(Error::io)? else {
+        return Ok(None);
+    };
+    let Some(bytes) = project
+        .read_file_bounded_in(&dir, &member(run_id, "input")?, INPUT_CAP)
+        .map_err(Error::io)?
+    else {
+        return Ok(None);
+    };
+    Ok(Some(serde_json::from_slice(&bytes)?))
+}
+
+pub(super) fn publish_input(
+    lease: &LifecycleLease,
+    run_id: &str,
+    value: &InputCapsule,
+) -> Result<()> {
+    let bytes = serde_json::to_vec(value)?;
+    if bytes.len() > INPUT_CAP {
+        return Err(Error::Refused(
+            "publication input capsule exceeds 1 MiB".into(),
+        ));
+    }
+    let project = lease.publication_journal_project();
+    let home = project.ensure_subproject(&HOME).map_err(Error::io)?;
+    let dir = home.root_dir().map_err(Error::io)?;
+    let name = member(run_id, "input")?;
+    home.publish_new_in(&dir, &name, &bytes).map_err(|error| {
+        Error::Refused(format!(
+            "input capsule publication: {:#}",
+            error.into_report()
+        ))
+    })?;
+    let observed = home
+        .read_file_bounded_in(&dir, &name, INPUT_CAP)
+        .map_err(Error::io)?;
+    if observed.as_deref() != Some(bytes.as_slice()) {
+        return Err(Error::Refused("input capsule changed before Ready".into()));
+    }
+    Ok(())
 }
 
 pub(super) fn pending_name(index: usize) -> String {

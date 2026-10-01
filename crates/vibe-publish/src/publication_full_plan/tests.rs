@@ -42,7 +42,7 @@ pub(super) fn scope() -> SubmissionScope {
 pub(super) struct FakeRemote {
     current: RemoteObservation,
     pub(super) calls: Vec<usize>,
-    lost_at: Option<usize>,
+    pub(super) lost_at: Option<usize>,
     drift_before: Option<usize>,
     observations: usize,
     pub(super) forbidden: bool,
