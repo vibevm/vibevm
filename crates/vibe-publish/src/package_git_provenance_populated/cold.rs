@@ -81,42 +81,76 @@ pub(crate) fn inspect_complete_cold(
             "populated Pending link set incomplete, duplicated or unordered",
         );
     }
-    let index = GitIndexCensus::PopulatedCandidate {
-        repository_root_token: row.index_repository_root_token.clone(),
-        package_prefix: row.index_package_prefix.clone(),
-        index_sha256: row.index_sha256.clone(),
-        links: index_links(&row.links),
-    };
-    let mut proofs = Vec::with_capacity(row.links.len());
-    for (link, expected) in row.links.iter().zip(&row.link_receipts) {
-        let proved = match package_git_submodule_store::proved_link_receipt(
-            lease, namespace, scope, key, &link.path, None, None, binary, limits, admission,
-        ) {
-            Ok(v) => v,
-            Err(other) => {
+    // Current-source collect proves the same exact retained Pending/Landed
+    // bytes twice per link while also checking the approved checkout and full
+    // index. The separate source-less pass is needed only on historical attach.
+    let digest = match (source, approved) {
+        (Some(source), Some(approved)) => {
+            let current = match collect(
+                lease, namespace, scope, key, &proof, source, approved, binary, limits, admission,
+            ) {
+                Ok(v) => v,
+                Err(s) => {
+                    return uncertain(
+                        Some(&run),
+                        format!("current populated source changed: {s:?}"),
+                    );
+                }
+            };
+            if pending_row(&proof, &tree_bytes, &current).ok().as_ref() != Some(&row) {
                 return uncertain(
                     Some(&run),
-                    format!("indexed per-link cold proof missing: {other:?}"),
+                    "current complete Gitlink index differs from historical aggregate",
                 );
             }
-        };
-        if sha(&proved.pending_bytes) != expected.pending_sha256
-            || sha(&proved.landed_bytes) != expected.landed_sha256
-        {
-            return uncertain(
+            current.flattened_sha256
+        }
+        (None, None) => {
+            let index = GitIndexCensus::PopulatedCandidate {
+                repository_root_token: row.index_repository_root_token.clone(),
+                package_prefix: row.index_package_prefix.clone(),
+                index_sha256: row.index_sha256.clone(),
+                links: index_links(&row.links),
+            };
+            let mut proofs = Vec::with_capacity(row.links.len());
+            for (link, expected) in row.links.iter().zip(&row.link_receipts) {
+                let proved = match package_git_submodule_store::proved_link_receipt(
+                    lease, namespace, scope, key, &link.path, None, None, binary, limits, admission,
+                ) {
+                    Ok(v) => v,
+                    Err(other) => {
+                        return uncertain(
+                            Some(&run),
+                            format!("indexed per-link cold proof missing: {other:?}"),
+                        );
+                    }
+                };
+                if sha(&proved.pending_bytes) != expected.pending_sha256
+                    || sha(&proved.landed_bytes) != expected.landed_sha256
+                {
+                    return uncertain(
+                        Some(&run),
+                        "per-link record bytes differ from aggregate Pending",
+                    );
+                }
+                proofs.push(proof_from_pending(&proved.pending));
+            }
+            let digest = match semantic_digest(&index, &proofs) {
+                Ok(v) => v,
+                Err(e) => return uncertain(Some(&run), e),
+            };
+            if digest != row.flattened_submodules_sha256 {
+                return uncertain(Some(&run), "retained populated digest differs from plan");
+            }
+            digest
+        }
+        _ => {
+            return unavailable(
                 Some(&run),
-                "per-link record bytes differ from aggregate Pending",
+                "current aggregate check needs both package source and all approved Git dirs",
             );
         }
-        proofs.push(proof_from_pending(&proved.pending));
-    }
-    let digest = match semantic_digest(&index, &proofs) {
-        Ok(v) => v,
-        Err(e) => return uncertain(Some(&run), e),
     };
-    if digest != row.flattened_submodules_sha256 {
-        return uncertain(Some(&run), "retained populated digest differs from plan");
-    }
     let landed_bytes = match journal::read_bytes(lease, &run, LANDED) {
         Ok(Some(v)) => v,
         Ok(None) => {
@@ -137,30 +171,6 @@ pub(crate) fn inspect_complete_cold(
         return uncertain(
             Some(&run),
             "populated Landed differs from independently proved aggregate",
-        );
-    }
-    if let (Some(source), Some(approved)) = (source, approved) {
-        let current = match collect(
-            lease, namespace, scope, key, &proof, source, approved, binary, limits, admission,
-        ) {
-            Ok(v) => v,
-            Err(s) => {
-                return uncertain(
-                    Some(&run),
-                    format!("current populated source changed: {s:?}"),
-                );
-            }
-        };
-        if pending_row(&proof, &tree_bytes, &current).ok().as_ref() != Some(&row) {
-            return uncertain(
-                Some(&run),
-                "current complete Gitlink index differs from historical aggregate",
-            );
-        }
-    } else if source.is_some() || approved.is_some() {
-        return unavailable(
-            Some(&run),
-            "current aggregate check needs both package source and all approved Git dirs",
         );
     }
     match prior(lease, namespace, scope, key, source, binary, admission) {
