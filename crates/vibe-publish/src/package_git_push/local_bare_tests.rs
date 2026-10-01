@@ -6,7 +6,7 @@ use std::process::Command;
 
 #[path = "local_bare_output.rs"]
 mod output;
-use output::{bounded_output, porcelain_receipt};
+pub(crate) use output::{bounded_output, porcelain_receipt};
 
 struct LocalBarePort {
     remote: tempfile::TempDir,

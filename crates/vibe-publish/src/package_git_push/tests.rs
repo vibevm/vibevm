@@ -6,24 +6,37 @@ use crate::package_git_repo_create::tests::{
 use std::fs;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-struct Snapshot {
-    repository: RepositoryObservation,
-    refs: RefSnapshot,
+pub(crate) struct Snapshot {
+    pub(crate) repository: RepositoryObservation,
+    pub(crate) refs: RefSnapshot,
 }
 
 #[derive(Debug)]
-struct PushRequest<'a> {
-    repository: &'a RepositoryIdentity,
-    before_refs: &'a RefSnapshot,
-    desired_refs: &'a RefSnapshot,
-    version_tag_ref: &'a str,
-    commit_oid: &'a str,
-    tag_oid: &'a str,
+pub(crate) struct PushRequest<'a> {
+    pub(crate) repository: &'a RepositoryIdentity,
+    pub(crate) before_refs: &'a RefSnapshot,
+    pub(crate) desired_refs: &'a RefSnapshot,
+    pub(crate) version_tag_ref: &'a str,
+    pub(crate) commit_oid: &'a str,
+    pub(crate) tag_oid: &'a str,
 }
 
 pub(crate) trait FakePushPort {
     fn observe(&mut self) -> Result<Snapshot, String>;
     fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, String>;
+}
+
+/// Held test-only inputs for the same owner driver on HostedCreate and DirectGitExisting.
+pub(crate) struct FakeRun<'a> {
+    pub(crate) home: &'a ApprovalHome,
+    pub(crate) lease: &'a LifecycleLease,
+    pub(crate) namespace: &'a SubmissionNamespace,
+    pub(crate) scope: &'a SubmissionScope,
+    pub(crate) key: &'a str,
+    pub(crate) package_source: &'a Project,
+    pub(crate) local_bare_source: Option<&'a Project>,
+    pub(crate) binary: &'a Path,
+    pub(crate) limits: ReadyLimits,
 }
 
 /// Test-only transport. Production retains only cold inspection and no Git
@@ -33,16 +46,38 @@ pub(crate) fn drive_fake(
     approval_id: &str,
     port: &mut impl FakePushPort,
 ) -> PushInspection {
+    drive_fake_run(
+        &FakeRun {
+            home: &world.home,
+            lease: &world.lease,
+            namespace: &world.namespace,
+            scope: &world.scope,
+            key: "approval",
+            package_source: &world.source,
+            local_bare_source: None,
+            binary: &world.binary,
+            limits: limits(),
+        },
+        approval_id,
+        port,
+    )
+}
+
+pub(crate) fn drive_fake_run(
+    input: &FakeRun<'_>,
+    approval_id: &str,
+    port: &mut impl FakePushPort,
+) -> PushInspection {
     let proof = match proved(
-        &world.home,
-        &world.lease,
-        &world.namespace,
-        &world.scope,
-        "approval",
-        Some(&world.source),
-        None,
-        &world.binary,
-        limits(),
+        input.home,
+        input.lease,
+        input.namespace,
+        input.scope,
+        input.key,
+        Some(input.package_source),
+        input.local_bare_source,
+        input.binary,
+        input.limits,
         approval_id,
     ) {
         Ok(value) => value,
@@ -50,15 +85,15 @@ pub(crate) fn drive_fake(
     };
     let run = proof.run();
     match inspect_cold(
-        &world.home,
-        &world.lease,
-        &world.namespace,
-        &world.scope,
-        "approval",
-        Some(&world.source),
-        None,
-        &world.binary,
-        limits(),
+        input.home,
+        input.lease,
+        input.namespace,
+        input.scope,
+        input.key,
+        Some(input.package_source),
+        input.local_bare_source,
+        input.binary,
+        input.limits,
         approval_id,
     ) {
         PushInspection::NotStarted { .. } => {}
@@ -83,11 +118,11 @@ pub(crate) fn drive_fake(
         );
     }
     let pending = expected_pending(&proof);
-    let pending_bytes = match journal::publish(&world.lease, run, PENDING, &pending) {
+    let pending_bytes = match journal::publish(input.lease, run, PENDING, &pending) {
         Ok(value) => value,
         Err(e) => return recovery(Some(run), format!("atomic-push Pending uncertain: {e:#}")),
     };
-    if !matches!(journal::read_bytes(&world.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
+    if !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
     {
         return recovery(Some(run), "atomic-push Pending changed before dispatch");
     }
@@ -102,22 +137,22 @@ pub(crate) fn drive_fake(
         );
     }
     let reproved = match proved(
-        &world.home,
-        &world.lease,
-        &world.namespace,
-        &world.scope,
-        "approval",
-        Some(&world.source),
-        None,
-        &world.binary,
-        limits(),
+        input.home,
+        input.lease,
+        input.namespace,
+        input.scope,
+        input.key,
+        Some(input.package_source),
+        input.local_bare_source,
+        input.binary,
+        input.limits,
         approval_id,
     ) {
         Ok(value) => value,
         Err(status) => return status,
     };
     if reproved != proof
-        || !matches!(journal::read_bytes(&world.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
+        || !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
     {
         return recovery(
             Some(run),
@@ -160,7 +195,7 @@ pub(crate) fn drive_fake(
             "atomic push post-observation is not exact desired refs",
         );
     }
-    if !matches!(journal::read_bytes(&world.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
+    if !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
     {
         return recovery(Some(run), "atomic-push Pending changed before Landed");
     }
@@ -174,19 +209,19 @@ pub(crate) fn drive_fake(
         observed_repository: after.repository,
         observed_refs: after.refs,
     };
-    if let Err(e) = journal::publish(&world.lease, run, LANDED, &landed) {
+    if let Err(e) = journal::publish(input.lease, run, LANDED, &landed) {
         return recovery(Some(run), format!("atomic-push Landed uncertain: {e:#}"));
     }
     inspect_cold(
-        &world.home,
-        &world.lease,
-        &world.namespace,
-        &world.scope,
-        "approval",
-        Some(&world.source),
+        input.home,
+        input.lease,
+        input.namespace,
+        input.scope,
+        input.key,
         None,
-        &world.binary,
-        limits(),
+        None, // The selected Direct bare refs just moved; prove historical bytes.
+        input.binary,
+        input.limits,
         approval_id,
     )
 }
@@ -354,7 +389,7 @@ fn lost_callback_with_desired_refs_keeps_pending_and_never_replays() {
     );
     assert!(matches!(
         drive_fake(&world, &id, &mut fake),
-        PushInspection::RecoveryRequired { .. }
+        PushInspection::PendingRecoveryRequired { .. }
     ));
     assert_eq!(fake.calls, 1);
 }
@@ -409,4 +444,4 @@ fn local_authority_drift_after_pending_prevents_push_dispatch() {
 }
 
 #[path = "local_bare_tests.rs"]
-mod local_bare_tests;
+pub(crate) mod local_bare_tests;
