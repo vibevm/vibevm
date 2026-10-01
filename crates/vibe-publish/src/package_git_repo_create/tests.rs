@@ -4,9 +4,9 @@ use crate::package_git_plan::{CreateDecision, classify_create};
 use std::fs;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-struct RemoteSnapshot {
-    repository: RepositoryObservation,
-    refs: RefSnapshot,
+pub(crate) struct RemoteSnapshot {
+    pub(crate) repository: RepositoryObservation,
+    pub(crate) refs: RefSnapshot,
 }
 
 pub(crate) trait FakeCreatePort {
@@ -18,6 +18,17 @@ pub(crate) trait FakeCreatePort {
     ) -> Result<RepositoryIdentity, String>;
 }
 
+pub(crate) struct FakeRun<'a> {
+    pub(crate) home: &'a ApprovalHome,
+    pub(crate) lease: &'a LifecycleLease,
+    pub(crate) namespace: &'a SubmissionNamespace,
+    pub(crate) scope: &'a SubmissionScope,
+    pub(crate) key: &'a str,
+    pub(crate) package_source: &'a Project,
+    pub(crate) git_binary: &'a Path,
+    pub(crate) profile: ReadyProfile<'a>,
+}
+
 /// Test-only dispatch. Production has no RepoCreator, GitHub client or write
 /// port connected to this owner.
 pub(crate) fn drive_fake(
@@ -25,16 +36,39 @@ pub(crate) fn drive_fake(
     approval_id: &str,
     port: &mut impl FakeCreatePort,
 ) -> CreateInspection {
-    let proof = match proved(
-        &world.home,
-        &world.lease,
-        &world.namespace,
-        &world.scope,
-        "approval",
-        Some(&world.source),
-        None,
-        &world.binary,
-        limits(),
+    drive_fake_run(
+        &FakeRun {
+            home: &world.home,
+            lease: &world.lease,
+            namespace: &world.namespace,
+            scope: &world.scope,
+            key: "approval",
+            package_source: &world.source,
+            git_binary: &world.binary,
+            profile: ReadyProfile::NoGitlinks {
+                limits: limits(),
+                local_bare_source: None,
+            },
+        },
+        approval_id,
+        port,
+    )
+}
+
+pub(crate) fn drive_fake_run(
+    input: &FakeRun<'_>,
+    approval_id: &str,
+    port: &mut impl FakeCreatePort,
+) -> CreateInspection {
+    let proof = match proved_profile(
+        input.home,
+        input.lease,
+        input.namespace,
+        input.scope,
+        input.key,
+        Some(input.package_source),
+        input.git_binary,
+        input.profile,
         approval_id,
     ) {
         Ok(value) => value,
@@ -45,20 +79,20 @@ pub(crate) fn drive_fake(
         Ok(value) => value,
         Err(status) => return status,
     };
-    match inspect_cold(
-        &world.home,
-        &world.lease,
-        &world.namespace,
-        &world.scope,
-        "approval",
-        Some(&world.source),
-        None,
-        &world.binary,
-        limits(),
-        approval_id,
-    ) {
-        CreateInspection::NotStarted { .. } => {}
-        other => return other,
+    let pending = journal::read_bytes(input.lease, run, PENDING);
+    let landed = journal::read_bytes(input.lease, run, LANDED);
+    if !matches!((&pending, &landed), (Ok(None), Ok(None))) {
+        return inspect_cold_profile(
+            input.home,
+            input.lease,
+            input.namespace,
+            input.scope,
+            input.key,
+            Some(input.package_source),
+            input.git_binary,
+            input.profile,
+            approval_id,
+        );
     }
     let baseline = RemoteSnapshot {
         repository: proof.plan.before_repo.clone(),
@@ -79,7 +113,7 @@ pub(crate) fn drive_fake(
         );
     }
     let pending = expected_pending(&proof, repository, creation);
-    let pending_bytes = match journal::publish(&world.lease, run, PENDING, &pending) {
+    let pending_bytes = match journal::publish(input.lease, run, PENDING, &pending) {
         Ok(value) => value,
         Err(e) => {
             return recovery(
@@ -88,7 +122,7 @@ pub(crate) fn drive_fake(
             );
         }
     };
-    if !matches!(journal::read_bytes(&world.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
+    if !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
     {
         return recovery(Some(run), "create Pending changed before dispatch");
     }
@@ -102,23 +136,22 @@ pub(crate) fn drive_fake(
             "remote changed after Pending before create; no dispatch",
         );
     }
-    let reproved = match proved(
-        &world.home,
-        &world.lease,
-        &world.namespace,
-        &world.scope,
-        "approval",
-        Some(&world.source),
-        None,
-        &world.binary,
-        limits(),
+    let reproved = match proved_profile(
+        input.home,
+        input.lease,
+        input.namespace,
+        input.scope,
+        input.key,
+        Some(input.package_source),
+        input.git_binary,
+        input.profile,
         approval_id,
     ) {
         Ok(value) => value,
         Err(status) => return status,
     };
     if reproved != proof
-        || !matches!(journal::read_bytes(&world.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
+        || !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
     {
         return recovery(
             Some(run),
@@ -152,7 +185,7 @@ pub(crate) fn drive_fake(
             "create response and independent repository identity differ",
         );
     }
-    if !matches!(journal::read_bytes(&world.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
+    if !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
     {
         return recovery(Some(run), "create Pending changed before Landed");
     }
@@ -164,19 +197,18 @@ pub(crate) fn drive_fake(
         observed_repo: after.repository,
         observed_refs: after.refs,
     };
-    if let Err(e) = journal::publish(&world.lease, run, LANDED, &landed) {
+    if let Err(e) = journal::publish(input.lease, run, LANDED, &landed) {
         return recovery(Some(run), format!("create Landed uncertain: {e:#}"));
     }
-    inspect_cold(
-        &world.home,
-        &world.lease,
-        &world.namespace,
-        &world.scope,
-        "approval",
-        Some(&world.source),
-        None,
-        &world.binary,
-        limits(),
+    inspect_cold_profile(
+        input.home,
+        input.lease,
+        input.namespace,
+        input.scope,
+        input.key,
+        Some(input.package_source),
+        input.git_binary,
+        input.profile,
         approval_id,
     )
 }
@@ -480,3 +512,6 @@ fn local_authority_drift_during_last_remote_observation_prevents_create() {
         );
     }
 }
+
+#[path = "profile_tests.rs"]
+mod profile_tests;

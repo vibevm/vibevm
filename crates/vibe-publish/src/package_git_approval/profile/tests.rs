@@ -7,7 +7,7 @@ use crate::package_git_provenance_populated::{self, AggregateInspection, Approve
 use crate::package_git_ready::populated::{self, PopulatedInspection};
 use crate::package_git_ready::profile::inspect_profile_cold;
 
-fn prepared() -> Option<(World, tempfile::TempDir, ApprovalHome, SubmissionNamespace)> {
+pub(crate) fn prepared() -> Option<(World, tempfile::TempDir, ApprovalHome, SubmissionNamespace)> {
     let binary = binary()?;
     let world = world(&binary);
     world.stage_links(2);

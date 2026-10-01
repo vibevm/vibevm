@@ -270,7 +270,7 @@ pub(crate) fn world(binary: &Path) -> World {
         target: "package-git:github.com/vibespecs/org.vibevm.wal".into(),
         principal: "owner".into(),
     };
-    let namespace = SubmissionReservations::issue_namespace(&lease, &scope, 60_000).unwrap();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &scope, 600_000).unwrap();
     let token = namespace.id().to_owned();
     let PendingInspection::VaultCompleteButNotReady { run_id, .. } = prepare_pending(
         &lease,
