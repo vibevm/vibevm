@@ -32,6 +32,8 @@ mod asset_driver;
 pub(super) mod asset_history;
 mod assets;
 mod driver;
+#[path = "calls/noop_completion.rs"]
+pub(in crate::publication_full_plan) mod noop_completion;
 
 #[cfg(test)]
 #[path = "calls/asset_many_tests.rs"]

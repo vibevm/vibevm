@@ -15,6 +15,7 @@ use crate::publication_payload::vault::{VaultAssetStream, cap};
 use crate::publication_payload::{ExpectedUploadCatalogue, expected_upload_catalogue};
 
 use super::calls::asset_history::{self, AssetInspection};
+use super::calls::noop_completion::{self, NoOpInspection};
 use super::calls::{self, CallInspection};
 use super::cold::{self, ColdReadyProof};
 use super::journal;
@@ -138,13 +139,23 @@ impl<'a> ReadyRun<'a> {
                 });
             }
             CallInspection::Unavailable { .. } => {
-                if matches!(
-                    asset_history::inspect_assets_proved(&session)?,
-                    AssetInspection::Uncertain { .. }
-                ) {
-                    return Ok(SessionOpen::Uncertain {
-                        run_id: session.run_id,
-                    });
+                match asset_history::inspect_assets_proved(&session)? {
+                    AssetInspection::Uncertain { .. } => {
+                        return Ok(SessionOpen::Uncertain {
+                            run_id: session.run_id,
+                        });
+                    }
+                    AssetInspection::Unavailable { landed: 38 }
+                        if matches!(
+                            noop_completion::inspect_proved(&session)?,
+                            NoOpInspection::Uncertain { .. }
+                        ) =>
+                    {
+                        return Ok(SessionOpen::Uncertain {
+                            run_id: session.run_id,
+                        });
+                    }
+                    _ => {}
                 }
             }
             CallInspection::Next { .. } => {}
