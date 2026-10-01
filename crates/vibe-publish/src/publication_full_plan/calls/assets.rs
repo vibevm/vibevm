@@ -281,6 +281,10 @@ pub(super) fn same_observation(left: &CallObservation, right: &CallObservation) 
             a.release_id == b.release_id
                 && a.tag == b.tag
                 && a.draft == b.draft
+                && a.target_commitish == b.target_commitish
+                && a.name == b.name
+                && a.body == b.body
+                && a.prerelease == b.prerelease
                 && a.inventory_complete == b.inventory_complete
                 && a.generation_ref == b.generation_ref
                 && matches!((inventory_map(&a.assets), inventory_map(&b.assets)),
@@ -311,6 +315,13 @@ pub(super) fn verify_transition(pending: &AssetPending, landed: &AssetLanded) ->
     ) else {
         return false;
     };
+    if before.target_commitish != after.target_commitish
+        || before.name != after.name
+        || before.body != after.body
+        || before.prerelease != after.prerelease
+    {
+        return false;
+    }
     let (Some(before_map), Some(after_map)) =
         (inventory_map(&before.assets), inventory_map(&after.assets))
     else {

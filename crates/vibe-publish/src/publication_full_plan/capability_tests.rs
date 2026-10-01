@@ -7,7 +7,9 @@ use crate::publication_payload::vault::stage_payload_vault_until;
 use sha2::{Digest, Sha256};
 use vibe_lifecycle::ReservationDecision;
 use vibe_lifecycle::process::propose_run_id;
-use vibe_wire::generated::publication_effect_plan::PublicationObservedAsset;
+use vibe_wire::generated::publication_effect_plan::{
+    PublicationObservedAsset, PublicationObservedReleasePresent, PublicationObservedTagPresent,
+};
 use vibe_wire::generated::publication_subject::{PublicationAsset, PublicationSmokeProbeStatus};
 
 pub(super) struct TinyPayloadWorld {
@@ -102,6 +104,64 @@ impl TinyPayloadWorld {
 fn set_asset(asset: &mut PublicationAsset, bytes: &[u8]) {
     asset.size_bytes = bytes.len().to_string();
     asset.sha256 = format!("sha256:{:x}", Sha256::digest(bytes));
+}
+
+#[test]
+fn e2_release_transition_requires_every_approved_successor_field() {
+    let tiny = TinyPayloadWorld::new();
+    let PublicationPartition::Release(step) = &tiny.plan.partitions[1] else {
+        panic!()
+    };
+    let before = RemoteObservation {
+        generation_ref: "before-release".into(),
+        tag: PublicationObservedTag::Present(Box::new(PublicationObservedTagPresent {
+            reference: format!("refs/tags/{}", step.desired_tag),
+            object_kind: "commit".into(),
+            object_sha: step.desired_target_commit.clone(),
+        })),
+        release: PublicationObservedRelease::Absent(Box::new(
+            vibe_wire::generated::publication_effect_plan::PublicationObservedReleaseAbsent {},
+        )),
+        latest_release_id: None,
+        last: None,
+    };
+    let mut after = before.clone();
+    after.generation_ref = "after-release".into();
+    after.release =
+        PublicationObservedRelease::Present(Box::new(PublicationObservedReleasePresent {
+            assets: Vec::new(),
+            draft: step.desired_draft,
+            generation_ref: after.generation_ref.clone(),
+            inventory_complete: true,
+            release_id: "700".into(),
+            tag: step.desired_tag.clone(),
+            target_commitish: step.desired_target_commit.clone(),
+            name: Some(step.desired_name.clone()),
+            body: Some(step.desired_body.clone()),
+            prerelease: step.desired_prerelease,
+        }));
+    assert!(transition::verifies(
+        &before,
+        &after,
+        &tiny.plan.partitions[1]
+    ));
+    for field in ["target", "name", "body", "prerelease"] {
+        let mut changed = after.clone();
+        let PublicationObservedRelease::Present(row) = &mut changed.release else {
+            panic!()
+        };
+        match field {
+            "target" => row.target_commitish = "b".repeat(40),
+            "name" => row.name = Some("foreign".into()),
+            "body" => row.body = Some("foreign".into()),
+            "prerelease" => row.prerelease = !row.prerelease,
+            _ => unreachable!(),
+        }
+        assert!(
+            !transition::verifies(&before, &changed, &tiny.plan.partitions[1]),
+            "{field}"
+        );
+    }
 }
 
 #[test]
@@ -411,7 +471,7 @@ fn replacement_release_without_old_id_deletion_proof_is_not_fake_admitted() {
     let project = tempfile::tempdir().unwrap();
     let (subject, _) = prepared();
     let plan: PublicationEffectPlan = serde_json::from_str(include_str!(
-        "../../../../formats/corpora/publication_effect_plan/e1/valid/replace-known-draft.json"
+        "../../../../formats/corpora/publication_effect_plan/e2/valid/replace-known-draft.json"
     ))
     .unwrap();
     let index = plan
