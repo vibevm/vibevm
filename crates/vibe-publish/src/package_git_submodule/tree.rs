@@ -12,6 +12,20 @@ use super::{MetadataBlob, SubmoduleLimits};
 
 const TREE_DOMAIN: &[u8] = b"vibevm/package-git-populated-submodule/e1\0";
 
+pub(super) fn normalized_path(path: &str, max_path: usize) -> Result<Vec<&str>> {
+    if path.is_empty() || path.len() > max_path {
+        bail!("Gitlink path exceeds host-selected cap");
+    }
+    let components: Vec<&str> = path.split('/').collect();
+    if components
+        .iter()
+        .any(|part| part.is_empty() || *part == "." || *part == ".." || part.contains('\\'))
+    {
+        bail!("Gitlink path is not a normalized source directory");
+    }
+    Ok(components)
+}
+
 #[derive(Debug)]
 struct Entry {
     mode: String,
