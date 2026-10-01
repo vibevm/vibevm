@@ -1,23 +1,9 @@
 use super::*;
 use crate::package_git_approval::tests::{World, binary, limits};
-use crate::package_git_plan::{CreateDecision, classify_create};
+use crate::package_git_operation;
 use std::fs;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct RemoteSnapshot {
-    pub(crate) repository: RepositoryObservation,
-    pub(crate) refs: RefSnapshot,
-}
-
-pub(crate) trait FakeCreatePort {
-    fn observe(&mut self) -> Result<RemoteSnapshot, String>;
-    fn create(
-        &mut self,
-        repository: &HostedRepository,
-        creation: &CreationOptions,
-    ) -> Result<RepositoryIdentity, String>;
-}
-
+use super::driver::{CreatePort as FakeCreatePort, CreatePortError, RemoteSnapshot};
 pub(crate) struct FakeRun<'a> {
     pub(crate) home: &'a ApprovalHome,
     pub(crate) lease: &'a LifecycleLease,
@@ -60,161 +46,25 @@ pub(crate) fn drive_fake_run(
     approval_id: &str,
     port: &mut impl FakeCreatePort,
 ) -> CreateInspection {
-    let proof = match proved_profile(
-        input.home,
-        input.lease,
-        input.namespace,
-        input.scope,
-        input.key,
-        Some(input.package_source),
-        input.git_binary,
-        input.profile,
-        approval_id,
-    ) {
-        Ok(value) => value,
-        Err(status) => return status,
-    };
-    let run = proof.run_id.as_str();
-    let (repository, creation) = match create_shape(&proof) {
-        Ok(value) => value,
-        Err(status) => return status,
-    };
-    let pending = journal::read_bytes(input.lease, run, PENDING);
-    let landed = journal::read_bytes(input.lease, run, LANDED);
-    if !matches!((&pending, &landed), (Ok(None), Ok(None))) {
-        return inspect_cold_profile(
-            input.home,
-            input.lease,
-            input.namespace,
-            input.scope,
-            input.key,
-            Some(input.package_source),
-            input.git_binary,
-            input.profile,
+    driver::drive(
+        &driver::CreateRun {
+            home: input.home,
+            lease: input.lease,
+            namespace: input.namespace,
+            scope: input.scope,
+            key: input.key,
+            package_source: input.package_source,
+            git_binary: input.git_binary,
+            profile: input.profile,
             approval_id,
-        );
-    }
-    let baseline = RemoteSnapshot {
-        repository: proof.plan.before_repo.clone(),
-        refs: proof.plan.before_refs.clone(),
-    };
-    let first = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("first pre-observation: {e}")),
-    };
-    let second = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("second pre-observation: {e}")),
-    };
-    if first != baseline || second != baseline {
-        return recovery(
-            Some(run),
-            "pre-effect repository/refs differ from approved baseline",
-        );
-    }
-    let pending = expected_pending(&proof, repository, creation);
-    let pending_bytes = match journal::publish(input.lease, run, PENDING, &pending) {
-        Ok(value) => value,
-        Err(e) => {
-            return recovery(
-                Some(run),
-                format!("create Pending publication uncertain: {e:#}"),
-            );
-        }
-    };
-    if !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
-    {
-        return recovery(Some(run), "create Pending changed before dispatch");
-    }
-    let immediate = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("last pre-observation: {e}")),
-    };
-    if immediate != baseline {
-        return recovery(
-            Some(run),
-            "remote changed after Pending before create; no dispatch",
-        );
-    }
-    let reproved = match proved_profile(
-        input.home,
-        input.lease,
-        input.namespace,
-        input.scope,
-        input.key,
-        Some(input.package_source),
-        input.git_binary,
-        input.profile,
-        approval_id,
-    ) {
-        Ok(value) => value,
-        Err(status) => return status,
-    };
-    if reproved != proof
-        || !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
-    {
-        return recovery(
-            Some(run),
-            "local Ready/approval/Pending changed before create",
-        );
-    }
-    let returned = match port.create(repository, creation) {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("create callback uncertain: {e}")),
-    };
-    let after = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("first post-observation: {e}")),
-    };
-    let after_again = match port.observe() {
-        Ok(value) => value,
-        Err(e) => return recovery(Some(run), format!("second post-observation: {e}")),
-    };
-    if after != after_again || after.refs != empty_refs() {
-        return recovery(
-            Some(run),
-            "created repository/refs changed during post-observation",
-        );
-    }
-    if !matches!(
-        classify_create(&proof.plan, true, Some(&returned), &after.repository),
-        Ok(CreateDecision::Landed(_))
-    ) {
-        return recovery(
-            Some(run),
-            "create response and independent repository identity differ",
-        );
-    }
-    if !matches!(journal::read_bytes(input.lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)
-    {
-        return recovery(Some(run), "create Pending changed before Landed");
-    }
-    let landed = RepoCreateLanded {
-        format: REPO_CREATE_FORMAT.into(),
-        run_id: run.into(),
-        pending_sha256: sha(&pending_bytes),
-        returned_identity: returned,
-        observed_repo: after.repository,
-        observed_refs: after.refs,
-    };
-    if let Err(e) = journal::publish(input.lease, run, LANDED, &landed) {
-        return recovery(Some(run), format!("create Landed uncertain: {e:#}"));
-    }
-    inspect_cold_profile(
-        input.home,
-        input.lease,
-        input.namespace,
-        input.scope,
-        input.key,
-        Some(input.package_source),
-        input.git_binary,
-        input.profile,
-        approval_id,
+        },
+        port,
     )
 }
 
 pub(crate) struct Fake {
     repository: HostedRepository,
+    version_tag_ref: String,
     observed: RemoteSnapshot,
     observations: usize,
     calls: usize,
@@ -242,6 +92,7 @@ impl Fake {
         };
         Self {
             repository,
+            version_tag_ref: plan.version_tag_ref,
             observed: RemoteSnapshot {
                 repository: RepositoryObservation::Absent,
                 refs: empty_refs(),
@@ -265,12 +116,18 @@ impl Fake {
 }
 
 impl FakeCreatePort for Fake {
-    fn observe(&mut self) -> Result<RemoteSnapshot, String> {
+    fn observe(
+        &mut self,
+        repository: &HostedRepository,
+        version_tag_ref: &str,
+    ) -> Result<RemoteSnapshot, CreatePortError> {
+        assert_eq!(repository, &self.repository);
+        assert_eq!(version_tag_ref, self.version_tag_ref);
         self.observations += 1;
         if self.observations == 3
             && let Some(path) = &self.tamper_on_third_observation
         {
-            fs::write(path, b"not-json").map_err(|e| e.to_string())?;
+            fs::write(path, b"not-json").map_err(|_| CreatePortError::Uncertain)?;
         }
         if (self.foreign_before_pending && self.observations == 2)
             || (self.foreign_after_pending && self.observations == 3)
@@ -289,7 +146,7 @@ impl FakeCreatePort for Fake {
         &mut self,
         repository: &HostedRepository,
         creation: &CreationOptions,
-    ) -> Result<RepositoryIdentity, String> {
+    ) -> Result<RepositoryIdentity, CreatePortError> {
         assert_eq!(repository, &self.repository);
         assert_eq!(creation.default_branch, "main");
         self.calls += 1;
@@ -300,7 +157,7 @@ impl FakeCreatePort for Fake {
             };
         }
         if self.lose_response {
-            return Err("injected response loss".into());
+            return Err(CreatePortError::Uncertain);
         }
         if self.wrong_returned_id {
             return Ok(RepositoryIdentity::Hosted {
