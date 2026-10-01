@@ -66,7 +66,9 @@ macro_rules! ensure {
     };
 }
 
+mod capsule;
 mod execution;
+pub(crate) use capsule::inspect_fixed_static_file_cold;
 #[cfg(test)]
 use execution::result_name;
 pub(crate) use execution::{BoundSource, execute_fixed_static_file, verify_bound_source};
@@ -259,19 +261,31 @@ pub(crate) fn reserve_fixed_static_file_intent(
                                 &domain_run_id,
                             )? =>
                 {
-                    match (reservation_ref, read_completion(lease, &domain_run_id)) {
-                        (Some(expected_ref), Ok(Some(completion)))
-                            if completion.reservation_ref == expected_ref
-                                && completion.plan_sha256 == intent.plan_sha256
-                                && verify_completed(lease, &intent, &completion).is_ok() =>
-                        {
-                            StaticFileJournalInspection::Completed {
-                                run_id: domain_run_id,
-                                output_sha256: completion.output_sha256,
-                                artifact_record: completion.artifact_record,
+                    if capsule::verify_existing(
+                        lease,
+                        &domain_run_id,
+                        &intent,
+                        &sha(&subject.request),
+                        &intent.plan_sha256,
+                    )
+                    .is_err()
+                    {
+                        uncertain(lease, domain_run_id)
+                    } else {
+                        match (reservation_ref, read_completion(lease, &domain_run_id)) {
+                            (Some(expected_ref), Ok(Some(completion)))
+                                if completion.reservation_ref == expected_ref
+                                    && completion.plan_sha256 == intent.plan_sha256
+                                    && verify_completed(lease, &intent, &completion).is_ok() =>
+                            {
+                                StaticFileJournalInspection::Completed {
+                                    run_id: domain_run_id,
+                                    output_sha256: completion.output_sha256,
+                                    artifact_record: completion.artifact_record,
+                                }
                             }
+                            _ => uncertain(lease, domain_run_id),
                         }
-                        _ => uncertain(lease, domain_run_id),
                     }
                 }
                 _ => StaticFileJournalInspection::RecoveryRequired {
@@ -326,6 +340,7 @@ pub(crate) fn reserve_fixed_static_file_intent(
         readback == bytes,
         "new static-file intent changed before Ready"
     );
+    capsule::publish(lease, &run_id, &selected, &intent)?;
     recheck_before_image(lease, &selected)?;
     SubmissionReservations::mark_journal_ready(lease, namespace, scope, key, &run_id)?;
     ensure!(
