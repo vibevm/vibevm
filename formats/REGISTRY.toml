@@ -1461,3 +1461,12 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/environment-operation-binding/e1"
 sunset = "none"
+
+[format.machine-operation-stream-message]
+epoch = 1
+schema = "schemas/machine/e1/operation_stream_message.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-operation-stream-message/e1"
+sunset = "none"

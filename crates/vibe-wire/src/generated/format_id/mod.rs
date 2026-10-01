@@ -111,6 +111,7 @@ pub enum FormatId {
     MachineEntityReference,
     MachineOperationDescriptor,
     MachineOperationEnvelope,
+    MachineOperationStreamMessage,
     MachineSessionFrame,
     MachineSourceLocation,
     Manifest,

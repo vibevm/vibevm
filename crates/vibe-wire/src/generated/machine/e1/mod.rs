@@ -9,5 +9,6 @@ pub mod composite_snapshot;
 pub mod entity_reference;
 pub mod operation_descriptor;
 pub mod operation_envelope;
+pub mod operation_stream_message;
 pub mod session_frame;
 pub mod source_location;

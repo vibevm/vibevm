@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "context_id": "context:one",
+  "target_id": null,
+  "operation_id": "rust:domain:operation",
+  "run_id": "run:one",
+  "stream_id": "stream:one",
+  "body": {
+    "kind": "event",
+    "event": {
+      "sequence": "1",
+      "payload": {
+        "type": "raw_output",
+        "origin": "stdout",
+        "hex_bytes": "00ff",
+        "byte_count": 2,
+        "truncated": true
+      }
+    }
+  }
+}

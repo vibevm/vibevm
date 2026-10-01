@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "context_id": "context:one",
+  "target_id": null,
+  "operation_id": "rust:domain:operation",
+  "run_id": "run:one",
+  "stream_id": "stream:one",
+  "body": {
+    "kind": "gap",
+    "from_sequence": "1",
+    "to_sequence": "2",
+    "reason": "evicted",
+    "terminal_ref": null
+  }
+}

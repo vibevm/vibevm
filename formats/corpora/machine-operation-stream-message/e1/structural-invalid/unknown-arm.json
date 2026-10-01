@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "context_id": "context:one",
+  "target_id": null,
+  "operation_id": "rust:domain:operation",
+  "run_id": "run:one",
+  "stream_id": "stream:one",
+  "body": {
+    "kind": "control_reply",
+    "request_id": "request:one",
+    "action": "cancel",
+    "status": "reached_safe_stop",
+    "operation_effect_state": "uncertain",
+    "result_ref": "result:one",
+    "extra": true
+  }
+}
