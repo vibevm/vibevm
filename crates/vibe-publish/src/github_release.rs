@@ -25,6 +25,7 @@ pub use model::*;
 mod asset;
 pub(crate) use asset::StreamedUploadError;
 mod bounded_read;
+pub(crate) use bounded_read::{LatestReleaseObservation, LatestReleaseReadError};
 mod protected_calls;
 pub(crate) use protected_calls::{
     DeleteReleaseResponseEvidence, DraftCallFields, DraftResponseEvidence, TagResponseEvidence,

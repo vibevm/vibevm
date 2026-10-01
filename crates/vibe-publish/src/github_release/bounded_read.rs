@@ -56,6 +56,36 @@ struct StrictRelease {
     upload_url: String,
 }
 
+/// One bounded GET of GitHub's latest *published full* release. This is only
+/// read evidence for a future e3 plan; it does not establish fallback after
+/// deleting the current latest or any cross-object CAS.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum LatestReleaseObservation {
+    /// Authenticated fixed `/releases/latest` returned 404. This says nothing
+    /// about draft or prerelease releases and is not a fallback prediction.
+    Absent,
+    Present {
+        release_id: u64,
+        tag: String,
+    },
+}
+
+#[derive(Debug, thiserror::Error, PartialEq, Eq)]
+pub(crate) enum LatestReleaseReadError {
+    #[error("latest release read refused before GET: {0}")]
+    Refused(&'static str),
+    #[error("latest release read is unavailable: {0}")]
+    Unavailable(&'static str),
+}
+
+#[derive(Deserialize)]
+struct StrictLatestRelease {
+    id: u64,
+    tag_name: String,
+    draft: bool,
+    prerelease: bool,
+}
+
 impl From<StrictRelease> for GithubRelease {
     fn from(row: StrictRelease) -> Self {
         Self {
@@ -172,6 +202,51 @@ fn next_page(current: &Url, initial: &Url, raw: &str) -> Result<Url, BoundedRead
 }
 
 impl GithubReleaseClient {
+    /// No redirect and no inherited public-reader fallback. A 404 means
+    /// Absent only for the authenticated fixed publication repository.
+    pub(crate) fn read_latest_release_bounded(
+        &self,
+    ) -> Result<LatestReleaseObservation, LatestReleaseReadError> {
+        if !self.is_fixed_publication_target() {
+            #[cfg(test)]
+            if !self.is_fixed_publication_loopback() {
+                return Err(LatestReleaseReadError::Refused(
+                    "client is not fixed to publication repository",
+                ));
+            }
+            #[cfg(not(test))]
+            return Err(LatestReleaseReadError::Refused(
+                "client is not fixed to publication repository",
+            ));
+        }
+        let url = self
+            .api_url(&["releases", "latest"])
+            .map_err(|_| LatestReleaseReadError::Refused("invalid latest endpoint"))?;
+        let page: Page<StrictLatestRelease> = self
+            .bounded_json_get(url, PAGE_JSON_CAP)
+            .map_err(|_| LatestReleaseReadError::Unavailable("bounded latest GET failed"))?;
+        let Some(row) = page.value else {
+            return Ok(LatestReleaseObservation::Absent);
+        };
+        if page.next.is_some()
+            || row.id == 0
+            || row.draft
+            || row.prerelease
+            || row.tag_name.is_empty()
+            || row.tag_name.len() > 512
+            || row.tag_name.trim() != row.tag_name
+            || row.tag_name.chars().any(char::is_control)
+        {
+            return Err(LatestReleaseReadError::Unavailable(
+                "latest response identity is invalid",
+            ));
+        }
+        Ok(LatestReleaseObservation::Present {
+            release_id: row.id,
+            tag: row.tag_name,
+        })
+    }
+
     fn bounded_json_get<T: DeserializeOwned>(
         &self,
         url: Url,
