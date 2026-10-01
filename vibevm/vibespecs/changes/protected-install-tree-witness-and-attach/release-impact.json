@@ -51,6 +51,18 @@
       ]
     },
     {
+      "interface_id": "rust:vibe-lifecycle:SubmissionReservations::inspect_existing_request",
+      "capability_id": "read-only-existing-submission-attach",
+      "kind": "introduced",
+      "before": "The public C.1 reservation API had no typed read-only inspection of an existing exact namespace/scope/key/request before fresh planning.",
+      "after": "Public ExistingSubmissionInspection and SubmissionReservations::inspect_existing_request report Absent, RetiredUnreserved or the retained run for an exact request; this is correlation evidence for early attach, not journal Ready or effect authority.",
+      "audience": "Rust library consumer / internal lifecycle owner",
+      "platform": "Public API compiled for Linux/macOS/Windows; selected GNU/Linux reservation tests only, native macOS/Windows behavior unrun.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION"
+      ]
+    },
+    {
       "interface_id": "internal:vibe-orchestrator:protected-install-v3-plan",
       "capability_id": "retained-install-source-plan-and-attach",
       "kind": "introduced",
@@ -66,12 +78,12 @@
   ],
   "user_impact": {
     "state": "impact",
-    "reason": "Additive public bounded PackageTreeWitness Rust API; protected Install remains fixture-only and no existing 1.0.x user-owned state requires conversion.",
+    "reason": "Additive public bounded PackageTreeWitness and read-only ExistingSubmissionInspection/inspect_existing_request Rust APIs; protected Install remains fixture-only and no existing 1.0.x user-owned state requires conversion.",
     "migration_action": "none"
   },
   "documentation_impact": {
     "state": "impact",
-    "reason": "Document bounded public tree-witness selection/caps and cooperative drift limits, plus internal v3 plan/early-attach fixture boundary; final topic/editorial proof pending.",
+    "reason": "Document bounded public tree-witness selection/caps and cooperative drift limits, public C.1 existing-request inspection as non-authority, and the internal v3 plan/early-attach fixture boundary; final topic/editorial proof pending.",
     "documentation_action": "update"
   },
   "evidence": [
