@@ -10,6 +10,9 @@ use vibe_extension_registry::MechanismRegistry;
 
 use crate::mechanism::package::support::{empty_world, key, registry, temp};
 
+#[path = "cold_tests.rs"]
+mod cold_tests;
+
 fn target() -> ArtifactPackageTarget {
     ArtifactPackageTarget {
         id: TARGET.into(),
