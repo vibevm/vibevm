@@ -1,6 +1,8 @@
 //! Check 7 — the boot directory (`current_boot_dir()`, PROP-052 L2)
-//! exists and holds only spec-source files (Markdown or dialect XML,
-//! PROP-045 ##LOADER-LAW). PROP-009 retired the `NN-` filename prefix;
+//! exists and validates selected spec-source files. A legacy host uses
+//! Markdown/dialect-XML suffixes (PROP-045 ##LOADER-LAW); an opt-in host
+//! admits ordinary declared resources without Vibe interpretation.
+//! PROP-009 retired the `NN-` filename prefix;
 //! the directory holds authored boot files and `vibe`-generated
 //! `INDEX.md` / `STATIC.*` artifacts, none numerically prefixed. An
 //! `.xml` boot file must parse as the dialect (a foreign construct is a
@@ -14,13 +16,18 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use specmark::cell;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{
+    Manifest, SelectedSource, SourceInterpretation, SourceLoading, select_source_rows,
+};
 
 use crate::{Check, CheckId, CheckOptions, CheckReport};
 
 /// The [`CheckId::BootDirectory`] cell.
 #[cell(seam = "Check", variant = "boot-directory")]
 pub struct BootDirectoryCheck;
+
+mod declared;
+use declared::declared_boot;
 
 /// `true` when the node's own manifest declares `kind = "doc"`.
 ///
@@ -67,6 +74,18 @@ impl Check for BootDirectoryCheck {
             }
             return;
         }
+        let declared = match declared_boot(project_root, &boot_rel) {
+            Ok(declared) => declared,
+            Err(reason) => {
+                report.err(
+                    CheckId::BootDirectory,
+                    Some(boot_rel.clone()),
+                    None,
+                    format!("declared host boot sources cannot be classified: {reason}"),
+                );
+                return;
+            }
+        };
         let entries = match fs::read_dir(&boot) {
             Ok(e) => e,
             Err(e) => {
@@ -111,6 +130,78 @@ impl Check for BootDirectoryCheck {
             // only — near misses (`.bak`) and the crash-only journal and
             // stage control names must keep warning below.
             if name == vibe_core::layout::BOOT_ARTIFACTS_LOCK {
+                continue;
+            }
+            if let Some(declared) = &declared {
+                let rel = boot_rel.join(&name);
+                let key = rel.to_string_lossy().replace('\\', "/");
+                let selection =
+                    match select_source_rows(&declared.coordinate, &declared.sources, &key) {
+                        Ok(selection) => selection,
+                        Err(error) => {
+                            report.err(
+                                CheckId::BootDirectory,
+                                Some(rel),
+                                None,
+                                format!("host boot source selection failed: {error:?}"),
+                            );
+                            continue;
+                        }
+                    };
+                let selected_vibe = match selection {
+                    SelectedSource::Descriptor { descriptor, .. } => {
+                        if matches!(
+                            descriptor.interpretation(),
+                            SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc
+                        ) && descriptor.loading() == SourceLoading::Scan
+                        {
+                            Some(descriptor.interpretation())
+                        } else {
+                            None
+                        }
+                    }
+                    SelectedSource::NeedsInput { .. } => {
+                        report.err(
+                            CheckId::BootDirectory,
+                            Some(rel),
+                            None,
+                            "host boot source has ambiguous descriptors",
+                        );
+                        continue;
+                    }
+                    SelectedSource::Unclassified { .. } => None,
+                };
+                let Some(selected_vibe) = selected_vibe else {
+                    continue;
+                };
+                let bytes = match declared.read_selected(&key) {
+                    Ok(bytes) => bytes,
+                    Err(reason) => {
+                        report.err(CheckId::BootDirectory, Some(rel), None, reason);
+                        continue;
+                    }
+                };
+                let vocabulary = match selected_vibe {
+                    SourceInterpretation::VibeDoc => vibe_specdoc::Vocabulary::Doc,
+                    SourceInterpretation::VibeSpec => vibe_specdoc::Vocabulary::Spec,
+                    _ => unreachable!(),
+                };
+                let valid = std::str::from_utf8(&bytes)
+                    .map_err(|error| error.to_string())
+                    .and_then(|text| {
+                        vibe_specdoc::project_spec_text_with(&path, text, vocabulary)
+                            .map(|_| ())
+                            .map_err(|error| error.to_string())
+                    });
+                if let Err(reason) = valid {
+                    report.err(
+                        CheckId::BootDirectory,
+                        Some(rel),
+                        None,
+                        format!("selected Vibe boot source is invalid: {reason}"),
+                    );
+                }
+                spec_files.push(path);
                 continue;
             }
             if !vibe_specdoc::is_spec_source(&path) {

@@ -18,6 +18,7 @@ vibe-facts.workspace = true
 # boot files through the dialect (##LOADER-LAW, ##PROJECTION-READ).
 vibe-specdoc.workspace = true
 vibe-core.workspace = true
+vibe-safefs.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
 # The documentation pipeline owns everything with content in it
