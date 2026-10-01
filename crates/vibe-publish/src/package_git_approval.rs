@@ -98,6 +98,12 @@ pub(crate) struct VerifiedApproval {
     record_name: String,
 }
 
+impl VerifiedApproval {
+    pub(crate) fn authority_id(&self) -> &str {
+        &self.record.approval_id
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct RedemptionReceipt {
     pub run_id: String,
@@ -469,7 +475,8 @@ impl ApprovalHome {
 
 mod cold;
 mod link;
+pub(crate) use link::LinkInspection;
 use link::marker_candidate;
 mod ready;
 #[cfg(test)]
-mod tests;
+pub(crate) mod tests;

@@ -14,7 +14,7 @@ use crate::package_git_plan::{
 use crate::package_git_provenance::{self, ProvenanceInspection};
 use crate::package_git_tree::{self, TreeInspection};
 
-fn binary() -> Option<PathBuf> {
+pub(crate) fn binary() -> Option<PathBuf> {
     let name = if cfg!(windows) { "git.exe" } else { "git" };
     std::env::split_paths(&std::env::var_os("PATH")?)
         .find_map(|dir| dir.join(name).canonicalize().ok().filter(|p| p.is_file()))
@@ -45,7 +45,7 @@ fn git(binary: &Path, cwd: &Path, args: &[&str]) -> String {
     String::from_utf8(result.stdout).unwrap().trim().into()
 }
 
-fn limits() -> ReadyLimits {
+pub(crate) fn limits() -> ReadyLimits {
     ReadyLimits {
         census: CensusLimits {
             max_index_bytes: 8192,
@@ -70,21 +70,21 @@ fn payload_limits() -> PayloadLimits {
     }
 }
 
-struct World {
+pub(crate) struct World {
     _source_root: tempfile::TempDir,
-    root: tempfile::TempDir,
+    pub(crate) root: tempfile::TempDir,
     settings_root: tempfile::TempDir,
-    source: Project,
-    lease: LifecycleLease,
-    namespace: SubmissionNamespace,
-    scope: SubmissionScope,
-    run_id: String,
-    binary: PathBuf,
-    home: ApprovalHome,
+    pub(crate) source: Project,
+    pub(crate) lease: LifecycleLease,
+    pub(crate) namespace: SubmissionNamespace,
+    pub(crate) scope: SubmissionScope,
+    pub(crate) run_id: String,
+    pub(crate) binary: PathBuf,
+    pub(crate) home: ApprovalHome,
 }
 
 impl World {
-    fn new(binary: &Path) -> Self {
+    pub(crate) fn new(binary: &Path) -> Self {
         let source_root = tempfile::tempdir().unwrap();
         fs::write(
             source_root.path().join("vibe.toml"),
@@ -298,7 +298,7 @@ impl World {
         fs::write(path, serde_json::to_vec(record).unwrap()).unwrap();
     }
 
-    fn load(&self) -> Result<VerifiedApproval, ApprovalError> {
+    pub(crate) fn load(&self) -> Result<VerifiedApproval, ApprovalError> {
         self.home.load_at(
             &self.lease,
             &self.namespace,
@@ -309,6 +309,23 @@ impl World {
             &self.binary,
             limits(),
             10,
+        )
+    }
+
+    pub(crate) fn link(&self, verified: &VerifiedApproval) -> LinkInspection {
+        self.home.link_inner(
+            &self.lease,
+            &self.namespace,
+            &self.scope,
+            "approval",
+            Some(&self.source),
+            None,
+            &self.binary,
+            limits(),
+            verified,
+            Some(10),
+            false,
+            false,
         )
     }
 
