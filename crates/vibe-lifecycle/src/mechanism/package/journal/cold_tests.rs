@@ -56,8 +56,33 @@ fn cold_static_file_attach_recovers_completed_without_execution_or_recopy() {
         .path()
         .join(".vibe/package-operations")
         .join(format!("{run_id}.static-file-input.json"));
-    std::fs::write(capsule, b"{\"tampered\":true}").unwrap();
-    assert!(inspect_fixed_static_file_cold(&lease, &token, &trusted, "cold-copy").is_err());
+    let original_capsule = std::fs::read(&capsule).unwrap();
+    std::fs::write(&capsule, b"{\"tampered\":true}").unwrap();
+    let malformed = inspect_fixed_static_file_cold(&lease, &token, &trusted, "cold-copy")
+        .unwrap()
+        .unwrap();
+    assert!(
+        matches!(malformed, StaticFileJournalInspection::Uncertain { run_id: same, partial }
+        if same == run_id && matches!(partial.artifact_record, ObservedFile::Present { .. }))
+    );
+    let mut changed: serde_json::Value = serde_json::from_slice(&original_capsule).unwrap();
+    changed["request"] = serde_json::json!("{}");
+    std::fs::write(&capsule, serde_json::to_vec(&changed).unwrap()).unwrap();
+    let tampered = inspect_fixed_static_file_cold(&lease, &token, &trusted, "cold-copy")
+        .unwrap()
+        .unwrap();
+    assert!(
+        matches!(tampered, StaticFileJournalInspection::Uncertain { run_id: same, .. }
+        if same == run_id)
+    );
+    std::fs::remove_file(&capsule).unwrap();
+    let missing = inspect_fixed_static_file_cold(&lease, &token, &trusted, "cold-copy")
+        .unwrap()
+        .unwrap();
+    assert!(
+        matches!(missing, StaticFileJournalInspection::Uncertain { run_id: same, .. }
+        if same == run_id)
+    );
     assert_eq!(copies.load(Ordering::SeqCst), 1);
 }
 

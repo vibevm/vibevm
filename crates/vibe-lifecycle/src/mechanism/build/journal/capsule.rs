@@ -193,19 +193,28 @@ pub(crate) fn inspect_fixed_cargo_cold(
     };
     let capsule = match read(lease, &run_id) {
         Ok(Some(capsule)) => capsule,
-        Ok(None) if existing.journal_admission == JournalAdmission::Ready => {
+        _ if existing.journal_admission == JournalAdmission::Ready => {
             return Ok(Some(uncertain(lease, run_id, &intent.cargo_home)));
         }
-        Ok(None) => return Ok(Some(BuildJournalInspection::RecoveryRequired { run_id })),
-        Err(error) => return Err(error),
+        _ => return Ok(Some(BuildJournalInspection::RecoveryRequired { run_id })),
     };
-    validate(
+    if validate(
         lease,
         &capsule,
         &intent,
         &existing.request_sha256,
         &existing.plan_sha256,
-    )?;
+    )
+    .is_err()
+    {
+        return Ok(Some(
+            if existing.journal_admission == JournalAdmission::Ready {
+                uncertain(lease, run_id, &intent.cargo_home)
+            } else {
+                BuildJournalInspection::RecoveryRequired { run_id }
+            },
+        ));
+    }
     if existing.journal_admission != JournalAdmission::Ready {
         return Ok(Some(BuildJournalInspection::RecoveryRequired { run_id }));
     }
