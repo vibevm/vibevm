@@ -76,7 +76,7 @@ fn evidence(
     }
 }
 
-fn digest(evidence: &NoGitlinksEvidence) -> anyhow::Result<String> {
+pub(crate) fn digest(evidence: &NoGitlinksEvidence) -> anyhow::Result<String> {
     let bytes = serde_json::to_vec(evidence)?;
     let mut hash = Sha256::new();
     hash.update(DIGEST_DOMAIN);

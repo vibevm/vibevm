@@ -9,7 +9,7 @@ use vibe_safefs::Project;
 use crate::package_git_operation::journal::{self, TreeFile, TreeReceipt, sha};
 use crate::package_git_operation::{self, PendingInspection, PendingProof};
 
-mod git;
+pub(crate) mod git;
 use git::LocalGit;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
