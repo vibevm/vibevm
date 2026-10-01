@@ -180,3 +180,76 @@ fn changed_pending_or_landed_record_refuses_cold_attach() {
         ));
     }
 }
+
+#[test]
+fn borrowed_ready_marker_refuses_changed_or_absent_raw_seal_and_foreign_identity() {
+    let binary = binary().expect("Git required for the borrowed Ready regression fixture");
+    let world = World::new(&binary);
+    let verified = world.load().unwrap();
+    let receipt = world.redeem(&verified, 10, false).unwrap();
+    let ready = world
+        .home
+        .ready(
+            &world.lease,
+            &world.namespace,
+            &world.scope,
+            "approval",
+            None,
+            None,
+            &binary,
+            limits(),
+        )
+        .unwrap();
+    let expected = ColdExpectation {
+        approval_id: &verified.record.approval_id,
+        approval_record_sha256: &receipt.approval_record_sha256,
+        marker_sha256: &receipt.marker_sha256,
+    };
+    let inspect = |scope: &SubmissionScope, key: &str| {
+        world.home.inspect_redemption_with_ready(
+            &world.lease,
+            &world.namespace,
+            scope,
+            key,
+            &ready,
+            &expected,
+        )
+    };
+    assert_eq!(inspect(&world.scope, "approval").unwrap(), receipt);
+    let foreign_scope = SubmissionScope {
+        principal: "foreign-owner".into(),
+        ..world.scope.clone()
+    };
+    for result in [
+        inspect(&foreign_scope, "approval"),
+        inspect(&world.scope, "foreign-key"),
+    ] {
+        assert!(matches!(result, Err(ApprovalError::RecoveryRequired(_))));
+    }
+    let seal_path = world.root.path().join(format!(
+        ".vibe/package-git-operations/{}.package-git-ready.json",
+        world.run_id,
+    ));
+    let original = fs::read(&seal_path).unwrap();
+    let marker_before = fs::read(world.marker_path(&verified.record.approval_id)).unwrap();
+    let mut altered = ready.seal.clone();
+    altered.lease_root_token = sha(b"foreign-root");
+    for bytes in [serde_json::to_vec(&altered).unwrap(), b"not-json".to_vec()] {
+        fs::write(&seal_path, bytes).unwrap();
+        assert!(matches!(
+            inspect(&world.scope, "approval"),
+            Err(ApprovalError::RecoveryRequired(_))
+        ));
+    }
+    fs::remove_file(&seal_path).unwrap();
+    assert!(matches!(
+        inspect(&world.scope, "approval"),
+        Err(ApprovalError::RecoveryRequired(_))
+    ));
+    fs::write(&seal_path, original).unwrap();
+    assert_eq!(inspect(&world.scope, "approval").unwrap(), receipt);
+    assert_eq!(
+        fs::read(world.marker_path(&verified.record.approval_id)).unwrap(),
+        marker_before
+    );
+}
