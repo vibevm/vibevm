@@ -89,7 +89,7 @@
     <PUBLICATION-PLAN-DIGEST title="Exact target and replacement identity">
       <p><req-publication-plan-digest fact="true" status="spec/plan">`req r1`</req-publication-plan-digest></p>
       <p><PUBLICATION-PLAN-DIGEST-LAW fact="true" status="spec/plan">The
-      epoch-one effect-plan SHA-256 has a publication-plan domain tag separate
+      epoch-two effect-plan SHA-256 has a publication-plan domain tag separate
       from the subject digest. Ordered frames bind the subject digest, target
       owner/repository, requested operation and visibility posture, every
       partition and its exact remote precondition, absent/present markers,
