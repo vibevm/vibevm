@@ -2,9 +2,10 @@
 //! every installed package's written files, each with a `spec://`
 //! provenance header (`VIBEVM-SPEC.md` §4.6).
 //!
-//! Authored spec sources enter through the PROP-045 projection dispatch
-//! (`load_spec_text`): a `.xml` boot file or written file is shown as its
-//! canonical Markdown projection. Generated STATIC is different: it is a
+//! Legacy authored spec sources use the PROP-045 suffix projection. Opt-in
+//! host sources use their selected media and vocabulary from captured bytes;
+//! descriptor-owned package outputs require their lock and slot witnesses.
+//! Generated STATIC is different: it is a
 //! provenance-delimited tape of contributions, not one dialect document, so
 //! the effective view reads either generated spelling verbatim. The WAL stays
 //! host Markdown and is also read raw.
@@ -18,10 +19,10 @@ use anyhow::{Context, Result};
 use serde::Serialize;
 use vibe_core::machine_json_path;
 use vibe_core::manifest::{
-    Lockfile, Manifest, SelectedSource, SourceDescriptor, SourceInterpretation, SourceLoading,
-    select_source_rows,
+    LockedPackage, Lockfile, Manifest, SelectedSource, SourceDescriptor, SourceInterpretation,
+    SourceLoading, select_source_rows,
 };
-use vibe_safefs::Project;
+use vibe_safefs::{Project, StableFileSnapshot};
 use vibe_workspace::{boot_artifacts, vibedeps};
 
 use crate::cli::ShowEffectiveArgs;
@@ -112,26 +113,42 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
             };
             let filename = filename.to_string_lossy().into_owned();
             let rel = format!("{boot_prefix}{filename}");
-            if !matches!(filename.as_str(), "STATIC.md" | "STATIC.xml" | "INDEX.md")
-                && let Some((coordinate, sources)) = host_sources.as_ref()
-            {
-                let selection = select_source_rows(coordinate, sources, &rel)
+            let package_boot = boot_package(&filename, lockfile.as_ref())?;
+            let body = if matches!(filename.as_str(), "STATIC.md" | "STATIC.xml" | "INDEX.md") {
+                load_boot_entry(&path)?
+            } else if let Some(package) = package_boot {
+                validate_legacy_package_boot_copy(project_root, package)?;
+                load_boot_entry(&path)?
+            } else if let Some(host) = host_sources.as_ref() {
+                let selection = select_source_rows(&host.coordinate, &host.sources, &rel)
                     .map_err(|error| anyhow::anyhow!("host boot source `{rel}`: {error:?}"))?;
                 match selection {
                     SelectedSource::Descriptor { descriptor, .. }
                         if matches!(
                             descriptor.interpretation(),
                             SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc
-                        ) && descriptor.loading() == SourceLoading::Scan => {}
+                        ) && descriptor.loading() == SourceLoading::Scan =>
+                    {
+                        host.load_selected(&rel, descriptor)?
+                    }
                     SelectedSource::NeedsInput { .. } => {
                         anyhow::bail!("host boot source `{rel}` has ambiguous descriptors")
                     }
                     _ => continue,
                 }
-            }
-            let origin = boot_origin(&filename, lockfile.as_ref());
+            } else {
+                load_boot_entry(&path)?
+            };
+            let origin = package_boot.map_or_else(
+                || "user".to_owned(),
+                |package| {
+                    format!(
+                        "package:{}/{}@{}",
+                        package.group, package.name, package.version
+                    )
+                },
+            );
             let spec_uri = format!("spec://project/boot/{filename}");
-            let body = load_boot_entry(&path)?;
             sections.push(EffectiveSection {
                 spec_uri,
                 path: rel,
@@ -263,7 +280,58 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     Ok(sections)
 }
 
-fn selected_host_sources(project_root: &Path) -> Result<Option<(String, Vec<SourceDescriptor>)>> {
+struct HostSources {
+    pinned: Project,
+    manifest: StableFileSnapshot,
+    coordinate: String,
+    sources: Vec<SourceDescriptor>,
+}
+
+impl HostSources {
+    fn load_selected(&self, relative: &str, descriptor: &SourceDescriptor) -> Result<String> {
+        let snapshot = self
+            .pinned
+            .read_file_snapshot_bounded(relative, 16 * 1024 * 1024)
+            .with_context(|| format!("capturing selected host boot source `{relative}`"))?
+            .with_context(|| format!("selected host boot source `{relative}` is absent"))?;
+        self.recheck_manifest()?;
+        let raw = std::str::from_utf8(&snapshot.bytes)
+            .with_context(|| format!("selected host boot source `{relative}` is not UTF-8"))?;
+        match (descriptor.interpretation(), descriptor.media()) {
+            (SourceInterpretation::VibeSpec, "text/markdown") => Ok(raw.to_owned()),
+            (SourceInterpretation::VibeSpec, "application/xml") => {
+                vibe_specdoc::from_xml_with(raw, vibe_specdoc::Vocabulary::Spec)
+                    .map(|doc| vibe_specdoc::to_markdown(&doc))
+                    .map_err(|error| {
+                        anyhow::anyhow!("selected host boot source `{relative}`: {error}")
+                    })
+            }
+            (SourceInterpretation::VibeDoc, "application/xml") => {
+                vibe_specdoc::from_xml_with(raw, vibe_specdoc::Vocabulary::Doc)
+                    .map(|doc| vibe_specdoc::to_markdown(&doc))
+                    .map_err(|error| {
+                        anyhow::anyhow!("selected host boot source `{relative}`: {error}")
+                    })
+            }
+            _ => anyhow::bail!(
+                "selected host boot source `{relative}` has unsupported media/vocabulary"
+            ),
+        }
+    }
+
+    fn recheck_manifest(&self) -> Result<()> {
+        let after = self
+            .pinned
+            .read_file_snapshot_bounded(Manifest::FILENAME, 1024 * 1024)?
+            .context("selected host manifest disappeared")?;
+        if self.manifest != after {
+            anyhow::bail!("selected host manifest changed during effective view");
+        }
+        Ok(())
+    }
+}
+
+fn selected_host_sources(project_root: &Path) -> Result<Option<HostSources>> {
     let manifest_path = project_root.join(Manifest::FILENAME);
     let pinned = Project::open(project_root)
         .with_context(|| format!("pinning `{}`", project_root.display()))?;
@@ -286,7 +354,14 @@ fn selected_host_sources(project_root: &Path) -> Result<Option<(String, Vec<Sour
     let group = project
         .group
         .context("host source declarations require a project self-coordinate group")?;
-    Ok(Some((format!("{group}/{}", project.name), project.sources)))
+    let host = HostSources {
+        pinned,
+        manifest: captured,
+        coordinate: format!("{group}/{}", project.name),
+        sources: project.sources,
+    };
+    host.recheck_manifest()?;
+    Ok(Some(host))
 }
 
 fn load_selected_output(
@@ -391,23 +466,63 @@ fn load_spec(path: &Path) -> Result<String> {
         .map(|(body, _)| body)
 }
 
-fn boot_origin(filename: &str, lockfile: Option<&Lockfile>) -> String {
-    let logical_name = logical_spec_name(Path::new(filename));
-    if matches!(logical_name, Some("00-core" | "90-user")) {
-        return "user".to_string();
+fn boot_package<'a>(
+    filename: &str,
+    lockfile: Option<&'a Lockfile>,
+) -> Result<Option<&'a LockedPackage>> {
+    let Some(logical_name) = logical_spec_name(Path::new(filename)) else {
+        return Ok(None);
+    };
+    if matches!(logical_name, "00-core" | "90-user") {
+        return Ok(None);
     }
     let Some(lockfile) = lockfile else {
-        return "user".to_string();
+        return Ok(None);
     };
-    if let Some(pkg) = lockfile.packages.iter().find(|p| {
-        p.boot_snippet
+    let mut found = None;
+    for package in &lockfile.packages {
+        if package
+            .boot_snippet
             .as_deref()
             .and_then(|snippet| logical_spec_name(Path::new(snippet)))
-            == logical_name
-    }) {
-        return format!("package:{}/{}@{}", pkg.group, pkg.name, pkg.version);
+            == Some(logical_name)
+        {
+            if found.replace(package).is_some() {
+                anyhow::bail!("boot file `{filename}` is claimed by multiple locked packages");
+            }
+        }
     }
-    "user".to_string()
+    Ok(found)
+}
+
+/// The retired `boot_snippet` lock field names a host copy by logical
+/// basename, not an exact recorded slot output. Current installs never set
+/// it. A descriptor-owned slot cannot authenticate that old host copy, so
+/// refuse instead of giving it Vibe semantics from its suffix.
+fn validate_legacy_package_boot_copy(root: &Path, package: &LockedPackage) -> Result<()> {
+    let slot = if package.materialization.is_in_place() {
+        vibedeps::in_place_slot_abs_path(root, &package.group, &package.name)
+    } else {
+        vibedeps::slot_abs_path(root, &package.group, &package.name, &package.version)
+    };
+    let selected = vibedeps::read_validated_descriptor_map_for_citation(
+        &slot,
+        &package.group,
+        package.name.as_str(),
+        &package.version,
+        &package.content_hash,
+        false,
+    )
+    .map_err(|reason| anyhow::anyhow!("legacy package boot copy `{}`: {reason}", package.name))?;
+    if selected.is_some() {
+        anyhow::bail!(
+            "descriptor-owned package `{}/{}@{}` cannot prove a legacy host boot copy",
+            package.group,
+            package.name,
+            package.version
+        );
+    }
+    Ok(())
 }
 
 /// A boot contribution keeps its identity when materialisation changes only
