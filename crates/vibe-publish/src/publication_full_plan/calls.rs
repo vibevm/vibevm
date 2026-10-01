@@ -36,6 +36,9 @@ mod asset_many_tests;
 #[cfg(test)]
 #[path = "calls/assets_tests.rs"]
 mod assets_tests;
+#[cfg(test)]
+#[path = "calls/e2_metadata_tests.rs"]
+mod e2_metadata_tests;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, tag = "kind", rename_all = "kebab-case")]
@@ -56,7 +59,10 @@ pub(super) enum CallAction {
     },
     CreateDraft {
         tag: String,
-        commit: String,
+        target_commit: String,
+        name: String,
+        body: String,
+        prerelease: bool,
     },
 }
 
@@ -184,7 +190,10 @@ pub(super) fn decompose(
         1,
         CallAction::CreateDraft {
             tag: release.desired_tag.clone(),
-            commit: subject.source.commit.clone(),
+            target_commit: release.desired_target_commit.clone(),
+            name: release.desired_name.clone(),
+            body: release.desired_body.clone(),
+            prerelease: release.desired_prerelease,
         },
         after_tag,
         PublicationObservedRelease::Absent(Box::new(PublicationObservedReleaseAbsent {})),
@@ -285,13 +294,23 @@ fn verified_transition(
                 && after.tag == before.tag
                 && after.generation_ref != before.generation_ref
         }
-        CallAction::CreateDraft { tag, commit } => {
+        CallAction::CreateDraft {
+            tag,
+            target_commit,
+            name,
+            body,
+            prerelease,
+        } => {
             matches!(before.release, PublicationObservedRelease::Absent(_))
                 && matches!(&before.tag, PublicationObservedTag::Present(value)
-                    if value.reference == format!("refs/tags/{tag}") && value.object_sha == *commit)
+                    if value.reference == format!("refs/tags/{tag}") && value.object_sha == *target_commit)
                 && matches!(&after.release, PublicationObservedRelease::Present(value)
                     if value.release_id == receipt && value.tag == *tag
                         && value.draft && value.inventory_complete && value.assets.is_empty()
+                        && value.target_commitish == *target_commit
+                        && value.name.as_deref() == Some(name.as_str())
+                        && value.body.as_deref() == Some(body.as_str())
+                        && value.prerelease == *prerelease
                         && value.generation_ref == after.generation_ref)
                 && after.tag == before.tag
                 && after.generation_ref != before.generation_ref

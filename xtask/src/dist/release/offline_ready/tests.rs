@@ -15,12 +15,12 @@ use crate::dist::capture::{
 };
 use crate::dist::snapshot::GitIdentity;
 
-fn corpus(family: &str, category: &str, name: &str) -> String {
+fn corpus(family: &str, epoch: &str, category: &str, name: &str) -> String {
     std::fs::read_to_string(
         PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("../formats/corpora")
             .join(family)
-            .join("e1")
+            .join(epoch)
             .join(category)
             .join(format!("{name}.json")),
     )
@@ -63,6 +63,7 @@ fn composition_from_corpus(mut subject: PublicationSubject) -> PreparedPublicati
     }
     let plan: PublicationEffectPlan = serde_json::from_str(&corpus(
         "publication_effect_plan",
+        "e2",
         "valid",
         "new-draft-complete",
     ))
@@ -98,6 +99,7 @@ fn composition_from_corpus(mut subject: PublicationSubject) -> PreparedPublicati
 fn ready_composition() -> PreparedPublicationComposition {
     let subject: PublicationSubject = serde_json::from_str(&corpus(
         "publication_subject",
+        "e1",
         "valid",
         "complete-five-targets",
     ))
@@ -176,6 +178,7 @@ fn missing_target_and_stale_plan_digest_refuse_with_zero_fake_calls() {
 fn skipped_smoke_is_inspectable_but_cannot_call_any_fake_remote_method() {
     let subject: PublicationSubject = serde_json::from_str(&corpus(
         "publication_subject",
+        "e1",
         "readiness-invalid",
         "skipped-smoke",
     ))

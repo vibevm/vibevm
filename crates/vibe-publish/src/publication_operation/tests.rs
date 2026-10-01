@@ -6,10 +6,10 @@ const SUBJECT: &str = include_str!(
     "../../../../formats/corpora/publication_subject/e1/valid/complete-five-targets.json"
 );
 const NEW: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
+    "../../../../formats/corpora/publication_effect_plan/e2/valid/new-draft-complete.json"
 );
 const REPLACE: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e1/valid/replace-known-draft.json"
+    "../../../../formats/corpora/publication_effect_plan/e2/valid/replace-known-draft.json"
 );
 
 fn expected() -> PublicationEffectPlanExpectations<'static> {

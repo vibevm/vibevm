@@ -33,7 +33,7 @@ pub(super) fn effectful(partition: &PublicationPartition) -> bool {
 }
 
 /// Closed fake capability set. In particular, an observed replacement
-/// release ID does not prove deletion of the old release, and the epoch-one
+/// release ID does not prove deletion of the old release, and the epoch-two
 /// fake has no protocol for deleting a nonempty cleanup inventory.
 pub(super) fn supports(partition: &PublicationPartition) -> bool {
     match partition {
@@ -101,6 +101,10 @@ fn added_assets(
     if before.release_id != after.release_id
         || before.tag != after.tag
         || before.draft != after.draft
+        || before.target_commitish != after.target_commitish
+        || before.name != after.name
+        || before.body != after.body
+        || before.prerelease != after.prerelease
         || !after.inventory_complete
         || after.generation_ref != after_generation
     {
@@ -128,7 +132,7 @@ fn added_assets(
 }
 
 /// Every accepted transition is over typed independently observed objects.
-/// The validated epoch-one cleanup is empty; a retained draft has no visibility
+/// The validated epoch-two cleanup is empty; a retained draft has no visibility
 /// change. These no-op partitions may keep object state unchanged by design.
 pub(super) fn verifies(
     before: &RemoteObservation,
@@ -162,6 +166,10 @@ pub(super) fn verifies(
             if !canonical_id(&new.release_id)
                 || new.tag != step.desired_tag
                 || new.draft != step.desired_draft
+                || new.target_commitish != step.desired_target_commit
+                || new.name.as_deref() != Some(step.desired_name.as_str())
+                || new.body.as_deref() != Some(step.desired_body.as_str())
+                || new.prerelease != step.desired_prerelease
                 || !new.inventory_complete
                 || !new.assets.is_empty()
                 || new.generation_ref != after.generation_ref
@@ -222,6 +230,10 @@ pub(super) fn verifies(
                     && !new.draft
                     && old.release_id == new.release_id
                     && old.tag == new.tag
+                    && old.target_commitish == new.target_commitish
+                    && old.name == new.name
+                    && old.body == new.body
+                    && old.prerelease == new.prerelease
                     && old.assets == new.assets
                     && new.inventory_complete
                     && new.generation_ref == after.generation_ref
