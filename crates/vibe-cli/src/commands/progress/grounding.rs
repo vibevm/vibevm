@@ -16,6 +16,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context as _, Result, bail};
 use progress_core::doc::ParsedDoc;
 use progress_core::{cache, journal, rollup, scope, sidecar, state};
+use vibe_core::manifest::SourceDescriptor;
 use vibe_registry::ShellGit;
 
 use crate::cli::ProgressCommonArgs;
@@ -32,6 +33,9 @@ use crate::commands::progress_evidence::EvidenceSnapshot;
 struct VocabularyByPackage {
     seen: BTreeMap<PathBuf, vibe_specdoc::Vocabulary>,
 }
+mod source_classification;
+pub(super) use source_classification::read_selected;
+use source_classification::{SourceAdmission, SourceDeclarations};
 
 impl VocabularyByPackage {
     /// The vocabulary `file` is read under: walk up to the nearest
@@ -78,6 +82,9 @@ pub(crate) struct Ground {
     /// used or the join names a file that does not exist.
     pub(crate) root: PathBuf,
     pub(crate) docs: Vec<ParsedDoc>,
+    /// Selected descriptors and raw byte witnesses; weave rechecks through a
+    /// bounded nofollow read instead of retaining all projected text in RAM.
+    pub(super) selected_sources: BTreeMap<String, (SourceDescriptor, String)>,
     pub(super) campaign: Option<PathBuf>,
     /// The campaign cache, read once at the head of the run: it says what
     /// each observed file hashed to when it was judged, and carries the
@@ -165,13 +172,27 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     // `X.xml` beside each other are a split brain — parsing both would
     // count one document's units twice under two paths, so the pair is a
     // loud stop before any parse, naming both files.
-    if let Some(collision) = vibe_specdoc::pair_collisions_in(&files).first() {
+    let mut declarations = SourceDeclarations::default();
+    let mut admitted = Vec::new();
+    let mut selected = BTreeMap::new();
+    for rel in files {
+        match declarations.classify(&root, &rel)? {
+            SourceAdmission::Legacy => admitted.push(rel),
+            SourceAdmission::Selected(descriptor) => {
+                selected.insert(rel.clone(), descriptor);
+                admitted.push(rel);
+            }
+            SourceAdmission::Raw => {}
+        }
+    }
+    if let Some(collision) = vibe_specdoc::pair_collisions_in(&admitted).first() {
         bail!("{}", collision.message());
     }
     let mut docs = Vec::new();
     let mut xml_sources = BTreeSet::new();
     let mut vocabularies = VocabularyByPackage::default();
-    for rel in files {
+    let mut selected_sources = BTreeMap::new();
+    for rel in admitted {
         let full = root.join(&rel);
         // The projection dispatch (PROP-045 ##PROJECTION-READ): `.md` (and
         // anything else) verbatim, `.xml` through `from_xml →
@@ -187,14 +208,23 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         // refuses the first page of any manual it observes — a legal
         // `example` or `derived` block is simply not in the spec
         // dialect.
-        let vocab = vocabularies.of(&root, &full);
-        let (text, kind) = vibe_specdoc::load_spec_text_with(&full, vocab)
-            .map_err(|e| anyhow::Error::msg(e.to_string()))
-            .with_context(|| format!("reading {}", full.display()))?;
-        if kind == vibe_specdoc::SourceKind::XmlProjected {
+        let (text, xml_projected, raw_sha) = if let Some(descriptor) = selected.get(&rel) {
+            let (text, sha) = read_selected(&root, &rel, descriptor, None)?;
+            (text, descriptor.media() == "application/xml", Some(sha))
+        } else {
+            let vocab = vocabularies.of(&root, &full);
+            let (text, kind) = vibe_specdoc::load_spec_text_with(&full, vocab)
+                .map_err(|e| anyhow::Error::msg(e.to_string()))
+                .with_context(|| format!("reading {}", full.display()))?;
+            (text, kind == vibe_specdoc::SourceKind::XmlProjected, None)
+        };
+        if xml_projected {
             xml_sources.insert(scope::rel_str(&rel));
         }
         let path = scope::rel_str(&rel);
+        if let (Some(descriptor), Some(sha)) = (selected.get(&rel), raw_sha) {
+            selected_sources.insert(path.clone(), (descriptor.clone(), sha));
+        }
         let hash = progress_core::parse::content_hash(&text);
         let cached = (!common.no_cache)
             .then(|| cache.cached_doc(&path, &hash, &payloads))
@@ -204,10 +234,12 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
             None => progress_core::parse::parse_document(&path, &text),
         });
     }
+    declarations.recheck()?;
     let judging_exemption = cfg.judging_exemption()?;
     Ok(Ground {
         root,
         docs,
+        selected_sources,
         campaign,
         cache,
         cache_warning,
