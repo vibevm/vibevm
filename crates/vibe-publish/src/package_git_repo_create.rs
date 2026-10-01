@@ -1,5 +1,5 @@
-//! Private package-Git repository-create journal. Production has cold
-//! inspection only; the sole dispatch port is compiled for local fake tests.
+//! Private package-Git repository-create journal and validated create owner.
+//! No live dispatch port or public invocation route is installed.
 
 use std::path::Path;
 
@@ -8,7 +8,7 @@ use vibe_lifecycle::{LifecycleLease, SubmissionNamespace, SubmissionScope};
 use vibe_safefs::Project;
 
 use crate::package_git_approval::{ApprovalHome, LinkInspection};
-use crate::package_git_operation::{self, journal};
+use crate::package_git_operation::journal;
 use crate::package_git_plan::{
     CreationOptions, HostedRepository, PackageGitPlan, RawRef, RefSnapshot, RepositoryIdentity,
     RepositoryObservation, RepositoryTarget, TagRef,
@@ -377,6 +377,8 @@ pub(crate) fn inspect_cold_profile(
         landed_sha256: sha(&landed_bytes),
     }
 }
+
+pub(crate) mod driver;
 
 #[cfg(test)]
 pub(crate) mod tests;

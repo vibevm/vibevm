@@ -49,6 +49,7 @@ pub(crate) fn linked() -> Option<(
 
 pub(crate) struct ProfileFake {
     repository: HostedRepository,
+    version_tag_ref: String,
     observed: RemoteSnapshot,
     observations: usize,
     calls: usize,
@@ -66,11 +67,13 @@ impl ProfileFake {
             Some(&world.source),
         )
         .unwrap();
-        let RepositoryTarget::HostedCreate { repository, .. } = proof.unwrap().plan.target else {
+        let plan = proof.unwrap().plan;
+        let RepositoryTarget::HostedCreate { repository, .. } = plan.target else {
             panic!("hosted fixture")
         };
         Self {
             repository,
+            version_tag_ref: plan.version_tag_ref,
             observed: RemoteSnapshot {
                 repository: RepositoryObservation::Absent,
                 refs: empty_refs(),
@@ -88,11 +91,17 @@ impl ProfileFake {
     }
 }
 impl FakeCreatePort for ProfileFake {
-    fn observe(&mut self) -> Result<RemoteSnapshot, String> {
+    fn observe(
+        &mut self,
+        repository: &HostedRepository,
+        version_tag_ref: &str,
+    ) -> Result<RemoteSnapshot, CreatePortError> {
+        assert_eq!(repository, &self.repository);
+        assert_eq!(version_tag_ref, self.version_tag_ref);
         self.observations += 1;
         if self.observations == 3 {
             if let Some(path) = &self.tamper_on_third {
-                fs::write(path, b"not-json").map_err(|e| e.to_string())?;
+                fs::write(path, b"not-json").map_err(|_| CreatePortError::Uncertain)?;
             }
             if self.foreign_third_observation {
                 return Ok(RemoteSnapshot {
@@ -110,7 +119,7 @@ impl FakeCreatePort for ProfileFake {
         &mut self,
         repository: &HostedRepository,
         creation: &CreationOptions,
-    ) -> Result<RepositoryIdentity, String> {
+    ) -> Result<RepositoryIdentity, CreatePortError> {
         assert_eq!(repository, &self.repository);
         assert!(!creation.auto_init);
         self.calls += 1;
@@ -120,7 +129,7 @@ impl FakeCreatePort for ProfileFake {
         };
         self.observed.repository = RepositoryObservation::Present(identity.clone());
         if self.lose_response {
-            Err("injected lost callback".into())
+            Err(CreatePortError::Uncertain)
         } else {
             Ok(identity)
         }
