@@ -127,7 +127,7 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "core-ai-native-conform"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -141,7 +141,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-mcp"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "serde",
@@ -152,7 +152,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmap"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -172,7 +172,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark-grammar",
  "proc-macro2",
@@ -182,7 +182,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark-grammar"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -589,7 +589,7 @@ checksum = "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20"
 
 [[package]]
 name = "typescript-ai-native-cli"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -608,7 +608,7 @@ dependencies = [
 
 [[package]]
 name = "typescript-ai-native-conform"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -621,7 +621,7 @@ dependencies = [
 
 [[package]]
 name = "typescript-ai-native-conform-frontend"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-conform",
@@ -632,7 +632,7 @@ dependencies = [
 
 [[package]]
 name = "typescript-ai-native-extract-bridge"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-conform",
  "serde",
@@ -643,7 +643,7 @@ dependencies = [
 
 [[package]]
 name = "typescript-ai-native-mcp"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -661,7 +661,7 @@ dependencies = [
 
 [[package]]
 name = "typescript-ai-native-specmap"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmap",
@@ -671,7 +671,7 @@ dependencies = [
 
 [[package]]
 name = "typescript-ai-native-specmap-scan"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmap",
  "core-ai-native-specmark-grammar",
@@ -680,7 +680,7 @@ dependencies = [
 
 [[package]]
 name = "typescript-ai-native-tcg"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -696,7 +696,7 @@ dependencies = [
 
 [[package]]
 name = "typescript-ai-native-tcg-bridge"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "serde",
  "serde_json",

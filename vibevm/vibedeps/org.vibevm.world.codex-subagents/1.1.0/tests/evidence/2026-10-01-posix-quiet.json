@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-01",
+  "platform": "linux",
+  "cli_version": "0.159.3",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "medium",
+  "resolved_model": null,
+  "effective_reasoning_effort": null,
+  "offline_launcher_contract": {
+    "passed": 10,
+    "failed": 0
+  },
+  "quiet_probe": {
+    "project_doc_max_bytes": 0,
+    "exit": 0,
+    "final": "QUIET_PROBE_OK",
+    "tool_items": 0
+  },
+  "positive_control": {
+    "project_doc_max_bytes": 4096,
+    "exit": 0,
+    "final": "AUTO_BOOT_SENTINEL_PRESENT",
+    "tool_items": 0
+  },
+  "initial_probe_failure": {
+    "exit": 2,
+    "cause": "duplicate sandbox CLI flags; launcher defaults corrected before model execution"
+  },
+  "unrun": [
+    "native-windows",
+    "native-macos",
+    "receipt-deployment"
+  ]
+}

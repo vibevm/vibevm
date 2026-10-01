@@ -127,7 +127,7 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "core-ai-native-conform"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -141,7 +141,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-mcp"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "serde",
@@ -152,7 +152,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmap"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -172,7 +172,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark-grammar",
  "proc-macro2",
@@ -182,7 +182,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark-grammar"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -394,7 +394,7 @@ checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
 
 [[package]]
 name = "rust-ai-native-cli"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -410,7 +410,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-conform"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -422,7 +422,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-conform-frontend"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-conform",
  "core-ai-native-specmark",
@@ -434,7 +434,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-mcp"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -452,7 +452,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-specmap"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -461,7 +461,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-tcg"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -479,7 +479,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-tcg-bridge"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "serde",

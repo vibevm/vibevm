@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-01",
+  "platform": "linux",
+  "vibe_cli_version": "1.1.0",
+  "install": {
+    "offline": true,
+    "version": "1.1.0",
+    "requirement": "^1.1.0",
+    "exit": 0
+  },
+  "deploy": {
+    "profile": "posix",
+    "target": "codex-worker-posix",
+    "exit": 0,
+    "receipt_status": "verified",
+    "reversible": true,
+    "scope": "user"
+  },
+  "installed_boot": {
+    "entries": 1,
+    "lines": 28
+  },
+  "worker_audit": {
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "medium",
+    "sandbox": "read-only",
+    "exit": 0,
+    "checks_passed": 5,
+    "launcher_bytes_equal": true,
+    "manifest_bytes_equal": true,
+    "full_boot_executed": false,
+    "writes": false,
+    "scope_note": "rg context exposed adjacent lines around named AGENTS and manifest sections; no full boot was followed"
+  },
+  "resolved_model": null,
+  "effective_reasoning_effort": null,
+  "unrun": [
+    "native-windows",
+    "native-macos"
+  ]
+}

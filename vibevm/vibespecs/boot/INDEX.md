@@ -41,5 +41,9 @@ path = "vibevm/vibedeps/org.vibevm.fractality.delegation-first/1.1.0/vibevm/vibe
 kind = "static"
 
 [[entry]]
+path = "vibevm/vibedeps/org.vibevm.world.codex-subagents/1.1.0/vibevm/vibespecs/boot/78-tool-codex-subagents.xml"
+kind = "static"
+
+[[entry]]
 path = "vibevm/vibedeps/org.vibevm.world.omnichannel/1.1.0/vibevm/vibespecs/boot/68-flow-omnichannel.xml"
 kind = "static"

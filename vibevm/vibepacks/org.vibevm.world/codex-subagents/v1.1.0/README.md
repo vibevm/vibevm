@@ -95,8 +95,13 @@ with automatic project loading enabled returned the token from a sentinel
 `gpt-6.1-sol` at medium; the JSONL stream did not independently expose resolved
 model/effort metadata. Those runtime identities remain unverified.
 
-Native Windows, macOS and receipt deployment are UNRUN. The package is not
+Linux offline installation and the POSIX receipt deployment passed with VibeVM
+1.1.0; the deployment receipt is verified. A real bounded CLI worker audited
+the installed package and completed all five checks without following full boot.
+Native Windows and macOS remain UNRUN. The package is not
 activated by creating its source. Historical GLM worker practice is retained
 only in `provenance.xml`; this package has no GLM subscription, model routing
 or campaign dependency. A sanitized record of the executed checks is in
 `tests/evidence/2026-10-01-posix-quiet.json`.
+
+Installation/use evidence: `tests/evidence/2026-10-01-linux-install.json`.
