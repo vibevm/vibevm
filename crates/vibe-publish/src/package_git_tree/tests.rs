@@ -5,8 +5,9 @@ use super::*;
 use crate::package_git_operation::prepare_pending;
 use crate::package_git_payload::{PayloadLimits, stage_local_payload};
 use crate::package_git_plan::{
-    PackageCoordinate, PackageGitPlan, RawRef, RefSnapshot, RepositoryIdentity,
-    RepositoryObservation, RepositoryTarget, StagedCommit, StagedObjects, TagRef,
+    CommitMetadata, GitPerson, PackageCoordinate, PackageGitPlan, RawRef, RefSnapshot,
+    RepositoryIdentity, RepositoryObservation, RepositoryTarget, StagedCommit, StagedObjects,
+    TagMetadata, TagRef,
 };
 use vibe_lifecycle::{JournalAdmission, SubmissionReservations, SubmissionScope};
 
@@ -49,8 +50,18 @@ fn scope() -> SubmissionScope {
     }
 }
 fn plan(payload_sha256: String, tree_oid: String) -> PackageGitPlan {
+    plan_with_oid_len(payload_sha256, tree_oid, 40)
+}
+fn plan_with_oid_len(payload_sha256: String, tree_oid: String, oid_len: usize) -> PackageGitPlan {
     let remote_identity_sha256 = format!("sha256:{}", "9".repeat(64));
-    PackageGitPlan {
+    let person = GitPerson {
+        name: "Oleg Chirukhin".into(),
+        email: "oleg@example.test".into(),
+        timestamp_seconds: 1_700_000_000,
+        timezone_offset_minutes: 180,
+    };
+    let mut plan = PackageGitPlan {
+        epoch: 2,
         package: PackageCoordinate {
             kind: "flow".into(),
             group: "org.vibevm".into(),
@@ -64,7 +75,7 @@ fn plan(payload_sha256: String, tree_oid: String) -> PackageGitPlan {
         },
         payload_sha256,
         flattened_submodules_sha256: format!("sha256:{}", "b".repeat(64)),
-        oid_hex_len: 40,
+        oid_hex_len: oid_len,
         before_repo: RepositoryObservation::Present(RepositoryIdentity::Direct {
             remote_identity_sha256,
         }),
@@ -75,13 +86,24 @@ fn plan(payload_sha256: String, tree_oid: String) -> PackageGitPlan {
         staged: StagedObjects {
             git_tree_oid: tree_oid,
             commit: StagedCommit::New {
-                oid: "d".repeat(40),
+                oid: "d".repeat(oid_len),
                 parent_oid: None,
             },
-            annotated_tag_oid: Some("e".repeat(40)),
-            tag_target_commit_oid: "d".repeat(40),
+            annotated_tag_oid: Some("e".repeat(oid_len)),
+            tag_target_commit_oid: "d".repeat(oid_len),
+            commit_metadata: Some(CommitMetadata {
+                author: person.clone(),
+                committer: person.clone(),
+                message: "Release wal@1.1.0\n".into(),
+            }),
+            tag_metadata: Some(TagMetadata {
+                tagger: person,
+                message: "wal@1.1.0\n".into(),
+            }),
         },
-    }
+    };
+    plan.derive_staged_object_ids().unwrap();
+    plan
 }
 fn expected_tree(source: &Project, binary: &Path) -> (String, String) {
     expected_tree_with_oid_len(source, binary, 40)
@@ -116,14 +138,7 @@ fn selected_sha256_git_format_is_probed_before_retained_staging() {
         return; // Older host Git: the production path returns typed Unavailable.
     }
     let (payload_sha, tree_oid) = expected_tree_with_oid_len(&source, &binary, 64);
-    let mut selected_plan = plan(payload_sha, tree_oid.clone());
-    selected_plan.oid_hex_len = 64;
-    selected_plan.staged.commit = StagedCommit::New {
-        oid: "d".repeat(64),
-        parent_oid: None,
-    };
-    selected_plan.staged.annotated_tag_oid = Some("e".repeat(64));
-    selected_plan.staged.tag_target_commit_oid = "d".repeat(64);
+    let selected_plan = plan_with_oid_len(payload_sha, tree_oid.clone(), 64);
     let root = tempfile::tempdir().unwrap();
     let lease = LifecycleLease::acquire(root.path()).unwrap();
     let selected = scope();

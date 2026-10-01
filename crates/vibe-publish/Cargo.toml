@@ -20,6 +20,7 @@ tracing.workspace = true
 reqwest.workspace = true
 semver.workspace = true
 sha2.workspace = true
+sha1.workspace = true
 tempfile.workspace = true
 walkdir.workspace = true
 chrono.workspace = true

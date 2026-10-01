@@ -2,8 +2,8 @@ use std::fs;
 
 use super::*;
 use crate::package_git_plan::{
-    PackageCoordinate, RawRef, RefSnapshot, RepositoryIdentity, RepositoryObservation,
-    RepositoryTarget, StagedCommit, StagedObjects, TagRef,
+    CommitMetadata, GitPerson, PackageCoordinate, RawRef, RefSnapshot, RepositoryIdentity,
+    RepositoryObservation, RepositoryTarget, StagedCommit, StagedObjects, TagMetadata, TagRef,
 };
 
 fn limits() -> PayloadLimits {
@@ -31,7 +31,14 @@ fn plan(source: &Project) -> PackageGitPlan {
         .unwrap()
         .tree_sha256;
     let remote_identity_sha256 = format!("sha256:{}", "9".repeat(64));
-    PackageGitPlan {
+    let person = GitPerson {
+        name: "Oleg Chirukhin".into(),
+        email: "oleg@example.test".into(),
+        timestamp_seconds: 1_700_000_000,
+        timezone_offset_minutes: 180,
+    };
+    let mut plan = PackageGitPlan {
+        epoch: 2,
         package: PackageCoordinate {
             kind: "flow".into(),
             group: "org.vibevm".into(),
@@ -61,8 +68,19 @@ fn plan(source: &Project) -> PackageGitPlan {
             },
             annotated_tag_oid: Some("e".repeat(40)),
             tag_target_commit_oid: "d".repeat(40),
+            commit_metadata: Some(CommitMetadata {
+                author: person.clone(),
+                committer: person.clone(),
+                message: "Release wal@1.1.0\n".into(),
+            }),
+            tag_metadata: Some(TagMetadata {
+                tagger: person,
+                message: "wal@1.1.0\n".into(),
+            }),
         },
-    }
+    };
+    plan.derive_staged_object_ids().unwrap();
+    plan
 }
 fn scope() -> SubmissionScope {
     SubmissionScope {
