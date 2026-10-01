@@ -61,6 +61,7 @@ struct Redemption {
     target: String,
     principal: String,
     root_correlation_token: String,
+    settings_root_token: String,
 }
 
 /// Host-pinned settings root. A request cannot supply a different directory.
@@ -93,6 +94,17 @@ pub(crate) struct RedemptionReceipt {
     pub run_id: String,
     pub plan_sha256: String,
     pub marker_sha256: String,
+}
+
+/// Exact owner-journal values used only to inspect a prior redemption. The
+/// caller cannot use these claims to create a marker or perform an effect.
+pub(crate) struct ColdRedemptionExpectation<'a> {
+    pub authority_id: &'a str,
+    pub run_id: &'a str,
+    pub marker_sha256: &'a str,
+    pub plan_sha256: &'a str,
+    pub c1_plan_sha256: &'a str,
+    pub request_sha256: &'a str,
 }
 
 fn sha(bytes: &[u8]) -> String {
@@ -392,6 +404,7 @@ impl ApprovalHome {
             target: scope.target.clone(),
             principal: scope.principal.clone(),
             root_correlation_token: current_root,
+            settings_root_token: verified.settings_root_token.clone(),
         };
         let bytes = serde_json::to_vec(&marker)
             .map_err(|error| ApprovalError::Refused(format!("redemption encoding: {error}")))?;
@@ -430,8 +443,107 @@ impl ApprovalHome {
             marker_sha256: sha(&bytes),
         })
     }
+
+    /// Read a survived redemption after process/lease exit. This never
+    /// re-evaluates today's approval expiry and never creates or redeems a
+    /// marker. The C.1 row may be Pending or Ready, but must be the same run.
+    pub(crate) fn inspect_redemption_cold(
+        &self,
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        expected: &ColdRedemptionExpectation<'_>,
+    ) -> Result<RedemptionReceipt, ApprovalError> {
+        if !is_valid_run_id(expected.run_id)
+            || expected.authority_id.is_empty()
+            || expected.authority_id.chars().any(char::is_control)
+            || plan_name(expected.plan_sha256).is_err()
+            || plan_name(expected.c1_plan_sha256).is_err()
+            || plan_name(expected.request_sha256).is_err()
+            || plan_name(expected.marker_sha256).is_err()
+        {
+            return Err(ApprovalError::Refused(
+                "invalid cold redemption identity".into(),
+            ));
+        }
+        let held_settings = self.settings.root_correlation_token().map_err(|error| {
+            ApprovalError::RecoveryRequired(format!("held settings root: {error:#}"))
+        })?;
+        let reopened = Project::open(self.settings.root_path()).map_err(|error| {
+            ApprovalError::RecoveryRequired(format!("settings root reobserve: {error:#}"))
+        })?;
+        if reopened.root_correlation_token().ok().as_deref() != Some(held_settings.as_str()) {
+            return Err(ApprovalError::RecoveryRequired(
+                "settings pathname no longer denotes held root".into(),
+            ));
+        }
+        let workspace_root = lease
+            .publication_journal_project()
+            .root_correlation_token()
+            .map_err(|error| {
+                ApprovalError::RecoveryRequired(format!("held workspace root: {error:#}"))
+            })?;
+        let row = SubmissionReservations::inspect_existing_key(lease, namespace, scope, key)
+            .map_err(|error| ApprovalError::Refused(format!("C.1 inspection: {error}")))?
+            .ok_or_else(|| ApprovalError::Refused("C.1 key is absent".into()))?;
+        if row.retired
+            || row.domain_run_id != expected.run_id
+            || row.plan_sha256 != expected.c1_plan_sha256
+            || row.request_sha256 != expected.request_sha256
+        {
+            return Err(ApprovalError::Refused(
+                "cold C.1 run/request/plan differs".into(),
+            ));
+        }
+        let redeemed = self
+            .settings
+            .subproject(&[HOME, REDEEMED])
+            .map_err(|error| {
+                ApprovalError::RecoveryRequired(format!("redemption home: {error:#}"))
+            })?;
+        let marker_name = marker_name(expected.authority_id);
+        let snapshot = redeemed
+            .read_file_snapshot_bounded(&marker_name, CAP)
+            .map_err(|error| {
+                ApprovalError::RecoveryRequired(format!("redemption read: {error:#}"))
+            })?
+            .ok_or_else(|| ApprovalError::RecoveryRequired("redemption marker is absent".into()))?;
+        if sha(&snapshot.bytes) != expected.marker_sha256 {
+            return Err(ApprovalError::RecoveryRequired(
+                "redemption marker digest changed".into(),
+            ));
+        }
+        let marker: Redemption = canonical(&snapshot.bytes)
+            .map_err(|error| ApprovalError::RecoveryRequired(error.to_string()))?;
+        if marker.format != REDEMPTION_FORMAT
+            || marker.approval_id_sha256 != sha(expected.authority_id.as_bytes())
+            || marker.plan_sha256 != expected.plan_sha256
+            || marker.c1_plan_sha256 != expected.c1_plan_sha256
+            || marker.request_sha256 != expected.request_sha256
+            || marker.namespace_id != namespace.id()
+            || marker.run_id != expected.run_id
+            || marker.context != scope.context
+            || marker.target != scope.target
+            || marker.principal != scope.principal
+            || marker.root_correlation_token != workspace_root
+            || marker.settings_root_token != held_settings
+        {
+            return Err(ApprovalError::RecoveryRequired(
+                "redemption marker differs from exact C.1 or held roots".into(),
+            ));
+        }
+        Ok(RedemptionReceipt {
+            run_id: marker.run_id,
+            plan_sha256: marker.plan_sha256,
+            marker_sha256: expected.marker_sha256.into(),
+        })
+    }
 }
 
 #[cfg(test)]
 #[path = "publication_approval/tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "publication_approval/tests_cold.rs"]
+mod tests_cold;
