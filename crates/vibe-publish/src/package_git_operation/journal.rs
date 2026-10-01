@@ -14,7 +14,7 @@ pub(super) const REQUEST_FORMAT: &str = "vibevm.package-git-request/e1";
 pub(crate) const TREE_FORMAT: &str = "vibevm.package-git-tree/e1";
 pub(crate) const PROVENANCE_FORMAT: &str = "vibevm.package-git-no-gitlinks/e1";
 pub(crate) const PROVENANCE_PENDING_FORMAT: &str = "vibevm.package-git-no-gitlinks-pending/e1";
-pub(crate) const OBJECT_FORMAT: &str = "vibevm.package-git-control-objects/e2";
+pub(crate) const OBJECT_FORMAT: &str = "vibevm.package-git-control-objects/e3";
 pub(crate) const PARENT_PENDING_FORMAT: &str = "vibevm.package-git-parent-pending/e1";
 pub(crate) const PARENT_FORMAT: &str = "vibevm.package-git-parent/e1";
 pub(crate) const GITLINK_PENDING_FORMAT: &str = "vibevm.package-git-link-pending/e1";
@@ -138,7 +138,7 @@ pub(crate) struct ObjectReceipt {
     pub intent_sha256: String,
     pub payload_manifest_sha256: String,
     pub tree_receipt_sha256: String,
-    pub provenance_receipt_sha256: String,
+    pub provenance: crate::package_git_objects::ObjectProvenance,
     pub parent_receipt_sha256: Option<String>,
     pub parent_oid: Option<String>,
     pub object_root_token: String,

@@ -3,16 +3,31 @@
 
 use std::path::Path;
 
+use serde::{Deserialize, Serialize};
 use vibe_lifecycle::{LifecycleLease, SubmissionScope};
 use vibe_safefs::Project;
 
 use crate::package_git_gitlink::CensusLimits;
 use crate::package_git_operation::journal::{self, ObjectReceipt, sha};
 use crate::package_git_parent::{self, ParentInspection, ParentLimits};
+use crate::package_git_provenance_populated::{self, AggregateInspection, ApprovedGitdir};
+use crate::package_git_submodule::SubmoduleLimits;
 use crate::package_git_tree::git::LocalGit;
 
 mod proof;
 use proof::{expected, held};
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) enum ObjectProvenance {
+    NoGitlinks {
+        landed_sha256: String,
+    },
+    Populated {
+        pending_sha256: String,
+        landed_sha256: String,
+        flattened_submodules_sha256: String,
+    },
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum ObjectInspection {
@@ -61,6 +76,35 @@ pub(crate) fn stage_parentless_objects_pending(
         limits,
         None,
         None,
+        None,
+        None,
+    )
+}
+
+/// Parentless flattened output whose complete indexed Gitlinks have already
+/// landed in separate retained byte stores. This still writes only at Pending.
+pub(crate) fn stage_parentless_populated_objects_pending(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: &Project,
+    approved: &[ApprovedGitdir<'_>],
+    git_binary: &Path,
+    limits: SubmoduleLimits,
+) -> ObjectInspection {
+    stage_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        limits.census,
+        None,
+        None,
+        Some(limits),
+        Some(approved),
     )
 }
 
@@ -84,6 +128,8 @@ pub(crate) fn stage_existing_main_objects_pending(
         limits.census,
         Some(limits),
         Some(local_bare_source),
+        None,
+        None,
     )
 }
 
@@ -97,6 +143,8 @@ fn stage_inner(
     limits: CensusLimits,
     parent_limits: Option<ParentLimits>,
     local_bare_source: Option<&Project>,
+    populated_limits: Option<SubmoduleLimits>,
+    approved: Option<&[ApprovedGitdir<'_>]>,
 ) -> ObjectInspection {
     let held = match held(
         lease,
@@ -108,6 +156,8 @@ fn stage_inner(
         limits,
         parent_limits,
         local_bare_source,
+        populated_limits,
+        approved,
         false,
     ) {
         Ok(value) => value,
@@ -132,6 +182,8 @@ fn stage_inner(
                 limits,
                 parent_limits,
                 local_bare_source,
+                populated_limits,
+                approved,
                 false,
             );
         }
@@ -173,6 +225,19 @@ fn stage_inner(
             );
         }
     }
+    if let Some(populated_limits) = populated_limits {
+        if !matches!(package_git_provenance_populated::inspect_complete_cold(
+            lease, namespace_token, scope, key, Some(source), approved, git_binary,
+            populated_limits, vibe_lifecycle::JournalAdmission::Pending,
+        ), AggregateInspection::AggregateCompleteButNotReady { run_id: ref same, ref flattened_submodules_sha256, .. }
+            if same == &run_id && flattened_submodules_sha256 == &held.proof.plan.flattened_submodules_sha256)
+        {
+            return uncertain(
+                Some(&run_id),
+                "complete populated Gitlink proof changed before object write",
+            );
+        }
+    }
     let stage = (|| -> anyhow::Result<()> {
         if git.object_present(&planned.commit_oid)? || git.object_present(&planned.tag_oid)? {
             anyhow::bail!("unreceipted planned commit/tag object already exists; never restage");
@@ -201,6 +266,22 @@ fn stage_inner(
             format!("local commit/tag stage incomplete: {error:#}"),
         );
     }
+    if let Some(populated_limits) = populated_limits {
+        if !matches!(package_git_provenance_populated::inspect_complete_cold(
+            lease, namespace_token, scope, key, Some(source), approved, git_binary,
+            populated_limits, vibe_lifecycle::JournalAdmission::Pending,
+        ), AggregateInspection::AggregateCompleteButNotReady { run_id: ref same, ref flattened_submodules_sha256, .. }
+            if same == &run_id && flattened_submodules_sha256 == &held.proof.plan.flattened_submodules_sha256)
+            || !matches!(journal::read_bytes(lease, &run_id, "gitlink-aggregate"), Ok(Some(ref bytes))
+                if matches!(&held.provenance, ObjectProvenance::Populated { landed_sha256, .. }
+                    if &sha(bytes) == landed_sha256))
+        {
+            return uncertain(
+                Some(&run_id),
+                "populated Gitlink proof changed after object write",
+            );
+        }
+    }
     if let Err(error) = journal::publish(lease, &run_id, "objects", &planned) {
         return uncertain(
             Some(&run_id),
@@ -217,6 +298,8 @@ fn stage_inner(
         limits,
         parent_limits,
         local_bare_source,
+        populated_limits,
+        approved,
         false,
     )
 }
@@ -242,6 +325,8 @@ pub(crate) fn inspect_objects_cold(
         limits,
         None,
         None,
+        None,
+        None,
         false,
     )
 }
@@ -265,7 +350,35 @@ pub(crate) fn inspect_objects_ready_cold(
         limits,
         None,
         None,
+        None,
+        None,
         true,
+    )
+}
+
+pub(crate) fn inspect_parentless_populated_objects_cold(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    approved: Option<&[ApprovedGitdir<'_>]>,
+    git_binary: &Path,
+    limits: SubmoduleLimits,
+) -> ObjectInspection {
+    inspect_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        limits.census,
+        None,
+        None,
+        Some(limits),
+        approved,
+        false,
     )
 }
 
@@ -289,6 +402,8 @@ pub(crate) fn inspect_existing_main_objects_cold(
         limits.census,
         Some(limits),
         local_bare_source,
+        None,
+        None,
         false,
     )
 }
@@ -313,6 +428,8 @@ pub(crate) fn inspect_existing_main_objects_ready_cold(
         limits.census,
         Some(limits),
         local_bare_source,
+        None,
+        None,
         true,
     )
 }
@@ -327,6 +444,8 @@ fn inspect_inner(
     limits: CensusLimits,
     parent_limits: Option<ParentLimits>,
     local_bare_source: Option<&Project>,
+    populated_limits: Option<SubmoduleLimits>,
+    approved: Option<&[ApprovedGitdir<'_>]>,
     ready: bool,
 ) -> ObjectInspection {
     let held = match held(
@@ -339,6 +458,8 @@ fn inspect_inner(
         limits,
         parent_limits,
         local_bare_source,
+        populated_limits,
+        approved,
         ready,
     ) {
         Ok(value) => value,
