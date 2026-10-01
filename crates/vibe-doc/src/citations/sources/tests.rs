@@ -122,6 +122,88 @@ fn the_checkout_answers_only_its_own_coordinate() {
     assert!(err.contains("checkout `org.acme/host`"), "{err}");
 }
 
+fn declared_checkout() -> (tempfile::TempDir, PathBuf, PathBuf) {
+    let root = tempfile::tempdir().unwrap();
+    let spec_root = root.path().join(vibe_core::layout::current_specs_root());
+    let common = spec_root.join("common");
+    fs::create_dir_all(&common).unwrap();
+    let selected = common.join("guide.xml");
+    let raw_markdown = common.join("guide.md");
+    let raw_data = common.join("data.xml");
+    fs::write(
+        &selected,
+        b"<spec xmlns=\"https://vibevm.org/spec/1\"><p><RULE fact=\"true\" status=\"spec/done\">chosen</RULE></p></spec>\n",
+    )
+    .unwrap();
+    fs::write(&raw_markdown, b"# Ordinary CommonMark\n").unwrap();
+    fs::write(&raw_data, b"<data>ordinary XML</data>\n").unwrap();
+    let slash = |path: &Path| path.to_string_lossy().replace('\\', "/");
+    let spec_root = vibe_core::layout::current_specs_root();
+    fs::write(
+        root.path().join("vibe.toml"),
+        format!(
+            "[project]\ngroup='org.acme'\nname='host'\nversion='1.1.0'\n\
+             [[project.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+             [[project.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
+             [[project.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+            slash(&spec_root.join("common/guide.xml")),
+            slash(&spec_root.join("common/guide.md")),
+            slash(&spec_root.join("common/data.xml")),
+        ),
+    )
+    .unwrap();
+    (root, selected, raw_markdown)
+}
+
+#[test]
+fn opt_in_checkout_citation_selects_vibe_xml_beside_raw_same_stem() {
+    let (root, selected, raw_markdown) = declared_checkout();
+    let world = SpecSources::for_checkout(root.path(), Some("org.acme"), "host");
+    let found = world
+        .locate(&address("spec://org.acme/host/common/guide#RULE"))
+        .unwrap();
+    assert_eq!(found.source, Source::Checkout);
+    assert_eq!(found.path, selected);
+    assert_eq!(fs::read(raw_markdown).unwrap(), b"# Ordinary CommonMark\n");
+}
+
+#[test]
+fn opt_in_package_checkout_uses_the_same_selected_source_rule() {
+    let (root, selected, _) = declared_checkout();
+    let manifest_path = root.path().join("vibe.toml");
+    let project_manifest = fs::read_to_string(&manifest_path).unwrap();
+    let package_manifest = project_manifest
+        .replace(
+            "[project]\ngroup='org.acme'\nname='host'\nversion='1.1.0'",
+            "[package]\ngroup='org.acme'\nname='host'\nkind='flow'\nversion='1.1.0'",
+        )
+        .replace("[[project.sources]]", "[[package.sources]]");
+    fs::write(&manifest_path, package_manifest).unwrap();
+    let world = SpecSources::for_checkout(root.path(), Some("org.acme"), "host");
+    assert_eq!(
+        world
+            .locate(&address("spec://org.acme/host/common/guide#RULE"))
+            .unwrap()
+            .path,
+        selected
+    );
+}
+
+#[test]
+fn opt_in_checkout_citation_refuses_raw_and_changed_source() {
+    let (root, selected, _) = declared_checkout();
+    let world = SpecSources::for_checkout(root.path(), Some("org.acme"), "host");
+    let raw = world
+        .locate(&address("spec://org.acme/host/common/data#anything"))
+        .unwrap_err();
+    assert!(raw.contains("no declared scan-loaded Vibe source"), "{raw}");
+    fs::write(&selected, [0xff, 0xfe]).unwrap();
+    let changed = world
+        .locate(&address("spec://org.acme/host/common/guide#RULE"))
+        .unwrap_err();
+    assert!(changed.contains("not UTF-8"), "{changed}");
+}
+
 /// A pin on the address is CHECKED against the instance the chain found,
 /// never dropped: an author who wrote `@2.0.0` and silently got 1.0.0's
 /// bytes has no way to notice.
