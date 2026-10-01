@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "kind": "documentation-capture-selection-template-candidate",
+  "phase": "after",
+  "source_subject": {
+    "kind": "git",
+    "repository_key": "product",
+    "repository_identity": "https://gitverse.ru/vibevm/vibevm.git",
+    "commit_sha1": "681d8a47b98318c042f7a8b10d6a37edd603cb04",
+    "tree_sha1": "7770ad004a16d7283485bb38da6828ab6dd5b644"
+  },
+  "source_root_components": [
+    "vibevm",
+    "vibepacks",
+    "org.vibevm.core"
+  ],
+  "source_profile": "urn:vibevm:doc:xml",
+  "product_baseline_capture_id": "m06-a-after-424ed24cd-v2",
+  "page_rule": "Only XML under the EN/RU v1.1.0 authored vibevm/vibespecs roots; 100 example-registry XML paths are fixture inputs, not Doc-vocabulary pages.",
+  "build_inputs": [
+    {
+      "purpose": "configuration",
+      "path": "Cargo.toml"
+    },
+    {
+      "purpose": "lock",
+      "path": "Cargo.lock"
+    },
+    {
+      "purpose": "generator",
+      "path": "crates/vibe-doc/src/derived.rs"
+    },
+    {
+      "purpose": "generator",
+      "path": "crates/vibe-doc/src/site.rs"
+    },
+    {
+      "purpose": "generator",
+      "path": "crates/vibe-specdoc/src/load.rs"
+    },
+    {
+      "purpose": "generator",
+      "path": "crates/vibe-cli/src/commands/doc/site.rs"
+    },
+    {
+      "purpose": "configuration",
+      "path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibe.toml"
+    },
+    {
+      "purpose": "configuration",
+      "path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibe.toml"
+    },
+    {
+      "purpose": "lock",
+      "path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/derived.json"
+    },
+    {
+      "purpose": "lock",
+      "path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/maintenance/derived.json"
+    }
+  ],
+  "toolchains": [
+    {
+      "name": "vibe-specdoc",
+      "version": "1.1.0"
+    },
+    {
+      "name": "vibe-doc",
+      "version": "1.1.0"
+    },
+    {
+      "name": "vibe-cli",
+      "version": "1.1.0"
+    }
+  ],
+  "limitations": [
+    "Candidate selection and source-declared toolchain versions only; no built binary, derived regeneration, editorial or complete topic proof."
+  ]
+}
