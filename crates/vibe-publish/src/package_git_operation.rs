@@ -15,8 +15,20 @@ use crate::package_git_payload::{
 };
 use crate::package_git_plan::{PackageGitPlan, RepositoryTarget};
 
-mod journal;
+pub(crate) mod journal;
 use journal::{Intent, Request, StageReceipt, sha};
+
+/// One cold-proved local Pending run. This retains the exact byte vault and
+/// parsed plan for the next local object stage; it grants no remote effect.
+#[derive(Debug)]
+pub(crate) struct PendingProof {
+    pub run_id: String,
+    pub plan: PackageGitPlan,
+    pub manifest: crate::package_git_payload::CompleteManifest,
+    pub vault: Project,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum PendingInspection {
@@ -377,6 +389,80 @@ pub(crate) fn inspect_pending_cold(
         run_id,
         tree_sha256: manifest.tree_sha256,
     })
+}
+
+/// Reconstruct a held byte-vault proof from one C.1 Pending run. The second
+/// cold scan brackets the borrowed proof; a changed record yields uncertainty.
+pub(crate) fn pending_proof_cold(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+) -> Result<(PendingInspection, Option<PendingProof>), OperationError> {
+    pending_proof_cold_inner(lease, namespace_token, scope, key, source, |_| {})
+}
+
+fn pending_proof_cold_inner(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    after_first_inspection: impl FnOnce(&str),
+) -> Result<(PendingInspection, Option<PendingProof>), OperationError> {
+    let status = inspect_pending_cold(lease, namespace_token, scope, key, source)?;
+    let PendingInspection::VaultCompleteButNotReady { run_id, .. } = &status else {
+        return Ok((status, None));
+    };
+    let uncertain = |reason: String| PendingInspection::Uncertain {
+        run_id: run_id.clone(),
+        reason,
+    };
+    after_first_inspection(run_id);
+    // From this point onward the run has already been observed as complete.
+    // Any read/decode failure is a changed or unreadable retained witness, not
+    // an ordinary preflight refusal that a caller may retry by staging again.
+    let rebuilt = (|| -> anyhow::Result<PendingProof> {
+        let intent_bytes = journal::read_bytes(lease, run_id, "intent")?
+            .ok_or_else(|| anyhow::anyhow!("owner intent vanished"))?;
+        let intent: Intent = serde_json::from_slice(&intent_bytes)?;
+        let plan: PackageGitPlan = serde_json::from_str(&intent.plan_json)?;
+        let vault = journal::vault(lease, run_id, false)?
+            .ok_or_else(|| anyhow::anyhow!("payload vault vanished"))?;
+        let manifest = match inspect_local_payload(
+            &vault,
+            intent.limits,
+            &intent.source_root_token,
+            &intent.source_tree_sha256,
+        ) {
+            LocalPayloadInspection::Complete(value) => value,
+            other => anyhow::bail!("payload changed during proof: {other:?}"),
+        };
+        let root = vault.root_dir()?;
+        let manifest_bytes = vault
+            .read_file_bounded_in(&root, "complete.json", intent.limits.max_manifest_bytes)?
+            .ok_or_else(|| anyhow::anyhow!("payload completion vanished"))?;
+        let again = inspect_pending_cold(lease, namespace_token, scope, key, source)?;
+        if again != status {
+            anyhow::bail!("C.1 or payload changed while rebuilding proof");
+        }
+        Ok(PendingProof {
+            run_id: run_id.clone(),
+            plan,
+            manifest,
+            vault,
+            intent_sha256: sha(&intent_bytes),
+            payload_manifest_sha256: sha(&manifest_bytes),
+        })
+    })();
+    match rebuilt {
+        Ok(proof) => Ok((status, Some(proof))),
+        Err(error) => Ok((
+            uncertain(format!("retained Pending proof changed: {error:#}")),
+            None,
+        )),
+    }
 }
 
 #[cfg(test)]
