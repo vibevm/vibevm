@@ -6,6 +6,9 @@ use vibe_lifecycle::{LifecycleLease, SubmissionScope};
 
 use crate::package_git_payload::{PayloadLimits, ProvenanceStatus};
 
+mod ready;
+pub(crate) use ready::{ReadyProvenance, ReadySeal};
+
 const HOME: [&str; 2] = [".vibe", "package-git-operations"];
 const RECORD_CAP: usize = 1024 * 1024; // C.1-scale control record, not a payload-size cap.
 pub(super) const INTENT_FORMAT: &str = "vibevm.package-git-intent/e1";
@@ -21,7 +24,7 @@ pub(crate) const GITLINK_PENDING_FORMAT: &str = "vibevm.package-git-link-pending
 pub(crate) const GITLINK_FORMAT: &str = "vibevm.package-git-link/e1";
 pub(crate) const POPULATED_PENDING_FORMAT: &str = "vibevm.package-git-populated-pending/e1";
 pub(crate) const POPULATED_FORMAT: &str = "vibevm.package-git-populated/e1";
-pub(crate) const READY_FORMAT: &str = "vibevm.package-git-ready-seal/e1";
+pub(crate) const READY_FORMAT: &str = "vibevm.package-git-ready-seal/e2";
 pub(crate) const APPROVAL_LINK_PENDING_FORMAT: &str = "vibevm.package-git-approval-link-pending/e1";
 pub(crate) const APPROVAL_LINK_FORMAT: &str = "vibevm.package-git-approval-link/e1";
 pub(crate) const REPO_CREATE_PENDING_FORMAT: &str = "vibevm.package-git-repo-create-pending/e1";
@@ -288,37 +291,6 @@ pub(crate) struct PopulatedLanded {
     pub run_id: String,
     pub pending_sha256: String,
     pub flattened_submodules_sha256: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub(crate) struct ReadySeal {
-    pub format: String,
-    pub run_id: String,
-    pub namespace_id: String,
-    pub scope_context: String,
-    pub scope_target: String,
-    pub scope_principal: String,
-    pub key_sha256: String,
-    pub request_sha256: String,
-    pub c1_plan_sha256: String,
-    pub semantic_plan_sha256: String,
-    pub lease_root_token: String,
-    pub source_root_token: String,
-    pub vault_root_token: String,
-    pub object_root_token: String,
-    pub intent_sha256: String,
-    pub payload_manifest_sha256: String,
-    pub stage_receipt_sha256: String,
-    pub tree_receipt_sha256: String,
-    pub no_gitlinks_pending_sha256: String,
-    pub no_gitlinks_landed_sha256: String,
-    pub parent_pending_sha256: Option<String>,
-    pub parent_landed_sha256: Option<String>,
-    pub object_receipt_sha256: String,
-    pub selected_tree_oid: String,
-    pub selected_commit_oid: String,
-    pub selected_tag_oid: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
