@@ -40,6 +40,7 @@ pub mod github;
 pub mod github_release;
 pub mod gitverse;
 mod orchestrator;
+mod package_git_payload;
 mod package_git_plan;
 pub mod post_hook;
 mod publication_approval;
