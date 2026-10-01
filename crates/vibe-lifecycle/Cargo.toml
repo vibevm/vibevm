@@ -20,6 +20,7 @@ sha2.workspace = true
 specmark.workspace = true
 thiserror.workspace = true
 toml.workspace = true
+tokio = { workspace = true, features = ["process"] }
 # The pure injected-home client-skill path helpers (§6.3.1.7): the three
 # standalone-skill deploy providers call ONLY those, never the ambient
 # directory resolvers the older compatibility APIs carry.

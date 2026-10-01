@@ -10,7 +10,9 @@ use std::process::{Command, Stdio};
 use specmark::spec;
 use thiserror::Error;
 
+mod observed;
 mod package_tree_snapshot;
+pub use observed::*;
 mod scratch;
 mod source_snapshot;
 pub use package_tree_snapshot::{
