@@ -52,6 +52,31 @@
   ],
   "effects": [
     {
+      "interface_id": "rust:vibe-lifecycle:process:source-witnesses",
+      "capability_id": "bounded-script-and-prompt-source-witness",
+      "kind": "introduced",
+      "audience": "Rust library consumer / developer",
+      "platform": "Public API compiled for Linux/macOS/Windows; selected GNU/Linux source tests only, native macOS/Windows behavior unrun.",
+      "before": "No public bounded ScriptSourceWitness/PromptSourceWitness capture and recheck API for the selected source bytes.",
+      "after": "vibe_lifecycle::process publicly re-exports bounded nofollow script and prompt witnesses with capture/recheck functions; these values describe exact source evidence and do not authorize a general protected Validate submission.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-lifecycle:ScriptSourceStage::matches_witness",
+      "capability_id": "public-script-stage-witness-match",
+      "kind": "introduced",
+      "audience": "Rust library consumer / developer",
+      "platform": "Public API compiled for Linux/macOS/Windows; selected GNU/Linux source-stage tests only, native macOS/Windows behavior unrun.",
+      "before": "The existing public ScriptSourceStage lacked a public match operation against a captured script source witness.",
+      "after": "ScriptSourceStage::matches_witness publicly compares the existing retained stage to an exact ScriptSourceWitness; it does not create a new stage publisher or expose the crate-private protected route.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT"
+      ]
+    },
+    {
       "interface_id": "internal:vibe-orchestrator:protected-validate",
       "capability_id": "handler-free-protected-validate-admission",
       "kind": "fixed",
@@ -104,13 +129,13 @@
     }
   ],
   "user_impact": {
-    "state": "no-impact",
-    "reason": "Only crate-private fixed protected Validate routes and refusal boundaries change; ordinary lifecycle and public CLI/MCP are not routed through them, so existing 1.0.x user-owned state needs no migration.",
+    "state": "impact",
+    "reason": "Additive public Rust source-witness capture/recheck and ScriptSourceStage::matches_witness APIs affect library consumers; fixed protected Validate submission remains crate-private and existing 1.0.x user-owned state needs no conversion.",
     "migration_action": "none"
   },
   "documentation_impact": {
     "state": "impact",
-    "reason": "Developer/release architecture guidance should describe the fixed script and hosted-Parked reservation/source-stage/replay boundary, and distinguish it from public or general handler support; final owned topic map remains pending.",
+    "reason": "Developer API guidance should describe the new public bounded script/prompt witness and ScriptSourceStage match contracts, while release architecture guidance distinguishes fixed internal Validate routes from public/general handler support; final owned topic map remains pending.",
     "documentation_action": "update"
   },
   "evidence": [
