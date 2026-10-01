@@ -414,7 +414,7 @@ impl FormatId {
             FormatId::PreviewDocumentationCapture => 1,
             FormatId::PreviewDocumentationMap => 1,
             FormatId::PreviewTransition => 1,
-            FormatId::PublicationEffectPlan => 1,
+            FormatId::PublicationEffectPlan => 2,
             FormatId::PublicationSubject => 1,
             FormatId::ReleaseImpact => 1,
             FormatId::RequirementsReport => 2,

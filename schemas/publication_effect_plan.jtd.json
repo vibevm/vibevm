@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Epoch-one pure partition plan for exact remote publication effects. Remote observations are comparison inputs, not an atomic cross-object CAS or an effect grant.",
+    "description": "Epoch-two pure partition plan binding exact successor release metadata. Remote observations are comparison inputs, not an atomic cross-object CAS or an effect grant.",
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-EFFECT-PLAN" },
     "rustOptions": { "package": "vibe_wire::publication_effect_plan" }
   },
@@ -57,10 +57,16 @@
           "properties": {
             "release_id": { "type": "string", "metadata": { "description": "Canonical decimal u64 remote ID." } },
             "draft": { "type": "boolean" },
+            "prerelease": { "type": "boolean" },
             "tag": { "type": "string" },
+            "target_commitish": { "type": "string" },
             "generation_ref": { "type": "string" },
             "inventory_complete": { "type": "boolean" },
             "assets": { "elements": { "ref": "publication_observed_asset" }, "metadata": { "x-empty": "emit" } }
+          },
+          "optionalProperties": {
+            "name": { "type": "string", "metadata": { "x-default": null } },
+            "body": { "type": "string", "metadata": { "x-default": null } }
           }
         }
       }
@@ -97,6 +103,10 @@
             "action": { "enum": ["create", "replace"], "metadata": { "x-vocabulary": "closed" } },
             "desired_tag": { "type": "string" },
             "desired_draft": { "type": "boolean" },
+            "desired_target_commit": { "type": "string" },
+            "desired_name": { "type": "string" },
+            "desired_body": { "type": "string" },
+            "desired_prerelease": { "type": "boolean" },
             "recovery_ref": { "type": "string" }
           }
         },

@@ -24,7 +24,9 @@ use crate::publication_subject::{
     PublicationSubjectExpectations, publication_subject_digest, require_apply_ready_default_smoke,
     validate_publication_subject,
 };
-use crate::release_manifest::SUPPORTED_DISTRIBUTION_TARGETS;
+use crate::release_manifest::{
+    DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME, SUPPORTED_DISTRIBUTION_TARGETS,
+};
 
 /// Explicit owner selection, independent of an authored plan body.
 pub struct PublicationEffectPlanExpectations<'a> {
@@ -74,6 +76,31 @@ fn invalid(field: impl Into<String>, reason: impl Into<String>) -> PublicationEf
 fn nonblank(field: &str, value: &str) -> Result<(), PublicationEffectPlanError> {
     if value.is_empty() || value.trim() != value || value.chars().any(char::is_control) {
         return Err(invalid(field, "blank, padded or control-bearing text"));
+    }
+    Ok(())
+}
+
+fn draft_name(version: &str) -> String {
+    format!("vibevm {version}")
+}
+
+fn draft_body(version: &str) -> String {
+    format!(
+        "Mutable vibevm {version} distribution. Verify downloads through \
+         `{DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME}`."
+    )
+}
+
+fn bounded_release_text(
+    field: &str,
+    value: &str,
+    cap: usize,
+) -> Result<(), PublicationEffectPlanError> {
+    if value.len() > cap {
+        return Err(invalid(
+            field,
+            "release metadata exceeds bounded byte limit",
+        ));
     }
     Ok(())
 }
@@ -172,6 +199,18 @@ fn validate_remote_observation(
         PublicationObservedRelease::Present(value) => {
             decimal("observed_release.release_id", &value.release_id, true)?;
             nonblank("observed_release.generation_ref", &value.generation_ref)?;
+            nonblank("observed_release.target_commitish", &value.target_commitish)?;
+            bounded_release_text(
+                "observed_release.target_commitish",
+                &value.target_commitish,
+                256,
+            )?;
+            if let Some(name) = &value.name {
+                bounded_release_text("observed_release.name", name, 1024)?;
+            }
+            if let Some(body) = &value.body {
+                bounded_release_text("observed_release.body", body, 256 * 1024)?;
+            }
             if (!value.draft && !allow_replace_published)
                 || value.tag != tag
                 || !value.inventory_complete
@@ -250,6 +289,10 @@ pub fn plan_from_captured_remote(
             },
             desired_tag: tag,
             desired_draft: true,
+            desired_target_commit: subject.source.commit.clone(),
+            desired_name: draft_name(&subject.version),
+            desired_body: draft_body(&subject.version),
+            desired_prerelease: false,
             recovery_ref: "draft-release".into(),
         })),
     ];
@@ -300,7 +343,7 @@ pub fn plan_from_captured_remote(
         },
     )));
     let plan = PublicationEffectPlan {
-        schema: 1,
+        schema: 2,
         subject_sha256,
         target: PublicationRemoteTarget {
             host: expected.host.into(),
@@ -330,7 +373,7 @@ pub fn validate_publication_effect_plan(
         .map_err(|error| PublicationEffectPlanError::Subject(error.to_string()))?;
     let subject_digest = publication_subject_digest(subject, &expected.subject)
         .map_err(|error| PublicationEffectPlanError::Subject(error.to_string()))?;
-    if plan.schema != 1 || plan.subject_sha256 != subject_digest {
+    if plan.schema != 2 || plan.subject_sha256 != subject_digest {
         return Err(invalid(
             "subject_sha256",
             "schema or exact subject digest differs",
@@ -410,6 +453,10 @@ pub fn validate_publication_effect_plan(
     nonblank("partitions[1].recovery_ref", &release_step.recovery_ref)?;
     if release_step.desired_tag != tag
         || !release_step.desired_draft
+        || release_step.desired_target_commit != subject.source.commit
+        || release_step.desired_name != draft_name(&subject.version)
+        || release_step.desired_body != draft_body(&subject.version)
+        || release_step.desired_prerelease
         || !matches!(
             (&plan.observed_release, &release_step.action),
             (
@@ -559,7 +606,7 @@ struct Frames(Sha256);
 impl Frames {
     fn new() -> Self {
         let mut hash = Sha256::new();
-        hash.update(b"vibevm/publication-effect-plan/e1\0");
+        hash.update(b"vibevm/publication-effect-plan/e2\0");
         Self(hash)
     }
 

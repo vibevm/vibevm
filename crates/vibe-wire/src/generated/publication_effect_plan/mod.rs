@@ -2,9 +2,9 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Epoch-one pure partition plan for exact remote publication effects. Remote
-/// observations are comparison inputs, not an atomic cross-object CAS or an
-/// effect grant.
+/// Epoch-two pure partition plan binding exact successor release metadata.
+/// Remote observations are comparison inputs, not an atomic cross-object CAS or
+/// an effect grant.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PublicationEffectPlan {
@@ -81,10 +81,20 @@ pub struct PublicationObservedReleasePresent {
 
     pub inventory_complete: bool,
 
+    pub prerelease: bool,
+
     /// Canonical decimal u64 remote ID.
     pub release_id: String,
 
     pub tag: String,
+
+    pub target_commitish: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub body: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -209,9 +219,17 @@ pub enum PublicationPartitionReleaseAction {
 pub struct PublicationPartitionRelease {
     pub action: PublicationPartitionReleaseAction,
 
+    pub desired_body: String,
+
     pub desired_draft: bool,
 
+    pub desired_name: String,
+
+    pub desired_prerelease: bool,
+
     pub desired_tag: String,
+
+    pub desired_target_commit: String,
 
     pub recovery_ref: String,
 }
