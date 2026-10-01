@@ -411,3 +411,6 @@ fn dispatcher_selects_first_asset_after_two_landed_prefix_calls() {
         }
     );
 }
+
+#[path = "owner_loopback_tests.rs"]
+mod owner_loopback_tests;

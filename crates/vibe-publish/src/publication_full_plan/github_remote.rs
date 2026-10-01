@@ -28,7 +28,7 @@ impl<'a> GithubRemoteReadPort<'a> {
     }
 
     #[cfg(test)]
-    fn new_loopback(client: &'a GithubReleaseClient) -> Result<Self, ObservationError> {
+    pub(super) fn new_loopback(client: &'a GithubReleaseClient) -> Result<Self, ObservationError> {
         if !client.is_fixed_publication_loopback() {
             return Err(ObservationError::Refused(
                 "test GitHub client is not fixed to loopback vibevm/vibevm".into(),
