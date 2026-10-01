@@ -34,16 +34,28 @@
         "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
         "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
       ]
+    },
+    {
+      "interface_id": "rust:vibe-lifecycle:DeployError::ProtectedReservation",
+      "capability_id": "typed-protected-deploy-reservation-refusal",
+      "kind": "introduced",
+      "before": "The public DeployError enum had no ProtectedReservation variant for a C.1/domain-bridge refusal before the first bound deploy effect.",
+      "after": "DeployError::ProtectedReservation is a publicly re-exported typed refusal carrying the reason a protected bound deployment could not prove its reservation; the fixed bridge that emits it remains crate-private. Downstream exhaustive Rust matches over DeployError may require a new arm.",
+      "audience": "Rust library consumer / developer",
+      "platform": "Variant is compiled for Linux/macOS/Windows; selected GNU/Linux bound-deploy tests only, native macOS/Windows bridge behavior unrun.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION"
+      ]
     }
   ],
   "user_impact": {
-    "state": "no-impact",
-    "reason": "Only a crate-private fixed host-admitted deploy path changes; no public CLI/MCP adapter or 1.0.x user-owned state migration is introduced.",
-    "migration_action": "none"
+    "state": "impact",
+    "reason": "A new variant in the public DeployError enum can require manual updates to downstream exhaustive Rust matches; the protected deploy bridge remains crate-private and does not migrate 1.0.x user-owned deployment state.",
+    "migration_action": "manual"
   },
   "documentation_impact": {
     "state": "impact",
-    "reason": "Developer/release architecture should distinguish the fixed reserved deploy bridge and retained partial truth from the ordinary/public routes; final topic mapping pending.",
+    "reason": "Developer API guidance must name the public ProtectedReservation error and exhaustive-match update, while release architecture distinguishes the fixed reserved deploy bridge/partial truth from ordinary public routes; final topic map pending.",
     "documentation_action": "update"
   },
   "evidence": [
