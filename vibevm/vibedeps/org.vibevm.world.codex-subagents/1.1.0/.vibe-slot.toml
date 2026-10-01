@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:e90c7460eba47f76538687acb5b7fc6a7ba47ee9ca2ce87967253eb83becba0a"
+source_hash = "sha256:7f9c7c82d2a45ec89c7b7583ddbb636bff6751f3314eaa04b1f4a29458436d4f"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:a0fb3c8e86a79b326e6b41fd7ee0e583c04b6ea9edeca2d0bc4b529d1e28a8d3"
+derived_hash = "sha256:5605989bc940dfe95dd919a0bd49fbc08d39d61ebcfa7322c064a36376e60327"
 
 [[file]]
 path = "LICENSE.md"
@@ -12,7 +12,7 @@ source = "LICENSE.md"
 
 [[file]]
 path = "README.xml"
-sha256 = "ae12d41f09e9053b1f747401d493fa6b72e59bb34faa81f064fe181d6de7ba66"
+sha256 = "c670c3ea79f1b4d3cfe733c8e6e508395dfef6e3c2dc78e4d16adb45091d6dd6"
 disposition = "converted"
 source = "README.md"
 
@@ -47,6 +47,12 @@ disposition = "copied"
 source = "tests/evidence/2026-10-01-posix-quiet.json"
 
 [[file]]
+path = "tests/evidence/2026-10-01-worker-git-fixture.json"
+sha256 = "155e5c479fc617dfe08f515357720a230a6e41866bd3ae0a5e75d72d3a4cba14"
+disposition = "copied"
+source = "tests/evidence/2026-10-01-worker-git-fixture.json"
+
+[[file]]
 path = "tests/launcher_contract.py"
 sha256 = "ed1d589c84e605294fc36cca9f54ef4689df9cb7a68e6ca880ea117326c57e6e"
 disposition = "copied"
@@ -66,7 +72,7 @@ source = "vibevm/vibespecs/boot/78-tool-codex-subagents.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/codex-subagents/CODEX-SUBAGENTS-PROTOCOL.xml"
-sha256 = "694cc9c84e749605157a2b5ebeca1e1103b44b51084b0a64c2469b44f3fe7729"
+sha256 = "9a1fd2669d0c97e15a13b82f960508e35810a61fa72c0f6fb2eb5f5628740021"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/codex-subagents/CODEX-SUBAGENTS-PROTOCOL.xml"
 
@@ -78,7 +84,7 @@ source = "vibevm/vibespecs/flows/codex-subagents/packet-template.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/codex-subagents/provenance.xml"
-sha256 = "c9ac2b5467098a33d21f52544e5f642d3c91b28b4381e0a37f8df2fd74c636e4"
+sha256 = "a40eccaa8aeca26b6be0f0cdb7deb0dcc2d81f2161155b9355b13097d66c5d3a"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/codex-subagents/provenance.xml"
 
