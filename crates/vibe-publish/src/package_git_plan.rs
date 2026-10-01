@@ -1,12 +1,13 @@
 //! Pure protected package-Git publication identity and recovery comparison.
 //! No C.1 reservation, Git command, RepoCreator call, network, or effect grant.
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 const DOMAIN: &[u8] = b"vibevm/package-git-publication-plan/e1\0";
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) struct PackageCoordinate {
     pub kind: String,
     pub group: String,
@@ -16,14 +17,16 @@ pub(crate) struct PackageCoordinate {
     pub mutable: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) struct HostedRepository {
     pub host: String,
     pub organization: String,
     pub name: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) struct CreationOptions {
     pub description: Option<String>,
     pub homepage: Option<String>,
@@ -31,7 +34,8 @@ pub(crate) struct CreationOptions {
     pub auto_init: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) enum RepositoryTarget {
     HostedCreate {
         repository: HostedRepository,
@@ -42,7 +46,8 @@ pub(crate) enum RepositoryTarget {
     DirectGitExisting { remote_identity_sha256: String },
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) enum RepositoryIdentity {
     Hosted {
         repository: HostedRepository,
@@ -53,19 +58,22 @@ pub(crate) enum RepositoryIdentity {
     },
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) enum RepositoryObservation {
     Absent,
     Present(RepositoryIdentity),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) enum RawRef {
     Absent,
     Present { oid: String },
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) enum TagRef {
     Absent,
     Present {
@@ -74,13 +82,15 @@ pub(crate) enum TagRef {
     },
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) struct RefSnapshot {
     pub main: RawRef,
     pub version_tag: TagRef,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) enum StagedCommit {
     /// New commit whose one parent is the exact observed main, or no parent
     /// when the repository was absent/empty.
@@ -100,7 +110,8 @@ impl StagedCommit {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) struct StagedObjects {
     /// Claimed identities only. A later owner must retain and verify the
     /// actual object bytes/types before this plan can authorize an effect.
@@ -112,7 +123,8 @@ pub(crate) struct StagedObjects {
     pub tag_target_commit_oid: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(crate) struct PackageGitPlan {
     pub package: PackageCoordinate,
     /// Exact selected mutable version ref; never inferred by a transport.

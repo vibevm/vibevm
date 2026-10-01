@@ -33,6 +33,10 @@ fn nested_unicode_empty_directory_and_exact_copy_have_local_receipt_only() {
     fs::write(source.path().join(".git/config"), b"private git state").unwrap();
     fs::write(source.path().join(".gitmodules"), b"[submodule \"x\"]\n").unwrap();
     let complete = stage_local_payload(&input, &output, limits()).unwrap();
+    assert_eq!(
+        inspect_local_payload(&output, limits(), &complete.source_root_token, &complete.tree_sha256),
+        LocalPayloadInspection::Complete(complete.clone())
+    );
     assert_eq!(complete.format, FORMAT);
     assert_eq!(complete.provenance, ProvenanceStatus::NeedsGitlinkCheck);
     assert!(complete.skipped_gitmodules);
@@ -161,6 +165,11 @@ fn interrupted_first_copy_is_partial_and_never_implicitly_retried() {
         })
     ));
     assert!(!destination.path().join(COMPLETE).exists());
+    let source_token = input.root_correlation_token().unwrap();
+    assert_eq!(
+        inspect_local_payload(&output, limits(), &source_token, "sha256:unknown"),
+        LocalPayloadInspection::Incomplete
+    );
     assert!(matches!(
         stage_local_payload(&input, &output, limits()),
         Err(PayloadStageError::Partial {
@@ -168,6 +177,15 @@ fn interrupted_first_copy_is_partial_and_never_implicitly_retried() {
             ..
         })
     ));
+}
+
+#[test]
+fn cold_inspection_rehashes_payload_and_refuses_tampered_bytes() {
+    let (_source, destination, input, output) = projects();
+    let complete = stage_local_payload(&input, &output, limits()).unwrap();
+    fs::write(destination.path().join("payload/vibe.toml"), b"tampered").unwrap();
+    assert!(matches!(inspect_local_payload(&output, limits(), &complete.source_root_token,
+        &complete.tree_sha256), LocalPayloadInspection::Uncertain(_)));
 }
 
 #[test]

@@ -241,6 +241,13 @@ impl LifecycleLease {
     pub fn publication_journal_project(&self) -> &Project {
         &self.project
     }
+
+    /// Borrow the same pinned root for the distinct per-package Git owner.
+    /// Its records live under `.vibe/package-git-operations`; this accessor
+    /// neither creates a second lease nor grants Git or repository effects.
+    pub fn package_git_journal_project(&self) -> &Project {
+        &self.project
+    }
 }
 
 #[cfg(test)]
