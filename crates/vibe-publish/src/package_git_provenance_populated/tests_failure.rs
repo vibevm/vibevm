@@ -55,7 +55,8 @@ fn missing_one_retained_link_landed_refuses_aggregate_cold() {
             None,
             None,
             &binary,
-            limits()
+            limits(),
+            JournalAdmission::Pending
         ),
         AggregateInspection::Uncertain { .. }
     ));

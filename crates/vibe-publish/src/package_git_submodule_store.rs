@@ -3,7 +3,7 @@
 
 use std::path::Path;
 
-use vibe_lifecycle::{LifecycleLease, SubmissionScope};
+use vibe_lifecycle::{JournalAdmission, LifecycleLease, SubmissionScope};
 use vibe_safefs::Project;
 
 use crate::package_git_gitlink::GitlinkCandidate;
@@ -65,10 +65,14 @@ fn prior(
     key: &str,
     package_source: Option<&Project>,
     binary: &Path,
+    admission: JournalAdmission,
 ) -> Result<PendingProof, LinkStoreInspection> {
-    let (status, proof) =
+    let (status, proof) = if admission == JournalAdmission::Ready {
+        package_git_operation::ready_proof_cold(lease, namespace, scope, key, package_source)
+    } else {
         package_git_operation::pending_proof_cold(lease, namespace, scope, key, package_source)
-            .map_err(|error| uncertain(None, error.to_string()))?;
+    }
+    .map_err(|error| uncertain(None, error.to_string()))?;
     let Some(proof) = proof else {
         return match status {
             package_git_operation::PendingInspection::Absent => {
@@ -81,12 +85,23 @@ fn prior(
             }
             other => Err(uncertain(
                 None,
-                format!("C.1 Pending payload unavailable: {other:?}"),
+                format!("C.1 selected payload unavailable: {other:?}"),
             )),
         };
     };
-    match package_git_tree::inspect_tree_cold(lease, namespace, scope, key, package_source, binary)
-    {
+    let tree = if admission == JournalAdmission::Ready {
+        package_git_tree::inspect_tree_ready_cold(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            binary,
+        )
+    } else {
+        package_git_tree::inspect_tree_cold(lease, namespace, scope, key, package_source, binary)
+    };
+    match tree {
         Ok(TreeInspection::TreeCompleteButNotReady { run_id, .. }) if run_id == proof.run_id => {
             Ok(proof)
         }
@@ -136,7 +151,15 @@ fn stage_inner(
     limits: SubmoduleLimits,
     after_object: impl FnMut(usize),
 ) -> LinkStoreInspection {
-    let proof = match prior(lease, namespace, scope, key, Some(package_source), binary) {
+    let proof = match prior(
+        lease,
+        namespace,
+        scope,
+        key,
+        Some(package_source),
+        binary,
+        JournalAdmission::Pending,
+    ) {
         Ok(value) => value,
         Err(status) => return status,
     };
@@ -159,6 +182,7 @@ fn stage_inner(
                 Some(approved_gitdir),
                 binary,
                 limits,
+                JournalAdmission::Pending,
             );
         }
         (Err(error), _, _) | (_, Err(error), _) | (_, _, Err(error)) => {
@@ -301,6 +325,7 @@ fn stage_inner(
         Some(approved_gitdir),
         binary,
         limits,
+        JournalAdmission::Pending,
     )
 }
 
@@ -314,8 +339,17 @@ pub(crate) fn inspect_one_cold(
     approved_gitdir: Option<&Project>,
     binary: &Path,
     limits: SubmoduleLimits,
+    admission: JournalAdmission,
 ) -> LinkStoreInspection {
-    let proof = match prior(lease, namespace, scope, key, package_source, binary) {
+    let proof = match prior(
+        lease,
+        namespace,
+        scope,
+        key,
+        package_source,
+        binary,
+        admission,
+    ) {
         Ok(value) => value,
         Err(status) => return status,
     };
@@ -485,7 +519,15 @@ pub(crate) fn inspect_one_cold(
             "current Gitlink reobservation needs both held source and approved Git dir",
         );
     }
-    match prior(lease, namespace, scope, key, package_source, binary) {
+    match prior(
+        lease,
+        namespace,
+        scope,
+        key,
+        package_source,
+        binary,
+        admission,
+    ) {
         Ok(again)
             if again.run_id == run_id
                 && again.intent_sha256 == proof.intent_sha256
@@ -513,66 +555,8 @@ pub(crate) fn inspect_one_cold(
     }
 }
 
-/// Return exact canonical records only after the source-owned cold inspector
-/// has rehashed the retained byte store. A second inspection brackets reads.
-pub(crate) fn proved_link_receipt(
-    lease: &LifecycleLease,
-    namespace: &str,
-    scope: &SubmissionScope,
-    key: &str,
-    path: &str,
-    package_source: Option<&Project>,
-    approved_gitdir: Option<&Project>,
-    binary: &Path,
-    limits: SubmoduleLimits,
-) -> Result<ProvedLinkReceipt, LinkStoreInspection> {
-    let first = inspect_one_cold(
-        lease,
-        namespace,
-        scope,
-        key,
-        path,
-        package_source,
-        approved_gitdir,
-        binary,
-        limits,
-    );
-    let LinkStoreInspection::ByteStoreCompleteButNotReady { run_id, .. } = first else {
-        return Err(first);
-    };
-    let (pending_name, landed_name) = suffixes(&path_sha(path));
-    let pending_bytes = journal::read_bytes(lease, &run_id, &pending_name)
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
-        .ok_or_else(|| uncertain(Some(&run_id), "proved Gitlink Pending vanished"))?;
-    let landed_bytes = journal::read_bytes(lease, &run_id, &landed_name)
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
-        .ok_or_else(|| uncertain(Some(&run_id), "proved Gitlink Landed vanished"))?;
-    let pending: GitlinkPending = serde_json::from_slice(&pending_bytes)
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?;
-    if pending.path != path
-        || serde_json::to_vec(&pending).ok().as_deref() != Some(pending_bytes.as_slice())
-    {
-        return Err(uncertain(
-            Some(&run_id),
-            "Gitlink Pending changed after cold proof",
-        ));
-    }
-    if !matches!(inspect_one_cold(lease, namespace, scope, key, path, package_source, approved_gitdir, binary, limits), LinkStoreInspection::ByteStoreCompleteButNotReady { run_id: ref again, .. } if again == &run_id)
-        || !matches!(journal::read_bytes(lease, &run_id, &pending_name), Ok(Some(ref now)) if now == &pending_bytes)
-        || !matches!(journal::read_bytes(lease, &run_id, &landed_name), Ok(Some(ref now)) if now == &landed_bytes)
-    {
-        return Err(uncertain(
-            Some(&run_id),
-            "Gitlink records changed during proved receipt read",
-        ));
-    }
-    Ok(ProvedLinkReceipt {
-        path: path.into(),
-        pending_bytes,
-        landed_bytes,
-        pending,
-    })
-}
+mod proof;
+pub(crate) use proof::proved_link_receipt;
 
 #[cfg(test)]
 #[path = "package_git_submodule_store/tests.rs"]
