@@ -34,10 +34,8 @@ pub(crate) enum DraftAssetDigestError {
 }
 
 impl GithubReleaseClient {
-    /// Stream an exact private asset ID through a fixed 64-KiB read window.
-    /// Reqwest's redirect implementation strips Authorization on origin
-    /// changes; the final body is still checked against the caller's exact
-    /// size and digest. No content-sized Vec or owner effect is involved.
+    /// Verify an asset against a caller-known digest. This is read-only
+    /// evidence, not proof that any earlier POST belongs to this run.
     pub(crate) fn verify_draft_asset_digest_streamed(
         &self,
         asset_id: u64,
@@ -45,25 +43,49 @@ impl GithubReleaseClient {
         expected_sha256: &str,
         max_bytes: u64,
     ) -> Result<DraftAssetDigestEvidence, DraftAssetDigestError> {
+        self.stream_draft_asset_digest(asset_id, expected_size, max_bytes, Some(expected_sha256))
+    }
+
+    /// Capture a prior or foreign asset whose GitHub metadata has no digest.
+    /// The complete exact-size body is hashed through one 64-KiB window;
+    /// this witness neither assigns ownership nor grants a remote effect.
+    pub(crate) fn capture_draft_asset_digest_streamed(
+        &self,
+        asset_id: u64,
+        observed_size: u64,
+        max_bytes: u64,
+    ) -> Result<DraftAssetDigestEvidence, DraftAssetDigestError> {
+        self.stream_draft_asset_digest(asset_id, observed_size, max_bytes, None)
+    }
+
+    fn stream_draft_asset_digest(
+        &self,
+        asset_id: u64,
+        observed_size: u64,
+        max_bytes: u64,
+        expected_sha256: Option<&str>,
+    ) -> Result<DraftAssetDigestEvidence, DraftAssetDigestError> {
         const OPERATION: &str = "stream exact draft asset digest";
         if asset_id == 0
             || max_bytes == 0
             || max_bytes > DISTRIBUTION_BUNDLE_MAX_BYTES
-            || expected_size > max_bytes
+            || observed_size > max_bytes
         {
             return Err(DraftAssetDigestError::Refused(
-                "invalid asset ID, expected size or cap",
+                "invalid asset ID, observed size or cap",
             ));
         }
-        let Some(hex) = expected_sha256.strip_prefix("sha256:") else {
-            return Err(DraftAssetDigestError::Refused("invalid expected SHA-256"));
-        };
-        if hex.len() != 64
-            || !hex
-                .bytes()
-                .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
-        {
-            return Err(DraftAssetDigestError::Refused("invalid expected SHA-256"));
+        if let Some(expected) = expected_sha256 {
+            let Some(hex) = expected.strip_prefix("sha256:") else {
+                return Err(DraftAssetDigestError::Refused("invalid expected SHA-256"));
+            };
+            if hex.len() != 64
+                || !hex
+                    .bytes()
+                    .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+            {
+                return Err(DraftAssetDigestError::Refused("invalid expected SHA-256"));
+            }
         }
         let url = self
             .api_url(&["releases", "assets", &asset_id.to_string()])
@@ -72,6 +94,8 @@ impl GithubReleaseClient {
             .authenticated_read_request(Method::GET, url, GITHUB_BINARY, OPERATION)
             .map_err(|_| DraftAssetDigestError::Refused("publish token absent"))?
             .header(ACCEPT_ENCODING, "identity");
+        // Reqwest strips Authorization when a binary GET redirects to a
+        // different origin. The final body is still bounded and hashed here.
         let mut response = self
             .send(request, OPERATION)
             .map_err(|_| DraftAssetDigestError::Uncertain("GET transport or redirect failed"))?;
@@ -95,7 +119,7 @@ impl GithubReleaseClient {
             ));
         }
         if let Some(declared) = response.content_length()
-            && (declared > max_bytes || declared != expected_size)
+            && (declared > max_bytes || declared != observed_size)
         {
             return Err(DraftAssetDigestError::Uncertain(
                 "GET declared size differs or exceeds cap",
@@ -114,7 +138,7 @@ impl GithubReleaseClient {
             count = count
                 .checked_add(read as u64)
                 .ok_or(DraftAssetDigestError::Uncertain("GET byte count overflow"))?;
-            if count > max_bytes || count > expected_size {
+            if count > max_bytes || count > observed_size {
                 return Err(DraftAssetDigestError::Uncertain(
                     "GET body exceeds exact size or cap",
                 ));
@@ -122,7 +146,8 @@ impl GithubReleaseClient {
             hash.update(&buffer[..read]);
         }
         let observed_sha256 = format!("sha256:{:x}", hash.finalize());
-        if count != expected_size || observed_sha256 != expected_sha256 {
+        if count != observed_size || expected_sha256.is_some_and(|wanted| wanted != observed_sha256)
+        {
             return Err(DraftAssetDigestError::Uncertain(
                 "GET body size or digest differs",
             ));

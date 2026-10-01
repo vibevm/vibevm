@@ -202,3 +202,82 @@ fn non_success_or_declared_oversize_never_proves_asset_and_error_hides_token() {
     server.join().unwrap();
     assert!(matches!(error, DraftAssetDigestError::Uncertain(_)));
 }
+
+#[test]
+fn unknown_prior_digest_is_captured_from_exact_fixed_and_chunked_body() {
+    let bytes = vec![0x7a; 131_089];
+    for reply in [fixed_reply("200 OK", &bytes, ""), chunked_reply(&bytes)] {
+        let (url, server) = endpoint(reply);
+        let evidence = client(&url)
+            .capture_draft_asset_digest_streamed(709, bytes.len() as u64, bytes.len() as u64)
+            .unwrap();
+        let seen = server.join().unwrap();
+        assert_eq!(seen.path, "/repos/vibevm/vibevm/releases/assets/709");
+        assert_eq!(seen.authorization, format!("Bearer {TOKEN}"));
+        assert_eq!(evidence.asset_id, 709);
+        assert_eq!(evidence.size_bytes, bytes.len() as u64);
+        assert_eq!(evidence.sha256, sha256_digest(&bytes));
+    }
+}
+
+#[test]
+fn unknown_digest_short_grown_or_missing_body_is_uncertain() {
+    let bytes = vec![0x42; 70_000];
+    let mut short = format!(
+        "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+        bytes.len(),
+    )
+    .into_bytes();
+    short.extend_from_slice(&bytes[..1024]);
+    let (url, server) = endpoint(short);
+    assert!(matches!(
+        client(&url).capture_draft_asset_digest_streamed(
+            709,
+            bytes.len() as u64,
+            bytes.len() as u64,
+        ),
+        Err(DraftAssetDigestError::Uncertain(_))
+    ));
+    server.join().unwrap();
+
+    let (url, server) = endpoint(chunked_reply(&bytes));
+    assert!(matches!(
+        client(&url).capture_draft_asset_digest_streamed(709, 65_536, 65_536,),
+        Err(DraftAssetDigestError::Uncertain(_))
+    ));
+    server.join().unwrap();
+
+    let (url, server) = endpoint(fixed_reply("404 Not Found", b"", ""));
+    assert!(matches!(
+        client(&url).capture_draft_asset_digest_streamed(
+            709,
+            bytes.len() as u64,
+            bytes.len() as u64,
+        ),
+        Err(DraftAssetDigestError::Uncertain(_))
+    ));
+    server.join().unwrap();
+}
+
+#[test]
+fn unknown_digest_invalid_cap_refuses_before_get_and_error_hides_token() {
+    let offline_client = client("http://127.0.0.1:9");
+    for (id, size, cap) in [
+        (0, 1, 1),
+        (709, 2, 1),
+        (709, 1, 0),
+        (709, 1, DISTRIBUTION_BUNDLE_MAX_BYTES + 1),
+    ] {
+        assert!(matches!(
+            offline_client.capture_draft_asset_digest_streamed(id, size, cap),
+            Err(DraftAssetDigestError::Refused(_))
+        ));
+    }
+    let (url, server) = endpoint(fixed_reply("500 Server Error", TOKEN.as_bytes(), ""));
+    let error = client(&url)
+        .capture_draft_asset_digest_streamed(709, 7, 7)
+        .unwrap_err();
+    server.join().unwrap();
+    assert!(matches!(error, DraftAssetDigestError::Uncertain(_)));
+    assert!(!error.to_string().contains(TOKEN));
+}
