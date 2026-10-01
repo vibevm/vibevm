@@ -23,12 +23,14 @@ use crate::github::DEFAULT_GITHUB_API_BASE;
 mod model;
 pub use model::*;
 mod asset;
+pub(crate) use asset::StreamedUploadError;
 mod bounded_read;
 mod protected_calls;
 pub(crate) use protected_calls::{
     DeleteReleaseResponseEvidence, DraftCallFields, DraftResponseEvidence, TagResponseEvidence,
 };
 mod read;
+pub(crate) use read::DraftAssetDigestEvidence;
 
 const GITHUB_JSON: &str = "application/vnd.github+json";
 const GITHUB_BINARY: &str = "application/octet-stream";
