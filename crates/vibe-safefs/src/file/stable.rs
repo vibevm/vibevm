@@ -16,6 +16,7 @@ use crate::publish::{PublishError, Published};
 
 const WINDOW: usize = 64 * 1024;
 
+pub(super) mod held_stream;
 mod new_bounded;
 
 /// Stable identity of one regular single-link file read twice through one

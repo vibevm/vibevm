@@ -38,6 +38,7 @@ pub use identity::FileIdentity;
 pub(crate) use identity::is_not_empty;
 use identity::{file_identity, number_of_links};
 pub use stable::StableFileState;
+pub use stable::held_stream::{StreamCompletion, StreamOutcome, VerifiedStreamReader};
 pub(crate) use stable::unix_mode;
 pub use stream::ContentDigest;
 
