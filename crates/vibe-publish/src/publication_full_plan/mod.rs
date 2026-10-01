@@ -22,6 +22,7 @@ use crate::publication_payload::expected_upload_catalogue;
 
 #[cfg(test)]
 mod approval_join_tests;
+mod calls;
 mod cold;
 mod journal;
 #[cfg(test)]
