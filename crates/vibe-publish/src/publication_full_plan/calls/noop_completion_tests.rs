@@ -551,3 +551,6 @@ fn eof_or_lost_reply_after_pending_is_uncertain_and_cold_attach_never_replays() 
 
 #[path = "terminal_tests.rs"]
 mod terminal_tests;
+
+#[path = "owner_tests.rs"]
+mod owner_tests;

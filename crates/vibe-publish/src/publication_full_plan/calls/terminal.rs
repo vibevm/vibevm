@@ -291,7 +291,7 @@ fn observe(
 }
 
 /// Local terminal seal only. No remote write or retry occurs here.
-fn seal_inner(
+pub(super) fn seal_inner(
     session: &ReadyRun<'_>,
     reader: &mut dyn RemoteReadPort,
 ) -> Result<TerminalInspection> {

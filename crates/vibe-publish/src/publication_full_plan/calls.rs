@@ -34,6 +34,7 @@ mod assets;
 mod driver;
 #[path = "calls/noop_completion.rs"]
 pub(in crate::publication_full_plan) mod noop_completion;
+pub(super) mod owner;
 pub(super) mod terminal;
 
 #[cfg(test)]
