@@ -16,6 +16,7 @@ use crate::publication_payload::{ExpectedUploadCatalogue, expected_upload_catalo
 
 use super::calls::asset_history::{self, AssetInspection};
 use super::calls::noop_completion::{self, NoOpInspection};
+use super::calls::terminal::{self, TerminalInspection};
 use super::calls::{self, CallInspection};
 use super::cold::{self, ColdReadyProof};
 use super::journal;
@@ -71,14 +72,42 @@ impl<'a> ReadyRun<'a> {
             cold::inspect_full_plan_cold_proved(lease, namespace.id(), scope, key, approval_home)?;
         let run_id = match &status {
             Inspection::JournalReady { run_id }
+            | Inspection::CallChainReady { run_id, .. }
             | Inspection::Partial {
                 run_id,
                 uncertain: false,
                 pending: None,
                 ..
             } => run_id.clone(),
+            Inspection::CallChainCompleted { run_id, .. } => {
+                let matches_request = proof.as_ref().is_some_and(|proof| {
+                    proof.capsule.run_id == *run_id
+                        && proof.capsule.subject == *subject
+                        && proof.capsule.plan == *plan
+                        && proof.capsule.publish == expected.publish
+                        && proof.capsule.allow_replace_published == expected.allow_replace_published
+                })
+                    && crate::publication_effect_plan::require_apply_ready_effect_plan(
+                        plan, subject, expected,
+                    )
+                    .is_ok();
+                return Ok(if matches_request {
+                    SessionOpen::Completed {
+                        run_id: run_id.clone(),
+                    }
+                } else {
+                    SessionOpen::RecoveryRequired {
+                        run_id: run_id.clone(),
+                    }
+                });
+            }
             Inspection::Completed { run_id, .. } => {
-                return Ok(SessionOpen::Completed {
+                return Ok(SessionOpen::RecoveryRequired {
+                    run_id: run_id.clone(),
+                });
+            }
+            Inspection::CallChainUncertain { run_id } => {
+                return Ok(SessionOpen::Uncertain {
                     run_id: run_id.clone(),
                 });
             }
@@ -160,7 +189,68 @@ impl<'a> ReadyRun<'a> {
             }
             CallInspection::Next { .. } => {}
         }
-        Ok(SessionOpen::Ready(session))
+        match terminal::inspect_proved(&session)? {
+            TerminalInspection::Completed { .. } => Ok(SessionOpen::Completed {
+                run_id: session.run_id,
+            }),
+            TerminalInspection::Uncertain => Ok(SessionOpen::Uncertain {
+                run_id: session.run_id,
+            }),
+            TerminalInspection::Ready { .. } | TerminalInspection::NotReady => {
+                Ok(SessionOpen::Ready(session))
+            }
+        }
+    }
+
+    /// Construct only from the cold inspector's already validated local proof.
+    /// This avoids recursively calling `open` while cold status is classified.
+    #[allow(clippy::too_many_arguments)]
+    pub(super) fn from_cold_proof(
+        lease: &'a LifecycleLease,
+        namespace: &'a SubmissionNamespace,
+        scope: &'a SubmissionScope,
+        key: &'a str,
+        subject: &'a PublicationSubject,
+        plan: &'a PublicationEffectPlan,
+        expected: &'a PublicationEffectPlanExpectations<'a>,
+        approval_home: &'a ApprovalHome,
+        proof: ColdReadyProof,
+    ) -> Result<Self> {
+        let run_id = proof.capsule.run_id.clone();
+        if proof.capsule.subject != *subject || proof.capsule.plan != *plan {
+            return Err(Error::Refused("cold subject or plan changed".into()));
+        }
+        let catalogue = expected_upload_catalogue(subject, &expected.subject).map_err(Error::io)?;
+        if catalogue.digest != proof.capsule.upload_catalogue_sha256 {
+            return Err(Error::Refused("cold upload catalogue changed".into()));
+        }
+        let vault_name = format!("{run_id}.payloads");
+        let vault = lease
+            .publication_journal_project()
+            .subproject(&[".vibe", "publication-operations", &vault_name])
+            .map_err(Error::io)?;
+        let vault_identity = vault.root_identity().map_err(Error::io)?;
+        let session = Self {
+            lease,
+            namespace,
+            scope,
+            key,
+            run_id,
+            subject,
+            plan,
+            expected,
+            approval_home,
+            proof,
+            catalogue,
+            vault,
+            vault_identity,
+        };
+        session.recheck_small()?;
+        Ok(session)
+    }
+
+    pub(super) fn terminal_proof(&self) -> &ColdReadyProof {
+        &self.proof
     }
 
     /// Cheap correlation recheck under the same lease. It never rehashes all

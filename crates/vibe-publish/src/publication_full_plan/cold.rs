@@ -1,5 +1,7 @@
 //! Read-only cold attachment for production vault and test-only fake lanes.
 
+use super::calls::terminal::{self, TerminalInspection};
+use super::session::ReadyRun;
 use super::*;
 use crate::publication_approval::{ApprovalHome, ColdRedemptionExpectation};
 use crate::publication_payload::vault::{VaultInspection, inspect_payload_vault};
@@ -13,6 +15,7 @@ enum ColdLane {
 
 /// Private, single-constructor evidence from one complete cold validation.
 /// It is an observation, not an effect grant or a durable skip-scan token.
+#[derive(Clone)]
 pub(super) struct ColdReadyProof {
     pub(super) capsule: journal::InputCapsule,
     pub(super) intent: journal::Intent,
@@ -245,15 +248,47 @@ fn inspect_cold(
                     Ok(Some(intent)) if intent == expected_intent => intent,
                     _ => return Ok(unproved(degraded(inspected, run_id))),
                 };
-                Ok((
-                    inspected,
-                    Some(ColdReadyProof {
-                        capsule,
-                        intent,
-                        request_sha256: row.request_sha256,
-                        plan_sha256: row.plan_sha256,
-                    }),
-                ))
+                if !matches!(inspected, Inspection::JournalReady { .. }) {
+                    return Ok(unproved(degraded(inspected, run_id)));
+                }
+                let proof = ColdReadyProof {
+                    capsule: capsule.clone(),
+                    intent,
+                    request_sha256: row.request_sha256,
+                    plan_sha256: row.plan_sha256,
+                };
+                let Some(home) = approval_home else {
+                    return Ok(unproved(Inspection::RecoveryRequired { run_id }));
+                };
+                let session = match ReadyRun::from_cold_proof(
+                    lease,
+                    &namespace,
+                    scope,
+                    key,
+                    &capsule.subject,
+                    &capsule.plan,
+                    &expected,
+                    home,
+                    proof.clone(),
+                ) {
+                    Ok(value) => value,
+                    Err(_) => return Ok(unproved(Inspection::RecoveryRequired { run_id })),
+                };
+                let status = match terminal::inspect_proved(&session) {
+                    Ok(TerminalInspection::NotReady) => inspected,
+                    Ok(TerminalInspection::Ready { calls }) => Inspection::CallChainReady {
+                        run_id: run_id.clone(),
+                        calls,
+                    },
+                    Ok(TerminalInspection::Completed { calls }) => Inspection::CallChainCompleted {
+                        run_id: run_id.clone(),
+                        calls,
+                    },
+                    Ok(TerminalInspection::Uncertain) | Err(_) => Inspection::CallChainUncertain {
+                        run_id: run_id.clone(),
+                    },
+                };
+                Ok((status, Some(proof)))
             } else {
                 Ok(unproved(degraded(inspected, run_id)))
             }

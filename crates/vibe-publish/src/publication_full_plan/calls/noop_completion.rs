@@ -33,10 +33,10 @@ enum Action {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-struct NoOpCall {
-    ordinal: usize,
+pub(super) struct NoOpCall {
+    pub(super) ordinal: usize,
     partition_ordinal: usize,
-    call_id: String,
+    pub(super) call_id: String,
     semantic_plan_sha256: String,
     predecessor_call_id: String,
     action: Action,
@@ -54,13 +54,13 @@ struct Pending {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-struct Landed {
+pub(super) struct Landed {
     format: String,
     run_id: String,
     pending_sha256: String,
     receipt_ref: String,
     after_sha256: String,
-    after: CallObservation,
+    pub(super) after: CallObservation,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -71,7 +71,7 @@ pub(in crate::publication_full_plan) enum NoOpInspection {
     Unavailable,
 }
 
-fn suffix(ordinal: usize, phase: &str) -> String {
+pub(super) fn suffix(ordinal: usize, phase: &str) -> String {
     format!("noop-{ordinal:03}-{phase}")
 }
 
@@ -98,7 +98,7 @@ fn call_id(
     Ok(sha(&bytes))
 }
 
-fn schedule(session: &ReadyRun<'_>) -> Result<Option<[NoOpCall; 2]>> {
+pub(super) fn schedule(session: &ReadyRun<'_>) -> Result<Option<[NoOpCall; 2]>> {
     let cleanup_index = 2 + session.subject.targets.len();
     let Some(PublicationPartition::Cleanup(cleanup)) = session.plan.partitions.get(cleanup_index)
     else {
