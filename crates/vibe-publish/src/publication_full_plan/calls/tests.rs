@@ -103,6 +103,7 @@ impl FakeHost {
                 generation_ref: plan.remote_generation_ref.clone(),
                 tag: plan.observed_tag.clone(),
                 release: plan.observed_release.clone(),
+                latest_release: plan.observed_latest_release.clone(),
             },
             calls: Vec::new(),
             lost_at: None,

@@ -131,6 +131,7 @@ impl World {
             generation_ref: tiny.plan.remote_generation_ref.clone(),
             tag: tiny.plan.observed_tag.clone(),
             release: tiny.plan.observed_release.clone(),
+            latest_release: tiny.plan.observed_latest_release.clone(),
         };
         for call in &prefix.calls {
             let pending = super::super::Pending {
@@ -310,6 +311,7 @@ struct Reader {
     reads: usize,
     fail_at: Option<usize>,
     drift_at: Option<usize>,
+    latest_drift_from: Option<usize>,
 }
 impl RemoteReadPort for Reader {
     fn read_complete(&mut self) -> std::result::Result<RemoteSnapshot, ObservationError> {
@@ -320,6 +322,15 @@ impl RemoteReadPort for Reader {
         let mut row = self.snapshot.borrow().clone();
         if self.drift_at == Some(self.reads) {
             row.release.as_mut().unwrap().body = Some("foreign".into());
+        }
+        if self
+            .latest_drift_from
+            .is_some_and(|first| self.reads >= first)
+        {
+            row.latest = crate::github_release::LatestReleaseObservation::Present {
+                release_id: 102,
+                tag: "v1.0.1".into(),
+            };
         }
         Ok(row)
     }
@@ -340,6 +351,7 @@ fn two_read_only_checkpoints_land_and_survive_cold_attach_without_completion_cla
         reads: 0,
         fail_at: None,
         drift_at: None,
+        latest_drift_from: None,
     };
     assert_eq!(
         drive_one_read_only(&session, &mut reader).unwrap(),
@@ -384,6 +396,7 @@ fn drift_before_cleanup_refuses_without_pending() {
         reads: 0,
         fail_at: None,
         drift_at: None,
+        latest_drift_from: None,
     };
     assert!(matches!(
         drive_one_read_only(&session, &mut reader),
@@ -422,6 +435,7 @@ fn out_of_order_or_post_pending_remote_drift_cannot_advance() {
         reads: 0,
         fail_at: None,
         drift_at: Some(4),
+        latest_drift_from: None,
     };
     assert_eq!(
         drive_one_read_only(&session, &mut reader).unwrap(),
@@ -429,6 +443,36 @@ fn out_of_order_or_post_pending_remote_drift_cannot_advance() {
     );
     assert!(world.record(calls[0].ordinal, "pending").is_some());
     assert!(world.record(calls[0].ordinal, "landed").is_none());
+    drop(session);
+    assert!(matches!(world.open(), SessionOpen::Uncertain { .. }));
+}
+
+#[test]
+fn latest_drift_after_noop_pending_never_lands_or_replays() {
+    let world = World::new();
+    let SessionOpen::Ready(session) = world.open() else {
+        panic!()
+    };
+    let calls = schedule(&session).unwrap().unwrap();
+    let mut reader = Reader {
+        snapshot: world.snapshot.clone(),
+        reads: 0,
+        fail_at: None,
+        drift_at: None,
+        latest_drift_from: Some(3),
+    };
+    assert_eq!(
+        drive_one_read_only(&session, &mut reader).unwrap(),
+        NoOpInspection::Uncertain { step: 0 }
+    );
+    assert!(world.record(calls[0].ordinal, "pending").is_some());
+    assert!(world.record(calls[0].ordinal, "landed").is_none());
+    let reads = reader.reads;
+    assert_eq!(
+        drive_one_read_only(&session, &mut reader).unwrap(),
+        NoOpInspection::Uncertain { step: 0 }
+    );
+    assert_eq!(reader.reads, reads);
     drop(session);
     assert!(matches!(world.open(), SessionOpen::Uncertain { .. }));
 }
@@ -445,6 +489,7 @@ fn eof_or_lost_reply_after_pending_is_uncertain_and_cold_attach_never_replays() 
             reads: 0,
             fail_at: None,
             drift_at: None,
+            latest_drift_from: None,
         };
         if failed_step == 1 {
             assert_eq!(

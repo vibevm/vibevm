@@ -121,6 +121,7 @@ fn drive_one(
         generation_ref: observed.generation_ref,
         tag: observed.tag,
         release: observed.release,
+        latest_release: observed.observed_latest_release,
     };
     let prior_after = if ordinal == 0 {
         None
@@ -133,9 +134,14 @@ fn drive_one(
         .ok_or_else(|| Error::Refused("prior call Landed record vanished".into()))?;
         Some(prior.after)
     };
-    if before.tag != call.expected_tag
+    if before.latest_release != call.expected_latest_release
+        || before.tag != call.expected_tag
         || before.release != call.expected_release
-        || ordinal == 0 && before.generation_ref != session.plan.remote_generation_ref
+        || ordinal == 0
+            && (before.generation_ref != session.plan.remote_generation_ref
+                || before.tag != session.plan.observed_tag
+                || before.release != session.plan.observed_release
+                || before.latest_release != session.plan.observed_latest_release)
         || prior_after.as_ref().is_some_and(|prior| prior != &before)
     {
         return Err(Error::Refused(format!(
@@ -176,6 +182,7 @@ fn drive_one(
         generation_ref: observed.generation_ref,
         tag: observed.tag,
         release: observed.release,
+        latest_release: observed.observed_latest_release,
     };
     if !verified_transition(call, &before, &after, &receipt_id) {
         return Ok(CallInspection::Uncertain { ordinal });

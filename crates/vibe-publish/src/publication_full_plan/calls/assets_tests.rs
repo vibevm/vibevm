@@ -30,6 +30,7 @@ fn publish_prefix(
         generation_ref: plan.remote_generation_ref.clone(),
         tag: plan.observed_tag.clone(),
         release: plan.observed_release.clone(),
+        latest_release: plan.observed_latest_release.clone(),
     };
     for call in &schedule.calls {
         let pending = Pending {
@@ -160,7 +161,7 @@ fn drive(
     host: &mut CallObservation,
     lose_response: bool,
 ) -> Result<FirstPairInspection> {
-    drive_with_drift(world, host, lose_response, false)
+    drive_with_drift(world, host, lose_response, false, false)
 }
 
 fn drive_with_drift(
@@ -168,6 +169,7 @@ fn drive_with_drift(
     host: &mut CallObservation,
     lose_response: bool,
     corrupt_observation: bool,
+    corrupt_latest: bool,
 ) -> Result<FirstPairInspection> {
     let current = world.inspect();
     let (call, release_id, asset_id, before) = match current {
@@ -187,7 +189,7 @@ fn drive_with_drift(
         return Err(Error::Refused("asset preflight remote drift".into()));
     }
     let pending = AssetPending {
-        format: "vibevm.publication.asset-call-pending/e1".into(),
+        format: "vibevm.publication.asset-call-pending/e2".into(),
         run_id: world.run_id.clone(),
         call: call.clone(),
         release_id: release_id.clone(),
@@ -231,8 +233,16 @@ fn drive_with_drift(
         };
         release.assets[0].asset_id = "999".into();
     }
+    if corrupt_latest {
+        observed.latest_release = PublicationObservedLatestRelease::Present(Box::new(
+            vibe_wire::generated::publication_effect_plan::PublicationObservedLatestReleasePresent {
+                release_id: "102".into(),
+                tag: "v1.0.1".into(),
+            },
+        ));
+    }
     let landed = AssetLanded {
-        format: "vibevm.publication.asset-call-landed/e1".into(),
+        format: "vibevm.publication.asset-call-landed/e2".into(),
         run_id: world.run_id.clone(),
         pending_sha256: sha(&serde_json::to_vec(&pending)?),
         receipt_id,
@@ -338,6 +348,21 @@ fn first_fake_asset_pair_lands_only_after_exact_observations() {
 }
 
 #[test]
+fn changed_latest_after_asset_effect_keeps_only_pending() {
+    let world = Ready::new();
+    let mut host = world.host.clone();
+    assert_eq!(
+        drive_with_drift(&world, &mut host, false, false, true).unwrap(),
+        FirstPairInspection::Uncertain
+    );
+    assert_eq!(world.inspect(), FirstPairInspection::Uncertain);
+    assert_eq!(
+        drive(&world, &mut host, false).unwrap(),
+        FirstPairInspection::Uncertain
+    );
+}
+
+#[test]
 fn lost_upload_response_is_uncertain_and_never_renames_or_replays() {
     let world = Ready::new();
     let mut host = world.host.clone();
@@ -365,7 +390,7 @@ fn foreign_post_observation_leaves_only_pending_and_no_rename() {
     let world = Ready::new();
     let mut host = world.host.clone();
     assert_eq!(
-        drive_with_drift(&world, &mut host, false, true).unwrap(),
+        drive_with_drift(&world, &mut host, false, true, false).unwrap(),
         FirstPairInspection::Uncertain
     );
     assert!(

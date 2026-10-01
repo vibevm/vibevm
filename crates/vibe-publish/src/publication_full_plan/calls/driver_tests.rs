@@ -28,6 +28,7 @@ struct FakeState {
     wrong_reply: bool,
     wrong_post_body: bool,
     drift_second_read: bool,
+    latest_after_call: Option<crate::github_release::LatestReleaseObservation>,
 }
 
 fn tag(commit: &str) -> GithubGitRef {
@@ -83,6 +84,7 @@ fn initial(commit: &str, retain_tag: bool, replace_release: bool) -> FakeState {
         wrong_reply: false,
         wrong_post_body: false,
         drift_second_read: false,
+        latest_after_call: None,
     }
 }
 
@@ -111,6 +113,9 @@ impl CallTransport for Transport {
         let mut state = self.0.borrow_mut();
         state.writes.push("create-tag");
         state.snapshot.tag = Some(tag(commit));
+        if let Some(latest) = state.latest_after_call.clone() {
+            state.snapshot.latest = latest;
+        }
         Ok(TagResponseEvidence {
             reference: "refs/tags/v1.1.0".into(),
             object_sha: if state.wrong_reply {
@@ -333,6 +338,81 @@ fn foreign_generation_refuses_before_pending_or_transport() {
         inspect_calls_proved(&session).unwrap(),
         CallInspection::Next { ordinal: 0 }
     ));
+}
+
+#[test]
+fn old_call_record_without_latest_cannot_resume_as_e3() {
+    let fixture = Fixture::new(false, false);
+    let session = fixture.session();
+    let schedule = decompose(session.subject, session.plan, session.expected).unwrap();
+    let before = CallObservation {
+        generation_ref: session.plan.remote_generation_ref.clone(),
+        tag: session.plan.observed_tag.clone(),
+        release: session.plan.observed_release.clone(),
+        latest_release: session.plan.observed_latest_release.clone(),
+    };
+    let pending = Pending {
+        format: PENDING_FORMAT.into(),
+        run_id: session.run_id.clone(),
+        call: schedule.calls[0].clone(),
+        expected_observation_sha256: sha(&serde_json::to_vec(&before).unwrap()),
+        before,
+    };
+    let mut old = serde_json::to_value(pending).unwrap();
+    old["format"] = "vibevm.publication.api-call-pending/e1".into();
+    old["before"]
+        .as_object_mut()
+        .unwrap()
+        .remove("latest_release");
+    journal::publish(session.lease, &session.run_id, &suffix(0, "pending"), &old).unwrap();
+    assert!(matches!(
+        inspect_calls_proved(&session).unwrap(),
+        CallInspection::Uncertain { ordinal: 0 }
+    ));
+    assert!(fixture.state.borrow().writes.is_empty());
+}
+
+#[test]
+fn latest_id_or_tag_drift_refuses_before_pending_and_after_effect_never_lands() {
+    use crate::github_release::LatestReleaseObservation;
+    for foreign in [
+        LatestReleaseObservation::Present {
+            release_id: 102,
+            tag: "v1.0.1".into(),
+        },
+        LatestReleaseObservation::Present {
+            release_id: 101,
+            tag: "v1.0.2".into(),
+        },
+    ] {
+        let before = Fixture::new(false, false);
+        let session = before.session();
+        before.state.borrow_mut().snapshot.latest = foreign.clone();
+        assert!(before.drive(&session).is_err());
+        assert!(before.state.borrow().writes.is_empty());
+        assert!(matches!(
+            inspect_calls_proved(&session).unwrap(),
+            CallInspection::Next { ordinal: 0 }
+        ));
+
+        let after = Fixture::new(false, false);
+        let session = after.session();
+        after.state.borrow_mut().latest_after_call = Some(foreign);
+        assert!(matches!(
+            after.drive(&session).unwrap(),
+            CallInspection::Uncertain { ordinal: 0 }
+        ));
+        assert_eq!(after.state.borrow().writes, ["create-tag"]);
+        assert!(matches!(
+            inspect_calls_proved(&session).unwrap(),
+            CallInspection::Uncertain { ordinal: 0 }
+        ));
+        assert!(matches!(
+            after.drive(&session).unwrap(),
+            CallInspection::Uncertain { ordinal: 0 }
+        ));
+        assert_eq!(after.state.borrow().writes, ["create-tag"]);
+    }
 }
 
 #[test]

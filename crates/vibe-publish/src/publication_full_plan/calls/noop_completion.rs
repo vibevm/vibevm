@@ -1,7 +1,7 @@
 //! Two independent read-only call checkpoints after all 38 asset effects.
 //! Empty Cleanup and RetainDraft perform no remote write. They remain
 //! separately Pending/Landed and a lost read never grants replay or completion.
-//! The remote port does not observe latest_release_id, so these checkpoints
+//! The remote port observes latest ID/tag, but these checkpoints alone
 //! cannot establish the full Finalize transition or FinalResult.
 
 use serde::{Deserialize, Serialize};
@@ -20,9 +20,9 @@ use super::asset_history::{self, AssetInspection};
 use super::assets::{self, AssetLanded};
 use super::{CallObservation, sha};
 
-const DOMAIN: &[u8] = b"vibevm.publication.read-only-call/e1\0";
-const PENDING_FORMAT: &str = "vibevm.publication.noop-pending/e1";
-const LANDED_FORMAT: &str = "vibevm.publication.noop-landed/e1";
+const DOMAIN: &[u8] = b"vibevm.publication.read-only-call/e2\0";
+const PENDING_FORMAT: &str = "vibevm.publication.noop-pending/e2";
+const LANDED_FORMAT: &str = "vibevm.publication.noop-landed/e2";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -286,6 +286,7 @@ fn observed(
         generation_ref: remote.generation_ref,
         tag: remote.tag,
         release: remote.release,
+        latest_release: remote.observed_latest_release,
     })
 }
 

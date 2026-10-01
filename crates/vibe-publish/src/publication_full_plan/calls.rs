@@ -7,9 +7,9 @@ use vibe_lifecycle::{
     JournalAdmission, LifecycleLease, SubmissionNamespace, SubmissionReservations, SubmissionScope,
 };
 use vibe_wire::generated::publication_effect_plan::{
-    PublicationEffectPlan, PublicationObservedRelease, PublicationObservedReleaseAbsent,
-    PublicationObservedTag, PublicationObservedTagPresent, PublicationPartition,
-    PublicationPartitionReleaseAction, PublicationPartitionTagAction,
+    PublicationEffectPlan, PublicationObservedLatestRelease, PublicationObservedRelease,
+    PublicationObservedReleaseAbsent, PublicationObservedTag, PublicationObservedTagPresent,
+    PublicationPartition, PublicationPartitionReleaseAction, PublicationPartitionTagAction,
 };
 use vibe_wire::generated::publication_subject::PublicationSubject;
 
@@ -23,9 +23,9 @@ use super::journal::{self, Intent, sha};
 use super::session::ReadyRun;
 use super::{Error, Result};
 
-const DOMAIN: &[u8] = b"vibevm.publication.api-call/e1\0";
-const PENDING_FORMAT: &str = "vibevm.publication.api-call-pending/e1";
-const LANDED_FORMAT: &str = "vibevm.publication.api-call-landed/e1";
+const DOMAIN: &[u8] = b"vibevm.publication.api-call/e2\0";
+const PENDING_FORMAT: &str = "vibevm.publication.api-call-pending/e2";
+const LANDED_FORMAT: &str = "vibevm.publication.api-call-landed/e2";
 
 mod asset_driver;
 #[path = "calls/asset_history.rs"]
@@ -80,6 +80,7 @@ pub(super) struct PlannedCall {
     pub semantic_plan_sha256: String,
     pub expected_tag: PublicationObservedTag,
     pub expected_release: PublicationObservedRelease,
+    pub expected_latest_release: PublicationObservedLatestRelease,
     pub action: CallAction,
 }
 
@@ -97,6 +98,7 @@ fn call_id(
     action: &CallAction,
     tag: &PublicationObservedTag,
     release: &PublicationObservedRelease,
+    latest_release: &PublicationObservedLatestRelease,
 ) -> Result<String> {
     let mut bytes = Vec::new();
     bytes.extend_from_slice(DOMAIN);
@@ -107,6 +109,7 @@ fn call_id(
         serde_json::to_vec(action)?,
         serde_json::to_vec(tag)?,
         serde_json::to_vec(release)?,
+        serde_json::to_vec(latest_release)?,
     ] {
         bytes.extend_from_slice(&(frame.len() as u64).to_be_bytes());
         bytes.extend_from_slice(&frame);
@@ -153,6 +156,7 @@ pub(super) fn decompose(
             &action,
             &expected_tag,
             &expected_release,
+            &plan.observed_latest_release,
         )?;
         calls.push(PlannedCall {
             ordinal,
@@ -161,6 +165,7 @@ pub(super) fn decompose(
             semantic_plan_sha256: digest.clone(),
             expected_tag,
             expected_release,
+            expected_latest_release: plan.observed_latest_release.clone(),
             action,
         });
         Ok(())
@@ -225,6 +230,7 @@ struct CallObservation {
     generation_ref: String,
     tag: PublicationObservedTag,
     release: PublicationObservedRelease,
+    latest_release: PublicationObservedLatestRelease,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -266,7 +272,9 @@ fn verified_transition(
     after: &CallObservation,
     receipt: &str,
 ) -> bool {
-    if before.tag != call.expected_tag
+    if before.latest_release != call.expected_latest_release
+        || after.latest_release != before.latest_release
+        || before.tag != call.expected_tag
         || before.release != call.expected_release
         || before.generation_ref.is_empty()
         || after.generation_ref.is_empty()
@@ -522,7 +530,12 @@ fn inspect_calls_inner(
             || pending.run_id != run_id
             || pending.call != *call
             || pending.expected_observation_sha256 != sha(&serde_json::to_vec(&pending.before)?)
-            || call.ordinal == 0 && pending.before.generation_ref != plan.remote_generation_ref
+            || call.ordinal == 0
+                && (pending.before.generation_ref != plan.remote_generation_ref
+                    || pending.before.tag != plan.observed_tag
+                    || pending.before.release != plan.observed_release
+                    || pending.before.latest_release != plan.observed_latest_release)
+            || pending.before.latest_release != call.expected_latest_release
             || previous_after
                 .as_ref()
                 .is_some_and(|prior| prior != &pending.before)
