@@ -36,6 +36,10 @@ pub(super) struct InputCapsule {
     pub plan: PublicationEffectPlan,
     pub publish: bool,
     pub allow_replace_published: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub authority_mode: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub authority_ref: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -50,6 +54,10 @@ pub(super) struct Intent {
     pub remote_generation_ref: String,
     pub target: String,
     pub partition_sha256: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub authority_mode: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub authority_ref: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

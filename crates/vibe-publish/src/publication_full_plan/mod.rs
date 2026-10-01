@@ -1,12 +1,12 @@
-//! Private, fake-remote full-plan owner. Every partition has its own durable
-//! Pending/Landed pair under one C.1 run. No live adapter or public entry exists.
+//! Private full-plan owner journal and cold inspection. Only tests dispatch
+//! fake remote partitions; no live adapter or public entry exists.
 
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use vibe_lifecycle::process::propose_run_id;
+#[cfg(test)]
+use vibe_lifecycle::ExistingSubmissionInspection;
 use vibe_lifecycle::{
-    ExistingSubmissionInspection, JournalAdmission, LifecycleLease, ReservationDecision,
-    SubmissionNamespace, SubmissionReservations, SubmissionScope,
+    JournalAdmission, LifecycleLease, SubmissionNamespace, SubmissionReservations, SubmissionScope,
 };
 use vibe_wire::generated::publication_effect_plan::{
     PublicationEffectPlan, PublicationObservedRelease, PublicationObservedTag,
@@ -20,8 +20,11 @@ use crate::publication_effect_plan::{
 };
 
 mod journal;
+mod prepare;
 mod transition;
-use journal::{FinalResult, InputCapsule, Intent, Step, landed_name, pending_name, sha};
+use journal::{FinalResult, Intent, Step, landed_name, pending_name, sha};
+#[cfg(test)]
+use prepare::PreparedJournal;
 
 const C1_CAP: usize = 1024 * 1024;
 
@@ -45,6 +48,9 @@ type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum Inspection {
+    JournalReady {
+        run_id: String,
+    },
     Completed {
         run_id: String,
         partitions: usize,
@@ -84,6 +90,7 @@ pub(crate) struct RemoteObservation {
 /// Only a test fake implements this crate-private port. Its apply call must
 /// compare the exact expected generation atomically before changing state.
 /// GitHub's multi-object API provides no equivalent blanket guarantee.
+#[cfg(test)]
 pub(crate) trait FakePlanPort {
     fn observe(&mut self) -> std::result::Result<RemoteObservation, String>;
     fn apply(
@@ -99,6 +106,10 @@ struct Selected {
     request: Vec<u8>,
     plan_bytes: Vec<u8>,
     intent: Intent,
+    authority_mode: Option<String>,
+    authority_ref: Option<String>,
+    publish: bool,
+    allow_replace_published: bool,
 }
 
 fn select(
@@ -106,17 +117,8 @@ fn select(
     subject: &PublicationSubject,
     plan: &PublicationEffectPlan,
     expected: &PublicationEffectPlanExpectations<'_>,
+    authority: Option<(&str, &str)>,
 ) -> Result<Selected> {
-    if let Some((index, _)) = plan
-        .partitions
-        .iter()
-        .enumerate()
-        .find(|(_, partition)| !transition::supports(partition))
-    {
-        return Err(Error::Refused(format!(
-            "fake remote cannot prove partition {index} before reservation"
-        )));
-    }
     require_apply_ready_effect_plan(plan, subject, expected).map_err(Error::io)?;
     let semantic_plan_sha256 =
         publication_effect_plan_digest(plan, subject, expected).map_err(Error::io)?;
@@ -128,6 +130,16 @@ fn select(
             "host scope differs from fixed publication target".into(),
         ));
     }
+    if authority.is_some_and(|(mode, reference)| {
+        mode != "A"
+            || reference.is_empty()
+            || reference.trim() != reference
+            || reference.chars().any(char::is_control)
+    }) {
+        return Err(Error::Refused("invalid local authority binding".into()));
+    }
+    let authority_mode = authority.map(|(mode, _)| mode.to_owned());
+    let authority_ref = authority.map(|(_, reference)| reference.to_owned());
     let plan_bytes = serde_json::to_vec(plan)?;
     let partition_sha256 = plan
         .partitions
@@ -143,6 +155,8 @@ fn select(
         "partition_sha256": partition_sha256,
         "publish": expected.publish,
         "allow_replace_published": expected.allow_replace_published,
+        "authority_mode": authority_mode,
+        "authority_ref": authority_ref,
     }))?;
     if request.len() > C1_CAP || plan_bytes.len() > C1_CAP {
         return Err(Error::Refused("C.1 payload cap".into()));
@@ -157,11 +171,17 @@ fn select(
         remote_generation_ref: plan.remote_generation_ref.clone(),
         target: scope.target.clone(),
         partition_sha256,
+        authority_mode: authority_mode.clone(),
+        authority_ref: authority_ref.clone(),
     };
     Ok(Selected {
         request,
         plan_bytes,
         intent,
+        authority_mode,
+        authority_ref,
+        publish: expected.publish,
+        allow_replace_published: expected.allow_replace_published,
     })
 }
 
@@ -237,7 +257,11 @@ fn inspect(
             Err(_) => return Ok(partial(run_id, index, Some(index), true)),
         };
         let Some(pending) = pending else {
-            return Ok(partial(run_id, index, None, false));
+            return if index == 0 {
+                Ok(Inspection::JournalReady { run_id })
+            } else {
+                Ok(partial(run_id, index, None, false))
+            };
         };
         if pending != expected_pending(&intent, index, &before.generation_ref) {
             return Ok(Inspection::RecoveryRequired { run_id });
@@ -312,7 +336,7 @@ fn inspect(
 /// The capsule is protected local evidence because authored smoke references
 /// may contain sensitive text even though no asset bytes or token field live
 /// in this record.
-pub(crate) fn inspect_fake_full_plan_cold(
+pub(crate) fn inspect_full_plan_cold(
     lease: &LifecycleLease,
     host_namespace_token: &str,
     scope: &SubmissionScope,
@@ -348,7 +372,14 @@ pub(crate) fn inspect_fake_full_plan_cold(
         publish: capsule.publish,
         allow_replace_published: capsule.allow_replace_published,
     };
-    let selected = match select(scope, &capsule.subject, &capsule.plan, &expected) {
+    if capsule.authority_mode.is_some() != capsule.authority_ref.is_some() {
+        return Ok(Inspection::RecoveryRequired { run_id });
+    }
+    let authority = capsule
+        .authority_mode
+        .as_deref()
+        .zip(capsule.authority_ref.as_deref());
+    let selected = match select(scope, &capsule.subject, &capsule.plan, &expected, authority) {
         Ok(selected) => selected,
         Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
     };
@@ -371,9 +402,20 @@ pub(crate) fn inspect_fake_full_plan_cold(
     )
 }
 
+#[cfg(test)]
+fn inspect_fake_full_plan_cold(
+    lease: &LifecycleLease,
+    host_namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+) -> Result<Inspection> {
+    inspect_full_plan_cold(lease, host_namespace_token, scope, key)
+}
+
 /// Fake-only full plan. A duplicate never calls the port, including after
 /// response loss or an owner process exit. Later partitions remain absent
 /// after uncertainty and cannot be inferred from matching remote bytes.
+#[cfg(test)]
 pub(crate) fn submit_fake_full_plan(
     lease: &LifecycleLease,
     namespace: &SubmissionNamespace,
@@ -384,71 +426,39 @@ pub(crate) fn submit_fake_full_plan(
     expected: &PublicationEffectPlanExpectations<'_>,
     port: &mut dyn FakePlanPort,
 ) -> Result<Inspection> {
-    let selected = select(scope, subject, plan, expected)?;
-    match SubmissionReservations::inspect_existing_request(
+    if let Some((index, _)) = plan
+        .partitions
+        .iter()
+        .enumerate()
+        .find(|(_, partition)| !transition::supports(partition))
+    {
+        return Err(Error::Refused(format!(
+            "fake remote cannot prove partition {index} before reservation"
+        )));
+    }
+    let selected = select(scope, subject, plan, expected, None)?;
+    let prepared = prepare::prepare_journal(
         lease,
         namespace,
         scope,
         key,
-        &selected.request,
-    )? {
-        ExistingSubmissionInspection::RetiredUnreserved => {
-            return Ok(Inspection::Retired { run_id: None });
-        }
-        ExistingSubmissionInspection::Reserved { .. } => {
-            return inspect_fake_full_plan_cold(lease, namespace.id(), scope, key);
-        }
-        ExistingSubmissionInspection::Absent => {}
-    }
-    let before = port.observe().map_err(Error::io)?;
-    if !initial_matches(&before, plan) {
-        return Err(Error::Refused(
-            "captured remote precondition changed before reservation".into(),
-        ));
-    }
-    let run_id = propose_run_id(lease.root())?;
-    if !matches!(SubmissionReservations::reserve(lease, namespace, scope, key,
-        &selected.request, &selected.plan_bytes, &run_id)?,
-        ReservationDecision::Created { domain_run_id } if domain_run_id == run_id)
-    {
-        return Err(Error::Refused(
-            "fresh full-plan reservation was not Created".into(),
-        ));
-    }
-    let mut intent = selected.intent;
-    intent.run_id = run_id.clone();
-    let request_json = String::from_utf8(selected.request).map_err(Error::io)?;
-    let capsule = InputCapsule {
-        format: journal::INPUT_FORMAT.into(),
-        run_id: run_id.clone(),
-        context: scope.context.clone(),
-        target: scope.target.clone(),
-        principal: scope.principal.clone(),
-        key_sha256: sha(key.as_bytes()),
-        request_json,
-        subject: subject.clone(),
-        plan: plan.clone(),
-        publish: expected.publish,
-        allow_replace_published: expected.allow_replace_published,
-    };
-    if journal::publish_input(lease, &run_id, &capsule).is_err()
-        || !matches!(journal::read_input(lease, &run_id), Ok(Some(ref row)) if row == &capsule)
-        || journal::publish(lease, &run_id, "intent", &intent).is_err()
-        || !matches!(journal::read::<Intent>(lease, &run_id, "intent"), Ok(Some(ref row)) if row == &intent)
-        || SubmissionReservations::mark_journal_ready(lease, namespace, scope, key, &run_id)
-            .is_err()
-        || !matches!(
-            SubmissionReservations::journal_admission(lease, namespace, scope, key, &run_id),
-            Ok(JournalAdmission::Ready)
-        )
-    {
-        return Ok(Inspection::RecoveryRequired { run_id });
-    }
-    let reservation_ref =
-        match SubmissionReservations::reservation_ref(lease, namespace, scope, key, &run_id) {
-            Ok(value) => value,
-            Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
+        subject,
+        plan,
+        selected,
+        || port.observe().map_err(Error::io),
+    )?;
+    let PreparedJournal::New {
+        run_id,
+        intent,
+        reservation_ref,
+        before,
+    } = prepared
+    else {
+        let PreparedJournal::Existing(inspection) = prepared else {
+            unreachable!()
         };
+        return Ok(inspection);
+    };
     let mut current = before;
     let mut landed_hashes = Vec::with_capacity(plan.partitions.len());
     for (index, partition) in plan.partitions.iter().enumerate() {
