@@ -8,7 +8,7 @@ use std::process::Command;
 mod output;
 pub(crate) use output::{bounded_output, porcelain_receipt};
 
-struct LocalBarePort {
+pub(super) struct LocalBarePort {
     remote: tempfile::TempDir,
     remote_project: Project,
     objects: Project,
@@ -32,21 +32,56 @@ struct LocalBarePort {
 
 impl LocalBarePort {
     fn new(world: &World, approval_id: &str) -> Self {
-        let proof = proved(
-            &world.home,
-            &world.lease,
-            &world.namespace,
-            &world.scope,
-            "approval",
-            Some(&world.source),
-            None,
-            &world.binary,
-            limits(),
+        Self::new_run(
+            &FakeRun {
+                home: &world.home,
+                lease: &world.lease,
+                namespace: &world.namespace,
+                scope: &world.scope,
+                key: "approval",
+                package_source: &world.source,
+                local_bare_source: None,
+                binary: &world.binary,
+                limits: limits(),
+            },
+            approval_id,
+        )
+    }
+
+    pub(super) fn new_run(input: &FakeRun<'_>, approval_id: &str) -> Self {
+        Self::new_profile(
+            &ProfileRun {
+                home: input.home,
+                lease: input.lease,
+                namespace: input.namespace,
+                scope: input.scope,
+                key: input.key,
+                package_source: input.package_source,
+                binary: input.binary,
+                profile: ReadyProfile::NoGitlinks {
+                    limits: input.limits,
+                    local_bare_source: input.local_bare_source,
+                },
+            },
+            approval_id,
+        )
+    }
+
+    pub(super) fn new_profile(input: &ProfileRun<'_>, approval_id: &str) -> Self {
+        let proof = proved_profile(
+            input.home,
+            input.lease,
+            input.namespace,
+            input.scope,
+            input.key,
+            Some(input.package_source),
+            input.binary,
+            input.profile,
             approval_id,
         )
         .unwrap();
         let remote = tempfile::tempdir().unwrap();
-        let result = Command::new(&world.binary)
+        let result = Command::new(input.binary)
             .env_clear()
             .env("GIT_CONFIG_NOSYSTEM", "1")
             .env("GIT_TERMINAL_PROMPT", "0")
@@ -62,10 +97,10 @@ impl LocalBarePort {
             String::from_utf8_lossy(&result.stderr)
         );
         let remote_project = Project::open(remote.path()).unwrap();
-        let objects = journal::objects(&world.lease, &world.run_id, false)
+        let objects = journal::objects(input.lease, proof.run(), false)
             .unwrap()
             .unwrap();
-        let git = LocalGit::new(&world.binary, &objects, proof.plan.oid_hex_len).unwrap();
+        let git = LocalGit::new(input.binary, &objects, proof.plan.oid_hex_len).unwrap();
         for reference in ["refs/heads/main", proof.plan.version_tag_ref.as_str()] {
             let output = git
                 .command(&["show-ref", "--verify", reference], true)
@@ -81,7 +116,7 @@ impl LocalBarePort {
             remote,
             remote_project,
             objects,
-            binary: world.binary.clone(),
+            binary: input.binary.to_path_buf(),
             identity: proof.repository,
             oid_len: proof.plan.oid_hex_len,
             version_tag_ref: proof.plan.version_tag_ref,
@@ -273,6 +308,16 @@ impl LocalBarePort {
                 _ => return Err("partial annotated tag observation".into()),
             },
         })
+    }
+
+    pub(super) fn calls(&self) -> usize {
+        self.calls
+    }
+    pub(super) fn exact_refs(&self) -> RefSnapshot {
+        self.read_refs().unwrap()
+    }
+    pub(super) fn race_desired_main(&mut self) {
+        self.desired_before_protected_push = Some("main");
     }
 }
 
