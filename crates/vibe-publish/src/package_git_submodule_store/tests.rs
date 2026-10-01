@@ -333,7 +333,8 @@ fn one_gitlink_import_lands_and_cold_survives_source_loss() {
             None,
             None,
             &binary,
-            limits()
+            limits(),
+            JournalAdmission::Pending
         ),
         LinkStoreInspection::ByteStoreCompleteButNotReady {
             source_reobserved: false,
@@ -390,7 +391,8 @@ fn sha256_gitlink_import_keeps_selected_object_format() {
             None,
             None,
             &binary,
-            limits()
+            limits(),
+            JournalAdmission::Pending
         ),
         LinkStoreInspection::ByteStoreCompleteButNotReady {
             source_reobserved: false,
@@ -444,7 +446,8 @@ fn missing_retained_blob_refuses_source_less_cold() {
             None,
             None,
             &binary,
-            limits()
+            limits(),
+            JournalAdmission::Pending
         ),
         LinkStoreInspection::Uncertain { .. }
     ));
@@ -499,7 +502,8 @@ fn mid_import_source_drift_leaves_pending_only_and_never_reimports() {
             None,
             None,
             &binary,
-            limits()
+            limits(),
+            JournalAdmission::Pending
         ),
         LinkStoreInspection::Uncertain { .. }
     ));

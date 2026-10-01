@@ -373,7 +373,8 @@ fn two_link_aggregate_lands_and_cold_survives_source_loss() {
             None,
             None,
             &binary,
-            limits()
+            limits(),
+            JournalAdmission::Pending
         ),
         AggregateInspection::AggregateCompleteButNotReady {
             run_id: world.run_id.clone(),
@@ -467,7 +468,8 @@ fn full_index_drift_after_pending_stays_uncertain_without_landed() {
             None,
             None,
             &binary,
-            limits()
+            limits(),
+            JournalAdmission::Pending
         ),
         AggregateInspection::Uncertain { .. }
     ));
@@ -512,7 +514,8 @@ fn tampered_aggregate_landed_refuses_historical_cold() {
             None,
             None,
             &binary,
-            limits()
+            limits(),
+            JournalAdmission::Pending
         ),
         AggregateInspection::Uncertain { .. }
     ));
@@ -572,6 +575,9 @@ fn pre_c1_semantic_digest_is_order_independent_but_complete() {
     links[1] = links[0].clone();
     assert!(semantic_digest(&duplicate_index, &comparisons[..2]).is_err());
 }
+
+#[path = "tests_ready.rs"]
+mod tests_ready;
 
 #[path = "tests_failure.rs"]
 mod tests_failure;
