@@ -138,7 +138,7 @@ fn observed(
 /// Exactly one selected UploadTemporary or RenameTemporary. Pending is
 /// create-new/read back before any transport call. A later attach sees Pending
 /// and never retries based on an identical remote asset.
-fn drive_one(
+pub(super) fn drive_one(
     session: &ReadyRun<'_>,
     reader: &mut dyn RemoteReadPort,
     transport: &dyn AssetCallTransport,

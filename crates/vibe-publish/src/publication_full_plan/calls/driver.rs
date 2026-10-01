@@ -100,7 +100,7 @@ fn callback_identity(call: &PlannedCall, transport: &dyn CallTransport) -> Optio
 /// Exactly one call. A missing or damaged callback after Pending is uncertain,
 /// even if a later observer sees the desired bytes; it never retries or
 /// advances to a subsequent call on that evidence alone.
-fn drive_one(
+pub(super) fn drive_one(
     session: &ReadyRun<'_>,
     reader: &mut dyn RemoteReadPort,
     transport: &dyn CallTransport,
