@@ -1,0 +1,89 @@
+schema = 1
+source_hash = "sha256:e90c7460eba47f76538687acb5b7fc6a7ba47ee9ca2ce87967253eb83becba0a"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:a0fb3c8e86a79b326e6b41fd7ee0e583c04b6ea9edeca2d0bc4b529d1e28a8d3"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "ae12d41f09e9053b1f747401d493fa6b72e59bb34faa81f064fe181d6de7ba66"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "launchers/codex-worker"
+sha256 = "d75a7b45bbe439bfe2f5e99efc337fbc27410996e215a3dffe76a0f0ecb0538e"
+disposition = "copied"
+source = "launchers/codex-worker"
+
+[[file]]
+path = "launchers/codex-worker.cmd"
+sha256 = "5cac7ea7552b2310bf7c81f0aa77e9954be134244aa4dff17c7fe91d5bee1c71"
+disposition = "copied"
+source = "launchers/codex-worker.cmd"
+
+[[file]]
+path = "launchers/codex-worker.ps1"
+sha256 = "b97c8bba5981bc5c93cd1cba8ad979cead7e76fa1b7e9d89c69045d6c476a06f"
+disposition = "copied"
+source = "launchers/codex-worker.ps1"
+
+[[file]]
+path = "tests/evidence/2026-10-01-linux-install.json"
+sha256 = "2dc64461a21b67db4e399b6dbbfad96134303a6b5bfb44e511c161d2663fbf42"
+disposition = "copied"
+source = "tests/evidence/2026-10-01-linux-install.json"
+
+[[file]]
+path = "tests/evidence/2026-10-01-posix-quiet.json"
+sha256 = "3c8b33951667fe9aa7395d7bfe8698c58f6400826b8c765e1ea0dd169267bbe3"
+disposition = "copied"
+source = "tests/evidence/2026-10-01-posix-quiet.json"
+
+[[file]]
+path = "tests/launcher_contract.py"
+sha256 = "ed1d589c84e605294fc36cca9f54ef4689df9cb7a68e6ca880ea117326c57e6e"
+disposition = "copied"
+source = "tests/launcher_contract.py"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "290950924f96cd49d90537e8b761d3c3289d32c98db5235c4d992d41108adace"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/78-tool-codex-subagents.xml"
+sha256 = "bb4efe2029886e95f30d68ce306c6fdd2820707480266ea0165e3f7a4159172b"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/78-tool-codex-subagents.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/codex-subagents/CODEX-SUBAGENTS-PROTOCOL.xml"
+sha256 = "694cc9c84e749605157a2b5ebeca1e1103b44b51084b0a64c2469b44f3fe7729"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/codex-subagents/CODEX-SUBAGENTS-PROTOCOL.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/codex-subagents/packet-template.xml"
+sha256 = "d741d117e9be679fe9047b50a1cdfe8b5d40b090c08c2442d4e948b9a3937384"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/codex-subagents/packet-template.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/codex-subagents/provenance.xml"
+sha256 = "c9ac2b5467098a33d21f52544e5f642d3c91b28b4381e0a37f8df2fd74c636e4"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/codex-subagents/provenance.xml"
+
+[[file]]
+path = "vibevm/vibespecs/manual-tests/MT-01-codex-subagents.xml"
+sha256 = "00907fa1bc57a0a6701352fa8b165503c7df9b26e693644850d5917e770b4907"
+disposition = "copied"
+source = "vibevm/vibespecs/manual-tests/MT-01-codex-subagents.xml"

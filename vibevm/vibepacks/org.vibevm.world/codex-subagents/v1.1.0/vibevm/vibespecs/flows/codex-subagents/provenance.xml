@@ -26,10 +26,22 @@
     zero and emitted no tool calls. Requested settings were gpt-6.1-sol/medium;
     resolved model and effective effort were absent from the JSONL metadata and
     remain unverified. Sanitized evidence lives in
-    tests/evidence/2026-10-01-posix-quiet.json. Native Windows, macOS and receipt
-    deployment remain UNRUN. No account identity or credential values are evidence
+    tests/evidence/2026-10-01-posix-quiet.json. Native Windows and macOS remain UNRUN. No account identity or credential values are evidence
     artifacts. This CLI result does not establish native-harness boot behavior.
     </CLI-DISCOVERY></p>
+    <p><LINUX-INSTALLED-USE fact="true" status="impl/done">
+    On 2026-10-01 VibeVM 1.1.0 installed this mutable 1.1.0 package offline
+    and deployed the POSIX launcher with a verified reversible user receipt.
+    The compact installed boot entry was unique and 28 lines. A real read-only
+    Codex CLI worker, requested as gpt-6.1-sol/medium, checked root requirement,
+    lock version, source/slot/deployed launcher byte equality, manifest identity,
+    and boot pointer: five checks passed, child exit zero, no full boot or writes.
+    Its search context exposed adjacent lines around named sections; this is
+    recorded rather than presented as mechanical read confinement. Runtime
+    model/effort metadata remain unverified. Sanitized evidence is retained in
+    tests/evidence/2026-10-01-linux-install.json. Windows/macOS execution is not
+    inferred from this Linux receipt.
+    </LINUX-INSTALLED-USE></p>
   </history>
   <decisions title="Adaptations and excluded assumptions">
     <p><OFFICIAL-REFERENCES fact="true" status="spec/done">

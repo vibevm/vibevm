@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Codex subagents — provenance and evidence limits</title>
+  <status stage="spec" state="done"/>
+  <history title="Historical sources">
+    <p><GLM-BASELINE fact="true" status="spec/done">
+    The zai-glm-claude 1.1.0 protocol, packet template, provenance, manifest and boot snippet
+    supplied the portable parent/worker lifecycle: narrow packets, scoped cwd, visible
+    unstaged work, early reports, real exits, exact-process observation, preservation on
+    failure and parent acceptance. They are historical design inputs, not live dependencies or
+    provider authorization.
+    </GLM-BASELINE></p>
+    <p><QUIET-INCIDENT fact="true" status="spec/done">
+    The host AGENTS.md ledger records a 2026-08-30 incident: plain codexrunner exec
+    auto-loaded AGENTS.md and began the full roughly 145k-token boot before reading a quiet
+    packet. A strict-config/ignore-user-config/project_doc_max_bytes=0 retry respected named
+    inputs. The historical model/effort were gpt-5.6-sol/xhigh; those settings do not become
+    this package defaults.
+    </QUIET-INCIDENT></p>
+    <p><CLI-DISCOVERY fact="true" status="spec/done">
+    On 2026-10-01 local CLI 0.159.3 accepted the launcher options. POSIX fake-child
+    contract tests passed 10/10. A live Linux read-only probe on an independently
+    authenticated home returned QUIET_PROBE_OK with project_doc_max_bytes=0;
+    the same conditional prompt with project_doc_max_bytes=4096 returned
+    AUTO_BOOT_SENTINEL_PRESENT from automatically loaded AGENTS.md. Both exited
+    zero and emitted no tool calls. Requested settings were gpt-6.1-sol/medium;
+    resolved model and effective effort were absent from the JSONL metadata and
+    remain unverified. Sanitized evidence lives in
+    tests/evidence/2026-10-01-posix-quiet.json. Native Windows and macOS remain UNRUN. No account identity or credential values are evidence
+    artifacts. This CLI result does not establish native-harness boot behavior.
+    </CLI-DISCOVERY></p>
+    <p><LINUX-INSTALLED-USE fact="true" status="impl/done">
+    On 2026-10-01 VibeVM 1.1.0 installed this mutable 1.1.0 package offline
+    and deployed the POSIX launcher with a verified reversible user receipt.
+    The compact installed boot entry was unique and 28 lines. A real read-only
+    Codex CLI worker, requested as gpt-6.1-sol/medium, checked root requirement,
+    lock version, source/slot/deployed launcher byte equality, manifest identity,
+    and boot pointer: five checks passed, child exit zero, no full boot or writes.
+    Its search context exposed adjacent lines around named sections; this is
+    recorded rather than presented as mechanical read confinement. Runtime
+    model/effort metadata remain unverified. Sanitized evidence is retained in
+    tests/evidence/2026-10-01-linux-install.json. Windows/macOS execution is not
+    inferred from this Linux receipt.
+    </LINUX-INSTALLED-USE></p>
+  </history>
+  <decisions title="Adaptations and excluded assumptions">
+    <p><OFFICIAL-REFERENCES fact="true" status="spec/done">
+    The official configuration reference at
+    https://learn.chatgpt.com/docs/config-file/config-reference documents
+    project_doc_max_bytes and model_reasoning_effort. Authentication at
+    https://learn.chatgpt.com/docs/auth documents file-based credential storage
+    under CODEX_HOME and interactive login. The GPT-6.1 Sol model page at
+    https://developers.openai.com/api/docs/models/gpt-6.1-sol documents medium
+    reasoning support; that does not establish any particular account's quota.
+    Local CLI help and the live sentinel control are separate implementation evidence.
+    </OFFICIAL-REFERENCES></p>
+    <p><ISOLATION-CHANGE fact="true" status="spec/done">
+    This contract requires explicit absolute isolated CODEX_WORKER_HOME, file ChatGPT login
+    and clearing inherited Codex/OpenAI auth/session routing. It does not inherit the GLM
+    token source, endpoint, persistent Claude home, subscription entitlement or model routing.
+    Account files, account-specific paths and token contents are never package artifacts.
+    </ISOLATION-CHANGE></p>
+    <p><QUIET-CHANGE fact="true" status="spec/done">
+    The marker moves to the first line of both packet and launch pointer. Parent-owned named
+    rule selection and packet-defect stops replace implicit full boot. CLI suppression
+    prevents instruction loading; it does not prove filesystem confinement. Native tools need
+    separate host support.
+    </QUIET-CHANGE></p>
+    <p><BOUNDING-CHANGE fact="true" status="spec/done">
+    One observable outcome plus a closed contract defines boundedness. Token/line ceilings do
+    not replace semantic scope or permit dropping hard requirements. Narrow meaningful oracles
+    are mandatory; broad suites are not universal package law. Mutation checks are used only
+    for suspicious cases or material false-green risk.
+    </BOUNDING-CHANGE></p>
+    <p><REQUEST-CHANGE fact="true" status="spec/done">
+    The new default requests gpt-6.1-sol at medium. Model requests, worker self-report and a
+    successful fake CLI do not prove executed model or effective effort. Live metadata is
+    reported only when actually observed.
+    </REQUEST-CHANGE></p>
+    <p><EXCLUDED fact="true" status="spec/done">
+    Repository Cargo limits, campaign priorities, stewardship state, branch conventions,
+    provider billing assumptions, quotas, account identity and host-specific model reserves
+    remain outside the installed contract. Historical retired launchers need not be invoked or
+    their secrets inspected.
+    </EXCLUDED></p>
+  </decisions>
+</spec>

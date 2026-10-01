@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-09-29T06:44:10Z"
+generated_at = "2026-10-01T19:02:05Z"
 schema_version = 7
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.1.0",
@@ -10,6 +10,7 @@ root_dependencies = [
     "org.vibevm.world/redbook@^1.1.0",
     "stack:org.vibevm.ai-native/rust-ai-native@^1.1.0",
     "stack:org.vibevm.ai-native/typescript-ai-native@^1.1.0",
+    "tool:org.vibevm.world/codex-subagents@^1.1.0",
 ]
 
 [[package]]
@@ -129,13 +130,25 @@ admitted_by = "root-edge"
 source_kind = "registry"
 
 [[package]]
+kind = "tool"
+name = "codex-subagents"
+group = "org.vibevm.world"
+version = "1.1.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.world/codex-subagents/v1.1.0"
+content_hash = "sha256:e90c7460eba47f76538687acb5b7fc6a7ba47ee9ca2ce87967253eb83becba0a"
+files_written = []
+admitted_by = "root-edge"
+source_kind = "registry"
+
+[[package]]
 kind = "flow"
 name = "core-ai-native"
 group = "org.vibevm.ai-native"
 version = "1.1.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0"
-content_hash = "sha256:21997b142f588e44fef4413c2585c223c3ddfef0a1ca6062794a94a118bf2345"
+content_hash = "sha256:3df2c1782ebe2e7d9ef8ae9c46692975e0a2c7ac6c708cd97e93c6440f275786"
 files_written = []
 admitted_by = "public-chain"
 source_kind = "registry"
@@ -147,7 +160,7 @@ group = "org.vibevm.ai-native"
 version = "1.1.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0"
-content_hash = "sha256:c7ea1269429329b18d7cd314823ddf83f8dae573886dc4688cfffb7c025c41be"
+content_hash = "sha256:5d3d568d30ed002d5c2cf01b7b4a00956c49502c968be7baa271f577e38d9c73"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.1.0"]
 admitted_by = "public-chain"
@@ -160,7 +173,7 @@ group = "org.vibevm.ai-native"
 version = "1.1.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0"
-content_hash = "sha256:b860928059b0183c7ecc08482cb13da0a247055f81aa47dcac14e4242d015b09"
+content_hash = "sha256:43ba49f9d5779cf703faebd327fd0a9214ea3672d9bdda19ffe65e90634c9db8"
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/rust-ai-native-lang@=1.1.0"]
 admitted_by = "public-chain"
@@ -173,7 +186,7 @@ group = "org.vibevm.ai-native"
 version = "1.1.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0"
-content_hash = "sha256:15c0c51db40f0a3e05e686ade6aacaff68ad811acf0a63ef6e2fb9765a2b2fd9"
+content_hash = "sha256:6a455dd6e55105da11abd2a83981fa87ad697899b1a56165b4035551dae24c7a"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.1.0"]
 admitted_by = "public-chain"
@@ -186,7 +199,7 @@ group = "org.vibevm.ai-native"
 version = "1.1.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0"
-content_hash = "sha256:a0e37e4c53ce81c84a937e4f6c0d1ac76fba0e9c4e66c1b11394e42e54f9e7ff"
+content_hash = "sha256:ddcaac23d26ff78bc6bfd10aa7302372e64a11464fbd3275220db55f96ccf1ea"
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/typescript-ai-native-lang@=1.1.0"]
 admitted_by = "public-chain"
