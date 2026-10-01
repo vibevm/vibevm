@@ -48,6 +48,10 @@ mod plan;
 mod prelude;
 mod world;
 
+#[cfg(test)]
+#[path = "retained_mechanism_attach_tests.rs"]
+mod retained_mechanism_attach_tests;
+
 pub use callback::after_durable_world_stage;
 pub use command::{
     DefaultLifecyclePorts, DefaultLifecycleRequest, LeasedDefaultLifecycle,

@@ -104,6 +104,7 @@ pub mod native;
 pub use legacy_hooks::SyntheticHookIdentity;
 pub mod process;
 mod registry;
+pub mod retained_mechanism;
 mod runner;
 mod state;
 
