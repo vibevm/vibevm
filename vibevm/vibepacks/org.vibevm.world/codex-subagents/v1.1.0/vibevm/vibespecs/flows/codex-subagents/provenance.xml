@@ -42,6 +42,20 @@
     tests/evidence/2026-10-01-linux-install.json. Windows/macOS execution is not
     inferred from this Linux receipt.
     </LINUX-INSTALLED-USE></p>
+    <p><WORKER-ORACLE-ENVIRONMENT fact="true" status="impl/done">
+    A 2026-10-01 Linux CLI 0.159.3 workspace-write worker delivered a bounded
+    approval-link implementation but all 13 ordinary runtime cases failed before
+    changed code in a no-Git fixture. Its view contained /tmp/.git while the
+    parent view did not; Git toplevel discovery exited 128. The guarded census
+    correctly refused to assume no repository when it saw ancestor metadata.
+    The parent reproduced the exact same code: ordinary 13/13 and populated
+    1/1 passed. The worker's populated case and production check also passed.
+    Sandbox and oracles were unchanged. The cause of the extra metadata's
+    projection remains unverified; it is not evidence of a real Git repository.
+    This is an environment-specific oracle limit, not a general permission
+    bypass or a substitute for runtime tests. Sanitized evidence lives in
+    tests/evidence/2026-10-01-worker-git-fixture.json.
+    </WORKER-ORACLE-ENVIRONMENT></p>
   </history>
   <decisions title="Adaptations and excluded assumptions">
     <p><OFFICIAL-REFERENCES fact="true" status="spec/done">

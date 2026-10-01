@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-01",
+  "platform": "linux",
+  "cli_version": "0.159.3",
+  "worker_sandbox": "workspace-write",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "medium",
+  "worker_ordinary_gate": {
+    "exit": 101,
+    "passed": 0,
+    "failed": 13,
+    "failure_phase": "unchanged no-Git provenance fixture before modified helper"
+  },
+  "parent_same_tree_gate": {
+    "exit": 0,
+    "passed": 13,
+    "failed": 0
+  },
+  "worker_populated_gate": {
+    "exit": 0,
+    "passed": 1
+  },
+  "parent_populated_gate": {
+    "exit": 0,
+    "passed": 1
+  },
+  "metadata_observation": {
+    "worker_tmp_git_exists": true,
+    "parent_tmp_git_exists": false,
+    "scratch_git_exists": false,
+    "git_toplevel_exit": 128
+  },
+  "disposition": "Parent reproduced required runtime oracles and accepted the bounded code change; sandbox/oracles unchanged",
+  "namespace_projection_cause": "Unverified; do not infer a real Git repository from visible marker alone",
+  "full_boot_loaded": false,
+  "credential_values_recorded": false
+}

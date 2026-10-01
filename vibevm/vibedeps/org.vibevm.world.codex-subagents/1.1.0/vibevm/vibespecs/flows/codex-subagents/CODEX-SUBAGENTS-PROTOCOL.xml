@@ -142,6 +142,15 @@
     needs a positive control when emptiness could be vacuous. Capture the real exit directly.
     Do not weaken, delete or broaden an oracle merely to obtain green output.
     </ORACLES></p>
+    <p><ORACLE-ENVIRONMENT fact="true" status="spec/done">
+    Record a failed gate in the actual worker environment. If it fails before
+    the changed subject, diagnose only the relevant environment assumptions and
+    reproduce the same tree through the accepting parent's runner. A packet may
+    assign environment-sensitive gates to that parent without weakening the
+    oracle or silently changing sandbox policy. A worker reports those gates
+    blocked or pending; compile success is not their runtime verdict. Parent
+    acceptance requires the missing evidence, not an invented green result.
+    </ORACLE-ENVIRONMENT></p>
     <p><MUTATIONS fact="true" status="spec/done">
     Mutation checks are reserved for suspicious or material false-green cases; they are not
     compulsory for every task. Run only the named temporary mutation within the authorized

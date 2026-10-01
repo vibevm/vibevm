@@ -86,5 +86,10 @@ only in `provenance.xml`; this package has no GLM subscription, model routing
 or campaign dependency. A sanitized record of the executed checks is in
 `tests/evidence/2026-10-01-posix-quiet.json`.</p>
     <p>Installation/use evidence: `tests/evidence/2026-10-01-linux-install.json`.</p>
+    <p>A Linux CLI workspace-write run exposed an extra ancestor Git metadata marker
+to a no-Git fixture. That family's worker gate failed before changed code while
+the parent's identical-tree run passed. Bind such environment-sensitive oracles
+explicitly to the parent; retain the worker sandbox and report missing evidence.
+See `tests/evidence/2026-10-01-worker-git-fixture.json`.</p>
   </section>
 </spec>

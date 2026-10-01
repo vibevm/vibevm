@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-10-01T19:02:05Z"
+generated_at = "2026-10-01T19:31:10Z"
 schema_version = 7
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.1.0",
@@ -136,7 +136,7 @@ group = "org.vibevm.world"
 version = "1.1.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///home/olegchir/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.world/codex-subagents/v1.1.0"
-content_hash = "sha256:e90c7460eba47f76538687acb5b7fc6a7ba47ee9ca2ce87967253eb83becba0a"
+content_hash = "sha256:7f9c7c82d2a45ec89c7b7583ddbb636bff6751f3314eaa04b1f4a29458436d4f"
 files_written = []
 admitted_by = "root-edge"
 source_kind = "registry"
