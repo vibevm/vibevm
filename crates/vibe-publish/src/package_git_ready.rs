@@ -1,5 +1,4 @@
 //! C.1 Ready retains exact local bytes; it never grants repository or Git effects.
-
 use std::path::Path;
 
 use vibe_lifecycle::{
@@ -19,7 +18,8 @@ use crate::package_git_provenance::{self, ProvenanceInspection};
 use crate::package_git_tree::{self, TreeInspection};
 
 const SEAL: &str = "ready";
-mod populated;
+pub(crate) mod populated;
+pub(crate) mod profile;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum ReadyInspection {
