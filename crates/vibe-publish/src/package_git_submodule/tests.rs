@@ -24,6 +24,7 @@ fn git(binary: &Path, cwd: &Path, args: &[&str]) -> String {
         .env("LC_ALL", "C")
         .env("HOME", cwd)
         .env("USERPROFILE", cwd)
+        .env("PATH", binary.parent().unwrap())
         .args(args)
         .output()
         .unwrap();
@@ -33,6 +34,35 @@ fn git(binary: &Path, cwd: &Path, args: &[&str]) -> String {
         String::from_utf8_lossy(&out.stderr)
     );
     String::from_utf8(out.stdout).unwrap().trim().into()
+}
+fn retained_store(binary: &Path, checkout: &Path, oid_len: usize) -> (tempfile::TempDir, Project) {
+    let root = tempfile::tempdir().unwrap();
+    if oid_len == 64 {
+        git(
+            binary,
+            root.path(),
+            &["init", "--bare", "-q", "--object-format=sha256"],
+        );
+    } else {
+        git(binary, root.path(), &["init", "--bare", "-q"]);
+    }
+    let source = checkout.join(".git");
+    git(
+        binary,
+        root.path(),
+        &[
+            "fetch",
+            "--depth=1",
+            "--no-tags",
+            "--no-write-fetch-head",
+            "--no-recurse-submodules",
+            "--",
+            source.to_str().unwrap(),
+            "HEAD:refs/byteonly/selected",
+        ],
+    );
+    let project = Project::open(root.path()).unwrap();
+    (root, project)
 }
 fn limits() -> SubmoduleLimits {
     SubmoduleLimits {
@@ -469,4 +499,20 @@ fn sha256_parent_and_submodule_object_formats_are_compared_raw() {
         ),
         SubmoduleInspection::ExactCandidate { files: 1, .. }
     ));
+    let (_store_root, store) = retained_store(&binary, &world.checkout, 64);
+    assert!(matches!(
+        compare_retained_byte_store(
+            &vault,
+            &manifest,
+            &store,
+            &selected.path,
+            &selected.indexed_oid,
+            &binary,
+            limits()
+        ),
+        RawInspection::Exact(RawComparison { files: 1, .. })
+    ));
 }
+
+#[path = "tests_retained.rs"]
+mod tests_retained;

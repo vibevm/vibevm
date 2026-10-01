@@ -46,6 +46,32 @@ pub(crate) struct MetadataBlob {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct RawComparison {
+    pub object_root_token: String,
+    pub indexed_commit_oid: String,
+    pub commit_tree_oid: String,
+    pub commit_sha256: String,
+    pub vault_subtree_sha256: String,
+    pub files: usize,
+    pub directories: usize,
+    pub total_raw_bytes: u64,
+    pub omitted_gitmodules: Vec<MetadataBlob>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum RawInspection {
+    Exact(RawComparison),
+    Unavailable(String),
+    Drift(String),
+}
+
+#[derive(Clone, Copy)]
+enum StoreKind<'a> {
+    ApprovedCheckout,
+    RetainedByteOnly { commit_oid: &'a str },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum SubmoduleInspection {
     ExactCandidate {
         path: String,
@@ -149,17 +175,7 @@ fn git_probe(binary: &Path, checkout: &Project, args: &[&str], cap: usize) -> Re
 }
 
 fn checkout_project(package: &Project, path: &str, max_path: usize) -> Result<Project> {
-    if path.is_empty() || path.len() > max_path {
-        bail!("Gitlink path exceeds host-selected cap");
-    }
-    let components: Vec<&str> = path.split('/').collect();
-    if components
-        .iter()
-        .any(|part| part.is_empty() || *part == "." || *part == ".." || part.contains('\\'))
-    {
-        bail!("Gitlink path is not a normalized source directory");
-    }
-    package.subproject(&components)
+    package.subproject(&tree::normalized_path(path, max_path)?)
 }
 
 fn gitdir_project(
@@ -224,10 +240,24 @@ fn gitdir_project(
     Ok(approved_token)
 }
 
-fn no_external_sources(gitdir: &Project, limits: SubmoduleLimits) -> Result<()> {
+fn no_external_sources(
+    gitdir: &Project,
+    limits: SubmoduleLimits,
+    kind: StoreKind<'_>,
+) -> Result<()> {
     let root = gitdir.root_dir()?;
     if gitdir.child_kind_nofollow(&root, "shallow")?.is_some() {
-        bail!("submodule Git dir is shallow");
+        match kind {
+            StoreKind::ApprovedCheckout => bail!("source submodule Git dir is shallow"),
+            StoreKind::RetainedByteOnly { commit_oid } => {
+                let bytes = gitdir
+                    .read_file_bounded_in(&root, "shallow", limits.max_git_output_bytes)?
+                    .context("byte-only shallow marker vanished")?;
+                if bytes != format!("{commit_oid}\n").into_bytes() {
+                    bail!("byte-only shallow marker differs from exact selected commit");
+                }
+            }
+        }
     }
     if gitdir
         .child_kind_nofollow(&root, ".no-global-config")?
@@ -358,6 +388,82 @@ fn commit_tree(
     Ok((tree, witness.sha256))
 }
 
+fn raw_compare(
+    vault: &Project,
+    manifest: &CompleteManifest,
+    store: &Project,
+    path: &str,
+    commit_oid: &str,
+    binary: &Path,
+    limits: SubmoduleLimits,
+    kind: StoreKind<'_>,
+) -> Result<RawComparison> {
+    tree::normalized_path(path, limits.max_path_bytes)?;
+    if !matches!(commit_oid.len(), 40 | 64)
+        || !commit_oid
+            .bytes()
+            .all(|b| b.is_ascii_digit() || matches!(b, b'a'..=b'f'))
+    {
+        bail!("selected submodule commit OID is malformed");
+    }
+    let store_token = store.root_correlation_token()?;
+    root_unchanged(store, &store_token)?;
+    checked_manifest(vault, manifest, &manifest.source_root_token)?;
+    no_external_sources(store, limits, kind)?;
+    let git = LocalGit::new(binary, store, commit_oid.len())?;
+    let (tree_oid, commit_sha256) = commit_tree(&git, commit_oid, limits)?;
+    let rows = tree::selected_vault_rows(&manifest.files, &manifest.directories, path)?;
+    let mut compared = tree::compare(&git, &tree_oid, rows, limits)?;
+    compared.metadata.sort_by(|a, b| a.path.cmp(&b.path));
+    root_unchanged(store, &store_token)?;
+    no_external_sources(store, limits, kind)?;
+    checked_manifest(vault, manifest, &manifest.source_root_token)?;
+    Ok(RawComparison {
+        object_root_token: store_token,
+        indexed_commit_oid: commit_oid.into(),
+        commit_tree_oid: tree_oid,
+        commit_sha256,
+        vault_subtree_sha256: compared.digest,
+        files: compared.files,
+        directories: compared.directories,
+        total_raw_bytes: compared.total_raw_bytes,
+        omitted_gitmodules: compared.metadata,
+    })
+}
+
+/// Historical byte comparison only. The caller must separately prove where
+/// this retained store came from before using it as publication provenance.
+pub(crate) fn compare_retained_byte_store(
+    vault: &Project,
+    manifest: &CompleteManifest,
+    retained_store: &Project,
+    path: &str,
+    commit_oid: &str,
+    binary: &Path,
+    limits: SubmoduleLimits,
+) -> RawInspection {
+    if !trusted_binary(binary) || !limits_valid(limits) {
+        return RawInspection::Unavailable(
+            "trusted Git binary or explicit raw-byte limits unavailable".into(),
+        );
+    }
+    match raw_compare(
+        vault,
+        manifest,
+        retained_store,
+        path,
+        commit_oid,
+        binary,
+        limits,
+        StoreKind::RetainedByteOnly { commit_oid },
+    ) {
+        Ok(value) => RawInspection::Exact(value),
+        Err(error) => RawInspection::Unavailable(format!(
+            "retained raw byte comparison unavailable: {error:#}"
+        )),
+    }
+}
+
 pub(crate) fn compare_one(
     package: &Project,
     vault: &Project,
@@ -403,7 +509,7 @@ fn compare_inner(
         let checkout = checkout_project(package, &candidate.path, limits.max_path_bytes)?;
         let checkout_token = checkout.root_correlation_token()?;
         let gitdir_token = gitdir_project(&checkout, approved_gitdir, binary, limits)?;
-        no_external_sources(approved_gitdir, limits)?;
+        no_external_sources(approved_gitdir, limits, StoreKind::ApprovedCheckout)?;
         let git = LocalGit::new(binary, approved_gitdir, candidate.indexed_oid.len())?;
         let head = git.output(
             &["rev-parse", "--verify", "HEAD^{commit}"],
@@ -415,32 +521,26 @@ fn compare_inner(
         {
             bail!("submodule HEAD differs from indexed Gitlink");
         }
-        let (tree_oid, commit_sha) = commit_tree(&git, &candidate.indexed_oid, limits)?;
-        let rows =
-            tree::selected_vault_rows(&manifest.files, &manifest.directories, &candidate.path)?;
-        let mut compared = tree::compare(&git, &tree_oid, rows, limits)?;
-        compared.metadata.sort_by(|a, b| a.path.cmp(&b.path));
+        let compared = raw_compare(
+            vault,
+            manifest,
+            approved_gitdir,
+            &candidate.path,
+            &candidate.indexed_oid,
+            binary,
+            limits,
+            StoreKind::ApprovedCheckout,
+        )?;
         Ok((
             package_token,
             index,
             checkout,
             checkout_token,
             gitdir_token,
-            tree_oid,
-            commit_sha,
             compared,
         ))
     })();
-    let (
-        package_token,
-        index,
-        checkout,
-        checkout_token,
-        gitdir_token,
-        tree_oid,
-        commit_sha,
-        compared,
-    ) = match initial {
+    let (package_token, index, checkout, checkout_token, gitdir_token, compared) = match initial {
         Ok(value) => value,
         Err(error) => {
             return SubmoduleInspection::Unavailable(format!(
@@ -453,7 +553,7 @@ fn compare_inner(
         root_unchanged(package, &package_token)?;
         root_unchanged(&checkout, &checkout_token)?;
         root_unchanged(approved_gitdir, &gitdir_token)?;
-        no_external_sources(approved_gitdir, limits)?;
+        no_external_sources(approved_gitdir, limits, StoreKind::ApprovedCheckout)?;
         if indexed_candidate(package, binary, candidate, limits)? != index {
             bail!("full package Gitlink index changed during raw-byte comparison");
         }
@@ -473,14 +573,14 @@ fn compare_inner(
         index_gitlink_count: index.links.len(),
         index_repository_root_token: index.repository_root_token,
         index_package_prefix: index.package_prefix,
-        commit_tree_oid: tree_oid,
-        commit_sha256: commit_sha,
+        commit_tree_oid: compared.commit_tree_oid,
+        commit_sha256: compared.commit_sha256,
         git_dir_root_token: gitdir_token,
-        vault_subtree_sha256: compared.digest,
+        vault_subtree_sha256: compared.vault_subtree_sha256,
         files: compared.files,
         directories: compared.directories,
         total_raw_bytes: compared.total_raw_bytes,
-        omitted_gitmodules: compared.metadata,
+        omitted_gitmodules: compared.omitted_gitmodules,
     }
 }
 
