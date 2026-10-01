@@ -14,6 +14,7 @@ pub(super) const REQUEST_FORMAT: &str = "vibevm.package-git-request/e1";
 pub(crate) const TREE_FORMAT: &str = "vibevm.package-git-tree/e1";
 pub(crate) const PROVENANCE_FORMAT: &str = "vibevm.package-git-no-gitlinks/e1";
 pub(crate) const PROVENANCE_PENDING_FORMAT: &str = "vibevm.package-git-no-gitlinks-pending/e1";
+pub(crate) const OBJECT_FORMAT: &str = "vibevm.package-git-control-objects/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -112,6 +113,28 @@ pub(crate) struct ProvenanceReceipt {
     pub source_root_token: String,
     pub flattened_submodules_sha256: String,
     pub evidence: NoGitlinksEvidence,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ObjectReceipt {
+    pub format: String,
+    pub run_id: String,
+    pub c1_plan_sha256: String,
+    pub semantic_plan_sha256: String,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+    pub tree_receipt_sha256: String,
+    pub provenance_receipt_sha256: String,
+    pub object_root_token: String,
+    pub root_tree_oid: String,
+    pub oid_hex_len: usize,
+    pub commit_oid: String,
+    pub commit_size_bytes: usize,
+    pub commit_sha256: String,
+    pub tag_oid: String,
+    pub tag_size_bytes: usize,
+    pub tag_sha256: String,
 }
 
 pub(crate) fn sha(bytes: &[u8]) -> String {

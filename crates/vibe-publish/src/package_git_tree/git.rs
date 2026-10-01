@@ -11,7 +11,7 @@ use vibe_safefs::{Project, StreamOutcome};
 use crate::package_git_operation::journal::TreeFile;
 use crate::package_git_payload::FileRow;
 
-pub(super) struct LocalGit<'a> {
+pub(crate) struct LocalGit<'a> {
     binary: &'a Path,
     objects: &'a Project,
     oid_len: usize,
@@ -21,7 +21,7 @@ impl<'a> LocalGit<'a> {
     /// Probe SHA-256 support in a disposable repository before the retained
     /// object root is created. An init failure later is partial-state trouble,
     /// never evidence that the host simply lacks this format.
-    pub(super) fn probe_sha256(binary: &Path) -> Result<bool> {
+    pub(crate) fn probe_sha256(binary: &Path) -> Result<bool> {
         let scratch = tempfile::tempdir()?;
         let template = scratch.path().join("empty-template");
         std::fs::create_dir(&template)?;
@@ -56,7 +56,7 @@ impl<'a> LocalGit<'a> {
         }
         Ok(command.status()?.success())
     }
-    pub(super) fn new(binary: &'a Path, objects: &'a Project, oid_len: usize) -> Result<Self> {
+    pub(crate) fn new(binary: &'a Path, objects: &'a Project, oid_len: usize) -> Result<Self> {
         if !binary.is_absolute() || !matches!(oid_len, 40 | 64) {
             bail!("trusted Git binary must be absolute and object algorithm selected");
         }
@@ -84,6 +84,8 @@ impl<'a> LocalGit<'a> {
             .env("LANG", "C")
             .env("GIT_TERMINAL_PROMPT", "0")
             .env("GIT_CONFIG_NOSYSTEM", "1")
+            .env("GIT_NO_REPLACE_OBJECTS", "1")
+            .env("GIT_OPTIONAL_LOCKS", "0")
             .env(
                 "GIT_CONFIG_GLOBAL",
                 self.objects.root_path().join(".no-global-config"),
@@ -175,6 +177,58 @@ impl<'a> LocalGit<'a> {
             bail!("Git returned a malformed or foreign-format OID");
         }
         Ok(oid.into())
+    }
+
+    /// Read-only occupancy check. A prior orphaned object cannot be silently
+    /// attributed to this staging attempt merely because its bytes match.
+    pub(crate) fn object_present(&self, oid: &str) -> Result<bool> {
+        self.oid(format!("{oid}\n").as_bytes())?;
+        let line = self.output(
+            &["cat-file", "--batch-check"],
+            format!("{oid}\n").as_bytes(),
+            128,
+        )?;
+        if line == format!("{oid} missing\n").into_bytes() {
+            return Ok(false);
+        }
+        let text = std::str::from_utf8(&line)?;
+        if !text.starts_with(&format!("{oid} ")) || !text.ends_with('\n') {
+            bail!("Git object occupancy response malformed");
+        }
+        Ok(true)
+    }
+
+    pub(crate) fn write_control_object(&self, kind: &str, bytes: &[u8]) -> Result<String> {
+        if !matches!(kind, "commit" | "tag") || bytes.len() > 16 * 1024 {
+            bail!("unsupported or oversized Git control object");
+        }
+        self.oid(&self.output(&["hash-object", "-t", kind, "-w", "--stdin"], bytes, 128)?)
+    }
+
+    pub(crate) fn verify_control_object(
+        &self,
+        kind: &str,
+        oid: &str,
+        expected: &[u8],
+    ) -> Result<String> {
+        if !matches!(kind, "commit" | "tag") || expected.len() > 16 * 1024 {
+            bail!("unsupported or oversized Git control object");
+        }
+        self.oid(format!("{oid}\n").as_bytes())?;
+        if self.output(&["cat-file", "-t", oid], &[], 32)? != format!("{kind}\n").into_bytes() {
+            bail!("retained Git control object has wrong type");
+        }
+        if self.output(&["cat-file", "-s", oid], &[], 32)?
+            != format!("{}\n", expected.len()).into_bytes()
+        {
+            bail!("retained Git control object has wrong size");
+        }
+        let actual = self.output(&["cat-file", kind, oid], &[], expected.len())?;
+        let hash = format!("sha256:{:x}", Sha256::digest(&actual));
+        if actual != expected {
+            bail!("retained Git control object bytes differ from e2 plan");
+        }
+        Ok(hash)
     }
 
     pub(super) fn init(&self) -> Result<()> {
