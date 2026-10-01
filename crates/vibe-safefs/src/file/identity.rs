@@ -11,6 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
 use std::path::Path;
 
 use anyhow::{Context, Result};
+use sha2::{Digest, Sha256};
 
 /// Opaque OS identity: volume + file index on Windows, device and inode on
 /// Unix. Equality is public; the platform representation is not.
@@ -44,6 +45,17 @@ impl FileIdentity {
         bytes[..8].copy_from_slice(&self.volume.to_be_bytes());
         bytes[8..].copy_from_slice(&self.index.to_be_bytes());
         bytes
+    }
+
+    /// Same-host, detection-bound correlation evidence for a previously
+    /// pinned root. It is neither an authority nor a secret. Device/inode or
+    /// volume/file-index reuse can produce an ABA match after replacement;
+    /// another host's token is not comparable even if the spelling matches.
+    pub(crate) fn root_correlation_token(self) -> String {
+        let mut hash = Sha256::new();
+        hash.update(b"vibevm/safefs/root-correlation/e1\0");
+        hash.update(self.identity_bytes());
+        format!("sha256:{:x}", hash.finalize())
     }
 
     pub(crate) const fn same_filesystem(self, other: Self) -> bool {

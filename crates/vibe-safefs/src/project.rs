@@ -157,6 +157,13 @@ impl Project {
         self.root_dir()?.identity()
     }
 
+    /// Opaque same-host correlation for this held root. Reopen through a
+    /// trusted caller path and compare tokens to detect ordinary replacement;
+    /// this is not a portable authority or a defence against identity reuse.
+    pub fn root_correlation_token(&self) -> Result<String> {
+        Ok(self.root_identity()?.root_correlation_token())
+    }
+
     /// Retain an existing descendant as its own project capability. This
     /// walks from the held root without an ambient path reopen and records
     /// each added ancestor identity for explicit later comparisons. Holding
