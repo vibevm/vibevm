@@ -184,8 +184,8 @@ pub(super) fn decompose_asset_calls(
     Ok(calls)
 }
 
-const PENDING_FORMAT: &str = "vibevm.publication.asset-call-pending/e1";
-const LANDED_FORMAT: &str = "vibevm.publication.asset-call-landed/e1";
+pub(super) const PENDING_FORMAT: &str = "vibevm.publication.asset-call-pending/e1";
+pub(super) const LANDED_FORMAT: &str = "vibevm.publication.asset-call-landed/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
