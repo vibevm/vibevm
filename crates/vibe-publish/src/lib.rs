@@ -53,6 +53,7 @@ mod package_git_provenance_populated;
 mod package_git_push;
 mod package_git_ready;
 mod package_git_repo_create;
+mod package_git_result;
 mod package_git_submodule;
 mod package_git_submodule_store;
 mod package_git_tree;
