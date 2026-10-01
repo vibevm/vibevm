@@ -20,8 +20,12 @@ use crate::publication_effect_plan::{
 };
 use crate::publication_payload::expected_upload_catalogue;
 
+#[cfg(test)]
+mod approval_join_tests;
 mod cold;
 mod journal;
+#[cfg(test)]
+mod local_tests;
 mod prepare;
 #[cfg(test)]
 use cold::inspect_fake_full_plan_cold;
@@ -197,6 +201,8 @@ fn select(
         upload_catalogue_sha256: upload_catalogue_sha256.clone(),
         root_correlation_token: root_correlation_token.clone(),
         vault_manifest_sha256: None,
+        redemption_marker_sha256: None,
+        approval_record_sha256: None,
     };
     Ok(Selected {
         request,

@@ -43,6 +43,10 @@ pub(super) struct InputCapsule {
     pub root_correlation_token: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vault_manifest_sha256: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub redemption_marker_sha256: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub approval_record_sha256: Option<String>,
     pub publish: bool,
     pub allow_replace_published: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -67,6 +71,10 @@ pub(super) struct Intent {
     pub root_correlation_token: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vault_manifest_sha256: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub redemption_marker_sha256: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub approval_record_sha256: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub authority_mode: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]

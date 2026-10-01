@@ -89,6 +89,18 @@ pub(crate) struct VerifiedApproval {
     expires_at_unix: u64,
 }
 
+impl VerifiedApproval {
+    pub(crate) fn authority_id(&self) -> &str {
+        &self.approval_id
+    }
+    pub(crate) fn plan_sha256(&self) -> &str {
+        &self.plan_sha256
+    }
+    pub(crate) fn record_sha256(&self) -> &str {
+        &self.record_sha256
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct RedemptionReceipt {
     pub run_id: String,
@@ -105,6 +117,7 @@ pub(crate) struct ColdRedemptionExpectation<'a> {
     pub plan_sha256: &'a str,
     pub c1_plan_sha256: &'a str,
     pub request_sha256: &'a str,
+    pub approval_record_sha256: &'a str,
 }
 
 fn sha(bytes: &[u8]) -> String {
@@ -151,6 +164,11 @@ fn canonical<T: Serialize + for<'de> Deserialize<'de>>(bytes: &[u8]) -> Result<T
     }
     Ok(value)
 }
+
+#[cfg(test)]
+mod test_support;
+#[cfg(test)]
+pub(crate) use test_support::lose_next_redemption_reply;
 
 impl ApprovalHome {
     /// Resolve the one canonical per-user settings directory from the trusted
@@ -281,6 +299,10 @@ impl ApprovalHome {
         canonical_request: &[u8],
         verified: &VerifiedApproval,
     ) -> Result<RedemptionReceipt, ApprovalError> {
+        #[cfg(test)]
+        let lose_reply = test_support::take_reply_loss();
+        #[cfg(not(test))]
+        let lose_reply = false;
         self.redeem_inner(
             lease,
             namespace,
@@ -290,7 +312,7 @@ impl ApprovalHome {
             canonical_request,
             verified,
             host_now()?,
-            false,
+            lose_reply,
         )
     }
 
@@ -462,6 +484,7 @@ impl ApprovalHome {
             || plan_name(expected.c1_plan_sha256).is_err()
             || plan_name(expected.request_sha256).is_err()
             || plan_name(expected.marker_sha256).is_err()
+            || plan_name(expected.approval_record_sha256).is_err()
         {
             return Err(ApprovalError::Refused(
                 "invalid cold redemption identity".into(),
@@ -518,6 +541,7 @@ impl ApprovalHome {
             .map_err(|error| ApprovalError::RecoveryRequired(error.to_string()))?;
         if marker.format != REDEMPTION_FORMAT
             || marker.approval_id_sha256 != sha(expected.authority_id.as_bytes())
+            || marker.approval_record_sha256 != expected.approval_record_sha256
             || marker.plan_sha256 != expected.plan_sha256
             || marker.c1_plan_sha256 != expected.c1_plan_sha256
             || marker.request_sha256 != expected.request_sha256

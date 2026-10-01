@@ -14,6 +14,7 @@ pub(super) struct TinyPayloadWorld {
     pub subject: PublicationSubject,
     pub plan: PublicationEffectPlan,
     pub output: tempfile::TempDir,
+    pub settings: tempfile::TempDir,
     finals: [Vec<u8>; 4],
 }
 
@@ -21,6 +22,7 @@ impl TinyPayloadWorld {
     pub fn new() -> Self {
         let (mut subject, old_plan) = prepared();
         let output = tempfile::tempdir().unwrap();
+        let settings = tempfile::tempdir().unwrap();
         for target in &mut subject.targets {
             for asset in [
                 &mut target.bundle,
@@ -64,6 +66,7 @@ impl TinyPayloadWorld {
             subject,
             plan,
             output,
+            settings,
             finals,
         }
     }
@@ -75,6 +78,24 @@ impl TinyPayloadWorld {
             powershell: &self.finals[2],
             cmd: &self.finals[3],
         }
+    }
+
+    pub fn seed_approval(&self, lease: &LifecycleLease, scope: &SubmissionScope) {
+        let home =
+            crate::publication_approval::ApprovalHome::open_for_test(self.settings.path()).unwrap();
+        home.seed_mode_a_for_test(
+            lease,
+            scope,
+            &self.subject,
+            &self.plan,
+            &expected(),
+            "fixture-approval",
+        )
+        .unwrap();
+    }
+
+    pub fn approval_home(&self) -> crate::publication_approval::ApprovalHome {
+        crate::publication_approval::ApprovalHome::open_for_test(self.settings.path()).unwrap()
     }
 }
 
@@ -89,6 +110,7 @@ fn bad_vault_keeps_c1_pending_and_duplicate_never_restages() {
     let root = tempfile::tempdir().unwrap();
     let lease = LifecycleLease::acquire(root.path()).unwrap();
     let selected = scope();
+    tiny.seed_approval(&lease, &selected);
     let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
     let missing_name = &tiny.subject.targets[0].bundle.name;
     let original = std::fs::read(tiny.output.path().join(missing_name)).unwrap();
@@ -103,6 +125,7 @@ fn bad_vault_keeps_c1_pending_and_duplicate_never_restages() {
         &tiny.plan,
         &expected(),
         trusted(
+            tiny.settings.path(),
             &lease,
             &selected,
             &tiny.subject,
@@ -142,6 +165,7 @@ fn bad_vault_keeps_c1_pending_and_duplicate_never_restages() {
         &tiny.plan,
         &expected(),
         trusted(
+            tiny.settings.path(),
             &lease,
             &selected,
             &tiny.subject,
@@ -172,6 +196,7 @@ fn post_ready_vault_drift_downgrades_cold_inspection() {
     let selected = scope();
     let (token, run_id) = {
         let lease = LifecycleLease::acquire(root.path()).unwrap();
+        tiny.seed_approval(&lease, &selected);
         let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
         let output = vibe_safefs::Project::open(tiny.output.path()).unwrap();
         let first = prepare_local_full_plan(
@@ -183,6 +208,7 @@ fn post_ready_vault_drift_downgrades_cold_inspection() {
             &tiny.plan,
             &expected(),
             trusted(
+                tiny.settings.path(),
                 &lease,
                 &selected,
                 &tiny.subject,
@@ -204,7 +230,14 @@ fn post_ready_vault_drift_downgrades_cold_inspection() {
     std::fs::write(staged, b"changed after Ready").unwrap();
     let lease = LifecycleLease::acquire(root.path()).unwrap();
     assert_eq!(
-        inspect_full_plan_cold(&lease, &token, &selected, "vault-drift").unwrap(),
+        cold::inspect_full_plan_cold_with_home(
+            &lease,
+            &token,
+            &selected,
+            "vault-drift",
+            &tiny.approval_home()
+        )
+        .unwrap(),
         Inspection::RecoveryRequired { run_id },
     );
 }
@@ -298,6 +331,7 @@ fn interrupted_vault_stays_pending_and_same_key_does_not_stage_again() {
             &tiny.plan,
             &expected(),
             trusted(
+                tiny.settings.path(),
                 &lease,
                 &selected_scope,
                 &tiny.subject,

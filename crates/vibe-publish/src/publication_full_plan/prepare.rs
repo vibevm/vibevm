@@ -10,13 +10,11 @@ use vibe_safefs::Project;
 use vibe_wire::generated::publication_effect_plan::PublicationEffectPlan;
 use vibe_wire::generated::publication_subject::PublicationSubject;
 
-use crate::publication_authority::PublicationAuthorityDecision;
+use crate::publication_approval::{ApprovalHome, VerifiedApproval};
 use crate::publication_effect_plan::PublicationEffectPlanExpectations;
 use crate::publication_payload::vault::{FinalPayloadBytes, VaultInspection, stage_payload_vault};
 
 use super::journal::{self, InputCapsule, Intent};
-#[cfg(test)]
-use super::tests::expected;
 use super::{Error, Inspection, RemoteObservation, Result, Selected, initial_matches, select, sha};
 
 pub(super) enum PreparedJournal {
@@ -29,14 +27,48 @@ pub(super) enum PreparedJournal {
     },
 }
 
-/// A future owner must construct this only from its own remote observer and
-/// owner-controlled approval loader. No production constructor exists yet;
-/// tests may inject it without introducing a live publication capability.
+/// The production constructor retains a host capture and selects the fixed
+/// settings home lazily after C.1 lookup. No live remote/public route calls it.
 pub(crate) struct TrustedLocalPublication<'a> {
-    approved: PublicationAuthorityDecision,
+    approval_source: ApprovalSource,
     before: RemoteObservation,
     output: &'a Project,
     finals: FinalPayloadBytes<'a>,
+}
+
+enum ApprovalSource {
+    HostSettings,
+    #[cfg(test)]
+    TestPath(std::path::PathBuf),
+}
+
+impl ApprovalSource {
+    fn open(
+        &self,
+    ) -> std::result::Result<ApprovalHome, crate::publication_approval::ApprovalError> {
+        match self {
+            Self::HostSettings => ApprovalHome::open_from_settings(),
+            #[cfg(test)]
+            Self::TestPath(path) => ApprovalHome::open_for_test(path),
+        }
+    }
+}
+
+impl<'a> TrustedLocalPublication<'a> {
+    /// Host composition supplies captured bytes and observation; the approval
+    /// home is selected only through the fixed user-settings resolver.
+    pub(crate) fn from_host_capture(
+        before: RemoteObservation,
+        output: &'a Project,
+        finals: FinalPayloadBytes<'a>,
+    ) -> Self {
+        Self {
+            approval_source: ApprovalSource::HostSettings,
+            before,
+            output,
+            finals,
+        }
+    }
 }
 
 /// Production-compiled, crate-private local journal seam. It never calls a
@@ -51,25 +83,40 @@ pub(crate) fn prepare_local_full_plan(
     expected: &PublicationEffectPlanExpectations<'_>,
     trusted: TrustedLocalPublication<'_>,
 ) -> Result<Inspection> {
-    let PublicationAuthorityDecision::Approved {
-        mode,
-        authority_ref,
-        plan_sha256,
-    } = trusted.approved
-    else {
-        return Err(Error::Refused(
-            "local preparation has no approved authority".into(),
-        ));
-    };
+    if let Some(existing) =
+        SubmissionReservations::inspect_existing_key(lease, namespace, scope, key)?
+    {
+        if existing.retired {
+            return Ok(Inspection::Retired {
+                run_id: Some(existing.domain_run_id),
+            });
+        }
+        return match trusted.approval_source.open() {
+            Ok(home) => super::cold::inspect_full_plan_cold_with_home(
+                lease,
+                namespace.id(),
+                scope,
+                key,
+                &home,
+            ),
+            Err(_) => Ok(Inspection::RecoveryRequired {
+                run_id: existing.domain_run_id,
+            }),
+        };
+    }
+    let approval_home = trusted.approval_source.open().map_err(Error::io)?;
+    let verified = approval_home
+        .load_mode_a(lease, scope, subject, plan, expected)
+        .map_err(Error::io)?;
     let selected = select(
         lease,
         scope,
         subject,
         plan,
         expected,
-        Some((mode, &authority_ref)),
+        Some(("A", verified.authority_id())),
     )?;
-    if plan_sha256 != selected.intent.semantic_plan_sha256 {
+    if verified.plan_sha256() != selected.intent.semantic_plan_sha256 {
         return Err(Error::Refused(
             "approved plan digest differs from selected plan".into(),
         ));
@@ -87,6 +134,8 @@ pub(crate) fn prepare_local_full_plan(
         ReadyLane::Vault {
             output: trusted.output,
             finals: trusted.finals,
+            approval_home: &approval_home,
+            verified: &verified,
         },
     )? {
         PreparedJournal::Existing(inspection) => Ok(inspection),
@@ -102,6 +151,8 @@ enum ReadyLane<'a> {
     Vault {
         output: &'a Project,
         finals: FinalPayloadBytes<'a>,
+        approval_home: &'a ApprovalHome,
+        verified: &'a VerifiedApproval,
     },
     #[cfg(test)]
     FakeNoVault,
@@ -159,8 +210,14 @@ fn prepare_journal_inner(
         }
         ExistingSubmissionInspection::Reserved { .. } => {
             return Ok(PreparedJournal::Existing(match lane {
-                ReadyLane::Vault { .. } => {
-                    super::inspect_full_plan_cold(lease, namespace.id(), scope, key)?
+                ReadyLane::Vault { approval_home, .. } => {
+                    super::cold::inspect_full_plan_cold_with_home(
+                        lease,
+                        namespace.id(),
+                        scope,
+                        key,
+                        approval_home,
+                    )?
                 }
                 #[cfg(test)]
                 ReadyLane::FakeNoVault => {
@@ -185,8 +242,13 @@ fn prepare_journal_inner(
             "fresh full-plan reservation was not Created".into(),
         ));
     }
-    let vault_manifest_sha256 = match lane {
-        ReadyLane::Vault { output, finals } => {
+    let (vault_manifest_sha256, redemption_marker_sha256, approval_record_sha256) = match lane {
+        ReadyLane::Vault {
+            output,
+            finals,
+            approval_home,
+            verified,
+        } => {
             match stage_payload_vault(
                 lease,
                 namespace,
@@ -205,7 +267,31 @@ fn prepare_journal_inner(
                 }) if observed == run_id
                     && catalogue_digest == selected.upload_catalogue_sha256 =>
                 {
-                    Some(manifest_sha256)
+                    match approval_home.redeem(
+                        lease,
+                        namespace,
+                        scope,
+                        key,
+                        &run_id,
+                        &selected.request,
+                        verified,
+                    ) {
+                        Ok(receipt)
+                            if receipt.run_id == run_id
+                                && receipt.plan_sha256 == selected.intent.semantic_plan_sha256 =>
+                        {
+                            (
+                                Some(manifest_sha256),
+                                Some(receipt.marker_sha256),
+                                Some(verified.record_sha256().to_owned()),
+                            )
+                        }
+                        _ => {
+                            return Ok(PreparedJournal::Existing(Inspection::RecoveryRequired {
+                                run_id,
+                            }));
+                        }
+                    }
                 }
                 _ => {
                     return Ok(PreparedJournal::Existing(Inspection::RecoveryRequired {
@@ -215,11 +301,13 @@ fn prepare_journal_inner(
             }
         }
         #[cfg(test)]
-        ReadyLane::FakeNoVault => None,
+        ReadyLane::FakeNoVault => (None, None, None),
     };
     let mut intent = selected.intent;
     intent.run_id = run_id.clone();
     intent.vault_manifest_sha256 = vault_manifest_sha256.clone();
+    intent.redemption_marker_sha256 = redemption_marker_sha256.clone();
+    intent.approval_record_sha256 = approval_record_sha256.clone();
     let request_json = String::from_utf8(selected.request).map_err(Error::io)?;
     let capsule = InputCapsule {
         format: if vault_manifest_sha256.is_some() {
@@ -247,6 +335,8 @@ fn prepare_journal_inner(
         upload_catalogue_sha256: selected.upload_catalogue_sha256,
         root_correlation_token: selected.root_correlation_token,
         vault_manifest_sha256,
+        redemption_marker_sha256,
+        approval_record_sha256,
         authority_mode: selected.authority_mode,
         authority_ref: selected.authority_ref,
     };
@@ -284,28 +374,16 @@ fn prepare_journal_inner(
 
 #[cfg(test)]
 pub(super) fn trusted<'a>(
-    lease: &LifecycleLease,
-    scope: &SubmissionScope,
-    subject: &PublicationSubject,
+    settings: &std::path::Path,
+    _lease: &LifecycleLease,
+    _scope: &SubmissionScope,
+    _subject: &PublicationSubject,
     plan: &PublicationEffectPlan,
     output: &'a Project,
     finals: FinalPayloadBytes<'a>,
 ) -> TrustedLocalPublication<'a> {
-    let selected = select(
-        lease,
-        scope,
-        subject,
-        plan,
-        &expected(),
-        Some(("A", "fixture-approval")),
-    )
-    .unwrap();
     TrustedLocalPublication {
-        approved: PublicationAuthorityDecision::Approved {
-            mode: "A",
-            authority_ref: "fixture-approval".into(),
-            plan_sha256: selected.intent.semantic_plan_sha256,
-        },
+        approval_source: ApprovalSource::TestPath(settings.to_path_buf()),
         before: RemoteObservation {
             generation_ref: plan.remote_generation_ref.clone(),
             tag: plan.observed_tag.clone(),
@@ -315,274 +393,5 @@ pub(super) fn trusted<'a>(
         },
         output,
         finals,
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::publication_full_plan::capability_tests::TinyPayloadWorld;
-    use crate::publication_full_plan::tests::{expected, scope};
-
-    #[test]
-    fn local_prepare_retains_ready_capsule_without_any_remote_effect_and_cold_attaches() {
-        let root = tempfile::tempdir().unwrap();
-        let tiny = TinyPayloadWorld::new();
-        let (subject, plan) = (&tiny.subject, &tiny.plan);
-        let output = Project::open(tiny.output.path()).unwrap();
-        let scope = scope();
-        let (token, run_id) = {
-            let lease = LifecycleLease::acquire(root.path()).unwrap();
-            let namespace =
-                SubmissionReservations::issue_namespace(&lease, &scope, 60_000).unwrap();
-            let outcome = prepare_local_full_plan(
-                &lease,
-                &namespace,
-                &scope,
-                "local-key",
-                &subject,
-                &plan,
-                &expected(),
-                trusted(&lease, &scope, subject, plan, &output, tiny.finals()),
-            )
-            .unwrap();
-            let Inspection::JournalReady { run_id } = outcome else {
-                panic!("local journal not Ready")
-            };
-            assert_eq!(
-                SubmissionReservations::journal_admission(
-                    &lease,
-                    &namespace,
-                    &scope,
-                    "local-key",
-                    &run_id,
-                )
-                .unwrap(),
-                JournalAdmission::Ready,
-            );
-            let capsule = journal::read_input(&lease, &run_id).unwrap().unwrap();
-            assert_eq!(capsule.authority_mode.as_deref(), Some("A"));
-            assert_eq!(capsule.authority_ref.as_deref(), Some("fixture-approval"));
-            let catalogue = crate::publication_payload::expected_upload_catalogue(
-                &subject,
-                &expected().subject,
-            )
-            .unwrap();
-            let root_token = lease
-                .publication_journal_project()
-                .root_correlation_token()
-                .unwrap();
-            assert_eq!(capsule.upload_catalogue_sha256, catalogue.digest);
-            assert_eq!(capsule.root_correlation_token, root_token);
-            let manifest = capsule.vault_manifest_sha256.clone().unwrap();
-            assert!(manifest.starts_with("sha256:"));
-            let request: serde_json::Value = serde_json::from_str(&capsule.request_json).unwrap();
-            assert_eq!(request["upload_catalogue_sha256"], catalogue.digest);
-            assert_eq!(request["root_correlation_token"], root_token);
-            let intent = journal::read::<Intent>(&lease, &run_id, "intent")
-                .unwrap()
-                .unwrap();
-            assert_eq!(intent.upload_catalogue_sha256, catalogue.digest);
-            assert_eq!(intent.root_correlation_token, root_token);
-            assert_eq!(
-                intent.vault_manifest_sha256.as_deref(),
-                Some(manifest.as_str())
-            );
-            assert!(
-                journal::read::<super::super::Step>(&lease, &run_id, "000-pending")
-                    .unwrap()
-                    .is_none()
-            );
-            assert!(
-                journal::read::<super::super::FinalResult>(&lease, &run_id, "result")
-                    .unwrap()
-                    .is_none()
-            );
-            assert_eq!(
-                prepare_local_full_plan(
-                    &lease,
-                    &namespace,
-                    &scope,
-                    "local-key",
-                    &subject,
-                    &plan,
-                    &expected(),
-                    trusted(&lease, &scope, subject, plan, &output, tiny.finals()),
-                )
-                .unwrap(),
-                Inspection::JournalReady {
-                    run_id: run_id.clone()
-                },
-            );
-            (namespace.id().to_owned(), run_id)
-        };
-        let lease = LifecycleLease::acquire(root.path()).unwrap();
-        assert_eq!(
-            super::super::inspect_full_plan_cold(&lease, &token, &scope, "local-key").unwrap(),
-            Inspection::JournalReady {
-                run_id: run_id.clone()
-            },
-        );
-        let capsule_path = root.path().join(format!(
-            ".vibe/publication-operations/{run_id}.full-plan-input.json"
-        ));
-        let original_capsule = std::fs::read(&capsule_path).unwrap();
-        let mut capsule = journal::read_input(&lease, &run_id).unwrap().unwrap();
-        capsule.upload_catalogue_sha256 = sha(b"foreign-catalogue");
-        std::fs::write(&capsule_path, serde_json::to_vec(&capsule).unwrap()).unwrap();
-        assert_eq!(
-            super::super::inspect_full_plan_cold(&lease, &token, &scope, "local-key").unwrap(),
-            Inspection::RecoveryRequired {
-                run_id: run_id.clone()
-            },
-        );
-        std::fs::write(&capsule_path, &original_capsule).unwrap();
-        let mut capsule = journal::read_input(&lease, &run_id).unwrap().unwrap();
-        capsule.root_correlation_token = sha(b"foreign-root");
-        std::fs::write(&capsule_path, serde_json::to_vec(&capsule).unwrap()).unwrap();
-        assert_eq!(
-            super::super::inspect_full_plan_cold(&lease, &token, &scope, "local-key").unwrap(),
-            Inspection::RecoveryRequired {
-                run_id: run_id.clone()
-            },
-        );
-        std::fs::write(&capsule_path, &original_capsule).unwrap();
-        let mut capsule = journal::read_input(&lease, &run_id).unwrap().unwrap();
-        capsule.authority_ref = Some("changed".into());
-        std::fs::write(&capsule_path, serde_json::to_vec(&capsule).unwrap()).unwrap();
-        assert_eq!(
-            super::super::inspect_full_plan_cold(&lease, &token, &scope, "local-key").unwrap(),
-            Inspection::RecoveryRequired {
-                run_id: run_id.clone()
-            },
-        );
-        std::fs::remove_file(capsule_path).unwrap();
-        assert_eq!(
-            super::super::inspect_full_plan_cold(&lease, &token, &scope, "local-key").unwrap(),
-            Inspection::RecoveryRequired { run_id },
-        );
-    }
-
-    #[test]
-    fn pre_ready_missing_capsule_and_unapproved_local_selection_never_complete() {
-        let root = tempfile::tempdir().unwrap();
-        let tiny = TinyPayloadWorld::new();
-        let (subject, plan) = (&tiny.subject, &tiny.plan);
-        let output = Project::open(tiny.output.path()).unwrap();
-        let scope = scope();
-        let lease = LifecycleLease::acquire(root.path()).unwrap();
-        let namespace = SubmissionReservations::issue_namespace(&lease, &scope, 60_000).unwrap();
-        let mut unapproved = trusted(&lease, &scope, subject, plan, &output, tiny.finals());
-        unapproved.approved = PublicationAuthorityDecision::NeedsApproval {
-            reason: crate::publication_authority::PublicationAuthorityReason::ApprovalMissing,
-        };
-        assert!(matches!(
-            prepare_local_full_plan(
-                &lease,
-                &namespace,
-                &scope,
-                "local-key",
-                &subject,
-                &plan,
-                &expected(),
-                unapproved
-            ),
-            Err(Error::Refused(_))
-        ));
-        let selected = select(
-            &lease,
-            &scope,
-            &subject,
-            &plan,
-            &expected(),
-            Some(("A", "fixture-approval")),
-        )
-        .unwrap();
-        let run_id = propose_run_id(lease.root()).unwrap();
-        assert!(matches!(
-            SubmissionReservations::reserve(
-                &lease,
-                &namespace,
-                &scope,
-                "local-key",
-                &selected.request,
-                &selected.plan_bytes,
-                &run_id,
-            )
-            .unwrap(),
-            ReservationDecision::Created { .. }
-        ));
-        assert_eq!(
-            super::super::inspect_full_plan_cold(&lease, namespace.id(), &scope, "local-key",)
-                .unwrap(),
-            Inspection::RecoveryRequired { run_id },
-        );
-    }
-
-    #[test]
-    fn copied_tree_at_same_path_cannot_cold_attach_as_ready() {
-        use std::fs;
-        use std::path::Path;
-
-        fn copy_tree(from: &Path, to: &Path) {
-            fs::create_dir_all(to).unwrap();
-            for entry in fs::read_dir(from).unwrap() {
-                let entry = entry.unwrap();
-                let destination = to.join(entry.file_name());
-                if entry.file_type().unwrap().is_dir() {
-                    copy_tree(&entry.path(), &destination);
-                } else {
-                    fs::copy(entry.path(), destination).unwrap();
-                }
-            }
-        }
-
-        let parent = tempfile::tempdir().unwrap();
-        let root = parent.path().join("workspace");
-        fs::create_dir(&root).unwrap();
-        let tiny = TinyPayloadWorld::new();
-        let (subject, plan) = (&tiny.subject, &tiny.plan);
-        let output = Project::open(tiny.output.path()).unwrap();
-        let scope = scope();
-        let (token, run_id, original_root_token) = {
-            let lease = LifecycleLease::acquire(&root).unwrap();
-            let namespace =
-                SubmissionReservations::issue_namespace(&lease, &scope, 60_000).unwrap();
-            let inspection = prepare_local_full_plan(
-                &lease,
-                &namespace,
-                &scope,
-                "copied-key",
-                &subject,
-                &plan,
-                &expected(),
-                trusted(&lease, &scope, subject, plan, &output, tiny.finals()),
-            )
-            .unwrap();
-            let Inspection::JournalReady { run_id } = inspection else {
-                panic!("not Ready")
-            };
-            let root_token = lease
-                .publication_journal_project()
-                .root_correlation_token()
-                .unwrap();
-            (namespace.id().to_owned(), run_id, root_token)
-        };
-        let old = parent.path().join("original");
-        fs::rename(&root, &old).unwrap();
-        copy_tree(&old, &root);
-        let lease = LifecycleLease::acquire(&root).unwrap();
-        assert_ne!(
-            lease
-                .publication_journal_project()
-                .root_correlation_token()
-                .unwrap(),
-            original_root_token,
-        );
-        let copied = super::super::inspect_full_plan_cold(&lease, &token, &scope, "copied-key");
-        assert!(
-            matches!(&copied, Ok(Inspection::RecoveryRequired { run_id: same }) if same == &run_id),
-            "copied same-path root must recover, got {copied:?}"
-        );
     }
 }

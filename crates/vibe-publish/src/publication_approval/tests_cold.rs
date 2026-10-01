@@ -18,6 +18,7 @@ fn cold_expectation<'a>(
         plan_sha256: &verified.plan_sha256,
         c1_plan_sha256: &verified.c1_plan_sha256,
         request_sha256,
+        approval_record_sha256: &verified.record_sha256,
     }
 }
 
@@ -79,6 +80,15 @@ fn cold_redemption_survives_lease_exit_and_historical_expiry() {
         before,
         "cold inspection is read-only"
     );
+    let wrong_digest = sha(b"different approval record");
+    let wrong = ColdRedemptionExpectation {
+        approval_record_sha256: &wrong_digest,
+        ..expected
+    };
+    assert!(matches!(
+        home.inspect_redemption_cold(&lease, &namespace, &scope, "key-a", &wrong),
+        Err(ApprovalError::RecoveryRequired(_))
+    ));
 }
 
 #[test]
