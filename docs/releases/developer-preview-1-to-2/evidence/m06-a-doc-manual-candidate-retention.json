@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "kind": "m06-a-documentation-capture-candidate-retention",
+  "acceptance": "candidate-mechanical-only",
+  "before_commit": "5b668557aaf0c42c965c0dd1436c31902acbd901",
+  "after_commit": "681d8a47b98318c042f7a8b10d6a37edd603cb04",
+  "source_root_components": [
+    "vibevm",
+    "vibepacks",
+    "org.vibevm.core"
+  ],
+  "selected_files_per_endpoint": 364,
+  "authored_xml_pages_per_endpoint": 108,
+  "fixture_xml_excluded_per_endpoint": 100,
+  "files": [
+    {
+      "phase": "before",
+      "kind": "template",
+      "source": "evidence/m06-a-doc-manual-before-template.json",
+      "bytes": 2160,
+      "sha256": "a82a3e48d15d135cfb8dcf0be96c7e168217b9ec8ad2d203e8c61068252f95e9"
+    },
+    {
+      "phase": "before",
+      "kind": "raw",
+      "source": "evidence/m06-a-doc-manual-before-raw.json",
+      "bytes": 174913,
+      "sha256": "28d734df90d73cd25782487909557c63c37cf278f22a8434790cd04f50e46874"
+    },
+    {
+      "phase": "before",
+      "kind": "capture-e1",
+      "source": "evidence/m06-a-doc-manual-before-capture-e1.json",
+      "bytes": 120306,
+      "sha256": "ed70619e1f9f2d3b8efc539f2837dc2f26b484e347e66e7b6d54ee8d7aaf703b"
+    },
+    {
+      "phase": "after",
+      "kind": "template",
+      "source": "evidence/m06-a-doc-manual-after-template.json",
+      "bytes": 2159,
+      "sha256": "9f253cd5fd9d7064b9a2712fe5c321928ef49698176fc24a06351a40123e60cb"
+    },
+    {
+      "phase": "after",
+      "kind": "raw",
+      "source": "evidence/m06-a-doc-manual-after-raw.json",
+      "bytes": 174912,
+      "sha256": "eec778ebaf1b3fa384accc23bcf1730236f0564ddb989e077fa063c5fc5ac8ee"
+    },
+    {
+      "phase": "after",
+      "kind": "capture-e1",
+      "source": "evidence/m06-a-doc-manual-after-capture-e1.json",
+      "bytes": 120304,
+      "sha256": "bcbec9ce2a12159aeb0f980d235b0f25dc482a273bb70ea3224a3388c0624256"
+    }
+  ],
+  "limits": [
+    "Git blob/SHA and XML well-formedness checked; no canonical documentation-capture verifier or accepted topic map ran.",
+    "EN/RU source pages do not include the Markdown release guide under a different root.",
+    "Editorial parity, build inputs/toolchain execution, links, examples and 21-topic anchor bindings remain open."
+  ]
+}

@@ -1,0 +1,2740 @@
+{
+  "schema": 1,
+  "kind": "documentation-git-observation-candidate",
+  "capture_id": "m06-a-doc-manual-after-681d8a47b-candidate",
+  "commit_sha1": "681d8a47b98318c042f7a8b10d6a37edd603cb04",
+  "tree_sha1": "7770ad004a16d7283485bb38da6828ab6dd5b644",
+  "source_root_components": [
+    "vibevm",
+    "vibepacks",
+    "org.vibevm.core"
+  ],
+  "files": [
+    {
+      "path": "vibevm-docs-ru/v1.1.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/README.md",
+      "git_blob_sha1": "835d457ddd3dafe881290cba69dc6eaa53262e4b",
+      "bytes": 1426,
+      "sha256": "f65845ce5801ed2cbd509b52800d85580bf25f64116a1013e057d16a0d25c6e6"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/maintenance/derived.json",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/maintenance/derived.json",
+      "git_blob_sha1": "d427caa05750536d0de900f80c1b75c5626dc545",
+      "bytes": 13553,
+      "sha256": "4b2f7be164f7bfcc8ddba69a78c47fbc3b841947d0c8a2d9f167bc2d8b4a3556"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/style/banned.ru.txt",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/style/banned.ru.txt",
+      "git_blob_sha1": "0bf0040e76f0217319ded64ed3aa633591583a04",
+      "bytes": 2033,
+      "sha256": "c4d436f1142dab0cc240271cb3a965694100fb0e961e566e120f1f6d3320f76f"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibe.toml",
+      "git_blob_sha1": "8cf0d5c0994e18f56121132891aab27e1c722328",
+      "bytes": 6635,
+      "sha256": "06e5a7643aa1ba2f9167cfaeef1e839b777984dda2ac85d62c14ffbd06633b3f"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/ask-your-agent.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/ask-your-agent.xml",
+      "git_blob_sha1": "a5d233a45eb39a91c2418f72c82afc0cee20f15b",
+      "bytes": 8005,
+      "sha256": "59aed7be4de0ee143efc3e9d5e578efeb8fe757d6c335d830975f9617e291695"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "git_blob_sha1": "0b40c8e482aad74e88c995e85b8b480fdf904eac",
+      "bytes": 10877,
+      "sha256": "69ca196f4fbb6dc4489d46e002b975e474e2585c29617dda111256e3118a0774"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "git_blob_sha1": "b29c229bacd8d0a906b0a157425ca70b1a5f9344",
+      "bytes": 11550,
+      "sha256": "04e534f098a98f69915b59dd1d7b1061feef1c17dc6541f49640abf2ddf3e4c6"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/how-this-manual-is-maintained.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/how-this-manual-is-maintained.xml",
+      "git_blob_sha1": "6586ee58d7e70b52cafaa10195dc9140a213e479",
+      "bytes": 14929,
+      "sha256": "83a0c6b1bedccb58aad5834873eaeb70ea3fc1e592aaf0abe9d2624209dd4365"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "git_blob_sha1": "1f5c6f508652774035706c980fe48ba05ec545c6",
+      "bytes": 14094,
+      "sha256": "18e81beccc3d663cb9706ca125d9eb41da96eccde277c3b572f3eb58d25c2a75"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/traceability.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/traceability.xml",
+      "git_blob_sha1": "3fae8f5ae565469700a7e64366f8d0a3e77aa411",
+      "bytes": 8107,
+      "sha256": "adf485eaeed8ca93a3d30175de208499213eb2adfb7e94beb0e441c029ba4cd5"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "git_blob_sha1": "bf2875dce2e53d52f0d8866e320ac1571aff6b97",
+      "bytes": 11832,
+      "sha256": "d6e44bd4ddca651bfc61bf955d1ff198e64442b8af9a6a278278335b3b5636ad"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/bridge-a-repository.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/bridge-a-repository.xml",
+      "git_blob_sha1": "26d2c400bb3749631414f618c8c68fc4f921f94e",
+      "bytes": 8591,
+      "sha256": "674f0c8ad562caab68f717da22fbd6fa621ecaafbee0992bbf627ff00af417a9"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/facts-and-status-markers.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/facts-and-status-markers.xml",
+      "git_blob_sha1": "84b464466301813d957aca9019a0d8bd46fd6cc7",
+      "bytes": 9028,
+      "sha256": "5135375d59b9a2bfeac44fbc628672f5239c8eb8f0c75223ea629c666fbc6ee8"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "git_blob_sha1": "f214334d2ea3810fe542ac2aba35eb09697afdf7",
+      "bytes": 12561,
+      "sha256": "f8ff3443e09a83c26956b58558382296d266c44c907223b1481fdccb90255656"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "git_blob_sha1": "5e91889d44a3d67f251462a40ee670da18cae379",
+      "bytes": 12164,
+      "sha256": "c5038f7b9994a4f694085c7d6e0d2103c820e9c48ad4620e834eff798f7f0ae7"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/translate-documentation.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/translate-documentation.xml",
+      "git_blob_sha1": "87a5ffc29cfdaedb2ec8a173e8da9ba7ef31bc59",
+      "bytes": 8162,
+      "sha256": "3eabb26d67353a4694d5b03b4268ebe18550a38ec548dc3772e94210c393b45a"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "git_blob_sha1": "e719797c6de3668c8f9114048adcf3a6dfeb9e57",
+      "bytes": 8518,
+      "sha256": "cad2a69644de7533a3f1c53025da27d05824bf5a8f1ca7f73fdc65298d84e3c3"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-flow.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-flow.xml",
+      "git_blob_sha1": "741e182e9df93b696f60b40aeaca7918b4f495a2",
+      "bytes": 12365,
+      "sha256": "7f388f834453668434997734c0fff694b0f9878e8ea05d16b3024617af91f907"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "git_blob_sha1": "0c0e879b3ec46e5216e99cf6e11f359469609b7c",
+      "bytes": 7006,
+      "sha256": "2fa4fc154329cf085073e26e4e5643105848f71f577bd757e2ba4145ad4221d3"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-documentation.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-documentation.xml",
+      "git_blob_sha1": "0c5d6bec9c6ea8cd50ce1e4fea2aeedeed02c8cd",
+      "bytes": 19053,
+      "sha256": "043ece64fa2dd7baadb71c28506c0b98c637fb36b6a9e89c6aabebc274abf989"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/diagnostics/errors.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/diagnostics/errors.xml",
+      "git_blob_sha1": "808ed9e36c023d409505f71227bee284bac13ae3",
+      "bytes": 12429,
+      "sha256": "ac44ad2a5c39c08166707acf886a76e08efa558914424be9945a4616cd487d1b"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/faq/index.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/faq/index.xml",
+      "git_blob_sha1": "78861098bd4cf43586bb57fb56dbb6049423bcc0",
+      "bytes": 11065,
+      "sha256": "0c5aee8468a84d6d97324c29e68110bf365b0f2504dbf422ed76c5766922b780"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/glossary/index.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/glossary/index.xml",
+      "git_blob_sha1": "759431faebf81f34f962bbf13c01754ffc177b83",
+      "bytes": 26708,
+      "sha256": "cc4adb6b4d7ecb750186feb44a2012145761471fc6af65d9224b4f7b09b23afb"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/install-a-package.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/install-a-package.xml",
+      "git_blob_sha1": "4d93923dd520d66a08123273b1d1c8d672eb959e",
+      "bytes": 10598,
+      "sha256": "872b2af1488d80fbf6289cedddc82846eb76ce3a51cd173d657afe9ed9e7b40f"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/publish-a-package.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/publish-a-package.xml",
+      "git_blob_sha1": "5db05c60eb412b69af8f2b727af5a79b62111e5a",
+      "bytes": 11113,
+      "sha256": "8700a6c51bce4170b15932e5caf9007481616d1b20bd1a9168144ac6561e16c4"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/publish-to-the-central-registry.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/publish-to-the-central-registry.xml",
+      "git_blob_sha1": "241ed04e59ea3ce0d8c499ca711501f83615230b",
+      "bytes": 6089,
+      "sha256": "dd7dfbc1f1588b0cbb914596a68b951cfda5ea8e6e3cc52b88254e49bb93da90"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "git_blob_sha1": "98c152adc52ce03034e5e4a4d6c1cb4efc7e8d87",
+      "bytes": 9884,
+      "sha256": "ec2a58fd03ece333acf8239242757432986b9318be4e2beeba833929e7a31175"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/remove-a-package.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/remove-a-package.xml",
+      "git_blob_sha1": "7b3623431697f173be88c9ff5bd26ae9e7d80cd0",
+      "bytes": 4926,
+      "sha256": "173f3c1a05b9cd3b05b87bd723aeacbb487b97aa4a0a6edd5a8d1eb9b6710024"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "git_blob_sha1": "d9c9aa4019f65b4f08ee39a0b6f442fa00a8849b",
+      "bytes": 9794,
+      "sha256": "a6419b54597132803903b2272020b9c669f206578b23f49ad72f8ea198de3ed7"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/update-packages.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/update-packages.xml",
+      "git_blob_sha1": "5f5960b0b04bbe7b73461da592835b83101a3f70",
+      "bytes": 6374,
+      "sha256": "7b8406eb0b5be8b54b3770eb505a87bb697e37ac1969ddb98db865c7d52e70a6"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "git_blob_sha1": "94ebf91f05b8887b68c0f31bb2c399a4f45d8695",
+      "bytes": 9138,
+      "sha256": "c0510f2ef2116b169025501394117954734a5f46141faa20856748a2747a3ce3"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/work-offline.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/work-offline.xml",
+      "git_blob_sha1": "3a741c2f782afefaccbdc4c3430485db634cd4fa",
+      "bytes": 6659,
+      "sha256": "df3c23ab6112d3ab1c4ba31ded246dcdd418b49d4795ab6b342df287215e2044"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/legal/applicable-law.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/legal/applicable-law.xml",
+      "git_blob_sha1": "3421f4281e068983c33721938644744732a0c0e2",
+      "bytes": 3318,
+      "sha256": "cffd169ecc5ed00280c4e7212c962b7222b09f222c76185968c0d02f0a5019bc"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "git_blob_sha1": "fad346ba7f24ff04fe88cc975a1f5b783067714d",
+      "bytes": 8741,
+      "sha256": "9eb6accedb5337f7b6cd0f19b329c9c9562602ab7a034b58aa345e3e80a92337"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "git_blob_sha1": "07cdbaf6367c7542206e2001c692d3451cc65805",
+      "bytes": 11244,
+      "sha256": "1bc86651c996cee847566a2132f73354940e252f7e0a1a272306077f76168437"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/phases.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/phases.xml",
+      "git_blob_sha1": "6b581585af54e85549fe7d18bf99e2db82016cbf",
+      "bytes": 8286,
+      "sha256": "f9e63b628b67b44786c02fa18cdacf599928f951c880e6d9941c037888b88b73"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/scrape.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/scrape.xml",
+      "git_blob_sha1": "a8344b4fd94ba269f1ff2bb880956817fc9f00f4",
+      "bytes": 12251,
+      "sha256": "ead0021d6b5d85ee54714d8e392d86a0be460aa50b69566eab4fe2335e3ab959"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/boot-lane.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/boot-lane.xml",
+      "git_blob_sha1": "f934526b545db254b3397448c4811858cfa851a0",
+      "bytes": 11239,
+      "sha256": "90e7b105750b4d519766935acda07b4007c53aa53cefa0c3280042735c93a382"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/dependency-visibility.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/dependency-visibility.xml",
+      "git_blob_sha1": "1ff64046a5f3fe0993fa126207ed172c54bccbaa",
+      "bytes": 17987,
+      "sha256": "6b3ca5429de8bc8dc2dd5e341a7e13c7cd7837d91c32a8342c726d180a09f176"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/lock-and-store.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/lock-and-store.xml",
+      "git_blob_sha1": "643c0808cf06f1055736ab5104c29aa7d808fa27",
+      "bytes": 8143,
+      "sha256": "e0bbc78dbd20c745342bf60e408766985c48a982c52df716b8d8d16475e43042"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/packages-and-kinds.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/packages-and-kinds.xml",
+      "git_blob_sha1": "bfebf3205044a0d3a8e944442af670e921ebcfe2",
+      "bytes": 15224,
+      "sha256": "a7d151101af31383b0dd24d10a87369f28aeb28b1ba0352e1ebbf234415fb3e2"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/registries.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/registries.xml",
+      "git_blob_sha1": "f34b9a3be3821a19a7c2ae06c8ce97697e7878dc",
+      "bytes": 22247,
+      "sha256": "5da3d2defeeb94fd9f401179132b5fbb369e8c4689c077852164b8ef2e9953b3"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/two-trees.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/two-trees.xml",
+      "git_blob_sha1": "d0a091f660ab56acb875fda19bc71c3461a3f961",
+      "bytes": 6759,
+      "sha256": "2ffb364887504cf97c1477e8f31c818762a02a05456f39f7cbd75f20e3c5c248"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/versions.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/versions.xml",
+      "git_blob_sha1": "2fb4bbd46a2745194b75d46ceefdee3d4e448a02",
+      "bytes": 9583,
+      "sha256": "bfb8abd3066f1892ff2de8a4d8793c720782121112d30672e198bf942f023463"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/commands.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/commands.xml",
+      "git_blob_sha1": "eed3a5467550bba47a1afa54da436da4141ec482",
+      "bytes": 5102,
+      "sha256": "b4cc187205bb6d9c15dadd37a5113f489809495e9e1630dea21e4ca48e987659"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/lock-file.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/lock-file.xml",
+      "git_blob_sha1": "b9ace1139730f57205006916db3215d782da4832",
+      "bytes": 8216,
+      "sha256": "c2efd3bc9a508942c3d69bdf4f8e6f782ab580aae16ed052612d6fc6526eb7ae"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/machine-formats.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/machine-formats.xml",
+      "git_blob_sha1": "af3d9df8c8aae6ee1fc1a8f0474fe5c2ad71e2a1",
+      "bytes": 8921,
+      "sha256": "3476457981a0c4013639838f249835d970202cf32131e39cd0118da1b5d676cb"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/manifest.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/manifest.xml",
+      "git_blob_sha1": "6b483eafef0d00a7058ade71ca2dad8f979200c8",
+      "bytes": 22364,
+      "sha256": "c735da5ef923ab65f785a25f3bf29d9daf8cbb6b5c2cb2d707d700c6884371b7"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/settings-and-environment.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/settings-and-environment.xml",
+      "git_blob_sha1": "4c0a5da6bb9ea11afc8b0fa51819b60533871de5",
+      "bytes": 11819,
+      "sha256": "f433c9f753772bdd8f7d060c92f482f5a16404cd623dddbd68d8e6bacbe4f56a"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/tree.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/tree.xml",
+      "git_blob_sha1": "df1b4a0d14cdc053ba764e339b577e8bd010ee22",
+      "bytes": 13273,
+      "sha256": "eee3f81bc0833dcb600af0304288efa078dd890d9683d485cc6877b2f1dd1ddb"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/first-project.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/first-project.xml",
+      "git_blob_sha1": "5ecfd6b98ea566dbfdd6375bfb02e14b90217c7f",
+      "bytes": 29800,
+      "sha256": "3d4b3bdfe0326004ac911fcf80cb313a2c6444e49da307f9505e94392f719c23"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/index.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/index.xml",
+      "git_blob_sha1": "00628344c23626ecf106f7b8307839fa3f180367",
+      "bytes": 6576,
+      "sha256": "9920030900c1e451d636d257f5e308bb8a745cbcb64b50236aa83d212fede58c"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/install-vibe.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/install-vibe.xml",
+      "git_blob_sha1": "5fbe526a277b3b67cd0c6c5597ba9e8377f8914d",
+      "bytes": 9364,
+      "sha256": "2186e9cee1cbd9a29a0268acf12b101f036b201229e6094eefa6c20d69a03328"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/what-a-project-contains.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/what-a-project-contains.xml",
+      "git_blob_sha1": "d87cda7f49a1fdabc039dfc3498ab3f79b794d86",
+      "bytes": 10097,
+      "sha256": "7a9a7482b47f18018d77afeebb9be4b0269b1773643f7cfb3dc08ac15663214c"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/what-vibevm-is.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/what-vibevm-is.xml",
+      "git_blob_sha1": "9d776619319e98cb46d3a008206242d3f4db2e76",
+      "bytes": 8194,
+      "sha256": "2ee41c3959cfef489290abe58137bcd6c6249ed9169e81e296bf11f900b2d0c1"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/ai-native-rust.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/ai-native-rust.xml",
+      "git_blob_sha1": "d361289aa7e658c674259c448fff0dca80a935d7",
+      "bytes": 29940,
+      "sha256": "cd9611b8cbab46610b61dcf50434dd1d0362ec24b8141a189b04d0034604f032"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+      "git_blob_sha1": "fc2ae8083664ba1a94722e4611b7214ed377e6a3",
+      "bytes": 40519,
+      "sha256": "27d52c9d806c8051f6e0a14350b5b3ac752ea61013edbfcb88e6ff60ba2e880e"
+    },
+    {
+      "path": "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/obsidian-to-project.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/obsidian-to-project.xml",
+      "git_blob_sha1": "ad481d16188869483a56ab1935a0494031757fe5",
+      "bytes": 31535,
+      "sha256": "36779aad7ad5c6c06a24bc79c7d26ddd16d3ec1507e6e9c1a8cccb4bc8883412"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/AUTHORING.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/AUTHORING.md",
+      "git_blob_sha1": "bee3a1394f1f2f6df22de7aab17cf704a4e0aac9",
+      "bytes": 24168,
+      "sha256": "410d2cd3f7e1b26d137412eb6083c7faebdc300f23fbbdb4dd8e106bc566abe0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/CHANGELOG.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/CHANGELOG.md",
+      "git_blob_sha1": "b3dd82cde56f6365b98fdac6d5d19cdd8f4da8bc",
+      "bytes": 7771,
+      "sha256": "b799a8b6eaa876a7a94b8e3c80d9a5b76becf750d41623ed3aaf5f08ce805bbf"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/JOURNAL.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/JOURNAL.md",
+      "git_blob_sha1": "ecdfe7639fca0dc0d21ca049d4c77f5a4ea82d5a",
+      "bytes": 153887,
+      "sha256": "a7eec6a6f7e5583aaa5305da7170ac3aa47fa5a37f4763a432c411f076548270"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/LICENSE.md",
+      "git_blob_sha1": "b42ee6a5e99f4836d43f067a21aa0fc26fbfc88e",
+      "bytes": 1833,
+      "sha256": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/README.md",
+      "git_blob_sha1": "310d38145db3f1b362dbeb6250470351be34981d",
+      "bytes": 2038,
+      "sha256": "927fea2553b128103ff9b4716d87da65c2fcb0101cdda8834e4d2c2f84f6eb13"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/deferred.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/deferred.toml",
+      "git_blob_sha1": "e1d86c625552d93c6ae0b0bdffaa723877dda124",
+      "bytes": 2130,
+      "sha256": "5c9f9471ec3568359ab1f8e9525ac56a30d19525829b9383db1ca2e08852311e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/empty/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/empty/example.toml",
+      "git_blob_sha1": "7890552a97a55db962e77fca0061a775cb0268de",
+      "bytes": 231,
+      "sha256": "c14c6d4e1d2946999841e2adae2341c924e40abdb1bddae0f6155be37b8b44f9"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/flow-slot/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/flow-slot/example.toml",
+      "git_blob_sha1": "ece2735a835face636558b1cd670f90cfbcd1df1",
+      "bytes": 197,
+      "sha256": "5c46247feec59e533accacf7bae8c0e4d845cb3b163ab15b8e8b1d7a89083746"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-cargo/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-cargo/example.toml",
+      "git_blob_sha1": "66512e9fdfe7759aca37852cf2ad6104a958a2c2",
+      "bytes": 383,
+      "sha256": "9eafa07ef8e87469d5c0e59aa30d67e4df706f4bfc2da1ad9ed56de60682c956"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-deploy/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-deploy/example.toml",
+      "git_blob_sha1": "8209d4ef3ff949751d3e9e73088a6c6a14b224f8",
+      "bytes": 770,
+      "sha256": "ad39ee020856f509a1bb7c78d32356dcac534ac2db91a35f9bb3ca64a9cdfa4f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibe-cwd/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibe-cwd/example.toml",
+      "git_blob_sha1": "3245d2e08544e78bc511de7905335602f3394b6a",
+      "bytes": 202,
+      "sha256": "fe3d050e2ff255237a42fb11cc5ec818275a05d73ce915ca374baa446d53d95f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibe-empty/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibe-empty/example.toml",
+      "git_blob_sha1": "f94a61e12961073bc057dae064931893995937ab",
+      "bytes": 134,
+      "sha256": "8dd8113532ba2b2270a4b31951d5996007d6678276a9f50d3f7a8bd2cdcecd56"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibe-registry/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibe-registry/example.toml",
+      "git_blob_sha1": "7997252f17e471a3f1d6f6d2de193640222580cf",
+      "bytes": 438,
+      "sha256": "d3fec5ac9e29ad1672c2d7ab1b100eb371bb74365279a9e999537707761df74a"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibe-relay/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibe-relay/example.toml",
+      "git_blob_sha1": "2db6da394548e365c7ec439cd0e6a6bd334d915d",
+      "bytes": 231,
+      "sha256": "0e673006ff1390582c8ec371656c8744dc48f368490fef4303eb6ee8dd5a4e9c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibe-removed/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibe-removed/example.toml",
+      "git_blob_sha1": "b9846a0000a22ef34ec714cd82c8373c9007bfd5",
+      "bytes": 191,
+      "sha256": "9b03b6d5a8ad03367d6e0bf55d4f6e965f270efee2b4917bd470242b13a20a7c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibe-scrape/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibe-scrape/example.toml",
+      "git_blob_sha1": "aff409e6c3c6dd37fd34e0ac3eec8e3b31169eea",
+      "bytes": 502,
+      "sha256": "3b6abbae858a92b7cbe5058ceb6e185861235bc15f74253bf1c9173a8fcbf6d2"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibe/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibe/example.toml",
+      "git_blob_sha1": "a7aa68ec803001f4ddf9eef3677af0d453fae0c8",
+      "bytes": 492,
+      "sha256": "17476850c2435e07c68c848d44356fd01b5d269bdecb0f99bd9a058b435255a6"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibevm-cwd/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibevm-cwd/example.toml",
+      "git_blob_sha1": "a0d87034a0e2fdbad16bc8cf1ddee85070663980",
+      "bytes": 222,
+      "sha256": "76fe188564634f47fcdc73130afa224e407ad88e059a613d161ec505976d6ca2"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibevm-empty/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibevm-empty/example.toml",
+      "git_blob_sha1": "605590d19b346ae485f0cb64254ee0ef1534b54b",
+      "bytes": 505,
+      "sha256": "ee05222015a83750861a26eb1b1de406fb8a135ae7d3f764707e78740595fda7"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/hello-vibevm/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/hello-vibevm/example.toml",
+      "git_blob_sha1": "ed2447e4b5e31aa6e8a9ad5f00b092c8717e4de3",
+      "bytes": 350,
+      "sha256": "7f0b5f66c913bcfc947f24809ef5d1ab019b6fbd801a7bdb3ac9bd93376e712b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/host/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/host/example.toml",
+      "git_blob_sha1": "15235df813ccfb93845d7fcdad66e2a993fc8847",
+      "bytes": 300,
+      "sha256": "86b98152bf7c357dc7c7285a34439847382f23167117cbb88232a2c3e8de625c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/example.toml",
+      "git_blob_sha1": "922028ada67a90c5d6842efeca2d343d0e073c84",
+      "bytes": 444,
+      "sha256": "9c029353a0bb836a49c6a2b869d65634bfbfec5a08c6b52a61cf7e870bdb9753"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/home/config.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/home/config.toml",
+      "git_blob_sha1": "841882f7397f43935a7cd38d43f6812ece570b1c",
+      "bytes": 151,
+      "sha256": "7f57d519f437234f0c2519e597a003adf259d756f8c95a020b436b2a61a10186"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/home/registry.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/home/registry.toml",
+      "git_blob_sha1": "857784e1ebb3d9e7156649b18d3685c55c9332c2",
+      "bytes": 292,
+      "sha256": "997e5ad6b74e9bd704f99b0869019a2bd7e9f186bdffd6a116dd9ecd4fcebf21"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/README.md",
+      "git_blob_sha1": "e9bf4521e5aa4c844763eee327073f09c530b8d8",
+      "bytes": 4822,
+      "sha256": "1f45853fd49dd9a464aa4f82b62bba381a16dfc3a3f793053bf1e56739a9436d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibe.toml",
+      "git_blob_sha1": "58148e8416aff8fca266c3c177eb2bc2aec95a46",
+      "bytes": 553,
+      "sha256": "5d76d926c576966980438bfa3d4cefaa6dbf092dcaf96acd970233deb6c461b4"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml",
+      "git_blob_sha1": "09b4f97230ddd2103225f01576cbbd31b99d8831",
+      "bytes": 4636,
+      "sha256": "96c9b83561090696e817bb73633af653b14a25b6267382e948b099f8b3954d69"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml",
+      "git_blob_sha1": "1377dca78ed418dce8124062edaa967480b98380",
+      "bytes": 26094,
+      "sha256": "a91cbb661f4106035ee2238c13f526a8e079c69106d7f38e8811b29e89ff4bac"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml",
+      "git_blob_sha1": "f29d3cb4feb6b42f736fea65cc71c99d6670edaa",
+      "bytes": 19569,
+      "sha256": "1cce99db92ff713eb26ebc59a25a8c36a0b46dfd03f6e0015adb2170720f31a0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml",
+      "git_blob_sha1": "bb0cbae6e4cd4fdcfe25eb9453efd661c0b690dc",
+      "bytes": 17446,
+      "sha256": "e080e815bf9cc4ba581c18949bd7debb70b74139a3b9b74b7dbd90deb04409de"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/README.md",
+      "git_blob_sha1": "088bd77b095499e764cd8e34a94db7a49bda23fa",
+      "bytes": 4974,
+      "sha256": "e0a73ecf0a6e091ea2cfe75a08fb1efbd40650fc21ceb91ac53235e4b34da0e7"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibe.toml",
+      "git_blob_sha1": "da951e653abb4664129ffc3cc9ea332b85cbec67",
+      "bytes": 580,
+      "sha256": "0c8cbab2d55f1d9b724308b8ced6ad8b0ba727892c02c2d133f87c50c0cf3f1e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml",
+      "git_blob_sha1": "9539743a02f369c2b6d9851c8bda2362d0bf9917",
+      "bytes": 6274,
+      "sha256": "0b0ef38b0eb024ef189a21d8c04802510e847ff1b786a6139e1209467b58f67d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml",
+      "git_blob_sha1": "08006efc9d7ec87091a599b22b3863c3f3048157",
+      "bytes": 24058,
+      "sha256": "106fdcb753715744ce614a93886932b80e4f7889e621158a79936d10eda3622c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/execution-ledger.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/execution-ledger.xml",
+      "git_blob_sha1": "06d49bd943f59354093c6ba9887196ee289a17e9",
+      "bytes": 14532,
+      "sha256": "76e0a1213dd60b854e50b0552a56ba6fdf857ef39c1cbab9d199f0534b86a24e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/phase-gates.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/phase-gates.xml",
+      "git_blob_sha1": "ec9b2390a27c9314b14e2ce72c89968ecd22147e",
+      "bytes": 15394,
+      "sha256": "07012f50d12fab7847c69793e3c03b2bb527db4a508473c84bc097dcb6546056"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/README.md",
+      "git_blob_sha1": "8701d07f3e89309e4fc0093bc4b2e831f91a0b7b",
+      "bytes": 4672,
+      "sha256": "187adeffe15793a6d8924e4bdd21ad19bb7eaea9fd6602d4c87a41bf9448b783"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibe.toml",
+      "git_blob_sha1": "35a197a619b48356b5d3082f006bba1d1d4fa4a7",
+      "bytes": 559,
+      "sha256": "30272103179fb829e527a88ab07ef8f6d9ffe79adecace0ac8e46515c1a1ac28"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml",
+      "git_blob_sha1": "318077b57e31f97c8c39becfc3676f32facd7a70",
+      "bytes": 3667,
+      "sha256": "d3495d6c94e4cc95d3ac0b6775b5e2172052df4e3365df6bac05f8710bb01c37"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml",
+      "git_blob_sha1": "64f5af4dd1339d44f6df91d387cf5bb1c9e50987",
+      "bytes": 17075,
+      "sha256": "a7db2efa6658ba17cf5162e892adce09b6d6b86b8ba7f7fdba611565de7a5f57"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/from-research-to-roadmap.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/from-research-to-roadmap.xml",
+      "git_blob_sha1": "2eb0f21689945fd1aa43c737c220cb5dbe280d16",
+      "bytes": 15652,
+      "sha256": "322f21a83f32f054318df6fdabb549d5b0eeec9d108bde8bd5bda4c52eb95ace"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/research-template.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/research-template.xml",
+      "git_blob_sha1": "410fd116c6947cab52a3a552607ec72ca8b42cc0",
+      "bytes": 10591,
+      "sha256": "4dfee13c40229175456da35d2ccd6293f8171daf61c81875e9011b885e2d09bc"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/README.md",
+      "git_blob_sha1": "894a65d11b48d8c4ad35a6e36e12f0d1d94eecec",
+      "bytes": 4700,
+      "sha256": "884979669a2b099a9b0f3e7ac499832278aba6e00adbf4f57ab1c8edffa0ad13"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibe.toml",
+      "git_blob_sha1": "fdad62c94c1de72b740e4db6d15dc07afa45c0cb",
+      "bytes": 703,
+      "sha256": "47b66de192fa61bf8f30389857c43f937be1a1f96caf5f3f1bec24536167d1df"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml",
+      "git_blob_sha1": "0a029bfd48624b736a15152864bdfe7cd4e61b30",
+      "bytes": 5402,
+      "sha256": "c72fc8e006bc80b2284512a0925a0db7f954d172b4e8bea966ca2759449a9d82"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/boot/35a-wal-binding.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/boot/35a-wal-binding.xml",
+      "git_blob_sha1": "ffea77e7a50eae091e6c33b1370323b6853d43de",
+      "bytes": 412,
+      "sha256": "65a27053e20e7bb72dc2e3a3e0a320f55fc8a88abe73000a183a1b7c40ca8305"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/CONFLICT-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/CONFLICT-PROTOCOL.xml",
+      "git_blob_sha1": "1d035fed1a28e307e33781faf8eabb1961c96a2c",
+      "bytes": 19065,
+      "sha256": "47818ddf4db92feec75cb609edeca3907ec79ae91fae7fe336f4b15b5004f430"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/failure-modes.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/failure-modes.xml",
+      "git_blob_sha1": "b1115fc2e9b3f3d856045dc056b6f0bf9bb2bddc",
+      "bytes": 14460,
+      "sha256": "1d39f5ce44291bd355f9083406c2f53b2e289aa1cc0d0d11b2f724e8d5756ebf"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml",
+      "git_blob_sha1": "226bec16a92a0d36f08e32cb1cebc7fbc9f4e740",
+      "bytes": 16585,
+      "sha256": "075170adcfdd9c7f82e06ed25be7cde76b5faddf9285e5ecd5dfbf6d559b016c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/README.md",
+      "git_blob_sha1": "25f0d8b426637d9274c4f067d4df3056d8f7176e",
+      "bytes": 4996,
+      "sha256": "77658bdfbb6fb9416a0420662353cfd65fffde7d4975f68ea14f1445ff48c5b2"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibe.toml",
+      "git_blob_sha1": "92bff634e850f3e1e543e528d52dce0c6be5b195",
+      "bytes": 524,
+      "sha256": "0dfe72163b6feee2735b94ca4bda62e273ad52ed3f89faf1d64284f964c06bdb"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml",
+      "git_blob_sha1": "528291bdfccd3c57be837bf2cc3b5b606651fe0c",
+      "bytes": 6448,
+      "sha256": "85c4c16decf617d00c46048a9b2183a65eca1cb3d82c286dc5f52bf254d23648"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml",
+      "git_blob_sha1": "b8498a09da56f75428f06a8bcea9cb7f1a407624",
+      "bytes": 19017,
+      "sha256": "11e4d9bf2c7e9d457820531b2fc975514aa2da795baffa365197ae54fff16192"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/record-template.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/record-template.xml",
+      "git_blob_sha1": "fed804098cdf3332830edbfec7fc96d68ee0e449",
+      "bytes": 13476,
+      "sha256": "3ad73d9b400d5a723d1990603b57781475bc4636344a700abe50fb7c57f2da97"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/revisit-triggers.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/revisit-triggers.xml",
+      "git_blob_sha1": "1043dc65f37c651b8c7a6c36cb1b2eaf9b17ed96",
+      "bytes": 16450,
+      "sha256": "4d942bbbf05c7372026fc20e9277e725fc915b175bd971716179ff728b9192f5"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/LICENSE",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/LICENSE",
+      "git_blob_sha1": "f8ba5bec5ca04782130cc7dacd104e39e967cda9",
+      "bytes": 1820,
+      "sha256": "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/README.md",
+      "git_blob_sha1": "2646022e7aa130eed0fafa4bfd750f39e2b72643",
+      "bytes": 2149,
+      "sha256": "56da90a8a81207ec6062fea8aefae9eab20f973f68d693f8738a07c93f2cddb0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/vibe.toml",
+      "git_blob_sha1": "152774c12efd578688969db93752d35051b6c683",
+      "bytes": 564,
+      "sha256": "9a78686c3046abe9e0a56e18a6fb2786931c82db82bff04ca3582fea2747a06f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml",
+      "git_blob_sha1": "d790f5502d579ab01e51a294b9a7fec347b953e9",
+      "bytes": 1884,
+      "sha256": "78635be9245d10473e202881971d66ae71520140eee86538669fa7924c8ad10b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/dev-runtime-docs/v1.0.0/vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml",
+      "git_blob_sha1": "6e31be8fe75f9b3d2b784045470978231a903c9c",
+      "bytes": 4645,
+      "sha256": "02ba8b8b41c9863fc14e0f44f553f2c8b2f38e7d8e424226c48c861023fff549"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/README.md",
+      "git_blob_sha1": "35ad9d1acbd52e540c878fecf88850bcb976f761",
+      "bytes": 3839,
+      "sha256": "d4553a1bb4dd5a8e39ea90f8f78c801180aa5926b9321345f38e50efbef55931"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/vibe.toml",
+      "git_blob_sha1": "9ef689c42d7bb915a7f8ed0bc6f850b5888dfffe",
+      "bytes": 586,
+      "sha256": "ef053032958814291074d8c79e3a47e4f03dd6c2cf022c10a44e88d4bcfd1be6"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml",
+      "git_blob_sha1": "3dcbd0ca5207ec339fb4e7db184252ac84b8f016",
+      "bytes": 3305,
+      "sha256": "0e8704d08904ef5d6ae097cdda8205984f75a1797a94e6181dbf007112ee50c4"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml",
+      "git_blob_sha1": "86af4de1c05bce51b1582179460e0861e7f0883f",
+      "bytes": 26361,
+      "sha256": "47e44bb84e3c994ac56091b3e8ec3f15d188187ba26905061a4182956b1d8b77"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/vibevm/vibespecs/flows/discovery-prompt/usage.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/discovery-prompt/v1.0.0/vibevm/vibespecs/flows/discovery-prompt/usage.xml",
+      "git_blob_sha1": "c719a6258ad335aa352e0073db3adae311147330",
+      "bytes": 20183,
+      "sha256": "2269b060d5e795d2f9ce5395cd80402fd9dd62d399f77ea1caf93ae1cc75bd57"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/LICENSE",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/LICENSE",
+      "git_blob_sha1": "f8ba5bec5ca04782130cc7dacd104e39e967cda9",
+      "bytes": 1820,
+      "sha256": "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/README.md",
+      "git_blob_sha1": "ddfc7881906335cea6fb319cd5bd235e5e93db29",
+      "bytes": 3855,
+      "sha256": "52607dc59b0c1aaeb72b230554b4ff51acdaecec5c8eeb7b84db0fcb73ac6b9c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/vibe.toml",
+      "git_blob_sha1": "e4534967d10f832107505f82533f887a5aa8db0e",
+      "bytes": 744,
+      "sha256": "86feac27d85ae42c8ca65834a02d9dd095614c6c3bf8b3d25a5a47b32cec7dd0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml",
+      "git_blob_sha1": "4666aba7e9e14df2940b74bf2f9f14c2eb73ef73",
+      "bytes": 5296,
+      "sha256": "d94d333e3215616aaaf6f6e6b4d4f6c584e98bef8fd69d944a8cfd4b0eb9a0d7"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml",
+      "git_blob_sha1": "d95f8e63fb0d827c073ab1923799334a0f15ed43",
+      "bytes": 15775,
+      "sha256": "7da2944a6748c644d55b0824f9c9bb4677d0c7ce55be02f38529b067ca3add06"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/flows/atomic-commits/splitting-large-changes.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/flows/atomic-commits/splitting-large-changes.xml",
+      "git_blob_sha1": "247c35246a811dbfb6ea9da9e12af5a1286492b1",
+      "bytes": 13101,
+      "sha256": "a9acb751b50bb3de718acf012944fb8dcd507aa6bd9b6a5f58c3285fc440b11d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/README.md",
+      "git_blob_sha1": "d039bbc993a705b100d5cdf06d0d82a2d33b8bac",
+      "bytes": 5362,
+      "sha256": "c236cf9a90cf205452ee35926f200c3b12c62abc5a264e9298eae340df7ece89"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibe.toml",
+      "git_blob_sha1": "bf130515af20c9d22b414e7e6b66d1c78f433714",
+      "bytes": 682,
+      "sha256": "42d5ef646ad62e5c46c517e15bdd683869076353c8af7f56a4a8a87cbad1f730"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml",
+      "git_blob_sha1": "04cad345ea889a3b97d1bd52e9980f39c5da0ffe",
+      "bytes": 5154,
+      "sha256": "0c200d1b3dad5d20e8163a920f34073aa71923d22b45a83d26844bc7aafedc62"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/ATTRIBUTION-POLICY.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/ATTRIBUTION-POLICY.xml",
+      "git_blob_sha1": "cf23c275c763f9962b544d672265b7a78a6ef4ba",
+      "bytes": 11888,
+      "sha256": "269edc93078cfeefcdfb9cc1f13984bd935f304537b60dd71656ee1ab0a6c10d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/disclosure-alternative.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/disclosure-alternative.xml",
+      "git_blob_sha1": "0850ede6b54b04da55eaa78860ec93fb0acebe04",
+      "bytes": 9441,
+      "sha256": "cc2d89470d2e5b314675c57ec5eaced971d240c48ba04cc0067d5d46095da0e0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/enforcement-checklist.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/enforcement-checklist.xml",
+      "git_blob_sha1": "e09ef148a5c2001604699cf358919a141ef278a2",
+      "bytes": 10439,
+      "sha256": "5599fd61d9f6b467e498cfbfa21716fb4c60318fcd69d3f7de5a9aa0e99b9420"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/LICENSE",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/LICENSE",
+      "git_blob_sha1": "f8ba5bec5ca04782130cc7dacd104e39e967cda9",
+      "bytes": 1820,
+      "sha256": "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/README.md",
+      "git_blob_sha1": "4481609b37155a950a7e9e678d140d0d6c6d42cf",
+      "bytes": 1650,
+      "sha256": "ac5b64061b0af77033184ab58b2c74af6e37ba70d180ef8157bba13b4d7bc840"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/vibe.toml",
+      "git_blob_sha1": "da8da437cc3521f989dc2f32797083f781f9e237",
+      "bytes": 737,
+      "sha256": "2d2c1f531ce1d4c1eee47417a5afff6061f233c0b612442de134262aac2a5a19"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/vibevm/vibespecs/boot/32-flow-autonomy.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/vibevm/vibespecs/boot/32-flow-autonomy.xml",
+      "git_blob_sha1": "1663ca440cee2eba9c32ed21ec559e8589b386e3",
+      "bytes": 2880,
+      "sha256": "384b77e7b4c32df7cdd54ca12e294893ce7c6de3eaa23b8acdf34104b217a44a"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/vibevm/vibespecs/flows/autonomy/AUTONOMY-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-autonomy/v1.0.0/vibevm/vibespecs/flows/autonomy/AUTONOMY-PROTOCOL.xml",
+      "git_blob_sha1": "79fbedb0eba8e2e0af209de0185b0c04e095c9f0",
+      "bytes": 6114,
+      "sha256": "8ccd7cd0b773941dca53a43644c23c99bc6306fb47861b7a76d2dbafe5851ff3"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/LICENSE",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/LICENSE",
+      "git_blob_sha1": "f8ba5bec5ca04782130cc7dacd104e39e967cda9",
+      "bytes": 1820,
+      "sha256": "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/README.md",
+      "git_blob_sha1": "54fa974fd09a6b2641e6e0d72d5f51167d651e7c",
+      "bytes": 1863,
+      "sha256": "aed8511fa0345b23149114d7ce828fd7f19236f0e7defedf84f681a18c27c0dd"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/vibe.toml",
+      "git_blob_sha1": "f730d7d9e299d3d2cf913aa74a3aad39c9da6132",
+      "bytes": 805,
+      "sha256": "881b9467d99223379a780e7583df68cac5101d1ff2105cc5ab9702818170731f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml",
+      "git_blob_sha1": "c0fd6490cdd8b0c887f0db4f1a01145a2d1a723b",
+      "bytes": 3256,
+      "sha256": "2e16de3b2ad9f268324faf2bb14c56a2b87b41d25020f6ea92d15548475a55c1"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/vibevm/vibespecs/flows/conventional-commits/conventional-commits.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-conventional-commits/v1.0.0/vibevm/vibespecs/flows/conventional-commits/conventional-commits.xml",
+      "git_blob_sha1": "c873376b22ebb9e04dc889ae19614a9db2250182",
+      "bytes": 15694,
+      "sha256": "59b11500c8c12ad76bbb31ff96fe1f65dc8394bc3c7e88d1b3d2de541b7daee1"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-practices/v1.0.0/LICENSE",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-practices/v1.0.0/LICENSE",
+      "git_blob_sha1": "f8ba5bec5ca04782130cc7dacd104e39e967cda9",
+      "bytes": 1820,
+      "sha256": "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-practices/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-practices/v1.0.0/README.md",
+      "git_blob_sha1": "c4bc49dff56cb846b80d184ede2730c3efeee915",
+      "bytes": 2604,
+      "sha256": "50a72bd6e62888a61a5d14d336cc58e4598809b26930672f05666ab5b7a829d8"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-practices/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/git-practices/v1.0.0/vibe.toml",
+      "git_blob_sha1": "d067529cf7fa97e37bd8e33847f5deeffd90dc2d",
+      "bytes": 1822,
+      "sha256": "ac8bb8c95299cbc66fd203b10c492e9e07644ece09b5116a7126b2ffb0bde7c0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/README.md",
+      "git_blob_sha1": "6bd137da76d75fe8cebe17e55a2fb97509d4658c",
+      "bytes": 4680,
+      "sha256": "a0b36bf7d3443040681c61c76624dbbcfb086cc2781498037e6947c9709e908c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibe.toml",
+      "git_blob_sha1": "c214fb7730ee04a1ccd4ffd0721871b8610dde1f",
+      "bytes": 911,
+      "sha256": "1f3e1f93fd3121fd1b441bf45493034d3ec19503f63c3c42e67bcd1f8ca3c69b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/boot/42-flow-health-audit.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/boot/42-flow-health-audit.xml",
+      "git_blob_sha1": "9284a4248aa1ba296c4aea045478225c9ed2df34",
+      "bytes": 5009,
+      "sha256": "d8b458eb62802222bc29d3829a6bb74507e369c804853f7dd84009e07fadae1d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/boot/42a-wal-binding.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/boot/42a-wal-binding.xml",
+      "git_blob_sha1": "2b2c4874a1f28f5eec87f967799e75c8386360dd",
+      "bytes": 413,
+      "sha256": "81a3dada895d490f189eb63fa5bb69b4d09bc4b97f5f1e185475046d3e3e37fb"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml",
+      "git_blob_sha1": "6f7386632d1e5eadfc6759973c67342e2e0d9f64",
+      "bytes": 22109,
+      "sha256": "8096327db314a4719640611e625c5d5c7ab497b1c82ccc1d6539fa6283536643"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/audit-checklist.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/audit-checklist.xml",
+      "git_blob_sha1": "5e7d529eecdf1f83f384e9b5684471735de690a2",
+      "bytes": 16020,
+      "sha256": "368d2fb9c06334bc442c57986655eb4f777539a4570660ddd41aa8de255c2001"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/running-an-audit.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/running-an-audit.xml",
+      "git_blob_sha1": "3e980ca82f43e5f3ecec684e36f283f973454990",
+      "bytes": 11279,
+      "sha256": "596e62c00c707d194cc396c7922725e1a1f4480b7cd20f244f2664c2587ad5e8"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/skills/health-audit/SKILL.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/skills/health-audit/SKILL.md",
+      "git_blob_sha1": "825e81d4fcfd2d0480e65f18422a84ef627cfe7a",
+      "bytes": 3306,
+      "sha256": "5a714276d299b2a7f992b49f071c5d2e31795f747b75c51c4d610831cb0f66bf"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/README.md",
+      "git_blob_sha1": "aabf4206b2e532e4d161cc6e409b0ed648fb201e",
+      "bytes": 5546,
+      "sha256": "26c1adeb52632c409fe92aec82ea2725ea96ea682abada91f4adb68451dba48f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibe.toml",
+      "git_blob_sha1": "e58c614ee9af53efba2167c12ee2742907346954",
+      "bytes": 795,
+      "sha256": "f7d6a6b774bd761bdcf3f4cf72f41d6bfd0e9d85b1bc882e384a06b97025e561"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/boot/60-flow-licensing.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/boot/60-flow-licensing.xml",
+      "git_blob_sha1": "e875a97caaab8e59f3ac47a542d06e401e764956",
+      "bytes": 4501,
+      "sha256": "813dcf62879c431b99a2b99b290bc631f4633162aba0c839149fa97958429f47"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml",
+      "git_blob_sha1": "eb514fcfdac80fc9fa74b17ca1c5397847eb15eb",
+      "bytes": 14098,
+      "sha256": "3331fbf05e0383f4f4a23c9e51bd5db59d18d594d590a337b3d72b0cea647e53"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/dependency-licenses.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/dependency-licenses.xml",
+      "git_blob_sha1": "a6630263bbb977253a8d7465174151ef84ef90fd",
+      "bytes": 10353,
+      "sha256": "98073ba91e82e3991669c8501192ab0fc4fbb462e5c44420981444d2654f1736"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/eula-template.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/eula-template.xml",
+      "git_blob_sha1": "df572bef2f67c81df3648f1b8c261f5cc8701d3f",
+      "bytes": 7816,
+      "sha256": "a18ad09ea3ac1273bc787bee5c601008ace310aae87e4c42e030de21a98d523d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/skills/draft-eula/SKILL.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/skills/draft-eula/SKILL.md",
+      "git_blob_sha1": "8a0f75831931e73295b14b8e4b0109a5b12ac149",
+      "bytes": 2982,
+      "sha256": "d226c21ebac6123a9e96982728c0863f1463846fcc699747c1e965e128450147"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/README.md",
+      "git_blob_sha1": "608dbfa3c02bbea65d82eecfdd95ee31cb360821",
+      "bytes": 4631,
+      "sha256": "a22f1c24001e5df53a0386a8bce0ea89f23a1b22bebc792dc00db1ec837e8552"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibe.toml",
+      "git_blob_sha1": "a44025d8c64ff8052578a551f190c825485030a1",
+      "bytes": 570,
+      "sha256": "cc6e22d7db4f6d8d90ab3a2ea77971bc59310dea0b3c3dfcfad0427c93d68a56"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml",
+      "git_blob_sha1": "c0f34b0934eb3ad9d30dfdebe62270697f4d281f",
+      "bytes": 2931,
+      "sha256": "3479fda737707e6187989795befdc1b5d7a4cd5c86c55cd6dce849d3f78859de"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml",
+      "git_blob_sha1": "f4348ab5c6b417b480279598b373663ca277c99a",
+      "bytes": 22252,
+      "sha256": "d46f28129f9bdb572f92ca3d2bd21908aa27a47b187ee1c87bc68ebf57f5b29f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/adoption-guide.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/adoption-guide.xml",
+      "git_blob_sha1": "b212e308a59a1b511714f6515802a6b2c4657683",
+      "bytes": 15376,
+      "sha256": "255a5dbfb0f627eaec45a7f48583a917cc406b46e36caa96f76383c32f315a93"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/rejected-designs.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/rejected-designs.xml",
+      "git_blob_sha1": "de5610e111adcb37ea90806dd815178994b9757b",
+      "bytes": 14601,
+      "sha256": "ecab85f99ecde887cca0e22e71325f65cc6d6217c76a1af62f292e5df4e49353"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/README.md",
+      "git_blob_sha1": "2ec6aae665df4f442a0f27f396cc8cda3a7edfad",
+      "bytes": 4654,
+      "sha256": "c35e6d154f40f5596328a15c91743cb91d09dc9f4c49a628b1e0e25e7a6f5c0c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibe.toml",
+      "git_blob_sha1": "1c2e0b69f3ebf168765454cd67302bba768e3667",
+      "bytes": 534,
+      "sha256": "daf77be39ae49360fc436dddbcfd535c1b888350d75b15cd3f0ff7709af7a39d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml",
+      "git_blob_sha1": "09193a2015f3d936785119d2afbc58f83beca88f",
+      "bytes": 4502,
+      "sha256": "776a80dc34b2374e54bce15285aa7b1f68d103affba60d56a6e719d194699fae"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml",
+      "git_blob_sha1": "a489dcb3672d1cc01f6c463d5f3196c6de3bc56c",
+      "bytes": 13573,
+      "sha256": "5c4454bb9a2851cb66ad75365e5acc1a7204cbe49c39ebe568f33df2c5e7d35a"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/authoring-rules.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/authoring-rules.xml",
+      "git_blob_sha1": "5a76aca83a4e43eb350c2a443ea2375fe860371f",
+      "bytes": 10028,
+      "sha256": "3a74edee726a5ca90dbe435fd36e300b33a67c58e0ee4453fc95fb1e28566c22"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/test-template.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/test-template.xml",
+      "git_blob_sha1": "02a845866b41b3ee41f18bdca2c505524eab8542",
+      "bytes": 7587,
+      "sha256": "c9dbd5c35cdd417eb5d2ff8cc81c2b26ada2988626f0fdd0837c53e878138246"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/README.md",
+      "git_blob_sha1": "b8900df7ad8ef72f4a11826b8c2529e711173372",
+      "bytes": 3950,
+      "sha256": "d00e10054cccfdd0b06d25037deda13a44765a5e32569d8b17593f2d1028fa18"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibe.toml",
+      "git_blob_sha1": "f7ab7dce78b368490dc8a1844405f91da279b77c",
+      "bytes": 537,
+      "sha256": "d78795bb4bc5c480749825d9829e706cfa29a1ccce3120a0361eba66fcc2f661"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml",
+      "git_blob_sha1": "013e14ed93d41e2042902f22f7518a83104cf2b1",
+      "bytes": 5839,
+      "sha256": "242404d1d10bea80d4225d4f33ee66db19c51e084b7ed42dbf34b808ed5afb4d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml",
+      "git_blob_sha1": "78d168ae5519e171721006e8c16b3b3081c100e6",
+      "bytes": 14053,
+      "sha256": "19aa264e9fef2e905e3ba48be4627113c01f89d72370dc7766ef2684c78a1e0f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/mfbt-mode.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/mfbt-mode.xml",
+      "git_blob_sha1": "cb21655cb37687af0bb3359a6450dd5a4497f4ee",
+      "bytes": 9925,
+      "sha256": "a489d05bc98636824c4c6ad422c882175995ab7189a77eb1f3bac255c9621b56"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml",
+      "git_blob_sha1": "2f0598915e7b36399fc020ad115b5d8930d9f18c",
+      "bytes": 11313,
+      "sha256": "15578733f15bb3f9f3b60912808b2d4ae8874c36d6e974cbecd13b7dff6922e9"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/README.md",
+      "git_blob_sha1": "ee47c1d873152fc8af869c19556f8df0ab5c9ada",
+      "bytes": 5736,
+      "sha256": "21b058801484975663ccad0c72aeec794dcc065d9f27b4aca1736adabf9c6a66"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibe.toml",
+      "git_blob_sha1": "2029e7b60eb9c62ad1770a95a18b5b99a3783ec6",
+      "bytes": 564,
+      "sha256": "f68dbaf1844a153949910e504c3d01dad77864edd76f0c116c8884c62dd5b147"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml",
+      "git_blob_sha1": "13eb678e8df3b61a210643a56d5f159680623b24",
+      "bytes": 4032,
+      "sha256": "792c4a695ce492bad127b5fe30222efc1bbfc35fa6144543b9074b49d57816a8"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml",
+      "git_blob_sha1": "3da5209e68743389cc8b653de2994d06b08b1f21",
+      "bytes": 16608,
+      "sha256": "5b203b4fe24b83862df101c3820eede5720cc59d9b083ca6517aa219b76089f1"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/naming-forks.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/naming-forks.xml",
+      "git_blob_sha1": "e7eb9135d4f5fe6f8846ba34b3769016b1b5fa40",
+      "bytes": 14772,
+      "sha256": "a85a84c02243645e1bb17b3a6affedd3d1e05f93fd713f46118f9ad62c213a11"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml",
+      "git_blob_sha1": "012b0c164b2620a312613be97d2e7f49c5c22abc",
+      "bytes": 17186,
+      "sha256": "de61e215f1705573235b073ae8919a199444b81390536a3e4f9d71d417440b3d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/README.md",
+      "git_blob_sha1": "5a64e1ba3e964c2bc3cf9aac030fc48389baf2c1",
+      "bytes": 9645,
+      "sha256": "4c481f039babae6ad1b10d30ff2f3badb8b774770d32ac24aa9133c1babf3594"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibe.toml",
+      "git_blob_sha1": "37e02a388f411cac58b322090ce653e476f857d2",
+      "bytes": 2652,
+      "sha256": "6f873587fb9958e0fc57257cbd61da6b1ae5c699e6759695b56c734715654b46"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/book/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/book/README.md",
+      "git_blob_sha1": "8e91ef3e9b5d8da9de711dfb9b2da7abd8634303",
+      "bytes": 1503,
+      "sha256": "39626657b40ef98a89b3e9a35142bf71e4f0f4bc9179cf6bdf248773e9754e45"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml",
+      "git_blob_sha1": "a8857e9092361578139b8f37e4b31238c1f4f3d2",
+      "bytes": 52528,
+      "sha256": "ac40a50cf75a12ba6e14fa490806eaebf7d733f4b2af3c4496f7935bcb9a50ba"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/book/ru/chapter-2-shared-state-and-files.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/book/ru/chapter-2-shared-state-and-files.xml",
+      "git_blob_sha1": "60b44c06bf998d54ff1a23716e24812b892ecafc",
+      "bytes": 67894,
+      "sha256": "239c993d26f920f3e3d2a2ffe7e9d5d3129ecf210b495d893f7c7ed1dc1819f0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/book/ru/chapter-3-memory-individual.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/book/ru/chapter-3-memory-individual.xml",
+      "git_blob_sha1": "013befd6ef89f1dcf88078ee5b504cf19c5cb403",
+      "bytes": 29329,
+      "sha256": "2d2fbb2b1ac0c7b2e683818119aa7176146b3ba5a8d3aa05176995f658172da2"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03-flow-redbook.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03-flow-redbook.xml",
+      "git_blob_sha1": "b11aec7b7dd20d3f65c4daa4bea0da83fd73cd90",
+      "bytes": 7345,
+      "sha256": "571f075b92bb5a987e0d769a2da4c53c0bf4e243fc95521b5d076e21dde91da6"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03a-member-wal.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03a-member-wal.xml",
+      "git_blob_sha1": "112e27ba8150fb08ff7af2c25b68424458970659",
+      "bytes": 297,
+      "sha256": "ed3502e7d2b564c6ae0dc1350adcf2140d129cc87e709b77a5a1377b14b842b2"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03b-member-wal-specspaces.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03b-member-wal-specspaces.xml",
+      "git_blob_sha1": "61484ef77f6f378cc36e96687d554e8d52c87507",
+      "bytes": 363,
+      "sha256": "b97c57008834bb5152f4d5a5c31a90dd86f802d666fbdb92f6d9d38466027175"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/README.md",
+      "git_blob_sha1": "7c9566d004c29b774454005a88d8b160efe2bec7",
+      "bytes": 5180,
+      "sha256": "dfa76ced3a3c1cdb33fc998ad99d2f7e7bb052702aa2ddffca137f9423459b21"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibe.toml",
+      "git_blob_sha1": "50cda698104305843dce8c75dda9ff096f506406",
+      "bytes": 554,
+      "sha256": "714859eb412e146094425942ab6e366bdf081d6a49c44d27a17dfdf06b66bce5"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml",
+      "git_blob_sha1": "4b9e8c2f08659db9723a281f918e223c252fe190",
+      "bytes": 6115,
+      "sha256": "121fae0fbbc2c55ca46301bcc7e858e9e516360a2246638a6085f62314dd3ad5"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml",
+      "git_blob_sha1": "8023cb1e3ed035669e8a06cafe12ec59b4bb6db8",
+      "bytes": 18884,
+      "sha256": "40eaae71b4a010e846e5fb4420c801b4cadf4e0db51865b100973df28af3b4bc"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml",
+      "git_blob_sha1": "cf0fd22f00c9d95c90eebc1c18ee788b4b08f161",
+      "bytes": 12410,
+      "sha256": "f7460895b9454b34473618a38f1f2d4f65935f71e075806a508ea6575db67554"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml",
+      "git_blob_sha1": "f5300e9c99cd1cbff2253643a722d2139d6f13e4",
+      "bytes": 12368,
+      "sha256": "69abe7119d0b7d5a63aab30fe71de2d121cfe59d7652a947880430f2df8fdb19"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/README.md",
+      "git_blob_sha1": "baba8a03f7981d762d1505801dfd0029b96835c2",
+      "bytes": 4773,
+      "sha256": "563600e90b4c10750de698858860bcf89094d25ed7a3fff45b53176abc7c66f3"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibe.toml",
+      "git_blob_sha1": "a2420af86fc804ee1a5e98e19520dcdd38328fb5",
+      "bytes": 544,
+      "sha256": "fac36afd078a3c932146e9862963700226a5c2897be6c655ed716abea9578f4b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml",
+      "git_blob_sha1": "4c201b48183145f988725fa14d82651714b44847",
+      "bytes": 4060,
+      "sha256": "4c2206845fe3e5ae7923ddf34bfb14c974ec94b3d058e5ba0a23649be0404dd9"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml",
+      "git_blob_sha1": "f88ce55ab6b5717583fd199df927d7c97b4be235",
+      "bytes": 16027,
+      "sha256": "20f6c4b536aea3e5d45c8f7eb87fd61f3bcd264fe30c00731c938ba0437f453d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/daily-loop.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/daily-loop.xml",
+      "git_blob_sha1": "d44fdde0d48678587602e8b39dd6c3b0d40b8069",
+      "bytes": 13799,
+      "sha256": "4661f256b2be3369da56e7d2f6f4378e0908943cf0ae1f6aafeec9bdf94073ab"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml",
+      "git_blob_sha1": "36778d1bd0fe1f587fbae6d2372e795bd388ebab",
+      "bytes": 19042,
+      "sha256": "5ca48813fa5209e989ee83da4bb9154fabee79b306333e2754ba3544b8919d2f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/README.md",
+      "git_blob_sha1": "199645646f66eb0d9599c74285e7cdef78bfda1f",
+      "bytes": 4829,
+      "sha256": "66b24de96aac4f3cc8bf07c7504cac436f632bea704288f156dfe92df68526c7"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibe.toml",
+      "git_blob_sha1": "6a9e1ec516f7cbbf8851f98b25af775e97d491f3",
+      "bytes": 543,
+      "sha256": "8af4ca50ebd3abc4d55c69be3cdbaebb2fca4a04b44b3367e2282545afa40048"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml",
+      "git_blob_sha1": "9328c2da61b526a5767fb2751466bf436ee2847c",
+      "bytes": 7145,
+      "sha256": "49dfaf76b4754507a382eada69329fcc8640621a13c4c91c736eae16a5067356"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml",
+      "git_blob_sha1": "e380c138e8b2ff0f70df1d1d0d76811231565cd4",
+      "bytes": 19243,
+      "sha256": "fa316c142171e1db81c93109962c4294ed277784f4b6e5d6007e0c0784fe2091"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/design-docs.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/design-docs.xml",
+      "git_blob_sha1": "873cb27f848cc06678c97a100947e7a6591ed447",
+      "bytes": 11143,
+      "sha256": "f1eea38a67a0804020da4e5f8907f74e04b432ae05357b7228b110b6602424ed"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/when-to-write-what.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/when-to-write-what.xml",
+      "git_blob_sha1": "c6111bdf6ca048e96ccf2c2e2411bfa9ee05a105",
+      "bytes": 14742,
+      "sha256": "230761a81e4ee21ac2dc143bea2bb8d90c73b4b408449d295f59a95cc54123fe"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/LICENSE",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/LICENSE",
+      "git_blob_sha1": "f8ba5bec5ca04782130cc7dacd104e39e967cda9",
+      "bytes": 1820,
+      "sha256": "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/README.md",
+      "git_blob_sha1": "88ecc722111cb7e9aad9b8bc154c1554759e50e8",
+      "bytes": 4233,
+      "sha256": "7fb9b178ceb4d797fe931d3078c44374969bfb669cdd290065f656479a80cec1"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibe.toml",
+      "git_blob_sha1": "a7fb1c2bc2e9ea578362e524871ab1c1d8680f97",
+      "bytes": 611,
+      "sha256": "1df4d97290f2f9efd57d8ffa3c22e4f2395474d9601ad51c127fbde2df22377c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml",
+      "git_blob_sha1": "3545e7d1aeecb25452cdd4f13576afa0bdc6cca4",
+      "bytes": 4860,
+      "sha256": "39f99e5a30b6a5c8cc8bfda48404dd7411f6047cf272d4e41fc7577c5fb16285"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/boot/20a-wal-binding.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/boot/20a-wal-binding.xml",
+      "git_blob_sha1": "f9caa6fb5bb6b1f06633dce50904b9362ca81037",
+      "bytes": 434,
+      "sha256": "dc07206e44c8eb126b12af884be56f2f8fa1862cd16c5cb7ed27131a98ecc739"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml",
+      "git_blob_sha1": "e3eb710a28c29a17d7e79a7899631b3c5eb76681",
+      "bytes": 13390,
+      "sha256": "f40bf411748e7683c58cfc721491ba98e1484fdfe4bd2511dce9db30ae69621b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/review-workflow.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/review-workflow.xml",
+      "git_blob_sha1": "02171319e6104f1db64a33971c51f48190a76c52",
+      "bytes": 11292,
+      "sha256": "9e84c70121ee1ef4c06733119cd842c476e19f45b7e8b80d60ee15b56421a732"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml",
+      "git_blob_sha1": "7e1698b35549823cc6c5f9d3000e4774ec5eef1f",
+      "bytes": 9572,
+      "sha256": "7348ba635505b048a41a9c5dc8ce8786ffd18ad4b6f929ae2a0384a331090aeb"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/README.md",
+      "git_blob_sha1": "e313023765cdb4e46e710356f73d2c308ff69321",
+      "bytes": 4791,
+      "sha256": "b1c7eb50d92f4503fb223365754933a38c23a75fa2806552f1668c2acab6b113"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibe.toml",
+      "git_blob_sha1": "3a8a15ce440cc789afa81616a1292066a6624865",
+      "bytes": 584,
+      "sha256": "215d80734fe8151d5b4921e98d2b3ea08c528a8fa5a7ab350494a6a5d1c75f97"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml",
+      "git_blob_sha1": "72471893a329029f2745fb523a314fd35bd2dd1f",
+      "bytes": 3361,
+      "sha256": "914477df8c831af5bf07f062462bf4276ba756a65b054ab4c1732a020d43032e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml",
+      "git_blob_sha1": "000a55996b0e46151583b70c796eacc4aab481b0",
+      "bytes": 16298,
+      "sha256": "a39b8782593eadb633056c5e5beb949d37bc9dc2d5cf53f637753b82dd316caa"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/packaging-lessons.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/packaging-lessons.xml",
+      "git_blob_sha1": "500071a0bd59f0174ae1499c17bac611f69a69c6",
+      "bytes": 18660,
+      "sha256": "d7571a281cd36a28788d7578dab372fb3fb46d3a1123987602a45400fbb1028d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/self-updating-tools.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/self-updating-tools.xml",
+      "git_blob_sha1": "5b976eaa41ddbc0f2dfb367b1bdfbe943ce129e2",
+      "bytes": 21543,
+      "sha256": "36670a6822fc9c246c1a0b036364efd4e205776231114cc33c1d29595c5e1572"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/README.md",
+      "git_blob_sha1": "4527c35485d4529ca458a528d8c252b691accddd",
+      "bytes": 4302,
+      "sha256": "95af6f3d7806ee0e0cae2641a6bb600bb166fe538aeab80dc0d8530ca136802d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibe.toml",
+      "git_blob_sha1": "6e1315ceb4ff0aba0c761ca5f1f3cda131b4f150",
+      "bytes": 553,
+      "sha256": "ae362fa19d0bdb30b4e8b4a2500268e2a4d39304e9ee3bd2c287d38d8a871a32"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml",
+      "git_blob_sha1": "5cebf14976c3399dc611b9e0adba17561f5e4622",
+      "bytes": 5299,
+      "sha256": "78c170113e50abd60f71578ef3e9b32e4cce1410216f7f52e2cb430e906b5883"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/TWO-PROCESS-MODEL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/TWO-PROCESS-MODEL.xml",
+      "git_blob_sha1": "8c23643b62f1ac55dc6cd954fd5a0237ca34230c",
+      "bytes": 13809,
+      "sha256": "8f2e37c2f15a498d943a6cb9bb714395a457f166f4b1a4720b68fc6ca8ca5561"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml",
+      "git_blob_sha1": "c38ab498e32e495c9a14bbf4015872e5d4896b62",
+      "bytes": 12797,
+      "sha256": "7fbba6582bbe0a0f1c85ae82c663e95f46ae6d6e7672a54f5156eae5767c3c84"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml",
+      "git_blob_sha1": "59e0acfd3b91c6bd8cb921fa6f403ac20904e70d",
+      "bytes": 12691,
+      "sha256": "2397c03c88060ef0ff49fae9ce33edd5113c50e8652f6f65d06b94d57502747e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/README.md",
+      "git_blob_sha1": "c1beca2ce2dc253d63430497c2b245b6a4253e4f",
+      "bytes": 2245,
+      "sha256": "8a0299cd5459aa876a45c9cb520678a0a353af90dd6a7e6e9b73376a6cc61584"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/vibe.toml",
+      "git_blob_sha1": "b7908d1d8698d8281bf66bb412b2cef3aa7ae7c9",
+      "bytes": 932,
+      "sha256": "11ad0bf5ac3277622638c12b8de212725572558f19f52daba8bcdbe390c97dae"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml",
+      "git_blob_sha1": "13ad001842b21abaea64972c76a425a98c38cc4c",
+      "bytes": 6038,
+      "sha256": "7525a8a510acb634664c80b8d73eaa6f2a0ed9f9fe72e1802a36ef07d1f1970b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal-specspaces/v1.0.0/vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml",
+      "git_blob_sha1": "5dfe554f12aa6fb6c53f70cb0b29892d6ed9d1cd",
+      "bytes": 14558,
+      "sha256": "b368c8048c522fb173d7b46b13276946535347222399e7f89ae87180a86d55be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/LICENSE.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/LICENSE.md",
+      "git_blob_sha1": "eb720b1474bdfdc1b773838e039565c873ce67d8",
+      "bytes": 1834,
+      "sha256": "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/README.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/README.md",
+      "git_blob_sha1": "b14644924cca197b3bef5660f9f0c25e84f0f17c",
+      "bytes": 6077,
+      "sha256": "b41137ebeb055ddcc41e57c718f2b24387b932176d60fac3d8e723f1aeb4c867"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibe.toml",
+      "git_blob_sha1": "aba42a89c0b828755c79d262a4143201ff1c8882",
+      "bytes": 806,
+      "sha256": "201175700822cddf6f53fea3c51ded6da94d9cc0864f687e149287d3a5aebad1"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/boot/10-flow-wal.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/boot/10-flow-wal.xml",
+      "git_blob_sha1": "fc0c1efa1838e9fdac04849825626fba4f1b0085",
+      "bytes": 5251,
+      "sha256": "c2507573c8122a8a2f5c09996f1efbe914f5c18be492f605e74cfa550395cc94"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml",
+      "git_blob_sha1": "2032212574e383442b774fdfc1871c9d26ef2644",
+      "bytes": 17081,
+      "sha256": "7cd00a7eb38fca3811449166dc86e5157312e16c5ee06ff0b797112e9cdbb898"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/cold-resume.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/cold-resume.xml",
+      "git_blob_sha1": "4cca664c0a8e958b4864a532a9327c30b1da6901",
+      "bytes": 13795,
+      "sha256": "15d404ab2503479b1108d8b0a3ca78933b279c556dd5646d589a433e10976fc4"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/morning-routine.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/morning-routine.xml",
+      "git_blob_sha1": "9384b64615d11a1cc667490b572a57c1735ab1af",
+      "bytes": 9133,
+      "sha256": "77b4bdb9b9f4a0b50baf0b4d14c754b487b788d44ce57bc7f82a6164f1188626"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/session-end-hook.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/session-end-hook.xml",
+      "git_blob_sha1": "decd6a4abaa332ccd72efe5c26339915bb68a43a",
+      "bytes": 11001,
+      "sha256": "074bcf2358e9e784dc9b4eb28f11581701a8dbde7f89ece2663207a19c29fd40"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/skills/wal-status/SKILL.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/none/tree/registry/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/skills/wal-status/SKILL.md",
+      "git_blob_sha1": "668238f985ef14c24b6dc3155cb39522bb112ae3",
+      "bytes": 2101,
+      "sha256": "f42779e58d3312dbfde729ba0280dc9b45fecd94e2dfe21d0dc009e5ae59a4d3"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/example.toml",
+      "git_blob_sha1": "14c62b6a1c8fbc885c7e1eeb6c836b295233cff8",
+      "bytes": 376,
+      "sha256": "ec215e8314b002d5fb6d70f51d324636e15aef0207494f888e4254c8bf43ab60"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/.obsidian/app.json",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/.obsidian/app.json",
+      "git_blob_sha1": "0967ef424bce6791893e9a57bb952f80fd536e93",
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/.obsidian/workspace.json",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/.obsidian/workspace.json",
+      "git_blob_sha1": "f2bc4b27b1f1fcb8dc0449825335bb117a077856",
+      "bytes": 452,
+      "sha256": "dfbef31a007ffec38cf833c8ac11d50b9317d0054feeb4e741f737b93035c182"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Daily/2026-09-20.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Daily/2026-09-20.md",
+      "git_blob_sha1": "391c21cdeaa2fbdd540ff08c52b19e25736b04e0",
+      "bytes": 351,
+      "sha256": "2d0a646ad4e10efeb561361558adc4419de0de96a3049e07a712e4f96d3e1ef2"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Inbox.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Inbox.md",
+      "git_blob_sha1": "886fed305e9f1263fe58647854330ad196f37826",
+      "bytes": 326,
+      "sha256": "339895bf4554dfa04850858ab5542c72af7783c84a3b0828684b079eacd7d110"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Projects/calculator/decisions.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Projects/calculator/decisions.md",
+      "git_blob_sha1": "8b1e87283d7b7e6cf710102f4a7dc3f0affd78d1",
+      "bytes": 417,
+      "sha256": "85e514661f5aaaa57e9aff71cb7c4bf5505e1211b87cd0bb43bbd70b1682a18c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Projects/calculator/spec.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Projects/calculator/spec.md",
+      "git_blob_sha1": "935eb4519e497849719058b362fb852c99378d7e",
+      "bytes": 450,
+      "sha256": "700c4177006ab77fe7c676f139d826a247f1bee5b0a00075bb69566c528ad165"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Prompts/release-checklist.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Prompts/release-checklist.md",
+      "git_blob_sha1": "92a8dcf3ecacf58c1fef3d36dff1de703c197cbe",
+      "bytes": 395,
+      "sha256": "237320756154b18ec63214a2e3a3111497cf26c283ae8ad9d237b7228d245236"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Skills/code-review.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Skills/code-review.md",
+      "git_blob_sha1": "26a9e9c84d87a470009749d22fa9fd849249bd70",
+      "bytes": 563,
+      "sha256": "69faeb83450eb727d6894d75239db690c1a03fc01033e0f1819b715295e0d363"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Skills/commit-messages.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Skills/commit-messages.md",
+      "git_blob_sha1": "91157db23009d2b8a793143991f78df65b1a4535",
+      "bytes": 499,
+      "sha256": "cddcda5cd5e4787e35169400b5f8072ce042888a1324542a57124a216619f5a6"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Skills/writing-style.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/obsidian-vault/tree/work/my-vault/Skills/writing-style.md",
+      "git_blob_sha1": "980951ddca154e23a6db880445d3216dde1cb0c1",
+      "bytes": 386,
+      "sha256": "9e7d4498f0eb2e31f0cf0046ba46f8918117efae40ab9fd0ff96646dea266138"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/package-spec/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/package-spec/example.toml",
+      "git_blob_sha1": "0e04ea1e63466827893c0642786e4c39c15b3226",
+      "bytes": 275,
+      "sha256": "b3b1f61659a1d00da86d9c58fc1e239a3188127d236814f7e03510491dc35d01"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/package-spec/tree/work/vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/NOTES-FLOW.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/package-spec/tree/work/vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/NOTES-FLOW.md",
+      "git_blob_sha1": "95d48e1c1ad0c1766c95284b8b6450d43b943319",
+      "bytes": 76,
+      "sha256": "113fdc487c1f16a54e0f514f8b2714ab59e2561af448caee3101fe98a2b9f25d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/project/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/project/example.toml",
+      "git_blob_sha1": "c77f97d59b4029fbe285bce3864e82043e7143b6",
+      "bytes": 189,
+      "sha256": "bd902346e2fdbe93bfba719912aded180f74bcae61b0bf9b7bc30f05b1acfe87"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-contract-installed/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-contract-installed/example.toml",
+      "git_blob_sha1": "fe7281060a6d34535a38424aa3853f4ac5c36b99",
+      "bytes": 272,
+      "sha256": "716db115a1ce870d263376ae083fc77f50218f8f9a490b0834b547a6d0a83530"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-contract/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-contract/example.toml",
+      "git_blob_sha1": "c083f03ae7762e9410e126af54e40383911c25d3",
+      "bytes": 709,
+      "sha256": "d10035024c42a65b3fd8e827e801a3a94989e2738bd2351858771c8c8aaec59d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-contract/tree/work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/boot/10-flow-review.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-contract/tree/work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/boot/10-flow-review.md",
+      "git_blob_sha1": "07af31cf0360e670d4bf0f3d82a535154736fd40",
+      "bytes": 325,
+      "sha256": "1068cdcdd0e19a381356acf4f7d7be3cbad8ce0742c4fd7bd51ebb1ce64d14e4"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-contract/tree/work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/contract/REVIEW.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-contract/tree/work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/contract/REVIEW.md",
+      "git_blob_sha1": "055af67b51608119e5f4e0dd84134d3909c8e0d5",
+      "bytes": 430,
+      "sha256": "0a43c09744410c3a0ab612d536995b6b61bed73e3dbd45fca38d3552a684d386"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-installed/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-installed/example.toml",
+      "git_blob_sha1": "144efc2852ee430d12180eac141afb5a98134947",
+      "bytes": 248,
+      "sha256": "aa7589b7779242cc9487d418bed5129b5de94a502ac4f457801c10e9c11096d3"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-slot/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-slot/example.toml",
+      "git_blob_sha1": "95c016105320a021fce1859bf5be15bc1af97963",
+      "bytes": 291,
+      "sha256": "02102b2989cc3ab83fc0ca40f9db53d895a7977af6155a535b3d6927fcaff9f0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-split/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-split/example.toml",
+      "git_blob_sha1": "eeaee6af78223ccb056365119ee92df0303c4b4b",
+      "bytes": 581,
+      "sha256": "99a0e97a5545a1267fa6657bad2726a7dbafa20b6a9b60da3ff86730c1fcacd0"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-split/tree/work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/source/details.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-split/tree/work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/source/details.md",
+      "git_blob_sha1": "f59b33968ae451a0844f3563816de995b1d021de",
+      "bytes": 621,
+      "sha256": "ef943b22bc72aba1d0765e6db66a3721ea67b113237a20b01acaade930616cba"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-xml-installed/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-xml-installed/example.toml",
+      "git_blob_sha1": "d8e1b01eb8c60dac95feeea9deb6e4ea9491cd5a",
+      "bytes": 257,
+      "sha256": "0d5604e1c8285ba973bcdd7726537403e82af33d88782ed223d8457542c0f4fd"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/review-xml/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/review-xml/example.toml",
+      "git_blob_sha1": "bd3adce999e3f6f5d02d6b528c683a6c0c6bc6fa",
+      "bytes": 563,
+      "sha256": "a5196ab51358a7719abaa2a2c2d4be8c3a23f70a7e96c2e6ba2b2ea743ed37e2"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/workspace-root/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/workspace-root/example.toml",
+      "git_blob_sha1": "7baafd9d80889cc3df1bc10c657f84d853856438",
+      "bytes": 348,
+      "sha256": "a53d17b55eebd47c5b638c08b6c1b199feb877aca88a8ffdbd3a61ec18a80fe7"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/workspace/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/workspace/example.toml",
+      "git_blob_sha1": "48a2adc12a4ec5352d1091c29cbcb4e8250b3b04",
+      "bytes": 252,
+      "sha256": "e92732ea1abfe6cf5d1233bb80c691b7e1bcd370aa28329841a027186639e51f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/workspace/tree/work/packages/notes-flow/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/workspace/tree/work/packages/notes-flow/vibe.toml",
+      "git_blob_sha1": "f1fa9549205c7939f51ab27f00579b51a37baa18",
+      "bytes": 181,
+      "sha256": "c6c35b5456dcc774c06c0574f8451092ba25da763bf78c239fafc24d9e6071be"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/workspace/tree/work/packages/review-notes/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/workspace/tree/work/packages/review-notes/vibe.toml",
+      "git_blob_sha1": "631b5238e87e35fcc674805975cc3b9fcf4373bd",
+      "bytes": 183,
+      "sha256": "6593ba69a429172a4a6a69bf7410fc5bd1b69eee479fc5565887ce7b1114f42c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/examples/xml-lab/example.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/examples/xml-lab/example.toml",
+      "git_blob_sha1": "e5cb06467dfacb09f417cc3799fcc5f0a42f671a",
+      "bytes": 461,
+      "sha256": "ef66276f7cc0b3ecfcb9a8331c2cd8e2be16a0ba37f34cdb816b7e6b4f16b85e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/maintenance/derived.json",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/derived.json",
+      "git_blob_sha1": "2ee4a5cca754e752f0fe5aaf4352afd34fb93f6b",
+      "bytes": 13718,
+      "sha256": "09b10cf5c3bcc5998de5e7125b494530ca24691079ffaa46c7b27bd55b915076"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/maintenance/monthly.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/monthly.md",
+      "git_blob_sha1": "3ee9cfbbcff488eddb3673e376310d076c5df892",
+      "bytes": 2066,
+      "sha256": "0b1fdeac8913220eb9ece0072f22fa61bfaa8b7e9890105e6c3f951525aef587"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/maintenance/reconcile.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/reconcile.md",
+      "git_blob_sha1": "cc1757ebc32c6882c1b5b6aa1905e4567164ed89",
+      "bytes": 3354,
+      "sha256": "bbe0e6f7ae0c3a0d448914aa5a955951de926eddd0a6fcc969084e25979fe31e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/maintenance/release.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/release.md",
+      "git_blob_sha1": "e391a7cac40c247d30b7ee4fcc74c05e652c67bb",
+      "bytes": 1834,
+      "sha256": "78850c4f195ea3ac8becd9098408ec9113b5a9689134f74bd4ffa956f723da9c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/maintenance/reviews.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/reviews.toml",
+      "git_blob_sha1": "096e26b7d3c667658f9d4f67be818a26406e0c79",
+      "bytes": 4736,
+      "sha256": "49fc2fca91fcd06179da86bc31ab95d39bd3020e140bffe734e3e24f11f95f18"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/maintenance/surface/1.0.0.json",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/surface/1.0.0.json",
+      "git_blob_sha1": "f639458ea840a2b27663078694baf0a3106e5267",
+      "bytes": 1481958,
+      "sha256": "670efce3d8385e8fa409ccc486f181fab75c3915d4c536c43b7dc18f8933fe35"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/maintenance/weekly.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/weekly.md",
+      "git_blob_sha1": "aa49c4342eb5fb4fb9f98d0db357f7e9e3b5d920",
+      "bytes": 1610,
+      "sha256": "9138fda92254365ed2229b14e2f6715fb26502357b5a2407b8ea77828fe26cf3"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/package.specmap.json",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/package.specmap.json",
+      "git_blob_sha1": "d4c0333ba0413935b4925b45eebd4abd72c5f85c",
+      "bytes": 120043,
+      "sha256": "14eb8b986dc9a17bc84b2df2796c6dc88506887e3b14c7b610014e8e0a8bf45d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/prompts.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/prompts.toml",
+      "git_blob_sha1": "867f79bdb8fe5f16dcf84830461de1c5036c6e55",
+      "bytes": 6878,
+      "sha256": "b1fcd53cd6efce009d1cfd4a301cd2e362fb69a0c85cb2299ee6fdb302c332f6"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/specmap.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/specmap.toml",
+      "git_blob_sha1": "226bc82412229e3f117d6cf789be5eb5a8079689",
+      "bytes": 2603,
+      "sha256": "f401b2a2a5a9f8c817b9a80bac1a1eb57ec7ddcf4d9f9e0002adca3618b0d976"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/style/banned.en.txt",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/style/banned.en.txt",
+      "git_blob_sha1": "61e0a5f0493ec3b17e9ef9602c28be1a923d292e",
+      "bytes": 1352,
+      "sha256": "f49bc200a13e0cf7b558609bd732afb9d4adceae988d9e4988848b03ab9bde7f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/style/banned.ru.txt",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/style/banned.ru.txt",
+      "git_blob_sha1": "0bf0040e76f0217319ded64ed3aa633591583a04",
+      "bytes": 2033,
+      "sha256": "c4d436f1142dab0cc240271cb3a965694100fb0e961e566e120f1f6d3320f76f"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibe.toml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibe.toml",
+      "git_blob_sha1": "d6ad1344ed6e5bcdcc04d764cdd2f8a68832ee99",
+      "bytes": 6703,
+      "sha256": "c17658c26ed030f51aa3b99d31087b26a79e4272ec66f9c67db340c38ef7cb62"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/agent/ask-your-agent.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/agent/ask-your-agent.xml",
+      "git_blob_sha1": "8b0350a086c95af6e06c7522fbe06d4b8769acad",
+      "bytes": 6170,
+      "sha256": "b8c897bb354d3ee2c6584b1f486c8140140968123c1fe1dcf799b754494b9046"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+      "git_blob_sha1": "b0d8000941631bc30f205b764379e92568e72132",
+      "bytes": 10052,
+      "sha256": "b3d8790e9dc014e139b5f60d4fa8858283ef1f0a2768d2496a1ab1e7ebf587cb"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+      "git_blob_sha1": "0b143be61151461de9e3e3b0e6a985b390ace232",
+      "bytes": 8012,
+      "sha256": "7473a69281fb0a9a457efe65c28e992fda9afdd4c12db73d3b91cc67a3ed5e51"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/how-this-manual-is-maintained.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/how-this-manual-is-maintained.xml",
+      "git_blob_sha1": "9e20030bb73789f7c73a780555862b5cfd73224d",
+      "bytes": 9487,
+      "sha256": "f279ecb9f6115ae25560706e74e8d14ff3c9bc64473730fc6cad990522eb0822"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+      "git_blob_sha1": "524527ac8dfccb752e7826ac041a9a45cb21a8cc",
+      "bytes": 9118,
+      "sha256": "36023293a992305f1ac928b156d030aad01bc414dfa70e452415d6b7b8886d9e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/traceability.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/traceability.xml",
+      "git_blob_sha1": "0d1ef73b9a3f8138f93ebf9da40e436160c0b23d",
+      "bytes": 8996,
+      "sha256": "6f4ca6d3ebf3b534b7108524aa18dc668c6333474f61015ddf2e1dc061b15522"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+      "git_blob_sha1": "40ba338b62b62027a33fbcdfda35d0b03e95b432",
+      "bytes": 7180,
+      "sha256": "cd3b9f3f6122323199a8f673b4780f033ad9d74f30db903be1e70f354e636e97"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/bridge-a-repository.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/bridge-a-repository.xml",
+      "git_blob_sha1": "4c1d4dbd599eb0d7dd604bc3807b28a59fd6fd86",
+      "bytes": 6002,
+      "sha256": "70d971589f9b6cfe80e346d61d37e44058850c0dcf85c5b210503072ef375b87"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/facts-and-status-markers.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/facts-and-status-markers.xml",
+      "git_blob_sha1": "7b66146d83f00ed6383111711323bd3d28d95e75",
+      "bytes": 6658,
+      "sha256": "1a2804b342e5b67695e54ace99a7ffaa83e547370738601b875cf940df23707d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+      "git_blob_sha1": "5a829bfb9b5d9ca447d4bf830d80b33fabb4aa95",
+      "bytes": 8854,
+      "sha256": "756030fa67845615fa2fa87bb1796a422c3ffee27d1cac21008f40d36f39668a"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+      "git_blob_sha1": "c63399ee07a75f1799a79133f14caee65630c36e",
+      "bytes": 10882,
+      "sha256": "ec0a8fcbf8d577eecd74ed01cfef011d77962d7957082f02d558cbe93b42cd31"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/translate-documentation.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/translate-documentation.xml",
+      "git_blob_sha1": "0d9fd8e50375621973c9c20ebd75a74d18800862",
+      "bytes": 5777,
+      "sha256": "046ced166cdb4a304c7cda4012190e8e56b61caf25511ba582d4fac197e8531d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+      "git_blob_sha1": "6f39b605f463da5456c853ba09e978872291f850",
+      "bytes": 5895,
+      "sha256": "6b854be298f6d8d46530af47ff27f88ac60c51f398850bcd5aae6cdd415f1c57"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-flow.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-flow.xml",
+      "git_blob_sha1": "ff3524a5c8ead7d069bfd5c92aa38d82f1d08f2a",
+      "bytes": 10020,
+      "sha256": "77752e31f86699e390cfca493006510e31ba94b66eb475efcf22a7ac6df2cb05"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml",
+      "git_blob_sha1": "dab9bf429b3c7d446ebc2d2d4d601463fcbf75c4",
+      "bytes": 5648,
+      "sha256": "32c1593413a1ac3463ea5d2d3286055d183601799011d8e1104171224ee1caab"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-documentation.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-documentation.xml",
+      "git_blob_sha1": "f3d1597ce77d56bb8a19a2f2a9ee0d8d1fab90d8",
+      "bytes": 12753,
+      "sha256": "99cfe3df8f01373bc76f3aead840143b72c116d53b59673143146a15b87b2a1c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/diagnostics/errors.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/diagnostics/errors.xml",
+      "git_blob_sha1": "e090c863c105e3f4b2690b8f2cb9db0c9f0b9ad2",
+      "bytes": 8867,
+      "sha256": "2a6648301b9bcc87e40e7e868d14cc645a8c4112e0ea113811743e829aae5fac"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/faq/index.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/faq/index.xml",
+      "git_blob_sha1": "ac2378902788f61fffc937ecdd816c5a05793804",
+      "bytes": 7050,
+      "sha256": "f752f0c45589050b75e0e09be71b019956f3984e5180d857b78e2fe39225242a"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/glossary/index.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/glossary/index.xml",
+      "git_blob_sha1": "8bde5c3df109f66037287d4e1828e71651ceec6b",
+      "bytes": 17572,
+      "sha256": "3f9ffd92cd5077cd8cacbada4a8fa58891bd810aa2e6b38a48f2e5bb9274ac58"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/install-a-package.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/install-a-package.xml",
+      "git_blob_sha1": "5e5202b5e8394e92054df78db5868f927aed4b80",
+      "bytes": 7792,
+      "sha256": "585a59e3716bc6b2bc40c40c8e9058ddd2259f695fe6ff35c2e6db9d1c2ecded"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/publish-a-package.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/publish-a-package.xml",
+      "git_blob_sha1": "d78ed790e394657e605485fbbf72d96b1ceaa84d",
+      "bytes": 7880,
+      "sha256": "45829ce04f716fa498bc79378e0a7a8e1a4143c67b3f6402f121975f98bd9148"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/publish-to-the-central-registry.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/publish-to-the-central-registry.xml",
+      "git_blob_sha1": "e67ccce82f6cd5d443506fc1f553b467c0bd5c7e",
+      "bytes": 3948,
+      "sha256": "5b642dc643be08ec1981d425e18a57bcb14fd4722d0d6aa949c14ceb8d7eefeb"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/read-documentation-locally.xml",
+      "git_blob_sha1": "32e3794a5332efb5ff2fc1339efbc37e3729f219",
+      "bytes": 6668,
+      "sha256": "a507f54fbf6cb1a5cdad36d6c96c7151008bb29f23ea73e7e5ce3b8937be2e9c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/remove-a-package.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/remove-a-package.xml",
+      "git_blob_sha1": "b1255a74d73f7327a7222d36ad80f6a308baa1fb",
+      "bytes": 4143,
+      "sha256": "06342a5e32854ce141601ca9b985b94508d8e61872ad0ada473b3a25a77cce87"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/set-up-a-workspace.xml",
+      "git_blob_sha1": "bf9046b71a01a5982ea82cac09bf4cc66305ee1b",
+      "bytes": 7252,
+      "sha256": "f25556bd04f271b241d8f99caae5744b39f410e33a399b564cbf4e2d83e6e23b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/update-packages.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/update-packages.xml",
+      "git_blob_sha1": "c129df5b9e40b4cc094e17bc64a139fed0d9c40c",
+      "bytes": 4771,
+      "sha256": "524ea78df47b300de0050da94259645244ef6d6a83818b1ea2be024da6b5e49d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/use-a-private-registry.xml",
+      "git_blob_sha1": "29b21b072319f3ab6dd0212b88ca406c160a220f",
+      "bytes": 6686,
+      "sha256": "62fbaad5a403543d8a8724c1eefa142e96a453c2d7f1a58fabc7ffc35bdfbc71"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/work-offline.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/howto/work-offline.xml",
+      "git_blob_sha1": "869c3c45763d4bf45083f71a71a66275cdf1edce",
+      "bytes": 5384,
+      "sha256": "3bd8b6dd269efdeaa1222e10309c8e20584f33e478203aa5d5ae38fa4bf59a8b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/legal/applicable-law.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/legal/applicable-law.xml",
+      "git_blob_sha1": "0a1b829d0ac681d68af5245d586ba89dc9157c7b",
+      "bytes": 2020,
+      "sha256": "bbb07ca3803b1167c959a88c69bd0c2539b9ddb7fe93f9d8baecbd876f4454fc"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+      "git_blob_sha1": "4a8096e66b58d9fdbcf9eb2d805542c7e73af292",
+      "bytes": 6991,
+      "sha256": "a65071f08a7783fd35b2f7963ad286878caa7792a08deced71b0c6548ff3910e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+      "git_blob_sha1": "f84fd84b4a4d20dc2fcbd78dcde33095420d03de",
+      "bytes": 7711,
+      "sha256": "d06fcc98328491eaeb14217d4a1afca633995a8e3007ccd81556616c923a8fb2"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/phases.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/phases.xml",
+      "git_blob_sha1": "78fd8734ec8edea69386aa647dadf415179c8a70",
+      "bytes": 5872,
+      "sha256": "88109c39b07035a661d47092b23a67ec03c3de7eb4ce441f1d2cfddd1e15a257"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/scrape.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/scrape.xml",
+      "git_blob_sha1": "77a4078956bf2dd22219dc745a9eddcf30440f31",
+      "bytes": 8391,
+      "sha256": "c8e2c935afa6ede8d8acb2a31c322e16148eb25b9692f2ef577aac4fdc0c89a9"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/model/boot-lane.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/model/boot-lane.xml",
+      "git_blob_sha1": "8dbbc375d6d91d678c9107f122ee3902253dad62",
+      "bytes": 7508,
+      "sha256": "7130f0364c72e26b7c2552044339d29beaa9375139ab940c5b760c85937e324e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/model/dependency-visibility.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/model/dependency-visibility.xml",
+      "git_blob_sha1": "a70b4d66ca3144d00ff0419e7831238709b89527",
+      "bytes": 11793,
+      "sha256": "3420c4e94360bc75e50cbfd114f97bbb698a9a6de6e733721c7856b3bfcbb2f6"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/model/lock-and-store.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/model/lock-and-store.xml",
+      "git_blob_sha1": "6b3fe6f76cd0ea6348f45a6ef849592f932d629c",
+      "bytes": 5751,
+      "sha256": "dd4985e3b644d03100565fc051342f825c6b1b2b8adec3f9ac83c5079a326d7c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/model/packages-and-kinds.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/model/packages-and-kinds.xml",
+      "git_blob_sha1": "89b6c73daf9bd7bc648a8fcd317fb47cd5527638",
+      "bytes": 10795,
+      "sha256": "283653ea04bd5827e7c36654f2a3e00aaa4c1b00a858e54da19a178b943fbe61"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/model/registries.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/model/registries.xml",
+      "git_blob_sha1": "70bac779aba1601c9678a17b0aa834890858e280",
+      "bytes": 15684,
+      "sha256": "71acd8755e1d09c84ecc7eaddfd34b669f4b3296fa72553a10156798d093008e"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/model/two-trees.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/model/two-trees.xml",
+      "git_blob_sha1": "e806d72c8d7df6d22f82183914b451ed05ca5f46",
+      "bytes": 4639,
+      "sha256": "777739b93745416ca42bbbf4d851f59eab6c33fda05fda1fa909ee73f717d0b9"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/model/versions.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/model/versions.xml",
+      "git_blob_sha1": "df06decd3d6a4d0a183f33571e259bf74014b61d",
+      "bytes": 6858,
+      "sha256": "3595a3b43fc1e853559c7d843a48a9bb9345672a9cb1b2010b58448813f0294d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/commands.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/reference/commands.xml",
+      "git_blob_sha1": "b867723d6b481cb84abbecea5f82dcd49ab4ddf6",
+      "bytes": 4490,
+      "sha256": "f3209c1f5191d77335a87bac10d44faf2ca2c10c680f8337beadaae5f21d431d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/lock-file.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/reference/lock-file.xml",
+      "git_blob_sha1": "103faeeb362c95246368d168a3902867fb8cadf9",
+      "bytes": 5974,
+      "sha256": "994461e49a96cc257e85bbb973eb20e2ec238205b4c2c95b8ee06fbf3321af1c"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/machine-formats.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/reference/machine-formats.xml",
+      "git_blob_sha1": "5e790d5dbe507f77aefe673e35614179413433fc",
+      "bytes": 7575,
+      "sha256": "aa1edf03ed122278e19d11955b1653396210eacc509e43dcd24cd9c0d6ccc446"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/manifest.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/reference/manifest.xml",
+      "git_blob_sha1": "8b3f18d7fc8da06aacaefb22faf1d16e135efc7a",
+      "bytes": 16276,
+      "sha256": "71aeeb5fee4a49acc63c889c88d115589dfc8051a53ba66939d0560ff2273d75"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/settings-and-environment.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/reference/settings-and-environment.xml",
+      "git_blob_sha1": "cb325cc82de7af1a392318f71a08033fda068cd0",
+      "bytes": 8944,
+      "sha256": "8beb9986db1b32c3216ebf42995aca4de3f9e8c8849ee2174586ef4c8d27033b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/tree.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/reference/tree.xml",
+      "git_blob_sha1": "6fe51542045e79a3983699beb641f4a5c12aaa86",
+      "bytes": 9501,
+      "sha256": "6fab24d06f03c272ebcb824d8021d0132f931cc309e60f21bb2733f13fa6bc96"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/skills/vibevm-docs/SKILL.md",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/skills/vibevm-docs/SKILL.md",
+      "git_blob_sha1": "d1bf5873561245e960b634b84a40592fed1378d0",
+      "bytes": 3216,
+      "sha256": "989471e5e90276dd007e14217f3663ca237489311bc7bb3d1d70eae23fda838a"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/start/first-project.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/start/first-project.xml",
+      "git_blob_sha1": "745fd864f98cf38191354c4664ed5a444c2f0140",
+      "bytes": 22989,
+      "sha256": "381bd4c0c9733f3525c3ec33a107065bb90702bd5b5ba277861fc184f3a856f3"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/start/index.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/start/index.xml",
+      "git_blob_sha1": "4b89fc94c73134aa05a17517a283991a0358a510",
+      "bytes": 4248,
+      "sha256": "fdd21794a4c463cb481b71e8406448ff4f8a18659bf4c046526226616dfc7878"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/start/install-vibe.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/start/install-vibe.xml",
+      "git_blob_sha1": "2c6f2f2afc7e6198382d3fd7a5211283146e5a0f",
+      "bytes": 6710,
+      "sha256": "b1e39c75976410032a1ebaf26ee9fe32a540518a51776f7bdef3b361f9d36a1a"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/start/what-a-project-contains.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/start/what-a-project-contains.xml",
+      "git_blob_sha1": "045300e019ead06a08bbfc5d975196c91734eab9",
+      "bytes": 7246,
+      "sha256": "7a3d996aaadc40abc58a71e72b1a3652e5b588fe23ea474c5ae1a7c018d1527b"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/start/what-vibevm-is.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/start/what-vibevm-is.xml",
+      "git_blob_sha1": "3715196e5790d67e2c0c9e273bbce127a9c733d6",
+      "bytes": 5274,
+      "sha256": "63cca0bdda754e7f280a58aa1ca4346ab340a8731f7a5e3da71f1ca3fb4b9a0d"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/ai-native-rust.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/ai-native-rust.xml",
+      "git_blob_sha1": "ce681b579a317561a951162f7a31837a943fefe7",
+      "bytes": 19552,
+      "sha256": "f857d6b3cd2fe4b69ab673ec16690e8353a301fb6de9dd4daf3e11269c216ad1"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+      "git_blob_sha1": "361097da84ab7dc49445ebe4d967f50c02fdce57",
+      "bytes": 40894,
+      "sha256": "be6907702965dd7c633c023168e7b584232c971518ff98612dbe313c817fe884"
+    },
+    {
+      "path": "vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/obsidian-to-project.xml",
+      "repository_path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/obsidian-to-project.xml",
+      "git_blob_sha1": "f5e2036a96eacdd3ac3b3c275f2666e573ee0914",
+      "bytes": 22464,
+      "sha256": "81bba0607c52be74b2213b973709dd2a2dec8b9d718354539f5a55a10de04719"
+    }
+  ],
+  "authored_xml_pages": [
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/ask-your-agent.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/how-this-manual-is-maintained.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/traceability.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/bridge-a-repository.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/facts-and-status-markers.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/translate-documentation.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-flow.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/authoring/write-documentation.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/diagnostics/errors.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/faq/index.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/glossary/index.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/install-a-package.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/publish-a-package.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/publish-to-the-central-registry.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/read-documentation-locally.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/remove-a-package.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/set-up-a-workspace.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/update-packages.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/use-a-private-registry.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/howto/work-offline.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/legal/applicable-law.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/phases.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/lifecycle/scrape.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/boot-lane.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/dependency-visibility.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/lock-and-store.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/packages-and-kinds.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/registries.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/two-trees.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/model/versions.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/commands.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/lock-file.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/machine-formats.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/manifest.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/settings-and-environment.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/reference/tree.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/first-project.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/index.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/install-vibe.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/what-a-project-contains.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/start/what-vibevm-is.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/ai-native-rust.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+    "vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/obsidian-to-project.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/agent/ask-your-agent.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/agent/give-your-agent-the-skill.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/agent/how-agents-read-this-manual.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/how-this-manual-is-maintained.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/how-vibe-is-built.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/traceability.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/architecture/what-the-lifecycle-epic-delivered.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/bridge-a-repository.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/facts-and-status-markers.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/ship-tools-and-mcp-servers.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/specs-agents-can-cite.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/translate-documentation.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-feat-or-stack.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-flow.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-a-lang-package.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/authoring/write-documentation.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/diagnostics/errors.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/faq/index.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/glossary/index.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/install-a-package.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/publish-a-package.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/publish-to-the-central-registry.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/read-documentation-locally.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/remove-a-package.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/set-up-a-workspace.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/update-packages.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/use-a-private-registry.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/howto/work-offline.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/legal/applicable-law.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/build-package-deploy.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/extensions-and-providers.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/phases.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/lifecycle/scrape.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/model/boot-lane.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/model/dependency-visibility.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/model/lock-and-store.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/model/packages-and-kinds.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/model/registries.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/model/two-trees.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/model/versions.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/commands.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/lock-file.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/machine-formats.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/manifest.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/settings-and-environment.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/reference/tree.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/start/first-project.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/start/index.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/start/install-vibe.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/start/what-a-project-contains.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/start/what-vibevm-is.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/ai-native-rust.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+    "vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/obsidian-to-project.xml"
+  ],
+  "fixture_xml_exclusion": {
+    "path": "vibevm-docs/v1.1.0/examples/",
+    "reason": "Bundled isolated example registry fixture XML, not authored EN/RU manual pages; retain all bytes in file census but do not parse as Doc-vocabulary pages.",
+    "count": 100
+  },
+  "build_inputs": {
+    "Cargo.toml": {
+      "purpose": "configuration",
+      "git_blob_sha1": "410bf2aa06a2cbc56e318a729ea773b23054c1b0",
+      "sha256": "5abcd0f5386de6f5a6cd7143b8f93e5565fc474ee7a9558927a4aa262bf84835",
+      "bytes": 15019
+    },
+    "Cargo.lock": {
+      "purpose": "lock",
+      "git_blob_sha1": "0aa25279f777ae39afa77aeca5d1858c3fa6d806",
+      "sha256": "7a64c81b4533d9e074fa1f531346741f90488636d81136b482656f4cb516dc2e",
+      "bytes": 146809
+    },
+    "crates/vibe-doc/src/derived.rs": {
+      "purpose": "generator",
+      "git_blob_sha1": "e55460b03968bed0f727e769c4b1be612b84e836",
+      "sha256": "dba5b78401c35628257ac9b54d318810e525d70a2f4d1a706da5c763ef4e609a",
+      "bytes": 13261
+    },
+    "crates/vibe-doc/src/site.rs": {
+      "purpose": "generator",
+      "git_blob_sha1": "4e27e6232ba04faff17e41e4e68011cb38d3ef19",
+      "sha256": "aed69624eee3feba34a1f3baa8e6f46ec7e04d9f19a21e4ee757e585afd45231",
+      "bytes": 2066
+    },
+    "crates/vibe-specdoc/src/load.rs": {
+      "purpose": "generator",
+      "git_blob_sha1": "c24b60973c67b8580febb6f97427fa32c979f256",
+      "sha256": "814e2be930dbecf36bce70ecbe48b8de9aeecbd02ba800c5ddc755537701c728",
+      "bytes": 15797
+    },
+    "crates/vibe-cli/src/commands/doc/site.rs": {
+      "purpose": "generator",
+      "git_blob_sha1": "03a8e5a18c630701bdfe17762dbad7d201e3f3f1",
+      "sha256": "cc31b9e71d491dd2b92b0b2e461d4cbc53bc1f3cb7bcb3aa8441913a396e706f",
+      "bytes": 18822
+    },
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibe.toml": {
+      "purpose": "configuration",
+      "git_blob_sha1": "d6ad1344ed6e5bcdcc04d764cdd2f8a68832ee99",
+      "sha256": "c17658c26ed030f51aa3b99d31087b26a79e4272ec66f9c67db340c38ef7cb62",
+      "bytes": 6703
+    },
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibe.toml": {
+      "purpose": "configuration",
+      "git_blob_sha1": "8cf0d5c0994e18f56121132891aab27e1c722328",
+      "sha256": "06e5a7643aa1ba2f9167cfaeef1e839b777984dda2ac85d62c14ffbd06633b3f",
+      "bytes": 6635
+    },
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/maintenance/derived.json": {
+      "purpose": "lock",
+      "git_blob_sha1": "2ee4a5cca754e752f0fe5aaf4352afd34fb93f6b",
+      "sha256": "09b10cf5c3bcc5998de5e7125b494530ca24691079ffaa46c7b27bd55b915076",
+      "bytes": 13718
+    },
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/maintenance/derived.json": {
+      "purpose": "lock",
+      "git_blob_sha1": "d427caa05750536d0de900f80c1b75c5626dc545",
+      "sha256": "4b2f7be164f7bfcc8ddba69a78c47fbc3b841947d0c8a2d9f167bc2d8b4a3556",
+      "bytes": 13553
+    }
+  },
+  "toolchain_source_version": "1.1.0 from immutable Cargo.toml; executable build not checked"
+}
