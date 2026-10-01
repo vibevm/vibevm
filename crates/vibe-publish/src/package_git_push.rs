@@ -57,6 +57,10 @@ pub(crate) enum PushInspection {
     NotStarted {
         run_id: String,
     },
+    PendingRecoveryRequired {
+        run_id: String,
+        pending_sha256: String,
+    },
     Landed {
         run_id: String,
         landed_sha256: String,
@@ -352,7 +356,12 @@ pub(crate) fn inspect_cold(
     }
     let landed_bytes = match journal::read_bytes(lease, run, LANDED) {
         Ok(Some(value)) => value,
-        Ok(None) => return recovery(Some(run), "atomic-push Pending has no Landed; no replay"),
+        Ok(None) => {
+            return PushInspection::PendingRecoveryRequired {
+                run_id: run.into(),
+                pending_sha256: sha(&pending_bytes),
+            };
+        }
         Err(e) => return recovery(Some(run), e.to_string()),
     };
     let landed: AtomicPushLanded = match serde_json::from_slice(&landed_bytes) {
@@ -391,4 +400,4 @@ pub(crate) fn inspect_cold(
 }
 
 #[cfg(test)]
-mod tests;
+pub(crate) mod tests;

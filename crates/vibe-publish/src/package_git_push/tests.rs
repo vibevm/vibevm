@@ -21,14 +21,18 @@ struct PushRequest<'a> {
     tag_oid: &'a str,
 }
 
-trait FakePushPort {
+pub(crate) trait FakePushPort {
     fn observe(&mut self) -> Result<Snapshot, String>;
     fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, String>;
 }
 
 /// Test-only transport. Production retains only cold inspection and no Git
 /// or provider write port is reachable from a public call.
-fn drive_fake(world: &World, approval_id: &str, port: &mut impl FakePushPort) -> PushInspection {
+pub(crate) fn drive_fake(
+    world: &World,
+    approval_id: &str,
+    port: &mut impl FakePushPort,
+) -> PushInspection {
     let proof = match proved(
         &world.home,
         &world.lease,
@@ -187,7 +191,7 @@ fn drive_fake(world: &World, approval_id: &str, port: &mut impl FakePushPort) ->
     )
 }
 
-fn ready_world(binary: &Path) -> (World, String) {
+pub(crate) fn ready_world(binary: &Path) -> (World, String) {
     let (world, id) = linked_world(binary);
     let mut creator = CreateFake::new(&world);
     assert!(matches!(
@@ -200,7 +204,7 @@ fn ready_world(binary: &Path) -> (World, String) {
     (world, id)
 }
 
-struct Fake {
+pub(crate) struct Fake {
     observed: Snapshot,
     calls: usize,
     observations: usize,
@@ -211,7 +215,7 @@ struct Fake {
     tamper_on_third_observation: Option<std::path::PathBuf>,
 }
 impl Fake {
-    fn new(world: &World, id: &str) -> Self {
+    pub(crate) fn new(world: &World, id: &str) -> Self {
         let proof = proved(
             &world.home,
             &world.lease,
@@ -238,6 +242,17 @@ impl Fake {
             third_state_after_push: false,
             tamper_on_third_observation: None,
         }
+    }
+    pub(crate) fn calls(&self) -> usize {
+        self.calls
+    }
+    pub(crate) fn lose_next_reply(&mut self) {
+        self.lose_reply = true;
+    }
+    pub(crate) fn drift_remote_refs(&mut self) {
+        self.observed.refs.main = crate::package_git_plan::RawRef::Present {
+            oid: "a".repeat(40),
+        };
     }
 }
 impl FakePushPort for Fake {
