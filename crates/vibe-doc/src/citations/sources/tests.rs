@@ -168,6 +168,29 @@ fn opt_in_checkout_citation_selects_vibe_xml_beside_raw_same_stem() {
 }
 
 #[test]
+fn selected_checkout_citation_keeps_captured_bytes_after_source_changes() {
+    let (root, selected, _) = declared_checkout();
+    let world = SpecSources::for_checkout(root.path(), Some("org.acme"), "host");
+    let located = world
+        .locate(&address("spec://org.acme/host/common/guide#RULE"))
+        .unwrap();
+    fs::write(
+        &selected,
+        b"<spec xmlns=\"https://vibevm.org/spec/1\"><p><RULE fact=\"true\" status=\"spec/done\">changed later</RULE></p></spec>\n",
+    )
+    .unwrap();
+    let doc = crate::citations::anchor::read_spec_selected(
+        &located.path,
+        located.captured.as_ref().unwrap(),
+    )
+    .unwrap();
+    assert_eq!(
+        crate::citations::anchor::anchor_text(&doc, &["RULE".into()]),
+        Some("chosen".into())
+    );
+}
+
+#[test]
 fn opt_in_package_checkout_uses_the_same_selected_source_rule() {
     let (root, selected, _) = declared_checkout();
     let manifest_path = root.path().join("vibe.toml");
