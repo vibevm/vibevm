@@ -1,5 +1,9 @@
 # Developer Preview 1 → Developer Preview 2
 
+The [source-declaration migration draft](source-descriptor-migration.md)
+explains the optional 1.1.0 source interpretation decision for existing
+Developer Preview 1 projects. It is not the final migration guide.
+
 The [raw source capture](evidence/dp1-source-capture.json) and its
 [registered epoch-1 projection](evidence/dp1-capture-e1.json) record the exact
 before-state for this implementation campaign. They identify commit
