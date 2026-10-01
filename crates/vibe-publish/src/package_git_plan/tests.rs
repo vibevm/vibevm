@@ -545,3 +545,18 @@ fn peeled_target_idempotence_ignores_new_annotated_tag_metadata() {
         PushDecision::RecoveryRequired
     );
 }
+
+#[test]
+fn private_plan_roundtrip_is_strict_at_root_and_nested_rows() {
+    let plan = direct();
+    let bytes = serde_json::to_vec(&plan).unwrap();
+    let decoded: PackageGitPlan = serde_json::from_slice(&bytes).unwrap();
+    assert_eq!(decoded, plan);
+    assert_eq!(decoded.digest().unwrap(), plan.digest().unwrap());
+    let mut root: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+    root["unexpected"] = serde_json::json!(true);
+    assert!(serde_json::from_value::<PackageGitPlan>(root).is_err());
+    let mut nested: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+    nested["package"]["unexpected"] = serde_json::json!(true);
+    assert!(serde_json::from_value::<PackageGitPlan>(nested).is_err());
+}

@@ -58,6 +58,36 @@ struct Census {
     tree_sha256: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct SourcePayloadIdentity {
+    pub root_token: String,
+    pub tree_sha256: String,
+    pub skipped_gitmodules: bool,
+}
+
+/// Read-only source selection before C.1 reservation. Staging repeats the
+/// entire census under the reserved run; this snapshot alone retains no bytes.
+pub(crate) fn capture_source_identity(
+    source: &Project,
+    limits: PayloadLimits,
+) -> Result<SourcePayloadIdentity, PayloadStageError> {
+    limits.validate().map_err(before)?;
+    let root_token = source.root_correlation_token().map_err(before)?;
+    let census = walk::scan(source, &limits, true).map_err(before)?;
+    if !census.files.iter().any(|row| row.path == "vibe.toml") {
+        return Err(before("complete source census has no vibe.toml"));
+    }
+    let named = Project::open(source.root_path()).map_err(before)?;
+    if named.root_correlation_token().map_err(before)? != root_token {
+        return Err(before("source pathname no longer names the held root"));
+    }
+    Ok(SourcePayloadIdentity {
+        root_token,
+        tree_sha256: census.tree_sha256,
+        skipped_gitmodules: census.skipped_gitmodules,
+    })
+}
+
 /// Complete *local byte* receipt, with Gitlink provenance deliberately open.
 /// `NeedsGitlinkCheck` must never be promoted to a publish effect permit.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -77,6 +107,80 @@ pub(crate) struct CompleteManifest {
     pub tree_sha256: String,
     pub skipped_gitmodules: bool,
     pub provenance: ProvenanceStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum LocalPayloadInspection {
+    Missing,
+    Incomplete,
+    Complete(CompleteManifest),
+    Uncertain(String),
+}
+
+/// Cold, read-only local byte proof. The manifest is only accepted alongside
+/// a fresh bounded census of the same run-scoped destination and root name.
+/// It cannot establish Gitlink provenance or authorize C.1 Ready.
+pub(crate) fn inspect_local_payload(
+    destination: &Project,
+    limits: PayloadLimits,
+    expected_source_root_token: &str,
+    expected_tree_sha256: &str,
+) -> LocalPayloadInspection {
+    let inspect = || -> anyhow::Result<LocalPayloadInspection> {
+        limits.validate()?;
+        let held_token = destination.root_correlation_token()?;
+        let named = Project::open(destination.root_path())?;
+        if named.root_correlation_token()? != held_token {
+            anyhow::bail!("run-scoped payload root name changed");
+        }
+        let root = named.root_dir()?;
+        let mut names = named.child_names_bounded(&root, limits.max_children_per_directory)?;
+        names.sort();
+        let bytes = named.read_file_bounded_in(&root, COMPLETE, limits.max_manifest_bytes)?;
+        let Some(bytes) = bytes else {
+            return Ok(if names.is_empty() {
+                LocalPayloadInspection::Missing
+            } else {
+                LocalPayloadInspection::Incomplete
+            });
+        };
+        if names != [COMPLETE, PAYLOAD] {
+            anyhow::bail!("complete payload has foreign or missing root entries");
+        }
+        let manifest: CompleteManifest = serde_json::from_slice(&bytes)?;
+        if serde_json::to_vec(&manifest)? != bytes
+            || manifest.format != FORMAT
+            || manifest.limits != limits
+            || manifest.source_root_token != expected_source_root_token
+            || manifest.destination_root_token != held_token
+            || manifest.tree_sha256 != expected_tree_sha256
+            || manifest.provenance != ProvenanceStatus::NeedsGitlinkCheck
+        {
+            anyhow::bail!("complete payload manifest identity or canonical bytes differ");
+        }
+        let payload = named.subproject(&[PAYLOAD])?;
+        let census = walk::scan(&payload, &limits, false)?;
+        if census.files != manifest.files
+            || census.directories != manifest.directories
+            || census.tree_sha256 != manifest.tree_sha256
+        {
+            anyhow::bail!("complete payload bytes or full census differ");
+        }
+        let again = Project::open(destination.root_path())?;
+        if again.root_correlation_token()? != held_token {
+            anyhow::bail!("payload root name changed after cold census");
+        }
+        let final_root = again.root_dir()?;
+        if again
+            .read_file_bounded_in(&final_root, COMPLETE, limits.max_manifest_bytes)?
+            .as_deref()
+            != Some(bytes.as_slice())
+        {
+            anyhow::bail!("complete payload manifest changed after census");
+        }
+        Ok(LocalPayloadInspection::Complete(manifest))
+    };
+    inspect().unwrap_or_else(|error| LocalPayloadInspection::Uncertain(format!("{error:#}")))
 }
 
 #[derive(Debug, thiserror::Error)]
