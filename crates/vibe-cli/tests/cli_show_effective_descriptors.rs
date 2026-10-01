@@ -146,12 +146,36 @@ fn synthetic_nonempty_lock_refuses_foreign_hash_drift_and_removed_rows() {
 }
 
 #[test]
+fn historical_package_boot_copy_cannot_bypass_descriptor_slot_proof() {
+    let (root, _slot, lock) = selected_legacy_footprint();
+    let boot_rel = vibe_core::layout::current_boot_dir().join("10-lib.md");
+    write(
+        &root.path().join(&boot_rel),
+        b"# Unproved copy\n\n@fact:FAKE must not surface.\n",
+    );
+    let boot_wire = boot_rel.to_string_lossy().replace('\\', "/");
+    let lock = lock.replacen(
+        "files_written=",
+        &format!("boot_snippet='{boot_wire}'\nfiles_written="),
+        1,
+    );
+    write(&root.path().join("vibe.lock"), lock);
+    let output = run(&UserScratch::new(), root.path());
+    assert!(!output.status.success());
+    assert!(
+        String::from_utf8_lossy(&output.stderr).contains("cannot prove a legacy host boot copy"),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+}
+
+#[test]
 fn opted_in_host_boot_omits_raw_same_stem_and_xml_data() {
     let root = tempfile::tempdir().unwrap();
     let boot = vibe_core::layout::current_boot_dir();
-    let vibe = boot.join("rule.xml");
-    let raw_md = boot.join("rule.md");
-    let raw_xml = boot.join("data.xml");
+    let vibe = boot.join("rule.md");
+    let raw_md = boot.join("ordinary.md");
+    let raw_xml = boot.join("rule.xml");
     let slash = |path: &Path| path.to_string_lossy().replace('\\', "/");
     write(
         &root.path().join("vibe.toml"),
@@ -187,9 +211,44 @@ fn opted_in_host_boot_omits_raw_same_stem_and_xml_data() {
             .unwrap()
             .contains("host Vibe XML")
     );
+    assert!(sections[0]["body"].as_str().unwrap().contains("@fact:RULE"));
+    assert!(!sections[0]["body"].as_str().unwrap().contains("<spec"));
     assert_eq!(
         fs::read(root.path().join(raw_xml)).unwrap(),
         b"<data>host raw</data>\n"
+    );
+}
+
+#[test]
+fn opted_in_host_vibe_doc_uses_document_vocabulary() {
+    let root = tempfile::tempdir().unwrap();
+    let doc = vibe_core::layout::current_boot_dir().join("doc.xml");
+    let wire = doc.to_string_lossy().replace('\\', "/");
+    write(
+        &root.path().join("vibe.toml"),
+        format!(
+            "[project]\ngroup='org.host'\nname='reader'\nversion='1.1.0'\n\
+             [[project.sources]]\nfile='{wire}'\nmedia='application/xml'\ninterpretation='vibe-doc'\nrole='documentation'\nloading='scan'\n"
+        ),
+    );
+    write(
+        &root.path().join(&doc),
+        b"<spec xmlns='https://vibevm.org/spec/1'><note kind='tip'>Doc-only host content.</note></spec>",
+    );
+    let output = run(&UserScratch::new(), root.path());
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let payload: Value = serde_json::from_slice(&output.stdout).unwrap();
+    let sections = payload["sections"].as_array().unwrap();
+    assert_eq!(sections.len(), 1);
+    assert!(
+        sections[0]["body"]
+            .as_str()
+            .unwrap()
+            .contains("Doc-only host content.")
     );
 }
 
