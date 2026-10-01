@@ -107,12 +107,16 @@ fn populated_create_then_local_atomic_push_lands_and_cold_attaches() {
 
 pub(crate) struct LostReply(pub(crate) LocalBarePort);
 impl FakePushPort for LostReply {
-    fn observe(&mut self) -> Result<Snapshot, String> {
-        self.0.observe()
+    fn observe(
+        &mut self,
+        repository: &RepositoryIdentity,
+        version_tag_ref: &str,
+    ) -> Result<Snapshot, PushPortError> {
+        self.0.observe(repository, version_tag_ref)
     }
-    fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, String> {
+    fn atomic_push(&mut self, request: PushRequest<'_>) -> Result<PushReceipt, PushPortError> {
         let _actual = self.0.atomic_push(request)?;
-        Err("injected lost reply after local atomic push".into())
+        Err(PushPortError::Uncertain)
     }
 }
 
