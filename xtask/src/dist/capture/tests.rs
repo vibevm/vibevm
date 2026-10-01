@@ -32,6 +32,8 @@ use super::{
 use crate::dist::archive::{ArchiveEntry, read_zip, write_stored_zip, write_zip};
 use crate::dist::smoke::prepare::prepare_local_with;
 
+#[path = "tests_plan_local.rs"]
+mod tests_plan_local;
 #[path = "tests_smoke.rs"]
 mod tests_smoke;
 use crate::dist::snapshot;

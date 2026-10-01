@@ -7,6 +7,15 @@ use std::process::Command;
 
 use anyhow::{Result, bail};
 use clap::Subcommand;
+use serde::Deserialize;
+use vibe_publish::publication_effect_plan::CapturedPublicationRemote;
+use vibe_publish::publication_subject::{
+    PublicationSubjectExpectations, require_apply_ready_default_smoke,
+};
+use vibe_safefs::Project;
+use vibe_wire::generated::publication_effect_plan::{
+    PublicationObservedRelease, PublicationObservedTag,
+};
 
 mod archive;
 mod build;
@@ -58,6 +67,23 @@ pub(crate) enum DistCommand {
         /// Bounded operator reason shared by the explicitly skipped targets.
         #[arg(long = "skip-reason", requires = "skip_targets")]
         skip_reason: Option<String>,
+    },
+
+    /// Review a local 1.1.0 effect plan without probes, credentials or remote calls.
+    PlanLocal {
+        #[arg(long, default_value = "1.1.0")]
+        version: String,
+        #[arg(long, default_value = "dist")]
+        out_dir: PathBuf,
+        /// Relative content-addressed report path below the output directory.
+        #[arg(long)]
+        smoke_report: String,
+        /// Operator-supplied typed observation; this command cannot verify its remote origin.
+        #[arg(long)]
+        remote_snapshot: PathBuf,
+        /// Describe a future visibility change; this performs no publication.
+        #[arg(long)]
+        publish: bool,
     },
 
     /// Upload one previously built platform bundle, bootstrap and fragment.
@@ -171,6 +197,25 @@ pub(crate) fn run_dist(repo_root: &Path, command: DistCommand) -> Result<()> {
                 &mut locked,
             )
         }
+        DistCommand::PlanLocal {
+            version,
+            out_dir,
+            smoke_report,
+            remote_snapshot,
+            publish,
+        } => {
+            let stdout = io::stdout();
+            let mut locked = stdout.lock();
+            run_plan_local_into(
+                repo_root,
+                &version,
+                &out_dir,
+                &smoke_report,
+                &remote_snapshot,
+                publish,
+                &mut locked,
+            )
+        }
         DistCommand::Upload { asset, fragment } => release::upload(repo_root, &asset, &fragment),
         DistCommand::UploadBuilt { target, out_dir } => {
             release::upload_built(repo_root, &target, &out_dir)
@@ -180,6 +225,94 @@ pub(crate) fn run_dist(repo_root: &Path, command: DistCommand) -> Result<()> {
             release::finalize(repo_root, &version, publish)
         }
     }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct OperatorRemoteSnapshot {
+    generation_ref: String,
+    tag: PublicationObservedTag,
+    release: PublicationObservedRelease,
+}
+
+fn read_remote_snapshot(repo_root: &Path, path: &Path) -> Result<CapturedPublicationRemote> {
+    let absolute = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        repo_root.join(path)
+    };
+    let parent = absolute
+        .parent()
+        .ok_or_else(|| anyhow::anyhow!("remote snapshot has no parent"))?;
+    let name = absolute
+        .file_name()
+        .and_then(OsStr::to_str)
+        .ok_or_else(|| anyhow::anyhow!("remote snapshot filename is not UTF-8"))?;
+    let project = Project::open(parent)?;
+    let bytes = project
+        .read_file_bounded(name, 256 * 1024)?
+        .ok_or_else(|| anyhow::anyhow!("remote snapshot is absent"))?;
+    let typed: OperatorRemoteSnapshot = serde_json::from_slice(&bytes)?;
+    Ok(CapturedPublicationRemote {
+        generation_ref: typed.generation_ref,
+        tag: typed.tag,
+        release: typed.release,
+    })
+}
+
+fn run_plan_local_into(
+    repo_root: &Path,
+    version: &str,
+    out_dir: &Path,
+    smoke_report: &str,
+    remote_snapshot: &Path,
+    publish: bool,
+    output: &mut dyn Write,
+) -> Result<()> {
+    if version != "1.1.0" {
+        bail!("local distribution planning requires the mutable 1.1.0 version");
+    }
+    let remote = read_remote_snapshot(repo_root, remote_snapshot)?;
+    let prepared = smoke::prepare::load_local_subject(repo_root, out_dir, smoke_report)?;
+    let report_digest = prepared.report.digest;
+    let composition = capture::plan_captured_subject(
+        prepared.capture,
+        &remote,
+        if publish {
+            capture::PublicationVisibilityChoice::Publish
+        } else {
+            capture::PublicationVisibilityChoice::RetainDraft
+        },
+        capture::PublishedReplacementChoice::Refuse,
+    )?;
+    let smoke_gate_passed = require_apply_ready_default_smoke(
+        &composition.capture.subject,
+        &PublicationSubjectExpectations {
+            version: "1.1.0",
+            repository: "vibevm/vibevm",
+            smoke_policy_id: "distribution-smoke/e1",
+            smoke_policy_epoch: 1,
+        },
+    )
+    .is_ok();
+    // Operator-supplied JSON is a review input, never an authenticated remote
+    // generation or an approval to apply. Keep this verdict false even when
+    // all native probes passed.
+    let rendered = serde_json::to_vec_pretty(&serde_json::json!({
+        "schema": 1,
+        "version": "1.1.0",
+        "remote_observation": "operator-supplied-unverified",
+        "apply_ready": false,
+        "smoke_gate_passed": smoke_gate_passed,
+        "subject_sha256": composition.capture.subject_digest,
+        "smoke_report_sha256": report_digest,
+        "plan_sha256": composition.plan_digest,
+        "effect_plan": composition.plan,
+    }))?;
+    output.write_all(&rendered)?;
+    output.write_all(b"\n")?;
+    output.flush()?;
+    Ok(())
 }
 
 fn run_prepare_local_into(
