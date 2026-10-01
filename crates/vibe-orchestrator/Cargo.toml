@@ -31,6 +31,8 @@ vibe-wire.workspace = true
 vibe-workspace.workspace = true
 
 [dev-dependencies]
+# Control receipt fault oracles need the owned publication hooks only in tests.
+vibe-safefs = { workspace = true, features = ["inject-failures"] }
 tempfile.workspace = true
 vibe-package-source.workspace = true
 thiserror.workspace = true

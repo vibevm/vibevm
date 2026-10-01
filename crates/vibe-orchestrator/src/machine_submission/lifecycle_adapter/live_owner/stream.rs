@@ -71,7 +71,7 @@ impl History {
             terminal_ref: None,
         }
     }
-    fn expected(&self) -> ExpectedBinding<'_> {
+    pub(super) fn expected(&self) -> ExpectedBinding<'_> {
         ExpectedBinding {
             context_id: &self.envelope.context_id,
             target_id: self.envelope.target_id.as_deref(),
@@ -80,7 +80,7 @@ impl History {
             stream_id: &self.envelope.stream_id,
         }
     }
-    fn message(&self, body: Body) -> OperationStreamMessage {
+    pub(super) fn message(&self, body: Body) -> OperationStreamMessage {
         let mut message = self.envelope.clone();
         message.body = body;
         message
@@ -243,7 +243,7 @@ impl History {
     }
 }
 impl LiveOwner {
-    fn check_stream_binding(
+    pub(super) fn check_stream_binding(
         &self,
         binding: &Binding,
         trusted: &HostCoordinates,
