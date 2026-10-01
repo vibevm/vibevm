@@ -14,15 +14,15 @@ use std::path::Path;
 
 use anyhow::{Context, Result};
 use vibe_core::manifest::{LinkType, LockedPackage, Lockfile, Manifest};
-use vibe_spec::Directives;
 use vibe_workspace::boot_artifacts;
 
 use super::artifacts::{self, IndexParse};
 use super::diagnostics;
+#[cfg(test)]
+use super::model::Carrier;
 use super::model::{
-    Boot, Carrier, Condition, ConditionKind, DeclaredLink, InPlaceSpec, IndexLane, Load,
-    LoadOrigin, LoadType, Package, PackageTree, Project, SCHEMA_VERSION, Source, SourceKind,
-    StaticLane, Upstream, UpstreamSource,
+    Boot, Condition, ConditionKind, DeclaredLink, IndexLane, Load, LoadOrigin, LoadType, Package,
+    PackageTree, Project, SCHEMA_VERSION, Source, SourceKind, StaticLane, Upstream, UpstreamSource,
 };
 
 /// The host-authored boot files that seed the in-place `@spec` scan
@@ -32,6 +32,8 @@ use super::model::{
 /// `INDEX.md` themselves are never scanned: they are artifacts, not authored
 /// boot lanes.
 const HOST_BOOT_FILES: &[&str] = &["00-core.md", "90-user.md"];
+
+mod in_place;
 
 /// Build the full [`PackageTree`] model for the project rooted at `root`.
 ///
@@ -218,7 +220,7 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         roots,
         packages,
         boot,
-        in_place_specs: collect_in_place(root, &boot_files),
+        in_place_specs: in_place::collect(root, &boot_files, &lockfile)?,
         // Root-drift lands here now; the stale-artifacts check (needs a fresh
         // EffectiveBoot recompute) is still deferred — PROP-036 §2.10.
         diagnostics,
@@ -441,57 +443,6 @@ fn condition_from_when(when: Option<&str>) -> Condition {
                 value,
             }
         }
-    }
-}
-
-/// Collect in-place `@spec` / `#use` / `#embed` / `#source` markers from every
-/// boot source file that loads, via the canonical fence-aware parser
-/// (PROP-036 §2.9). `boot_files` are project-relative paths (the host-authored
-/// boot files plus every `STATIC.md` / `INDEX.md` source path); each that
-/// exists is read and parsed. A bare `spec://` is discretionary and not
-/// collected. An empty result is correct when no boot file carries a marker.
-///
-/// A `.xml` boot source is read through its canonical MD projection
-/// (PROP-045 ##PROJECTION-READ): directives live in unit text, which the
-/// projection preserves, so the marker scan sees exactly what a reader of
-/// the projected file sees.
-fn collect_in_place(root: &Path, boot_files: &[String]) -> Vec<InPlaceSpec> {
-    let mut out = Vec::new();
-    for file in boot_files {
-        let Ok((text, _)) = vibe_specdoc::load_spec_text(&root.join(file)) else {
-            continue;
-        };
-        let directives = Directives::parse(&text);
-        for u in directives.in_place_uses {
-            out.push(InPlaceSpec {
-                carrier: Carrier::AtSpec,
-                address: u.address.without_pin(),
-                file: file.clone(),
-                line: (u.line + 1) as u64,
-                resolved: false,
-                target_package: None,
-            });
-        }
-        for d in directives.directives {
-            out.push(InPlaceSpec {
-                carrier: carrier_of(d.kind),
-                address: d.address.without_pin(),
-                file: file.clone(),
-                line: (d.line + 1) as u64,
-                resolved: false,
-                target_package: None,
-            });
-        }
-    }
-    out
-}
-
-/// Map a directive kind to the model carrier.
-fn carrier_of(kind: vibe_spec::DirectiveKind) -> Carrier {
-    match kind {
-        vibe_spec::DirectiveKind::Embed => Carrier::Embed,
-        vibe_spec::DirectiveKind::Use => Carrier::Use,
-        vibe_spec::DirectiveKind::Source => Carrier::Source,
     }
 }
 

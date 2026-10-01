@@ -165,11 +165,114 @@ fn in_place_directives_collect_from_an_xml_boot_source() {
          <p>#use spec://org.example/lib/boot</p>\n</spec>\n",
     )
     .expect("write xml");
-    let specs = collect_in_place(root, std::slice::from_ref(&dyn_rel));
+    let specs = in_place::collect(
+        root,
+        std::slice::from_ref(&dyn_rel),
+        &Lockfile::empty("vibe 1.1.0", "2026-09-01T00:00:00Z"),
+    )
+    .unwrap();
     assert_eq!(specs.len(), 1, "{specs:?}");
     assert_eq!(specs[0].file, dyn_rel);
     assert_eq!(specs[0].carrier, Carrier::Use);
     assert_eq!(specs[0].address.to_string(), "spec://org.example/lib/boot");
+}
+
+#[test]
+fn declared_simple_commonmark_use_is_literal_but_normal_vibe_use_is_collected() {
+    use vibe_core::ContentHash;
+    use vibe_core::manifest::SpecFormat;
+    use vibe_workspace::vibedeps;
+
+    let workspace = tempfile::tempdir().unwrap();
+    let group = vibe_core::Group::parse("org.example").unwrap();
+    let version = semver::Version::parse("1.1.0").unwrap();
+    let source_rel = vibe_core::layout::current_specs_root().join("boot/entry.md");
+    let source_wire = source_rel.to_string_lossy().replace('\\', "/");
+    let make = |name: &str, format: &str, descriptor: Option<(&str, &str)>, hash_digit: char| {
+        let source = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(source.path().join(&source_rel).parent().unwrap()).unwrap();
+        std::fs::write(
+            source.path().join(&source_rel),
+            "# Boot\n\n#use spec://org.example/lib/boot\n",
+        )
+        .unwrap();
+        let row = descriptor.map_or_else(String::new, |(interpretation, role)| {
+            format!(
+                "[[package.sources]]\nfile='{source_wire}'\nmedia='text/markdown'\ninterpretation='{interpretation}'\nrole='{role}'\nloading='scan'\n"
+            )
+        });
+        std::fs::write(source.path().join("vibe.toml"), format!(
+            "[package]\nname='{name}'\ngroup='org.example'\nkind='flow'\nversion='1.1.0'\nformat='{format}'\n{row}"
+        )).unwrap();
+        let hash =
+            ContentHash::parse(&format!("sha256:{}", hash_digit.to_string().repeat(64))).unwrap();
+        vibedeps::materialise_with_spec_format(
+            workspace.path(),
+            &group,
+            name,
+            &version,
+            source.path(),
+            vibedeps::CopyMode::Copy,
+            SpecFormat::Mixed,
+            &hash,
+        )
+        .unwrap();
+        let locked: LockedPackage = toml::from_str(&format!(
+            "kind='flow'\nname='{name}'\ngroup='org.example'\nversion='1.1.0'\nsource_url='file://test'\ncontent_hash='{}'\n",
+            hash.as_str(),
+        ))
+        .unwrap();
+        let path = format!(
+            "{}/{source_wire}",
+            vibedeps::slot_rel_path(&group, name, &version)
+        );
+        (locked, path)
+    };
+    let (literal, literal_path) = make(
+        "literal",
+        "simple",
+        Some(("commonmark", "documentation")),
+        '1',
+    );
+    let (selected, selected_path) = make("selected", "normal", Some(("vibe-spec", "spec")), '2');
+    let (legacy_simple, legacy_simple_path) = make("legacy-simple", "simple", None, '4');
+    let (legacy_normal, legacy_normal_path) = make("legacy-normal", "normal", None, '5');
+    let mut lock = Lockfile::empty("vibe 1.1.0", "2026-09-01T00:00:00Z");
+    lock.packages = vec![literal, selected, legacy_simple, legacy_normal];
+    let found = in_place::collect(
+        workspace.path(),
+        &[
+            literal_path.clone(),
+            selected_path.clone(),
+            legacy_simple_path,
+            legacy_normal_path.clone(),
+        ],
+        &lock,
+    )
+    .unwrap();
+    assert_eq!(
+        found.len(),
+        2,
+        "simple boot remains literal with or without descriptors"
+    );
+    assert_eq!(found[0].carrier, Carrier::Use);
+    assert_eq!(found[0].file, selected_path);
+    assert_eq!(found[0].address.to_string(), "spec://org.example/lib/boot");
+    assert_eq!(
+        found[1].file, legacy_normal_path,
+        "normal no-descriptor package keeps legacy scan"
+    );
+
+    lock.packages[1].content_hash =
+        ContentHash::parse(&format!("sha256:{}", "3".repeat(64))).unwrap();
+    let error = in_place::collect(
+        workspace.path(),
+        &[literal_path, found[0].file.clone()],
+        &lock,
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("source hash or format differs"), "{error}");
 }
 
 /// PROP-050 ##VIBE-WHY: the suffix is quiet exactly for the arrivals a
