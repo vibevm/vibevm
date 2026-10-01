@@ -258,3 +258,329 @@ fn no_gitlinks_or_stale_seal_claim_cannot_approve_populated_profile() {
         .is_err()
     );
 }
+
+#[test]
+fn populated_link_redeems_once_and_historical_cold_survives_expiry() {
+    let Some((world, settings, home, namespace)) = prepared() else {
+        return;
+    };
+    let approved = world.held();
+    let loaded = home
+        .load_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+        )
+        .unwrap();
+    let status = home.link_mode_a_populated(
+        &world.lease,
+        &namespace,
+        &world.scope,
+        "aggregate",
+        Some(&world.source),
+        Some(&approved),
+        &world.binary,
+        limits(),
+        &loaded,
+    );
+    assert!(
+        matches!(&status, LinkInspection::Landed { run_id, .. } if run_id == &world.run_id),
+        "{status:?}"
+    );
+    assert!(
+        settings
+            .path()
+            .join(HOME)
+            .join(REDEEMED)
+            .join(marker_name(loaded.authority_id()))
+            .is_file()
+    );
+    let expired_now = loaded.record.expires_at_unix;
+    assert!(
+        home.load_at_profile(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            &world.binary,
+            ReadyProfile::ParentlessPopulated {
+                limits: limits(),
+                approved_gitdirs: Some(&approved),
+            },
+            expired_now
+        )
+        .is_err()
+    );
+    assert_eq!(
+        home.inspect_link_populated_cold(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            None,
+            None,
+            &world.binary,
+            limits(),
+            loaded.authority_id()
+        ),
+        status
+    );
+    assert!(matches!(
+        home.link_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+            &loaded
+        ),
+        LinkInspection::RecoveryRequired { .. }
+    ));
+}
+
+#[test]
+fn populated_lost_marker_reply_leaves_pending_without_reissue() {
+    let Some((world, settings, home, namespace)) = prepared() else {
+        return;
+    };
+    let approved = world.held();
+    let loaded = home
+        .load_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+        )
+        .unwrap();
+    let status = home.link_inner_profile(
+        &world.lease,
+        &namespace,
+        &world.scope,
+        "aggregate",
+        Some(&world.source),
+        &world.binary,
+        ReadyProfile::ParentlessPopulated {
+            limits: limits(),
+            approved_gitdirs: Some(&approved),
+        },
+        &loaded,
+        Some(host_now().unwrap()),
+        true,
+        false,
+    );
+    assert!(matches!(status, LinkInspection::RecoveryRequired { .. }));
+    let marker = settings
+        .path()
+        .join(HOME)
+        .join(REDEEMED)
+        .join(marker_name(loaded.authority_id()));
+    let before = fs::read(&marker).unwrap();
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, "approval-link-pending")
+            .unwrap()
+            .is_some()
+    );
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, "approval-link")
+            .unwrap()
+            .is_none()
+    );
+    assert!(matches!(
+        home.inspect_link_populated_cold(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            None,
+            None,
+            &world.binary,
+            limits(),
+            loaded.authority_id()
+        ),
+        LinkInspection::RecoveryRequired { .. }
+    ));
+    assert!(matches!(
+        home.link_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+            &loaded
+        ),
+        LinkInspection::RecoveryRequired { .. }
+    ));
+    assert_eq!(fs::read(marker).unwrap(), before);
+}
+
+#[test]
+fn incomplete_or_foreign_populated_gitdirs_refuse_before_link_pending() {
+    let Some((world, settings, home, namespace)) = prepared() else {
+        return;
+    };
+    let approved = world.held();
+    let loaded = home
+        .load_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+        )
+        .unwrap();
+    let foreign_root = tempfile::tempdir().unwrap();
+    let foreign = Project::open(foreign_root.path()).unwrap();
+    let wrong = [
+        ApprovedGitdir {
+            path: "vendor/a",
+            gitdir: &foreign,
+        },
+        ApprovedGitdir {
+            path: "vendor/b",
+            gitdir: &world.approved[1],
+        },
+    ];
+    for choice in [Some(&approved[..1]), Some(&wrong[..]), None] {
+        assert!(matches!(
+            home.link_mode_a_populated(
+                &world.lease,
+                &namespace,
+                &world.scope,
+                "aggregate",
+                Some(&world.source),
+                choice,
+                &world.binary,
+                limits(),
+                &loaded
+            ),
+            LinkInspection::RecoveryRequired { .. }
+        ));
+    }
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, "approval-link-pending")
+            .unwrap()
+            .is_none()
+    );
+    assert!(!settings.path().join(HOME).join(REDEEMED).exists());
+}
+
+#[test]
+fn changed_populated_ready_seal_or_marker_refuses_link_cold() {
+    let Some((world, settings, home, namespace)) = prepared() else {
+        return;
+    };
+    let approved = world.held();
+    let loaded = home
+        .load_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+        )
+        .unwrap();
+    fs::write(
+        world.root.path().join(format!(
+            ".vibe/package-git-operations/{}.package-git-ready.json",
+            world.run_id
+        )),
+        b"not-json",
+    )
+    .unwrap();
+    assert!(matches!(
+        home.link_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+            &loaded
+        ),
+        LinkInspection::RecoveryRequired { .. }
+    ));
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, "approval-link-pending")
+            .unwrap()
+            .is_none()
+    );
+    assert!(!settings.path().join(HOME).join(REDEEMED).exists());
+
+    let Some((world, settings, home, namespace)) = prepared() else {
+        return;
+    };
+    let approved = world.held();
+    let loaded = home
+        .load_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+        )
+        .unwrap();
+    assert!(matches!(
+        home.link_mode_a_populated(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            Some(&world.source),
+            Some(&approved),
+            &world.binary,
+            limits(),
+            &loaded
+        ),
+        LinkInspection::Landed { .. }
+    ));
+    fs::write(
+        settings
+            .path()
+            .join(HOME)
+            .join(REDEEMED)
+            .join(marker_name(loaded.authority_id())),
+        b"tampered",
+    )
+    .unwrap();
+    assert!(matches!(
+        home.inspect_link_populated_cold(
+            &world.lease,
+            &namespace,
+            &world.scope,
+            "aggregate",
+            None,
+            None,
+            &world.binary,
+            limits(),
+            loaded.authority_id()
+        ),
+        LinkInspection::RecoveryRequired { .. }
+    ));
+}
