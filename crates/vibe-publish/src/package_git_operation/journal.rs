@@ -15,6 +15,8 @@ pub(crate) const TREE_FORMAT: &str = "vibevm.package-git-tree/e1";
 pub(crate) const PROVENANCE_FORMAT: &str = "vibevm.package-git-no-gitlinks/e1";
 pub(crate) const PROVENANCE_PENDING_FORMAT: &str = "vibevm.package-git-no-gitlinks-pending/e1";
 pub(crate) const OBJECT_FORMAT: &str = "vibevm.package-git-control-objects/e1";
+pub(crate) const PARENT_PENDING_FORMAT: &str = "vibevm.package-git-parent-pending/e1";
+pub(crate) const PARENT_FORMAT: &str = "vibevm.package-git-parent/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -135,6 +137,46 @@ pub(crate) struct ObjectReceipt {
     pub tag_oid: String,
     pub tag_size_bytes: usize,
     pub tag_sha256: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ParentPending {
+    pub format: String,
+    pub run_id: String,
+    pub semantic_plan_sha256: String,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+    pub tree_receipt_sha256: String,
+    pub provenance_receipt_sha256: String,
+    pub object_root_token: String,
+    pub local_bare_identity_sha256: String,
+    pub local_bare_root_token: String,
+    pub private_prefix: String,
+    pub observed_refs: crate::package_git_plan::RefSnapshot,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ParentReceipt {
+    pub format: String,
+    pub pending_sha256: String,
+    pub run_id: String,
+    pub semantic_plan_sha256: String,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+    pub tree_receipt_sha256: String,
+    pub provenance_receipt_sha256: String,
+    pub object_root_token: String,
+    pub local_bare_identity_sha256: String,
+    pub local_bare_root_token: String,
+    pub private_prefix: String,
+    pub observed_refs: crate::package_git_plan::RefSnapshot,
+    pub parent_oid: String,
+    pub parent_tree_oid: String,
+    pub closure_sha256: String,
+    pub closure_objects: usize,
+    pub closure_bytes: u64,
 }
 
 pub(crate) fn sha(bytes: &[u8]) -> String {

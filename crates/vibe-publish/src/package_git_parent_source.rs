@@ -94,6 +94,7 @@ fn command(binary: &Path, cwd: &Path, args: &[&str]) -> Command {
         .env("GIT_TERMINAL_PROMPT", "0")
         .env("GIT_OPTIONAL_LOCKS", "0")
         .env("GIT_NO_REPLACE_OBJECTS", "1")
+        .env("GIT_NO_LAZY_FETCH", "1")
         .env("GIT_CONFIG_NOSYSTEM", "1")
         .env(
             "GIT_CONFIG_GLOBAL",

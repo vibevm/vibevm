@@ -8,6 +8,7 @@ const DOMAIN: &[u8] = b"vibevm/package-git-publication-plan/e2\0";
 const EPOCH: u32 = 2;
 
 mod objects;
+pub(crate) use objects::GitObjectHasher;
 pub(crate) use objects::{CommitMetadata, GitPerson, TagMetadata};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
