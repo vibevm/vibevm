@@ -1,17 +1,146 @@
+use std::io::Read;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use reqwest::Method;
-use reqwest::header::{CONTENT_TYPE, HeaderValue};
+use reqwest::blocking::Body;
+use reqwest::header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE, HeaderValue, USER_AGENT};
 use serde::Serialize;
+use vibe_safefs::{StreamCompletion, StreamOutcome, VerifiedStreamReader};
 
 use super::{
-    GithubReleaseAsset, GithubReleaseClient, GithubReleaseError, sha256_digest, validate_asset_name,
+    GITHUB_API_VERSION, GITHUB_JSON, GithubReleaseAsset, GithubReleaseClient, GithubReleaseError,
+    sha256_digest, user_agent, validate_asset_name,
 };
+
+const STREAMED_UPLOAD_RESPONSE_CAP: u64 = 64 * 1024;
+
+/// A POST response only. The publication owner still has to reobserve the
+/// remote release and asset independently before it can write Landed.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct StreamedUploadResponse {
+    pub asset_id: u64,
+    pub temporary_name: String,
+    pub size_bytes: u64,
+    pub sha256: String,
+}
+
+#[derive(Debug, thiserror::Error, PartialEq, Eq)]
+pub(crate) enum StreamedUploadError {
+    #[error("streamed asset upload refused before dispatch: {0}")]
+    Refused(&'static str),
+    #[error(
+        "streamed asset upload may have taken effect; inspect the owner journal and remote state: {0}"
+    )]
+    Uncertain(&'static str),
+}
 
 static TEMP_ASSET_SEQUENCE: AtomicU64 = AtomicU64::new(1);
 
 impl GithubReleaseClient {
+    /// One explicit temporary-asset POST using a held nofollow reader. This
+    /// does not clean up, rename, retry, or turn a response into Landed.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn upload_temporary_asset_streamed(
+        &self,
+        release_id: u64,
+        temporary_name: &str,
+        content_type: &str,
+        expected_size: u64,
+        expected_sha256: &str,
+        reader: VerifiedStreamReader,
+        completion: StreamCompletion,
+    ) -> Result<StreamedUploadResponse, StreamedUploadError> {
+        if release_id == 0 || expected_size == 0 {
+            return Err(StreamedUploadError::Refused("invalid release ID or size"));
+        }
+        if validate_asset_name(temporary_name, self.token_value()).is_err() {
+            return Err(StreamedUploadError::Refused("invalid temporary asset name"));
+        }
+        let Some(hex) = expected_sha256.strip_prefix("sha256:") else {
+            return Err(StreamedUploadError::Refused("invalid expected SHA-256"));
+        };
+        if hex.len() != 64
+            || !hex
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+        {
+            return Err(StreamedUploadError::Refused("invalid expected SHA-256"));
+        }
+        let content_type = HeaderValue::from_str(content_type)
+            .map_err(|_| StreamedUploadError::Refused("invalid media type header"))?;
+        let token = self
+            .token
+            .as_ref()
+            .ok_or(StreamedUploadError::Refused("publish token absent"))?;
+        if completion.outcome() != StreamOutcome::Incomplete {
+            return Err(StreamedUploadError::Refused(
+                "stream was already consumed or uncertain",
+            ));
+        }
+        let id = release_id.to_string();
+        let mut url = self
+            .upload_url(&["releases", &id, "assets"])
+            .map_err(|_| StreamedUploadError::Refused("invalid upload endpoint"))?;
+        url.query_pairs_mut().append_pair("name", temporary_name);
+        // This client has redirect policy None; reqwest cannot forward the
+        // Authorization header or replay the move-only body to a 3xx target.
+        let request = self
+            .no_redirect_write_client
+            .request(Method::POST, url)
+            .header(ACCEPT, GITHUB_JSON)
+            .header("X-GitHub-Api-Version", GITHUB_API_VERSION)
+            .header(USER_AGENT, user_agent())
+            .header(AUTHORIZATION, format!("Bearer {}", token.value()))
+            .header(CONTENT_TYPE, content_type)
+            .body(Body::sized(reader, expected_size));
+        let response = request
+            .send()
+            .map_err(|_| StreamedUploadError::Uncertain("POST transport failed"))?;
+        if !matches!(completion.outcome(), StreamOutcome::Complete { bytes, sha256 }
+            if bytes == expected_size && sha256 == hex)
+        {
+            return Err(StreamedUploadError::Uncertain(
+                "local stream did not complete exact bytes",
+            ));
+        }
+        if !response.status().is_success() {
+            return Err(StreamedUploadError::Uncertain(
+                "POST returned a non-success status or redirect",
+            ));
+        }
+        let mut body = Vec::new();
+        response
+            .take(STREAMED_UPLOAD_RESPONSE_CAP + 1)
+            .read_to_end(&mut body)
+            .map_err(|_| StreamedUploadError::Uncertain("POST response read failed"))?;
+        if body.len() as u64 > STREAMED_UPLOAD_RESPONSE_CAP {
+            return Err(StreamedUploadError::Uncertain(
+                "POST response exceeded bound",
+            ));
+        }
+        let asset: GithubReleaseAsset = serde_json::from_slice(&body)
+            .map_err(|_| StreamedUploadError::Uncertain("POST response malformed"))?;
+        let response_digest = asset.digest.ok_or(StreamedUploadError::Uncertain(
+            "POST response asset digest missing",
+        ))?;
+        if asset.id == 0
+            || asset.name != temporary_name
+            || asset.size != expected_size
+            || response_digest != expected_sha256
+        {
+            return Err(StreamedUploadError::Uncertain(
+                "POST response asset identity differs or digest missing",
+            ));
+        }
+        Ok(StreamedUploadResponse {
+            asset_id: asset.id,
+            temporary_name: asset.name,
+            size_bytes: asset.size,
+            sha256: response_digest,
+        })
+    }
+
     /// Remove interrupted temporary uploads for the supplied canonical names.
     /// Other temporary namespaces and canonical assets remain untouched.
     pub fn cleanup_temporary_assets(
@@ -194,6 +323,10 @@ impl GithubReleaseClient {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "streamed_upload_tests.rs"]
+mod streamed_upload_tests;
 
 fn temporary_asset_name(name: &str, digest: &str) -> String {
     let sequence = TEMP_ASSET_SEQUENCE.fetch_add(1, Ordering::Relaxed);

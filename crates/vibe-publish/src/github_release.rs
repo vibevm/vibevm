@@ -38,6 +38,8 @@ pub struct GithubReleaseClient {
     upload_base: String,
     token: Option<Token>,
     client: Client,
+    /// Streamed POSTs must never follow a redirect and replay their body.
+    no_redirect_write_client: Client,
 }
 
 impl GithubReleaseClient {
@@ -148,6 +150,15 @@ impl GithubReleaseClient {
                 operation: "client construction",
                 message: redact_optional_secret(error.to_string(), secret),
             })?;
+        let no_redirect_write_client = Client::builder()
+            .connect_timeout(connect_timeout)
+            .timeout(transfer_timeout)
+            .redirect(reqwest::redirect::Policy::none())
+            .build()
+            .map_err(|error| GithubReleaseError::Transport {
+                operation: "no-redirect write client construction",
+                message: redact_optional_secret(error.to_string(), secret),
+            })?;
         Ok(Self {
             owner: owner.into(),
             repo: repo.into(),
@@ -155,6 +166,7 @@ impl GithubReleaseClient {
             upload_base: upload_base.trim_end_matches('/').to_string(),
             token,
             client,
+            no_redirect_write_client,
         })
     }
 
