@@ -288,13 +288,18 @@ pub(crate) fn normalize_fixed(
     })
 }
 
-#[cfg(test)]
-trait RemoteReadPort {
+/// Each invocation must return an independently complete typed read epoch:
+/// tag, draft-aware release and all paginated assets. Missing metadata SHA
+/// requires a fresh streamed same-ID/size digest witness in THAT epoch.
+/// A future HTTP adapter must enforce bounded responses and page exhaustion;
+/// implementing this port grants no write or remote CAS authority.
+pub(crate) trait RemoteReadPort {
     fn read_complete(&mut self) -> Result<RemoteSnapshot, ObservationError>;
 }
 
-#[cfg(test)]
-fn observe_fake_twice(
+/// Compare two independently obtained complete read epochs. This fingerprint
+/// is useful for drift detection, never an atomic remote precondition grant.
+pub(crate) fn observe_twice(
     port: &mut dyn RemoteReadPort,
     source_commit: &str,
 ) -> Result<CapturedPublicationRemote, ObservationError> {
