@@ -34,6 +34,10 @@ pub(super) struct InputCapsule {
     pub request_json: String,
     pub subject: PublicationSubject,
     pub plan: PublicationEffectPlan,
+    /// Portable subject-derived upload metadata, never a payload witness.
+    pub upload_catalogue_sha256: String,
+    /// Same-host held-root correlation, not a portable authority or secret.
+    pub root_correlation_token: String,
     pub publish: bool,
     pub allow_replace_published: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -54,6 +58,8 @@ pub(super) struct Intent {
     pub remote_generation_ref: String,
     pub target: String,
     pub partition_sha256: Vec<String>,
+    pub upload_catalogue_sha256: String,
+    pub root_correlation_token: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub authority_mode: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]

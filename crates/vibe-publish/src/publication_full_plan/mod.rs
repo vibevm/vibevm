@@ -18,6 +18,7 @@ use crate::publication_effect_plan::{
     PublicationEffectPlanExpectations, publication_effect_plan_digest,
     require_apply_ready_effect_plan,
 };
+use crate::publication_payload::expected_upload_catalogue;
 
 mod journal;
 mod prepare;
@@ -110,9 +111,12 @@ struct Selected {
     authority_ref: Option<String>,
     publish: bool,
     allow_replace_published: bool,
+    upload_catalogue_sha256: String,
+    root_correlation_token: String,
 }
 
 fn select(
+    lease: &LifecycleLease,
     scope: &SubmissionScope,
     subject: &PublicationSubject,
     plan: &PublicationEffectPlan,
@@ -122,6 +126,17 @@ fn select(
     require_apply_ready_effect_plan(plan, subject, expected).map_err(Error::io)?;
     let semantic_plan_sha256 =
         publication_effect_plan_digest(plan, subject, expected).map_err(Error::io)?;
+    let catalogue = expected_upload_catalogue(subject, &expected.subject).map_err(Error::io)?;
+    if catalogue.subject_sha256 != plan.subject_sha256 {
+        return Err(Error::Refused(
+            "upload catalogue subject differs from selected plan".into(),
+        ));
+    }
+    let upload_catalogue_sha256 = catalogue.digest;
+    let root_correlation_token = lease
+        .publication_journal_project()
+        .root_correlation_token()
+        .map_err(Error::io)?;
     if scope.target != "github.com/vibevm/vibevm"
         || scope.context.is_empty()
         || scope.principal.is_empty()
@@ -157,6 +172,8 @@ fn select(
         "allow_replace_published": expected.allow_replace_published,
         "authority_mode": authority_mode,
         "authority_ref": authority_ref,
+        "upload_catalogue_sha256": upload_catalogue_sha256,
+        "root_correlation_token": root_correlation_token,
     }))?;
     if request.len() > C1_CAP || plan_bytes.len() > C1_CAP {
         return Err(Error::Refused("C.1 payload cap".into()));
@@ -173,6 +190,8 @@ fn select(
         partition_sha256,
         authority_mode: authority_mode.clone(),
         authority_ref: authority_ref.clone(),
+        upload_catalogue_sha256: upload_catalogue_sha256.clone(),
+        root_correlation_token: root_correlation_token.clone(),
     };
     Ok(Selected {
         request,
@@ -182,6 +201,8 @@ fn select(
         authority_ref,
         publish: expected.publish,
         allow_replace_published: expected.allow_replace_published,
+        upload_catalogue_sha256,
+        root_correlation_token,
     })
 }
 
@@ -356,6 +377,11 @@ pub(crate) fn inspect_full_plan_cold(
         || capsule.target != scope.target
         || capsule.principal != scope.principal
         || capsule.key_sha256 != sha(key.as_bytes())
+        || capsule.root_correlation_token
+            != match lease.publication_journal_project().root_correlation_token() {
+                Ok(token) => token,
+                Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
+            }
     {
         return Ok(Inspection::RecoveryRequired { run_id });
     }
@@ -379,11 +405,20 @@ pub(crate) fn inspect_full_plan_cold(
         .authority_mode
         .as_deref()
         .zip(capsule.authority_ref.as_deref());
-    let selected = match select(scope, &capsule.subject, &capsule.plan, &expected, authority) {
+    let selected = match select(
+        lease,
+        scope,
+        &capsule.subject,
+        &capsule.plan,
+        &expected,
+        authority,
+    ) {
         Ok(selected) => selected,
         Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
     };
     if capsule.request_json.as_bytes() != selected.request
+        || capsule.upload_catalogue_sha256 != selected.upload_catalogue_sha256
+        || capsule.root_correlation_token != selected.root_correlation_token
         || row.request_sha256 != sha(&selected.request)
         || row.plan_sha256 != sha(&selected.plan_bytes)
     {
@@ -436,7 +471,7 @@ pub(crate) fn submit_fake_full_plan(
             "fake remote cannot prove partition {index} before reservation"
         )));
     }
-    let selected = select(scope, subject, plan, expected, None)?;
+    let selected = select(lease, scope, subject, plan, expected, None)?;
     let prepared = prepare::prepare_journal(
         lease,
         namespace,

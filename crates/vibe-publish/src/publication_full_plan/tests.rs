@@ -233,7 +233,7 @@ fn full_plan_records_each_partition_and_replays_after_lease_exit_without_port_ca
         lease: &lease,
         namespace: &namespace,
         scope: &selected,
-        request: select(&selected, &subject, &plan, &expected(), None)
+        request: select(&lease, &selected, &subject, &plan, &expected(), None)
             .unwrap()
             .request,
     };
