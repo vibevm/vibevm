@@ -28,7 +28,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-GRAMMAR"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP"/>
-    <p>`[project]` carries the same descriptive fields for a consumer, without a version line or a kind.</p>
+    <p>`[project]` carries the same descriptive fields for a consumer, without a version line or a kind. An authored package with no `format` remains `simple`; the separate `vibe init package` scaffold explicitly writes `format = "normal"` by default.</p>
   </package-table>
   <requirements title="[requires] and its neighbours">
     <table>
@@ -75,6 +75,23 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-CANONICAL-INVARIANT"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-CLI-FLAG"/>
   </sources>
+  <source-declarations title="Authored source interpretation and exports">
+    <table>
+      <tr><td>Table</td><td>Meaning</td></tr>
+      <tr><td>`[[package.sources]]`</td><td>an optional repeated declaration of a package source's media, interpretation, role and loading, selected by exactly one package-relative `file` or `directory` default</td></tr>
+      <tr><td>`[[project.sources]]`</td><td>the same optional declaration for a plain project's own relative sources; it does not turn an ordinary resource into a Vibe document</td></tr>
+      <tr><td>`[[package.source_exports]]`</td><td>a named ordinary CommonMark section export with package-unique ASCII `name`, exact `file` and nonempty ordered `headings` from the document root</td></tr>
+    </table>
+    <p>A `directory` selects descendants by path components, not a glob; an exact `file` wins over it, and the longest matching directory wins over a shorter one. Incompatible equally specific declarations return path-specific `NeedsInput`, not a guessed interpretation. A declaration requires normalized `media` and one `interpretation` (`vibe-spec`, `vibe-doc`, `commonmark`, `xml-data` or `opaque`), `role` (`spec`, `documentation` or `resource`) and `loading` (`scan` or `explicit`). Media and reader compatibility are checked before interpretation. Neither `.md` nor `.xml` grants Vibe semantics by itself.</p>
+    <p>Only selected `vibe-spec` and `vibe-doc` sources may mint their respective Vibe facts or addresses. Ordinary CommonMark supplies structure but no Vibe fact; XML data and opaque files remain raw resources, even if optional XML inspection fails. A source export requires a selected `commonmark` descriptor with `text/markdown` media. Its stable identity is the package and export name, while a resolved node and byte span belong to one captured source snapshot. Missing or ambiguous headings and changed bytes refuse; an export is not a Vibe directive.</p>
+    <p>These rows are opt-in. Packages and projects without declarations keep their legacy source behavior. A directory declaration alone is not proof of a complete file census, and authored rows do not prove source bytes or trust. The finite migration for a recognized old normal-flow package with one boot source asks for that exact path's media and requires explicit review and application; it does not automatically convert existing manifests.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-PRECEDENCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-OPT-IN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-SELECTOR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-MIGRATION-LAW"/>
+  </source-declarations>
   <deliveries title="What a package delivers">
     <table>
       <tr><td>Table</td><td>Meaning</td><td>Legal in</td></tr>

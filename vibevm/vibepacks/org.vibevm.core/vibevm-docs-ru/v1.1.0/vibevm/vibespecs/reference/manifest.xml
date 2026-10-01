@@ -28,7 +28,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-GRAMMAR"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP"/>
-    <p>`[project]` несёт те же описательные поля для потребителя, без строки версии и без вида.</p>
+    <p>`[project]` несёт те же описательные поля для потребителя, без строки версии и без вида. Авторский пакет без поля `format` остаётся в формате `simple`; отдельная заготовка `vibe init package` по умолчанию явно записывает `format = "normal"`.</p>
   </package-table>
   <requirements title="[requires] и его соседи">
     <table>
@@ -75,6 +75,23 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-CANONICAL-INVARIANT"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-CLI-FLAG"/>
   </sources>
+  <source-declarations title="Объявления интерпретации источников и экспортов">
+    <table>
+      <tr><td>Таблица</td><td>Смысл</td></tr>
+      <tr><td>`[[package.sources]]`</td><td>необязательное повторяемое объявление media, интерпретации, роли и загрузки источника пакета; выбирает ровно один относительный к пакету `file` или умолчание `directory`</td></tr>
+      <tr><td>`[[project.sources]]`</td><td>такое же необязательное объявление для собственных относительных источников обычного проекта; оно не превращает обычный ресурс в документ Vibe</td></tr>
+      <tr><td>`[[package.source_exports]]`</td><td>именованный экспорт раздела обычного CommonMark с уникальным в пакете ASCII-именем `name`, точным `file` и непустым упорядоченным списком `headings` от корня документа</td></tr>
+    </table>
+    <p>`directory` выбирает потомков по компонентам пути, а не как glob; точный `file` имеет приоритет, а из подходящих каталогов выигрывает самый длинный путь. Несовместимые объявления одинаковой точности возвращают вопрос `NeedsInput` для конкретного пути, а не угаданную интерпретацию. Объявление требует нормализованное `media`, одно значение `interpretation` (`vibe-spec`, `vibe-doc`, `commonmark`, `xml-data` или `opaque`), `role` (`spec`, `documentation` или `resource`) и `loading` (`scan` или `explicit`). Совместимость media и читателя проверяется до интерпретации. Расширение `.md` или `.xml` само по себе не даёт семантику Vibe.</p>
+    <p>Только выбранные источники `vibe-spec` и `vibe-doc` могут создавать соответствующие факты или адреса Vibe. Обычный CommonMark даёт структуру без фактов Vibe; данные XML и непрозрачные файлы остаются сырыми ресурсами, даже если необязательная проверка структуры XML не удалась. Экспорт источника требует выбранный дескриптор `commonmark` с media `text/markdown`. Его стабильная идентичность — пакет и имя экспорта, а разрешённый узел и диапазон байтов принадлежат одному снимку источника. Отсутствующие или неоднозначные заголовки и изменённые байты приводят к отказу; экспорт не является директивой Vibe.</p>
+    <p>Эти строки добавляются по выбору автора. Пакеты и проекты без объявлений сохраняют прежнее поведение источников. Одно объявление каталога не доказывает полный учёт файлов, а авторские строки не доказывают байты источника или доверие к нему. Конечная миграция для распознанного старого пакета flow в формате normal с одним стартовым источником спрашивает media именно этого пути и требует явного просмотра и применения; существующие манифесты не преобразуются автоматически.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-PRECEDENCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-OPT-IN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-SELECTOR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-MIGRATION-LAW"/>
+  </source-declarations>
   <deliveries title="Что доставляет пакет">
     <table>
       <tr><td>Таблица</td><td>Смысл</td><td>Где законна</td></tr>
