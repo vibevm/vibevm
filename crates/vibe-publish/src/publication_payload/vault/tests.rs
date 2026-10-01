@@ -2,6 +2,8 @@ use std::fs;
 use std::path::Path;
 
 use super::*;
+#[path = "stream_tests.rs"]
+mod stream_tests;
 use vibe_lifecycle::ReservationDecision;
 use vibe_lifecycle::process::propose_run_id;
 use vibe_wire::generated::publication_subject::{PublicationAsset, PublicationSmokeProbeStatus};
