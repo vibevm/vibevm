@@ -241,7 +241,9 @@
         "crates/vibe-safefs/src/file/stable.rs",
         "crates/vibe-safefs/src/file/stable/new_bounded.rs",
         "crates/vibe-safefs/src/file/stable/held_stream.rs",
-        "crates/vibe-safefs/src/file/stable/held_stream_tests.rs"
+        "crates/vibe-safefs/src/file/stable/held_stream_tests.rs",
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-safefs/src/lib.rs"
       ],
       "write_paths": [
         "crates/vibe-publish/src/",
@@ -284,7 +286,9 @@
         "crates/vibe-safefs/src/file/stable.rs",
         "crates/vibe-safefs/src/file/stable/new_bounded.rs",
         "crates/vibe-safefs/src/file/stable/held_stream.rs",
-        "crates/vibe-safefs/src/file/stable/held_stream_tests.rs"
+        "crates/vibe-safefs/src/file/stable/held_stream_tests.rs",
+        "crates/vibe-safefs/src/file.rs",
+        "crates/vibe-safefs/src/lib.rs"
       ],
       "steps": [
         "Bind a prepared exact publication subject/effect plan and remote generation to an owner run journal before repo/tag/release/asset writes; never reuse the registry fact log as this journal.",
