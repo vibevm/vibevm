@@ -8,7 +8,7 @@ use std::process::Command;
 mod output;
 pub(crate) use output::{bounded_output, porcelain_receipt};
 
-pub(super) struct LocalBarePort {
+pub(crate) struct LocalBarePort {
     remote: tempfile::TempDir,
     remote_project: Project,
     objects: Project,
@@ -67,7 +67,7 @@ impl LocalBarePort {
         )
     }
 
-    pub(super) fn new_profile(input: &ProfileRun<'_>, approval_id: &str) -> Self {
+    pub(crate) fn new_profile(input: &ProfileRun<'_>, approval_id: &str) -> Self {
         let proof = proved_profile(
             input.home,
             input.lease,
@@ -310,14 +310,32 @@ impl LocalBarePort {
         })
     }
 
-    pub(super) fn calls(&self) -> usize {
+    pub(crate) fn calls(&self) -> usize {
         self.calls
     }
-    pub(super) fn exact_refs(&self) -> RefSnapshot {
+    pub(crate) fn exact_refs(&self) -> RefSnapshot {
         self.read_refs().unwrap()
     }
     pub(super) fn race_desired_main(&mut self) {
         self.desired_before_protected_push = Some("main");
+    }
+
+    pub(crate) fn drift_tag_after_push(&self) {
+        let command = self
+            .git()
+            .command(
+                &[
+                    "--git-dir",
+                    self.remote_path(),
+                    "update-ref",
+                    "-d",
+                    &self.version_tag_ref,
+                ],
+                true,
+            )
+            .unwrap();
+        let (status, _, _) = bounded_output(command, 4096).unwrap();
+        assert!(status.success(), "local tag drift: {status}");
     }
 }
 
