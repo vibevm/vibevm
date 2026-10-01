@@ -9,7 +9,7 @@ struct RemoteSnapshot {
     refs: RefSnapshot,
 }
 
-trait FakeCreatePort {
+pub(crate) trait FakeCreatePort {
     fn observe(&mut self) -> Result<RemoteSnapshot, String>;
     fn create(
         &mut self,
@@ -20,7 +20,7 @@ trait FakeCreatePort {
 
 /// Test-only dispatch. Production has no RepoCreator, GitHub client or write
 /// port connected to this owner.
-fn drive_fake(
+pub(crate) fn drive_fake(
     world: &World,
     approval_id: &str,
     port: &mut impl FakeCreatePort,
@@ -181,7 +181,7 @@ fn drive_fake(
     )
 }
 
-struct Fake {
+pub(crate) struct Fake {
     repository: HostedRepository,
     observed: RemoteSnapshot,
     observations: usize,
@@ -195,7 +195,7 @@ struct Fake {
 }
 
 impl Fake {
-    fn new(world: &World) -> Self {
+    pub(crate) fn new(world: &World) -> Self {
         let (_, proof) = package_git_operation::ready_proof_cold(
             &world.lease,
             world.namespace.id(),
@@ -280,7 +280,7 @@ impl FakeCreatePort for Fake {
     }
 }
 
-fn linked_world(binary: &Path) -> (World, String) {
+pub(crate) fn linked_world(binary: &Path) -> (World, String) {
     let world = World::new(binary);
     let verified = world.load().unwrap();
     assert!(matches!(

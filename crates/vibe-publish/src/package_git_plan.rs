@@ -378,7 +378,7 @@ impl PackageGitPlan {
         Ok(format!("sha256:{:x}", hash.finalize()))
     }
 
-    fn desired_refs(&self) -> Option<RefSnapshot> {
+    pub(crate) fn desired_refs(&self) -> Option<RefSnapshot> {
         Some(RefSnapshot {
             main: RawRef::Present {
                 oid: self.staged.commit.oid().into(),
