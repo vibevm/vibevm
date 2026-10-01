@@ -237,7 +237,8 @@
         "formats/",
         "crates/vibe-wire/",
         "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
-        "crates/vibe-lifecycle/src/retained_mechanism.rs"
+        "crates/vibe-lifecycle/src/retained_mechanism.rs",
+        "crates/vibe-safefs/src/file/stable.rs"
       ],
       "write_paths": [
         "crates/vibe-publish/src/",
@@ -276,13 +277,15 @@
         "formats/",
         "crates/vibe-wire/",
         "crates/vibe-lifecycle/src/lib.rs",
-        "crates/vibe-lifecycle/src/retained_mechanism.rs"
+        "crates/vibe-lifecycle/src/retained_mechanism.rs",
+        "crates/vibe-safefs/src/file/stable.rs"
       ],
       "steps": [
         "Bind a prepared exact publication subject/effect plan and remote generation to an owner run journal before repo/tag/release/asset writes; never reuse the registry fact log as this journal.",
         "Reconcile repo-created-before-push, lost atomic push/release response and third-state remote refs without repeating an uncertain effect; retain partial/terminal result for retry.",
         "Review lifecycle, build, package, deploy and publication owners together for API exit, EOF, owner crash, one-writer/parked limits and local attach; unsupported adapters remain unavailable.",
-        "Expose read-only typed Build/Package/Deploy retained inspection to the orchestrator without exporting IntentReady as an effect grant; bind host-issued authority and held roots before cold attach."
+        "Expose read-only typed Build/Package/Deploy retained inspection to the orchestrator without exporting IntentReady as an effect grant; bind host-issued authority and held roots before cold attach.",
+        "Before any remote effect, reserve an exact expected 19-upload payload catalogue under C.1, stream and verify a run-scoped local vault while Pending, then publish/read back its complete manifest before Ready; cold attach must not mistake an incomplete vault for effect authority."
       ],
       "positive_cases": [
         "A lost remote response returns the same run and a retained result or explicit partial/recovery state.",
@@ -291,7 +294,8 @@
       "negative_cases": [
         "A registry Published fact or identical remote bytes is treated as operation completion.",
         "EOF silently restarts publication or an unavailable domain is advertised as callable.",
-        "A copied same-path root or a missing/tampered pre-Ready capsule is accepted as Completed or grants a retry effect."
+        "A copied same-path root or a missing/tampered pre-Ready capsule is accepted as Completed or grants a retry effect.",
+        "An observed source digest without retained upload bytes, or an interrupted/incomplete vault, is treated as sufficient to delete a prior release or upload a different byte stream."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
@@ -312,7 +316,8 @@
         "This is a required refinement of M-16-C.2; the parent and other children remain open until their own domain proof.",
         "Use only the smallest affected targets/cases and preserve 1.1.0 mutable version without public Git publication.",
         "The existing xtask dist prepare mutates remote tag/release before the five-target PROP-073 subject exists. An all-assets-ready protected route must capture and validate all target outputs first, then reserve one exact plan before any tag/release/asset/visibility effect. Keep live public Git publication disabled for this 1.1.0 campaign; use only fake hosts and local proof until explicit owner publication instruction.",
-        "Prerequisite: accepted M-07-A.1 exact publication subject/effect plan; journal work never authorizes public Git or release."
+        "Prerequisite: accepted M-07-A.1 exact publication subject/effect plan; journal work never authorizes public Git or release.",
+        "The expected canonical vault digest is derived from the validated subject before C.1 reservation. Actual byte staging follows reservation while Pending; large ZIPs require bounded streaming rather than preloading all five into memory. No remote effect route is enabled by the vault alone."
       ]
     }
   ]
