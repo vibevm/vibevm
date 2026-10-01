@@ -24,6 +24,7 @@ use crate::publication_payload::expected_upload_catalogue;
 mod approval_join_tests;
 mod calls;
 mod cold;
+mod github_remote;
 mod journal;
 #[cfg(test)]
 mod local_tests;

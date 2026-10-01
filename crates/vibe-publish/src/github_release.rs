@@ -44,6 +44,30 @@ pub struct GithubReleaseClient {
 }
 
 impl GithubReleaseClient {
+    /// Prevent a fixed-target publication observation from silently
+    /// attributing another repository's bytes to github.com/vibevm/vibevm.
+    pub(crate) fn is_fixed_publication_target(&self) -> bool {
+        self.owner == "vibevm"
+            && self.repo == "vibevm"
+            && self.api_base == DEFAULT_GITHUB_API_BASE
+            && self.upload_base == DEFAULT_GITHUB_UPLOAD_BASE
+            && self.token.is_some()
+    }
+
+    #[cfg(test)]
+    pub(crate) fn is_fixed_publication_loopback(&self) -> bool {
+        let local = |base: &str| {
+            reqwest::Url::parse(base).ok().is_some_and(|url| {
+                url.scheme() == "http" && url.host_str() == Some("127.0.0.1") && url.path() == "/"
+            })
+        };
+        self.owner == "vibevm"
+            && self.repo == "vibevm"
+            && self.token.is_some()
+            && local(&self.api_base)
+            && local(&self.upload_base)
+    }
+
     pub fn new(
         token: Token,
         owner: impl Into<String>,
