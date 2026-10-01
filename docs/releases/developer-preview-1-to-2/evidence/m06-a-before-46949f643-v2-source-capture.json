@@ -1,0 +1,693 @@
+{
+  "recipe": "explicit-immutable-git-selected-bytes-v1",
+  "capture_id": "m06-a-before-46949f643-v2",
+  "repository_commit_sha1": "46949f64373029e282a5b76d6447732eebc364ae",
+  "repository_tree_sha1": "58a8748282ce819c502670a907d1e3e46dc23d55",
+  "template_capture_sha256": "51435f494b8e3c4c1a53acae017a1f8bfb9b43cc225172000c254cdabf96961f",
+  "selected_files": [
+    ".gitignore",
+    "AGENTS.md",
+    "BACKLOG.md",
+    "Cargo.lock",
+    "Cargo.toml",
+    "VIBEVM-SPEC.md",
+    "crates/progress-core/src/parse/anchor_token.rs",
+    "crates/progress-core/src/parse/anchors.rs",
+    "crates/progress-core/src/parse/facts.rs",
+    "crates/progress-core/src/parse/mod.rs",
+    "crates/vibe-check/Cargo.toml",
+    "crates/vibe-check/src/checks/boot_directory.rs",
+    "crates/vibe-check/tests/check_cells_oracle.rs",
+    "crates/vibe-cli/src/cli.rs",
+    "crates/vibe-cli/src/cli/mcp.rs",
+    "crates/vibe-cli/src/cli/pkg.rs",
+    "crates/vibe-cli/src/commands/facts.rs",
+    "crates/vibe-cli/src/commands/init/helpers.rs",
+    "crates/vibe-cli/src/commands/init/package.rs",
+    "crates/vibe-cli/src/commands/progress.rs",
+    "crates/vibe-cli/src/commands/progress/grounding.rs",
+    "crates/vibe-cli/src/commands/progress/tests.rs",
+    "crates/vibe-cli/src/commands/progress/tests/xml_sources.rs",
+    "crates/vibe-cli/src/commands/refactor/mod.rs",
+    "crates/vibe-cli/src/commands/show/effective.rs",
+    "crates/vibe-cli/src/commands/tree/build.rs",
+    "crates/vibe-cli/src/commands/tree/build/tests.rs",
+    "crates/vibe-cli/tests/cli_init.rs",
+    "crates/vibe-core/src/manifest/document.rs",
+    "crates/vibe-core/src/manifest/migration.rs",
+    "crates/vibe-core/src/manifest/migration/tests.rs",
+    "crates/vibe-core/src/manifest/mod.rs",
+    "crates/vibe-core/src/manifest/package.rs",
+    "crates/vibe-core/src/manifest/package/meta.rs",
+    "crates/vibe-core/src/manifest/package/tests.rs",
+    "crates/vibe-core/src/manifest/package/wire.rs",
+    "crates/vibe-core/src/manifest/project.rs",
+    "crates/vibe-core/src/manifest/project/tests.rs",
+    "crates/vibe-doc/Cargo.toml",
+    "crates/vibe-doc/src/agent.rs",
+    "crates/vibe-doc/src/agent/tests.rs",
+    "crates/vibe-doc/src/citations.rs",
+    "crates/vibe-doc/src/citations/anchor.rs",
+    "crates/vibe-doc/src/citations/sources.rs",
+    "crates/vibe-doc/src/citations/sources/tests.rs",
+    "crates/vibe-doc/src/citations/tests.rs",
+    "crates/vibe-facts/Cargo.toml",
+    "crates/vibe-facts/src/lib.rs",
+    "crates/vibe-facts/src/scan.rs",
+    "crates/vibe-facts/src/sync.rs",
+    "crates/vibe-install/tests/recording_behaviour.rs",
+    "crates/vibe-lifecycle/src/handlers/mod.rs",
+    "crates/vibe-lifecycle/src/lease.rs",
+    "crates/vibe-lifecycle/src/lib.rs",
+    "crates/vibe-lifecycle/src/mechanism/build.rs",
+    "crates/vibe-lifecycle/src/mechanism/build/error.rs",
+    "crates/vibe-lifecycle/src/mechanism/cargo.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/bound_effect_tests.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/error.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/view.rs",
+    "crates/vibe-lifecycle/src/mechanism/package.rs",
+    "crates/vibe-lifecycle/src/process/mod.rs",
+    "crates/vibe-lifecycle/src/process/source_snapshot.rs",
+    "crates/vibe-lifecycle/src/state/mod.rs",
+    "crates/vibe-lifecycle/src/state/source_stage.rs",
+    "crates/vibe-lifecycle/src/state/source_stage/tests.rs",
+    "crates/vibe-lifecycle/src/state/submission.rs",
+    "crates/vibe-mcp/src/tools.rs",
+    "crates/vibe-orchestrator/Cargo.toml",
+    "crates/vibe-orchestrator/src/command.rs",
+    "crates/vibe-orchestrator/src/dispatch/mod.rs",
+    "crates/vibe-orchestrator/src/dispatch/untracked.rs",
+    "crates/vibe-orchestrator/src/install/mod.rs",
+    "crates/vibe-orchestrator/src/install/ready.rs",
+    "crates/vibe-orchestrator/src/machine_operation.rs",
+    "crates/vibe-orchestrator/src/machine_operation/discovery/tests.rs",
+    "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/install.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_plan.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_plan/tests.rs",
+    "crates/vibe-orchestrator/src/phase.rs",
+    "crates/vibe-orchestrator/src/ports.rs",
+    "crates/vibe-package-source/Cargo.toml",
+    "crates/vibe-package-source/src/fence_tests.rs",
+    "crates/vibe-package-source/src/lib.rs",
+    "crates/vibe-publish/Cargo.toml",
+    "crates/vibe-publish/src/lib.rs",
+    "crates/vibe-registry/Cargo.toml",
+    "crates/vibe-registry/src/lib.rs",
+    "crates/vibe-registry/src/shippable.rs",
+    "crates/vibe-requirements/Cargo.toml",
+    "crates/vibe-requirements/src/lib.rs",
+    "crates/vibe-requirements/src/sources.rs",
+    "crates/vibe-requirements/src/tests_query.rs",
+    "crates/vibe-safefs/src/file/bounded.rs",
+    "crates/vibe-safefs/src/file/stable_tests.rs",
+    "crates/vibe-spec/src/lib.rs",
+    "crates/vibe-spec/src/resolver.rs",
+    "crates/vibe-spec/src/resolver/tests.rs",
+    "crates/vibe-specdoc/Cargo.toml",
+    "crates/vibe-specdoc/src/lib.rs",
+    "crates/vibe-specdoc/tests/docs_corpus.rs",
+    "crates/vibe-wire/src/generated/migration/e1/plan_report/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/plan_request/mod.rs",
+    "crates/vibe-workspace/src/boot_artifacts.rs",
+    "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+    "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+    "crates/vibe-workspace/src/boot_artifacts/inputs_tests.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/explicit.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/replay.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed_tests.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed_unit_parity_tests.rs",
+    "crates/vibe-workspace/src/extension_world/tests.rs",
+    "crates/vibe-workspace/src/install/bootgen.rs",
+    "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit/native_managed.rs",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare/tests.rs",
+    "crates/vibe-workspace/src/migration_planning.rs",
+    "crates/vibe-workspace/src/migration_planning/tests.rs",
+    "crates/vibe-workspace/src/vibedeps.rs",
+    "crates/vibe-workspace/src/vibedeps/derived.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+    "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
+    "schemas/migration/e1/plan_report.jtd.json",
+    "schemas/migration/e1/plan_request.jtd.json",
+    "vibe.toml",
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+    "xtask/src/bin/authority-map-check/main.rs",
+    "xtask/src/dist/capture/tests.rs",
+    "xtask/src/dist/mod.rs",
+    "xtask/src/dist/release.rs",
+    "xtask/src/dist/smoke/prepare.rs",
+    "xtask/src/main.rs"
+  ],
+  "packages": [
+    {
+      "coordinate": "org.vibevm.ai-native/core-ai-native@1.1.0",
+      "git_tree_sha1": "7149bc7b06e0beefd0bb98fecaa25a68ff515e9a",
+      "kind": "flow",
+      "manifest_sha256": "a65d374bc2a585a2a3049f3613b42aef692036ec21443f5017a761580e080582",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/go-ai-native-lang@1.1.0",
+      "git_tree_sha1": "30025315bcac69c9ab6d023ef63e05c7a2c5ac49",
+      "kind": "lang",
+      "manifest_sha256": "24a96acee8c4fda3ef5c06804e186023a5efaec0a61718a02b4935ed871cf75f",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/go-ai-native-mcp@1.1.0",
+      "git_tree_sha1": "e3e87c112e867ae2fab81ceead450f697f8ff182",
+      "kind": "mcp",
+      "manifest_sha256": "37298015ad93b86650f62bdf9dd35266908f4cadc1fae46e8d8cf6bec92c38d2",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/go-ai-native@1.1.0",
+      "git_tree_sha1": "6a76dfefacfd967a1c349d0cbd21f84dff2d52d8",
+      "kind": "stack",
+      "manifest_sha256": "6e9f7f12819a97a5c8e78220a00c873d5685e9d4bff197980076dbcb50aeae8b",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/jtd-codegen@1.1.0",
+      "git_tree_sha1": "01719a81b1915ae5beee29b16264bfc7e27f228e",
+      "kind": "tool",
+      "manifest_sha256": "34b89ca803cff0f5353d8d16726581b9506bcbf201e60e659553f1266ba9a6f2",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/rust-ai-native-lang@1.1.0",
+      "git_tree_sha1": "9fd6a663f4c9233f4b5ec7c8f1345d16524ade08",
+      "kind": "lang",
+      "manifest_sha256": "4a2a736bd3b8c55077018494c29031a16304acc297854ba282cd62a70e3f4031",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/rust-ai-native-mcp@1.1.0",
+      "git_tree_sha1": "db51d45b699a5ddd9d7c4d3f947a3be5442c745e",
+      "kind": "mcp",
+      "manifest_sha256": "2e1e07cb961259faf8edf6c3b5ccdb0c15cf7891d274cdd571234d7cfd257436",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/rust-ai-native@1.1.0",
+      "git_tree_sha1": "816b59475ac374ac4ff543b64fa9761dc285deaf",
+      "kind": "stack",
+      "manifest_sha256": "f3d8ec1cbcf7178b891b6ee76612052aa80f7bc91cf7f6002e5f42dacbcc6576",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/typescript-ai-native-lang@1.1.0",
+      "git_tree_sha1": "c72e255ca578707cb234a3b0a0107b2618e8911b",
+      "kind": "lang",
+      "manifest_sha256": "8da33ce1decd9921fc564e05940e7ccb12aebd893921237c0022706fba6c9786",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/typescript-ai-native-mcp@1.1.0",
+      "git_tree_sha1": "8773755fbf3f6b66572ce70ba7b1058e59ed3bf4",
+      "kind": "mcp",
+      "manifest_sha256": "68157fa93a5acdd4e0c39500bc3f8eab16e1d455530f27e40564187dcb0d7321",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.ai-native/typescript-ai-native@1.1.0",
+      "git_tree_sha1": "cd6a15c78cff0ec626ca9f4821186a82f9917a27",
+      "kind": "stack",
+      "manifest_sha256": "240b75b959de053344fe2324c4d9fd526bb6b0b509fd1c8672f28c5f7f90ee53",
+      "slot": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.core/vibevm-docs-ru@1.1.0",
+      "git_tree_sha1": "530a79f064114e53720e781979fba9f8281ee9ea",
+      "kind": "doc",
+      "manifest_sha256": "06e5a7643aa1ba2f9167cfaeef1e839b777984dda2ac85d62c14ffbd06633b3f",
+      "slot": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.core/vibevm-docs@1.1.0",
+      "git_tree_sha1": "d4e16821816f3993d57e838edeb31508cacf5b66",
+      "kind": "doc",
+      "manifest_sha256": "c17658c26ed030f51aa3b99d31087b26a79e4272ec66f9c67db340c38ef7cb62",
+      "slot": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.doc/web@1.1.0",
+      "git_tree_sha1": "7835eaec933aa0f55f2f94be08a6e4f560846e7e",
+      "kind": "app",
+      "manifest_sha256": "c98a55d7645caefe496d5de2ac903b89c959ddefa93c6c601bf62329bd1957ed",
+      "slot": "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.fractality/delegation-first@1.1.0",
+      "git_tree_sha1": "a2b2c001915181a98d87738f19cf2e1c5ff5e312",
+      "kind": "flow",
+      "manifest_sha256": "4d5381d0c24eed32005c9bd137b15f92b4720ab23b732048e690f09b2508a808",
+      "slot": "vibevm/vibepacks/org.vibevm.fractality/delegation-first/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.fractality/delegation-rules@1.1.0",
+      "git_tree_sha1": "8da7b09eccf9167e4699313a032165bac329d148",
+      "kind": "flow",
+      "manifest_sha256": "482f3b83d9bce1dac21c4116598240454cd2292744e642004394aa3f7a4e85b0",
+      "slot": "vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.fractality/fractality@1.1.0",
+      "git_tree_sha1": "34d329ac43652cfe0d8cc09d36edd2da26aa545b",
+      "kind": "tool",
+      "manifest_sha256": "9516c59d293205e9f1418aea106123911209e45a29b6c9b892523253b8c1e84d",
+      "slot": "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/addressable-specs@1.1.0",
+      "git_tree_sha1": "db8e80c1777d70b3a2827cfd2d0cf6de61f5fce7",
+      "kind": "flow",
+      "manifest_sha256": "3b79f5f7282f30458ea96a86bee7dd702b44db778793340a431964081d2e566c",
+      "slot": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/campaign-plans@1.1.0",
+      "git_tree_sha1": "6f193b593300e67e84658fb17c5d6d3b76b1dd2b",
+      "kind": "flow",
+      "manifest_sha256": "31b12a612eccc747b1c213bae0d87d007546f9443bcce11dac2f63e032e32b88",
+      "slot": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/comparative-research@1.1.0",
+      "git_tree_sha1": "11e8bb4f224487b435ccfdcba0f761bf67f0bd20",
+      "kind": "flow",
+      "manifest_sha256": "bd75ab2890265cead98fb4925373fbdbe52a29cbebe624c964c24ac778665555",
+      "slot": "vibevm/vibepacks/org.vibevm.world/comparative-research/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/conflict-protocol@1.1.0",
+      "git_tree_sha1": "1058f271f2da2f56f0cfefcdd32ef5cb61fe732c",
+      "kind": "flow",
+      "manifest_sha256": "870269c9c4a1260fcb92e11cfa6eba2dabb048d979665b5701f921e7857c64b5",
+      "slot": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/decision-records@1.1.0",
+      "git_tree_sha1": "d598bbdf73d933b353a1639fb6faaadf9c7addaf",
+      "kind": "flow",
+      "manifest_sha256": "dc5cedf6912d34e1dd5af79f9144d3c9fb119be69590f9e02b691dc61d2976af",
+      "slot": "vibevm/vibepacks/org.vibevm.world/decision-records/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/dev-runtime-docs@1.1.0",
+      "git_tree_sha1": "c730ff406c11f042174c48622770bb3098c8861a",
+      "kind": "flow",
+      "manifest_sha256": "538688d39d7607ce0820c29674280f1ccfd5e14d95e7c8a430da91917d0333c5",
+      "slot": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/discovery-prompt@1.1.0",
+      "git_tree_sha1": "bc82de60385e4c27464e58567d4e0aba441fd63d",
+      "kind": "flow",
+      "manifest_sha256": "023c09d21f72d0c202478b06164f15550b21372e1d4325408a8d8d86495401d9",
+      "slot": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-atomic-commits@1.1.0",
+      "git_tree_sha1": "07f718c0f0d7d7d47d297444fbbe9aba4ec96f87",
+      "kind": "flow",
+      "manifest_sha256": "c55ad42538bee4e14ec904e312076854698c48bd908969953e2e4e50487261e5",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-attribution-policy@1.1.0",
+      "git_tree_sha1": "cd16fcbb6f544ac413ac746ea45b68cdbd9595e0",
+      "kind": "flow",
+      "manifest_sha256": "cdac4e40616f929447b154b3a0ed2c7e804dfc6c945bbd0216aa549d78531c66",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-autonomy@1.1.0",
+      "git_tree_sha1": "233243651f3de9db605392f52530ebd372c245b8",
+      "kind": "flow",
+      "manifest_sha256": "59c67b7e0b86121cbff0bececc3012740ad14fee099101f33402cecea5c40b82",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-conventional-commits@1.1.0",
+      "git_tree_sha1": "76cc18501fe7822ead78a6340b371e2c7c7433a2",
+      "kind": "flow",
+      "manifest_sha256": "1e1a5021ef884d54f011c6edb4c9f5a1b2c87e0f023a273e6da63823cb02c3c5",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/git-practices@1.1.0",
+      "git_tree_sha1": "f22c30c9c5178752e8c946d23d14e5d70134d758",
+      "kind": "flow",
+      "manifest_sha256": "be3ad4d7fdc98d261824ae4475152311ce9b78896229b76c7f35f45c4769cd4e",
+      "slot": "vibevm/vibepacks/org.vibevm.world/git-practices/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/health-audit@1.1.0",
+      "git_tree_sha1": "b16f83daa67251901aaeefb50ff0b803507b5dcc",
+      "kind": "flow",
+      "manifest_sha256": "cf4db0b78dd49df8127a52fdd38448e35a5ef7e43e5bed703a1ef07cf34754fb",
+      "slot": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/licensing@1.1.0",
+      "git_tree_sha1": "9d41f7f5f0995ac8b4e022392cd6418c3fa5bcc0",
+      "kind": "flow",
+      "manifest_sha256": "a00058534e33388ce850a9fd7c47bff7cd15b320ec19e3170381a888715fbf78",
+      "slot": "vibevm/vibepacks/org.vibevm.world/licensing/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/managed-blocks@1.1.0",
+      "git_tree_sha1": "c44f5621a485b8588b80d07514753b574328320c",
+      "kind": "flow",
+      "manifest_sha256": "408da77f89793bb9eb39ab067076afddd71734c45c1fab687129aaa4f3938163",
+      "slot": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/manual-tests@1.1.0",
+      "git_tree_sha1": "0eb69e52d247f578b73e6114837c3dc43a03be07",
+      "kind": "flow",
+      "manifest_sha256": "f82b80a6766d9c12851776f5ae781c00de9634be1ed38160fab7fa0b713c0717",
+      "slot": "vibevm/vibepacks/org.vibevm.world/manual-tests/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/multi-user-planning@1.1.0",
+      "git_tree_sha1": "5f80eb7e40158bde824592250cbbe30922f20d00",
+      "kind": "flow",
+      "manifest_sha256": "b70b1e2e14790597071cc20072d7654b81c21ab6f08729b4384a7553ff5c2707",
+      "slot": "vibevm/vibepacks/org.vibevm.world/multi-user-planning/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/omnichannel@1.1.0",
+      "git_tree_sha1": "846590be9a16c7f1be561706498419dd48fa76e2",
+      "kind": "flow",
+      "manifest_sha256": "1cb83291714f84f2221a68dcdb9bd4b5bb8a7ec7debc21f0e88f1e332ee9e3bf",
+      "slot": "vibevm/vibepacks/org.vibevm.world/omnichannel/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/operating-modes@1.1.0",
+      "git_tree_sha1": "d51bb62340df4007eee93df8204768e63b7403e2",
+      "kind": "flow",
+      "manifest_sha256": "9af89d64dce7a4ae9208465360f892fb079478b5ef63a583388c32c98f9c4cb3",
+      "slot": "vibevm/vibepacks/org.vibevm.world/operating-modes/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/qualified-naming@1.1.0",
+      "git_tree_sha1": "ac240533c35c98df06338bc7904648fd3b9161e7",
+      "kind": "flow",
+      "manifest_sha256": "96f8bfa9131bc63fce4b9706aac06e3a45cf785367a6af16d9edc53f73182210",
+      "slot": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/redbook@1.1.0",
+      "git_tree_sha1": "a9a17a2a168bb21aab6b2e84d0dfb60a2c1a03ec",
+      "kind": "flow",
+      "manifest_sha256": "21150f0c7a699eeb79a06d59e9a076ea804f40e8cc97244c416a0553b1749c07",
+      "slot": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/secrets-hygiene@1.1.0",
+      "git_tree_sha1": "a0db1a122d64ee4f301b521ad1f4890873f3ee89",
+      "kind": "flow",
+      "manifest_sha256": "a18e55afc61910b963fa0e294711bf8146888053b8b97838f40b601d07a950e2",
+      "slot": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/source-mirrors@1.1.0",
+      "git_tree_sha1": "932d06c67173c154f6bf7c4c9a298ca0db19c669",
+      "kind": "flow",
+      "manifest_sha256": "5eaa297474da94f7d57228f61f2d7e244048daf34f1a542178c273535f99f094",
+      "slot": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/spec-genres@1.1.0",
+      "git_tree_sha1": "561c4f287bb53c9219b3b8de5f1f4147cfe5d96e",
+      "kind": "flow",
+      "manifest_sha256": "f6ab4b2879fc13b67fd05d945463494693b5f9866b9480d6fcac2225943c8780",
+      "slot": "vibevm/vibepacks/org.vibevm.world/spec-genres/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/sync-from-code@1.1.0",
+      "git_tree_sha1": "1ba2300d04dbd5cd1ff223b39f253418aeac47aa",
+      "kind": "flow",
+      "manifest_sha256": "2adaf2e4cb4662fb8a5ccc92f7512aac17b3d9979fcba23ef973f83715866702",
+      "slot": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/tool-design-lessons@1.1.0",
+      "git_tree_sha1": "c5c642d84f21930024fc84a5ded43dae40144b00",
+      "kind": "flow",
+      "manifest_sha256": "5fe1ad36023af203029e43612f2029ad51a9233c08f1878e94b1f903e04a215b",
+      "slot": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/two-process-model@1.1.0",
+      "git_tree_sha1": "f9d7a863e385096e1ceaf69761a4d341ccdd8310",
+      "kind": "flow",
+      "manifest_sha256": "fb070502612f6366b30f9c6a662a33df373765318b7cc0addb9edcbdb244e4ef",
+      "slot": "vibevm/vibepacks/org.vibevm.world/two-process-model/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/wal-specspaces@1.1.0",
+      "git_tree_sha1": "1ebe1c1cb834c639360422b6b7a9ae2199e8e788",
+      "kind": "flow",
+      "manifest_sha256": "2521e3f020d555b8fa60d81932955428df3ef7b080452944741b4fc41e03f0cc",
+      "slot": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/wal@1.1.0",
+      "git_tree_sha1": "6f4d250bcd397c0a56af6b249f2166f078685daa",
+      "kind": "flow",
+      "manifest_sha256": "0ee554f53f93cb0445fdbbb45358fd9d4794ef42d7faf2fac9e8f93941b2fb4d",
+      "slot": "vibevm/vibepacks/org.vibevm.world/wal/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.world/zai-glm-claude@1.1.0",
+      "git_tree_sha1": "b7be488b545eb0c81daea2ebaf18ae0a508a9017",
+      "kind": "tool",
+      "manifest_sha256": "acd1434732b5b0685ef009bb19f14cbd51abb48616ceae7b6d297e6be3de7850",
+      "slot": "vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.1.0"
+    },
+    {
+      "coordinate": "org.vibevm.zap/zap@1.1.0",
+      "git_tree_sha1": "95aa603e901f5921ae661ec523db087eb576fcae",
+      "kind": "flow",
+      "manifest_sha256": "51c6f410f57be9f783ffe04aec627af7fe986de0fa50d255586f36d0b7cee36c",
+      "slot": "vibevm/vibepacks/org.vibevm.zap/zap/v1.1.0"
+    }
+  ],
+  "surfaces": [
+    {
+      "evidence_level": "source-declared",
+      "identifiers": [
+        "Init",
+        "List",
+        "Extensions",
+        "Validate",
+        "Install",
+        "Generate",
+        "Build",
+        "Test",
+        "Run",
+        "Create",
+        "Verify",
+        "Package",
+        "Deploy",
+        "Undeploy",
+        "Deployments",
+        "Clean",
+        "Scrape",
+        "Outdated",
+        "Search",
+        "Mcp",
+        "Aiui",
+        "Term",
+        "Frame",
+        "Skill",
+        "Agentic",
+        "Drain",
+        "Uninstall",
+        "Update",
+        "Reinstall",
+        "Check",
+        "Doc",
+        "Facts",
+        "Requirements",
+        "Why",
+        "Refactor",
+        "Friends",
+        "Show",
+        "Prefs",
+        "Tree",
+        "Registry",
+        "Cache",
+        "Workspace",
+        "Vvm",
+        "Tools",
+        "Bin",
+        "Explain",
+        "Query",
+        "Select",
+        "Specmap",
+        "Trace",
+        "Vars",
+        "Progress",
+        "Version"
+      ],
+      "kind": "cli",
+      "source": "crates/vibe-cli/src/cli.rs",
+      "source_sha256": "b78c1ff4c2b5cbc0c70032a79b3f1ea6da4a5a2ab2d00c676cdf85c8efa9e96e"
+    },
+    {
+      "evidence_level": "source-declared",
+      "identifiers": [
+        "QueryPackageMcpTool",
+        "ReadSubskillMcpTool",
+        "MaterialiseSubskillMcpTool",
+        "AgenticExplainMcpTool",
+        "ExplainMcpTool",
+        "QueryMcpTool",
+        "SelectMcpTool",
+        "ListToolsMcpTool",
+        "LifecycleTasksMcpTool",
+        "LifecycleRunMcpTool",
+        "RequirementsQueryMcpTool",
+        "ReadDocMcpTool",
+        "PlanManifestMigrationMcpTool",
+        "ManifestMigrationOperationMcpTool",
+        "PlanManifestMigrationEnvelopeMcpTool"
+      ],
+      "kind": "mcp",
+      "source": "crates/vibe-mcp/src/tools.rs",
+      "source_sha256": "a1f3ecde6be3de1c6871fb98a3d484805fb60684f833f04e7db30bf63abb3f05"
+    },
+    {
+      "evidence_level": "source-declared",
+      "identifiers": [
+        "xtask batch-review",
+        "xtask bridge",
+        "xtask bridge pin",
+        "xtask capability-coverage",
+        "xtask check-codegen",
+        "xtask codegen",
+        "xtask codemod",
+        "xtask codemod add-cell",
+        "xtask conform",
+        "xtask conform check",
+        "xtask conform freeze",
+        "xtask dist",
+        "xtask dist build",
+        "xtask dist finalize",
+        "xtask dist prepare",
+        "xtask dist status",
+        "xtask dist upload",
+        "xtask dist upload-built",
+        "xtask embed-doc-shell",
+        "xtask fast-loop",
+        "xtask health",
+        "xtask mirror",
+        "xtask rebuild",
+        "xtask specmap",
+        "xtask sync-engines",
+        "xtask test-gate",
+        "xtask trace",
+        "xtask trace explain",
+        "xtask tripwire",
+        "xtask wire-diff"
+      ],
+      "kind": "cli",
+      "source": "xtask/src/main.rs",
+      "source_sha256": "fba5174892210ae0720cb8e1a07f0cc178e88cee1ff1aa3a0600e131318ee60c"
+    },
+    {
+      "evidence_level": "source-declared",
+      "identifiers": [
+        "authority-map-check --inventory <PATH> --map <PATH>"
+      ],
+      "kind": "cli",
+      "source": "xtask/src/bin/authority-map-check/main.rs",
+      "source_sha256": "f92a221abf02ba65fd4824c7346eaf498a30cc9e1b0949193821f1f705cbfd86"
+    },
+    {
+      "evidence_level": "source-declared",
+      "identifiers": [
+        "PlanMigration",
+        "MigrationOperation",
+        "ConvertSource",
+        "ConvertPackageSrc",
+        "ConvertSpecSrc"
+      ],
+      "kind": "cli",
+      "source": "crates/vibe-cli/src/commands/refactor/mod.rs",
+      "source_sha256": "0473cb57809c4723c6290e26250833b2b5fc2420a359bb96dd2e51790eab93e2"
+    },
+    {
+      "evidence_level": "source-declared",
+      "identifiers": [
+        "McpServeArgs.path",
+        "McpServeArgs.migration_recovery_store",
+        "McpServeArgs.migration_file"
+      ],
+      "kind": "cli",
+      "source": "crates/vibe-cli/src/cli/mcp.rs",
+      "source_sha256": "b21b672b783471faf3ee774ac48f8b5654ea28ce517dd2f2f5b9dc089952a9e8"
+    }
+  ],
+  "excluded_from_product_delta": [
+    {
+      "path": "campaigns/next/",
+      "reason": "Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): temporary planning and execution scaffold; retained inside raw Git tree"
+    },
+    {
+      "path": "vibevm/vibespecs/terraforms/next/",
+      "reason": "Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): temporary staged requirements; retained inside raw Git tree"
+    },
+    {
+      "path": "docs/releases/developer-preview-1-to-2/",
+      "reason": "Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): new capture/output itself; not present in captured Git commit"
+    },
+    {
+      "path": "vibevm/vibedeps/",
+      "reason": "Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): derived installed materialization; lock and canonical vibepacks capture authority"
+    },
+    {
+      "path": "target/",
+      "reason": "Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture m06-a-before-46949f643; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-after-3ffb13b29; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture architecture-baseline-2145ec8d1; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture next-1.1-after-110da6f17; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture policy-baseline-e203b9dab; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-after-fe0e04eba; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture authority-baseline-e95aa1c36; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-2c35eed03; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-after-dd7d05e4c; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture capability-baseline-4a3f80a34; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-0adc39a38; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture bootstrap-4cec12cd3; original historical rationale (not a claim about current tree absence): Inherited scope exclusion from template capture dp1-30d217bfce47bca; original historical rationale (not a claim about current tree absence): Cargo build output, absent from tracked source snapshot"
+    }
+  ],
+  "toolchains": [
+    {
+      "name": "git",
+      "version": "git version 2.53.0"
+    },
+    {
+      "name": "cargo",
+      "version": "cargo 1.98.0 (797e8a9bc 2026-08-05)"
+    },
+    {
+      "name": "rustc",
+      "version": "rustc 1.98.0 (88d9e12ae 2026-08-18)"
+    }
+  ],
+  "artifact_state": "unavailable",
+  "documentation_input_state": "pending-owner-binding",
+  "declaration_basis": "reviewed template subsets retained only after byte equality of package manifests and surface sources; scope exclusions retain explicitly labeled inherited historical rationale, not current tree-absence claims",
+  "limits": [
+    "finite supplied selection; no complete capability or topic census",
+    "source-declared identifiers only; no runtime, build or example proof",
+    "no repository authentication, framework selection or package discovery",
+    "toolchain declarations supplied independently by root; not measured by this helper"
+  ]
+}
