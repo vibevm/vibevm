@@ -6,7 +6,7 @@ use crate::package_git_repo_create::tests::{
     profile_tests::{ProfileFake, input as create_input, linked},
 };
 
-fn push_input<'a>(
+pub(crate) fn push_input<'a>(
     world: &'a crate::package_git_provenance_populated::tests::World,
     home: &'a ApprovalHome,
     namespace: &'a SubmissionNamespace,
@@ -27,7 +27,7 @@ fn push_input<'a>(
     }
 }
 
-fn created() -> Option<(
+pub(crate) fn created() -> Option<(
     crate::package_git_provenance_populated::tests::World,
     tempfile::TempDir,
     ApprovalHome,
@@ -105,7 +105,7 @@ fn populated_create_then_local_atomic_push_lands_and_cold_attaches() {
     assert_eq!(local.calls(), 1);
 }
 
-struct LostReply(LocalBarePort);
+pub(crate) struct LostReply(pub(crate) LocalBarePort);
 impl FakePushPort for LostReply {
     fn observe(&mut self) -> Result<Snapshot, String> {
         self.0.observe()

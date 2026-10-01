@@ -489,4 +489,4 @@ fn local_authority_drift_after_pending_prevents_push_dispatch() {
 pub(crate) mod local_bare_tests;
 
 #[path = "profile_tests.rs"]
-mod profile_tests;
+pub(crate) mod profile_tests;
