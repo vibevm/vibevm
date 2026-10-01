@@ -12,7 +12,10 @@ use crate::package_git_plan::{
     PackageGitPlan, RawRef, RefSnapshot, RepositoryIdentity, RepositoryObservation,
     RepositoryTarget, StagedCommit, TagRef,
 };
-use crate::package_git_ready::{self, ReadyInspection, ReadyLimits};
+use crate::package_git_ready::{
+    ReadyLimits,
+    profile::{ReadyProfile, inspect_profile_cold},
+};
 use crate::package_git_repo_create::{self, CreateInspection};
 use journal::{
     ATOMIC_PUSH_FORMAT, ATOMIC_PUSH_PENDING_FORMAT, AtomicPushLanded, AtomicPushPending,
@@ -118,27 +121,82 @@ fn proved(
     limits: ReadyLimits,
     approval_id: &str,
 ) -> Result<Proved, PushInspection> {
-    let ReadyInspection::ReadyForApproval {
-        run_id,
-        seal_sha256,
-    } = package_git_ready::inspect_ready_seal_cold(
+    proved_profile(
+        home,
         lease,
-        namespace.id(),
+        namespace,
         scope,
         key,
         package_source,
-        local_bare_source,
         git_binary,
-        limits,
+        ReadyProfile::NoGitlinks {
+            limits,
+            local_bare_source,
+        },
+        approval_id,
     )
-    else {
-        return Err(recovery(None, "exact C.1 Ready seal unavailable"));
+}
+
+#[allow(clippy::too_many_arguments)]
+fn proved_profile(
+    home: &ApprovalHome,
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    package_source: Option<&Project>,
+    git_binary: &Path,
+    profile: ReadyProfile<'_>,
+    approval_id: &str,
+) -> Result<Proved, PushInspection> {
+    let ready = inspect_profile_cold(
+        lease,
+        namespace,
+        scope,
+        key,
+        package_source,
+        git_binary,
+        profile,
+    )
+    .map_err(|status| {
+        recovery(
+            None,
+            format!("exact C.1 Ready profile unavailable: {status:?}"),
+        )
+    })?;
+    let run_id = ready.seal.run_id.clone();
+    let seal_sha256 = ready.seal_sha256;
+    let link = match profile {
+        ReadyProfile::NoGitlinks {
+            limits,
+            local_bare_source,
+        } => home.inspect_link_cold(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            local_bare_source,
+            git_binary,
+            limits,
+            approval_id,
+        ),
+        ReadyProfile::ParentlessPopulated {
+            limits,
+            approved_gitdirs,
+        } => home.inspect_link_populated_cold(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            approved_gitdirs,
+            git_binary,
+            limits,
+            approval_id,
+        ),
     };
-    if !matches!(home.inspect_link_cold(
-        lease, namespace, scope, key, package_source, local_bare_source,
-        git_binary, limits, approval_id,
-    ), LinkInspection::Landed { run_id: linked, .. } if linked == run_id)
-    {
+    if !matches!(link, LinkInspection::Landed { run_id: linked, .. } if linked == run_id) {
         return Err(recovery(
             Some(&run_id),
             "approval-link Landed cold proof unavailable",
@@ -165,6 +223,12 @@ fn proved(
         return Err(recovery(Some(&run_id), "Ready plan differs"));
     }
     let plan = pending_proof.plan;
+    if plan != ready.plan || seal != ready.seal {
+        return Err(recovery(
+            Some(&run_id),
+            "Ready profile differs from retained plan/seal",
+        ));
+    }
     if matches!(plan.staged.commit, StagedCommit::ReusedMain { .. }) {
         return Err(unavailable(
             Some(&run_id),
@@ -183,16 +247,15 @@ fn proved(
                 run_id: created,
                 repository_id,
                 landed_sha256,
-            } = package_git_repo_create::inspect_cold(
+            } = package_git_repo_create::inspect_cold_profile(
                 home,
                 lease,
                 namespace,
                 scope,
                 key,
                 package_source,
-                local_bare_source,
                 git_binary,
-                limits,
+                profile,
                 approval_id,
             )
             else {
@@ -253,11 +316,9 @@ fn proved(
             ));
         }
     };
-    if !matches!(package_git_ready::inspect_ready_seal_cold(
-        lease, namespace.id(), scope, key, package_source, local_bare_source,
-        git_binary, limits,
-    ), ReadyInspection::ReadyForApproval { run_id: ref current, seal_sha256: ref digest }
-        if current == &run_id && digest == &seal_sha256)
+    if !matches!(inspect_profile_cold(
+        lease, namespace, scope, key, package_source, git_binary, profile,
+    ), Ok(ref current) if current.seal == seal && current.seal_sha256 == seal_sha256 && current.plan == plan)
         || !matches!(journal::read_bytes(lease, &run_id, "approval-link"), Ok(Some(ref now)) if now == &link_landed)
     {
         return Err(recovery(
@@ -316,16 +377,43 @@ pub(crate) fn inspect_cold(
     limits: ReadyLimits,
     approval_id: &str,
 ) -> PushInspection {
-    let proof = match proved(
+    inspect_cold_profile(
         home,
         lease,
         namespace,
         scope,
         key,
         package_source,
-        local_bare_source,
         git_binary,
-        limits,
+        ReadyProfile::NoGitlinks {
+            limits,
+            local_bare_source,
+        },
+        approval_id,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn inspect_cold_profile(
+    home: &ApprovalHome,
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    package_source: Option<&Project>,
+    git_binary: &Path,
+    profile: ReadyProfile<'_>,
+    approval_id: &str,
+) -> PushInspection {
+    let proof = match proved_profile(
+        home,
+        lease,
+        namespace,
+        scope,
+        key,
+        package_source,
+        git_binary,
+        profile,
         approval_id,
     ) {
         Ok(value) => value,

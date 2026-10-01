@@ -3,7 +3,7 @@ use crate::package_git_approval::prepared_populated_for_test as prepared;
 use crate::package_git_provenance_populated::ApprovedGitdir;
 use crate::package_git_ready::profile::ReadyProfile;
 
-fn linked() -> Option<(
+pub(crate) fn linked() -> Option<(
     crate::package_git_provenance_populated::tests::World,
     tempfile::TempDir,
     ApprovalHome,
@@ -47,7 +47,7 @@ fn linked() -> Option<(
     ))
 }
 
-struct ProfileFake {
+pub(crate) struct ProfileFake {
     repository: HostedRepository,
     observed: RemoteSnapshot,
     observations: usize,
@@ -57,7 +57,7 @@ struct ProfileFake {
     tamper_on_third: Option<std::path::PathBuf>,
 }
 impl ProfileFake {
-    fn new(world: &crate::package_git_provenance_populated::tests::World) -> Self {
+    pub(crate) fn new(world: &crate::package_git_provenance_populated::tests::World) -> Self {
         let (_, proof) = package_git_operation::ready_proof_cold(
             &world.lease,
             &world.namespace,
@@ -81,6 +81,10 @@ impl ProfileFake {
             foreign_third_observation: false,
             tamper_on_third: None,
         }
+    }
+
+    pub(crate) fn calls(&self) -> usize {
+        self.calls
     }
 }
 impl FakeCreatePort for ProfileFake {
@@ -123,7 +127,7 @@ impl FakeCreatePort for ProfileFake {
     }
 }
 
-fn input<'a>(
+pub(crate) fn input<'a>(
     world: &'a crate::package_git_provenance_populated::tests::World,
     home: &'a ApprovalHome,
     namespace: &'a SubmissionNamespace,

@@ -514,4 +514,4 @@ fn local_authority_drift_during_last_remote_observation_prevents_create() {
 }
 
 #[path = "profile_tests.rs"]
-mod profile_tests;
+pub(crate) mod profile_tests;

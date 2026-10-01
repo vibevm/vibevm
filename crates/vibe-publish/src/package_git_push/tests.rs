@@ -39,6 +39,17 @@ pub(crate) struct FakeRun<'a> {
     pub(crate) limits: ReadyLimits,
 }
 
+pub(crate) struct ProfileRun<'a> {
+    pub(crate) home: &'a ApprovalHome,
+    pub(crate) lease: &'a LifecycleLease,
+    pub(crate) namespace: &'a SubmissionNamespace,
+    pub(crate) scope: &'a SubmissionScope,
+    pub(crate) key: &'a str,
+    pub(crate) package_source: &'a Project,
+    pub(crate) binary: &'a Path,
+    pub(crate) profile: ReadyProfile<'a>,
+}
+
 /// Test-only transport. Production retains only cold inspection and no Git
 /// or provider write port is reachable from a public call.
 pub(crate) fn drive_fake(
@@ -68,36 +79,59 @@ pub(crate) fn drive_fake_run(
     approval_id: &str,
     port: &mut impl FakePushPort,
 ) -> PushInspection {
-    let proof = match proved(
+    drive_fake_profile(
+        &ProfileRun {
+            home: input.home,
+            lease: input.lease,
+            namespace: input.namespace,
+            scope: input.scope,
+            key: input.key,
+            package_source: input.package_source,
+            binary: input.binary,
+            profile: ReadyProfile::NoGitlinks {
+                limits: input.limits,
+                local_bare_source: input.local_bare_source,
+            },
+        },
+        approval_id,
+        port,
+    )
+}
+
+pub(crate) fn drive_fake_profile(
+    input: &ProfileRun<'_>,
+    approval_id: &str,
+    port: &mut impl FakePushPort,
+) -> PushInspection {
+    let proof = match proved_profile(
         input.home,
         input.lease,
         input.namespace,
         input.scope,
         input.key,
         Some(input.package_source),
-        input.local_bare_source,
         input.binary,
-        input.limits,
+        input.profile,
         approval_id,
     ) {
         Ok(value) => value,
         Err(status) => return status,
     };
     let run = proof.run();
-    match inspect_cold(
-        input.home,
-        input.lease,
-        input.namespace,
-        input.scope,
-        input.key,
-        Some(input.package_source),
-        input.local_bare_source,
-        input.binary,
-        input.limits,
-        approval_id,
-    ) {
-        PushInspection::NotStarted { .. } => {}
-        other => return other,
+    let pending_before = journal::read_bytes(input.lease, run, PENDING);
+    let landed_before = journal::read_bytes(input.lease, run, LANDED);
+    if !matches!((&pending_before, &landed_before), (Ok(None), Ok(None))) {
+        return inspect_cold_profile(
+            input.home,
+            input.lease,
+            input.namespace,
+            input.scope,
+            input.key,
+            Some(input.package_source),
+            input.binary,
+            input.profile,
+            approval_id,
+        );
     }
     let baseline = Snapshot {
         repository: RepositoryObservation::Present(proof.repository.clone()),
@@ -136,16 +170,15 @@ pub(crate) fn drive_fake_run(
             "raw refs changed after Pending before atomic push",
         );
     }
-    let reproved = match proved(
+    let reproved = match proved_profile(
         input.home,
         input.lease,
         input.namespace,
         input.scope,
         input.key,
         Some(input.package_source),
-        input.local_bare_source,
         input.binary,
-        input.limits,
+        input.profile,
         approval_id,
     ) {
         Ok(value) => value,
@@ -212,16 +245,25 @@ pub(crate) fn drive_fake_run(
     if let Err(e) = journal::publish(input.lease, run, LANDED, &landed) {
         return recovery(Some(run), format!("atomic-push Landed uncertain: {e:#}"));
     }
-    inspect_cold(
+    let cold_profile = match input.profile {
+        ReadyProfile::NoGitlinks { limits, .. } => ReadyProfile::NoGitlinks {
+            limits,
+            local_bare_source: None,
+        },
+        ReadyProfile::ParentlessPopulated { limits, .. } => ReadyProfile::ParentlessPopulated {
+            limits,
+            approved_gitdirs: None,
+        },
+    };
+    inspect_cold_profile(
         input.home,
         input.lease,
         input.namespace,
         input.scope,
         input.key,
         None,
-        None, // The selected Direct bare refs just moved; prove historical bytes.
         input.binary,
-        input.limits,
+        cold_profile,
         approval_id,
     )
 }
@@ -445,3 +487,6 @@ fn local_authority_drift_after_pending_prevents_push_dispatch() {
 
 #[path = "local_bare_tests.rs"]
 pub(crate) mod local_bare_tests;
+
+#[path = "profile_tests.rs"]
+mod profile_tests;
