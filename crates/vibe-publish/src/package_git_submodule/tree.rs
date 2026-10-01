@@ -27,10 +27,10 @@ pub(super) fn normalized_path(path: &str, max_path: usize) -> Result<Vec<&str>> 
 }
 
 #[derive(Debug)]
-struct Entry {
-    mode: String,
-    name: String,
-    oid: String,
+pub(crate) struct Entry {
+    pub(crate) mode: String,
+    pub(crate) name: String,
+    pub(crate) oid: String,
 }
 
 fn raw_oid_hex(raw: &[u8]) -> String {
@@ -50,7 +50,7 @@ fn read_byte(reader: &mut dyn Read) -> Result<Option<u8>> {
     }
 }
 
-fn parse_entries(
+pub(crate) fn parse_entries(
     reader: &mut dyn Read,
     oid_len: usize,
     limits: SubmoduleLimits,

@@ -206,6 +206,80 @@ impl<'a> LocalGit<'a> {
         self.oid(&self.output(&["hash-object", "-t", kind, "-w", "--stdin"], bytes, 128)?)
     }
 
+    /// Fixed-window local raw object import. The source reader owns its own
+    /// exact-byte witness; this method additionally bounds destination input
+    /// and requires Git to report the selected object ID.
+    pub(crate) fn write_raw_object_streamed(
+        &self,
+        kind: &str,
+        expected_oid: &str,
+        expected_size: u64,
+        cap: u64,
+        source: &mut dyn Read,
+    ) -> Result<()> {
+        if !matches!(kind, "blob" | "tree" | "commit") || expected_size > cap {
+            bail!("unsupported or oversized local raw object import");
+        }
+        self.oid(format!("{expected_oid}\n").as_bytes())?;
+        let mut child = self
+            .command(&["hash-object", "-t", kind, "-w", "--stdin"], true)?
+            .spawn()?;
+        let Some(mut stdin) = child.stdin.take() else {
+            let _ = child.kill();
+            let _ = child.wait();
+            bail!("Git raw object stdin absent");
+        };
+        let mut count = 0_u64;
+        let mut window = [0_u8; 64 * 1024];
+        loop {
+            let read = match source.read(&mut window) {
+                Ok(value) => value,
+                Err(error) => {
+                    drop(stdin);
+                    let _ = child.kill();
+                    let _ = child.wait();
+                    return Err(error.into());
+                }
+            };
+            if read == 0 {
+                break;
+            }
+            count = match count.checked_add(read as u64) {
+                Some(value) => value,
+                None => {
+                    drop(stdin);
+                    let _ = child.kill();
+                    let _ = child.wait();
+                    bail!("raw object import byte count overflow");
+                }
+            };
+            if count > cap || count > expected_size {
+                drop(stdin);
+                let _ = child.kill();
+                let _ = child.wait();
+                bail!("raw object input exceeded exact selected size");
+            }
+            if let Err(error) = stdin.write_all(&window[..read]) {
+                drop(stdin);
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(error.into());
+            }
+        }
+        if count != expected_size {
+            drop(stdin);
+            let _ = child.kill();
+            let _ = child.wait();
+            bail!("raw object input ended short");
+        }
+        drop(stdin);
+        let actual = self.oid(&self.finish(child, 128)?)?;
+        if actual != expected_oid {
+            bail!("local raw object import wrote a foreign OID");
+        }
+        Ok(())
+    }
+
     pub(crate) fn verify_control_object(
         &self,
         kind: &str,
@@ -232,7 +306,7 @@ impl<'a> LocalGit<'a> {
         Ok(hash)
     }
 
-    pub(super) fn init(&self) -> Result<()> {
+    pub(crate) fn init(&self) -> Result<()> {
         let root = self.objects.root_dir()?;
         if !self.objects.child_names_bounded(&root, 1)?.is_empty() {
             bail!("run-scoped Git object root is occupied; never restage");

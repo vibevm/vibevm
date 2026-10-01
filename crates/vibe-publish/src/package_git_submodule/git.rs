@@ -10,9 +10,9 @@ use vibe_safefs::Project;
 use crate::package_git_plan::GitObjectHasher;
 use crate::package_git_tree::git::LocalGit;
 
-pub(super) struct RawWitness {
-    pub size: u64,
-    pub sha256: String,
+pub(crate) struct RawWitness {
+    pub(crate) size: u64,
+    pub(crate) sha256: String,
 }
 
 struct HashedRead<'a> {
@@ -54,7 +54,7 @@ impl Read for HashedRead<'_> {
 impl LocalGit<'_> {
     /// The callback must consume the complete object. Its reader allocates a
     /// fixed 64 KiB buffer and hashes Git framing and raw bytes as delivered.
-    pub(super) fn with_raw_object<T>(
+    pub(crate) fn with_raw_object<T>(
         &self,
         kind: &str,
         oid: &str,
