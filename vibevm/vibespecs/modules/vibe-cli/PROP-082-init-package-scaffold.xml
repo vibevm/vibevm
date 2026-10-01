@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-082 — Package initialization scaffold</title>
+  <status stage="spec" state="plan"/>
+  <p>This proposal specifies the authored package fields produced by
+  `vibe init package`. PROP-009 defines what a boot link does after
+  installation; PROP-035 defines the meaning and absent-field default of a
+  package format. Neither chooses the fields written by this command.</p>
+
+  <init-package title="1. Package scaffold choices">
+    <p><INIT-PACKAGE-SCAFFOLD fact="true" status="spec/plan">For a new package,
+    `vibe init package &lt;group&gt;/&lt;name&gt; [dir]` records the selected
+    boot link and package format in the generated package `vibe.toml`.
+    An already existing package manifest is kept rather than silently
+    rewritten to new defaults. The generated fields describe this package;
+    they do not migrate an installed 1.0.x package or change an existing
+    user's authored manifest.</INIT-PACKAGE-SCAFFOLD></p>
+    <p><INIT-PACKAGE-LINK fact="true" status="spec/plan">The package form
+    defaults its generated `[boot_snippet].link` to
+    `dynamic`. An explicit `--link static` or
+    `--link dynamic` controls that field; another link value is
+    refused before writing the package manifest. The project-and-package
+    scaffold form retains its separate `static` default. The
+    resulting link semantics are those of PROP-009
+    `#LINK-STATIC` and `#LINK-DYNAMIC`.</INIT-PACKAGE-LINK></p>
+    <p><INIT-PACKAGE-FORMAT fact="true" status="spec/plan">The generated
+    package manifest explicitly writes `format = "normal"` when
+    no format is selected; an explicit `--format simple` or
+    `--format normal` writes that selected value. This scaffold
+    default is distinct from PROP-035's `simple` interpretation
+    of a pre-existing manifest with no format field. Initialization does
+    not reinterpret such a manifest or rewrite its files.</INIT-PACKAGE-FORMAT></p>
+  </init-package>
+</spec>
