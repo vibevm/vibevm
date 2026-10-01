@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LIFETIME");
 
 use super::*;
+mod stream;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
 use std::sync::{Condvar, Mutex, Weak};
@@ -58,6 +59,7 @@ pub(super) struct Binding {
     request_sha256: String,
     plan_sha256: String,
     physical_root: Arc<PhysicalRoot>,
+    history: Arc<Mutex<stream::History>>,
 }
 
 /// Retain a no-follow root independently of the writer lease on every host.
@@ -178,7 +180,7 @@ impl LiveOwner {
         }
         // Terminal attach must validate domain evidence before subscribing.
         inspect(&self.shared)?;
-        Ok(subscribe(&self.shared))
+        subscribe(&self.shared).map_err(Into::into)
     }
 }
 fn same_binding(a: &Binding, b: &Binding) -> bool {
@@ -188,16 +190,20 @@ fn same_binding(a: &Binding, b: &Binding) -> bool {
         && a.request_sha256 == b.request_sha256
         && a.plan_sha256 == b.plan_sha256
         && Arc::ptr_eq(&a.physical_root, &b.physical_root)
+        && Arc::ptr_eq(&a.history, &b.history)
 }
-fn subscribe(shared: &Arc<Shared>) -> Observer {
+fn subscribe(shared: &Arc<Shared>) -> std::result::Result<Observer, stream::SubscriptionLimit> {
     let mut record = shared.record.lock().unwrap();
+    if record.subscriptions.len() >= stream::MAX_OBSERVERS {
+        return Err(stream::SubscriptionLimit);
+    }
     let id = record.next_subscription;
-    record.next_subscription += 1;
+    record.next_subscription = id.checked_add(1).ok_or(stream::SubscriptionLimit)?;
     record.subscriptions.insert(id);
-    Observer {
+    Ok(Observer {
         shared: shared.clone(),
         subscription: Some(id),
-    }
+    })
 }
 
 pub(super) struct ReadyObserver {
@@ -259,7 +265,17 @@ impl ReadyObserver {
             request_sha256: c1.request_sha256,
             plan_sha256: c1.plan_sha256,
             physical_root,
+            history: Arc::new(Mutex::new(stream::History::new(
+                scope,
+                run_id,
+                reservation_ref,
+            ))),
         };
+        binding.history.lock().unwrap().state(
+            stream::Observed::JournalReady,
+            stream::Effect::NoEffects,
+            None,
+        );
         {
             let mut record = self.shared.record.lock().unwrap();
             ensure!(record.state == LiveState::Starting, "owner Ready twice");
@@ -394,7 +410,7 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
         }),
         changed: Condvar::new(),
     });
-    let observer = subscribe(&shared);
+    let observer = subscribe(&shared)?;
     let worker = shared.clone();
     let thread = std::thread::Builder::new()
         .name("fixed-validate-owner".into())
@@ -418,6 +434,10 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                     .map_or(&PROCESS, |f| f.process.as_ref());
                 #[cfg(not(test))]
                 let process: &dyn ProcessRunner = &PROCESS;
+                let process = stream::ObservedProcess {
+                    process,
+                    shared: &worker,
+                };
                 submit_one_script_validate_internal(
                     &dispatch.path,
                     &dispatch.namespace,
@@ -426,7 +446,7 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                     dispatch.request,
                     dispatch.target_os,
                     dispatch.observed_at,
-                    process,
+                    &process,
                     &PROBE,
                     None,
                     None,
@@ -459,6 +479,7 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                 }
             }
             drop(record);
+            stream::publish_terminal(&worker);
             worker.changed.notify_all();
         })?;
     Ok((
