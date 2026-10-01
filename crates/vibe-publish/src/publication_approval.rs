@@ -22,8 +22,8 @@ use crate::publication_effect_plan::{
     PublicationEffectPlanExpectations, publication_effect_plan_digest,
 };
 
-const HOME: &str = "publication-approvals";
-const REDEEMED: &str = "redeemed";
+pub(crate) const HOME: &str = "publication-approvals";
+pub(crate) const REDEEMED: &str = "redeemed";
 const FORMAT: &str = "vibevm.publication.mode-a-approval/e1";
 const REDEMPTION_FORMAT: &str = "vibevm.publication.approval-redemption/e1";
 const CAP: usize = 16 * 1024;
@@ -145,7 +145,7 @@ fn plan_name(digest: &str) -> Result<String, ApprovalError> {
     Ok(format!("{hex}.json"))
 }
 
-fn marker_name(approval_id: &str) -> String {
+pub(crate) fn marker_name(approval_id: &str) -> String {
     let mut hasher = Sha256::new();
     hasher.update(b"vibevm.publication.approval-id/e1\0");
     hasher.update(approval_id.as_bytes());
