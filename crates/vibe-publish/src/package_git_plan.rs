@@ -4,7 +4,11 @@
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
-const DOMAIN: &[u8] = b"vibevm/package-git-publication-plan/e1\0";
+const DOMAIN: &[u8] = b"vibevm/package-git-publication-plan/e2\0";
+const EPOCH: u32 = 2;
+
+mod objects;
+pub(crate) use objects::{CommitMetadata, GitPerson, TagMetadata};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -121,11 +125,14 @@ pub(crate) struct StagedObjects {
     /// it avoids manufacturing a new annotated object merely to decide.
     pub annotated_tag_oid: Option<String>,
     pub tag_target_commit_oid: String,
+    pub commit_metadata: Option<CommitMetadata>,
+    pub tag_metadata: Option<TagMetadata>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct PackageGitPlan {
+    pub epoch: u32,
     pub package: PackageCoordinate,
     /// Exact selected mutable version ref; never inferred by a transport.
     pub version_tag_ref: String,
@@ -215,6 +222,9 @@ fn tag_raw(value: &TagRef) -> Option<&str> {
 
 impl PackageGitPlan {
     pub(crate) fn validate(&self) -> Result<(), PlanError> {
+        if self.epoch != EPOCH {
+            return Err(invalid("package Git plan epoch must be e2"));
+        }
         if !source_token(&self.package.kind)
             || !source_token(&self.package.group)
             || !source_token(&self.package.name)
@@ -353,6 +363,7 @@ impl PackageGitPlan {
                 "absent staged tag object requires an exact peeled pre-effect no-op",
             ));
         }
+        self.validate_object_bytes()?;
         Ok(())
     }
 

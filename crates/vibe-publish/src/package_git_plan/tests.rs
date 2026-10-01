@@ -6,6 +6,27 @@ fn oid_hex(ch: char) -> String {
 fn sha(ch: char) -> String {
     format!("sha256:{}", ch.to_string().repeat(64))
 }
+fn person() -> GitPerson {
+    GitPerson {
+        name: "Oleg Chirukhin".into(),
+        email: "oleg@example.test".into(),
+        timestamp_seconds: 1_700_000_000,
+        timezone_offset_minutes: 180,
+    }
+}
+fn commit_metadata() -> CommitMetadata {
+    CommitMetadata {
+        author: person(),
+        committer: person(),
+        message: "Release wal@1.1.0\n".into(),
+    }
+}
+fn tag_metadata() -> TagMetadata {
+    TagMetadata {
+        tagger: person(),
+        message: "wal@1.1.0\n".into(),
+    }
+}
 fn hosted() -> HostedRepository {
     HostedRepository {
         host: "github.com".into(),
@@ -20,7 +41,8 @@ fn hosted_identity(id: u64) -> RepositoryIdentity {
     }
 }
 fn absent() -> PackageGitPlan {
-    PackageGitPlan {
+    let mut plan = PackageGitPlan {
+        epoch: 2,
         package: PackageCoordinate {
             kind: "flow".into(),
             group: "org.vibevm".into(),
@@ -54,8 +76,12 @@ fn absent() -> PackageGitPlan {
             },
             annotated_tag_oid: Some(oid_hex('e')),
             tag_target_commit_oid: oid_hex('d'),
+            commit_metadata: Some(commit_metadata()),
+            tag_metadata: Some(tag_metadata()),
         },
-    }
+    };
+    plan.derive_staged_object_ids().unwrap();
+    plan
 }
 fn existing() -> PackageGitPlan {
     let mut plan = absent();
@@ -71,6 +97,7 @@ fn existing() -> PackageGitPlan {
         oid: oid_hex('d'),
         parent_oid: Some(oid_hex('1')),
     };
+    plan.derive_staged_object_ids().unwrap();
     plan
 }
 fn direct() -> PackageGitPlan {
@@ -92,6 +119,7 @@ fn exact_payload_target_refs_objects_and_options_change_digest() {
     let mut variants = Vec::new();
     let mut changed = plan.clone();
     changed.version_tag_ref = "refs/tags/release-1.1.0".into();
+    changed.derive_staged_object_ids().unwrap();
     variants.push(changed);
     let mut changed = plan.clone();
     changed.payload_sha256 = sha('f');
@@ -121,9 +149,11 @@ fn exact_payload_target_refs_objects_and_options_change_digest() {
         oid: oid_hex('d'),
         parent_oid: Some(oid_hex('3')),
     };
+    changed.derive_staged_object_ids().unwrap();
     variants.push(changed);
     let mut changed = plan.clone();
-    changed.staged.annotated_tag_oid = Some(oid_hex('4'));
+    changed.staged.tag_metadata.as_mut().unwrap().message = "changed tag\n".into();
+    changed.derive_staged_object_ids().unwrap();
     variants.push(changed);
     for candidate in variants {
         assert_ne!(candidate.digest().unwrap(), baseline);
@@ -225,6 +255,7 @@ fn strict_scope_oid_parent_and_credential_surfaces_refuse() {
     };
     sha256_repo.staged.annotated_tag_oid = Some("e".repeat(64));
     sha256_repo.staged.tag_target_commit_oid = "d".repeat(64);
+    sha256_repo.derive_staged_object_ids().unwrap();
     assert!(sha256_repo.validate().is_ok());
 }
 
@@ -369,6 +400,7 @@ fn direct_existing_bare_identity_has_no_create_call_or_numeric_id() {
         oid: oid_hex('d'),
         parent_oid: None,
     };
+    empty_bare.derive_staged_object_ids().unwrap();
     empty_bare.validate().unwrap();
     let ready = match classify_create(&empty_bare, false, None, &empty_bare.before_repo).unwrap() {
         CreateDecision::AlreadyPresent(ready) => ready,
@@ -485,14 +517,17 @@ fn atomic_push_requires_callback_and_exact_ref_poststate() {
 }
 
 #[test]
-fn peeled_target_idempotence_ignores_new_annotated_tag_metadata() {
+fn peeled_target_idempotence_creates_no_new_object() {
     let mut plan = existing();
     plan.staged.commit = StagedCommit::ReusedMain { oid: oid_hex('1') };
     plan.staged.tag_target_commit_oid = oid_hex('1');
-    assert_ne!(
-        tag_raw(&plan.before_refs.version_tag),
-        plan.staged.annotated_tag_oid.as_deref()
+    plan.staged.commit_metadata = None;
+    assert!(
+        plan.validate().is_err(),
+        "no-op cannot claim a newly staged tag"
     );
+    plan.staged.annotated_tag_oid = None;
+    plan.staged.tag_metadata = None;
     plan.validate().unwrap();
     let ready = match classify_create(&plan, false, None, &plan.before_repo).unwrap() {
         CreateDecision::AlreadyPresent(value) => value,
@@ -520,8 +555,8 @@ fn peeled_target_idempotence_ignores_new_annotated_tag_metadata() {
         .unwrap(),
         PushDecision::Landed
     );
-    plan.staged.annotated_tag_oid = None; // no object is manufactured for this no-op
-    plan.validate().unwrap();
+    assert_eq!(plan.canonical_commit_bytes().unwrap(), None);
+    assert_eq!(plan.canonical_tag_bytes().unwrap(), None);
     assert_eq!(
         classify_push(
             &plan,
@@ -560,3 +595,6 @@ fn private_plan_roundtrip_is_strict_at_root_and_nested_rows() {
     nested["package"]["unexpected"] = serde_json::json!(true);
     assert!(serde_json::from_value::<PackageGitPlan>(nested).is_err());
 }
+
+#[path = "objects_tests.rs"]
+mod objects_tests;
