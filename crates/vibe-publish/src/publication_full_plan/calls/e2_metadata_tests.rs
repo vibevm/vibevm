@@ -56,6 +56,7 @@ impl World {
             generation_ref: plan.remote_generation_ref.clone(),
             tag: plan.observed_tag.clone(),
             release: plan.observed_release.clone(),
+            latest_release: plan.observed_latest_release.clone(),
         };
         for call in &schedule.calls {
             let pending = Pending {
@@ -160,7 +161,7 @@ fn asset_pending(
     asset_id: Option<&str>,
 ) -> AssetPending {
     AssetPending {
-        format: "vibevm.publication.asset-call-pending/e1".into(),
+        format: "vibevm.publication.asset-call-pending/e2".into(),
         run_id: world.run_id.clone(),
         call,
         release_id: "700".into(),
@@ -191,7 +192,7 @@ fn asset_landed(world: &World, pending: &AssetPending, mut after: CallObservatio
         assets::AssetAction::RenameTemporary => release.assets[0] = row,
     }
     AssetLanded {
-        format: "vibevm.publication.asset-call-landed/e1".into(),
+        format: "vibevm.publication.asset-call-landed/e2".into(),
         run_id: world.run_id.clone(),
         pending_sha256: sha(&serde_json::to_vec(pending).unwrap()),
         receipt_id,

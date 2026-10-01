@@ -56,6 +56,7 @@ impl World {
             generation_ref: plan.remote_generation_ref.clone(),
             tag: plan.observed_tag.clone(),
             release: plan.observed_release.clone(),
+            latest_release: plan.observed_latest_release.clone(),
         };
         for call in &schedule.calls {
             let pending = Pending {
@@ -184,7 +185,7 @@ fn drive_one_with_corruption(
         return Err(Error::Refused("asset remote precondition drift".into()));
     }
     let pending = AssetPending {
-        format: "vibevm.publication.asset-call-pending/e1".into(),
+        format: "vibevm.publication.asset-call-pending/e2".into(),
         run_id: world.run_id.clone(),
         call: call.clone(),
         release_id,
@@ -252,7 +253,7 @@ fn drive_one_with_corruption(
         row.sha256 = "sha256:".to_owned() + &"f".repeat(64);
     }
     let landed = AssetLanded {
-        format: "vibevm.publication.asset-call-landed/e1".into(),
+        format: "vibevm.publication.asset-call-landed/e2".into(),
         run_id: world.run_id.clone(),
         pending_sha256: sha(&serde_json::to_vec(&pending)?),
         receipt_id,

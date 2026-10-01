@@ -131,6 +131,7 @@ fn observed(
         generation_ref: remote.generation_ref,
         tag: remote.tag,
         release: remote.release,
+        latest_release: remote.observed_latest_release,
     })
 }
 

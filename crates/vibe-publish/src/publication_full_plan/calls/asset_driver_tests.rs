@@ -130,6 +130,7 @@ impl Fixture {
             generation_ref: self.tiny.plan.remote_generation_ref.clone(),
             tag: self.tiny.plan.observed_tag.clone(),
             release: self.tiny.plan.observed_release.clone(),
+            latest_release: self.tiny.plan.observed_latest_release.clone(),
         };
         for call in &schedule.calls {
             let pending = Pending {
@@ -155,6 +156,7 @@ impl Fixture {
                         object_sha: commit.clone(),
                     })),
                     release: before.release.clone(),
+                    latest_release: before.latest_release.clone(),
                 },
                 CallAction::CreateDraft { .. } => {
                     let observed = normalize_fixed(
@@ -166,6 +168,7 @@ impl Fixture {
                         generation_ref: observed.generation_ref,
                         tag: observed.tag,
                         release: observed.release,
+                        latest_release: observed.observed_latest_release,
                     }
                 }
                 _ => panic!("new-draft fixture only"),

@@ -19,7 +19,7 @@ use vibe_wire::generated::publication_effect_plan::{
     PublicationObservedAsset, PublicationObservedRelease,
 };
 
-const DOMAIN: &[u8] = b"vibevm.publication.asset-api-call/e1\0";
+const DOMAIN: &[u8] = b"vibevm.publication.asset-api-call/e2\0";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, tag = "kind", rename_all = "kebab-case")]
@@ -184,8 +184,8 @@ pub(super) fn decompose_asset_calls(
     Ok(calls)
 }
 
-pub(super) const PENDING_FORMAT: &str = "vibevm.publication.asset-call-pending/e1";
-pub(super) const LANDED_FORMAT: &str = "vibevm.publication.asset-call-landed/e1";
+pub(super) const PENDING_FORMAT: &str = "vibevm.publication.asset-call-pending/e2";
+pub(super) const LANDED_FORMAT: &str = "vibevm.publication.asset-call-landed/e2";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -272,7 +272,10 @@ fn inventory_map(
 /// Equivalent exact remote state despite provider listing order. Generation,
 /// release identity and every unique asset ID/name/digest/size still match.
 pub(super) fn same_observation(left: &CallObservation, right: &CallObservation) -> bool {
-    if left.generation_ref != right.generation_ref || left.tag != right.tag {
+    if left.generation_ref != right.generation_ref
+        || left.tag != right.tag
+        || left.latest_release != right.latest_release
+    {
         return false;
     }
     match (&left.release, &right.release) {
@@ -303,6 +306,7 @@ pub(super) fn verify_transition(pending: &AssetPending, landed: &AssetLanded) ->
         || landed.pending_sha256 != sha(&serde_json::to_vec(pending).unwrap_or_default())
         || landed.after_sha256 != sha(&serde_json::to_vec(&landed.after).unwrap_or_default())
         || pending.before.tag != landed.after.tag
+        || pending.before.latest_release != landed.after.latest_release
         || pending.before.generation_ref == landed.after.generation_ref
         || !canonical_id(&pending.release_id)
         || !canonical_id(&landed.receipt_id)
