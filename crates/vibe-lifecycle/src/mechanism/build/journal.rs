@@ -68,7 +68,9 @@ macro_rules! ensure {
     ($condition:expr, $($arg:tt)*) => { if !($condition) { bail!($($arg)*); } };
 }
 
+mod capsule;
 mod execution;
+pub(crate) use capsule::inspect_fixed_cargo_cold;
 #[cfg(test)]
 pub(crate) use execution::execute_fixed_cargo_with_hooks;
 pub(crate) use execution::{BoundCargo, execute_fixed_cargo, verify_bound_sources};
@@ -232,12 +234,24 @@ pub(crate) fn reserve_fixed_cargo_intent(
                                 &domain_run_id,
                             )? =>
                 {
-                    execution::inspect_existing_result(
+                    if capsule::verify_existing(
                         lease,
-                        domain_run_id,
+                        &domain_run_id,
                         &intent,
-                        reservation_ref.as_deref(),
+                        &sha(&subject.request),
+                        &intent.plan_sha256,
                     )
+                    .is_err()
+                    {
+                        uncertain(lease, domain_run_id, &intent.cargo_home)
+                    } else {
+                        execution::inspect_existing_result(
+                            lease,
+                            domain_run_id,
+                            &intent,
+                            reservation_ref.as_deref(),
+                        )
+                    }
                 }
                 _ => BuildJournalInspection::RecoveryRequired {
                     run_id: domain_run_id,
@@ -281,6 +295,7 @@ pub(crate) fn reserve_fixed_cargo_intent(
         .map_err(refused)?
         .ok_or_else(|| refused("fixed Cargo intent vanished before Ready"))?;
     ensure!(visible == bytes, "fixed Cargo intent changed before Ready");
+    capsule::publish(lease, &run_id, &selected, &intent)?;
     recheck(lease, &selected)?;
     SubmissionReservations::mark_journal_ready(lease, namespace, scope, key, &run_id)?;
     ensure!(
