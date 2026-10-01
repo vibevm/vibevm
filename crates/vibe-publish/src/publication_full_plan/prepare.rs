@@ -6,13 +6,17 @@ use vibe_lifecycle::{
     ExistingSubmissionInspection, JournalAdmission, LifecycleLease, ReservationDecision,
     SubmissionNamespace, SubmissionReservations, SubmissionScope,
 };
+use vibe_safefs::Project;
 use vibe_wire::generated::publication_effect_plan::PublicationEffectPlan;
 use vibe_wire::generated::publication_subject::PublicationSubject;
 
 use crate::publication_authority::PublicationAuthorityDecision;
 use crate::publication_effect_plan::PublicationEffectPlanExpectations;
+use crate::publication_payload::vault::{FinalPayloadBytes, VaultInspection, stage_payload_vault};
 
 use super::journal::{self, InputCapsule, Intent};
+#[cfg(test)]
+use super::tests::expected;
 use super::{Error, Inspection, RemoteObservation, Result, Selected, initial_matches, select, sha};
 
 pub(super) enum PreparedJournal {
@@ -28,9 +32,11 @@ pub(super) enum PreparedJournal {
 /// A future owner must construct this only from its own remote observer and
 /// owner-controlled approval loader. No production constructor exists yet;
 /// tests may inject it without introducing a live publication capability.
-pub(crate) struct TrustedLocalPublication {
+pub(crate) struct TrustedLocalPublication<'a> {
     approved: PublicationAuthorityDecision,
     before: RemoteObservation,
+    output: &'a Project,
+    finals: FinalPayloadBytes<'a>,
 }
 
 /// Production-compiled, crate-private local journal seam. It never calls a
@@ -43,7 +49,7 @@ pub(crate) fn prepare_local_full_plan(
     subject: &PublicationSubject,
     plan: &PublicationEffectPlan,
     expected: &PublicationEffectPlanExpectations<'_>,
-    trusted: TrustedLocalPublication,
+    trusted: TrustedLocalPublication<'_>,
 ) -> Result<Inspection> {
     let PublicationAuthorityDecision::Approved {
         mode,
@@ -68,15 +74,20 @@ pub(crate) fn prepare_local_full_plan(
             "approved plan digest differs from selected plan".into(),
         ));
     }
-    match prepare_journal(
+    match prepare_journal_inner(
         lease,
         namespace,
         scope,
         key,
         subject,
         plan,
+        expected,
         selected,
         || Ok(trusted.before),
+        ReadyLane::Vault {
+            output: trusted.output,
+            finals: trusted.finals,
+        },
     )? {
         PreparedJournal::Existing(inspection) => Ok(inspection),
         PreparedJournal::New { run_id, .. } => Ok(Inspection::JournalReady { run_id }),
@@ -87,15 +98,52 @@ pub(crate) fn prepare_local_full_plan(
 /// Existing keys are inspected before `observe` is called. Fresh runs publish
 /// the input capsule and intent create-new, read both back, then mark C.1
 /// Ready. No effect callback exists here.
-pub(super) fn prepare_journal(
+enum ReadyLane<'a> {
+    Vault {
+        output: &'a Project,
+        finals: FinalPayloadBytes<'a>,
+    },
+    #[cfg(test)]
+    FakeNoVault,
+}
+
+#[cfg(test)]
+pub(super) fn prepare_journal_fake(
     lease: &LifecycleLease,
     namespace: &SubmissionNamespace,
     scope: &SubmissionScope,
     key: &str,
     subject: &PublicationSubject,
     plan: &PublicationEffectPlan,
+    expected: &PublicationEffectPlanExpectations<'_>,
     selected: Selected,
     observe: impl FnOnce() -> Result<RemoteObservation>,
+) -> Result<PreparedJournal> {
+    prepare_journal_inner(
+        lease,
+        namespace,
+        scope,
+        key,
+        subject,
+        plan,
+        expected,
+        selected,
+        observe,
+        ReadyLane::FakeNoVault,
+    )
+}
+
+fn prepare_journal_inner(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    subject: &PublicationSubject,
+    plan: &PublicationEffectPlan,
+    expected: &PublicationEffectPlanExpectations<'_>,
+    selected: Selected,
+    observe: impl FnOnce() -> Result<RemoteObservation>,
+    lane: ReadyLane<'_>,
 ) -> Result<PreparedJournal> {
     match SubmissionReservations::inspect_existing_request(
         lease,
@@ -110,12 +158,15 @@ pub(super) fn prepare_journal(
             }));
         }
         ExistingSubmissionInspection::Reserved { .. } => {
-            return Ok(PreparedJournal::Existing(super::inspect_full_plan_cold(
-                lease,
-                namespace.id(),
-                scope,
-                key,
-            )?));
+            return Ok(PreparedJournal::Existing(match lane {
+                ReadyLane::Vault { .. } => {
+                    super::inspect_full_plan_cold(lease, namespace.id(), scope, key)?
+                }
+                #[cfg(test)]
+                ReadyLane::FakeNoVault => {
+                    super::inspect_fake_full_plan_cold(lease, namespace.id(), scope, key)?
+                }
+            }));
         }
         ExistingSubmissionInspection::Absent => {}
     }
@@ -134,11 +185,55 @@ pub(super) fn prepare_journal(
             "fresh full-plan reservation was not Created".into(),
         ));
     }
+    let vault_manifest_sha256 = match lane {
+        ReadyLane::Vault { output, finals } => {
+            match stage_payload_vault(
+                lease,
+                namespace,
+                scope,
+                key,
+                &run_id,
+                subject,
+                &expected.subject,
+                output,
+                &finals,
+            ) {
+                Ok(VaultInspection::Complete {
+                    run_id: observed,
+                    catalogue_digest,
+                    manifest_sha256,
+                }) if observed == run_id
+                    && catalogue_digest == selected.upload_catalogue_sha256 =>
+                {
+                    Some(manifest_sha256)
+                }
+                _ => {
+                    return Ok(PreparedJournal::Existing(Inspection::RecoveryRequired {
+                        run_id,
+                    }));
+                }
+            }
+        }
+        #[cfg(test)]
+        ReadyLane::FakeNoVault => None,
+    };
     let mut intent = selected.intent;
     intent.run_id = run_id.clone();
+    intent.vault_manifest_sha256 = vault_manifest_sha256.clone();
     let request_json = String::from_utf8(selected.request).map_err(Error::io)?;
     let capsule = InputCapsule {
-        format: journal::INPUT_FORMAT.into(),
+        format: if vault_manifest_sha256.is_some() {
+            journal::INPUT_FORMAT.into()
+        } else {
+            #[cfg(test)]
+            {
+                journal::FAKE_INPUT_FORMAT.into()
+            }
+            #[cfg(not(test))]
+            {
+                unreachable!("production lane always requires a vault")
+            }
+        },
         run_id: run_id.clone(),
         context: scope.context.clone(),
         target: scope.target.clone(),
@@ -151,6 +246,7 @@ pub(super) fn prepare_journal(
         allow_replace_published: selected.allow_replace_published,
         upload_catalogue_sha256: selected.upload_catalogue_sha256,
         root_correlation_token: selected.root_correlation_token,
+        vault_manifest_sha256,
         authority_mode: selected.authority_mode,
         authority_ref: selected.authority_ref,
     };
@@ -187,45 +283,53 @@ pub(super) fn prepare_journal(
 }
 
 #[cfg(test)]
+pub(super) fn trusted<'a>(
+    lease: &LifecycleLease,
+    scope: &SubmissionScope,
+    subject: &PublicationSubject,
+    plan: &PublicationEffectPlan,
+    output: &'a Project,
+    finals: FinalPayloadBytes<'a>,
+) -> TrustedLocalPublication<'a> {
+    let selected = select(
+        lease,
+        scope,
+        subject,
+        plan,
+        &expected(),
+        Some(("A", "fixture-approval")),
+    )
+    .unwrap();
+    TrustedLocalPublication {
+        approved: PublicationAuthorityDecision::Approved {
+            mode: "A",
+            authority_ref: "fixture-approval".into(),
+            plan_sha256: selected.intent.semantic_plan_sha256,
+        },
+        before: RemoteObservation {
+            generation_ref: plan.remote_generation_ref.clone(),
+            tag: plan.observed_tag.clone(),
+            release: plan.observed_release.clone(),
+            latest_release_id: None,
+            last: None,
+        },
+        output,
+        finals,
+    }
+}
+
+#[cfg(test)]
 mod tests {
     use super::*;
-    use crate::publication_full_plan::tests::{expected, prepared, scope};
-
-    fn trusted(
-        lease: &LifecycleLease,
-        scope: &SubmissionScope,
-        subject: &PublicationSubject,
-        plan: &PublicationEffectPlan,
-    ) -> TrustedLocalPublication {
-        let selected = select(
-            lease,
-            scope,
-            subject,
-            plan,
-            &expected(),
-            Some(("A", "fixture-approval")),
-        )
-        .unwrap();
-        TrustedLocalPublication {
-            approved: PublicationAuthorityDecision::Approved {
-                mode: "A",
-                authority_ref: "fixture-approval".into(),
-                plan_sha256: selected.intent.semantic_plan_sha256,
-            },
-            before: RemoteObservation {
-                generation_ref: plan.remote_generation_ref.clone(),
-                tag: plan.observed_tag.clone(),
-                release: plan.observed_release.clone(),
-                latest_release_id: None,
-                last: None,
-            },
-        }
-    }
+    use crate::publication_full_plan::capability_tests::TinyPayloadWorld;
+    use crate::publication_full_plan::tests::{expected, scope};
 
     #[test]
     fn local_prepare_retains_ready_capsule_without_any_remote_effect_and_cold_attaches() {
         let root = tempfile::tempdir().unwrap();
-        let (subject, plan) = prepared();
+        let tiny = TinyPayloadWorld::new();
+        let (subject, plan) = (&tiny.subject, &tiny.plan);
+        let output = Project::open(tiny.output.path()).unwrap();
         let scope = scope();
         let (token, run_id) = {
             let lease = LifecycleLease::acquire(root.path()).unwrap();
@@ -239,7 +343,7 @@ mod tests {
                 &subject,
                 &plan,
                 &expected(),
-                trusted(&lease, &scope, &subject, &plan),
+                trusted(&lease, &scope, subject, plan, &output, tiny.finals()),
             )
             .unwrap();
             let Inspection::JournalReady { run_id } = outcome else {
@@ -270,6 +374,8 @@ mod tests {
                 .unwrap();
             assert_eq!(capsule.upload_catalogue_sha256, catalogue.digest);
             assert_eq!(capsule.root_correlation_token, root_token);
+            let manifest = capsule.vault_manifest_sha256.clone().unwrap();
+            assert!(manifest.starts_with("sha256:"));
             let request: serde_json::Value = serde_json::from_str(&capsule.request_json).unwrap();
             assert_eq!(request["upload_catalogue_sha256"], catalogue.digest);
             assert_eq!(request["root_correlation_token"], root_token);
@@ -278,6 +384,10 @@ mod tests {
                 .unwrap();
             assert_eq!(intent.upload_catalogue_sha256, catalogue.digest);
             assert_eq!(intent.root_correlation_token, root_token);
+            assert_eq!(
+                intent.vault_manifest_sha256.as_deref(),
+                Some(manifest.as_str())
+            );
             assert!(
                 journal::read::<super::super::Step>(&lease, &run_id, "000-pending")
                     .unwrap()
@@ -297,7 +407,7 @@ mod tests {
                     &subject,
                     &plan,
                     &expected(),
-                    trusted(&lease, &scope, &subject, &plan),
+                    trusted(&lease, &scope, subject, plan, &output, tiny.finals()),
                 )
                 .unwrap(),
                 Inspection::JournalReady {
@@ -356,11 +466,13 @@ mod tests {
     #[test]
     fn pre_ready_missing_capsule_and_unapproved_local_selection_never_complete() {
         let root = tempfile::tempdir().unwrap();
-        let (subject, plan) = prepared();
+        let tiny = TinyPayloadWorld::new();
+        let (subject, plan) = (&tiny.subject, &tiny.plan);
+        let output = Project::open(tiny.output.path()).unwrap();
         let scope = scope();
         let lease = LifecycleLease::acquire(root.path()).unwrap();
         let namespace = SubmissionReservations::issue_namespace(&lease, &scope, 60_000).unwrap();
-        let mut unapproved = trusted(&lease, &scope, &subject, &plan);
+        let mut unapproved = trusted(&lease, &scope, subject, plan, &output, tiny.finals());
         unapproved.approved = PublicationAuthorityDecision::NeedsApproval {
             reason: crate::publication_authority::PublicationAuthorityReason::ApprovalMissing,
         };
@@ -428,7 +540,9 @@ mod tests {
         let parent = tempfile::tempdir().unwrap();
         let root = parent.path().join("workspace");
         fs::create_dir(&root).unwrap();
-        let (subject, plan) = prepared();
+        let tiny = TinyPayloadWorld::new();
+        let (subject, plan) = (&tiny.subject, &tiny.plan);
+        let output = Project::open(tiny.output.path()).unwrap();
         let scope = scope();
         let (token, run_id, original_root_token) = {
             let lease = LifecycleLease::acquire(&root).unwrap();
@@ -442,7 +556,7 @@ mod tests {
                 &subject,
                 &plan,
                 &expected(),
-                trusted(&lease, &scope, &subject, &plan),
+                trusted(&lease, &scope, subject, plan, &output, tiny.finals()),
             )
             .unwrap();
             let Inspection::JournalReady { run_id } = inspection else {

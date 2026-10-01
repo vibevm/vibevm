@@ -41,6 +41,7 @@ pub enum VaultInspection {
     Complete {
         run_id: String,
         catalogue_digest: String,
+        manifest_sha256: String,
     },
     Incomplete {
         run_id: String,
@@ -244,6 +245,35 @@ pub fn stage_payload_vault(
     )
 }
 
+#[cfg(test)]
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn stage_payload_vault_until(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    run_id: &str,
+    subject: &PublicationSubject,
+    expected: &PublicationSubjectExpectations<'_>,
+    output: &Project,
+    finals: &FinalPayloadBytes<'_>,
+    staged_files: usize,
+) -> Result<VaultInspection, VaultError> {
+    stage_with_interrupt(
+        lease,
+        namespace,
+        scope,
+        key,
+        run_id,
+        subject,
+        expected,
+        output,
+        finals,
+        Some(staged_files),
+        |_, _| {},
+    )
+}
+
 #[allow(clippy::too_many_arguments)]
 fn stage_with_interrupt<F: FnMut(usize, &Project)>(
     lease: &LifecycleLease,
@@ -352,6 +382,7 @@ fn stage_with_interrupt<F: FnMut(usize, &Project)>(
             "completion changed on readback".into(),
         ));
     }
+    let manifest_sha256 = digest(&bytes);
     reserved_run(lease, namespace, scope, key, run_id, true).map_err(|error| {
         VaultError::RecoveryRequired(format!("C.1 changed after completion readback: {error}"))
     })?;
@@ -360,10 +391,15 @@ fn stage_with_interrupt<F: FnMut(usize, &Project)>(
         VaultInspection::Complete {
             run_id: observed,
             catalogue_digest,
-        } if observed == run_id && catalogue_digest == catalogue.digest => {
+            manifest_sha256: observed_manifest,
+        } if observed == run_id
+            && catalogue_digest == catalogue.digest
+            && observed_manifest == manifest_sha256 =>
+        {
             Ok(VaultInspection::Complete {
                 run_id: observed,
                 catalogue_digest,
+                manifest_sha256,
             })
         }
         other => Err(VaultError::RecoveryRequired(format!(
@@ -422,7 +458,7 @@ pub fn inspect_payload_vault(
                 if snapshot.bytes != canonical {
                     return uncertain("completion bytes are not canonical".into());
                 }
-                Some(value)
+                Some((value, digest(&snapshot.bytes)))
             }
             Err(error) => return uncertain(format!("completion is malformed: {error}")),
         },
@@ -445,7 +481,7 @@ pub fn inspect_payload_vault(
         }
         verified += 1;
     }
-    let Some(completion) = completion else {
+    let Some((completion, manifest_sha256)) = completion else {
         return VaultInspection::Incomplete {
             run_id: run_id.into(),
             verified_files: verified,
@@ -467,6 +503,7 @@ pub fn inspect_payload_vault(
     VaultInspection::Complete {
         run_id: run_id.into(),
         catalogue_digest: catalogue.digest,
+        manifest_sha256,
     }
 }
 
