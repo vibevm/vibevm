@@ -44,7 +44,9 @@ pub mod post_hook;
 pub mod publication_authority;
 pub mod publication_capture;
 pub mod publication_effect_plan;
+#[cfg(test)]
 mod publication_full_plan;
+#[cfg(test)]
 mod publication_operation;
 pub mod publication_subject;
 pub mod redirect_sync;
