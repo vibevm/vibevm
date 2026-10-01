@@ -272,10 +272,23 @@ fn in_tree_descriptor_package_excludes_raw_resources_before_pair_collision() {
     write_source(&package, &rule, b"<spec xmlns=\"https://vibevm.org/spec/1\"><p><REAL fact=\"true\" status=\"spec/done\">package fact</REAL></p></spec>\n");
     write_source(&package, &raw_md, b"# Raw\n\n@fact:FALSE literal.\n");
     write_source(&package, &raw_xml, b"<data>raw</data>\n");
-    let observed = ground(&args(root, false)).unwrap();
+    let run = root.join("campaigns/in-tree/run");
+    std::fs::create_dir_all(&run).unwrap();
+    let mut common = args(root, false);
+    common.campaign = Some(root.join("campaigns/in-tree"));
+    let observed = ground(&common).unwrap();
     assert_eq!(observed.docs.len(), 1);
     assert_eq!(observed.docs[0].fact_count, 1);
     assert!(observed.docs[0].path.ends_with("common/rule.xml"));
+    let ctx = Context::from_flags(true, false, None, false, crate::cli::AgentModeArg::Auto);
+    scan(&ctx, &common).unwrap();
+    let cache = std::fs::read_to_string(run.join("cache.json")).unwrap();
+    assert!(cache.contains("common/rule.xml"), "{cache}");
+    assert!(!cache.contains("common/rule.md") && !cache.contains("common/data.xml"));
+    assert_eq!(
+        std::fs::read(package.join(raw_md)).unwrap(),
+        b"# Raw\n\n@fact:FALSE literal.\n"
+    );
     assert_eq!(
         std::fs::read(package.join(raw_xml)).unwrap(),
         b"<data>raw</data>\n"
