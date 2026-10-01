@@ -37,6 +37,19 @@
   ],
   "effects": [
     {
+      "interface_id": "rust:vibe-lifecycle:LifecycleLease::publication_journal_project",
+      "capability_id": "public-held-publication-journal-root-borrow",
+      "kind": "introduced",
+      "audience": "Rust library consumer / publication owner integrator",
+      "platform": "Public method compiled for Linux/macOS/Windows; selected GNU/Linux owner tests only, native macOS/Windows identity behavior unrun.",
+      "before": "A caller holding LifecycleLease had no public borrow of its pinned Project for a distinct publication owner journal.",
+      "after": "LifecycleLease::publication_journal_project publicly borrows the held Project so an external publication crate can store/read its own local journal under the same root; the borrow is not remote publication authority or a protected effect grant.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-JOURNAL-BOUNDARY",
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION"
+      ]
+    },
+    {
       "interface_id": "internal:vibe-publish:submit_fake_tag_create",
       "capability_id": "fake-tag-owner-recovery-proof",
       "kind": "introduced",
@@ -64,14 +77,14 @@
     }
   ],
   "user_impact": {
-    "state": "no-impact",
-    "reason": "The reviewed endpoint only registers private crate owner code and disposable fake-port tests; no CLI, MCP, public Rust API or live publication adapter is exposed, and existing user-owned state is unchanged.",
+    "state": "impact",
+    "reason": "An additive public LifecycleLease::publication_journal_project Rust API exposes the held local journal root to library consumers; the fake publication owners remain private, no live CLI/MCP/GitHub route is enabled, and 1.0.x user-owned state needs no conversion.",
     "migration_action": "none"
   },
   "documentation_impact": {
-    "state": "no-impact",
-    "reason": "No existing user-facing page claim changes at this endpoint; PROP-073 already states live publication is unavailable. Internal source/evidence review remains required but is not a user guide migration.",
-    "documentation_action": "none"
+    "state": "impact",
+    "reason": "Developer API guidance should explain the public lease-root borrow and its limited local-journal purpose, while publication guidance keeps the fake owner and live-unavailable boundary explicit; final topic/editorial proof remains pending.",
+    "documentation_action": "update"
   },
   "evidence": [
     {
