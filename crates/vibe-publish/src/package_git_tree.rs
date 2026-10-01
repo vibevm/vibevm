@@ -46,9 +46,14 @@ fn no_proof(status: PendingInspection) -> TreeInspection {
         PendingInspection::Absent | PendingInspection::Retired { .. } => {
             TreeInspection::NotReady { run_id: None }
         }
-        PendingInspection::VaultCompleteButNotReady { run_id, .. } => TreeInspection::Uncertain {
+        PendingInspection::VaultCompleteButNotReady { run_id, .. }
+        | PendingInspection::VaultCompleteReady { run_id, .. } => TreeInspection::Uncertain {
             run_id,
             reason: "cold proof omitted complete payload".into(),
+        },
+        PendingInspection::ReadyRetainedNeedsColdProof { run_id } => TreeInspection::Uncertain {
+            run_id,
+            reason: "duplicate Ready correlation is not a Git tree byte proof".into(),
         },
     }
 }
@@ -208,8 +213,42 @@ pub(crate) fn inspect_tree_cold(
     source: Option<&Project>,
     git_binary: &Path,
 ) -> Result<TreeInspection, package_git_operation::OperationError> {
-    let (status, proof) =
-        package_git_operation::pending_proof_cold(lease, namespace_token, scope, key, source)?;
+    inspect_tree_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        false,
+    )
+}
+
+pub(crate) fn inspect_tree_ready_cold(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    git_binary: &Path,
+) -> Result<TreeInspection, package_git_operation::OperationError> {
+    inspect_tree_inner(lease, namespace_token, scope, key, source, git_binary, true)
+}
+
+fn inspect_tree_inner(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    git_binary: &Path,
+    ready: bool,
+) -> Result<TreeInspection, package_git_operation::OperationError> {
+    let (status, proof) = if ready {
+        package_git_operation::ready_proof_cold(lease, namespace_token, scope, key, source)?
+    } else {
+        package_git_operation::pending_proof_cold(lease, namespace_token, scope, key, source)?
+    };
     let Some(proof) = proof else {
         return Ok(no_proof(status));
     };

@@ -36,16 +36,30 @@ pub(super) fn held(
     limits: CensusLimits,
     parent_limits: Option<ParentLimits>,
     local_bare_source: Option<&Project>,
+    ready: bool,
 ) -> Result<Held, ObjectInspection> {
-    let run_id = match package_git_provenance::inspect_no_gitlinks_cold(
-        lease,
-        namespace_token,
-        scope,
-        key,
-        source,
-        git_binary,
-        limits,
-    ) {
+    let observed = if ready {
+        package_git_provenance::inspect_no_gitlinks_ready_cold(
+            lease,
+            namespace_token,
+            scope,
+            key,
+            source,
+            git_binary,
+            limits,
+        )
+    } else {
+        package_git_provenance::inspect_no_gitlinks_cold(
+            lease,
+            namespace_token,
+            scope,
+            key,
+            source,
+            git_binary,
+            limits,
+        )
+    };
+    let run_id = match observed {
         ProvenanceInspection::NoGitlinksRetainedButNotReady { run_id, .. } => run_id,
         ProvenanceInspection::NotReady { run_id } => {
             return Err(ObjectInspection::NotReady { run_id });
@@ -63,9 +77,12 @@ pub(super) fn held(
             return Err(ObjectInspection::Uncertain { run_id, reason });
         }
     };
-    let (status, proof) =
+    let (status, proof) = if ready {
+        package_git_operation::ready_proof_cold(lease, namespace_token, scope, key, source)
+    } else {
         package_git_operation::pending_proof_cold(lease, namespace_token, scope, key, source)
-            .map_err(|error| uncertain(Some(&run_id), error.to_string()))?;
+    }
+    .map_err(|error| uncertain(Some(&run_id), error.to_string()))?;
     let Some(proof) = proof else {
         return Err(uncertain(
             Some(&run_id),
@@ -115,16 +132,30 @@ pub(super) fn held(
                 reason: "held existing-main closure limits absent".into(),
             });
         };
-        match package_git_parent::inspect_parent_cold(
-            lease,
-            namespace_token,
-            scope,
-            key,
-            source,
-            local_bare_source,
-            git_binary,
-            parent_limits,
-        ) {
+        let parent_status = if ready {
+            package_git_parent::inspect_parent_ready_cold(
+                lease,
+                namespace_token,
+                scope,
+                key,
+                source,
+                local_bare_source,
+                git_binary,
+                parent_limits,
+            )
+        } else {
+            package_git_parent::inspect_parent_cold(
+                lease,
+                namespace_token,
+                scope,
+                key,
+                source,
+                local_bare_source,
+                git_binary,
+                parent_limits,
+            )
+        };
+        match parent_status {
             ParentInspection::ClosureCompleteButNotReady {
                 run_id: observed, ..
             } if observed == run_id => {}

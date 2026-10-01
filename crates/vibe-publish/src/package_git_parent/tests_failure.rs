@@ -1,5 +1,6 @@
 use super::*;
 use crate::package_git_objects::{self, ObjectInspection};
+use crate::package_git_ready::{self, ReadyInspection, ReadyLimits};
 use crate::package_git_tree::git::LocalGit;
 
 #[test]
@@ -250,6 +251,149 @@ fn imported_parent_precedes_new_child_commit_and_tag_cold_proof() {
             source_reobserved: false,
             ..
         }
+    ));
+}
+
+#[test]
+fn exact_parented_new_commit_seals_ready_then_cold_rechecks_without_sources() {
+    let Some(binary) = binary() else {
+        eprintln!("Git absent; parent fixture skipped");
+        return;
+    };
+    let world = world(&binary, false);
+    assert!(matches!(
+        stage_local_parent_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        ParentInspection::ClosureCompleteButNotReady { .. }
+    ));
+    assert!(matches!(
+        package_git_objects::stage_existing_main_objects_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        ObjectInspection::ObjectsCompleteButNotReady { .. }
+    ));
+    let selected = ReadyLimits {
+        census: limits().census,
+        parent: Some(limits()),
+    };
+    let sealed = package_git_ready::seal_local_ready(
+        &world.lease,
+        &world.token,
+        &world.scope,
+        "parent",
+        &world.package,
+        Some(&world.origin.project),
+        &binary,
+        selected,
+    );
+    assert!(
+        matches!(sealed, ReadyInspection::ReadyForApproval { .. }),
+        "{sealed:?}"
+    );
+    assert!(matches!(
+        package_git_ready::inspect_ready_seal_cold(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            None,
+            None,
+            &binary,
+            selected
+        ),
+        ReadyInspection::ReadyForApproval { .. }
+    ));
+    fs::write(
+        world.root.path().join(format!(
+            ".vibe/package-git-operations/{}.package-git-parent.json",
+            world.run_id
+        )),
+        b"not-json",
+    )
+    .unwrap();
+    assert!(matches!(
+        package_git_ready::inspect_ready_seal_cold(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            None,
+            None,
+            &binary,
+            selected
+        ),
+        ReadyInspection::RecoveryRequired { .. }
+    ));
+}
+
+#[test]
+fn reused_main_noop_cannot_manufacture_new_object_ready_seal() {
+    let Some(binary) = binary() else {
+        eprintln!("Git absent; parent fixture skipped");
+        return;
+    };
+    let world = world(&binary, true);
+    assert!(matches!(
+        stage_local_parent_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        ParentInspection::ClosureCompleteButNotReady { .. }
+    ));
+    let selected = ReadyLimits {
+        census: limits().census,
+        parent: Some(limits()),
+    };
+    let status = package_git_ready::seal_local_ready(
+        &world.lease,
+        &world.token,
+        &world.scope,
+        "parent",
+        &world.package,
+        Some(&world.origin.project),
+        &binary,
+        selected,
+    );
+    assert!(
+        matches!(status, ReadyInspection::Unavailable { .. }),
+        "{status:?}"
+    );
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, "ready")
+            .unwrap()
+            .is_none()
+    );
+    assert!(matches!(
+        crate::package_git_operation::inspect_pending_cold(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            Some(&world.package)
+        )
+        .unwrap(),
+        crate::package_git_operation::PendingInspection::VaultCompleteButNotReady { .. }
     ));
 }
 

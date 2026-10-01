@@ -108,6 +108,7 @@ fn stage_inner(
         limits,
         parent_limits,
         local_bare_source,
+        false,
     ) {
         Ok(value) => value,
         Err(status) => return status,
@@ -131,6 +132,7 @@ fn stage_inner(
                 limits,
                 parent_limits,
                 local_bare_source,
+                false,
             );
         }
         Ok(None) => {}
@@ -215,6 +217,7 @@ fn stage_inner(
         limits,
         parent_limits,
         local_bare_source,
+        false,
     )
 }
 
@@ -239,6 +242,30 @@ pub(crate) fn inspect_objects_cold(
         limits,
         None,
         None,
+        false,
+    )
+}
+
+pub(crate) fn inspect_objects_ready_cold(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    git_binary: &Path,
+    limits: CensusLimits,
+) -> ObjectInspection {
+    inspect_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        limits,
+        None,
+        None,
+        true,
     )
 }
 
@@ -262,6 +289,31 @@ pub(crate) fn inspect_existing_main_objects_cold(
         limits.census,
         Some(limits),
         local_bare_source,
+        false,
+    )
+}
+
+pub(crate) fn inspect_existing_main_objects_ready_cold(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    package_source: Option<&Project>,
+    local_bare_source: Option<&Project>,
+    git_binary: &Path,
+    limits: ParentLimits,
+) -> ObjectInspection {
+    inspect_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        package_source,
+        git_binary,
+        limits.census,
+        Some(limits),
+        local_bare_source,
+        true,
     )
 }
 
@@ -275,6 +327,7 @@ fn inspect_inner(
     limits: CensusLimits,
     parent_limits: Option<ParentLimits>,
     local_bare_source: Option<&Project>,
+    ready: bool,
 ) -> ObjectInspection {
     let held = match held(
         lease,
@@ -286,6 +339,7 @@ fn inspect_inner(
         limits,
         parent_limits,
         local_bare_source,
+        ready,
     ) {
         Ok(value) => value,
         Err(status) => return status,

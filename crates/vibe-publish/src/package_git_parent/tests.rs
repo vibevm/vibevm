@@ -12,6 +12,7 @@ use crate::package_git_plan::{
     CommitMetadata, GitPerson, PackageCoordinate, RawRef, RefSnapshot, RepositoryIdentity,
     RepositoryObservation, RepositoryTarget, StagedObjects, TagMetadata,
 };
+use crate::package_git_provenance::{self, ProvenanceInspection};
 use crate::package_git_tree::{self, TreeInspection};
 use vibe_lifecycle::{JournalAdmission, SubmissionReservations};
 
