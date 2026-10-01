@@ -220,6 +220,12 @@ pub(crate) fn inspect_host_admitted_bound_vibe_bin_cold(
     )?;
     let capsule = match read_capsule(lease, &run_id) {
         Ok(Some(capsule)) => capsule,
+        Ok(None) if existing.journal_admission == JournalAdmission::Ready => {
+            return Ok(Some(BoundDeployBridgeInspection::Uncertain {
+                partial: partial(settings, &home),
+                run_id,
+            }));
+        }
         Ok(None) => {
             return Ok(Some(BoundDeployBridgeInspection::RecoveryRequired {
                 run_id,

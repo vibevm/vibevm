@@ -413,7 +413,7 @@ fn cold_deploy_attach_recovers_completed_with_reissued_held_roots() {
         .join(".vibe/deploy-operations")
         .join(format!("{run_id}.bound-vibe-bin-input.json"));
     let original_capsule = std::fs::read(&capsule).unwrap();
-    std::fs::write(capsule, b"{\"tampered\":true}").unwrap();
+    std::fs::write(&capsule, b"{\"tampered\":true}").unwrap();
     assert!(matches!(
         inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &trusted, "key-a", &grant)
             .unwrap()
@@ -422,16 +422,27 @@ fn cold_deploy_attach_recovers_completed_with_reissued_held_roots() {
     ));
     let mut changed: serde_json::Value = serde_json::from_slice(&original_capsule).unwrap();
     changed["request"] = serde_json::Value::String("{}".into());
-    let capsule = project
-        .join(".vibe/deploy-operations")
-        .join(format!("{run_id}.bound-vibe-bin-input.json"));
-    std::fs::write(capsule, serde_json::to_vec(&changed).unwrap()).unwrap();
+    std::fs::write(&capsule, serde_json::to_vec(&changed).unwrap()).unwrap();
     assert!(matches!(
         inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &trusted, "key-a", &grant)
             .unwrap()
             .unwrap(),
         BoundDeployBridgeInspection::Uncertain { run_id: seen, .. } if seen == run_id
     ));
+    let bin_entries = std::fs::read_dir(settings.join("bin")).unwrap().count();
+    std::fs::remove_file(&capsule).unwrap();
+    let missing =
+        inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &trusted, "key-a", &grant)
+            .unwrap()
+            .unwrap();
+    assert!(
+        matches!(missing, BoundDeployBridgeInspection::Uncertain { run_id: seen, partial }
+        if seen == run_id && partial.receipt == "present" && partial.sidecar == "present")
+    );
+    assert_eq!(
+        std::fs::read_dir(settings.join("bin")).unwrap().count(),
+        bin_entries
+    );
 }
 
 #[test]
