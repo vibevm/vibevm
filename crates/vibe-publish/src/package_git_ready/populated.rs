@@ -2,7 +2,7 @@
 //! evidence only; Mode A, push and terminal owners have no route to it yet.
 
 use super::*;
-use crate::package_git_provenance_populated::{self, AggregateInspection, ApprovedGitdir};
+use crate::package_git_provenance_populated::ApprovedGitdir;
 use crate::package_git_submodule::SubmoduleLimits;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -121,18 +121,9 @@ fn local_proof(
             format!("flattened vault tree unproved: {tree:?}"),
         ));
     }
-    let aggregate = package_git_provenance_populated::inspect_complete_cold(
-        lease, namespace, scope, key, source, approved, binary, limits, admission,
-    );
-    if !matches!(&aggregate, AggregateInspection::AggregateCompleteButNotReady {
-        run_id, flattened_submodules_sha256, ..
-    } if run_id == run && flattened_submodules_sha256 == &proof.plan.flattened_submodules_sha256)
-    {
-        return Err(recovery(
-            Some(run),
-            format!("complete populated aggregate unproved: {aggregate:?}"),
-        ));
-    }
+    // The object owner's cold proof rehashes the complete aggregate and every
+    // retained link store; the typed receipt is compared below against both
+    // aggregate record bytes and the selected semantic digest.
     let objects = if admission == JournalAdmission::Ready {
         package_git_objects::inspect_parentless_populated_objects_ready_cold(
             lease, namespace, scope, key, source, approved, binary, limits,

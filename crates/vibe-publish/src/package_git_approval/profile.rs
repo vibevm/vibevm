@@ -159,4 +159,4 @@ impl ApprovalHome {
 }
 
 #[cfg(test)]
-mod tests;
+pub(crate) mod tests;

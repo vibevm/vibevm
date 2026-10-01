@@ -458,6 +458,8 @@ pub(crate) fn seed_selected_ready_for_test(
 mod cold;
 mod link;
 mod profile;
+#[cfg(test)]
+pub(crate) use profile::tests::prepared as prepared_populated_for_test;
 mod redeem;
 pub(crate) use link::LinkInspection;
 use link::marker_candidate;
