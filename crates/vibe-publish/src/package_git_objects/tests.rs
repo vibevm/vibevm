@@ -281,6 +281,12 @@ fn parentless_commit_and_tag_are_retained_and_cold_verified_without_ready() {
     let receipt = journal::read_bytes(&world.lease, &world.run_id, "objects")
         .unwrap()
         .unwrap();
+    let row: ObjectReceipt = serde_json::from_slice(&receipt).unwrap();
+    assert_eq!(row.format, journal::OBJECT_FORMAT);
+    assert!(matches!(
+        row.provenance,
+        ObjectProvenance::NoGitlinks { .. }
+    ));
     assert_eq!(
         stage_parentless_objects_pending(
             &world.lease,
@@ -480,3 +486,6 @@ fn parentless_sha256_commit_and_tag_use_selected_git_object_format() {
     assert_eq!(receipt.commit_oid.len(), 64);
     assert_eq!(receipt.tag_oid.len(), 64);
 }
+
+#[path = "tests_populated.rs"]
+mod tests_populated;

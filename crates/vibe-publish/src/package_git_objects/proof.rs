@@ -1,5 +1,5 @@
 //! Cold-proved C.1/parent inputs and exact e2 control-object receipt.
-use super::{ObjectInspection, uncertain};
+use super::{ObjectInspection, ObjectProvenance, uncertain};
 use crate::package_git_gitlink::CensusLimits;
 use crate::package_git_operation::journal::{self, ObjectReceipt, sha};
 use crate::package_git_operation::{self, PendingProof};
@@ -8,17 +8,19 @@ use crate::package_git_plan::{
     RawRef, RepositoryObservation, RepositoryTarget, StagedCommit, TagRef,
 };
 use crate::package_git_provenance::{self, ProvenanceInspection};
+use crate::package_git_provenance_populated::{self, AggregateInspection, ApprovedGitdir};
+use crate::package_git_submodule::SubmoduleLimits;
 use crate::package_git_tree::git::LocalGit;
 use sha2::{Digest, Sha256};
 use std::path::Path;
-use vibe_lifecycle::{LifecycleLease, SubmissionScope};
+use vibe_lifecycle::{JournalAdmission, LifecycleLease, SubmissionScope};
 use vibe_safefs::Project;
 
 pub(super) struct Held {
     pub(super) run_id: String,
     pub(super) proof: PendingProof,
     pub(super) tree_bytes: Vec<u8>,
-    pub(super) provenance_bytes: Vec<u8>,
+    pub(super) provenance: ObjectProvenance,
     pub(super) parent_receipt_sha256: Option<String>,
     pub(super) parent_oid: Option<String>,
     pub(super) objects: Project,
@@ -36,46 +38,106 @@ pub(super) fn held(
     limits: CensusLimits,
     parent_limits: Option<ParentLimits>,
     local_bare_source: Option<&Project>,
+    populated_limits: Option<SubmoduleLimits>,
+    approved: Option<&[ApprovedGitdir<'_>]>,
     ready: bool,
 ) -> Result<Held, ObjectInspection> {
-    let observed = if ready {
-        package_git_provenance::inspect_no_gitlinks_ready_cold(
+    let (run_id, provenance) = if let Some(populated_limits) = populated_limits {
+        let admission = if ready {
+            JournalAdmission::Ready
+        } else {
+            JournalAdmission::Pending
+        };
+        let observed = package_git_provenance_populated::inspect_complete_cold(
             lease,
             namespace_token,
             scope,
             key,
             source,
+            approved,
             git_binary,
-            limits,
+            populated_limits,
+            admission,
+        );
+        let (run_id, flattened_submodules_sha256) = match observed {
+            AggregateInspection::AggregateCompleteButNotReady {
+                run_id,
+                flattened_submodules_sha256,
+                ..
+            } => (run_id, flattened_submodules_sha256),
+            AggregateInspection::NotReady { run_id } => {
+                return Err(ObjectInspection::NotReady { run_id });
+            }
+            AggregateInspection::Unavailable { run_id, reason } => {
+                return Err(ObjectInspection::Unavailable { run_id, reason });
+            }
+            AggregateInspection::Uncertain { run_id, reason } => {
+                return Err(ObjectInspection::Uncertain { run_id, reason });
+            }
+        };
+        let pending = journal::read_bytes(lease, &run_id, "gitlink-aggregate-pending")
+            .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
+            .ok_or_else(|| uncertain(Some(&run_id), "populated aggregate Pending vanished"))?;
+        let landed = journal::read_bytes(lease, &run_id, "gitlink-aggregate")
+            .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
+            .ok_or_else(|| uncertain(Some(&run_id), "populated aggregate Landed vanished"))?;
+        (
+            run_id,
+            ObjectProvenance::Populated {
+                pending_sha256: sha(&pending),
+                landed_sha256: sha(&landed),
+                flattened_submodules_sha256,
+            },
         )
     } else {
-        package_git_provenance::inspect_no_gitlinks_cold(
-            lease,
-            namespace_token,
-            scope,
-            key,
-            source,
-            git_binary,
-            limits,
+        let observed = if ready {
+            package_git_provenance::inspect_no_gitlinks_ready_cold(
+                lease,
+                namespace_token,
+                scope,
+                key,
+                source,
+                git_binary,
+                limits,
+            )
+        } else {
+            package_git_provenance::inspect_no_gitlinks_cold(
+                lease,
+                namespace_token,
+                scope,
+                key,
+                source,
+                git_binary,
+                limits,
+            )
+        };
+        let run_id = match observed {
+            ProvenanceInspection::NoGitlinksRetainedButNotReady { run_id, .. } => run_id,
+            ProvenanceInspection::NotReady { run_id } => {
+                return Err(ObjectInspection::NotReady { run_id });
+            }
+            ProvenanceInspection::NeedsCommitTreeProof { run_id } => {
+                return Err(ObjectInspection::Unavailable {
+                    run_id: Some(run_id),
+                    reason: "populated Gitlinks require selected aggregate proof".into(),
+                });
+            }
+            ProvenanceInspection::Unavailable { run_id, reason } => {
+                return Err(ObjectInspection::Unavailable { run_id, reason });
+            }
+            ProvenanceInspection::Uncertain { run_id, reason } => {
+                return Err(ObjectInspection::Uncertain { run_id, reason });
+            }
+        };
+        let landed = journal::read_bytes(lease, &run_id, "provenance")
+            .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
+            .ok_or_else(|| uncertain(Some(&run_id), "no-Gitlinks provenance Landed vanished"))?;
+        (
+            run_id,
+            ObjectProvenance::NoGitlinks {
+                landed_sha256: sha(&landed),
+            },
         )
-    };
-    let run_id = match observed {
-        ProvenanceInspection::NoGitlinksRetainedButNotReady { run_id, .. } => run_id,
-        ProvenanceInspection::NotReady { run_id } => {
-            return Err(ObjectInspection::NotReady { run_id });
-        }
-        ProvenanceInspection::NeedsCommitTreeProof { run_id } => {
-            return Err(ObjectInspection::Unavailable {
-                run_id: Some(run_id),
-                reason: "populated Gitlinks need exact commit-tree byte proof".into(),
-            });
-        }
-        ProvenanceInspection::Unavailable { run_id, reason } => {
-            return Err(ObjectInspection::Unavailable { run_id, reason });
-        }
-        ProvenanceInspection::Uncertain { run_id, reason } => {
-            return Err(ObjectInspection::Uncertain { run_id, reason });
-        }
     };
     let (status, proof) = if ready {
         package_git_operation::ready_proof_cold(lease, namespace_token, scope, key, source)
@@ -93,6 +155,14 @@ pub(super) fn held(
         return Err(uncertain(
             Some(&run_id),
             "C.1 run changed during local object admission",
+        ));
+    }
+    if matches!(&provenance, ObjectProvenance::Populated { flattened_submodules_sha256, .. }
+        if flattened_submodules_sha256 != &proof.plan.flattened_submodules_sha256)
+    {
+        return Err(uncertain(
+            Some(&run_id),
+            "populated aggregate digest differs from e2 plan",
         ));
     }
     let parentless = matches!(proof.plan.before_repo, RepositoryObservation::Absent)
@@ -124,6 +194,12 @@ pub(super) fn held(
     };
     if !parentless && selected_parent.is_none() {
         return Err(ObjectInspection::Unavailable { run_id: Some(run_id), reason: "only parentless new commit or exact DirectGitExisting child commit is supported; ReusedMain creates no object".into() });
+    }
+    if populated_limits.is_some() && !parentless {
+        return Err(ObjectInspection::Unavailable {
+            run_id: Some(run_id),
+            reason: "populated Gitlinks currently support parentless New commit only".into(),
+        });
     }
     let (parent_receipt_sha256, parent_oid) = if let Some(parent) = selected_parent {
         let Some(parent_limits) = parent_limits else {
@@ -208,9 +284,6 @@ pub(super) fn held(
     let tree_bytes = journal::read_bytes(lease, &run_id, "tree")
         .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
         .ok_or_else(|| uncertain(Some(&run_id), "proved tree receipt vanished"))?;
-    let provenance_bytes = journal::read_bytes(lease, &run_id, "provenance")
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
-        .ok_or_else(|| uncertain(Some(&run_id), "proved provenance Landed vanished"))?;
     let objects = journal::objects(lease, &run_id, false)
         .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
         .ok_or_else(|| uncertain(Some(&run_id), "proved Git object root vanished"))?;
@@ -249,7 +322,7 @@ pub(super) fn held(
         run_id,
         proof,
         tree_bytes,
-        provenance_bytes,
+        provenance,
         parent_receipt_sha256,
         parent_oid,
         objects,
@@ -274,7 +347,7 @@ pub(super) fn expected(held: &Held) -> anyhow::Result<ObjectReceipt> {
         intent_sha256: held.proof.intent_sha256.clone(),
         payload_manifest_sha256: held.proof.payload_manifest_sha256.clone(),
         tree_receipt_sha256: sha(&held.tree_bytes),
-        provenance_receipt_sha256: sha(&held.provenance_bytes),
+        provenance: held.provenance.clone(),
         parent_receipt_sha256: held.parent_receipt_sha256.clone(),
         parent_oid: held.parent_oid.clone(),
         object_root_token: held.objects.root_correlation_token()?,

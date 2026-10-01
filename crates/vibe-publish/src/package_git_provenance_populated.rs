@@ -417,4 +417,4 @@ pub(crate) use cold::inspect_complete_cold;
 
 #[cfg(test)]
 #[path = "package_git_provenance_populated/tests.rs"]
-mod tests;
+pub(crate) mod tests;

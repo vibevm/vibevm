@@ -15,12 +15,12 @@ use crate::package_git_submodule_store::{self, LinkStoreInspection};
 use crate::package_git_tree::TreeInspection;
 use vibe_lifecycle::SubmissionReservations;
 
-fn binary() -> Option<PathBuf> {
+pub(crate) fn binary() -> Option<PathBuf> {
     let name = if cfg!(windows) { "git.exe" } else { "git" };
     std::env::split_paths(&std::env::var_os("PATH")?)
         .find_map(|dir| dir.join(name).canonicalize().ok().filter(|p| p.is_file()))
 }
-fn git(binary: &Path, cwd: &Path, args: &[&str]) -> String {
+pub(crate) fn git(binary: &Path, cwd: &Path, args: &[&str]) -> String {
     let out = Command::new(binary)
         .current_dir(cwd)
         .env_clear()
@@ -57,7 +57,7 @@ fn payload_limits() -> PayloadLimits {
         max_manifest_bytes: 16 * 4096,
     }
 }
-fn limits() -> SubmoduleLimits {
+pub(crate) fn limits() -> SubmoduleLimits {
     SubmoduleLimits {
         census: crate::package_git_gitlink::CensusLimits {
             max_index_bytes: 32 * 1024,
@@ -162,27 +162,27 @@ fn plan(source: &Project, digest: String, tree: String) -> PackageGitPlan {
     plan.derive_staged_object_ids().unwrap();
     plan
 }
-struct World {
-    root: tempfile::TempDir,
+pub(crate) struct World {
+    pub(crate) root: tempfile::TempDir,
     _source_root: tempfile::TempDir,
-    source: Project,
-    approved: Vec<Project>,
-    lease: LifecycleLease,
-    namespace: String,
-    scope: SubmissionScope,
-    run_id: String,
-    digest: String,
-    binary: PathBuf,
+    pub(crate) source: Project,
+    pub(crate) approved: Vec<Project>,
+    pub(crate) lease: LifecycleLease,
+    pub(crate) namespace: String,
+    pub(crate) scope: SubmissionScope,
+    pub(crate) run_id: String,
+    pub(crate) digest: String,
+    pub(crate) binary: PathBuf,
 }
 impl World {
-    fn held(&self) -> Vec<ApprovedGitdir<'_>> {
+    pub(crate) fn held(&self) -> Vec<ApprovedGitdir<'_>> {
         ["vendor/a", "vendor/b"]
             .into_iter()
             .zip(&self.approved)
             .map(|(path, gitdir)| ApprovedGitdir { path, gitdir })
             .collect()
     }
-    fn stage_links(&self, count: usize) {
+    pub(crate) fn stage_links(&self, count: usize) {
         let GitIndexCensus::PopulatedCandidate { links, .. } =
             package_git_gitlink::census(&self.source, &self.binary, limits().census)
         else {
@@ -206,7 +206,7 @@ impl World {
         }
     }
 }
-fn world(binary: &Path) -> World {
+pub(crate) fn world(binary: &Path) -> World {
     let source_root = tempfile::tempdir().unwrap();
     git(binary, source_root.path(), &["init", "-q"]);
     fs::write(
