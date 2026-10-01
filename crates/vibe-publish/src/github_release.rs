@@ -23,6 +23,7 @@ use crate::github::DEFAULT_GITHUB_API_BASE;
 mod model;
 pub use model::*;
 mod asset;
+mod bounded_read;
 mod read;
 
 const GITHUB_JSON: &str = "application/vnd.github+json";
