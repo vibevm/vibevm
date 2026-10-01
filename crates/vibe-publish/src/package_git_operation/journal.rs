@@ -22,6 +22,8 @@ pub(crate) const GITLINK_FORMAT: &str = "vibevm.package-git-link/e1";
 pub(crate) const POPULATED_PENDING_FORMAT: &str = "vibevm.package-git-populated-pending/e1";
 pub(crate) const POPULATED_FORMAT: &str = "vibevm.package-git-populated/e1";
 pub(crate) const READY_FORMAT: &str = "vibevm.package-git-ready-seal/e1";
+pub(crate) const APPROVAL_LINK_PENDING_FORMAT: &str = "vibevm.package-git-approval-link-pending/e1";
+pub(crate) const APPROVAL_LINK_FORMAT: &str = "vibevm.package-git-approval-link/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -313,6 +315,40 @@ pub(crate) struct ReadySeal {
     pub selected_tree_oid: String,
     pub selected_commit_oid: String,
     pub selected_tag_oid: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ApprovalLinkPending {
+    pub format: String,
+    pub run_id: String,
+    pub namespace_id: String,
+    pub scope_context: String,
+    pub scope_target: String,
+    pub scope_principal: String,
+    pub key_sha256: String,
+    pub lease_root_token: String,
+    pub settings_root_token: String,
+    pub semantic_plan_sha256: String,
+    pub c1_plan_sha256: String,
+    pub request_sha256: String,
+    pub ready_seal_sha256: String,
+    pub approval_id_sha256: String,
+    pub approval_record_sha256: String,
+    pub expected_marker_sha256: String,
+    pub repository: crate::package_git_plan::RepositoryTarget,
+    pub create_repository: bool,
+    pub atomic_push_main_and_version_tag: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ApprovalLinkLanded {
+    pub format: String,
+    pub run_id: String,
+    pub pending_sha256: String,
+    pub marker_sha256: String,
+    pub approval_record_sha256: String,
 }
 
 pub(crate) fn sha(bytes: &[u8]) -> String {

@@ -564,3 +564,6 @@ fn damaged_ready_seal_after_load_requires_recovery_before_marker() {
     ));
     assert!(!world.marker_path(&verified.record.approval_id).exists());
 }
+
+#[path = "link_tests.rs"]
+mod link_tests;
