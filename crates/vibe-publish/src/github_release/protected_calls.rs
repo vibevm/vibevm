@@ -48,6 +48,22 @@ pub(crate) struct DraftResponseEvidence {
     pub release_id: u64,
     pub tag: String,
     pub target_commitish: String,
+    pub draft: bool,
+    pub name: String,
+    pub body: String,
+    pub prerelease: bool,
+}
+
+/// Caller-selected e2 successor fields. This transport validates the fixed
+/// campaign contract but does not itself prove plan approval or journal Ready.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct DraftCallFields {
+    pub target_commit: String,
+    pub tag: String,
+    pub draft: bool,
+    pub name: String,
+    pub body: String,
+    pub prerelease: bool,
 }
 
 fn valid_commit(commit: &str) -> bool {
@@ -195,18 +211,24 @@ impl GithubReleaseClient {
     /// release search/update, asset operation or visibility transition.
     pub(crate) fn create_fixed_draft_explicit(
         &self,
-        source_commit: &str,
+        selected: &DraftCallFields,
     ) -> Result<DraftResponseEvidence, ProtectedCallError> {
-        if !valid_commit(source_commit) {
+        if !valid_commit(&selected.target_commit)
+            || selected.tag != TAG
+            || !selected.draft
+            || selected.name != DRAFT_NAME
+            || selected.body != fixed_draft_body()
+            || selected.prerelease
+        {
             return Err(ProtectedCallError::Refused(
-                "invalid selected source commit",
+                "selected successor differs from fixed 1.1.0 draft contract",
             ));
         }
         #[derive(Serialize)]
         struct Draft<'a> {
-            tag_name: &'static str,
+            tag_name: &'a str,
             target_commitish: &'a str,
-            name: &'static str,
+            name: &'a str,
             body: &'a str,
             draft: bool,
             prerelease: bool,
@@ -215,16 +237,15 @@ impl GithubReleaseClient {
         let url = self
             .api_url(&["releases"])
             .map_err(|_| ProtectedCallError::Refused("invalid create release endpoint"))?;
-        let body = fixed_draft_body();
         let response = self
             .protected_call_request(Method::POST, url)?
             .json(&Draft {
-                tag_name: TAG,
-                target_commitish: source_commit,
-                name: DRAFT_NAME,
-                body: &body,
-                draft: true,
-                prerelease: false,
+                tag_name: &selected.tag,
+                target_commitish: &selected.target_commit,
+                name: &selected.name,
+                body: &selected.body,
+                draft: selected.draft,
+                prerelease: selected.prerelease,
                 generate_release_notes: false,
             })
             .send()
@@ -236,21 +257,31 @@ impl GithubReleaseClient {
         }
         let observed: GithubRelease = bounded_json(response, RELEASE_RESPONSE_CAP)?;
         if observed.id == 0
-            || observed.tag_name != TAG
-            || !observed.draft
-            || observed.target_commitish != source_commit
-            || observed.name.as_deref() != Some(DRAFT_NAME)
-            || observed.body.as_deref() != Some(body.as_str())
-            || observed.prerelease
+            || observed.tag_name != selected.tag
+            || observed.draft != selected.draft
+            || observed.target_commitish != selected.target_commit
+            || observed.name.as_deref() != Some(selected.name.as_str())
+            || observed.body.as_deref() != Some(selected.body.as_str())
+            || observed.prerelease != selected.prerelease
         {
             return Err(ProtectedCallError::Uncertain(
                 "create draft response identity differs",
             ));
         }
+        let name = observed.name.ok_or(ProtectedCallError::Uncertain(
+            "create draft response name absent",
+        ))?;
+        let body = observed.body.ok_or(ProtectedCallError::Uncertain(
+            "create draft response body absent",
+        ))?;
         Ok(DraftResponseEvidence {
             release_id: observed.id,
             tag: observed.tag_name,
             target_commitish: observed.target_commitish,
+            draft: observed.draft,
+            name,
+            body,
+            prerelease: observed.prerelease,
         })
     }
 }
