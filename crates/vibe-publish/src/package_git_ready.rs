@@ -19,6 +19,7 @@ use crate::package_git_provenance::{self, ProvenanceInspection};
 use crate::package_git_tree::{self, TreeInspection};
 
 const SEAL: &str = "ready";
+mod populated;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum ReadyInspection {
