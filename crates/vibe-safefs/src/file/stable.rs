@@ -16,6 +16,8 @@ use crate::publish::{PublishError, Published};
 
 const WINDOW: usize = 64 * 1024;
 
+mod new_bounded;
+
 /// Stable identity of one regular single-link file read twice through one
 /// held no-follow handle. No content-sized allocation is retained.
 ///
