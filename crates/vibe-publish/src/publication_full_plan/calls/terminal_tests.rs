@@ -387,3 +387,151 @@ fn prior_draft_replacement_reaches_forty_three_call_terminal_after_cold_attach()
     ));
     assert!(matches!(world.open(), SessionOpen::Completed { .. }));
 }
+
+#[test]
+fn one_lease_reopens_four_distinct_domain_keys_without_inventing_owner_effects() {
+    use vibe_lifecycle::retained_mechanism::{
+        BuildInspection, DeployColdHostFacts, DeployInspection, PackageInspection,
+        ReadOnlyDeployAdmission, RetainedInspection, inspect_bound_vibe_bin_deploy,
+        inspect_fixed_cargo_build, inspect_fixed_static_file_package,
+    };
+    use vibe_lifecycle::{ReservationDecision, SubmissionReservations, SubmissionScope};
+
+    let world = complete_checkpoints();
+    let SessionOpen::Ready(session) = world.open() else {
+        panic!()
+    };
+    let mut reader = terminal_reader(&world);
+    assert_eq!(
+        terminal::seal(&session, &mut reader).unwrap(),
+        TerminalInspection::Completed { calls: 42 }
+    );
+    let publication_reads = reader.reads;
+    drop(session);
+
+    let reserve_only = |target: &str, key: &str| {
+        let scope = SubmissionScope {
+            context: "cross-domain-host".into(),
+            target: target.into(),
+            principal: "owner".into(),
+        };
+        let namespace =
+            SubmissionReservations::issue_namespace(&world.lease, &scope, 60_000).unwrap();
+        let run_id = vibe_lifecycle::process::propose_run_id(world.lease.root()).unwrap();
+        assert!(matches!(
+            SubmissionReservations::reserve(&world.lease, &namespace, &scope, key,
+                b"C1-only request; no domain owner intent", b"C1-only plan", &run_id).unwrap(),
+            ReservationDecision::Created { domain_run_id } if domain_run_id == run_id
+        ));
+        (scope, namespace.id().to_owned(), run_id)
+    };
+    let (build_scope, build_token, build_run) = reserve_only("fixed-cargo-build", "build-key");
+    let (package_scope, package_token, package_run) =
+        reserve_only("fixed-static-package", "package-key");
+    let (deploy_scope, deploy_token, deploy_run) = reserve_only("instance-a", "deploy-key");
+    assert_ne!(build_run, package_run);
+    assert_ne!(build_run, deploy_run);
+    assert_ne!(package_run, deploy_run);
+    assert_ne!(build_token, package_token);
+    assert_ne!(build_token, deploy_token);
+    assert_ne!(package_token, deploy_token);
+
+    let settings = tempfile::tempdir().unwrap();
+    let home = tempfile::tempdir().unwrap();
+    let World {
+        tiny,
+        _root,
+        lease,
+        namespace: publication_namespace,
+        scope: publication_scope,
+        home: publication_home,
+        expected,
+        snapshot: _,
+        run_id: publication_run,
+    } = world;
+    drop(lease); // Simulated API exit: no daemon or retained in-memory lease.
+    let reopened = LifecycleLease::acquire(_root.path()).unwrap();
+    assert_eq!(
+        inspect_fixed_cargo_build(&reopened, &build_token, &build_scope, "build-key").unwrap(),
+        BuildInspection::RecoveryRequired { run_id: build_run }
+    );
+    assert_eq!(
+        inspect_fixed_static_file_package(&reopened, &package_token, &package_scope, "package-key")
+            .unwrap(),
+        PackageInspection::RecoveryRequired {
+            run_id: package_run
+        }
+    );
+    let admission = ReadOnlyDeployAdmission::reissue(DeployColdHostFacts {
+        host_context_id: "cross-domain-host",
+        instance_ref: "instance-a",
+        selected_generation_ref: Some("generation-a"),
+        principal_ref: "owner",
+        admission_epoch: 1,
+        binding_nonce: "nonce-a",
+        allow_alias_resolution: false,
+        target_abi: None,
+        target_libc: None,
+        project_root: _root.path(),
+        settings_root: settings.path(),
+        user_home: home.path(),
+    })
+    .unwrap();
+    assert_eq!(
+        inspect_bound_vibe_bin_deploy(
+            &reopened,
+            &deploy_token,
+            &deploy_scope,
+            "deploy-key",
+            &admission
+        )
+        .unwrap(),
+        DeployInspection::RecoveryRequired { run_id: deploy_run }
+    );
+    assert!(
+        matches!(cold::inspect_full_plan_cold_with_home(&reopened, publication_namespace.id(),
+        &publication_scope, "noop-key", &publication_home).unwrap(),
+        Inspection::CallChainCompleted { run_id, calls: 42 } if run_id == publication_run)
+    );
+    assert!(matches!(
+        ReadyRun::open(
+            &reopened,
+            &publication_namespace,
+            &publication_scope,
+            "noop-key",
+            &tiny.subject,
+            &tiny.plan,
+            &expected,
+            &publication_home
+        )
+        .unwrap(),
+        SessionOpen::Completed { .. }
+    ));
+    assert_eq!(
+        reader.reads, publication_reads,
+        "cold attach invoked a remote reader"
+    );
+
+    let foreign = SubmissionScope {
+        principal: "foreign".into(),
+        ..build_scope.clone()
+    };
+    assert!(inspect_fixed_cargo_build(&reopened, &build_token, &foreign, "build-key").is_err());
+    assert_eq!(
+        inspect_fixed_cargo_build(&reopened, &build_token, &build_scope, "wrong-key").unwrap(),
+        RetainedInspection::Absent
+    );
+    assert!(
+        cold::inspect_full_plan_cold_with_home(
+            &reopened,
+            publication_namespace.id(),
+            &publication_scope,
+            "wrong-key",
+            &publication_home
+        )
+        .is_err()
+    );
+    // Build/Package/Deploy deliberately have C1 reservations only. Their
+    // RecoveryRequired statuses are not post-effect partial or completion.
+    assert!(!_root.path().join("target").exists());
+}
