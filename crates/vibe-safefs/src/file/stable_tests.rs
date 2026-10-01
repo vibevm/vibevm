@@ -1,6 +1,210 @@
 use sha2::{Digest, Sha256};
 
-use crate::Project;
+use crate::{Project, PublishStage};
+
+fn digest(bytes: &[u8]) -> String {
+    format!("{:x}", Sha256::digest(bytes))
+}
+
+#[test]
+fn bounded_create_new_streams_exact_expected_bytes() {
+    let source_root = tempfile::tempdir().unwrap();
+    let destination_root = tempfile::tempdir().unwrap();
+    let bytes = vec![0x5a; 2 * 64 * 1024 + 17];
+    std::fs::write(source_root.path().join("bundle"), &bytes).unwrap();
+    let source = Project::open(source_root.path()).unwrap();
+    let destination = Project::open(destination_root.path()).unwrap();
+    let (state, _) = source
+        .copy_stable_file_to_expected_new_bounded(
+            "bundle",
+            &destination,
+            "vault/bundle",
+            &digest(&bytes),
+            bytes.len() as u64,
+            bytes.len() as u64,
+            None,
+        )
+        .unwrap();
+    assert_eq!(state.bytes, bytes.len() as u64);
+    assert_eq!(state.sha256, digest(&bytes));
+    assert_eq!(
+        std::fs::read(destination_root.path().join("vault/bundle")).unwrap(),
+        bytes
+    );
+}
+
+#[test]
+fn bounded_create_new_refuses_oversize_before_destination_mutation() {
+    let source_root = tempfile::tempdir().unwrap();
+    let destination_root = tempfile::tempdir().unwrap();
+    std::fs::write(source_root.path().join("bundle"), b"eight!!!").unwrap();
+    let source = Project::open(source_root.path()).unwrap();
+    let destination = Project::open(destination_root.path()).unwrap();
+    let error = source
+        .copy_stable_file_to_expected_new_bounded(
+            "bundle",
+            &destination,
+            "vault/bundle",
+            &digest(b"eight!!!"),
+            7,
+            7,
+            None,
+        )
+        .unwrap_err();
+    assert_eq!(error.stage, PublishStage::BeforePublication);
+    assert!(!destination_root.path().join("vault").exists());
+}
+
+#[test]
+fn bounded_create_new_never_replaces_occupied_destination_or_race_winner() {
+    let source_root = tempfile::tempdir().unwrap();
+    let destination_root = tempfile::tempdir().unwrap();
+    std::fs::write(source_root.path().join("bundle"), b"source").unwrap();
+    std::fs::create_dir(destination_root.path().join("vault")).unwrap();
+    let output = destination_root.path().join("vault/bundle");
+    std::fs::write(&output, b"occupant").unwrap();
+    let source = Project::open(source_root.path()).unwrap();
+    let destination = Project::open(destination_root.path()).unwrap();
+    let copy = || {
+        source.copy_stable_file_to_expected_new_bounded(
+            "bundle",
+            &destination,
+            "vault/bundle",
+            &digest(b"source"),
+            6,
+            6,
+            None,
+        )
+    };
+    assert_eq!(copy().unwrap_err().stage, PublishStage::BeforePublication);
+    assert_eq!(std::fs::read(&output).unwrap(), b"occupant");
+    std::fs::remove_file(&output).unwrap();
+    crate::race_hook::arm_before_link(Some(Box::new(|directory, name| {
+        std::fs::write(directory.join(name), b"racer").unwrap();
+    })));
+    assert_eq!(copy().unwrap_err().stage, PublishStage::BeforePublication);
+    assert_eq!(std::fs::read(&output).unwrap(), b"racer");
+    assert!(
+        std::fs::read_dir(destination_root.path().join("vault"))
+            .unwrap()
+            .all(|entry| !entry
+                .unwrap()
+                .file_name()
+                .to_string_lossy()
+                .starts_with(".vibe-stage-"))
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn bounded_create_new_refuses_source_symlink_and_hardlink() {
+    let source_root = tempfile::tempdir().unwrap();
+    let destination_root = tempfile::tempdir().unwrap();
+    std::fs::write(source_root.path().join("actual"), b"source").unwrap();
+    std::os::unix::fs::symlink("actual", source_root.path().join("link")).unwrap();
+    std::fs::hard_link(
+        source_root.path().join("actual"),
+        source_root.path().join("alias"),
+    )
+    .unwrap();
+    let source = Project::open(source_root.path()).unwrap();
+    let destination = Project::open(destination_root.path()).unwrap();
+    for name in ["link", "alias"] {
+        let error = source
+            .copy_stable_file_to_expected_new_bounded(
+                name,
+                &destination,
+                "vault/bundle",
+                &digest(b"source"),
+                6,
+                6,
+                None,
+            )
+            .unwrap_err();
+        assert_eq!(error.stage, PublishStage::BeforePublication);
+    }
+    assert!(!destination_root.path().join("vault").exists());
+}
+
+#[test]
+fn bounded_create_new_refuses_source_drift_between_passes() {
+    let source_root = tempfile::tempdir().unwrap();
+    let destination_root = tempfile::tempdir().unwrap();
+    let path = source_root.path().join("bundle");
+    std::fs::write(&path, b"source").unwrap();
+    let source = Project::open(source_root.path()).unwrap();
+    let destination = Project::open(destination_root.path()).unwrap();
+    crate::race_hook::arm_between_stream_passes(Some(Box::new(move |_, _| {
+        std::fs::write(&path, b"change").unwrap();
+    })));
+    let error = source
+        .copy_stable_file_to_expected_new_bounded(
+            "bundle",
+            &destination,
+            "vault/bundle",
+            &digest(b"source"),
+            6,
+            6,
+            None,
+        )
+        .unwrap_err();
+    assert_eq!(error.stage, PublishStage::BeforePublication);
+    assert!(!destination_root.path().join("vault/bundle").exists());
+}
+
+#[cfg(unix)]
+#[test]
+fn bounded_create_new_same_bytes_destination_replacement_is_uncertain() {
+    let source_root = tempfile::tempdir().unwrap();
+    let destination_root = tempfile::tempdir().unwrap();
+    std::fs::write(source_root.path().join("bundle"), b"source").unwrap();
+    let source = Project::open(source_root.path()).unwrap();
+    let destination = Project::open(destination_root.path()).unwrap();
+    crate::race_hook::arm_before_publish_verify(Some(Box::new(|directory, name| {
+        let path = directory.join(name);
+        std::fs::remove_file(&path).unwrap();
+        std::fs::write(path, b"source").unwrap();
+    })));
+    let error = source
+        .copy_stable_file_to_expected_new_bounded(
+            "bundle",
+            &destination,
+            "vault/bundle",
+            &digest(b"source"),
+            6,
+            6,
+            None,
+        )
+        .unwrap_err();
+    assert_eq!(error.stage, PublishStage::PossiblyPublished);
+}
+
+#[test]
+fn bounded_create_new_post_link_failure_retains_uncertain_visible_file() {
+    let source_root = tempfile::tempdir().unwrap();
+    let destination_root = tempfile::tempdir().unwrap();
+    std::fs::write(source_root.path().join("bundle"), b"source").unwrap();
+    let source = Project::open(source_root.path()).unwrap();
+    let destination = Project::open(destination_root.path()).unwrap();
+    crate::file::fail_after_publish(Some("vault/bundle"));
+    let error = source
+        .copy_stable_file_to_expected_new_bounded(
+            "bundle",
+            &destination,
+            "vault/bundle",
+            &digest(b"source"),
+            6,
+            6,
+            None,
+        )
+        .unwrap_err();
+    crate::file::fail_after_publish(None);
+    assert_eq!(error.stage, PublishStage::PossiblyPublished);
+    assert_eq!(
+        std::fs::read(destination_root.path().join("vault/bundle")).unwrap(),
+        b"source"
+    );
+}
 
 #[test]
 fn root_correlation_token_reopens_stably_and_detects_replacement() {
