@@ -73,6 +73,32 @@
       ]
     },
     {
+      "interface_id": "rust:vibe-lifecycle:PackageTreeWitness::validate_copy_content",
+      "capability_id": "bounded-package-tree-copy-attestation",
+      "kind": "introduced",
+      "before": "The public package-tree witness had no public comparison against a fetched copy of its exact selected content.",
+      "after": "PackageTreeWitness::validate_copy_content and the public attest_package_tree_copy helper compare the bounded complete selected-file set and digest against a copied tree; a detected mismatch is not a no-effects claim after fetch.",
+      "audience": "Rust library consumer / internal install owner",
+      "platform": "Selected GNU/Linux bounded fixture tests; native macOS/Windows and hostile-writer atomicity unproved.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED",
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#HASH-INTEGRITY-GATE"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-orchestrator:PackageSource::recheck_before_apply",
+      "capability_id": "public-pre-apply-source-recheck-hook",
+      "kind": "introduced",
+      "before": "The public PackageSource trait had no final read-only source/cache check hook immediately before install apply.",
+      "after": "A public default no-op recheck_before_apply hook is invoked before slot/lock/boot writes; protected sources may override it with bounded owner validation, while existing ordinary implementations retain their prior behavior.",
+      "audience": "Rust library consumer / install source implementer",
+      "platform": "Public trait method compiled for Linux/macOS/Windows; selected GNU/Linux protected fixture proof only.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#HASH-INTEGRITY-GATE"
+      ]
+    },
+    {
       "interface_id": "internal:vibe-orchestrator:install-cache-attestation",
       "capability_id": "post-fetch-cache-byte-recheck",
       "kind": "introduced",
@@ -88,12 +114,12 @@
   ],
   "user_impact": {
     "state": "impact",
-    "reason": "Additive public bounded legacy0 hash and PinnedLocalFactory Rust APIs; the internal cache attestation changes no existing default install route or 1.0.x user-owned state.",
+    "reason": "Additive public bounded legacy0 hash, PinnedLocalFactory, package-tree copy attestation and PackageSource pre-apply hook Rust APIs; ordinary source defaults remain unchanged and no 1.0.x user-owned state is converted.",
     "migration_action": "none"
   },
   "documentation_impact": {
     "state": "impact",
-    "reason": "Document exact local-only factory/hash contracts, post-fetch uncertainty and bounded source/copy checks; final source-page mapping and native portability proof pending.",
+    "reason": "Document exact local-only factory/hash and copied-tree attestation contracts, the public PackageSource pre-apply hook, post-fetch uncertainty and bounded source/copy checks; final source-page mapping and native portability proof pending.",
     "documentation_action": "update"
   },
   "evidence": [
