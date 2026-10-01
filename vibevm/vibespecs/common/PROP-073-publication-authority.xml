@@ -85,6 +85,20 @@
       occurs outside the pure planner; plan construction itself performs no
       filesystem or network write, creates no tag or release, and loads no
       credential.</PUBLICATION-EFFECT-PLAN-LAW></p>
+      <p><PUBLICATION-LATEST-BASELINE-LAW fact="true" status="spec/plan">A
+      protected successor plan must distinguish an independently observed
+      absent latest published full release from an unavailable observation.
+      Its approved identity binds the prior latest release ID and tag, or
+      explicit absence, before any remote effect. The owner reobserves that
+      posture in each complete before/after epoch and rejects unplanned drift;
+      GitHub read comparisons are detection, not an atomic multi-object CAS.
+      Creating or retaining a draft does not itself make that draft latest.
+      Deleting a prior release that is currently latest is unavailable under
+      the delete-first plan until a separately approved strategy can bind and
+      verify the fallback without guessing from release-list order, dates or
+      version numbers. A later latest read cannot retroactively authorize the
+      deletion. Earlier plans without this baseline cannot silently acquire
+      it from transport defaults.</PUBLICATION-LATEST-BASELINE-LAW></p>
     </PUBLICATION-EFFECT-PLAN>
     <PUBLICATION-PLAN-DIGEST title="Exact target and replacement identity">
       <p><req-publication-plan-digest fact="true" status="spec/plan">`req r1`</req-publication-plan-digest></p>
@@ -101,8 +115,11 @@
       prerelease posture in that approved plan identity. An epoch-one plan
       without those fields cannot acquire them from code defaults or be
       silently upgraded for protected release dispatch; it requires a new
-      explicit plan and approval. Immediately before each remote effect the
-      owner reobserves its stated preconditions; drift refuses before that
+      explicit plan and approval. The next protected plan epoch also binds
+      the typed prior latest published release identity (or explicit
+      absence); an epoch-two plan without that field cannot be dispatched
+      through a latest-aware protected owner. Immediately before each remote
+      effect the owner reobserves its stated preconditions; drift refuses before that
       effect. Where a provider offers no atomic compare-and-swap across
       separate remote objects, a race after reobservation is reported as
       partial or uncertain with the landed partition recorded, never as a
