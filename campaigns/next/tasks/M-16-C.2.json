@@ -298,7 +298,8 @@
         "Before any remote effect, reserve an exact expected 19-upload payload catalogue under C.1, stream and verify a run-scoped local vault while Pending, then publish/read back its complete manifest before Ready; cold attach must not mistake an incomplete vault for effect authority.",
         "Load Mode A approval only from a host-pinned user settings Project at a fixed digest-derived name, validate exact scope/expiry/provenance, and redeem its ID create-new under the owner before any remote effect; a lost redemption response is recovery-required, not permission to retry.",
         "Decompose each remote partition into deterministic individual mutating API calls; write/readback a pending call record immediately before each call, independently reobserve its exact object preconditions, and retain landed/uncertain result before advancing. GitHub multi-object operations are not atomic partition CAS.",
-        "For large upload payloads, hold a nofollow single-link vault file through preflight and streaming body delivery with bounded memory, verify exact count/digest and final identity after transfer, and classify any ambiguous POST or stream failure as uncertain without retry."
+        "For large upload payloads, hold a nofollow single-link vault file through preflight and streaming body delivery with bounded memory, verify exact count/digest and final identity after transfer, and classify any ambiguous POST or stream failure as uncertain without retry.",
+        "Bind exact desired successor release metadata, including name/body/prerelease as well as tag/draft, into the approved effect-plan identity before any protected CreateDraft dispatch; fixed transport defaults alone are not plan authority."
       ],
       "positive_cases": [
         "A lost remote response returns the same run and a retained result or explicit partial/recovery state.",
@@ -311,7 +312,8 @@
         "An observed source digest without retained upload bytes, or an interrupted/incomplete vault, is treated as sufficient to delete a prior release or upload a different byte stream.",
         "A caller-provided OwnerControlled assertion, arbitrary approval path, stale approval, or reused approval ID becomes a publication effect grant.",
         "A lost DELETE-release, upload, rename, or finalize response advances to the next API call or replays the uncertain call merely because remote bytes match.",
-        "A multi-gigabyte bundle is buffered as one Vec, a streamed upload silently retries after a lost reply, or a changed vault file is treated as an exact sent payload."
+        "A multi-gigabyte bundle is buffered as one Vec, a streamed upload silently retries after a lost reply, or a changed vault file is treated as an exact sent payload.",
+        "A code-default release name, body or prerelease posture changes while the approved plan digest remains the same and the owner still writes a draft."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
