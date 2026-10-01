@@ -77,7 +77,7 @@ pub(crate) fn limits() -> ParentLimits {
         max_config_bytes: 4096,
     }
 }
-fn payload_limits() -> PayloadLimits {
+pub(crate) fn payload_limits() -> PayloadLimits {
     PayloadLimits {
         max_files: 8,
         max_directories: 8,

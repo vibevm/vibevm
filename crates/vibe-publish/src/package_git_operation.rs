@@ -180,7 +180,7 @@ fn prepare_pending_inner(
                     run_id: domain_run_id,
                 });
             }
-            if !journal::ready_duplicate_matches(
+            let effect_ready = journal::ready_duplicate_matches(
                 lease,
                 &domain_run_id,
                 namespace.id(),
@@ -191,7 +191,20 @@ fn prepare_pending_inner(
                 &plan_bytes,
                 &lease_root_token,
                 &selected.root_token,
-            ) {
+            );
+            let no_effect_ready = crate::package_git_noop::ready_duplicate_matches(
+                lease,
+                &domain_run_id,
+                namespace.id(),
+                scope,
+                key,
+                &request_bytes,
+                plan,
+                &plan_bytes,
+                &lease_root_token,
+                &selected.root_token,
+            );
+            if !effect_ready && !no_effect_ready {
                 return Ok(PendingInspection::RecoveryRequired {
                     run_id: domain_run_id,
                 });

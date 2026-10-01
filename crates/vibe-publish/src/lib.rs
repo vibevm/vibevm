@@ -42,6 +42,7 @@ pub mod gitverse;
 mod orchestrator;
 mod package_git_approval;
 mod package_git_gitlink;
+mod package_git_noop;
 mod package_git_objects;
 mod package_git_operation;
 mod package_git_parent;
