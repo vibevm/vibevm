@@ -47,6 +47,7 @@ pub mod publication_effect_plan;
 mod publication_full_plan;
 #[cfg(test)]
 mod publication_operation;
+pub mod publication_payload;
 pub mod publication_subject;
 pub mod redirect_sync;
 pub mod release_manifest;
