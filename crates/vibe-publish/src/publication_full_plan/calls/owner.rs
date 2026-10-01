@@ -288,3 +288,12 @@ pub(super) fn drive_one_fake_with_hook(
 ) -> Result<OwnerStep> {
     drive_inner_with_hook(session, reader, calls, assets, after_step)
 }
+
+#[cfg(test)]
+pub(super) fn drive_one_loopback(
+    session: &ReadyRun<'_>,
+    client: &GithubReleaseClient,
+) -> Result<OwnerStep> {
+    let mut reader = GithubRemoteReadPort::new_loopback(client).map_err(Error::io)?;
+    drive_inner(session, &mut reader, client, client)
+}
