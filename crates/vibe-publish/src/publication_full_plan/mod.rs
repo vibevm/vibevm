@@ -28,6 +28,7 @@ mod journal;
 #[cfg(test)]
 mod local_tests;
 mod prepare;
+mod remote_observation;
 mod session;
 #[cfg(test)]
 use cold::inspect_fake_full_plan_cold;
