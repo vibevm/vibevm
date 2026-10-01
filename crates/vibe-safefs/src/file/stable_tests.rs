@@ -3,6 +3,30 @@ use sha2::{Digest, Sha256};
 use crate::Project;
 
 #[test]
+fn root_correlation_token_reopens_stably_and_detects_replacement() {
+    let parent = tempfile::tempdir().unwrap();
+    let root = parent.path().join("root");
+    std::fs::create_dir(&root).unwrap();
+    let first = Project::open(&root)
+        .unwrap()
+        .root_correlation_token()
+        .unwrap();
+    let second = Project::open(&root)
+        .unwrap()
+        .root_correlation_token()
+        .unwrap();
+    assert_eq!(first, second);
+    assert!(first.starts_with("sha256:") && first.len() == 71);
+    std::fs::rename(&root, parent.path().join("old-root")).unwrap();
+    std::fs::create_dir(&root).unwrap();
+    let replaced = Project::open(&root)
+        .unwrap()
+        .root_correlation_token()
+        .unwrap();
+    assert_ne!(first, replaced);
+}
+
+#[test]
 fn a_stable_source_streams_to_an_atomically_verified_destination() {
     let source_root = tempfile::tempdir().expect("source tempdir");
     let destination_root = tempfile::tempdir().expect("destination tempdir");
