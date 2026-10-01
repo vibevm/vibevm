@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LIFETIME");
 
 use super::*;
+mod control;
 mod stream;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
@@ -60,6 +61,10 @@ pub(super) struct Binding {
     plan_sha256: String,
     physical_root: Arc<PhysicalRoot>,
     history: Arc<Mutex<stream::History>>,
+    source: ScriptSourceWitness,
+    selected: SelectedManifestLockWitness,
+    started: String,
+    gate: control::Gate,
 }
 
 /// Retain a no-follow root independently of the writer lease on every host.
@@ -109,6 +114,15 @@ struct Record {
     reason: String,
     subscriptions: BTreeSet<u64>,
     next_subscription: u64,
+}
+impl Record {
+    // Only the incumbent under this record lock carries control state.
+    fn gate(&self) -> &control::Gate {
+        &self.binding.as_ref().expect("Ready control binding").gate
+    }
+    fn gate_mut(&mut self) -> &mut control::Gate {
+        &mut self.binding.as_mut().expect("Ready control binding").gate
+    }
 }
 struct Shared {
     record: Mutex<Record>,
@@ -229,6 +243,9 @@ impl ReadyObserver {
         reservation_ref: &str,
         canonical_request: &[u8],
         _canonical_plan: &[u8],
+        source: &ScriptSourceWitness,
+        selected: &SelectedManifestLockWitness,
+        started: &str,
     ) -> Result<()> {
         let physical_root = self
             .physical_root
@@ -253,6 +270,10 @@ impl ReadyObserver {
             canonical_request,
         )?;
         let binding = Binding {
+            gate: control::Gate::Open,
+            source: source.clone(),
+            selected: selected.clone(),
+            started: started.to_owned(),
             owner: Arc::downgrade(&self.shared),
             coordinates: HostCoordinates {
                 root: lease.root().to_owned(),

@@ -1372,11 +1372,17 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                         &reservation_ref,
                         &self.canonical_request,
                         self.canonical_plan,
+                        &script.admitted.source,
+                        &self.witness,
+                        &self.identity.started,
                     )?;
                     // Notification cannot admit source or identity drift.
                     self.recheck()?;
                     recheck_script_source_witness(&script.admitted.source)?;
                     Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+                    if let Some(stopped) = ready.close_gate(&lease)? {
+                        return Ok(stopped);
+                    }
                 }
                 let stage = publish_script_source_stage(
                     &lease,
