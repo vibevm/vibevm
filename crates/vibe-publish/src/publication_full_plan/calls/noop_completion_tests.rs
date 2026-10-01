@@ -80,7 +80,30 @@ fn github_snapshot(
 
 impl World {
     fn new() -> Self {
-        let tiny = TinyPayloadWorld::new();
+        Self::new_with_prior_draft(false)
+    }
+
+    fn new_with_prior_draft(replace: bool) -> Self {
+        let mut tiny = TinyPayloadWorld::new();
+        if replace {
+            let prior: vibe_wire::generated::publication_effect_plan::PublicationEffectPlan =
+                serde_json::from_str(include_str!(
+                    "../../../../../formats/corpora/publication_effect_plan/e3/valid/replace-known-draft.json"
+                )).unwrap();
+            let remote = crate::publication_effect_plan::CapturedPublicationRemote {
+                generation_ref: prior.remote_generation_ref,
+                tag: prior.observed_tag,
+                release: prior.observed_release,
+                observed_latest_release: prior.observed_latest_release,
+            };
+            tiny.plan = crate::publication_effect_plan::plan_from_captured_remote(
+                &tiny.subject,
+                &expected(),
+                &remote,
+            )
+            .unwrap()
+            .plan;
+        }
         let root = tempfile::tempdir().unwrap();
         let lease = LifecycleLease::acquire(root.path()).unwrap();
         let scope = scope();
@@ -151,6 +174,16 @@ impl World {
             let mut after = prior.clone();
             after.generation_ref = format!("prefix-{}", call.ordinal);
             let receipt = match &call.action {
+                super::super::CallAction::RetainTag { .. } => {
+                    after.generation_ref = prior.generation_ref.clone();
+                    "tag-retained".to_owned()
+                }
+                super::super::CallAction::DeletePriorRelease { release_id, .. } => {
+                    after.release = PublicationObservedRelease::Absent(Box::new(
+                        vibe_wire::generated::publication_effect_plan::PublicationObservedReleaseAbsent {},
+                    ));
+                    release_id.clone()
+                }
                 super::super::CallAction::CreateTag { tag, commit } => {
                     after.tag =
                         PublicationObservedTag::Present(Box::new(PublicationObservedTagPresent {
@@ -183,7 +216,6 @@ impl World {
                     ));
                     "700".to_owned()
                 }
-                _ => panic!("fresh draft prefix expected"),
             };
             assert!(super::super::verified_transition(
                 call, &prior, &after, &receipt

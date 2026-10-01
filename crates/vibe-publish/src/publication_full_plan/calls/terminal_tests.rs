@@ -3,7 +3,11 @@ use crate::publication_full_plan::calls::terminal::{self, TerminalInspection};
 use crate::publication_full_plan::{Inspection, cold};
 
 fn complete_checkpoints() -> World {
-    let world = World::new();
+    complete_checkpoints_with_replace(false)
+}
+
+fn complete_checkpoints_with_replace(replace: bool) -> World {
+    let world = World::new_with_prior_draft(replace);
     let SessionOpen::Ready(session) = world.open() else {
         panic!("sealed ReadyRun absent")
     };
@@ -307,4 +311,79 @@ fn latest_drift_before_terminal_pending_writes_no_marker() {
         terminal::inspect_proved(&session).unwrap(),
         TerminalInspection::Ready { calls: 42 }
     );
+}
+
+#[test]
+fn prior_draft_replacement_reaches_forty_three_call_terminal_after_cold_attach() {
+    use vibe_wire::generated::publication_effect_plan::{
+        PublicationObservedLatestRelease, PublicationObservedRelease,
+    };
+    let world = complete_checkpoints_with_replace(true);
+    let prefix = crate::publication_full_plan::calls::decompose(
+        &world.tiny.subject,
+        &world.tiny.plan,
+        &world.expected,
+    )
+    .unwrap();
+    assert_eq!(prefix.calls.len(), 3);
+    assert!(matches!(
+        prefix.calls[0].action,
+        crate::publication_full_plan::calls::CallAction::RetainTag { .. }
+    ));
+    assert!(
+        matches!(prefix.calls[1].action, crate::publication_full_plan::calls::CallAction::DeletePriorRelease { ref release_id, .. } if release_id == "123")
+    );
+    assert!(matches!(
+        prefix.calls[2].action,
+        crate::publication_full_plan::calls::CallAction::CreateDraft { .. }
+    ));
+    assert!(matches!(&world.tiny.plan.observed_latest_release,
+        PublicationObservedLatestRelease::Present(latest) if latest.release_id == "101" && latest.tag == "v1.0.1"));
+    let deleted: crate::publication_full_plan::calls::Landed = journal::read(
+        &world.lease,
+        &world.run_id,
+        &crate::publication_full_plan::calls::suffix(1, "landed"),
+    )
+    .unwrap()
+    .unwrap();
+    assert_eq!(deleted.receipt_id, "123");
+    assert!(matches!(
+        deleted.after.release,
+        PublicationObservedRelease::Absent(_)
+    ));
+    let created: crate::publication_full_plan::calls::Landed = journal::read(
+        &world.lease,
+        &world.run_id,
+        &crate::publication_full_plan::calls::suffix(2, "landed"),
+    )
+    .unwrap()
+    .unwrap();
+    assert_eq!(created.receipt_id, "700");
+    assert!(
+        matches!(created.after.release, PublicationObservedRelease::Present(ref row) if row.draft && row.release_id == "700")
+    );
+    let SessionOpen::Ready(session) = world.open() else {
+        panic!("43-call ReadyRun absent")
+    };
+    assert_eq!(
+        terminal::inspect_proved(&session).unwrap(),
+        TerminalInspection::Ready { calls: 43 }
+    );
+    assert_eq!(
+        terminal::seal(&session, &mut terminal_reader(&world)).unwrap(),
+        TerminalInspection::Completed { calls: 43 }
+    );
+    drop(session);
+    assert!(matches!(
+        cold::inspect_full_plan_cold_with_home(
+            &world.lease,
+            world.namespace.id(),
+            &world.scope,
+            "noop-key",
+            &world.home
+        )
+        .unwrap(),
+        Inspection::CallChainCompleted { calls: 43, .. }
+    ));
+    assert!(matches!(world.open(), SessionOpen::Completed { .. }));
 }
