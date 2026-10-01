@@ -23,9 +23,9 @@ const PENDING: &str = "atomic-push-pending";
 const LANDED: &str = "atomic-push";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct PushReceipt {
-    main_update: RefUpdateKind,
-    tag_update: RefUpdateKind,
+pub(crate) struct PushReceipt {
+    pub(crate) main_update: RefUpdateKind,
+    pub(crate) tag_update: RefUpdateKind,
 }
 
 fn exact_updates(plan: &PackageGitPlan, receipt: PushReceipt) -> bool {

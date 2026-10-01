@@ -3,7 +3,7 @@ use super::*;
 use std::io::Read;
 use std::process::ExitStatus;
 
-pub(super) fn bounded_output(
+pub(crate) fn bounded_output(
     mut command: Command,
     cap: usize,
 ) -> Result<(ExitStatus, Vec<u8>, Vec<u8>), String> {
@@ -39,7 +39,7 @@ pub(super) fn bounded_output(
     Ok((status, stdout, stderr))
 }
 
-pub(super) fn porcelain_receipt(
+pub(crate) fn porcelain_receipt(
     bytes: &[u8],
     main: &str,
     tag: &str,

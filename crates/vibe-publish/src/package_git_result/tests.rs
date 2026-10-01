@@ -260,3 +260,6 @@ fn tampered_result_or_push_landed_refuses_historical_completion() {
         ));
     }
 }
+
+#[path = "direct_tests.rs"]
+mod direct_tests;

@@ -500,4 +500,4 @@ fn inspect_parent_inner(
 
 #[cfg(test)]
 #[path = "package_git_parent/tests.rs"]
-mod tests;
+pub(crate) mod tests;

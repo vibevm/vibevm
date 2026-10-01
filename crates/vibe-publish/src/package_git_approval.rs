@@ -473,6 +473,111 @@ impl ApprovalHome {
     }
 }
 
+#[cfg(test)]
+pub(crate) fn seed_selected_ready_for_test(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    package_source: &Project,
+    local_bare_source: &Project,
+    binary: &Path,
+    limits: ReadyLimits,
+) -> (tempfile::TempDir, ApprovalHome, SubmissionNamespace, String) {
+    let namespace = SubmissionNamespace::from_host_token(namespace_token.into()).unwrap();
+    let ReadyInspection::ReadyForApproval {
+        run_id,
+        seal_sha256,
+    } = package_git_ready::inspect_ready_seal_cold(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        Some(package_source),
+        Some(local_bare_source),
+        binary,
+        limits,
+    )
+    else {
+        panic!("selected fixture lacks Ready seal")
+    };
+    let seal_bytes = journal::read_bytes(lease, &run_id, "ready")
+        .unwrap()
+        .unwrap();
+    let seal: journal::ReadySeal = serde_json::from_slice(&seal_bytes).unwrap();
+    let (_, proof) = package_git_operation::ready_proof_cold(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        Some(package_source),
+    )
+    .unwrap();
+    let plan = proof.unwrap().plan;
+    let settings_root = tempfile::tempdir().unwrap();
+    std::fs::create_dir_all(settings_root.path().join(HOME).join(APPROVAL_DIR)).unwrap();
+    let home = ApprovalHome::open_selected(settings_root.path()).unwrap();
+    let record = ApprovalRecord {
+        format: FORMAT.into(),
+        approval_id: "selected-direct-human-approval".into(),
+        approver: "Oleg Chirukhin".into(),
+        issued_at_unix: 1,
+        expires_at_unix: 20,
+        semantic_plan_sha256: seal.semantic_plan_sha256.clone(),
+        c1_plan_sha256: seal.c1_plan_sha256.clone(),
+        request_sha256: seal.request_sha256.clone(),
+        ready_seal_sha256: seal_sha256,
+        namespace_id: namespace.id().into(),
+        run_id,
+        key_sha256: seal.key_sha256,
+        context: scope.context.clone(),
+        target: scope.target.clone(),
+        principal: scope.principal.clone(),
+        workspace_root_token: seal.lease_root_token,
+        settings_root_token: home.settings.root_correlation_token().unwrap(),
+        repository: plan.target.clone(),
+        effects: effects(&plan).unwrap(),
+    };
+    let path = settings_root
+        .path()
+        .join(HOME)
+        .join(APPROVAL_DIR)
+        .join(approval_name(&record.semantic_plan_sha256).unwrap());
+    std::fs::write(path, serde_json::to_vec(&record).unwrap()).unwrap();
+    let verified = home
+        .load_at(
+            lease,
+            &namespace,
+            scope,
+            key,
+            Some(package_source),
+            Some(local_bare_source),
+            binary,
+            limits,
+            10,
+        )
+        .unwrap();
+    let id = verified.authority_id().to_owned();
+    assert!(matches!(
+        home.link_inner(
+            lease,
+            &namespace,
+            scope,
+            key,
+            Some(package_source),
+            Some(local_bare_source),
+            binary,
+            limits,
+            &verified,
+            Some(10),
+            false,
+            false,
+        ),
+        LinkInspection::Landed { .. }
+    ));
+    (settings_root, home, namespace, id)
+}
+
 mod cold;
 mod link;
 pub(crate) use link::LinkInspection;

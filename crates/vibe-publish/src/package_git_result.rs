@@ -8,13 +8,14 @@ use vibe_lifecycle::{LifecycleLease, SubmissionNamespace, SubmissionScope};
 use vibe_safefs::Project;
 
 use crate::package_git_approval::{ApprovalHome, LinkInspection};
-use crate::package_git_operation::journal::{self, ReadySeal, sha};
+use crate::package_git_operation::journal::{self, AtomicPushPending, ReadySeal, sha};
+use crate::package_git_plan::RepositoryIdentity;
 use crate::package_git_push::{self, PushInspection};
 use crate::package_git_ready::{self, ReadyInspection, ReadyLimits};
 use crate::package_git_repo_create::{self, CreateInspection};
 
 const RESULT: &str = "result";
-const FORMAT: &str = "vibevm.package-git-result/e1";
+const FORMAT: &str = "vibevm.package-git-result/e2";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum ResultInspection {
@@ -71,9 +72,9 @@ struct ResultRow {
     request_sha256: String,
     ready_seal_sha256: String,
     approval_link_landed_sha256: String,
-    repository_id: u64,
-    repo_create_pending_sha256: String,
-    repo_create_landed_sha256: String,
+    repository: RepositoryIdentity,
+    repo_create_pending_sha256: Option<String>,
+    repo_create_landed_sha256: Option<String>,
     atomic_push_pending_sha256: String,
     atomic_push_landed_sha256: String,
     selected_tree_oid: String,
@@ -128,33 +129,6 @@ fn complete_chain(
             "approval-link Landed cold proof unavailable",
         ));
     }
-    let (repository_id, create_landed_sha) = match package_git_repo_create::inspect_cold(
-        home,
-        lease,
-        namespace,
-        scope,
-        key,
-        package_source,
-        local_bare_source,
-        git_binary,
-        limits,
-        approval_id,
-    ) {
-        CreateInspection::Landed {
-            run_id: created,
-            repository_id,
-            landed_sha256,
-        } if created == run && repository_id > 0 => (repository_id, landed_sha256),
-        CreateInspection::Unavailable { run_id, reason } => {
-            return Err(unavailable(run_id.as_deref(), reason));
-        }
-        other => {
-            return Err(recovery(
-                Some(&run),
-                format!("repo-create Landed unavailable: {other:?}"),
-            ));
-        }
-    };
     let push_landed_sha = match package_git_push::inspect_cold(
         home,
         lease,
@@ -202,12 +176,58 @@ fn complete_chain(
     let seal: ReadySeal =
         serde_json::from_slice(&ready_bytes).map_err(|e| recovery(Some(&run), e.to_string()))?;
     let link_bytes = bytes("approval-link")?;
-    let create_pending = bytes("repo-create-pending")?;
-    let create_landed = bytes("repo-create")?;
     let push_pending = bytes("atomic-push-pending")?;
     let push_landed = bytes("atomic-push")?;
+    let push_row: AtomicPushPending =
+        serde_json::from_slice(&push_pending).map_err(|e| recovery(Some(&run), e.to_string()))?;
+    let (create_pending, create_landed, create_landed_sha) = match &push_row.repository {
+        RepositoryIdentity::Hosted { id, .. } => {
+            let landed_sha = match package_git_repo_create::inspect_cold(
+                home,
+                lease,
+                namespace,
+                scope,
+                key,
+                package_source,
+                local_bare_source,
+                git_binary,
+                limits,
+                approval_id,
+            ) {
+                CreateInspection::Landed {
+                    run_id: created,
+                    repository_id,
+                    landed_sha256,
+                } if created == run && repository_id == *id && *id > 0 => landed_sha256,
+                other => {
+                    return Err(recovery(
+                        Some(&run),
+                        format!("repo-create Landed unavailable: {other:?}"),
+                    ));
+                }
+            };
+            (
+                Some(bytes("repo-create-pending")?),
+                Some(bytes("repo-create")?),
+                Some(landed_sha),
+            )
+        }
+        RepositoryIdentity::Direct { .. } => {
+            if !matches!(
+                journal::read_bytes(lease, &run, "repo-create-pending"),
+                Ok(None)
+            ) || !matches!(journal::read_bytes(lease, &run, "repo-create"), Ok(None))
+            {
+                return Err(recovery(
+                    Some(&run),
+                    "DirectGitExisting has foreign create records",
+                ));
+            }
+            (None, None, None)
+        }
+    };
     if sha(&ready_bytes) != ready_sha
-        || sha(&create_landed) != create_landed_sha
+        || create_landed.as_ref().map(|bytes| sha(bytes)) != create_landed_sha
         || sha(&push_landed) != push_landed_sha
         || serde_json::to_vec(&seal).ok().as_deref() != Some(ready_bytes.as_slice())
     {
@@ -230,8 +250,8 @@ fn complete_chain(
         request_sha256: seal.request_sha256.clone(),
         ready_seal_sha256: ready_sha,
         approval_link_landed_sha256: sha(&link_bytes),
-        repository_id,
-        repo_create_pending_sha256: sha(&create_pending),
+        repository: push_row.repository,
+        repo_create_pending_sha256: create_pending.as_ref().map(|bytes| sha(bytes)),
         repo_create_landed_sha256: create_landed_sha,
         atomic_push_pending_sha256: sha(&push_pending),
         atomic_push_landed_sha256: push_landed_sha,
@@ -239,13 +259,14 @@ fn complete_chain(
         selected_commit_oid: seal.selected_commit_oid,
         selected_tag_oid: seal.selected_tag_oid,
     };
+    let unchanged_optional = |suffix: &str, expected: &Option<Vec<u8>>| matches!(journal::read_bytes(lease, &run, suffix), Ok(now) if &now == expected);
     if !matches!(package_git_ready::inspect_ready_seal_cold(
         lease, namespace.id(), scope, key, package_source, local_bare_source, git_binary, limits,
     ), ReadyInspection::ReadyForApproval { run_id: ref same, seal_sha256: ref hash }
         if same == &run && hash == &row.ready_seal_sha256)
         || !matches!(journal::read_bytes(lease, &run, "approval-link"), Ok(Some(ref now)) if now == &link_bytes)
-        || !matches!(journal::read_bytes(lease, &run, "repo-create-pending"), Ok(Some(ref now)) if now == &create_pending)
-        || !matches!(journal::read_bytes(lease, &run, "repo-create"), Ok(Some(ref now)) if now == &create_landed)
+        || !unchanged_optional("repo-create-pending", &create_pending)
+        || !unchanged_optional("repo-create", &create_landed)
         || !matches!(journal::read_bytes(lease, &run, "atomic-push-pending"), Ok(Some(ref now)) if now == &push_pending)
         || !matches!(journal::read_bytes(lease, &run, "atomic-push"), Ok(Some(ref now)) if now == &push_landed)
     {

@@ -16,7 +16,7 @@ use crate::package_git_provenance::{self, ProvenanceInspection};
 use crate::package_git_tree::{self, TreeInspection};
 use vibe_lifecycle::{JournalAdmission, SubmissionReservations};
 
-fn binary() -> Option<PathBuf> {
+pub(crate) fn binary() -> Option<PathBuf> {
     let name = if cfg!(windows) { "git.exe" } else { "git" };
     std::env::split_paths(&std::env::var_os("PATH")?).find_map(|dir| {
         dir.join(name)
@@ -54,7 +54,7 @@ fn git(binary: &Path, cwd: &Path, args: &[&str], input: &[u8]) -> String {
     );
     String::from_utf8(out.stdout).unwrap().trim().into()
 }
-fn limits() -> ParentLimits {
+pub(crate) fn limits() -> ParentLimits {
     ParentLimits {
         source: SourceLimits {
             max_path_bytes: 4096,
@@ -95,12 +95,12 @@ fn package_source(contents: &[u8]) -> (tempfile::TempDir, Project) {
     let project = Project::open(root.path()).unwrap();
     (root, project)
 }
-struct Origin {
+pub(crate) struct Origin {
     _root: tempfile::TempDir,
-    project: Project,
-    main: String,
-    previous: String,
-    tag: String,
+    pub(crate) project: Project,
+    pub(crate) main: String,
+    pub(crate) previous: String,
+    pub(crate) tag: String,
     blob: String,
     tree: String,
 }
@@ -290,18 +290,18 @@ fn plan(binary: &Path, package: &Project, origin: &Origin, reused_main: bool) ->
     plan.derive_staged_object_ids().unwrap();
     plan
 }
-struct World {
-    root: tempfile::TempDir,
+pub(crate) struct World {
+    pub(crate) root: tempfile::TempDir,
     _package_root: tempfile::TempDir,
-    package: Project,
-    origin: Origin,
-    lease: LifecycleLease,
-    token: String,
-    scope: SubmissionScope,
-    run_id: String,
-    plan: PackageGitPlan,
+    pub(crate) package: Project,
+    pub(crate) origin: Origin,
+    pub(crate) lease: LifecycleLease,
+    pub(crate) token: String,
+    pub(crate) scope: SubmissionScope,
+    pub(crate) run_id: String,
+    pub(crate) plan: PackageGitPlan,
 }
-fn world(binary: &Path, reused_main: bool) -> World {
+pub(crate) fn world(binary: &Path, reused_main: bool) -> World {
     let contents: &[u8] = if reused_main {
         b"[package]\nname='old'\n"
     } else {
