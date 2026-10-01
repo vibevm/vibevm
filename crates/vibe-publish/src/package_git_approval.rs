@@ -420,30 +420,7 @@ impl ApprovalHome {
                 "approval ID already redeemed".into(),
             ));
         }
-        let marker = Redemption {
-            format: MARKER_FORMAT.into(),
-            approval_id_sha256: sha(verified.record.approval_id.as_bytes()),
-            approval_record_sha256: verified.record_sha256.clone(),
-            semantic_plan_sha256: verified.record.semantic_plan_sha256.clone(),
-            c1_plan_sha256: verified.record.c1_plan_sha256.clone(),
-            request_sha256: verified.record.request_sha256.clone(),
-            ready_seal_sha256: verified.record.ready_seal_sha256.clone(),
-            namespace_id: namespace.id().into(),
-            run_id: verified.record.run_id.clone(),
-            key_sha256: verified.record.key_sha256.clone(),
-            context: scope.context.clone(),
-            target: scope.target.clone(),
-            principal: scope.principal.clone(),
-            workspace_root_token: verified.record.workspace_root_token.clone(),
-            settings_root_token: settings_root,
-            repository: verified.record.repository.clone(),
-            effects: verified.record.effects,
-        };
-        let bytes = serde_json::to_vec(&marker)
-            .map_err(|e| ApprovalError::Refused(format!("marker encode: {e}")))?;
-        if bytes.len() > CAP {
-            return Err(ApprovalError::Refused("marker exceeds cap".into()));
-        }
+        let (marker, bytes) = marker_candidate(verified, namespace, scope, &settings_root)?;
         // The production clock is read at the last pre-publication boundary,
         // after potentially long cold Git/object verification.
         let now = match now_override {
@@ -491,6 +468,8 @@ impl ApprovalHome {
 }
 
 mod cold;
+mod link;
+use link::marker_candidate;
 mod ready;
 #[cfg(test)]
 mod tests;
