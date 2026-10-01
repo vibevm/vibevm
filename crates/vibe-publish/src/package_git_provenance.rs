@@ -92,10 +92,21 @@ fn tree_status(
     key: &str,
     source: Option<&Project>,
     git_binary: &Path,
+    ready: bool,
 ) -> Result<String, ProvenanceInspection> {
-    let status =
+    let status = if ready {
+        package_git_tree::inspect_tree_ready_cold(
+            lease,
+            namespace_token,
+            scope,
+            key,
+            source,
+            git_binary,
+        )
+    } else {
         package_git_tree::inspect_tree_cold(lease, namespace_token, scope, key, source, git_binary)
-            .map_err(|error| uncertain(None, error.to_string()))?;
+    }
+    .map_err(|error| uncertain(None, error.to_string()))?;
     match status {
         TreeInspection::TreeCompleteButNotReady { run_id, .. } => Ok(run_id),
         TreeInspection::NotReady {
@@ -133,10 +144,14 @@ fn held_proof(
     scope: &SubmissionScope,
     key: &str,
     source: Option<&Project>,
+    ready: bool,
 ) -> Result<PendingProof, ProvenanceInspection> {
-    let (status, proof) =
+    let (status, proof) = if ready {
+        package_git_operation::ready_proof_cold(lease, namespace_token, scope, key, source)
+    } else {
         package_git_operation::pending_proof_cold(lease, namespace_token, scope, key, source)
-            .map_err(|error| uncertain(None, error.to_string()))?;
+    }
+    .map_err(|error| uncertain(None, error.to_string()))?;
     proof.ok_or_else(|| uncertain(None, format!("C.1 Pending proof unavailable: {status:?}")))
 }
 
@@ -213,11 +228,19 @@ fn retain_inner(
     limits: CensusLimits,
     after_pending: impl FnOnce(),
 ) -> ProvenanceInspection {
-    let run_id = match tree_status(lease, namespace_token, scope, key, Some(source), git_binary) {
+    let run_id = match tree_status(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        Some(source),
+        git_binary,
+        false,
+    ) {
         Ok(value) => value,
         Err(status) => return status,
     };
-    let proof = match held_proof(lease, namespace_token, scope, key, Some(source)) {
+    let proof = match held_proof(lease, namespace_token, scope, key, Some(source), false) {
         Ok(value) if value.run_id == run_id => value,
         Ok(_) => return uncertain(Some(&run_id), "C.1 run changed after tree proof"),
         Err(status) => return status,
@@ -330,11 +353,62 @@ pub(crate) fn inspect_no_gitlinks_cold(
     git_binary: &Path,
     limits: CensusLimits,
 ) -> ProvenanceInspection {
-    let run_id = match tree_status(lease, namespace_token, scope, key, source, git_binary) {
+    inspect_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        limits,
+        false,
+    )
+}
+
+pub(crate) fn inspect_no_gitlinks_ready_cold(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    git_binary: &Path,
+    limits: CensusLimits,
+) -> ProvenanceInspection {
+    inspect_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        limits,
+        true,
+    )
+}
+
+fn inspect_inner(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    git_binary: &Path,
+    limits: CensusLimits,
+    ready: bool,
+) -> ProvenanceInspection {
+    let run_id = match tree_status(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        ready,
+    ) {
         Ok(value) => value,
         Err(status) => return status,
     };
-    let proof = match held_proof(lease, namespace_token, scope, key, source) {
+    let proof = match held_proof(lease, namespace_token, scope, key, source, ready) {
         Ok(value) if value.run_id == run_id => value,
         Ok(_) => {
             return uncertain(

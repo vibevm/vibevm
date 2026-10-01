@@ -1,8 +1,8 @@
 //! Run-scoped create-new local records; never the distribution release journal.
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use vibe_lifecycle::LifecycleLease;
 use vibe_lifecycle::process::is_valid_run_id;
+use vibe_lifecycle::{LifecycleLease, SubmissionScope};
 
 use crate::package_git_payload::{PayloadLimits, ProvenanceStatus};
 
@@ -21,6 +21,7 @@ pub(crate) const GITLINK_PENDING_FORMAT: &str = "vibevm.package-git-link-pending
 pub(crate) const GITLINK_FORMAT: &str = "vibevm.package-git-link/e1";
 pub(crate) const POPULATED_PENDING_FORMAT: &str = "vibevm.package-git-populated-pending/e1";
 pub(crate) const POPULATED_FORMAT: &str = "vibevm.package-git-populated/e1";
+pub(crate) const READY_FORMAT: &str = "vibevm.package-git-ready-seal/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -283,8 +284,78 @@ pub(crate) struct PopulatedLanded {
     pub flattened_submodules_sha256: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ReadySeal {
+    pub format: String,
+    pub run_id: String,
+    pub namespace_id: String,
+    pub scope_context: String,
+    pub scope_target: String,
+    pub scope_principal: String,
+    pub key_sha256: String,
+    pub request_sha256: String,
+    pub c1_plan_sha256: String,
+    pub semantic_plan_sha256: String,
+    pub lease_root_token: String,
+    pub source_root_token: String,
+    pub vault_root_token: String,
+    pub object_root_token: String,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+    pub stage_receipt_sha256: String,
+    pub tree_receipt_sha256: String,
+    pub no_gitlinks_pending_sha256: String,
+    pub no_gitlinks_landed_sha256: String,
+    pub parent_pending_sha256: Option<String>,
+    pub parent_landed_sha256: Option<String>,
+    pub object_receipt_sha256: String,
+    pub selected_tree_oid: String,
+    pub selected_commit_oid: String,
+    pub selected_tag_oid: String,
+}
+
 pub(crate) fn sha(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
+}
+
+/// Narrow duplicate-preparation correlation under C.1 Ready. This does not
+/// rehash Git objects or grant an effect; the Ready seal owner does that cold.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn ready_duplicate_matches(
+    lease: &LifecycleLease,
+    run_id: &str,
+    namespace_id: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    request_bytes: &[u8],
+    plan: &crate::package_git_plan::PackageGitPlan,
+    plan_bytes: &[u8],
+    lease_root_token: &str,
+    source_root_token: &str,
+) -> bool {
+    let Ok(Some(bytes)) = read_bytes(lease, run_id, "ready") else {
+        return false;
+    };
+    let Ok(seal) = serde_json::from_slice::<ReadySeal>(&bytes) else {
+        return false;
+    };
+    seal.format == READY_FORMAT
+        && seal.run_id == run_id
+        && seal.namespace_id == namespace_id
+        && seal.scope_context == scope.context
+        && seal.scope_target == scope.target
+        && seal.scope_principal == scope.principal
+        && seal.key_sha256 == sha(key.as_bytes())
+        && seal.request_sha256 == sha(request_bytes)
+        && seal.c1_plan_sha256 == sha(plan_bytes)
+        && plan.digest().ok().as_deref() == Some(seal.semantic_plan_sha256.as_str())
+        && seal.lease_root_token == lease_root_token
+        && seal.source_root_token == source_root_token
+        && seal.selected_tree_oid == plan.staged.git_tree_oid
+        && seal.selected_commit_oid == plan.staged.tag_target_commit_oid
+        && seal.selected_tag_oid == plan.staged.annotated_tag_oid.as_deref().unwrap_or_default()
+        && serde_json::to_vec(&seal).ok().as_deref() == Some(bytes.as_slice())
 }
 fn name(run_id: &str, suffix: &str) -> anyhow::Result<String> {
     if !is_valid_run_id(run_id) {

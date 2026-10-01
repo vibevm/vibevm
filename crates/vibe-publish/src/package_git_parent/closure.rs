@@ -1,6 +1,11 @@
 //! Bounded retained parent graph and no-external-object-source proof.
 use super::git::ReadObjectDigest;
-use super::{CLOSURE_DOMAIN, ParentLimits, main_oid, tag_oid};
+use super::{
+    CLOSURE_DOMAIN, ParentInspection, ParentLimits, main_oid, tag_oid, target_identity,
+    unavailable, uncertain,
+};
+use crate::package_git_operation::journal::{self, ParentPending, ParentReceipt, sha};
+use crate::package_git_operation::{self, PendingProof};
 use crate::package_git_plan::{PackageGitPlan, StagedCommit, TagRef};
 use crate::package_git_provenance::{self, ProvenanceInspection};
 use crate::package_git_tree::git::LocalGit;
@@ -11,6 +16,174 @@ use std::path::Path;
 use vibe_lifecycle::{LifecycleLease, SubmissionScope};
 use vibe_safefs::{ChildKind, Project};
 
+pub(super) struct Held {
+    pub(super) run_id: String,
+    pub(super) proof: PendingProof,
+    pub(super) tree_bytes: Vec<u8>,
+    pub(super) provenance_bytes: Vec<u8>,
+    pub(super) objects: Project,
+    pub(super) private_prefix: String,
+}
+
+pub(super) fn held(
+    lease: &LifecycleLease,
+    namespace: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    package_source: Option<&Project>,
+    binary: &Path,
+    limits: ParentLimits,
+    ready: bool,
+) -> Result<Held, ParentInspection> {
+    let observed = if ready {
+        package_git_provenance::inspect_no_gitlinks_ready_cold(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            binary,
+            limits.census,
+        )
+    } else {
+        package_git_provenance::inspect_no_gitlinks_cold(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            binary,
+            limits.census,
+        )
+    };
+    let run_id = match observed {
+        ProvenanceInspection::NoGitlinksRetainedButNotReady { run_id, .. } => run_id,
+        ProvenanceInspection::NotReady { run_id } => {
+            return Err(ParentInspection::NotReady { run_id });
+        }
+        ProvenanceInspection::NeedsCommitTreeProof { run_id } => {
+            return Err(unavailable(
+                Some(&run_id),
+                "populated Gitlinks need separate commit-tree byte proof",
+            ));
+        }
+        ProvenanceInspection::Unavailable { run_id, reason } => {
+            return Err(ParentInspection::Unavailable { run_id, reason });
+        }
+        ProvenanceInspection::Uncertain { run_id, reason } => {
+            return Err(ParentInspection::Uncertain { run_id, reason });
+        }
+    };
+    let (status, proof) = if ready {
+        package_git_operation::ready_proof_cold(lease, namespace, scope, key, package_source)
+    } else {
+        package_git_operation::pending_proof_cold(lease, namespace, scope, key, package_source)
+    }
+    .map_err(|error| uncertain(Some(&run_id), error.to_string()))?;
+    let Some(proof) = proof else {
+        return Err(uncertain(
+            Some(&run_id),
+            format!("C.1 Pending proof changed: {status:?}"),
+        ));
+    };
+    if proof.run_id != run_id {
+        return Err(uncertain(
+            Some(&run_id),
+            "C.1 run changed during parent admission",
+        ));
+    }
+    let Some(main) = main_oid(&proof.plan) else {
+        return Err(unavailable(Some(&run_id), "existing main baseline absent"));
+    };
+    if target_identity(&proof.plan).is_none() {
+        return Err(unavailable(
+            Some(&run_id),
+            "local-bare parent import requires DirectGitExisting",
+        ));
+    }
+    match &proof.plan.staged.commit {
+        StagedCommit::New {
+            parent_oid: Some(parent),
+            ..
+        } if parent == main => {}
+        StagedCommit::ReusedMain { oid } if oid == main => {}
+        _ => {
+            return Err(unavailable(
+                Some(&run_id),
+                "plan does not select exact existing main as parent/reused commit",
+            ));
+        }
+    }
+    let tree_bytes = journal::read_bytes(lease, &run_id, "tree")
+        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
+        .ok_or_else(|| uncertain(Some(&run_id), "proved tree receipt vanished"))?;
+    let provenance_bytes = journal::read_bytes(lease, &run_id, "provenance")
+        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
+        .ok_or_else(|| uncertain(Some(&run_id), "proved provenance Landed vanished"))?;
+    let objects = journal::objects(lease, &run_id, false)
+        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
+        .ok_or_else(|| uncertain(Some(&run_id), "retained Git object root vanished"))?;
+    LocalGit::new(binary, &objects, proof.plan.oid_hex_len)
+        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?;
+    Ok(Held {
+        private_prefix: format!("refs/package-git-parent/{run_id}"),
+        run_id,
+        proof,
+        tree_bytes,
+        provenance_bytes,
+        objects,
+    })
+}
+
+pub(super) fn pending(
+    held: &Held,
+    source_identity: &str,
+    source_token: &str,
+) -> Result<ParentPending> {
+    Ok(ParentPending {
+        format: journal::PARENT_PENDING_FORMAT.into(),
+        run_id: held.run_id.clone(),
+        semantic_plan_sha256: held.proof.plan.digest()?,
+        intent_sha256: held.proof.intent_sha256.clone(),
+        payload_manifest_sha256: held.proof.payload_manifest_sha256.clone(),
+        tree_receipt_sha256: sha(&held.tree_bytes),
+        provenance_receipt_sha256: sha(&held.provenance_bytes),
+        object_root_token: held.objects.root_correlation_token()?,
+        local_bare_identity_sha256: source_identity.into(),
+        local_bare_root_token: source_token.into(),
+        private_prefix: held.private_prefix.clone(),
+        observed_refs: held.proof.plan.before_refs.clone(),
+    })
+}
+
+pub(super) fn receipt(
+    row: &ParentPending,
+    pending_bytes: &[u8],
+    plan: &PackageGitPlan,
+    closure: &Closure,
+) -> Result<ParentReceipt> {
+    Ok(ParentReceipt {
+        format: journal::PARENT_FORMAT.into(),
+        pending_sha256: sha(pending_bytes),
+        run_id: row.run_id.clone(),
+        semantic_plan_sha256: row.semantic_plan_sha256.clone(),
+        intent_sha256: row.intent_sha256.clone(),
+        payload_manifest_sha256: row.payload_manifest_sha256.clone(),
+        tree_receipt_sha256: row.tree_receipt_sha256.clone(),
+        provenance_receipt_sha256: row.provenance_receipt_sha256.clone(),
+        object_root_token: row.object_root_token.clone(),
+        local_bare_identity_sha256: row.local_bare_identity_sha256.clone(),
+        local_bare_root_token: row.local_bare_root_token.clone(),
+        private_prefix: row.private_prefix.clone(),
+        observed_refs: row.observed_refs.clone(),
+        parent_oid: main_oid(plan).context("main absent")?.into(),
+        parent_tree_oid: closure.tree_oid.clone(),
+        closure_sha256: closure.sha256.clone(),
+        closure_objects: closure.objects,
+        closure_bytes: closure.bytes,
+    })
+}
+
 pub(super) fn recheck_prior(
     lease: &LifecycleLease,
     namespace: &str,
@@ -20,16 +193,30 @@ pub(super) fn recheck_prior(
     binary: &Path,
     limits: ParentLimits,
     run_id: &str,
+    ready: bool,
 ) -> Result<()> {
-    match package_git_provenance::inspect_no_gitlinks_cold(
-        lease,
-        namespace,
-        scope,
-        key,
-        package_source,
-        binary,
-        limits.census,
-    ) {
+    let observed = if ready {
+        package_git_provenance::inspect_no_gitlinks_ready_cold(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            binary,
+            limits.census,
+        )
+    } else {
+        package_git_provenance::inspect_no_gitlinks_cold(
+            lease,
+            namespace,
+            scope,
+            key,
+            package_source,
+            binary,
+            limits.census,
+        )
+    };
+    match observed {
         ProvenanceInspection::NoGitlinksRetainedButNotReady {
             run_id: observed, ..
         } if observed == run_id => Ok(()),

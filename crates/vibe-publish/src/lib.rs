@@ -51,6 +51,7 @@ mod package_git_payload;
 mod package_git_plan;
 mod package_git_provenance;
 mod package_git_provenance_populated;
+mod package_git_ready;
 mod package_git_tree;
 pub mod post_hook;
 mod publication_approval;
