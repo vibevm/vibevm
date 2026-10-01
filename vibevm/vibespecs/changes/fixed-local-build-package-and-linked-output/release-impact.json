@@ -64,6 +64,18 @@
       ]
     },
     {
+      "interface_id": "rust:vibe-lifecycle:SubmissionReservations::inspect_reserved_plan_sha256",
+      "capability_id": "read-only-reserved-plan-correlation",
+      "kind": "introduced",
+      "before": "The public reservation owner had no read-only lookup of the exact reserved C1 plan digest for a matched namespace, scope, key and run ID.",
+      "after": "SubmissionReservations::inspect_reserved_plan_sha256 publicly returns the retained plan SHA-256 only for the exact reserved run/key/scope; it is correlation evidence and never grants Ready or an effect.",
+      "audience": "Rust library consumer / repository maintainer",
+      "platform": "Public API compiled for Linux/macOS/Windows; selected GNU/Linux reservation tests only, native macOS/Windows behavior unrun.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION"
+      ]
+    },
+    {
       "interface_id": "rust:vibe-safefs:Project::read_linked_regular_snapshot_bounded",
       "capability_id": "linked-regular-output-observation",
       "kind": "introduced",
@@ -78,12 +90,12 @@
   ],
   "user_impact": {
     "state": "impact",
-    "reason": "Additive public safefs API supports legitimate hard-linked Cargo outputs; fixed protected Build/Package entries remain internal, and existing users need no state migration.",
+    "reason": "Additive public safefs linked-reader and vibe-lifecycle reserved-plan correlation APIs affect Rust library consumers; fixed protected Build/Package entries remain internal and existing users need no state migration.",
     "migration_action": "none"
   },
   "documentation_impact": {
     "state": "impact",
-    "reason": "Document the public linked-reader opt-in and its weaker alias/host contract, plus fixed Build/Package owner boundaries; final source page/editorial proof pending.",
+    "reason": "Document the public linked-reader opt-in and weaker alias/host contract, the read-only C1 reserved-plan lookup, and fixed Build/Package owner boundaries; final source page/editorial proof pending.",
     "documentation_action": "update"
   },
   "evidence": [
