@@ -19,6 +19,8 @@ pub(crate) const PARENT_PENDING_FORMAT: &str = "vibevm.package-git-parent-pendin
 pub(crate) const PARENT_FORMAT: &str = "vibevm.package-git-parent/e1";
 pub(crate) const GITLINK_PENDING_FORMAT: &str = "vibevm.package-git-link-pending/e1";
 pub(crate) const GITLINK_FORMAT: &str = "vibevm.package-git-link/e1";
+pub(crate) const POPULATED_PENDING_FORMAT: &str = "vibevm.package-git-populated-pending/e1";
+pub(crate) const POPULATED_FORMAT: &str = "vibevm.package-git-populated/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -235,6 +237,50 @@ pub(crate) struct GitlinkLanded {
     pub commit_sha256: String,
     pub vault_subtree_sha256: String,
     pub omitted_gitmodules: Vec<GitlinkMetadataRow>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct PopulatedIndexLink {
+    pub path: String,
+    pub indexed_oid: String,
+    pub checkout_head_oid: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct PopulatedLinkReceipt {
+    pub path: String,
+    pub pending_sha256: String,
+    pub landed_sha256: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct PopulatedPending {
+    pub format: String,
+    pub run_id: String,
+    pub c1_plan_sha256: String,
+    pub semantic_plan_sha256: String,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+    pub tree_receipt_sha256: String,
+    pub source_root_token: String,
+    pub index_repository_root_token: String,
+    pub index_package_prefix: String,
+    pub index_sha256: String,
+    pub links: Vec<PopulatedIndexLink>,
+    pub link_receipts: Vec<PopulatedLinkReceipt>,
+    pub flattened_submodules_sha256: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct PopulatedLanded {
+    pub format: String,
+    pub run_id: String,
+    pub pending_sha256: String,
+    pub flattened_submodules_sha256: String,
 }
 
 pub(crate) fn sha(bytes: &[u8]) -> String {
