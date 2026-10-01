@@ -34,7 +34,7 @@ impl World {
             generation_ref: plan.remote_generation_ref.clone(),
             tag: plan.observed_tag.clone(),
             release: plan.observed_release.clone(),
-            latest_release_id: None,
+            latest_release: plan.observed_latest_release.clone(),
             last: None,
         };
         let prepare::PreparedJournal::New { run_id, .. } = prepare::prepare_journal_fake(

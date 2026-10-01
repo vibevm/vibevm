@@ -9,8 +9,8 @@ use vibe_lifecycle::{
     JournalAdmission, LifecycleLease, SubmissionNamespace, SubmissionReservations, SubmissionScope,
 };
 use vibe_wire::generated::publication_effect_plan::{
-    PublicationEffectPlan, PublicationObservedRelease, PublicationObservedTag,
-    PublicationPartition, PublicationRemoteTarget,
+    PublicationEffectPlan, PublicationObservedLatestRelease, PublicationObservedRelease,
+    PublicationObservedTag, PublicationPartition, PublicationRemoteTarget,
 };
 use vibe_wire::generated::publication_subject::PublicationSubject;
 
@@ -96,7 +96,7 @@ pub(crate) struct RemoteObservation {
     pub generation_ref: String,
     pub tag: PublicationObservedTag,
     pub release: PublicationObservedRelease,
-    pub latest_release_id: Option<String>,
+    pub latest_release: PublicationObservedLatestRelease,
     pub last: Option<PartitionReceipt>,
 }
 
@@ -225,7 +225,7 @@ fn initial_matches(observed: &RemoteObservation, plan: &PublicationEffectPlan) -
     observed.generation_ref == plan.remote_generation_ref
         && observed.tag == plan.observed_tag
         && observed.release == plan.observed_release
-        && observed.latest_release_id.is_none()
+        && observed.latest_release == plan.observed_latest_release
         && observed.last.is_none()
 }
 
@@ -283,7 +283,7 @@ fn inspect(
         generation_ref: plan.remote_generation_ref.clone(),
         tag: plan.observed_tag.clone(),
         release: plan.observed_release.clone(),
-        latest_release_id: None,
+        latest_release: plan.observed_latest_release.clone(),
         last: None,
     };
     let mut landed_hashes = Vec::with_capacity(intent.partition_sha256.len());

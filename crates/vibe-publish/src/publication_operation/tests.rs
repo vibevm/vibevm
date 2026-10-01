@@ -6,10 +6,10 @@ const SUBJECT: &str = include_str!(
     "../../../../formats/corpora/publication_subject/e1/valid/complete-five-targets.json"
 );
 const NEW: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e2/valid/new-draft-complete.json"
+    "../../../../formats/corpora/publication_effect_plan/e3/valid/new-draft-complete.json"
 );
 const REPLACE: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e2/valid/replace-known-draft.json"
+    "../../../../formats/corpora/publication_effect_plan/e3/valid/replace-known-draft.json"
 );
 
 fn expected() -> PublicationEffectPlanExpectations<'static> {
@@ -66,6 +66,7 @@ impl FakeTag {
                 generation_ref: plan.remote_generation_ref.clone(),
                 tag: plan.observed_tag.clone(),
                 release: plan.observed_release.clone(),
+                observed_latest_release: plan.observed_latest_release.clone(),
             },
             post_tag,
             creates: 0,
@@ -457,6 +458,7 @@ fn same_key_changed_remote_generation_is_c1_conflict_before_fake_port() {
         generation_ref: plan.remote_generation_ref.clone(),
         tag: plan.observed_tag.clone(),
         release: plan.observed_release.clone(),
+        observed_latest_release: plan.observed_latest_release.clone(),
     };
     remote.generation_ref.push_str("-next");
     let changed = plan_from_captured_remote(&subject, &expected(), &remote).unwrap();

@@ -962,12 +962,12 @@ corpus = "formats/corpora/distribution_smoke_report/e1"
 sunset = "none"
 
 [format.publication-effect-plan]
-epoch = 2
+epoch = 3
 schema = "schemas/publication_effect_plan.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/publication_effect_plan/e2"
+corpus = "formats/corpora/publication_effect_plan/e3"
 sunset = "none"
 
 # ── Documentation pipeline (2 records, 1 JTD), PROP-057 §10 ────────────────

@@ -4,10 +4,11 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use vibe_wire::generated::publication_effect_plan::{
-    PublicationAssetEffect, PublicationObservedAsset, PublicationObservedRelease,
-    PublicationObservedReleasePresent, PublicationObservedTag, PublicationPartition,
-    PublicationPartitionFinalizeAction, PublicationPartitionFinalizeMakeLatest,
-    PublicationPartitionReleaseAction, PublicationPartitionTagAction, PublicationPriorAsset,
+    PublicationAssetEffect, PublicationObservedAsset, PublicationObservedLatestRelease,
+    PublicationObservedRelease, PublicationObservedReleasePresent, PublicationObservedTag,
+    PublicationPartition, PublicationPartitionFinalizeAction,
+    PublicationPartitionFinalizeMakeLatest, PublicationPartitionReleaseAction,
+    PublicationPartitionTagAction, PublicationPriorAsset,
 };
 
 use super::RemoteObservation;
@@ -132,7 +133,7 @@ fn added_assets(
 }
 
 /// Every accepted transition is over typed independently observed objects.
-/// The validated epoch-two cleanup is empty; a retained draft has no visibility
+/// The validated epoch-three cleanup is empty; a retained draft has no visibility
 /// change. These no-op partitions may keep object state unchanged by design.
 pub(super) fn verifies(
     before: &RemoteObservation,
@@ -141,9 +142,7 @@ pub(super) fn verifies(
 ) -> bool {
     match partition {
         PublicationPartition::Tag(step) => {
-            if after.release != before.release
-                || after.latest_release_id != before.latest_release_id
-            {
+            if after.release != before.release || after.latest_release != before.latest_release {
                 return false;
             }
             match step.action {
@@ -157,7 +156,7 @@ pub(super) fn verifies(
             }
         }
         PublicationPartition::Release(step) => {
-            if after.tag != before.tag || after.latest_release_id != before.latest_release_id {
+            if after.tag != before.tag || after.latest_release != before.latest_release {
                 return false;
             }
             let Some(new) = release(&after.release) else {
@@ -186,7 +185,7 @@ pub(super) fn verifies(
             }
         }
         PublicationPartition::PlatformAssets(step) => {
-            if after.tag != before.tag || after.latest_release_id != before.latest_release_id {
+            if after.tag != before.tag || after.latest_release != before.latest_release {
                 return false;
             }
             match (release(&before.release), release(&after.release)) {
@@ -200,10 +199,10 @@ pub(super) fn verifies(
             step.assets.is_empty()
                 && after.tag == before.tag
                 && after.release == before.release
-                && after.latest_release_id == before.latest_release_id
+                && after.latest_release == before.latest_release
         }
         PublicationPartition::FinalAssets(step) => {
-            if after.tag != before.tag || after.latest_release_id != before.latest_release_id {
+            if after.tag != before.tag || after.latest_release != before.latest_release {
                 return false;
             }
             match (release(&before.release), release(&after.release)) {
@@ -217,7 +216,7 @@ pub(super) fn verifies(
             PublicationPartitionFinalizeAction::RetainDraft => {
                 after.tag == before.tag
                     && after.release == before.release
-                    && after.latest_release_id == before.latest_release_id
+                    && after.latest_release == before.latest_release
                     && step.make_latest == PublicationPartitionFinalizeMakeLatest::Unchanged
             }
             PublicationPartitionFinalizeAction::Publish => {
@@ -237,7 +236,8 @@ pub(super) fn verifies(
                     && old.assets == new.assets
                     && new.inventory_complete
                     && new.generation_ref == after.generation_ref
-                    && after.latest_release_id.as_deref() == Some(new.release_id.as_str())
+                    && matches!(&after.latest_release, PublicationObservedLatestRelease::Present(latest)
+                        if latest.release_id == new.release_id && latest.tag == new.tag)
                     && step.make_latest == PublicationPartitionFinalizeMakeLatest::Legacy
             }
         },

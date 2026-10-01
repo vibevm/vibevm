@@ -1,13 +1,15 @@
 use super::*;
 use vibe_wire::generated::publication_effect_plan::{
-    PublicationObservedAsset, PublicationObservedReleasePresent, PublicationObservedTagPresent,
+    PublicationObservedAsset, PublicationObservedLatestRelease,
+    PublicationObservedLatestReleaseAbsent, PublicationObservedLatestReleasePresent,
+    PublicationObservedReleasePresent, PublicationObservedTagPresent,
 };
 
 const SUBJECT: &str = include_str!(
     "../../../../formats/corpora/publication_subject/e1/valid/complete-five-targets.json"
 );
 const NEW: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e2/valid/new-draft-complete.json"
+    "../../../../formats/corpora/publication_effect_plan/e3/valid/new-draft-complete.json"
 );
 
 pub(super) fn expected() -> PublicationEffectPlanExpectations<'static> {
@@ -55,7 +57,7 @@ impl FakeRemote {
                 generation_ref: plan.remote_generation_ref.clone(),
                 tag: plan.observed_tag.clone(),
                 release: plan.observed_release.clone(),
-                latest_release_id: None,
+                latest_release: plan.observed_latest_release.clone(),
                 last: None,
             },
             calls: Vec::new(),
@@ -143,7 +145,9 @@ impl FakePlanPort for FakeRemote {
                         let PublicationObservedRelease::Present(row) = &mut self.current.release else { panic!("fake draft absent") };
                         row.draft = false;
                         row.generation_ref = receipt.resulting_generation_ref.clone();
-                        self.current.latest_release_id = Some(row.release_id.clone());
+                        self.current.latest_release = PublicationObservedLatestRelease::Present(Box::new(
+                            PublicationObservedLatestReleasePresent { release_id: row.release_id.clone(), tag: row.tag.clone() },
+                        ));
                     }
                 }
             }
@@ -472,6 +476,7 @@ fn callback_and_generation_cannot_complete_unchanged_publish_visibility() {
         generation_ref: original.remote_generation_ref,
         tag: original.observed_tag,
         release: original.observed_release,
+        observed_latest_release: original.observed_latest_release,
     };
     let plan = crate::publication_effect_plan::plan_from_captured_remote(
         &subject,
@@ -519,6 +524,52 @@ fn callback_and_generation_cannot_complete_unchanged_publish_visibility() {
         matches!(replay, Inspection::Partial { landed, pending: Some(index),
         uncertain: true, .. } if landed == visibility_index && index == visibility_index)
     );
+}
+
+#[test]
+fn fake_full_plan_refuses_foreign_latest_before_reservation_or_effect() {
+    let (subject, plan) = prepared();
+    let baseline = FakeRemote::new(&plan).current;
+    assert!(initial_matches(&baseline, &plan));
+    for foreign in [
+        PublicationObservedLatestRelease::Absent(Box::new(
+            PublicationObservedLatestReleaseAbsent {},
+        )),
+        PublicationObservedLatestRelease::Present(Box::new(
+            PublicationObservedLatestReleasePresent {
+                release_id: "102".into(),
+                tag: "v1.0.1".into(),
+            },
+        )),
+        PublicationObservedLatestRelease::Present(Box::new(
+            PublicationObservedLatestReleasePresent {
+                release_id: "101".into(),
+                tag: "v1.0.2".into(),
+            },
+        )),
+    ] {
+        let project = tempfile::tempdir().unwrap();
+        let selected = scope();
+        let lease = LifecycleLease::acquire(project.path()).unwrap();
+        let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
+        let mut fake = FakeRemote::new(&plan);
+        fake.current.latest_release = foreign;
+        assert!(!initial_matches(&fake.current, &plan));
+        assert!(matches!(
+            submit_fake_full_plan(
+                &lease,
+                &namespace,
+                &selected,
+                "latest-drift",
+                &subject,
+                &plan,
+                &expected(),
+                &mut fake,
+            ),
+            Err(Error::Refused(_))
+        ));
+        assert!(fake.calls.is_empty());
+    }
 }
 
 #[test]

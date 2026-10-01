@@ -63,7 +63,7 @@ fn composition_from_corpus(mut subject: PublicationSubject) -> PreparedPublicati
     }
     let plan: PublicationEffectPlan = serde_json::from_str(&corpus(
         "publication_effect_plan",
-        "e2",
+        "e3",
         "valid",
         "new-draft-complete",
     ))
@@ -72,6 +72,7 @@ fn composition_from_corpus(mut subject: PublicationSubject) -> PreparedPublicati
         generation_ref: plan.remote_generation_ref,
         tag: plan.observed_tag,
         release: plan.observed_release,
+        observed_latest_release: plan.observed_latest_release,
     };
     let subject_digest = publication_subject_digest(&subject, &expected().subject).unwrap();
     // Corpus-only fixture: the capture type is the production carrier for

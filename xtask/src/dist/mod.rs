@@ -14,7 +14,7 @@ use vibe_publish::publication_subject::{
 };
 use vibe_safefs::Project;
 use vibe_wire::generated::publication_effect_plan::{
-    PublicationObservedRelease, PublicationObservedTag,
+    PublicationObservedLatestRelease, PublicationObservedRelease, PublicationObservedTag,
 };
 
 mod archive;
@@ -233,6 +233,8 @@ struct OperatorRemoteSnapshot {
     generation_ref: String,
     tag: PublicationObservedTag,
     release: PublicationObservedRelease,
+    /// Authored typed observation input, never a host-authenticated witness.
+    observed_latest_release: PublicationObservedLatestRelease,
 }
 
 fn read_remote_snapshot(repo_root: &Path, path: &Path) -> Result<CapturedPublicationRemote> {
@@ -257,6 +259,7 @@ fn read_remote_snapshot(repo_root: &Path, path: &Path) -> Result<CapturedPublica
         generation_ref: typed.generation_ref,
         tag: typed.tag,
         release: typed.release,
+        observed_latest_release: typed.observed_latest_release,
     })
 }
 

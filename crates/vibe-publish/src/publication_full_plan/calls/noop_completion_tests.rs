@@ -37,6 +37,10 @@ fn github_snapshot(
     release: &PublicationObservedReleasePresent,
 ) -> RemoteSnapshot {
     RemoteSnapshot {
+        latest: crate::github_release::LatestReleaseObservation::Present {
+            release_id: 101,
+            tag: "v1.0.1".into(),
+        },
         tag: Some(GithubGitRef {
             reference: "refs/tags/v1.1.0".into(),
             object: GithubGitObject {

@@ -96,6 +96,11 @@ fn asset(id: u64, name: &str, bytes: &[u8], digest: Option<&str>) -> String {
 
 fn present_epoch(body: &str, assets: &[String]) -> Vec<Vec<u8>> {
     vec![
+        reply(
+            "200 OK",
+            "{\"id\":101,\"tag_name\":\"v1.0.1\",\"draft\":false,\"prerelease\":false}",
+            "",
+        ),
         reply("200 OK", &tag(), ""),
         reply("200 OK", &release(700, body), ""),
         reply("200 OK", &format!("[{}]", assets.join(",")), ""),
@@ -110,6 +115,7 @@ fn stable_absent_and_fixed_target_guard() {
                 [
                     reply("404 Not Found", "{}", ""),
                     reply("404 Not Found", "{}", ""),
+                    reply("404 Not Found", "{}", ""),
                     reply("200 OK", "[]", ""),
                 ]
             })
@@ -119,7 +125,9 @@ fn stable_absent_and_fixed_target_guard() {
     let mut port = GithubRemoteReadPort::new_loopback(&loopback_client).unwrap();
     let observed = observe_twice(&mut port, COMMIT).unwrap();
     let seen = handle.join().unwrap();
-    assert_eq!(seen.len(), 6);
+    assert_eq!(seen.len(), 8);
+    assert_eq!(seen[0].path, "/repos/vibevm/vibevm/releases/latest");
+    assert_eq!(seen[4].path, "/repos/vibevm/vibevm/releases/latest");
     assert!(
         seen.iter()
             .all(|row| row.authorization == format!("Bearer {TOKEN}"))
@@ -147,6 +155,11 @@ fn stable_absent_and_fixed_target_guard() {
 fn release_without_tag_is_left_for_pure_normalizer_to_refuse() {
     let (base, handle) = server(|_| {
         vec![
+            reply(
+                "200 OK",
+                "{\"id\":101,\"tag_name\":\"v1.0.1\",\"draft\":false,\"prerelease\":false}",
+                "",
+            ),
             reply("404 Not Found", "{}", ""),
             reply("200 OK", &release(700, "draft"), ""),
             reply("200 OK", "[]", ""),
@@ -161,7 +174,7 @@ fn release_without_tag_is_left_for_pure_normalizer_to_refuse() {
         super::super::remote_observation::normalize_fixed(snapshot, COMMIT),
         Err(ObservationError::Refused(_))
     ));
-    assert_eq!(handle.join().unwrap().len(), 3);
+    assert_eq!(handle.join().unwrap().len(), 4);
 }
 
 #[test]
@@ -183,7 +196,7 @@ fn stable_present_reordered_assets_keep_one_generation() {
     let client = client(&base);
     let mut port = GithubRemoteReadPort::new_loopback(&client).unwrap();
     let observed = observe_twice(&mut port, COMMIT).unwrap();
-    assert_eq!(handle.join().unwrap().len(), 6);
+    assert_eq!(handle.join().unwrap().len(), 8);
     assert!(observed.generation_ref.starts_with("sha256:"));
     let vibe_wire::generated::publication_effect_plan::PublicationObservedRelease::Present(row) =
         observed.release
@@ -212,7 +225,7 @@ fn missing_metadata_digest_is_streamed_by_same_id_in_each_epoch() {
     let mut port = GithubRemoteReadPort::new_loopback(&client).unwrap();
     let observed = observe_twice(&mut port, COMMIT).unwrap();
     let seen = handle.join().unwrap();
-    assert_eq!(seen.len(), 8);
+    assert_eq!(seen.len(), 10);
     assert_eq!(
         seen.iter()
             .filter(|row| row.path.ends_with("/releases/assets/701"))
@@ -267,6 +280,11 @@ fn malformed_overcap_foreign_pagination_and_token_echo_are_unavailable() {
     let row = asset(701, "a.zip", b"seven!!", Some(&sha256_digest(b"seven!!")));
     let (base, handle) = server(|_| {
         vec![
+            reply(
+                "200 OK",
+                "{\"id\":101,\"tag_name\":\"v1.0.1\",\"draft\":false,\"prerelease\":false}",
+                "",
+            ),
             reply("200 OK", &tag(), ""),
             reply("200 OK", &release(700, "same"), ""),
             reply(
@@ -286,6 +304,11 @@ fn malformed_overcap_foreign_pagination_and_token_echo_are_unavailable() {
 
     let (base, handle) = server(|_| {
         vec![
+            reply(
+                "200 OK",
+                "{\"id\":101,\"tag_name\":\"v1.0.1\",\"draft\":false,\"prerelease\":false}",
+                "",
+            ),
             reply("200 OK", &tag(), ""),
             reply("200 OK", &release(700, "same"), ""),
             reply(
@@ -302,5 +325,5 @@ fn malformed_overcap_foreign_pagination_and_token_echo_are_unavailable() {
         port.read_complete(),
         Err(ObservationError::Unavailable(_))
     ));
-    assert_eq!(handle.join().unwrap().len(), 4);
+    assert_eq!(handle.join().unwrap().len(), 5);
 }

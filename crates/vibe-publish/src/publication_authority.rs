@@ -321,6 +321,7 @@ mod tests {
         SUPPORTED_DISTRIBUTION_TARGETS,
     };
     use vibe_wire::generated::publication_effect_plan::{
+        PublicationObservedLatestRelease, PublicationObservedLatestReleasePresent,
         PublicationObservedRelease, PublicationObservedReleaseAbsent, PublicationObservedTag,
         PublicationObservedTagAbsent,
     };
@@ -467,6 +468,12 @@ mod tests {
                 tag: PublicationObservedTag::Absent(Box::new(PublicationObservedTagAbsent {})),
                 release: PublicationObservedRelease::Absent(Box::new(
                     PublicationObservedReleaseAbsent {},
+                )),
+                observed_latest_release: PublicationObservedLatestRelease::Present(Box::new(
+                    PublicationObservedLatestReleasePresent {
+                        release_id: "101".into(),
+                        tag: "v1.0.1".into(),
+                    },
                 )),
             },
         )
