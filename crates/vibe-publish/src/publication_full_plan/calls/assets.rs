@@ -11,13 +11,9 @@ use vibe_wire::generated::publication_subject::PublicationSubject;
 use crate::publication_effect_plan::PublicationEffectPlanExpectations;
 use crate::publication_payload::expected_upload_catalogue;
 
-use super::super::journal;
 use super::super::journal::sha;
 use super::super::{Error, Result};
-use super::{
-    CallAction, CallInspection, CallObservation, Landed, PlannedCall, decompose, inspect_calls,
-    suffix,
-};
+use super::{CallAction, CallObservation, PlannedCall, decompose};
 use vibe_lifecycle::{LifecycleLease, SubmissionNamespace, SubmissionScope};
 use vibe_wire::generated::publication_effect_plan::{
     PublicationObservedAsset, PublicationObservedRelease,
@@ -41,6 +37,7 @@ pub(super) struct PlannedAssetCall {
     pub semantic_plan_sha256: String,
     pub predecessor_release_call_id: String,
     pub predecessor_asset_call_id: Option<String>,
+    pub asset_index: usize,
     pub action: AssetAction,
     pub temporary_name: String,
     pub canonical_name: String,
@@ -64,6 +61,7 @@ fn identity(call: &PlannedAssetCall) -> Result<String> {
             call.partition_ordinal,
             &call.predecessor_release_call_id,
             &call.predecessor_asset_call_id,
+            call.asset_index,
             &call.action,
             &call.temporary_name,
             &call.canonical_name,
@@ -109,6 +107,7 @@ fn push_pair(
         semantic_plan_sha256: release.semantic_plan_sha256.clone(),
         predecessor_release_call_id: release.call_id.clone(),
         predecessor_asset_call_id: None,
+        asset_index,
         action: AssetAction::UploadTemporary,
         temporary_name,
         canonical_name: effect.name.clone(),
@@ -233,14 +232,14 @@ pub(super) fn asset_suffix(ordinal: usize, phase: &str) -> String {
     format!("asset-{ordinal:03}-{phase}")
 }
 
-fn canonical_id(value: &str) -> bool {
+pub(super) fn canonical_id(value: &str) -> bool {
     value
         .parse::<u64>()
         .ok()
         .is_some_and(|id| id > 0 && id.to_string() == value)
 }
 
-fn draft<'a>(
+pub(super) fn draft<'a>(
     observation: &'a CallObservation,
     release_id: &str,
 ) -> Option<&'a vibe_wire::generated::publication_effect_plan::PublicationObservedReleasePresent> {
@@ -252,6 +251,43 @@ fn draft<'a>(
         && value.inventory_complete
         && value.generation_ref == observation.generation_ref)
         .then_some(value)
+}
+
+fn inventory_map(
+    rows: &[PublicationObservedAsset],
+) -> Option<std::collections::BTreeMap<&str, &PublicationObservedAsset>> {
+    let mut ids = std::collections::BTreeMap::new();
+    let mut names = std::collections::BTreeSet::new();
+    for row in rows {
+        if !canonical_id(&row.asset_id)
+            || !names.insert(row.name.as_str())
+            || ids.insert(row.asset_id.as_str(), row).is_some()
+        {
+            return None;
+        }
+    }
+    Some(ids)
+}
+
+/// Equivalent exact remote state despite provider listing order. Generation,
+/// release identity and every unique asset ID/name/digest/size still match.
+pub(super) fn same_observation(left: &CallObservation, right: &CallObservation) -> bool {
+    if left.generation_ref != right.generation_ref || left.tag != right.tag {
+        return false;
+    }
+    match (&left.release, &right.release) {
+        (PublicationObservedRelease::Absent(_), PublicationObservedRelease::Absent(_)) => true,
+        (PublicationObservedRelease::Present(a), PublicationObservedRelease::Present(b)) => {
+            a.release_id == b.release_id
+                && a.tag == b.tag
+                && a.draft == b.draft
+                && a.inventory_complete == b.inventory_complete
+                && a.generation_ref == b.generation_ref
+                && matches!((inventory_map(&a.assets), inventory_map(&b.assets)),
+                    (Some(left), Some(right)) if left == right)
+        }
+        _ => false,
+    }
 }
 
 pub(super) fn verify_transition(pending: &AssetPending, landed: &AssetLanded) -> bool {
@@ -275,34 +311,46 @@ pub(super) fn verify_transition(pending: &AssetPending, landed: &AssetLanded) ->
     ) else {
         return false;
     };
+    let (Some(before_map), Some(after_map)) =
+        (inventory_map(&before.assets), inventory_map(&after.assets))
+    else {
+        return false;
+    };
+    let index = call.asset_index;
+    let wanted = |name: &str| PublicationObservedAsset {
+        asset_id: landed.receipt_id.clone(),
+        name: name.into(),
+        sha256: call.sha256.clone(),
+        size_bytes: call.size_bytes.to_string(),
+    };
+    let preserved = before_map
+        .iter()
+        .all(|(id, row)| after_map.get(id).is_some_and(|observed| *observed == *row));
     match call.action {
         AssetAction::UploadTemporary => {
             pending.asset_id.is_none()
-                && before.assets.is_empty()
-                && after.assets
-                    == vec![PublicationObservedAsset {
-                        asset_id: landed.receipt_id.clone(),
-                        name: call.temporary_name.clone(),
-                        sha256: call.sha256.clone(),
-                        size_bytes: call.size_bytes.to_string(),
-                    }]
+                && before.assets.len() == index
+                && after.assets.len() == index + 1
+                && !before_map.contains_key(landed.receipt_id.as_str())
+                && preserved
+                && after_map
+                    .get(landed.receipt_id.as_str())
+                    .is_some_and(|row| **row == wanted(&call.temporary_name))
         }
         AssetAction::RenameTemporary => {
             pending.asset_id.as_deref() == Some(landed.receipt_id.as_str())
-                && before.assets
-                    == vec![PublicationObservedAsset {
-                        asset_id: landed.receipt_id.clone(),
-                        name: call.temporary_name.clone(),
-                        sha256: call.sha256.clone(),
-                        size_bytes: call.size_bytes.to_string(),
-                    }]
-                && after.assets
-                    == vec![PublicationObservedAsset {
-                        asset_id: landed.receipt_id.clone(),
-                        name: call.canonical_name.clone(),
-                        sha256: call.sha256.clone(),
-                        size_bytes: call.size_bytes.to_string(),
-                    }]
+                && before.assets.len() == index + 1
+                && after.assets.len() == index + 1
+                && before_map
+                    .get(landed.receipt_id.as_str())
+                    .is_some_and(|row| **row == wanted(&call.temporary_name))
+                && after_map
+                    .get(landed.receipt_id.as_str())
+                    .is_some_and(|row| **row == wanted(&call.canonical_name))
+                && before_map
+                    .iter()
+                    .filter(|(id, _)| **id != landed.receipt_id.as_str())
+                    .all(|(id, row)| after_map.get(id).is_some_and(|observed| *observed == *row))
         }
     }
 }
@@ -318,99 +366,31 @@ pub(super) fn inspect_first_pair(
     plan: &PublicationEffectPlan,
     expected: &PublicationEffectPlanExpectations<'_>,
 ) -> Result<FirstPairInspection> {
-    // This uses the same strict C.1/vault/approval cold gate as the prefix.
-    let prefix = decompose(subject, plan, expected)?;
-    if !matches!(inspect_calls(lease, namespace, scope, key, run_id, subject, plan, expected)?,
-        CallInspection::Unavailable { landed, .. } if landed == prefix.calls.len())
-    {
-        return Ok(FirstPairInspection::Unavailable);
-    }
-    let calls = decompose_asset_calls(subject, plan, expected, run_id)?;
-    let release_call = prefix
-        .calls
-        .last()
-        .ok_or_else(|| Error::Refused("missing CreateDraft".into()))?;
-    let Some(release_landed) =
-        journal::read::<Landed>(lease, run_id, &suffix(release_call.ordinal, "landed"))?
-    else {
-        return Ok(FirstPairInspection::Uncertain);
-    };
-    if !canonical_id(&release_landed.receipt_id)
-        || draft(&release_landed.after, &release_landed.receipt_id).is_none()
-        || !matches!(release_call.action, CallAction::CreateDraft { .. })
-        || calls[0].predecessor_release_call_id != release_call.call_id
-    {
-        return Ok(FirstPairInspection::Uncertain);
-    }
-    let release_id = release_landed.receipt_id;
-    let mut prior = release_landed.after;
-    let mut asset_id = None;
-    for call in calls.iter().take(2) {
-        let pending_name = asset_suffix(call.ordinal, "pending");
-        let landed_name = asset_suffix(call.ordinal, "landed");
-        let pending = match journal::read::<AssetPending>(lease, run_id, &pending_name) {
-            Ok(row) => row,
-            Err(_) => return Ok(FirstPairInspection::Uncertain),
-        };
-        let Some(pending) = pending else {
-            if !matches!(journal::read_bytes(lease, run_id, &landed_name), Ok(None))
-                || calls
-                    .iter()
-                    .skip(call.ordinal + 1 - calls[0].ordinal)
-                    .any(|future| {
-                        ["pending", "landed"].into_iter().any(|phase| {
-                            !matches!(
-                                journal::read_bytes(
-                                    lease,
-                                    run_id,
-                                    &asset_suffix(future.ordinal, phase)
-                                ),
-                                Ok(None)
-                            )
-                        })
-                    })
-            {
-                return Ok(FirstPairInspection::Uncertain);
-            }
-            return Ok(match call.action {
-                AssetAction::UploadTemporary => FirstPairInspection::NextUpload {
-                    release_id,
-                    before: prior,
-                },
+    use super::asset_history::{AssetInspection, inspect_assets};
+    Ok(
+        match inspect_assets(
+            lease, namespace, scope, key, run_id, subject, plan, expected,
+        )? {
+            AssetInspection::Next {
+                call,
+                release_id,
+                asset_id,
+                before,
+            } if call.asset_index == 0 => match call.action {
+                AssetAction::UploadTemporary => {
+                    FirstPairInspection::NextUpload { release_id, before }
+                }
                 AssetAction::RenameTemporary => FirstPairInspection::NextRename {
                     release_id,
                     asset_id: asset_id.expect("upload Landed supplied ID"),
-                    before: prior,
+                    before,
                 },
-            });
-        };
-        if pending.call != *call
-            || pending.run_id != run_id
-            || pending.release_id != release_id
-            || pending.before != prior
-            || pending.asset_id != asset_id
-        {
-            return Ok(FirstPairInspection::Uncertain);
-        }
-        let landed = match journal::read::<AssetLanded>(lease, run_id, &landed_name) {
-            Ok(Some(row)) => row,
-            _ => return Ok(FirstPairInspection::Uncertain),
-        };
-        if !verify_transition(&pending, &landed) {
-            return Ok(FirstPairInspection::Uncertain);
-        }
-        asset_id = Some(landed.receipt_id.clone());
-        prior = landed.after;
-    }
-    if calls.iter().skip(2).any(|future| {
-        ["pending", "landed"].into_iter().any(|phase| {
-            !matches!(
-                journal::read_bytes(lease, run_id, &asset_suffix(future.ordinal, phase)),
-                Ok(None)
-            )
-        })
-    }) {
-        return Ok(FirstPairInspection::Uncertain);
-    }
-    Ok(FirstPairInspection::Landed)
+            },
+            AssetInspection::Next { .. } | AssetInspection::Unavailable { landed: 38 } => {
+                FirstPairInspection::Landed
+            }
+            AssetInspection::Uncertain { .. } => FirstPairInspection::Uncertain,
+            AssetInspection::Unavailable { .. } => FirstPairInspection::Unavailable,
+        },
+    )
 }

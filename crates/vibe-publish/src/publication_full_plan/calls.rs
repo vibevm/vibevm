@@ -25,8 +25,13 @@ const DOMAIN: &[u8] = b"vibevm.publication.api-call/e1\0";
 const PENDING_FORMAT: &str = "vibevm.publication.api-call-pending/e1";
 const LANDED_FORMAT: &str = "vibevm.publication.api-call-landed/e1";
 
+#[path = "calls/asset_history.rs"]
+mod asset_history;
 mod assets;
 
+#[cfg(test)]
+#[path = "calls/asset_many_tests.rs"]
+mod asset_many_tests;
 #[cfg(test)]
 #[path = "calls/assets_tests.rs"]
 mod assets_tests;
