@@ -311,4 +311,4 @@ pub(crate) fn inspect_cold(
 }
 
 #[cfg(test)]
-mod tests;
+pub(crate) mod tests;

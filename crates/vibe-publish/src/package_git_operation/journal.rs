@@ -26,6 +26,8 @@ pub(crate) const APPROVAL_LINK_PENDING_FORMAT: &str = "vibevm.package-git-approv
 pub(crate) const APPROVAL_LINK_FORMAT: &str = "vibevm.package-git-approval-link/e1";
 pub(crate) const REPO_CREATE_PENDING_FORMAT: &str = "vibevm.package-git-repo-create-pending/e1";
 pub(crate) const REPO_CREATE_FORMAT: &str = "vibevm.package-git-repo-create/e1";
+pub(crate) const ATOMIC_PUSH_PENDING_FORMAT: &str = "vibevm.package-git-atomic-push-pending/e1";
+pub(crate) const ATOMIC_PUSH_FORMAT: &str = "vibevm.package-git-atomic-push/e2";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -385,6 +387,53 @@ pub(crate) struct RepoCreateLanded {
     pub returned_identity: crate::package_git_plan::RepositoryIdentity,
     pub observed_repo: crate::package_git_plan::RepositoryObservation,
     pub observed_refs: crate::package_git_plan::RefSnapshot,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct AtomicPushPending {
+    pub format: String,
+    pub run_id: String,
+    pub namespace_id: String,
+    pub scope_context: String,
+    pub scope_target: String,
+    pub scope_principal: String,
+    pub key_sha256: String,
+    pub lease_root_token: String,
+    pub semantic_plan_sha256: String,
+    pub c1_plan_sha256: String,
+    pub request_sha256: String,
+    pub ready_seal_sha256: String,
+    pub approval_link_landed_sha256: String,
+    pub repo_create_landed_sha256: Option<String>,
+    pub repository: crate::package_git_plan::RepositoryIdentity,
+    pub before_refs: crate::package_git_plan::RefSnapshot,
+    pub desired_refs: crate::package_git_plan::RefSnapshot,
+    pub object_root_token: String,
+    pub object_receipt_sha256: String,
+    pub selected_tree_oid: String,
+    pub selected_commit_oid: String,
+    pub selected_tag_oid: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct AtomicPushLanded {
+    pub format: String,
+    pub run_id: String,
+    pub pending_sha256: String,
+    pub callback_exit_zero: bool,
+    pub main_update: RefUpdateKind,
+    pub tag_update: RefUpdateKind,
+    pub observed_repository: crate::package_git_plan::RepositoryObservation,
+    pub observed_refs: crate::package_git_plan::RefSnapshot,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) enum RefUpdateKind {
+    New,
+    Forced,
+    FastForward,
 }
 
 pub(crate) fn sha(bytes: &[u8]) -> String {
