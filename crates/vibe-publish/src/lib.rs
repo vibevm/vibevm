@@ -41,6 +41,7 @@ pub mod github_release;
 pub mod gitverse;
 mod orchestrator;
 mod package_git_operation;
+mod package_git_parent_source;
 mod package_git_objects;
 mod package_git_gitlink;
 mod package_git_payload;
