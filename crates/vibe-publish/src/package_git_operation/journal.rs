@@ -12,6 +12,8 @@ pub(super) const INTENT_FORMAT: &str = "vibevm.package-git-intent/e1";
 pub(super) const STAGE_FORMAT: &str = "vibevm.package-git-stage/e1";
 pub(super) const REQUEST_FORMAT: &str = "vibevm.package-git-request/e1";
 pub(crate) const TREE_FORMAT: &str = "vibevm.package-git-tree/e1";
+pub(crate) const PROVENANCE_FORMAT: &str = "vibevm.package-git-no-gitlinks/e1";
+pub(crate) const PROVENANCE_PENDING_FORMAT: &str = "vibevm.package-git-no-gitlinks-pending/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -83,6 +85,33 @@ pub(crate) struct TreeFile {
     pub git_mode: String,
     pub size_bytes: u64,
     pub sha256: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) enum NoGitlinksEvidence {
+    NoGitRepository,
+    NoGitlinks {
+        repository_root_token: String,
+        package_prefix: String,
+        index_sha256: String,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ProvenanceReceipt {
+    pub format: String,
+    pub pending_sha256: Option<String>,
+    pub run_id: String,
+    pub semantic_plan_sha256: String,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+    pub tree_receipt_sha256: String,
+    pub root_tree_oid: String,
+    pub source_root_token: String,
+    pub flattened_submodules_sha256: String,
+    pub evidence: NoGitlinksEvidence,
 }
 
 pub(crate) fn sha(bytes: &[u8]) -> String {
