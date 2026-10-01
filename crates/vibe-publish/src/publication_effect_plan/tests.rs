@@ -1,6 +1,8 @@
 use sha2::Digest;
 use vibe_wire::generated::publication_effect_plan::{
-    PublicationEffectPlan, PublicationObservedRelease, PublicationPartition, PublicationPriorAsset,
+    PublicationEffectPlan, PublicationObservedLatestRelease,
+    PublicationObservedLatestReleaseAbsent, PublicationObservedLatestReleasePresent,
+    PublicationObservedRelease, PublicationPartition, PublicationPriorAsset,
     PublicationPriorAssetPresent,
 };
 use vibe_wire::generated::publication_subject::{PublicationSmokeProbeStatus, PublicationSubject};
@@ -18,10 +20,10 @@ const SUBJECT: &str = include_str!(
 );
 
 const NEW: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e2/valid/new-draft-complete.json"
+    "../../../../formats/corpora/publication_effect_plan/e3/valid/new-draft-complete.json"
 );
 const REPLACE: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e2/valid/replace-known-draft.json"
+    "../../../../formats/corpora/publication_effect_plan/e3/valid/replace-known-draft.json"
 );
 
 fn subject_expected() -> PublicationSubjectExpectations<'static> {
@@ -60,6 +62,7 @@ fn captured(plan: &PublicationEffectPlan) -> CapturedPublicationRemote {
         generation_ref: plan.remote_generation_ref.clone(),
         tag: plan.observed_tag.clone(),
         release: plan.observed_release.clone(),
+        observed_latest_release: plan.observed_latest_release.clone(),
     }
 }
 
@@ -329,19 +332,19 @@ fn three_semantic_invalid_corpora_refuse() {
     for (raw, field) in [
         (
             include_str!(
-                "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/changed-target-replacement.json"
+                "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/changed-target-replacement.json"
             ),
             "partitions[2]",
         ),
         (
             include_str!(
-                "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/incomplete-release-inventory.json"
+                "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/incomplete-release-inventory.json"
             ),
             "observed_release",
         ),
         (
             include_str!(
-                "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/wrong-partition-order.json"
+                "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/wrong-partition-order.json"
             ),
             "partitions[0]",
         ),
@@ -362,16 +365,16 @@ fn three_semantic_invalid_corpora_refuse() {
 fn four_structural_invalid_corpora_fail_generated_decoding() {
     for raw in [
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e2/structural-invalid/unknown-root.json"
+            "../../../../formats/corpora/publication_effect_plan/e3/structural-invalid/unknown-root.json"
         ),
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e2/structural-invalid/unknown-partition-arm.json"
+            "../../../../formats/corpora/publication_effect_plan/e3/structural-invalid/unknown-partition-arm.json"
         ),
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e2/structural-invalid/missing-prior-state.json"
+            "../../../../formats/corpora/publication_effect_plan/e3/structural-invalid/missing-prior-state.json"
         ),
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e2/structural-invalid/wrong-release-id-type.json"
+            "../../../../formats/corpora/publication_effect_plan/e3/structural-invalid/wrong-release-id-type.json"
         ),
     ] {
         assert!(serde_json::from_str::<PublicationEffectPlan>(raw).is_err());
@@ -418,11 +421,123 @@ fn successor_metadata_is_exact_and_observed_metadata_changes_plan_identity() {
 }
 
 #[test]
-fn historical_fieldless_epoch_one_plan_cannot_decode_as_epoch_two() {
-    let old = include_str!(
-        "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
+fn historical_epoch_one_and_two_plans_cannot_decode_as_epoch_three() {
+    for old in [
+        include_str!(
+            "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
+        ),
+        include_str!(
+            "../../../../formats/corpora/publication_effect_plan/e2/valid/new-draft-complete.json"
+        ),
+    ] {
+        assert!(serde_json::from_str::<PublicationEffectPlan>(old).is_err());
+    }
+}
+
+#[test]
+fn latest_baseline_is_typed_and_changes_epoch_three_digest() {
+    for raw in [NEW, REPLACE] {
+        let (plan, subject) = prepared(raw);
+        validate_publication_effect_plan(&plan, &subject, &plan_expected()).unwrap();
+        assert!(matches!(&plan.observed_latest_release,
+            PublicationObservedLatestRelease::Present(row)
+                if row.release_id == "101" && row.tag == "v1.0.1"));
+        let baseline = publication_effect_plan_digest(&plan, &subject, &plan_expected()).unwrap();
+        let mut changed = plan.clone();
+        let PublicationObservedLatestRelease::Present(latest) =
+            &mut changed.observed_latest_release
+        else {
+            panic!()
+        };
+        latest.release_id = "102".into();
+        assert_ne!(
+            baseline,
+            publication_effect_plan_digest(&changed, &subject, &plan_expected()).unwrap()
+        );
+        let mut changed = plan.clone();
+        let PublicationObservedLatestRelease::Present(latest) =
+            &mut changed.observed_latest_release
+        else {
+            panic!()
+        };
+        latest.tag = "v1.0.2".into();
+        assert_ne!(
+            baseline,
+            publication_effect_plan_digest(&changed, &subject, &plan_expected()).unwrap()
+        );
+        let mut changed = plan.clone();
+        changed.observed_latest_release = PublicationObservedLatestRelease::Absent(Box::new(
+            PublicationObservedLatestReleaseAbsent {},
+        ));
+        assert_ne!(
+            baseline,
+            publication_effect_plan_digest(&changed, &subject, &plan_expected()).unwrap()
+        );
+    }
+}
+
+#[test]
+fn deleting_the_current_latest_published_release_refuses_before_plan() {
+    let (plan, subject) = prepared(include_str!(
+        "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/latest-is-published-prior.json"
+    ));
+    let mut selected = plan_expected();
+    selected.allow_replace_published = true;
+    assert!(
+        matches!(validate_publication_effect_plan(&plan, &subject, &selected),
+        Err(PublicationEffectPlanError::Invalid { field, .. }) if field == "observed_latest_release")
     );
-    assert!(serde_json::from_str::<PublicationEffectPlan>(old).is_err());
+    assert!(
+        matches!(plan_from_captured_remote(&subject, &selected, &captured(&plan)),
+        Err(PublicationEffectPlanError::Invalid { field, .. }) if field == "observed_latest_release")
+    );
+}
+
+#[test]
+fn latest_target_tag_refuses_even_when_release_lookup_says_absent() {
+    let (mut plan, subject) = prepared(NEW);
+    plan.observed_latest_release = PublicationObservedLatestRelease::Present(Box::new(
+        PublicationObservedLatestReleasePresent {
+            release_id: "999".into(),
+            tag: "v1.1.0".into(),
+        },
+    ));
+    assert!(matches!(
+        validate_publication_effect_plan(&plan, &subject, &plan_expected()),
+        Err(PublicationEffectPlanError::Invalid { field, .. }) if field == "observed_latest_release"
+    ));
+    assert!(matches!(
+        plan_from_captured_remote(&subject, &plan_expected(), &captured(&plan)),
+        Err(PublicationEffectPlanError::Invalid { field, .. }) if field == "observed_latest_release"
+    ));
+}
+
+#[test]
+fn malformed_latest_id_or_tag_refuses_semantically() {
+    let (_, subject) = prepared(NEW);
+    for raw in [
+        include_str!(
+            "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/malformed-latest-id.json"
+        ),
+        include_str!(
+            "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/malformed-latest-tag.json"
+        ),
+    ] {
+        let plan: PublicationEffectPlan = serde_json::from_str(raw).unwrap();
+        assert!(
+            matches!(validate_publication_effect_plan(&plan, &subject, &plan_expected()),
+            Err(PublicationEffectPlanError::Invalid { field, .. })
+                if field.starts_with("observed_latest_release"))
+        );
+    }
+    let mut changed = prepared(NEW).0;
+    changed.observed_latest_release = PublicationObservedLatestRelease::Present(Box::new(
+        PublicationObservedLatestReleasePresent {
+            release_id: "0".into(),
+            tag: "v1.0.1".into(),
+        },
+    ));
+    assert!(validate_publication_effect_plan(&changed, &subject, &plan_expected()).is_err());
 }
 
 #[test]
@@ -430,13 +545,13 @@ fn successor_metadata_invalid_corpora_refuse_before_effect() {
     let (_, subject) = prepared(NEW);
     for raw in [
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/wrong-successor-commit.json"
+            "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/wrong-successor-commit.json"
         ),
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/wrong-successor-body.json"
+            "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/wrong-successor-body.json"
         ),
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/wrong-successor-prerelease.json"
+            "../../../../formats/corpora/publication_effect_plan/e3/semantic-invalid/wrong-successor-prerelease.json"
         ),
     ] {
         let plan: PublicationEffectPlan = serde_json::from_str(raw).unwrap();

@@ -15,6 +15,7 @@ fn plan_local_reads_existing_evidence_without_new_effects_or_claiming_readiness(
             "generation_ref": "fixture-remote-absent",
             "tag": absent_remote().tag,
             "release": absent_remote().release,
+            "observed_latest_release": {"state": "absent"},
         }))
         .unwrap(),
     )
@@ -88,6 +89,7 @@ fn plan_local_rejects_bad_remote_or_report_without_stdout() {
             "generation_ref": "fixture-remote-absent",
             "tag": absent_remote().tag,
             "release": absent_remote().release,
+            "observed_latest_release": {"state": "absent"},
         }))
         .unwrap(),
     )

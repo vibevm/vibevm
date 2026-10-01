@@ -17,9 +17,11 @@ use vibe_wire::generated::distribution_smoke_report::{
     DistributionSmokeReport, DistributionSmokeTargetStatus,
 };
 use vibe_wire::generated::publication_effect_plan::{
-    PublicationObservedAsset, PublicationObservedRelease, PublicationObservedReleaseAbsent,
-    PublicationObservedReleasePresent, PublicationObservedTag, PublicationObservedTagAbsent,
-    PublicationObservedTagPresent, PublicationPartition, PublicationPartitionReleaseAction,
+    PublicationObservedAsset, PublicationObservedLatestRelease,
+    PublicationObservedLatestReleasePresent, PublicationObservedRelease,
+    PublicationObservedReleaseAbsent, PublicationObservedReleasePresent, PublicationObservedTag,
+    PublicationObservedTagAbsent, PublicationObservedTagPresent, PublicationPartition,
+    PublicationPartitionReleaseAction,
 };
 use vibe_wire::generated::publication_subject::{
     PublicationSmoke, PublicationSmokeProbe, PublicationSmokeProbeStatus,
@@ -234,6 +236,12 @@ fn absent_remote() -> CapturedPublicationRemote {
         generation_ref: "fixture-remote-absent".into(),
         tag: PublicationObservedTag::Absent(Box::new(PublicationObservedTagAbsent {})),
         release: PublicationObservedRelease::Absent(Box::new(PublicationObservedReleaseAbsent {})),
+        observed_latest_release: PublicationObservedLatestRelease::Present(Box::new(
+            PublicationObservedLatestReleasePresent {
+                release_id: "101".into(),
+                tag: "v1.0.1".into(),
+            },
+        )),
     }
 }
 
@@ -245,6 +253,12 @@ fn old_draft_remote(commit: &str, release_id: &str, generation: &str) -> Capture
             object_kind: "commit".into(),
             object_sha: commit.into(),
         })),
+        observed_latest_release: PublicationObservedLatestRelease::Present(Box::new(
+            PublicationObservedLatestReleasePresent {
+                release_id: "101".into(),
+                tag: "v1.0.1".into(),
+            },
+        )),
         release: PublicationObservedRelease::Present(Box::new(PublicationObservedReleasePresent {
             release_id: release_id.into(),
             generation_ref: generation.into(),

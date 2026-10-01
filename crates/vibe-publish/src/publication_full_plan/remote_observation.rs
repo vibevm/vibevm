@@ -6,15 +6,19 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use sha2::{Digest, Sha256};
 use vibe_wire::generated::publication_effect_plan::{
-    PublicationObservedAsset, PublicationObservedRelease, PublicationObservedReleaseAbsent,
+    PublicationObservedAsset, PublicationObservedLatestRelease,
+    PublicationObservedLatestReleaseAbsent, PublicationObservedLatestReleasePresent,
+    PublicationObservedRelease, PublicationObservedReleaseAbsent,
     PublicationObservedReleasePresent, PublicationObservedTag, PublicationObservedTagAbsent,
     PublicationObservedTagPresent,
 };
 
-use crate::github_release::{GithubGitRef, GithubRelease, GithubReleaseAsset};
+use crate::github_release::{
+    GithubGitRef, GithubRelease, GithubReleaseAsset, LatestReleaseObservation,
+};
 use crate::publication_effect_plan::CapturedPublicationRemote;
 
-const DOMAIN: &[u8] = b"vibevm/github-publication-observation/e1\0";
+const DOMAIN: &[u8] = b"vibevm/github-publication-observation/e2\0";
 const MAX_ASSETS: usize = 32 * 100;
 const MAX_TEXT: usize = 512;
 const MAX_URL: usize = 2048;
@@ -36,6 +40,7 @@ pub(crate) struct AssetDigestEvidence {
 /// listing. Digest evidence is accepted only for metadata with no digest.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct RemoteSnapshot {
+    pub latest: LatestReleaseObservation,
     pub tag: Option<GithubGitRef>,
     pub release: Option<GithubRelease>,
     pub assets: Option<Vec<GithubReleaseAsset>>,
@@ -130,6 +135,28 @@ pub(crate) fn normalize_fixed(
     let mut hash = Sha256::new();
     hash.update(DOMAIN);
     text(&mut hash, b"target", "github.com/vibevm/vibevm");
+    let observed_latest_release = match snapshot.latest {
+        LatestReleaseObservation::Absent => {
+            frame(&mut hash, b"latest-state", b"absent");
+            PublicationObservedLatestRelease::Absent(Box::new(
+                PublicationObservedLatestReleaseAbsent {},
+            ))
+        }
+        LatestReleaseObservation::Present { release_id, tag } => {
+            if release_id == 0 || tag.is_empty() || !bounded(&tag, MAX_TEXT) {
+                return Err(refused("latest published release ID/tag is invalid"));
+            }
+            frame(&mut hash, b"latest-state", b"present");
+            frame(&mut hash, b"latest-id", &release_id.to_be_bytes());
+            text(&mut hash, b"latest-tag", &tag);
+            PublicationObservedLatestRelease::Present(Box::new(
+                PublicationObservedLatestReleasePresent {
+                    release_id: positive_decimal(release_id),
+                    tag,
+                },
+            ))
+        }
+    };
     match &tag {
         PublicationObservedTag::Absent(_) => frame(&mut hash, b"tag-state", b"absent"),
         PublicationObservedTag::Present(value) => {
@@ -289,6 +316,7 @@ pub(crate) fn normalize_fixed(
         generation_ref,
         tag,
         release,
+        observed_latest_release,
     })
 }
 

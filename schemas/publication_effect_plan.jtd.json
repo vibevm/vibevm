@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Epoch-two pure partition plan binding exact successor release metadata. Remote observations are comparison inputs, not an atomic cross-object CAS or an effect grant.",
+    "description": "Epoch-three pure partition plan binding successor metadata and an independently observed latest published release baseline. Remote observations are comparison inputs, not an atomic cross-object CAS or an effect grant.",
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-EFFECT-PLAN" },
     "rustOptions": { "package": "vibe_wire::publication_effect_plan" }
   },
@@ -14,6 +14,7 @@
     },
     "observed_tag": { "ref": "publication_observed_tag" },
     "observed_release": { "ref": "publication_observed_release" },
+    "observed_latest_release": { "ref": "publication_observed_latest_release" },
     "smoke_policy_id": { "type": "string" },
     "partitions": {
       "elements": { "ref": "publication_partition" },
@@ -67,6 +68,18 @@
           "optionalProperties": {
             "name": { "type": "string", "metadata": { "x-default": null } },
             "body": { "type": "string", "metadata": { "x-default": null } }
+          }
+        }
+      }
+    },
+    "publication_observed_latest_release": {
+      "discriminator": "state",
+      "mapping": {
+        "absent": { "properties": {} },
+        "present": {
+          "properties": {
+            "release_id": { "type": "string", "metadata": { "description": "Canonical positive decimal u64 latest published release ID." } },
+            "tag": { "type": "string" }
           }
         }
       }

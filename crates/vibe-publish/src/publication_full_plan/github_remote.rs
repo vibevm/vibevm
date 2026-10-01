@@ -40,6 +40,10 @@ impl<'a> GithubRemoteReadPort<'a> {
 
 impl RemoteReadPort for GithubRemoteReadPort<'_> {
     fn read_complete(&mut self) -> Result<RemoteSnapshot, ObservationError> {
+        let latest = self
+            .client
+            .read_latest_release_bounded()
+            .map_err(|error| ObservationError::Unavailable(error.to_string()))?;
         let tag = self
             .client
             .read_tag_ref_bounded(TAG)
@@ -80,6 +84,7 @@ impl RemoteReadPort for GithubRemoteReadPort<'_> {
             }
         };
         Ok(RemoteSnapshot {
+            latest,
             tag,
             release,
             assets,

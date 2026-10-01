@@ -8,7 +8,7 @@ const SUBJECT: &str = include_str!(
     "../../../../formats/corpora/publication_subject/e1/valid/complete-five-targets.json"
 );
 const PLAN: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e2/valid/new-draft-complete.json"
+    "../../../../formats/corpora/publication_effect_plan/e3/valid/new-draft-complete.json"
 );
 
 pub(super) fn expected() -> PublicationEffectPlanExpectations<'static> {

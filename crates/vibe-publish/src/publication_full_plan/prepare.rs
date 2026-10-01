@@ -388,7 +388,7 @@ pub(super) fn trusted<'a>(
             generation_ref: plan.remote_generation_ref.clone(),
             tag: plan.observed_tag.clone(),
             release: plan.observed_release.clone(),
-            latest_release_id: None,
+            latest_release: plan.observed_latest_release.clone(),
             last: None,
         },
         output,

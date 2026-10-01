@@ -99,6 +99,10 @@ impl Fixture {
             },
         };
         let remote = Rc::new(RefCell::new(RemoteSnapshot {
+            latest: crate::github_release::LatestReleaseObservation::Present {
+                release_id: 101,
+                tag: "v1.0.1".into(),
+            },
             tag: Some(tag),
             release: Some(release),
             assets: Some(Vec::new()),

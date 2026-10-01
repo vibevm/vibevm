@@ -60,6 +60,7 @@ impl TinyPayloadWorld {
             generation_ref: old_plan.remote_generation_ref,
             tag: old_plan.observed_tag,
             release: old_plan.observed_release,
+            observed_latest_release: old_plan.observed_latest_release,
         };
         let plan = plan_from_captured_remote(&subject, &expected(), &remote)
             .unwrap()
@@ -122,7 +123,7 @@ fn e2_release_transition_requires_every_approved_successor_field() {
         release: PublicationObservedRelease::Absent(Box::new(
             vibe_wire::generated::publication_effect_plan::PublicationObservedReleaseAbsent {},
         )),
-        latest_release_id: None,
+        latest_release: tiny.plan.observed_latest_release.clone(),
         last: None,
     };
     let mut after = before.clone();
@@ -143,6 +144,15 @@ fn e2_release_transition_requires_every_approved_successor_field() {
     assert!(transition::verifies(
         &before,
         &after,
+        &tiny.plan.partitions[1]
+    ));
+    let mut changed_latest = after.clone();
+    changed_latest.latest_release = PublicationObservedLatestRelease::Absent(Box::new(
+        vibe_wire::generated::publication_effect_plan::PublicationObservedLatestReleaseAbsent {},
+    ));
+    assert!(!transition::verifies(
+        &before,
+        &changed_latest,
         &tiny.plan.partitions[1]
     ));
     for field in ["target", "name", "body", "prerelease"] {
@@ -471,7 +481,7 @@ fn replacement_release_without_old_id_deletion_proof_is_not_fake_admitted() {
     let project = tempfile::tempdir().unwrap();
     let (subject, _) = prepared();
     let plan: PublicationEffectPlan = serde_json::from_str(include_str!(
-        "../../../../formats/corpora/publication_effect_plan/e2/valid/replace-known-draft.json"
+        "../../../../formats/corpora/publication_effect_plan/e3/valid/replace-known-draft.json"
     ))
     .unwrap();
     let index = plan

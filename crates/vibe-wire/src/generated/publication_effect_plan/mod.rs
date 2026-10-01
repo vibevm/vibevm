@@ -2,12 +2,15 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Epoch-two pure partition plan binding exact successor release metadata.
-/// Remote observations are comparison inputs, not an atomic cross-object CAS or
-/// an effect grant.
+/// Epoch-three pure partition plan binding successor metadata and an
+/// independently observed latest published release baseline. Remote
+/// observations are comparison inputs, not an atomic cross-object CAS or an
+/// effect grant.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PublicationEffectPlan {
+    pub observed_latest_release: PublicationObservedLatestRelease,
+
     pub observed_release: PublicationObservedRelease,
 
     pub observed_tag: PublicationObservedTag,
@@ -54,6 +57,29 @@ pub struct PublicationObservedAsset {
     pub sha256: String,
 
     pub size_bytes: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "state")]
+pub enum PublicationObservedLatestRelease {
+    #[serde(rename = "absent")]
+    Absent(Box<PublicationObservedLatestReleaseAbsent>),
+
+    #[serde(rename = "present")]
+    Present(Box<PublicationObservedLatestReleasePresent>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PublicationObservedLatestReleaseAbsent {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PublicationObservedLatestReleasePresent {
+    /// Canonical positive decimal u64 latest published release ID.
+    pub release_id: String,
+
+    pub tag: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

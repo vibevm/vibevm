@@ -59,6 +59,10 @@ fn initial(commit: &str, retain_tag: bool, replace_release: bool) -> FakeState {
     let release = replace_release.then(|| old_release(commit));
     FakeState {
         snapshot: RemoteSnapshot {
+            latest: crate::github_release::LatestReleaseObservation::Present {
+                release_id: 101,
+                tag: "v1.0.1".into(),
+            },
             tag: (retain_tag || replace_release).then(|| tag(commit)),
             release,
             assets: replace_release.then(|| {

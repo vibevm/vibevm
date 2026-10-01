@@ -11,12 +11,13 @@ use std::collections::BTreeSet;
 use sha2::{Digest, Sha256};
 use vibe_wire::generated::publication_effect_plan::{
     PublicationAssetEffect, PublicationEffectPlan, PublicationObservedAsset,
-    PublicationObservedRelease, PublicationObservedTag, PublicationPartition,
-    PublicationPartitionCleanup, PublicationPartitionFinalAssets, PublicationPartitionFinalize,
-    PublicationPartitionFinalizeAction, PublicationPartitionFinalizeMakeLatest,
-    PublicationPartitionPlatformAssets, PublicationPartitionRelease,
-    PublicationPartitionReleaseAction, PublicationPartitionTag, PublicationPartitionTagAction,
-    PublicationPriorAsset, PublicationPriorAssetAbsent, PublicationRemoteTarget,
+    PublicationObservedLatestRelease, PublicationObservedRelease, PublicationObservedTag,
+    PublicationPartition, PublicationPartitionCleanup, PublicationPartitionFinalAssets,
+    PublicationPartitionFinalize, PublicationPartitionFinalizeAction,
+    PublicationPartitionFinalizeMakeLatest, PublicationPartitionPlatformAssets,
+    PublicationPartitionRelease, PublicationPartitionReleaseAction, PublicationPartitionTag,
+    PublicationPartitionTagAction, PublicationPriorAsset, PublicationPriorAssetAbsent,
+    PublicationRemoteTarget,
 };
 use vibe_wire::generated::publication_subject::{PublicationAsset, PublicationSubject};
 
@@ -49,6 +50,9 @@ pub struct CapturedPublicationRemote {
     pub generation_ref: String,
     pub tag: PublicationObservedTag,
     pub release: PublicationObservedRelease,
+    /// Independently read latest published full release, or explicit 404.
+    /// Unknown/unavailable latest must not be represented as Absent.
+    pub observed_latest_release: PublicationObservedLatestRelease,
 }
 
 /// Pure construction result. Its digest is identity data, not authorization.
@@ -177,6 +181,7 @@ fn validate_remote_observation(
     generation_ref: &str,
     observed_tag: &PublicationObservedTag,
     observed_release: &PublicationObservedRelease,
+    observed_latest_release: &PublicationObservedLatestRelease,
 ) -> Result<(), PublicationEffectPlanError> {
     nonblank("remote_generation_ref", generation_ref)?;
     let tag = format!("v{}", subject.version);
@@ -233,6 +238,32 @@ fn validate_remote_observation(
             }
         }
     }
+    match observed_latest_release {
+        PublicationObservedLatestRelease::Absent(_) => {}
+        PublicationObservedLatestRelease::Present(latest) => {
+            decimal(
+                "observed_latest_release.release_id",
+                &latest.release_id,
+                true,
+            )?;
+            nonblank("observed_latest_release.tag", &latest.tag)?;
+            bounded_release_text("observed_latest_release.tag", &latest.tag, 512)?;
+            if latest.tag == tag {
+                return Err(invalid(
+                    "observed_latest_release",
+                    "the target tag is already the latest published release or remote reads disagree",
+                ));
+            }
+            if matches!(observed_release, PublicationObservedRelease::Present(old)
+                if old.release_id == latest.release_id)
+            {
+                return Err(invalid(
+                    "observed_latest_release",
+                    "delete-first replacement of the current latest release has no pre-effect fallback proof",
+                ));
+            }
+        }
+    }
     Ok(())
 }
 
@@ -265,6 +296,7 @@ pub fn plan_from_captured_remote(
         &captured.generation_ref,
         &captured.tag,
         &captured.release,
+        &captured.observed_latest_release,
     )?;
     let subject_sha256 = publication_subject_digest(subject, &expected.subject)
         .map_err(|error| PublicationEffectPlanError::Subject(error.to_string()))?;
@@ -343,7 +375,7 @@ pub fn plan_from_captured_remote(
         },
     )));
     let plan = PublicationEffectPlan {
-        schema: 2,
+        schema: 3,
         subject_sha256,
         target: PublicationRemoteTarget {
             host: expected.host.into(),
@@ -353,6 +385,7 @@ pub fn plan_from_captured_remote(
         remote_generation_ref: captured.generation_ref.clone(),
         observed_tag: captured.tag.clone(),
         observed_release: captured.release.clone(),
+        observed_latest_release: captured.observed_latest_release.clone(),
         smoke_policy_id: subject.smoke.policy_id.clone(),
         partitions,
     };
@@ -373,7 +406,7 @@ pub fn validate_publication_effect_plan(
         .map_err(|error| PublicationEffectPlanError::Subject(error.to_string()))?;
     let subject_digest = publication_subject_digest(subject, &expected.subject)
         .map_err(|error| PublicationEffectPlanError::Subject(error.to_string()))?;
-    if plan.schema != 2 || plan.subject_sha256 != subject_digest {
+    if plan.schema != 3 || plan.subject_sha256 != subject_digest {
         return Err(invalid(
             "subject_sha256",
             "schema or exact subject digest differs",
@@ -417,6 +450,7 @@ pub fn validate_publication_effect_plan(
         &plan.remote_generation_ref,
         &plan.observed_tag,
         &plan.observed_release,
+        &plan.observed_latest_release,
     )?;
     let tag = format!("v{}", subject.version);
     if plan.partitions.len() != 2 + SUPPORTED_DISTRIBUTION_TARGETS.len() + 3 {
@@ -606,7 +640,7 @@ struct Frames(Sha256);
 impl Frames {
     fn new() -> Self {
         let mut hash = Sha256::new();
-        hash.update(b"vibevm/publication-effect-plan/e2\0");
+        hash.update(b"vibevm/publication-effect-plan/e3\0");
         Self(hash)
     }
 

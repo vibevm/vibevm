@@ -13,7 +13,7 @@ use vibe_wire::generated::publication_effect_plan::{
 fn replacement() -> (PublicationSubject, PublicationEffectPlan) {
     let (subject, _) = prepared();
     let plan = serde_json::from_str(include_str!(
-        "../../../../../formats/corpora/publication_effect_plan/e2/valid/replace-known-draft.json"
+        "../../../../../formats/corpora/publication_effect_plan/e3/valid/replace-known-draft.json"
     ))
     .unwrap();
     (subject, plan)
@@ -41,7 +41,7 @@ impl Ready {
             generation_ref: plan.remote_generation_ref.clone(),
             tag: plan.observed_tag.clone(),
             release: plan.observed_release.clone(),
-            latest_release_id: None,
+            latest_release: plan.observed_latest_release.clone(),
             last: None,
         };
         let prepared = prepare::prepare_journal_fake(

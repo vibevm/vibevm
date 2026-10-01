@@ -48,6 +48,10 @@ fn asset(id: u64, name: &str) -> GithubReleaseAsset {
 
 fn snapshot() -> RemoteSnapshot {
     RemoteSnapshot {
+        latest: LatestReleaseObservation::Present {
+            release_id: 101,
+            tag: "v1.0.1".into(),
+        },
         tag: Some(tag()),
         release: Some(release()),
         assets: Some(vec![asset(20, "second"), asset(3, "first")]),
@@ -67,6 +71,7 @@ impl RemoteReadPort for FakePort {
 #[test]
 fn absent_and_reordered_present_observations_are_stable() {
     let absent = RemoteSnapshot {
+        latest: LatestReleaseObservation::Absent,
         tag: None,
         release: None,
         assets: None,
@@ -98,6 +103,24 @@ fn absent_and_reordered_present_observations_are_stable() {
     assert_eq!(release.generation_ref, result.generation_ref);
     let mut fake = FakePort(VecDeque::from([one, two]));
     assert_eq!(observe_twice(&mut fake, &commit()).unwrap(), result);
+}
+
+#[test]
+fn latest_baseline_is_bound_to_same_epoch_fingerprint() {
+    let first = snapshot();
+    let mut changed = first.clone();
+    changed.latest = LatestReleaseObservation::Present {
+        release_id: 102,
+        tag: "v1.0.2".into(),
+    };
+    let before = normalize_fixed(first.clone(), &commit()).unwrap();
+    let after = normalize_fixed(changed.clone(), &commit()).unwrap();
+    assert_ne!(before.generation_ref, after.generation_ref);
+    let mut fake = FakePort(VecDeque::from([first, changed]));
+    assert_eq!(
+        observe_twice(&mut fake, &commit()),
+        Err(ObservationError::Drift)
+    );
 }
 
 #[test]
