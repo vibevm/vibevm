@@ -11,6 +11,7 @@ use super::super::{Error, Result};
 use super::asset_driver::{self, AssetCallTransport};
 use super::asset_history::{self, AssetInspection};
 use super::driver::{self, CallTransport};
+use super::finalize::{self, FinalizeInspection, FinalizePort};
 use super::noop_completion::{self, NoOpInspection};
 use super::terminal::{self, TerminalInspection};
 use super::{CallInspection, inspect_calls_proved};
@@ -20,6 +21,7 @@ pub(super) enum Phase {
     TagRelease,
     Asset,
     Checkpoint,
+    Finalize,
     Terminal,
 }
 
@@ -109,7 +111,7 @@ fn select(session: &ReadyRun<'_>) -> Result<Cursor> {
         }
         NoOpInspection::Uncertain { step } => {
             let ordinal = noop_completion::schedule(session)?
-                .map(|calls| calls[step].ordinal)
+                .and_then(|calls| calls.get(step).map(|call| call.ordinal))
                 .unwrap_or(step);
             return Ok(Cursor::Uncertain(call(Phase::Checkpoint, ordinal)));
         }
@@ -121,9 +123,24 @@ fn select(session: &ReadyRun<'_>) -> Result<Cursor> {
         }
         NoOpInspection::CheckpointsLanded => {}
     }
-    let terminal_ordinal = noop_completion::schedule(session)?
-        .map(|calls| calls[1].ordinal + 1)
-        .unwrap_or(0);
+    let mut terminal_ordinal = finalize::ordinal(session)?;
+    if finalize::selected(session) {
+        match finalize::inspect_proved(session)? {
+            FinalizeInspection::Next { call: row } => {
+                return Ok(Cursor::Next(call(Phase::Finalize, row.ordinal)));
+            }
+            FinalizeInspection::Uncertain => {
+                return Ok(Cursor::Uncertain(call(Phase::Finalize, terminal_ordinal)));
+            }
+            FinalizeInspection::Unavailable => {
+                return Ok(Cursor::Unavailable(
+                    Phase::Finalize,
+                    "finalize history is unavailable",
+                ));
+            }
+            FinalizeInspection::Landed { .. } => terminal_ordinal += 1,
+        }
+    }
     match terminal::inspect_proved(session)? {
         TerminalInspection::Ready { .. } => {
             Ok(Cursor::Next(call(Phase::Terminal, terminal_ordinal)))
@@ -172,11 +189,21 @@ fn drive_inner_with_hook(
     calls: &dyn CallTransport,
     assets: &dyn AssetCallTransport,
     after_step: impl FnOnce(),
+    finalize_port: Option<&dyn FinalizePort>,
 ) -> Result<OwnerStep> {
     let selected = select(session)?;
     let Cursor::Next(attempted) = selected else {
         return Ok(status(session, selected, None));
     };
+    if attempted.phase == Phase::Finalize && finalize_port.is_none() {
+        return Ok(OwnerStep::Unavailable {
+            run_id: session.run_id.clone(),
+            phase: Phase::Finalize,
+            ordinal: Some(attempted.ordinal),
+            attempted: None,
+            reason: "finalize transport is unavailable",
+        });
+    }
     let uncertain = || OwnerStep::Uncertain {
         run_id: session.run_id.clone(),
         at: attempted,
@@ -222,6 +249,10 @@ fn drive_inner_with_hook(
                 }
             },
         },
+        Phase::Finalize => match finalize::drive_one(session, reader, finalize_port.unwrap()) {
+            Ok(FinalizeInspection::Landed { .. }) => {}
+            _ => return Ok(uncertain()),
+        },
         Phase::Terminal => match terminal::seal_inner(session, reader) {
             Err(_) => return Ok(uncertain()),
             Ok(value) => match value {
@@ -249,7 +280,7 @@ fn drive_inner(
     calls: &dyn CallTransport,
     assets: &dyn AssetCallTransport,
 ) -> Result<OwnerStep> {
-    drive_inner_with_hook(session, reader, calls, assets, || {})
+    drive_inner_with_hook(session, reader, calls, assets, || {}, None)
 }
 
 /// The only production transport binding: canonical GitHub repository, one
@@ -286,7 +317,7 @@ pub(super) fn drive_one_fake_with_hook(
     assets: &dyn AssetCallTransport,
     after_step: impl FnOnce(),
 ) -> Result<OwnerStep> {
-    drive_inner_with_hook(session, reader, calls, assets, after_step)
+    drive_inner_with_hook(session, reader, calls, assets, after_step, None)
 }
 
 #[cfg(test)]
@@ -296,4 +327,15 @@ pub(super) fn drive_one_loopback(
 ) -> Result<OwnerStep> {
     let mut reader = GithubRemoteReadPort::new_loopback(client).map_err(Error::io)?;
     drive_inner(session, &mut reader, client, client)
+}
+
+#[cfg(test)]
+pub(super) fn drive_one_fake_finalize(
+    session: &ReadyRun<'_>,
+    reader: &mut dyn RemoteReadPort,
+    calls: &dyn CallTransport,
+    assets: &dyn AssetCallTransport,
+    finalize_port: &dyn FinalizePort,
+) -> Result<OwnerStep> {
+    drive_inner_with_hook(session, reader, calls, assets, || {}, Some(finalize_port))
 }

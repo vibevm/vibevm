@@ -84,6 +84,15 @@ impl TinyPayloadWorld {
     }
 
     pub fn seed_approval(&self, lease: &LifecycleLease, scope: &SubmissionScope) {
+        self.seed_approval_with(lease, scope, &expected());
+    }
+
+    pub fn seed_approval_with(
+        &self,
+        lease: &LifecycleLease,
+        scope: &SubmissionScope,
+        selected: &crate::publication_effect_plan::PublicationEffectPlanExpectations<'_>,
+    ) {
         let home =
             crate::publication_approval::ApprovalHome::open_for_test(self.settings.path()).unwrap();
         home.seed_mode_a_for_test(
@@ -91,7 +100,7 @@ impl TinyPayloadWorld {
             scope,
             &self.subject,
             &self.plan,
-            &expected(),
+            selected,
             "fixture-approval",
         )
         .unwrap();

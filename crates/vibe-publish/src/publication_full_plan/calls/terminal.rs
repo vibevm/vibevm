@@ -12,7 +12,8 @@ use crate::publication_payload::vault::{VaultInspection, inspect_payload_vault};
 
 use super::super::{Error, Result, journal};
 use super::asset_history::{self, AssetInspection};
-use super::assets::{self, AssetLanded};
+use super::assets;
+use super::finalize::{self, FinalizeInspection};
 use super::noop_completion::{self, NoOpInspection};
 use super::{CallInspection, CallObservation, decompose, inspect_calls_proved, sha, suffix};
 
@@ -100,6 +101,36 @@ fn record(
 }
 
 fn collect(session: &ReadyRun<'_>) -> Result<Progress> {
+    // Known finalize history cannot hide behind earlier incomplete records,
+    // or be ignored by a plan that selected only RetainDraft.
+    let publish = finalize::selected(session);
+    let ordinal = finalize::ordinal(session)?;
+    let first = if publish {
+        ordinal
+    } else {
+        ordinal.saturating_sub(1)
+    };
+    let has_record = (first..=ordinal + 1).any(|index| {
+        ["pending", "landed"].into_iter().any(|phase| {
+            !matches!(
+                journal::read_bytes(
+                    session.lease,
+                    &session.run_id,
+                    &finalize::suffix(index, phase)
+                ),
+                Ok(None)
+            )
+        })
+    });
+    if has_record
+        && (!publish
+            || !matches!(
+                finalize::inspect_proved(session)?,
+                FinalizeInspection::Landed { .. }
+            ))
+    {
+        return Ok(Progress::Uncertain);
+    }
     let prefix = decompose(session.subject, session.plan, session.expected)?;
     match inspect_calls_proved(session)? {
         CallInspection::Unavailable { landed, .. } if landed == prefix.calls.len() => {}
@@ -165,6 +196,37 @@ fn collect(session: &ReadyRun<'_>) -> Result<Progress> {
         };
         rows.push(row);
     }
+    let final_observation = if finalize::selected(session) {
+        let (call, after) = match finalize::inspect_proved(session)? {
+            FinalizeInspection::Landed { call, after } => (call, after),
+            FinalizeInspection::Next { .. } | FinalizeInspection::Unavailable => {
+                return Ok(Progress::NotReady);
+            }
+            FinalizeInspection::Uncertain => return Ok(Progress::Uncertain),
+        };
+        let Some(row) = record(
+            session,
+            call.ordinal,
+            &call.call_id,
+            &finalize::suffix(call.ordinal, "pending"),
+            &finalize::suffix(call.ordinal, "landed"),
+        )?
+        else {
+            return Ok(Progress::Uncertain);
+        };
+        rows.push(row);
+        after
+    } else {
+        let Some(last): Option<noop_completion::Landed> = journal::read(
+            session.lease,
+            &session.run_id,
+            &noop_completion::suffix(noops.last().unwrap().ordinal, "landed"),
+        )?
+        else {
+            return Ok(Progress::Uncertain);
+        };
+        last.after
+    };
     if rows
         .iter()
         .enumerate()
@@ -172,18 +234,9 @@ fn collect(session: &ReadyRun<'_>) -> Result<Progress> {
     {
         return Ok(Progress::Uncertain);
     }
-    let Some(last): Option<noop_completion::Landed> = journal::read(
-        session.lease,
-        &session.run_id,
-        &noop_completion::suffix(noops[1].ordinal, "landed"),
-    )?
-    else {
-        return Ok(Progress::Uncertain);
-    };
-    let final_observation = last.after;
     let valid_final = matches!(&final_observation.release,
         PublicationObservedRelease::Present(release)
-            if release.draft && release.inventory_complete && release.assets.len() == 19);
+            if release.draft == !finalize::selected(session) && release.inventory_complete && release.assets.len() == 19);
     if !valid_final || final_observation.latest_release != session.plan.observed_latest_release {
         return Ok(Progress::Uncertain);
     }

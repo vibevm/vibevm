@@ -32,8 +32,11 @@ mod asset_driver;
 pub(super) mod asset_history;
 mod assets;
 mod driver;
+mod finalize;
 #[path = "calls/noop_completion.rs"]
 pub(in crate::publication_full_plan) mod noop_completion;
+#[cfg(test)]
+mod noop_completion_fixture;
 pub(super) mod owner;
 pub(super) mod terminal;
 
@@ -46,7 +49,6 @@ mod assets_tests;
 #[cfg(test)]
 #[path = "calls/e2_metadata_tests.rs"]
 mod e2_metadata_tests;
-
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, tag = "kind", rename_all = "kebab-case")]
 pub(super) enum CallAction {
@@ -72,7 +74,6 @@ pub(super) enum CallAction {
         prerelease: bool,
     },
 }
-
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct PlannedCall {
