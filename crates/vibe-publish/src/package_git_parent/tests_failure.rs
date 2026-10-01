@@ -1,4 +1,6 @@
 use super::*;
+use crate::package_git_objects::{self, ObjectInspection};
+use crate::package_git_tree::git::LocalGit;
 
 #[test]
 fn missing_retained_blob_refuses_cold_closure() {
@@ -162,4 +164,207 @@ fn reachable_object_cap_refuses_landed_and_keeps_pending() {
         ),
         ParentInspection::Uncertain { .. }
     ));
+    assert!(matches!(
+        package_git_objects::stage_existing_main_objects_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        ObjectInspection::Uncertain { .. }
+    ));
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, "objects")
+            .unwrap()
+            .is_none()
+    );
+}
+
+#[test]
+fn imported_parent_precedes_new_child_commit_and_tag_cold_proof() {
+    let Some(binary) = binary() else {
+        eprintln!("Git absent; parent fixture skipped");
+        return;
+    };
+    let world = world(&binary, false);
+    assert!(matches!(
+        stage_local_parent_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        ParentInspection::ClosureCompleteButNotReady { .. }
+    ));
+    assert!(matches!(
+        package_git_objects::stage_existing_main_objects_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        ObjectInspection::ObjectsCompleteButNotReady {
+            source_reobserved: true,
+            ..
+        }
+    ));
+    let child = journal::read::<journal::ObjectReceipt>(&world.lease, &world.run_id, "objects")
+        .unwrap()
+        .unwrap();
+    let parent_bytes = journal::read_bytes(&world.lease, &world.run_id, "parent")
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        child.parent_oid.as_deref(),
+        Some(world.origin.main.as_str())
+    );
+    assert_eq!(
+        child.parent_receipt_sha256.as_deref(),
+        Some(sha(&parent_bytes).as_str())
+    );
+    assert_eq!(child.commit_oid, world.plan.staged.tag_target_commit_oid);
+    assert!(matches!(
+        package_git_objects::inspect_existing_main_objects_cold(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            None,
+            None,
+            &binary,
+            limits()
+        ),
+        ObjectInspection::ObjectsCompleteButNotReady {
+            source_reobserved: false,
+            ..
+        }
+    ));
+}
+
+#[test]
+fn missing_or_changed_parent_receipt_refuses_child_before_object_write() {
+    let Some(binary) = binary() else {
+        eprintln!("Git absent; parent fixture skipped");
+        return;
+    };
+    for corrupt in [false, true] {
+        let world = world(&binary, false);
+        assert!(matches!(
+            stage_local_parent_pending(
+                &world.lease,
+                &world.token,
+                &world.scope,
+                "parent",
+                &world.package,
+                &world.origin.project,
+                &binary,
+                limits()
+            ),
+            ParentInspection::ClosureCompleteButNotReady { .. }
+        ));
+        let receipt = world.root.path().join(format!(
+            ".vibe/package-git-operations/{}.package-git-parent.json",
+            world.run_id
+        ));
+        if corrupt {
+            fs::write(&receipt, b"not-json").unwrap();
+        } else {
+            fs::remove_file(&receipt).unwrap();
+        }
+        assert!(matches!(
+            package_git_objects::stage_existing_main_objects_pending(
+                &world.lease,
+                &world.token,
+                &world.scope,
+                "parent",
+                &world.package,
+                &world.origin.project,
+                &binary,
+                limits()
+            ),
+            ObjectInspection::Uncertain { .. }
+        ));
+        let objects = journal::objects(&world.lease, &world.run_id, false)
+            .unwrap()
+            .unwrap();
+        let git = LocalGit::new(&binary, &objects, world.plan.oid_hex_len).unwrap();
+        assert!(
+            !git.object_present(&world.plan.staged.tag_target_commit_oid)
+                .unwrap()
+        );
+        assert!(
+            !git.object_present(world.plan.staged.annotated_tag_oid.as_deref().unwrap())
+                .unwrap()
+        );
+        assert!(
+            journal::read_bytes(&world.lease, &world.run_id, "objects")
+                .unwrap()
+                .is_none()
+        );
+    }
+}
+
+#[test]
+fn changed_local_bare_refs_after_parent_landed_refuse_child() {
+    let Some(binary) = binary() else {
+        eprintln!("Git absent; parent fixture skipped");
+        return;
+    };
+    let world = world(&binary, false);
+    assert!(matches!(
+        stage_local_parent_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        ParentInspection::ClosureCompleteButNotReady { .. }
+    ));
+    let source = world.origin.project.root_path().to_str().unwrap();
+    git(
+        &binary,
+        world.origin.project.root_path(),
+        &[
+            "--git-dir",
+            source,
+            "update-ref",
+            "refs/heads/main",
+            &world.origin.previous,
+        ],
+        b"",
+    );
+    assert!(matches!(
+        package_git_objects::stage_existing_main_objects_pending(
+            &world.lease,
+            &world.token,
+            &world.scope,
+            "parent",
+            &world.package,
+            &world.origin.project,
+            &binary,
+            limits()
+        ),
+        ObjectInspection::Uncertain { .. }
+    ));
+    assert!(
+        journal::read_bytes(&world.lease, &world.run_id, "objects")
+            .unwrap()
+            .is_none()
+    );
 }

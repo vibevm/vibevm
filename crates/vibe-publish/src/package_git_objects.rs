@@ -3,16 +3,16 @@
 
 use std::path::Path;
 
-use sha2::{Digest, Sha256};
 use vibe_lifecycle::{LifecycleLease, SubmissionScope};
 use vibe_safefs::Project;
 
 use crate::package_git_gitlink::CensusLimits;
 use crate::package_git_operation::journal::{self, ObjectReceipt, sha};
-use crate::package_git_operation::{self, PendingProof};
-use crate::package_git_plan::{RawRef, RepositoryObservation, StagedCommit, TagRef};
-use crate::package_git_provenance::{self, ProvenanceInspection};
+use crate::package_git_parent::{self, ParentInspection, ParentLimits};
 use crate::package_git_tree::git::LocalGit;
+
+mod proof;
+use proof::{expected, held};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum ObjectInspection {
@@ -40,143 +40,6 @@ fn uncertain(run: Option<&str>, reason: impl Into<String>) -> ObjectInspection {
     }
 }
 
-struct Held {
-    run_id: String,
-    proof: PendingProof,
-    tree_bytes: Vec<u8>,
-    provenance_bytes: Vec<u8>,
-    objects: Project,
-    commit_bytes: Vec<u8>,
-    tag_bytes: Vec<u8>,
-}
-
-fn held(
-    lease: &LifecycleLease,
-    namespace_token: &str,
-    scope: &SubmissionScope,
-    key: &str,
-    source: Option<&Project>,
-    git_binary: &Path,
-    limits: CensusLimits,
-) -> Result<Held, ObjectInspection> {
-    let run_id = match package_git_provenance::inspect_no_gitlinks_cold(
-        lease,
-        namespace_token,
-        scope,
-        key,
-        source,
-        git_binary,
-        limits,
-    ) {
-        ProvenanceInspection::NoGitlinksRetainedButNotReady { run_id, .. } => run_id,
-        ProvenanceInspection::NotReady { run_id } => {
-            return Err(ObjectInspection::NotReady { run_id });
-        }
-        ProvenanceInspection::NeedsCommitTreeProof { run_id } => {
-            return Err(ObjectInspection::Unavailable {
-                run_id: Some(run_id),
-                reason: "populated Gitlinks need exact commit-tree byte proof".into(),
-            });
-        }
-        ProvenanceInspection::Unavailable { run_id, reason } => {
-            return Err(ObjectInspection::Unavailable { run_id, reason });
-        }
-        ProvenanceInspection::Uncertain { run_id, reason } => {
-            return Err(ObjectInspection::Uncertain { run_id, reason });
-        }
-    };
-    let (status, proof) =
-        package_git_operation::pending_proof_cold(lease, namespace_token, scope, key, source)
-            .map_err(|error| uncertain(Some(&run_id), error.to_string()))?;
-    let Some(proof) = proof else {
-        return Err(uncertain(
-            Some(&run_id),
-            format!("C.1 Pending proof changed: {status:?}"),
-        ));
-    };
-    if proof.run_id != run_id {
-        return Err(uncertain(
-            Some(&run_id),
-            "C.1 run changed during local object admission",
-        ));
-    }
-    let supported = matches!(proof.plan.before_repo, RepositoryObservation::Absent)
-        && matches!(proof.plan.before_refs.main, RawRef::Absent)
-        && matches!(proof.plan.before_refs.version_tag, TagRef::Absent)
-        && matches!(
-            proof.plan.staged.commit,
-            StagedCommit::New {
-                parent_oid: None,
-                ..
-            }
-        );
-    if !supported {
-        return Err(ObjectInspection::Unavailable {
-            run_id: Some(run_id),
-            reason: "existing-main parent or reused-main object custody is not available".into(),
-        });
-    }
-    let commit_bytes = proof
-        .plan
-        .canonical_commit_bytes()
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
-        .ok_or_else(|| uncertain(Some(&run_id), "new commit bytes absent"))?;
-    let tag_bytes = proof
-        .plan
-        .canonical_tag_bytes()
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
-        .ok_or_else(|| uncertain(Some(&run_id), "annotated tag bytes absent"))?;
-    let tree_bytes = journal::read_bytes(lease, &run_id, "tree")
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
-        .ok_or_else(|| uncertain(Some(&run_id), "proved tree receipt vanished"))?;
-    let provenance_bytes = journal::read_bytes(lease, &run_id, "provenance")
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
-        .ok_or_else(|| uncertain(Some(&run_id), "proved provenance Landed vanished"))?;
-    let objects = journal::objects(lease, &run_id, false)
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?
-        .ok_or_else(|| uncertain(Some(&run_id), "proved Git object root vanished"))?;
-    let _ = LocalGit::new(git_binary, &objects, proof.plan.oid_hex_len)
-        .map_err(|error| uncertain(Some(&run_id), error.to_string()))?;
-    Ok(Held {
-        run_id,
-        proof,
-        tree_bytes,
-        provenance_bytes,
-        objects,
-        commit_bytes,
-        tag_bytes,
-    })
-}
-
-fn expected(held: &Held) -> anyhow::Result<ObjectReceipt> {
-    let tag_oid = held
-        .proof
-        .plan
-        .staged
-        .annotated_tag_oid
-        .clone()
-        .ok_or_else(|| anyhow::anyhow!("annotated tag OID absent"))?;
-    Ok(ObjectReceipt {
-        format: journal::OBJECT_FORMAT.into(),
-        run_id: held.run_id.clone(),
-        c1_plan_sha256: sha(&serde_json::to_vec(&held.proof.plan)?),
-        semantic_plan_sha256: held.proof.plan.digest()?,
-        intent_sha256: held.proof.intent_sha256.clone(),
-        payload_manifest_sha256: held.proof.payload_manifest_sha256.clone(),
-        tree_receipt_sha256: sha(&held.tree_bytes),
-        provenance_receipt_sha256: sha(&held.provenance_bytes),
-        object_root_token: held.objects.root_correlation_token()?,
-        root_tree_oid: held.proof.plan.staged.git_tree_oid.clone(),
-        oid_hex_len: held.proof.plan.oid_hex_len,
-        commit_oid: held.proof.plan.staged.tag_target_commit_oid.clone(),
-        commit_size_bytes: held.commit_bytes.len(),
-        commit_sha256: format!("sha256:{:x}", Sha256::digest(&held.commit_bytes)),
-        tag_oid,
-        tag_size_bytes: held.tag_bytes.len(),
-        tag_sha256: format!("sha256:{:x}", Sha256::digest(&held.tag_bytes)),
-    })
-}
-
 /// Write only absent commit/tag objects in the already staged, cold-proved
 /// bare Git object root. A prior object without receipt is uncertain, not ours.
 pub(crate) fn stage_parentless_objects_pending(
@@ -188,6 +51,53 @@ pub(crate) fn stage_parentless_objects_pending(
     git_binary: &Path,
     limits: CensusLimits,
 ) -> ObjectInspection {
+    stage_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        limits,
+        None,
+        None,
+    )
+}
+
+pub(crate) fn stage_existing_main_objects_pending(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    package_source: &Project,
+    local_bare_source: &Project,
+    git_binary: &Path,
+    limits: ParentLimits,
+) -> ObjectInspection {
+    stage_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        package_source,
+        git_binary,
+        limits.census,
+        Some(limits),
+        Some(local_bare_source),
+    )
+}
+
+fn stage_inner(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: &Project,
+    git_binary: &Path,
+    limits: CensusLimits,
+    parent_limits: Option<ParentLimits>,
+    local_bare_source: Option<&Project>,
+) -> ObjectInspection {
     let held = match held(
         lease,
         namespace_token,
@@ -196,14 +106,22 @@ pub(crate) fn stage_parentless_objects_pending(
         Some(source),
         git_binary,
         limits,
+        parent_limits,
+        local_bare_source,
     ) {
         Ok(value) => value,
         Err(status) => return status,
     };
+    if parent_limits.is_some() && held.parent_oid.is_none() {
+        return ObjectInspection::Unavailable {
+            run_id: Some(held.run_id),
+            reason: "existing-main object route selected a parentless plan".into(),
+        };
+    }
     let run_id = held.run_id.clone();
     match journal::read_bytes(lease, &run_id, "objects") {
         Ok(Some(_)) => {
-            return inspect_objects_cold(
+            return inspect_inner(
                 lease,
                 namespace_token,
                 scope,
@@ -211,6 +129,8 @@ pub(crate) fn stage_parentless_objects_pending(
                 Some(source),
                 git_binary,
                 limits,
+                parent_limits,
+                local_bare_source,
             );
         }
         Ok(None) => {}
@@ -224,6 +144,33 @@ pub(crate) fn stage_parentless_objects_pending(
         Ok(value) => value,
         Err(error) => return uncertain(Some(&run_id), error.to_string()),
     };
+    if let Some(parent_limits) = parent_limits {
+        if !matches!(
+            package_git_parent::inspect_parent_cold(
+                lease,
+                namespace_token,
+                scope,
+                key,
+                Some(source),
+                local_bare_source,
+                git_binary,
+                parent_limits
+            ),
+            ParentInspection::ClosureCompleteButNotReady { .. }
+        ) {
+            return uncertain(
+                Some(&run_id),
+                "existing-main closure changed before child object write",
+            );
+        }
+        if !matches!(journal::read_bytes(lease, &run_id, "parent"), Ok(Some(ref bytes)) if Some(sha(bytes).as_str()) == held.parent_receipt_sha256.as_deref())
+        {
+            return uncertain(
+                Some(&run_id),
+                "parent receipt changed before child object write",
+            );
+        }
+    }
     let stage = (|| -> anyhow::Result<()> {
         if git.object_present(&planned.commit_oid)? || git.object_present(&planned.tag_oid)? {
             anyhow::bail!("unreceipted planned commit/tag object already exists; never restage");
@@ -258,7 +205,7 @@ pub(crate) fn stage_parentless_objects_pending(
             format!("object receipt publication uncertain: {error:#}"),
         );
     }
-    inspect_objects_cold(
+    inspect_inner(
         lease,
         namespace_token,
         scope,
@@ -266,6 +213,8 @@ pub(crate) fn stage_parentless_objects_pending(
         Some(source),
         git_binary,
         limits,
+        parent_limits,
+        local_bare_source,
     )
 }
 
@@ -280,6 +229,53 @@ pub(crate) fn inspect_objects_cold(
     git_binary: &Path,
     limits: CensusLimits,
 ) -> ObjectInspection {
+    inspect_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        source,
+        git_binary,
+        limits,
+        None,
+        None,
+    )
+}
+
+pub(crate) fn inspect_existing_main_objects_cold(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    package_source: Option<&Project>,
+    local_bare_source: Option<&Project>,
+    git_binary: &Path,
+    limits: ParentLimits,
+) -> ObjectInspection {
+    inspect_inner(
+        lease,
+        namespace_token,
+        scope,
+        key,
+        package_source,
+        git_binary,
+        limits.census,
+        Some(limits),
+        local_bare_source,
+    )
+}
+
+fn inspect_inner(
+    lease: &LifecycleLease,
+    namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    source: Option<&Project>,
+    git_binary: &Path,
+    limits: CensusLimits,
+    parent_limits: Option<ParentLimits>,
+    local_bare_source: Option<&Project>,
+) -> ObjectInspection {
     let held = match held(
         lease,
         namespace_token,
@@ -288,10 +284,18 @@ pub(crate) fn inspect_objects_cold(
         source,
         git_binary,
         limits,
+        parent_limits,
+        local_bare_source,
     ) {
         Ok(value) => value,
         Err(status) => return status,
     };
+    if parent_limits.is_some() && held.parent_oid.is_none() {
+        return ObjectInspection::Unavailable {
+            run_id: Some(held.run_id),
+            reason: "existing-main cold route selected a parentless plan".into(),
+        };
+    }
     let run_id = held.run_id.clone();
     let bytes = match journal::read_bytes(lease, &run_id, "objects") {
         Ok(Some(value)) => value,
@@ -367,7 +371,8 @@ pub(crate) fn inspect_objects_cold(
     }
     ObjectInspection::ObjectsCompleteButNotReady {
         run_id,
-        source_reobserved: source.is_some(),
+        source_reobserved: source.is_some()
+            && (held.parent_oid.is_none() || local_bare_source.is_some()),
     }
 }
 
