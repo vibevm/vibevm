@@ -210,7 +210,19 @@
         "crates/vibe-mcp/Cargo.toml",
         "crates/vibe-mcp/src/tools/lifecycle_run.rs",
         "crates/vibe-orchestrator/Cargo.toml",
-        "crates/vibe-orchestrator/src/lib.rs"
+        "crates/vibe-orchestrator/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "crates/vibe-mcp/src/machine_session.rs",
+        "crates/vibe-mcp/src/machine_session/",
+        "crates/vibe-lifecycle/src/process/mod.rs",
+        "crates/vibe-lifecycle/src/process/tests.rs",
+        "formats/REGISTRY.toml",
+        "formats/EPOCHS.toml",
+        "schemas/machine/",
+        "crates/vibe-wire/src/generated/machine/",
+        "crates/vibe-wire/src/generated/format_id/",
+        "xtask/src/codegen/",
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/"
       ],
       "write_paths": [
         "crates/vibe-mcp/src/lib.rs",
@@ -221,7 +233,18 @@
         "crates/vibe-mcp/Cargo.toml",
         "crates/vibe-mcp/src/tools/lifecycle_run.rs",
         "crates/vibe-orchestrator/Cargo.toml",
-        "crates/vibe-orchestrator/src/lib.rs"
+        "crates/vibe-orchestrator/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "crates/vibe-mcp/src/machine_session.rs",
+        "crates/vibe-mcp/src/machine_session/",
+        "crates/vibe-lifecycle/src/process/mod.rs",
+        "crates/vibe-lifecycle/src/process/tests.rs",
+        "formats/REGISTRY.toml",
+        "schemas/machine/e1/operation_stream_message.jtd.json",
+        "formats/corpora/machine-operation-stream-message/e1/",
+        "crates/vibe-wire/src/generated/machine/",
+        "crates/vibe-wire/src/generated/format_id/",
+        "crates/vibe-wire/tests/machine_operation_stream_contract.rs"
       ],
       "steps": [
         "Separate request dispatch from long job execution and stream typed phase/state/progress/diagnostic events with per-stream sequence and context/target references.",
@@ -252,7 +275,8 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Source-bound C3 refinement: registered operation-stream message and generated readers/semantic validation are required before event publication; session runner and incumbent process capture are the actual responsive/bounded-output seams. This perimeter extension changes no acceptance or numbered obligation, and does not authorize public 1.1.0 publication or flipping formats/EPOCHS.toml public."
       ]
     },
     {

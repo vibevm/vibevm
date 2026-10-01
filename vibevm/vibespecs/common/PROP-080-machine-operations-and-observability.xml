@@ -62,6 +62,41 @@
       autonomous service, generic command runner, scheduler or competing
       operation-result journal.</MACHINE-OWNER-LIFETIME-LAW></p>
     </MACHINE-OWNER-LIFETIME>
+    <MACHINE-OPERATION-STREAM title="Scoped bounded observations and cooperative control">
+      <p><req-machine-operation-stream fact="true" status="spec/plan">`req r1`</req-machine-operation-stream></p>
+      <p><MACHINE-OPERATION-STREAM-LAW fact="true" status="spec/plan">A
+      registered versioned stream message owns typed state, phase, progress,
+      diagnostic, raw stdout/stderr and terminal-reference observations,
+      replay/gap responses and control request/response values. Each message
+      binds the host-assigned context and target, semantic operation, actual
+      domain run and owner-issued stream identity. Event sequences are
+      canonical decimal u64 values, start at one and increase within that
+      stream; zero is only a before-first replay cursor. Independent streams
+      have independent order, never a fabricated global clock order. Shape
+      decoding and pure semantic validation grant no execution authority.
+      The owning service separately checks the exact live binding and domain
+      evidence before publication or control. A terminal-reference event is a
+      pointer to incumbent retained evidence, never a new result journal or
+      evidence of completion by itself. Explicit bounds cover frame bytes,
+      event count and payload bytes, replay batches, subscriptions and pending
+      delivery. Slow consumers cannot hold the provider or block query/control
+      dispatch. Eviction, oversized payload loss and expired stream history
+      return explicit bounded gaps or expiry with the same domain result
+      identity; they cannot erase that identity or fabricate replayed bytes.
+      Raw output preserves its byte encoding and independent stdout/stderr
+      origin within the declared cap. Cancellation-requested acknowledges
+      only the admitted request. Reached-safe-stop requires the domain's
+      cooperative boundary and retained effect truth: committed effects stay
+      partial/recoverable and are never described as rolled back. A request
+      after an already retained terminal result is explicitly too late and
+      does not rewrite that result. Unsupported provider cancellation remains
+      unavailable. Observer detach and stopping trace observation never
+      falsely cancel an underlying build. Linux, macOS and Windows use their
+      incumbent portable lease and root owners; native execution evidence is
+      stated separately from source or compilation support. A descriptor,
+      shaped event or test transport cannot promote unimplemented streaming,
+      replay or control to an available production capability.</MACHINE-OPERATION-STREAM-LAW></p>
+    </MACHINE-OPERATION-STREAM>
     <MACHINE-OPERATION-DISCOVERY title="Retained descriptor-only discovery">
       <p><req-machine-operation-discovery fact="true" status="spec/plan">`req r1`</req-machine-operation-discovery></p>
       <p><MACHINE-OPERATION-DISCOVERY-LAW fact="true" status="spec/plan">Discovery reads retained, validated descriptor and schema identities from their owning source, including extension declarations, without invoking a handler, loading a native library, starting a provider or fetching/building a schema. Unknown, absent or unvalidated contributed schema remains unavailable with a reason. Retained metadata cannot promote an extension to an executable or authorized service; its later owner must separately prove that path.</MACHINE-OPERATION-DISCOVERY-LAW></p>
