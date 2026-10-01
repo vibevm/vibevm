@@ -11,7 +11,7 @@ const PLAN: &str = include_str!(
     "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
 );
 
-fn expected() -> PublicationEffectPlanExpectations<'static> {
+pub(super) fn expected() -> PublicationEffectPlanExpectations<'static> {
     PublicationEffectPlanExpectations {
         subject: PublicationSubjectExpectations {
             version: "1.1.0",
@@ -27,18 +27,18 @@ fn expected() -> PublicationEffectPlanExpectations<'static> {
     }
 }
 
-struct World {
-    settings: tempfile::TempDir,
-    _workspace: tempfile::TempDir,
-    home: ApprovalHome,
-    lease: LifecycleLease,
-    scope: SubmissionScope,
-    subject: PublicationSubject,
-    plan: PublicationEffectPlan,
+pub(super) struct World {
+    pub(super) settings: tempfile::TempDir,
+    pub(super) _workspace: tempfile::TempDir,
+    pub(super) home: ApprovalHome,
+    pub(super) lease: LifecycleLease,
+    pub(super) scope: SubmissionScope,
+    pub(super) subject: PublicationSubject,
+    pub(super) plan: PublicationEffectPlan,
 }
 
 impl World {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let settings = tempfile::tempdir().unwrap();
         let workspace = tempfile::tempdir().unwrap();
         let home = ApprovalHome::open_selected(settings.path()).unwrap();
@@ -107,7 +107,7 @@ impl World {
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(path, serde_json::to_vec(record).unwrap()).unwrap();
     }
-    fn load(&self) -> Result<VerifiedApproval, ApprovalError> {
+    pub(super) fn load(&self) -> Result<VerifiedApproval, ApprovalError> {
         self.home.load_at(
             &self.lease,
             &self.scope,
@@ -117,7 +117,7 @@ impl World {
             10,
         )
     }
-    fn reserve(&self, namespace: &SubmissionNamespace, key: &str) -> String {
+    pub(super) fn reserve(&self, namespace: &SubmissionNamespace, key: &str) -> String {
         let run_id = vibe_lifecycle::process::propose_run_id(self.lease.root()).unwrap();
         let plan_bytes = serde_json::to_vec(&self.plan).unwrap();
         assert!(matches!(
