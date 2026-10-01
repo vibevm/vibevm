@@ -552,3 +552,51 @@ fn changed_input_capsule_cannot_complete_or_restart_warm_build() {
     assert!(matches!(seen, BuildJournalInspection::Uncertain { .. }));
     assert!(!root.path().join("target").exists());
 }
+
+#[test]
+fn copied_build_c1_and_capsule_at_replaced_same_path_refuse_cold_attach() {
+    let root = fixture();
+    let trusted = scope();
+    let (token, run_id) = {
+        let targets = [target()];
+        let registry = registry();
+        let routes = MechanismRoutes::default();
+        let selected = execution(root.path(), &targets, &registry, &routes);
+        let lease = LifecycleLease::acquire(root.path()).unwrap();
+        let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+        let BuildJournalInspection::IntentReady { run_id } =
+            reserve_fixed_cargo_intent(&lease, &namespace, &trusted, "copied", &selected).unwrap()
+        else {
+            panic!("fixed intent must be Ready")
+        };
+        (namespace.id().to_owned(), run_id)
+    };
+    let current = root.path().to_path_buf();
+    let archived = current.with_extension("cold-old");
+    std::fs::rename(&current, &archived).unwrap();
+    std::fs::create_dir_all(current.join(".vibe/build-operations")).unwrap();
+    std::fs::copy(
+        archived.join(".vibe/machine-submissions.json"),
+        current.join(".vibe/machine-submissions.json"),
+    )
+    .unwrap();
+    for name in [
+        format!("{run_id}.cargo-intent.json"),
+        format!("{run_id}.cargo-input.json"),
+    ] {
+        std::fs::copy(
+            archived.join(".vibe/build-operations").join(&name),
+            current.join(".vibe/build-operations").join(name),
+        )
+        .unwrap();
+    }
+    {
+        let lease = LifecycleLease::acquire(&current).unwrap();
+        assert!(matches!(
+            inspect_fixed_cargo_cold(&lease, &token, &trusted, "copied").unwrap(),
+            Some(BuildJournalInspection::Uncertain { run_id: seen, .. }) if seen == run_id
+        ));
+    }
+    std::fs::remove_dir_all(&current).unwrap();
+    std::fs::rename(archived, current).unwrap();
+}

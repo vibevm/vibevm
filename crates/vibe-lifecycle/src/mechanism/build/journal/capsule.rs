@@ -18,6 +18,8 @@ fn file_sha(bytes: &[u8]) -> String {
 struct InputCapsule {
     format: String,
     run_id: String,
+    /// Same-host detection evidence, never a portable grant (inode/index ABA).
+    root_token: String,
     request: String,
     plan: String,
     manifest_sha256: String,
@@ -39,6 +41,7 @@ pub(super) fn publish(
     let capsule = InputCapsule {
         format: CAPSULE_FORMAT.into(),
         run_id: run_id.into(),
+        root_token: lease.project().root_correlation_token().map_err(refused)?,
         request: String::from_utf8(selected.request.clone()).map_err(refused)?,
         plan: String::from_utf8(selected.plan.clone()).map_err(refused)?,
         manifest_sha256: selected.manifest.sha256.clone(),
@@ -127,6 +130,7 @@ fn validate(
     ensure!(
         capsule.format == CAPSULE_FORMAT
             && capsule.run_id == intent.run_id
+            && capsule.root_token == lease.project().root_correlation_token().map_err(refused)?
             && sha(capsule.request.as_bytes()) == request_sha256
             && sha(capsule.plan.as_bytes()) == plan_sha256
             && intent.request_sha256 == request_sha256
