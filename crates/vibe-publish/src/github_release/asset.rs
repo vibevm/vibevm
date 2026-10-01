@@ -25,12 +25,49 @@ pub(crate) struct StreamedUploadResponse {
     pub sha256: String,
 }
 
+/// Candidate ID from one exact local stream and a syntactically valid 2xx
+/// POST response without a digest. It remains uncertain until a separate
+/// streamed GET and release-inventory observation both agree.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct StreamedAssetCandidate {
+    pub asset_id: u64,
+    pub temporary_name: String,
+    pub size_bytes: u64,
+}
+
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
 pub(crate) enum StreamedUploadError {
     #[error("streamed asset upload refused before dispatch: {0}")]
     Refused(&'static str),
     #[error(
         "streamed asset upload may have taken effect; inspect the owner journal and remote state: {0}"
+    )]
+    Uncertain(&'static str),
+    #[error(
+        "streamed asset upload has only a candidate ID; independent GET and release observation required: {reason}"
+    )]
+    UncertainCandidate {
+        reason: &'static str,
+        candidate: StreamedAssetCandidate,
+    },
+}
+
+/// A PATCH response, never a journal Landed receipt. Missing response digest
+/// remains visible for the later independent GET and release observation.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct ExplicitRenameResponse {
+    pub asset_id: u64,
+    pub canonical_name: String,
+    pub size_bytes: u64,
+    pub response_sha256: Option<String>,
+}
+
+#[derive(Debug, thiserror::Error, PartialEq, Eq)]
+pub(crate) enum ExplicitRenameError {
+    #[error("explicit asset rename refused before dispatch: {0}")]
+    Refused(&'static str),
+    #[error(
+        "explicit asset rename may have taken effect; inspect the owner journal and remote state: {0}"
     )]
     Uncertain(&'static str),
 }
@@ -121,16 +158,24 @@ impl GithubReleaseClient {
         }
         let asset: GithubReleaseAsset = serde_json::from_slice(&body)
             .map_err(|_| StreamedUploadError::Uncertain("POST response malformed"))?;
-        let response_digest = asset.digest.ok_or(StreamedUploadError::Uncertain(
-            "POST response asset digest missing",
-        ))?;
-        if asset.id == 0
-            || asset.name != temporary_name
-            || asset.size != expected_size
-            || response_digest != expected_sha256
-        {
+        if asset.id == 0 || asset.name != temporary_name || asset.size != expected_size {
             return Err(StreamedUploadError::Uncertain(
-                "POST response asset identity differs or digest missing",
+                "POST response asset identity differs",
+            ));
+        }
+        let Some(response_digest) = asset.digest else {
+            return Err(StreamedUploadError::UncertainCandidate {
+                reason: "POST response digest missing",
+                candidate: StreamedAssetCandidate {
+                    asset_id: asset.id,
+                    temporary_name: asset.name,
+                    size_bytes: asset.size,
+                },
+            });
+        };
+        if response_digest != expected_sha256 {
+            return Err(StreamedUploadError::Uncertain(
+                "POST response digest differs",
             ));
         }
         Ok(StreamedUploadResponse {
@@ -138,6 +183,94 @@ impl GithubReleaseClient {
             temporary_name: asset.name,
             size_bytes: asset.size,
             sha256: response_digest,
+        })
+    }
+
+    /// One explicit PATCH for a caller-selected asset ID. This method never
+    /// lists, deletes, cleans up, retries, or converts the response to Landed.
+    pub(crate) fn rename_temporary_asset_explicit(
+        &self,
+        asset_id: u64,
+        canonical_name: &str,
+        expected_size: u64,
+        expected_sha256: &str,
+    ) -> Result<ExplicitRenameResponse, ExplicitRenameError> {
+        if asset_id == 0 || expected_size == 0 {
+            return Err(ExplicitRenameError::Refused("invalid asset ID or size"));
+        }
+        if validate_asset_name(canonical_name, self.token_value()).is_err() {
+            return Err(ExplicitRenameError::Refused("invalid canonical asset name"));
+        }
+        let Some(hex) = expected_sha256.strip_prefix("sha256:") else {
+            return Err(ExplicitRenameError::Refused("invalid expected SHA-256"));
+        };
+        if hex.len() != 64
+            || !hex
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+        {
+            return Err(ExplicitRenameError::Refused("invalid expected SHA-256"));
+        }
+        let token = self
+            .token
+            .as_ref()
+            .ok_or(ExplicitRenameError::Refused("publish token absent"))?;
+        let url = self
+            .api_url(&["releases", "assets", &asset_id.to_string()])
+            .map_err(|_| ExplicitRenameError::Refused("invalid API endpoint"))?;
+        #[derive(Serialize)]
+        struct Rename<'a> {
+            name: &'a str,
+        }
+        let request = self
+            .no_redirect_write_client
+            .request(Method::PATCH, url)
+            .header(ACCEPT, GITHUB_JSON)
+            .header("X-GitHub-Api-Version", GITHUB_API_VERSION)
+            .header(USER_AGENT, user_agent())
+            .header(AUTHORIZATION, format!("Bearer {}", token.value()))
+            .json(&Rename {
+                name: canonical_name,
+            });
+        let response = request
+            .send()
+            .map_err(|_| ExplicitRenameError::Uncertain("PATCH transport failed"))?;
+        if !response.status().is_success() {
+            return Err(ExplicitRenameError::Uncertain(
+                "PATCH returned non-success status or redirect",
+            ));
+        }
+        let mut body = Vec::new();
+        response
+            .take(STREAMED_UPLOAD_RESPONSE_CAP + 1)
+            .read_to_end(&mut body)
+            .map_err(|_| ExplicitRenameError::Uncertain("PATCH response read failed"))?;
+        if body.len() as u64 > STREAMED_UPLOAD_RESPONSE_CAP {
+            return Err(ExplicitRenameError::Uncertain(
+                "PATCH response exceeded bound",
+            ));
+        }
+        let asset: GithubReleaseAsset = serde_json::from_slice(&body)
+            .map_err(|_| ExplicitRenameError::Uncertain("PATCH response malformed"))?;
+        if asset.id != asset_id || asset.name != canonical_name || asset.size != expected_size {
+            return Err(ExplicitRenameError::Uncertain(
+                "PATCH response asset identity differs",
+            ));
+        }
+        if asset
+            .digest
+            .as_deref()
+            .is_some_and(|digest| digest != expected_sha256)
+        {
+            return Err(ExplicitRenameError::Uncertain(
+                "PATCH response digest differs",
+            ));
+        }
+        Ok(ExplicitRenameResponse {
+            asset_id: asset.id,
+            canonical_name: asset.name,
+            size_bytes: asset.size,
+            response_sha256: asset.digest,
         })
     }
 
