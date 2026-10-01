@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Codex bounded worker packet template</title>
+  <status stage="spec" state="done"/>
+  <p><TEMPLATE-USE fact="true" status="spec/done">Copy the fenced packet to an ordinary
+  file, replace every placeholder and delete optional clauses explicitly.
+  The exact quiet marker remains the first line. A read-only CLI review needs
+  a report destination compatible with its sandbox or parent-captured output.</TEMPLATE-USE></p>
+  <fence lang="markdown">##subagent-quiet-clause
+# PACKET-&lt;task-id&gt; — &lt;one observable outcome&gt;
+
+## Role and authority
+You are a bounded &lt;execution/review/consultation&gt; worker. The accepting parent
+is &lt;parent identifier&gt;. Parent owns architecture, ambiguity, acceptance,
+integration and Git mutations. Your task verdict is advisory.
+
+## Task and success
+&lt;One observable outcome; exact success behavior and required compatibility.&gt;
+Do not shrink requirements to fit a line/token budget or silently invent public
+semantics. Stop for a parent decision on architecture, security or scope drift.
+
+## Identity and named inputs
+- Exact cwd: &lt;absolute workspace path&gt;
+- Task identifier: &lt;id; parent retains exact process/home/thread handles&gt;
+- Standing rules, in order: &lt;each exact file, with relevant sections if needed&gt;
+- Source inputs: &lt;each exact path; include governing nested directory rules&gt;
+- Dependency state: &lt;required upstream result/version and how to detect drift&gt;
+
+Read only these named files, this packet and explicit corrections. Do not run
+full project boot, follow broad boot includes, read stewardship/campaign plans,
+or claim central custody. Quiet mode is an instruction boundary, not a read
+sandbox. If a required rule/input is missing, report PACKET-DEFECT and stop the
+dependent action; parent amends the packet before you continue.
+
+## Closed write scope
+- &lt;each exact permitted product file or closed directory&gt;
+- &lt;exact durable report path&gt;
+&lt;For read-only review: no product writes; report location permitted separately.&gt;
+Preserve existing changes and leave ordinary visible unstaged artifacts.
+Needed expansion requires a parent packet amendment before writing. Read-only
+Git evidence is allowed; never add/commit/push/merge/rebase/stash/reset/restore/
+checkout, mutate index/refs, create a private worktree or hide the only result
+in a patch/cache/external service. No recursive delegation unless authorized.
+
+## Narrow acceptance oracles
+1. &lt;criterion and exact observable evidence, including compatibility&gt;
+2. &lt;failure case where material; expected failure signal&gt;
+3. &lt;exact narrow verification commands, cwd and meaningful count expectation&gt;
+
+Capture real child exits. A filtered test must select a nonzero relevant count.
+An empty result needs a positive control where vacuity is plausible. Never
+weaken an oracle. Use a temporary mutation only for a named suspicious case or
+material false-green risk and restore it within scope. Do not substitute a
+broad suite unless the packet explicitly requires it or parent amends it.
+
+## Budget, dependencies and stop conditions
+- Time/resource budget: &lt;task-shaped limits and observation cadence&gt;
+- Stop conditions: &lt;missing input/rule, upstream drift, ambiguity, scope drift&gt;
+- On quota/crash: preserve product artifacts and report; mark unrun gates PENDING.
+- Do not read/print/copy/hash credentials or inspect provider secrets.
+- Do not restart a worker on observation timeout; parent checks its exact handle.
+- Corrections are serialized after verified process exit in the same cwd/home
+  and explicit thread binding, or a fresh bounded remainder packet.
+
+## Durable report
+Create the skeleton after the first meaningful slice and update before long
+gates. Keep it concise but include all decisive evidence:
+
+```markdown
+# WORKER-REPORT — &lt;task-id&gt;
+## Advisory task verdict
+PASS | FAIL | BLOCKED | PACKET-DEFECT; parent acceptance is pending.
+## Observed execution
+Exact command/cwd; real exit/signal or RUNNING/UNKNOWN; relevant counts.
+Requested model/effort separately from observed metadata or UNVERIFIED.
+## Artifacts
+Exact changed paths and reasons; preserved prior changes; scope breaches.
+## Evidence per criterion
+Criterion -&gt; exact command/result/location; failure controls where material.
+## Decisions, dependencies and blockers
+Granted choices; drift; exact packet defects; no implicit authority expansion.
+## Remaining work
+Every unrun gate PENDING; surviving artifacts; next bounded repair if needed.
+```
+
+Finish with TASK-DONE or TASK-BLOCKED and the report path. These tokens are
+screen summaries, not evidence of process completion or accepted product work.
+</fence>
+  <p><LAUNCH-POINTER fact="true" status="spec/done">The short launch pointer also begins
+  with the quiet marker; CLI suppression must apply before packet loading.</LAUNCH-POINTER></p>
+  <fence lang="text">##subagent-quiet-clause
+Read &lt;exact packet path&gt; first and follow only its named instruction/source inputs.
+Do not run full boot or mutate Git. Preserve visible unstaged artifacts and
+write the named durable report early. Missing necessary rules are packet defects.
+Parent retains acceptance. Finish with TASK-DONE or TASK-BLOCKED and report path.</fence>
+</spec>

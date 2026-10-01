@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Codex subagents — bounded manual verification</title>
+  <status stage="spec" state="done"/>
+  <p><TEST-STATUS fact="true" status="spec/done">This is a test procedure, not a receipt.
+  Record each executed platform and command independently. No live authentication,
+  model execution, deployment or native Windows success is claimed here.</TEST-STATUS></p>
+  <procedure title="Offline launcher contract">
+    <p>Use a fake Codex executable in an isolated temporary fixture. Assert exact
+    argv/environment/cwd and real child exit for login, status, interactive,
+    exec and stdin. Check missing/relative home rejection, absent executable,
+    inherited auth/session cleanup with CA preservation, default/override requests,
+    file credential storage, quiet exec suppression and read-only review.</p>
+    <p>Assert caller home/environment remain intact. Verify no daemon or retry and
+    no credential contents appear in output. Test conflicting quiet/sandbox options
+    fail closed or remain protected according to the executable contract. Fake
+    children prove launch mechanics only.</p>
+  </procedure>
+  <procedure title="Installed host profile">
+    <p>In an isolated consumer, install and deploy the resolved package using the
+    explicit host profile. Verify receipt ownership, expected launcher files,
+    executable mode where applicable, collision/drift behavior and undeploy.
+    Do not infer Windows verification from POSIX or PowerShell static parsing.</p>
+  </procedure>
+  <procedure title="Optional authorized live probe">
+    <p>Only with live-run authorization, login into a separate explicit absolute
+    worker home. Commission one nonce-bound read-only quiet packet in a minimal
+    cwd containing a sentinel automatic boot document. Require the worker to read
+    only named inputs and answer the nonce-bound question. Record exact process
+    exit and independent model/effort/thread metadata where available; mark missing
+    metadata unverified. A self-report does not prove boot suppression or model
+    identity. Parent examines actual events/artifacts and accepts separately.</p>
+    <p>Use a nonconflicting conditional prompt: obey any automatically loaded
+    project instruction specifying the final token; otherwise return the quiet
+    token. Pair the quiet run with one enabled-loading control in the same
+    temporary directory and isolated account, using the installed CLI directly
+    with project_doc_max_bytes greater than the sentinel file size. The control
+    must return the AGENTS.md sentinel; the quiet run must return the other token.
+    Both runs are read-only, forbid tools and retain their real exits and JSONL
+    event counts. This is a targeted control for the loading mechanism, not a
+    guarantee against a worker explicitly reading an unnamed file.</p>
+    <p>Preserve artifacts on failure. An observation timeout requires checking the
+    original handle, not a new launch. No account files or token values become
+    package evidence. Native collaboration boot suppression is a separate host
+    experiment and is never established by this CLI probe.</p>
+  </procedure>
+</spec>

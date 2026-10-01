@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Codex subagents — bounded parent/worker protocol</title>
+  <status stage="spec" state="done"/>
+  <scope title="1. Scope and authority">
+    <p><PORTABLE-CONTRACT fact="true" status="spec/done">
+    This installed contract governs a parent commissioning a Codex execution, review or
+    consultation worker. The parent owns architecture, public semantics, unresolved ambiguity,
+    destructive decisions, routing, integration, staging, commits and acceptance. A worker
+    executes or advises and never accepts its own work. Host authorization and safety rules
+    still bind the parent before delegation.
+    System and harness instructions retain their authority; quiet mode controls
+    discovered project documents and does not disable those instructions.
+    </PORTABLE-CONTRACT></p>
+    <p><BOUNDED-OUTCOME fact="true" status="spec/done">
+    A bounded task has one observable outcome; closed named standing/source inputs and write
+    scope; narrow meaningful oracles including failure cases where material; dependency and
+    stop conditions; a time/resource budget; a durable report path and an accepting parent.
+    Width is semantic responsibility, not lines of code or token budget. A hard requirement is
+    never removed merely to manufacture a smaller contract.
+    </BOUNDED-OUTCOME></p>
+    <p><ROUTING fact="true" status="spec/done">
+    Delegate execution when independent verification is cheaper than generation. Announce the
+    selected harness and bounded outcome. Parent review remains mandatory even when an
+    independent worker reviews the result. Parallelize disjoint write sets only; retain one
+    live writer for each intersecting scope. Do not commission duplicate workers for the same
+    outcome.
+    </ROUTING></p>
+  </scope>
+  <quiet title="2. Boot suppression and packet completeness">
+    <p><PARENT-LOADS-RULES fact="true" status="spec/done">
+    The parent loads the governing host rules itself and chooses the exact standing files that
+    bind this task. It names each file explicitly, including any needed nested-directory
+    rules. Workers do not infer a relevant boot lane, load broad project plans, claim central
+    stewardship or consult custody/handoffs.
+    </PARENT-LOADS-RULES></p>
+    <p><QUIET-FIRST-LINE fact="true" status="spec/done">
+    The packet and its short pointer start on their first line with the exact marker
+    ##subagent-quiet-clause. The worker reads only the named standing rules and source inputs,
+    plus its packet and explicitly named correction. Do not run the full host boot or follow
+    broad includes from a named rule. The packet must specify the relevant governing subset
+    instead.
+    </QUIET-FIRST-LINE></p>
+    <p><PACKET-DEFECT fact="true" status="spec/done">
+    If a required rule, input, dependency or scope decision is absent, report the exact packet
+    defect. The parent amends the packet before any dependent worker action. Workers do not
+    discover omitted instructions by loading the full boot lane or silently broaden their
+    scope.
+    </PACKET-DEFECT></p>
+    <p><CLI-SUPPRESSION fact="true" status="spec/done">
+    Unattended CLI exec uses --strict-config --ignore-user-config and -c
+    project_doc_max_bytes=0 so automatic project-document discovery cannot precede the
+    explicit packet. The marker alone cannot stop a harness that already loaded AGENTS.md.
+    The launcher rejects exec profile switches (-p) and CLI configuration overrides
+    of project_doc_max_bytes or authentication storage. Explicit model/effort
+    overrides remain requests. These flags are CLI-specific. For native workers the parent must explicitly pass the
+    packet and confirm host boot-suppression support; this package does not guarantee native
+    harness behavior.
+    </CLI-SUPPRESSION></p>
+    <p><BOUNDARY-KIND fact="true" status="spec/done">
+    Quiet mode is an instruction/context boundary, not a filesystem read sandbox. Named inputs
+    are a cooperative reading contract. CLI sandbox policy separately limits operations and
+    writes; it does not prove that an unnamed readable file is inaccessible. Report observed
+    scope breaches plainly.
+    </BOUNDARY-KIND></p>
+  </quiet>
+  <install title="3. Installation and launcher interface">
+    <p><INSTALL-DEPLOY fact="true" status="spec/done">
+    Declare tool:org.vibevm.world/codex-subagents@1.1.0 and materialise with ordinary vibe
+    install. Deploy the resolved slot with an explicit posix or windows profile. No default
+    profile is inferred. The deploy engine publishes receipt-owned launchers under
+    &lt;settings-root&gt;/opt/bin, default ~/.vibe/opt/bin, and owns drift, recovery and
+    undeploy. Never replace it with install-hook copying. PATH is not modified.
+    </INSTALL-DEPLOY></p>
+    <p><ENTRYPOINTS fact="true" status="spec/done">
+    The POSIX launcher is codex-worker; Windows provides codex-worker.ps1 and the convenience
+    shim codex-worker.cmd. Commands are login [login options], status, interactive [CLI
+    options], and exec [exec options/prompt or - for stdin]. There is no daemon, scheduler,
+    implicit retry, shared parent conversation or worker acceptance logic.
+    </ENTRYPOINTS></p>
+    <p><ISOLATED-HOME fact="true" status="spec/done">
+    CODEX_WORKER_HOME is required and must be an explicit absolute isolated state directory;
+    never default to ordinary ~/.codex. CODEX_WORKER_BIN optionally selects an installed Codex
+    executable. CODEX_WORKER_MODEL defaults to gpt-6.1-sol and CODEX_WORKER_EFFORT to medium.
+    Authenticate through login into file-based ChatGPT auth in this isolated home. status
+    checks login state, not entitlement or quota.
+    </ISOLATED-HOME></p>
+    <p><CHILD-ENV fact="true" status="spec/done">
+    Clear inherited CODEX_ and OPENAI_ authentication, routing and session environment before
+    constructing the child environment from launcher inputs. Preserve TLS CA configuration.
+    Set the child CODEX_HOME to the explicit isolated home and force file credential storage.
+    Do not forward a parent thread/session identifier or inherited API credential. Never
+    inspect, print, hash or copy credential values into packets, reports or logs.
+    </CHILD-ENV></p>
+    <p><ARGS-EXIT fact="true" status="spec/done">
+    POSIX preserves cwd and exact argument boundaries; all launchers return the real child exit.
+    PowerShell restores its temporary process environment. Windows PowerShell 5.1 and the
+    CMD shim may reparse native arguments, losing empty arguments or unusual quoting.
+    Send packet prompts through stdin, and verify native argument handling on the actual host
+    before relying on it. PowerShell rejects linked/reparse state-directory ancestry. A command
+    pipeline must not substitute the last filter exit for the child exit.
+    </ARGS-EXIT></p>
+    <p><PERMISSIONS fact="true" status="spec/done">
+    Unattended exec uses sandbox workspace-write and approval never. A read-only reviewer may
+    request -s read-only. Normal read/search, shell, formatters, generators and exact tests
+    are allowed within the packet. Do not bypass sandbox policy or replace necessary tools
+    with an arbitrarily starved tool set. Non-routine external effects require existing parent
+    authorization.
+    </PERMISSIONS></p>
+  </install>
+  <packet title="4. Inputs, artifacts and reports">
+    <p><PACKET-FILE fact="true" status="spec/done">
+    Substantial instructions live in an ordinary packet file in the worker cwd or at an
+    explicitly readable absolute path. The short pointer repeats quiet mode, exact packet
+    path, visible artifacts, report and authority invariants. Every input must exist. Populate
+    the copy-ready packet-template completely; unresolved placeholders are defects.
+    </PACKET-FILE></p>
+    <p><WRITE-SCOPE fact="true" status="spec/done">
+    Write only named product paths and the named report. Preserve prior changes. A needed
+    expansion stops for a parent amendment; a worker cannot authorize it by mentioning it
+    after the fact. Deliver ordinary visible unstaged files, never a patch-only copy, hidden
+    cache or external-only result.
+    </WRITE-SCOPE></p>
+    <p><GIT-BOUNDARY fact="true" status="spec/done">
+    Read-only Git status, diff, log, show and blame are evidence. Workers never mutate the
+    index, commit, push, merge, rebase, stash, reset, restore, checkout, create a private
+    worktree or rewrite refs. Parent-owned preparation/integration is separate. Do not spawn
+    further workers without explicit authorization.
+    </GIT-BOUNDARY></p>
+    <p><REPORT-EARLY fact="true" status="spec/done">
+    Create the durable report skeleton after the first meaningful slice, mark unfinished
+    checks PENDING and update before long gates. Give exact changed paths, evidence per
+    criterion, commands with real exits and meaningful counts, decisions, scope breaches,
+    blockers and remaining work. Report observed process status separately from advisory task
+    verdict and parent acceptance. Screen TASK-DONE or PASS is never acceptance.
+    </REPORT-EARLY></p>
+  </packet>
+  <verification title="5. Narrow verification and acceptance">
+    <p><ORACLES fact="true" status="spec/done">
+    Choose targeted gates that actually decide the outcome, including failure cases when
+    material. A filtered test command requires a nonzero relevant test count. An empty search
+    needs a positive control when emptiness could be vacuous. Capture the real exit directly.
+    Do not weaken, delete or broaden an oracle merely to obtain green output.
+    </ORACLES></p>
+    <p><MUTATIONS fact="true" status="spec/done">
+    Mutation checks are reserved for suspicious or material false-green cases; they are not
+    compulsory for every task. Run only the named temporary mutation within the authorized
+    write scope, record why it tests the suspected defect and restore it. No compulsory broad
+    suite follows decisive narrow gates unless a host requirement, new failure or unresolved
+    concern justifies it.
+    </MUTATIONS></p>
+    <p><PARENT-ACCEPTANCE fact="true" status="spec/done">
+    The parent compares actual changed paths to the packet and report, reads the full relevant
+    diff/artifact, reproduces the decisive checks and classifies missing evidence. Issue
+    accept, serialized repair, recommission remainder or reject. Integration/cleanup follows
+    disposition, not worker self-report. A transport exit of zero proves only process
+    completion.
+    </PARENT-ACCEPTANCE></p>
+    <p><REQUEST-NOT-IDENTITY fact="true" status="spec/done">
+    Configured gpt-6.1-sol and medium are requested settings. Record CLI version, argv and
+    independently observed terminal model/effort metadata when available. A model self-report
+    or requested alias alone does not verify effective identity or effort; absent metadata
+    remains unverified. Fake-child coverage is never live execution evidence.
+    </REQUEST-NOT-IDENTITY></p>
+  </verification>
+  <lifecycle title="6. Observation, corrections and recovery">
+    <p><EXACT-IDENTITY fact="true" status="spec/done">
+    Pin each launch to explicit cwd and isolated home; retain the exact process handle/PID and
+    CLI thread identifier when available. A correction preserves the same cwd/home/thread
+    binding. Do not use ambiguous latest-session continuation. A fresh remainder packet is
+    preferable when no reliable thread identity survives.
+    </EXACT-IDENTITY></p>
+    <p><OBSERVE-NOT-RESTART fact="true" status="spec/done">
+    An observation-tool timeout does not mean the worker exited. Poll or inspect the exact
+    original process handle, last meaningful event, visible artifacts and report. Do not
+    restart or create a duplicate writer while that process remains alive. File mtime, log
+    growth and a grep hit for TASK-DONE are neither completion nor a code verdict.
+    </OBSERVE-NOT-RESTART></p>
+    <p><TERMINAL-STATES fact="true" status="spec/done">
+    Record actual exit/signal and provider/CLI error separately. Quota exhaustion, transport
+    timeout, process crash, cancellation or a stalled final turn can leave useful work.
+    Preserve cwd, diff, report, retained handles and unrun gates. No quota availability,
+    subscription entitlement or reset success is guaranteed. Never copy account-specific state
+    or token values into this package.
+    </TERMINAL-STATES></p>
+    <p><SERIALIZED-CORRECTIONS fact="true" status="spec/done">
+    Wait for verified real process exit before starting a correction writer. Inspect artifacts
+    first, then amend the packet with named findings and verification tail. Resume only the
+    explicit thread in the original cwd/home, or commission a fresh bounded remainder. Never
+    blindly retransmit the whole task or spin retries against a known quota wall.
+    </SERIALIZED-CORRECTIONS></p>
+    <p><EXACT-STOP-CLEANUP fact="true" status="spec/done">
+    If stopping is necessary, stop only the exact marked process or identified child chain;
+    never kill by executable name. Verify exit before cleanup. Remove a worker cwd only after
+    disposition, preserved unique artifacts and durable findings; no live process or
+    unclassified product artifact may remain.
+    </EXACT-STOP-CLEANUP></p>
+  </lifecycle>
+  <references title="7. Installed references">
+    <p><PACKET-REFERENCE fact="true" status="spec/done">
+    Copy-ready packet:
+    @spec://org.vibevm.world/codex-subagents/flows/codex-subagents/packet-template#root.
+    </PACKET-REFERENCE></p>
+    <p><PROVENANCE-REFERENCE fact="true" status="spec/done">
+    History and evidence limits:
+    @spec://org.vibevm.world/codex-subagents/flows/codex-subagents/provenance#root. GLM
+    practice supplies historical process lessons only; no retired subscription, GLM routing
+    rule or host campaign is inherited.
+    </PROVENANCE-REFERENCE></p>
+  </references>
+</spec>
