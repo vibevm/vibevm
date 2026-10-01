@@ -112,6 +112,63 @@ fn an_address_returns_the_page_with_its_rules_resolved() {
     );
 }
 
+#[test]
+fn checkout_doc_vocabulary_uses_captured_xml_media_even_with_md_suffix() {
+    let tmp = tempfile::tempdir().unwrap();
+    let repo = world(tmp.path(), false);
+    let model = repo.join("vibevm/vibespecs/model");
+    fs::create_dir_all(&model).unwrap();
+    let selected = model.join("guide.md");
+    fs::write(
+        &selected,
+        "<spec xmlns=\"https://vibevm.org/spec/1\"><title id=\"root\">Guide</title>\
+         <p>A page in the documentation vocabulary.</p>\
+         <example id=\"run\" fixture=\"none\"><run>vibe --version</run><expect>ok</expect></example>\
+         </spec>\n",
+    )
+    .unwrap();
+    let raw = model.join("guide.xml");
+    fs::write(&raw, "<data>ordinary XML</data>\n").unwrap();
+    fs::write(model.join("raw-only.xml"), "<data>never a page</data>\n").unwrap();
+    fs::write(
+        repo.join("vibe.toml"),
+        "[project]\nname='host'\ngroup='com.example'\nversion='1.1.0'\n\
+         [[project.sources]]\nfile='vibevm/vibespecs/model/guide.md'\n\
+         media='application/xml'\ninterpretation='vibe-doc'\nrole='documentation'\nloading='scan'\n\
+         [[project.sources]]\nfile='vibevm/vibespecs/model/guide.xml'\n\
+         media='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n\
+         [[project.sources]]\nfile='vibevm/vibespecs/model/raw-only.xml'\n\
+         media='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+    )
+    .unwrap();
+    let page = read_page(
+        "spec://com.example/host/model/guide",
+        Format::Md,
+        None,
+        &sources(&repo),
+    )
+    .unwrap();
+    assert_eq!(page.source, Source::Checkout);
+    assert!(
+        page.text.contains("documentation vocabulary"),
+        "{}",
+        page.text
+    );
+    assert_eq!(fs::read(raw).unwrap(), b"<data>ordinary XML</data>\n");
+    let refused = read_page(
+        "spec://com.example/host/model/raw-only",
+        Format::Md,
+        None,
+        &sources(&repo),
+    )
+    .unwrap_err();
+    assert!(
+        refused
+            .to_string()
+            .contains("no declared scan-loaded Vibe source")
+    );
+}
+
 /// The XML projection keeps the ADDRESS instead — which is what an agent
 /// that resolves its own citations wants, and cheaper by every rule it
 /// does not read.

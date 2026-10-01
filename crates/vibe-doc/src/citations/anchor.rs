@@ -16,6 +16,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-RULE-A
 
 use std::path::Path;
 
+use super::sources::{CapturedMedia, CapturedSource};
 use vibe_specdoc::doc::{Block, BlockNode, Section, SpecDoc, Unit};
 
 /// Read a specification through the pivot, by the serialisation its
@@ -27,6 +28,19 @@ pub fn read_spec(path: &Path) -> Result<SpecDoc, String> {
         _ => vibe_specdoc::from_markdown(&raw),
     };
     parsed.map_err(|e| format!("{}: {e}", path.display()))
+}
+
+/// A selected Checkout source is parsed from its held bytes and authored
+/// media. The filename is only a diagnostic label in this route.
+pub fn read_spec_selected(path: &Path, captured: &CapturedSource) -> Result<SpecDoc, String> {
+    let parsed = match captured.media {
+        CapturedMedia::Xml => vibe_specdoc::from_xml_with(&captured.text, captured.vocabulary)
+            .map_err(|error| error.to_string()),
+        CapturedMedia::Markdown => {
+            vibe_specdoc::from_markdown(&captured.text).map_err(|error| error.to_string())
+        }
+    };
+    parsed.map_err(|error| format!("{}: {error}", path.display()))
 }
 
 /// The text of the node an anchor path names (`["PIPE-LIBRARY"]`, or a

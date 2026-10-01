@@ -50,7 +50,7 @@ pub use anchor::anchor_text;
 pub use scan::rule_uris;
 pub use sources::{Source, SpecSources};
 
-use anchor::read_spec;
+use anchor::{read_spec, read_spec_selected};
 use scan::{prose_uris, rule_lines};
 
 /// The reserved teaching group. An address under it is an illustration in
@@ -306,7 +306,10 @@ pub fn resolve(uri: &str, sources: &SpecSources) -> std::result::Result<RuleText
         ));
     }
     let found = sources.locate(&address)?;
-    let doc = read_spec(&found.path)?;
+    let doc = match &found.captured {
+        Some(captured) => read_spec_selected(&found.path, captured)?,
+        None => read_spec(&found.path)?,
+    };
     let anchor = address.anchor.join(".");
     let text = anchor_text(&doc, &address.anchor).ok_or_else(|| {
         format!(

@@ -71,6 +71,34 @@ fn a_rule_resolves_to_the_current_text_of_the_fact_it_names() {
     assert_eq!(found.lang, "en");
 }
 
+#[test]
+fn declared_xml_media_in_markdown_named_checkout_file_supplies_the_fact() {
+    let tmp = tempfile::tempdir().unwrap();
+    let (spec_pkg, _) = world(tmp.path(), &page(""));
+    let common = spec_pkg.join("vibevm/vibespecs/common");
+    let selected = common.join("PROP-001-the-thing.md");
+    let raw = common.join("PROP-001-the-thing.xml");
+    fs::rename(&raw, &selected).unwrap();
+    fs::write(&raw, b"<data>raw XML, no fact</data>\n").unwrap();
+    fs::write(
+        spec_pkg.join("vibe.toml"),
+        "[project]\nname='host'\ngroup='com.example'\nversion='1.1.0'\n\
+         [[project.sources]]\nfile='vibevm/vibespecs/common/PROP-001-the-thing.md'\n\
+         media='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+         [[project.sources]]\nfile='vibevm/vibespecs/common/PROP-001-the-thing.xml'\n\
+         media='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+    )
+    .unwrap();
+    let found = resolve(
+        "spec://com.example/host/common/PROP-001#A-RULE",
+        &sources(&spec_pkg),
+    )
+    .unwrap();
+    assert_eq!(found.text, "The rule says a thing.");
+    assert_eq!(found.path, selected);
+    assert_eq!(fs::read(raw).unwrap(), b"<data>raw XML, no fact</data>\n");
+}
+
 /// The lossy `PROP-NNN` truncation is inverted by the resolver that owns
 /// that law — the address says `PROP-001`, the file is
 /// `PROP-001-the-thing.xml`.

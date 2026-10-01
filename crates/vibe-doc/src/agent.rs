@@ -29,11 +29,13 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT");
 
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 
 use vibe_spec::{Authority, SpecAddress};
 
 use crate::build::{self, Format};
+use crate::citations::sources::CapturedMedia;
 use crate::citations::{self, Source, SpecSources};
 use crate::content::Content;
 use crate::error::{DocError, Result};
@@ -143,15 +145,33 @@ fn fetch(
             uri: address.to_owned(),
             message,
         })?;
-    let raw = std::fs::read_to_string(&located.path)
-        .map_err(|e| DocError::io("reading", &located.path, e))?;
-    let doc =
-        vibe_specdoc::from_xml_with(&raw, vibe_specdoc::doc::Vocabulary::Doc).map_err(|e| {
-            DocError::Page {
-                path: located.path.clone(),
-                message: e.to_string(),
-            }
-        })?;
+    let raw = match &located.captured {
+        Some(captured) => Cow::Borrowed(captured.text.as_str()),
+        None => Cow::Owned(
+            std::fs::read_to_string(&located.path)
+                .map_err(|e| DocError::io("reading", &located.path, e))?,
+        ),
+    };
+    let parsed_doc = match located.captured.as_ref().map(|captured| captured.media) {
+        Some(CapturedMedia::Markdown) => {
+            vibe_specdoc::from_markdown(&raw).map_err(|error| error.to_string())
+        }
+        Some(CapturedMedia::Xml) => vibe_specdoc::from_xml_with(
+            &raw,
+            located
+                .captured
+                .as_ref()
+                .expect("selected media has capture")
+                .vocabulary,
+        )
+        .map_err(|error| error.to_string()),
+        None => vibe_specdoc::from_xml_with(&raw, vibe_specdoc::doc::Vocabulary::Doc)
+            .map_err(|error| error.to_string()),
+    };
+    let doc = parsed_doc.map_err(|e| DocError::Page {
+        path: located.path.clone(),
+        message: e.to_string(),
+    })?;
     // The address names a document, the package holds a file: the
     // extension is the pivot's serialisation and not part of the address
     // (PROP-052's layout owns it), so it is put back here.
