@@ -316,6 +316,48 @@ fn tampered_retained_bytes_do_not_produce_vault_complete_status() {
 }
 
 #[test]
+fn intent_tampered_between_cold_proof_passes_is_typed_uncertain() {
+    let (_source_root, source) = source();
+    let plan = plan(&source);
+    let root = tempfile::tempdir().unwrap();
+    let lease = LifecycleLease::acquire(root.path()).unwrap();
+    let selected = scope();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
+    let PendingInspection::VaultCompleteButNotReady { run_id, .. } = prepare_pending(
+        &lease,
+        &namespace,
+        &selected,
+        "mid-proof",
+        &source,
+        &plan,
+        limits(),
+    )
+    .unwrap() else {
+        panic!("fixture must begin as a complete Pending vault")
+    };
+    let (status, proof) = pending_proof_cold_inner(
+        &lease,
+        namespace.id(),
+        &selected,
+        "mid-proof",
+        Some(&source),
+        |observed_run| {
+            assert_eq!(observed_run, run_id);
+            fs::write(
+                root.path().join(format!(
+                    ".vibe/package-git-operations/{observed_run}.package-git-intent.json"
+                )),
+                b"not-json",
+            )
+            .unwrap();
+        },
+    )
+    .unwrap();
+    assert!(proof.is_none());
+    assert!(matches!(status, PendingInspection::Uncertain { run_id: got, .. } if got == run_id));
+}
+
+#[test]
 fn cold_refuses_c1_bound_malformed_plan_even_with_matching_record_hashes() {
     let (_source_root, source) = source();
     let plan = plan(&source);

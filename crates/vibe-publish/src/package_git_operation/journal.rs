@@ -11,6 +11,7 @@ const RECORD_CAP: usize = 1024 * 1024; // C.1-scale control record, not a payloa
 pub(super) const INTENT_FORMAT: &str = "vibevm.package-git-intent/e1";
 pub(super) const STAGE_FORMAT: &str = "vibevm.package-git-stage/e1";
 pub(super) const REQUEST_FORMAT: &str = "vibevm.package-git-request/e1";
+pub(crate) const TREE_FORMAT: &str = "vibevm.package-git-tree/e1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -59,7 +60,32 @@ pub(super) struct StageReceipt {
     pub provenance: ProvenanceStatus,
 }
 
-pub(super) fn sha(bytes: &[u8]) -> String {
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct TreeReceipt {
+    pub format: String,
+    pub run_id: String,
+    pub c1_plan_sha256: String,
+    pub semantic_plan_sha256: String,
+    pub intent_sha256: String,
+    pub payload_manifest_sha256: String,
+    pub object_root_token: String,
+    pub root_tree_oid: String,
+    pub oid_hex_len: usize,
+    pub files: Vec<TreeFile>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct TreeFile {
+    pub path: String,
+    pub blob_oid: String,
+    pub git_mode: String,
+    pub size_bytes: u64,
+    pub sha256: String,
+}
+
+pub(crate) fn sha(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
 }
 fn name(run_id: &str, suffix: &str) -> anyhow::Result<String> {
@@ -69,7 +95,7 @@ fn name(run_id: &str, suffix: &str) -> anyhow::Result<String> {
     Ok(format!("{run_id}.package-git-{suffix}.json"))
 }
 
-pub(super) fn read_bytes(
+pub(crate) fn read_bytes(
     lease: &LifecycleLease,
     run_id: &str,
     suffix: &str,
@@ -81,7 +107,7 @@ pub(super) fn read_bytes(
     project.read_file_bounded_in(&dir, &name(run_id, suffix)?, RECORD_CAP)
 }
 
-pub(super) fn read<T: for<'de> Deserialize<'de>>(
+pub(crate) fn read<T: for<'de> Deserialize<'de>>(
     lease: &LifecycleLease,
     run_id: &str,
     suffix: &str,
@@ -91,7 +117,7 @@ pub(super) fn read<T: for<'de> Deserialize<'de>>(
         .transpose()
 }
 
-pub(super) fn publish<T: Serialize>(
+pub(crate) fn publish<T: Serialize>(
     lease: &LifecycleLease,
     run_id: &str,
     suffix: &str,
@@ -123,6 +149,26 @@ pub(super) fn vault(
     }
     let project = lease.package_git_journal_project();
     let name = format!("{run_id}.payloads");
+    let path = [HOME[0], HOME[1], name.as_str()];
+    if create {
+        Ok(Some(project.ensure_subproject(&path)?))
+    } else if project.dir_if_present(&path)?.is_none() {
+        Ok(None)
+    } else {
+        project.subproject(&path).map(Some)
+    }
+}
+
+pub(crate) fn objects(
+    lease: &LifecycleLease,
+    run_id: &str,
+    create: bool,
+) -> anyhow::Result<Option<vibe_safefs::Project>> {
+    if !is_valid_run_id(run_id) {
+        anyhow::bail!("invalid package Git run ID");
+    }
+    let project = lease.package_git_journal_project();
+    let name = format!("{run_id}.objects");
     let path = [HOME[0], HOME[1], name.as_str()];
     if create {
         Ok(Some(project.ensure_subproject(&path)?))
