@@ -17,8 +17,12 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result};
 use serde::Serialize;
 use vibe_core::machine_json_path;
-use vibe_core::manifest::Lockfile;
-use vibe_workspace::boot_artifacts;
+use vibe_core::manifest::{
+    Lockfile, Manifest, SelectedSource, SourceDescriptor, SourceInterpretation, SourceLoading,
+    select_source_rows,
+};
+use vibe_safefs::Project;
+use vibe_workspace::{boot_artifacts, vibedeps};
 
 use crate::cli::ShowEffectiveArgs;
 use crate::output;
@@ -66,6 +70,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     } else {
         None
     };
+    let host_sources = selected_host_sources(project_root)?;
 
     let mut sections: Vec<EffectiveSection> = Vec::new();
     // Layout-relative string prefixes, computed once: everything this
@@ -107,6 +112,23 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
             };
             let filename = filename.to_string_lossy().into_owned();
             let rel = format!("{boot_prefix}{filename}");
+            if !matches!(filename.as_str(), "STATIC.md" | "STATIC.xml" | "INDEX.md")
+                && let Some((coordinate, sources)) = host_sources.as_ref()
+            {
+                let selection = select_source_rows(coordinate, sources, &rel)
+                    .map_err(|error| anyhow::anyhow!("host boot source `{rel}`: {error:?}"))?;
+                match selection {
+                    SelectedSource::Descriptor { descriptor, .. }
+                        if matches!(
+                            descriptor.interpretation(),
+                            SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc
+                        ) && descriptor.loading() == SourceLoading::Scan => {}
+                    SelectedSource::NeedsInput { .. } => {
+                        anyhow::bail!("host boot source `{rel}` has ambiguous descriptors")
+                    }
+                    _ => continue,
+                }
+            }
             let origin = boot_origin(&filename, lockfile.as_ref());
             let spec_uri = format!("spec://project/boot/{filename}");
             let body = load_boot_entry(&path)?;
@@ -140,6 +162,32 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     if let Some(lockfile) = &lockfile {
         for entry in &lockfile.packages {
             let pkg_uri_root = format!("spec://{}/{}/{}", entry.group, entry.name, entry.version);
+            let slot = if entry.materialization.is_in_place() {
+                vibedeps::in_place_slot_abs_path(project_root, &entry.group, &entry.name)
+            } else {
+                vibedeps::slot_abs_path(project_root, &entry.group, &entry.name, &entry.version)
+            };
+            let descriptor_map = if entry.files_written.is_empty() {
+                None
+            } else {
+                vibedeps::read_validated_descriptor_map_for_citation(
+                    &slot,
+                    &entry.group,
+                    entry.name.as_str(),
+                    &entry.version,
+                    &entry.content_hash,
+                    false,
+                )
+                .map_err(|reason| {
+                    anyhow::anyhow!(
+                        "selected package `{}/{}@{}`: {reason}",
+                        entry.group,
+                        entry.name,
+                        entry.version
+                    )
+                })?
+            };
+            let slot_rel = slot.strip_prefix(project_root).ok();
             let mut paths: Vec<PathBuf> = entry
                 .files_written
                 .iter()
@@ -152,6 +200,23 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
                     // Already emitted under step 1.
                     continue;
                 }
+                let selected_row = if let Some(map) = descriptor_map.as_ref() {
+                    let Some(output) = slot_rel
+                        .and_then(|slot_rel| rel.strip_prefix(slot_rel).ok())
+                        .map(machine_json_path)
+                    else {
+                        continue;
+                    };
+                    let Some(row) = map.output_row(&output) else {
+                        continue;
+                    };
+                    if row.document_address.is_none() {
+                        continue;
+                    }
+                    Some(row)
+                } else {
+                    None
+                };
                 let abs = project_root.join(&rel);
                 if !abs.is_file() {
                     // Missing file — surface as a section with empty
@@ -174,10 +239,19 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
                     });
                     continue;
                 }
-                let body = load_spec(&abs)?;
+                let body = if let Some(row) = selected_row {
+                    load_selected_output(&slot, &row.output, &row.output_sha256, &abs)?
+                } else {
+                    load_spec(&abs)?
+                };
                 let suffix = rel_str.trim_start_matches(&specs_prefix);
                 sections.push(EffectiveSection {
-                    spec_uri: format!("{pkg_uri_root}/{suffix}"),
+                    spec_uri: selected_row
+                        .and_then(|row| row.document_address.as_deref())
+                        .map_or_else(
+                            || format!("{pkg_uri_root}/{suffix}"),
+                            |address| format!("{pkg_uri_root}/{address}"),
+                        ),
                     path: rel_str,
                     origin: format!("package:{}/{}@{}", entry.group, entry.name, entry.version),
                     body,
@@ -187,6 +261,53 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     }
 
     Ok(sections)
+}
+
+fn selected_host_sources(project_root: &Path) -> Result<Option<(String, Vec<SourceDescriptor>)>> {
+    let manifest_path = project_root.join(Manifest::FILENAME);
+    let pinned = Project::open(project_root)
+        .with_context(|| format!("pinning `{}`", project_root.display()))?;
+    let Some(captured) = pinned
+        .read_file_snapshot_bounded(Manifest::FILENAME, 1024 * 1024)
+        .with_context(|| format!("capturing `{}`", manifest_path.display()))?
+    else {
+        return Ok(None);
+    };
+    let text = std::str::from_utf8(&captured.bytes)
+        .with_context(|| format!("`{}` is not UTF-8", manifest_path.display()))?;
+    let manifest = Manifest::parse_str(text)
+        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
+    let Some(project) = manifest.project else {
+        return Ok(None);
+    };
+    if project.sources.is_empty() {
+        return Ok(None);
+    }
+    let group = project
+        .group
+        .context("host source declarations require a project self-coordinate group")?;
+    Ok(Some((format!("{group}/{}", project.name), project.sources)))
+}
+
+fn load_selected_output(
+    slot: &Path,
+    relative: &str,
+    expected_sha: &str,
+    path: &Path,
+) -> Result<String> {
+    let pinned = Project::open(slot).with_context(|| format!("pinning `{}`", slot.display()))?;
+    let snapshot = pinned
+        .read_file_snapshot_bounded(relative, 64 * 1024 * 1024)
+        .with_context(|| format!("reading selected output `{relative}`"))?
+        .with_context(|| format!("selected output `{relative}` is absent"))?;
+    if snapshot.sha256 != expected_sha {
+        anyhow::bail!("selected output `{relative}` changed after descriptor validation");
+    }
+    let source = std::str::from_utf8(&snapshot.bytes)
+        .with_context(|| format!("selected output `{relative}` is not UTF-8"))?;
+    vibe_specdoc::project_spec_text(path, source)
+        .map(|(text, _)| text)
+        .map_err(|error| anyhow::anyhow!("selected output `{relative}`: {error}"))
 }
 
 pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
