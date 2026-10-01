@@ -14,6 +14,7 @@ use vibe_publish::publication_capture::{
 use vibe_publish::publication_effect_plan::{
     CapturedPublicationRemote, PublicationEffectPlanExpectations, plan_from_captured_remote,
 };
+use vibe_publish::publication_payload::vault::FinalPayloadBytes;
 use vibe_publish::publication_subject::PublicationSubjectExpectations;
 use vibe_publish::sha256_digest;
 use vibe_safefs::{Project, StableFileState};
@@ -33,6 +34,51 @@ pub(crate) struct PreparedSubjectCapture {
     pub(crate) subject: PublicationSubject,
     pub(crate) subject_digest: String,
     pub(crate) aggregate_bytes: Vec<u8>,
+    installers: CommittedInstallerBytes,
+}
+
+/// Exact byte strings read from the selected immutable commit. These stay
+/// with the subject so a later local vault never reopens dirty working files.
+struct CommittedInstallerBytes {
+    bash: Vec<u8>,
+    powershell: Vec<u8>,
+    cmd: Vec<u8>,
+}
+
+impl PreparedSubjectCapture {
+    pub(crate) fn final_payload_bytes(&self) -> FinalPayloadBytes<'_> {
+        FinalPayloadBytes {
+            aggregate: &self.aggregate_bytes,
+            bash: &self.installers.bash,
+            powershell: &self.installers.powershell,
+            cmd: &self.installers.cmd,
+        }
+    }
+
+    /// The offline-ready test has no real committed tree; keep its synthetic
+    /// carrier constructor out of production so only the commit reader can
+    /// populate installer bytes there.
+    #[cfg(test)]
+    pub(crate) fn synthetic_for_test(
+        identity: GitIdentity,
+        subject: PublicationSubject,
+        subject_digest: String,
+        aggregate_bytes: Vec<u8>,
+        installers: [Vec<u8>; 3],
+    ) -> Self {
+        let [bash, powershell, cmd] = installers;
+        Self {
+            identity,
+            subject,
+            subject_digest,
+            aggregate_bytes,
+            installers: CommittedInstallerBytes {
+                bash,
+                powershell,
+                cmd,
+            },
+        }
+    }
 }
 
 /// Requested visibility of a future release. This is a plan input, never
@@ -191,6 +237,11 @@ fn capture_prepared_subject_at_identity(
         subject: subject.subject,
         subject_digest: subject.subject_digest,
         aggregate_bytes: subject.aggregate_bytes,
+        installers: CommittedInstallerBytes {
+            bash,
+            powershell,
+            cmd,
+        },
     })
 }
 

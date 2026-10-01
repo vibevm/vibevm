@@ -43,7 +43,24 @@ fn expected() -> PublicationEffectPlanExpectations<'static> {
     }
 }
 
-fn composition_from_corpus(subject: PublicationSubject) -> PreparedPublicationComposition {
+fn composition_from_corpus(mut subject: PublicationSubject) -> PreparedPublicationComposition {
+    let aggregate_bytes = b"{}\n".to_vec();
+    subject.aggregate.size_bytes = aggregate_bytes.len().to_string();
+    subject.aggregate.sha256 = vibe_publish::sha256_digest(&aggregate_bytes);
+    let installers = [
+        b"#!/bin/sh\n".to_vec(),
+        b"Write-Host fixture\n".to_vec(),
+        b"@echo off\r\n".to_vec(),
+    ];
+    for (asset, bytes) in subject
+        .installers
+        .iter_mut()
+        .map(|row| &mut row.asset)
+        .zip(&installers)
+    {
+        asset.size_bytes = bytes.len().to_string();
+        asset.sha256 = vibe_publish::sha256_digest(bytes);
+    }
     let plan: PublicationEffectPlan = serde_json::from_str(&corpus(
         "publication_effect_plan",
         "valid",
@@ -58,16 +75,17 @@ fn composition_from_corpus(subject: PublicationSubject) -> PreparedPublicationCo
     let subject_digest = publication_subject_digest(&subject, &expected().subject).unwrap();
     // Corpus-only fixture: the capture type is the production carrier for
     // independently witnessed bytes; this first seam tests semantic gates.
-    let capture = PreparedSubjectCapture {
-        identity: GitIdentity {
+    let capture = PreparedSubjectCapture::synthetic_for_test(
+        GitIdentity {
             commit: subject.source.commit.clone(),
             tree: subject.source.tree.clone(),
             source_date_epoch: "1".into(),
         },
         subject,
         subject_digest,
-        aggregate_bytes: Vec::new(),
-    };
+        aggregate_bytes,
+        installers,
+    );
     plan_captured_subject(
         capture,
         &remote,

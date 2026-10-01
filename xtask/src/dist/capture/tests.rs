@@ -27,11 +27,13 @@ use vibe_wire::generated::publication_subject::{
 
 use super::{
     PreparedSubjectCapture, PublicationVisibilityChoice, PublishedReplacementChoice,
-    capture_prepared_subject, plan_captured_subject,
+    capture_prepared_subject, capture_prepared_subject_at_identity, plan_captured_subject,
 };
 use crate::dist::archive::{ArchiveEntry, read_zip, write_stored_zip, write_zip};
 use crate::dist::smoke::prepare::prepare_local_with;
 
+#[path = "tests_installer_bytes.rs"]
+mod tests_installer_bytes;
 #[path = "tests_plan_local.rs"]
 mod tests_plan_local;
 #[path = "tests_smoke.rs"]
