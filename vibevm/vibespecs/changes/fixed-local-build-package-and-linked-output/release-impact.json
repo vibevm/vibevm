@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "change_id": "fixed-local-build-package-and-linked-output",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "6c690a5a453ef46c2e5e203b92da13da044af2c2"
+    },
+    {
+      "kind": "commit",
+      "identity": "05563814788bee462c81f611bff5fc00d5520e33"
+    },
+    {
+      "kind": "commit",
+      "identity": "251cc19d22e10baeaee19a1654ca6ff3484b5e05"
+    },
+    {
+      "kind": "commit",
+      "identity": "7b8d2a48fdefba0210d71977533656d255afcff7"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-lifecycle/src/mechanism/build.rs",
+    "crates/vibe-lifecycle/src/mechanism/build/error.rs",
+    "crates/vibe-lifecycle/src/mechanism/build/journal.rs",
+    "crates/vibe-lifecycle/src/mechanism/build/journal/execution.rs",
+    "crates/vibe-lifecycle/src/mechanism/build/journal/tests.rs",
+    "crates/vibe-lifecycle/src/mechanism/cargo.rs",
+    "crates/vibe-lifecycle/src/mechanism/package.rs",
+    "crates/vibe-lifecycle/src/mechanism/package/journal.rs",
+    "crates/vibe-lifecycle/src/mechanism/package/journal/execution.rs",
+    "crates/vibe-lifecycle/src/mechanism/package/journal/tests.rs",
+    "crates/vibe-lifecycle/src/state/submission.rs",
+    "crates/vibe-safefs/src/file/bounded.rs",
+    "crates/vibe-safefs/src/file/stable_tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "internal:vibe-lifecycle:fixed-static-file-package",
+      "capability_id": "reserved-static-file-package-recovery",
+      "kind": "introduced",
+      "before": "One fixed static-file package target had no same-C1 retained pre-effect intent/result journal.",
+      "after": "Under one lease the owner records exact source/plan/absence and Ready before copy, verifies copied bytes and A2 record before create-new result, and returns typed partial/recovery on interrupted duplicate; other package targets remain outside.",
+      "audience": "Internal package owner / repository maintainer",
+      "platform": "Selected GNU/Linux package journal tests; no native macOS/Windows runtime proof.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
+      ]
+    },
+    {
+      "interface_id": "internal:vibe-lifecycle:fixed-offline-cargo-build",
+      "capability_id": "reserved-cargo-build-recovery",
+      "kind": "introduced",
+      "before": "One fixed offline Cargo target had no same-C1 pre-effect journal or verified retained result.",
+      "after": "The owner records source/plan/absence and Ready before Cargo/rustc commands, uses a project-local Cargo home, verifies selected binary and A2 record, and never respawns on duplicate; ambient toolchain/home side effects remain outside proof.",
+      "audience": "Internal build owner / repository maintainer",
+      "platform": "Selected GNU/Linux real four-process Cargo fixture; native macOS/Windows and unrestricted CAS unproved.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-safefs:Project::read_linked_regular_snapshot_bounded",
+      "capability_id": "linked-regular-output-observation",
+      "kind": "introduced",
+      "before": "The default stable reader refused any hard-linked output, including legitimate Cargo release/deps aliases.",
+      "after": "A public explicit opt-in reads a held nofollow regular file twice under a cap, checks stable metadata/link count and final-name identity; alias mutation outside the observed interval remains a cooperative detection-bound risk.",
+      "audience": "Rust library consumer / repository maintainer",
+      "platform": "Selected GNU/Linux hardlink tests; native macOS/Windows observation and hostile-writer CAS unproved.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Additive public safefs API supports legitimate hard-linked Cargo outputs; fixed protected Build/Package entries remain internal, and existing users need no state migration.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Document the public linked-reader opt-in and its weaker alias/host contract, plus fixed Build/Package owner boundaries; final source page/editorial proof pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "bounded-domain-central-review",
+      "subject_id": "7b8d2a48fdefba0210d71977533656d255afcff7",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-2-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-selected-delta-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-fixed-local-build-package-and-linked-output-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "7b8d2a48fdefba0210d71977533656d255afcff7",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-2-central-review.md"
+  }
+}

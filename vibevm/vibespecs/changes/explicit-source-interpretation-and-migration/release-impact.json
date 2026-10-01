@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "change_id": "explicit-source-interpretation-and-migration",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "2928123034787ead067f508a8fa6597e61539ed0"
+    },
+    {
+      "kind": "commit",
+      "identity": "2466ce0ff154fc34993a8b234da0e964a5226a5a"
+    },
+    {
+      "kind": "commit",
+      "identity": "b35bbb47b54985bd8273ad49ef4e5e7b5e1ff9c0"
+    },
+    {
+      "kind": "commit",
+      "identity": "ba1fdc7c6a08b4a51d8cd45836a9f30037b19dea"
+    },
+    {
+      "kind": "commit",
+      "identity": "01489818b129a3c51e17bd0f05a7d45eb364a3d8"
+    },
+    {
+      "kind": "commit",
+      "identity": "451ed4c91daad74af3f1c4dd2f8f5bc4dbd97e07"
+    },
+    {
+      "kind": "commit",
+      "identity": "7321157a289dc58a407a50edca2e0cf899cbf1bb"
+    },
+    {
+      "kind": "commit",
+      "identity": "417610c117387c4a783d648ae60f48f60cdc8a6d"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-cli/src/commands/facts.rs",
+    "crates/vibe-cli/tests/cli_facts_declared.rs",
+    "crates/vibe-core/src/manifest/migration.rs",
+    "crates/vibe-core/src/manifest/migration/source.rs",
+    "crates/vibe-core/src/manifest/migration/tests.rs",
+    "crates/vibe-core/src/manifest/migration/tests_source.rs",
+    "crates/vibe-core/src/manifest/mod.rs",
+    "crates/vibe-core/src/manifest/package/meta.rs",
+    "crates/vibe-core/src/manifest/package/tests.rs",
+    "crates/vibe-core/src/manifest/package/wire.rs",
+    "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+    "crates/vibe-core/src/manifest/source_descriptor/tests.rs",
+    "crates/vibe-facts/src/lib.rs",
+    "crates/vibe-facts/src/scan.rs",
+    "crates/vibe-facts/src/scan/declared.rs",
+    "crates/vibe-facts/src/scan/declared/tests.rs",
+    "crates/vibe-facts/src/scan/declared/walk.rs",
+    "crates/vibe-facts/src/scan/declared/walk/tests.rs",
+    "crates/vibe-orchestrator/src/machine_operation.rs",
+    "crates/vibe-orchestrator/src/machine_operation/discovery/tests.rs",
+    "crates/vibe-orchestrator/src/machine_operation/publication/tests.rs",
+    "crates/vibe-wire/src/generated/migration/e1/plan_report/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/plan_request/mod.rs",
+    "crates/vibe-workspace/src/migration_planning.rs",
+    "crates/vibe-workspace/src/migration_planning/tests.rs",
+    "crates/vibe-workspace/src/migration_planning/tests_apply.rs",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/global-question-with-path.json",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/source-question-duplicate.json",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/source-question-missing-path.json",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/source-question-path-escape.json",
+    "formats/corpora/migration-plan-report/e1/valid/needs-input-source.json",
+    "formats/corpora/migration-plan-request/e1/presence-invalid/source-decisions-null.json",
+    "formats/corpora/migration-plan-request/e1/semantic-invalid/source-duplicate.json",
+    "formats/corpora/migration-plan-request/e1/semantic-invalid/source-media-mismatch.json",
+    "formats/corpora/migration-plan-request/e1/semantic-invalid/source-path-escape.json",
+    "formats/corpora/migration-plan-request/e1/structural-invalid/source-unknown-interpretation.json",
+    "formats/corpora/migration-plan-request/e1/valid/source-decision.json",
+    "schemas/migration/e1/plan_report.jtd.json",
+    "schemas/migration/e1/plan_request.jtd.json"
+  ],
+  "effects": [
+    {
+      "capability_id": "selected-package-source-descriptors",
+      "audience": "package authors and source consumers",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-GRAMMAR"
+      ],
+      "interface_id": "manifest:vibe.toml:package.sources",
+      "kind": "introduced",
+      "before": "No strict authored source interpretation or common file-over-directory selector; suffixes could be mistaken for Vibe authority.",
+      "after": "Strict package source rows select media, interpretation, role and loading before semantics; ambiguous equal precedence is NeedsInput, while no-descriptor sources remain unclassified."
+    },
+    {
+      "capability_id": "selected-fact-source-observation",
+      "audience": "facts consumers and CLI users",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-GRAMMAR"
+      ],
+      "interface_id": "rust:vibe-facts:declared-source-observation",
+      "kind": "introduced",
+      "before": "Fact adoption and source reading lacked a descriptor-selected captured-byte route.",
+      "after": "A bounded selected reader/census and Mixed-slot facts adoption use witnessed exact bytes and refuse foreign, ambiguous, transformed or incomplete sources before registry write; legacy no-descriptor adoption remains."
+    },
+    {
+      "capability_id": "explicit-source-declaration-migration",
+      "audience": "authors of old normal flow packages",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-GRAMMAR",
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-MIGRATION-LAW"
+      ],
+      "interface_id": "manifest-migration:source-descriptor-profile",
+      "kind": "introduced",
+      "before": "The incumbent migration planner could not express path-specific source decisions or lossless ordered insertions for old single boot sources.",
+      "after": "The finite normal-flow profile asks for exact-path media and appends a TOML-safe descriptor through the incumbent byte-preserving planner/application journal; simple, fragment and unknown forms refuse."
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Only recognized old normal-flow/single-boot-source packages have an explicit document-preserving manual decision/application route; no automatic conversion or mandatory change for no-descriptor 1.0.x users.",
+    "migration_action": "manual"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Capability, refusal, audience and platform limitations require final source-documentation mapping; central task review is not an accepted final guide.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "central-m06-1-review",
+      "subject_id": "417610c117387c4a783d648ae60f48f60cdc8a6d",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/source-descriptor-a1-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "reviewed-m06-1-source-delta",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-a1-reviewed-m06-1-source-delta.json",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "selected-m06-1-verification",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-a1-selected-m06-1-verification.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "417610c117387c4a783d648ae60f48f60cdc8a6d",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/source-descriptor-a1-central-review.md"
+  }
+}

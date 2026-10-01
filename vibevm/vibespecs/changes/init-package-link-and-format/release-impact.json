@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "change_id": "init-package-link-and-format",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "51f931d949a7b440d318e4a9b4bbe641a5a602f1"
+    },
+    {
+      "kind": "commit",
+      "identity": "1eda062db07ca43ff78762d8d75dd50dc952664e"
+    },
+    {
+      "kind": "commit",
+      "identity": "db058053f68d774e36bffb8ea19baedd398ce954"
+    }
+  ],
+  "affected_paths": [
+    "BACKLOG.md",
+    "crates/vibe-cli/src/cli/pkg.rs",
+    "crates/vibe-cli/src/commands/init/package.rs",
+    "crates/vibe-cli/tests/cli_init.rs",
+    "vibe.toml",
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.1.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml"
+  ],
+  "effects": [
+    {
+      "capability_id": "init-package-link-and-format",
+      "audience": "package authors",
+      "platform": "CLI test proof on Linux; native macOS/Windows pending",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-082#INIT-PACKAGE-SCAFFOLD",
+        "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-082#INIT-PACKAGE-LINK",
+        "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-082#INIT-PACKAGE-FORMAT"
+      ],
+      "interface_id": "cli:vibe-init-package",
+      "kind": "changed",
+      "before": "The package scaffold ignored --link and help/default format statements diverged.",
+      "after": "The scaffold honors static/dynamic link choice, help matches its normal default, and English/Russian 1.1.0 tutorials describe the actual behavior."
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "The 1.1.0 package scaffold now honors explicit static/dynamic --link and agrees with its normal format default/help. Existing authored 1.0.x packages are not rewritten and need no migration.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "English/Russian 1.1.0 tutorial source was corrected, but the exact final owned topic map/editorial/build/link proof is pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "central-init-package-source-review",
+      "subject_id": "db058053f68d774e36bffb8ea19baedd398ce954",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/source-consumers-a4-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-init-affected-source-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-init-package-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "db058053f68d774e36bffb8ea19baedd398ce954",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/source-consumers-a4-central-review.md"
+  }
+}

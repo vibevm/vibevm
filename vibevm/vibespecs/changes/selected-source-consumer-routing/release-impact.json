@@ -1,0 +1,241 @@
+{
+  "schema": 1,
+  "change_id": "selected-source-consumer-routing",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "3009c30017342875580420373f3d88a56b538993"
+    },
+    {
+      "kind": "commit",
+      "identity": "204310557d3e14c4b4f503569363fb47dd151af9"
+    },
+    {
+      "kind": "commit",
+      "identity": "ff50cdb655d7bf9e83ffeb242de5a1bf671e3eda"
+    },
+    {
+      "kind": "commit",
+      "identity": "11eefad1ff16420c20de1874bfdc26ef3dcc640b"
+    },
+    {
+      "kind": "commit",
+      "identity": "e4e8631d38beeb940a289ab99b65d97f493a5fde"
+    },
+    {
+      "kind": "commit",
+      "identity": "7d665528df926e7fffc5c909e4648f5f4d27ebff"
+    },
+    {
+      "kind": "commit",
+      "identity": "4af17c6b2ff818729e406daad0be685f9f8af78d"
+    },
+    {
+      "kind": "commit",
+      "identity": "8c01bc13f49e2fcd49cf02f0a4ad99ba2661233b"
+    },
+    {
+      "kind": "commit",
+      "identity": "2ee7fdc400085fcac57cd8b510b723215425b515"
+    },
+    {
+      "kind": "commit",
+      "identity": "6725a1cd17bec1018e9110a4e74e82202bb3a445"
+    },
+    {
+      "kind": "commit",
+      "identity": "941afe8cdce1b63616e14331baf88781075c45cf"
+    },
+    {
+      "kind": "commit",
+      "identity": "1a4b743b81a17eb2c1f3cbcab871c1d31640e1a1"
+    },
+    {
+      "kind": "commit",
+      "identity": "a3adada12a22f98d16075bebe4f2f4a63af1a241"
+    },
+    {
+      "kind": "commit",
+      "identity": "d50ebdb7b1e6305c328851df8496f11627d97fcf"
+    },
+    {
+      "kind": "commit",
+      "identity": "b93873a2720fc103d4febf7b7ee0d8937f0193d7"
+    },
+    {
+      "kind": "commit",
+      "identity": "e81ca8963bd29a15d3b09ad79d9ece4ef378e92b"
+    },
+    {
+      "kind": "commit",
+      "identity": "424ed24cdaea07c2d0c7e23c5f60422a2a2cdfa4"
+    }
+  ],
+  "affected_paths": [
+    "Cargo.lock",
+    "crates/vibe-check/Cargo.toml",
+    "crates/vibe-check/src/checks/boot_directory.rs",
+    "crates/vibe-check/src/checks/boot_directory/declared.rs",
+    "crates/vibe-check/tests/check_cells_oracle.rs",
+    "crates/vibe-cli/src/commands/facts.rs",
+    "crates/vibe-cli/src/commands/init/helpers.rs",
+    "crates/vibe-cli/src/commands/progress.rs",
+    "crates/vibe-cli/src/commands/progress/grounding.rs",
+    "crates/vibe-cli/src/commands/progress/grounding/source_classification.rs",
+    "crates/vibe-cli/src/commands/progress/tests.rs",
+    "crates/vibe-cli/src/commands/progress/tests/xml_sources.rs",
+    "crates/vibe-cli/src/commands/show/effective.rs",
+    "crates/vibe-cli/src/commands/tree/build.rs",
+    "crates/vibe-cli/src/commands/tree/build/in_place.rs",
+    "crates/vibe-cli/src/commands/tree/build/tests.rs",
+    "crates/vibe-cli/tests/cli_facts_declared.rs",
+    "crates/vibe-cli/tests/cli_show_effective_descriptors.rs",
+    "crates/vibe-core/src/manifest/document.rs",
+    "crates/vibe-core/src/manifest/mod.rs",
+    "crates/vibe-core/src/manifest/project.rs",
+    "crates/vibe-core/src/manifest/project/tests.rs",
+    "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+    "crates/vibe-doc/Cargo.toml",
+    "crates/vibe-doc/src/agent.rs",
+    "crates/vibe-doc/src/agent/tests.rs",
+    "crates/vibe-doc/src/citations.rs",
+    "crates/vibe-doc/src/citations/anchor.rs",
+    "crates/vibe-doc/src/citations/sources.rs",
+    "crates/vibe-doc/src/citations/sources/checkout.rs",
+    "crates/vibe-doc/src/citations/sources/tests.rs",
+    "crates/vibe-doc/src/citations/tests.rs",
+    "crates/vibe-facts/Cargo.toml",
+    "crates/vibe-facts/src/lib.rs",
+    "crates/vibe-facts/src/sync.rs",
+    "crates/vibe-facts/src/tests_sync.rs",
+    "crates/vibe-install/tests/recording_behaviour.rs",
+    "crates/vibe-requirements/Cargo.toml",
+    "crates/vibe-requirements/src/lib.rs",
+    "crates/vibe-requirements/src/sources.rs",
+    "crates/vibe-requirements/src/sources/declared.rs",
+    "crates/vibe-requirements/src/tests_query.rs",
+    "crates/vibe-requirements/src/tests_query/slot_fixture.rs",
+    "crates/vibe-requirements/src/tests_query_declared.rs",
+    "crates/vibe-spec/src/resolver/source_map.rs",
+    "crates/vibe-workspace/src/boot_artifacts.rs",
+    "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+    "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+    "crates/vibe-workspace/src/boot_artifacts/inputs_tests.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/explicit.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/selected.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed_tests.rs",
+    "crates/vibe-workspace/src/extension_world/tests.rs",
+    "crates/vibe-workspace/src/install/bootgen.rs",
+    "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+    "crates/vibe-workspace/src/install/bootgen/selected_node_tests.rs",
+    "crates/vibe-workspace/src/vibedeps.rs",
+    "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml"
+  ],
+  "effects": [
+    {
+      "capability_id": "selected-host-source-descriptors",
+      "audience": "project/package authors and CLI consumers",
+      "platform": "source-level Linux proof; macOS/Windows native behavior pending",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-OPT-IN",
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION"
+      ],
+      "interface_id": "manifest:vibe.toml:project.sources",
+      "kind": "introduced",
+      "before": "Checkout/project sources and several readers used filename extension to infer Vibe semantics; project source rows had no shared selector.",
+      "after": "Opt-in project source rows use the package descriptor selector; only declared scan-loaded Vibe sources enter migrated host readers, and raw resources remain raw. Legacy no-descriptor projects retain their route."
+    },
+    {
+      "capability_id": "selected-fact-and-requirement-readers",
+      "audience": "CLI users and package consumers",
+      "platform": "Linux selected tests; native macOS/Windows pending",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION"
+      ],
+      "interface_id": "cli:vibe-facts-and-requirements",
+      "kind": "changed",
+      "before": "Selected materialized package and host facts/requirements could classify .md or .xml by suffix and lose selected-source identity.",
+      "after": "Facts adoption/report/sync and requirements query use selected descriptors, independent lock hash where applicable, bounded captured bytes and typed refusal on mismatch or ambiguity; raw CommonMark/XML-data do not mint facts."
+    },
+    {
+      "capability_id": "selected-boot-readers",
+      "audience": "install and boot consumers",
+      "platform": "Linux selected tests; native macOS/Windows pending",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION"
+      ],
+      "interface_id": "boot:bound-node-and-simple-inputs",
+      "kind": "changed",
+      "before": "Bound node and simple boot paths could parse same-stem raw files as Vibe sources or collide by suffix.",
+      "after": "Selected witnesses reach writer/analyzer and simple boot input classification; raw same-stem resources remain raw, descriptor drift refuses, and legacy generated STATIC stays byte-compatible."
+    },
+    {
+      "capability_id": "selected-document-citations",
+      "audience": "documentation readers and agents",
+      "platform": "Linux selected tests; native macOS/Windows pending",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION",
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-OPT-IN"
+      ],
+      "interface_id": "rust:vibe-doc:SpecSources-and-agent-fetch",
+      "kind": "changed",
+      "before": "Lock and Checkout citations could resolve selected Vibe and raw same-stem files through extension lookup or reopen a changed Checkout file.",
+      "after": "Lock citations use validated selected maps; opt-in Checkout citations carry bounded captured bytes with authored media/vocabulary into rule/page readers, including XML serialized under .md; raw-only addresses refuse."
+    },
+    {
+      "capability_id": "selected-cli-views-and-progress",
+      "audience": "CLI users",
+      "platform": "Linux selected tests; native macOS/Windows pending",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION",
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-OPT-IN"
+      ],
+      "interface_id": "cli:vibe-show-tree-check-progress",
+      "kind": "changed",
+      "before": "Effective display, tree/check and progress paths could promote raw descriptor resources by suffix or write their content into state.",
+      "after": "Migrated readers classify before display, parse or scan/mirror/weave writes; simple directives stay literal, raw resources are excluded, and selected bytes are rechecked for weave."
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Selected 1.1.0 source consumers avoid raw-resource suffix promotion and fail closed on descriptor mismatch. Existing 1.0.x no-descriptor inputs remain usable without required conversion; descriptor opt-in is an optional authored choice.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Source descriptor interpretation/refusal, opt-in Checkout behavior and platform/host limits require final source-documentation mapping; no final topic/editorial/build proof is claimed.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "central-source-consumers-a4-review",
+      "subject_id": "424ed24cdaea07c2d0c7e23c5f60422a2a2cdfa4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/source-consumers-a4-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "reviewed-source-consumers-a4-delta",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-a4-reviewed-source-consumers-a4-delta.json",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "selected-source-consumers-a4-verification",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-a4-selected-source-consumers-a4-verification.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "424ed24cdaea07c2d0c7e23c5f60422a2a2cdfa4",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/source-consumers-a4-central-review.md"
+  }
+}

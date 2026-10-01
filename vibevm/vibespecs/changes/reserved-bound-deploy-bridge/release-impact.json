@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "change_id": "reserved-bound-deploy-bridge",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "16e1a3bc3067abf788452a124469e137dce7de76"
+    },
+    {
+      "kind": "commit",
+      "identity": "7bec62ca4452ad5865942b60aa3e7f5191c7ebe9"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/bound_effect_tests.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/bridge.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/bridge_tests.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/error.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/view.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "internal:vibe-lifecycle:bound-vibe-bin-deploy-bridge",
+      "capability_id": "reserved-bound-deploy-recovery",
+      "kind": "introduced",
+      "before": "The fixed host-admitted bound deploy path had no C1-linked bridge between exact preplan and incumbent deployment receipt.",
+      "after": "Before destination acquisition the private bridge binds C1 run/plan/home/principal/provider/artifact/resources and Ready; replay inspects the retained receipt/sidecar/result with no second provider apply. Other deploy shapes and public adapters remain separate.",
+      "audience": "Internal deploy owner / repository maintainer",
+      "platform": "Selected GNU/Linux bound completion/interruption tests; native macOS/Windows physical-root proof unrun.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Only a crate-private fixed host-admitted deploy path changes; no public CLI/MCP adapter or 1.0.x user-owned state migration is introduced.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Developer/release architecture should distinguish the fixed reserved deploy bridge and retained partial truth from the ordinary/public routes; final topic mapping pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "bounded-domain-central-review",
+      "subject_id": "7bec62ca4452ad5865942b60aa3e7f5191c7ebe9",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-3-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-selected-delta-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-reserved-bound-deploy-bridge-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "7bec62ca4452ad5865942b60aa3e7f5191c7ebe9",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-3-central-review.md"
+  }
+}

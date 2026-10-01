@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "change_id": "local-source-cache-attestation",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "09b90ce33be5f5091835b449bdd1870d8b2f20f0"
+    },
+    {
+      "kind": "commit",
+      "identity": "a5b21eda615114321dd41fe6a5a0d673c1923ff3"
+    },
+    {
+      "kind": "commit",
+      "identity": "c4090e8833947a80b79eee966f66a575052f69fa"
+    },
+    {
+      "kind": "commit",
+      "identity": "d229eab970ac2acc15b4ed187c1193e818642fa6"
+    }
+  ],
+  "affected_paths": [
+    "Cargo.lock",
+    "crates/vibe-lifecycle/src/process/mod.rs",
+    "crates/vibe-lifecycle/src/process/package_tree_snapshot.rs",
+    "crates/vibe-lifecycle/src/process/package_tree_snapshot/tests.rs",
+    "crates/vibe-orchestrator/Cargo.toml",
+    "crates/vibe-orchestrator/src/install/mod.rs",
+    "crates/vibe-orchestrator/src/install/ready.rs",
+    "crates/vibe-orchestrator/src/install/source_attestation.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/install.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests/fixture.rs",
+    "crates/vibe-orchestrator/src/ports.rs",
+    "crates/vibe-package-source/Cargo.toml",
+    "crates/vibe-package-source/src/bound_local.rs",
+    "crates/vibe-package-source/src/bound_local/tests.rs",
+    "crates/vibe-package-source/src/fence_tests.rs",
+    "crates/vibe-package-source/src/lib.rs",
+    "crates/vibe-registry/Cargo.toml",
+    "crates/vibe-registry/src/lib.rs",
+    "crates/vibe-registry/src/shippable.rs",
+    "crates/vibe-registry/src/shippable/bounded.rs",
+    "crates/vibe-registry/src/shippable/bounded/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-registry:compute_content_hash_legacy0_bounded_exact",
+      "capability_id": "bounded-legacy0-content-hash-replay",
+      "kind": "introduced",
+      "before": "No public complete small-tree nofollow replay of the legacy recipe-zero package content hash against an exact source witness.",
+      "after": "Public helper replays the frozen legacy0 hash from a bounded complete file census and exact package pin, with root/bytes recheck; it does not grant arbitrary-tree or hostile-writer CAS claims.",
+      "audience": "Rust library consumer / repository maintainer",
+      "platform": "Selected GNU/Linux bounded fixture proof; native macOS/Windows unrun.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#HASH-INTEGRITY-GATE",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED"
+      ]
+    },
+    {
+      "interface_id": "rust:vibe-package-source:PinnedLocalFactory",
+      "capability_id": "pinned-offline-local-source-factory",
+      "kind": "introduced",
+      "before": "No public named factory limited to one witnessed exact local registry slot and offline source choice.",
+      "after": "Public factory pins local registry/source roots and package witness and refuses network/global/embedded fallback; the separate orchestrator wrapper still owns post-fetch cache-byte attestation.",
+      "audience": "Rust library consumer / internal install owner",
+      "platform": "Source-declared local-only route with selected GNU/Linux tests; native macOS/Windows unrun.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OFFLINE-LOCAL-ONLY",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED"
+      ]
+    },
+    {
+      "interface_id": "internal:vibe-orchestrator:install-cache-attestation",
+      "capability_id": "post-fetch-cache-byte-recheck",
+      "kind": "introduced",
+      "before": "The protected one-package fixture could use a fetched cache copy before comparing all bounded source rows and rechecking immediately before apply.",
+      "after": "Internal wrapper attests the returned cache copy and rechecks it before slot/lock/boot apply; a mismatch after fetch is uncertain partial, not a no-effect preflight refusal. No general machine Install adapter is exposed.",
+      "audience": "Internal orchestrator / repository maintainer",
+      "platform": "Selected GNU/Linux fixture proof; cache effects before post-fetch check and native Mac/Win remain outside.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#HASH-INTEGRITY-GATE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Additive public bounded legacy0 hash and PinnedLocalFactory Rust APIs; the internal cache attestation changes no existing default install route or 1.0.x user-owned state.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Document exact local-only factory/hash contracts, post-fetch uncertainty and bounded source/copy checks; final source-page mapping and native portability proof pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "bounded-c2-1-central-review",
+      "subject_id": "d229eab970ac2acc15b4ed187c1193e818642fa6",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-1-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-selected-delta-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-local-source-cache-attestation-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "d229eab970ac2acc15b4ed187c1193e818642fa6",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-1-central-review.md"
+  }
+}

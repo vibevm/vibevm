@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "change_id": "ordinary-commonmark-structure-and-exports",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "d00908242bf2ca41de4dad8122376719a207b6cf"
+    },
+    {
+      "kind": "commit",
+      "identity": "8a4c096f305479f9c56e86db6c7421956174ba24"
+    },
+    {
+      "kind": "commit",
+      "identity": "e9abbbba80acc758d9322ae1252f0aaa0213a341"
+    },
+    {
+      "kind": "commit",
+      "identity": "e8f1bfe797c2955c354cc5835e5f195aa7a607ee"
+    },
+    {
+      "kind": "commit",
+      "identity": "d88c6dfe16885be5526ef0d65c74af1b720629cf"
+    }
+  ],
+  "affected_paths": [
+    "Cargo.lock",
+    "Cargo.toml",
+    "campaigns/next/manifest.json",
+    "campaigns/next/plan.seed.toml",
+    "campaigns/next/tasks/M-06-A.json",
+    "crates/progress-core/src/parse/anchor_token.rs",
+    "crates/progress-core/src/parse/anchors.rs",
+    "crates/progress-core/src/parse/facts.rs",
+    "crates/progress-core/src/parse/mod.rs",
+    "crates/vibe-core/src/manifest/mod.rs",
+    "crates/vibe-core/src/manifest/package.rs",
+    "crates/vibe-core/src/manifest/package/meta.rs",
+    "crates/vibe-core/src/manifest/package/source_export.rs",
+    "crates/vibe-core/src/manifest/package/tests.rs",
+    "crates/vibe-core/src/manifest/package/wire.rs",
+    "crates/vibe-facts/src/lib.rs",
+    "crates/vibe-facts/src/scan.rs",
+    "crates/vibe-facts/src/scan/declared.rs",
+    "crates/vibe-facts/src/scan/declared/export.rs",
+    "crates/vibe-facts/src/scan/declared/export/tests.rs",
+    "crates/vibe-facts/src/scan/declared/tests.rs",
+    "crates/vibe-facts/src/scan/declared/walk.rs",
+    "crates/vibe-facts/src/scan/declared/walk/tests.rs",
+    "crates/vibe-specdoc/Cargo.toml",
+    "crates/vibe-specdoc/src/commonmark.rs",
+    "crates/vibe-specdoc/src/commonmark/export.rs",
+    "crates/vibe-specdoc/src/commonmark/tests.rs",
+    "crates/vibe-specdoc/src/lib.rs",
+    "crates/vibe-specdoc/tests/docs_corpus.rs",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml"
+  ],
+  "effects": [
+    {
+      "capability_id": "ordinary-commonmark-structure",
+      "audience": "authors and documentation consumers",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-SELECTOR"
+      ],
+      "interface_id": "rust:vibe-specdoc:commonmark-structure",
+      "kind": "introduced",
+      "before": "Ordinary CommonMark had no separate snapshot-local structural view; Vibe-like syntax could be confused with directives.",
+      "after": "Pinned CommonMark offset events expose heading sections, fences, links, text and inline code with byte spans; duplicate sibling headings refuse and Vibe-like text remains literal."
+    },
+    {
+      "capability_id": "commonmark-section-exports",
+      "audience": "package authors and facts consumers",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-SELECTOR"
+      ],
+      "interface_id": "manifest:vibe.toml:package.source_exports",
+      "kind": "introduced",
+      "before": "There was no durable package/export name selecting one captured CommonMark heading path.",
+      "after": "Authored exact-file/root-to-section exports resolve against one witnessed CommonMark snapshot; the host join verifies descriptor, resource identity and SHA. Node IDs remain snapshot-local and mint no Vibe facts."
+    },
+    {
+      "capability_id": "inline-code-fact-anchor-correction",
+      "audience": "fact scanner users",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+        "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-COUNTABLE"
+      ],
+      "interface_id": "rust:progress-core:fact-anchor-scan",
+      "kind": "changed",
+      "before": "Repeated @fact markers inside inline code could be recounted as definitions and falsely produce DuplicateId.",
+      "after": "Inline-code quotations in paragraphs and table cells remain text while real fact anchors retain their IDs; stale corpus quarantine was removed."
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "No existing authored source is rewritten; exports are opt-in and existing Vibe Markdown reader remains unchanged.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Capability, refusal, audience and platform limitations require final source-documentation mapping; central task review is not an accepted final guide.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "central-m06-2-review",
+      "subject_id": "d88c6dfe16885be5526ef0d65c74af1b720629cf",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/commonmark-a2-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "reviewed-m06-2-source-delta",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-a2-reviewed-m06-2-source-delta.json",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "selected-m06-2-verification",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-a2-selected-m06-2-verification.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "d88c6dfe16885be5526ef0d65c74af1b720629cf",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/commonmark-a2-central-review.md"
+  }
+}
