@@ -1,6 +1,7 @@
 //! Read-only cold attachment for production vault and test-only fake lanes.
 
 use super::*;
+use crate::publication_approval::{ApprovalHome, ColdRedemptionExpectation};
 use crate::publication_payload::vault::{VaultInspection, inspect_payload_vault};
 
 #[derive(Clone, Copy)]
@@ -28,6 +29,24 @@ pub(crate) fn inspect_full_plan_cold(
         scope,
         key,
         ColdLane::ProductionVault,
+        None,
+    )
+}
+
+pub(super) fn inspect_full_plan_cold_with_home(
+    lease: &LifecycleLease,
+    host_namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    home: &ApprovalHome,
+) -> Result<Inspection> {
+    inspect_cold(
+        lease,
+        host_namespace_token,
+        scope,
+        key,
+        ColdLane::ProductionVault,
+        Some(home),
     )
 }
 
@@ -37,6 +56,7 @@ fn inspect_cold(
     scope: &SubmissionScope,
     key: &str,
     lane: ColdLane,
+    supplied_home: Option<&ApprovalHome>,
 ) -> Result<Inspection> {
     let namespace = SubmissionNamespace::from_host_token(host_namespace_token.to_owned())?;
     let row = SubmissionReservations::inspect_existing_key(lease, &namespace, scope, key)?
@@ -51,11 +71,17 @@ fn inspect_cold(
     };
     let valid_lane = match lane {
         ColdLane::ProductionVault => {
-            capsule.format == journal::INPUT_FORMAT && capsule.vault_manifest_sha256.is_some()
+            capsule.format == journal::INPUT_FORMAT
+                && capsule.vault_manifest_sha256.is_some()
+                && capsule.redemption_marker_sha256.is_some()
+                && capsule.approval_record_sha256.is_some()
         }
         #[cfg(test)]
         ColdLane::FakeNoVault => {
-            capsule.format == journal::FAKE_INPUT_FORMAT && capsule.vault_manifest_sha256.is_none()
+            capsule.format == journal::FAKE_INPUT_FORMAT
+                && capsule.vault_manifest_sha256.is_none()
+                && capsule.redemption_marker_sha256.is_none()
+                && capsule.approval_record_sha256.is_none()
         }
     };
     if !valid_lane
@@ -112,6 +138,8 @@ fn inspect_cold(
         return Ok(Inspection::RecoveryRequired { run_id });
     }
     selected.intent.vault_manifest_sha256 = capsule.vault_manifest_sha256.clone();
+    selected.intent.redemption_marker_sha256 = capsule.redemption_marker_sha256.clone();
+    selected.intent.approval_record_sha256 = capsule.approval_record_sha256.clone();
     let inspected = inspect(
         lease,
         &namespace,
@@ -125,6 +153,25 @@ fn inspect_cold(
     )?;
     match lane {
         ColdLane::ProductionVault => {
+            let owned_home = if supplied_home.is_none() {
+                ApprovalHome::open_from_settings().ok()
+            } else {
+                None
+            };
+            let approval_home = supplied_home.or(owned_home.as_ref());
+            let redemption = approval_home.and_then(|home| {
+                let expectation = ColdRedemptionExpectation {
+                    authority_id: capsule.authority_ref.as_deref()?,
+                    run_id: &run_id,
+                    marker_sha256: capsule.redemption_marker_sha256.as_deref()?,
+                    plan_sha256: &selected.intent.semantic_plan_sha256,
+                    c1_plan_sha256: &selected.intent.c1_plan_sha256,
+                    request_sha256: &selected.intent.request_sha256,
+                    approval_record_sha256: capsule.approval_record_sha256.as_deref()?,
+                };
+                home.inspect_redemption_cold(lease, &namespace, scope, key, &expectation)
+                    .ok()
+            });
             let vault = inspect_payload_vault(
                 lease,
                 &namespace,
@@ -134,7 +181,8 @@ fn inspect_cold(
                 &capsule.subject,
                 &expected.subject,
             );
-            if matches!(vault, VaultInspection::Complete {
+            if redemption.is_some()
+                && matches!(vault, VaultInspection::Complete {
                 run_id: ref observed, catalogue_digest: ref catalogue, manifest_sha256: ref manifest,
             } if observed == &run_id && catalogue == &selected.upload_catalogue_sha256
                 && Some(manifest) == capsule.vault_manifest_sha256.as_ref())
@@ -178,5 +226,6 @@ pub(super) fn inspect_fake_full_plan_cold(
         scope,
         key,
         ColdLane::FakeNoVault,
+        None,
     )
 }
