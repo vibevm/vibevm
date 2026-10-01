@@ -106,6 +106,35 @@ fn four_domain_coordinates_survive_lease_exit_and_reopen_without_effect_dispatch
             }
         );
         assert_eq!(
+            SubmissionReservations::inspect_existing_key_at(
+                &lease,
+                &namespace,
+                &saved.scope,
+                12,
+                "same-key"
+            )
+            .unwrap(),
+            Some(ExistingKeyInspection {
+                domain_run_id: saved.run_id.clone(),
+                request_sha256: format!("sha256:{}", digest(&saved.request)),
+                plan_sha256: format!("sha256:{}", digest(&saved.plan)),
+                journal_admission: JournalAdmission::Ready,
+                reservation_ref: Some(saved.reservation_ref.clone()),
+                retired: false,
+            })
+        );
+        assert!(
+            SubmissionReservations::inspect_existing_key_at(
+                &lease,
+                &namespace,
+                &saved.scope,
+                12,
+                "missing-key"
+            )
+            .unwrap()
+            .is_none()
+        );
+        assert_eq!(
             SubmissionReservations::inspect_reserved_plan_sha256(
                 &lease,
                 &namespace,
@@ -138,6 +167,16 @@ fn four_domain_coordinates_survive_lease_exit_and_reopen_without_effect_dispatch
                 12,
                 "same-key",
                 &saved.request
+            ),
+            Err(SubmissionError::ForeignScope)
+        ));
+        assert!(matches!(
+            SubmissionReservations::inspect_existing_key_at(
+                &lease,
+                &namespace,
+                &foreign_principal,
+                12,
+                "same-key"
             ),
             Err(SubmissionError::ForeignScope)
         ));

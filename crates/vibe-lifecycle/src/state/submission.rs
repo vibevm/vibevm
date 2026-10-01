@@ -89,6 +89,19 @@ pub enum ExistingSubmissionInspection {
     },
 }
 
+/// Correlation only for a trusted host that retained namespace/scope/key but
+/// lost the request body. Digests locate the domain-owned input capsule; they
+/// are neither the original bytes nor an effect grant.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ExistingKeyInspection {
+    pub domain_run_id: String,
+    pub request_sha256: String,
+    pub plan_sha256: String,
+    pub journal_admission: JournalAdmission,
+    pub reservation_ref: Option<String>,
+    pub retired: bool,
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum SubmissionError {
     #[error("invalid submission {0}")]
@@ -261,6 +274,60 @@ fn publish(lease: &LifecycleLease, index: &Index) -> Result<(), SubmissionError>
 pub struct SubmissionReservations;
 
 impl SubmissionReservations {
+    /// Read a retained key without the original request bytes. The domain
+    /// owner must read its own immutable input capsule and compare both
+    /// digests before interpreting any result. This never grants dispatch.
+    pub fn inspect_existing_key(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+    ) -> Result<Option<ExistingKeyInspection>, SubmissionError> {
+        Self::inspect_existing_key_at(lease, namespace, scope, now_ms()?, key)
+    }
+
+    fn inspect_existing_key_at(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        now_ms: u64,
+        key: &str,
+    ) -> Result<Option<ExistingKeyInspection>, SubmissionError> {
+        if !valid_field(key) {
+            return Err(SubmissionError::InvalidInput("key"));
+        }
+        let index = read(lease)?;
+        let owner = index
+            .namespaces
+            .get(namespace.id())
+            .ok_or(SubmissionError::UnknownNamespace)?;
+        if owner.context != scope.context
+            || owner.target != scope.target
+            || owner.principal != scope.principal
+        {
+            return Err(SubmissionError::ForeignScope);
+        }
+        if now_ms < owner.observed_at_ms {
+            return Err(SubmissionError::InvalidInput("host clock rolled back"));
+        }
+        let Some(row) = owner.keys.get(key) else {
+            return Ok(None);
+        };
+        let ready = row.journal_ready;
+        Ok(Some(ExistingKeyInspection {
+            domain_run_id: row.domain_run_id.clone(),
+            request_sha256: format!("sha256:{}", row.request_sha256),
+            plan_sha256: format!("sha256:{}", row.plan_sha256),
+            journal_admission: if ready {
+                JournalAdmission::Ready
+            } else {
+                JournalAdmission::Pending
+            },
+            reservation_ref: ready.then(|| reservation_ref_of(namespace.id(), owner, key, row)),
+            retired: owner.retired || now_ms >= owner.expires_at_ms,
+        }))
+    }
+
     /// Find an existing reservation by its original canonical request before
     /// inspecting current product files. The stored plan digest is used only
     /// inside the reservation ref; current post-effect files cannot become a

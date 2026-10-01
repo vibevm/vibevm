@@ -115,3 +115,108 @@ fn tampered_post_observation_cannot_complete_even_with_recomputed_record_digests
     );
     assert_eq!(fake.calls.len(), plan.partitions.len());
 }
+
+#[test]
+fn cold_attach_recovers_completed_without_original_subject_plan_or_remote_port() {
+    let project = tempfile::tempdir().unwrap();
+    let selected = scope();
+    let (token, run_id, partition_count) = {
+        let (subject, plan) = prepared();
+        let lease = LifecycleLease::acquire(project.path()).unwrap();
+        let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
+        let mut fake = FakeRemote::new(&plan);
+        let first = submit_fake_full_plan(
+            &lease,
+            &namespace,
+            &selected,
+            "key-a",
+            &subject,
+            &plan,
+            &expected(),
+            &mut fake,
+        )
+        .unwrap();
+        let Inspection::Completed {
+            run_id,
+            partitions,
+            replayed: false,
+        } = first
+        else {
+            panic!("first fake operation did not complete")
+        };
+        (namespace.id().to_owned(), run_id, partitions)
+    };
+    let lease = LifecycleLease::acquire(project.path()).unwrap();
+    let cold = inspect_fake_full_plan_cold(&lease, &token, &selected, "key-a").unwrap();
+    assert_eq!(
+        cold,
+        Inspection::Completed {
+            run_id,
+            partitions: partition_count,
+            replayed: true
+        }
+    );
+    let foreign = SubmissionScope {
+        principal: "foreign".into(),
+        ..selected.clone()
+    };
+    assert!(matches!(
+        inspect_fake_full_plan_cold(&lease, &token, &foreign, "key-a"),
+        Err(Error::Submission(
+            vibe_lifecycle::SubmissionError::ForeignScope
+        ))
+    ));
+    assert!(matches!(
+        inspect_fake_full_plan_cold(&lease, &token, &selected, "other-key"),
+        Err(Error::Refused(_))
+    ));
+}
+
+#[test]
+fn cold_attach_keeps_lost_reply_uncertain_and_tampered_input_recovery_required() {
+    let project = tempfile::tempdir().unwrap();
+    let selected = scope();
+    let (token, run_id, stopped) = {
+        let (subject, plan) = prepared();
+        let lease = LifecycleLease::acquire(project.path()).unwrap();
+        let namespace = SubmissionReservations::issue_namespace(&lease, &selected, 60_000).unwrap();
+        let mut fake = FakeRemote::new(&plan);
+        fake.lost_at = Some(3);
+        let first = submit_fake_full_plan(
+            &lease,
+            &namespace,
+            &selected,
+            "key-a",
+            &subject,
+            &plan,
+            &expected(),
+            &mut fake,
+        )
+        .unwrap();
+        let Inspection::Partial {
+            run_id,
+            landed,
+            pending: Some(index),
+            uncertain: true,
+        } = first
+        else {
+            panic!("lost reply was not partial")
+        };
+        assert_eq!(landed, index);
+        (namespace.id().to_owned(), run_id, index)
+    };
+    let lease = LifecycleLease::acquire(project.path()).unwrap();
+    let cold = inspect_fake_full_plan_cold(&lease, &token, &selected, "key-a").unwrap();
+    assert!(matches!(cold, Inspection::Partial { run_id: same, landed,
+        pending: Some(index), uncertain: true } if same == run_id && landed == stopped && index == stopped));
+    let mut capsule = journal::read_input(&lease, &run_id).unwrap().unwrap();
+    capsule.request_json.push(' ');
+    let path = project.path().join(format!(
+        ".vibe/publication-operations/{run_id}.full-plan-input.json"
+    ));
+    std::fs::write(path, serde_json::to_vec(&capsule).unwrap()).unwrap();
+    assert_eq!(
+        inspect_fake_full_plan_cold(&lease, &token, &selected, "key-a").unwrap(),
+        Inspection::RecoveryRequired { run_id }
+    );
+}
