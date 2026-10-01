@@ -83,6 +83,25 @@ fn execution<'a>(
 }
 
 #[test]
+fn retired_unreserved_cargo_key_remains_retired_without_intent_or_effect() {
+    let root = fixture();
+    let targets = [target()];
+    let registry = registry();
+    let routes = MechanismRoutes::default();
+    let selected = execution(root.path(), &targets, &registry, &routes);
+    let lease = LifecycleLease::acquire(root.path()).unwrap();
+    let scope = scope();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &scope, 60_000).unwrap();
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope).unwrap();
+    assert_eq!(
+        reserve_fixed_cargo_intent(&lease, &namespace, &scope, "build", &selected).unwrap(),
+        BuildJournalInspection::Retired { run_id: None }
+    );
+    assert!(!root.path().join(".vibe/build-operations").exists());
+    assert!(!root.path().join("target").exists());
+}
+
+#[test]
 fn fixed_cargo_intent_is_ready_before_target_lock_or_record_exists() {
     let root = fixture();
     let targets = [target()];
@@ -110,6 +129,7 @@ fn fixed_cargo_intent_is_ready_before_target_lock_or_record_exists() {
     for path in ABSENT {
         assert!(!root.path().join(path).exists(), "{path}");
     }
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope).unwrap();
     let second =
         reserve_fixed_cargo_intent(&lease, &namespace, &scope, "build", &selected).unwrap();
     let BuildJournalInspection::Uncertain {
@@ -207,6 +227,7 @@ fn reserved_run_without_cargo_intent_requires_recovery() {
         .unwrap(),
         ReservationDecision::Created { .. }
     ));
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope).unwrap();
     assert_eq!(
         reserve_fixed_cargo_intent(&lease, &namespace, &scope, "build", &selected).unwrap(),
         BuildJournalInspection::RecoveryRequired { run_id }
@@ -258,6 +279,7 @@ fn one_real_offline_cargo_build_retains_verified_result_and_never_respawns() {
     assert!(warning.contains("rustup"));
     let saved_run_id = run_id.clone();
     let saved_output_relative = output_relative.clone();
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope).unwrap();
     let second = execute_fixed_cargo_with_hooks(
         &lease,
         &namespace,
