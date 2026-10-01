@@ -1,8 +1,6 @@
-//! Two independent read-only call checkpoints after all 38 asset effects.
-//! Empty Cleanup and RetainDraft perform no remote write. They remain
-//! separately Pending/Landed and a lost read never grants replay or completion.
-//! The remote port observes latest ID/tag, but these checkpoints alone
-//! cannot establish the full Finalize transition or FinalResult.
+//! Independent read-only cleanup and optional RetainDraft checkpoints.
+//! Publish selects only the empty cleanup here; its mutating finalize has a
+//! separate journal. Each lost read leaves Pending without replay authority.
 
 use serde::{Deserialize, Serialize};
 use vibe_wire::generated::publication_effect_plan::{
@@ -98,7 +96,7 @@ fn call_id(
     Ok(sha(&bytes))
 }
 
-pub(super) fn schedule(session: &ReadyRun<'_>) -> Result<Option<[NoOpCall; 2]>> {
+pub(super) fn schedule(session: &ReadyRun<'_>) -> Result<Option<Vec<NoOpCall>>> {
     let cleanup_index = 2 + session.subject.targets.len();
     let Some(PublicationPartition::Cleanup(cleanup)) = session.plan.partitions.get(cleanup_index)
     else {
@@ -107,10 +105,11 @@ pub(super) fn schedule(session: &ReadyRun<'_>) -> Result<Option<[NoOpCall; 2]>> 
     let Some(PublicationPartition::Finalize(finalize)) = session.plan.partitions.last() else {
         return Ok(None);
     };
-    if !cleanup.assets.is_empty()
-        || finalize.action != PublicationPartitionFinalizeAction::RetainDraft
-        || finalize.make_latest != PublicationPartitionFinalizeMakeLatest::Unchanged
-    {
+    let retain = finalize.action == PublicationPartitionFinalizeAction::RetainDraft
+        && finalize.make_latest == PublicationPartitionFinalizeMakeLatest::Unchanged;
+    let publish = finalize.action == PublicationPartitionFinalizeAction::Publish
+        && finalize.make_latest == PublicationPartitionFinalizeMakeLatest::Legacy;
+    if !cleanup.assets.is_empty() || !(retain || publish) {
         return Ok(None);
     }
     let assets = assets::decompose_asset_calls(
@@ -141,6 +140,9 @@ pub(super) fn schedule(session: &ReadyRun<'_>) -> Result<Option<[NoOpCall; 2]>> 
         predecessor_call_id: last.call_id.clone(),
         action: cleanup_action,
     };
+    if publish {
+        return Ok(Some(vec![cleanup_call]));
+    }
     let finalize_ordinal = cleanup_ordinal + 1;
     let finalize_action = Action::RetainDraft;
     let finalize_call = NoOpCall {
@@ -158,7 +160,7 @@ pub(super) fn schedule(session: &ReadyRun<'_>) -> Result<Option<[NoOpCall; 2]>> 
         predecessor_call_id: cleanup_call.call_id.clone(),
         action: finalize_action,
     };
-    Ok(Some([cleanup_call, finalize_call]))
+    Ok(Some(vec![cleanup_call, finalize_call]))
 }
 
 fn prior_asset_after(session: &ReadyRun<'_>) -> Result<Option<CallObservation>> {
@@ -233,6 +235,17 @@ pub(in crate::publication_full_plan) fn inspect_proved(
                 journal::read_bytes(session.lease, &session.run_id, &landed_name),
                 Ok(None)
             ) || future_record(session, &calls[step + 1..])
+                || (calls.len() == 1
+                    && ["pending", "landed"].into_iter().any(|phase| {
+                        !matches!(
+                            journal::read_bytes(
+                                session.lease,
+                                &session.run_id,
+                                &super::finalize::suffix(calls[0].ordinal + 1, phase)
+                            ),
+                            Ok(None)
+                        )
+                    }))
             {
                 return Ok(NoOpInspection::Uncertain { step });
             }
@@ -267,7 +280,7 @@ pub(in crate::publication_full_plan) fn inspect_proved(
             journal::read_bytes(
                 session.lease,
                 &session.run_id,
-                &suffix(calls[1].ordinal + 1, phase)
+                &suffix(calls.last().unwrap().ordinal + 1, phase)
             ),
             Ok(None)
         )
@@ -277,7 +290,7 @@ pub(in crate::publication_full_plan) fn inspect_proved(
     Ok(NoOpInspection::CheckpointsLanded)
 }
 
-fn observed(
+pub(super) fn observed(
     reader: &mut dyn RemoteReadPort,
     source_commit: &str,
 ) -> std::result::Result<CallObservation, ()> {
