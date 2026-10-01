@@ -179,3 +179,105 @@ fn xml_fixture_config() -> String {
         "include = [\"{prefix}/**/*.md\", \"{prefix}/**/*.xml\"]\n\n[progress]\ncache_dir = \"{FIXTURE_CACHE_DIR}\"\n"
     )
 }
+
+fn write_source(root: &std::path::Path, relative: &std::path::Path, body: impl AsRef<[u8]>) {
+    let path = root.join(relative);
+    std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+    std::fs::write(path, body).unwrap();
+}
+
+#[test]
+fn opted_in_host_scan_and_mirror_ignore_raw_same_stem_resources() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path();
+    let specs = vibe_core::layout::current_specs_root();
+    let rule = specs.join("common/rule.xml");
+    let raw_md = specs.join("common/rule.md");
+    let raw_xml = specs.join("common/data.xml");
+    let slash = |path: &std::path::Path| path.to_string_lossy().replace('\\', "/");
+    std::fs::write(root.join("vibe.toml"), format!(
+        "[project]\ngroup='org.host'\nname='demo'\nversion='1.1.0'\n\
+         [[project.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+         [[project.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
+         [[project.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+        slash(&rule), slash(&raw_md), slash(&raw_xml),
+    )).unwrap();
+    write_source(root, &rule, b"<spec xmlns=\"https://vibevm.org/spec/1\"><p><REAL fact=\"true\" status=\"impl/done\">selected fact</REAL></p></spec>\n");
+    let raw_md_bytes = b"# Ordinary\n\n@fact:FALSE literal. @status:impl/done\n";
+    let raw_xml_bytes = b"<data>not Vibe XML</data>\n";
+    write_source(root, &raw_md, raw_md_bytes);
+    write_source(root, &raw_xml, raw_xml_bytes);
+    let campaign = root.join("campaigns/selected/run");
+    std::fs::create_dir_all(&campaign).unwrap();
+    let mut common = args(root, false);
+    common.campaign = Some(root.join("campaigns/selected"));
+    let observed = ground(&common).unwrap();
+    assert_eq!(observed.docs.len(), 1);
+    assert_eq!(observed.docs[0].fact_count, 1);
+    assert!(observed.selected_sources.contains_key(&slash(&rule)));
+    let ctx = Context::from_flags(true, false, None, false, crate::cli::AgentModeArg::Auto);
+    scan(&ctx, &common).unwrap();
+    mirror(&ctx, &common).unwrap();
+    let cache = std::fs::read_to_string(campaign.join("cache.json")).unwrap();
+    assert!(cache.contains("common/rule.xml"), "{cache}");
+    assert!(!cache.contains("FALSE") && !cache.contains("data.xml"));
+    assert_eq!(
+        std::fs::read_dir(campaign.join("mirror")).unwrap().count(),
+        1
+    );
+    assert_eq!(std::fs::read(root.join(raw_md)).unwrap(), raw_md_bytes);
+    assert_eq!(std::fs::read(root.join(raw_xml)).unwrap(), raw_xml_bytes);
+    let (descriptor, digest) = observed.selected_sources[&slash(&rule)].clone();
+    write_source(root, &rule, b"changed XML\n");
+    let stale = crate::commands::progress::grounding::read_selected(
+        root,
+        &rule,
+        &descriptor,
+        Some(&digest),
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(stale.contains("changed after grounding"), "{stale}");
+}
+
+#[test]
+fn in_tree_descriptor_package_excludes_raw_resources_before_pair_collision() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path();
+    std::fs::write(
+        root.join("vibe.toml"),
+        "[project]\ngroup='org.host'\nname='demo'\nversion='1.1.0'\n",
+    )
+    .unwrap();
+    let package = root.join("vibevm/vibepacks/org.example/flow/v1.1.0");
+    let specs = vibe_core::layout::current_specs_root();
+    let rule = specs.join("common/rule.xml");
+    let raw_md = specs.join("common/rule.md");
+    let raw_xml = specs.join("common/data.xml");
+    let slash = |path: &std::path::Path| path.to_string_lossy().replace('\\', "/");
+    write_source(
+        &package,
+        std::path::Path::new("vibe.toml"),
+        format!(
+            "[package]\ngroup='org.example'\nname='flow'\nkind='flow'\nversion='1.1.0'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n\
+         [[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+            slash(&rule),
+            slash(&raw_md),
+            slash(&raw_xml),
+        )
+        .into_bytes(),
+    );
+    write_source(&package, &rule, b"<spec xmlns=\"https://vibevm.org/spec/1\"><p><REAL fact=\"true\" status=\"spec/done\">package fact</REAL></p></spec>\n");
+    write_source(&package, &raw_md, b"# Raw\n\n@fact:FALSE literal.\n");
+    write_source(&package, &raw_xml, b"<data>raw</data>\n");
+    let observed = ground(&args(root, false)).unwrap();
+    assert_eq!(observed.docs.len(), 1);
+    assert_eq!(observed.docs[0].fact_count, 1);
+    assert!(observed.docs[0].path.ends_with("common/rule.xml"));
+    assert_eq!(
+        std::fs::read(package.join(raw_xml)).unwrap(),
+        b"<data>raw</data>\n"
+    );
+}

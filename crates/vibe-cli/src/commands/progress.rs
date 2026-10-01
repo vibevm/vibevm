@@ -228,9 +228,17 @@ fn weave_cmd(ctx: &Context, a: &ProgressWeaveArgs) -> Result<()> {
             // The same dispatch `ground` read through (PROP-045
             // ##PROJECTION-READ): a `.xml` source weaves its projection,
             // exactly the text the parse — and therefore the doc — saw.
-            let (text, _) = vibe_specdoc::load_spec_text(&g.root.join(&d.path))
-                .map_err(|e| anyhow::Error::msg(e.to_string()))
-                .with_context(|| format!("re-reading {}", d.path))?;
+            let text = match g.selected_sources.get(&d.path) {
+                Some((descriptor, sha)) => {
+                    grounding::read_selected(&g.root, Path::new(&d.path), descriptor, Some(sha))?.0
+                }
+                None => {
+                    vibe_specdoc::load_spec_text(&g.root.join(&d.path))
+                        .map_err(|e| anyhow::Error::msg(e.to_string()))
+                        .with_context(|| format!("re-reading {}", d.path))?
+                        .0
+                }
+            };
             Ok((d.path.clone(), text))
         })
         .collect::<Result<_>>()?;

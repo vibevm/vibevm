@@ -98,6 +98,7 @@ fn refresh_state_derives_phase_from_journal() {
     let mut g = Ground {
         root: tmp.path().to_path_buf(),
         docs: Vec::new(),
+        selected_sources: BTreeMap::new(),
         campaign: Some(campaign.clone()),
         cache: cache::Cache::load_tolerant(&run.join("cache.json")).0,
         cache_warning: None,
