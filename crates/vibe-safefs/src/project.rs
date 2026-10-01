@@ -13,6 +13,7 @@ mod enumerate;
 mod reset;
 
 pub use absolute::{PinnedAbsentPath, PinnedAbsoluteFile};
+pub use enumerate::ChildKind;
 
 /// The pinned project-root capability every mutation goes through.
 ///

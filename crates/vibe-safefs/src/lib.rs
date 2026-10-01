@@ -50,7 +50,8 @@ pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanu
 #[cfg(any(test, feature = "inject-failures"))]
 pub use identity_hook::arm_identity_alias;
 pub use project::{
-    ExclusiveChildError, LockGuard, Pinned, PinnedAbsentPath, PinnedAbsoluteFile, Project,
+    ChildKind, ExclusiveChildError, LockGuard, Pinned, PinnedAbsentPath, PinnedAbsoluteFile,
+    Project,
 };
 pub use proof::{EntryProof, ProofRefusal};
 pub use publish::{PublishError, PublishStage, Published};

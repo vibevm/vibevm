@@ -12,10 +12,63 @@
 //! ceiling lifted rather than a second implementation of it.
 
 use anyhow::{Context, Result, bail};
+use cap_fs_ext::DirExt;
 
 use super::{Pinned, Project};
+use crate::component::ensure_safe_component;
+use crate::file::cap_options;
+
+/// One observed direct child kind. This does not retain a byte witness: a
+/// later reader must open and verify that file through the held capability.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ChildKind {
+    RegularFile,
+    Directory,
+}
 
 impl Project {
+    /// Classify one direct child of a held directory without following links.
+    /// Missing is distinct from an unsafe link, reparse point, special file,
+    /// or I/O failure. The result is a momentary kind observation, not a
+    /// transaction or permission to consume later bytes from an ambient path.
+    pub fn child_kind_nofollow(&self, directory: &Pinned, name: &str) -> Result<Option<ChildKind>> {
+        ensure_safe_component(name)?;
+        let display = directory.join(name);
+        let metadata = match directory.dir.symlink_metadata(name) {
+            Ok(value) => value,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+            Err(error) => {
+                return Err(anyhow::Error::new(error).context(format!(
+                    "inspecting child `{}` no-follow",
+                    display.display()
+                )));
+            }
+        };
+        if metadata.file_type().is_symlink() {
+            bail!("`{}` is a symlink or reparse point", display.display());
+        }
+        if metadata.is_dir() {
+            directory
+                .dir
+                .open_dir_nofollow(name)
+                .with_context(|| format!("opening no-follow directory `{}`", display.display()))?;
+            return Ok(Some(ChildKind::Directory));
+        }
+        if metadata.is_file() {
+            let mut options = cap_options();
+            let opened = directory
+                .dir
+                .open_with(name, options.read(true))
+                .with_context(|| format!("opening no-follow file `{}`", display.display()))?;
+            let opened_metadata = opened.metadata()?;
+            if opened_metadata.file_type().is_symlink() || !opened_metadata.is_file() {
+                bail!("`{}` changed away from a regular file", display.display());
+            }
+            return Ok(Some(ChildKind::RegularFile));
+        }
+        bail!("`{}` is not a regular file or directory", display.display())
+    }
+
     /// List the direct child names of `directory` through the retained
     /// capability; entry and non-UTF8-name errors propagate.
     ///
@@ -83,3 +136,7 @@ impl Project {
 #[cfg(test)]
 #[path = "child_names_tests.rs"]
 mod child_names_tests;
+
+#[cfg(test)]
+#[path = "entry_kind_tests.rs"]
+mod entry_kind_tests;
