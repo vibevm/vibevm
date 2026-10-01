@@ -472,3 +472,6 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(all(test, target_os = "linux"))]
+mod process_tests;
