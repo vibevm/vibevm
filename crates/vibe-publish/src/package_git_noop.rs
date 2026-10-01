@@ -562,6 +562,7 @@ fn seal_inner(
 
 mod duplicate;
 pub(crate) use duplicate::ready_duplicate_matches;
+mod result;
 
 #[cfg(test)]
 mod tests;
