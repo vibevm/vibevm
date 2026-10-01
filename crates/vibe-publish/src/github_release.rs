@@ -25,6 +25,9 @@ pub use model::*;
 mod asset;
 mod bounded_read;
 mod protected_calls;
+pub(crate) use protected_calls::{
+    DeleteReleaseResponseEvidence, DraftCallFields, DraftResponseEvidence, TagResponseEvidence,
+};
 mod read;
 
 const GITHUB_JSON: &str = "application/vnd.github+json";

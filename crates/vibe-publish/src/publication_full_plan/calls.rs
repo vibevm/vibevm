@@ -1,5 +1,6 @@
 //! Deterministic first API-call frontier for tag and release effects.
-//! This production module journals exact calls but exposes no remote port.
+//! Its private driver binds one selected call to a sealed ReadyRun; no public
+//! or CLI publication route invokes the driver.
 
 use serde::{Deserialize, Serialize};
 use vibe_lifecycle::{
@@ -29,6 +30,7 @@ const LANDED_FORMAT: &str = "vibevm.publication.api-call-landed/e1";
 #[path = "calls/asset_history.rs"]
 pub(super) mod asset_history;
 mod assets;
+mod driver;
 
 #[cfg(test)]
 #[path = "calls/asset_many_tests.rs"]
