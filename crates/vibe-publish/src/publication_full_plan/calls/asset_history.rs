@@ -13,11 +13,13 @@ use super::super::journal;
 use super::super::{Error, Result};
 use super::assets::{self, AssetAction, AssetLanded, AssetPending, PlannedAssetCall};
 use super::{
-    CallAction, CallInspection, CallObservation, Landed, decompose, inspect_calls, suffix,
+    CallAction, CallInspection, CallObservation, Landed, decompose, inspect_calls,
+    inspect_calls_proved, suffix,
 };
+use crate::publication_full_plan::session::ReadyRun;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub(super) enum AssetInspection {
+pub(in crate::publication_full_plan) enum AssetInspection {
     Next {
         call: PlannedAssetCall,
         release_id: String,
@@ -55,12 +57,50 @@ pub(super) fn inspect_assets(
     plan: &PublicationEffectPlan,
     expected: &PublicationEffectPlanExpectations<'_>,
 ) -> Result<AssetInspection> {
+    inspect_assets_inner(
+        lease, namespace, scope, key, run_id, subject, plan, expected, None,
+    )
+}
+
+pub(in crate::publication_full_plan) fn inspect_assets_proved(
+    session: &ReadyRun<'_>,
+) -> Result<AssetInspection> {
+    inspect_assets_inner(
+        session.lease,
+        session.namespace,
+        session.scope,
+        session.key,
+        &session.run_id,
+        session.subject,
+        session.plan,
+        session.expected,
+        Some(session),
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn inspect_assets_inner(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    run_id: &str,
+    subject: &PublicationSubject,
+    plan: &PublicationEffectPlan,
+    expected: &PublicationEffectPlanExpectations<'_>,
+    ready_proof: Option<&ReadyRun<'_>>,
+) -> Result<AssetInspection> {
     // The prefix inspector includes C.1 Ready and the production cold vault +
     // approval checks. The cfg(test) fake lane is confined to its test capsule.
     let prefix = decompose(subject, plan, expected)?;
-    match inspect_calls(
-        lease, namespace, scope, key, run_id, subject, plan, expected,
-    )? {
+    let prefix_status = if let Some(session) = ready_proof {
+        inspect_calls_proved(session)?
+    } else {
+        inspect_calls(
+            lease, namespace, scope, key, run_id, subject, plan, expected,
+        )?
+    };
+    match prefix_status {
         CallInspection::Unavailable { landed, .. } if landed == prefix.calls.len() => {}
         CallInspection::Uncertain { ordinal } => return Ok(AssetInspection::Uncertain { ordinal }),
         _ => return Ok(AssetInspection::Unavailable { landed: 0 }),

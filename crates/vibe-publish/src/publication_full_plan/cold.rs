@@ -11,6 +11,39 @@ enum ColdLane {
     FakeNoVault,
 }
 
+/// Private, single-constructor evidence from one complete cold validation.
+/// It is an observation, not an effect grant or a durable skip-scan token.
+pub(super) struct ColdReadyProof {
+    pub(super) capsule: journal::InputCapsule,
+    pub(super) intent: journal::Intent,
+    pub(super) request_sha256: String,
+    pub(super) plan_sha256: String,
+}
+
+fn unproved(status: Inspection) -> (Inspection, Option<ColdReadyProof>) {
+    (status, None)
+}
+
+fn degraded(inspected: Inspection, run_id: String) -> Inspection {
+    match inspected {
+        Inspection::Completed { partitions, .. } => Inspection::Partial {
+            run_id,
+            landed: partitions,
+            pending: None,
+            uncertain: true,
+        },
+        Inspection::Partial {
+            landed, pending, ..
+        } => Inspection::Partial {
+            run_id,
+            landed,
+            pending,
+            uncertain: true,
+        },
+        _ => Inspection::RecoveryRequired { run_id },
+    }
+}
+
 /// Reattach from host-retained namespace/scope/key after the original caller
 /// and its prepared subject/plan values are gone. This is inspection only:
 /// the C.1 digest lookup and immutable input capsule never grant an effect.
@@ -31,6 +64,7 @@ pub(crate) fn inspect_full_plan_cold(
         ColdLane::ProductionVault,
         None,
     )
+    .map(|(status, _)| status)
 }
 
 pub(super) fn inspect_full_plan_cold_with_home(
@@ -48,6 +82,24 @@ pub(super) fn inspect_full_plan_cold_with_home(
         ColdLane::ProductionVault,
         Some(home),
     )
+    .map(|(status, _)| status)
+}
+
+pub(super) fn inspect_full_plan_cold_proved(
+    lease: &LifecycleLease,
+    host_namespace_token: &str,
+    scope: &SubmissionScope,
+    key: &str,
+    home: &ApprovalHome,
+) -> Result<(Inspection, Option<ColdReadyProof>)> {
+    inspect_cold(
+        lease,
+        host_namespace_token,
+        scope,
+        key,
+        ColdLane::ProductionVault,
+        Some(home),
+    )
 }
 
 fn inspect_cold(
@@ -57,17 +109,17 @@ fn inspect_cold(
     key: &str,
     lane: ColdLane,
     supplied_home: Option<&ApprovalHome>,
-) -> Result<Inspection> {
+) -> Result<(Inspection, Option<ColdReadyProof>)> {
     let namespace = SubmissionNamespace::from_host_token(host_namespace_token.to_owned())?;
     let row = SubmissionReservations::inspect_existing_key(lease, &namespace, scope, key)?
         .ok_or_else(|| Error::Refused("host key has no retained C.1 reservation".into()))?;
     let run_id = row.domain_run_id;
     if row.journal_admission == JournalAdmission::Pending {
-        return Ok(Inspection::RecoveryRequired { run_id });
+        return Ok(unproved(Inspection::RecoveryRequired { run_id }));
     }
     let capsule = match journal::read_input(lease, &run_id) {
         Ok(Some(capsule)) => capsule,
-        Ok(None) | Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
+        Ok(None) | Err(_) => return Ok(unproved(Inspection::RecoveryRequired { run_id })),
     };
     let valid_lane = match lane {
         ColdLane::ProductionVault => {
@@ -93,10 +145,10 @@ fn inspect_cold(
         || capsule.root_correlation_token
             != match lease.publication_journal_project().root_correlation_token() {
                 Ok(token) => token,
-                Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
+                Err(_) => return Ok(unproved(Inspection::RecoveryRequired { run_id })),
             }
     {
-        return Ok(Inspection::RecoveryRequired { run_id });
+        return Ok(unproved(Inspection::RecoveryRequired { run_id }));
     }
     let expected = PublicationEffectPlanExpectations {
         subject: crate::publication_subject::PublicationSubjectExpectations {
@@ -112,7 +164,7 @@ fn inspect_cold(
         allow_replace_published: capsule.allow_replace_published,
     };
     if capsule.authority_mode.is_some() != capsule.authority_ref.is_some() {
-        return Ok(Inspection::RecoveryRequired { run_id });
+        return Ok(unproved(Inspection::RecoveryRequired { run_id }));
     }
     let authority = capsule
         .authority_mode
@@ -127,7 +179,7 @@ fn inspect_cold(
         authority,
     ) {
         Ok(selected) => selected,
-        Err(_) => return Ok(Inspection::RecoveryRequired { run_id }),
+        Err(_) => return Ok(unproved(Inspection::RecoveryRequired { run_id })),
     };
     if capsule.request_json.as_bytes() != selected.request
         || capsule.upload_catalogue_sha256 != selected.upload_catalogue_sha256
@@ -135,7 +187,7 @@ fn inspect_cold(
         || row.request_sha256 != sha(&selected.request)
         || row.plan_sha256 != sha(&selected.plan_bytes)
     {
-        return Ok(Inspection::RecoveryRequired { run_id });
+        return Ok(unproved(Inspection::RecoveryRequired { run_id }));
     }
     selected.intent.vault_manifest_sha256 = capsule.vault_manifest_sha256.clone();
     selected.intent.redemption_marker_sha256 = capsule.redemption_marker_sha256.clone();
@@ -149,7 +201,7 @@ fn inspect_cold(
         &capsule.plan,
         run_id.clone(),
         row.journal_admission,
-        row.reservation_ref,
+        row.reservation_ref.clone(),
     )?;
     match lane {
         ColdLane::ProductionVault => {
@@ -187,29 +239,27 @@ fn inspect_cold(
             } if observed == &run_id && catalogue == &selected.upload_catalogue_sha256
                 && Some(manifest) == capsule.vault_manifest_sha256.as_ref())
             {
-                Ok(inspected)
+                let mut expected_intent = selected.intent.clone();
+                expected_intent.run_id = run_id.clone();
+                let intent = match journal::read::<journal::Intent>(lease, &run_id, "intent") {
+                    Ok(Some(intent)) if intent == expected_intent => intent,
+                    _ => return Ok(unproved(degraded(inspected, run_id))),
+                };
+                Ok((
+                    inspected,
+                    Some(ColdReadyProof {
+                        capsule,
+                        intent,
+                        request_sha256: row.request_sha256,
+                        plan_sha256: row.plan_sha256,
+                    }),
+                ))
             } else {
-                Ok(match inspected {
-                    Inspection::Completed { partitions, .. } => Inspection::Partial {
-                        run_id,
-                        landed: partitions,
-                        pending: None,
-                        uncertain: true,
-                    },
-                    Inspection::Partial {
-                        landed, pending, ..
-                    } => Inspection::Partial {
-                        run_id,
-                        landed,
-                        pending,
-                        uncertain: true,
-                    },
-                    _ => Inspection::RecoveryRequired { run_id },
-                })
+                Ok(unproved(degraded(inspected, run_id)))
             }
         }
         #[cfg(test)]
-        ColdLane::FakeNoVault => Ok(inspected),
+        ColdLane::FakeNoVault => Ok(unproved(inspected)),
     }
 }
 
@@ -228,4 +278,5 @@ pub(super) fn inspect_fake_full_plan_cold(
         ColdLane::FakeNoVault,
         None,
     )
+    .map(|(status, _)| status)
 }
