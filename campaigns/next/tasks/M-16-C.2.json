@@ -238,7 +238,8 @@
         "crates/vibe-wire/",
         "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
         "crates/vibe-lifecycle/src/retained_mechanism.rs",
-        "crates/vibe-safefs/src/file/stable.rs"
+        "crates/vibe-safefs/src/file/stable.rs",
+        "crates/vibe-safefs/src/file/stable/new_bounded.rs"
       ],
       "write_paths": [
         "crates/vibe-publish/src/",
@@ -278,7 +279,8 @@
         "crates/vibe-wire/",
         "crates/vibe-lifecycle/src/lib.rs",
         "crates/vibe-lifecycle/src/retained_mechanism.rs",
-        "crates/vibe-safefs/src/file/stable.rs"
+        "crates/vibe-safefs/src/file/stable.rs",
+        "crates/vibe-safefs/src/file/stable/new_bounded.rs"
       ],
       "steps": [
         "Bind a prepared exact publication subject/effect plan and remote generation to an owner run journal before repo/tag/release/asset writes; never reuse the registry fact log as this journal.",
