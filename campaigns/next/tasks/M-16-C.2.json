@@ -236,7 +236,8 @@
         "schemas/",
         "formats/",
         "crates/vibe-wire/",
-        "vibevm/vibespecs/common/PROP-073-publication-authority.xml"
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml",
+        "crates/vibe-lifecycle/src/retained_mechanism.rs"
       ],
       "write_paths": [
         "crates/vibe-publish/src/",
@@ -273,12 +274,15 @@
         "crates/vibe-index/src/journal/",
         "schemas/",
         "formats/",
-        "crates/vibe-wire/"
+        "crates/vibe-wire/",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/retained_mechanism.rs"
       ],
       "steps": [
         "Bind a prepared exact publication subject/effect plan and remote generation to an owner run journal before repo/tag/release/asset writes; never reuse the registry fact log as this journal.",
         "Reconcile repo-created-before-push, lost atomic push/release response and third-state remote refs without repeating an uncertain effect; retain partial/terminal result for retry.",
-        "Review lifecycle, build, package, deploy and publication owners together for API exit, EOF, owner crash, one-writer/parked limits and local attach; unsupported adapters remain unavailable."
+        "Review lifecycle, build, package, deploy and publication owners together for API exit, EOF, owner crash, one-writer/parked limits and local attach; unsupported adapters remain unavailable.",
+        "Expose read-only typed Build/Package/Deploy retained inspection to the orchestrator without exporting IntentReady as an effect grant; bind host-issued authority and held roots before cold attach."
       ],
       "positive_cases": [
         "A lost remote response returns the same run and a retained result or explicit partial/recovery state.",
@@ -286,7 +290,8 @@
       ],
       "negative_cases": [
         "A registry Published fact or identical remote bytes is treated as operation completion.",
-        "EOF silently restarts publication or an unavailable domain is advertised as callable."
+        "EOF silently restarts publication or an unavailable domain is advertised as callable.",
+        "A copied same-path root or a missing/tampered pre-Ready capsule is accepted as Completed or grants a retry effect."
       ],
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
