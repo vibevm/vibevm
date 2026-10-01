@@ -13,6 +13,7 @@ const TOKEN: &str = "fixture-secret-do-not-leak";
 
 #[derive(Debug)]
 struct Received {
+    method: String,
     path: String,
     authorization: String,
     content_length: usize,
@@ -26,6 +27,7 @@ fn request(mut stream: TcpStream) -> Received {
     let mut reader = BufReader::new(&mut stream);
     let mut first = String::new();
     reader.read_line(&mut first).unwrap();
+    let method = first.split_whitespace().next().unwrap().to_string();
     let path = first.split_whitespace().nth(1).unwrap().to_string();
     let mut authorization = String::new();
     let mut content_length = 0;
@@ -47,6 +49,7 @@ fn request(mut stream: TcpStream) -> Received {
     let mut body = vec![0; content_length];
     reader.read_exact(&mut body).unwrap();
     Received {
+        method,
         path,
         authorization,
         content_length,
@@ -232,7 +235,49 @@ fn early_close_and_changed_short_source_are_uncertain() {
 fn absent_or_wrong_response_digest_and_token_echo_are_uncertain_without_leak() {
     let bytes = b"small exact asset";
     let digest = sha256_digest(bytes);
-    for returned in ["null".to_owned(), format!("\"sha256:{}\"", "f".repeat(64))] {
+    let reply = response(
+        "201 Created",
+        "",
+        &format!(
+            "{{\"id\":701,\"name\":\"{NAME}\",\"size\":{},\"digest\":null}}",
+            bytes.len()
+        ),
+    );
+    let (url, server) = serve_once(reply);
+    let (_root, reader, completion, _) = stream(bytes);
+    let candidate = match client(&url).upload_temporary_asset_streamed(
+        700,
+        NAME,
+        "application/zip",
+        bytes.len() as u64,
+        &digest,
+        reader,
+        completion,
+    ) {
+        Err(StreamedUploadError::UncertainCandidate { candidate, .. }) => candidate,
+        other => panic!("missing digest must retain only uncertain candidate: {other:?}"),
+    };
+    assert_eq!(candidate.asset_id, 701);
+    assert_eq!(candidate.temporary_name, NAME);
+    assert_eq!(candidate.size_bytes, bytes.len() as u64);
+    assert_eq!(server.join().unwrap().method, "POST");
+
+    // A later GET can verify bytes by this candidate ID, but the owner still
+    // needs an independent release observation before any Landed record.
+    let (url, server) = serve_once(response("200 OK", "", std::str::from_utf8(bytes).unwrap()));
+    let read = client(&url)
+        .verify_draft_asset_digest_streamed(
+            candidate.asset_id,
+            bytes.len() as u64,
+            &digest,
+            bytes.len() as u64,
+        )
+        .unwrap();
+    assert_eq!(read.asset_id, candidate.asset_id);
+    assert_eq!(read.sha256, digest);
+    assert_eq!(server.join().unwrap().method, "GET");
+
+    for returned in [format!("\"sha256:{}\"", "f".repeat(64))] {
         let reply = response(
             "201 Created",
             "",
@@ -265,6 +310,14 @@ fn absent_or_wrong_response_digest_and_token_echo_are_uncertain_without_leak() {
             "{{\"id\":701,\"name\":\"foreign\",\"size\":{},\"digest\":\"{digest}\"}}",
             bytes.len()
         ),
+        format!(
+            "{{\"id\":701,\"name\":\"foreign\",\"size\":{},\"digest\":null}}",
+            bytes.len()
+        ),
+        format!(
+            "{{\"id\":701,\"name\":\"{NAME}\",\"size\":{},\"digest\":null}}",
+            bytes.len() + 1
+        ),
     ] {
         let (url, server) = serve_once(response("201 Created", "", &body));
         let (_root, reader, completion, _) = stream(bytes);
@@ -296,4 +349,116 @@ fn absent_or_wrong_response_digest_and_token_echo_are_uncertain_without_leak() {
     server.join().unwrap();
     assert!(matches!(error, StreamedUploadError::Uncertain(_)));
     assert!(!error.to_string().contains(TOKEN));
+}
+
+#[test]
+fn explicit_patch_returns_response_evidence_without_cleanup_or_landed() {
+    let bytes = b"small exact asset";
+    let digest = sha256_digest(bytes);
+    for returned in [format!("\"{digest}\""), "null".into()] {
+        let reply = response(
+            "200 OK",
+            "",
+            &format!(
+                "{{\"id\":701,\"name\":\"canonical.zip\",\"size\":{},\"digest\":{returned}}}",
+                bytes.len()
+            ),
+        );
+        let (url, server) = serve_once(reply);
+        let evidence = client(&url)
+            .rename_temporary_asset_explicit(701, "canonical.zip", bytes.len() as u64, &digest)
+            .unwrap();
+        let received = server.join().unwrap();
+        assert_eq!(received.method, "PATCH");
+        assert_eq!(received.path, "/repos/vibevm/vibevm/releases/assets/701");
+        assert_eq!(received.authorization, format!("Bearer {TOKEN}"));
+        assert_eq!(received.body, br#"{"name":"canonical.zip"}"#);
+        assert_eq!(evidence.asset_id, 701);
+        assert_eq!(evidence.canonical_name, "canonical.zip");
+        assert_eq!(evidence.size_bytes, bytes.len() as u64);
+        assert_eq!(
+            evidence.response_sha256.as_deref(),
+            (returned != "null").then_some(digest.as_str())
+        );
+    }
+}
+
+#[test]
+fn explicit_patch_redirect_lost_reply_and_foreign_response_stay_uncertain() {
+    let bytes = b"small exact asset";
+    let digest = sha256_digest(bytes);
+    let target = TcpListener::bind("127.0.0.1:0").unwrap();
+    target.set_nonblocking(true).unwrap();
+    let location = format!("http://{}/redirected", target.local_addr().unwrap());
+    let (url, server) = serve_once(response(
+        "307 Temporary Redirect",
+        &format!("Location: {location}\r\n"),
+        "",
+    ));
+    let result = client(&url).rename_temporary_asset_explicit(
+        701,
+        "canonical.zip",
+        bytes.len() as u64,
+        &digest,
+    );
+    assert!(matches!(result, Err(ExplicitRenameError::Uncertain(_))));
+    assert_eq!(server.join().unwrap().method, "PATCH");
+    assert!(
+        target.accept().is_err(),
+        "redirect target must not receive PATCH"
+    );
+
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    let url = format!("http://{}", listener.local_addr().unwrap());
+    let server = thread::spawn(move || {
+        let (socket, _) = listener.accept().unwrap();
+        drop(socket);
+    });
+    let result = client(&url).rename_temporary_asset_explicit(
+        701,
+        "canonical.zip",
+        bytes.len() as u64,
+        &digest,
+    );
+    server.join().unwrap();
+    assert!(matches!(result, Err(ExplicitRenameError::Uncertain(_))));
+
+    let (url, server) = serve_once(response("500 Server Error", "", TOKEN));
+    let error = client(&url)
+        .rename_temporary_asset_explicit(701, "canonical.zip", bytes.len() as u64, &digest)
+        .unwrap_err();
+    server.join().unwrap();
+    assert!(matches!(error, ExplicitRenameError::Uncertain(_)));
+    assert!(!error.to_string().contains(TOKEN));
+
+    for body in [
+        "{malformed".to_owned(),
+        format!(
+            "{{\"id\":702,\"name\":\"canonical.zip\",\"size\":{},\"digest\":\"{digest}\"}}",
+            bytes.len()
+        ),
+        format!(
+            "{{\"id\":701,\"name\":\"foreign.zip\",\"size\":{},\"digest\":\"{digest}\"}}",
+            bytes.len()
+        ),
+        format!(
+            "{{\"id\":701,\"name\":\"canonical.zip\",\"size\":{},\"digest\":\"{digest}\"}}",
+            bytes.len() + 1
+        ),
+        format!(
+            "{{\"id\":701,\"name\":\"canonical.zip\",\"size\":{},\"digest\":\"sha256:{}\"}}",
+            bytes.len(),
+            "f".repeat(64)
+        ),
+    ] {
+        let (url, server) = serve_once(response("200 OK", "", &body));
+        let result = client(&url).rename_temporary_asset_explicit(
+            701,
+            "canonical.zip",
+            bytes.len() as u64,
+            &digest,
+        );
+        assert!(matches!(result, Err(ExplicitRenameError::Uncertain(_))));
+        assert_eq!(server.join().unwrap().method, "PATCH");
+    }
 }
