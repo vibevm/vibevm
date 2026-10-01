@@ -104,6 +104,17 @@ fn draft_body(id: u64, tag: &str, commit: &str, draft: bool) -> String {
     .to_string()
 }
 
+fn selected_draft(commit: &str) -> DraftCallFields {
+    DraftCallFields {
+        target_commit: commit.into(),
+        tag: TAG.into(),
+        draft: true,
+        name: DRAFT_NAME.into(),
+        body: fixed_draft_body(),
+        prerelease: false,
+    }
+}
+
 fn changed_draft(field: &str, value: serde_json::Value) -> String {
     let mut row: serde_json::Value =
         serde_json::from_str(&draft_body(701, TAG, COMMIT, true)).unwrap();
@@ -139,7 +150,9 @@ fn exact_201_tag_204_delete_and_201_draft_are_response_evidence_only() {
         &draft_body(701, TAG, COMMIT, true),
         "",
     ));
-    let evidence = client(&base).create_fixed_draft_explicit(COMMIT).unwrap();
+    let evidence = client(&base)
+        .create_fixed_draft_explicit(&selected_draft(COMMIT))
+        .unwrap();
     let received = server.join().unwrap();
     assert_eq!(received.method, "POST");
     assert_eq!(received.path, "/repos/vibevm/vibevm/releases");
@@ -157,6 +170,11 @@ fn exact_201_tag_204_delete_and_201_draft_are_response_evidence_only() {
     assert_eq!(posted["prerelease"], false);
     assert_eq!(posted["generate_release_notes"], false);
     assert_eq!((evidence.release_id, evidence.tag.as_str()), (701, TAG));
+    assert_eq!(evidence.target_commitish, COMMIT);
+    assert_eq!(evidence.name, "vibevm 1.1.0");
+    assert_eq!(evidence.body, fixed_draft_body());
+    assert!(evidence.draft);
+    assert!(!evidence.prerelease);
 }
 
 #[test]
@@ -174,7 +192,9 @@ fn write_redirects_never_replay_on_another_endpoint() {
         let result = match action {
             0 => client.create_fixed_tag_ref_explicit(COMMIT).map(|_| ()),
             1 => client.delete_prior_release_explicit(700).map(|_| ()),
-            _ => client.create_fixed_draft_explicit(COMMIT).map(|_| ()),
+            _ => client
+                .create_fixed_draft_explicit(&selected_draft(COMMIT))
+                .map(|_| ()),
         };
         assert!(matches!(result, Err(ProtectedCallError::Uncertain(_))));
         server.join().unwrap();
@@ -224,9 +244,52 @@ fn lost_delete_response_and_foreign_client_do_not_grant_retry() {
         Err(ProtectedCallError::Refused(_))
     ));
     assert!(matches!(
-        local.create_fixed_draft_explicit(&long_oid),
+        local.create_fixed_draft_explicit(&selected_draft(&long_oid)),
         Err(ProtectedCallError::Refused(_))
     ));
+}
+
+#[test]
+fn wrong_e2_successor_fields_refuse_before_any_http_dispatch() {
+    let local = client("http://127.0.0.1:9");
+    for field in ["target", "tag", "draft", "name", "body", "prerelease"] {
+        let mut selected = selected_draft(COMMIT);
+        match field {
+            "target" => selected.target_commit = "not-a-commit".into(),
+            "tag" => selected.tag = "v9.9.9".into(),
+            "draft" => selected.draft = false,
+            "name" => selected.name = "foreign".into(),
+            "body" => selected.body = "foreign".into(),
+            "prerelease" => selected.prerelease = true,
+            _ => unreachable!(),
+        }
+        assert!(
+            matches!(
+                local.create_fixed_draft_explicit(&selected),
+                Err(ProtectedCallError::Refused(_))
+            ),
+            "{field}"
+        );
+    }
+}
+
+#[test]
+fn selected_valid_commit_is_sent_from_e2_fields_not_a_transport_default() {
+    let other_commit = "b".repeat(40);
+    let selected = selected_draft(&other_commit);
+    let (base, server) = serve_once(reply(
+        "201 Created",
+        &draft_body(702, TAG, &other_commit, true),
+        "",
+    ));
+    let evidence = client(&base)
+        .create_fixed_draft_explicit(&selected)
+        .unwrap();
+    let received = server.join().unwrap();
+    let posted: serde_json::Value = serde_json::from_slice(&received.body).unwrap();
+    assert_eq!(posted["target_commitish"], other_commit);
+    assert_eq!(evidence.target_commitish, other_commit);
+    assert_eq!(evidence.release_id, 702);
 }
 
 #[test]
@@ -254,7 +317,7 @@ fn malformed_overcap_and_foreign_responses_are_uncertain_without_token_leak() {
         "x".repeat(RELEASE_RESPONSE_CAP as usize + 1),
     ] {
         let (base, server) = serve_once(reply("201 Created", &body, ""));
-        let result = client(&base).create_fixed_draft_explicit(COMMIT);
+        let result = client(&base).create_fixed_draft_explicit(&selected_draft(COMMIT));
         assert!(matches!(result, Err(ProtectedCallError::Uncertain(_))));
         server.join().unwrap();
     }
