@@ -53,6 +53,27 @@ fn execution<'a>(
 }
 
 #[test]
+fn retired_unreserved_static_file_key_remains_retired_without_effect() {
+    let root = temp();
+    std::fs::write(root.path().join(SOURCE), b"source bytes").unwrap();
+    let world = empty_world();
+    let registry = registry(&world);
+    let routes = MechanismRoutes::default();
+    let targets = [target()];
+    let selected = execution(root.path(), &targets, &registry, &routes);
+    let lease = LifecycleLease::acquire(root.path()).unwrap();
+    let scope = scope();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &scope, 60_000).unwrap();
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope).unwrap();
+    assert_eq!(
+        reserve_fixed_static_file_intent(&lease, &namespace, &scope, "copy", &selected).unwrap(),
+        StaticFileJournalInspection::Retired { run_id: None }
+    );
+    assert!(!root.path().join(OUTPUT_DIR).exists());
+    assert!(!root.path().join(RECORD).exists());
+}
+
+#[test]
 fn fixed_intent_is_ready_before_any_output_or_artifact_record() {
     let root = temp();
     std::fs::write(root.path().join(SOURCE), b"source bytes").unwrap();
@@ -82,6 +103,7 @@ fn fixed_intent_is_ready_before_any_output_or_artifact_record() {
     );
     assert!(!root.path().join(OUTPUT_DIR).exists());
     assert!(!root.path().join(RECORD).exists());
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope).unwrap();
     let second =
         reserve_fixed_static_file_intent(&lease, &namespace, &scope, "copy", &selected).unwrap();
     let StaticFileJournalInspection::Uncertain {
@@ -212,6 +234,7 @@ fn reservation_without_owner_intent_requires_recovery() {
         .unwrap(),
         ReservationDecision::Created { .. }
     ));
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope).unwrap();
     assert_eq!(
         reserve_fixed_static_file_intent(&lease, &namespace, &scope, "copy", &selected).unwrap(),
         StaticFileJournalInspection::RecoveryRequired {
@@ -274,6 +297,7 @@ fn fixed_copy_retains_verified_result_and_duplicate_never_reapplies() {
             .join(result_name(&run_id))
             .is_file()
     );
+    SubmissionReservations::retire_namespace(&lease, &namespace, &scope).unwrap();
     let second = execute_fixed_static_file_with_hook(
         &lease, &namespace, &scope, "copy", &selected, &counted,
     )

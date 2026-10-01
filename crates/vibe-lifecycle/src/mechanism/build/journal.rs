@@ -208,13 +208,8 @@ pub(crate) fn reserve_fixed_cargo_intent(
             domain_run_id,
             journal_admission,
             reservation_ref,
-            retired,
+            ..
         } => {
-            if retired {
-                return Ok(BuildJournalInspection::Retired {
-                    run_id: Some(domain_run_id),
-                });
-            }
             let intent = match read_intent(lease, &domain_run_id) {
                 Ok(intent) => intent,
                 Err(_) => {

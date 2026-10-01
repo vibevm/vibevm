@@ -240,13 +240,8 @@ pub(crate) fn reserve_fixed_static_file_intent(
             domain_run_id,
             journal_admission,
             reservation_ref,
-            retired,
+            ..
         } => {
-            if retired {
-                return Ok(StaticFileJournalInspection::Retired {
-                    run_id: Some(domain_run_id),
-                });
-            }
             let observed = match read_intent(lease, &domain_run_id) {
                 Ok(observed) => observed,
                 Err(_) => return Ok(uncertain(lease, domain_run_id)),
