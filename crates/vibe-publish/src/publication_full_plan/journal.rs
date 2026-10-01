@@ -16,7 +16,10 @@ const INPUT_CAP: usize = 1024 * 1024;
 pub(super) const INTENT_FORMAT: &str = "vibevm.publication.full-plan-intent/1";
 pub(super) const STEP_FORMAT: &str = "vibevm.publication.full-plan-step/1";
 pub(super) const RESULT_FORMAT: &str = "vibevm.publication.full-plan-result/1";
-pub(super) const INPUT_FORMAT: &str = "vibevm.publication.full-plan-input/1";
+pub(super) const INPUT_FORMAT: &str = "vibevm.publication.full-plan-input/2";
+#[cfg(test)]
+pub(super) const FAKE_INPUT_FORMAT: &str =
+    "vibevm.publication.full-plan-input/test-fake-no-vault-1";
 
 /// Canonical request and selected metadata, without asset payload bytes or an
 /// explicit token field. Smoke runner/evidence references are caller-supplied
@@ -38,6 +41,8 @@ pub(super) struct InputCapsule {
     pub upload_catalogue_sha256: String,
     /// Same-host held-root correlation, not a portable authority or secret.
     pub root_correlation_token: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vault_manifest_sha256: Option<String>,
     pub publish: bool,
     pub allow_replace_published: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -60,6 +65,8 @@ pub(super) struct Intent {
     pub partition_sha256: Vec<String>,
     pub upload_catalogue_sha256: String,
     pub root_correlation_token: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vault_manifest_sha256: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub authority_mode: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]

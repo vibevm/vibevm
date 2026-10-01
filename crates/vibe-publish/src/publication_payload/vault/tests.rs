@@ -174,20 +174,12 @@ fn stages_nineteen_exact_files_then_complete_manifest_without_advancing_c1() {
             verified_files: 0
         }
     );
-    assert_eq!(
-        world.stage().unwrap(),
-        VaultInspection::Complete {
-            run_id: world.run_id.clone(),
-            catalogue_digest: catalogue.digest.clone(),
-        }
-    );
-    assert_eq!(
-        world.inspect(),
-        VaultInspection::Complete {
-            run_id: world.run_id.clone(),
-            catalogue_digest: catalogue.digest,
-        }
-    );
+    let staged = world.stage().unwrap();
+    assert!(matches!(&staged, VaultInspection::Complete {
+        run_id, catalogue_digest, manifest_sha256,
+    } if run_id == &world.run_id && catalogue_digest == &catalogue.digest
+        && manifest_sha256.starts_with("sha256:")));
+    assert_eq!(world.inspect(), staged);
     assert_eq!(fs::read_dir(world.vault_path()).unwrap().count(), 20);
     world.pending();
     let manifest = world.vault_path().join(COMPLETE);
