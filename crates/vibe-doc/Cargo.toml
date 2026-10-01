@@ -46,6 +46,7 @@ vibe-spec.workspace = true
 # materialisation root — and the canonical language default a cited spec
 # carries when its manifest declares none (PROP-052, PROP-003 §2.7).
 vibe-core.workspace = true
+vibe-safefs.workspace = true
 # The machine store's entry layout (PROP-010 §2.7): documentation warmed
 # with `vibe cache add` cites specs that live there and nowhere else.
 vibe-registry.workspace = true
