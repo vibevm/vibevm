@@ -1,3 +1,4 @@
+use sha2::Digest;
 use vibe_wire::generated::publication_effect_plan::{
     PublicationEffectPlan, PublicationObservedRelease, PublicationPartition, PublicationPriorAsset,
     PublicationPriorAssetPresent,
@@ -17,10 +18,10 @@ const SUBJECT: &str = include_str!(
 );
 
 const NEW: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
+    "../../../../formats/corpora/publication_effect_plan/e2/valid/new-draft-complete.json"
 );
 const REPLACE: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e1/valid/replace-known-draft.json"
+    "../../../../formats/corpora/publication_effect_plan/e2/valid/replace-known-draft.json"
 );
 
 fn subject_expected() -> PublicationSubjectExpectations<'static> {
@@ -60,6 +61,12 @@ fn captured(plan: &PublicationEffectPlan) -> CapturedPublicationRemote {
         tag: plan.observed_tag.clone(),
         release: plan.observed_release.clone(),
     }
+}
+
+fn candidate_frames(plan: &PublicationEffectPlan) -> String {
+    let mut frames = super::Frames::new();
+    frames.value("plan", &serde_json::to_value(plan).unwrap());
+    format!("sha256:{:x}", frames.0.finalize())
 }
 
 #[test]
@@ -248,6 +255,7 @@ fn two_raw_complete_corpora_bind_independent_subject_without_mutation() {
 fn remote_generation_and_replaced_id_change_framed_digest() {
     let (plan, subject) = prepared(REPLACE);
     let baseline = publication_effect_plan_digest(&plan, &subject, &plan_expected()).unwrap();
+    assert_eq!(candidate_frames(&plan), baseline);
     let mut changed = plan.clone();
     changed.remote_generation_ref.push_str("-new");
     assert_ne!(
@@ -321,19 +329,19 @@ fn three_semantic_invalid_corpora_refuse() {
     for (raw, field) in [
         (
             include_str!(
-                "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/changed-target-replacement.json"
+                "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/changed-target-replacement.json"
             ),
             "partitions[2]",
         ),
         (
             include_str!(
-                "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/incomplete-release-inventory.json"
+                "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/incomplete-release-inventory.json"
             ),
             "observed_release",
         ),
         (
             include_str!(
-                "../../../../formats/corpora/publication_effect_plan/e1/semantic-invalid/wrong-partition-order.json"
+                "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/wrong-partition-order.json"
             ),
             "partitions[0]",
         ),
@@ -354,18 +362,87 @@ fn three_semantic_invalid_corpora_refuse() {
 fn four_structural_invalid_corpora_fail_generated_decoding() {
     for raw in [
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e1/structural-invalid/unknown-root.json"
+            "../../../../formats/corpora/publication_effect_plan/e2/structural-invalid/unknown-root.json"
         ),
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e1/structural-invalid/unknown-partition-arm.json"
+            "../../../../formats/corpora/publication_effect_plan/e2/structural-invalid/unknown-partition-arm.json"
         ),
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e1/structural-invalid/missing-prior-state.json"
+            "../../../../formats/corpora/publication_effect_plan/e2/structural-invalid/missing-prior-state.json"
         ),
         include_str!(
-            "../../../../formats/corpora/publication_effect_plan/e1/structural-invalid/wrong-release-id-type.json"
+            "../../../../formats/corpora/publication_effect_plan/e2/structural-invalid/wrong-release-id-type.json"
         ),
     ] {
         assert!(serde_json::from_str::<PublicationEffectPlan>(raw).is_err());
+    }
+}
+
+#[test]
+fn successor_metadata_is_exact_and_observed_metadata_changes_plan_identity() {
+    let (plan, subject) = prepared(REPLACE);
+    let baseline = publication_effect_plan_digest(&plan, &subject, &plan_expected()).unwrap();
+    for field in ["target_commit", "name", "body", "prerelease"] {
+        let mut changed = plan.clone();
+        let PublicationPartition::Release(release) = &mut changed.partitions[1] else {
+            panic!("release partition missing")
+        };
+        match field {
+            "target_commit" => release.desired_target_commit = "b".repeat(40),
+            "name" => release.desired_name.push_str(" altered"),
+            "body" => release.desired_body.push_str(" altered"),
+            "prerelease" => release.desired_prerelease = true,
+            _ => unreachable!(),
+        }
+        assert!(
+            validate_publication_effect_plan(&changed, &subject, &plan_expected()).is_err(),
+            "{field}"
+        );
+        assert_ne!(candidate_frames(&changed), baseline, "{field}");
+    }
+    for field in ["target_commitish", "name", "body", "prerelease"] {
+        let mut changed = plan.clone();
+        let PublicationObservedRelease::Present(release) = &mut changed.observed_release else {
+            panic!("observed release absent")
+        };
+        match field {
+            "target_commitish" => release.target_commitish.push_str("-other"),
+            "name" => release.name = Some("another prior name".into()),
+            "body" => release.body = Some("another prior body".into()),
+            "prerelease" => release.prerelease = true,
+            _ => unreachable!(),
+        }
+        let digest = publication_effect_plan_digest(&changed, &subject, &plan_expected()).unwrap();
+        assert_ne!(digest, baseline, "{field}");
+    }
+}
+
+#[test]
+fn historical_fieldless_epoch_one_plan_cannot_decode_as_epoch_two() {
+    let old = include_str!(
+        "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
+    );
+    assert!(serde_json::from_str::<PublicationEffectPlan>(old).is_err());
+}
+
+#[test]
+fn successor_metadata_invalid_corpora_refuse_before_effect() {
+    let (_, subject) = prepared(NEW);
+    for raw in [
+        include_str!(
+            "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/wrong-successor-commit.json"
+        ),
+        include_str!(
+            "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/wrong-successor-body.json"
+        ),
+        include_str!(
+            "../../../../formats/corpora/publication_effect_plan/e2/semantic-invalid/wrong-successor-prerelease.json"
+        ),
+    ] {
+        let plan: PublicationEffectPlan = serde_json::from_str(raw).unwrap();
+        assert!(matches!(
+            validate_publication_effect_plan(&plan, &subject, &plan_expected()),
+            Err(PublicationEffectPlanError::Invalid { field, .. }) if field == "partitions[1]"
+        ));
     }
 }

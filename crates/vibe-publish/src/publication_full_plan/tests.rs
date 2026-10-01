@@ -7,7 +7,7 @@ const SUBJECT: &str = include_str!(
     "../../../../formats/corpora/publication_subject/e1/valid/complete-five-targets.json"
 );
 const NEW: &str = include_str!(
-    "../../../../formats/corpora/publication_effect_plan/e1/valid/new-draft-complete.json"
+    "../../../../formats/corpora/publication_effect_plan/e2/valid/new-draft-complete.json"
 );
 
 pub(super) fn expected() -> PublicationEffectPlanExpectations<'static> {
@@ -123,6 +123,10 @@ impl FakePlanPort for FakeRemote {
                 PublicationPartition::Release(step) => {
                     self.current.release = PublicationObservedRelease::Present(Box::new(PublicationObservedReleasePresent {
                         assets: Vec::new(), draft: step.desired_draft,
+                        prerelease: step.desired_prerelease,
+                        target_commitish: step.desired_target_commit.clone(),
+                        name: Some(step.desired_name.clone()),
+                        body: Some(step.desired_body.clone()),
                         generation_ref: receipt.resulting_generation_ref.clone(), inventory_complete: true,
                         release_id: "700".into(), tag: step.desired_tag.clone(),
                     }));

@@ -250,6 +250,10 @@ fn old_draft_remote(commit: &str, release_id: &str, generation: &str) -> Capture
             generation_ref: generation.into(),
             tag: "v1.1.0".into(),
             draft: true,
+            prerelease: false,
+            target_commitish: commit.into(),
+            name: Some("vibevm 1.1.0 prior draft".into()),
+            body: Some("Prior mutable draft.".into()),
             inventory_complete: true,
             assets: vec![PublicationObservedAsset {
                 asset_id: "7".into(),

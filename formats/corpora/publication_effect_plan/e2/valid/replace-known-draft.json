@@ -1,0 +1,288 @@
+{
+  "schema": 2,
+  "subject_sha256": "sha256:6fae78326b4d97adeb0dcb7fa4684cbe7a466c009c01a3bcdd6f55b4df215394",
+  "target": {
+    "host": "github.com",
+    "owner": "vibevm",
+    "repository": "vibevm"
+  },
+  "remote_generation_ref": "observed:release-list-2",
+  "observed_tag": {
+    "state": "present",
+    "reference": "refs/tags/v1.1.0",
+    "object_kind": "commit",
+    "object_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "observed_release": {
+    "state": "present",
+    "release_id": "123",
+    "draft": true,
+    "tag": "v1.1.0",
+    "generation_ref": "observed:release-123",
+    "inventory_complete": true,
+    "assets": [
+      {
+        "name": "old-note.txt",
+        "asset_id": "456",
+        "size_bytes": "8",
+        "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "target_commitish": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "name": "vibevm 1.1.0 prior draft",
+    "body": "Prior mutable draft.",
+    "prerelease": false
+  },
+  "smoke_policy_id": "distribution-smoke/e1",
+  "partitions": [
+    {
+      "kind": "tag",
+      "action": "retain",
+      "tag": "v1.1.0",
+      "desired_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "recovery_ref": "tag-ref"
+    },
+    {
+      "kind": "release",
+      "action": "replace",
+      "desired_tag": "v1.1.0",
+      "desired_draft": true,
+      "recovery_ref": "draft-release",
+      "desired_target_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "desired_name": "vibevm 1.1.0",
+      "desired_body": "Mutable vibevm 1.1.0 distribution. Verify downloads through `DISTRIBUTIONS.json`.",
+      "desired_prerelease": false
+    },
+    {
+      "kind": "platform_assets",
+      "target": "x86_64-pc-windows-msvc",
+      "target_release_ref": "created:draft-release",
+      "assets": [
+        {
+          "name": "vibevm-1.1.0-x86_64-pc-windows-msvc.zip",
+          "media_type": "application/zip",
+          "desired_size_bytes": "100",
+          "desired_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibe-bootstrap-x86_64-pc-windows-msvc.exe",
+          "media_type": "application/octet-stream",
+          "desired_size_bytes": "50",
+          "desired_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibevm-1.1.0-x86_64-pc-windows-msvc.fragment.json",
+          "media_type": "application/json",
+          "desired_size_bytes": "70",
+          "desired_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "prior": {
+            "state": "absent"
+          }
+        }
+      ],
+      "recovery_ref": "platform:x86_64-pc-windows-msvc"
+    },
+    {
+      "kind": "platform_assets",
+      "target": "x86_64-unknown-linux-musl",
+      "target_release_ref": "created:draft-release",
+      "assets": [
+        {
+          "name": "vibevm-1.1.0-x86_64-unknown-linux-musl.zip",
+          "media_type": "application/zip",
+          "desired_size_bytes": "101",
+          "desired_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibe-bootstrap-x86_64-unknown-linux-musl",
+          "media_type": "application/octet-stream",
+          "desired_size_bytes": "51",
+          "desired_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibevm-1.1.0-x86_64-unknown-linux-musl.fragment.json",
+          "media_type": "application/json",
+          "desired_size_bytes": "71",
+          "desired_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "prior": {
+            "state": "absent"
+          }
+        }
+      ],
+      "recovery_ref": "platform:x86_64-unknown-linux-musl"
+    },
+    {
+      "kind": "platform_assets",
+      "target": "x86_64-unknown-linux-gnu",
+      "target_release_ref": "created:draft-release",
+      "assets": [
+        {
+          "name": "vibevm-1.1.0-x86_64-unknown-linux-gnu.zip",
+          "media_type": "application/zip",
+          "desired_size_bytes": "102",
+          "desired_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibe-bootstrap-x86_64-unknown-linux-gnu",
+          "media_type": "application/octet-stream",
+          "desired_size_bytes": "52",
+          "desired_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibevm-1.1.0-x86_64-unknown-linux-gnu.fragment.json",
+          "media_type": "application/json",
+          "desired_size_bytes": "72",
+          "desired_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "prior": {
+            "state": "absent"
+          }
+        }
+      ],
+      "recovery_ref": "platform:x86_64-unknown-linux-gnu"
+    },
+    {
+      "kind": "platform_assets",
+      "target": "x86_64-apple-darwin",
+      "target_release_ref": "created:draft-release",
+      "assets": [
+        {
+          "name": "vibevm-1.1.0-x86_64-apple-darwin.zip",
+          "media_type": "application/zip",
+          "desired_size_bytes": "103",
+          "desired_sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibe-bootstrap-x86_64-apple-darwin",
+          "media_type": "application/octet-stream",
+          "desired_size_bytes": "53",
+          "desired_sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibevm-1.1.0-x86_64-apple-darwin.fragment.json",
+          "media_type": "application/json",
+          "desired_size_bytes": "73",
+          "desired_sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "prior": {
+            "state": "absent"
+          }
+        }
+      ],
+      "recovery_ref": "platform:x86_64-apple-darwin"
+    },
+    {
+      "kind": "platform_assets",
+      "target": "aarch64-apple-darwin",
+      "target_release_ref": "created:draft-release",
+      "assets": [
+        {
+          "name": "vibevm-1.1.0-aarch64-apple-darwin.zip",
+          "media_type": "application/zip",
+          "desired_size_bytes": "104",
+          "desired_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibe-bootstrap-aarch64-apple-darwin",
+          "media_type": "application/octet-stream",
+          "desired_size_bytes": "54",
+          "desired_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "vibevm-1.1.0-aarch64-apple-darwin.fragment.json",
+          "media_type": "application/json",
+          "desired_size_bytes": "74",
+          "desired_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "prior": {
+            "state": "absent"
+          }
+        }
+      ],
+      "recovery_ref": "platform:aarch64-apple-darwin"
+    },
+    {
+      "kind": "cleanup",
+      "target_release_ref": "created:draft-release",
+      "assets": [],
+      "recovery_ref": "cleanup-final"
+    },
+    {
+      "kind": "final_assets",
+      "target_release_ref": "created:draft-release",
+      "assets": [
+        {
+          "name": "DISTRIBUTIONS.json",
+          "media_type": "application/json",
+          "desired_size_bytes": "500",
+          "desired_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "install.sh",
+          "media_type": "text/x-shellscript",
+          "desired_size_bytes": "31",
+          "desired_sha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "install.ps1",
+          "media_type": "text/plain",
+          "desired_size_bytes": "32",
+          "desired_sha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "prior": {
+            "state": "absent"
+          }
+        },
+        {
+          "name": "install.cmd",
+          "media_type": "text/plain",
+          "desired_size_bytes": "33",
+          "desired_sha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+          "prior": {
+            "state": "absent"
+          }
+        }
+      ],
+      "recovery_ref": "final-assets"
+    },
+    {
+      "kind": "finalize",
+      "action": "retain_draft",
+      "target_release_ref": "created:draft-release",
+      "make_latest": "unchanged",
+      "recovery_ref": "visibility"
+    }
+  ]
+}

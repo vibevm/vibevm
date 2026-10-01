@@ -52,11 +52,21 @@ fn publish_prefix(
                     }));
                 "tag-created".to_owned()
             }
-            CallAction::CreateDraft { tag, .. } => {
+            CallAction::CreateDraft {
+                tag,
+                target_commit,
+                name,
+                body,
+                prerelease,
+            } => {
                 after.release = PublicationObservedRelease::Present(Box::new(
                     PublicationObservedReleasePresent {
                         assets: vec![],
                         draft: true,
+                        prerelease: *prerelease,
+                        target_commitish: target_commit.clone(),
+                        name: Some(name.clone()),
+                        body: Some(body.clone()),
                         generation_ref: after.generation_ref.clone(),
                         inventory_complete: true,
                         release_id: "700".into(),

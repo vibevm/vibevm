@@ -13,7 +13,7 @@ use vibe_wire::generated::publication_effect_plan::{
 fn replacement() -> (PublicationSubject, PublicationEffectPlan) {
     let (subject, _) = prepared();
     let plan = serde_json::from_str(include_str!(
-        "../../../../../formats/corpora/publication_effect_plan/e1/valid/replace-known-draft.json"
+        "../../../../../formats/corpora/publication_effect_plan/e2/valid/replace-known-draft.json"
     ))
     .unwrap();
     (subject, plan)
@@ -149,12 +149,22 @@ impl FakeHost {
                 }
                 format!("deleted:{release_id}")
             }
-            CallAction::CreateDraft { tag, .. } => {
+            CallAction::CreateDraft {
+                tag,
+                target_commit,
+                name,
+                body,
+                prerelease,
+            } => {
                 if self.unchanged_at != Some(index) {
                     self.current.release = PublicationObservedRelease::Present(Box::new(
                         PublicationObservedReleasePresent {
                             assets: Vec::new(),
                             draft: true,
+                            prerelease: *prerelease,
+                            target_commitish: target_commit.clone(),
+                            name: Some(name.clone()),
+                            body: Some(body.clone()),
                             generation_ref: if self.mismatched_release_generation_at == Some(index)
                             {
                                 "foreign-release-generation".into()
