@@ -3,7 +3,8 @@
 use super::DeployError;
 use super::binding::{AdmittedLocalDeployBinding, TrustedLocalDeployFacts};
 use super::bridge::{
-    BoundDeployBridgeInspection, canonical_request, submit_host_admitted_bound_vibe_bin,
+    BoundDeployBridgeInspection, canonical_request, inspect_host_admitted_bound_vibe_bin_cold,
+    submit_host_admitted_bound_vibe_bin,
 };
 use super::state::{DeployState, DeploymentHome};
 use super::support::{Fixture, selection};
@@ -29,6 +30,20 @@ fn admitted<'a>(
     execution: &super::DeployExecution<'a>,
     instance: &'a str,
 ) -> AdmittedLocalDeployBinding {
+    reissued(
+        execution.project_root,
+        execution.settings_root,
+        execution.user_home,
+        instance,
+    )
+}
+
+fn reissued(
+    project_root: &std::path::Path,
+    settings_root: &std::path::Path,
+    user_home: &std::path::Path,
+    instance: &str,
+) -> AdmittedLocalDeployBinding {
     AdmittedLocalDeployBinding::issue(TrustedLocalDeployFacts {
         host_context_id: "host-test-context",
         instance_ref: instance,
@@ -43,9 +58,9 @@ fn admitted<'a>(
         target_architecture: std::env::consts::ARCH,
         target_abi: None,
         target_libc: None,
-        project_root: execution.project_root,
-        settings_root: execution.settings_root,
-        user_home: execution.user_home,
+        project_root,
+        settings_root,
+        user_home,
     })
     .unwrap()
 }
@@ -325,4 +340,212 @@ fn copied_receipt_sidecar_and_result_cannot_complete_another_bound_home() {
         all_copied,
         BoundDeployBridgeInspection::Uncertain { .. }
     ));
+}
+
+#[test]
+fn cold_deploy_attach_recovers_completed_with_reissued_held_roots() {
+    let fixture = Fixture::new("cold-completed-bytes");
+    let trusted = scope("cold-instance");
+    let (token, original, project, settings, user_home) = {
+        let targets = [target()];
+        let selection = selection("local", &["local-helper"]);
+        let state_home = fixture.state_home();
+        let execution = fixture.execution(&targets, &selection, &state_home);
+        let lease = LifecycleLease::acquire(execution.project_root).unwrap();
+        let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+        let grant = admitted(&execution, "cold-instance");
+        let binding = grant.binding().clone();
+        let mut current = || Ok(Some("generation-a".to_owned()));
+        let result = submit_host_admitted_bound_vibe_bin(
+            &lease,
+            &namespace,
+            &trusted,
+            "key-a",
+            &execution,
+            &binding,
+            grant,
+            "principal-a",
+            &mut current,
+        )
+        .unwrap();
+        assert!(matches!(
+            result,
+            BoundDeployBridgeInspection::Completed { .. }
+        ));
+        (
+            namespace.id().to_owned(),
+            result,
+            execution.project_root.to_path_buf(),
+            execution.settings_root.to_path_buf(),
+            execution.user_home.to_path_buf(),
+        )
+    };
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    let grant = reissued(&project, &settings, &user_home, "cold-instance");
+    let cold = inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &trusted, "key-a", &grant)
+        .unwrap()
+        .unwrap();
+    let BoundDeployBridgeInspection::Completed {
+        run_id,
+        receipt,
+        replayed,
+    } = cold
+    else {
+        panic!("cold attach must retain verified completion")
+    };
+    assert!(replayed);
+    let BoundDeployBridgeInspection::Completed {
+        run_id: original_run,
+        receipt: original_receipt,
+        ..
+    } = original
+    else {
+        unreachable!()
+    };
+    assert_eq!(run_id, original_run);
+    assert_eq!(receipt, original_receipt);
+    let foreign = scope("another-instance");
+    assert!(
+        inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &foreign, "key-a", &grant,)
+            .is_err()
+    );
+    let capsule = project
+        .join(".vibe/deploy-operations")
+        .join(format!("{run_id}.bound-vibe-bin-input.json"));
+    let original_capsule = std::fs::read(&capsule).unwrap();
+    std::fs::write(capsule, b"{\"tampered\":true}").unwrap();
+    assert!(matches!(
+        inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &trusted, "key-a", &grant)
+            .unwrap()
+            .unwrap(),
+        BoundDeployBridgeInspection::Uncertain { run_id: seen, .. } if seen == run_id
+    ));
+    let mut changed: serde_json::Value = serde_json::from_slice(&original_capsule).unwrap();
+    changed["request"] = serde_json::Value::String("{}".into());
+    let capsule = project
+        .join(".vibe/deploy-operations")
+        .join(format!("{run_id}.bound-vibe-bin-input.json"));
+    std::fs::write(capsule, serde_json::to_vec(&changed).unwrap()).unwrap();
+    assert!(matches!(
+        inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &trusted, "key-a", &grant)
+            .unwrap()
+            .unwrap(),
+        BoundDeployBridgeInspection::Uncertain { run_id: seen, .. } if seen == run_id
+    ));
+}
+
+#[test]
+fn cold_deploy_attach_retains_interrupted_partial_without_provider() {
+    let fixture = Fixture::new("cold-partial-bytes");
+    let trusted = scope("cold-partial");
+    let (token, original_run, project, settings, user_home) = {
+        let targets = [target()];
+        let selection = selection("local", &["local-helper"]);
+        let state_home = fixture.state_home();
+        let execution = fixture.execution(&targets, &selection, &state_home);
+        let lease = LifecycleLease::acquire(execution.project_root).unwrap();
+        let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+        let grant = admitted(&execution, "cold-partial");
+        let binding = grant.binding().clone();
+        let mut observations = 0;
+        let mut drift = || {
+            observations += 1;
+            Ok(Some(
+                if observations >= 6 {
+                    "generation-b"
+                } else {
+                    "generation-a"
+                }
+                .to_owned(),
+            ))
+        };
+        let first = submit_host_admitted_bound_vibe_bin(
+            &lease,
+            &namespace,
+            &trusted,
+            "key-a",
+            &execution,
+            &binding,
+            grant,
+            "principal-a",
+            &mut drift,
+        )
+        .unwrap();
+        let BoundDeployBridgeInspection::Uncertain { run_id, partial } = first else {
+            panic!("interrupted first run must be partial")
+        };
+        assert_eq!(partial.intent, "present");
+        (
+            namespace.id().to_owned(),
+            run_id,
+            execution.project_root.to_path_buf(),
+            execution.settings_root.to_path_buf(),
+            execution.user_home.to_path_buf(),
+        )
+    };
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    let grant = reissued(&project, &settings, &user_home, "cold-partial");
+    let cold = inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &trusted, "key-a", &grant)
+        .unwrap()
+        .unwrap();
+    let BoundDeployBridgeInspection::Uncertain { run_id, partial } = cold else {
+        panic!("cold attach must not replay interrupted deploy")
+    };
+    assert_eq!(run_id, original_run);
+    assert_eq!(partial.intent, "present");
+    assert_eq!(partial.receipt, "absent");
+}
+
+#[test]
+fn cold_deploy_reissued_same_path_after_settings_replacement_refuses() {
+    let fixture = Fixture::new("cold-root-bytes");
+    let trusted = scope("cold-root");
+    let (token, project, settings, user_home) = {
+        let targets = [target()];
+        let selection = selection("local", &["local-helper"]);
+        let state_home = fixture.state_home();
+        let execution = fixture.execution(&targets, &selection, &state_home);
+        let lease = LifecycleLease::acquire(execution.project_root).unwrap();
+        let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+        let grant = admitted(&execution, "cold-root");
+        let binding = grant.binding().clone();
+        let mut current = || Ok(Some("generation-a".to_owned()));
+        assert!(matches!(
+            submit_host_admitted_bound_vibe_bin(
+                &lease,
+                &namespace,
+                &trusted,
+                "key-a",
+                &execution,
+                &binding,
+                grant,
+                "principal-a",
+                &mut current,
+            )
+            .unwrap(),
+            BoundDeployBridgeInspection::Completed { .. }
+        ));
+        (
+            namespace.id().to_owned(),
+            execution.project_root.to_path_buf(),
+            execution.settings_root.to_path_buf(),
+            execution.user_home.to_path_buf(),
+        )
+    };
+    let moved = settings.with_file_name(format!(
+        "{}-cold-old",
+        settings.file_name().unwrap().to_string_lossy()
+    ));
+    std::fs::rename(&settings, &moved).unwrap();
+    std::fs::create_dir(&settings).unwrap();
+    {
+        let lease = LifecycleLease::acquire(&project).unwrap();
+        let grant = reissued(&project, &settings, &user_home, "cold-root");
+        assert!(
+            inspect_host_admitted_bound_vibe_bin_cold(&lease, &token, &trusted, "key-a", &grant,)
+                .is_err()
+        );
+    }
+    std::fs::remove_dir(&settings).unwrap();
+    std::fs::rename(moved, settings).unwrap();
 }

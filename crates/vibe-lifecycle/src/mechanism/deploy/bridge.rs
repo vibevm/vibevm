@@ -24,6 +24,9 @@ const C1_CAP: usize = 1024 * 1024;
 const BRIDGE_FORMAT: &str = "vibevm.deploy.bound-vibe-bin-bridge/1";
 const RESULT_FORMAT: &str = "vibevm.deploy.bound-vibe-bin-result/1";
 
+mod capsule;
+pub(crate) use capsule::inspect_host_admitted_bound_vibe_bin_cold;
+
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum BoundDeployBridgeError {
     #[error("bound deploy bridge refused: {0}")]
@@ -297,6 +300,7 @@ fn inspect(
     settings: &vibe_safefs::Project,
     home: &DeploymentHome,
     binding: &EnvironmentOperationBinding,
+    roots: &capsule::RootTokens,
 ) -> Result<BoundDeployBridgeInspection> {
     let bridge = match read::<Bridge>(lease, &run_id, "bridge") {
         Ok(Some(bridge)) => bridge,
@@ -329,6 +333,12 @@ fn inspect(
         || bridge.plan["artifact_digest"] != bridge.artifact_digest
     {
         return Ok(BoundDeployBridgeInspection::RecoveryRequired { run_id });
+    }
+    if capsule::verify_existing(lease, &run_id, request, &bridge, binding, roots).is_err() {
+        return Ok(BoundDeployBridgeInspection::Uncertain {
+            partial: partial(settings, home),
+            run_id,
+        });
     }
     let result = match read::<ResultRecord>(lease, &run_id, "result") {
         Ok(Some(result)) => result,
@@ -390,6 +400,7 @@ pub(crate) fn submit_host_admitted_bound_vibe_bin(
         return Err(refused("host scope or admitted binding differs"));
     }
     admitted.reobserve_roots().map_err(refused)?;
+    let roots = capsule::RootTokens::capture(&admitted)?;
     let request = canonical_request(execution, request_binding, principal)?;
     let target_id = &execution.selection.targets[0];
     let home = DeploymentHome::new_bound(
@@ -423,6 +434,7 @@ pub(crate) fn submit_host_admitted_bound_vibe_bin(
                 &settings,
                 &home,
                 request_binding,
+                &roots,
             );
         }
         ExistingSubmissionInspection::Absent => {}
@@ -497,6 +509,15 @@ pub(crate) fn submit_host_admitted_bound_vibe_bin(
             {
                 return Err(refused("bridge changed on readback"));
             }
+            capsule::publish(
+                lease,
+                &run_id,
+                &request,
+                &plan_bytes,
+                request_binding,
+                &bridge,
+                &roots,
+            )?;
             SubmissionReservations::mark_journal_ready(lease, namespace, scope, key, &run_id)?;
             if SubmissionReservations::journal_admission(lease, namespace, scope, key, &run_id)?
                 != JournalAdmission::Ready
