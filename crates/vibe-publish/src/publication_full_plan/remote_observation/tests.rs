@@ -97,7 +97,7 @@ fn absent_and_reordered_present_observations_are_stable() {
     );
     assert_eq!(release.generation_ref, result.generation_ref);
     let mut fake = FakePort(VecDeque::from([one, two]));
-    assert_eq!(observe_fake_twice(&mut fake, &commit()).unwrap(), result);
+    assert_eq!(observe_twice(&mut fake, &commit()).unwrap(), result);
 }
 
 #[test]
@@ -155,12 +155,19 @@ fn missing_digest_needs_independent_witness_on_both_reads() {
     let mut second = first.clone();
     second.assets.as_mut().unwrap().reverse();
     let mut fake = FakePort(VecDeque::from([first.clone(), second]));
-    assert!(observe_fake_twice(&mut fake, &commit()).is_ok());
+    assert!(observe_twice(&mut fake, &commit()).is_ok());
+    let mut missing_second = first.clone();
+    missing_second.streamed_digests.clear();
+    let mut fake = FakePort(VecDeque::from([first.clone(), missing_second]));
+    assert!(matches!(
+        observe_twice(&mut fake, &commit()),
+        Err(ObservationError::Unavailable(_))
+    ));
     let mut wrong = first.clone();
     wrong.streamed_digests[0].sha256 = format!("sha256:{}", "c".repeat(64));
     let mut fake = FakePort(VecDeque::from([first, wrong]));
     assert_eq!(
-        observe_fake_twice(&mut fake, &commit()),
+        observe_twice(&mut fake, &commit()),
         Err(ObservationError::Drift)
     );
 }
@@ -172,7 +179,7 @@ fn changed_bookends_refuse_and_do_not_guess_post_effect_success() {
     second.release.as_mut().unwrap().id = 8;
     let mut fake = FakePort(VecDeque::from([first, second]));
     assert_eq!(
-        observe_fake_twice(&mut fake, &commit()),
+        observe_twice(&mut fake, &commit()),
         Err(ObservationError::Drift)
     );
 }
