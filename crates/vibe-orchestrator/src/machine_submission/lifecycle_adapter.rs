@@ -88,6 +88,11 @@ use crate::prelude::selected_under_lease;
 
 mod install;
 #[allow(
+    dead_code,
+    reason = "private host integration atom; no public surface yet"
+)]
+mod live_owner;
+#[allow(
     unused_imports,
     reason = "internal Install adapter is exercised by focused tests"
 )]
@@ -118,6 +123,7 @@ struct ScriptFixturePort<'a> {
     probe: &'a dyn InterpreterProbe,
     after_stage: Option<&'a dyn Fn()>,
     after_effect: Option<&'a dyn Fn() -> Result<()>>,
+    ready: Option<&'a live_owner::ReadyObserver>,
 }
 
 struct AgentFixturePort<'a> {
@@ -531,6 +537,7 @@ pub(crate) fn submit_fixed_one_script_validate(
         &PROBE,
         None,
         None,
+        None,
     )
 }
 
@@ -562,6 +569,7 @@ pub(crate) fn submit_one_script_validate_fixture<'a>(
         probe,
         after_stage,
         after_effect,
+        None,
     )
 }
 
@@ -578,6 +586,7 @@ fn submit_one_script_validate_internal<'a>(
     probe: &'a dyn InterpreterProbe,
     after_stage: Option<&'a dyn Fn()>,
     after_effect: Option<&'a dyn Fn() -> Result<()>>,
+    ready: Option<&'a live_owner::ReadyObserver>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     let admitted = admit_one_script_validate_fixture(path, &request, target_os)?;
     submit_protected_lifecycle_inner(
@@ -596,6 +605,7 @@ fn submit_one_script_validate_internal<'a>(
             probe,
             after_stage,
             after_effect,
+            ready,
         }),
         None,
     )
@@ -823,6 +833,9 @@ fn submit_protected_lifecycle_inner<'a>(
     );
     let leased = lease_default_lifecycle(path)?;
     let lease = leased.retain_lease();
+    if let Some(ready) = script.as_ref().and_then(|s| s.ready) {
+        ready.pin_root(&lease)?;
+    }
     let fixture = fixture
         .map(|fixture| {
             ensure!(phase == Phase::Install, "fixture source is Install-only");
@@ -1349,6 +1362,22 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             }
             let script_stage = if let Some(script) = &self.script {
                 recheck_script_source_witness(&script.admitted.source)?;
+                if let Some(ready) = script.ready {
+                    ready.admitted(
+                        lease.clone(),
+                        self.namespace,
+                        self.scope,
+                        self.key,
+                        run_id,
+                        &reservation_ref,
+                        &self.canonical_request,
+                        self.canonical_plan,
+                    )?;
+                    // Notification cannot admit source or identity drift.
+                    self.recheck()?;
+                    recheck_script_source_witness(&script.admitted.source)?;
+                    Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+                }
                 let stage = publish_script_source_stage(
                     &lease,
                     self.namespace,

@@ -4880,6 +4880,7 @@ dependencies = [
  "vibe-package-source",
  "vibe-registry",
  "vibe-resolver",
+ "vibe-safefs",
  "vibe-spec",
  "vibe-test-support",
  "vibe-wire",
