@@ -466,16 +466,9 @@ impl ApprovalHome {
             approval_record_sha256: &pending.approval_record_sha256,
             marker_sha256: &pending.expected_marker_sha256,
         };
-        if let Err(error) = self.inspect_redemption_cold_profile(
-            lease,
-            namespace,
-            scope,
-            key,
-            package_source,
-            git_binary,
-            profile,
-            &cold,
-        ) {
+        if let Err(error) =
+            self.inspect_redemption_with_ready(lease, namespace, scope, key, &ready, &cold)
+        {
             return recovery(Some(run), format!("historical marker: {error}"));
         }
         if !matches!(journal::read_bytes(lease, run, PENDING), Ok(Some(ref b)) if b == &pending_bytes)

@@ -34,6 +34,29 @@ impl ApprovalHome {
             git_binary,
             profile,
         )?;
+        self.inspect_redemption_with_ready(lease, namespace, scope, key, &ready, expected)
+    }
+
+    /// Read-only reuse within one inspection, never an effect grant. The deep
+    /// Ready proof belongs to the caller; current identity is bracketed here.
+    pub(super) fn inspect_redemption_with_ready(
+        &self,
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        ready: &ReadyBinding,
+        expected: &ColdExpectation<'_>,
+    ) -> Result<RedemptionReceipt, ApprovalError> {
+        if !valid_human(expected.approval_id)
+            || !valid_sha(expected.approval_record_sha256)
+            || !valid_sha(expected.marker_sha256)
+        {
+            return Err(ApprovalError::Refused(
+                "invalid cold marker identity".into(),
+            ));
+        }
+        check_ready_identity(lease, namespace, scope, key, ready)?;
         let settings_root = self.checked_settings_root()?;
         let redeemed = self
             .settings
@@ -78,6 +101,7 @@ impl ApprovalHome {
                 "settings root changed during cold inspection".into(),
             ));
         }
+        check_ready_identity(lease, namespace, scope, key, ready)?;
         Ok(RedemptionReceipt {
             run_id: marker.run_id,
             marker_sha256: expected.marker_sha256.into(),
@@ -139,4 +163,45 @@ impl ApprovalHome {
             expected,
         )
     }
+}
+
+/// Recheck only the live C.1 admission and exact raw seal/root, without
+/// repeating retained payload, provenance and Git object hashing.
+fn check_ready_identity(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    ready: &ReadyBinding,
+) -> Result<(), ApprovalError> {
+    let recovery = |reason: String| ApprovalError::RecoveryRequired(reason);
+    let row = SubmissionReservations::inspect_existing_key(lease, namespace, scope, key)
+        .map_err(|e| recovery(format!("current C.1 row: {e:#}")))?
+        .ok_or_else(|| recovery("current C.1 row absent".into()))?;
+    let bytes = journal::read_bytes(lease, &ready.seal.run_id, "ready")
+        .map_err(|e| recovery(format!("current Ready seal: {e:#}")))?
+        .ok_or_else(|| recovery("current Ready seal absent".into()))?;
+    let project = lease.package_git_journal_project();
+    let root = project
+        .root_correlation_token()
+        .map_err(|e| recovery(format!("current workspace root: {e:#}")))?;
+    let reopened = Project::open(project.root_path())
+        .map_err(|e| recovery(format!("workspace root reopen: {e:#}")))?;
+    if row.retired
+        || row.journal_admission != JournalAdmission::Ready
+        || row.domain_run_id != ready.seal.run_id
+        || row.plan_sha256 != ready.seal.c1_plan_sha256
+        || row.request_sha256 != ready.seal.request_sha256
+        || ready.seal.namespace_id != namespace.id()
+        || ready.seal.scope_context != scope.context
+        || ready.seal.scope_target != scope.target
+        || ready.seal.scope_principal != scope.principal
+        || ready.seal.key_sha256 != sha(key.as_bytes())
+        || sha(&bytes) != ready.seal_sha256
+        || root != ready.seal.lease_root_token
+        || reopened.root_correlation_token().ok().as_deref() != Some(root.as_str())
+    {
+        return Err(recovery("current Ready seal/C.1/scope/root changed".into()));
+    }
+    Ok(())
 }
