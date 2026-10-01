@@ -369,3 +369,86 @@ fn token_echo_and_release_404_without_list_never_claim_absent() {
     ));
     server.join().unwrap();
 }
+
+#[test]
+fn latest_200_is_typed_published_full_release_and_404_is_absent() {
+    let (base, server) = scripted(|_| {
+        vec![reply(
+            "200 OK",
+            "{\"id\":101,\"tag_name\":\"v1.0.1\",\"draft\":false,\"prerelease\":false}",
+            "",
+        )]
+    });
+    assert_eq!(
+        client(&base).read_latest_release_bounded().unwrap(),
+        LatestReleaseObservation::Present {
+            release_id: 101,
+            tag: "v1.0.1".into()
+        }
+    );
+    let seen = server.join().unwrap();
+    assert_eq!(seen[0].path, "/repos/vibevm/vibevm/releases/latest");
+    assert_eq!(seen[0].authorization, format!("Bearer {TOKEN}"));
+
+    let (base, server) = scripted(|_| vec![reply("404 Not Found", "{}", "")]);
+    assert_eq!(
+        client(&base).read_latest_release_bounded().unwrap(),
+        LatestReleaseObservation::Absent
+    );
+    assert_eq!(server.join().unwrap().len(), 1);
+}
+
+#[test]
+fn latest_redirect_malformed_or_overcap_is_unavailable_without_token_leak() {
+    let target = TcpListener::bind("127.0.0.1:0").unwrap();
+    target.set_nonblocking(true).unwrap();
+    let location = format!("http://{}/foreign", target.local_addr().unwrap());
+    let (base, server) =
+        scripted(|_| vec![reply("302 Found", "", &format!("Location: {location}\r\n"))]);
+    assert!(matches!(
+        client(&base).read_latest_release_bounded(),
+        Err(LatestReleaseReadError::Unavailable(_))
+    ));
+    server.join().unwrap();
+    assert!(
+        target.accept().is_err(),
+        "latest GET followed a foreign redirect"
+    );
+
+    for body in [
+        "{bad".to_owned(),
+        "{\"id\":0,\"tag_name\":\"v1.0.1\",\"draft\":false,\"prerelease\":false}".into(),
+        "{\"id\":101,\"tag_name\":\"v1.0.1\",\"draft\":true,\"prerelease\":false}".into(),
+        "{\"id\":101,\"tag_name\":\"v1.0.1\",\"draft\":false,\"prerelease\":true}".into(),
+        "{\"id\":101,\"tag_name\":\" \",\"draft\":false,\"prerelease\":false}".into(),
+        "{\"id\":101,\"tag_name\":\"v1.0.1\",\"draft\":false}".into(),
+        "x".repeat(PAGE_JSON_CAP as usize + 1),
+    ] {
+        let (base, server) = scripted(|_| vec![reply("200 OK", &body, "")]);
+        assert!(matches!(
+            client(&base).read_latest_release_bounded(),
+            Err(LatestReleaseReadError::Unavailable(_))
+        ));
+        server.join().unwrap();
+    }
+    let (base, server) = scripted(|_| vec![reply("500 Server Error", TOKEN, "")]);
+    let error = client(&base).read_latest_release_bounded().unwrap_err();
+    server.join().unwrap();
+    assert!(matches!(error, LatestReleaseReadError::Unavailable(_)));
+    assert!(!error.to_string().contains(TOKEN));
+
+    let foreign = GithubReleaseClient::with_endpoints_and_timeouts(
+        Token::from_explicit(TOKEN),
+        "foreign",
+        "vibevm",
+        "http://127.0.0.1:9",
+        "http://127.0.0.1:9",
+        Duration::from_secs(1),
+        Duration::from_secs(1),
+    )
+    .unwrap();
+    assert!(matches!(
+        foreign.read_latest_release_bounded(),
+        Err(LatestReleaseReadError::Refused(_))
+    ));
+}
