@@ -25,6 +25,12 @@ const DOMAIN: &[u8] = b"vibevm.publication.api-call/e1\0";
 const PENDING_FORMAT: &str = "vibevm.publication.api-call-pending/e1";
 const LANDED_FORMAT: &str = "vibevm.publication.api-call-landed/e1";
 
+mod assets;
+
+#[cfg(test)]
+#[path = "calls/assets_tests.rs"]
+mod assets_tests;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, tag = "kind", rename_all = "kebab-case")]
 pub(super) enum CallAction {
