@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "change_id": "raw-xml-resources-and-selected-slot-map",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "b66ea01be2709edd6f6104f143c89c0071a89bb0"
+    },
+    {
+      "kind": "commit",
+      "identity": "77c2aeccdf1117d268c8253c68ccc5c48e894d91"
+    },
+    {
+      "kind": "commit",
+      "identity": "42e45936b438fc594a52000ee2c7227c94775736"
+    },
+    {
+      "kind": "commit",
+      "identity": "607c29f001aee99ccd4f837690fe5108cd18f69a"
+    },
+    {
+      "kind": "commit",
+      "identity": "86ee8e3ab05153f4332be30c82aa0d694e1fad32"
+    },
+    {
+      "kind": "commit",
+      "identity": "8e1c5721782da85896bbaff5343a80d50ff1a3d3"
+    },
+    {
+      "kind": "commit",
+      "identity": "00ce69ab54c033cfe9bd736b5f20345fb7f6c7ad"
+    },
+    {
+      "kind": "commit",
+      "identity": "51e69763ab1f837e3c3a0d0b73c99806e665151f"
+    },
+    {
+      "kind": "commit",
+      "identity": "9e3a91dee4cb6647372edd7e35d27db1fa39885a"
+    },
+    {
+      "kind": "commit",
+      "identity": "631e37d6e00b6a479361694532a36e4a3ecf46c4"
+    },
+    {
+      "kind": "commit",
+      "identity": "7b2df89f255fb19a96e237b6647a8efd2369d2d5"
+    },
+    {
+      "kind": "commit",
+      "identity": "3db608b900ae6117e79ec8f10adb69fa9360a4d4"
+    }
+  ],
+  "affected_paths": [
+    "campaigns/next/manifest.json",
+    "campaigns/next/plan.seed.toml",
+    "campaigns/next/tasks/M-06-A.json",
+    "crates/vibe-spec/src/lib.rs",
+    "crates/vibe-spec/src/resolver.rs",
+    "crates/vibe-spec/src/resolver/source_map.rs",
+    "crates/vibe-spec/src/resolver/tests.rs",
+    "crates/vibe-specdoc/src/lib.rs",
+    "crates/vibe-specdoc/src/xml_data.rs",
+    "crates/vibe-specdoc/src/xml_data/tests.rs",
+    "crates/vibe-workspace/src/boot_artifacts.rs",
+    "crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs",
+    "crates/vibe-workspace/src/boot_artifacts/descriptor_reader/tests.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/explicit.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/replay.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/selected.rs",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed_unit_parity_tests.rs",
+    "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit/descriptor_map_tests.rs",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit/native_managed.rs",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare/descriptor_positive_tests.rs",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare/tests.rs",
+    "crates/vibe-workspace/src/vibedeps.rs",
+    "crates/vibe-workspace/src/vibedeps/derived.rs",
+    "crates/vibe-workspace/src/vibedeps/derived/overlay.rs",
+    "crates/vibe-workspace/src/vibedeps/derived/selection.rs",
+    "crates/vibe-workspace/src/vibedeps/derived/tests.rs",
+    "crates/vibe-workspace/src/vibedeps/derived/transform.rs",
+    "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/place.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/strict_tests.rs",
+    "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+    "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml"
+  ],
+  "effects": [
+    {
+      "capability_id": "raw-xml-data-and-opaque-resource-preservation",
+      "audience": "package authors and materialization consumers",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION"
+      ],
+      "interface_id": "rust:vibe-workspace:vibedeps-derived",
+      "kind": "changed",
+      "before": "XML-shaped data could enter Vibe conversion or same-stem collision handling and lose original bytes.",
+      "after": "Only declared Vibe documents enter the format pivot; CommonMark, XML-data and opaque resources retain exact bytes, including invalid/non-UTF8 data. Two Vibe forms claiming one address refuse before slot publication."
+    },
+    {
+      "capability_id": "bounded-xml-data-inspection",
+      "audience": "resource readers",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION"
+      ],
+      "interface_id": "rust:vibe-specdoc:xml-data",
+      "kind": "introduced",
+      "before": "Optional XML-data structure was not separate from the Vibe XML dialect reader.",
+      "after": "A bounded optional structure inspector refuses malformed/unsafe XML without erasing or invalidating the raw resource."
+    },
+    {
+      "capability_id": "validated-installed-descriptor-map",
+      "audience": "resolver and install/boot consumers",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION"
+      ],
+      "interface_id": "rust:vibe-spec:resolver:validated-descriptor-map",
+      "kind": "introduced",
+      "before": "Installed selected slots could rely on suffix lookup and pair collision rather than declared logical Vibe addresses.",
+      "after": "Bounded nofollow record/manifest/output reads compare an independent selected version/source hash and map only Vibe outputs; missing, foreign or drifted proof refuses."
+    },
+    {
+      "capability_id": "selected-boot-reader-carriage",
+      "audience": "install and boot users",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION"
+      ],
+      "interface_id": "rust:vibe-workspace:install-bootgen",
+      "kind": "changed",
+      "before": "Actual unit emitters, native/explicit backend and sealed replay lacked a consistent selected map witness.",
+      "after": "Install readers carry the selected slot through actual unit/native/explicit/replay paths; raw same-stem resources remain raw and replay checks before provider creation. Public standalone legacy remains."
+    },
+    {
+      "capability_id": "descriptor-slot-publication-fence",
+      "audience": "installed package consumers",
+      "platform": "GNU/Linux focused source/runtime tests only; macOS/Windows native execution not proved",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION"
+      ],
+      "interface_id": "rust:vibe-workspace:vibedeps-strict-slot",
+      "kind": "changed",
+      "before": "Descriptor slot publication lacked reviewed no-replace and recorded-identity fencing.",
+      "after": "Strict descriptor slots use no-replace publication and recorded-identity checks under a cooperative cross-platform contract."
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Existing no-descriptor slots retain legacy behavior; descriptor opt-in may require rematerialization from retained authored sources, but no automatic migration or all-platform recipe is established.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Capability, refusal, audience and platform limitations require final source-documentation mapping; central task review is not an accepted final guide.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "central-m06-3-review",
+      "subject_id": "3db608b900ae6117e79ec8f10adb69fa9360a4d4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/xml-data-a3-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "reviewed-m06-3-source-delta",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-a3-reviewed-m06-3-source-delta.json",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "selected-m06-3-verification",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-a3-selected-m06-3-verification.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "3db608b900ae6117e79ec8f10adb69fa9360a4d4",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/xml-data-a3-central-review.md"
+  }
+}

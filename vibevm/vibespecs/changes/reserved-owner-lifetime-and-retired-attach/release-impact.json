@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "change_id": "reserved-owner-lifetime-and-retired-attach",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "a5d800a5b70c9324361e1193f91aa187ae6a990b"
+    },
+    {
+      "kind": "commit",
+      "identity": "9118ccb53e4287ef817c6167ca90dfe91d856fb6"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-lifecycle/src/mechanism/build/journal.rs",
+    "crates/vibe-lifecycle/src/mechanism/build/journal/tests.rs",
+    "crates/vibe-lifecycle/src/mechanism/package/journal.rs",
+    "crates/vibe-lifecycle/src/mechanism/package/journal/tests.rs",
+    "crates/vibe-lifecycle/src/state/submission.rs",
+    "crates/vibe-lifecycle/src/state/submission/lifetime_tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "internal:vibe-lifecycle:C1-cold-lifetime-and-retired-attach",
+      "capability_id": "retained-reservation-inspection",
+      "kind": "fixed",
+      "before": "The fixed owner test surface lacked cross-lease C1 identity proof, and retired reserved Build/Package keys could be classified as terminal retirement instead of inspecting their retained run.",
+      "after": "Cross-lease tests pin the same reservation identity; Build/Package duplicate paths now inspect the prior reserved owner even after namespace retirement. No effect is authorized or re-run by a tombstone.",
+      "audience": "Internal lifecycle owner / repository maintainer",
+      "platform": "Selected local fixture/source proof; native macOS/Windows runtime and complete cross-domain lifetime unproved.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Only internal reservation/lifetime inspection and fixed Build/Package duplicate handling change; no public submission route or user data migration is introduced.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Developer owner/recovery guidance should describe retired reserved attach and cross-lease identity limits; final topic and test-evidence review pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "bounded-domain-central-review",
+      "subject_id": "9118ccb53e4287ef817c6167ca90dfe91d856fb6",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-reserved-owner-lifetime-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-selected-delta-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-reserved-owner-lifetime-and-retired-attach-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "9118ccb53e4287ef817c6167ca90dfe91d856fb6",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/PENDING-reserved-owner-lifetime-central-review.md"
+  }
+}

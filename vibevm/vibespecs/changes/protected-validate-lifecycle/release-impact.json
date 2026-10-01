@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "change_id": "protected-validate-lifecycle",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "12dae70216b5ea83eca2b897bb4599e177dd6c75"
+    },
+    {
+      "kind": "commit",
+      "identity": "01bc4ab42a6c9f8dbdc5439d52a9518e07c19128"
+    },
+    {
+      "kind": "commit",
+      "identity": "4ea711ba604fa3f73f5d4754229c6ea5ef12b4dd"
+    },
+    {
+      "kind": "commit",
+      "identity": "1b121bdaf26bd5daa170409eaeb48bb20398e8c8"
+    },
+    {
+      "kind": "commit",
+      "identity": "70bc34816f09545546e0f3a40212bc69c18a16b5"
+    },
+    {
+      "kind": "commit",
+      "identity": "4db9f5089b6c8bc3793c3c0ea256bfe034d761bf"
+    },
+    {
+      "kind": "commit",
+      "identity": "aa9c4f4ef2521f4dc4904afb8cc9cd8381d9ba41"
+    }
+  ],
+  "affected_paths": [
+    "crates/vibe-lifecycle/src/handlers/mod.rs",
+    "crates/vibe-lifecycle/src/process/mod.rs",
+    "crates/vibe-lifecycle/src/process/source_snapshot.rs",
+    "crates/vibe-lifecycle/src/state/source_stage.rs",
+    "crates/vibe-lifecycle/src/state/source_stage/tests.rs",
+    "crates/vibe-orchestrator/src/command.rs",
+    "crates/vibe-orchestrator/src/dispatch/mod.rs",
+    "crates/vibe-orchestrator/src/dispatch/untracked.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/install.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests/fixture.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_plan.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_plan/tests.rs",
+    "crates/vibe-orchestrator/src/phase.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "internal:vibe-orchestrator:protected-validate",
+      "capability_id": "handler-free-protected-validate-admission",
+      "kind": "fixed",
+      "audience": "internal orchestrator / repository maintainer",
+      "platform": "Selected GNU/Linux tests only; no native macOS/Windows protected execution proof.",
+      "before": "A protected Validate request could reach a phase-handler world before a matching protected effect route was proved.",
+      "after": "The bounded protected route refuses a nonempty Validate handler world before C1 reservation or process creation; ordinary default lifecycle remains separate.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-VALIDATE"
+      ]
+    },
+    {
+      "interface_id": "internal:vibe-orchestrator:fixed-script-validate",
+      "capability_id": "reserved-script-source-stage-and-replay",
+      "kind": "introduced",
+      "audience": "internal orchestrator / repository maintainer",
+      "platform": "One real GNU/Linux script effect and selected synthetic tests; native macOS/Windows interpreter behavior unrun.",
+      "before": "No fixed protected script Validate entry with exact nofollow source witness and per-run staged first effect.",
+      "after": "A crate-private fixed entry binds exact script bytes and host OS to the request/plan, publishes the source stage only after matching Ready/header, allows one counted process and inspects retained replay/partial outcomes without a second process.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-VALIDATE",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT"
+      ]
+    },
+    {
+      "interface_id": "internal:vibe-orchestrator:fixed-agent-validate",
+      "capability_id": "reserved-hosted-agent-park-and-replay",
+      "kind": "introduced",
+      "audience": "internal orchestrator / repository maintainer",
+      "platform": "Selected GNU/Linux hosted-Parked fixture; no native macOS/Windows or provider-completion proof.",
+      "before": "No fixed protected agent Validate entry bound to an exact witnessed prompt and retained hosted task.",
+      "after": "A crate-private fixed entry binds the prompt/source, parks one hosted task after Ready, and replays the same Parked marker without another resolve or publication; its backend cannot complete a provider call.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-VALIDATE",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE"
+      ]
+    },
+    {
+      "interface_id": "internal:vibe-orchestrator:fixed-validate-host-os",
+      "capability_id": "host-os-effect-admission",
+      "kind": "fixed",
+      "audience": "internal orchestrator / repository maintainer",
+      "platform": "Current-host check implemented for Linux/macOS/Windows enum; selected GNU/Linux refusal test only.",
+      "before": "A caller-supplied foreign target OS could be carried into the fixed script or agent entry without this pre-reservation equality check.",
+      "after": "Both fixed entries refuse when requested target OS differs from the current host before reservation; no cross-platform native execution is inferred.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-VALIDATE"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "Only crate-private fixed protected Validate routes and refusal boundaries change; ordinary lifecycle and public CLI/MCP are not routed through them, so existing 1.0.x user-owned state needs no migration.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Developer/release architecture guidance should describe the fixed script and hosted-Parked reservation/source-stage/replay boundary, and distinguish it from public or general handler support; final owned topic map remains pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "central-reserved-lifecycle-owner-review",
+      "subject_id": "aa9c4f4ef2521f4dc4904afb8cc9cd8381d9ba41",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-1-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-selected-delta-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-protected-validate-lifecycle-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "aa9c4f4ef2521f4dc4904afb8cc9cd8381d9ba41",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-1-central-review.md"
+  }
+}

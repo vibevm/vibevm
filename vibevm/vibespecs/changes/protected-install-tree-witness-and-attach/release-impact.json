@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "change_id": "protected-install-tree-witness-and-attach",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "293cdbbc4b28d160fb55dbc2984b05a8564d03ea"
+    },
+    {
+      "kind": "commit",
+      "identity": "bea17650626523bb390592946fe82b00e51a3116"
+    },
+    {
+      "kind": "commit",
+      "identity": "f6e7fb7bc361b81f1847135fbb1bda0fc1c18ea8"
+    },
+    {
+      "kind": "commit",
+      "identity": "1b8c4cbf00128a835783931d3a0e3c0965a5e34c"
+    }
+  ],
+  "affected_paths": [
+    "Cargo.lock",
+    "crates/vibe-lifecycle/src/lib.rs",
+    "crates/vibe-lifecycle/src/process/mod.rs",
+    "crates/vibe-lifecycle/src/process/package_tree_snapshot.rs",
+    "crates/vibe-lifecycle/src/process/package_tree_snapshot/tests.rs",
+    "crates/vibe-lifecycle/src/state/mod.rs",
+    "crates/vibe-lifecycle/src/state/submission.rs",
+    "crates/vibe-orchestrator/Cargo.toml",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/install.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests/fixture.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_plan.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_plan/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "rust:vibe-lifecycle:process:PackageTreeWitness",
+      "capability_id": "bounded-exact-local-package-tree",
+      "kind": "introduced",
+      "before": "No public fixed small-tree package source witness with complete selected-file membership and physical root observation.",
+      "after": "Public capture/recheck/attest helpers witness one exact qualified package tree with bounded nofollow file census, root identity and digest; drift is detection-bound, not atomic hostile-writer CAS.",
+      "audience": "Rust library consumer / internal install owner",
+      "platform": "Selected GNU/Linux fixture proof; native macOS/Windows tree behavior unrun.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED"
+      ]
+    },
+    {
+      "interface_id": "internal:vibe-orchestrator:protected-install-v3-plan",
+      "capability_id": "retained-install-source-plan-and-attach",
+      "kind": "introduced",
+      "before": "The fixed one-package protected Install fixture had no package-tree source witness in its v3 plan or early attach before post-effect preflight.",
+      "after": "The internal plan binds the witnessed tree; same-key request attach can read the retained run before changed post-effect lock/files are re-planned, and a staged one-package fixture demonstrates the slot/lock/boot effect. No general machine Install route is exposed.",
+      "audience": "Internal orchestrator / repository maintainer",
+      "platform": "Selected GNU/Linux fixture tests; no general installation or native macOS/Windows proof.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
+        "spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-SCOPE-IS-DECLARED"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Additive public bounded PackageTreeWitness Rust API; protected Install remains fixture-only and no existing 1.0.x user-owned state requires conversion.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Document bounded public tree-witness selection/caps and cooperative drift limits, plus internal v3 plan/early-attach fixture boundary; final topic/editorial proof pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "bounded-c2-1-central-review",
+      "subject_id": "1b8c4cbf00128a835783931d3a0e3c0965a5e34c",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-1-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-selected-delta-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-protected-install-tree-witness-and-attach-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "1b8c4cbf00128a835783931d3a0e3c0965a5e34c",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/lifecycle-c2-1-central-review.md"
+  }
+}

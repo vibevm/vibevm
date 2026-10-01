@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "change_id": "fake-publication-owner-journal",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "ec1c50bb7c05bb6ea9159f928424e29b62aebb05"
+    },
+    {
+      "kind": "commit",
+      "identity": "9c8590ae8f5d050f869a7320435c6c57784e9615"
+    },
+    {
+      "kind": "commit",
+      "identity": "01979e98f75e8360a739e0fa9d414fc108ffa7b8"
+    },
+    {
+      "kind": "commit",
+      "identity": "4bf1cb82ff442dc0f5f018672218cfc5c2e53ba4"
+    }
+  ],
+  "affected_paths": [
+    "Cargo.lock",
+    "crates/vibe-lifecycle/src/lease.rs",
+    "crates/vibe-publish/Cargo.toml",
+    "crates/vibe-publish/src/lib.rs",
+    "crates/vibe-publish/src/publication_full_plan/capability_tests.rs",
+    "crates/vibe-publish/src/publication_full_plan/journal.rs",
+    "crates/vibe-publish/src/publication_full_plan/mod.rs",
+    "crates/vibe-publish/src/publication_full_plan/replay_tests.rs",
+    "crates/vibe-publish/src/publication_full_plan/tests.rs",
+    "crates/vibe-publish/src/publication_full_plan/transition.rs",
+    "crates/vibe-publish/src/publication_operation.rs",
+    "crates/vibe-publish/src/publication_operation/tests.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "internal:vibe-publish:submit_fake_tag_create",
+      "capability_id": "fake-tag-owner-recovery-proof",
+      "kind": "introduced",
+      "audience": "repository maintainer / in-process test harness",
+      "platform": "In-process fake remote only; no native remote adapter or macOS/Windows execution proof.",
+      "before": "No internal first-tag fake owner journal bound to C1 request, plan and remote generation.",
+      "after": "A crate-private fake port records Ready and per-tag Pending/Landed/result identity, treats lost replies as uncertain, and refuses malformed retained records without replay; it is not a shipped publication route.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-JOURNAL-BOUNDARY",
+        "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-SMOKE-POLICY"
+      ]
+    },
+    {
+      "interface_id": "internal:vibe-publish:submit_fake_full_plan",
+      "capability_id": "fake-full-plan-owner-transition-proof",
+      "kind": "introduced",
+      "audience": "repository maintainer / in-process test harness",
+      "platform": "In-process fake remote only; no native GitHub write or cross-platform remote proof.",
+      "before": "No internal full-plan fake owner retained each partition boundary and independently compared post-observed object transitions.",
+      "after": "A crate-private fake port records per-partition Pending/Landed and terminal result, checks remote generation and typed tag/release/asset/visibility changes, and leaves uncertain partitions unrerun. This endpoint has no cold-by-key capsule or live adapter.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-JOURNAL-BOUNDARY",
+        "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-EFFECT-PLAN"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "no-impact",
+    "reason": "The reviewed endpoint only registers private crate owner code and disposable fake-port tests; no CLI, MCP, public Rust API or live publication adapter is exposed, and existing user-owned state is unchanged.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "no-impact",
+    "reason": "No existing user-facing page claim changes at this endpoint; PROP-073 already states live publication is unavailable. Internal source/evidence review remains required but is not a user guide migration.",
+    "documentation_action": "none"
+  },
+  "evidence": [
+    {
+      "claim_id": "pending-domain-source-review",
+      "subject_id": "4bf1cb82ff442dc0f5f018672218cfc5c2e53ba4",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-fake-publication-owner-journal-central-review.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-selected-delta-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-fake-publication-owner-journal-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "4bf1cb82ff442dc0f5f018672218cfc5c2e53ba4",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/PENDING-fake-publication-owner-journal-central-review.md"
+  }
+}

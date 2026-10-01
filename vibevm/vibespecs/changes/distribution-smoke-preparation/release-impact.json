@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "change_id": "distribution-smoke-preparation",
+  "before_capture_id": "m06-a-before-46949f643-v2",
+  "after_capture_id": "m06-a-after-424ed24cd-v2",
+  "implementation_subjects": [
+    {
+      "kind": "commit",
+      "identity": "cb14554120a2652109548b417983401a1f07666a"
+    },
+    {
+      "kind": "commit",
+      "identity": "df69530c3b04e0243a6ec30ac92dc7e7344057d1"
+    }
+  ],
+  "affected_paths": [
+    "xtask/src/dist/capture/tests.rs",
+    "xtask/src/dist/capture/tests_smoke.rs",
+    "xtask/src/dist/mod.rs",
+    "xtask/src/dist/prepare_local_cli_tests.rs",
+    "xtask/src/dist/release.rs",
+    "xtask/src/dist/release/offline_ready.rs",
+    "xtask/src/dist/release/offline_ready/tests.rs",
+    "xtask/src/dist/smoke/prepare.rs"
+  ],
+  "effects": [
+    {
+      "interface_id": "cli:cargo-xtask-dist:prepare-local",
+      "capability_id": "local-distribution-smoke-report",
+      "kind": "introduced",
+      "audience": "release operator / repository maintainer",
+      "platform": "Source-declared local CLI with focused synthetic GNU/Linux-host tests; no native macOS/Windows or final five-target matrix proof.",
+      "before": "No 1.1.0-only local prepare-local command that persisted a content-addressed smoke report and emitted the same bytes on stdout.",
+      "after": "The local command validates five exact bundle inputs, stages a native probe when available, writes a digest-addressed e1 smoke report and emits identical JSON bytes. Explicit per-target skip requires a bounded reason, cannot mint Passed or apply-ready status, and does not contact GitHub. The second commit adds only a cfg(test) fake all-assets-ready dispatch proof.",
+      "contract_anchors": [
+        "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-SMOKE-POLICY",
+        "spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-JOURNAL-BOUNDARY"
+      ]
+    }
+  ],
+  "user_impact": {
+    "state": "impact",
+    "reason": "Additive local release-operator CLI for mutable 1.1.0 preparation; it changes no existing 1.0.x user-owned inputs and performs no public publication.",
+    "migration_action": "none"
+  },
+  "documentation_impact": {
+    "state": "impact",
+    "reason": "Release/operator guidance must explain prepare-local defaults and options, exact report/stdout bytes, explicit skip semantics, and lack of live publication; final owned page/topic map remains pending.",
+    "documentation_action": "update"
+  },
+  "evidence": [
+    {
+      "claim_id": "local-smoke-cli-central-review",
+      "subject_id": "cb14554120a2652109548b417983401a1f07666a",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/distribution-b2-local-cli.md",
+      "verdict": "unverified"
+    },
+    {
+      "claim_id": "pending-selected-delta-review",
+      "subject_id": "m06-a-after-424ed24cd-v2",
+      "source": "docs/releases/developer-preview-1-to-2/evidence/PENDING-distribution-smoke-preparation-affected-source-review.json",
+      "verdict": "unverified"
+    }
+  ],
+  "relations": [],
+  "acceptance": {
+    "state": "candidate",
+    "review_subject": "df69530c3b04e0243a6ec30ac92dc7e7344057d1",
+    "review_evidence": "docs/releases/developer-preview-1-to-2/evidence/PENDING-distribution-smoke-preparation-central-review.md"
+  }
+}
