@@ -69,6 +69,13 @@
       visibility and latest-release posture. Existing release/tag identity,
       draft state, source commit, asset names, IDs, sizes and digests, including
       explicit absence, are plan inputs, not facts inferred after approval.
+      For an epoch-two successor release, the approved release partition names
+      the exact desired tag, target commit, draft state, release name, body and
+      prerelease posture. These values are selected plan inputs, not defaults
+      supplied by a transport when CreateDraft runs. After that effect, the
+      owner independently observes and compares every one of those typed
+      successor fields before marking the release partition Landed; matching
+      tag and draft alone cannot prove the approved successor.
       Replacing a release, whether draft or published, requires an explicit owner-selected replacement posture and deletes the old release before a new draft is created: old asset IDs belong only to that deletion, while assets in the new draft start absent. A cleanup step for assets observed only after upload requires a new bounded observation and plan rather than invented prior IDs. Deleting a release implicitly deletes its assets, so a prior release
       whose complete asset inventory cannot be observed has an unknown effect
       set and refuses an apply-ready plan. Cleanup of temporary assets is also
@@ -89,7 +96,12 @@
       replaced release/tag/asset IDs and observed generation, intended names
       and byte digests, smoke policy and recovery prerequisites. Changing a
       target, remote generation, replacement ID, selected operation or asset
-      changes the plan identity. Immediately before each remote effect the
+      changes the plan identity. An epoch-two successor release plan also binds
+      its desired target commit, tag, draft state, name, exact body bytes and
+      prerelease posture in that approved plan identity. An epoch-one plan
+      without those fields cannot acquire them from code defaults or be
+      silently upgraded for protected release dispatch; it requires a new
+      explicit plan and approval. Immediately before each remote effect the
       owner reobserves its stated preconditions; drift refuses before that
       effect. Where a provider offers no atomic compare-and-swap across
       separate remote objects, a race after reobservation is reported as
