@@ -19,6 +19,7 @@ use crate::publication_effect_plan::{
 };
 
 use super::journal::{self, Intent, sha};
+use super::session::ReadyRun;
 use super::{Error, Result};
 
 const DOMAIN: &[u8] = b"vibevm.publication.api-call/e1\0";
@@ -26,7 +27,7 @@ const PENDING_FORMAT: &str = "vibevm.publication.api-call-pending/e1";
 const LANDED_FORMAT: &str = "vibevm.publication.api-call-landed/e1";
 
 #[path = "calls/asset_history.rs"]
-mod asset_history;
+pub(super) mod asset_history;
 mod assets;
 
 #[cfg(test)]
@@ -395,7 +396,22 @@ pub(super) fn inspect_calls(
     expected: &PublicationEffectPlanExpectations<'_>,
 ) -> Result<CallInspection> {
     inspect_calls_inner(
-        lease, namespace, scope, key, run_id, subject, plan, expected, None,
+        lease, namespace, scope, key, run_id, subject, plan, expected, None, None,
+    )
+}
+
+pub(super) fn inspect_calls_proved(session: &ReadyRun<'_>) -> Result<CallInspection> {
+    inspect_calls_inner(
+        session.lease,
+        session.namespace,
+        session.scope,
+        session.key,
+        &session.run_id,
+        session.subject,
+        session.plan,
+        session.expected,
+        Some(session.approval_home),
+        Some(session),
     )
 }
 
@@ -421,6 +437,7 @@ fn inspect_calls_with_home(
         plan,
         expected,
         Some(home),
+        None,
     )
 }
 
@@ -435,18 +452,23 @@ fn inspect_calls_inner(
     plan: &PublicationEffectPlan,
     expected: &PublicationEffectPlanExpectations<'_>,
     approval_home: Option<&ApprovalHome>,
+    ready_proof: Option<&ReadyRun<'_>>,
 ) -> Result<CallInspection> {
-    inspect_ready(
-        lease,
-        namespace,
-        scope,
-        key,
-        run_id,
-        subject,
-        plan,
-        expected,
-        approval_home,
-    )?;
+    if let Some(session) = ready_proof {
+        session.recheck_small()?;
+    } else {
+        inspect_ready(
+            lease,
+            namespace,
+            scope,
+            key,
+            run_id,
+            subject,
+            plan,
+            expected,
+            approval_home,
+        )?;
+    }
     let schedule = decompose(subject, plan, expected)?;
     let mut previous_after: Option<CallObservation> = None;
     for call in &schedule.calls {
