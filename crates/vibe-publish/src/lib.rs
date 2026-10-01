@@ -41,6 +41,7 @@ pub mod github_release;
 pub mod gitverse;
 mod orchestrator;
 pub mod post_hook;
+mod publication_approval;
 pub mod publication_authority;
 pub mod publication_capture;
 pub mod publication_effect_plan;

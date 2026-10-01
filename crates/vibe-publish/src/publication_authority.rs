@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#PUBLICATION-JOURNAL-BOUNDARY");
 
+use serde::{Deserialize, Serialize};
 use vibe_wire::generated::publication_effect_plan::PublicationEffectPlan;
 use vibe_wire::generated::publication_subject::PublicationSubject;
 
@@ -18,7 +19,8 @@ use crate::publication_effect_plan::{
 /// Exact fields repeated in an authority record for inspection and checked
 /// against the validated plan. `plan_sha256` still binds every partition and
 /// observed remote object, including fields not repeated here.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct PublicationAuthorityScope {
     pub plan_sha256: String,
     pub subject_sha256: String,
@@ -35,7 +37,8 @@ pub struct PublicationAuthorityScope {
 
 /// One owner-approved, exact batch. Persistence and one-use redemption are
 /// responsibilities of the publication owner's M-16 pre-effect journal.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct PublicationApprovalReceipt {
     pub approval_id: String,
     pub scope: PublicationAuthorityScope,
