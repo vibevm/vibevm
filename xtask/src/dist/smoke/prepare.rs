@@ -21,7 +21,7 @@ use vibe_wire::generated::publication_subject::{
 use crate::dist::build;
 use crate::dist::capture::{PreparedSubjectCapture, capture_prepared_subject_in};
 
-use super::report::{prepare_report, summary_from_stored_report};
+use super::report::{PreparedSmokeReport, prepare_report, summary_from_stored_report};
 use super::report_store::{StoredSmokeReport, store_report};
 use super::{host_identity, run_native_probe, stage_verified_bundle};
 
@@ -124,6 +124,59 @@ pub(crate) fn prepare_local_subject_selected(
     let output = Project::open(&output_root)
         .with_context(|| format!("pinning distribution output `{}`", output_root.display()))?;
     prepare_local_with_selection(repo_root, &output, selection, || Ok(()))
+}
+
+/// Reconstruct a subject from an existing content-addressed report. This is
+/// observation only: no probes, report publication or remote calls occur.
+pub(crate) fn load_local_subject(
+    repo_root: &Path,
+    out_dir: &Path,
+    report_relative_path: &str,
+) -> Result<PreparedLocalSmoke> {
+    if !report_relative_path.starts_with("smoke/e1/") || !report_relative_path.ends_with(".json") {
+        bail!("smoke report must be a relative smoke/e1/<digest>.json path");
+    }
+    let output_root = build::absolute_out_dir(repo_root, out_dir);
+    let output = Project::open(&output_root)
+        .with_context(|| format!("pinning distribution output `{}`", output_root.display()))?;
+    let provisional = capture_prepared_subject_in(repo_root, &output, provisional_smoke())
+        .context("capturing committed 1.1.0 source and five exact local distributions")?;
+    let bytes = output
+        .read_file_bounded(report_relative_path, REPORT_MAX_BYTES)
+        .context("reading bounded local smoke report")?
+        .context("local smoke report is absent")?;
+    let digest = vibe_publish::distribution_smoke_report::validate_distribution_smoke_report_bytes(
+        &bytes,
+        &provisional.subject,
+    )
+    .context("validating local smoke report against exact subject")?;
+    let stored = StoredSmokeReport {
+        digest: digest.clone(),
+        relative_path: report_relative_path.to_owned(),
+    };
+    let prepared = PreparedSmokeReport { bytes, digest };
+    let summary = summary_from_stored_report(&provisional.subject, &prepared, &stored)?;
+    let final_capture = capture_prepared_subject_in(repo_root, &output, summary)
+        .context("recapturing final exact publication subject")?;
+    let mut expected_subject = provisional.subject;
+    expected_subject.smoke = final_capture.subject.smoke.clone();
+    if provisional.identity != final_capture.identity
+        || provisional.aggregate_bytes != final_capture.aggregate_bytes
+        || expected_subject != final_capture.subject
+    {
+        bail!("source or distribution identity changed between smoke captures");
+    }
+    let visible = output
+        .read_file_bounded(report_relative_path, REPORT_MAX_BYTES)
+        .context("rechecking held smoke report after final capture")?;
+    if visible.as_deref() != Some(prepared.bytes.as_slice()) {
+        bail!("stored smoke report changed after final subject capture");
+    }
+    Ok(PreparedLocalSmoke {
+        capture: final_capture,
+        report: stored,
+        report_bytes: prepared.bytes,
+    })
 }
 
 /// Hook is internal and only a deterministic test seam. It runs after the
