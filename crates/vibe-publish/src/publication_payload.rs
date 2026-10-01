@@ -18,6 +18,8 @@ use crate::publication_subject::{
 const DOMAIN: &[u8] = b"vibevm.publication.expected-upload-catalogue/e1\0";
 const ENTRY_COUNT: usize = 19;
 
+pub mod vault;
+
 /// Where a later owner must obtain and independently check the bytes.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UploadSource {
