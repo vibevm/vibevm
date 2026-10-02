@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "operation_id": "rust:vibe-lifecycle:validate",
+  "requested_scope": {
+    "context": "actual-evidence",
+    "target": "root",
+    "principal": "actual-host"
+  },
+  "requested_phase": "validate",
+  "bound_scope": null,
+  "run_id": null,
+  "basis": "unavailable",
+  "last_phase": null,
+  "phase_unavailable_reason": "no phase callback or validated report step",
+  "phases": [],
+  "work_outcomes": [],
+  "known_contribution_total": null,
+  "observed_terminal_work_count": null,
+  "partial": true,
+  "status": {
+    "state": "starting",
+    "extra": 1
+  }
+}
