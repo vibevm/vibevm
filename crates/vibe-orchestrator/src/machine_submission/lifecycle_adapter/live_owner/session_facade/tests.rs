@@ -248,6 +248,7 @@ fn host_capability_before_boundary_requests_then_proves_stop_without_provider() 
         before_boundary: None,
         after_effect: None,
         deferred_stop: false,
+        profile: None,
         path: c.root.clone(),
         namespace: c.namespace.clone(),
         scope: c.scope.clone(),

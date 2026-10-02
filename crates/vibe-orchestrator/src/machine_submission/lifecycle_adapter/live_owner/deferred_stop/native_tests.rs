@@ -386,6 +386,7 @@ fn start_hook(
         target_os: TargetOs::Linux,
         observed_at: "2026-09-30T00:00:05Z".parse().unwrap(),
         deferred_stop: true,
+        profile: None,
         fixture: None,
         before_boundary: boundary,
         after_effect,

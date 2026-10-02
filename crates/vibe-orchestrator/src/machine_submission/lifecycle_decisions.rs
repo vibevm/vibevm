@@ -18,9 +18,11 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 mod policy;
 mod questions;
+pub(super) mod submission;
 pub use policy::HostPolicyFacts;
 use policy::State;
 use questions::*;
+pub use submission::ReadonlyFixedJob;
 const MAX_SEQUENCES: usize = 4;
 const MAX_RETAINED: usize = 8 * 1024 * 1024;
 const CANONICAL_CAP: usize = 1024 * 1024;
@@ -113,6 +115,10 @@ struct Sequence {
 pub struct ValidatedFixedPlanEvidence {
     identity: String,
     options: RequestedOptions,
+    holder: Arc<()>,
+    base: Arc<CapturedPlan>,
+    revision: u64,
+    question_id: String,
 }
 impl ValidatedFixedPlanEvidence {
     pub fn identity(&self) -> &str {
@@ -132,12 +138,14 @@ pub enum DecisionOutcome {
 /// to its cell; the cell is never held during filesystem I/O.
 pub struct FixedLifecycleDecisionHost {
     root: PathBuf,
-    project: Project,
+    project: Arc<Project>,
     namespace: SubmissionNamespace,
     scope: SubmissionScope,
     target_os: TargetOs,
     issuer: String,
-    state: Mutex<State>,
+    state: Arc<Mutex<State>>,
+    holder: Arc<()>,
+    jobs: Mutex<Vec<submission::JobEntry>>,
 }
 impl FixedLifecycleDecisionHost {
     /// Trusted embedding boundary. Wire bodies cannot construct these facts.
@@ -155,17 +163,19 @@ impl FixedLifecycleDecisionHost {
         let issuer = propose_run_id(&root).map_err(infrastructure)?; // nonce only, never a domain run
         let host = Self {
             root,
-            project,
+            project: Arc::new(project),
             namespace,
             scope,
             target_os,
             issuer,
-            state: Mutex::new(State {
+            holder: Arc::new(()),
+            jobs: Mutex::new(Vec::new()),
+            state: Arc::new(Mutex::new(State {
                 facts: policy,
                 revision: 1,
                 counter: 0,
                 sequences: vec![],
-            }),
+            })),
         };
         let _ = host.scope_lease()?;
         Ok(host)
@@ -474,6 +484,10 @@ impl FixedLifecycleDecisionHost {
                     return Err(FixedDecisionError::PolicyDenied);
                 }
                 Ok(DecisionOutcome::Validated(ValidatedFixedPlanEvidence {
+                    holder: self.holder.clone(),
+                    base,
+                    revision,
+                    question_id: question.question_id.clone().expect("owned question"),
                     identity: question.plan_id.expect("owned identity"),
                     options: question.requested_options,
                 }))

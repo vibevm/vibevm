@@ -151,6 +151,52 @@ impl HostOwnedFixedOperation {
         })
     }
 
+    pub(in crate::machine_submission) fn start_admitted(
+        root: PathBuf,
+        namespace: SubmissionNamespace,
+        scope: SubmissionScope,
+        key: String,
+        target_os: TargetOs,
+        observed_at: Timestamp,
+        profile: AdmittedProfile,
+    ) -> Result<Self> {
+        let coordinates = HostCoordinates {
+            root,
+            namespace,
+            scope,
+            key,
+        };
+        let (owner, observer) = launch(OwnedDispatch {
+            path: coordinates.root.clone(),
+            namespace: coordinates.namespace.clone(),
+            scope: coordinates.scope.clone(),
+            key: coordinates.key.clone(),
+            request: DefaultLifecycleRequest {
+                requested: Phase::Validate,
+                force: false,
+                agent_mode: RunAgentMode::Cli,
+                assume_yes: true,
+                trace_flag: false,
+                install_inputs: Default::default(),
+                policy: Default::default(),
+            },
+            target_os,
+            observed_at,
+            deferred_stop: false,
+            profile: Some(profile),
+            #[cfg(test)]
+            fixture: None,
+            #[cfg(test)]
+            before_boundary: None,
+            #[cfg(test)]
+            after_effect: None,
+        })?;
+        drop(observer);
+        Ok(Self {
+            inner: Arc::new(Inner { owner, coordinates }),
+        })
+    }
+
     /// Host opt-in for a deferred stop at this domain's protected callback boundary.
     /// An acknowledged request may wait indefinitely for the direct provider to
     /// exit naturally and the callback and after-effect hook to return. This
@@ -182,6 +228,7 @@ impl HostOwnedFixedOperation {
             target_os,
             observed_at,
             deferred_stop: true,
+            profile: None,
             #[cfg(test)]
             fixture: None,
             #[cfg(test)]
@@ -230,7 +277,15 @@ impl HostOwnedFixedOperation {
     }
 
     pub fn inspect(&self) -> Result<FixedOperationStatus> {
-        self.inner.owner.inspect().map(Into::into)
+        let observed = self.inner.owner.inspect()?;
+        if matches!(observed, Observation::RecoveryRequired { run_id: None, .. }) {
+            let c = &self.inner.coordinates;
+            let lease = LifecycleLease::acquire(&c.root)?;
+            if let Some(status) = inspect_fixed_existing(&lease, &c.namespace, &c.scope, &c.key)? {
+                return Ok(status);
+            }
+        }
+        Ok(observed.into())
     }
 
     /// Attach to this owner's actual Ready binding; capped by the incumbent 64

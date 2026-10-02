@@ -121,7 +121,10 @@ struct FixtureRuntime<'a> {
     confirm: Option<&'a dyn ConfirmGate>,
 }
 
+use super::lifecycle_decisions::submission::profile::AdmittedProfile;
+
 struct ScriptFixturePort<'a> {
+    profile: Option<&'a AdmittedProfile>,
     admitted: OneScriptValidateAdmission,
     process: &'a dyn ProcessRunner,
     probe: &'a dyn InterpreterProbe,
@@ -557,6 +560,7 @@ pub(crate) fn submit_fixed_one_script_validate(
         None,
         None,
         None,
+        None,
     )
 }
 
@@ -589,6 +593,7 @@ pub(crate) fn submit_one_script_validate_fixture<'a>(
         after_stage,
         after_effect,
         None,
+        None,
     )
 }
 
@@ -606,6 +611,7 @@ fn submit_one_script_validate_internal<'a>(
     after_stage: Option<&'a dyn Fn()>,
     after_effect: Option<&'a dyn Fn() -> Result<()>>,
     ready: Option<&'a live_owner::ReadyObserver>,
+    profile: Option<&'a AdmittedProfile>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     let admitted = admit_one_script_validate_fixture(path, &request, target_os)?;
     submit_protected_lifecycle_inner(
@@ -619,6 +625,7 @@ fn submit_one_script_validate_internal<'a>(
         Phase::Validate,
         None,
         Some(ScriptFixturePort {
+            profile,
             admitted,
             process,
             probe,
@@ -798,7 +805,7 @@ fn submit_protected_lifecycle_inner<'a>(
     observed_at: Timestamp,
     phase: Phase,
     fixture: Option<FixtureSourcePort<'a>>,
-    script: Option<ScriptFixturePort<'a>>,
+    mut script: Option<ScriptFixturePort<'a>>,
     agent: Option<AgentFixturePort<'a>>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     ensure!(
@@ -869,10 +876,20 @@ fn submit_protected_lifecycle_inner<'a>(
             })
         })
         .transpose()?;
+    if let Some(script) = script.as_mut() {
+        if script.profile.is_some() {
+            // Recapture actual v4 source and plan under this protected lease.
+            script.admitted = preflight_one_script_under_lease(&leased, &request, target_os)?;
+        }
+    }
     let canonical_request = if let Some(agent) = &agent {
         agent.admitted.canonical_request.clone()
     } else if let Some(script) = &script {
-        script.admitted.canonical_request.clone()
+        if let Some(profile) = script.profile {
+            profile.request(&script.admitted.canonical_request)?
+        } else {
+            script.admitted.canonical_request.clone()
+        }
     } else if let Some(fixture) = &fixture {
         canonical_one_package_fixture_request(&fixture.witness, target_os)?
     } else {
@@ -881,6 +898,18 @@ fn submit_protected_lifecycle_inner<'a>(
     if let Some(attached) =
         attach_existing_lifecycle(&lease, namespace, scope, key, &canonical_request)?
     {
+        if script.as_ref().is_some_and(|s| s.profile.is_some()) {
+            if let Some(row) =
+                SubmissionReservations::inspect_existing_key(&lease, namespace, scope, key)?
+            {
+                check_admitted_capsule(
+                    &lease,
+                    &row.domain_run_id,
+                    &row.request_sha256,
+                    &row.plan_sha256,
+                )?;
+            }
+        }
         return Ok(attached);
     }
     let selected_root = leased.selected_root().to_path_buf();
@@ -1028,6 +1057,22 @@ fn submit_protected_lifecycle_inner<'a>(
         );
     }
     recheck_selected_manifest_lock(&selected_root, &witness)?;
+    let plan = if let Some(script) = &script {
+        if let Some(profile) = script.profile {
+            recheck_script_source_witness(&script.admitted.source)?;
+            profile.guard(
+                &lease,
+                &script.admitted.canonical_request,
+                &plan,
+                &script.admitted.source,
+            )?;
+            profile.plan(&plan)?
+        } else {
+            plan
+        }
+    } else {
+        plan
+    };
     let mut journal = ProtectedJournal {
         leased: Some(leased),
         selection: Some(selection),
@@ -1146,6 +1191,106 @@ fn attach_existing_lifecycle(
     }
 }
 
+pub(super) fn inspect_fixed_existing(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+) -> Result<Option<FixedOperationStatus>> {
+    let Some(row) = SubmissionReservations::inspect_existing_key(lease, namespace, scope, key)?
+    else {
+        return Ok(None);
+    };
+    if let Err(error) = check_admitted_capsule(
+        lease,
+        &row.domain_run_id,
+        &row.request_sha256,
+        &row.plan_sha256,
+    ) {
+        return Ok(Some(FixedOperationStatus::RecoveryRequired {
+            run_id: Some(row.domain_run_id),
+            reason: format!("input capsule: {error:#}"),
+        }));
+    }
+    let run_id = row.domain_run_id;
+    let Some(reference) = row
+        .reservation_ref
+        .filter(|_| row.journal_admission == JournalAdmission::Ready)
+    else {
+        return Ok(Some(FixedOperationStatus::RecoveryRequired {
+            run_id: Some(run_id),
+            reason: "C1 journal not Ready".into(),
+        }));
+    };
+    Ok(Some(
+        match inspect_retained_lifecycle_outcome(lease, &run_id, &reference) {
+            Ok(LifecycleOutcomeInspection::Validated {
+                marker,
+                report_bytes,
+            }) => FixedOperationStatus::ResultAvailable {
+                run_id,
+                marker,
+                report_bytes,
+            },
+            other => FixedOperationStatus::RecoveryRequired {
+                run_id: Some(run_id),
+                reason: format!("retained inspection: {other:?}"),
+            },
+        },
+    ))
+}
+
+// Immutable input evidence belongs to the incumbent protected journal, not a
+// second result journal. Only the new profile publishes this capsule; default
+// v4 bytes and its existing inspection route stay unchanged.
+fn admitted_capsule(request: &[u8], plan: &[u8]) -> Result<Vec<u8>> {
+    let value = serde_json::json!({
+        "format": "vibevm.lifecycle.admitted-input/1",
+        "request": serde_json::from_slice::<serde_json::Value>(request)?,
+        "plan": serde_json::from_slice::<serde_json::Value>(plan)?,
+    });
+    let mut bytes = Vec::new();
+    super::lifecycle_plan::write_canonical(&value, &mut bytes)?;
+    ensure!(
+        bytes.len() <= 2 * 1024 * 1024 + 4096,
+        "input capsule capacity"
+    );
+    Ok(bytes)
+}
+fn check_admitted_capsule(
+    lease: &LifecycleLease,
+    run_id: &str,
+    request_sha256: &str,
+    plan_sha256: &str,
+) -> Result<()> {
+    let home = lease
+        .publication_journal_project()
+        .subproject(&[".vibe", "lifecycle-outcomes"])?;
+    let bytes = home
+        .read_file_bounded(
+            &format!("{run_id}.admitted-input.json"),
+            2 * 1024 * 1024 + 4096,
+        )?
+        .context("admitted input capsule absent")?;
+    let value: serde_json::Value = serde_json::from_slice(&bytes)?;
+    ensure!(
+        value["format"] == "vibevm.lifecycle.admitted-input/1",
+        "input capsule format"
+    );
+    for (field, expected) in [("request", request_sha256), ("plan", plan_sha256)] {
+        let mut canonical = Vec::new();
+        super::lifecycle_plan::write_canonical(&value[field], &mut canonical)?;
+        let actual = vibe_lifecycle::process::SelectedFileWitness::from_bytes(canonical);
+        // Both the C1 inspection and SelectedFileWitness already include the
+        // sha256: prefix. Compare the full digest of the read-back bytes once.
+        ensure!(
+            expected == actual.sha256,
+            "input capsule {field} digest differs from C1"
+        );
+    }
+    Ok(())
+}
+
 fn request_bytes(phase: Phase, target_os: TargetOs) -> &'static [u8] {
     match (phase, target_os) {
         (Phase::Validate, TargetOs::Linux) => VALIDATE_LINUX,
@@ -1253,6 +1398,27 @@ impl SubmissionJournal for ProtectedJournal<'_> {
         lease: &LifecycleLease,
         run_id: &str,
     ) -> Result<JournalState<Self::Outcome>, String> {
+        if self.script.as_ref().is_some_and(|s| s.profile.is_some()) {
+            let row = SubmissionReservations::inspect_existing_key(
+                lease,
+                self.namespace,
+                self.scope,
+                self.key,
+            )
+            .map_err(|error| error.to_string())?
+            .ok_or("C1 absent")?;
+            // Pending with no capsule is still Absent and can initialize only
+            // the reserved journal; Ready must never bypass capsule proof.
+            if row.journal_admission == JournalAdmission::Ready {
+                check_admitted_capsule(
+                    lease,
+                    &row.domain_run_id,
+                    &row.request_sha256,
+                    &row.plan_sha256,
+                )
+                .map_err(|error| error.to_string())?;
+            }
+        }
         let admission = SubmissionReservations::journal_admission(
             lease,
             self.namespace,
@@ -1315,6 +1481,33 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
                 "protected validate slice refuses any prior lifecycle header"
             );
+            if self.script.as_ref().is_some_and(|s| s.profile.is_some()) {
+                let bytes = admitted_capsule(&self.canonical_request, self.canonical_plan)?;
+                let home = lease
+                    .publication_journal_project()
+                    .ensure_subproject(&[".vibe", "lifecycle-outcomes"])?;
+                let directory = home.root_dir()?;
+                let name = format!("{run_id}.admitted-input.json");
+                match home.read_file_bounded_in(&directory, &name, 2 * 1024 * 1024 + 4096)? {
+                    Some(prior) => ensure!(prior == bytes, "input capsule changed"),
+                    None => home
+                        .publish_new_in(&directory, &name, &bytes)
+                        .map_err(|e| e.into_report())?,
+                }
+                let row = SubmissionReservations::inspect_existing_key(
+                    &lease,
+                    self.namespace,
+                    self.scope,
+                    self.key,
+                )?
+                .context("C1 absent")?;
+                check_admitted_capsule(
+                    &lease,
+                    &row.domain_run_id,
+                    &row.request_sha256,
+                    &row.plan_sha256,
+                )?;
+            }
             let store = LifecycleStateStore::begin(
                 lease.clone(),
                 self.phase.as_str().into(),
