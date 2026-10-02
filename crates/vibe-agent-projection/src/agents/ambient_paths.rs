@@ -7,7 +7,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Result, anyhow, bail};
 
-use super::{Agent, SKILL_NAME, Scope};
+use super::{Agent, AgentUserDirectories, SKILL_NAME, Scope};
 
 impl Agent {
     /// Resolve the per-agent config-file path for a single concrete
@@ -16,6 +16,34 @@ impl Agent {
     /// (e.g. Claude Desktop + Project). Returns `Err(...)` if the
     /// host cannot resolve required dirs (HOME / config-dir).
     pub fn config_path(self, scope: Scope, project_root: Option<&Path>) -> Result<Option<PathBuf>> {
+        self.config_path_with_dirs(scope, project_root, &AgentUserDirectories::ambient())
+    }
+
+    /// Resolve a config path using only supplied project and user directories.
+    /// No environment or filesystem reads occur. Expand `Scope::Both` first;
+    /// unsupported scopes and a missing project root return `Ok(None)`.
+    /// Missing user directories retain the errors from [`Agent::config_path`].
+    ///
+    /// ```
+    /// use vibe_agent_projection::agents::{Agent, AgentUserDirectories, Scope};
+    /// let sandbox = tempfile::tempdir()?;
+    /// let home = sandbox.path().join("home");
+    /// let directories = AgentUserDirectories {
+    ///     home: Some(home.clone()),
+    ///     config: None,
+    /// };
+    /// assert_eq!(
+    ///     Agent::Codex.config_path_with_dirs(Scope::User, None, &directories)?,
+    ///     Some(home.join(".codex").join("config.toml")),
+    /// );
+    /// # Ok::<(), anyhow::Error>(())
+    /// ```
+    pub fn config_path_with_dirs(
+        self,
+        scope: Scope,
+        project_root: Option<&Path>,
+        directories: &AgentUserDirectories,
+    ) -> Result<Option<PathBuf>> {
         match (self, scope) {
             (_, Scope::Both) => {
                 bail!("internal: Agent::config_path requires concrete scope; expand Both first")
@@ -45,12 +73,16 @@ impl Agent {
                 // of `~/.claude.json` (exactly what `claude mcp add --scope
                 // user` writes); Claude Code does not read server definitions
                 // from `~/.claude/settings.json`.
-                let home = dirs::home_dir()
+                let home = directories
+                    .home
+                    .as_ref()
                     .ok_or_else(|| anyhow!("could not resolve home dir for Claude Code"))?;
                 Ok(Some(home.join(".claude.json")))
             }
             (Agent::Cursor, Scope::User) => {
-                let home = dirs::home_dir()
+                let home = directories
+                    .home
+                    .as_ref()
                     .ok_or_else(|| anyhow!("could not resolve home dir for Cursor"))?;
                 Ok(Some(home.join(".cursor").join("mcp.json")))
             }
@@ -63,7 +95,9 @@ impl Agent {
                 // what `opencode` reads on Windows; `%APPDATA%\opencode\`
                 // is silently ignored. So we resolve via `home_dir`,
                 // not `config_dir`.
-                let home = dirs::home_dir()
+                let home = directories
+                    .home
+                    .as_ref()
                     .ok_or_else(|| anyhow!("could not resolve home dir for OpenCode"))?;
                 Ok(Some(
                     home.join(".config").join("opencode").join("opencode.json"),
@@ -75,18 +109,22 @@ impl Agent {
                 // on Windows, `~/Library/Application Support/Claude/`
                 // on macOS). dirs::config_dir() is the right resolver
                 // here.
-                let cfg = dirs::config_dir().ok_or_else(|| {
+                let cfg = directories.config.as_ref().ok_or_else(|| {
                     anyhow!("could not resolve user-config dir for Claude Desktop")
                 })?;
                 Ok(Some(cfg.join("Claude").join("claude_desktop_config.json")))
             }
             (Agent::Codex, Scope::User) => {
-                let home = dirs::home_dir()
+                let home = directories
+                    .home
+                    .as_ref()
                     .ok_or_else(|| anyhow!("could not resolve home dir for Codex"))?;
                 Ok(Some(home.join(".codex").join("config.toml")))
             }
             (Agent::QwenCode, Scope::User) => {
-                let home = dirs::home_dir()
+                let home = directories
+                    .home
+                    .as_ref()
                     .ok_or_else(|| anyhow!("could not resolve home dir for Qwen Code"))?;
                 Ok(Some(home.join(".qwen").join("settings.json")))
             }
@@ -238,5 +276,144 @@ impl Agent {
                 Ok(Some(home.join(".qwen").join("skills")))
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod injected_path_tests {
+    use super::*;
+
+    #[test]
+    fn injected_user_paths_preserve_agent_mappings() {
+        let sandbox = tempfile::tempdir().unwrap();
+        let home = sandbox.path().join("home");
+        let config = sandbox.path().join("config");
+        let directories = AgentUserDirectories {
+            home: Some(home.clone()),
+            config: Some(config.clone()),
+        };
+        for (agent, expected) in [
+            (Agent::ClaudeCode, home.join(".claude.json")),
+            (Agent::Cursor, home.join(".cursor/mcp.json")),
+            (Agent::OpenCode, home.join(".config/opencode/opencode.json")),
+            (Agent::Codex, home.join(".codex/config.toml")),
+            (Agent::QwenCode, home.join(".qwen/settings.json")),
+            (
+                Agent::ClaudeCodeDesktop,
+                config.join("Claude/claude_desktop_config.json"),
+            ),
+        ] {
+            assert_eq!(
+                agent
+                    .config_path_with_dirs(Scope::User, None, &directories)
+                    .unwrap(),
+                Some(expected),
+                "{}",
+                agent.as_str(),
+            );
+        }
+        assert!(!home.exists());
+        assert!(!config.exists());
+    }
+
+    #[test]
+    fn injected_project_paths_do_not_require_user_directories() {
+        let sandbox = tempfile::tempdir().unwrap();
+        let project = sandbox.path().join("project");
+        let directories = AgentUserDirectories::default();
+        for (agent, expected) in [
+            (Agent::ClaudeCode, Some(project.join(".mcp.json"))),
+            (Agent::Cursor, Some(project.join(".cursor/mcp.json"))),
+            (Agent::OpenCode, Some(project.join("opencode.json"))),
+            (Agent::Codex, Some(project.join(".codex/config.toml"))),
+            (Agent::QwenCode, Some(project.join(".qwen/settings.json"))),
+            (Agent::ClaudeCodeDesktop, None),
+        ] {
+            assert_eq!(
+                agent
+                    .config_path_with_dirs(Scope::Project, Some(&project), &directories)
+                    .unwrap(),
+                expected,
+            );
+            assert_eq!(
+                agent
+                    .config_path_with_dirs(Scope::Project, None, &directories)
+                    .unwrap(),
+                None,
+            );
+        }
+        assert!(!project.exists());
+    }
+
+    #[test]
+    fn injected_missing_directories_preserve_errors() {
+        let directories = AgentUserDirectories::default();
+        for (agent, expected) in [
+            (
+                Agent::ClaudeCode,
+                "could not resolve home dir for Claude Code",
+            ),
+            (Agent::Cursor, "could not resolve home dir for Cursor"),
+            (Agent::OpenCode, "could not resolve home dir for OpenCode"),
+            (Agent::Codex, "could not resolve home dir for Codex"),
+            (Agent::QwenCode, "could not resolve home dir for Qwen Code"),
+            (
+                Agent::ClaudeCodeDesktop,
+                "could not resolve user-config dir for Claude Desktop",
+            ),
+        ] {
+            assert_eq!(
+                agent
+                    .config_path_with_dirs(Scope::User, None, &directories)
+                    .unwrap_err()
+                    .to_string(),
+                expected,
+            );
+            assert_eq!(
+                agent
+                    .config_path_with_dirs(Scope::Both, None, &directories)
+                    .unwrap_err()
+                    .to_string(),
+                "internal: Agent::config_path requires concrete scope; expand Both first",
+            );
+        }
+    }
+
+    #[test]
+    fn injected_user_paths_require_only_the_selected_directory() {
+        let sandbox = tempfile::tempdir().unwrap();
+        let root = sandbox.path().to_path_buf();
+        let config_only = AgentUserDirectories {
+            home: None,
+            config: Some(root.clone()),
+        };
+        assert!(
+            Agent::ClaudeCodeDesktop
+                .config_path_with_dirs(Scope::User, None, &config_only)
+                .is_ok()
+        );
+        assert!(
+            Agent::Codex
+                .config_path_with_dirs(Scope::User, None, &config_only)
+                .is_err()
+        );
+        let home_only = AgentUserDirectories {
+            home: Some(root),
+            config: None,
+        };
+        for agent in Agent::ALL {
+            if *agent != Agent::ClaudeCodeDesktop {
+                assert!(
+                    agent
+                        .config_path_with_dirs(Scope::User, None, &home_only)
+                        .is_ok()
+                );
+            }
+        }
+        assert!(
+            Agent::ClaudeCodeDesktop
+                .config_path_with_dirs(Scope::User, None, &home_only)
+                .is_err()
+        );
     }
 }

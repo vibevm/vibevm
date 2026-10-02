@@ -17,6 +17,7 @@ fn args(path: std::path::PathBuf) -> InstallArgs {
         packages: Vec::new(),
         global: false,
         agent: None,
+        server: None,
         from_source: false,
         local_source: false,
         path,

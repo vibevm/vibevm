@@ -25,6 +25,7 @@ pub(super) fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         packages: Vec::new(),
         global: false,
         agent: None,
+        server: None,
         from_source: false,
         local_source: false,
         path: args.path.clone(),

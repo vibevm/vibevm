@@ -3,7 +3,7 @@
 //! slots are independent of whichever directory invoked `vibe install -g`.
 
 use std::fs::{self, OpenOptions};
-use std::io::{self, IsTerminal, Write};
+use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -50,7 +50,12 @@ pub(crate) fn run(
     let package = validate_package(&args)?.to_owned();
     let agents = select_agents(ctx, args.agent.as_deref())?;
     let project_root = user_project_root()?;
-    prepare_project(&project_root)?;
+    let preparation = ctx.progress().task("Preparing user MCP project");
+    if let Err(error) = prepare_project(&project_root) {
+        preparation.fail("user MCP project preparation failed");
+        return Err(error);
+    }
+    preparation.finish();
     args.path = project_root.clone();
     // Keep every previously installed user MCP package on its chosen version.
     // A later `-g` install must not silently move another package's endpoint
@@ -60,7 +65,14 @@ pub(crate) fn run(
     // solely a CLI routing flag; do not let it select a second resolver.
     args.global = false;
     args.agent = None;
-    super::run_direct(&ctx.quiet_child(), args, embedded_root, root_offline)?;
+    args.server = None;
+    super::run_user_project(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        super::UserProjectAction::Install,
+    )?;
     Ok(GlobalMcpInstall {
         project_root,
         package,
@@ -94,6 +106,7 @@ pub(crate) fn update(
         packages: vec![package.clone()],
         global: false,
         agent: None,
+        server: None,
         from_source: false,
         local_source: false,
         path: project_root.clone(),
@@ -122,11 +135,12 @@ pub(crate) fn update(
         force: false,
         trace_compile: args.trace_compile,
     };
-    super::run_direct(
-        &ctx.quiet_child(),
+    super::run_user_project(
+        ctx,
         install_args,
         embedded_root,
         root_offline,
+        super::UserProjectAction::Update,
     )?;
     Ok(GlobalMcpUpdate {
         project_root,
@@ -136,16 +150,21 @@ pub(crate) fn update(
 
 /// Remove a single global MCP root with the ordinary project uninstaller.
 /// The user project is never created by a removal request.
-pub(crate) fn uninstall(ctx: &output::Context, mut args: UninstallArgs) -> Result<()> {
+pub(crate) fn preflight_uninstall(args: &UninstallArgs) -> Result<PathBuf> {
     if args.path != Path::new(".") {
         bail!("global MCP uninstall uses a dedicated user project; omit --path");
     }
     let package = validate_mcp_coordinate(&args.package, false)?.to_owned();
     let project_root = existing_user_project_root()?;
     ensure_locked(&project_root, &package)?;
-    args.path = project_root.clone();
+    Ok(project_root)
+}
+
+pub(crate) fn uninstall(ctx: &output::Context, mut args: UninstallArgs) -> Result<()> {
+    args.path = preflight_uninstall(&args)?;
     args.global = false;
-    crate::commands::uninstall::run(&ctx.quiet_child(), args)
+    args.agent = None;
+    crate::commands::uninstall::run(&ctx.progress_child(), args)
 }
 
 fn existing_user_project_root() -> Result<PathBuf> {
@@ -230,39 +249,19 @@ fn validate_mcp_coordinate(spelling: &str, allow_version: bool) -> Result<&str> 
 
 fn select_agents(ctx: &output::Context, explicit: Option<&str>) -> Result<Vec<Agent>> {
     if let Some(explicit) = explicit {
-        return Agent::parse_filter(explicit);
+        return crate::commands::global_mcp_agents::parse_explicit_filter(explicit);
     }
-    if ctx.is_json() || ctx.is_unattended() || !io::stdin().is_terminal() {
+    if !crate::commands::global_mcp_agents::interactive(ctx) {
         bail!(
             "global MCP install needs --agent <name> (or --agent all) outside an interactive terminal"
         );
     }
-    let mut stderr = io::stderr().lock();
-    writeln!(stderr, "Select the agent to configure:")?;
-    for (index, agent) in Agent::ALL.iter().enumerate() {
-        let present = if agent.host_present() {
-            " (detected)"
-        } else {
-            ""
-        };
-        writeln!(stderr, "  {}. {}{}", index + 1, agent.as_str(), present)?;
-    }
-    write!(stderr, "Agent number or name: ")?;
-    stderr.flush()?;
-    let mut answer = String::new();
-    io::stdin().read_line(&mut answer)?;
-    let answer = answer.trim();
-    if let Ok(number) = answer.parse::<usize>()
-        && let Some(agent) = number
-            .checked_sub(1)
-            .and_then(|index| Agent::ALL.get(index))
-    {
-        return Ok(vec![*agent]);
-    }
-    if answer.is_empty() {
-        bail!("no agent selected; pass --agent <name> to install without a prompt");
-    }
-    Agent::parse_filter(answer)
+    let detected: Vec<_> = Agent::ALL
+        .iter()
+        .copied()
+        .filter(|agent| agent.host_present())
+        .collect();
+    crate::commands::global_mcp_agents::prompt(ctx, Agent::ALL, &detected)
 }
 
 fn prepare_project(root: &Path) -> Result<()> {

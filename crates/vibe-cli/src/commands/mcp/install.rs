@@ -581,7 +581,9 @@ fn walk_install_pkg_servers(
         results.extend(package_registration::register(
             project_root,
             &s.package,
-            Some(&s.decl.name),
+            Some(&package_registration::exact_server_filter(
+                std::slice::from_ref(&s.decl.name),
+            )?),
             &[agent],
             Scope::Project,
             assume_yes,

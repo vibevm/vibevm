@@ -10,6 +10,45 @@ use super::*;
 use rust_ai_native_env_audit::EnvGuard;
 
 #[test]
+fn report_suppression_preserves_progress_without_enabling_silent_modes() {
+    for (quiet, json, mode, enabled) in [
+        (false, false, ProgressMode::Plain, true),
+        (true, false, ProgressMode::Plain, false),
+        (false, true, ProgressMode::Plain, false),
+        (false, false, ProgressMode::Disabled, false),
+    ] {
+        let parent = Context::from_flags(
+            quiet,
+            json,
+            Some("codex"),
+            true,
+            crate::cli::AgentModeArg::Auto,
+        )
+        .with_progress(true, mode);
+        let child = parent.progress_child();
+        match (&parent.progress_renderer, &child.progress_renderer) {
+            (Some(parent), Some(child)) => assert!(Arc::ptr_eq(parent, child)),
+            (None, None) => assert!(!enabled),
+            _ => panic!("child lost invocation prompt suspension"),
+        }
+        assert_eq!(child.agent_user_dirs, parent.agent_user_dirs);
+        assert!(child.suppresses_output());
+        assert_eq!(child.is_json(), json);
+        assert!(child.is_unattended());
+        assert_eq!(child.agent_mode(), parent.agent_mode());
+        assert_eq!(child.is_verbose(), enabled);
+        let task = child.progress().task("nested installation");
+        assert_eq!(task.id().get() != 0, enabled);
+        let nested = child.with_progress_scope(task.progress());
+        let stage = nested.progress().task("resolution");
+        assert_eq!(stage.id().get() != 0, enabled);
+        stage.finish();
+        task.finish();
+        assert_eq!(parent.quiet_child().progress().task("silent").id().get(), 0);
+    }
+}
+
+#[test]
 fn quiet_and_json_suppress_progress_even_when_verbose() {
     for (quiet, json) in [(true, false), (false, true)] {
         let context = Context::from_flags(quiet, json, None, false, crate::cli::AgentModeArg::Auto)

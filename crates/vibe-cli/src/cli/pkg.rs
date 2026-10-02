@@ -162,9 +162,14 @@ pub struct InstallArgs {
     pub global: bool,
 
     /// Target coding agent for a global MCP package. Without this flag an
-    /// interactive terminal asks which agent to configure.
+    /// interactive terminal offers all detected agents by default.
     #[arg(long, requires = "global")]
     pub agent: Option<String>,
+
+    /// Global MCP server names: comma-separated, or a JSON string array for literal commas.
+    /// Without the flag, multiple servers offer checkboxes (default: all).
+    #[arg(long, requires = "global")]
+    pub server: Option<String>,
 
     /// For a global application, build the resolved source revision even
     /// when a verified platform distribution is available.
@@ -574,6 +579,10 @@ pub struct UninstallArgs {
     /// Uninstall one user application without mutating a project.
     #[arg(short = 'g', long = "global")]
     pub global: bool,
+
+    /// Target agent registration for a global MCP package; `all` removes all owned registrations.
+    #[arg(long, requires = "global")]
+    pub agent: Option<String>,
 
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]

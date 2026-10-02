@@ -10,6 +10,7 @@ pub(super) fn remove_selected(
     only_server: Option<&str>,
     dry_run: bool,
 ) -> Result<Vec<AgentInstallReport>> {
+    let selected = server_filter(only_server)?;
     let coordinate = normalized_coordinate(package)?;
     let requested_version = selector_exact_version(package)?;
     let mut receipt = read_receipt(config)?;
@@ -17,7 +18,8 @@ pub(super) fn remove_selected(
         .entries
         .iter()
         .filter(|(name, entry)| {
-            entry.package == coordinate && only_server.is_none_or(|n| n == name.as_str())
+            entry.package == coordinate
+                && selected.as_ref().is_none_or(|names| names.contains(name))
         })
         .map(|(name, _)| name.clone())
         .collect();
@@ -106,7 +108,7 @@ pub(in crate::commands::mcp) fn remove_all_managed(
             scope,
             config,
             package,
-            Some(name),
+            Some(&exact_server_filter(std::slice::from_ref(name))?),
             true,
         )?);
     }
@@ -132,7 +134,7 @@ pub(in crate::commands::mcp) fn remove_all_managed(
             scope,
             config,
             package,
-            Some(name),
+            Some(&exact_server_filter(std::slice::from_ref(name))?),
             false,
         )?);
     }
@@ -146,7 +148,9 @@ pub(in crate::commands::mcp) fn remove_all_managed(
             scope,
             config,
             &server.package,
-            Some(&server.decl.name),
+            Some(&exact_server_filter(std::slice::from_ref(
+                &server.decl.name,
+            ))?),
             false,
         )?);
     }

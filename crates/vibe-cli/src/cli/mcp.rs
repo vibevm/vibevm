@@ -63,8 +63,7 @@ pub struct McpInstallArgs {
     /// retain the legacy walk over every package server in the project.
     pub package: Option<String>,
 
-    /// One server within the selected package. Required only when a package
-    /// declares multiple servers and the operator wants just one.
+    /// Server names: comma-separated, or a JSON string array for literal commas.
     #[arg(long, requires = "package")]
     pub server: Option<String>,
 
@@ -137,7 +136,7 @@ pub struct McpUninstallArgs {
     /// Remove registrations owned by this installed MCP package only.
     pub package: Option<String>,
 
-    /// Remove only this server within the selected package.
+    /// Server names to remove: comma-separated, or a JSON string array for literal commas.
     #[arg(long, requires = "package")]
     pub server: Option<String>,
 

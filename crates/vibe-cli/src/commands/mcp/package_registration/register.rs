@@ -132,6 +132,32 @@ pub(in crate::commands::mcp) fn register(
     consent: bool,
     dry_run: bool,
 ) -> Result<Vec<AgentInstallReport>> {
+    register_with_dirs(
+        root,
+        package,
+        only_server,
+        agents,
+        scope,
+        RegistrationPolicy { consent, dry_run },
+        &vibe_agent_projection::agents::AgentUserDirectories::ambient(),
+    )
+}
+
+pub(in crate::commands::mcp) struct RegistrationPolicy {
+    pub(in crate::commands::mcp) consent: bool,
+    pub(in crate::commands::mcp) dry_run: bool,
+}
+
+pub(in crate::commands::mcp) fn register_with_dirs(
+    root: &Path,
+    package: &str,
+    only_server: Option<&str>,
+    agents: &[Agent],
+    scope: Scope,
+    policy: RegistrationPolicy,
+    dirs: &vibe_agent_projection::agents::AgentUserDirectories,
+) -> Result<Vec<AgentInstallReport>> {
+    let RegistrationPolicy { consent, dry_run } = policy;
     let servers = selected_servers(root, package, only_server)?;
     for server in &servers {
         ensure_scope_supported(scope, server)?;
@@ -140,13 +166,14 @@ pub(in crate::commands::mcp) fn register(
     let mut planned = Vec::new();
     let mut skipped = Vec::new();
     for &agent in agents {
-        let Some(config) = agent.config_path(
+        let Some(config) = agent.config_path_with_dirs(
             scope,
             if scope == Scope::Project {
                 Some(root)
             } else {
                 None
             },
+            dirs,
         )?
         else {
             if agents.len() == 1 {
