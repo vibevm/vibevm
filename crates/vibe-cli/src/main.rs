@@ -46,6 +46,9 @@ fn main() -> ExitCode {
         }
     };
 
+    if let Command::Machine(args) = &cli.command {
+        return commands::machine_session::run(args, &cli);
+    }
     if let Some(exit) = commands::refactor::machine_entry::run(&cli.command) {
         return exit;
     }
@@ -211,6 +214,7 @@ fn main() -> ExitCode {
                 seed_default_registry: read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none(),
             },
         ),
+        Command::Machine(_) => Err(anyhow::anyhow!("machine session requires early dispatch")),
         Command::Aiui(args) => commands::aiui::run(&ctx, args),
         Command::Term(args) => commands::term::run(&ctx, args),
         Command::Frame(args) => commands::term::run_frame(&ctx, args),

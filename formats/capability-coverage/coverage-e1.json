@@ -37,7 +37,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/cli.rs",
       "path": "crates/vibe-cli/src/cli.rs",
-      "sha256": "b78c1ff4c2b5cbc0c70032a79b3f1ea6da4a5a2ab2d00c676cdf85c8efa9e96e"
+      "sha256": "10947c5614fd2f8fa50f91f19627610819d328e48737a94f69db979bafb7724b"
     },
     {
       "source_id": "source:crates/vibe-cli/src/cli/agentic.rs",
@@ -152,7 +152,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/cli/tests.rs",
       "path": "crates/vibe-cli/src/cli/tests.rs",
-      "sha256": "8e852092136527c4368add51036a55c36d56924c5dd2181ac38ebc13941d3506"
+      "sha256": "666eba4a51fcafbe9ef3ab2a051342ebee6bb09398d732dd64a0b57bbde27e77"
     },
     {
       "source_id": "source:crates/vibe-cli/src/cli/vars.rs",
@@ -172,7 +172,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/command_progress.rs",
       "path": "crates/vibe-cli/src/command_progress.rs",
-      "sha256": "19f1784e0e662945ac0a2b973a21466dc1067e4e70e7857f517c68136c958f2c"
+      "sha256": "80435cc4fa611e48e17a61c6a95a484a888fc51b5dc93ec2fc38d8ac9c0b10e9"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/agentic/mod.rs",
@@ -297,7 +297,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/commands/mod.rs",
       "path": "crates/vibe-cli/src/commands/mod.rs",
-      "sha256": "983fbe30b537b17ae673d65840519fb700a5787c2b57103e475b23b39d16085b"
+      "sha256": "80abce4ea263669d247a673972a6b157d87853bb836827afd8427ab3a4d96880"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/outdated.rs",
@@ -612,7 +612,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/main.rs",
       "path": "crates/vibe-cli/src/main.rs",
-      "sha256": "2e7d84ff34f9e89b757944f5ad8999357ecb847f284360cbcf038bcba201a0cb"
+      "sha256": "d11501bc725742d6b214b28abec5a7ecb971e92a819a4fa37a61159d4beca687"
     },
     {
       "source_id": "source:crates/vibe-cli/src/output.rs",
@@ -1123,6 +1123,26 @@
       "source_id": "source:schemas/machine/e1/lifecycle_submission_view.jtd.json",
       "path": "schemas/machine/e1/lifecycle_submission_view.jtd.json",
       "sha256": "ec4fe12ba15719934e957ce183546193b3f65f333aad273682e952219813c96d"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/cli/machine.rs",
+      "path": "crates/vibe-cli/src/cli/machine.rs",
+      "sha256": "046add8bfe4550407f524df6853b919c14b89ef14ba62478b887413986c45b97"
+    }
+,    {
+      "source_id": "source:crates/vibe-cli/src/commands/machine_session.rs",
+      "path": "crates/vibe-cli/src/commands/machine_session.rs",
+      "sha256": "1c577dfd044d2d6da5fa788fa62303b3109cacdb6a61a74f6271413345166164"
+    }
+,    {
+      "source_id": "source:crates/vibe-cli/tests/machine_session.rs",
+      "path": "crates/vibe-cli/tests/machine_session.rs",
+      "sha256": "3621f2da11353044d9bdadfbcde723ac671a70be11073583e6605aabcd8263c6"
+    }
+,    {
+      "source_id": "source:crates/vibe-mcp/src/machine_session/runner.rs",
+      "path": "crates/vibe-mcp/src/machine_session/runner.rs",
+      "sha256": "d5d175ba506a18816cce9471f403ae80a55e636f8365651b30a16cba7be32c28"
     }
   ],
   "surfaces": [
@@ -8611,6 +8631,70 @@
       "disposition": "operation",
       "reason": "Observed local registration and owner source; checked source bytes bound to selected Git subject. The selected capture is a six-row SourceDeclared subset, not the complete CLI/MCP denominator. Runtime and semantic adequacy remain separately reviewed.",
       "operation_id": "operation.mcp.plan_manifest_migration_envelope"
+    },
+    {
+      "surface_id": "surface.cli.vibe.machine",
+      "kind": "cli",
+      "aliases": [],
+      "authority": "Explicit CLI composition chooses a canonical physical project root; this registration alone grants no effectful host or namespace.",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Finite source registration only; separate focused binary tests establish the pure frame route, not whole machine capability.",
+      "conformance_cases": [
+        "proposed:registration-accounting"
+      ],
+      "registered": true,
+      "name": "machine",
+      "owner": "Actual clap group at crates/vibe-cli/src/cli.rs and crates/vibe-cli/src/cli/machine.rs; early dispatch in crates/vibe-cli/src/main.rs.",
+      "target": "CLI route vibe machine; only the explicit session child is registered.",
+      "effects": [
+        "Grouping metadata only; no provider or namespace is started by the group."
+      ],
+      "carrier": "Group has no uniform exchange; the session child has a separate byte-framed carrier.",
+      "schema_ref": "unbound schema: command group has no exchange value",
+      "retention": "No group-level result or operation state.",
+      "source_ids": [
+        "source:crates/vibe-cli/src/cli.rs",
+        "source:crates/vibe-cli/src/cli/machine.rs",
+        "source:crates/vibe-cli/src/main.rs"
+      ],
+      "disposition": "group",
+      "reason": "Actual native clap group; no callable semantic action at the group node."
+    }
+,    {
+      "surface_id": "surface.cli.vibe.machine.session",
+      "kind": "cli",
+      "aliases": [],
+      "authority": "Explicit CLI composition chooses a canonical physical project root; this registration alone grants no effectful host or namespace.",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Finite source registration only; separate focused binary tests establish the pure frame route, not whole machine capability.",
+      "conformance_cases": [
+        "proposed:registration-accounting",
+        "source:crates/vibe-cli/tests/machine_session.rs"
+      ],
+      "registered": true,
+      "name": "session",
+      "owner": "Actual early adapter crates/vibe-cli/src/commands/machine_session.rs; delegates pure planning to vibe-mcp machine_session/runner.rs without starting MCP JSON-RPC.",
+      "target": "Required absolute --root is canonicalized as a project before stdin frames; one finite workspace/target is bound, HOME and container remain unavailable.",
+      "effects": [
+        "Pure migration planner returns NoEffects; fixed lifecycle host, C1 namespace, provider, streaming, replay and control are unavailable on this CLI route."
+      ],
+      "carrier": "Four-byte length-prefixed generated SessionFrame with registered OperationEnvelope and migration plan input/result/error values; stdout is frames only.",
+      "schema_ref": "format:machine-session-frame@1",
+      "retention": "Connection-local response until EOF; no durable effect or operation result is created by this pure planner.",
+      "source_ids": [
+        "source:crates/vibe-cli/src/cli.rs",
+        "source:crates/vibe-cli/src/cli/machine.rs",
+        "source:crates/vibe-cli/src/main.rs",
+        "source:crates/vibe-cli/src/commands/machine_session.rs",
+        "source:crates/vibe-mcp/src/machine_session/runner.rs",
+        "source:crates/vibe-cli/tests/machine_session.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Actual explicit pure planner adapter and registered frame source. Source inventory does not promote fixed Validate or any general effectful machine operation.",
+      "parent_surface_id": "surface.cli.vibe.machine",
+      "operation_id": "operation.cli.vibe.machine.session"
     }
   ],
   "models": [

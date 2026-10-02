@@ -37,6 +37,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "init",
     "install",
     "list",
+    "machine",
     "mcp",
     "outdated",
     "package",
@@ -164,6 +165,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         },
         Command::Outdated(_) => FiniteFallback("Command outdated"),
         Command::Search(_) => FiniteFallback("Command search"),
+        Command::Machine(_) => PersistentProtocol,
         Command::Mcp(args) => match &args.command {
             McpSubcommand::Serve(_) => PersistentProtocol,
             McpSubcommand::Install(_) => FiniteFallback("Command mcp install"),

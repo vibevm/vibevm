@@ -51,6 +51,7 @@ pub mod init;
 pub mod install;
 pub mod lifecycle;
 pub mod list;
+pub(crate) mod machine_session;
 pub mod mcp;
 pub mod outdated;
 pub mod prefs;
