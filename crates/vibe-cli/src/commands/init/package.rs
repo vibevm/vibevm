@@ -68,7 +68,7 @@ pub(super) fn create_package_in_project(
 
     // Gather package field values (interactive or defaults from project fields).
     let fields = if interactive {
-        prompts::prompt_package_fields(group, name, user_config)?
+        ctx.suspend_progress(|| prompts::prompt_package_fields(group, name, user_config))?
     } else {
         prompts::package_fields_from_args(args, group, name, user_config)
     };

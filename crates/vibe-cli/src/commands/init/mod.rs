@@ -170,7 +170,7 @@ fn create_project(
 
     // Gather project field values (interactive prompts or flags/defaults).
     let fields = if interactive {
-        prompts::prompt_project_fields(&project_name, user_config)?
+        ctx.suspend_progress(|| prompts::prompt_project_fields(&project_name, user_config))?
     } else {
         prompts::project_fields_from_args(args, &project_name, user_config)
     };
