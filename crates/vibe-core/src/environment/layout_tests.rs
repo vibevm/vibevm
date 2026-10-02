@@ -217,7 +217,7 @@ fn explicit_profile_cache_and_home_bindings_do_not_fall_back() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
-    r = 1
+    r = 2
 )]
 fn linux_non_utf8_components_survive_windows_control_plane() {
     let windows_executor = PlatformFacts::new(
@@ -257,11 +257,12 @@ fn linux_non_utf8_components_survive_windows_control_plane() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
-    r = 1
+    r = 2
 )]
 fn traversal_and_windows_reserved_rules_use_only_target_policy() {
     for policy in [
         TargetPathPolicy::LinuxBytes,
+        TargetPathPolicy::MacosPosixBytes,
         TargetPathPolicy::WindowsPortableWin32Utf8,
     ] {
         for invalid in [b"".as_slice(), b".", b"..", b"a/b", b"a\0b"] {
@@ -424,7 +425,7 @@ fn distinct_instances_share_immutable_content_without_sharing_resource_identity(
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
-    r = 1
+    r = 2
 )]
 fn lexical_collision_ascii_limits_and_unknown_policy_are_explicit() {
     let layout = EnvironmentLayout::settings_anchored(input()).unwrap();
