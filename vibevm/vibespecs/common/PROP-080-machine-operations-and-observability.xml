@@ -61,6 +61,10 @@
       generic executor or expanded Public A/future B grant. Legacy MCP and
       one-shot reaches remain independent under their coexistence
       contract.</MACHINE-INPUT-ADMISSION-LAW></p>
+      <MACHINE-FIXED-FORCE title="Explicit force in the fixed Validate profile">
+        <p><req-machine-fixed-force fact="true" status="spec/plan">`req r1`</req-machine-fixed-force></p>
+        <p><MACHINE-FIXED-FORCE-DECISION fact="true" status="spec/plan">Decision: the narrow one-script fixed Validate profile may admit `force=true` only through its generated requested options, exact typed approval and current host policy for the captured script. Its unchanged v4 source-capture base remains a comparison component; the already versioned admitted request/plan wrapper binds the force bit and is the effective C1 canonical intent. The owner passes that same approved bit to run-identity selection, pre-effect execution and the actual lifecycle request. An identical key and identical force intent attaches to the retained run/result; changing force under one key refuses. A fresh key alone never implies force: `force=false` follows ordinary freshness and predecessor fences, while `force=true` must be explicitly asked and approved. Why: force changes execution/freshness behavior, while C1 replay must never redispatch an already reserved key. Considered and rejected: inferring force from key novelty, merely removing adapter refusal while executing with force false, rewriting the unchanged v4 capture as if it were the admitted wrapper, and treating host script permission as a blanket answer. Revisit when a general phase or domain needs a distinct host-level force policy, a versioned base capture, or a named test proves the wrapper cannot preserve exact request/plan identity and owner effect truth.</MACHINE-FIXED-FORCE-DECISION></p>
+      </MACHINE-FIXED-FORCE>
     </MACHINE-INPUT-ADMISSION>
     <MACHINE-OPERATION-SERVICE title="Shared domain delegation">
       <p><req-machine-operation-service fact="true" status="spec/plan">`req r1`</req-machine-operation-service></p>
