@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "question_id": "test-question",
+  "operation_id": "test-operation",
+  "domain_owner": "test-owner",
+  "context_id": "test-context",
+  "target_id": null,
+  "principal_id": "test-principal",
+  "plan_id": "test-plan",
+  "source_id": "test-source",
+  "policy_generation": "test-policy",
+  "requested_options": {
+    "force": false,
+    "trace": false,
+    "deploy_profile": null,
+    "control": "none"
+  },
+  "body": {
+    "kind": "selection_question",
+    "prompt": "Choose",
+    "choices": [
+      {
+        "id": "a",
+        "label": "Alpha"
+      },
+      {
+        "id": "b",
+        "label": "Beta"
+      }
+    ],
+    "min_choices": 1,
+    "max_choices": 2
+  },
+  "assume_yes": true
+}

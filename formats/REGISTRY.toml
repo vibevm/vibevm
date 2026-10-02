@@ -1470,3 +1470,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-operation-stream-message/e1"
 sunset = "none"
+
+[format.machine-input-decision-message]
+epoch = 1
+schema = "schemas/machine/e1/input_decision_message.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-input-decision-message/e1"
+sunset = "none"
