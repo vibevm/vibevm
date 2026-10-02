@@ -17,7 +17,12 @@ to the historical subject above. All other source hashes are retained without
 a freshness recensus; baseline paths outside the historical selection remain
 historical evidence.
 
-This candidate names 224 source files, 174 CLI command forms, 16 default MCP
+`machine-session-source-delta.json` separately binds nine current source byte
+observations for the pure CLI frame route, including four newly cited paths.
+It does not attribute them to the historical selected observation or claim
+effectful fixed lifecycle authority.
+
+This candidate names 228 source files, 176 CLI command forms, 16 default MCP
 tools, nine registered TUI actions, 12 direct TUI effect routes, one dynamic MCP
 registration seam, and 30 developer-tool command nodes. Its 35 model families
 include migration, environment, machine-operation and captured entity-view shapes; its 15 planned
@@ -45,7 +50,7 @@ retain explicit reasons. Proposed conformance cases are unexecuted unless
 separately bound to a retained test receipt. This inventory is a bounded current
 source and registration account, not complete semantic/API coverage.
 
-The inventory now contains 242 surface rows, 215 distinct operation identities
+The inventory now contains 244 surface rows, 216 distinct operation identities
 and the unchanged 35 model identities and 15 planned families.
 The shared machine registry historically projects the 214 operation identities and 35 model
 identities with typed extraction gaps while their catalogue owner and schema
@@ -64,6 +69,8 @@ deploy profiles, controls, streams, CLI, full legacy lifecycle and general
 owners remain gaps. Nullable/unavailable results and missing final reports
 retain uncertainty. This metadata neither admits a general handler nor grants
 namespace/root/principal authority; the legacy `lifecycle_run` is unchanged.
+The new `operation.cli.vibe.machine.session` row is outside that historical
+registry projection. Its focused binary proof covers pure planning only.
 C4 remains 36/222, with no public 1.1 or native Windows/macOS claim.
 Captured entity models keep
 logical/content/observation/occurrence identities separate, and their page

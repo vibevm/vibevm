@@ -20,6 +20,7 @@ mod extensions;
 mod init;
 mod inspect;
 mod lifecycle;
+mod machine;
 mod mcp;
 mod pkg;
 mod prefs;
@@ -46,6 +47,7 @@ pub use extensions::*;
 pub use init::{InitArgs, InitType};
 pub use inspect::*;
 pub use lifecycle::*;
+pub use machine::*;
 pub use mcp::*;
 pub use pkg::*;
 pub use prefs::*;
@@ -235,6 +237,9 @@ pub enum Command {
     /// PROP-004 §5.1 / ROADMAP §M1.7. Reads JSON-RPC 2.0 requests
     /// line-by-line from stdin; writes responses to stdout.
     Mcp(McpArgs),
+
+    /// Run an explicitly rooted byte-framed pure planner session over stdio.
+    Machine(MachineArgs),
 
     /// The agent-facing observation surface (PROP-042). `vibe aiui render`
     /// renders the `vibe tree` TUI headlessly to a symbolic snapshot (text or

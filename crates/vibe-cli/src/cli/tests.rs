@@ -261,3 +261,83 @@ fn run_keeps_arguments_after_the_separator() {
     assert_eq!(args.command, "vibevm-doc");
     assert_eq!(args.args, ["--no-build", "--port", "4323"]);
 }
+
+#[test]
+fn machine_session_requires_explicit_absolute_root() {
+    let root = std::env::temp_dir();
+    let root = root.to_str().unwrap();
+    let cli = Cli::try_parse_from(["vibe", "machine", "session", "--root", root]).unwrap();
+    let Command::Machine(args) = cli.command else {
+        panic!("machine registration")
+    };
+    let super::MachineSubcommand::Session(args) = args.command;
+    assert_eq!(args.root, std::path::PathBuf::from(root));
+    for argv in [
+        vec!["vibe", "machine"],
+        vec!["vibe", "machine", "session"],
+        vec!["vibe", "machine", "session", "--root", "."],
+        vec!["vibe", "machine", "session", "--root", ""],
+        vec![
+            "vibe",
+            "machine",
+            "session",
+            "--root",
+            root,
+            "--namespace",
+            "caller",
+        ],
+    ] {
+        assert!(Cli::try_parse_from(&argv).is_err(), "{argv:?}");
+    }
+}
+
+#[test]
+fn machine_session_rejects_conflicting_global_output_flags() {
+    let root = std::env::temp_dir();
+    let root = root.to_str().unwrap();
+    for flags in [
+        vec!["--json"],
+        vec!["--quiet"],
+        vec!["--verbose"],
+        vec!["--invoked-by", "test"],
+        vec!["--agent-mode", "agent"],
+    ] {
+        for before in [true, false] {
+            let mut argv = vec!["vibe"];
+            if before {
+                argv.extend(flags.clone());
+            }
+            argv.extend(["machine", "session", "--root", root]);
+            if !before {
+                argv.extend(flags.clone());
+            }
+            if let Ok(cli) = Cli::try_parse_from(&argv) {
+                assert!(
+                    crate::commands::machine_session::validate_output(&cli).is_err(),
+                    "{argv:?}"
+                );
+            }
+        }
+    }
+    let cli = Cli::try_parse_from([
+        "vibe",
+        "machine",
+        "session",
+        "--root",
+        root,
+        "--offline",
+        "--no-progress",
+    ])
+    .unwrap();
+    assert!(crate::commands::machine_session::validate_output(&cli).is_ok());
+    assert_eq!(
+        crate::command_progress::policy(&cli.command, false),
+        crate::command_progress::CommandPolicy::PersistentProtocol
+    );
+    assert!(matches!(
+        Cli::try_parse_from(["vibe", "mcp", "serve"])
+            .unwrap()
+            .command,
+        Command::Mcp(_)
+    ));
+}
