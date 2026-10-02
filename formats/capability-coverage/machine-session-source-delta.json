@@ -1,6 +1,6 @@
 {
   "receipt_id": "machine-session-workingtree-source-delta",
-  "scope": "Explicit pure-planner vibe machine session clap registration, early adapter, exact binary fixture and directly delegated incumbent runner. Current working-tree SHA256 bytes; no current commit identity asserted.",
+  "scope": "Pure and explicit fixed Validate CLI session registration, trusted grant, framed runner, identity owner and binary fixtures. Current working-tree SHA256 bytes; no current commit identity asserted.",
   "historical_baseline_capture_id": "capability-baseline-4a3f80a34",
   "historical_observation_capture_id": "entity-view-observed-c2a31e642",
   "historical_git_subject": "c2a31e642737a29486dc69d0f444407df778fc67",
@@ -13,13 +13,13 @@
     },
     {
       "path": "crates/vibe-cli/src/cli/machine.rs",
-      "sha256": "046add8bfe4550407f524df6853b919c14b89ef14ba62478b887413986c45b97",
+      "sha256": "40d3276a04c7b1f9bb5bfe1ad87aa3f831596ed1f8362ddf92a814aae306b861",
       "previous_ledger_sha256": null,
       "change": "newly cited source; not claimed newly created"
     },
     {
       "path": "crates/vibe-cli/src/cli/tests.rs",
-      "sha256": "666eba4a51fcafbe9ef3ab2a051342ebee6bb09398d732dd64a0b57bbde27e77",
+      "sha256": "05a56936b231eb396daaa85ece9701fd07421650063f4c5172476b4077881165",
       "previous_ledger_sha256": "8e852092136527c4368add51036a55c36d56924c5dd2181ac38ebc13941d3506",
       "change": "rebound source bytes"
     },
@@ -31,7 +31,7 @@
     },
     {
       "path": "crates/vibe-cli/src/commands/machine_session.rs",
-      "sha256": "1c577dfd044d2d6da5fa788fa62303b3109cacdb6a61a74f6271413345166164",
+      "sha256": "ba32bfd64cce65ba1b9df2445114b13c2b459b6474c80e59f898c5dc1e24336c",
       "previous_ledger_sha256": null,
       "change": "newly cited source; not claimed newly created"
     },
@@ -58,12 +58,42 @@
       "sha256": "d5d175ba506a18816cce9471f403ae80a55e636f8365651b30a16cba7be32c28",
       "previous_ledger_sha256": null,
       "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "crates/vibe-cli/tests/machine_session_fixed.rs",
+      "sha256": "95401ac404dae94a42c4100663c541cbd8d0d9cc87b45d59bb01bb211f7ca1f9",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "crates/vibe-cli/tests/machine_session_fixed/cases.rs",
+      "sha256": "9f6320322274d32113a3f0fff723a856c9aaec7f45c90bafcdc50d996c5afce7",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "crates/vibe-mcp/src/machine_session/fixed.rs",
+      "sha256": "b9b14639d36243900660fa17a70f4ab8b1f0f945e439396851d3058bfc1e4e34",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "crates/vibe-mcp/src/machine_session/state.rs",
+      "sha256": "95986683f0fd277a912a8dca6a7cdba72949fdf55b1f13fb99b99414778334ca",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs",
+      "sha256": "b4f83c8770115d268720ab73419a0a483ac33cbd8593e9cff2eb163bbdaefca4",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
     }
   ],
   "counts": {
-    "sources": 228,
+    "sources": 233,
     "surfaces": 244,
     "registered_cli": 176
   },
-  "limitations": "Other historical source hashes retain their historical observation; this delta does not attribute current bytes to that capture. Inventory is source/registration evidence, not a grant or whole machine capability."
+  "limitations": "Other historical source hashes retain their historical observation; current bytes are not attributed to that capture. Inventory binds registration/source only, not arbitrary effects, general phases, hostile cross-user authority or whole machine completeness."
 }

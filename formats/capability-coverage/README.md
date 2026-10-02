@@ -17,12 +17,13 @@ to the historical subject above. All other source hashes are retained without
 a freshness recensus; baseline paths outside the historical selection remain
 historical evidence.
 
-`machine-session-source-delta.json` separately binds nine current source byte
-observations for the pure CLI frame route, including four newly cited paths.
-It does not attribute them to the historical selected observation or claim
-effectful fixed lifecycle authority.
+`machine-session-source-delta.json` separately binds 14 current source byte
+observations for the CLI frame route, including nine newly cited paths. It
+does not attribute them to the historical selected observation. The explicit
+fixed Validate route has its own bounded owner and binary proof; this source
+inventory alone grants no effectful authority.
 
-This candidate names 228 source files, 176 CLI command forms, 16 default MCP
+This candidate names 233 source files, 176 CLI command forms, 16 default MCP
 tools, nine registered TUI actions, 12 direct TUI effect routes, one dynamic MCP
 registration seam, and 30 developer-tool command nodes. Its 35 model families
 include migration, environment, machine-operation and captured entity-view shapes; its 15 planned
@@ -70,7 +71,8 @@ owners remain gaps. Nullable/unavailable results and missing final reports
 retain uncertainty. This metadata neither admits a general handler nor grants
 namespace/root/principal authority; the legacy `lifecycle_run` is unchanged.
 The new `operation.cli.vibe.machine.session` row is outside that historical
-registry projection. Its focused binary proof covers pure planning only.
+registry projection. Its focused binary proof covers pure planning by default
+and explicit host-granted fixed Validate; other phases remain unavailable.
 C4 remains 36/222, with no public 1.1 or native Windows/macOS claim.
 Captured entity models keep
 logical/content/observation/occurrence identities separate, and their page

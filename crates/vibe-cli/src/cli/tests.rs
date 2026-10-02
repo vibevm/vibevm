@@ -292,6 +292,89 @@ fn machine_session_requires_explicit_absolute_root() {
 }
 
 #[test]
+fn machine_session_fixed_validate_grammar_and_denied_defaults() {
+    let root = std::env::temp_dir();
+    let prefix = [
+        "vibe",
+        "machine",
+        "session",
+        "--root",
+        root.to_str().unwrap(),
+    ];
+    for suffix in [
+        vec![],
+        vec!["--fixed-validate", "issue", "--ttl-ms", "60000"],
+        vec!["--fixed-validate", "reattach"],
+    ] {
+        let cli = Cli::try_parse_from(prefix.into_iter().chain(suffix)).unwrap();
+        let Command::Machine(args) = cli.command else {
+            panic!("machine")
+        };
+        let super::MachineSubcommand::Session(args) = args.command;
+        assert!(crate::commands::machine_session::validate_mode(&args).is_ok());
+        assert!(
+            !args.approve_captured_script
+                && !args.allow_detach
+                && !args.allow_cancel_pre_dispatch
+                && !args.allow_cancel_deferred_boundary
+        );
+    }
+    for flag in [
+        "--approve-captured-script",
+        "--allow-detach",
+        "--allow-cancel-pre-dispatch",
+        "--allow-cancel-deferred-boundary",
+    ] {
+        assert!(Cli::try_parse_from(prefix.into_iter().chain([flag])).is_err());
+        let cli =
+            Cli::try_parse_from(
+                prefix
+                    .into_iter()
+                    .chain(["--fixed-validate", "reattach", flag]),
+            )
+            .unwrap();
+        let Command::Machine(args) = cli.command else {
+            panic!("machine")
+        };
+        let super::MachineSubcommand::Session(args) = args.command;
+        assert!(crate::commands::machine_session::validate_mode(&args).is_ok());
+    }
+    for suffix in [
+        vec!["--fixed-validate"],
+        vec!["--fixed-validate", "unknown"],
+        vec!["--fixed-validate", "issue"],
+        vec!["--ttl-ms", "60000"],
+        vec!["--fixed-validate", "issue", "--ttl-ms", "0"],
+        vec!["--fixed-validate", "issue", "--ttl-ms", "86400001"],
+        vec!["--fixed-validate", "issue", "--ttl-ms", "-1"],
+        vec!["--fixed-validate", "issue", "--ttl-ms", "bad"],
+        vec![
+            "--fixed-validate",
+            "issue",
+            "--ttl-ms",
+            "60000",
+            "--fixed-validate",
+            "reattach",
+        ],
+        vec!["--fixed-validate", "reattach", "--ttl-ms", "60000"],
+        vec!["--fixed-validate", "reattach", "--force"],
+        vec!["--fixed-validate", "reattach", "--trace"],
+        vec!["--fixed-validate", "reattach", "--deploy-profile", "posix"],
+    ] {
+        if let Ok(cli) = Cli::try_parse_from(prefix.into_iter().chain(suffix.clone())) {
+            let Command::Machine(args) = cli.command else {
+                panic!("machine")
+            };
+            let super::MachineSubcommand::Session(args) = args.command;
+            assert!(
+                crate::commands::machine_session::validate_mode(&args).is_err(),
+                "{suffix:?}"
+            );
+        }
+    }
+}
+
+#[test]
 fn machine_session_rejects_conflicting_global_output_flags() {
     let root = std::env::temp_dir();
     let root = root.to_str().unwrap();
