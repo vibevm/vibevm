@@ -331,7 +331,9 @@
         "crates/vibe-mcp/src/tools/machine_operation.rs",
         "crates/vibe-orchestrator/src/machine_submission/",
         "formats/REGISTRY.toml",
-        "formats/EPOCHS.toml"
+        "formats/EPOCHS.toml",
+        "crates/vibe-safefs/src/project.rs",
+        "crates/vibe-safefs/src/project/race_tests.rs"
       ],
       "write_paths": [
         "crates/vibe-mcp/src/tools/",
@@ -355,7 +357,9 @@
         "crates/vibe-cli/src/cli.rs",
         "crates/vibe-cli/src/cli/",
         "crates/vibe-mcp/src/machine_session/",
-        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "crates/vibe-safefs/src/project.rs",
+        "crates/vibe-safefs/src/project/race_tests.rs"
       ],
       "steps": [
         "Map domain NeedsSelection/input/approval requests to schemas bound to exact question, plan, scope and policy generation.",
@@ -391,7 +395,8 @@
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
-        "Source-bound C4 refinement: owner-bound decision/admission values require registered JTD schemas, generated machine readers and semantic validation; actual CLI registration belongs to its clap owners and machine-session routing belongs to its incumbent service. This extends only the required schema/registration/adapter perimeter. All four steps and acceptance remain unchanged; legacy MCP coexistence, exact target/effect grants, Public A/future B and the ban on public 1.1.0 publication remain binding."
+        "Source-bound C4 refinement: owner-bound decision/admission values require registered JTD schemas, generated machine readers and semantic validation; actual CLI registration belongs to its clap owners and machine-session routing belongs to its incumbent service. This extends only the required schema/registration/adapter perimeter. All four steps and acceptance remain unchanged; legacy MCP coexistence, exact target/effect grants, Public A/future B and the ban on public 1.1.0 publication remain binding.",
+        "Source-bound C4 lock-owner refinement: the actual concurrent terminal/control probes and native FD-alias counterexample require the incumbent SafeFS project LockGuard owner and its exact race tests. Preserve exclusive ownership and negative lock/reentry proof; explicit release must not fabricate terminal truth, hide external Busy, or replace a domain journal. Scope and all numbered C4 obligations remain unchanged."
       ]
     }
   ]
