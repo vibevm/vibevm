@@ -100,6 +100,9 @@ pub struct ToolDescriptor {
 /// level JSON-RPC error.
 /// StructuredPreflight retains an owning report without domain execution;
 /// ordinary variants keep their text-only result.
+/// A tool error is not a zero-effect guarantee: an internal error can occur
+/// after execution while publishing its report. The domain owner remains the
+/// authority for execution and effect evidence.
 ///
 /// ```
 /// use vibe_mcp::ToolError;

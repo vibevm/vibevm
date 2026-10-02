@@ -58,9 +58,13 @@ pub trait McpTool {
     /// `Ok(ToolOutput)` means the operation **executed** — ordinary
     /// success, or an executed structured failure whose report survives
     /// in `structuredContent` under `isError: true`. `Err(ToolError)`
-    /// is the preflight / tool-failure channel: the operation never ran.
+    /// is the preflight / tool-failure channel. It can also contain a late
+    /// failure, such as report serialization after domain execution; `Err`
+    /// alone does not establish that the operation never ran or had no effects.
     /// StructuredPreflight retains its owning typed report; ordinary errors
-    /// remain text-only. See [`ToolOutput`] for the executed distinction.
+    /// remain text-only, so missing effect evidence stays unavailable until
+    /// the domain owner establishes it. See [`ToolOutput`] for the executed
+    /// distinction.
     fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError>;
 }
 
