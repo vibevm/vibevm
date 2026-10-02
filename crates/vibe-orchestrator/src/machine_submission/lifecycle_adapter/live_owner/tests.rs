@@ -119,7 +119,7 @@ pub(super) fn begin(
     .unwrap();
     let binding = owner
         .wait_ready(Duration::from_secs(10))
-        .expect("actual Ready binding");
+        .unwrap_or_else(|| panic!("actual Ready binding unavailable: {:?}", owner.inspect()));
     s.entered.recv_timeout(Duration::from_secs(10)).unwrap();
     (owner, observer, binding)
 }

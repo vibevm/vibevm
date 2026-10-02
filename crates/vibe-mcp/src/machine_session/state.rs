@@ -45,6 +45,7 @@ pub struct TrustedContextSource {
 pub enum SessionBuildError {
     IdsExhausted,
     MissingTrustedRoot,
+    ObserverUnavailable,
 }
 
 struct BoundContext {
@@ -75,6 +76,11 @@ pub struct MachineSession {
     session_id: String,
     contexts: BTreeMap<String, BoundContext>,
     request_ids: BTreeSet<String>,
+    request_id_bytes: usize,
+    correlation_exhausted: bool,
+    schemas: Vec<SchemaOffer>,
+    capabilities: Capabilities,
+    require_target: bool,
 }
 
 fn supported_schemas() -> Vec<SchemaOffer> {
@@ -108,8 +114,18 @@ fn unavailable_context(session: u64, ordinal: usize, kind: ContextKind) -> Bound
     }
 }
 
+pub const MAX_REQUEST_IDS: usize = 256;
+pub const MAX_REQUEST_ID_BYTES: usize = 256;
+pub const MAX_CORRELATION_BYTES: usize = 64 * 1024;
+
+fn allocate_session() -> Result<u64, SessionBuildError> {
+    NEXT_SESSION
+        .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+        .map_err(|_| SessionBuildError::IdsExhausted)
+}
+
 fn valid_id(id: &str) -> bool {
-    !id.trim().is_empty() && !id.chars().any(char::is_control)
+    id.len() <= MAX_REQUEST_ID_BYTES && !id.trim().is_empty() && !id.chars().any(char::is_control)
 }
 
 impl MachineSession {
@@ -120,9 +136,7 @@ impl MachineSession {
         r = 1
     )]
     pub fn new(sources: Vec<TrustedContextSource>) -> Result<Self, SessionBuildError> {
-        let session = NEXT_SESSION
-            .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
-            .map_err(|_| SessionBuildError::IdsExhausted)?;
+        let session = allocate_session()?;
         let mut contexts = BTreeMap::new();
         for (ordinal, source) in sources.into_iter().enumerate() {
             if source.context.project_root.as_os_str().is_empty() {
@@ -172,7 +186,92 @@ impl MachineSession {
             session_id: format!("machine-session-{session}"),
             contexts,
             request_ids: BTreeSet::new(),
+            request_id_bytes: 0,
+            correlation_exhausted: false,
+            schemas: supported_schemas(),
+            capabilities: Capabilities {
+                streaming: false,
+                replay: false,
+                control: false,
+            },
+            require_target: false,
         })
+    }
+
+    /// Available only from a sealed real observation handle. These assigned IDs
+    /// route to that handle; the descriptor is not a root or attachment grant.
+    pub(super) fn bound_observer(
+        reader: &vibe_orchestrator::machine_submission::ObservationHandle,
+        control: bool,
+    ) -> Result<Self, SessionBuildError> {
+        let session = allocate_session()?;
+        let context_id = format!("machine-context-{session}-0");
+        let target_ids = reader
+            .summary()
+            .target_id()
+            .map(|_| format!("machine-target-{session}-0-0"))
+            .into_iter()
+            .collect();
+        let descriptor = Context {
+            context_id: context_id.clone(),
+            kind: ContextKind::Workspace,
+            availability: ContextAvailability::Available,
+            target_ids,
+            reason: None,
+        };
+        Ok(Self {
+            phase: SessionPhase::Uninitialized,
+            session_id: format!("machine-session-{session}"),
+            contexts: BTreeMap::from([(
+                context_id,
+                BoundContext {
+                    descriptor,
+                    _context: None,
+                    _target_roots: BTreeMap::new(),
+                },
+            )]),
+            request_ids: BTreeSet::new(),
+            request_id_bytes: 0,
+            correlation_exhausted: false,
+            schemas: [
+                FormatId::MachineSessionFrame,
+                FormatId::MachineOperationStreamMessage,
+            ]
+            .into_iter()
+            .map(|format| SchemaOffer {
+                format_id: format.id().to_owned(),
+                epoch: 1,
+            })
+            .collect(),
+            capabilities: Capabilities {
+                streaming: true,
+                replay: true,
+                control,
+            },
+            require_target: reader.summary().target_id().is_some(),
+        })
+    }
+
+    pub(super) fn session_id(&self) -> &str {
+        &self.session_id
+    }
+    pub(super) fn correlation_exhausted(&self) -> bool {
+        self.correlation_exhausted
+    }
+
+    fn reserve_request_id(&mut self, id: &str) -> bool {
+        if self.request_ids.contains(id) {
+            return false;
+        }
+        if self.request_ids.len() >= MAX_REQUEST_IDS
+            || self.request_id_bytes.saturating_add(id.len()) > MAX_CORRELATION_BYTES
+        {
+            self.correlation_exhausted = true;
+            return false;
+        }
+        self.request_id_bytes += id.len();
+        self.request_ids.insert(id.to_owned());
+        true
     }
 
     pub fn phase(&self) -> SessionPhase {
@@ -184,6 +283,7 @@ impl MachineSession {
         self.phase = SessionPhase::Closed;
         self.contexts.clear();
         self.request_ids.clear();
+        self.request_id_bytes = 0;
     }
 
     fn reply(&self, request_id: Option<String>, body: Body) -> SessionDecision {
@@ -211,6 +311,7 @@ impl MachineSession {
     }
 
     fn initialization_refused(
+        &self,
         request_id: Option<String>,
         reason: BodyInitializationRefusedReason,
     ) -> SessionDecision {
@@ -221,7 +322,7 @@ impl MachineSession {
             body: Body::InitializationRefused(Box::new(BodyInitializationRefused {
                 reason,
                 supported_api_versions: vec![API_VERSION.to_owned()],
-                supported_schemas: supported_schemas(),
+                supported_schemas: self.schemas.clone(),
                 supported_position_encodings: vec![POSITION_ENCODING.to_owned()],
             })),
         })
@@ -252,22 +353,23 @@ impl MachineSession {
                     || session_id.is_some()
                     || !request_id.as_deref().is_some_and(valid_id)
                 {
-                    return Self::initialization_refused(
+                    return self.initialization_refused(
                         request_id,
                         BodyInitializationRefusedReason::InvalidOffer,
                     );
                 }
                 if !offer.api_versions.iter().any(|value| value == API_VERSION) {
-                    return Self::initialization_refused(
+                    return self.initialization_refused(
                         request_id,
                         BodyInitializationRefusedReason::NoCommonApiVersion,
                     );
                 }
-                if supported_schemas()
+                if self
+                    .schemas
                     .iter()
                     .any(|required| !offer.schema_offers.contains(required))
                 {
-                    return Self::initialization_refused(
+                    return self.initialization_refused(
                         request_id,
                         BodyInitializationRefusedReason::NoCommonSchema,
                     );
@@ -277,25 +379,26 @@ impl MachineSession {
                     .iter()
                     .any(|value| value == POSITION_ENCODING)
                 {
-                    return Self::initialization_refused(
+                    return self.initialization_refused(
                         request_id,
                         BodyInitializationRefusedReason::NoCommonPositionEncoding,
                     );
                 }
                 let request_id = request_id.expect("validated nonblank request ID");
-                self.request_ids.insert(request_id.clone());
+                if !self.reserve_request_id(&request_id) {
+                    return self.initialization_refused(
+                        Some(request_id),
+                        BodyInitializationRefusedReason::InvalidOffer,
+                    );
+                }
                 self.phase = SessionPhase::Initialized;
                 self.reply(
                     Some(request_id),
                     Body::Initialized(Box::new(BodyInitialized {
                         api_version: API_VERSION.to_owned(),
-                        selected_schemas: supported_schemas(),
+                        selected_schemas: self.schemas.clone(),
                         position_encoding: POSITION_ENCODING.to_owned(),
-                        actual_capabilities: Capabilities {
-                            streaming: false,
-                            replay: false,
-                            control: false,
-                        },
+                        actual_capabilities: self.capabilities.clone(),
                         contexts: self
                             .contexts
                             .values()
@@ -325,7 +428,7 @@ impl MachineSession {
             return self.refused(request_id, BodyRefusalReason::InvalidRequest);
         }
         let request_id = request_id.expect("validated nonblank request ID");
-        if !self.request_ids.insert(request_id.clone()) {
+        if !self.reserve_request_id(&request_id) {
             return self.refused(Some(request_id), BodyRefusalReason::InvalidRequest);
         }
         let Some(bound) = self.contexts.get(&request.context_id) else {
@@ -334,10 +437,11 @@ impl MachineSession {
         if bound.descriptor.availability != ContextAvailability::Available {
             return self.refused(Some(request_id), BodyRefusalReason::Unavailable);
         }
-        if request
-            .target_id
-            .as_ref()
-            .is_some_and(|id| !bound.descriptor.target_ids.contains(id))
+        if (self.require_target && request.target_id.is_none())
+            || request
+                .target_id
+                .as_ref()
+                .is_some_and(|id| !bound.descriptor.target_ids.contains(id))
         {
             return self.refused(Some(request_id), BodyRefusalReason::UnknownTarget);
         }
