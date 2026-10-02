@@ -652,6 +652,39 @@ impl SubmissionReservations {
         Ok(reservation_ref_of(namespace.id(), owner, key, reserved))
     }
 
+    /// Read-only inverse correlation for the fixed journal owner under its
+    /// already-held physical mutation lease. This grants no namespace or
+    /// principal authority and never renews, reserves, or marks a row ready.
+    pub fn inspect_existing_run(
+        lease: &LifecycleLease,
+        domain_run_id: &str,
+    ) -> Result<Option<ExistingKeyInspection>, SubmissionError> {
+        if !valid_field(domain_run_id) {
+            return Err(SubmissionError::InvalidInput("domain run ID"));
+        }
+        let index = read(lease)?;
+        for (id, owner) in &index.namespaces {
+            for (key, row) in &owner.keys {
+                if row.domain_run_id == domain_run_id {
+                    return Ok(Some(ExistingKeyInspection {
+                        domain_run_id: row.domain_run_id.clone(),
+                        request_sha256: format!("sha256:{}", row.request_sha256),
+                        plan_sha256: format!("sha256:{}", row.plan_sha256),
+                        journal_admission: if row.journal_ready {
+                            JournalAdmission::Ready
+                        } else {
+                            JournalAdmission::Pending
+                        },
+                        reservation_ref: row.journal_ready
+                            .then(|| reservation_ref_of(id, owner, key, row)),
+                        retired: owner.retired,
+                    }));
+                }
+            }
+        }
+        Ok(None)
+    }
+
     /// Record that the owner has re-read and proven the exact durable domain
     /// journal. Publication uncertainty refuses effect dispatch; a retry
     /// reconciles the index and journal under the same outer lease.

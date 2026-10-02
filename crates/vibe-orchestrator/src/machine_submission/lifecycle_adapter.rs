@@ -89,6 +89,7 @@ use crate::ports::{
 use crate::prelude::selected_under_lease;
 
 mod install;
+mod sequential_runs;
 #[allow(
     dead_code,
     reason = "private host integration atom; no public surface yet"
@@ -1446,7 +1447,15 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 Ok(LifecycleRunJournalObservation::Uncertain { .. }) => Ok(
                     JournalState::Uncertain("unattributed current lifecycle header".into()),
                 ),
-                Err(error) => Ok(JournalState::Uncertain(error.to_string())),
+                Err(error) => {
+                    // The fixed owner independently re-reads and proves a
+                    // distinct terminal predecessor; generic inspection stays
+                    // strict and grants no transition authority.
+                    match sequential_runs::inspect_previous_terminal(lease, run_id) {
+                        Ok(()) => Ok(JournalState::Absent),
+                        Err(proof) => Ok(JournalState::Uncertain(format!("{error}; {proof:#}"))),
+                    }
+                }
             };
         }
         let reservation_ref = self
@@ -1481,10 +1490,9 @@ impl SubmissionJournal for ProtectedJournal<'_> {
     fn initialize(&mut self, lease: Arc<LifecycleLease>, run_id: &str) -> Result<(), String> {
         let result = (|| -> Result<()> {
             self.recheck()?;
-            ensure!(
-                LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
-                "protected validate slice refuses any prior lifecycle header"
-            );
+            if LifecycleStateStore::peek_with_lease(&lease)?.is_some() {
+                sequential_runs::inspect_previous_terminal(&lease, run_id)?;
+            }
             if self.script.as_ref().is_some_and(|s| s.profile.is_some()) {
                 let bytes = admitted_capsule(&self.canonical_request, self.canonical_plan)?;
                 let home = lease
@@ -1525,8 +1533,9 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 false,
             )?;
             ensure!(
-                store.state().execution.is_empty(),
-                "new protected header inherited execution rows"
+                store.state().run.slot_continuation.is_none()
+                    && store.delegated_rows().is_empty(),
+                "new protected header inherited parked work"
             );
             drop(store);
             Self::header(&lease, run_id, Some(&self.identity.started), self.phase)
