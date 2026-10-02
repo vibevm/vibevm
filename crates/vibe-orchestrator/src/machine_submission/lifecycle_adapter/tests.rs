@@ -1207,7 +1207,7 @@ fn empty_install_marker_loss_requires_recovery_and_never_regenerates_boot() {
 }
 
 #[test]
-fn empty_install_same_key_attaches_original_after_manifest_change_without_boot_write() {
+fn empty_install_same_key_attaches_original_and_fresh_key_uses_current_manifest() {
     let dir = project();
     let scope = scope();
     let namespace = issue(dir.path(), &scope);
@@ -1224,23 +1224,34 @@ fn empty_install_same_key_attaches_original_after_manifest_change_without_boot_w
     )
     .unwrap();
     let index_before = std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap();
+    let old = SubmissionOutcome::Replayed {
+        run_id: run_id.clone(),
+        outcome,
+    };
     assert_eq!(
         call_install(dir.path(), &namespace, &scope, "install-one").unwrap(),
-        SubmissionOutcome::Replayed { run_id, outcome }
+        old
     );
     assert_eq!(
         std::fs::read(dir.path().join(".vibe/machine-submissions.json")).unwrap(),
         index_before
     );
-    let new_key = call_install(dir.path(), &namespace, &scope, "install-two")
-        .unwrap_err()
-        .to_string();
-    assert!(new_key.contains("uncertain"), "{new_key}");
     assert_eq!(
         std::fs::read(&boot).unwrap(),
         b"sentinel after first install"
     );
+    let SubmissionOutcome::Invoked {
+        run_id: next_run, ..
+    } = call_install(dir.path(), &namespace, &scope, "install-two").unwrap()
+    else {
+        panic!("validated terminal permits a fresh install key")
+    };
+    assert_ne!(next_run, run_id);
     assert_eq!(
+        call_install(dir.path(), &namespace, &scope, "install-one").unwrap(),
+        old
+    );
+    assert_ne!(
         std::fs::read(dir.path().join(".vibe/lifecycle.toml")).unwrap(),
         state_before
     );
@@ -1379,7 +1390,7 @@ fn pending_reservation_attaches_read_only_without_header_or_scratch() {
 }
 
 #[test]
-fn changed_witness_same_key_attaches_original_and_fresh_key_refuses() {
+fn changed_witness_same_key_attaches_original_and_fresh_key_uses_current_source() {
     let dir = project();
     let scope = scope();
     let namespace = issue(dir.path(), &scope);
@@ -1393,18 +1404,20 @@ fn changed_witness_same_key_attaches_original_and_fresh_key_refuses() {
         "[project]\nname = 'changed'\nversion = '1.1.0'\n",
     )
     .unwrap();
-    assert_eq!(
-        call(dir.path(), &namespace, &scope, "one").unwrap(),
-        SubmissionOutcome::Replayed {
-            run_id: run_id.clone(),
-            outcome
-        }
-    );
-    let new_key = call(dir.path(), &namespace, &scope, "two")
-        .unwrap_err()
-        .to_string();
-    assert!(new_key.contains("uncertain"), "{new_key}");
-    assert_eq!(
+    let old = SubmissionOutcome::Replayed {
+        run_id: run_id.clone(),
+        outcome,
+    };
+    assert_eq!(call(dir.path(), &namespace, &scope, "one").unwrap(), old);
+    let SubmissionOutcome::Invoked {
+        run_id: next_run, ..
+    } = call(dir.path(), &namespace, &scope, "two").unwrap()
+    else {
+        panic!("validated terminal permits a fresh key with current source")
+    };
+    assert_ne!(next_run, run_id);
+    assert_eq!(call(dir.path(), &namespace, &scope, "one").unwrap(), old);
+    assert_ne!(
         std::fs::read(dir.path().join(".vibe/lifecycle.toml")).unwrap(),
         state_before
     );
