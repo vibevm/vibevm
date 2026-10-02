@@ -103,7 +103,7 @@ impl FixedPackageRoute {
                 None,
             )
         })?;
-        route.compare_root(root).map_err(|e| {
+        route.compare_context_root(root).map_err(|e| {
             failure(
                 grant,
                 err::FixedPackageActionErrorCode::ContextRootMismatch,
@@ -158,7 +158,9 @@ impl FixedPackageRoute {
             )
         })
     }
-    fn compare_root(&self, root: &Path) -> Result<(), FixedPackageHostError> {
+    /// Compare a supplied physical root with this retained host without
+    /// issuing a namespace or dispatching the package owner.
+    pub fn compare_context_root(&self, root: &Path) -> Result<(), FixedPackageHostError> {
         self.host.check_root(None)?;
         let supplied = vibe_safefs::Project::open(root).map_err(super::root_error)?;
         if supplied
