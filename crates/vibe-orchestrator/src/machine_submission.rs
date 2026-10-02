@@ -40,6 +40,8 @@ pub use lifecycle_adapter::{
 mod policy_owner;
 pub use policy_owner::{PolicyError, PolicyOwner, PolicySnapshot, TrustedPolicySource};
 
+pub mod cli_grant;
+
 mod lifecycle_decisions;
 pub(crate) use lifecycle_decisions::FIXED_DOMAIN_OWNER;
 pub use lifecycle_decisions::submission::ScopedFixedJob;
