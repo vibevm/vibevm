@@ -1,14 +1,13 @@
 //! Path helpers, display utils, report rendering, file-ensurance, and
 //! templates for `vibe init`.
 
-use super::*;
 use crate::cli::InitArgs;
 use crate::output;
 use anyhow::{Context, Result};
 use serde::Serialize;
 use std::fs;
 use std::path::Path;
-use vibe_core::manifest::{Lockfile, Manifest, ProjectSection, RegistrySection, SpecFormat};
+use vibe_core::manifest::{Lockfile, SpecFormat};
 
 pub(super) fn resolve_name(args: &InitArgs, path: &Path) -> Result<String> {
     if let Some(n) = &args.name {
@@ -279,50 +278,6 @@ pub(super) fn ensure_local_settings_gitignored(root: &Path) -> Result<Option<Out
         action: Action::Created,
         reason: "gitignore: L3 personal settings",
     }))
-}
-
-pub(super) fn ensure_project_manifest(
-    ctx: &output::Context,
-    root: &Path,
-    name: &str,
-    stack: Option<&str>,
-    registries: Vec<RegistrySection>,
-    authors: &[String],
-) -> Result<Outcome> {
-    let path = root.join(Manifest::FILENAME);
-    let rel = relative_to_root(root, &path);
-    if path.exists() {
-        ctx.skipped(&rel, "already exists");
-        return Ok(Outcome {
-            path: rel,
-            action: Action::Kept,
-            reason: "project manifest",
-        });
-    }
-
-    let manifest = Manifest {
-        project: Some(ProjectSection {
-            name: name.to_string(),
-            group: None,
-            version: "0.0.1".to_string(),
-            spec_format: None,
-            sources: Vec::new(),
-            authors: authors.to_vec(),
-        }),
-        active: stack.map(|s| ActiveSection {
-            stack: Some(s.to_string()),
-        }),
-        registries,
-        ..Default::default()
-    };
-
-    manifest.write(&path)?;
-    ctx.created(&rel);
-    Ok(Outcome {
-        path: rel,
-        action: Action::Created,
-        reason: "project manifest",
-    })
 }
 
 pub(super) fn ensure_empty_lockfile(ctx: &output::Context, root: &Path) -> Result<Outcome> {

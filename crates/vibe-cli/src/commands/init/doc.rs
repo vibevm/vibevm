@@ -50,6 +50,28 @@ const ABSTRACT_TEMPLATE: &str = "\
 #   4. What does it deliberately leave out?
 ";
 
+/// Build a typed root doc declaration without interpolating user prose into TOML.
+pub(super) fn root_manifest(group: &str, name: &str, fields: &ProjectFields) -> Result<Manifest> {
+    let safe = ProjectFields {
+        name: name.to_string(),
+        version: fields.version.clone(),
+        authors: Vec::new(),
+        license: "UPL-1.0".to_string(),
+        description: String::new(),
+        format: fields.format.clone(),
+    };
+    let mut manifest = Manifest::parse_str(&manifest_text(group, name, &safe, None))?;
+    let package = manifest
+        .package
+        .as_mut()
+        .context("doc scaffold requires package metadata")?;
+    package.authors = fields.authors.clone();
+    package.license = Some(fields.license.clone());
+    package.description = Some(fields.description.clone());
+    manifest.validate()?;
+    Ok(manifest)
+}
+
 /// Write the `doc` package tree under `pkg_dir`. Returns the outcomes
 /// the caller reports, in creation order.
 pub(super) fn create_doc_package(
@@ -318,7 +340,7 @@ fn display_title(name: &str) -> String {
         .join(" ")
 }
 
-fn manifest_text(
+pub(super) fn manifest_text(
     group: &str,
     name: &str,
     fields: &ProjectFields,
