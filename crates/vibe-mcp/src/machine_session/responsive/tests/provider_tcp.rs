@@ -25,6 +25,12 @@ fn until(mut condition: impl FnMut() -> bool) {
 }
 impl Fixture {
     fn new(flood: bool) -> Self {
+        Self::with_deferred_stop(flood, false)
+    }
+    fn new_deferred() -> Self {
+        Self::with_deferred_stop(false, true)
+    }
+    fn with_deferred_stop(flood: bool, deferred: bool) -> Self {
         let dir = tempfile::tempdir().unwrap();
         // Exact incumbent one-script manifest from lifecycle_adapter.rs.
         std::fs::write(dir.path().join("vibe.toml"), "[project]\nname = 'demo'\nversion = '1.1.0'\n[[extension]]\nid = 'once'\npoint = 'phase:validate'\nhandler = { kind = 'script', base = 'run' }\n").unwrap();
@@ -45,7 +51,12 @@ impl Fixture {
             let lease = LifecycleLease::acquire(dir.path()).unwrap();
             SubmissionReservations::issue_namespace(&lease, &scope, 60_000).unwrap()
         };
-        let host = HostOwnedFixedOperation::start(
+        let start = if deferred {
+            HostOwnedFixedOperation::start_with_deferred_stop
+        } else {
+            HostOwnedFixedOperation::start
+        };
+        let host = start(
             dir.path().into(),
             namespace,
             scope,
@@ -288,3 +299,4 @@ fn control_status(value: frame::SessionFrame) -> stream::BodyControlReplyStatus 
 }
 
 mod cases;
+mod deferred;
