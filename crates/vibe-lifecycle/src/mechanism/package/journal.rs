@@ -4,6 +4,7 @@
 //! records that a copy MAY occur; only a separately published result after
 //! actual output and A2 verification records completion. Existing keys are
 //! inspection only and never invoke the provider again.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-PACKAGE");
 
 use std::path::Path;
 
