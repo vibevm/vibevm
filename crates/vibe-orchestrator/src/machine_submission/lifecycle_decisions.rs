@@ -63,9 +63,6 @@ fn capacity_available(count: usize, retained: usize, added: usize) -> bool {
 }
 fn supported(options: &RequestedOptions) -> Result<(), FixedDecisionError> {
     let mut unsupported = Vec::new();
-    if options.force {
-        unsupported.push("force");
-    }
     if options.trace {
         unsupported.push("trace");
     }

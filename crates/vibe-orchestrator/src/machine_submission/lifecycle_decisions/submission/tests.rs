@@ -34,4 +34,26 @@ fn canonical_request_and_plan_bind_owned_admission_before_attachment_without_que
         c.request(&old_request).unwrap()
     );
     assert_ne!(a.plan(&old_plan).unwrap(), c.plan(&old_plan).unwrap());
+    let forced = host.force_approved_for_test();
+    assert_eq!(forced.base.request, old_request);
+    assert_eq!(forced.base.plan, old_plan);
+    assert_ne!(forced.identity(), first.identity());
+    let d = AdmittedProfile::from_owned(&host, &forced).unwrap();
+    let mut tampered = forced.clone();
+    tampered.options.force = false;
+    assert!(matches!(
+        AdmittedProfile::from_owned(&host, &tampered),
+        Err(FixedDecisionError::InvalidData)
+    ));
+    assert_ne!(
+        digest(a.request(&old_request).unwrap()),
+        digest(d.request(&old_request).unwrap())
+    );
+    assert_ne!(
+        digest(a.plan(&old_plan).unwrap()),
+        digest(d.plan(&old_plan).unwrap())
+    );
+    let plan: serde_json::Value = serde_json::from_slice(&d.plan(&old_plan).unwrap()).unwrap();
+    assert_eq!(plan["requested_options"]["force"], true);
+    assert_eq!(plan["base_v4"]["force"], false);
 }

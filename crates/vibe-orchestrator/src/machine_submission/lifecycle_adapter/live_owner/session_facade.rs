@@ -173,7 +173,7 @@ impl HostOwnedFixedOperation {
             key: coordinates.key.clone(),
             request: DefaultLifecycleRequest {
                 requested: Phase::Validate,
-                force: false,
+                force: profile.force(),
                 agent_mode: RunAgentMode::Cli,
                 assume_yes: true,
                 trace_flag: false,

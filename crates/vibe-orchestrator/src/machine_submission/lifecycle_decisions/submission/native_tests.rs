@@ -55,14 +55,16 @@ impl Fixture {
     fn no_effect(&self) {
         assert!(!self.dir.path().join("counter").exists());
         let lease = vibe_lifecycle::LifecycleLease::acquire(self.dir.path()).unwrap();
-        assert!(SubmissionReservations::inspect_existing_key(
-            &lease,
-            &self.namespace,
-            &self.scope,
-            "once"
-        )
-        .unwrap()
-        .is_none());
+        assert!(
+            SubmissionReservations::inspect_existing_key(
+                &lease,
+                &self.namespace,
+                &self.scope,
+                "once"
+            )
+            .unwrap()
+            .is_none()
+        );
     }
 }
 impl Drop for Fixture {
@@ -90,7 +92,13 @@ pub(super) fn approved(
     host: &FixedLifecycleDecisionHost,
     control: RequestedOptionsControl,
 ) -> ValidatedFixedPlanEvidence {
-    let mut q = host.prepare_requested_options(options(control)).unwrap();
+    approved_options(host, options(control))
+}
+fn approved_options(
+    host: &FixedLifecycleDecisionHost,
+    options: RequestedOptions,
+) -> ValidatedFixedPlanEvidence {
+    let mut q = host.prepare_requested_options(options).unwrap();
     if matches!(q.body, Body::SelectionQuestion(_)) {
         let mut answer = q.clone();
         answer.body = Body::SelectionAnswer(Box::new(BodySelectionAnswer {
@@ -208,6 +216,75 @@ fn concurrent_shared_service_same_actual_job_ready_query_replay_fresh_question_a
     ));
     f.count_one();
 }
+
+#[test]
+fn explicit_force_concurrent_retry_retains_one_run_and_changed_force_conflicts() {
+    let f = Fixture::new(false);
+    let host = f.host();
+    let forced = host.force_approved_for_test();
+    let ordinary = approved(&host, RequestedOptionsControl::None);
+    let barrier = Arc::new(std::sync::Barrier::new(3));
+    let calls: Vec<_> = (0..2)
+        .map(|_| {
+            let (h, e, b) = (host.clone(), forced.clone(), barrier.clone());
+            std::thread::spawn(move || {
+                b.wait();
+                h.submit_no_control(&e, "once", now()).unwrap()
+            })
+        })
+        .collect();
+    barrier.wait();
+    let jobs: Vec<_> = calls.into_iter().map(|c| c.join().unwrap()).collect();
+    let run = ready(&jobs[0]);
+    assert_eq!(ready(&jobs[1]), run);
+    until(|| f.dir.path().join("entered").exists());
+    assert!(matches!(
+        host.submit_no_control(&ordinary, "once", now()),
+        Err(FixedDecisionError::AnswerConflict)
+    ));
+    f.count_one();
+    f.release();
+    let result = terminal(&jobs[0]);
+    assert!(
+        matches!(&result, FixedOperationStatus::ResultAvailable { run_id, report_bytes: Some(_), .. } if run_id == &run)
+    );
+    // Discarded replies and a newly approved identical intent retain the same result.
+    let fresh = host.force_approved_for_test();
+    assert_ne!(fresh.question_id, forced.question_id);
+    assert_eq!(fresh.identity(), forced.identity());
+    let retry = host.submit_no_control(&fresh, "once", now()).unwrap();
+    assert_eq!(ready(&retry), run);
+    assert_eq!(terminal(&retry), result);
+    assert_eq!(host.inspect_existing("once").unwrap(), Some(result.clone()));
+    let lease = vibe_lifecycle::LifecycleLease::acquire(f.dir.path()).unwrap();
+    let row = SubmissionReservations::inspect_existing_key(&lease, &f.namespace, &f.scope, "once")
+        .unwrap()
+        .unwrap();
+    let profile = AdmittedProfile::from_owned(&host, &forced).unwrap();
+    assert_eq!(row.domain_run_id, run);
+    assert_eq!(
+        row.request_sha256,
+        digest(profile.request(&forced.base.request).unwrap())
+    );
+    assert_eq!(
+        row.plan_sha256,
+        digest(profile.plan(&forced.base.plan).unwrap())
+    );
+    drop(lease);
+    // Evict only the terminal process-local claims to exercise the actual C1
+    // attach/conflict paths, rather than relying on the retained jobs table.
+    host.jobs.lock().unwrap().clear();
+    let cold_retry = host.submit_no_control(&fresh, "once", now()).unwrap();
+    assert_eq!(terminal(&cold_retry), result);
+    host.jobs.lock().unwrap().clear();
+    let cold_changed = host.submit_no_control(&ordinary, "once", now()).unwrap();
+    assert!(matches!(
+        terminal(&cold_changed),
+        FixedOperationStatus::RecoveryRequired { .. }
+    ));
+    assert_eq!(host.inspect_existing("once").unwrap(), Some(result));
+    f.count_one();
+}
 #[test]
 fn foreign_host_revocation_and_unsupported_controls_do_not_reserve() {
     let f = Fixture::new(false);
@@ -255,7 +332,7 @@ fn source_drift_before_async_admission_does_not_reserve() {
 fn actual_dispatch_guard_rechecks_revocation_after_factory_and_before_c1() {
     let f = Fixture::new(false);
     let h = f.host();
-    let e = approved(&h, RequestedOptionsControl::None);
+    let e = h.force_approved_for_test();
     let mut profile = AdmittedProfile::from_owned(&h, &e).unwrap();
     let revoke = h.clone();
     profile.before_guard = Some(Arc::new(move || {
@@ -430,8 +507,9 @@ fn invalid_c1_keys_refuse_before_job_claim_or_reservation() {
 #[test]
 fn same_owner_terminal_inspections_serialize_fresh_native_evidence() {
     use std::sync::{
+        Barrier, Mutex,
         atomic::{AtomicBool, Ordering},
-        mpsc, Barrier, Mutex,
+        mpsc,
     };
     let f = Fixture::new(false);
     let host = f.host();
@@ -503,5 +581,12 @@ impl FixedLifecycleDecisionHost {
         &self,
     ) -> ValidatedFixedPlanEvidence {
         approved(self, RequestedOptionsControl::None)
+    }
+    pub(in crate::machine_submission) fn force_approved_for_test(
+        &self,
+    ) -> ValidatedFixedPlanEvidence {
+        let mut requested = options(RequestedOptionsControl::None);
+        requested.force = true;
+        approved_options(self, requested)
     }
 }

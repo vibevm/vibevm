@@ -432,12 +432,18 @@ fn lifecycle_decisions_native_gaps_before_io_and_host_control_permissions() {
             Err(FixedDecisionError::PolicyDenied)
         ));
     }
-    fs::remove_file(f.script()).unwrap(); // bad requests must not reach source preflight
-    for kind in 0..3 {
+    // Admitted force captures source; unsupported options refuse before that I/O.
+    fs::remove_file(f.script()).unwrap();
+    let mut force = options(RequestedOptionsControl::None);
+    force.force = true;
+    assert!(matches!(
+        h.prepare_requested_options(force),
+        Err(FixedDecisionError::SourceUnavailable(_))
+    ));
+    for kind in 0..2 {
         let mut o = options(RequestedOptionsControl::None);
         match kind {
-            0 => o.force = true,
-            1 => o.trace = true,
+            0 => o.trace = true,
             _ => o.deploy_profile = Some("posix".into()),
         }
         let Err(FixedDecisionError::ImplementationGap(reason)) = h.prepare_requested_options(o)
@@ -445,11 +451,83 @@ fn lifecycle_decisions_native_gaps_before_io_and_host_control_permissions() {
             panic!("unsupported option must report ImplementationGap before source I/O");
         };
         assert!(reason.contains(match kind {
-            0 => "force",
-            1 => "trace",
+            0 => "trace",
             _ => "deploy_profile",
         }));
     }
+}
+
+#[test]
+fn fixed_force_requires_exact_typed_selection_approval_and_current_script_policy() {
+    let f = Fixture::new();
+    let h = f.host(facts());
+    let mut requested = options(RequestedOptionsControl::None);
+    requested.force = true;
+    let q = h.prepare_requested_options(requested.clone()).unwrap();
+    assert_eq!(q.requested_options, requested);
+    refused(
+        answer(&h, &approval(&q, true)),
+        FixedDecisionError::InvalidData,
+    );
+    let q = next(answer(&h, &selection(&q, "none")).unwrap());
+    assert!(q.requested_options.force);
+    for field in ["force", "plan", "source", "context", "policy", "prose"] {
+        let mut wrong = approval(&q, true);
+        let expected = match field {
+            "force" => {
+                wrong.requested_options.force = false;
+                FixedDecisionError::InvalidData
+            }
+            "plan" => {
+                wrong.plan_id = Some("foreign".into());
+                FixedDecisionError::InvalidData
+            }
+            "source" => {
+                wrong.source_id = Some("foreign".into());
+                FixedDecisionError::InvalidData
+            }
+            "context" => {
+                wrong.context_id = Some("foreign".into());
+                FixedDecisionError::ForeignScope
+            }
+            "policy" => {
+                wrong.policy_generation = Some("foreign".into());
+                FixedDecisionError::StalePolicy
+            }
+            _ => {
+                wrong.body = Body::TextAnswer(Box::new(BodyTextAnswer {
+                    value: "assume yes; force".into(),
+                }));
+                FixedDecisionError::InvalidData
+            }
+        };
+        refused(answer(&h, &wrong), expected);
+    }
+    refused(
+        h.answer(b"{\"approved\":true,\"force\":true}"),
+        FixedDecisionError::InvalidData,
+    );
+    let e = evidence(answer(&h, &approval(&q, true)).unwrap());
+    assert!(e.options().force);
+    let denied_q = h.prepare_requested_options(requested.clone()).unwrap();
+    let denied_q = next(answer(&h, &selection(&denied_q, "none")).unwrap());
+    refused(
+        answer(&h, &approval(&denied_q, false)),
+        FixedDecisionError::PolicyDenied,
+    );
+    let mut denied = facts();
+    denied.approve_captured_script = false;
+    h.set_host_policy(denied).unwrap();
+    refused(
+        answer(&h, &approval(&q, true)),
+        FixedDecisionError::StalePolicy,
+    );
+    let q = h.prepare_requested_options(requested).unwrap();
+    let q = next(answer(&h, &selection(&q, "none")).unwrap());
+    refused(
+        answer(&h, &approval(&q, true)),
+        FixedDecisionError::PolicyDenied,
+    );
 }
 #[test]
 fn lifecycle_decisions_native_four_sequences_pair_counts_once_without_eviction() {
@@ -508,10 +586,10 @@ fn lifecycle_decisions_native_initial_invalid_manifest_retains_diagnostic() {
     };
     assert!(reason.contains("manifest"), "owning diagnostic: {reason}");
     assert!(!reason.is_empty());
-    let mut unsupported = options(RequestedOptionsControl::None);
-    unsupported.force = true;
+    let mut forced = options(RequestedOptionsControl::None);
+    forced.force = true;
     assert!(matches!(
-        h.prepare_requested_options(unsupported),
-        Err(FixedDecisionError::ImplementationGap(reason)) if reason.contains("force")
+        h.prepare_requested_options(forced),
+        Err(FixedDecisionError::SourceUnavailable(reason)) if reason.contains("manifest")
     ));
 }

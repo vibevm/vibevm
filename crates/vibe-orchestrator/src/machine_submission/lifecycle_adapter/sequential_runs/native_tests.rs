@@ -182,128 +182,194 @@ fn valid_failed_terminal_allows_next_invocation_and_retains_partial_truth() {
     assert_eq!(fs::read(f.member(&run, "report.json")).unwrap(), report);
     assert_eq!(f.count(), 2);
 }
+
+#[test]
+fn explicit_force_after_terminal_bypasses_freshness_and_preserves_old_results() {
+    let f = Fixture::new();
+    let host = f.host();
+    let ordinary = host.sequential_approved_for_test();
+    let forced = host.force_approved_for_test();
+    let mut retained = Vec::new();
+    for (key, evidence, expected, effects) in [
+        ("first", &ordinary, "ok", 1),
+        ("fresh-key", &ordinary, "fresh", 1),
+        ("explicit-force", &forced, "ok", 2),
+    ] {
+        let job = host.submit_no_control(evidence, key, now()).unwrap();
+        let run = ready(&job);
+        let result = terminal(&job);
+        let FixedOperationStatus::ResultAvailable {
+            report_bytes: Some(bytes),
+            marker,
+            ..
+        } = &result
+        else {
+            panic!("actual report required")
+        };
+        assert_eq!(marker.outcome, MarkerOutcome::Completed);
+        let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+            serde_json::from_slice(bytes).unwrap();
+        assert_eq!(report.contributions.len(), 1);
+        assert_eq!(report.contributions[0].status, expected);
+        let capsule: serde_json::Value =
+            serde_json::from_slice(&fs::read(f.member(&run, "admitted-input.json")).unwrap())
+                .unwrap();
+        assert_eq!(
+            capsule["request"]["requested_options"]["force"],
+            evidence.options().force
+        );
+        assert_eq!(
+            capsule["plan"]["requested_options"]["force"],
+            evidence.options().force
+        );
+        assert_eq!(capsule["plan"]["base_v4"]["force"], false);
+        assert_eq!(f.count(), effects);
+        retained.push((key, evidence, run, result));
+    }
+    for (key, evidence, run, result) in &retained {
+        assert_eq!(host.inspect_existing(key).unwrap().as_ref(), Some(result));
+        let retry = host.submit_no_control(evidence, key, now()).unwrap();
+        assert_eq!(ready(&retry), *run);
+        assert_eq!(terminal(&retry), *result);
+    }
+    assert!(matches!(
+        host.submit_no_control(&forced, "first", now()),
+        Err(crate::machine_submission::FixedDecisionError::AnswerConflict)
+    ));
+    assert_eq!(f.count(), 2);
+}
 #[test]
 fn damaged_or_nonterminal_previous_proof_refuses_before_new_ready_and_provider() {
-    for damage in [
-        "missing-marker",
-        "corrupt-marker",
-        "missing-report",
-        "corrupt-report",
-        "unavailable-report",
-        "uncertain",
-        "parked",
-        "unready",
-        "unattributed",
-        "delegated",
-        "continuation",
-    ] {
-        let f = Fixture::new();
-        let host = f.host();
-        let evidence = host.sequential_approved_for_test();
-        let first = host.submit_no_control(&evidence, "first", now()).unwrap();
-        let run = ready(&first);
-        assert!(matches!(
-            terminal(&first),
-            FixedOperationStatus::ResultAvailable { .. }
-        ));
-        let marker_path = f.member(&run, "marker.json");
-        let report_path = f.member(&run, "report.json");
-        match damage {
-            "missing-marker" => fs::remove_file(&marker_path).unwrap(),
-            "corrupt-marker" => fs::write(&marker_path, "broken").unwrap(),
-            "missing-report" => fs::remove_file(&report_path).unwrap(),
-            "corrupt-report" => fs::write(&report_path, "broken").unwrap(),
-            "uncertain" | "parked" | "unavailable-report" => {
-                let mut marker: LifecycleOutcomeMarker =
-                    serde_json::from_slice(&fs::read(&marker_path).unwrap()).unwrap();
-                marker.outcome = if damage == "parked" {
-                    MarkerOutcome::Parked
-                } else {
-                    MarkerOutcome::Uncertain
-                };
-                if damage == "unavailable-report" {
-                    marker = create_lifecycle_outcome_marker(
-                        &run,
-                        &marker.reservation_ref,
-                        MarkerOutcome::Failed,
-                        EffectState::Uncertain,
-                        LifecycleReportPayload::Unavailable(
-                            ReportEvidenceUnavailableReason::NotProduced,
-                        ),
-                    )
-                    .unwrap();
-                    fs::remove_file(&report_path).unwrap();
+    for force in [false, true] {
+        for damage in [
+            "missing-marker",
+            "corrupt-marker",
+            "missing-report",
+            "corrupt-report",
+            "unavailable-report",
+            "uncertain",
+            "parked",
+            "unready",
+            "unattributed",
+            "delegated",
+            "continuation",
+        ] {
+            let f = Fixture::new();
+            let host = f.host();
+            let evidence = host.sequential_approved_for_test();
+            let next_evidence = if force {
+                host.force_approved_for_test()
+            } else {
+                evidence.clone()
+            };
+            let first = host.submit_no_control(&evidence, "first", now()).unwrap();
+            let run = ready(&first);
+            assert!(matches!(
+                terminal(&first),
+                FixedOperationStatus::ResultAvailable { .. }
+            ));
+            let marker_path = f.member(&run, "marker.json");
+            let report_path = f.member(&run, "report.json");
+            match damage {
+                "missing-marker" => fs::remove_file(&marker_path).unwrap(),
+                "corrupt-marker" => fs::write(&marker_path, "broken").unwrap(),
+                "missing-report" => fs::remove_file(&report_path).unwrap(),
+                "corrupt-report" => fs::write(&report_path, "broken").unwrap(),
+                "uncertain" | "parked" | "unavailable-report" => {
+                    let mut marker: LifecycleOutcomeMarker =
+                        serde_json::from_slice(&fs::read(&marker_path).unwrap()).unwrap();
+                    marker.outcome = if damage == "parked" {
+                        MarkerOutcome::Parked
+                    } else {
+                        MarkerOutcome::Uncertain
+                    };
+                    if damage == "unavailable-report" {
+                        marker = create_lifecycle_outcome_marker(
+                            &run,
+                            &marker.reservation_ref,
+                            MarkerOutcome::Failed,
+                            EffectState::Uncertain,
+                            LifecycleReportPayload::Unavailable(
+                                ReportEvidenceUnavailableReason::NotProduced,
+                            ),
+                        )
+                        .unwrap();
+                        fs::remove_file(&report_path).unwrap();
+                    }
+                    fs::write(&marker_path, serde_json::to_vec(&marker).unwrap()).unwrap();
                 }
-                fs::write(&marker_path, serde_json::to_vec(&marker).unwrap()).unwrap();
+                "unready" => {
+                    let path = f.dir.path().join(".vibe/machine-submissions.json");
+                    let mut index: serde_json::Value =
+                        serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
+                    index["namespaces"][f.namespace.id()]["keys"]["first"]["journal_ready"] =
+                        false.into();
+                    fs::write(path, serde_json::to_vec(&index).unwrap()).unwrap();
+                }
+                _ => {
+                    let path = f.dir.path().join(LifecycleStateStore::FILE);
+                    let mut state: vibe_wire::generated::lifecycle_state::LifecycleState =
+                        toml::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+                    if damage == "unattributed" {
+                        state.run.run_id = None;
+                    }
+                    if damage == "delegated" {
+                        let row = state.execution.values_mut().next().unwrap();
+                        row.status =
+                            vibe_wire::generated::lifecycle_state::ExecutionRecordStatus::Delegated;
+                        row.scope = Some(
+                            vibe_wire::generated::lifecycle_state::ExecutionRecordScope::Phase,
+                        );
+                        row.tasks = vec![format!(".vibe/outbox/{run}/task.json")];
+                    }
+                    if damage == "continuation" {
+                        state.run.slot_continuation =
+                            Some(vibe_wire::generated::lifecycle_state::SlotContinuation {
+                                targets: vec![],
+                            });
+                    }
+                    fs::write(path, toml::to_string(&state).unwrap()).unwrap();
+                }
             }
-            "unready" => {
-                let path = f.dir.path().join(".vibe/machine-submissions.json");
-                let mut index: serde_json::Value =
-                    serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
-                index["namespaces"][f.namespace.id()]["keys"]["first"]["journal_ready"] =
-                    false.into();
-                fs::write(path, serde_json::to_vec(&index).unwrap()).unwrap();
+            let state_before = fs::read(f.dir.path().join(LifecycleStateStore::FILE)).unwrap();
+            let members: Vec<_> = ["marker.json", "report.json", "admitted-input.json"]
+                .into_iter()
+                .map(|suffix| (suffix, fs::read(f.member(&run, suffix)).ok()))
+                .collect();
+            let next = host
+                .submit_no_control(&next_evidence, "next", now())
+                .unwrap();
+            assert!(
+                matches!(
+                    terminal(&next),
+                    FixedOperationStatus::RecoveryRequired { .. }
+                ),
+                "{damage}"
+            );
+            assert!(
+                !matches!(
+                    next.wait_ready(Duration::from_millis(10)).unwrap(),
+                    Readiness::Ready(_)
+                ),
+                "{damage}"
+            );
+            let lease = LifecycleLease::acquire(f.dir.path()).unwrap();
+            if let Some(row) =
+                SubmissionReservations::inspect_existing_key(&lease, &f.namespace, &f.scope, "next")
+                    .unwrap()
+            {
+                assert_eq!(row.journal_admission, JournalAdmission::Pending);
+                assert!(row.reservation_ref.is_none());
+                assert!(!f.member(&row.domain_run_id, "admitted-input.json").exists());
             }
-            _ => {
-                let path = f.dir.path().join(LifecycleStateStore::FILE);
-                let mut state: vibe_wire::generated::lifecycle_state::LifecycleState =
-                    toml::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
-                if damage == "unattributed" {
-                    state.run.run_id = None;
-                }
-                if damage == "delegated" {
-                    let row = state.execution.values_mut().next().unwrap();
-                    row.status =
-                        vibe_wire::generated::lifecycle_state::ExecutionRecordStatus::Delegated;
-                    row.scope =
-                        Some(vibe_wire::generated::lifecycle_state::ExecutionRecordScope::Phase);
-                    row.tasks = vec![format!(".vibe/outbox/{run}/task.json")];
-                }
-                if damage == "continuation" {
-                    state.run.slot_continuation =
-                        Some(vibe_wire::generated::lifecycle_state::SlotContinuation {
-                            targets: vec![],
-                        });
-                }
-                fs::write(path, toml::to_string(&state).unwrap()).unwrap();
+            assert_eq!(
+                fs::read(f.dir.path().join(LifecycleStateStore::FILE)).unwrap(),
+                state_before
+            );
+            for (suffix, bytes) in members {
+                assert_eq!(fs::read(f.member(&run, suffix)).ok(), bytes);
             }
+            assert_eq!(f.count(), 1);
         }
-        let state_before = fs::read(f.dir.path().join(LifecycleStateStore::FILE)).unwrap();
-        let members: Vec<_> = ["marker.json", "report.json", "admitted-input.json"]
-            .into_iter()
-            .map(|suffix| (suffix, fs::read(f.member(&run, suffix)).ok()))
-            .collect();
-        let next = host.submit_no_control(&evidence, "next", now()).unwrap();
-        assert!(
-            matches!(
-                terminal(&next),
-                FixedOperationStatus::RecoveryRequired { .. }
-            ),
-            "{damage}"
-        );
-        assert!(
-            !matches!(
-                next.wait_ready(Duration::from_millis(10)).unwrap(),
-                Readiness::Ready(_)
-            ),
-            "{damage}"
-        );
-        let lease = LifecycleLease::acquire(f.dir.path()).unwrap();
-        if let Some(row) =
-            SubmissionReservations::inspect_existing_key(&lease, &f.namespace, &f.scope, "next")
-                .unwrap()
-        {
-            assert_eq!(row.journal_admission, JournalAdmission::Pending);
-            assert!(row.reservation_ref.is_none());
-            assert!(!f.member(&row.domain_run_id, "admitted-input.json").exists());
-        }
-        assert_eq!(
-            fs::read(f.dir.path().join(LifecycleStateStore::FILE)).unwrap(),
-            state_before
-        );
-        for (suffix, bytes) in members {
-            assert_eq!(fs::read(f.member(&run, suffix)).ok(), bytes);
-        }
-        assert_eq!(f.count(), 1);
     }
 }
