@@ -307,6 +307,8 @@ impl ProcessRunner for ObservedProcess<'_> {
                         &fault.reason,
                     );
                 }
+                self.shared.record.lock().unwrap().provider_evidence =
+                    Some(super::deferred_stop::NativeEvidence::from_system(&outcome));
                 // Post-spawn faults retain the actual output and exit code.
                 Ok(outcome.output)
             }

@@ -245,6 +245,9 @@ fn host_capability_before_boundary_requests_then_proves_stop_without_provider() 
     });
     let c = &s.coordinates;
     let (owner, initial) = launch(OwnedDispatch {
+        before_boundary: None,
+        after_effect: None,
+        deferred_stop: false,
         path: c.root.clone(),
         namespace: c.namespace.clone(),
         scope: c.scope.clone(),

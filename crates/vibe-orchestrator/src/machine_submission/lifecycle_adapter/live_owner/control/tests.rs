@@ -68,6 +68,9 @@ fn before_dispatch_fault(
     });
     let c = &s.coordinates;
     let (owner, observer) = launch(OwnedDispatch {
+        before_boundary: None,
+        after_effect: None,
+        deferred_stop: false,
         path: c.root.clone(),
         namespace: c.namespace.clone(),
         scope: c.scope.clone(),
@@ -143,6 +146,19 @@ fn request_wins_retains_real_stop_and_idempotent_receipt_without_stage_or_provid
         assert_eq!(response.operation_effect_state, Effect::NoEffects);
         assert_eq!(response.result_ref, Some(reference(&binding)));
     }
+    let late = status(
+        owner
+            .control(
+                &binding,
+                &s.coordinates,
+                &mut observer,
+                &request(&binding, "new-after-stop", BodyControlRequestAction::Cancel),
+            )
+            .unwrap(),
+    );
+    assert_eq!(late.status, Status::AlreadyTerminal);
+    assert_eq!(late.operation_effect_state, Effect::NoEffects);
+    assert_eq!(late.result_ref, Some(reference(&binding)));
     for (path, bytes) in before {
         assert_eq!(std::fs::read(path).unwrap(), bytes);
     }

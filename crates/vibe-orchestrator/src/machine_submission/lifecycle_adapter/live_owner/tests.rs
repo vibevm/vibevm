@@ -104,6 +104,9 @@ pub(super) fn begin(
 ) -> (LiveOwner, Observer, Binding) {
     let c = &s.coordinates;
     let (owner, observer) = launch(OwnedDispatch {
+        before_boundary: None,
+        after_effect: None,
+        deferred_stop: false,
         path: c.root.clone(),
         namespace: c.namespace.clone(),
         scope: c.scope.clone(),
@@ -232,6 +235,8 @@ fn foreign_coordinates_and_handles_refuse_without_second_execution() {
                 reason: String::new(),
                 subscriptions: BTreeSet::new(),
                 next_subscription: 1,
+                deferred_stop: false,
+                provider_evidence: None,
             }),
             changed: Condvar::new(),
         }),
@@ -403,6 +408,9 @@ fn notification_source_or_header_drift_cannot_gain_effect() {
             }
         });
         let (owner, _observer) = launch(OwnedDispatch {
+            before_boundary: None,
+            after_effect: None,
+            deferred_stop: false,
             path: c.root.clone(),
             namespace: c.namespace.clone(),
             scope: c.scope.clone(),
@@ -469,6 +477,9 @@ fn initial_observer_detach_during_ready_notification_does_not_cancel_dispatch() 
     });
     let c = &s.coordinates;
     let (owner, mut observer) = launch(OwnedDispatch {
+        before_boundary: None,
+        after_effect: None,
+        deferred_stop: false,
         path: c.root.clone(),
         namespace: c.namespace.clone(),
         scope: c.scope.clone(),
@@ -507,6 +518,9 @@ fn failure_before_ready_stops_without_guessing_run_or_invoking_provider() {
     std::fs::write(s.coordinates.root.join("vibe.toml"), b"invalid manifest").unwrap();
     let c = &s.coordinates;
     let (owner, observer) = launch(OwnedDispatch {
+        before_boundary: None,
+        after_effect: None,
+        deferred_stop: false,
         path: c.root.clone(),
         namespace: c.namespace.clone(),
         scope: c.scope.clone(),

@@ -15,6 +15,11 @@ pub(super) enum Gate {
     Stopping(String),
     Stopped(String),
     Failed(String),
+    DeferredOpen,
+    DeferredRequested(String),
+    DeferredStopping(String),
+    DeferredStopped(String, LifecycleOutcomeMarker),
+    DeferredFailed(String),
 }
 #[derive(Debug)]
 pub(in super::super) enum ControlError {
@@ -31,7 +36,7 @@ impl std::fmt::Display for ControlError {
 }
 impl std::error::Error for ControlError {}
 
-fn reply(
+pub(super) fn reply(
     binding: &Binding,
     request: &BodyControlRequest,
     status: Status,
@@ -52,17 +57,17 @@ fn reply(
     validation::validate(&message, history.expected())?;
     Ok(message)
 }
-fn reference(binding: &Binding) -> String {
+pub(super) fn reference(binding: &Binding) -> String {
     format!("lifecycle:{}:{}", binding.run_id, binding.reservation_ref)
 }
-fn receipt_name(binding: &Binding) -> Result<String> {
+pub(super) fn receipt_name(binding: &Binding) -> Result<String> {
     ensure!(
         vibe_lifecycle::process::is_valid_run_id(&binding.run_id),
         "invalid receipt run"
     );
     Ok(format!("{}.cancel.json", binding.run_id))
 }
-fn proof(lease: &LifecycleLease, binding: &Binding, canonical: &[u8]) -> Result<()> {
+pub(super) fn proof(lease: &LifecycleLease, binding: &Binding, canonical: &[u8]) -> Result<()> {
     binding.physical_root.check_lease(lease)?;
     let c = &binding.coordinates;
     let row = SubmissionReservations::inspect_existing_key(lease, &c.namespace, &c.scope, &c.key)?
@@ -99,7 +104,7 @@ fn dispatch_proof(lease: &LifecycleLease, binding: &Binding, canonical: &[u8]) -
     Ok(())
 }
 
-fn domain(lease: &LifecycleLease, binding: &Binding) -> Result<RetainedLifecycleResult> {
+pub(super) fn domain(lease: &LifecycleLease, binding: &Binding) -> Result<RetainedLifecycleResult> {
     match inspect_retained_lifecycle_outcome(lease, &binding.run_id, &binding.reservation_ref)? {
         LifecycleOutcomeInspection::Validated {
             marker,
@@ -176,7 +181,7 @@ impl LiveOwner {
         };
         self.check_stream_binding(binding, trusted)
             .map_err(|e| ControlError::ScopeUnavailable(e.to_string()))?;
-        let (lease, canonical, stop_id, failed, pending, open) = {
+        let (lease, canonical, stop_id, failed, pending, open, deferred, expected) = {
             let mut r = self.shared.record.lock().unwrap();
             if !Arc::ptr_eq(&observer.shared, &self.shared)
                 || !observer
@@ -186,19 +191,46 @@ impl LiveOwner {
                 return Err(ControlError::Binding);
             }
             let detach = request.action == BodyControlRequestAction::Detach;
+            let deferred = matches!(
+                r.gate(),
+                Gate::DeferredOpen
+                    | Gate::DeferredRequested(_)
+                    | Gate::DeferredStopping(_)
+                    | Gate::DeferredStopped(..)
+                    | Gate::DeferredFailed(_)
+            );
+            let expected = match r.gate() {
+                Gate::DeferredStopped(_, result) => Some(result.clone()),
+                _ => None,
+            };
             let (id, failed, pending) = match r.gate() {
+                Gate::DeferredRequested(id) => {
+                    (Some(id.clone()), false, r.state == LiveState::Running)
+                }
+                Gate::DeferredStopping(id) | Gate::DeferredFailed(id) => {
+                    (Some(id.clone()), true, false)
+                }
+                Gate::DeferredStopped(id, _) => (Some(id.clone()), false, false),
                 Gate::Requested(id) => (Some(id.clone()), false, r.state == LiveState::Running),
                 Gate::Stopping(id) => (Some(id.clone()), true, false),
                 Gate::Stopped(id) => (Some(id.clone()), false, false),
                 Gate::Failed(id) => (Some(id.clone()), true, false),
                 _ => (None, false, false),
             };
-            if !detach && id.as_ref().is_some_and(|id| id != &request.request_id) {
+            if !detach
+                && r.state == LiveState::Running
+                && id.as_ref().is_some_and(|id| id != &request.request_id)
+            {
                 return Err(ControlError::ConflictingRequest);
             }
-            let open = matches!(r.gate(), Gate::Open);
+            let open = r.state == LiveState::Running
+                && matches!(r.gate(), Gate::Open | Gate::DeferredOpen);
             if !detach && open {
-                *r.gate_mut() = Gate::Requested(request.request_id.clone());
+                *r.gate_mut() = if deferred {
+                    Gate::DeferredRequested(request.request_id.clone())
+                } else {
+                    Gate::Requested(request.request_id.clone())
+                };
             }
             if detach {
                 r.subscriptions
@@ -207,10 +239,14 @@ impl LiveOwner {
             (
                 r.lease.clone(),
                 r.canonical_request.clone(),
-                id,
+                // Only the original request can prove its cancellation receipt.
+                // A new late request inspects terminal domain truth independently.
+                id.filter(|id| id == &request.request_id),
                 failed,
                 pending,
                 open,
+                deferred,
+                expected,
             )
         };
         let detach = request.action == BodyControlRequestAction::Detach;
@@ -223,11 +259,17 @@ impl LiveOwner {
             proof(&lease, binding, &canonical)?;
             let result = domain(&lease, binding)?;
             if let Some(id) = stop_id.as_ref().filter(|_| !detach) {
-                ensure!(
-                    !failed && stopped_marker(&result),
-                    "pre-dispatch stop not proven"
-                );
-                read_receipt(&lease, binding, id)?;
+                ensure!(!failed, "stop publication failed");
+                if deferred {
+                    ensure!(
+                        expected.as_ref() == Some(&result.marker),
+                        "deferred domain proof changed"
+                    );
+                    super::deferred_stop::read_receipt(&lease, binding, id)?;
+                } else {
+                    ensure!(stopped_marker(&result), "pre-dispatch stop not proven");
+                    read_receipt(&lease, binding, id)?;
+                }
             }
             Ok(result)
         })();
@@ -238,12 +280,24 @@ impl LiveOwner {
             }
         } else if open || pending {
             // Admission is memory only. The worker rechecks all proof before closing.
-            (Status::Requested, Effect::NoEffects, None)
+            (
+                Status::Requested,
+                if deferred {
+                    Effect::Uncertain
+                } else {
+                    Effect::NoEffects
+                },
+                None,
+            )
         } else {
             match snapshot {
                 Ok(_) if stop_id.is_some() => (
                     Status::ReachedSafeStop,
-                    Effect::NoEffects,
+                    if deferred {
+                        Effect::Uncertain
+                    } else {
+                        Effect::NoEffects
+                    },
                     Some(reference(binding)),
                 ),
                 Ok(result) if !active => (
@@ -278,7 +332,11 @@ impl ReadyObserver {
             let mut r = self.shared.record.lock().unwrap();
             let id = match r.gate() {
                 Gate::Open => {
-                    *r.gate_mut() = Gate::Closed;
+                    *r.gate_mut() = if r.deferred_stop {
+                        Gate::DeferredOpen
+                    } else {
+                        Gate::Closed
+                    };
                     return Ok(None);
                 }
                 Gate::Requested(id) => id.clone(),
