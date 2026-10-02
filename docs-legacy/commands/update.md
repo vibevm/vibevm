@@ -16,6 +16,7 @@ Named package references use `<kind>:<name>` and must already be installed. Name
 | Option | Effect |
 | --- | --- |
 | `--all` | Update every package in `vibe.lock`. |
+| `-g`, `--global` | Update one installed user MCP package (or one global application) without selecting a project. Global MCP updates require one unversioned `mcp:<group>/<name>` coordinate. |
 | `--path <PATH>` | Select the project directory; default `.`. |
 | `--assume-yes` | Skip the confirmation prompt. |
 | `--exact` | Tighten updated root constraints in `vibe.toml` to `=<resolved-version>`. |
@@ -30,7 +31,10 @@ The common `--json`, `--quiet`, `--invoked-by`, and `--unattended` options are a
 vibe update flow:wal
 vibe update --all --assume-yes
 vibe update --all --offline --path ./my-project
+vibe update -g mcp:ai.lev/fpf-mcp
 ```
+
+For global MCP packages, the command uses the dedicated user MCP project, updates the selected root to an exact version, and refreshes its owned agent registrations. Other global MCP roots retain their versions. Global MCP updates require `mcp:` plus the full group/name, reject `--all` and `--path`, and do not accept an `@version` suffix. A remote URL package has no binary to rebuild; its published version pins the URL declaration, not the live remote implementation. Project `vibe update` updates package materialisation; use [`vibe mcp install`](mcp-install.md) to refresh selected project agent registrations after a package change.
 
 If an alpha format break prevents reconciliation, follow the re-fetch recipe in [ALPHA-NOTES.md](../ALPHA-NOTES.md).
 
@@ -39,4 +43,3 @@ If an alpha format break prevents reconciliation, follow the re-fetch recipe in 
 - [`vibe install`](install.md)
 - [`vibe cache`](cache.md)
 - [`vibe check`](check.md)
-

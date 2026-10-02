@@ -23,6 +23,9 @@ struct UninstallReport {
 }
 
 pub(super) fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Result<()> {
+    if args.package.is_some() {
+        return run_selected_uninstall(ctx, args);
+    }
     let scope = if let Some(s) = &args.scope {
         Scope::parse(s)?
     } else {
@@ -137,6 +140,113 @@ pub(super) fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Re
     Ok(())
 }
 
+fn run_selected_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Result<()> {
+    if args.skill_only {
+        bail!(
+            "selected MCP package uninstall only removes server registrations; omit --skill-only"
+        );
+    }
+    let package = args
+        .package
+        .as_deref()
+        .ok_or_else(|| anyhow::anyhow!("selected MCP package is missing"))?;
+    let scope = args
+        .scope
+        .as_deref()
+        .map(Scope::parse)
+        .transpose()?
+        .unwrap_or(Scope::Project);
+    let project = if scope == Scope::User {
+        None
+    } else {
+        Some(resolve_project_root_required(&args.path)?)
+    };
+    let agents = if let Some(filter) = args.agent.as_deref() {
+        Agent::parse_filter(filter)?
+    } else {
+        Agent::ALL.to_vec()
+    };
+    let mut destinations = Vec::new();
+    for agent in agents {
+        for concrete in scope.expand() {
+            if let Some(config) = agent.config_path(concrete, project.as_deref())? {
+                destinations.push((agent, concrete, config));
+            }
+        }
+    }
+    let preview = package_registration::remove_from_configs(
+        &destinations,
+        package,
+        args.server.as_deref(),
+        true,
+    )?;
+    if preview.is_empty() {
+        bail!(
+            "no MCP registrations owned by `{package}`{} in the selected agent scope",
+            args.server
+                .as_deref()
+                .map(|s| format!(" --server {s}"))
+                .unwrap_or_default()
+        );
+    }
+    if !args.dry_run
+        && !args.yes
+        && !ctx.is_unattended()
+        && !ctx.is_json()
+        && console::user_attended()
+    {
+        for row in &preview {
+            ctx.step(&format!(
+                "{} {} ({}) → {}",
+                row.status, row.agent, row.scope, row.config_path
+            ));
+        }
+        if !Confirm::new()
+            .with_prompt("Remove these MCP registrations?")
+            .default(false)
+            .interact()?
+        {
+            return Err(InstallError::UserDeclined.into());
+        }
+    }
+    let results = if args.dry_run {
+        preview
+    } else {
+        package_registration::remove_from_configs(
+            &destinations,
+            package,
+            args.server.as_deref(),
+            false,
+        )?
+    };
+    if ctx.is_json() {
+        ctx.emit_json(&serde_json::json!({
+            "ok": true, "command": "mcp:uninstall", "package": package,
+            "scope": scope.as_str(), "results": results, "dry_run": args.dry_run,
+        }))?;
+    } else if ctx.is_quiet() {
+        let count = results.len();
+        ctx.summary(&format!(
+            "vibe mcp uninstall: {package} ({}) — {count} registration{} {}",
+            scope.as_str(),
+            if count == 1 { "" } else { "s" },
+            if args.dry_run { "previewed" } else { "removed" }
+        ));
+    } else {
+        for row in &results {
+            ctx.step(&format!(
+                "{} {} ({}) → {} ({})",
+                row.status,
+                row.agent,
+                row.scope,
+                row.config_path,
+                row.note.as_deref().unwrap_or("")
+            ));
+        }
+    }
+    Ok(())
+}
+
 /// Per-(agent × scope) uninstall walker. Mirrors `walk_install` /
 /// `walk_upgrade`: invoked twice from `run_uninstall`, once
 /// dry-run, once apply.
@@ -166,6 +276,7 @@ fn walk_uninstall(
                         *agent,
                         concrete_scope,
                         &path,
+                        project_root,
                         dry_run,
                         &mut results,
                     )?;
@@ -258,58 +369,22 @@ fn uninstall_mcp_entry(
     })
 }
 
-/// Remove every entry the vibevm-managed sidecar names (PROP-027
-/// §2.4) — the package-declared servers `vibe mcp install` registered.
-/// JSON-only by construction (the sidecar exists only where package
-/// servers register); a config without a sidecar is a no-op.
+/// Remove receipt-owned entries and exact, unchanged legacy sidecar entries.
 fn uninstall_managed_entries(
     agent: Agent,
     scope: Scope,
     config_path: &Path,
+    project_root: Option<&Path>,
     dry_run: bool,
     results: &mut Vec<AgentInstallReport>,
 ) -> Result<()> {
-    if agent.config_format() != ConfigFormat::Json || !config_path.exists() {
-        return Ok(());
-    }
-    let doc = read_json(config_path)?;
-    let managed = vibe_mcp::pkg_servers::managed_entries(&doc);
-    if managed.is_empty() {
-        return Ok(());
-    }
-    let section = agent.mcp_section_key();
-    if dry_run {
-        for name in &managed {
-            results.push(AgentInstallReport {
-                agent: agent.as_str().to_string(),
-                scope: scope.as_str(),
-                config_path: machine_json_path(config_path),
-                status: "would-remove",
-                note: Some(format!("drop managed pkg server `{name}` from {section}")),
-            });
-        }
-        return Ok(());
-    }
-    let mut doc = doc;
-    for name in &managed {
-        if let Some(servers) = doc.get_mut(section).and_then(|v| v.as_object_mut()) {
-            servers.remove(name);
-        }
-        vibe_mcp::pkg_servers::unmark_managed(&mut doc, name);
-        results.push(AgentInstallReport {
-            agent: agent.as_str().to_string(),
-            scope: scope.as_str(),
-            config_path: machine_json_path(config_path),
-            status: "removed",
-            note: Some(format!(
-                "dropped managed pkg server `{name}` from {section}"
-            )),
-        });
-    }
-    let serialized =
-        serde_json::to_string_pretty(&doc).with_context(|| "serializing stripped JSON config")?;
-    fs::write(config_path, serialized + "\n")
-        .with_context(|| format!("writing `{}`", config_path.display()))?;
+    results.extend(package_registration::remove_all_managed(
+        agent,
+        scope,
+        config_path,
+        project_root,
+        dry_run,
+    )?);
     Ok(())
 }
 

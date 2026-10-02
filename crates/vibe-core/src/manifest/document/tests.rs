@@ -658,7 +658,10 @@ fn mcp_kind_manifest_parses_under_its_laws() {
     let m = Manifest::parse_str(&raw).unwrap();
     assert_eq!(m.require_package().unwrap().kind, PackageKind::Mcp);
     assert_eq!(m.mcp_servers.len(), 1);
-    assert_eq!(m.mcp_servers[0].binary, "rust-ai-native-mcp");
+    assert_eq!(
+        m.mcp_servers[0].binary.as_deref(),
+        Some("rust-ai-native-mcp")
+    );
     // Round-trips through serialisation.
     let back = Manifest::parse_str(&toml::to_string_pretty(&m).unwrap()).unwrap();
     assert_eq!(m, back);
@@ -732,6 +735,121 @@ fn mcp_server_args_substitute_only_the_closed_set() {
     let err = Manifest::parse_str(&raw).unwrap_err().to_string();
     assert!(err.contains("unknown substitution variable"), "{err}");
     assert!(err.contains("{secret}"), "{err}");
+}
+
+/// A remote MCP package is declaration-only: it needs no `[[binary]]`.
+fn remote_mcp_manifest(server_tail: &str) -> String {
+    format!(
+        r#"
+[package]
+group = "ai.lev"
+name = "fpf-mcp"
+kind = "mcp"
+version = "1.0.0"
+license = "UPL-1.0"
+description = "FPF MCP endpoint"
+
+[[mcp_server]]
+name = "fpf"
+url = "https://mcp.fpf.tools/mcp"
+transport = "streamable-http"
+{server_tail}
+"#
+    )
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
+fn remote_mcp_manifest_needs_no_binary_and_round_trips() {
+    let m = Manifest::parse_str(&remote_mcp_manifest("")).unwrap();
+    assert!(m.binaries.is_empty());
+    assert_eq!(m.mcp_servers[0].binary, None);
+    assert_eq!(
+        m.mcp_servers[0].url.as_deref(),
+        Some("https://mcp.fpf.tools/mcp")
+    );
+    assert_eq!(
+        m.mcp_servers[0].transport.as_deref(),
+        Some("streamable-http")
+    );
+    let back = Manifest::parse_str(&toml::to_string_pretty(&m).unwrap()).unwrap();
+    assert_eq!(m, back);
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
+fn remote_mcp_url_keeps_valid_internationalized_hostname_verbatim() {
+    let url = "https://пример.рф/mcp?mode=stream";
+    let raw = remote_mcp_manifest("").replace("https://mcp.fpf.tools/mcp", url);
+    let m = Manifest::parse_str(&raw).unwrap();
+    assert_eq!(m.mcp_servers[0].url.as_deref(), Some(url));
+    let back = Manifest::parse_str(&toml::to_string_pretty(&m).unwrap()).unwrap();
+    assert_eq!(back.mcp_servers[0].url.as_deref(), Some(url));
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
+fn mcp_server_requires_exactly_one_delivery() {
+    let both = remote_mcp_manifest("binary = \"fpf-mcp\"");
+    let err = Manifest::parse_str(&both).unwrap_err().to_string();
+    assert!(err.contains("exactly one of binary or url"), "{err}");
+
+    let neither = remote_mcp_manifest("")
+        .replace("url = \"https://mcp.fpf.tools/mcp\"\n", "")
+        .replace("transport = \"streamable-http\"\n", "");
+    let err = Manifest::parse_str(&neither).unwrap_err().to_string();
+    assert!(err.contains("exactly one of binary or url"), "{err}");
+
+    let empty_binary =
+        mcp_manifest("", "").replace("binary = \"rust-ai-native-mcp\"", "binary = \"\"");
+    let err = Manifest::parse_str(&empty_binary).unwrap_err().to_string();
+    assert!(err.contains("empty binary name"), "{err}");
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
+fn mcp_server_transport_matches_delivery() {
+    let no_transport = remote_mcp_manifest("").replace("transport = \"streamable-http\"\n", "");
+    let err = Manifest::parse_str(&no_transport).unwrap_err().to_string();
+    assert!(err.contains("requires transport"), "{err}");
+
+    let wrong_transport = remote_mcp_manifest("").replace("streamable-http", "stdio");
+    let err = Manifest::parse_str(&wrong_transport)
+        .unwrap_err()
+        .to_string();
+    assert!(err.contains("requires transport"), "{err}");
+
+    let local_http = mcp_manifest("", "transport = \"streamable-http\"");
+    let err = Manifest::parse_str(&local_http).unwrap_err().to_string();
+    assert!(err.contains("requires stdio"), "{err}");
+
+    let local_stdio = mcp_manifest("", "transport = \"stdio\"");
+    Manifest::parse_str(&local_stdio).unwrap();
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
+fn remote_mcp_url_and_args_are_checked() {
+    for bad in [
+        "http://mcp.fpf.tools/mcp",
+        "https://",
+        "https://user:pass@mcp.fpf.tools/mcp",
+        "https://mcp.fpf.tools/mcp#fragment",
+        "https://mcp.fpf.tools/a b",
+    ] {
+        let raw = remote_mcp_manifest("").replace("https://mcp.fpf.tools/mcp", bad);
+        let err = Manifest::parse_str(&raw).unwrap_err().to_string();
+        assert!(
+            err.contains("url must be an HTTPS endpoint"),
+            "{bad}: {err}"
+        );
+    }
+    let err = Manifest::parse_str(&remote_mcp_manifest(
+        "args = [\"--path\", \"{project_root}\"]",
+    ))
+    .unwrap_err()
+    .to_string();
+    assert!(err.contains("cannot declare launch args"), "{err}");
 }
 
 #[test]

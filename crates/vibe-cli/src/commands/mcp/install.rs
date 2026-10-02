@@ -46,6 +46,9 @@ impl InstallMode {
 }
 
 pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result<()> {
+    if args.package.is_some() {
+        return run_selected_install(ctx, args);
+    }
     // The mode is `auto` if --auto was passed; `flags` if any of
     // (--scope/--what/--agent) was passed without --auto and we don't
     // need to ask anything; `interactive` otherwise (asks via wizard).
@@ -98,7 +101,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
             Scope::User
         }
     } else {
-        interactive_ask_scope(&args.path)?
+        super::install_prompts::interactive_ask_scope(&args.path)?
     };
 
     // 2. Resolve project_root. Two policies, mirroring the model in
@@ -130,7 +133,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
     } else if args.auto {
         What::Both
     } else {
-        interactive_ask_what()?
+        super::install_prompts::interactive_ask_what()?
     };
 
     // 4. Resolve agents.
@@ -144,7 +147,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
             .filter(|a| args.force || detected.contains(a))
             .collect()
     } else {
-        interactive_select_agents(&detected, args.force)?
+        super::install_prompts::interactive_select_agents(&detected, args.force)?
     };
 
     if targeted.is_empty() && !ctx.is_json() {
@@ -179,7 +182,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
 
     let needs_change = preview_results
         .iter()
-        .any(|r| matches!(r.status, "would-create" | "would-update"))
+        .any(|r| matches!(r.status, "would-create" | "would-update" | "would-adopt"))
         || preview_skill
             .iter()
             .any(|r| matches!(r.status, "would-create" | "would-update"));
@@ -203,7 +206,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
             print_install_results(ctx, true, &preview_results, &preview_skill);
             let mcp_count = preview_results
                 .iter()
-                .filter(|r| matches!(r.status, "would-create" | "would-update"))
+                .filter(|r| matches!(r.status, "would-create" | "would-update" | "would-adopt"))
                 .count();
             let skill_count = preview_skill
                 .iter()
@@ -259,7 +262,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
     if ctx.is_quiet() {
         let mcp_written = results
             .iter()
-            .filter(|r| matches!(r.status, "created" | "updated"))
+            .filter(|r| matches!(r.status, "created" | "updated" | "adopted"))
             .count();
         let skill_written = skill_results
             .iter()
@@ -281,6 +284,154 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
              Run `vibe init` here first if you want both legs.",
             args.path.display()
         ));
+    }
+    Ok(())
+}
+
+fn run_selected_install(ctx: &output::Context, args: McpInstallArgs) -> Result<()> {
+    let package = args
+        .package
+        .as_deref()
+        .ok_or_else(|| anyhow::anyhow!("selected MCP package is missing"))?;
+    let scope = args
+        .scope
+        .as_deref()
+        .map(Scope::parse)
+        .transpose()?
+        .unwrap_or(Scope::Project);
+    if args.what.as_deref().is_some_and(|w| w != "mcp") {
+        bail!(
+            "selected MCP package registration supports only `--what mcp`; omit --what or pass --what mcp"
+        );
+    }
+    if args.force {
+        bail!("--force does not override MCP package ownership or agent support; omit --force");
+    }
+    let project = if scope != Scope::User {
+        Some(resolve_project_root_required(&args.path)?)
+    } else {
+        None
+    };
+    let agents = if let Some(filter) = args.agent.as_deref() {
+        Agent::parse_filter(filter)?
+    } else if args.auto {
+        detect_agents(project.as_deref())
+    } else {
+        bail!("selected MCP package registration requires `--agent <name>` or `--auto`");
+    };
+    if agents.is_empty() {
+        bail!("no supported agents detected; pass `--agent <name>`");
+    }
+    let user_root = if scope != Scope::Project {
+        Some(crate::commands::install::user_project_root()?)
+    } else {
+        None
+    };
+    let mut preview = Vec::new();
+    for concrete in scope.expand() {
+        let root = if concrete == Scope::Project {
+            project
+                .as_deref()
+                .ok_or_else(|| anyhow::anyhow!("project scope requires a project root"))?
+        } else {
+            user_root
+                .as_deref()
+                .ok_or_else(|| anyhow::anyhow!("user scope requires a package inventory"))?
+        };
+        preview.extend(super::package_registration::register(
+            root,
+            package,
+            args.server.as_deref(),
+            &agents,
+            concrete,
+            args.yes || ctx.is_unattended(),
+            true,
+        )?);
+    }
+    let changes = preview
+        .iter()
+        .any(|r| matches!(r.status, "would-create" | "would-update" | "would-adopt"));
+    if changes
+        && !args.dry_run
+        && !args.yes
+        && !ctx.is_unattended()
+        && !ctx.is_json()
+        && console::user_attended()
+    {
+        for row in &preview {
+            ctx.step(&format!(
+                "{} {} ({}) → {}",
+                row.status, row.agent, row.scope, row.config_path
+            ));
+        }
+        if !Confirm::new()
+            .with_prompt("Register these MCP servers?")
+            .default(false)
+            .interact()?
+        {
+            return Err(InstallError::UserDeclined.into());
+        }
+    }
+    let results = if args.dry_run || !changes {
+        preview
+    } else {
+        let mut applied = Vec::new();
+        for concrete in scope.expand() {
+            let root = if concrete == Scope::Project {
+                project
+                    .as_deref()
+                    .ok_or_else(|| anyhow::anyhow!("project scope requires a project root"))?
+            } else {
+                user_root
+                    .as_deref()
+                    .ok_or_else(|| anyhow::anyhow!("user scope requires a package inventory"))?
+            };
+            applied.extend(super::package_registration::register(
+                root,
+                package,
+                args.server.as_deref(),
+                &agents,
+                concrete,
+                true,
+                false,
+            )?);
+        }
+        applied
+    };
+    if ctx.is_json() {
+        ctx.emit_json(&serde_json::json!({ "ok": true, "command": "mcp:install", "package": package, "scope": scope.as_str(), "results": results, "dry_run": args.dry_run }))?;
+    } else if ctx.is_quiet() {
+        let changed = results
+            .iter()
+            .filter(|row| {
+                matches!(
+                    row.status,
+                    "created"
+                        | "updated"
+                        | "adopted"
+                        | "would-create"
+                        | "would-update"
+                        | "would-adopt"
+                )
+            })
+            .count();
+        ctx.summary(&format!(
+            "vibe mcp install: {package} ({}) — {changed} registration{} {}",
+            scope.as_str(),
+            if changed == 1 { "" } else { "s" },
+            if args.dry_run { "previewed" } else { "applied" }
+        ));
+    } else {
+        for row in &results {
+            ctx.step(&format!(
+                "{} {} ({}) → {} ({})",
+                row.status,
+                row.agent,
+                row.scope,
+                row.config_path,
+                row.note.as_deref().unwrap_or("")
+            ));
+        }
     }
     Ok(())
 }
@@ -410,137 +561,32 @@ fn walk_install(
 fn walk_install_pkg_servers(
     agent: Agent,
     project_root: &Path,
-    config_path: &Path,
+    _config_path: &Path,
     assume_yes: bool,
     dry_run: bool,
     results: &mut Vec<AgentInstallReport>,
 ) -> Result<()> {
     let servers = vibe_workspace::bins::collect_mcp_servers(project_root)
         .map_err(|e| anyhow::anyhow!("{e}"))?;
-    for s in servers {
-        if let Err(refusal) = vibe_workspace::bins::consent_to_build(&s.binary, assume_yes) {
-            results.push(AgentInstallReport {
-                agent: agent.as_str().to_string(),
-                scope: "project",
-                config_path: machine_json_path(config_path),
-                status: "refused",
-                note: Some(format!("pkg server `{}` — {refusal}", s.decl.name)),
-            });
-            continue;
+    let mut names = std::collections::BTreeSet::new();
+    for server in &servers {
+        if server.decl.name == SERVER_NAME || !names.insert(server.decl.name.as_str()) {
+            bail!(
+                "MCP server name `{}` collides with another registration in this project",
+                server.decl.name
+            );
         }
-        let artifact = {
-            let a = s.binary.artifact();
-            let abs = if a.is_absolute() {
-                a
-            } else {
-                project_root.join(a)
-            };
-            vibe_mcp::pkg_servers::verbatim_free(&abs)
-        };
-        let command = machine_json_path(&artifact);
-        let args = vibe_mcp::pkg_servers::substituted_args(&s.decl.args, project_root);
-        let payload = vibe_mcp::pkg_servers::entry_payload(agent, &command, &args);
-        let ConfigPayload::Json(entry) = payload else {
-            // Unreachable by construction: project-scope agents are all
-            // JSON-configured; a TOML agent has no project surface.
-            continue;
-        };
-        let outcome = if dry_run {
-            preview_install_pkg_server(agent, config_path, &s.decl.name, &entry)?
-        } else {
-            apply_install_pkg_server(agent, config_path, &s.decl.name, &entry)?
-        };
-        results.push(outcome);
+    }
+    for s in servers {
+        results.extend(package_registration::register(
+            project_root,
+            &s.package,
+            Some(&s.decl.name),
+            &[agent],
+            Scope::Project,
+            assume_yes,
+            dry_run,
+        )?);
     }
     Ok(())
-}
-
-// ---------------------------------------------------------------------------
-// Interactive helpers — TTY-only paths
-// ---------------------------------------------------------------------------
-
-fn interactive_ask_scope(path: &Path) -> Result<Scope> {
-    if !stdin_is_tty() {
-        bail!(
-            "no --scope and stdin is not a TTY — pass `--scope project|user|both` or \
-             `--auto` (auto-resolves scope from vibe.toml presence)"
-        );
-    }
-    let has_toml = has_vibe_toml(path);
-    let default_idx = if has_toml { 0 } else { 1 };
-    let prompt = if has_toml {
-        "Where to install? (vibe.toml found — defaulting to project-level)"
-    } else {
-        "Where to install? (vibe.toml not found — defaulting to user-level)"
-    };
-    let chosen = dialoguer::Select::new()
-        .with_prompt(prompt)
-        .items([
-            "Project-level — per-project files committed to git",
-            "User-level    — global home/config dirs, works everywhere",
-            "Both          — project AND user simultaneously",
-        ])
-        .default(default_idx)
-        .interact()?;
-    Ok(match chosen {
-        0 => Scope::Project,
-        1 => Scope::User,
-        2 => Scope::Both,
-        _ => unreachable!(),
-    })
-}
-
-fn interactive_ask_what() -> Result<What> {
-    if !stdin_is_tty() {
-        return Ok(What::Both);
-    }
-    let chosen = dialoguer::Select::new()
-        .with_prompt("What to install?")
-        .items([
-            "Both MCP server config and SKILL.md (recommended)",
-            "MCP server only",
-            "SKILL.md only",
-        ])
-        .default(0)
-        .interact()?;
-    Ok(match chosen {
-        0 => What::Both,
-        1 => What::Mcp,
-        2 => What::Skill,
-        _ => unreachable!(),
-    })
-}
-
-fn interactive_select_agents(detected: &[Agent], force: bool) -> Result<Vec<Agent>> {
-    if !stdin_is_tty() {
-        bail!(
-            "no --agent and stdin is not a TTY — pass `--agent <name>` (one of \
-             `all`, `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`) or \
-             `--auto` to detect every supported agent"
-        );
-    }
-    // Slice 5: always show ALL agents, with checkbox preselected for
-    // detected ones and a `(not detected)` badge on the rest. `--force`
-    // toggles whether unchecked-not-detected agents will install
-    // anyway when chosen — but visually they're always pickable.
-    let _ = force; // currently informational only at the wizard layer
-    let pool: Vec<Agent> = Agent::ALL.to_vec();
-    let labels: Vec<String> = pool
-        .iter()
-        .map(|a| {
-            let badge = if detected.contains(a) {
-                ""
-            } else {
-                "  (not detected)"
-            };
-            format!("{}{}", a.as_str(), badge)
-        })
-        .collect();
-    let defaults: Vec<bool> = pool.iter().map(|a| detected.contains(a)).collect();
-    let chosen = dialoguer::MultiSelect::new()
-        .with_prompt("Which agents? (space to toggle, enter to confirm)")
-        .items(&labels)
-        .defaults(&defaults)
-        .interact()?;
-    Ok(chosen.into_iter().map(|i| pool[i]).collect())
 }

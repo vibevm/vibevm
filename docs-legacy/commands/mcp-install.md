@@ -1,16 +1,48 @@
-# `vibe mcp install` — wire vibevm into a coding agent
+# `vibe mcp install` — register MCP servers with coding agents
 
-Detects supported coding agents on this machine + the current project, writes the per-agent MCP server configuration, and (optionally) installs the `vibevm` SKILL.md instructing the agent how to use vibevm. Idempotent — already-correct configs surface as `unchanged`.
+Without a package selector, detects supported coding agents on this machine + the current project, writes the per-agent configuration for vibevm's own MCP server and installed package servers, and (optionally) installs the `vibevm` SKILL.md instructing the agent how to use vibevm. Idempotent — already-correct configs surface as `unchanged`.
+
+With an explicit `mcp:<group>/<name>` selector, this command registers only servers declared by that already-installed MCP package. Use `--server <name>` to select one server from a multi-server package. Package registration is separate from the legacy `vibevm` product MCP server and does not install a `vibevm` skill.
+
+## Remote MCP packages
+
+An endpoint-only package uses `kind = "mcp"` and declares a server without a binary:
+
+```toml
+[package]
+kind = "mcp"
+group = "ai.lev"
+name = "fpf-mcp"
+version = "1.0.0"
+
+[[mcp_server]]
+name = "fpf"
+transport = "streamable-http"
+url = "https://mcp.fpf.tools/mcp"
+```
+
+The remote form requires an HTTPS URL and no `[[binary]]`, `vibe bin build`, local launcher, or vibe process at runtime. A local stdio declaration instead names a `binary` from the same manifest; exactly one of `binary` and `url` is required. The package pins its endpoint declaration, not the implementation currently served at that address. Keep credentials out of the URL and package; configure authentication in the client.
+
+Project setup has two steps:
+
+```bash
+vibe install mcp:ai.lev/fpf-mcp
+vibe mcp install mcp:ai.lev/fpf-mcp --agent codex --scope project --what mcp --yes
+```
+
+`vibe install` materialises the package; `vibe mcp install` registers it in the agent's native config. Installing another package does not silently register that package. For a user-wide installation, [`vibe install -g mcp:ai.lev/fpf-mcp --agent codex`](install.md) combines materialisation in a dedicated user MCP project with user-scope registration. Global installation requires the `mcp:` prefix and a full group/name coordinate. Its interactive mode asks for an agent; unattended runs must pass `--agent <name>` or `--agent all`.
+
+Claude Code, Cursor, OpenCode, Codex, and Qwen Code accept project and user package registrations. Claude Desktop is user-only and does not support this remote HTTP package transport; local stdio remains available. The agent adapters write native shapes: Claude Code uses `type: "http"` plus `url`; Codex uses a TOML `url`; Qwen Code uses JSON `httpUrl`; OpenCode 1.x uses `mcp.<name>` with `type: "remote"` and `url`. This describes the supported OpenCode 1.x layout; it does not describe OpenCode V2's `mcp.servers` layout. Agent configs are not a shared MCP-standard file, so an explicit adapter and target agent are needed. A matching unmanaged name or a managed entry edited outside vibe is preserved and reported as a conflict.
 
 Spec: [PROP-004 §5.1](../../legacy-spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slices 4 + 5).
 
 ## Two scopes — project vs user
 
-Every install can land at one of three places:
+Every install can land at one of three places. The CWD and portable `vibe mcp serve` details below describe vibevm's own product server; package servers use their declared binary path or HTTPS URL:
 
 - **`--scope project`** — files in the project tree (`<proj>/.<agent>/...`), committed to git, every clone gets the same setup. The MCP server entry no longer passes `--path`; it is byte-identical for every scope and resolves its project root from the launcher's CWD (an MCP client sets the server's CWD to the project directory for a project-scope `.mcp.json` server). That keeps a committed `.mcp.json` portable across machines — no absolute path is baked in. Strictly requires `vibe.toml` in `--path` — bails out if absent.
 - **`--scope user`** — global home / config dirs (`~/.<agent>/...`), machine-local, works in every directory. Same entry as project scope (no `--path`); the server resolves its root from CWD per invocation. **Bootstrap-mode** — does NOT require `vibe.toml` in `--path`.
-- **`--scope both`** — write to project AND user simultaneously. **Best-effort** for the project leg: when `vibe.toml` is missing in `--path`, the project leg is silently skipped (a `note:` line in text mode flags it) and the user leg runs as normal. Same model as `vibe mcp upgrade` / `vibe mcp uninstall` — designed so first-time-user provisioning scripts can run unattended on a fresh machine before any vibevm project exists. For agents with no project surface (Claude Desktop, Codex), Both collapses to user with a `skipped` row in the project results.
+- **`--scope both`** — write to project AND user simultaneously. **Best-effort** for the project leg: when `vibe.toml` is missing in `--path`, the project leg is silently skipped (a `note:` line in text mode flags it) and the user leg runs as normal. Same model as `vibe mcp upgrade` / `vibe mcp uninstall` — designed so first-time-user provisioning scripts can run unattended on a fresh machine before any vibevm project exists. Claude Desktop has no project surface; Codex does.
 
 Without `--scope`, the wizard asks. Default in wizard: `project` if `vibe.toml` is present in `--path`, else `user`.
 
@@ -30,7 +62,8 @@ Without `--scope`, the wizard asks. Default in wizard: `project` if `vibe.toml` 
 | `claude-desktop` | (user-only) `<config-dir>/Claude/` exists | (n/a) | `<config-dir>/Claude/claude_desktop_config.json` | no |
 | `cursor` | `.cursor/`, `.cursorrules` | `<proj>/.cursor/mcp.json` | `~/.cursor/mcp.json` | no |
 | `opencode` | `.opencode/`, `opencode.json`, `opencode.jsonc`, `AGENTS.md` | `<proj>/opencode.json` | `~/.config/opencode/opencode.json` (XDG path on every OS — see note) | yes — `<proj>/.opencode/skills/` and `~/.config/opencode/skills/` |
-| `codex` | (user-only) `~/.codex/` exists | (n/a) | `~/.codex/config.toml` (TOML) | yes — `<proj>/.agents/skills/` and `~/.agents/skills/` |
+| `codex` | (user) `~/.codex/` exists | `<proj>/.codex/config.toml` (TOML) | `~/.codex/config.toml` (TOML) | yes — `<proj>/.agents/skills/` and `~/.agents/skills/` |
+| `qwen-code` | `.qwen/`, `QWEN.md` | `<proj>/.qwen/settings.json` | `~/.qwen/settings.json` | yes — `<proj>/.qwen/skills/` and `~/.qwen/skills/` |
 
 `<config-dir>` resolves through `dirs::config_dir()` — `%APPDATA%` on Windows, `~/Library/Application Support` on macOS, `~/.config` on Linux. **Used by Claude Desktop only.**
 
@@ -41,7 +74,8 @@ Claude Code reads MCP servers from `.mcp.json` (project) and the top-level `mcpS
 ## Usage
 
 ```
-vibe mcp install [--path <dir>]
+vibe mcp install [mcp:<group>/<name>] [--server <name>]
+                 [--path <dir>]
                  [--agent <FILTER> | --auto]
                  [--scope project | user | both]
                  [--what mcp | skill | both]
@@ -57,7 +91,9 @@ Without flags, drops into a 3-question wizard (TTY required): pick scope, pick w
 | Flag | Description | Default |
 | --- | --- | --- |
 | `--path <dir>` | Project root for project-scope walks. Strictly required only when scope is `project`. `--scope both` is best-effort — if `vibe.toml` is missing, the project leg is silently skipped and only the user leg runs. `--scope user` ignores `--path`. | `.` |
-| `--agent <FILTER>` | One of `all`, `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`. Conflicts with `--auto`. | (interactive) |
+| `mcp:<group>/<name>` | Optional installed package selector; register only this package. | all installed packages in the legacy walk |
+| `--server <name>` | One server within the selected package. Requires a package selector. | all servers in the selected package |
+| `--agent <FILTER>` | One of `all`, `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`. Conflicts with `--auto`. | (interactive) |
 | `--auto` | Detect every supported agent and install in all of them. No prompts (except apply confirm — pass `--yes` to skip). Conflicts with `--agent`. Auto-resolves: scope = `project` if `vibe.toml` in `--path`, else `user`; what = `both`. | off |
 | `--scope project|user|both` | See [Two scopes](#two-scopes--project-vs-user). | (interactive / auto-resolved under `--auto`) |
 | `--what mcp|skill|both` | See [Two install kinds](#two-install-kinds--mcp-and-skillmd). | `both` |
@@ -184,7 +220,7 @@ vibe mcp install --auto --dry-run
 - `updated` — file existed but differed; we rewrote it. Foreign keys outside the `mcpServers` / `mcp` / `mcp_servers` block are preserved.
 - `unchanged` — byte-identical block already on disk.
 - `would-create` / `would-update` — `--dry-run` previews.
-- `skipped` — agent has no surface for the requested action (skill writes for Cursor/Claude Desktop; project-scope MCP for Claude Desktop/Codex when `--scope both` or `--scope project --force`).
+- `skipped` — agent has no surface for the requested action (skill writes for Cursor/Claude Desktop; project-scope MCP for Claude Desktop).
 
 `mode`:
 
@@ -194,7 +230,7 @@ vibe mcp install --auto --dry-run
 
 ## What gets written
 
-### Claude Code / Claude Desktop / Cursor (JSON, `mcpServers`)
+### Claude Code / Claude Desktop / Cursor / Qwen Code (JSON, `mcpServers`)
 
 A single entry shape for every scope (no `--path` — the server resolves its root from the launcher's CWD):
 ```jsonc
@@ -257,7 +293,7 @@ command = "vibe"
 args = ["mcp", "serve"]
 ```
 
-### SKILL.md (Claude Code, OpenCode, Codex)
+### SKILL.md (Claude Code, OpenCode, Codex, Qwen Code)
 
 Two-state document with three sections:
 

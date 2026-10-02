@@ -1,6 +1,8 @@
 # `vibe mcp status` — preview agent integration state
 
-Read-only counterpart of [`vibe mcp install`](mcp-install.md) + [`vibe mcp upgrade`](mcp-upgrade.md). Walks every supported agent (Claude Code, Claude Desktop, Cursor, OpenCode, Codex) across both project and user scopes, works out what `install` / `upgrade` would do, and reports per-(agent × scope) MCP-config status AND SKILL.md drift status without touching disk. Useful as a CI gate to catch config drift, or as a one-shot probe to see which agents this project + machine combination would integrate with.
+Read-only counterpart of [`vibe mcp install`](mcp-install.md) + [`vibe mcp upgrade`](mcp-upgrade.md). Walks every supported agent (Claude Code, Claude Desktop, Cursor, OpenCode, Codex, Qwen Code) across supported project and user scopes, works out what `install` / `upgrade` would do, and reports per-(agent × scope) MCP-config status AND SKILL.md drift status without touching disk. Useful as a CI gate to catch config drift, or as a one-shot probe to see which agents this project + machine combination would integrate with.
+
+For installed MCP packages, status distinguishes a remote HTTPS endpoint from a local stdio server and reports missing local build artifacts with a `vibe bin build <name>` recipe. A configured remote URL only means the agent has an entry; it does **not** prove that the endpoint is reachable, authentication succeeds, or the agent has connected. Use the agent itself to verify a live connection.
 
 Spec: [PROP-004 §5.1](../../legacy-spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slice 2 + 4).
 
@@ -59,7 +61,7 @@ would-create  codex  → /home/dev/.codex/config.toml
 }
 ```
 
-`status` is one of `would-create`, `would-update`, `unchanged` — same vocabulary as `vibe mcp install --dry-run`. Each entry is keyed on `(agent, scope)` — a single agent appears in up to two rows when both project and user scopes have a surface. Cursor and Claude Desktop never appear in `skill_results` (no skill loader); Claude Desktop and Codex never appear in `results` for the `project` scope (no project surface).
+`status` is one of `would-create`, `would-update`, `unchanged` — same vocabulary as `vibe mcp install --dry-run`. Each entry is keyed on `(agent, scope)` — a single agent appears in up to two rows when both project and user scopes have a surface. Cursor and Claude Desktop never appear in `skill_results` (no skill loader); Claude Desktop never appears in `results` for the `project` scope (no project surface). Codex reads `<project>/.codex/config.toml`, and Qwen Code reads `<project>/.qwen/settings.json`.
 
 ## CI usage — drift gate
 

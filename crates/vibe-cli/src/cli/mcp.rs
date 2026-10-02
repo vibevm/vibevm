@@ -24,8 +24,8 @@ pub enum McpSubcommand {
     /// Detect supported coding agents and write the per-agent MCP
     /// server configuration plus an optional `vibevm` SKILL.md so the
     /// agent picks up vibevm automatically on its next session start.
-    /// Five agents supported: Claude Code, Claude Desktop, Cursor,
-    /// OpenCode, Codex. Idempotent — already-correct configs surface
+    /// Six agents supported: Claude Code, Claude Desktop, Cursor,
+    /// OpenCode, Codex, Qwen Code. Idempotent — already-correct configs surface
     /// as `unchanged`.
     ///
     /// Without flags, drops into an interactive multi-select picker
@@ -59,6 +59,15 @@ pub enum McpSubcommand {
 
 #[derive(Debug, clap::Args)]
 pub struct McpInstallArgs {
+    /// Optional installed MCP package to register. Without this selector,
+    /// retain the legacy walk over every package server in the project.
+    pub package: Option<String>,
+
+    /// One server within the selected package. Required only when a package
+    /// declares multiple servers and the operator wants just one.
+    #[arg(long, requires = "package")]
+    pub server: Option<String>,
+
     /// Project root with `vibe.toml`. Defaults to current directory.
     /// Required only when `--scope` is `project` or `both`. With
     /// `--scope user` (or auto-resolved to `user` because no
@@ -68,7 +77,7 @@ pub struct McpInstallArgs {
     pub path: PathBuf,
 
     /// Restrict to a specific agent. One of `all`, `claude`,
-    /// `claude-desktop`, `cursor`, `opencode`, `codex`. When absent
+    /// `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`. When absent
     /// and `--auto` is also absent, the wizard's agents step asks
     /// (TTY required). Conflicts with `--auto`.
     #[arg(long, conflicts_with = "auto")]
@@ -125,6 +134,13 @@ pub struct McpStatusArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct McpUninstallArgs {
+    /// Remove registrations owned by this installed MCP package only.
+    pub package: Option<String>,
+
+    /// Remove only this server within the selected package.
+    #[arg(long, requires = "package")]
+    pub server: Option<String>,
+
     /// Project root with `vibe.toml`. Defaults to current directory.
     /// Project-scope walks require it; user-scope works anywhere.
     #[arg(long, default_value = ".")]
@@ -138,7 +154,7 @@ pub struct McpUninstallArgs {
 
     /// Restrict to one or more agents. Same vocabulary as install:
     /// `all`, `claude`, `claude-desktop`, `cursor`, `opencode`,
-    /// `codex`. Default: all five.
+    /// `codex`, `qwen-code`. Default: all six.
     #[arg(long)]
     pub agent: Option<String>,
 
@@ -179,7 +195,7 @@ pub struct McpUpgradeArgs {
 
     /// Restrict the scan to one or more agents. Same vocabulary as
     /// `mcp install`: `all`, `claude`, `claude-desktop`, `cursor`,
-    /// `opencode`, `codex`. Default: scan all five.
+    /// `opencode`, `codex`, `qwen-code`. Default: scan all six.
     #[arg(long)]
     pub agent: Option<String>,
 

@@ -1907,14 +1907,22 @@ fn mcp_install_scope_both_writes_to_project_and_user_for_claude() {
     assert!(scopes.contains(&"user"));
 }
 
+// Windows and macOS may resolve native client directories outside overridden
+// process environment; keep this subprocess probe on the proven Linux path.
+#[cfg(target_os = "linux")]
 #[test]
-fn mcp_install_scope_both_collapses_to_user_for_user_only_agent() {
+fn mcp_install_scope_both_writes_codex_project_and_user_configs() {
     let user = UserScratch::new();
+    fs::create_dir_all(user.settings.join("native-home/.config")).unwrap();
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
 
     let out = user
         .vibe()
+        .env("HOME", user.settings.join("native-home"))
+        .env("USERPROFILE", user.settings.join("native-home"))
+        .env("XDG_CONFIG_HOME", user.settings.join("native-home/.config"))
+        .env("APPDATA", user.settings.join("native-home/.config"))
         .arg("--json")
         .arg("mcp")
         .arg("install")
@@ -1937,13 +1945,16 @@ fn mcp_install_scope_both_collapses_to_user_for_user_only_agent() {
     );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     let results = v["results"].as_array().unwrap();
-    // Both expands to two entries — but the project one is `skipped`
-    // (Codex has no project surface) and the user one is `would-create`.
+    // Current Codex reads project .codex/config.toml in trusted projects,
+    // as well as its user config. Both scopes are now registerable.
     let by_scope: std::collections::BTreeMap<&str, &str> = results
         .iter()
         .map(|r| (r["scope"].as_str().unwrap(), r["status"].as_str().unwrap()))
         .collect();
-    assert_eq!(by_scope.get("project"), Some(&"skipped"));
+    assert!(matches!(
+        by_scope.get("project"),
+        Some(&"would-create") | Some(&"would-update") | Some(&"unchanged")
+    ));
     assert!(matches!(
         by_scope.get("user"),
         Some(&"would-create") | Some(&"would-update") | Some(&"unchanged")

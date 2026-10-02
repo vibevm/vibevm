@@ -208,7 +208,11 @@ fn when_values_are_a_closed_list_with_a_hint() {
         installed.contains("unknown `when` condition"),
         "{installed}"
     );
-    assert_eq!(Cond::all().len(), 8, "three systems and five agents");
+    assert_eq!(Cond::all().len(), 9, "three systems and six agents");
+    assert_eq!(
+        Cond::parse("agent:qwen-code"),
+        Some(Cond::Agent(CondAgent::QwenCode))
+    );
 }
 
 /// Under the spec vocabulary `when` stays what it always was: a foreign

@@ -8,7 +8,7 @@
 //!
 //! The two helpers below are the pure twins of the ambient
 //! `Agent::skills_root` / `Agent::skill_path` pair in the parent module:
-//! the same three user-scope destinations, but the home arrives as a
+//! the same user-scope destinations, but the home arrives as a
 //! PARAMETER, so a caller that names a temp home cannot reach the
 //! operator's real one by construction. Nothing here reads
 //! `dirs::home_dir`, `HOME`, `USERPROFILE`, `CODEX_HOME` or
@@ -28,7 +28,7 @@ use super::Agent;
 
 impl Agent {
     /// The user-scope skills ROOT for an injected home: `.claude/skills`,
-    /// `.agents/skills`, `.config/opencode/skills`.
+    /// `.agents/skills`, `.config/opencode/skills`, `.qwen/skills`.
     ///
     /// `None` is the unsupported-agent answer (Cursor, Claude Desktop
     /// load no filesystem skills), identical to the ambient sibling's —
@@ -62,6 +62,7 @@ impl Agent {
         match self {
             Agent::ClaudeCode => Some(home.join(".claude").join("skills")),
             Agent::Codex => Some(home.join(".agents").join("skills")),
+            Agent::QwenCode => Some(home.join(".qwen").join("skills")),
             // Same XDG-on-every-OS contract as the ambient sibling — see
             // `Agent::config_path`'s comment for the empirical record.
             Agent::OpenCode => Some(Self::opencode_user_skills_root_from_home(home)),
@@ -143,6 +144,7 @@ mod tests {
             (Agent::ClaudeCode, ".claude/skills"),
             (Agent::Codex, ".agents/skills"),
             (Agent::OpenCode, ".config/opencode/skills"),
+            (Agent::QwenCode, ".qwen/skills"),
         ] {
             let root = agent
                 .user_skills_root_from_home(injected)

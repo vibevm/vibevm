@@ -19,9 +19,9 @@ pub const MCP_ARG_VARS: &[&str] = &["{project_root}"];
 /// `[[mcp_server]]` — one agent-facing MCP server (PROP-027).
 ///
 /// `name` is the agent-visible server name (what an MCP host shows as
-/// the tool namespace); `binary` must match a `[[binary]]` declared in
-/// the same manifest — the server IS a PROP-025 binary, so delivery,
-/// consent, and slot residence come from that machinery wholesale.
+/// the tool namespace). A local stdio server names a `[[binary]]` in this
+/// manifest; a remote Streamable HTTP server declares its HTTPS `url` and
+/// `transport = "streamable-http"` instead.
 ///
 /// ```
 /// use vibe_core::manifest::McpServerDecl;
@@ -33,7 +33,7 @@ pub const MCP_ARG_VARS: &[&str] = &["{project_root}"];
 ///     args = ["--path", "{project_root}"]
 /// "#).unwrap();
 /// assert_eq!(s.name, "rust-ai-native");
-/// assert_eq!(s.binary, "rust-ai-native-mcp");
+/// assert_eq!(s.binary.as_deref(), Some("rust-ai-native-mcp"));
 /// assert!(s.unknown_arg_vars().is_empty());
 ///
 /// // `description` and `args` are optional.
@@ -48,7 +48,16 @@ pub struct McpServerDecl {
     /// The agent-visible server name; unique within the package.
     pub name: String,
     /// The `[[binary]]` (by `name`) that serves this entry over stdio.
-    pub binary: String,
+    /// Mutually exclusive with `url`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub binary: Option<String>,
+    /// Remote Streamable HTTP endpoint. Mutually exclusive with `binary`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+    /// Explicit transport for remote servers. Local binary declarations
+    /// remain stdio by default for backwards compatibility.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transport: Option<String>,
     /// Optional human description, surfaced by `vibe mcp status`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -59,6 +68,28 @@ pub struct McpServerDecl {
 }
 
 impl McpServerDecl {
+    /// Validate a published remote endpoint without normalizing its original
+    /// declaration. An agent receives the URL string exactly as authored.
+    pub(crate) fn valid_remote_url(&self) -> bool {
+        let Some(raw) = self.url.as_deref() else {
+            return false;
+        };
+        if raw.chars().any(char::is_whitespace)
+            || raw.chars().any(char::is_control)
+            || raw.contains('\\')
+        {
+            return false;
+        }
+        let Ok(parsed) = url::Url::parse(raw) else {
+            return false;
+        };
+        parsed.scheme() == "https"
+            && parsed.host().is_some()
+            && parsed.username().is_empty()
+            && parsed.password().is_none()
+            && parsed.fragment().is_none()
+    }
+
     /// Substitution tokens (`{…}`) in `args` that are NOT in the closed
     /// set — the offenders `Manifest::validate` refuses. A lone `{`
     /// without a closing brace is treated as literal text, not a token.

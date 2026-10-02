@@ -31,7 +31,7 @@ close that loop:</close-the-loop></p>
       <SURFACE-INSTALL fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">An **agent-integration command family** (`vibe mcp install` and friends)
    that wires that server into each agent's own configuration and writes a
    per-agent skill manifest, so an operator runs one command instead of
-   hand-editing five different config files.</SURFACE-INSTALL>
+   hand-editing each agent's config file.</SURFACE-INSTALL>
     </facts>
     <facts ordered="false">
       <PRODUCT-SCOPE fact="true" status="impl/done">Both are product scope (`VIBEVM-SPEC.md` §5).</PRODUCT-SCOPE>
@@ -241,9 +241,10 @@ initialize state.</STRUCTURED-PREFLIGHT-LAW></p>
       </STRUCTURED-TOOL-PREFLIGHT>
     </errors>
     <agent-detection title="2.4 Agent detection">
-      <p><req-agent-detection fact="true" status="impl/done">`req r1`</req-agent-detection></p>
+      <p><req-agent-detection fact="true" status="impl/done">`req r2`</req-agent-detection></p>
       <p><AGENT-SET fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** The integration surface supports a fixed set of MCP-capable
-coding agents (Claude Code, Claude Code Desktop, Cursor, OpenCode, Codex).</AGENT-SET></p>
+coding agents (Claude Code, Claude Code Desktop, Cursor, OpenCode, Codex,
+Qwen Code).</AGENT-SET></p>
       <facts ordered="false">
         <AGENT-PRESENCE fact="true" status="impl/done">An agent is *present* in a project when its project-level markers exist
   (e.g. `.claude` / `CLAUDE.md`, `.cursor` / `.cursorrules`) or its
@@ -290,9 +291,9 @@ agent-aware but format-generic:</CONFIG-SHAPE-DECL></p>
       </facts>
     </agent-config>
     <skill title="2.6 Skill materialisation">
-      <p><req-skill fact="true" status="impl/done">`req r1`</req-skill></p>
+      <p><req-skill fact="true" status="impl/done">`req r2`</req-skill></p>
       <p><SKILL-MANIFEST fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** For agents that support a skill manifest (Claude Code,
-OpenCode, Codex — not the JSON-config-only Cursor / Claude Code Desktop),
+OpenCode, Codex, Qwen Code — not the JSON-config-only Cursor / Claude Code Desktop),
 `vibe mcp install` also writes a `SKILL.md` describing how to use vibevm
 through the MCP tools.</SKILL-MANIFEST></p>
       <facts ordered="false">

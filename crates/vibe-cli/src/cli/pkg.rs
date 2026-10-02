@@ -157,9 +157,14 @@ pub struct InstallArgs {
     /// constraint on) `vibe.toml` `[requires].packages`.
     pub packages: Vec<String>,
 
-    /// Install exactly one declared user application under the Vibe settings root.
+    /// Install a user application or an `mcp:` package under the Vibe settings root.
     #[arg(short = 'g', long = "global")]
     pub global: bool,
+
+    /// Target coding agent for a global MCP package. Without this flag an
+    /// interactive terminal asks which agent to configure.
+    #[arg(long, requires = "global")]
+    pub agent: Option<String>,
 
     /// For a global application, build the resolved source revision even
     /// when a verified platform distribution is available.
