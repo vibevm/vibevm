@@ -237,16 +237,20 @@ mod macos_tests {
     use super::*;
 
     #[test]
+    #[specmark::spec(
+        verifies = "spec://org.vibevm.core/vibevm/common/PROP-076#TARGET-PATH-POLICY",
+        r = 2
+    )]
     fn macos_posix_bytes_are_lexical_without_host_path_inference() {
         let policy = TargetPathPolicy::MacosPosixBytes;
         let path = AbsoluteTargetPath::new(
             policy,
             TargetAnchor::PosixRoot,
-            vec![b"Library".to_vec(), b"a:b\\c".to_vec()],
+            vec![b"Library".to_vec(), vec![0xff, b':', b'\\', 0x80]],
         )
         .unwrap();
         assert_eq!(path.policy(), policy);
-        assert_eq!(path.components()[1].bytes(), b"a:b\\c");
+        assert_eq!(path.components()[1].bytes(), &[0xff, b':', b'\\', 0x80]);
         assert!(TargetComponent::new(policy, b"..".to_vec()).is_err());
         assert!(AbsoluteTargetPath::new(policy, TargetAnchor::WindowsDrive(b'C'), vec![]).is_err());
     }
