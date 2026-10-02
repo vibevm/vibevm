@@ -78,6 +78,54 @@
               "type": "string"
             }
           }
+        },
+        "attached": {
+          "properties": {
+            "observer_ref": {
+              "type": "string"
+            },
+            "context_id": {
+              "type": "string"
+            },
+            "operation_id": {
+              "type": "string"
+            },
+            "run_id": {
+              "type": "string"
+            },
+            "stream_id": {
+              "type": "string"
+            },
+            "target_id": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "stream_response": {
+          "properties": {
+            "observer_ref": {
+              "type": "string"
+            },
+            "format_id": {
+              "enum": [
+                "machine-operation-stream-message"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "payload_json": {
+              "type": "string"
+            }
+          }
+        },
+        "detached": {
+          "properties": {
+            "observer_ref": {
+              "type": "string"
+            }
+          }
         }
       }
     }

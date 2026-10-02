@@ -17,11 +17,23 @@ pub enum Action {
     #[serde(rename = "answer")]
     Answer(Box<ActionAnswer>),
 
+    #[serde(rename = "attach")]
+    Attach(Box<ActionAttach>),
+
+    #[serde(rename = "control")]
+    Control(Box<ActionControl>),
+
+    #[serde(rename = "detach")]
+    Detach(Box<ActionDetach>),
+
     #[serde(rename = "inspect")]
     Inspect(Box<ActionInspect>),
 
     #[serde(rename = "prepare")]
     Prepare(Box<ActionPrepare>),
+
+    #[serde(rename = "replay")]
+    Replay(Box<ActionReplay>),
 
     #[serde(rename = "submit")]
     Submit(Box<ActionSubmit>),
@@ -31,6 +43,26 @@ pub enum Action {
 #[serde(deny_unknown_fields)]
 pub struct ActionAnswer {
     pub message_json: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ActionAttach {
+    pub key: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ActionControl {
+    pub message_json: String,
+
+    pub observer_ref: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ActionDetach {
+    pub observer_ref: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -45,6 +77,14 @@ pub struct ActionPrepare {
     pub phase: String,
 
     pub requested_options: RequestedOptions,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ActionReplay {
+    pub message_json: String,
+
+    pub observer_ref: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

@@ -17,8 +17,17 @@ pub enum Reply {
     #[serde(rename = "absent")]
     Absent(Box<ReplyAbsent>),
 
+    #[serde(rename = "attached")]
+    Attached(Box<ReplyAttached>),
+
+    #[serde(rename = "detached")]
+    Detached(Box<ReplyDetached>),
+
     #[serde(rename = "question")]
     Question(Box<ReplyQuestion>),
+
+    #[serde(rename = "stream_response")]
+    StreamResponse(Box<ReplyStreamResponse>),
 
     #[serde(rename = "submitted")]
     Submitted(Box<ReplySubmitted>),
@@ -37,6 +46,29 @@ pub struct ReplyAbsent {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ReplyAttached {
+    pub context_id: String,
+
+    pub observer_ref: String,
+
+    pub operation_id: String,
+
+    pub run_id: String,
+
+    pub stream_id: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub target_id: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ReplyDetached {
+    pub observer_ref: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ReplyQuestionFormatId {
     #[serde(rename = "machine-input-decision-message")]
     MachineInputDecisionMessage,
@@ -46,6 +78,22 @@ pub enum ReplyQuestionFormatId {
 #[serde(deny_unknown_fields)]
 pub struct ReplyQuestion {
     pub format_id: ReplyQuestionFormatId,
+
+    pub payload_json: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ReplyStreamResponseFormatId {
+    #[serde(rename = "machine-operation-stream-message")]
+    MachineOperationStreamMessage,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ReplyStreamResponse {
+    pub format_id: ReplyStreamResponseFormatId,
+
+    pub observer_ref: String,
 
     pub payload_json: String,
 }

@@ -56,6 +56,9 @@ fn malformed_and_bounded_requests_remain_generated_preflight() {
         json!({"schema":2,"action":{"kind":"inspect","key":"once"}}),
         json!({"schema":1,"action":{"kind":"submit","key":"once","accepted_ref":"forged","root":"/tmp"}}),
         json!({"schema":1,"action":{"kind":"answer","message_json":"x".repeat(128*1024)}}),
+        json!({"schema":1,"action":{"kind":"attach","key":"once","namespace":"forged"}}),
+        json!({"schema":1,"action":{"kind":"control","observer_ref":"forged","message_json":"{}","permission":true}}),
+        json!({"schema":1,"action":{"kind":"replay","observer_ref":"forged","message_json":"x".repeat(128*1024)}}),
     ] {
         let result = call(ServerContext::new(dir.path()), args);
         assert_eq!(result["isError"], true);
@@ -74,7 +77,7 @@ fn descriptor_is_authoritative_closed_projection() {
     let schema = descriptor::input_schema();
     assert_eq!(schema["additionalProperties"], false);
     let arms = schema["properties"]["action"]["oneOf"].as_array().unwrap();
-    assert_eq!(arms.len(), 4);
+    assert_eq!(arms.len(), 8);
     for arm in arms {
         assert_eq!(arm["additionalProperties"], false);
     }

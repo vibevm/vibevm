@@ -116,8 +116,23 @@ Tools:
   Missing final reports and unavailable effect evidence retain uncertainty;
   a new key does not force execution, and normal freshness may produce NoOp.
   Tool input cannot mint namespaces or override roots/principals. Other
-  phases, force, trace and deploy profiles are implementation gaps; controls
-  and streams are not provided. This flow does not change the separate
+  phases, force, trace and deploy profiles are implementation gaps.
+  Attach a retained Ready job with `action.kind: "attach"` and its `key`.
+  Keep the opaque `observer_ref` and actual context/target/operation/run/stream
+  binding returned by the owner. `replay` and `control` take that reference
+  and `message_json`, containing the complete generated
+  `machine-operation-stream-message` with the original binding and schema 1.
+  Replay requires a replay_request body; control requires a control_request.
+  The admitted `requested_options.control` policy remains authoritative:
+  none/detach deny cancel; pre-dispatch cancel becomes unavailable after
+  provider entry; deferred cancel waits for natural provider exit and the
+  protected callback boundary, retaining Uncertain effects without a deadline,
+  kill or rollback promise. Requery the original request ID for its receipt;
+  a new late request ID observes terminal truth. `detach` with `observer_ref`
+  releases only that subscription. Dropping a connection also releases its
+  observers while the surviving host continues its provider. At most eight
+  observers are retained per bridge; references expire with their bridge.
+  This flow does not change the separate
   `lifecycle_run` behavior.
 - **`plan_manifest_migration`** — plan a supported migration from supplied
   TOML text and explicit profiles/recipe. Inspect the exact in-memory edits

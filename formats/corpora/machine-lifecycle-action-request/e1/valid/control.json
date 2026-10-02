@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "action": {
+    "kind": "control",
+    "observer_ref": "opaque",
+    "message_json": "{}"
+  }
+}

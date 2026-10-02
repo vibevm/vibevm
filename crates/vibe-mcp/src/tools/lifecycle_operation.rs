@@ -1,11 +1,12 @@
 //! Actual registered MCP adapter for the trusted fixed lifecycle owner.
-//! Controls, streams, CLI and legacy lifecycle_run remain outside this atom.
+//! Opaque scoped observers delegate replay and controls to the incumbent owner.
 use super::{McpTool, ToolOutput};
 use crate::{ServerContext, ToolDescriptor, ToolError};
 use serde_json::Value;
 pub(crate) mod bridge;
 mod contract;
 mod descriptor;
+mod observers;
 use LifecycleActionErrorCode as Code;
 use contract::*;
 use vibe_orchestrator::machine_submission::{DecisionOutcome, FixedDecisionError};
@@ -62,7 +63,7 @@ fn snapshot_reply(
 }
 impl McpTool for LifecycleOperationMcpTool {
     fn descriptor(&self) -> ToolDescriptor {
-        ToolDescriptor{name:"lifecycle_operation".into(),description:"Prepare, answer, submit or inspect the explicitly granted fixed lifecycle owner. Questions and references are ephemeral; a submission may be Starting.".into(),input_schema:descriptor::input_schema()}
+        ToolDescriptor{name:"lifecycle_operation".into(),description:"Prepare, answer, submit, inspect, attach, replay, control or detach the explicitly granted fixed lifecycle owner. Questions and references are ephemeral; a submission may be Starting.".into(),input_schema:descriptor::input_schema()}
     }
     fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
         let grant = ctx.fixed_lifecycle_bridge();
@@ -76,6 +77,10 @@ impl McpTool for LifecycleOperationMcpTool {
             Action::Answer(_) => ("answer", None, None),
             Action::Submit(s) => ("submit", Some("validate"), Some(s.key.as_str())),
             Action::Inspect(i) => ("inspect", Some("validate"), Some(i.key.as_str())),
+            Action::Attach(a) => ("attach", Some("validate"), Some(a.key.as_str())),
+            Action::Replay(_) => ("replay", None, None),
+            Action::Control(_) => ("control", None, None),
+            Action::Detach(_) => ("detach", None, None),
         };
         let refuse =
             |code, m: &str, admitted| failure(error(code, m, Some(action), phase, host), admitted);
@@ -168,6 +173,10 @@ impl McpTool for LifecycleOperationMcpTool {
                     .map_err(|e| (owner_code(&e, Code::SubmissionRefused), e.to_string(), true))
                     .and_then(|j| snapshot_reply(&j.evidence(), &s.key, true))
             }
+            Action::Attach(a) => bridge.attach_observer(&a.key, &ctx.project_root),
+            Action::Replay(r) => bridge.stream_observer(&r.observer_ref, &r.message_json, false),
+            Action::Control(c) => bridge.stream_observer(&c.observer_ref, &c.message_json, true),
+            Action::Detach(d) => bridge.detach_observer(&d.observer_ref),
             Action::Inspect(i) => bridge
                 .inspect(&i.key)
                 .map_err(|e| {

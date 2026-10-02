@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "attached",
+    "observer_ref": "opaque",
+    "context_id": "ctx",
+    "target_id": null,
+    "operation_id": "lifecycle.validate",
+    "run_id": "run",
+    "stream_id": "stream"
+  }
+}
