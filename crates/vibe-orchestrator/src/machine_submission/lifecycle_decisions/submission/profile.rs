@@ -11,6 +11,8 @@ pub(in crate::machine_submission) struct AdmittedProfile {
     facts: HostPolicyFacts,
     generation: String,
     #[cfg(test)]
+    pub(in crate::machine_submission) after_ready: Option<Arc<dyn Fn() + Send + Sync>>,
+    #[cfg(test)]
     pub(super) before_guard: Option<Arc<dyn Fn() + Send + Sync>>,
 }
 impl AdmittedProfile {
@@ -41,7 +43,12 @@ impl AdmittedProfile {
             generation,
             #[cfg(test)]
             before_guard: None,
+            #[cfg(test)]
+            after_ready: None,
         })
+    }
+    pub(in crate::machine_submission) fn control_mode(&self) -> RequestedOptionsControl {
+        self.evidence.options.control.clone()
     }
     fn check_record(
         state: &State,

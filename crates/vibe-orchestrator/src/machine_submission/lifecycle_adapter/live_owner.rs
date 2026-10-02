@@ -135,6 +135,13 @@ impl Record {
     }
 }
 struct Shared {
+    // Lock order: evidence_access, then record/history snapshots. Never acquire
+    // this lock while holding record/history. It serializes same-owner cold
+    // leases and excludes active control lease borrows during final release;
+    // external writers still receive the ordinary non-reentrant lease refusal.
+    evidence_access: Mutex<()>,
+    #[cfg(test)]
+    after_cold_lease: Mutex<Option<Arc<dyn Fn() + Send + Sync>>>,
     record: Mutex<Record>,
     changed: Condvar,
 }
@@ -330,6 +337,7 @@ impl ReadyObserver {
 }
 
 fn inspect(shared: &Arc<Shared>) -> Result<Observation> {
+    let _access = shared.evidence_access.lock().unwrap();
     let (state, binding, canonical_request, reason) = {
         let r = shared.record.lock().unwrap();
         (
@@ -357,6 +365,10 @@ fn inspect(shared: &Arc<Shared>) -> Result<Observation> {
     let c = &binding.coordinates;
     let evidence = (|| -> Result<Option<SubmissionOutcome<RetainedLifecycleResult>>> {
         let lease = LifecycleLease::acquire(&c.root)?;
+        #[cfg(test)]
+        if let Some(hook) = shared.after_cold_lease.lock().unwrap().clone() {
+            hook();
+        }
         binding.physical_root.check_lease(&lease)?;
         let row =
             SubmissionReservations::inspect_existing_key(&lease, &c.namespace, &c.scope, &c.key)?
@@ -455,6 +467,9 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
         "fixed script target OS differs from current host"
     );
     let shared = Arc::new(Shared {
+        evidence_access: Mutex::new(()),
+        #[cfg(test)]
+        after_cold_lease: Mutex::new(None),
         record: Mutex::new(Record {
             state: LiveState::Starting,
             binding: None,
@@ -481,7 +496,17 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                     before_effect: dispatch
                         .fixture
                         .as_ref()
-                        .and_then(|f| f.before_effect.clone()),
+                        .and_then(|f| f.before_effect.clone())
+                        .or_else(|| {
+                            dispatch
+                                .profile
+                                .as_ref()
+                                .and_then(|p| p.after_ready.clone())
+                                .map(|hook| {
+                                    Arc::new(move |_: &Binding| hook())
+                                        as Arc<dyn Fn(&Binding) + Send + Sync>
+                                })
+                        }),
                 };
                 #[cfg(test)]
                 if let Some(hook) = dispatch.before_boundary {
@@ -524,6 +549,10 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
             }));
             // Submission locals have unwound/dropped. Release the active proof
             // outside the mutex, before publishing terminal state or notifying.
+            // Control snapshots must drop their active lease clones before the
+            // worker advertises terminal state. Queries then cold-read under
+            // the same owner lock, including publish_terminal's own inspection.
+            let access = worker.evidence_access.lock().unwrap();
             let lease = worker.record.lock().unwrap().lease.take();
             drop(lease);
             let mut record = worker.record.lock().unwrap();
@@ -559,6 +588,7 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                 }
             }
             drop(record);
+            drop(access);
             stream::publish_terminal(&worker);
             worker.changed.notify_all();
         })?;

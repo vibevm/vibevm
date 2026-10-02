@@ -228,6 +228,8 @@ fn foreign_coordinates_and_handles_refuse_without_second_execution() {
     let foreign_owner = LiveOwner {
         worker: Mutex::new(None),
         shared: Arc::new(Shared {
+            evidence_access: Mutex::new(()),
+            after_cold_lease: Mutex::new(None),
             record: Mutex::new(Record {
                 state: LiveState::Starting,
                 binding: None,

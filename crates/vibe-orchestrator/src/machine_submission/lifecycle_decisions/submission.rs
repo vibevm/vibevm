@@ -1,4 +1,4 @@
-//! First admitted profile only; general C4 controls and adapters remain open.
+//! Sealed admitted profiles; general C4 domains and adapters remain open.
 use super::super::lifecycle_adapter::{
     FixedOperationStatus, HostOwnedFixedOperation, ObservationHandle, Readiness,
 };
@@ -7,6 +7,8 @@ use std::time::Duration;
 use vibe_wire::generated::shared::Timestamp;
 pub(in crate::machine_submission) mod profile;
 use profile::AdmittedProfile;
+pub(in crate::machine_submission) mod controls;
+pub use controls::ScopedFixedJob;
 
 /// Owns the actual incumbent job without exposing a control grant.
 /// ```compile_fail
@@ -44,7 +46,6 @@ impl FixedLifecycleDecisionHost {
         key: &str,
         observed_at: Timestamp,
     ) -> Result<ReadonlyFixedJob, FixedDecisionError> {
-        // Match the C1 owner's key bound before claiming a background job.
         if key.is_empty()
             || key.len() > 256
             || key.trim() != key
@@ -58,10 +59,38 @@ impl FixedLifecycleDecisionHost {
                 "admitted submission implements only control=None; full C4 remains open".into(),
             ));
         }
+        self.submit_owned(evidence, key, observed_at)
+            .map(|owner| ReadonlyFixedJob { owner })
+    }
+
+    fn submit_owned(
+        &self,
+        evidence: &ValidatedFixedPlanEvidence,
+        key: &str,
+        observed_at: Timestamp,
+    ) -> Result<HostOwnedFixedOperation, FixedDecisionError> {
+        // Match the C1 owner's key bound before claiming a background job.
+        if key.is_empty()
+            || key.len() > 256
+            || key.trim() != key
+            || key.chars().any(char::is_control)
+        {
+            return Err(FixedDecisionError::InvalidData);
+        }
+        supported(&evidence.options)?;
         if !Arc::ptr_eq(&self.holder, &evidence.holder) {
             return Err(FixedDecisionError::ForeignScope);
         }
         let profile = AdmittedProfile::from_owned(self, evidence)?;
+        self.claim_owned(evidence, key, observed_at, profile)
+    }
+    fn claim_owned(
+        &self,
+        evidence: &ValidatedFixedPlanEvidence,
+        key: &str,
+        observed_at: Timestamp,
+        profile: AdmittedProfile,
+    ) -> Result<HostOwnedFixedOperation, FixedDecisionError> {
         profile.check_root_path(&self.root)?;
         let request_id = digest(
             profile
@@ -76,7 +105,7 @@ impl FixedLifecycleDecisionHost {
             if entry.request_id != request_id || entry.plan_id != plan_id {
                 return Err(FixedDecisionError::AnswerConflict);
             }
-            return Ok(entry.job.clone());
+            return Ok(entry.job.owner.clone());
         }
         if jobs.len() >= 8 {
             return Err(FixedDecisionError::Capacity);
@@ -98,7 +127,7 @@ impl FixedLifecycleDecisionHost {
             plan_id,
             job: job.clone(),
         });
-        Ok(job)
+        Ok(job.owner)
     }
 
     /// Cold inspection is observation, never renewed approval or dispatch.
