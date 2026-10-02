@@ -1,0 +1,219 @@
+{
+  "metadata": {
+    "description": "Immutable sampled incumbent lifecycle evidence, never authority or current filesystem freshness. Services must inspect the owner afresh before publishing. Terminal work is not proof of arbitrary filesystem effects.",
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::lifecycle_submission_view"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "operation_id": {
+      "type": "string"
+    },
+    "requested_scope": {
+      "ref": "scope"
+    },
+    "requested_phase": {
+      "type": "string"
+    },
+    "bound_scope": {
+      "ref": "scope",
+      "nullable": true
+    },
+    "run_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "basis": {
+      "enum": [
+        "live_callbacks",
+        "retained_report",
+        "unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "last_phase": {
+      "ref": "phase",
+      "nullable": true
+    },
+    "phase_unavailable_reason": {
+      "type": "string",
+      "nullable": true
+    },
+    "phases": {
+      "elements": {
+        "ref": "phase"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "work_outcomes": {
+      "elements": {
+        "ref": "work"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "known_contribution_total": {
+      "type": "string",
+      "nullable": true
+    },
+    "observed_terminal_work_count": {
+      "type": "string",
+      "nullable": true
+    },
+    "partial": {
+      "type": "boolean"
+    },
+    "status": {
+      "ref": "status"
+    }
+  },
+  "definitions": {
+    "scope": {
+      "properties": {
+        "context": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "principal": {
+          "type": "string"
+        }
+      }
+    },
+    "phase": {
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "work": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "handler": {
+          "type": "string"
+        }
+      }
+    },
+    "report": {
+      "discriminator": "availability",
+      "mapping": {
+        "available": {
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "metadata": {
+                "description": "SHA-256 of the exact persisted report bytes, checked after a no-follow bounded reread before this marker is committed."
+              }
+            },
+            "bytes": {
+              "type": "uint32"
+            }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "enum": [
+                "not_produced",
+                "publication_uncertain",
+                "validation_failed",
+                "payload_unavailable"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed",
+                "description": "Typed reason the owner cannot furnish a validated durable report payload. This never implies completed execution."
+              }
+            }
+          }
+        }
+      }
+    },
+    "status": {
+      "discriminator": "state",
+      "mapping": {
+        "starting": {
+          "properties": {}
+        },
+        "running": {
+          "properties": {}
+        },
+        "recovery_required": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            },
+            "reason_truncated": {
+              "type": "boolean"
+            }
+          }
+        },
+        "inspection_unavailable": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            },
+            "reason_truncated": {
+              "type": "boolean"
+            }
+          }
+        },
+        "result_available": {
+          "properties": {
+            "outcome": {
+              "enum": [
+                "completed",
+                "parked",
+                "failed",
+                "uncertain"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "effect_state": {
+              "enum": [
+                "none",
+                "landed",
+                "uncertain"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "reservation_ref": {
+              "type": "string"
+            },
+            "report": {
+              "ref": "report"
+            }
+          }
+        }
+      }
+    }
+  }
+}

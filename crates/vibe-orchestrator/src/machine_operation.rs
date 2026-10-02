@@ -329,6 +329,7 @@ pub mod exchange;
 mod publication;
 pub mod stream_message;
 pub mod input_decision;
+pub mod lifecycle_view;
 pub use coverage::*;
 pub use publication::MachineEnvelopeValidationError;
 

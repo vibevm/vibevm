@@ -1479,3 +1479,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-input-decision-message/e1"
 sunset = "none"
+
+[format.machine-lifecycle-submission-view]
+epoch = 1
+schema = "schemas/machine/e1/lifecycle_submission_view.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-lifecycle-submission-view/e1"
+sunset = "none"

@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "operation_id": "rust:vibe-lifecycle:validate",
+  "requested_scope": {
+    "context": "actual-evidence",
+    "target": "root",
+    "principal": "actual-host"
+  },
+  "requested_phase": "validate",
+  "bound_scope": {
+    "context": "actual-evidence",
+    "target": "root",
+    "principal": "actual-host"
+  },
+  "run_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "basis": "retained_report",
+  "last_phase": {
+    "phase": "validate",
+    "status": false
+  },
+  "phase_unavailable_reason": null,
+  "phases": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    }
+  ],
+  "work_outcomes": [
+    {
+      "key": "once",
+      "phase": "validate",
+      "status": "ok",
+      "provider": "script",
+      "handler": "run"
+    }
+  ],
+  "known_contribution_total": null,
+  "observed_terminal_work_count": null,
+  "partial": true,
+  "status": {
+    "state": "result_available",
+    "outcome": "uncertain",
+    "effect_state": "landed",
+    "reservation_ref": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "report": {
+      "availability": "available",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "bytes": 16
+    }
+  }
+}

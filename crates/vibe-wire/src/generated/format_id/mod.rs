@@ -110,6 +110,7 @@ pub enum FormatId {
     MachineCompositeSnapshot,
     MachineEntityReference,
     MachineInputDecisionMessage,
+    MachineLifecycleSubmissionView,
     MachineOperationDescriptor,
     MachineOperationEnvelope,
     MachineOperationStreamMessage,
