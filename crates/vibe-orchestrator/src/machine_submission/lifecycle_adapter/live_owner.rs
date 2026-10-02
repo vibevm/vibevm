@@ -5,7 +5,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LI
 use super::*;
 mod control;
 pub(super) mod observation;
+mod session_facade;
 mod stream;
+pub use session_facade::{
+    BindingSummary, FixedOperationStatus, HostControlCapability, HostOwnedFixedOperation,
+    ObservationHandle, Readiness,
+};
 use std::collections::BTreeSet;
 use std::path::PathBuf;
 use std::sync::{Condvar, Mutex, Weak};

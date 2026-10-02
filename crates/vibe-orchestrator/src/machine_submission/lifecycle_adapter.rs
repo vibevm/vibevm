@@ -99,6 +99,10 @@ mod live_owner;
 pub(crate) use install::submit_empty_world_install;
 #[cfg(test)]
 pub(crate) use install::submit_one_package_fixture_install;
+pub use live_owner::{
+    BindingSummary, FixedOperationStatus, HostControlCapability, HostOwnedFixedOperation,
+    ObservationHandle, Readiness,
+};
 
 /// A caller-controlled source port is admitted only by the test-only fixture
 /// entry. The existing port cannot prove which tree its implementation serves;

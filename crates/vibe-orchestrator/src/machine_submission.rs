@@ -29,6 +29,11 @@ mod lifecycle_plan;
 )]
 mod lifecycle_adapter;
 
+pub use lifecycle_adapter::{
+    BindingSummary, FixedOperationStatus, HostControlCapability, HostOwnedFixedOperation,
+    ObservationHandle, Readiness,
+};
+
 /// Exact domain-journal observation under the same outer mutation lease.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum JournalState<T> {
