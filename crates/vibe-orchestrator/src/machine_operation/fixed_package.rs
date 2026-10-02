@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-PACKAGE");
 
+use crate::machine_submission::{HostPolicyFacts, PolicyError, PolicyOwner, TrustedPolicySource};
 use std::sync::Arc;
 
 use vibe_lifecycle::{
@@ -37,6 +38,7 @@ pub enum FixedPackageHostError {
     Root(String),
     Lease(LifecycleLeaseError),
     Namespace(SubmissionError),
+    Policy(PolicyError),
     Owner(StaticFileJournalError),
 }
 
@@ -56,6 +58,10 @@ impl std::fmt::Display for FixedPackageHostError {
                 format!("C1 namespace or scope: {error}"),
                 "host-issued grant",
             ),
+            Self::Policy(error) => (
+                format!("current package policy: {error}"),
+                "trusted package policy owner",
+            ),
             Self::Owner(error) => (
                 format!("package owner: {error}"),
                 "lifecycle package journal",
@@ -70,6 +76,7 @@ impl std::error::Error for FixedPackageHostError {
         match self {
             Self::Lease(error) => Some(error),
             Self::Namespace(error) => Some(error),
+            Self::Policy(error) => Some(error),
             Self::Owner(error) => Some(error),
             Self::ForeignRoot | Self::Root(_) => None,
         }
@@ -119,6 +126,7 @@ pub struct FixedPackageHost {
     root_token: String,
     namespace: SubmissionNamespace,
     scope: SubmissionScope,
+    policy: Option<(Arc<PolicyOwner>, TrustedPolicySource)>,
 }
 
 impl FixedPackageHost {
@@ -139,9 +147,46 @@ impl FixedPackageHost {
             root_token,
             namespace,
             scope,
+            policy: None,
         };
         let lease = host.lease()?;
         SubmissionReservations::validate_namespace(&lease, &host.namespace, &host.scope)?;
+        Ok(host)
+    }
+
+    /// Attach a current shared policy guard to a trusted package host.
+    ///
+    /// ```no_run
+    /// # use std::sync::Arc;
+    /// # use vibe_orchestrator::machine_operation::fixed_package::FixedPackageHost;
+    /// # use vibe_orchestrator::machine_submission::{PolicyOwner, TrustedPolicySource};
+    /// # use vibe_lifecycle::{SubmissionNamespace, SubmissionScope};
+    /// # use vibe_safefs::Project;
+    /// # fn guarded(project: Arc<Project>, namespace: SubmissionNamespace, scope: SubmissionScope, owner: Arc<PolicyOwner>, source: TrustedPolicySource) -> Result<FixedPackageHost, Box<dyn std::error::Error>> {
+    /// let host = FixedPackageHost::with_shared_policy(project, namespace, scope, owner, source)?;
+    /// # Ok(host) }
+    /// ```
+    pub fn with_shared_policy(
+        project: Arc<Project>,
+        namespace: SubmissionNamespace,
+        scope: SubmissionScope,
+        owner: Arc<PolicyOwner>,
+        source: TrustedPolicySource,
+    ) -> Result<Self, FixedPackageHostError> {
+        if owner.scope() != &scope {
+            return Err(FixedPackageHostError::Policy(PolicyError::ForeignScope));
+        }
+        let mut host = Self::from_trusted_host(project, namespace, scope)?;
+        let lease = host.lease()?;
+        let snapshot = owner
+            .current_under_lease(&lease)
+            .map_err(FixedPackageHostError::Policy)?;
+        if snapshot.source() != &source || snapshot.facts() != &package_policy_facts() {
+            return Err(FixedPackageHostError::Policy(
+                PolicyError::StartupDisagreement,
+            ));
+        }
+        host.policy = Some((owner, source));
         Ok(host)
     }
 
@@ -154,6 +199,16 @@ impl FixedPackageHost {
     pub fn submit(&self, key: &str) -> Result<StaticFileJournalInspection, FixedPackageHostError> {
         let lease = self.lease()?;
         SubmissionReservations::validate_namespace(&lease, &self.namespace, &self.scope)?;
+        if let Some((owner, source)) = &self.policy {
+            let current = owner
+                .current_under_lease(&lease)
+                .map_err(FixedPackageHostError::Policy)?;
+            if current.source() != source || current.facts() != &package_policy_facts() {
+                return Err(FixedPackageHostError::Policy(
+                    PolicyError::StartupDisagreement,
+                ));
+            }
+        }
         let created_at = vibe_core::timestamp::now_utc();
         let result = submit_fixed_static_file_package(
             &lease,
@@ -215,6 +270,15 @@ impl FixedPackageHost {
 
 fn root_error(error: impl std::fmt::Display) -> FixedPackageHostError {
     FixedPackageHostError::Root(error.to_string())
+}
+
+pub(crate) fn package_policy_facts() -> HostPolicyFacts {
+    HostPolicyFacts {
+        approve_captured_script: false,
+        allow_detach: false,
+        allow_cancel_pre_dispatch: false,
+        allow_cancel_deferred_boundary: false,
+    }
 }
 
 #[cfg(test)]
