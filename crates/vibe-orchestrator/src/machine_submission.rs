@@ -34,6 +34,9 @@ pub use lifecycle_adapter::{
     ObservationHandle, Readiness,
 };
 
+mod policy_owner;
+pub use policy_owner::{PolicyError, PolicyOwner, PolicySnapshot, TrustedPolicySource};
+
 mod lifecycle_decisions;
 pub use lifecycle_decisions::submission::ScopedFixedJob;
 pub use lifecycle_decisions::{
