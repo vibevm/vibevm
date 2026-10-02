@@ -388,11 +388,7 @@ fn admit_one_agent_validate_fixture_inner(
     })
 }
 
-pub(crate) fn admit_one_script_validate_fixture(
-    path: &Path,
-    request: &DefaultLifecycleRequest,
-    target_os: TargetOs,
-) -> Result<OneScriptValidateAdmission> {
+fn require_one_script_request(request: &DefaultLifecycleRequest) -> Result<()> {
     ensure!(
         request.requested == Phase::Validate
             && request.agent_mode == RunAgentMode::Cli
@@ -410,7 +406,26 @@ pub(crate) fn admit_one_script_validate_fixture(
             && request.policy.spec_format_default.is_none(),
         "one-script fixture refuses variable command or install inputs"
     );
+    Ok(())
+}
+
+pub(crate) fn admit_one_script_validate_fixture(
+    path: &Path,
+    request: &DefaultLifecycleRequest,
+    target_os: TargetOs,
+) -> Result<OneScriptValidateAdmission> {
+    require_one_script_request(request)?;
     let leased = lease_default_lifecycle(path)?;
+    preflight_one_script_under_lease(&leased, request, target_os)
+}
+
+/// Incumbent v4 preflight under the caller's already-held outer lease.
+pub(super) fn preflight_one_script_under_lease(
+    leased: &LeasedDefaultLifecycle,
+    request: &DefaultLifecycleRequest,
+    target_os: TargetOs,
+) -> Result<OneScriptValidateAdmission> {
+    require_one_script_request(request)?;
     let lease = leased.retain_lease();
     let selected_root = leased.selected_root();
     let (snapshot, witness) = SelectedManifest::read_witnessed(selected_root)?;
