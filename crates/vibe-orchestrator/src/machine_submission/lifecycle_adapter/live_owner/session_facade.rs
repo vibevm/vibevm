@@ -217,6 +217,22 @@ pub struct HostControlCapability {
     inner: Arc<Inner>,
 }
 impl HostControlCapability {
+    /// Checks already-held opaque objects without touching the control gate.
+    pub fn validate_observer(&self, observer: &ObservationHandle) -> Result<()> {
+        ensure!(
+            Arc::ptr_eq(&self.inner, &observer.inner),
+            "foreign capability/observer pairing"
+        );
+        ensure!(
+            observer.observer.subscription.is_some(),
+            "observer detached"
+        );
+        self.inner
+            .owner
+            .check_stream_binding(&observer.binding, &self.inner.coordinates)
+            .map_err(Into::into)
+    }
+
     /// Requires this exact capability and an active observer of the same owner.
     /// The generated value is validated by the incumbent before its control gate.
     pub fn control(

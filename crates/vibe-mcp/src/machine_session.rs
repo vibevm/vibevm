@@ -5,5 +5,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FR
 
 pub mod framing;
 pub mod incremental;
+pub mod responsive;
 pub mod runner;
 pub mod state;

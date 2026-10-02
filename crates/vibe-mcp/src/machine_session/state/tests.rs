@@ -330,3 +330,68 @@ fn preinit_foreign_unavailable_duplicate_and_closed_requests_refuse() {
         BodyRefusalReason::Unavailable
     );
 }
+
+#[test]
+fn correlation_is_finite_and_never_reuses_duplicates() {
+    let mut session = MachineSession::new(vec![trusted("/owned")]).unwrap();
+    let initial = initialized(&mut session, "init");
+    let Body::Initialized(body) = initial.body else {
+        unreachable!()
+    };
+    let context = body
+        .contexts
+        .iter()
+        .find(|c| c.availability == ContextAvailability::Available)
+        .unwrap();
+    for n in 1..MAX_REQUEST_IDS {
+        assert!(matches!(
+            session.receive(request(
+                initial.session_id.clone(),
+                &format!("request-{n}"),
+                &context.context_id,
+                None
+            )),
+            SessionDecision::UnvalidatedRequest(_)
+        ));
+    }
+    assert_eq!(session.request_ids.len(), MAX_REQUEST_IDS);
+    assert_eq!(
+        refusal_reason(session.receive(request(
+            initial.session_id.clone(),
+            "request-1",
+            &context.context_id,
+            None
+        ))),
+        BodyRefusalReason::InvalidRequest
+    );
+    assert!(!session.correlation_exhausted());
+    assert_eq!(
+        refusal_reason(session.receive(request(
+            initial.session_id.clone(),
+            "over-limit",
+            &context.context_id,
+            None
+        ))),
+        BodyRefusalReason::InvalidRequest
+    );
+    assert!(session.correlation_exhausted());
+    assert_eq!(session.request_ids.len(), MAX_REQUEST_IDS);
+    assert!(session.request_ids.contains("request-1"));
+    assert!(session.request_id_bytes <= MAX_CORRELATION_BYTES);
+}
+
+#[test]
+fn oversized_request_id_cannot_initialize_or_enter_correlation_storage() {
+    let mut session = MachineSession::new(vec![]).unwrap();
+    let id = "x".repeat(MAX_REQUEST_ID_BYTES + 1);
+    let Body::InitializationRefused(refusal) = reply(session.receive(offer(&id))).body else {
+        panic!("oversized correlation admitted")
+    };
+    assert_eq!(
+        refusal.reason,
+        BodyInitializationRefusedReason::InvalidOffer
+    );
+    assert!(session.request_ids.is_empty());
+    assert_eq!(session.request_id_bytes, 0);
+    assert_eq!(session.phase(), SessionPhase::Uninitialized);
+}
