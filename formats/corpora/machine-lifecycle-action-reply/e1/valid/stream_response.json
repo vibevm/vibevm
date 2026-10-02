@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "stream_response",
+    "observer_ref": "opaque",
+    "format_id": "machine-operation-stream-message",
+    "payload_json": "{}"
+  }
+}

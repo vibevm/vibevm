@@ -44,6 +44,40 @@
               "type": "string"
             }
           }
+        },
+        "attach": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        },
+        "replay": {
+          "properties": {
+            "observer_ref": {
+              "type": "string"
+            },
+            "message_json": {
+              "type": "string"
+            }
+          }
+        },
+        "control": {
+          "properties": {
+            "observer_ref": {
+              "type": "string"
+            },
+            "message_json": {
+              "type": "string"
+            }
+          }
+        },
+        "detach": {
+          "properties": {
+            "observer_ref": {
+              "type": "string"
+            }
+          }
         }
       }
     },

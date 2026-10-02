@@ -37,16 +37,32 @@ fn corpus<T: DeserializeOwned + Serialize>(format: &str, names: &[&str]) {
 }
 #[test]
 fn all_action_reply_error_roots_roundtrip_and_register() {
-    corpus::<LifecycleActionRequest>("request", &["prepare", "answer", "submit", "inspect"]);
+    corpus::<LifecycleActionRequest>(
+        "request",
+        &[
+            "prepare", "answer", "submit", "inspect", "attach", "replay", "control", "detach",
+        ],
+    );
     corpus::<LifecycleActionReply>(
         "reply",
-        &["question", "validated", "submitted", "view", "absent"],
+        &[
+            "question",
+            "validated",
+            "submitted",
+            "view",
+            "absent",
+            "attached",
+            "stream_response",
+            "detached",
+        ],
     );
     corpus::<LifecycleActionError>("error", &["unavailable"]);
 }
 #[test]
 fn all_action_arms_and_options_are_closed_and_required() {
-    for name in ["prepare", "answer", "submit", "inspect"] {
+    for name in [
+        "prepare", "answer", "submit", "inspect", "attach", "replay", "control", "detach",
+    ] {
         let row = wire_support::read_json(&format!(
             "formats/corpora/machine-lifecycle-action-request/e1/valid/{name}.json"
         ));
@@ -93,4 +109,29 @@ fn every_error_nullable_distinguishes_missing_from_null() {
         row.as_object_mut().unwrap().remove(key);
         assert!(serde_json::from_value::<LifecycleActionError>(row).is_err());
     }
+}
+
+#[test]
+fn observer_replies_are_closed_and_all_binding_fields_required() {
+    for name in ["attached", "stream_response", "detached"] {
+        let base = wire_support::read_json(&format!(
+            "formats/corpora/machine-lifecycle-action-reply/e1/valid/{name}.json"
+        ));
+        let mut extra = base.clone();
+        extra["reply"]["grant"] = json!(true);
+        assert!(serde_json::from_value::<LifecycleActionReply>(extra).is_err());
+        for key in base["reply"].as_object().unwrap().keys() {
+            let mut missing = base.clone();
+            missing["reply"].as_object_mut().unwrap().remove(key);
+            assert!(
+                serde_json::from_value::<LifecycleActionReply>(missing).is_err(),
+                "{name}.{key}"
+            );
+        }
+    }
+    let mut wrong = wire_support::read_json(
+        "formats/corpora/machine-lifecycle-action-reply/e1/valid/stream_response.json",
+    );
+    wrong["reply"]["format_id"] = json!("arbitrary-json");
+    assert!(serde_json::from_value::<LifecycleActionReply>(wrong).is_err());
 }

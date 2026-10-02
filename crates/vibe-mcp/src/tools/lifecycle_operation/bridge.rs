@@ -19,12 +19,14 @@ struct Tables {
 pub(crate) struct Bridge {
     pub(crate) host: Arc<FixedLifecycleDecisionHost>,
     tables: Mutex<Tables>,
+    pub(crate) observers: super::observers::Observers,
 }
 impl Bridge {
     pub(crate) fn new(host: Arc<FixedLifecycleDecisionHost>) -> Self {
         Self {
             host,
             tables: Mutex::new(Tables::default()),
+            observers: Default::default(),
         }
     }
     pub(crate) fn retain(
@@ -90,6 +92,18 @@ impl Bridge {
             }
         }
         result
+    }
+    pub(crate) fn retained_job(
+        &self,
+        key: &str,
+    ) -> Result<Option<ScopedFixedJob>, FixedDecisionError> {
+        Ok(self
+            .tables
+            .lock()
+            .map_err(|_| FixedDecisionError::Capacity)?
+            .jobs
+            .get(key)
+            .and_then(|s| s.job.clone()))
     }
     pub(crate) fn inspect(
         &self,

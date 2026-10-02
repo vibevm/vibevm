@@ -35,7 +35,7 @@ impl Fixture {
         let dir = tempfile::tempdir().unwrap();
         fs::write(dir.path().join("vibe.toml"),"[project]\nname='demo'\nversion='1.1.0'\n[[extension]]\nid='once'\npoint='phase:validate'\nhandler={kind='script',base='run'}\n").unwrap();
         let root = dir.path().to_str().unwrap().replace('\'', "'\\''");
-        fs::write(dir.path().join("run.sh"),format!("#!/bin/sh\nset -eu\ncd '{root}'\nprintf 'effect\\n' >> counter\ntouch entered\ni=0\nwhile [ ! -f release ]; do i=$((i+1)); if [ \"$i\" -gt 400 ]; then exit 70; fi; sleep 0.05; done\n")).unwrap();
+        fs::write(dir.path().join("run.sh"),format!("#!/bin/sh\nset -eu\ncd '{root}'\nprintf 'effect\\n' >> counter\nprintf 'native-output\\n'\ntouch entered\ni=0\nwhile [ ! -f release ]; do i=$((i+1)); if [ \"$i\" -gt 400 ]; then exit 70; fi; sleep 0.05; done\n")).unwrap();
         let scope = SubmissionScope {
             context: "mcp-native".into(),
             target: "root".into(),
@@ -487,3 +487,6 @@ fn concurrent_registered_mcp_calls_share_the_actual_owner_job() {
     });
     f.count();
 }
+
+#[path = "observers/native_tests.rs"]
+mod observer_cases;
