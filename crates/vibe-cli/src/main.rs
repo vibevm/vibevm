@@ -157,17 +157,12 @@ fn main() -> ExitCode {
             }
         },
         Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
-        // `vibe install` is the OUTERMOST command on this path: it owns the
-        // one compile-trace session, prepares its own inputs (no config,
-        // manifest, workspace or clock is read here) and renders exactly one
-        // `cli-install-report` — apply, fresh or parked alike.
-        Command::Install(args) => {
-            if args.global {
-                commands::application::install(&ctx, args, discover_embedded_root(), cli.offline)
-            } else {
-                commands::install::run_direct(&ctx, args, discover_embedded_root(), cli.offline)
-            }
-        }
+        Command::Install(args) => commands::global_mcp_dispatch::run_install(
+            &ctx,
+            args,
+            discover_embedded_root(),
+            cli.offline,
+        ),
         Command::Generate(args) => run_lifecycle(vibe_lifecycle::Phase::Generate, args),
         Command::Build(args) => run_lifecycle(vibe_lifecycle::Phase::Build, args),
         Command::Test(args) => run_lifecycle(vibe_lifecycle::Phase::Test, args),
@@ -223,19 +218,14 @@ fn main() -> ExitCode {
         Command::Agentic(args) => commands::agentic::run(&ctx, args),
         Command::Drain(args) => commands::agentic::run_command(&ctx, args),
         Command::Uninstall(args) => {
-            if args.global {
-                commands::application::uninstall(&ctx, args, cli.offline)
-            } else {
-                commands::uninstall::run(&ctx, args)
-            }
+            commands::global_mcp_dispatch::run_uninstall(&ctx, args, cli.offline)
         }
-        Command::Update(args) => {
-            if args.global {
-                commands::application::update(&ctx, args, discover_embedded_root(), cli.offline)
-            } else {
-                commands::update::run(&ctx, args, discover_embedded_root(), cli.offline)
-            }
-        }
+        Command::Update(args) => commands::global_mcp_dispatch::run_update(
+            &ctx,
+            args,
+            discover_embedded_root(),
+            cli.offline,
+        ),
         Command::Reinstall(args) => {
             commands::reinstall::run(&ctx, args, discover_embedded_root(), cli.offline)
         }

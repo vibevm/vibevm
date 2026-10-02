@@ -115,6 +115,28 @@ fn single_file_source_lands_under_skill_dir() {
 }
 
 #[test]
+fn qwen_code_project_skill_lands_in_qwen_directory() {
+    let pkg = tempfile::tempdir().unwrap();
+    let proj = tempfile::tempdir().unwrap();
+    let file = pkg.path().join("SKILL.md");
+    fs::write(&file, "qwen skill").unwrap();
+    let result = install_package_skill(
+        Agent::QwenCode,
+        Scope::Project,
+        Some(proj.path()),
+        "demo",
+        &file,
+        false,
+    )
+    .unwrap();
+    assert_eq!(result.status, "created");
+    assert_eq!(
+        fs::read_to_string(proj.path().join(".qwen/skills/demo/SKILL.md")).unwrap(),
+        "qwen skill"
+    );
+}
+
+#[test]
 fn skipped_for_skill_unsupported_agent() {
     let proj = tempfile::tempdir().unwrap();
     let file = proj.path().join("SKILL.md");

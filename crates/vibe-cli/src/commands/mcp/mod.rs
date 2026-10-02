@@ -21,8 +21,8 @@
 //! - **User scope** writes the agent's home/global config
 //!   (`~/.claude.json` for Claude Code) — works in every directory.
 //! - **Both** writes to project AND user simultaneously, falling
-//!   into a single user-level entry for the two agents that have no
-//!   project surface (Claude Desktop, Codex).
+//!   into a single user-level entry for Claude Desktop, whose MCP
+//!   configuration has no project surface.
 //!
 //! The MCP entry is identical for every scope — `vibe mcp serve` with
 //! no `--path`, resolving its root from the launcher's CWD — and on
@@ -37,7 +37,8 @@
 //! | Claude Desktop | `mcpServers`  | JSON   | (n/a — user-only)   | `<config-dir>/Claude/claude_desktop_config.json` |
 //! | Cursor         | `mcpServers`  | JSON   | `.cursor/mcp.json`  | `~/.cursor/mcp.json`                             |
 //! | OpenCode       | `mcp`         | JSON   | `opencode.json`     | `~/.config/opencode/opencode.json`               |
-//! | Codex          | `mcp_servers` | TOML   | (n/a — user-only)   | `~/.codex/config.toml`                           |
+//! | Codex          | `mcp_servers` | TOML   | `.codex/config.toml`| `~/.codex/config.toml`                           |
+//! | Qwen Code      | `mcpServers`  | JSON   | `.qwen/settings.json`| `~/.qwen/settings.json`                         |
 //!
 //! Claude Code reads MCP servers from `.mcp.json` (project) and the
 //! top-level `mcpServers` of `~/.claude.json` (user) — NOT from
@@ -95,10 +96,128 @@ pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<
     match args.command {
         McpSubcommand::Serve(sub) => run_serve(sub, runtime),
         McpSubcommand::Install(sub) => install::run_install(ctx, sub),
-        McpSubcommand::Status(sub) => run_status(ctx, sub),
+        McpSubcommand::Status(sub) => status::run_status(ctx, sub),
         McpSubcommand::Upgrade(sub) => upgrade::run_upgrade(ctx, sub),
         McpSubcommand::Uninstall(sub) => uninstall::run_uninstall(ctx, sub),
     }
+}
+
+/// Register one already materialised global MCP package in the selected agents.
+pub(crate) fn register_global_package(
+    ctx: &output::Context,
+    project_root: &Path,
+    package: &str,
+    agents: &[Agent],
+    consent: bool,
+) -> Result<()> {
+    let version = package_registration::package_version(project_root, package)?;
+    let results = package_registration::register(
+        project_root,
+        package,
+        None,
+        agents,
+        Scope::User,
+        consent,
+        false,
+    )?;
+    if ctx.is_json() {
+        ctx.emit_json(&serde_json::json!({ "ok": true, "command": "install", "global": true, "scope": "user", "package": package, "version": version, "results": results }))?;
+    } else {
+        for row in results {
+            ctx.step(&format!(
+                "{} {} (user) → {} ({})",
+                row.status,
+                row.agent,
+                row.config_path,
+                row.note.as_deref().unwrap_or("")
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// Refresh only the agents that already have an owned registration for this
+/// package. A package update does not silently add new client integrations.
+pub(crate) fn preflight_refresh_global_package(package: &str) -> Result<()> {
+    package_registration::preflight_user_refresh(package)
+}
+
+pub(crate) fn refresh_global_package(
+    ctx: &output::Context,
+    project_root: &Path,
+    package: &str,
+    consent: bool,
+) -> Result<()> {
+    let version = package_registration::package_version(project_root, package)?;
+    let agents: Vec<Agent> = package_registration::user_agent_configs_for_package(package)?
+        .into_iter()
+        .map(|(agent, _)| agent)
+        .collect();
+    let results = if agents.is_empty() {
+        Vec::new()
+    } else {
+        package_registration::refresh_user_package(project_root, package, &agents, consent)?
+    };
+    if ctx.is_json() {
+        ctx.emit_json(&serde_json::json!({ "ok": true, "command": "update", "global": true, "scope": "user", "package": package, "version": version, "results": results }))?;
+    } else if results.is_empty() {
+        ctx.step(&format!(
+            "no agent registrations for `{package}` to refresh"
+        ));
+    } else {
+        for row in results {
+            ctx.step(&format!(
+                "{} {} (user) → {}",
+                row.status, row.agent, row.config_path
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// Opaque preparation for a global package uninstall. The exact bytes of
+/// every affected agent config and receipt are retained until the package
+/// uninstall succeeds, so a later failure can restore the prior state.
+pub(crate) struct GlobalMcpRemoval {
+    package: String,
+    version: Option<String>,
+    plan: package_registration::GlobalRemovalPlan,
+}
+
+pub(crate) fn preflight_unregister_global_package(package: &str) -> Result<GlobalMcpRemoval> {
+    let version = crate::commands::install::user_project_root()
+        .ok()
+        .and_then(|root| package_registration::package_version(&root, package).ok());
+    Ok(GlobalMcpRemoval {
+        package: package.to_owned(),
+        version,
+        plan: package_registration::plan_global_removal(package)?,
+    })
+}
+
+pub(crate) fn unregister_global_package(removal: &mut GlobalMcpRemoval) -> Result<()> {
+    package_registration::apply_global_removal(&mut removal.plan)
+}
+
+pub(crate) fn restore_global_package(removal: &GlobalMcpRemoval) -> Result<()> {
+    package_registration::restore_global_removal(&removal.plan)
+}
+
+pub(crate) fn report_global_uninstall(
+    ctx: &output::Context,
+    removal: &GlobalMcpRemoval,
+) -> Result<()> {
+    if ctx.is_json() {
+        ctx.emit_json(&serde_json::json!({ "ok": true, "command": "uninstall", "global": true, "scope": "user", "package": removal.package, "version": removal.version, "results": removal.plan.results }))?;
+    } else {
+        for row in &removal.plan.results {
+            ctx.step(&format!(
+                "{} {} (user) → {}",
+                row.status, row.agent, row.config_path
+            ));
+        }
+    }
+    Ok(())
 }
 
 #[specmark::spec(
@@ -131,172 +250,6 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     };
     let mut server = Server::stdio(server_ctx);
     server.run().context("MCP server I/O error")?;
-    Ok(())
-}
-
-// ---------------------------------------------------------------------------
-// status
-// ---------------------------------------------------------------------------
-
-#[derive(Debug, Serialize)]
-struct StatusReport {
-    ok: bool,
-    command: &'static str,
-    project: Option<String>,
-    detected: Vec<String>,
-    /// MCP-config preview entries, one per (agent × concrete-scope)
-    /// combination that has a surface.
-    results: Vec<AgentInstallReport>,
-    /// SKILL.md drift preview entries — same shape as install /
-    /// upgrade. Empty for agents without filesystem skill loaders
-    /// (Cursor, Claude Desktop). Status is `would-create` /
-    /// `would-update` / `unchanged`.
-    skill_results: Vec<SkillInstallReport>,
-    /// Package-declared servers (PROP-027 §2.4) and their lifecycle
-    /// state: registered where, artifact built or the build recipe.
-    pkg_servers: Vec<PkgServerStatus>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct PkgServerStatus {
-    name: String,
-    package: String,
-    version: String,
-    artifact: String,
-    /// `built` / `unbuilt` — an unbuilt artifact registers fine and
-    /// fails at agent-launch time, so status names the recipe.
-    artifact_state: &'static str,
-    /// The recipe when unbuilt.
-    note: Option<String>,
-}
-
-/// Collect the PROP-027 lifecycle rows for `vibe mcp status`.
-fn pkg_server_status(project_root: Option<&Path>) -> Vec<PkgServerStatus> {
-    let Some(root) = project_root else {
-        return Vec::new();
-    };
-    let Ok(servers) = vibe_workspace::bins::collect_mcp_servers(root) else {
-        return Vec::new();
-    };
-    servers
-        .into_iter()
-        .map(|s| {
-            let artifact = {
-                let a = s.binary.artifact();
-                if a.is_absolute() { a } else { root.join(a) }
-            };
-            let built = artifact.exists();
-            PkgServerStatus {
-                name: s.decl.name.clone(),
-                package: s.binary.package.clone(),
-                version: s.version.clone(),
-                artifact: machine_json_path(&artifact),
-                artifact_state: if built { "built" } else { "unbuilt" },
-                note: (!built).then(|| {
-                    format!(
-                        "run `vibe bin build {}` before an agent launches it",
-                        s.binary.decl.name
-                    )
-                }),
-            }
-        })
-        .collect()
-}
-
-fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
-    // Status is read-only and scope-agnostic: report on every agent ×
-    // every scope that has a surface. Project entries require
-    // resolved project_root; user entries don't.
-    let project_root: Option<PathBuf> = args
-        .path
-        .canonicalize()
-        .ok()
-        .map(super::init::strip_unc_public)
-        .filter(|p| p.join(Manifest::FILENAME).exists());
-    let detected = detect_agents(project_root.as_deref());
-    let mut results: Vec<AgentInstallReport> = Vec::new();
-    let mut skill_results: Vec<SkillInstallReport> = Vec::new();
-    for agent in Agent::ALL.iter().copied() {
-        for scope in [Scope::Project, Scope::User] {
-            if scope == Scope::Project && project_root.is_none() {
-                continue;
-            }
-            // MCP-config preview.
-            if let Some(path) = agent.config_path(scope, project_root.as_deref())? {
-                let payload = agent.build_mcp_entry();
-                results.push(preview_install_mcp(agent, scope, &path, &payload)?);
-            }
-            // Skill preview — only for agents that load skills + have
-            // a path for this scope. install_skill with dry_run=true
-            // reuses the decide-then-(don't-)apply logic and emits
-            // would-create / would-update / unchanged.
-            if agent.supports_skill() && agent.skill_path(scope, project_root.as_deref())?.is_some()
-            {
-                let outcome = install_skill(agent, scope, project_root.as_deref(), true)?;
-                skill_results.push(outcome);
-            }
-        }
-    }
-    let pkg_servers = pkg_server_status(project_root.as_deref());
-    let report = StatusReport {
-        ok: true,
-        command: "mcp:status",
-        project: project_root.as_ref().map(|p| p.display().to_string()),
-        detected: detected.iter().map(|a| a.as_str().to_string()).collect(),
-        results: results.clone(),
-        skill_results: skill_results.clone(),
-        pkg_servers: pkg_servers.clone(),
-    };
-    if ctx.is_json() {
-        ctx.emit_json(&report)?;
-        return Ok(());
-    }
-    ctx.summary(&format!(
-        "Detected agents: {}",
-        if detected.is_empty() {
-            "(none)".to_string()
-        } else {
-            detected
-                .iter()
-                .map(|a| a.as_str())
-                .collect::<Vec<_>>()
-                .join(", ")
-        }
-    ));
-    for r in &results {
-        let note = r
-            .note
-            .as_deref()
-            .map(|n| format!(" ({n})"))
-            .unwrap_or_default();
-        ctx.step(&format!(
-            "{} mcp     {} ({}) → {}{note}",
-            r.status, r.agent, r.scope, r.config_path
-        ));
-    }
-    for r in &skill_results {
-        let note = r
-            .note
-            .as_deref()
-            .map(|n| format!(" ({n})"))
-            .unwrap_or_default();
-        let path_str = r.path.as_deref().unwrap_or("(no skill loader)");
-        ctx.step(&format!(
-            "{} skill   {} ({}) → {}{note}",
-            r.status, r.agent, r.scope, path_str
-        ));
-    }
-    for s in &pkg_servers {
-        let note = s
-            .note
-            .as_deref()
-            .map(|n| format!(" ({n})"))
-            .unwrap_or_default();
-        ctx.step(&format!(
-            "{} server  {} ({}@{}) → {}{note}",
-            s.artifact_state, s.name, s.package, s.version, s.artifact
-        ));
-    }
     Ok(())
 }
 
@@ -417,86 +370,6 @@ pub(super) fn apply_install_mcp(
 }
 
 // ---------------------------------------------------------------------------
-// package-declared servers (PROP-027 §2.4) — JSON-only by construction:
-// registration is project-scope (the {project_root} substitution demands
-// a project), and every project-scope agent config is JSON.
-// ---------------------------------------------------------------------------
-
-fn decide_pkg_action(
-    config_path: &Path,
-    section: &str,
-    name: &str,
-    entry: &serde_json::Value,
-) -> Result<(&'static str, Option<String>)> {
-    if !config_path.exists() {
-        return Ok(("created", Some("file does not exist yet".into())));
-    }
-    let existing = read_json(config_path)?;
-    match existing.get(section).and_then(|v| v.get(name)) {
-        Some(e) if e == entry => Ok(("unchanged", None)),
-        Some(_) => Ok(("updated", Some(format!("`{section}.{name}` differs")))),
-        None => Ok(("created", Some(format!("`{section}.{name}` absent")))),
-    }
-}
-
-pub(super) fn preview_install_pkg_server(
-    agent: Agent,
-    config_path: &Path,
-    name: &str,
-    entry: &serde_json::Value,
-) -> Result<AgentInstallReport> {
-    let (status, note) = decide_pkg_action(config_path, agent.mcp_section_key(), name, entry)?;
-    let dry = match status {
-        "unchanged" => "unchanged",
-        "created" => "would-create",
-        "updated" => "would-update",
-        other => other,
-    };
-    Ok(AgentInstallReport {
-        agent: agent.as_str().to_string(),
-        scope: "project",
-        config_path: machine_json_path(config_path),
-        status: dry,
-        note: Some(match note {
-            Some(n) => format!("pkg server `{name}` — {n}"),
-            None => format!("pkg server `{name}`"),
-        }),
-    })
-}
-
-pub(super) fn apply_install_pkg_server(
-    agent: Agent,
-    config_path: &Path,
-    name: &str,
-    entry: &serde_json::Value,
-) -> Result<AgentInstallReport> {
-    let section = agent.mcp_section_key();
-    let (status, note) = decide_pkg_action(config_path, section, name, entry)?;
-    if status != "unchanged" {
-        if let Some(parent) = config_path.parent() {
-            fs::create_dir_all(parent)
-                .with_context(|| format!("creating dir `{}`", parent.display()))?;
-        }
-        let mut merged = merge_json(config_path, section, name, entry)?;
-        vibe_mcp::pkg_servers::mark_managed(&mut merged, name)?;
-        let serialized = serde_json::to_string_pretty(&merged)
-            .with_context(|| "serializing merged JSON config")?;
-        fs::write(config_path, serialized + "\n")
-            .with_context(|| format!("writing `{}`", config_path.display()))?;
-    }
-    Ok(AgentInstallReport {
-        agent: agent.as_str().to_string(),
-        scope: "project",
-        config_path: machine_json_path(config_path),
-        status,
-        note: Some(match note {
-            Some(n) => format!("pkg server `{name}` — {n}"),
-            None => format!("pkg server `{name}`"),
-        }),
-    })
-}
-
-// ---------------------------------------------------------------------------
 // project-root resolution
 // ---------------------------------------------------------------------------
 
@@ -524,5 +397,8 @@ pub(super) fn resolve_project_root_required(path: &Path) -> Result<PathBuf> {
 }
 
 mod install;
+mod install_prompts;
+mod package_registration;
+mod status;
 mod uninstall;
 mod upgrade;

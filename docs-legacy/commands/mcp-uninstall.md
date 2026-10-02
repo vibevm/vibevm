@@ -1,13 +1,16 @@
-# `vibe mcp uninstall` — remove vibevm from coding agents
+# `vibe mcp uninstall` — remove managed MCP registrations
 
-Mirror of [`vibe mcp install`](mcp-install.md): same scope axis (project / user / both), same agent filter, same `--config-only` / `--skill-only` toggle. Drops the `vibevm` key from each agent's MCP config (foreign keys preserved) and deletes the SKILL.md file (and parent `vibevm/` skill subdir if it becomes empty).
+Mirror of [`vibe mcp install`](mcp-install.md): same scope axis (project / user / both), same agent filter, same `--config-only` / `--skill-only` toggle. Without a package selector, the legacy product-MCP path drops the `vibevm` key from each agent's MCP config (foreign keys preserved) and deletes the SKILL.md file (and parent `vibevm/` skill subdir if it becomes empty).
+
+With `mcp:<group>/<name>`, removes only registrations owned by that installed package; `--server <name>` narrows the removal to one declared server. It preserves unrelated and externally edited entries. This unregisters the server from agents; to remove a globally installed package itself, use [`vibe uninstall -g`](uninstall.md).
 
 Spec: [PROP-004 §5.1](../../legacy-spec/research/PROP-004-tessl-comparative-research.md), [`spec/WAL.md`](../../spec/WAL.md) (M1.7 slice 5).
 
 ## Usage
 
 ```
-vibe mcp uninstall [--path <dir>]
+vibe mcp uninstall [mcp:<group>/<name>] [--server <name>]
+                   [--path <dir>]
                    [--scope project | user | both]
                    [--agent <FILTER>]
                    [--config-only | --skill-only]
@@ -20,8 +23,10 @@ vibe mcp uninstall [--path <dir>]
 | Flag | Description | Default |
 | --- | --- | --- |
 | `--path <dir>` | Project root for project-scope walks. Required when scope is `project` or `both`. | `.` |
+| `mcp:<group>/<name>` | Optional installed MCP package whose owned registrations should be removed. | legacy product MCP and package walk |
+| `--server <name>` | Limit removal to one server in the selected package. | all servers in selected package |
 | `--scope project|user|both` | Where to remove from. | `both` |
-| `--agent <FILTER>` | One of `all`, `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`. | `all` |
+| `--agent <FILTER>` | One of `all`, `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`. | `all` |
 | `--config-only` | Drop only MCP-config blocks (keep SKILL.md). Conflicts with `--skill-only`. | off |
 | `--skill-only` | Delete only SKILL.md (keep MCP-config block). Conflicts with `--config-only`. | off |
 | `--dry-run` | Print removal plan without writing. | off |
@@ -30,6 +35,8 @@ vibe mcp uninstall [--path <dir>]
 | `--quiet` (global) | One-line summary. | off |
 
 ## Removal contract
+
+The following file and skill behavior describes removal of vibevm's own product MCP integration. A selected package removal targets only that package's managed server entries.
 
 **Removed:**
 
@@ -50,7 +57,7 @@ vibe mcp uninstall [--path <dir>]
 - **`removed`** — vibevm-block / SKILL.md was present, deleted.
 - **`would-remove`** — same under `--dry-run`.
 - **`not-installed`** — file or block absent; nothing to remove.
-- **`skipped`** — agent has no surface for this scope (Cursor/Claude Desktop have no skill loader; Claude Desktop/Codex have no project surface).
+- **`skipped`** — agent has no surface for this scope (Cursor/Claude Desktop have no skill loader; Claude Desktop has no project surface).
 
 ## Examples
 
@@ -69,6 +76,9 @@ vibe mcp uninstall --skill-only
 
 # Remove vibevm from one agent only.
 vibe mcp uninstall --agent opencode --scope both
+
+# Remove one package's user registration while keeping its materialised package.
+vibe mcp uninstall mcp:ai.lev/fpf-mcp --agent qwen-code --scope user --yes
 
 # Pre-flight diff before applying.
 vibe mcp uninstall --dry-run

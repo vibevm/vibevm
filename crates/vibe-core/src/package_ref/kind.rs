@@ -38,8 +38,9 @@ pub enum PackageKind {
     Tool,
     /// An agent-server package: its primary deliverable is one or more
     /// MCP servers (`[[mcp_server]]`, legal only in this kind),
-    /// delivered as PROP-025 binaries and exact-pinned to the package
-    /// whose toolchain they serve (VIBEVM-SPEC §4.1, PROP-027).
+    /// delivered as local PROP-025 binaries or remote HTTPS endpoints.
+    /// Dependencies on served toolchains remain exact-pinned
+    /// (VIBEVM-SPEC §4.1, PROP-027).
     Mcp,
     /// Guidance for *writing in* something — a language, a notation, a
     /// format: the idioms, the constraints, the shape authors follow.

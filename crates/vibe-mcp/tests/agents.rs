@@ -78,10 +78,18 @@ fn detect_finds_opencode_via_agents_md() {
 }
 
 #[test]
+fn detect_finds_qwen_code_via_project_marker() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::create_dir_all(dir.path().join(".qwen")).unwrap();
+    let agents = detect_agents(Some(dir.path()));
+    assert!(agents.contains(&Agent::QwenCode));
+}
+
+#[test]
 fn detect_with_no_project_root_falls_back_to_host_probe() {
     // Without a project root, only host-presence agents can show up.
     // The set is non-deterministic per machine, but the call must not
-    // panic and must return at most all-five.
+    // panic and must return only known agents.
     let agents = detect_agents(None);
     for a in &agents {
         assert!(Agent::ALL.contains(a));
@@ -107,25 +115,32 @@ fn parse_filter_known_values() {
         vec![Agent::OpenCode]
     );
     assert_eq!(Agent::parse_filter("codex").unwrap(), vec![Agent::Codex]);
+    assert_eq!(
+        Agent::parse_filter("qwen-code").unwrap(),
+        vec![Agent::QwenCode]
+    );
+    assert_eq!(Agent::parse_filter("qwen").unwrap(), vec![Agent::QwenCode]);
     assert!(Agent::parse_filter("nope").is_err());
 }
 
 // ---- per-agent profile ----
 
 #[test]
-fn supports_project_scope_only_for_three_agents() {
+fn supports_project_scope_for_qwen_code_and_codex() {
     assert!(Agent::ClaudeCode.supports_project_scope());
     assert!(Agent::Cursor.supports_project_scope());
     assert!(Agent::OpenCode.supports_project_scope());
+    assert!(Agent::QwenCode.supports_project_scope());
+    assert!(Agent::Codex.supports_project_scope());
     assert!(!Agent::ClaudeCodeDesktop.supports_project_scope());
-    assert!(!Agent::Codex.supports_project_scope());
 }
 
 #[test]
-fn supports_skill_only_for_three_agents() {
+fn supports_skill_for_qwen_code() {
     assert!(Agent::ClaudeCode.supports_skill());
     assert!(Agent::OpenCode.supports_skill());
     assert!(Agent::Codex.supports_skill());
+    assert!(Agent::QwenCode.supports_skill());
     assert!(!Agent::ClaudeCodeDesktop.supports_skill());
     assert!(!Agent::Cursor.supports_skill());
 }
@@ -155,19 +170,53 @@ fn config_path_project_lands_under_project_root() {
         .unwrap();
     let s = p.display().to_string().replace('\\', "/");
     assert!(s.ends_with("/.cursor/mcp.json"), "got {s}");
+
+    let p = Agent::QwenCode
+        .config_path(Scope::Project, Some(dir.path()))
+        .unwrap()
+        .unwrap();
+    let s = p.display().to_string().replace('\\', "/");
+    assert!(s.ends_with("/.qwen/settings.json"), "got {s}");
+
+    let p = Agent::Codex
+        .config_path(Scope::Project, Some(dir.path()))
+        .unwrap()
+        .unwrap();
+    let s = p.display().to_string().replace('\\', "/");
+    assert!(s.ends_with("/.codex/config.toml"), "got {s}");
 }
 
 #[test]
-fn config_path_user_only_agents_have_no_project_surface() {
+fn qwen_code_user_config_and_skills_resolve_under_home() {
+    let config = Agent::QwenCode
+        .config_path(Scope::User, None)
+        .unwrap()
+        .unwrap();
+    assert!(
+        config
+            .display()
+            .to_string()
+            .replace('\\', "/")
+            .ends_with("/.qwen/settings.json")
+    );
+    let skill = Agent::QwenCode
+        .skill_path(Scope::User, None)
+        .unwrap()
+        .unwrap();
+    assert!(
+        skill
+            .display()
+            .to_string()
+            .replace('\\', "/")
+            .ends_with("/.qwen/skills/vibevm/SKILL.md")
+    );
+}
+
+#[test]
+fn config_path_claude_desktop_has_no_project_surface() {
     let dir = tempfile::tempdir().unwrap();
     assert!(
         Agent::ClaudeCodeDesktop
-            .config_path(Scope::Project, Some(dir.path()))
-            .unwrap()
-            .is_none()
-    );
-    assert!(
-        Agent::Codex
             .config_path(Scope::Project, Some(dir.path()))
             .unwrap()
             .is_none()
@@ -238,7 +287,12 @@ fn config_path_both_is_internal_error() {
 fn json_agents_entry_is_plain_vibe_off_windows() {
     // Off Windows `vibe` is a real executable: command=vibe, no cmd /c,
     // no --path (CWD-resolved). The same shape for every JSON agent.
-    for agent in [Agent::ClaudeCode, Agent::ClaudeCodeDesktop, Agent::Cursor] {
+    for agent in [
+        Agent::ClaudeCode,
+        Agent::ClaudeCodeDesktop,
+        Agent::Cursor,
+        Agent::QwenCode,
+    ] {
         let v = json_payload(agent, false);
         assert_eq!(v["command"], "vibe", "{}", agent.as_str());
         let args: Vec<&str> = v["args"]
@@ -255,7 +309,12 @@ fn json_agents_entry_is_plain_vibe_off_windows() {
 fn json_agents_entry_wraps_cmd_c_on_windows() {
     // On Windows the `vibe.cmd` shim must launch via `cmd /c` — an MCP
     // client's bare process-spawn cannot exec a `.cmd` directly.
-    for agent in [Agent::ClaudeCode, Agent::ClaudeCodeDesktop, Agent::Cursor] {
+    for agent in [
+        Agent::ClaudeCode,
+        Agent::ClaudeCodeDesktop,
+        Agent::Cursor,
+        Agent::QwenCode,
+    ] {
         let v = json_payload(agent, true);
         assert_eq!(v["command"], "cmd", "{}", agent.as_str());
         let args: Vec<&str> = v["args"]
@@ -330,6 +389,14 @@ fn opencode_entry_uses_command_array() {
         .map(|a| a.as_str().unwrap())
         .collect();
     assert_eq!(cmdw, vec!["cmd", "/c", "vibe", "mcp", "serve"]);
+}
+
+#[test]
+fn qwen_code_entry_uses_standard_stdio_shape() {
+    let v = json_payload(Agent::QwenCode, false);
+    assert_eq!(v["command"], "vibe");
+    assert_eq!(v["args"], serde_json::json!(["mcp", "serve"]));
+    assert_eq!(Agent::QwenCode.mcp_section_key(), "mcpServers");
 }
 
 #[test]

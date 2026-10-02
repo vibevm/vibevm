@@ -380,7 +380,7 @@ pub enum CondOs {
     Linux,
 }
 
-/// The agents a `when` condition names — the five
+/// The agents a `when` condition names — the six
 /// `vibe_agent_projection::agents::Agent` values, spelled here
 /// (see [`Cond`]).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -390,6 +390,7 @@ pub enum CondAgent {
     Cursor,
     OpenCode,
     Codex,
+    QwenCode,
 }
 
 impl CondOs {
@@ -411,6 +412,7 @@ impl CondAgent {
         CondAgent::Cursor,
         CondAgent::OpenCode,
         CondAgent::Codex,
+        CondAgent::QwenCode,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -420,6 +422,7 @@ impl CondAgent {
             CondAgent::Cursor => "cursor",
             CondAgent::OpenCode => "opencode",
             CondAgent::Codex => "codex",
+            CondAgent::QwenCode => "qwen-code",
         }
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">PROP-027 — `mcp` packages: the agent-server kind and its delivery</title>
-  <status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED with the MCP-SOVEREIGNTY waves"/>
+  <status stage="impl" state="done" comment="MCP-SOVEREIGNTY 2026-07-24; remote HTTP and user-scope package registration extended in 1.0.2"/>
   <p><milestone-line fact="true" status="impl/done">**Milestone:** M1.26 candidate («MCP sovereignty» —
 [MCP-SOVEREIGNTY-PLAN-v0.1](../../../legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md)).</milestone-line></p>
   <p><status-line fact="true" status="impl/done">**Status:** IMPLEMENTED — the kind and the manifest laws (§2.1–§2.3)
@@ -11,13 +11,15 @@ live-chained vibe-free); the registration lifecycle (§2.4–§2.5) with
 Wave 5 (`vibe mcp install/uninstall/status` speak package servers; the
 pin-server fixture e2e pins the walk). §2.7's composition rows inherit
 the kind-agnostic feature suites — no feature branches on `kind`, and
-the mcp e2e exercises code-bearing + binaries + the pin end to end. Units typed at REQ grain; the code carries the matching
+the mcp e2e exercises code-bearing + binaries + the pin end to end.
+The 1.0.2 extension admits URL-only Streamable HTTP packages, selected
+project/user registration, global package inventory, and Qwen Code. Units typed at REQ grain; the code carries the matching
 `scope!` / `#[spec(implements)]` / `#[verifies]` edges.</status-line></p>
   <p><related fact="true" status="spec/done">**Related:** [PROP-015](PROP-015-mcp-integration.xml) (the product MCP
 server + the agent-integration command family this PROP extends),
-[PROP-025](../vibe-workspace/PROP-025-binary-delivery.xml) (the binary
-delivery an `[[mcp_server]]` rides), [PROP-024](../../common/PROP-024-code-bearing-packages.xml)
-(code-bearing packages; §2.4 is why mcp packages vendor),
+[PROP-025](../vibe-workspace/PROP-025-binary-delivery.xml) (binary
+delivery for local stdio servers), [PROP-024](../../common/PROP-024-code-bearing-packages.xml)
+(code-bearing local servers),
 [`VIBEVM-SPEC.md` §4.1](../../../VIBEVM-SPEC.md) (the kind register,
 amended under owner sanction 2026-07-07).</related></p>
   <motivation title="1. Motivation">
@@ -53,17 +55,31 @@ Model Context Protocol servers.</MCP-KIND-DEF></p>
       </facts>
     </kind>
     <manifest title="2.2 The `[[mcp_server]]` declaration">
-      <p><req-manifest fact="true" status="impl/done">`req r1`</req-manifest></p>
+      <p><req-manifest fact="true" status="impl/done">`req r2`</req-manifest></p>
       <fence lang="toml">[[mcp_server]]
 name = "rust-ai-native"           # agent-visible server name = the family (PROP-028 §2.4)
 binary = "rust-ai-native-mcp"     # must match a [[binary]] in this manifest
 description = "AI-Native Rust discipline + type oracle over MCP"
 args = ["--path", "{project_root}"]</fence>
+      <fence lang="toml">[[mcp_server]]
+name = "fpf"
+transport = "streamable-http"
+url = "https://mcp.fpf.tools/mcp"
+description = "Official FPF MCP service"</fence>
       <facts ordered="false">
-        <SERVER-IS-BINARY fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">The server IS a [PROP-025](../vibe-workspace/PROP-025-binary-delivery.xml)
-  binary: delivery, consent, staleness, and slot residence come from that
-  machinery wholesale — `binary` must resolve to a `[[binary]]` declared
-  in the same manifest.</SERVER-IS-BINARY>
+        <SERVER-IS-BINARY fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A local stdio server is a [PROP-025](../vibe-workspace/PROP-025-binary-delivery.xml)
+  binary: delivery, build consent, staleness, and slot residence come from that
+  machinery — `binary` resolves to a `[[binary]]` declared in the same manifest.
+  Existing declarations without `transport` remain stdio.</SERVER-IS-BINARY>
+        <SERVER-REMOTE-HTTP fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">A remote server declares
+  `transport = "streamable-http"` and an HTTPS `url`. It needs no `[[binary]]`
+  and no build. The URL is passed to the selected agent's native MCP client;
+  vibe does not proxy traffic or enter the serving path.</SERVER-REMOTE-HTTP>
+        <SERVER-ONE-TRANSPORT fact="true" status="impl/done">Exactly one of `binary` and `url` is required. A remote server
+  cannot declare local launch `args`; URL userinfo, fragments, control characters,
+  whitespace, and backslashes are refused. A published URL must contain no
+  secret, including in its query. The package records the endpoint address,
+  not an immutable version of the running remote service.</SERVER-ONE-TRANSPORT>
         <SERVER-NAME fact="true" status="impl/done">`name` is what an MCP host shows as the tool
   namespace; names are unique within the package.</SERVER-NAME>
         <ARGS-CLOSED-SET fact="true" status="impl/done" action="continue" actionstage="doc" audience="author">`args` may carry
@@ -73,10 +89,11 @@ args = ["--path", "{project_root}"]</fence>
       </facts>
     </manifest>
     <exact-pin title="2.3 The exact-pin law">
-      <p><req-exact-pin fact="true" status="impl/done">`req r1`</req-exact-pin></p>
+      <p><req-exact-pin fact="true" status="impl/done">`req r2`</req-exact-pin></p>
       <facts ordered="false">
-        <VENDORING-WHY fact="true" status="impl/done">Cargo path-deps cannot cross package slots (PROP-024 §2.4), so an mcp
-  package VENDORS the crates of the toolchain it serves.</VENDORING-WHY>
+        <VENDORING-WHY fact="true" status="impl/done">Cargo path-deps cannot cross package slots (PROP-024 §2.4), so a local
+  code-bearing mcp package vendors the crates of the toolchain it serves.
+  A remote URL-only package carries no server code.</VENDORING-WHY>
         <SKEW-REOPENED fact="true" status="impl/done">Vendoring
   re-opens the version skew the in-slot prototype excluded by
   construction: a server built from engine copy X enriching against a
@@ -91,70 +108,84 @@ args = ["--path", "{project_root}"]</fence>
         <PIN-SOURCES fact="true" status="impl/done">Git-source deps pin by
   rev inherently; path-source deps are local-dev surfaces outside this
   law.</PIN-SOURCES>
-        <PIN-LOCKSTEP fact="true" status="impl/done">The operational consequence is accepted and priced by the plan:
-  the mcp package bumps in lockstep with the package it serves.</PIN-LOCKSTEP>
+        <PIN-LOCKSTEP fact="true" status="impl/done">A local code-bearing mcp package bumps in lockstep with the
+  package it serves. A URL-only package may have no package dependencies;
+  its version pins only the manifest declaration, not remote server behavior.</PIN-LOCKSTEP>
       </facts>
     </exact-pin>
     <registration title="2.4 Registration: `vibe mcp install` learns packages">
-      <p><req-registration fact="true" status="impl/done">`req r1`</req-registration></p>
+      <p><req-registration fact="true" status="impl/done">`req r2`</req-registration></p>
       <p><REG-TODAY fact="true" status="impl/done">`vibe mcp install` today writes vibevm's own server into agent configs
 (PROP-015).</REG-TODAY></p>
-      <p><REG-PACKAGE-DISCOVERY fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">It grows package discovery: every installed package of kind
-`mcp` contributes its `[[mcp_server]]` entries, written into the target
-agents' configs with</REG-PACKAGE-DISCOVERY></p>
+      <p><REG-PACKAGE-DISCOVERY fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">The no-selector command retains its established
+walk over installed package servers. An explicit `mcp:&lt;group&gt;/&lt;name&gt;`
+selector registers only that package, with optional `--server &lt;name&gt;`
+for one declaration. A missing package or unsupported agent scope fails
+visibly instead of succeeding with no entry.</REG-PACKAGE-DISCOVERY></p>
       <facts ordered="false">
         <REG-COMMAND-PATH fact="true" status="impl/done">`command` = the absolute, **verbatim-free** path to the slot-resident
   built artifact (a real executable — no shim, no `cmd /c` wrapper
   class), `args` with the closed-set substitutions resolved;</REG-COMMAND-PATH>
-        <REG-MANAGED-SIDECAR fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">a **managed sidecar**: a top-level `"vibevm": { "managed": [...] }`
-  object in the JSON config names the entries vibevm owns (never a key
-  INSIDE a server entry — hosts validate entry shapes), so re-installs
-  rewrite ONLY vibevm-managed entries and operator-owned servers are
-  never touched — the `&lt;vibevm&gt;` block convention of the boot files,
-  applied to agent configs.</REG-MANAGED-SIDECAR>
-        <REG-PROJECT-SCOPE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Registration is PROJECT-scope only (the
-  `{project_root}` substitution demands a project, and a project's
-  servers belong in its committed config), and every project-scope
-  agent config is JSON — so no TOML sidecar form exists;</REG-PROJECT-SCOPE>
+        <REG-REMOTE-URL fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">A remote declaration is written as the same HTTPS endpoint
+  in each client's native HTTP MCP shape: Claude Code requires `type = http`,
+  Codex a TOML `url`, Qwen Code JSON `httpUrl`, and the other supported
+  clients their own fields. No local process, shim, or vibe proxy is installed.</REG-REMOTE-URL>
+        <REG-MANAGED-SIDECAR fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Registration records the package identity and exact owned
+  entry in a separate receipt associated with each agent config. An unowned
+  colliding name or an owned entry changed outside vibe is never overwritten
+  or removed. The older JSON `"vibevm": { "managed": [...] }` marker remains
+  readable for existing registrations; no client-specific unknown member is
+  placed inside an MCP server entry.</REG-MANAGED-SIDECAR>
+        <REG-PROJECT-SCOPE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Package registration supports the agent's actual project and
+  user scopes. `vibe install -g mcp:&lt;group&gt;/&lt;name&gt;` maintains an exact-pinned
+  user inventory under the Vibe settings root and registers the selected
+  package with explicitly chosen user-scope agents. A local stdio server's
+  `{project_root}` still resolves to the selected project's root; a remote URL
+  is independent of the working directory.</REG-PROJECT-SCOPE>
         <REG-REFRESH fact="true" status="impl/done">lifecycle: `vibe mcp install` re-run refreshes paths after a slot
   move;</REG-REFRESH>
-        <REG-STATUS fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe mcp status` reports each declared server's artifact state
-  (an unbuilt artifact registers fine and fails at agent launch — the
-  recipe names `vibe bin build &lt;name&gt;`);</REG-STATUS>
-        <REG-UNINSTALL fact="true" status="impl/done">`vibe mcp uninstall` removes
-  managed entries plus the emptied sidecar, and nothing else.</REG-UNINSTALL>
+        <REG-STATUS fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`vibe mcp status` distinguishes a remote endpoint from a local
+  built/unbuilt artifact. Configuration presence does not assert live
+  connectivity or authorization; an unbuilt local artifact names the
+  `vibe bin build &lt;name&gt;` recipe.</REG-STATUS>
+        <REG-UNINSTALL fact="true" status="impl/done">`vibe mcp uninstall` can remove the
+  selected package/server registration and its emptied ownership receipt,
+  preserving every unrelated entry.</REG-UNINSTALL>
       </facts>
     </registration>
     <consent title="2.5 Consent: registration is the same trust act as building">
-      <p><req-consent fact="true" status="impl/done">`req r1`</req-consent></p>
+      <p><req-consent fact="true" status="impl/done">`req r2`</req-consent></p>
       <facts ordered="false">
-        <CONSENT-TRUST-ACT fact="true" status="impl/done">Registering a server schedules package code execution at agent-session
-  start; building its binary compiles package code.</CONSENT-TRUST-ACT>
+        <CONSENT-TRUST-ACT fact="true" status="impl/done">Registering a local server schedules package code execution at
+  agent-session start; building its binary compiles package code. Registering
+  a remote server gives an agent a connection to the declared endpoint;
+  installation and agent selection are the explicit trust act.</CONSENT-TRUST-ACT>
         <CONSENT-GATE-INHERITED fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">One trust model, two
   verbs: registration inherits PROP-025's consent gate verbatim —
-  `org.vibevm` packages are allow-listed; any other origin requires the
-  explicit `--assume-yes` (or is refused with the recipe naming that
-  exact flag).</CONSENT-GATE-INHERITED>
+  `org.vibevm` local binaries are allow-listed; another group's local
+  binary requires `--assume-yes` (or is refused with a recipe). URL-only
+  packages build no code; they carry no secret or authentication token.</CONSENT-GATE-INHERITED>
         <CONSENT-WRITE-SCOPE fact="true" status="impl/done">Registration writes touch ONLY the target agent's config
   files and only managed entries; server processes receive the project
   root as cwd and NO secrets from vibe.</CONSENT-WRITE-SCOPE>
       </facts>
     </consent>
     <vibe-free title="2.6 Serving is vibe-free">
-      <p><req-vibe-free fact="true" status="impl/done">`req r1`</req-vibe-free></p>
+      <p><req-vibe-free fact="true" status="impl/done">`req r2`</req-vibe-free></p>
       <facts ordered="false">
-        <VIBE-FREE-SERVING fact="true" status="impl/done">An mcp package's servers run without vibe: the artifact is launched by
-  the agent host directly from the slot path, links its vendored engines,
-  and speaks stdio MCP.</VIBE-FREE-SERVING>
-        <VIBE-ROLE fact="true" status="impl/done">`vibe` is required only to install, build, and
-  register.</VIBE-ROLE>
+        <VIBE-FREE-SERVING fact="true" status="impl/done">A local package server is launched by the agent host directly from
+  its slot and speaks stdio MCP. A remote package server is contacted by
+  the host's HTTP MCP client at the declared URL. Neither uses vibe at
+  runtime.</VIBE-FREE-SERVING>
+        <VIBE-ROLE fact="true" status="impl/done">`vibe` is required to install and register;
+  local binaries additionally require a build.</VIBE-ROLE>
         <VIBE-FREE-ACCEPTANCE fact="true" status="impl/done">The acceptance form of this requirement: the server's live
   chain passes with `vibe` absent from `PATH` and no vibevm process
   running.</VIBE-FREE-ACCEPTANCE>
       </facts>
     </vibe-free>
     <composition title="2.7 Composition: an mcp package is a full package">
-      <p><req-composition fact="true" status="impl/done">`req r1`</req-composition></p>
+      <p><req-composition fact="true" status="impl/done">`req r2`</req-composition></p>
       <p><COMPOSITION-LAW fact="true" status="impl/done">Every package-role feature applies to `mcp` packages exactly as to the
 other kinds; no feature branches on `kind`, so each row inherits its
 feature's own kind-agnostic suite (the mcp-kind e2e adds the
@@ -168,12 +199,12 @@ code-bearing + binaries + exact-pin composition end to end):</COMPOSITION-LAW></
         <tr>
           <td><ROW-CODE-BEARING fact="true" status="impl/done">Code-bearing layout</ROW-CODE-BEARING></td>
           <td><ROW-CODE-BEARING-SPEC fact="true" status="impl/done">PROP-024</ROW-CODE-BEARING-SPEC></td>
-          <td><ROW-CODE-BEARING-COMPOSITION-RULE fact="true" status="impl/done">the package IS code-bearing by definition; `spec/` for prompt content, crates at root</ROW-CODE-BEARING-COMPOSITION-RULE></td>
+          <td><ROW-CODE-BEARING-COMPOSITION-RULE fact="true" status="impl/done">local binary packages are code-bearing; URL-only packages need no code</ROW-CODE-BEARING-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-BINARIES fact="true" status="impl/done">Binaries</ROW-BINARIES></td>
           <td><ROW-BINARIES-SPEC fact="true" status="impl/done">PROP-025</ROW-BINARIES-SPEC></td>
-          <td><ROW-BINARIES-COMPOSITION-RULE fact="true" status="impl/done">`[[mcp_server]].binary` references them; `vibe bin list/build/exec` see them like any other</ROW-BINARIES-COMPOSITION-RULE></td>
+          <td><ROW-BINARIES-COMPOSITION-RULE fact="true" status="impl/done">the stdio variant references `[[binary]]`; a remote URL has no binary to list or build</ROW-BINARIES-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-SKILLS fact="true" status="impl/done">Skills</ROW-SKILLS></td>
@@ -232,8 +263,8 @@ code-bearing + binaries + exact-pin composition end to end):</COMPOSITION-LAW></
   </rejected>
   <open title="4. Open questions">
     <facts ordered="true">
-      <OPEN-MULTI-SERVER fact="true" status="spec/work">Multi-server packages (legal today) — does `vibe mcp install` offer
-   per-server opt-out? v1: all-or-nothing per package.</OPEN-MULTI-SERVER>
+      <OPEN-MULTI-SERVER fact="true" status="impl/done">Multi-server packages support explicit `--server` selection;
+   omitting it registers every server declared by the selected package.</OPEN-MULTI-SERVER>
       <OPEN-APP-KIND fact="true" status="spec/work">The `app` kind (anticipated, VIBEVM-SPEC §4.1) — whether it reuses
    §2.4's managed-entry machinery for desktop-integration surfaces.</OPEN-APP-KIND>
       <OPEN-STABLE-PATHS fact="true" status="spec/work">Stable artifact paths (PROP-025 v2 shims) would make managed entries

@@ -4564,6 +4564,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "toml_edit 0.23.10+spec-1.0.0",
  "tracing",
+ "url",
 ]
 
 [[package]]

@@ -15,6 +15,8 @@ A package reference accepts the qualified `<group>/<name>[@<version>]` form or C
 | Option | Effect |
 | --- | --- |
 | `--path <PATH>` | Select the project directory; default `.`. |
+| `-g`, `--global` | Install one user-scoped application or MCP package. MCP packages use a dedicated project under the Vibe settings root, independent of the current directory. |
+| `--agent <AGENT>` | For `-g mcp:...`, register the server with the selected agent (`claude`, `cursor`, `opencode`, `codex`, `qwen-code`, or `all`; `claude-desktop` supports local stdio servers only). Without it, an interactive terminal asks. Scripts must pass it. |
 | `--assume-yes` | Skip the install confirmation. |
 | `--exact` | Record the resolved version as an exact `=x.y.z` constraint. |
 | `--features <FEATURES>` | Activate repeatable or comma-separated features on every root package. |
@@ -47,13 +49,17 @@ vibe install --offline --path ./my-project
 
 # Install one direct git source.
 vibe install tool:example --git https://example.com/example.git --tag v1.0.0
+
+# Install and register a remote MCP package for this user.
+vibe install -g mcp:ai.lev/fpf-mcp --agent qwen-code
 ```
 
 Fetched content enters the machine store at `~/.vibe/cache/`; project materialisation lives in `vibedeps/`, and the exact graph is recorded in `vibe.lock`.
+
+For a project MCP package, `vibe install mcp:<group>/<name>` only materialises the package. Register it with a client separately using [`vibe mcp install`](mcp-install.md). `-g mcp:<group>/<name>` materialises it in the dedicated user MCP project and registers it with the selected user-scope agent. The `mcp:` prefix and full `<group>/<name>` are required for global routing; a bare coordinate is ambiguous with global applications. A remote URL-only package requires no binary build. The user's MCP client, rather than vibe, contacts its HTTPS endpoint.
 
 ## Related
 
 - [`vibe update`](update.md)
 - [`vibe uninstall`](uninstall.md)
 - [`vibe cache`](cache.md)
-

@@ -27,7 +27,7 @@ use crate::bins::{BinsError, collect_binaries, collect_mcp_servers};
 pub enum ToolChannel {
     /// A PATH-facing executable (`[[binary]]`), run by a human or a script.
     Binary,
-    /// An MCP server (`[[mcp_server]]`), spoken to by an agent over stdio.
+    /// An MCP server (`[[mcp_server]]`), reached over stdio or HTTP.
     Mcp,
 }
 
@@ -86,7 +86,7 @@ pub fn collect_tools(project_root: &Path) -> Result<Vec<Tool>, BinsError> {
         out.push(Tool {
             name: s.decl.name.clone(),
             channel: ToolChannel::Mcp,
-            package: s.binary.package.clone(),
+            package: s.package.clone(),
             version: Some(s.version.clone()),
             description: s.decl.description.clone(),
         });

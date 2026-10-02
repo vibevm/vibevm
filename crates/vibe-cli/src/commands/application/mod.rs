@@ -565,6 +565,7 @@ fn validate_install_args(args: &InstallArgs) -> Result<()> {
     }
     qualified_ref(&args.packages[0])?;
     if (!args.local_source && args.path != Path::new("."))
+        || args.agent.is_some()
         || args.language.is_some()
         || !args.features.is_empty()
         || args.no_default_features

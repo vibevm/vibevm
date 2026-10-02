@@ -21,6 +21,7 @@ semver.workspace = true
 indexmap.workspace = true
 sha2.workspace = true
 tracing.workspace = true
+url.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

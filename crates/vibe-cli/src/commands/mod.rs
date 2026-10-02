@@ -44,6 +44,7 @@ pub mod extensions_analyze;
 pub mod facts;
 pub(crate) mod facts_check;
 pub mod friends;
+pub(crate) mod global_mcp_dispatch;
 pub mod init;
 pub mod install;
 pub mod lifecycle;

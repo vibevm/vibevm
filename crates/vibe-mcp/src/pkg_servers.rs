@@ -1,9 +1,8 @@
 //! Package-declared MCP servers (PROP-027 §2.4–§2.5): the pure halves
 //! of registration — launch-entry payloads per agent, the closed-set
-//! `{project_root}` substitution, and the vibevm-managed sidecar that
-//! lets re-installs rewrite ONLY our entries while operator-owned
-//! servers stay untouched (the `<vibevm>` block convention of the boot
-//! files, applied to agent configs). Discovery lives in
+//! `{project_root}` substitution, and the legacy JSON sidecar retained
+//! for compatibility. Current ownership is tracked by an adjacent
+//! receipt and exact payload comparison. Discovery lives in
 //! `vibe_workspace::bins::collect_mcp_servers` (lockfile/slot
 //! knowledge); consent rides the SAME gate as building the binary
 //! (`consent_to_build` — one trust model, two verbs); the CLI composes
@@ -18,8 +17,8 @@ use serde_json::{Map, Value as JsonValue};
 use crate::agents::{Agent, ConfigPayload};
 
 /// The top-level sidecar key in a JSON agent config. Its `managed`
-/// array names the server entries vibevm owns; everything else in the
-/// file is the operator's.
+/// array marks entries written by earlier versions and remains as a
+/// compatibility marker; adjacent receipts determine current ownership.
 pub const MANAGED_KEY: &str = "vibevm";
 
 /// Strip Windows' `\\?\` verbatim prefix — agent hosts and the
@@ -81,7 +80,7 @@ pub fn substituted_args(decl_args: &[String], project_root: &Path) -> Vec<String
 /// ```
 pub fn entry_payload(agent: Agent, command: &str, args: &[String]) -> ConfigPayload {
     match agent {
-        Agent::ClaudeCode | Agent::ClaudeCodeDesktop | Agent::Cursor => {
+        Agent::ClaudeCode | Agent::ClaudeCodeDesktop | Agent::Cursor | Agent::QwenCode => {
             ConfigPayload::Json(serde_json::json!({
                 "command": command,
                 "args": args,
@@ -110,6 +109,43 @@ pub fn entry_payload(agent: Agent, command: &str, args: &[String]) -> ConfigPayl
             ConfigPayload::Toml(toml::Value::Table(tbl))
         }
     }
+}
+
+/// Render one package-declared Streamable HTTP endpoint in the native MCP
+/// configuration shape of the selected agent. The URL is package metadata;
+/// authentication remains owned by the client and its user.
+///
+/// ```
+/// use vibe_mcp::agents::{Agent, ConfigPayload};
+/// use vibe_mcp::pkg_servers::remote_entry_payload;
+/// let ConfigPayload::Toml(entry) =
+///     remote_entry_payload(Agent::Codex, "https://example.org/mcp").unwrap()
+/// else { panic!("Codex uses TOML") };
+/// assert_eq!(entry["url"].as_str(), Some("https://example.org/mcp"));
+/// assert!(remote_entry_payload(Agent::ClaudeCodeDesktop, "https://example.org/mcp").is_err());
+/// ```
+pub fn remote_entry_payload(agent: Agent, url: &str) -> anyhow::Result<ConfigPayload> {
+    Ok(match agent {
+        Agent::ClaudeCode => ConfigPayload::Json(serde_json::json!({
+            "type": "http",
+            "url": url,
+        })),
+        Agent::ClaudeCodeDesktop => anyhow::bail!(
+            "Claude Desktop cannot connect directly to a remote HTTP MCP URL through claude_desktop_config.json; select another agent or configure its remote connector in Claude Desktop (violates REQ spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#registration; fix surface: --agent or Claude Desktop remote connectors)"
+        ),
+        Agent::Cursor => ConfigPayload::Json(serde_json::json!({ "url": url })),
+        Agent::QwenCode => ConfigPayload::Json(serde_json::json!({ "httpUrl": url })),
+        Agent::OpenCode => ConfigPayload::Json(serde_json::json!({
+            "type": "remote",
+            "url": url,
+            "enabled": true,
+        })),
+        Agent::Codex => {
+            let mut table = toml::value::Table::new();
+            table.insert("url".into(), toml::Value::String(url.to_owned()));
+            ConfigPayload::Toml(toml::Value::Table(table))
+        }
+    })
 }
 
 /// The names the sidecar records as vibevm-managed in a JSON config
@@ -156,16 +192,18 @@ pub fn mark_managed(doc: &mut JsonValue, name: &str) -> anyhow::Result<()> {
     let sidecar_obj = sidecar
         .as_object_mut()
         .ok_or_else(|| anyhow::anyhow!("`{MANAGED_KEY}` is not a JSON object"))?;
-    let mut names = sidecar_obj
-        .get("managed")
-        .and_then(JsonValue::as_array)
-        .map(|a| {
+    let mut names = match sidecar_obj.get("managed") {
+        Some(value) => {
+            let a = value
+                .as_array()
+                .ok_or_else(|| anyhow::anyhow!("`{MANAGED_KEY}.managed` is not an array"))?;
             a.iter()
                 .filter_map(JsonValue::as_str)
                 .map(str::to_string)
                 .collect::<Vec<_>>()
-        })
-        .unwrap_or_default();
+        }
+        None => Vec::new(),
+    };
     if !names.iter().any(|n| n == name) {
         names.push(name.to_string());
         names.sort();
@@ -177,8 +215,8 @@ pub fn mark_managed(doc: &mut JsonValue, name: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Drop `name` from the managed sidecar; an emptied sidecar is removed
-/// whole, so an uninstalled config carries no vibevm residue.
+/// Drop `name` from the managed sidecar. Remove the top-level object only
+/// when it has no other members; operator-owned siblings survive.
 ///
 /// ```
 /// let mut doc = serde_json::json!({
@@ -197,23 +235,24 @@ pub fn unmark_managed(doc: &mut JsonValue, name: &str) {
         let Some(sidecar) = obj.get_mut(MANAGED_KEY).and_then(JsonValue::as_object_mut) else {
             return;
         };
-        let names: Vec<String> = sidecar
-            .get("managed")
-            .and_then(JsonValue::as_array)
-            .map(|a| {
-                a.iter()
-                    .filter_map(JsonValue::as_str)
-                    .filter(|n| *n != name)
-                    .map(str::to_string)
-                    .collect()
-            })
-            .unwrap_or_default();
-        let empty = names.is_empty();
-        sidecar.insert(
-            "managed".to_string(),
-            JsonValue::Array(names.into_iter().map(JsonValue::String).collect()),
-        );
-        empty
+        let Some(managed) = sidecar.get("managed").and_then(JsonValue::as_array) else {
+            return;
+        };
+        let names: Vec<String> = managed
+            .iter()
+            .filter_map(JsonValue::as_str)
+            .filter(|n| *n != name)
+            .map(str::to_string)
+            .collect();
+        if names.is_empty() {
+            sidecar.remove("managed");
+        } else {
+            sidecar.insert(
+                "managed".to_string(),
+                JsonValue::Array(names.into_iter().map(JsonValue::String).collect()),
+            );
+        }
+        sidecar.is_empty()
     };
     if emptied {
         obj.remove(MANAGED_KEY);
@@ -223,6 +262,37 @@ pub fn unmark_managed(doc: &mut JsonValue, name: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn remote_endpoint_uses_each_clients_http_field() {
+        let url = "https://mcp.fpf.tools/mcp";
+        let ConfigPayload::Json(value) = remote_entry_payload(Agent::ClaudeCode, url).unwrap()
+        else {
+            panic!("Claude uses JSON");
+        };
+        assert_eq!(value["type"], "http");
+        assert_eq!(value["url"], url);
+        assert!(remote_entry_payload(Agent::ClaudeCodeDesktop, url).is_err());
+        let ConfigPayload::Json(cursor) = remote_entry_payload(Agent::Cursor, url).unwrap() else {
+            panic!("Cursor uses JSON");
+        };
+        assert_eq!(cursor["url"], url);
+        let ConfigPayload::Json(qwen) = remote_entry_payload(Agent::QwenCode, url).unwrap() else {
+            panic!("Qwen uses JSON");
+        };
+        assert_eq!(qwen["httpUrl"], url);
+        assert!(qwen.get("url").is_none(), "url means SSE in Qwen Code");
+        let ConfigPayload::Json(opencode) = remote_entry_payload(Agent::OpenCode, url).unwrap()
+        else {
+            panic!("OpenCode uses JSON");
+        };
+        assert_eq!(opencode["type"], "remote");
+        assert_eq!(opencode["url"], url);
+        let ConfigPayload::Toml(codex) = remote_entry_payload(Agent::Codex, url).unwrap() else {
+            panic!("Codex uses TOML");
+        };
+        assert_eq!(codex.get("url").and_then(toml::Value::as_str), Some(url));
+    }
 
     #[test]
     fn opencode_entry_carries_the_local_argv_shape() {
@@ -255,6 +325,19 @@ mod tests {
     }
 
     #[test]
+    fn qwen_code_package_entry_uses_standard_stdio_shape() {
+        let ConfigPayload::Json(v) = entry_payload(
+            Agent::QwenCode,
+            "/slot/target/release/x",
+            &["--path".to_string(), "/proj".to_string()],
+        ) else {
+            panic!("Qwen Code uses JSON");
+        };
+        assert_eq!(v["command"], "/slot/target/release/x");
+        assert_eq!(v["args"], serde_json::json!(["--path", "/proj"]));
+    }
+
+    #[test]
     fn substitution_only_touches_the_closed_set() {
         let args = substituted_args(
             &[
@@ -265,5 +348,19 @@ mod tests {
         );
         assert_eq!(args[0], "/p/x");
         assert_eq!(args[1], "literal-{brace}");
+    }
+
+    #[test]
+    fn legacy_sidecar_keeps_unrelated_vibevm_members() {
+        let mut doc = serde_json::json!({
+            "vibevm": { "managed": ["fpf"], "operatorNote": "keep me" },
+        });
+        unmark_managed(&mut doc, "fpf");
+        assert_eq!(doc["vibevm"]["operatorNote"], "keep me");
+        assert!(doc["vibevm"].get("managed").is_none());
+        let mut malformed = serde_json::json!({"vibevm": {"managed": "operator value"}});
+        assert!(mark_managed(&mut malformed, "fpf").is_err());
+        unmark_managed(&mut malformed, "fpf");
+        assert_eq!(malformed["vibevm"]["managed"], "operator value");
     }
 }

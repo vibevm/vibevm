@@ -303,16 +303,19 @@ pub fn find_binary<'a>(
         })
 }
 
-/// One `[[mcp_server]]` reachable from the project's lockfile slots
-/// (PROP-027 §2.4): the declaration plus the resolved `[[binary]]` that
-/// serves it — the artifact path, consent group, and slot all come from
-/// the binary half.
+/// One `[[mcp_server]]` reachable from the project's lockfile slots.
+/// A local stdio server carries its resolved binary; a remote HTTP server
+/// carries only the package identity and endpoint declaration.
 #[derive(Debug, Clone)]
 pub struct DeclaredMcpServer {
     /// The `[[mcp_server]]` table as declared in the slot manifest.
     pub decl: vibe_core::manifest::McpServerDecl,
-    /// The `[[binary]]` the declaration references, fully resolved.
-    pub binary: DeclaredBinary,
+    /// The `[[binary]]` a local declaration references, fully resolved.
+    pub binary: Option<DeclaredBinary>,
+    /// The declaring package's qualified coordinate.
+    pub package: String,
+    /// The declaring package's group, used by the consent gate.
+    pub group: String,
     /// The declaring package's version (registration reports carry it).
     pub version: String,
 }
@@ -348,18 +351,27 @@ pub fn collect_mcp_servers(project_root: &Path) -> Result<Vec<DeclaredMcpServer>
             continue;
         };
         for decl in &manifest.mcp_servers {
-            let Some(bin_decl) = manifest.binaries.iter().find(|b| b.name == decl.binary) else {
+            let binary = decl.binary.as_deref().and_then(|name| {
+                manifest
+                    .binaries
+                    .iter()
+                    .find(|b| b.name == name)
+                    .map(|bin_decl| DeclaredBinary {
+                        decl: bin_decl.clone(),
+                        package: format!("{}/{}", pkg.group, pkg.name),
+                        group: pkg.group.to_string(),
+                        vibedeps_root: vibedeps_root.clone(),
+                        slot: slot.clone(),
+                    })
+            });
+            if decl.binary.is_some() && binary.is_none() {
                 continue;
-            };
+            }
             out.push(DeclaredMcpServer {
                 decl: decl.clone(),
-                binary: DeclaredBinary {
-                    decl: bin_decl.clone(),
-                    package: format!("{}/{}", pkg.group, pkg.name),
-                    group: pkg.group.to_string(),
-                    vibedeps_root: vibedeps_root.clone(),
-                    slot: slot.clone(),
-                },
+                binary,
+                package: format!("{}/{}", pkg.group, pkg.name),
+                group: pkg.group.to_string(),
                 version: pkg.version.to_string(),
             });
         }
