@@ -63,9 +63,6 @@ fn capacity_available(count: usize, retained: usize, added: usize) -> bool {
 }
 fn supported(options: &RequestedOptions) -> Result<(), FixedDecisionError> {
     let mut unsupported = Vec::new();
-    if options.trace {
-        unsupported.push("trace");
-    }
     if options.deploy_profile.is_some() {
         unsupported.push("deploy_profile");
     }
@@ -391,7 +388,7 @@ impl FixedLifecycleDecisionHost {
             return Err(FixedDecisionError::Capacity);
         }
         let generation = state.generation(&self.issuer);
-        let (body, plan_id) = if options.control == RequestedOptionsControl::None {
+        let (body, plan_id) = if options.trace || options.control == RequestedOptionsControl::None {
             (
                 Body::SelectionQuestion(Box::new(BodySelectionQuestion {
                     prompt: "Select a supported lifecycle control policy.".into(),

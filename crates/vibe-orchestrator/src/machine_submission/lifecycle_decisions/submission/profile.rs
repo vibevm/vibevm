@@ -69,6 +69,9 @@ impl AdmittedProfile {
     pub(in crate::machine_submission) fn force(&self) -> bool {
         self.evidence.options.force
     }
+    pub(in crate::machine_submission) fn trace(&self) -> bool {
+        self.evidence.options.trace
+    }
     /// The v4 capture stays a comparison component; the admitted wrapper owns
     /// effective intent. Only this sealed profile may separate the two.
     pub(in crate::machine_submission) fn source_capture_request(
@@ -76,11 +79,12 @@ impl AdmittedProfile {
         request: &DefaultLifecycleRequest,
     ) -> anyhow::Result<DefaultLifecycleRequest> {
         anyhow::ensure!(
-            request.force == self.force(),
-            "approved force intent changed"
+            request.force == self.force() && request.trace_flag == self.trace(),
+            "approved force/trace intent changed"
         );
         let mut base = request.clone();
         base.force = false;
+        base.trace_flag = false;
         Ok(base)
     }
     fn check_record(

@@ -1,7 +1,7 @@
 //! Internal, narrowly protected lifecycle submission through the incumbent runner.
 //!
 //! Only Validate and a one-node empty-world Install are admitted. General
-//! package install, providers, members, trace and prior-current-state cases
+//! package install, providers, members and general trace cases
 //! remain unavailable.
 
 use std::path::Path;
@@ -843,10 +843,9 @@ fn submit_protected_lifecycle_inner<'a>(
     );
     match script.as_ref().and_then(|s| s.profile) {
         Some(profile) => {
-            ensure!(!request.trace_flag, "protected slice refuses trace");
             ensure!(
-                request.force == profile.force(),
-                "approved force intent changed"
+                request.force == profile.force() && request.trace_flag == profile.trace(),
+                "approved force/trace intent changed"
             );
         }
         None => ensure!(
@@ -1029,7 +1028,7 @@ fn submit_protected_lifecycle_inner<'a>(
         &selected,
         request.agent_mode.clone(),
         request.force,
-        false,
+        request.trace_flag,
         vibe_core::timestamp::now_utc(),
     )?;
     ensure!(
@@ -1057,7 +1056,7 @@ fn submit_protected_lifecycle_inner<'a>(
         requested: phase,
         agent_mode: &request.agent_mode,
         trace_flag: false,
-        effective_trace: identity.compile_trace,
+        effective_trace: false,
         force: false,
         assume_yes: request.assume_yes,
         policy: &request.policy,
@@ -1100,6 +1099,7 @@ fn submit_protected_lifecycle_inner<'a>(
         request,
         target_os,
         observed_at,
+        post_effect_error: None,
         namespace,
         scope,
         key,
@@ -1281,7 +1281,7 @@ fn check_admitted_capsule(
     run_id: &str,
     request_sha256: &str,
     plan_sha256: &str,
-) -> Result<()> {
+) -> Result<serde_json::Value> {
     let home = lease
         .publication_journal_project()
         .subproject(&[".vibe", "lifecycle-outcomes"])?;
@@ -1307,7 +1307,7 @@ fn check_admitted_capsule(
             "input capsule {field} digest differs from C1"
         );
     }
-    Ok(())
+    Ok(value)
 }
 
 fn request_bytes(phase: Phase, target_os: TargetOs) -> &'static [u8] {
@@ -1330,6 +1330,7 @@ struct ProtectedJournal<'a> {
     request: DefaultLifecycleRequest,
     target_os: TargetOs,
     observed_at: Timestamp,
+    post_effect_error: Option<String>,
     namespace: &'a SubmissionNamespace,
     scope: &'a SubmissionScope,
     key: &'a str,
@@ -1354,11 +1355,48 @@ impl ProtectedJournal<'_> {
         Ok(())
     }
 
+    // Keep the incumbent control seam: recover its expected bit from the
+    // C1-validated admitted capsule rather than trusting the current header.
     fn header(
         lease: &LifecycleLease,
         run_id: &str,
         expected_started: Option<&str>,
         phase: Phase,
+    ) -> Result<()> {
+        let mut trace = false;
+        if lease.root().join(".vibe/lifecycle-outcomes").try_exists()?
+            && let Some(row) = SubmissionReservations::inspect_existing_run(lease, run_id)?
+        {
+            let home = lease
+                .publication_journal_project()
+                .subproject(&[".vibe", "lifecycle-outcomes"])?;
+            if home
+                .read_file_bounded(
+                    &format!("{run_id}.admitted-input.json"),
+                    2 * 1024 * 1024 + 4096,
+                )?
+                .is_some()
+            {
+                let capsule =
+                    check_admitted_capsule(lease, run_id, &row.request_sha256, &row.plan_sha256)?;
+                trace = capsule["request"]["requested_options"]["trace"]
+                    .as_bool()
+                    .context("admitted trace bit missing")?;
+                ensure!(
+                    capsule["plan"]["requested_options"]["trace"].as_bool() == Some(trace),
+                    "admitted trace intent differs"
+                );
+            }
+        }
+        Self::header_with_trace(lease, run_id, expected_started, phase, trace)
+    }
+
+    fn header_with_trace(
+        lease: &LifecycleLease,
+        run_id: &str,
+        expected_started: Option<&str>,
+        phase: Phase,
+        trace: bool,
     ) -> Result<()> {
         let state = LifecycleStateStore::peek_with_lease(lease)?
             .context("reserved lifecycle header is absent")?;
@@ -1371,7 +1409,7 @@ impl ProtectedJournal<'_> {
                 && state.run.requested == phase.as_str()
                 && state.run.chain == chain
                 && state.run.selected.as_deref() == Some(".")
-                && !state.run.compile_trace
+                && state.run.compile_trace == trace
                 && expected_started.is_none_or(|started| state.run.started == started),
             "reserved lifecycle header differs from protected identity"
         );
@@ -1417,6 +1455,9 @@ impl SubmissionJournal for ProtectedJournal<'_> {
         lease: &LifecycleLease,
         run_id: &str,
     ) -> Result<JournalState<Self::Outcome>, String> {
+        if let Some(reason) = &self.post_effect_error {
+            return Ok(JournalState::Uncertain(reason.clone()));
+        }
         if self.script.as_ref().is_some_and(|s| s.profile.is_some()) {
             let row = SubmissionReservations::inspect_existing_key(
                 lease,
@@ -1454,8 +1495,14 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                     // prepare only the stored ID and never invokes it again.
                     let started =
                         (run_id == self.identity.run_id).then_some(self.identity.started.as_str());
-                    Self::header(lease, run_id, started, self.phase)
-                        .map_err(|error| error.to_string())?;
+                    Self::header_with_trace(
+                        lease,
+                        run_id,
+                        started,
+                        self.phase,
+                        self.request.trace_flag,
+                    )
+                    .map_err(|error| error.to_string())?;
                     Ok(JournalState::Prepared)
                 }
                 Ok(LifecycleRunJournalObservation::Uncertain { .. }) => Ok(
@@ -1544,14 +1591,20 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 self.identity.started.clone(),
                 run_id.to_owned(),
                 ".".into(),
-                false,
+                self.identity.compile_trace,
             )?;
             ensure!(
                 store.state().run.slot_continuation.is_none() && store.delegated_rows().is_empty(),
                 "new protected header inherited parked work"
             );
             drop(store);
-            Self::header(&lease, run_id, Some(&self.identity.started), self.phase)
+            Self::header_with_trace(
+                &lease,
+                run_id,
+                Some(&self.identity.started),
+                self.phase,
+                self.identity.compile_trace,
+            )
         })();
         result.map_err(|error| format!("{error:#}"))
     }
@@ -1578,7 +1631,13 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             );
             let reservation_ref = self.reservation_ref(&lease, run_id)?;
             self.recheck()?;
-            Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+            Self::header_with_trace(
+                &lease,
+                run_id,
+                Some(&self.identity.started),
+                self.phase,
+                self.identity.compile_trace,
+            )?;
             if self.phase == Phase::Install {
                 let root = self.selected_root();
                 // This root-only slice has one witness for both the selected
@@ -1617,7 +1676,13 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                     // Notification cannot admit source or identity drift.
                     self.recheck()?;
                     recheck_script_source_witness(&script.admitted.source)?;
-                    Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+                    Self::header_with_trace(
+                        &lease,
+                        run_id,
+                        Some(&self.identity.started),
+                        self.phase,
+                        self.identity.compile_trace,
+                    )?;
                     if let Some(stopped) = ready.close_gate(&lease)? {
                         return Ok(stopped);
                     }
@@ -1640,7 +1705,13 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 if let Some(after_stage) = script.after_stage {
                     after_stage();
                 }
-                Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+                Self::header_with_trace(
+                    &lease,
+                    run_id,
+                    Some(&self.identity.started),
+                    self.phase,
+                    self.identity.compile_trace,
+                )?;
                 Some(stage)
             } else {
                 None
@@ -1655,7 +1726,13 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 if let Some(before_run) = agent.before_run {
                     before_run();
                 }
-                Self::header(&lease, run_id, Some(&self.identity.started), self.phase)?;
+                Self::header_with_trace(
+                    &lease,
+                    run_id,
+                    Some(&self.identity.started),
+                    self.phase,
+                    self.identity.compile_trace,
+                )?;
                 ensure!(
                     matches!(
                         SubmissionReservations::reserve(
@@ -1677,6 +1754,12 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                     "agent fixture journal is not ready before task publication"
                 );
                 recheck_prompt_source_witness(&agent.admitted.source)?;
+            }
+            if self.request.trace_flag {
+                self.recheck()?;
+                if let Some(script) = &self.script {
+                    recheck_script_source_witness(&script.admitted.source)?;
+                }
             }
             let leased = self.leased.take().context("leased stage consumed twice")?;
             let selection = self.selection.take().context("selection consumed twice")?;
@@ -1712,9 +1795,14 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             if let Some(agent) = &self.agent {
                 ports.agent = agent.backend.clone();
             }
+            // No fallible operation may escape with an open owner. Hooks and
+            // deferred-gate errors become failed exits carrying measured rows.
+            let clock = || Timestamp::from(std::time::SystemTime::now());
+            let preparation = prepared.prepare_trace(&clock);
             let outcome = if let (Some(script), Some(stage)) = (&self.script, &script_stage) {
                 prepared.run_protected_script(
                     ports,
+                    preparation.recorder(),
                     self.target_os,
                     self.observed_at,
                     ProtectedScriptExecution {
@@ -1724,25 +1812,103 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                     },
                 )
             } else {
-                prepared.run(ports, None, self.target_os, self.observed_at, None)
+                prepared.run(
+                    ports,
+                    preparation.recorder(),
+                    self.target_os,
+                    self.observed_at,
+                    None,
+                )
             };
-            if let Some(after_effect) = self.script.as_ref().and_then(|script| script.after_effect)
-            {
-                after_effect()?;
-            }
-            if let Some(after_effect) = self.agent.as_ref().and_then(|agent| agent.after_effect) {
-                after_effect()?;
-            }
-            let deferred = self
-                .script
-                .as_ref()
-                .and_then(|script| script.ready)
-                .map(|ready| ready.close_deferred_gate())
-                .transpose()?
-                .flatten();
-            match outcome {
+            let tail = (|| -> Result<Option<String>> {
+                if let Some(after_effect) =
+                    self.script.as_ref().and_then(|script| script.after_effect)
+                {
+                    after_effect()?;
+                }
+                if let Some(after_effect) = self.agent.as_ref().and_then(|agent| agent.after_effect)
+                {
+                    after_effect()?;
+                }
+                self.script
+                    .as_ref()
+                    .and_then(|script| script.ready)
+                    .map(|ready| ready.close_deferred_gate())
+                    .transpose()
+                    .map(Option::flatten)
+            })();
+            use crate::trace::CommandExit;
+            let (marker_outcome, exit) = match outcome {
                 PhaseOutcome::Completed(values) => {
-                    let report_bytes = serde_json::to_vec(&values.into_report(None))?;
+                    (MarkerOutcome::Completed, CommandExit::Success(Some(values)))
+                }
+                PhaseOutcome::Parked(values) => {
+                    (MarkerOutcome::Parked, CommandExit::Parked(Some(values)))
+                }
+                PhaseOutcome::Failed {
+                    measurement,
+                    original,
+                    emit_machine_failure,
+                } => {
+                    let values = match measurement {
+                        Measurement::Lifecycle {
+                            rows,
+                            stopped_phase,
+                            requested,
+                            chain,
+                            verification,
+                        } => Some(LifecycleValues::failed_with_verification(
+                            &requested,
+                            chain,
+                            &stopped_phase,
+                            rows,
+                            verification.map(|item| *item),
+                        )),
+                        _ => None,
+                    };
+                    (
+                        MarkerOutcome::Failed,
+                        CommandExit::Failed {
+                            report: values,
+                            original_error: original,
+                            emit_when_trace_disabled: emit_machine_failure,
+                        },
+                    )
+                }
+            };
+            let (deferred, post_error, exit) = match tail {
+                Ok(deferred) => (deferred, false, exit),
+                Err(original_error) => {
+                    let report = match exit {
+                        CommandExit::Success(report)
+                        | CommandExit::Parked(report)
+                        | CommandExit::Failed { report, .. } => report,
+                    };
+                    (
+                        None,
+                        true,
+                        CommandExit::Failed {
+                            report,
+                            original_error,
+                            emit_when_trace_disabled: true,
+                        },
+                    )
+                }
+            };
+            let finalized = crate::trace::finalize(preparation, exit, &clock);
+            // Preserve the incumbent untraced post-effect Err behavior.
+            if post_error && !finalized.trace_requested {
+                return Err(finalized
+                    .original_error
+                    .context("post-effect error absent")?);
+            }
+            let retained_result = (|| -> Result<RetainedLifecycleResult> {
+                let Some(mut values) = finalized.report else {
+                    return self.retain_uncertain(&lease, run_id, &reservation_ref);
+                };
+                values.notices.extend(finalized.notices);
+                let report_bytes = serde_json::to_vec(&values.into_report(finalized.trace))?;
+                if !post_error && marker_outcome == MarkerOutcome::Completed {
                     if let Some(id) = deferred.as_deref() {
                         return self
                             .script
@@ -1751,84 +1917,38 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                             .context("deferred owner missing")?
                             .retain_deferred_stop(&lease, id, &report_bytes);
                     }
-                    match create_lifecycle_outcome_marker(
+                }
+                match create_lifecycle_outcome_marker(
+                    run_id,
+                    &reservation_ref,
+                    if post_error {
+                        MarkerOutcome::Uncertain
+                    } else {
+                        marker_outcome
+                    },
+                    EffectState::Uncertain,
+                    LifecycleReportPayload::Available(&report_bytes),
+                ) {
+                    Ok(marker) => retained(
+                        &lease,
                         run_id,
                         &reservation_ref,
-                        MarkerOutcome::Completed,
-                        EffectState::Uncertain,
-                        LifecycleReportPayload::Available(&report_bytes),
-                    ) {
-                        Ok(marker) => retained(
-                            &lease,
-                            run_id,
-                            &reservation_ref,
-                            &marker,
-                            Some(&report_bytes),
-                        ),
-                        Err(_) => self.retain_uncertain(&lease, run_id, &reservation_ref),
-                    }
+                        &marker,
+                        Some(&report_bytes),
+                    ),
+                    Err(_) => self.retain_uncertain(&lease, run_id, &reservation_ref),
                 }
-                PhaseOutcome::Parked(values) => {
-                    let report_bytes = serde_json::to_vec(&values.into_report(None))?;
-                    match create_lifecycle_outcome_marker(
-                        run_id,
-                        &reservation_ref,
-                        MarkerOutcome::Parked,
-                        EffectState::Uncertain,
-                        LifecycleReportPayload::Available(&report_bytes),
-                    ) {
-                        Ok(marker) => retained(
-                            &lease,
-                            run_id,
-                            &reservation_ref,
-                            &marker,
-                            Some(&report_bytes),
-                        ),
-                        Err(_) => self.retain_uncertain(&lease, run_id, &reservation_ref),
-                    }
-                }
-                PhaseOutcome::Failed {
-                    measurement:
-                        Measurement::Lifecycle {
-                            rows,
-                            stopped_phase,
-                            requested,
-                            chain,
-                            verification,
-                        },
-                    ..
-                } => {
-                    let report_bytes = serde_json::to_vec(
-                        &LifecycleValues::failed_with_verification(
-                            &requested,
-                            chain,
-                            &stopped_phase,
-                            rows,
-                            verification.map(|item| *item),
-                        )
-                        .into_report(None),
-                    )?;
-                    match create_lifecycle_outcome_marker(
-                        run_id,
-                        &reservation_ref,
-                        MarkerOutcome::Failed,
-                        EffectState::Uncertain,
-                        LifecycleReportPayload::Available(&report_bytes),
-                    ) {
-                        Ok(marker) => retained(
-                            &lease,
-                            run_id,
-                            &reservation_ref,
-                            &marker,
-                            Some(&report_bytes),
-                        ),
-                        Err(_) => self.retain_uncertain(&lease, run_id, &reservation_ref),
-                    }
-                }
-                PhaseOutcome::Failed { .. } => {
-                    self.retain_uncertain(&lease, run_id, &reservation_ref)
-                }
+            })();
+            if post_error {
+                // Retention is secondary evidence; even its refusal cannot
+                // replace the original domain error after possible effects.
+                let error = finalized
+                    .original_error
+                    .context("post-effect error absent")?;
+                self.post_effect_error = Some(format!("{error:#}"));
+                return Err(error);
             }
+            retained_result
         })();
         result.map_err(|error| format!("{error:#}"))
     }

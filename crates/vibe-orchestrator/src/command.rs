@@ -518,11 +518,12 @@ impl PreparedDefaultLifecycle {
     pub(crate) fn run_protected_script(
         self,
         ports: DefaultLifecyclePorts<'_>,
+        trace: Option<&TraceRun>,
         target_os: TargetOs,
         observed_at: Timestamp,
         protected: crate::dispatch::ProtectedScriptExecution<'_>,
     ) -> PhaseOutcome {
-        self.run_with_protected(ports, None, target_os, observed_at, None, Some(protected))
+        self.run_with_protected(ports, trace, target_os, observed_at, None, Some(protected))
     }
 
     fn run_with_protected(

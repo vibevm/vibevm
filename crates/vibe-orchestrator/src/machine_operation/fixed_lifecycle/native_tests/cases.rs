@@ -72,6 +72,104 @@ fn explicit_force_route_typed_approval_retry_and_changed_force_refusal() {
 }
 
 #[test]
+fn explicit_trace_force_route_typed_approval_retry_and_changed_trace_refusal() {
+    let f = Fixture::new();
+    let root = f.dir.path();
+    let route = FixedLifecycleRoute::new(f.host(true));
+    let mut ordinary_action = prepare(RequestedOptionsControl::None);
+    let Action::Prepare(p) = &mut ordinary_action else {
+        unreachable!()
+    };
+    p.requested_options.force = true;
+    let mut q = question(call(&route, root, ordinary_action).unwrap());
+    q.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    q = question(call(&route, root, answer(&q)).unwrap());
+    q.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let Reply::Validated(approved) = call(&route, root, answer(&q)).unwrap().reply else {
+        panic!("ordinary force approval")
+    };
+    let ordinary = approved.accepted_ref;
+    let mut action = prepare(RequestedOptionsControl::None);
+    let Action::Prepare(p) = &mut action else {
+        unreachable!()
+    };
+    p.requested_options.force = true;
+    p.requested_options.trace = true;
+    let mut q = question(call(&route, root, action).unwrap());
+    assert!(q.requested_options.force && q.requested_options.trace);
+    q.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    q = question(call(&route, root, answer(&q)).unwrap());
+    let mut wrong = q.clone();
+    wrong.requested_options.trace = false;
+    wrong.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    assert_eq!(
+        call(&route, root, answer(&wrong)).unwrap_err().error.code,
+        Code::DecisionRefused
+    );
+    q.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let Reply::Validated(approved) = call(&route, root, answer(&q)).unwrap().reply else {
+        panic!("exact approved force and trace")
+    };
+    let reference = approved.accepted_ref;
+    call(&route, root, submit(&reference, "once")).unwrap();
+    until(|| root.join("entered").exists());
+    f.count();
+    let run = row(call(&route, root, inspect("once")).unwrap())
+        .run_id
+        .unwrap();
+    call(&route, root, submit(&reference, "once")).unwrap();
+    let refusal = call(&route, root, submit(&ordinary, "once")).unwrap_err();
+    assert_eq!(refusal.error.code, Code::SubmissionRefused);
+    assert!(refusal.error.message.contains("AnswerConflict"));
+    assert_eq!(refusal.error.known_run_id.as_deref(), Some(run.as_str()));
+    f.release();
+    until(|| {
+        matches!(
+            row(call(&route, root, inspect("once")).unwrap()).status,
+            v::Status::ResultAvailable(_)
+        )
+    });
+    let terminal = row(call(&route, root, inspect("once")).unwrap());
+    // A lost submit reply can be retried through the same registered action shape.
+    assert_eq!(
+        row(call(&route, root, submit(&reference, "once")).unwrap()),
+        terminal
+    );
+    let capsule: serde_json::Value = serde_json::from_slice(
+        &fs::read(
+            root.join(".vibe/lifecycle-outcomes")
+                .join(format!("{run}.admitted-input.json")),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(capsule["request"]["requested_options"]["force"], true);
+    assert_eq!(capsule["plan"]["requested_options"]["force"], true);
+    assert_eq!(capsule["plan"]["base_v4"]["force"], false);
+    assert_eq!(capsule["request"]["requested_options"]["trace"], true);
+    assert_eq!(capsule["plan"]["requested_options"]["trace"], true);
+    assert_eq!(capsule["plan"]["base_v4"]["trace_flag"], false);
+    assert_eq!(capsule["plan"]["base_v4"]["effective_trace"], false);
+    let report: serde_json::Value = serde_json::from_slice(
+        &fs::read(
+            root.join(".vibe/lifecycle-outcomes")
+                .join(format!("{run}.report.json")),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(report["trace"]["status"], "ok");
+    assert_eq!(report["trace"]["run_id"], run);
+    assert_eq!(report["trace"]["snapshots"], "0");
+    assert_eq!(report["trace"]["finalised"], true);
+    f.count();
+}
+
+#[test]
 fn direct_typed_decisions_same_key_owner_run_and_before_effect_refusals() {
     let f = Fixture::new();
     let host = f.host(true);
@@ -192,7 +290,6 @@ fn old_mcp_characterization_and_raw_no_grant_options_bounds() {
     );
     for (phase, force, trace, profile) in [
         ("build", false, false, None),
-        ("validate", false, true, None),
         ("validate", false, false, Some("posix".into())),
     ] {
         let mut req = request(prepare(RequestedOptionsControl::None));
@@ -207,7 +304,7 @@ fn old_mcp_characterization_and_raw_no_grant_options_bounds() {
         assert_eq!(error.error.code, Code::ImplementationGap);
         assert_eq!(
             error.error.message,
-            "fixed owner implements Validate without trace or deploy_profile"
+            "fixed owner implements Validate without deploy_profile"
         );
         assert!(!error.effects_may_have_begun);
     }
