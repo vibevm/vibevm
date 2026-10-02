@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "action": {
+    "kind": "submit",
+    "accepted_ref": "question-1",
+    "key": "once"
+  }
+}

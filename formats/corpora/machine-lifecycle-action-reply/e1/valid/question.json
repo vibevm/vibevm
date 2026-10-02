@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "question",
+    "format_id": "machine-input-decision-message",
+    "payload_json": "{\"schema\":1,\"question_id\":\"question-1\",\"operation_id\":\"rust:vibe-lifecycle:validate\",\"domain_owner\":\"rust:vibe-lifecycle:validate\",\"context_id\":\"context\",\"target_id\":\"root\",\"principal_id\":\"host\",\"plan_id\":\"plan-1\",\"source_id\":\"source-1\",\"policy_generation\":\"generation-1\",\"requested_options\":{\"force\":false,\"trace\":false,\"deploy_profile\":null,\"control\":\"detach\"},\"body\":{\"kind\":\"approval_question\",\"prompt\":\"Approve?\",\"effect_summary\":\"Run captured script\"}}"
+  }
+}

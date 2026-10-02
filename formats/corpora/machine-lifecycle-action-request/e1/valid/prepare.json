@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "action": {
+    "kind": "prepare",
+    "phase": "validate",
+    "requested_options": {
+      "force": false,
+      "trace": false,
+      "deploy_profile": null,
+      "control": "none"
+    }
+  }
+}

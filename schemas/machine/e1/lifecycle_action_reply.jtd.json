@@ -1,0 +1,91 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "reply": {
+      "ref": "reply"
+    }
+  },
+  "definitions": {
+    "reply": {
+      "discriminator": "kind",
+      "mapping": {
+        "question": {
+          "properties": {
+            "format_id": {
+              "enum": [
+                "machine-input-decision-message"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "payload_json": {
+              "type": "string"
+            }
+          }
+        },
+        "validated": {
+          "properties": {
+            "accepted_ref": {
+              "type": "string"
+            },
+            "plan_id": {
+              "type": "string"
+            }
+          }
+        },
+        "submitted": {
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "format_id": {
+              "enum": [
+                "machine-lifecycle-submission-view"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "payload_json": {
+              "type": "string"
+            }
+          }
+        },
+        "view": {
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "format_id": {
+              "enum": [
+                "machine-lifecycle-submission-view"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "payload_json": {
+              "type": "string"
+            }
+          }
+        },
+        "absent": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Bounded lifecycle action data; never authority. Epoch must be 1.",
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::lifecycle_action_reply"
+    }
+  }
+}

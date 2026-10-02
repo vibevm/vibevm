@@ -157,6 +157,18 @@ pub struct FixedLifecycleDecisionHost {
     jobs: Mutex<Vec<submission::JobEntry>>,
 }
 impl FixedLifecycleDecisionHost {
+    /// Immutable comparison data only; this cannot issue authority.
+    pub fn readonly_scope(&self) -> &SubmissionScope { &self.scope }
+
+    /// Compare physical project identities without acquiring a lifecycle lease.
+    pub fn compare_context_root(&self, root: &std::path::Path) -> Result<(), FixedDecisionError> {
+        let current = Project::open(root).map_err(|_| FixedDecisionError::ForeignScope)?;
+        let retained = self.project.root_correlation_token().map_err(|_| FixedDecisionError::ForeignScope)?;
+        let observed = current.root_correlation_token().map_err(|_| FixedDecisionError::ForeignScope)?;
+        if retained != observed { return Err(FixedDecisionError::ForeignScope); }
+        Ok(())
+    }
+
     /// Trusted embedding boundary. Wire bodies cannot construct these facts.
     /// This only looks up a known namespace under the lease; it neither issues
     /// one nor checks expiry for effect admission. Lease infrastructure may be

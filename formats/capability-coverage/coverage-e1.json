@@ -727,7 +727,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/context.rs",
       "path": "crates/vibe-mcp/src/context.rs",
-      "sha256": "e9939013224e37ca652ed75f6d4d919033904fa670967af6790e9158f9d26f09"
+      "sha256": "9fe38a89cdda03f349a6caec1a80f4c2261163c11811e6c74170738e93df5677"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/install.rs",
@@ -752,7 +752,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/tools.rs",
       "path": "crates/vibe-mcp/src/tools.rs",
-      "sha256": "a1f3ecde6be3de1c6871fb98a3d484805fb60684f833f04e7db30bf63abb3f05"
+      "sha256": "a60343653dd5ce87da10ce906456d479f7e73a222d63ed42f7752eda89f70cff"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/tools/explain.rs",
@@ -1088,9 +1088,76 @@
       "source_id": "source:xtask/src/main.rs",
       "path": "xtask/src/main.rs",
       "sha256": "fba5174892210ae0720cb8e1a07f0cc178e88cee1ff1aa3a0600e131318ee60c"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/lifecycle_operation.rs",
+      "path": "crates/vibe-mcp/src/tools/lifecycle_operation.rs",
+      "sha256": "747644ed75ed95272e4354fff078bcd9d60f8fb2dacca49e632abca765b8da72"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/lifecycle_operation/bridge.rs",
+      "path": "crates/vibe-mcp/src/tools/lifecycle_operation/bridge.rs",
+      "sha256": "075e8b65f27b0daf97b99223ca62da387c226124524d0efa0e4c4de3a74683ce"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/lifecycle_operation/contract.rs",
+      "path": "crates/vibe-mcp/src/tools/lifecycle_operation/contract.rs",
+      "sha256": "6bf155486fed45ffdd6b7f59f8273179c2ee11709cc46f2a2a84ff70517ca4c7"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/lifecycle_action_request.jtd.json",
+      "path": "schemas/machine/e1/lifecycle_action_request.jtd.json",
+      "sha256": "8753913b7f297c85928f3785f4f8be6b519944583c90baa0d4681c7103ccb8fc"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/lifecycle_action_reply.jtd.json",
+      "path": "schemas/machine/e1/lifecycle_action_reply.jtd.json",
+      "sha256": "0b448fe3c3b4b92ee72af0a8ecca85fd9be54f2e87b3cdcc8e25bcf88901c9c1"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/lifecycle_action_error.jtd.json",
+      "path": "schemas/machine/e1/lifecycle_action_error.jtd.json",
+      "sha256": "b58c29447734ccb6e3953cd9b5e7c2a2b93f4ab421743c075c7dcc4caaff2614"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/lifecycle_submission_view.jtd.json",
+      "path": "schemas/machine/e1/lifecycle_submission_view.jtd.json",
+      "sha256": "ec4fe12ba15719934e957ce183546193b3f65f333aad273682e952219813c96d"
     }
   ],
   "surfaces": [
+    {
+      "surface_id": "surface.mcp.lifecycle_operation",
+      "kind": "mcp",
+      "registered": true,
+      "name": "lifecycle_operation",
+      "aliases": [],
+      "owner": "crates/vibe-mcp/src/tools/lifecycle_operation.rs delegates to FixedLifecycleDecisionHost C1 through ServerContext::with_fixed_lifecycle_host.",
+      "target": "Explicit startup host context/target/principal and physically compared project root; body and descriptor cannot mint namespace or override roots.",
+      "effects": ["Prepare/answer owner-bound decisions, retain private accepted evidence, submit the fixed Validate declared-script profile as an asynchronous owner job, inspect fresh incumbent evidence."],
+      "authority": "Explicit trusted startup host required; ordinary default context may return unavailable_host. Registration, body, hashes and accepted references are not grants.",
+      "carrier": "Generated schema=1 action request/reply/error; question payload is machine-input-decision-message, submitted/view payload is machine-lifecycle-submission-view. Nullable scope/run/view and unavailable effect observation remain explicit; an error does not prove NoEffects.",
+      "schema_ref": "schemas/machine/e1/lifecycle_action_request.jtd.json; schemas/machine/e1/lifecycle_action_reply.jtd.json; schemas/machine/e1/lifecycle_action_error.jtd.json; schemas/machine/e1/lifecycle_submission_view.jtd.json",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Scoped prepare/answer/submit/inspect only, fixed Validate declared-script profile. Other phases, force, trace and deploy_profile are implementation gaps. Controls, streams, CLI, full legacy lifecycle and general owners are not provided; no whole API or native Windows/macOS proof.",
+      "retention": "Accepted references are ephemeral/private to the bridge. Keys bind actual owner jobs; inspect samples fresh state. Missing final report retains uncertainty; new keys are not force and normal freshness may NoOp.",
+      "conformance_cases": ["proposed:current-native-registration", "proposed:owning-adapter-carriage"],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/context.rs",
+        "source:crates/vibe-mcp/src/tools/lifecycle_operation.rs",
+        "source:crates/vibe-mcp/src/tools/lifecycle_operation/bridge.rs",
+        "source:crates/vibe-mcp/src/tools/lifecycle_operation/contract.rs",
+        "source:schemas/machine/e1/lifecycle_action_request.jtd.json",
+        "source:schemas/machine/e1/lifecycle_action_reply.jtd.json",
+        "source:schemas/machine/e1/lifecycle_action_error.jtd.json",
+        "source:schemas/machine/e1/lifecycle_submission_view.jtd.json"
+      ],
+      "disposition": "operation",
+      "reason": "Bounded working-tree source delta recorded separately in lifecycle-operation-source-delta.json from historical c2a31e642 and baseline4a3f80a34. Registered=true differs from callable eligibility, execution and admission; lifecycle_run remains independently scoped.",
+      "operation_id": "operation.mcp.lifecycle_operation"
+    },
     {
       "surface_id": "surface.cli.vibe.init",
       "kind": "cli",

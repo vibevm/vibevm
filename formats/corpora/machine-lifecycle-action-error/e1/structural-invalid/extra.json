@@ -1,0 +1,1 @@
+{"schema": 1, "code": "unavailable_host", "message": "no host", "message_truncated": false, "requested_action": "inspect", "requested_phase": null, "requested_scope": null, "scope_unavailable_reason": "no host", "known_run_id": null, "view_json": null, "effect_observation": "unavailable", "extra": true}

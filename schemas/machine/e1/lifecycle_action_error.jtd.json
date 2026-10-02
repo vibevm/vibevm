@@ -1,0 +1,86 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "code": {
+      "enum": [
+        "invalid_request",
+        "unavailable_host",
+        "context_root_mismatch",
+        "implementation_gap",
+        "decision_refused",
+        "unknown_reference",
+        "capacity",
+        "submission_refused",
+        "inspection_unavailable",
+        "publication_unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "message": {
+      "type": "string"
+    },
+    "message_truncated": {
+      "type": "boolean"
+    },
+    "requested_action": {
+      "type": "string",
+      "nullable": true
+    },
+    "requested_phase": {
+      "type": "string",
+      "nullable": true
+    },
+    "requested_scope": {
+      "ref": "scope",
+      "nullable": true
+    },
+    "scope_unavailable_reason": {
+      "type": "string",
+      "nullable": true
+    },
+    "known_run_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "view_json": {
+      "type": "string",
+      "nullable": true
+    },
+    "effect_observation": {
+      "enum": [
+        "unavailable",
+        "none",
+        "landed",
+        "uncertain"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  },
+  "definitions": {
+    "scope": {
+      "properties": {
+        "context": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "principal": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Bounded lifecycle action data; never authority. Epoch must be 1.",
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::lifecycle_action_error"
+    }
+  }
+}

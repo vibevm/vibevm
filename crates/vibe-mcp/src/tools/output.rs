@@ -17,11 +17,11 @@ use specmark::spec;
 /// of [`McpTool::run`](super::McpTool::run)'s contract.
 ///
 /// A tool leaves the dispatcher through exactly two channels, and the
-/// choice between them is *did it run?*, not *did it succeed?*:
+/// executed constructors preserve reports; errors alone do not prove execution absence:
 ///
-/// - **Preflight / tool failure** — `Err(ToolError)`. The operation did
-///   not execute: arguments failed validation, the target was not
-///   found, or an I/O / internal error struck before any work happened.
+/// - **Preflight / tool failure** — `Err(ToolError)`. This may also be a
+///   late publication failure after work happened. `Err` alone establishes
+///   neither that execution never ran nor that effects were absent.
 ///   Ordinary variants render `isError: true` with text only. The separate
 ///   ToolError::StructuredPreflight variant may retain an owning typed report
 ///   in structuredContent without pretending the domain executed. It does not
