@@ -125,6 +125,11 @@ pub use handlers::{
     PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
 };
 pub use lease::{LifecycleLease, LifecycleLeaseError};
+pub use mechanism::package::{
+    StaticFileJournalError, StaticFileJournalInspection, StaticFileObservedFile,
+    StaticFileObservedPresence, StaticFilePartialEvidence, inspect_fixed_static_file_package,
+    submit_fixed_static_file_package,
+};
 pub use mechanism::{
     ARTIFACT_RECORD_DIR, BuildError, BuildExecution, BuildOutcome, ClientExecutable,
     ClientExecutables, ClientProjectionError, DEPLOY_STATE_DIR, DeployError, DeployExecution,

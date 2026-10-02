@@ -41,6 +41,11 @@ mod inputs;
     reason = "protected host composition follows this domain owner"
 )]
 pub(crate) mod journal;
+pub use journal::{
+    ObservedFile as StaticFileObservedFile, ObservedPresence as StaticFileObservedPresence,
+    StaticFileJournalError, StaticFileJournalInspection, StaticFilePartialEvidence,
+    inspect_fixed_static_file_package, submit_fixed_static_file_package,
+};
 mod native;
 pub(crate) mod protocol;
 mod record;
