@@ -12,6 +12,7 @@ description = "Model Context Protocol server for vibevm — exposes installed pa
 
 [dependencies]
 specmark.workspace = true
+getrandom.workspace = true
 vibe-core.workspace = true
 vibe-workspace.workspace = true
 # The moved agent/package-skill projection (R7.4 §5): `vibe_mcp::{agents,

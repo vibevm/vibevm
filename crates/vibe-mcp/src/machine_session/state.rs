@@ -44,6 +44,7 @@ pub struct TrustedContextSource {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SessionBuildError {
     IdsExhausted,
+    EntropyUnavailable,
     MissingTrustedRoot,
     ObserverUnavailable,
 }
@@ -100,7 +101,7 @@ fn supported_schemas() -> Vec<SchemaOffer> {
     .collect()
 }
 
-fn unavailable_context(session: u64, ordinal: usize, kind: ContextKind) -> BoundContext {
+fn unavailable_context(session: &str, ordinal: usize, kind: ContextKind) -> BoundContext {
     BoundContext {
         descriptor: Context {
             context_id: format!("machine-context-{session}-{ordinal}"),
@@ -118,10 +119,20 @@ pub const MAX_REQUEST_IDS: usize = 256;
 pub const MAX_REQUEST_ID_BYTES: usize = 256;
 pub const MAX_CORRELATION_BYTES: usize = 64 * 1024;
 
-fn allocate_session() -> Result<u64, SessionBuildError> {
-    NEXT_SESSION
+fn allocate_session() -> Result<String, SessionBuildError> {
+    let sequence = NEXT_SESSION
         .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
-        .map_err(|_| SessionBuildError::IdsExhausted)
+        .map_err(|_| SessionBuildError::IdsExhausted)?;
+    // The counter distinguishes connections in this process. A fresh nonce
+    // keeps their public session/context/target IDs distinct after restart,
+    // so a frame from an old process cannot match by the same spelling.
+    let mut nonce = [0_u8; 16];
+    getrandom::fill(&mut nonce).map_err(|_| SessionBuildError::EntropyUnavailable)?;
+    let random = nonce
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
+    Ok(format!("{random}-{sequence}"))
 }
 
 fn valid_id(id: &str) -> bool {
@@ -178,7 +189,7 @@ impl MachineSession {
             .into_iter()
             .enumerate()
         {
-            let bound = unavailable_context(session, next + ordinal, kind);
+            let bound = unavailable_context(&session, next + ordinal, kind);
             contexts.insert(bound.descriptor.context_id.clone(), bound);
         }
         Ok(Self {
