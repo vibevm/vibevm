@@ -333,7 +333,8 @@
         "formats/REGISTRY.toml",
         "formats/EPOCHS.toml",
         "crates/vibe-safefs/src/project.rs",
-        "crates/vibe-safefs/src/project/race_tests.rs"
+        "crates/vibe-safefs/src/project/race_tests.rs",
+        "crates/vibe-lifecycle/src/state/submission.rs"
       ],
       "write_paths": [
         "crates/vibe-mcp/src/tools/",
@@ -360,7 +361,8 @@
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "crates/vibe-safefs/src/project.rs",
         "crates/vibe-safefs/src/project/race_tests.rs",
-        "Cargo.lock"
+        "Cargo.lock",
+        "crates/vibe-lifecycle/src/state/submission.rs"
       ],
       "steps": [
         "Map domain NeedsSelection/input/approval requests to schemas bound to exact question, plan, scope and policy generation.",
@@ -398,7 +400,8 @@
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
         "Source-bound C4 refinement: owner-bound decision/admission values require registered JTD schemas, generated machine readers and semantic validation; actual CLI registration belongs to its clap owners and machine-session routing belongs to its incumbent service. This extends only the required schema/registration/adapter perimeter. All four steps and acceptance remain unchanged; legacy MCP coexistence, exact target/effect grants, Public A/future B and the ban on public 1.1.0 publication remain binding.",
         "Source-bound C4 lock-owner refinement: the actual concurrent terminal/control probes and native FD-alias counterexample require the incumbent SafeFS project LockGuard owner and its exact race tests. Preserve exclusive ownership and negative lock/reentry proof; explicit release must not fabricate terminal truth, hide external Busy, or replace a domain journal. Scope and all numbered C4 obligations remain unchanged.",
-        "Source-bound C4 shared-policy refinement: independent process issuers currently contaminate policy generation and admitted intent. A root/exact-scope-bound policy owner under the incumbent lifecycle lease may retain only authority identity, checked revision, trusted source and policy facts; questions remain process-local and domain outcomes remain in existing journals. Strict internal record readers require the orchestrator serde dependency and its exact Cargo.lock row. Preserve current-policy validation before C1, publication uncertainty, portable filename components and truthful platform durability limits. This adds no adapter acceptance waiver and changes none of the four numbered C4 obligations."
+        "Source-bound C4 shared-policy refinement: independent process issuers currently contaminate policy generation and admitted intent. A root/exact-scope-bound policy owner under the incumbent lifecycle lease may retain only authority identity, checked revision, trusted source and policy facts; questions remain process-local and domain outcomes remain in existing journals. Strict internal record readers require the orchestrator serde dependency and its exact Cargo.lock row. Preserve current-policy validation before C1, publication uncertainty, portable filename components and truthful platform durability limits. This adds no adapter acceptance waiver and changes none of the four numbered C4 obligations.",
+        "Source-bound C4 sequential-run refinement: actual registered MCP capacity execution exposed the protected fixed owner refusing every second reserved run while a validated previous terminal header remained. The incumbent lifecycle adapter may advance only after independently validating the prior C1-ready reservation and retained terminal marker/report, with no parked/delegated/continuation work or uncertain/missing proof. Its narrowly owned inverse C1 run lookup requires state/submission.rs; it is read-only correlation, never a grant. Preserve ordinary freshness rows and begin semantics, old per-run results and key replay, and the existing one-writer/one-parked limits. A new key is not an implicit force request. All four numbered C4 obligations remain unchanged."
       ]
     }
   ]
