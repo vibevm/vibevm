@@ -1488,3 +1488,30 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-lifecycle-submission-view/e1"
 sunset = "none"
+
+[format.machine-lifecycle-action-request]
+epoch = 1
+schema = "schemas/machine/e1/lifecycle_action_request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-lifecycle-action-request/e1"
+sunset = "none"
+
+[format.machine-lifecycle-action-reply]
+epoch = 1
+schema = "schemas/machine/e1/lifecycle_action_reply.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-lifecycle-action-reply/e1"
+sunset = "none"
+
+[format.machine-lifecycle-action-error]
+epoch = 1
+schema = "schemas/machine/e1/lifecycle_action_error.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-lifecycle-action-error/e1"
+sunset = "none"

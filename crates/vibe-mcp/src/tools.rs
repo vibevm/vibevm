@@ -19,6 +19,9 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 pub mod output;
 pub use output::ToolOutput;
 
+pub mod lifecycle_operation;
+pub use lifecycle_operation::LifecycleOperationMcpTool;
+
 pub mod machine_operation;
 pub use machine_operation::PlanManifestMigrationEnvelopeMcpTool;
 
@@ -86,6 +89,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(ListToolsMcpTool),
         Box::new(LifecycleTasksMcpTool),
         Box::new(LifecycleRunMcpTool),
+        Box::new(LifecycleOperationMcpTool),
         Box::new(RequirementsQueryMcpTool),
         Box::new(ReadDocMcpTool),
         Box::new(PlanManifestMigrationMcpTool),

@@ -1,0 +1,82 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "action": {
+      "ref": "action"
+    }
+  },
+  "definitions": {
+    "action": {
+      "discriminator": "kind",
+      "mapping": {
+        "prepare": {
+          "properties": {
+            "phase": {
+              "type": "string"
+            },
+            "requested_options": {
+              "ref": "requested_options"
+            }
+          }
+        },
+        "answer": {
+          "properties": {
+            "message_json": {
+              "type": "string"
+            }
+          }
+        },
+        "submit": {
+          "properties": {
+            "accepted_ref": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            }
+          }
+        },
+        "inspect": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "requested_options": {
+      "properties": {
+        "force": {
+          "type": "boolean"
+        },
+        "trace": {
+          "type": "boolean"
+        },
+        "deploy_profile": {
+          "type": "string",
+          "nullable": true
+        },
+        "control": {
+          "enum": [
+            "none",
+            "detach",
+            "cancel_pre_dispatch",
+            "cancel_deferred_boundary"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Bounded lifecycle action data; never authority. Epoch must be 1.",
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::lifecycle_action_request"
+    }
+  }
+}

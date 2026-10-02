@@ -1,0 +1,76 @@
+{
+  "receipt_id": "lifecycle-operation-workingtree-source-delta",
+  "scope": "New lifecycle_operation registration, explicit host context seam, adapter/bridge/contract and four wire schemas only. Current working-tree SHA256 bytes; no current commit identity asserted.",
+  "historical_baseline_capture_id": "capability-baseline-4a3f80a34",
+  "historical_observation_capture_id": "entity-view-observed-c2a31e642",
+  "historical_git_subject": "c2a31e642737a29486dc69d0f444407df778fc67",
+  "sources": [
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "a60343653dd5ce87da10ce906456d479f7e73a222d63ed42f7752eda89f70cff",
+      "previous_ledger_sha256": "a1f3ecde6be3de1c6871fb98a3d484805fb60684f833f04e7db30bf63abb3f05",
+      "change": "rebound registration/host source"
+    },
+    {
+      "path": "crates/vibe-mcp/src/context.rs",
+      "sha256": "9fe38a89cdda03f349a6caec1a80f4c2261163c11811e6c74170738e93df5677",
+      "previous_ledger_sha256": "e9939013224e37ca652ed75f6d4d919033904fa670967af6790e9158f9d26f09",
+      "change": "rebound registration/host source"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/lifecycle_operation.rs",
+      "sha256": "747644ed75ed95272e4354fff078bcd9d60f8fb2dacca49e632abca765b8da72",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/lifecycle_operation/bridge.rs",
+      "sha256": "075e8b65f27b0daf97b99223ca62da387c226124524d0efa0e4c4de3a74683ce",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/lifecycle_operation/contract.rs",
+      "sha256": "6bf155486fed45ffdd6b7f59f8273179c2ee11709cc46f2a2a84ff70517ca4c7",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "schemas/machine/e1/lifecycle_action_request.jtd.json",
+      "sha256": "8753913b7f297c85928f3785f4f8be6b519944583c90baa0d4681c7103ccb8fc",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "schemas/machine/e1/lifecycle_action_reply.jtd.json",
+      "sha256": "0b448fe3c3b4b92ee72af0a8ecca85fd9be54f2e87b3cdcc8e25bcf88901c9c1",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "schemas/machine/e1/lifecycle_action_error.jtd.json",
+      "sha256": "b58c29447734ccb6e3953cd9b5e7c2a2b93f4ab421743c075c7dcc4caaff2614",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    },
+    {
+      "path": "schemas/machine/e1/lifecycle_submission_view.jtd.json",
+      "sha256": "ec4fe12ba15719934e957ce183546193b3f65f333aad273682e952219813c96d",
+      "previous_ledger_sha256": null,
+      "change": "newly cited source; not claimed newly created"
+    }
+  ],
+  "retained_evidence": {
+    "path": "/tmp/vibevm-c4-mcp-actual-244b/parent-old-server.log",
+    "observation": "Prior parent run: 133 passed, 2 failed, missing lifecycle_operation in old 15-row ledger and skill template. Not rerun by this worker."
+  },
+  "counts": {
+    "sources": 224,
+    "surfaces": 242,
+    "operation_identities": 215,
+    "registered_mcp": 16,
+    "models": 35,
+    "planned_families": 15
+  },
+  "limitations": "Other historical source hashes retained without freshness recensus. No code/test/build/native execution. Hashes are not effects or admission proof; C4 remains 36/222, no public 1.1 or native Windows/macOS claim."
+}

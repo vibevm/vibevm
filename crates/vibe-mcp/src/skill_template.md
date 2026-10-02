@@ -95,6 +95,42 @@ Tools:
   with its declaring package and the author's own description. Takes no
   arguments. A project with nothing installed returns an empty list, not
   an error.
+- **`lifecycle_operation`** — prepare, answer, submit or inspect the explicitly
+  supplied operation host. Registration alone does not
+  provide that host: an ordinary default MCP context may return
+  `unavailable_host`. Send generated action requests with `schema: 1`.
+  Start with `action.kind: "prepare"`, `phase: "validate"`, and explicit
+  `requested_options`: `force: false`, `trace: false`,
+  `deploy_profile: null`, `control: "none"`. This owner supports the fixed
+  Validate declared-script profile only.
+  Read the returned owner question in `reply.payload_json`; answer its
+  original bound decision message through `action.kind: "answer"` and
+  `message_json`, retaining the original identity and binding fields.
+  Follow further owner questions until a validated reply supplies
+  `accepted_ref`. This reference is ephemeral and private to this bridge;
+  neither an assume-yes flag nor a hash supplies approval or authority.
+  Submit that reference with `action.kind: "submit"` and a nonempty, trimmed
+  `key` (at most 256 bytes, no control characters). The returned submitted
+  view describes an actual asynchronous job and may still be starting.
+  Use `action.kind: "inspect"` with the same key to obtain fresh owner state.
+  Missing final reports and unavailable effect evidence retain uncertainty;
+  a new key does not force execution, and normal freshness may produce NoOp.
+  Tool input cannot mint namespaces or override roots/principals. Other
+  phases, force, trace and deploy profiles are implementation gaps; controls
+  and streams are not provided. This flow does not change the separate
+  `lifecycle_run` behavior.
+- **`plan_manifest_migration`** — plan a supported migration from supplied
+  TOML text and explicit profiles/recipe. Inspect the exact in-memory edits
+  or answer the returned questions; this tool reads no project, writes no
+  files and invokes no provider.
+- **`plan_manifest_migration_envelope`** — call that same pure migration
+  planner through its generated machine envelope. Use its registered input
+  format; the envelope grants no general handler or filesystem access.
+- **`manifest_migration_operation`** — apply, inspect or recover one authored
+  manifest only when the server has an explicit finite file/recovery-store
+  grant. Paths and scope labels in arguments do not create that grant.
+  Review the plan before application and preserve reported uncertainty or
+  recovery residue.
 - **`lifecycle_run(phase)`** — execute the canonical default lifecycle from
   `validate` through the named phase using VibeVM's algorithmic engine. The
   server fixes offline/install policy for its whole session; there is no
