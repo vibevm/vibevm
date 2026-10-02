@@ -274,6 +274,78 @@ fn publish(lease: &LifecycleLease, index: &Index) -> Result<(), SubmissionError>
 pub struct SubmissionReservations;
 
 impl SubmissionReservations {
+    /// Read-only issuance fence for a stable, host-assigned scope. Retired
+    /// rows count too: losing a reattach pointer never renews a namespace.
+    ///
+    /// ```no_run
+    /// # use vibe_lifecycle::{LifecycleLease, SubmissionReservations, SubmissionScope};
+    /// # fn check(lease: &LifecycleLease, scope: &SubmissionScope) -> Result<(), vibe_lifecycle::SubmissionError> {
+    /// assert!(!SubmissionReservations::namespace_exists_for_scope(lease, scope)?);
+    /// # Ok(()) }
+    /// ```
+    pub fn namespace_exists_for_scope(
+        lease: &LifecycleLease,
+        scope: &SubmissionScope,
+    ) -> Result<bool, SubmissionError> {
+        if !valid_field(&scope.context)
+            || !valid_field(&scope.target)
+            || !valid_field(&scope.principal)
+        {
+            return Err(SubmissionError::InvalidInput("scope"));
+        }
+        Ok(read(lease)?.namespaces.values().any(|row| {
+            row.context == scope.context
+                && row.target == scope.target
+                && row.principal == scope.principal
+        }))
+    }
+
+    /// Validate a lookup token against C1 and exact trusted scope, returning
+    /// `(expires_at_ms, retired_or_expired)`. This never writes or admits an
+    /// effect; retired namespaces remain usable for reserved-key inspection.
+    ///
+    /// ```no_run
+    /// # use vibe_lifecycle::{LifecycleLease, SubmissionReservations, SubmissionScope, SubmissionNamespace};
+    /// # fn check(lease: &LifecycleLease, scope: &SubmissionScope, token: &SubmissionNamespace) -> Result<(), vibe_lifecycle::SubmissionError> {
+    /// let (expiry, retired) = SubmissionReservations::validate_namespace(lease, token, scope)?;
+    /// assert!(expiry > 0);
+    /// # let _ = retired;
+    /// # Ok(()) }
+    /// ```
+    pub fn validate_namespace(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+    ) -> Result<(u64, bool), SubmissionError> {
+        Self::validate_namespace_at(lease, namespace, scope, now_ms()?)
+    }
+
+    fn validate_namespace_at(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        now_ms: u64,
+    ) -> Result<(u64, bool), SubmissionError> {
+        let index = read(lease)?;
+        let row = index
+            .namespaces
+            .get(namespace.id())
+            .ok_or(SubmissionError::UnknownNamespace)?;
+        if row.context != scope.context
+            || row.target != scope.target
+            || row.principal != scope.principal
+        {
+            return Err(SubmissionError::ForeignScope);
+        }
+        if now_ms < row.observed_at_ms {
+            return Err(SubmissionError::InvalidInput("host clock rolled back"));
+        }
+        Ok((
+            row.expires_at_ms,
+            row.retired || now_ms >= row.expires_at_ms,
+        ))
+    }
+
     /// Read a retained key without the original request bytes. The domain
     /// owner must read its own immutable input capsule and compare both
     /// digests before interpreting any result. This never grants dispatch.
@@ -675,7 +747,8 @@ impl SubmissionReservations {
                         } else {
                             JournalAdmission::Pending
                         },
-                        reservation_ref: row.journal_ready
+                        reservation_ref: row
+                            .journal_ready
                             .then(|| reservation_ref_of(id, owner, key, row)),
                         retired: owner.retired,
                     }));
@@ -1576,3 +1649,7 @@ mod tests {
 #[cfg(test)]
 #[path = "submission/lifetime_tests.rs"]
 mod lifetime_tests;
+
+#[cfg(test)]
+#[path = "submission/namespace_tests.rs"]
+mod namespace_tests;
