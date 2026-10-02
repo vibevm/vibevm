@@ -165,10 +165,18 @@ impl FixedLifecycleRoute {
                         phase,
                         host,
                     );
-                    if let Ok(Some(job)) = bridge.retained_job(&s.key) {
-                        enrich(&mut e, &job.evidence());
-                    }
-                    return failure(e, false);
+                    // A fresh route has no process-local accepted reference or
+                    // job table, but C1 may still retain this key's run. Ask
+                    // the domain owner before claiming the refusal had no
+                    // prior effects. Failed inspection is also uncertain.
+                    return match bridge.inspect(&s.key) {
+                        Ok(Some(snapshot)) => {
+                            enrich(&mut e, &snapshot);
+                            failure(e, true)
+                        }
+                        Ok(None) => failure(e, false),
+                        Err(_) => failure(e, true),
+                    };
                 };
                 bridge
                     .submit(&e, &s.key)
