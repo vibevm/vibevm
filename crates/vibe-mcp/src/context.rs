@@ -71,6 +71,9 @@ pub struct ServerContext {
     pub(crate) seed_default_registry: bool,
     /// One explicit finite migration grant, never supplied by tool arguments.
     manifest_migration_authority: Option<migration::ManifestMigrationAuthority>,
+    fixed_package_bridge: Option<
+        std::sync::Arc<vibe_orchestrator::machine_operation::fixed_package::FixedPackageRoute>,
+    >,
     fixed_lifecycle_bridge: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute>,
     >,
@@ -121,6 +124,38 @@ impl ServerContext {
         self.fixed_lifecycle_bridge.as_ref()
     }
 
+    /// Retain the embedding's explicit fixed package route after checking its
+    /// physical root. Neither a path nor a wire value can supply this grant.
+    ///
+    /// ```no_run
+    /// use std::sync::Arc;
+    /// use vibe_mcp::ServerContext;
+    /// use vibe_orchestrator::machine_operation::fixed_package::FixedPackageRoute;
+    /// fn bind(root: &std::path::Path, route: Arc<FixedPackageRoute>) {
+    ///     let _context = ServerContext::with_store_root(root, root.join("unused"))
+    ///         .with_fixed_package_route(route).unwrap();
+    /// }
+    /// ```
+    pub fn with_fixed_package_route(
+        mut self,
+        route: std::sync::Arc<
+            vibe_orchestrator::machine_operation::fixed_package::FixedPackageRoute,
+        >,
+    ) -> Result<Self, vibe_orchestrator::machine_operation::fixed_package::FixedPackageHostError>
+    {
+        route.compare_context_root(&self.project_root)?;
+        self.fixed_package_bridge = Some(route);
+        Ok(self)
+    }
+
+    pub(crate) fn fixed_package_bridge(
+        &self,
+    ) -> Option<
+        &std::sync::Arc<vibe_orchestrator::machine_operation::fixed_package::FixedPackageRoute>,
+    > {
+        self.fixed_package_bridge.as_ref()
+    }
+
     pub fn new(project_root: impl Into<PathBuf>) -> Self {
         let store_root = vibe_core::settings::settings_dir()
             .map(|home| home.join("cache"))
@@ -133,6 +168,7 @@ impl ServerContext {
             seed_default_registry: false,
             manifest_migration_authority: None,
             fixed_lifecycle_bridge: None,
+            fixed_package_bridge: None,
         }
     }
 
@@ -151,6 +187,7 @@ impl ServerContext {
             seed_default_registry: false,
             manifest_migration_authority: None,
             fixed_lifecycle_bridge: None,
+            fixed_package_bridge: None,
         }
     }
 
@@ -255,6 +292,7 @@ mod tests {
                 seed_default_registry,
                 manifest_migration_authority,
                 fixed_lifecycle_bridge,
+                fixed_package_bridge,
             } = context;
             let _ = (
                 project_root,
@@ -264,6 +302,7 @@ mod tests {
                 seed_default_registry,
                 manifest_migration_authority,
                 fixed_lifecycle_bridge,
+                fixed_package_bridge,
             );
         }
         let _ = destructure;
