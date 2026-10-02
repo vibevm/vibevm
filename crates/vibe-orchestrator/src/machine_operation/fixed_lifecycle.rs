@@ -1,9 +1,11 @@
-//! Internal trusted fixed Validate route; no local/CLI surface is advertised.
+//! Trusted fixed Validate route shared by explicit library and adapter grants.
 //! Bounded memory tables retain opaque owner objects, never a second journal.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE");
 mod contract;
 mod dispatch;
+mod envelope;
 mod error;
+pub use envelope::{DOMAIN_OWNER, OPERATION_ID};
 mod observers;
 pub use contract::{PUBLICATION_CAP, REQUEST_CAP};
 pub use error::FixedLifecycleRouteError;
@@ -64,6 +66,10 @@ impl FixedLifecycleRoute {
             tables: Mutex::new(Tables::default()),
             observers: Default::default(),
         }
+    }
+    /// Read-only physical identity comparison; see the type's dispatch example.
+    pub fn compare_context_root(&self, root: &std::path::Path) -> Result<(), FixedDecisionError> {
+        self.host.compare_context_root(root)
     }
     pub(crate) fn retain(
         &self,

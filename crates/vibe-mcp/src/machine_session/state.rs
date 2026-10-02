@@ -252,6 +252,57 @@ impl MachineSession {
         })
     }
 
+    /// Only the fixed runner calls this after retaining an explicit host grant.
+    pub(super) fn bound_fixed(
+        _route: &vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute,
+    ) -> Result<Self, SessionBuildError> {
+        let session = allocate_session()?;
+        let context_id = format!("machine-context-{session}-0");
+        let descriptor = Context {
+            context_id: context_id.clone(),
+            kind: ContextKind::Workspace,
+            availability: ContextAvailability::Available,
+            target_ids: vec![format!("machine-target-{session}-0-0")],
+            reason: None,
+        };
+        Ok(Self {
+            phase: SessionPhase::Uninitialized,
+            session_id: format!("machine-session-{session}"),
+            contexts: BTreeMap::from([(
+                context_id,
+                BoundContext {
+                    descriptor,
+                    _context: None,
+                    _target_roots: BTreeMap::new(),
+                },
+            )]),
+            request_ids: BTreeSet::new(),
+            request_id_bytes: 0,
+            correlation_exhausted: false,
+            schemas: [
+                FormatId::MachineSessionFrame,
+                FormatId::MachineOperationEnvelope,
+                FormatId::MachineLifecycleActionRequest,
+                FormatId::MachineLifecycleActionReply,
+                FormatId::MachineLifecycleActionError,
+                FormatId::MachineInputDecisionMessage,
+                FormatId::MachineLifecycleSubmissionView,
+            ]
+            .into_iter()
+            .map(|format| SchemaOffer {
+                format_id: format.id().to_owned(),
+                epoch: 1,
+            })
+            .collect(),
+            capabilities: Capabilities {
+                streaming: false,
+                replay: false,
+                control: false,
+            },
+            require_target: true,
+        })
+    }
+
     pub(super) fn session_id(&self) -> &str {
         &self.session_id
     }

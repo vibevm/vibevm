@@ -23,6 +23,7 @@ pub(super) mod submission;
 pub use policy::HostPolicyFacts;
 use policy::State;
 use questions::*;
+pub(crate) const FIXED_DOMAIN_OWNER: &str = questions::DOMAIN;
 pub use submission::ReadonlyFixedJob;
 const MAX_SEQUENCES: usize = 4;
 const MAX_RETAINED: usize = 8 * 1024 * 1024;
@@ -158,14 +159,23 @@ pub struct FixedLifecycleDecisionHost {
 }
 impl FixedLifecycleDecisionHost {
     /// Immutable comparison data only; this cannot issue authority.
-    pub fn readonly_scope(&self) -> &SubmissionScope { &self.scope }
+    pub fn readonly_scope(&self) -> &SubmissionScope {
+        &self.scope
+    }
 
     /// Compare physical project identities without acquiring a lifecycle lease.
     pub fn compare_context_root(&self, root: &std::path::Path) -> Result<(), FixedDecisionError> {
         let current = Project::open(root).map_err(|_| FixedDecisionError::ForeignScope)?;
-        let retained = self.project.root_correlation_token().map_err(|_| FixedDecisionError::ForeignScope)?;
-        let observed = current.root_correlation_token().map_err(|_| FixedDecisionError::ForeignScope)?;
-        if retained != observed { return Err(FixedDecisionError::ForeignScope); }
+        let retained = self
+            .project
+            .root_correlation_token()
+            .map_err(|_| FixedDecisionError::ForeignScope)?;
+        let observed = current
+            .root_correlation_token()
+            .map_err(|_| FixedDecisionError::ForeignScope)?;
+        if retained != observed {
+            return Err(FixedDecisionError::ForeignScope);
+        }
         Ok(())
     }
 
