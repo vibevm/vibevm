@@ -2,7 +2,6 @@
 use super::*;
 use crate::machine_operation::stream_message::{self as validation, ExpectedBinding};
 use std::collections::VecDeque;
-use vibe_lifecycle::process::{ProcessError, ProcessOutput, ProcessSpec};
 use vibe_wire::generated::lifecycle_outcome_marker::LifecycleOutcomeMarkerEffectState;
 pub(super) use vibe_wire::generated::machine::e1::operation_stream_message::PayloadStateEffectState as Effect;
 pub(super) use vibe_wire::generated::machine::e1::operation_stream_message::PayloadStateObserved as Observed;
@@ -97,7 +96,7 @@ impl History {
             result_ref,
         })));
     }
-    fn publish(&mut self, payload: Payload) {
+    pub(super) fn publish(&mut self, payload: Payload) {
         let Some(next) = self.tip.checked_add(1) else {
             self.expire();
             return;
@@ -290,24 +289,6 @@ impl LiveOwner {
         self.check_stream_binding(binding, trusted)?;
         binding.history.lock().unwrap().expire();
         Ok(())
-    }
-}
-// Observe the real provider edge without changing the provider or its result.
-pub(super) struct ObservedProcess<'a> {
-    pub(super) process: &'a dyn ProcessRunner,
-    pub(super) shared: &'a Arc<Shared>,
-}
-impl ProcessRunner for ObservedProcess<'_> {
-    fn run(&self, spec: &ProcessSpec) -> std::result::Result<ProcessOutput, ProcessError> {
-        let binding = self.shared.record.lock().unwrap().binding.clone();
-        if let Some(binding) = binding {
-            binding
-                .history
-                .lock()
-                .unwrap()
-                .state(Observed::Running, Effect::Uncertain, None);
-        }
-        self.process.run(spec)
     }
 }
 pub(super) fn publish_terminal(shared: &Arc<Shared>) {

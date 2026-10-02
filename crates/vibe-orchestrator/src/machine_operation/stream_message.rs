@@ -212,6 +212,11 @@ fn event(row: &EventRecord) -> Check<u64> {
             require(p.message.len() <= 4096, "diagnostic byte cap")?;
         }
         Payload::RawOutput(p) => {
+            let offset = decimal(&p.byte_offset, false)?;
+            require(
+                offset.checked_add(u64::from(p.byte_count)).is_some(),
+                "raw byte end overflow",
+            )?;
             require(
                 p.hex_bytes.len() <= 4096
                     && p.hex_bytes.len() % 2 == 0

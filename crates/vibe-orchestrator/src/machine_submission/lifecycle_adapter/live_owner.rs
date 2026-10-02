@@ -4,6 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LI
 
 use super::*;
 mod control;
+pub(super) mod observation;
 mod stream;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
@@ -446,19 +447,12 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                         .as_ref()
                         .and_then(|f| f.before_effect.clone()),
                 };
-                static PROCESS: SystemProcessRunner = SystemProcessRunner;
                 static PROBE: SystemProbe = SystemProbe;
+                let process = observation::ObservedProcess::system(&worker);
                 #[cfg(test)]
-                let process: &dyn ProcessRunner = dispatch
-                    .fixture
-                    .as_ref()
-                    .map_or(&PROCESS, |f| f.process.as_ref());
-                #[cfg(not(test))]
-                let process: &dyn ProcessRunner = &PROCESS;
-                let process = stream::ObservedProcess {
-                    process,
-                    shared: &worker,
-                };
+                let process = dispatch.fixture.as_ref().map_or(process, |fixture| {
+                    observation::ObservedProcess::fixture(fixture.process.as_ref(), &worker)
+                });
                 submit_one_script_validate_internal(
                     &dispatch.path,
                     &dispatch.namespace,

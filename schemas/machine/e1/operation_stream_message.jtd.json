@@ -276,6 +276,9 @@
         },
         "raw_output": {
           "properties": {
+            "byte_offset": {
+              "type": "string"
+            },
             "origin": {
               "enum": [
                 "stdout",

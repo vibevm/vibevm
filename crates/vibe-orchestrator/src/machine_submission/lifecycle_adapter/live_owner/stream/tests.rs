@@ -142,12 +142,27 @@ fn counted_blocked_owner_replays_then_domain_terminal_and_corruption_stays_recov
         request(&h, 0, 64, 65536)
     };
     let r = reply(owner.replay(&binding, &s.coordinates, &req).unwrap());
-    assert_eq!(r.events.len(), 2);
+    let states: Vec<_> = r
+        .events
+        .iter()
+        .filter_map(|event| match &event.payload {
+            Payload::State(state) => Some(state),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(states.len(), 2);
+    assert_eq!(states[0].observed, Observed::JournalReady);
+    assert_eq!(states[0].effect_state, Effect::NoEffects);
+    assert_eq!(states[1].observed, Observed::Running);
+    assert_eq!(states[1].effect_state, Effect::Uncertain);
+    for (index, event) in r.events.iter().enumerate() {
+        assert_eq!(event.sequence, (index + 1).to_string());
+    }
     assert!(
-        matches!(&r.events[0].payload, Payload::State(p) if p.observed == Observed::JournalReady && p.effect_state == Effect::NoEffects)
-    );
-    assert!(
-        matches!(&r.events[1].payload, Payload::State(p) if p.observed == Observed::Running && p.effect_state == Effect::Uncertain)
+        r.events
+            .iter()
+            .any(|event| matches!(&event.payload, Payload::Phase(row)
+        if row.phase == "validate" && row.transition == PayloadPhaseTransition::Started))
     );
     assert!(matches!(
         owner.inspect().unwrap(),

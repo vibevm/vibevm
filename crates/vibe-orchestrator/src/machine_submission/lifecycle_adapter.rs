@@ -1463,6 +1463,14 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             } else {
                 install::empty_install_ports()
             };
+            let live_observer = self
+                .script
+                .as_ref()
+                .and_then(|script| script.ready)
+                .map(live_owner::observation::LiveRun::new);
+            if let Some(observer) = &live_observer {
+                ports.observer = observer;
+            }
             if let Some(agent) = &self.agent {
                 ports.agent = agent.backend.clone();
             }

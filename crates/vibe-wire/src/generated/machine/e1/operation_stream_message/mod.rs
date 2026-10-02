@@ -315,6 +315,8 @@ pub enum PayloadRawOutputOrigin {
 pub struct PayloadRawOutput {
     pub byte_count: u32,
 
+    pub byte_offset: String,
+
     pub hex_bytes: String,
 
     pub origin: PayloadRawOutputOrigin,
