@@ -18,6 +18,7 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 mod policy;
 mod questions;
+mod shared_policy;
 pub(super) mod submission;
 pub use policy::HostPolicyFacts;
 use policy::State;
@@ -143,6 +144,14 @@ pub struct FixedLifecycleDecisionHost {
     scope: SubmissionScope,
     target_os: TargetOs,
     issuer: String,
+    shared_owner: Option<Arc<super::PolicyOwner>>,
+    // Per host: serialize the complete policy read/apply, outside State.
+    policy_access: Arc<Mutex<()>>,
+    #[cfg(test)]
+    after_shared_read: Option<Arc<dyn Fn(&super::PolicySnapshot) + Send + Sync>>,
+    #[cfg(test)]
+    before_shared_refresh_access:
+        Option<Arc<dyn Fn(&vibe_lifecycle::LifecycleLease) + Send + Sync>>,
     state: Arc<Mutex<State>>,
     holder: Arc<()>,
     jobs: Mutex<Vec<submission::JobEntry>>,
@@ -168,10 +177,17 @@ impl FixedLifecycleDecisionHost {
             scope,
             target_os,
             issuer,
+            shared_owner: None,
+            policy_access: Arc::new(Mutex::new(())),
+            #[cfg(test)]
+            after_shared_read: None,
+            #[cfg(test)]
+            before_shared_refresh_access: None,
             holder: Arc::new(()),
             jobs: Mutex::new(Vec::new()),
             state: Arc::new(Mutex::new(State {
                 facts: policy,
+                snapshot: None,
                 revision: 1,
                 counter: 0,
                 sequences: vec![],
@@ -184,6 +200,11 @@ impl FixedLifecycleDecisionHost {
         PreparationEffects::LeaseInfrastructureMayBeCreated
     }
     pub fn set_host_policy(&self, facts: HostPolicyFacts) -> Result<(), FixedDecisionError> {
+        if self.shared_owner.is_some() {
+            return Err(FixedDecisionError::ImplementationGap(
+                "shared policy updates require trusted PolicyOwner.update_under_lease".into(),
+            ));
+        }
         let mut state = self.state.lock().map_err(infrastructure)?;
         state.revision = state
             .revision
@@ -220,8 +241,14 @@ impl FixedLifecycleDecisionHost {
         })?;
         Ok(leased)
     }
-    fn capture(&self) -> Result<(CapturedPlan, LeasedDefaultLifecycle), FixedDecisionError> {
-        let leased = self.scope_lease()?;
+    fn capture(
+        &self,
+        held: Option<LeasedDefaultLifecycle>,
+    ) -> Result<(CapturedPlan, LeasedDefaultLifecycle), FixedDecisionError> {
+        let leased = match held {
+            Some(lease) => lease,
+            None => self.scope_lease()?,
+        };
         let request = DefaultLifecycleRequest {
             requested: vibe_lifecycle::Phase::Validate,
             force: false,
@@ -298,6 +325,7 @@ impl FixedLifecycleDecisionHost {
         options: RequestedOptions,
     ) -> Result<InputDecisionMessage, FixedDecisionError> {
         supported(&options)?; // before any source/runtime calls
+        let held = self.refresh_shared()?;
         let (revision, facts) = {
             let state = self.state.lock().map_err(infrastructure)?;
             if !state.facts.permits(&options.control) {
@@ -308,7 +336,7 @@ impl FixedLifecycleDecisionHost {
             }
             (state.revision, state.facts.clone())
         };
-        let (base, _held_lease) = self.capture()?;
+        let (base, _held_lease) = self.capture(held)?;
         let base = Arc::new(base);
         let mut state = self.state.lock().map_err(infrastructure)?;
         if revision != state.revision {
@@ -372,6 +400,7 @@ impl FixedLifecycleDecisionHost {
         answer: &InputDecisionMessage,
     ) -> Result<DecisionOutcome, FixedDecisionError> {
         supported(&answer.requested_options)?;
+        let held = self.refresh_shared()?;
         let (revision, base, question) = {
             let state = self.state.lock().map_err(infrastructure)?;
             if answer.policy_generation.as_deref() != Some(&state.generation(&self.issuer)) {
@@ -405,7 +434,7 @@ impl FixedLifecycleDecisionHost {
             }
             (state.revision, sequence.base.clone(), q.clone())
         };
-        let (fresh, _held_lease) = self.capture().map_err(|error| match error {
+        let (fresh, _held_lease) = self.capture(held).map_err(|error| match error {
             FixedDecisionError::SourceUnavailable(reason) => {
                 FixedDecisionError::SourceDrift(format!("fresh source preflight failed: {reason}"))
             }

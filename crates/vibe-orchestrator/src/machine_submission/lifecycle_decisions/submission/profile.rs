@@ -4,6 +4,12 @@ use vibe_lifecycle::LifecycleLease;
 
 pub(in crate::machine_submission) struct AdmittedProfile {
     evidence: ValidatedFixedPlanEvidence,
+    shared_owner: Option<Arc<super::super::super::PolicyOwner>>,
+    snapshot: Option<super::super::super::PolicySnapshot>,
+    policy_access: Arc<Mutex<()>>,
+    #[cfg(test)]
+    pub(in crate::machine_submission) under_guard:
+        Option<Arc<dyn Fn(&LifecycleLease) + Send + Sync>>,
     state: Arc<Mutex<State>>,
     root: Arc<Project>,
     root_token: String,
@@ -16,14 +22,19 @@ pub(in crate::machine_submission) struct AdmittedProfile {
     pub(super) before_guard: Option<Arc<dyn Fn() + Send + Sync>>,
 }
 impl AdmittedProfile {
-    pub(super) fn from_owned(
+    pub(in crate::machine_submission::lifecycle_decisions) fn from_owned(
         host: &FixedLifecycleDecisionHost,
         evidence: &ValidatedFixedPlanEvidence,
     ) -> Result<Self, FixedDecisionError> {
-        let (facts, generation) = {
+        host.observe_shared()?;
+        let (facts, generation, snapshot) = {
             let state = host.state.lock().map_err(infrastructure)?;
             Self::check_record(&state, evidence)?;
-            (state.facts.clone(), state.generation(&host.issuer))
+            (
+                state.facts.clone(),
+                state.generation(&host.issuer),
+                state.snapshot.clone(),
+            )
         };
         let root_token = host
             .project
@@ -35,6 +46,11 @@ impl AdmittedProfile {
         }
         Ok(Self {
             evidence: evidence.clone(),
+            shared_owner: host.shared_owner.clone(),
+            snapshot,
+            policy_access: host.policy_access.clone(),
+            #[cfg(test)]
+            under_guard: None,
             state: host.state.clone(),
             root,
             root_token,
@@ -107,6 +123,25 @@ impl AdmittedProfile {
         #[cfg(test)]
         if let Some(hook) = &self.before_guard {
             hook();
+        }
+        #[cfg(test)]
+        if let Some(hook) = &self.under_guard {
+            hook(lease);
+        }
+        if let Some(owner) = &self.shared_owner {
+            // The caller already owns the C1 writer lease. Serialize only the
+            // complete read/apply; release access before dispatch/provider IO.
+            let _access = self.policy_access.lock().map_err(infrastructure)?;
+            let current = owner
+                .current_under_lease(lease)
+                .map_err(super::super::shared_policy::policy_error)?;
+            self.state
+                .lock()
+                .map_err(infrastructure)?
+                .observe_snapshot(current.clone())?;
+            if self.snapshot.as_ref() != Some(&current) {
+                return Err(FixedDecisionError::StalePolicy.into());
+            }
         }
         self.check_root_path(lease.root())?;
         anyhow::ensure!(
