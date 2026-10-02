@@ -1,0 +1,83 @@
+[package]
+name = "fast-rust-compiler"
+group = "org.vibevm.world"
+kind = "flow"
+version = "1.1.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Portable Rust worktree discipline and owner-commanded Linux workstation setup and removal through agent skills"
+keywords = ["rust", "linux", "build", "worktree", "compiler", "setup"]
+
+[[package.sources]]
+directory = "vibevm/vibespecs/boot"
+media = "application/xml"
+interpretation = "vibe-spec"
+role = "spec"
+loading = "scan"
+
+[[package.sources]]
+directory = "vibevm/vibespecs/flows"
+media = "application/xml"
+interpretation = "vibe-spec"
+role = "spec"
+loading = "scan"
+
+[[package.sources]]
+directory = "vibevm/vibespecs/skills"
+media = "text/markdown"
+interpretation = "opaque"
+role = "resource"
+loading = "explicit"
+
+[[package.sources]]
+file = "README.md"
+media = "text/markdown"
+interpretation = "commonmark"
+role = "documentation"
+loading = "explicit"
+
+[[package.sources]]
+directory = "docs"
+media = "text/markdown"
+interpretation = "commonmark"
+role = "documentation"
+loading = "explicit"
+
+[[package.sources]]
+directory = "templates"
+media = "application/toml"
+interpretation = "opaque"
+role = "resource"
+loading = "explicit"
+
+[[package.sources]]
+file = "LICENSE"
+media = "text/plain"
+interpretation = "opaque"
+role = "resource"
+loading = "explicit"
+
+[compatibility]
+min_vibe_version = "1.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/fast-rust-compiler.xml"
+category = "flow"
+link = "static"
+
+[[boot_snippet.fragment]]
+source = "vibevm/vibespecs/boot/fast-rust-linux.xml"
+when = "os:linux"
+
+[[skill]]
+name = "fast-rust-setup"
+path = "vibevm/vibespecs/skills/fast-rust-setup"
+description = "On an explicit owner setup request, prepare and configure the Linux workstation and project for fast Rust development"
+
+[[skill]]
+name = "fast-rust-uninstall"
+path = "vibevm/vibespecs/skills/fast-rust-uninstall"
+description = "On an explicit owner removal request, undo receipt-owned Linux Rust acceleration without deleting shared tools or user work"

@@ -1,0 +1,5 @@
+# Local ancestor config only. This example selects x86_64 GNU/Linux.
+# Use an actually observed supported GNU/Linux target, never cfg(all(unix)).
+[target.x86_64-unknown-linux-gnu]
+linker = "clang"
+rustflags = ["-C", "link-arg=-fuse-ld=mold"]

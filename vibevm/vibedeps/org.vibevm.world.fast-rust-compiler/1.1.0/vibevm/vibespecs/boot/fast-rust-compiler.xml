@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: fast Rust compiler — portable working rules</title>
+  <status stage="impl" state="done"/>
+  <p><PORTABLE-RUST-WORKFLOW fact="true" status="impl/done">These rules supersede older shared-target advice. Keep project build configuration usable on stable Rust on Linux, macOS and Windows. Installing this flow installs instructions only, never machine software or settings.</PORTABLE-RUST-WORKFLOW></p>
+  <facts ordered="false">
+    <COMPILE-CHECK fact="true" status="impl/done">Use `cargo check -p &lt;crate&gt;` for compile checks; build only when an actual artifact is required.</COMPILE-CHECK>
+    <TARGETED-TESTS fact="true" status="impl/done">Use `cargo nextest run -p &lt;crate&gt; &lt;filter&gt;` if installed; otherwise use `cargo test -p &lt;crate&gt;` with the affected target/filter. Check a meaningful nonzero case count. Run the entire required test set only at the task's completion gate, retaining the designated final campaign gate.</TARGETED-TESTS>
+    <AFFECTED-CLIPPY fact="true" status="impl/done">Run `cargo clippy -p &lt;crate&gt;` only for affected crates.</AFFECTED-CLIPPY>
+    <NO-IMPLICIT-EXPENSIVE-COMMANDS fact="true" status="impl/done">Do not run `--release`, `cargo clean` or `cargo update` without an explicit owner request. Initial installation of an explicitly requested external compiler tool is a separate setup operation, not permission to release-build the project.</NO-IMPLICIT-EXPENSIVE-COMMANDS>
+    <WAIT-FOR-LOCK fact="true" status="impl/done">On “Blocking waiting for file lock”, wait; do not kill processes or remove lock files.</WAIT-FOR-LOCK>
+    <PRIVATE-TARGET fact="true" status="impl/done">Every worktree has its own `target/`. Never share `CARGO_TARGET_DIR` between worktrees or link to another worktree's target. Preserve source and foreign targets.</PRIVATE-TARGET>
+    <PRIMARY-CHECKOUT fact="true" status="impl/done">Discover the primary checkout from the first `worktree` record of `git worktree list --porcelain`. An explicitly owner-selected local warm-cache source may override it only after verifying that both belong to the same Git common directory. Do not infer the source from cwd or branch name.</PRIMARY-CHECKOUT>
+    <WARM-CACHE-OPTIONAL fact="true" status="impl/done">Warm target copying is optional. On Windows skip it. On Unix attempt `cp -a --reflink=always` into a unique temporary directory inside the new worktree; publish as target only on complete success. If unsupported or failed, discard only this attempt's temporary copy and build normally. Never fall back to a full ordinary copy. Preserve mtime and never overwrite an existing target.</WARM-CACHE-OPTIONAL>
+    <SAFE-REMOVAL fact="true" status="impl/done">Remove the exact worktree with `git worktree remove &lt;path&gt;` only after preserving unique work and evidence and proving no live writer remains. Its private target is removed with it.</SAFE-REMOVAL>
+  </facts>
+  <p><PACKAGE-CONTRACT fact="true" status="impl/done">The setup/removal authority and ownership contract is @spec://org.vibevm.world/fast-rust-compiler/flows/fast-rust-compiler/FAST-RUST-COMPILER#root. Linux-only setup instructions do not apply to other hosts.</PACKAGE-CONTRACT></p>
+</spec>

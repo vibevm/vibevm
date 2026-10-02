@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Linux agent commands for fast Rust development</title>
+  <status stage="impl" state="done"/>
+  <p><SETUP-TRIGGER fact="true" status="impl/done">On an explicit owner request such as “set up my computer and project for fast Rust development” or its equivalent in the user's language, apply the installed `fast-rust-setup` skill. It inventories existing tools/configuration, prepares an exact local plan, and then executes the authorized apt/Cargo/rustup/configuration steps. Do not stop at giving the user a command list when they requested execution. Ask only for missing scope or an actual permission barrier; existing explicit setup authorization is not asked for again.</SETUP-TRIGGER></p>
+  <p><REMOVE-TRIGGER fact="true" status="impl/done">On “remove fast-rust setup”, “remove the Rust accelerators” or an equivalent explicit removal request in the user's language, apply `fast-rust-uninstall`. Restore only receipt-owned settings and tools. Removing the VibeVM flow alone does not run system cleanup.</REMOVE-TRIGGER></p>
+  <p><LOCAL-PROFILE fact="true" status="impl/done">Linux acceleration is local opt-in: clang/mold, sccache/nextest and optional nightly/Cranelift, plus inherited local Cargo profiles. Parameterize roots and resources; preserve portable repository configuration. Installation of the flow itself is pure package materialization. This flow supplies agent procedures, not a system-control backend or automatic installation hooks.</LOCAL-PROFILE></p>
+  <p><SKILL-SOURCES fact="true" status="impl/done">Before setup read this package's `vibevm/vibespecs/skills/fast-rust-setup/SKILL.md`; before removal read `vibevm/vibespecs/skills/fast-rust-uninstall/SKILL.md`. Read the appropriate package-relative `docs/setup.md` or `docs/remove.md` and templates. Do not preload long setup guides during ordinary Rust coding.</SKILL-SOURCES></p>
+</spec>

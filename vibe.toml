@@ -14,6 +14,10 @@ authors = ["Oleg Chirukhin"]
 "stack:org.vibevm.ai-native/typescript-ai-native" = "^1.1.0"
 "tool:org.vibevm.world/codex-subagents" = "^1.1.0"
 
+[requires.packages."flow:org.vibevm.world/fast-rust-compiler"]
+version = "^1.1.0"
+link = "static"
+
 [requires.packages."flow:org.vibevm.fractality/delegation-first"]
 version = "^1.1.0"
 link = "dynamic"

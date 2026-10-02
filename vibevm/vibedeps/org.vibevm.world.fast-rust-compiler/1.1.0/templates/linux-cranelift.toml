@@ -1,0 +1,12 @@
+# Optional local ancestor config, layered with selected settings above.
+# Nightly/component support must be verified first. Never commit to the project.
+[unstable]
+codegen-backend = true
+
+[profile.dev]
+codegen-backend = "cranelift"
+
+# Optional frontend threading belongs in the one selected target rustflags
+# array, alongside linker flags. Tune to the actual machine; do not append
+# the same flag in both home and ancestor configs.
+# Example addition for a measured eight-thread profile: "-Zthreads=8"

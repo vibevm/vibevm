@@ -1,0 +1,89 @@
+schema = 1
+source_hash = "sha256:29bb1b0aeb3c1e1ec1b7b85ba93914b4992cf007c0f420afc18896f63ddc7033"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:29bb1b0aeb3c1e1ec1b7b85ba93914b4992cf007c0f420afc18896f63ddc7033"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "LICENSE"
+
+[[file]]
+path = "README.md"
+sha256 = "07296304d1a167a0565eb64941000d3bd56d5c9355f44467796632d31d77fbf1"
+disposition = "copied"
+source = "README.md"
+
+[[file]]
+path = "docs/remove.md"
+sha256 = "4be30abe5820f92ef137e3a1bca71d3047216127f9826cb4d6748c1b192e4da7"
+disposition = "copied"
+source = "docs/remove.md"
+
+[[file]]
+path = "docs/setup.md"
+sha256 = "94f4a0e37c10c36e5ff134536445114e63ffa2e0d325d3e8ca2210c5dbbdf538"
+disposition = "copied"
+source = "docs/setup.md"
+
+[[file]]
+path = "docs/validation.md"
+sha256 = "cb73b13916812dd958666fbf132c2d78ff56287a4d4d63df95f035b4649838e5"
+disposition = "copied"
+source = "docs/validation.md"
+
+[[file]]
+path = "templates/cargo-home.toml"
+sha256 = "96dc6ac83f38bcb2b912c5c70547545e92aeea7f2a4b7c33d9147054b6fd74c5"
+disposition = "copied"
+source = "templates/cargo-home.toml"
+
+[[file]]
+path = "templates/linux-cranelift.toml"
+sha256 = "bffb5380dd357a524967171a4adc42672f55c2eb5411b4dad4b30fa10cd82a69"
+disposition = "copied"
+source = "templates/linux-cranelift.toml"
+
+[[file]]
+path = "templates/linux-llvm.toml"
+sha256 = "e0e6fff441ade17bf23242ebe15cf95056ff39ab71e503bb66608c853dcb3bea"
+disposition = "copied"
+source = "templates/linux-llvm.toml"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "11436c317906e501a32aa2bfeff87bc6583593e9b75cdfc244f8fcfd08a757eb"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/fast-rust-compiler.xml"
+sha256 = "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/fast-rust-compiler.xml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/fast-rust-linux.xml"
+sha256 = "74d783d5d0f3d506b254bde46176096c19e7613b373585b6ad013001cce384a2"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/fast-rust-linux.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/fast-rust-compiler/FAST-RUST-COMPILER.xml"
+sha256 = "3139b3a3b60a607e14868656c359c7d86bc3b77f43a139cf4184eefd62be556d"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/fast-rust-compiler/FAST-RUST-COMPILER.xml"
+
+[[file]]
+path = "vibevm/vibespecs/skills/fast-rust-setup/SKILL.md"
+sha256 = "9ec2386aab671a89c8162df55d9c73100e05b5158570981b29e1a846162669f9"
+disposition = "copied"
+source = "vibevm/vibespecs/skills/fast-rust-setup/SKILL.md"
+
+[[file]]
+path = "vibevm/vibespecs/skills/fast-rust-uninstall/SKILL.md"
+sha256 = "b86f6c6754e3b38c665c8dc9bc9be1656970cf67548e6cf5387e92db04c728f4"
+disposition = "copied"
+source = "vibevm/vibespecs/skills/fast-rust-uninstall/SKILL.md"
