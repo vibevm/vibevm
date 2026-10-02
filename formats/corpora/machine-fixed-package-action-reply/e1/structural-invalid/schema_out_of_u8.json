@@ -1,0 +1,9 @@
+{
+  "schema": 256,
+  "reply": {
+    "kind": "completed",
+    "run_id": "run-1",
+    "output_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "artifact_record": "target/vibe-package/launcher/artifact.json"
+  }
+}

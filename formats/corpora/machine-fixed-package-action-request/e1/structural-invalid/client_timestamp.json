@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "action": {
+    "kind": "submit",
+    "key": "copy-key",
+    "created_at": "2099-01-01T00:00:00Z"
+  }
+}

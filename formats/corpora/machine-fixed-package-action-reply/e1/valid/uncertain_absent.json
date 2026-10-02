@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "uncertain",
+    "run_id": "run-1",
+    "partial": {
+      "output_directory": {
+        "kind": "absent"
+      },
+      "output_file": {
+        "kind": "absent"
+      },
+      "artifact_record": {
+        "kind": "absent"
+      }
+    }
+  }
+}

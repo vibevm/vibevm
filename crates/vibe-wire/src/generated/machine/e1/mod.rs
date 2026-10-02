@@ -7,6 +7,9 @@
 pub mod bound_page;
 pub mod composite_snapshot;
 pub mod entity_reference;
+pub mod fixed_package_action_error;
+pub mod fixed_package_action_reply;
+pub mod fixed_package_action_request;
 pub mod input_decision_message;
 pub mod lifecycle_action_error;
 pub mod lifecycle_action_reply;

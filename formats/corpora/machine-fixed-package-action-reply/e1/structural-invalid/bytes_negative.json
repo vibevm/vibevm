@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "uncertain",
+    "run_id": "run-1",
+    "partial": {
+      "output_directory": {
+        "kind": "present"
+      },
+      "output_file": {
+        "kind": "present",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "bytes": -1
+      },
+      "artifact_record": {
+        "kind": "present",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "bytes": 3
+      }
+    }
+  }
+}

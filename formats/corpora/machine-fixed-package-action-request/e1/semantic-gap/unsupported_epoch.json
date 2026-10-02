@@ -1,0 +1,7 @@
+{
+  "schema": 2,
+  "action": {
+    "kind": "submit",
+    "key": "copy-key"
+  }
+}

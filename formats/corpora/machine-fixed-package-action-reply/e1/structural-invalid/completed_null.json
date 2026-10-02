@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "completed",
+    "run_id": "run-1",
+    "output_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "artifact_record": null
+  }
+}

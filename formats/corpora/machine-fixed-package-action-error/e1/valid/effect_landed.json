@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "code": "unavailable_host",
+  "message": "host unavailable",
+  "message_truncated": false,
+  "requested_action": "submit",
+  "requested_scope": {
+    "context": "host-context",
+    "target": "host-target",
+    "principal": "host-principal"
+  },
+  "scope_unavailable_reason": null,
+  "known_run_id": "run-1",
+  "view": {
+    "kind": "uncertain",
+    "run_id": "run-1",
+    "partial": {
+      "output_directory": {
+        "kind": "present"
+      },
+      "output_file": {
+        "kind": "unavailable",
+        "reason": "file changed"
+      },
+      "artifact_record": {
+        "kind": "absent"
+      }
+    }
+  },
+  "effect_observation": "landed"
+}
