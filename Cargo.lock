@@ -4775,6 +4775,7 @@ dependencies = [
  "chrono",
  "core-ai-native-specmark",
  "dirs",
+ "getrandom 0.3.4",
  "serde",
  "serde_json",
  "sha2",

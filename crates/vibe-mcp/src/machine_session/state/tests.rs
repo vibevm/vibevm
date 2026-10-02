@@ -395,3 +395,90 @@ fn oversized_request_id_cannot_initialize_or_enter_correlation_storage() {
     assert_eq!(session.request_id_bytes, 0);
     assert_eq!(session.phase(), SessionPhase::Uninitialized);
 }
+
+#[test]
+fn cross_process_identity_probe() {
+    if std::env::var_os("VIBE_MCP_CROSS_PROCESS_ID_PROBE").is_none() {
+        return;
+    }
+    let mut session = MachineSession::new(vec![trusted("/owned")]).unwrap();
+    let frame = initialized(&mut session, "init");
+    let Body::Initialized(body) = frame.body else {
+        unreachable!()
+    };
+    let context = body
+        .contexts
+        .iter()
+        .find(|context| context.kind == ContextKind::Workspace)
+        .unwrap();
+    println!(
+        "MACHINE_ID_PROBE:{}:{}:{}",
+        frame.session_id.unwrap(),
+        context.context_id,
+        context.target_ids[0]
+    );
+}
+
+#[test]
+fn another_process_session_context_and_target_ids_cannot_match_current_grants() {
+    let mut current = MachineSession::new(vec![trusted("/owned")]).unwrap();
+    let frame = initialized(&mut current, "init");
+    let current_id = frame.session_id.unwrap();
+    let Body::Initialized(body) = frame.body else {
+        unreachable!()
+    };
+    let context = body
+        .contexts
+        .iter()
+        .find(|context| context.kind == ContextKind::Workspace)
+        .unwrap();
+    let output = std::process::Command::new(std::env::current_exe().unwrap())
+        .args([
+            "--exact",
+            "machine_session::state::tests::cross_process_identity_probe",
+            "--nocapture",
+        ])
+        .env("VIBE_MCP_CROSS_PROCESS_ID_PROBE", "1")
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let output = String::from_utf8(output.stdout).unwrap();
+    let marker = output
+        .split_whitespace()
+        .find_map(|word| word.strip_prefix("MACHINE_ID_PROBE:"))
+        .expect("child ran the exact identity probe");
+    let identities = marker.split(':').collect::<Vec<_>>();
+    let [old_session, old_context, old_target] = identities.as_slice() else {
+        panic!("three child identities")
+    };
+    assert_ne!(*old_session, current_id);
+    assert_ne!(*old_context, context.context_id);
+    assert_ne!(*old_target, context.target_ids[0]);
+    assert_eq!(
+        refusal_reason(current.receive(request(
+            Some((*old_session).to_owned()),
+            "old-session",
+            old_context,
+            Some((*old_target).to_owned()),
+        ))),
+        BodyRefusalReason::InvalidRequest
+    );
+    assert_eq!(
+        refusal_reason(current.receive(request(
+            Some(current_id.clone()),
+            "old-context",
+            old_context,
+            None,
+        ))),
+        BodyRefusalReason::UnknownContext
+    );
+    assert_eq!(
+        refusal_reason(current.receive(request(
+            Some(current_id),
+            "old-target",
+            &context.context_id,
+            Some((*old_target).to_owned()),
+        ))),
+        BodyRefusalReason::UnknownTarget
+    );
+}
