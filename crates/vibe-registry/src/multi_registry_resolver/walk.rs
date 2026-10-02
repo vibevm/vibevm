@@ -13,6 +13,7 @@ use super::*;
 mod local;
 mod observation;
 use local::read_local_dep_manifest;
+pub use observation::ResolutionPurpose;
 
 impl MultiRegistryResolver {
     /// All versions of `(group, name)` available to this resolver — the
@@ -111,14 +112,13 @@ impl MultiRegistryResolver {
             group: group.clone(),
             name: name.to_string(),
         })?;
-        Ok(vec![self.resolve(&probe)?.resolved.version])
+        task.detail("resolving a single candidate after version-list discovery");
+        Ok(vec![self.resolve_inner(&probe, task)?.resolved.version])
     }
 
     /// Resolve a pkgref through the override-then-registries decision tree.
     pub fn resolve(&self, pkgref: &PackageRef) -> Result<MultiResolution, RegistryError> {
-        observation::resolution(&self.progress, pkgref, |task| {
-            self.resolve_inner(pkgref, task)
-        })
+        self.resolve_for(pkgref, ResolutionPurpose::VersionSelection)
     }
 
     fn resolve_inner(
@@ -410,7 +410,7 @@ impl MultiRegistryResolver {
                     reason: format!("constructing pinned pkgref: {e}"),
                 }
             })?;
-        let resolution = match self.resolve(&pinned_pkgref) {
+        let resolution = match self.resolve_inner(&pinned_pkgref, task) {
             Ok(r) => r,
             Err(RegistryError::NoMatchingVersion { .. })
             | Err(RegistryError::PackageNotFoundEverywhere { .. })
@@ -428,7 +428,8 @@ impl MultiRegistryResolver {
                             reason: format!("constructing latest pkgref: {e}"),
                         }
                     })?;
-                let r = self.resolve(&fallback_pkgref)?;
+                task.detail("exact metadata version absent; probing latest for a pinned redirect and verifying the requested version");
+                let r = self.resolve_inner(&fallback_pkgref, task)?;
                 if &r.resolved.version != version {
                     return Err(RegistryError::NoMatchingVersion {
                         group: group.clone(),
