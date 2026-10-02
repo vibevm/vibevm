@@ -8,7 +8,7 @@ There are eight package kinds: `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `
 
 ## Status
 
-The current release is **1.0.0**. This is a closed alpha, not a compatibility promise: **1.0.0 will break** while `public = false`. Until the owner declares the first public presentation, breaking changes may ship without migrations; the recovery path is re-init / re-fetch. Read [Alpha notes](docs-legacy/ALPHA-NOTES.md) before adopting the release and [CHANGELOG.md](CHANGELOG.md) before updating.
+The latest stable source tag is **v1.0.3**. This `next` checkout develops 1.1.0; it has not been published for automatic updates. The 1.0.x line remains a closed alpha, and the Developer Preview 1 to 2 migration is being prepared. Read [Alpha notes](docs-legacy/ALPHA-NOTES.md) before adopting the stable line and [CHANGELOG.md](CHANGELOG.md) before updating.
 
 ## Install from the Windows distributive
 
@@ -52,11 +52,11 @@ cargo run -p vibe-cli -- self install
 cargo run -p vibe-cli -- self doctor --fix
 ```
 
-A ready-built `vibe` executable (for example, from the release zip) enters the
+A ready-built `vibe` executable (for example, from a local build) enters the
 same managed inventory without a Rust toolchain:
 
 ```bash
-vibe self import ./vibe.exe --tag 1.0.0 --use
+vibe self import ./vibe.exe --tag 1.0.3 --use
 ```
 
 Run `vibe self --help` for version switching, upgrades, removal, garbage collection, and relocation.
