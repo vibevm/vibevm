@@ -22,7 +22,8 @@ use crate::{
 
 /// Submit the one builtin `source.bin` to `launcher.bin` package operation.
 /// The package owner itself reserves C1 and retains the result. `created_at`
-/// is a trusted host clock value included in its canonical plan.
+/// is the first owner's trusted clock value included in its canonical plan;
+/// same-key replay uses that retained plan, not the retrying host's clock.
 ///
 /// ```no_run
 /// use vibe_lifecycle::{LifecycleLease, SubmissionReservations, SubmissionScope,

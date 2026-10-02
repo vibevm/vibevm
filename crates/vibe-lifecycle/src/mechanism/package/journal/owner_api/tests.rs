@@ -35,9 +35,11 @@ fn fixed_owner_api_copies_once_replays_and_cold_attaches() {
             &namespace,
             &scope,
             "copy",
-            "2026-10-03T00:00:00Z",
+            "2026-10-04T00:00:00Z",
         )
         .unwrap();
+        // The second process's clock is not a requested copy option. The
+        // first owner's retained plan and artifact timestamp remain in force.
         assert_eq!(replay, first);
         (namespace.id().to_owned(), first)
     };
@@ -75,16 +77,6 @@ fn fixed_owner_api_source_conflict_and_foreign_scope_refuse_without_recopy() {
         first,
         StaticFileJournalInspection::Completed { .. }
     ));
-    assert!(
-        submit_fixed_static_file_package(
-            &lease,
-            &namespace,
-            &scope,
-            "copy",
-            "2026-10-04T00:00:00Z",
-        )
-        .is_err()
-    );
     std::fs::write(root.path().join("source.bin"), b"changed").unwrap();
     assert!(
         submit_fixed_static_file_package(

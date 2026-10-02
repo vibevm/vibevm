@@ -8,10 +8,11 @@ caller supplies a held lifecycle lease and host-issued C1 namespace/scope/key.
 It invokes the existing package journal once, with no orchestrator reservation,
 new result store, generic package route or public adapter.
 
-For an existing key, the journal compares the requested plan digest including
-trusted `created_at` to its reserved plan before replay. Source or plan drift
-refuses; a completed cold attach reads the incumbent capsule, output and A2
-record instead of copying again. A2 alone remains post-effect evidence.
+For an existing key, the journal retains the first owner's `created_at` and
+canonical plan. A later host clock reading is not a requested copy option:
+same-key, same-source replay reads the retained plan without copying again.
+Source/request drift refuses; a completed cold attach reads the incumbent
+capsule, output and A2 record. A2 alone remains post-effect evidence.
 
 Focused Linux checks: the new owner API family passed 3/3 in the worker and
 primary targets. The previously existing package cold-attach family passed

@@ -274,24 +274,6 @@ pub(crate) fn reserve_fixed_static_file_intent(
                     {
                         uncertain(lease, domain_run_id)
                     } else {
-                        let requested_plan = serde_json::to_vec(&serde_json::json!({
-                            "format": "vibevm.package.pre-effect-plan/1",
-                            "root": root_value(lease.root())?,
-                            "target": TARGET,
-                            "provider": BUILTIN_STATIC_FILE_PIN,
-                            "source": SOURCE,
-                            "source_sha256": intent.source_sha256,
-                            "source_bytes": intent.source_bytes,
-                            "output_dir": OUTPUT_DIR,
-                            "output_before": intent.output_before,
-                            "artifact_record": RECORD,
-                            "record_before": intent.record_before,
-                            "created_at": execution.created_at,
-                        }))?;
-                        ensure!(
-                            sha(&requested_plan) == intent.plan_sha256,
-                            "fixed static-file replay plan differs from reserved plan"
-                        );
                         match (reservation_ref, read_completion(lease, &domain_run_id)) {
                             (Some(expected_ref), Ok(Some(completion)))
                                 if completion.reservation_ref == expected_ref
