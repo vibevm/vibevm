@@ -17,6 +17,7 @@ mod cache;
 mod doc;
 mod explain;
 mod extensions;
+mod init;
 mod inspect;
 mod lifecycle;
 mod mcp;
@@ -42,6 +43,7 @@ pub use cache::*;
 pub use doc::*;
 pub use explain::*;
 pub use extensions::*;
+pub use init::{InitArgs, InitType};
 pub use inspect::*;
 pub use lifecycle::*;
 pub use mcp::*;
@@ -153,7 +155,7 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
-    /// Scaffold a new vibevm project in the target directory.
+    /// Scaffold a project or package root in the target directory.
     Init(InitArgs),
 
     /// List the packages recorded in the project's lockfile.

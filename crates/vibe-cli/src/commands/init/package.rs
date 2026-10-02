@@ -48,58 +48,102 @@ fn requested_link<'a>(args: &'a InitArgs, default: &'a str) -> Result<&'a str> {
     }
 }
 
-/// Create a package in an existing project root (dynamic link by default).
-pub(super) fn create_package_in_project(
+pub(super) struct PreparedPackage {
+    fields: ProjectFields,
+    kind: PackageKind,
+    link: String,
+    translation: Option<Translation>,
+}
+
+/// Collect and validate all nested-package choices before creating its container.
+#[allow(clippy::too_many_arguments)]
+pub(super) fn prepare_package(
     ctx: &output::Context,
     args: &InitArgs,
-    project_path: &Path,
+    root: &Path,
     group: &str,
     name: &str,
-    user_config: &mut UserConfig,
+    user_config: &UserConfig,
     interactive: bool,
-) -> Result<()> {
-    let path = canonical_no_unc(project_path)?;
-    if !path.join(Manifest::FILENAME).exists() {
-        bail!(
-            "no `vibe.toml` in `{}` — `vibe init package` must be run inside a project root",
-            path.display()
-        );
-    }
-
-    // Gather package field values (interactive or defaults from project fields).
-    let fields = if interactive {
-        ctx.suspend_progress(|| prompts::prompt_package_fields(group, name, user_config))?
+) -> Result<PreparedPackage> {
+    let (fields, kind) = if interactive {
+        ctx.suspend_progress(|| {
+            prompts::identity_introduction(ctx);
+            prompts::prompt_package_fields(args, group, name, user_config)
+        })?
     } else {
-        prompts::package_fields_from_args(args, group, name, user_config)
+        (
+            prompts::package_fields_from_args(args, group, name, user_config),
+            requested_kind(args)?,
+        )
     };
-    prompts::maybe_save_author(user_config, &fields.authors);
-
-    ctx.heading(&format!(
-        "Creating package `{group}/{name}` in `{}`",
-        path.display()
-    ));
-
-    let kind = requested_kind(args)?;
+    super::root_role::validate_fields(&fields, crate::cli::InitType::Package)?;
     let translation = match args.translates.as_deref() {
         None => None,
         Some(coordinate) => {
             if kind != PackageKind::Doc {
-                bail!(
-                    "`--translates` scaffolds a translation, and a translation is a `doc` \
-                     package — pass `--kind doc` as well \
-                     (spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE)"
-                );
+                bail!("`--translates` requires a doc package; pass --kind doc");
             }
-            Some(doc::resolve_translation(&path, coordinate, name)?)
+            Some(doc::resolve_translation(root, coordinate, name)?)
         }
     };
+    let link = requested_link(args, "dynamic")?.to_string();
+    let candidate = if kind == PackageKind::Doc {
+        doc::manifest_text(group, name, &fields, translation.as_ref())
+    } else {
+        nested_manifest_text(group, name, &link, &fields, kind)
+    };
+    let manifest = Manifest::parse_str(&candidate).context(
+        "violates REQ spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE: invalid nested manifest; fix surface: init metadata and package kind",
+    )?;
+    let metadata = manifest.require_package()?;
+    if metadata.authors != fields.authors
+        || metadata.license.as_deref() != Some(fields.license.as_str())
+        || metadata.description.as_deref() != Some(fields.description.as_str())
+    {
+        bail!(
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE: nested metadata changes when parsed; fix surface: init author, license and description quoting"
+        );
+    }
+    Ok(PreparedPackage {
+        fields,
+        kind,
+        link,
+        translation,
+    })
+}
+
+/// Create the already validated package in its project container.
+pub(super) fn create_package_in_project(
+    ctx: &output::Context,
+    project_path: &Path,
+    group: &str,
+    name: &str,
+    user_config: &mut UserConfig,
+    prepared: PreparedPackage,
+) -> Result<()> {
+    let path = canonical_no_unc(project_path)?;
+    if !path.join(Manifest::FILENAME).exists() {
+        bail!("no vibe.toml in `{}`", path.display());
+    }
+    let PreparedPackage {
+        fields,
+        kind,
+        link,
+        translation,
+    } = prepared;
+    prompts::maybe_save_author(user_config, &fields.authors);
+    ctx.heading(&format!(
+        "Creating package `{group}/{name}` in `{}`",
+        path.display()
+    ));
 
     let mut outcomes = create_package_dirs_from_fields(
         ctx,
         &path,
         group,
         name,
-        requested_link(args, "dynamic")?,
+        &link,
         &fields,
         kind,
         translation.as_ref(),
@@ -205,7 +249,6 @@ fn create_package_dirs_from_fields(
         );
     }
 
-    let category = boot_category(package_kind);
     let mut outcomes = Vec::new();
 
     let manifest_path = pkg_dir.join(Manifest::FILENAME);
@@ -224,25 +267,7 @@ fn create_package_dirs_from_fields(
         });
     } else {
         ensure_dir(&pkg_dir)?;
-        let authors_line = if fields.authors.is_empty() {
-            String::new()
-        } else {
-            let quoted: Vec<String> = fields.authors.iter().map(|a| format!("\"{a}\"")).collect();
-            format!("authors = [{}]\n", quoted.join(", "))
-        };
-        let boot_source = display_pathbuf(
-            &vibe_core::layout::current_boot_dir().join(format!("10-{kind}-{name}.md")),
-        );
-        let manifest_text = format!(
-            "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
-             version = \"{version}\"\nepoch = 1\n{authors_line}\
-             license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
-             [boot_snippet]\nsource = \"{boot_source}\"\ncategory = \"{category}\"\n\
-             link = \"{link}\"\n",
-            license = fields.license,
-            description = fields.description,
-            format = fields.format,
-        );
+        let manifest_text = nested_manifest_text(group, name, link, fields, package_kind);
         fs::write(&manifest_path, &manifest_text)?;
         ctx.created(&manifest_rel);
         outcomes.push(Outcome {
@@ -310,4 +335,35 @@ fn create_package_dirs_from_fields(
     }
 
     Ok(outcomes)
+}
+
+fn nested_manifest_text(
+    group: &str,
+    name: &str,
+    link: &str,
+    fields: &ProjectFields,
+    kind: PackageKind,
+) -> String {
+    let authors_line = if fields.authors.is_empty() {
+        String::new()
+    } else {
+        let quoted: Vec<String> = fields.authors.iter().map(|a| format!("\"{a}\"")).collect();
+        format!("authors = [{}]\n", quoted.join(", "))
+    };
+    let kind_text = kind.as_str();
+    let category = boot_category(kind);
+    let boot_source = display_pathbuf(
+        &vibe_core::layout::current_boot_dir().join(format!("10-{kind_text}-{name}.md")),
+    );
+    format!(
+        "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind_text}\"\n\
+         version = \"{version}\"\nepoch = 1\n{authors_line}\
+         license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
+         [boot_snippet]\nsource = \"{boot_source}\"\ncategory = \"{category}\"\n\
+         link = \"{link}\"\n",
+        version = fields.version,
+        license = fields.license,
+        description = fields.description,
+        format = fields.format,
+    )
 }

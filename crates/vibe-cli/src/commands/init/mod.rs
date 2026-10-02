@@ -3,8 +3,9 @@
 //! Spec: `VIBEVM-SPEC.md` §9.1, §11.1.
 //!
 //! Forms:
-//!   vibe init [dir]                              — project only (dir defaults to CWD)
-//!   vibe init package <group>/<name> [dir]       — package (creates project if absent)
+//!   vibe init [dir]                             — choose root project/package in a TTY
+//!   vibe init [dir] --type package --group <group> — package-root declaration
+//!   vibe init package <group>/<name> [dir]      — nested package (creates project if absent)
 //!   vibe init group <group> [dir]                — group dir (creates project if absent)
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#project-initialization");
@@ -13,14 +14,14 @@ mod doc;
 mod helpers;
 mod package;
 mod prompts;
+mod root_role;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_core::manifest::{
-    ActiveSection, DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, Manifest, NamingConvention,
-    RegistrySection,
+    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, Manifest, NamingConvention, RegistrySection,
 };
 use vibe_core::user_config::UserConfig;
 
@@ -43,6 +44,17 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
     } else {
         InitMode::Project
     };
+
+    if !matches!(mode, InitMode::Project) && (args.init_type.is_some() || args.group.is_some()) {
+        bail!(
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE: `--type` and `--group` choose a root declaration; they cannot be combined with legacy `init package` or `init group`; fix surface: choose root flags or a legacy positional form"
+        );
+    }
+    if matches!(mode, InitMode::Project) && positional.len() > 1 {
+        bail!(
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE: ordinary `vibe init` accepts one target directory; use --type and --group for root identity; fix surface: init positional directory or --type/--group"
+        );
+    }
 
     // Extract pkgref/group and path from positionals.
     let (pkgref, path) = match mode {
@@ -95,16 +107,33 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
             let pkgref =
                 pkgref.context("`vibe init package` requires a pkgref `<group>/<name>`")?;
             let (group, name) = split_pkgref(&pkgref)?;
-            // Ensure the project exists first.
-            ensure_project_exists(ctx, &args, &project_path, &mut user_config, interactive)?;
-            package::create_package_in_project(
+            if args
+                .name
+                .as_deref()
+                .is_some_and(|explicit| explicit != name)
+            {
+                bail!(
+                    "violates REQ spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE: --name conflicts with the positional package identity; fix surface: init --name or the positional coordinate"
+                );
+            }
+            let prepared = package::prepare_package(
                 ctx,
                 &args,
                 &project_path,
                 &group,
                 &name,
-                &mut user_config,
+                &user_config,
                 interactive,
+            )?;
+            // Ensure the container only after the package fields are valid.
+            ensure_project_exists(ctx, &args, &project_path, &mut user_config, interactive)?;
+            package::create_package_in_project(
+                ctx,
+                &project_path,
+                &group,
+                &name,
+                &mut user_config,
+                prepared,
             )?;
         }
         InitMode::Group => {
@@ -139,7 +168,28 @@ fn ensure_project_exists(
         project_path.to_path_buf()
     };
     if !path.join(Manifest::FILENAME).exists() {
-        create_project(ctx, args, project_path, user_config, interactive, None)?;
+        let mut container_args = InitArgs {
+            init_type: Some(crate::cli::InitType::Project),
+            group: if interactive {
+                args.positional
+                    .get(1)
+                    .map(|identity| identity.split('/').next().unwrap_or(identity).to_string())
+            } else {
+                None
+            },
+            ..args.clone()
+        };
+        container_args.name = None;
+        container_args.kind = None;
+        container_args.translates = None;
+        create_project(
+            ctx,
+            &container_args,
+            project_path,
+            user_config,
+            interactive,
+            None,
+        )?;
     }
     Ok(())
 }
@@ -156,30 +206,28 @@ fn create_project(
 ) -> Result<()> {
     use helpers::*;
 
+    // Plan identity and validate every field before directory or user-settings writes.
+    let requested_root = if project_path.is_absolute() {
+        project_path.to_path_buf()
+    } else {
+        std::env::current_dir()?.join(project_path)
+    };
+    let plan = root_role::plan(ctx, args, &requested_root, user_config, interactive)?;
+    let manifest_text = toml::to_string_pretty(&plan.manifest)?;
     fs::create_dir_all(project_path)
         .with_context(|| format!("creating project directory `{}`", project_path.display()))?;
-
     let path = canonical_no_unc(project_path)?;
     let display_root = normalize_display(project_path, &path);
-
-    if !path.is_dir() {
-        bail!("target `{}` is not a directory", display_root);
-    }
-
-    let project_name = resolve_name(args, &path)?;
-
-    // Gather project field values (interactive prompts or flags/defaults).
-    let fields = if interactive {
-        ctx.suspend_progress(|| prompts::prompt_project_fields(&project_name, user_config))?
-    } else {
-        prompts::project_fields_from_args(args, &project_name, user_config)
-    };
-
-    // Save last_author if it changed.
+    let fields = plan.fields;
     prompts::maybe_save_author(user_config, &fields.authors);
 
     ctx.heading(&format!(
-        "Initializing project `{}` in `{display_root}`",
+        "Initializing {} `{}` in `{display_root}`",
+        if plan.role == crate::cli::InitType::Package {
+            "package"
+        } else {
+            "project"
+        },
         fields.name
     ));
 
@@ -209,15 +257,39 @@ fn create_project(
     )?);
 
     // 3. Project manifest + empty lockfile.
-    let registries = resolve_registry_sections(args);
-    outcomes.push(ensure_project_manifest(
+    outcomes.push(ensure_file(
         ctx,
         &path,
-        &fields.name,
-        args.stack.as_deref(),
-        registries,
-        &fields.authors,
+        &path.join(Manifest::FILENAME),
+        &manifest_text,
+        "root manifest",
     )?);
+    if plan.role == crate::cli::InitType::Package {
+        let package_meta = plan
+            .manifest
+            .package
+            .as_ref()
+            .context("package root metadata")?;
+        if package_meta.kind == vibe_core::PackageKind::Doc {
+            outcomes.extend(doc::create_doc_package(
+                ctx,
+                &path,
+                &path,
+                package_meta.group.as_str(),
+                &fields.name,
+                &fields,
+                None,
+            )?);
+        } else {
+            outcomes.push(ensure_file(
+                ctx,
+                &path,
+                &path.join("README.md"),
+                &format!("# {}\n\n{}\n", fields.name, fields.description),
+                "package README",
+            )?);
+        }
+    }
     outcomes.push(ensure_empty_lockfile(ctx, &path)?);
 
     // 4. `.vibe/` — the project-local state dir (settings, parked
@@ -267,9 +339,8 @@ fn split_pkgref(s: &str) -> Result<(String, String)> {
         "`{s}` is not a valid pkgref — expected `<group>/<name>` (e.g. org.vibevm.apple/orange)"
     ))?;
     validate_group(group)?;
-    if name.is_empty() {
-        bail!("package name after `/` is empty in `{s}`");
-    }
+    vibe_core::PackageName::parse(name)
+        .with_context(|| format!("invalid package name in `{s}`"))?;
     Ok((group.to_string(), name.to_string()))
 }
 

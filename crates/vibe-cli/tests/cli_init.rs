@@ -18,6 +18,9 @@ use predicates::prelude::*;
 
 mod common;
 
+#[path = "cli_init/init_root_roles.rs"]
+mod init_root_roles;
+
 use common::UserScratch;
 
 #[test]
