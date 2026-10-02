@@ -109,6 +109,7 @@ pub enum FormatId {
     MachineBoundPage,
     MachineCompositeSnapshot,
     MachineEntityReference,
+    MachineInputDecisionMessage,
     MachineOperationDescriptor,
     MachineOperationEnvelope,
     MachineOperationStreamMessage,

@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "description": "Pure bounded decision data. PureValidation != Ownership != Admission. Single text input only; other domain input kinds remain extraction gaps. IDs are opaque owner values; requested options and approval are data, never authority. Unavailable generation retains known bindings without inventing IDs. plan_id identifies the prepared question plan; the domain later supplies any resulting plan.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-INPUT-ADMISSION",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::input_decision_message"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "question_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "operation_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "domain_owner": {
+      "type": "string",
+      "nullable": true
+    },
+    "context_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "target_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "principal_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "plan_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "source_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "policy_generation": {
+      "type": "string",
+      "nullable": true
+    },
+    "requested_options": {
+      "ref": "requested_options"
+    },
+    "body": {
+      "ref": "body"
+    }
+  },
+  "definitions": {
+    "body": {
+      "discriminator": "kind",
+      "mapping": {
+        "selection_question": {
+          "properties": {
+            "prompt": {
+              "type": "string"
+            },
+            "choices": {
+              "elements": {
+                "ref": "choice"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "min_choices": {
+              "type": "uint16"
+            },
+            "max_choices": {
+              "type": "uint16"
+            }
+          }
+        },
+        "selection_answer": {
+          "properties": {
+            "choice_ids": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            }
+          }
+        },
+        "text_question": {
+          "properties": {
+            "prompt": {
+              "type": "string"
+            },
+            "min_bytes": {
+              "type": "uint16"
+            },
+            "max_bytes": {
+              "type": "uint16"
+            }
+          }
+        },
+        "text_answer": {
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        "approval_question": {
+          "properties": {
+            "prompt": {
+              "type": "string"
+            },
+            "effect_summary": {
+              "type": "string"
+            }
+          }
+        },
+        "approval_answer": {
+          "properties": {
+            "approved": {
+              "type": "boolean"
+            }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "choice": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "requested_options": {
+      "properties": {
+        "force": {
+          "type": "boolean"
+        },
+        "trace": {
+          "type": "boolean"
+        },
+        "deploy_profile": {
+          "type": "string",
+          "nullable": true
+        },
+        "control": {
+          "enum": [
+            "none",
+            "detach",
+            "cancel_pre_dispatch",
+            "cancel_deferred_boundary"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    }
+  }
+}

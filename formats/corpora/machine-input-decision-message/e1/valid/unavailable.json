@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "question_id": null,
+  "operation_id": "test-operation",
+  "domain_owner": "test-owner",
+  "context_id": "test-context",
+  "target_id": null,
+  "principal_id": "test-principal",
+  "plan_id": null,
+  "source_id": null,
+  "policy_generation": null,
+  "requested_options": {
+    "force": false,
+    "trace": false,
+    "deploy_profile": null,
+    "control": "none"
+  },
+  "body": {
+    "kind": "unavailable",
+    "reason": "Owner policy unavailable"
+  }
+}
