@@ -295,12 +295,56 @@ impl HostOwnedFixedOperation {
 
     pub fn inspect(&self) -> Result<FixedOperationStatus> {
         let observed = self.inner.owner.inspect()?;
-        if matches!(observed, Observation::RecoveryRequired { run_id: None, .. }) {
+        if let Observation::RecoveryRequired { reason, .. } = &observed {
             let _access = self.inner.owner.shared.evidence_access.lock().unwrap();
-            let c = &self.inner.coordinates;
-            let lease = LifecycleLease::acquire(&c.root)?;
-            if let Some(status) = inspect_fixed_existing(&lease, &c.namespace, &c.scope, &c.key)? {
-                return Ok(status);
+            let replay = {
+                let record = self.inner.owner.shared.record.lock().unwrap();
+                if record.binding.is_some() {
+                    None
+                } else {
+                    record.callback_disposition.clone()
+                }
+            };
+            if let Some(CallbackDisposition::Replayed {
+                run_id,
+                physical_root,
+            }) = replay
+            {
+                let c = &self.inner.coordinates;
+                let fresh = (|| -> Result<Option<FixedOperationStatus>> {
+                    physical_root.check(&c.root)?;
+                    let lease = LifecycleLease::acquire(&c.root)?;
+                    physical_root.check_lease(&lease)?;
+                    let row = SubmissionReservations::inspect_existing_key(
+                        &lease,
+                        &c.namespace,
+                        &c.scope,
+                        &c.key,
+                    )?
+                    .context("replayed C1 absent")?;
+                    ensure!(
+                        row.domain_run_id == run_id && !row.retired,
+                        "replayed C1 changed or retired"
+                    );
+                    inspect_fixed_existing(&lease, &c.namespace, &c.scope, &c.key)
+                })();
+                return Ok(match fresh {
+                    Err(error)
+                        if matches!(
+                            error.downcast_ref::<vibe_lifecycle::LifecycleLeaseError>(),
+                            Some(vibe_lifecycle::LifecycleLeaseError::Busy { .. })
+                        ) =>
+                    {
+                        return Err(error);
+                    }
+                    Ok(Some(status @ FixedOperationStatus::ResultAvailable { .. })) if matches!(&status, FixedOperationStatus::ResultAvailable { run_id: actual, .. } if actual == &run_id) => {
+                        status
+                    }
+                    other => FixedOperationStatus::RecoveryRequired {
+                        run_id: Some(run_id),
+                        reason: format!("{reason}; replay inspection: {other:?}"),
+                    },
+                });
             }
         }
         Ok(observed.into())

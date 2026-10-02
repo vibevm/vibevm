@@ -116,7 +116,26 @@ impl PhysicalRoot {
         self.check(lease.root())
     }
 }
+#[derive(Clone)]
+enum CallbackDisposition {
+    Replayed {
+        run_id: String,
+        physical_root: Arc<PhysicalRoot>,
+    },
+    Stopped {
+        run_id: Option<String>,
+    },
+}
+impl CallbackDisposition {
+    fn run_id(&self) -> Option<String> {
+        match self {
+            Self::Replayed { run_id, .. } => Some(run_id.clone()),
+            Self::Stopped { run_id } => run_id.clone(),
+        }
+    }
+}
 struct Record {
+    callback_disposition: Option<CallbackDisposition>,
     state: LiveState,
     binding: Option<Binding>,
     lease: Option<Arc<LifecycleLease>>,
@@ -342,13 +361,14 @@ impl ReadyObserver {
 
 fn inspect(shared: &Arc<Shared>) -> Result<Observation> {
     let _access = shared.evidence_access.lock().unwrap();
-    let (state, binding, canonical_request, reason) = {
+    let (state, binding, canonical_request, reason, callback_disposition) = {
         let r = shared.record.lock().unwrap();
         (
             r.state,
             r.binding.clone(),
             r.canonical_request.clone(),
             r.reason.clone(),
+            r.callback_disposition.clone(),
         )
     };
     if state == LiveState::Starting {
@@ -356,7 +376,7 @@ fn inspect(shared: &Arc<Shared>) -> Result<Observation> {
     }
     let Some(binding) = binding else {
         return Ok(Observation::RecoveryRequired {
-            run_id: None,
+            run_id: callback_disposition.and_then(|d| d.run_id()),
             reason,
         });
     };
@@ -477,6 +497,7 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
         #[cfg(test)]
         after_cold_lease: Mutex::new(None),
         record: Mutex::new(Record {
+            callback_disposition: None,
             state: LiveState::Starting,
             binding: None,
             lease: None,
@@ -537,7 +558,7 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                     .map(|hook| hook.as_ref() as &dyn Fn() -> Result<()>);
                 #[cfg(not(test))]
                 let after_effect = None;
-                submit_one_script_validate_internal(
+                let result = submit_one_script_validate_internal(
                     &dispatch.path,
                     &dispatch.namespace,
                     &dispatch.scope,
@@ -551,7 +572,42 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                     after_effect,
                     Some(&ready),
                     dispatch.profile.as_ref(),
-                )
+                );
+                // Only the actual callback may prove replay of this intent.
+                // Keep correlation alone; every result inspection stays fresh.
+                let disposition = match &result {
+                    Ok(SubmissionOutcome::Replayed { run_id, .. }) => ready
+                        .physical_root
+                        .lock()
+                        .unwrap()
+                        .clone()
+                        .map(|physical_root| CallbackDisposition::Replayed {
+                            run_id: run_id.clone(),
+                            physical_root,
+                        }),
+                    Ok(SubmissionOutcome::RecoveryRequired { run_id }) => {
+                        Some(CallbackDisposition::Stopped {
+                            run_id: Some(run_id.clone()),
+                        })
+                    }
+                    Ok(SubmissionOutcome::Retired { run_id }) => {
+                        Some(CallbackDisposition::Stopped {
+                            run_id: run_id.clone(),
+                        })
+                    }
+                    Err(error) => match error.downcast_ref::<SubmissionFailure>() {
+                        Some(
+                            SubmissionFailure::MissingJournal { run_id }
+                            | SubmissionFailure::UncertainJournal { run_id, .. },
+                        ) => Some(CallbackDisposition::Stopped {
+                            run_id: Some(run_id.clone()),
+                        }),
+                        _ => None,
+                    },
+                    _ => None,
+                };
+                worker.record.lock().unwrap().callback_disposition = disposition;
+                result
             }));
             // Submission locals have unwound/dropped. Release the active proof
             // outside the mutex, before publishing terminal state or notifying.

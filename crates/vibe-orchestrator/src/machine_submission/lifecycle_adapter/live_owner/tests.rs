@@ -233,6 +233,7 @@ fn foreign_coordinates_and_handles_refuse_without_second_execution() {
             evidence_access: Mutex::new(()),
             after_cold_lease: Mutex::new(None),
             record: Mutex::new(Record {
+                callback_disposition: None,
                 state: LiveState::Starting,
                 binding: None,
                 lease: None,
