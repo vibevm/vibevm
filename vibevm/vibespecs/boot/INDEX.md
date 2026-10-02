@@ -45,5 +45,10 @@ path = "vibevm/vibedeps/org.vibevm.world.codex-subagents/1.1.0/vibevm/vibespecs/
 kind = "static"
 
 [[entry]]
+path = "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-linux.xml"
+kind = "dynamic"
+when = "os:linux"
+
+[[entry]]
 path = "vibevm/vibedeps/org.vibevm.world.omnichannel/1.1.0/vibevm/vibespecs/boot/68-flow-omnichannel.xml"
 kind = "static"

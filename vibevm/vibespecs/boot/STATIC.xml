@@ -29,6 +29,7 @@
   A-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME → org-vibevm-world-%2Dsource-mirrors-%2DA-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME (org.vibevm.world/source-mirrors)
   ACCEPTANCE-NEVER-TRANSFERS → org-vibevm-world-%2Dmulti-user-planning-%2DACCEPTANCE-NEVER-TRANSFERS (org.vibevm.world/multi-user-planning)
   ADVISORY-CUSTODY → org-vibevm-world-%2Dmulti-user-planning-%2DADVISORY-CUSTODY (org.vibevm.world/multi-user-planning)
+  AFFECTED-CLIPPY → org-vibevm-world-%2Dfast-rust-compiler-%2DAFFECTED-CLIPPY (org.vibevm.world/fast-rust-compiler)
   AFFECTED-TARGETS-FIRST → org-vibevm-world-%2Dmulti-user-planning-%2DAFFECTED-TARGETS-FIRST (org.vibevm.world/multi-user-planning)
   AGENT-CANNOT-ASK-VASYA → org-vibevm-world-%2Ddecision-records-%2DAGENT-CANNOT-ASK-VASYA (org.vibevm.world/decision-records)
   AGENT-READS-THE-TREE-COLD-EVERY-SESSION → org-vibevm-world-%2Dspec-genres-%2DAGENT-READS-THE-TREE-COLD-EVERY-SESSION (org.vibevm.world/spec-genres)
@@ -63,6 +64,7 @@
   COLD-MANDATE-QUOTED-VERBATIM-AND-DATED → org-vibevm-world-%2Dcampaign-plans-%2DCOLD-MANDATE-QUOTED-VERBATIM-AND-DATED (org.vibevm.world/campaign-plans)
   COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW → org-vibevm-world-%2Dgit-atomic-commits-%2DCOMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW (org.vibevm.world/git-atomic-commits)
   COMMIT-ON-MAINLINE-ROLLOUT-IS-A-SEPARATE-STEP → org-vibevm-world-%2Dsource-mirrors-%2DCOMMIT-ON-MAINLINE-ROLLOUT-IS-A-SEPARATE-STEP (org.vibevm.world/source-mirrors)
+  COMPILE-CHECK → org-vibevm-world-%2Dfast-rust-compiler-%2DCOMPILE-CHECK (org.vibevm.world/fast-rust-compiler)
   CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY → org-vibevm-world-%2Dtwo-process-model-%2DCONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY (org.vibevm.world/two-process-model)
   CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES → org-vibevm-world-%2Dtwo-process-model-%2DCONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES (org.vibevm.world/two-process-model)
   CONSEQUENCE-THE-HUMAN-OWNS-COHERENCE → org-vibevm-world-%2Dtwo-process-model-%2DCONSEQUENCE-THE-HUMAN-OWNS-COHERENCE (org.vibevm.world/two-process-model)
@@ -240,6 +242,7 @@
   NEVER-WRITE-OUTSIDE-YOUR-OWN-BLOCK → org-vibevm-world-%2Dmanaged-blocks-%2DNEVER-WRITE-OUTSIDE-YOUR-OWN-BLOCK (org.vibevm.world/managed-blocks)
   NO-CODEWORD-CAN-BE-DEFINED-THAT-ERODES-THIS → org-vibevm-world-%2Doperating-modes-%2DNO-CODEWORD-CAN-BE-DEFINED-THAT-ERODES-THIS (org.vibevm.world/operating-modes)
   NO-HOST-IS-PRIMARY → org-vibevm-world-%2Dsource-mirrors-%2DNO-HOST-IS-PRIMARY (org.vibevm.world/source-mirrors)
+  NO-IMPLICIT-EXPENSIVE-COMMANDS → org-vibevm-world-%2Dfast-rust-compiler-%2DNO-IMPLICIT-EXPENSIVE-COMMANDS (org.vibevm.world/fast-rust-compiler)
   NO-SEPARATE-ADR-DIRECTORY → org-vibevm-world-%2Ddecision-records-%2DNO-SEPARATE-ADR-DIRECTORY (org.vibevm.world/decision-records)
   NO-SILENT-LOSS → org-vibevm-world-%2Dmulti-user-planning-%2DNO-SILENT-LOSS (org.vibevm.world/multi-user-planning)
   NON-ROUTINE-WORK-STOPS-FOR-EXPLICIT-CONFIRMATION → org-vibevm-world-%2Doperating-modes-%2DNON-ROUTINE-WORK-STOPS-FOR-EXPLICIT-CONFIRMATION (org.vibevm.world/operating-modes)
@@ -256,6 +259,7 @@
   ONE-STATED-PRODUCT-LICENCE → org-vibevm-world-%2Dlicensing-%2DONE-STATED-PRODUCT-LICENCE (org.vibevm.world/licensing)
   OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES → org-vibevm-world-%2Dredbook-%2DOPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES (org.vibevm.world/redbook)
   OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED → org-vibevm-world-%2Dhealth-audit-%2DOWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED (org.vibevm.world/health-audit)
+  PACKAGE-CONTRACT → org-vibevm-world-%2Dfast-rust-compiler-%2DPACKAGE-CONTRACT (org.vibevm.world/fast-rust-compiler)
   PARALLEL-PACKETS → org-vibevm-world-%2Dmulti-user-planning-%2DPARALLEL-PACKETS (org.vibevm.world/multi-user-planning)
   PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER → org-vibevm-world-%2Dcampaign-plans-%2DPHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER (org.vibevm.world/campaign-plans)
   PLAN-IS-HIERARCHICAL → org-vibevm-world-%2Dmulti-user-planning-%2DPLAN-IS-HIERARCHICAL (org.vibevm.world/multi-user-planning)
@@ -264,7 +268,10 @@
   POINTER-THE-AUTHORING-RULES → org-vibevm-world-%2Daddressable-specs-%2DPOINTER-THE-AUTHORING-RULES (org.vibevm.world/addressable-specs)
   POINTER-THE-PROTOCOL → org-vibevm-world-%2Daddressable-specs-%2DPOINTER-THE-PROTOCOL (org.vibevm.world/addressable-specs)
   POINTER-THE-SPEC-TREE-LAYOUT → org-vibevm-world-%2Daddressable-specs-%2DPOINTER-THE-SPEC-TREE-LAYOUT (org.vibevm.world/addressable-specs)
+  PORTABLE-RUST-WORKFLOW → org-vibevm-world-%2Dfast-rust-compiler-%2DPORTABLE-RUST-WORKFLOW (org.vibevm.world/fast-rust-compiler)
+  PRIMARY-CHECKOUT → org-vibevm-world-%2Dfast-rust-compiler-%2DPRIMARY-CHECKOUT (org.vibevm.world/fast-rust-compiler)
   PRINT-THE-SOURCE-NEVER-THE-VALUE → org-vibevm-world-%2Dsecrets-hygiene-%2DPRINT-THE-SOURCE-NEVER-THE-VALUE (org.vibevm.world/secrets-hygiene)
+  PRIVATE-TARGET → org-vibevm-world-%2Dfast-rust-compiler-%2DPRIVATE-TARGET (org.vibevm.world/fast-rust-compiler)
   PROFILE-QUALITY-FLOOR → org-vibevm-world-%2Dmulti-user-planning-%2DPROFILE-QUALITY-FLOOR (org.vibevm.world/multi-user-planning)
   PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF → org-vibevm-world-%2Dtool-design-lessons-%2DPROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF (org.vibevm.world/tool-design-lessons)
   PROJECT-DOCUMENTS-ARE-GENRE-TYPED → org-vibevm-world-%2Dspec-genres-%2DPROJECT-DOCUMENTS-ARE-GENRE-TYPED (org.vibevm.world/spec-genres)
@@ -343,6 +350,7 @@
   ROW-GENRE-THE-CHECKPOINT-BINDING → org-vibevm-world-%2Dspec-genres-%2DROW-GENRE-THE-CHECKPOINT-BINDING (org.vibevm.world/spec-genres)
   ROW-GENRE-THE-CHECKPOINT-HOLDS → org-vibevm-world-%2Dspec-genres-%2DROW-GENRE-THE-CHECKPOINT-HOLDS (org.vibevm.world/spec-genres)
   RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION → org-vibevm-world-%2Dsync-from-code-%2DRUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION (org.vibevm.world/sync-from-code)
+  SAFE-REMOVAL → org-vibevm-world-%2Dfast-rust-compiler-%2DSAFE-REMOVAL (org.vibevm.world/fast-rust-compiler)
   SCOPE-PRODUCT-IS-CARVED-OUT → org-vibevm-world-%2Dgit-attribution-policy-%2DSCOPE-PRODUCT-IS-CARVED-OUT (org.vibevm.world/git-attribution-policy)
   SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED → org-vibevm-world-%2Dgit-attribution-policy-%2DSCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED (org.vibevm.world/git-attribution-policy)
   SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL → org-vibevm-world-%2Dgit-attribution-policy-%2DSCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL (org.vibevm.world/git-attribution-policy)
@@ -363,6 +371,7 @@
   STEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY → org-vibevm-world-%2Dsync-from-code-%2DSTEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY (org.vibevm.world/sync-from-code)
   SURFACE-THE-MARKER-IN-THE-END-OF-SESSION-REPORT → org-vibevm-world-%2Dconflict-protocol-%2DSURFACE-THE-MARKER-IN-THE-END-OF-SESSION-REPORT (org.vibevm.world/conflict-protocol)
   SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE → org-vibevm-world-%2Dsync-from-code-%2DSYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE (org.vibevm.world/sync-from-code)
+  TARGETED-TESTS → org-vibevm-world-%2Dfast-rust-compiler-%2DTARGETED-TESTS (org.vibevm.world/fast-rust-compiler)
   TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM → org-vibevm-world-%2Dconflict-protocol-%2DTESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM (org.vibevm.world/conflict-protocol)
   THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET → org-vibevm-world-%2Dgit-attribution-policy-%2DTHE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET (org.vibevm.world/git-attribution-policy)
   THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD → org-vibevm-world-%2Dmanual-tests-%2DTHE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD (org.vibevm.world/manual-tests)
@@ -401,6 +410,8 @@
   UNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS → org-vibevm-world-%2Dspec-genres-%2DUNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS (org.vibevm.world/spec-genres)
   UNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED → org-vibevm-world-%2Dhealth-audit-%2DUNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED (org.vibevm.world/health-audit)
   USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE → org-vibevm-world-%2Dhealth-audit-%2DUSE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE (org.vibevm.world/health-audit)
+  WAIT-FOR-LOCK → org-vibevm-world-%2Dfast-rust-compiler-%2DWAIT-FOR-LOCK (org.vibevm.world/fast-rust-compiler)
+  WARM-CACHE-OPTIONAL → org-vibevm-world-%2Dfast-rust-compiler-%2DWARM-CACHE-OPTIONAL (org.vibevm.world/fast-rust-compiler)
   WHAT-COUNTS-AS-A-SURFACE-SECRET → org-vibevm-world-%2Dsecrets-hygiene-%2DWHAT-COUNTS-AS-A-SURFACE-SECRET (org.vibevm.world/secrets-hygiene)
   WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY → org-vibevm-world-%2Dconflict-protocol-%2DWHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY (org.vibevm.world/conflict-protocol)
   WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT → org-vibevm-world-%2Dlicensing-%2DWHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT (org.vibevm.world/licensing)
@@ -485,7 +496,7 @@
   retrofitting-a-group-is-a-migration → org-vibevm-world-%2Dqualified-naming-%2Dretrofitting-a-group-is-a-migration (org.vibevm.world/qualified-naming)
   review → org-vibevm-world-%2Dconflict-protocol-%2Dreview (org.vibevm.world/conflict-protocol)
   roles → org-vibevm-world-%2Dmanual-tests-%2Droles (org.vibevm.world/manual-tests)
-  root → org-vibevm-world-%2Daddressable-specs-%2Droot (org.vibevm.world/addressable-specs), org-vibevm-world-%2Dcampaign-plans-%2Droot (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Droot (org.vibevm.world/comparative-research), org-vibevm-world-%2Dconflict-protocol-%2Droot (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Ddecision-records-%2Droot (org.vibevm.world/decision-records), org-vibevm-world-%2Ddev-runtime-docs-%2Droot (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Ddiscovery-prompt-%2Droot (org.vibevm.world/discovery-prompt), org-vibevm-world-%2Dgit-atomic-commits-%2Droot (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dgit-attribution-policy-%2Droot (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dgit-autonomy-%2Droot (org.vibevm.world/git-autonomy), org-vibevm-world-%2Dgit-conventional-commits-%2Droot (org.vibevm.world/git-conventional-commits), org-vibevm-world-%2Dhealth-audit-%2Droot (org.vibevm.world/health-audit), org-vibevm-world-%2Dlicensing-%2Droot (org.vibevm.world/licensing), org-vibevm-world-%2Dmanaged-blocks-%2Droot (org.vibevm.world/managed-blocks), org-vibevm-world-%2Dmanual-tests-%2Droot (org.vibevm.world/manual-tests), org-vibevm-world-%2Dmulti-user-planning-%2Droot (org.vibevm.world/multi-user-planning), org-vibevm-world-%2Doperating-modes-%2Droot (org.vibevm.world/operating-modes), org-vibevm-world-%2Dqualified-naming-%2Droot (org.vibevm.world/qualified-naming), org-vibevm-world-%2Dredbook-%2Droot (org.vibevm.world/redbook), org-vibevm-world-%2Dsecrets-hygiene-%2Droot (org.vibevm.world/secrets-hygiene), org-vibevm-world-%2Dsource-mirrors-%2Droot (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dspec-genres-%2Droot (org.vibevm.world/spec-genres), org-vibevm-world-%2Dsync-from-code-%2Droot (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dtool-design-lessons-%2Droot (org.vibevm.world/tool-design-lessons), org-vibevm-world-%2Dtwo-process-model-%2Droot (org.vibevm.world/two-process-model)
+  root → org-vibevm-world-%2Daddressable-specs-%2Droot (org.vibevm.world/addressable-specs), org-vibevm-world-%2Dcampaign-plans-%2Droot (org.vibevm.world/campaign-plans), org-vibevm-world-%2Dcomparative-research-%2Droot (org.vibevm.world/comparative-research), org-vibevm-world-%2Dconflict-protocol-%2Droot (org.vibevm.world/conflict-protocol), org-vibevm-world-%2Ddecision-records-%2Droot (org.vibevm.world/decision-records), org-vibevm-world-%2Ddev-runtime-docs-%2Droot (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Ddiscovery-prompt-%2Droot (org.vibevm.world/discovery-prompt), org-vibevm-world-%2Dfast-rust-compiler-%2Droot (org.vibevm.world/fast-rust-compiler), org-vibevm-world-%2Dgit-atomic-commits-%2Droot (org.vibevm.world/git-atomic-commits), org-vibevm-world-%2Dgit-attribution-policy-%2Droot (org.vibevm.world/git-attribution-policy), org-vibevm-world-%2Dgit-autonomy-%2Droot (org.vibevm.world/git-autonomy), org-vibevm-world-%2Dgit-conventional-commits-%2Droot (org.vibevm.world/git-conventional-commits), org-vibevm-world-%2Dhealth-audit-%2Droot (org.vibevm.world/health-audit), org-vibevm-world-%2Dlicensing-%2Droot (org.vibevm.world/licensing), org-vibevm-world-%2Dmanaged-blocks-%2Droot (org.vibevm.world/managed-blocks), org-vibevm-world-%2Dmanual-tests-%2Droot (org.vibevm.world/manual-tests), org-vibevm-world-%2Dmulti-user-planning-%2Droot (org.vibevm.world/multi-user-planning), org-vibevm-world-%2Doperating-modes-%2Droot (org.vibevm.world/operating-modes), org-vibevm-world-%2Dqualified-naming-%2Droot (org.vibevm.world/qualified-naming), org-vibevm-world-%2Dredbook-%2Droot (org.vibevm.world/redbook), org-vibevm-world-%2Dsecrets-hygiene-%2Droot (org.vibevm.world/secrets-hygiene), org-vibevm-world-%2Dsource-mirrors-%2Droot (org.vibevm.world/source-mirrors), org-vibevm-world-%2Dspec-genres-%2Droot (org.vibevm.world/spec-genres), org-vibevm-world-%2Dsync-from-code-%2Droot (org.vibevm.world/sync-from-code), org-vibevm-world-%2Dtool-design-lessons-%2Droot (org.vibevm.world/tool-design-lessons), org-vibevm-world-%2Dtwo-process-model-%2Droot (org.vibevm.world/two-process-model)
   routine → org-vibevm-world-%2Dgit-autonomy-%2Droutine (org.vibevm.world/git-autonomy)
   routing-table-pointer → org-vibevm-world-%2Dspec-genres-%2Drouting-table-pointer (org.vibevm.world/spec-genres)
   rule → org-vibevm-world-%2Ddev-runtime-docs-%2Drule (org.vibevm.world/dev-runtime-docs), org-vibevm-world-%2Dgit-attribution-policy-%2Drule (org.vibevm.world/git-attribution-policy)
@@ -939,6 +950,27 @@ failure.</org-vibevm-world--discovery-prompt--STANCE-UNCERTAINTY-IS-DATA-NOT-FAI
   calibration aids, not measurements.</org-vibevm-world--discovery-prompt--NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES>
     </facts>
   </org-vibevm-world--discovery-prompt--never>
+</spec>
+
+<!-- vibe:c1 vibe:static org.vibevm.world/fast-rust-compiler — vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="org-vibevm-world--fast-rust-compiler--root">Flow: fast Rust compiler — portable working rules</title>
+  <status stage="impl" state="done"/>
+  <p><org-vibevm-world--fast-rust-compiler--PORTABLE-RUST-WORKFLOW fact="true" status="impl/done">These rules supersede older shared-target advice. Keep project build configuration usable on stable Rust on Linux, macOS and Windows. Installing this flow installs instructions only, never machine software or settings.</org-vibevm-world--fast-rust-compiler--PORTABLE-RUST-WORKFLOW></p>
+  <facts ordered="false">
+    <org-vibevm-world--fast-rust-compiler--COMPILE-CHECK fact="true" status="impl/done">Use `cargo check -p &lt;crate&gt;` for compile checks; build only when an actual artifact is required.</org-vibevm-world--fast-rust-compiler--COMPILE-CHECK>
+    <org-vibevm-world--fast-rust-compiler--TARGETED-TESTS fact="true" status="impl/done">Use `cargo nextest run -p &lt;crate&gt; &lt;filter&gt;` if installed; otherwise use `cargo test -p &lt;crate&gt;` with the affected target/filter. Check a meaningful nonzero case count. Run the entire required test set only at the task's completion gate, retaining the designated final campaign gate.</org-vibevm-world--fast-rust-compiler--TARGETED-TESTS>
+    <org-vibevm-world--fast-rust-compiler--AFFECTED-CLIPPY fact="true" status="impl/done">Run `cargo clippy -p &lt;crate&gt;` only for affected crates.</org-vibevm-world--fast-rust-compiler--AFFECTED-CLIPPY>
+    <org-vibevm-world--fast-rust-compiler--NO-IMPLICIT-EXPENSIVE-COMMANDS fact="true" status="impl/done">Do not run `--release`, `cargo clean` or `cargo update` without an explicit owner request. Initial installation of an explicitly requested external compiler tool is a separate setup operation, not permission to release-build the project.</org-vibevm-world--fast-rust-compiler--NO-IMPLICIT-EXPENSIVE-COMMANDS>
+    <org-vibevm-world--fast-rust-compiler--WAIT-FOR-LOCK fact="true" status="impl/done">On “Blocking waiting for file lock”, wait; do not kill processes or remove lock files.</org-vibevm-world--fast-rust-compiler--WAIT-FOR-LOCK>
+    <org-vibevm-world--fast-rust-compiler--PRIVATE-TARGET fact="true" status="impl/done">Every worktree has its own `target/`. Never share `CARGO_TARGET_DIR` between worktrees or link to another worktree's target. Preserve source and foreign targets.</org-vibevm-world--fast-rust-compiler--PRIVATE-TARGET>
+    <org-vibevm-world--fast-rust-compiler--PRIMARY-CHECKOUT fact="true" status="impl/done">Discover the primary checkout from the first `worktree` record of `git worktree list --porcelain`. An explicitly owner-selected local warm-cache source may override it only after verifying that both belong to the same Git common directory. Do not infer the source from cwd or branch name.</org-vibevm-world--fast-rust-compiler--PRIMARY-CHECKOUT>
+    <org-vibevm-world--fast-rust-compiler--WARM-CACHE-OPTIONAL fact="true" status="impl/done">Warm target copying is optional. On Windows skip it. On Unix attempt `cp -a --reflink=always` into a unique temporary directory inside the new worktree; publish as target only on complete success. If unsupported or failed, discard only this attempt's temporary copy and build normally. Never fall back to a full ordinary copy. Preserve mtime and never overwrite an existing target.</org-vibevm-world--fast-rust-compiler--WARM-CACHE-OPTIONAL>
+    <org-vibevm-world--fast-rust-compiler--SAFE-REMOVAL fact="true" status="impl/done">Remove the exact worktree with `git worktree remove &lt;path&gt;` only after preserving unique work and evidence and proving no live writer remains. Its private target is removed with it.</org-vibevm-world--fast-rust-compiler--SAFE-REMOVAL>
+  </facts>
+  <p><org-vibevm-world--fast-rust-compiler--PACKAGE-CONTRACT fact="true" status="impl/done">The setup/removal authority and ownership contract is @spec://org.vibevm.world/fast-rust-compiler/flows/fast-rust-compiler/FAST-RUST-COMPILER#root. Linux-only setup instructions do not apply to other hosts.</org-vibevm-world--fast-rust-compiler--PACKAGE-CONTRACT></p>
 </spec>
 
 <!-- vibe:c1 vibe:static org.vibevm.world/git-atomic-commits — vibevm/vibedeps/org.vibevm.world.git-atomic-commits/1.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml -->

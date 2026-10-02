@@ -65,7 +65,8 @@ Keep it current-state; prune stale lines.
   packet's `##subagent-quiet-clause`. Launch a boot-limited worker as
   `codexrunner exec --strict-config --ignore-user-config -c
   project_doc_max_bytes=0 -c model_reasoning_effort='"xhigh"' <pointer>`;
-  set the shared `CARGO_TARGET_DIR` in that process environment before launch.
+  that historical run used a shared build target. Current Rust workers follow
+  the private-target rules in `vibevm/vibespecs/boot/90-user.xml`.
   The strict-config probe returned exact `QUIET_OK` without a tool call, and
   the real retry read the packet first, loaded only its six named standing
   files, resolved `gpt-5.6-sol` / `xhigh`, and left product work unstaged.

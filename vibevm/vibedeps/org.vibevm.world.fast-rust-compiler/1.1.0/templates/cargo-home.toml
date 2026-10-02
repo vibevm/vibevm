@@ -1,0 +1,17 @@
+# Optional user-wide settings. Merge selected keys; do not replace a config file.
+[build]
+rustc-wrapper = "sccache"
+
+[profile.dev]
+debug = "line-tables-only"
+split-debuginfo = "unpacked"
+
+[profile.dev.package."*"]
+debug = false
+opt-level = 1
+
+[profile.dev.build-override]
+opt-level = 3
+
+[profile.test]
+debug = "line-tables-only"
