@@ -71,17 +71,30 @@ pub struct ServerContext {
     pub(crate) seed_default_registry: bool,
     /// One explicit finite migration grant, never supplied by tool arguments.
     manifest_migration_authority: Option<migration::ManifestMigrationAuthority>,
-    fixed_lifecycle_bridge: Option<std::sync::Arc<crate::tools::lifecycle_operation::bridge::Bridge>>,
+    fixed_lifecycle_bridge: Option<
+        std::sync::Arc<vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute>,
+    >,
 }
 
 impl ServerContext {
     /// Explicit trusted host grant. No namespace, policy or provider is initialized.
-    pub fn with_fixed_lifecycle_host(mut self, host: std::sync::Arc<vibe_orchestrator::machine_submission::FixedLifecycleDecisionHost>) -> Result<Self, vibe_orchestrator::machine_submission::FixedDecisionError> {
+    pub fn with_fixed_lifecycle_host(
+        mut self,
+        host: std::sync::Arc<vibe_orchestrator::machine_submission::FixedLifecycleDecisionHost>,
+    ) -> Result<Self, vibe_orchestrator::machine_submission::FixedDecisionError> {
         host.compare_context_root(&self.project_root)?;
-        self.fixed_lifecycle_bridge = Some(std::sync::Arc::new(crate::tools::lifecycle_operation::bridge::Bridge::new(host)));
+        self.fixed_lifecycle_bridge = Some(std::sync::Arc::new(
+            vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute::new(host),
+        ));
         Ok(self)
     }
-    pub(crate) fn fixed_lifecycle_bridge(&self) -> Option<&std::sync::Arc<crate::tools::lifecycle_operation::bridge::Bridge>> { self.fixed_lifecycle_bridge.as_ref() }
+    pub(crate) fn fixed_lifecycle_bridge(
+        &self,
+    ) -> Option<
+        &std::sync::Arc<vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute>,
+    > {
+        self.fixed_lifecycle_bridge.as_ref()
+    }
 
     pub fn new(project_root: impl Into<PathBuf>) -> Self {
         let store_root = vibe_core::settings::settings_dir()

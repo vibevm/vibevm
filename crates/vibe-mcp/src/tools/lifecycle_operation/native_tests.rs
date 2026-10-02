@@ -1,5 +1,5 @@
 //! Native provider cases through the actual registered Server tools/call.
-//! Compiled only in this packet; runtime evidence belongs to the parent.
+//! Isolated real fixed-owner fixtures; parent still owns acceptance.
 use super::*;
 use crate::{MemoryTransport, Server};
 use serde_json::json;
@@ -14,7 +14,8 @@ use vibe_lifecycle::{
 };
 use vibe_orchestrator::machine_operation::{input_decision as d, lifecycle_view as v};
 use vibe_orchestrator::machine_submission::{
-    FixedLifecycleDecisionHost, FixedOperationStatus, HostPolicyFacts, ValidatedFixedPlanEvidence,
+    DecisionOutcome, FixedLifecycleDecisionHost, FixedOperationStatus, HostPolicyFacts,
+    ValidatedFixedPlanEvidence,
 };
 const WAIT: Duration = Duration::from_secs(20);
 struct Fixture {
@@ -490,3 +491,6 @@ fn concurrent_registered_mcp_calls_share_the_actual_owner_job() {
 
 #[path = "observers/native_tests.rs"]
 mod observer_cases;
+
+#[path = "native_tests/route_cases.rs"]
+mod route_cases;
