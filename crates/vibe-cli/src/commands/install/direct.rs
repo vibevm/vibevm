@@ -221,7 +221,7 @@ fn execute_after_open(
     // from the bundle rather than re-resolved: two canonicalisations are two
     // answers to "which node did this command act on".
     let failed_root = selection.root().to_path_buf();
-    let confirm_gate = super::CliConfirmGate::new(ctx, args.assume_yes);
+    let confirm_gate = super::CliConfirmGate::new(ctx, args.assume_yes, &failed_root);
     let install_observer = super::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let sources = super::CliPackageSourceFactory { args: &args };
     let manifest_mutation = super::CliGitSourceMutation { args: &args };

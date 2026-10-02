@@ -70,6 +70,7 @@ pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
 pub use resolution::{MultiResolution, ResolvedPathDep};
 pub use source::{LocalRegistrySource, RegistrySource};
 pub(crate) use source::{is_local_directory_url, local_path_from_url};
+pub use walk::ResolutionPurpose;
 
 /// Default ref for `[[override]]` entries that omit `ref`. Most adopters
 /// will pin a tag or branch explicitly; `main` is the practical default

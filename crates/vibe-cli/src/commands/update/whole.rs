@@ -141,7 +141,8 @@ fn run(
     } = execution;
     let identity = UpdateIdentity::from_args(selection.root(), &args);
     let install_args = install_args_from(&args);
-    let confirm_gate = install::CliConfirmGate::new(ctx, install_args.assume_yes);
+    let confirm_gate =
+        install::CliConfirmGate::new(ctx, install_args.assume_yes, &identity.project_root);
     let install_observer =
         install::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let sources = install::CliPackageSourceFactory {

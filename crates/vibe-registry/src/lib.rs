@@ -53,7 +53,8 @@ pub use index_client::{
 pub use local_registry::LocalRegistry;
 pub use multi_registry_resolver::{
     DEFAULT_OVERRIDE_REF, MultiRegistryResolver, MultiResolution, RefreshReport, RefreshedEntry,
-    RefreshedVia, RegistryWalkAttempt, ResolvedPathDep, SkippedEntry, WalkAttemptStatus,
+    RefreshedVia, RegistryWalkAttempt, ResolutionPurpose, ResolvedPathDep, SkippedEntry,
+    WalkAttemptStatus,
 };
 
 /// Uniform surface over all registry backends — [`LocalRegistry`] and

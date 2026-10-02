@@ -127,7 +127,8 @@ pub fn run(
     let child = ctx.quiet_child();
     let observer = CliRunObserver::new(ctx);
     let install_observer = CliInstallObserver::new(&child, Some(ctx)).with_progress(ctx.progress());
-    let confirm_gate = super::install::CliConfirmGate::new(&child, install_args.assume_yes);
+    let confirm_gate =
+        super::install::CliConfirmGate::new(&child, install_args.assume_yes, &failed_root);
     let sources = CliPackageSourceFactory {
         args: &install_args,
     };
@@ -375,7 +376,8 @@ fn execute(
         .collect::<Vec<_>>();
     let observer = CliRunObserver::new(ctx);
     let install_observer = CliInstallObserver::new(&child, Some(ctx)).with_progress(ctx.progress());
-    let confirm_gate = super::install::CliConfirmGate::new(&child, install_args.assume_yes);
+    let confirm_gate =
+        super::install::CliConfirmGate::new(&child, install_args.assume_yes, &failed_root);
     let sources = CliPackageSourceFactory {
         args: &install_args,
     };
