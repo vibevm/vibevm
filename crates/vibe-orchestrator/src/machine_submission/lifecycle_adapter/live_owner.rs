@@ -4,6 +4,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LI
 
 use super::*;
 mod control;
+pub(in crate::machine_submission) mod evidence;
+pub use evidence::{EvidenceBasis, FixedOwnerEvidenceSnapshot, ObservedPhase, ObservedWork};
 mod deferred_stop;
 pub(super) mod observation;
 mod session_facade;
@@ -135,6 +137,8 @@ impl Record {
     }
 }
 struct Shared {
+    ledger: Mutex<evidence::Ledger>,
+    requested_phase: Phase,
     // Lock order: evidence_access, then record/history snapshots. Never acquire
     // this lock while holding record/history. It serializes same-owner cold
     // leases and excludes active control lease borrows during final release;
@@ -467,6 +471,8 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
         "fixed script target OS differs from current host"
     );
     let shared = Arc::new(Shared {
+        ledger: Mutex::new(evidence::Ledger::default()),
+        requested_phase: dispatch.request.requested,
         evidence_access: Mutex::new(()),
         #[cfg(test)]
         after_cold_lease: Mutex::new(None),

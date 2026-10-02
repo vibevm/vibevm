@@ -60,6 +60,8 @@ use crate::values::LifecycleValues;
 // The target OS changes lifecycle behavior and belongs in this fixed
 // request. `observed_at` is execution evidence: retries retain the first
 // report timestamp instead of treating a fresh clock reading as new intent.
+pub(in crate::machine_submission) const FIXED_OPERATION: &str = "rust:vibe-lifecycle:validate";
+
 const VALIDATE_LINUX: &[u8] =
     b"{\"operation\":\"lifecycle.validate\",\"schema\":1,\"target_os\":\"linux\"}";
 const VALIDATE_MACOS: &[u8] =
@@ -99,9 +101,11 @@ mod live_owner;
 pub(crate) use install::submit_empty_world_install;
 #[cfg(test)]
 pub(crate) use install::submit_one_package_fixture_install;
+pub(in crate::machine_submission) use live_owner::evidence::cold_snapshot;
 pub use live_owner::{
-    BindingSummary, FixedOperationStatus, HostControlCapability, HostOwnedFixedOperation,
-    ObservationHandle, Readiness,
+    BindingSummary, EvidenceBasis, FixedOperationStatus, FixedOwnerEvidenceSnapshot,
+    HostControlCapability, HostOwnedFixedOperation, ObservationHandle, ObservedPhase, ObservedWork,
+    Readiness,
 };
 
 /// A caller-controlled source port is admitted only by the test-only fixture

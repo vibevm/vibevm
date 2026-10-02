@@ -23,6 +23,9 @@ impl ReadonlyFixedJob {
     pub fn wait_ready(&self, timeout: Duration) -> anyhow::Result<Readiness> {
         self.owner.wait_ready(timeout)
     }
+    pub fn evidence(&self) -> super::super::lifecycle_adapter::FixedOwnerEvidenceSnapshot {
+        self.owner.evidence()
+    }
     pub fn inspect(&self) -> anyhow::Result<FixedOperationStatus> {
         self.owner.inspect()
     }

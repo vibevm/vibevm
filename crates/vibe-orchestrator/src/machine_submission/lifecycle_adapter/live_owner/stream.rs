@@ -53,7 +53,7 @@ impl History {
                 schema: 1,
                 context_id: scope.context.clone(),
                 target_id: Some(scope.target.clone()),
-                operation_id: "rust:vibe-lifecycle:validate".into(),
+                operation_id: FIXED_OPERATION.into(),
                 run_id: run.into(),
                 stream_id: format!("live:{run}:{reservation}"),
                 body: Body::ReplayRequest(Box::new(BodyReplayRequest {

@@ -62,11 +62,13 @@ impl RunObserver for LiveRun {
         // Borrow the incumbent canonical contributions; never plan a second run.
         let total = u64::try_from(plan.executions().len())
             .context("observed contribution count exceeds u64")?;
+        self.shared.ledger.lock().unwrap().total = Some(total);
         *self.progress.lock().unwrap() = (0, Some(total));
         self.progress(0, Some(total));
         Ok(())
     }
     fn observe_phase_started(&self, phase: &str) {
+        self.shared.ledger.lock().unwrap().phase(phase, None);
         publish(
             &self.shared,
             Payload::Phase(Box::new(PayloadPhase {
@@ -77,6 +79,11 @@ impl RunObserver for LiveRun {
         );
     }
     fn observe_phase_finished(&self, phase: &str, status: &str) {
+        self.shared
+            .ledger
+            .lock()
+            .unwrap()
+            .phase(phase, Some(status));
         publish(
             &self.shared,
             Payload::Phase(Box::new(PayloadPhase {
@@ -91,6 +98,7 @@ impl RunObserver for LiveRun {
         self.progress(current, total);
     }
     fn observe_contribution_terminal(&self, report: &LifecycleContributionReport) {
+        self.shared.ledger.lock().unwrap().terminal(report);
         let mut progress = self.progress.lock().unwrap();
         if let Some(next) = progress.0.checked_add(1)
             && progress.1.is_none_or(|total| next <= total)

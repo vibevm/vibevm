@@ -196,6 +196,27 @@ impl FixedLifecycleDecisionHost {
         let _ = host.scope_lease()?;
         Ok(host)
     }
+    /// Read retained evidence through the same trusted scope lease and incumbent
+    /// inspection as `inspect_existing`; no approval, source refresh or dispatch.
+    pub fn inspect_existing_evidence(
+        &self,
+        key: &str,
+    ) -> Result<Option<super::lifecycle_adapter::FixedOwnerEvidenceSnapshot>, FixedDecisionError>
+    {
+        let leased = self.scope_lease()?;
+        let status = super::lifecycle_adapter::inspect_fixed_existing(
+            &leased.retain_lease(),
+            &self.namespace,
+            &self.scope,
+            key,
+        )
+        .map_err(infrastructure)?;
+        status
+            .map(|status| {
+                super::lifecycle_adapter::cold_snapshot(&self.scope, status).map_err(infrastructure)
+            })
+            .transpose()
+    }
     pub fn preparation_effects(&self) -> PreparationEffects {
         PreparationEffects::LeaseInfrastructureMayBeCreated
     }
