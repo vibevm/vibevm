@@ -143,6 +143,11 @@ pub struct PolicyOwner {
     path: String,
 }
 impl PolicyOwner {
+    /// Immutable trusted scope; comparison data does not grant admission.
+    pub fn scope(&self) -> &SubmissionScope {
+        &self.scope
+    }
+
     fn pin(project: Arc<Project>, scope: SubmissionScope) -> Result<Self, PolicyError> {
         record::validate_scope(&scope)?;
         let root_token = project.root_correlation_token().map_err(infrastructure)?;
@@ -167,6 +172,16 @@ impl PolicyOwner {
         owner.check_root(None)?;
         observed?.ok_or(PolicyError::Unavailable)?;
         Ok(owner)
+    }
+
+    /// Observe the bounded current record without acquiring a mutation lease or
+    /// creating infrastructure. This snapshot is comparison data, never an
+    /// admission grant: admission must reread under its incumbent writer lease.
+    pub fn observe_readonly(&self) -> Result<PolicySnapshot, PolicyError> {
+        self.check_root(None)?;
+        let observed = self.read(&self.project);
+        self.check_root(None)?;
+        Ok(observed?.ok_or(PolicyError::Unavailable)?.snapshot())
     }
 
     /// Explicit trusted startup. Existing identical source/facts is idempotent;

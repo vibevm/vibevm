@@ -28,13 +28,33 @@ impl HostPolicyFacts {
 }
 pub(super) struct State {
     pub facts: HostPolicyFacts,
+    pub snapshot: Option<super::super::PolicySnapshot>,
     pub revision: u64,
     pub counter: u64,
     pub sequences: Vec<Sequence>,
 }
 impl State {
+    pub fn observe_snapshot(
+        &mut self,
+        snapshot: super::super::PolicySnapshot,
+    ) -> Result<(), FixedDecisionError> {
+        if self.snapshot.as_ref() != Some(&snapshot) {
+            self.revision = self
+                .revision
+                .checked_add(1)
+                .ok_or(FixedDecisionError::Capacity)?;
+            self.facts = snapshot.facts().clone();
+            self.snapshot = Some(snapshot);
+            self.sequences.clear();
+        }
+        Ok(())
+    }
+
     pub fn generation(&self, issuer: &str) -> String {
-        format!("{issuer}:policy:{}", self.revision)
+        self.snapshot.as_ref().map_or_else(
+            || format!("{issuer}:policy:{}", self.revision),
+            |snapshot| snapshot.generation().to_owned(),
+        )
     }
     pub fn question_id(&mut self, issuer: &str) -> Result<String, FixedDecisionError> {
         self.counter = self
