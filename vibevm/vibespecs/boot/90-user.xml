@@ -2,6 +2,53 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title>User overrides</title>
   <p><user-overrides-intro fact="true" status="impl/done">User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add any project-specific conventions that should be read at session boot.</user-overrides-intro></p>
+  <section title="Сборка и worktree (Rust) — приоритетные инструкции владельца, 2026-10-02">
+    <p><RUST-BUILD-WORKTREE-PRIORITY fact="true" status="impl/done">Эти инструкции обязательны для Rust-работы, включая делегированные задачи. Они заменяют прежние указания об общем `CARGO_TARGET_DIR`, размещении Rust worktree вне настроенного `rust_workspace_root` и прежнем цикле сборки. Центральная сессия явно включает эти инструкции и разрешённые локальные параметры в packet каждого Rust worker. Этот пользовательский snippet явно загружается через `vibevm/vibespecs/boot/INDEX.md`; generated boot-файлы вручную не редактируются.</RUST-BUILD-WORKTREE-PRIORITY></p>
+    <section title="Параметры машины — разрешить до работы">
+      <p><RUST-BUILD-LOCAL-PARAMETERS fact="true" status="impl/done">`rust_workspace_root` — абсолютная директория, содержащая основную копию и новые Rust worktree; `rust_primary_root` — абсолютный путь основной копии, из которой берётся тёплый `target/`. Значения читает центральная сессия из `[rust_build]` в `~/.vibe/steward/machine-facts.toml`, а не из shared спеки. Там же задаются `toolchain`, `codegen_backend`, `linker`, `compiler_cache` и `filesystem`. Перед работой проверь, что основная копия лежит внутри настроенного workspace root и принадлежит текущему Git repository. Не подставляй чужой путь или путь этой машины как универсальный default. Если параметры отсутствуют или неоднозначны, запроси локальные значения у владельца. Переменные shell ниже — только значения, прочитанные из локального файла; они не отдельный источник истины. Worker получает разрешённые параметры и точные standing files от центральной сессии в своём packet.</RUST-BUILD-LOCAL-PARAMETERS></p>
+    </section>
+    <section title="Окружение — не менять">
+      <facts ordered="false">
+        <RUST-BUILD-PRIMARY fact="true" status="impl/done">Основная копия репозитория определяется параметром `rust_primary_root`.</RUST-BUILD-PRIMARY>
+        <RUST-BUILD-TOOLCHAIN fact="true" status="impl/done">Используй уже настроенные локальные toolchain, бэкенд, линкер и кэш из `[rust_build]`. Rustup override и настройки Cargo наследуются из `rust_workspace_root`. Не переноси конфигурацию одной машины на другую и не меняй окружение для ускорения отдельной задачи.</RUST-BUILD-TOOLCHAIN>
+        <RUST-BUILD-CONFIG-NOTOUCH fact="true" status="impl/done">Настройки лежат в `~/.cargo/config.toml` и `${rust_workspace_root}/.cargo/config.toml`. Не редактируй их, не меняй toolchain и не добавляй `rust-toolchain.toml`.</RUST-BUILD-CONFIG-NOTOUCH>
+        <RUST-BUILD-REFLINK fact="true" status="impl/done">На файловой системе с reflink `cp --reflink` копирует тёплый cache без полного копирования данных; mtime сохраняется через `-a`. Конкретная файловая система — локальный параметр, а не требование XFS для всех компьютеров.</RUST-BUILD-REFLINK>
+      </facts>
+    </section>
+    <section title="Новый worktree — всегда с тёплым target/">
+      <p><RUST-WORKTREE-WARM-TARGET fact="true" status="impl/done">Создавай worktree только в `rust_workspace_root`, рядом с основной копией, чтобы сохранить наследование toolchain/Cargo и возможность reflink. После создания сразу скопируй `target/` из основной копии. В примере `rust_worktree_name` — выбранное свободное имя директории из одного компонента, `rust_branch` — выбранная ветка; параметры root уже разрешены из локального файла:</RUST-WORKTREE-WARM-TARGET></p>
+      <fence lang="bash">: "${rust_workspace_root:?resolve local workspace root first}"
+: "${rust_primary_root:?resolve local primary root first}"
+: "${rust_worktree_name:?choose a worktree name first}"
+: "${rust_branch:?choose a branch first}"
+cd "$rust_primary_root"
+git worktree add "$rust_workspace_root/$rust_worktree_name" -b "$rust_branch"
+cd "$rust_workspace_root/$rust_worktree_name"
+[ -d target ] || cp -a --reflink=always "$rust_primary_root/target" ./target</fence>
+      <facts ordered="false">
+        <RUST-WORKTREE-PRESERVE-MTIME fact="true" status="impl/done">`-a` обязателен: он сохраняет mtime, иначе Cargo пересоберёт всё.</RUST-WORKTREE-PRESERVE-MTIME>
+        <RUST-WORKTREE-REFLINK-FAILURE fact="true" status="impl/done">Если `cp --reflink=always` завершился ошибкой, не делай обычную копию. Просто собирай: зависимости подтянутся из sccache.</RUST-WORKTREE-REFLINK-FAILURE>
+        <RUST-WORKTREE-PRIVATE-TARGET fact="true" status="impl/done">Не используй общий `CARGO_TARGET_DIR` и не делай симлинк на чужой `target/`: параллельные агенты будут блокировать друг друга.</RUST-WORKTREE-PRIVATE-TARGET>
+        <RUST-WORKTREE-FOREIGN-TARGET-NOTOUCH fact="true" status="impl/done">Не трогай `target/` основной копии и других worktree.</RUST-WORKTREE-FOREIGN-TARGET-NOTOUCH>
+      </facts>
+    </section>
+    <section title="Цикл разработки">
+      <facts ordered="false">
+        <RUST-BUILD-CHECK fact="true" status="impl/done">Проверка компиляции: `cargo check -p &lt;crate&gt;`. Не используй `cargo build` без необходимости.</RUST-BUILD-CHECK>
+        <RUST-BUILD-NEXTEST fact="true" status="impl/done">Тесты точечно: `cargo nextest run -p &lt;crate&gt; &lt;фильтр&gt;`. Весь набор тестов запускай только перед завершением задачи.</RUST-BUILD-NEXTEST>
+        <RUST-BUILD-CLIPPY fact="true" status="impl/done">Clippy: `cargo clippy -p &lt;crate&gt;`, только по затронутым крейтам.</RUST-BUILD-CLIPPY>
+        <RUST-BUILD-NO-IMPLICIT-EXPENSIVE-COMMANDS fact="true" status="impl/done">Без явной просьбы не делай `--release`, `cargo clean` и `cargo update`.</RUST-BUILD-NO-IMPLICIT-EXPENSIVE-COMMANDS>
+        <RUST-BUILD-WAIT-FOR-LOCK fact="true" status="impl/done">При сообщении «Blocking waiting for file lock» жди. Не убивай процессы и не удаляй lock-файлы.</RUST-BUILD-WAIT-FOR-LOCK>
+        <RUST-BUILD-CRANELIFT-FAILURE fact="true" status="impl/done">Если сборка падает с ошибкой Cranelift (SIMD-интринсики, `asm!`, «unsupported»), не меняй конфиги. Сообщи пользователю, какой крейт не собирается.</RUST-BUILD-CRANELIFT-FAILURE>
+      </facts>
+    </section>
+    <section title="Удаление worktree">
+      <fence lang="bash">: "${rust_workspace_root:?resolve local workspace root first}"
+: "${rust_worktree_name:?select the exact worktree first}"
+git worktree remove "$rust_workspace_root/$rust_worktree_name"</fence>
+      <p><RUST-WORKTREE-REMOVE fact="true" status="impl/done">Вместе с ним удаляется его `target/`. Перед удалением сохраняй действующее правило: сначала доказать, что уникальная работа интегрирована или намеренно отклонена, а нужные отчёты и факты сохранены; живой или непринятый worktree не удаляется.</RUST-WORKTREE-REMOVE></p>
+    </section>
+  </section>
   <section title="Communication style">
     <p><communication-style fact="true" status="impl/done">Общение на русском языке в «айтишном» регистре: технические термины, кальки с английского и заимствования оставлять как есть (commit, install, registry, lockfile, build, stack, feat, flow, workflow, DAG, lifecycle и т.п.), не переводить их в стиле словаря Даля. Имена файлов, CLI-команды, код и термины из спеки — всегда в оригинале. Обычные слова — по-русски. Если есть устоявшийся русский термин (например, «зависимость» для dependency), можно использовать, но не насильно.</communication-style></p>
     <p><decode-identifiers-inline fact="true" status="impl/done">**Идентификаторы расшифровываются на месте (владелец, 2026-08-20).** Упоминая в чате внутренний идентификатор — строку BACKLOG (`B-007`), находку аудита (`2026-05-23-11`), номер спеки (`PROP-044`), слайс ТЗ (`С6`) — сразу, в той же фразе, говори что это: одной короткой скобкой или придаточным («B-007 — вопрос о жанре ADR в спеках»). Владелец не обязан держать реестры в голове или ходить по файлам за расшифровкой; голый номер без сути — дефект ответа. Не относится к воркер-пакетам и коммитам (там периметр и так называет всё полным текстом).</decode-identifiers-inline></p>
