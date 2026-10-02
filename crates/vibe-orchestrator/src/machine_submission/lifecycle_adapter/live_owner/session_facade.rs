@@ -182,7 +182,7 @@ impl HostOwnedFixedOperation {
             },
             target_os,
             observed_at,
-            deferred_stop: false,
+            deferred_stop: profile.control_mode() == vibe_wire::generated::machine::e1::input_decision_message::RequestedOptionsControl::CancelDeferredBoundary,
             profile: Some(profile),
             #[cfg(test)]
             fixture: None,
@@ -249,6 +249,14 @@ impl HostOwnedFixedOperation {
         }
     }
 
+    #[cfg(test)]
+    pub(in crate::machine_submission) fn after_cold_lease_for_test(
+        &self,
+        hook: Arc<dyn Fn() + Send + Sync>,
+    ) {
+        *self.inner.owner.shared.after_cold_lease.lock().unwrap() = Some(hook);
+    }
+
     /// A single finite wait, capped at ten seconds. Zero is a readiness poll.
     /// Ready is returned only for the actual incumbent binding; never guess IDs.
     pub fn wait_ready(&self, timeout: Duration) -> Result<Readiness> {
@@ -279,6 +287,7 @@ impl HostOwnedFixedOperation {
     pub fn inspect(&self) -> Result<FixedOperationStatus> {
         let observed = self.inner.owner.inspect()?;
         if matches!(observed, Observation::RecoveryRequired { run_id: None, .. }) {
+            let _access = self.inner.owner.shared.evidence_access.lock().unwrap();
             let c = &self.inner.coordinates;
             let lease = LifecycleLease::acquire(&c.root)?;
             if let Some(status) = inspect_fixed_existing(&lease, &c.namespace, &c.scope, &c.key)? {
@@ -303,6 +312,28 @@ impl HostOwnedFixedOperation {
             binding,
             observer,
         })
+    }
+
+    pub(in crate::machine_submission) fn scoped_control(
+        &self,
+        observer: &mut ObservationHandle,
+        message: &OperationStreamMessage,
+        mode: &vibe_wire::generated::machine::e1::input_decision_message::RequestedOptionsControl,
+    ) -> Result<OperationStreamMessage> {
+        ensure!(
+            Arc::ptr_eq(&self.inner, &observer.inner),
+            "foreign scoped owner/observer pairing"
+        );
+        self.inner
+            .owner
+            .control_scoped(
+                &observer.binding,
+                &self.inner.coordinates,
+                &mut observer.observer,
+                message,
+                mode,
+            )
+            .map_err(Into::into)
     }
 
     /// Explicit host grant for this operation. Only owning handles can mint it.

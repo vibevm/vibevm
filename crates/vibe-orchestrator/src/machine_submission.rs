@@ -35,6 +35,7 @@ pub use lifecycle_adapter::{
 };
 
 mod lifecycle_decisions;
+pub use lifecycle_decisions::submission::ScopedFixedJob;
 pub use lifecycle_decisions::{
     DecisionOutcome, FixedDecisionError, FixedLifecycleDecisionHost, HostPolicyFacts,
     PreparationEffects, ReadonlyFixedJob, ValidatedFixedPlanEvidence,

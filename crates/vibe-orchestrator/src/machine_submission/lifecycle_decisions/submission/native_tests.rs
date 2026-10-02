@@ -55,16 +55,14 @@ impl Fixture {
     fn no_effect(&self) {
         assert!(!self.dir.path().join("counter").exists());
         let lease = vibe_lifecycle::LifecycleLease::acquire(self.dir.path()).unwrap();
-        assert!(
-            SubmissionReservations::inspect_existing_key(
-                &lease,
-                &self.namespace,
-                &self.scope,
-                "once"
-            )
-            .unwrap()
-            .is_none()
-        );
+        assert!(SubmissionReservations::inspect_existing_key(
+            &lease,
+            &self.namespace,
+            &self.scope,
+            "once"
+        )
+        .unwrap()
+        .is_none());
     }
 }
 impl Drop for Fixture {
@@ -330,7 +328,8 @@ fn post_effect_failure_and_damaged_marker_report_capsule_keep_identity_without_r
         f.release();
         let result = terminal(&job);
         assert!(
-            matches!(&result, FixedOperationStatus::ResultAvailable { run_id, report_bytes: Some(_), .. } if run_id == &run)
+            matches!(&result, FixedOperationStatus::ResultAvailable { run_id, report_bytes: Some(_), .. } if run_id == &run),
+            "before {damage} injection expected retained result for {run}; actual {result:?}"
         );
         if damage == "failure" {
             let FixedOperationStatus::ResultAvailable { marker, .. } = result else {
@@ -426,4 +425,75 @@ fn invalid_c1_keys_refuse_before_job_claim_or_reservation() {
     }
     assert!(!f.dir.path().join("counter").exists());
     assert!(!f.dir.path().join(".vibe/lifecycle-outcomes").exists());
+}
+
+#[test]
+fn same_owner_terminal_inspections_serialize_fresh_native_evidence() {
+    use std::sync::{
+        atomic::{AtomicBool, Ordering},
+        mpsc, Barrier, Mutex,
+    };
+    let f = Fixture::new(false);
+    let host = f.host();
+    let evidence = approved(&host, RequestedOptionsControl::None);
+    let job = host.submit_no_control(&evidence, "once", now()).unwrap();
+    let run = ready(&job);
+    until(|| f.dir.path().join("entered").exists());
+    let (held_tx, held_rx) = mpsc::channel();
+    let (release_tx, release_rx) = mpsc::channel();
+    let release_rx = Mutex::new(release_rx);
+    let first = AtomicBool::new(true);
+    job.owner.after_cold_lease_for_test(Arc::new(move || {
+        if first.swap(false, Ordering::SeqCst) {
+            held_tx.send(()).unwrap();
+            release_rx.lock().unwrap().recv_timeout(WAIT).unwrap();
+        }
+    }));
+    // The worker's actual terminal publication holds a real cold writer lease.
+    f.release();
+    held_rx.recv_timeout(WAIT).unwrap();
+    let start = Arc::new(Barrier::new(5));
+    let (done_tx, done_rx) = mpsc::channel();
+    let mut readers = Vec::new();
+    for _ in 0..4 {
+        let (job, start, done) = (job.clone(), start.clone(), done_tx.clone());
+        readers.push(std::thread::spawn(move || {
+            start.wait();
+            let first = job.inspect().unwrap();
+            done.send(first.clone()).unwrap();
+            for _ in 0..16 {
+                assert_eq!(job.inspect().unwrap(), first);
+            }
+            first
+        }));
+    }
+    start.wait();
+    // Without owner coordination these return RecoveryRequired/Busy while the
+    // publication lease is held. Always release before asserting or joining.
+    let premature = done_rx.recv_timeout(Duration::from_millis(100));
+    release_tx.send(()).unwrap();
+    let results: Vec<_> = readers.into_iter().map(|r| r.join().unwrap()).collect();
+    assert!(
+        matches!(premature, Err(mpsc::RecvTimeoutError::Timeout)),
+        "terminal inspection escaped the held owner evidence access: {premature:?}"
+    );
+    for result in &results {
+        assert!(
+            matches!(result,
+            FixedOperationStatus::ResultAvailable { run_id, report_bytes: Some(_), .. }
+            if run_id == &run),
+            "native retained evidence required: {result:?}"
+        );
+        assert_eq!(result, &results[0]);
+    }
+    f.count_one();
+    // External Busy remains a refusal; the lock is coordination, not reentry.
+    let external = vibe_lifecycle::LifecycleLease::acquire(f.dir.path()).unwrap();
+    assert!(matches!(job.inspect().unwrap(),
+        FixedOperationStatus::RecoveryRequired { run_id: Some(id), .. } if id == run));
+    drop(external);
+    assert_eq!(job.inspect().unwrap(), results[0]);
+    let retry = host.submit_no_control(&evidence, "once", now()).unwrap();
+    assert_eq!(ready(&retry), run);
+    f.count_one();
 }

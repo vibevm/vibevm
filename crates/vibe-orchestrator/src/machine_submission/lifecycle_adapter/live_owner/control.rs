@@ -2,10 +2,10 @@
 //! Requested is only a bounded host-memory latch, never durable stop evidence.
 use super::*;
 use crate::machine_operation::stream_message::{self as validation};
-use BodyControlReplyOperationEffectState as Effect;
-use BodyControlReplyStatus as Status;
 use vibe_wire::generated::lifecycle_outcome_marker::ReportEvidence;
 use vibe_wire::generated::machine::e1::operation_stream_message::*;
+use BodyControlReplyOperationEffectState as Effect;
+use BodyControlReplyStatus as Status;
 
 #[derive(Clone)]
 pub(super) enum Gate {
@@ -22,7 +22,7 @@ pub(super) enum Gate {
     DeferredFailed(String),
 }
 #[derive(Debug)]
-pub(in super::super) enum ControlError {
+pub(in crate::machine_submission) enum ControlError {
     Binding,
     Invalid(validation::StreamValidationError),
     WrongBody,
@@ -172,6 +172,28 @@ impl LiveOwner {
         observer: &mut Observer,
         message: &OperationStreamMessage,
     ) -> std::result::Result<OperationStreamMessage, ControlError> {
+        self.control_with_mode(binding, trusted, observer, message, None)
+    }
+    pub(in crate::machine_submission) fn control_scoped(
+        &self,
+        binding: &Binding,
+        trusted: &HostCoordinates,
+        observer: &mut Observer,
+        message: &OperationStreamMessage,
+        mode: &vibe_wire::generated::machine::e1::input_decision_message::RequestedOptionsControl,
+    ) -> std::result::Result<OperationStreamMessage, ControlError> {
+        self.control_with_mode(binding, trusted, observer, message, Some(mode))
+    }
+    fn control_with_mode(
+        &self,
+        binding: &Binding,
+        trusted: &HostCoordinates,
+        observer: &mut Observer,
+        message: &OperationStreamMessage,
+        mode: Option<
+            &vibe_wire::generated::machine::e1::input_decision_message::RequestedOptionsControl,
+        >,
+    ) -> std::result::Result<OperationStreamMessage, ControlError> {
         {
             let history = binding.history.lock().unwrap();
             validation::validate(message, history.expected()).map_err(ControlError::Invalid)?;
@@ -181,6 +203,7 @@ impl LiveOwner {
         };
         self.check_stream_binding(binding, trusted)
             .map_err(|e| ControlError::ScopeUnavailable(e.to_string()))?;
+        let _access = self.shared.evidence_access.lock().unwrap();
         let (lease, canonical, stop_id, failed, pending, open, deferred, expected) = {
             let mut r = self.shared.record.lock().unwrap();
             if !Arc::ptr_eq(&observer.shared, &self.shared)
@@ -199,6 +222,29 @@ impl LiveOwner {
                     | Gate::DeferredStopped(..)
                     | Gate::DeferredFailed(_)
             );
+            // Validation and active-owner pairing precede policy denial. Admission
+            // and the boundary check use this same mutex, with no unlocked race.
+            if !detach {
+                use vibe_wire::generated::machine::e1::input_decision_message::RequestedOptionsControl as Mode;
+                let denied = match mode {
+                    None => false, // legacy mixed C3 behavior
+                    Some(Mode::None | Mode::Detach) => true,
+                    Some(Mode::CancelPreDispatch) => deferred,
+                    Some(Mode::CancelDeferredBoundary) => {
+                        !deferred && r.state == LiveState::Running
+                    }
+                };
+                if denied {
+                    return reply(
+                        binding,
+                        request,
+                        Status::Unavailable,
+                        Effect::Uncertain,
+                        None,
+                    )
+                    .map_err(|e| ControlError::ScopeUnavailable(e.to_string()));
+                }
+            }
             let expected = match r.gate() {
                 Gate::DeferredStopped(_, result) => Some(result.clone()),
                 _ => None,
