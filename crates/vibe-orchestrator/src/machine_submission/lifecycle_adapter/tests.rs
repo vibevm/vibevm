@@ -902,6 +902,52 @@ fn request() -> DefaultLifecycleRequest {
     }
 }
 
+#[test]
+fn generic_script_agent_and_empty_phases_still_refuse_force_without_admitted_profile() {
+    let os = TargetOs::current().expect("native OS");
+    let script = script_project();
+    let mut forced = request();
+    forced.force = true;
+    assert!(admit_one_script_validate_fixture(script.path(), &forced, os).is_err());
+    let agent = agent_project();
+    let mut agent_forced = agent_request();
+    agent_forced.force = true;
+    assert!(admit_one_agent_validate_fixture(agent.path(), &agent_forced, os).is_err());
+    let empty = project();
+    let scope = scope();
+    let namespace = issue(empty.path(), &scope);
+    let error = submit_validate_lifecycle(
+        empty.path(),
+        &namespace,
+        &scope,
+        "force",
+        forced,
+        os,
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap_err();
+    assert!(format!("{error:#}").contains("refuses force"));
+    let mut forced_install = install_request();
+    forced_install.force = true;
+    assert!(
+        submit_empty_world_install(
+            empty.path(),
+            &namespace,
+            &scope,
+            "force-install",
+            forced_install,
+            os,
+            "2026-09-30T00:00:05Z".parse().unwrap()
+        )
+        .is_err()
+    );
+    for root in [script.path(), agent.path(), empty.path()] {
+        assert!(!root.join("counter").exists());
+        assert!(!root.join(".vibe/lifecycle.toml").exists());
+        assert!(!root.join(".vibe/lifecycle-outcomes").exists());
+    }
+}
+
 fn call(
     root: &Path,
     namespace: &SubmissionNamespace,

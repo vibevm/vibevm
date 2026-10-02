@@ -618,7 +618,11 @@ fn submit_one_script_validate_internal<'a>(
     ready: Option<&'a live_owner::ReadyObserver>,
     profile: Option<&'a AdmittedProfile>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
-    let admitted = admit_one_script_validate_fixture(path, &request, target_os)?;
+    let capture_request = match profile {
+        Some(profile) => profile.source_capture_request(&request)?,
+        None => request.clone(),
+    };
+    let admitted = admit_one_script_validate_fixture(path, &capture_request, target_os)?;
     submit_protected_lifecycle_inner(
         path,
         namespace,
@@ -837,10 +841,19 @@ fn submit_protected_lifecycle_inner<'a>(
             },
         "protected slice agent mode differs from fixed route"
     );
-    ensure!(
-        !request.force && !request.trace_flag,
-        "protected slice refuses force and trace"
-    );
+    match script.as_ref().and_then(|s| s.profile) {
+        Some(profile) => {
+            ensure!(!request.trace_flag, "protected slice refuses trace");
+            ensure!(
+                request.force == profile.force(),
+                "approved force intent changed"
+            );
+        }
+        None => ensure!(
+            !request.force && !request.trace_flag,
+            "protected slice refuses force and trace"
+        ),
+    }
     ensure!(
         request.assume_yes
             && request.policy.offline == fixture.is_some()
@@ -882,9 +895,10 @@ fn submit_protected_lifecycle_inner<'a>(
         })
         .transpose()?;
     if let Some(script) = script.as_mut() {
-        if script.profile.is_some() {
+        if let Some(profile) = script.profile {
             // Recapture actual v4 source and plan under this protected lease.
-            script.admitted = preflight_one_script_under_lease(&leased, &request, target_os)?;
+            let base = profile.source_capture_request(&request)?;
+            script.admitted = preflight_one_script_under_lease(&leased, &base, target_os)?;
         }
     }
     let canonical_request = if let Some(agent) = &agent {
@@ -1014,7 +1028,7 @@ fn submit_protected_lifecycle_inner<'a>(
         &chain,
         &selected,
         request.agent_mode.clone(),
-        false,
+        request.force,
         false,
         vibe_core::timestamp::now_utc(),
     )?;
