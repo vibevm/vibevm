@@ -1515,3 +1515,30 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-lifecycle-action-error/e1"
 sunset = "none"
+
+[format.machine-fixed-package-action-request]
+epoch = 1
+schema = "schemas/machine/e1/fixed_package_action_request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-fixed-package-action-request/e1"
+sunset = "none"
+
+[format.machine-fixed-package-action-reply]
+epoch = 1
+schema = "schemas/machine/e1/fixed_package_action_reply.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-fixed-package-action-reply/e1"
+sunset = "none"
+
+[format.machine-fixed-package-action-error]
+epoch = 1
+schema = "schemas/machine/e1/fixed_package_action_error.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-fixed-package-action-error/e1"
+sunset = "none"

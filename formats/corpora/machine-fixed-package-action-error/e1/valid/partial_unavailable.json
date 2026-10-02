@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "code": "inspection_unavailable",
+  "message": "host unavailable",
+  "message_truncated": false,
+  "requested_action": null,
+  "requested_scope": null,
+  "scope_unavailable_reason": "host unavailable",
+  "known_run_id": "run-1",
+  "view": {
+    "kind": "uncertain",
+    "run_id": "run-1",
+    "partial": {
+      "output_directory": {
+        "kind": "unavailable",
+        "reason": "directory inaccessible"
+      },
+      "output_file": {
+        "kind": "unavailable",
+        "reason": "output_file inaccessible"
+      },
+      "artifact_record": {
+        "kind": "unavailable",
+        "reason": "artifact_record inaccessible"
+      }
+    }
+  },
+  "effect_observation": "uncertain"
+}

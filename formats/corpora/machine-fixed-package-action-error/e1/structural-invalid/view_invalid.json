@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "code": "unavailable_host",
+  "message": "host unavailable",
+  "message_truncated": false,
+  "requested_action": null,
+  "requested_scope": null,
+  "scope_unavailable_reason": "host unavailable",
+  "known_run_id": null,
+  "view": {
+    "kind": "uncertain",
+    "run_id": "r",
+    "partial": null
+  },
+  "effect_observation": "unavailable"
+}

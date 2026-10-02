@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "code": "publication_unavailable",
+  "message": "host unavailable",
+  "message_truncated": false,
+  "requested_action": null,
+  "requested_scope": null,
+  "scope_unavailable_reason": "host unavailable",
+  "known_run_id": null,
+  "view": null,
+  "effect_observation": "unavailable"
+}

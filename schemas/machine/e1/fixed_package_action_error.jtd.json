@@ -1,0 +1,206 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "code": {
+      "enum": [
+        "invalid_request",
+        "unavailable_host",
+        "context_root_mismatch",
+        "submission_refused",
+        "inspection_unavailable",
+        "publication_unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "message": {
+      "type": "string",
+      "metadata": {
+        "description": "Bounded diagnostic: at most 4096 UTF-8 bytes. The later adapter enforces this bound and sets message_truncated when truncating. Shape alone does not enforce length.",
+        "x-max-bytes": 4096
+      }
+    },
+    "message_truncated": {
+      "type": "boolean"
+    },
+    "requested_action": {
+      "type": "string",
+      "nullable": true
+    },
+    "requested_scope": {
+      "ref": "scope",
+      "nullable": true
+    },
+    "scope_unavailable_reason": {
+      "type": "string",
+      "nullable": true
+    },
+    "known_run_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "view": {
+      "ref": "reply",
+      "nullable": true
+    },
+    "effect_observation": {
+      "enum": [
+        "none",
+        "landed",
+        "uncertain",
+        "unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  },
+  "definitions": {
+    "reply": {
+      "discriminator": "kind",
+      "mapping": {
+        "completed": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            },
+            "output_sha256": {
+              "type": "string"
+            },
+            "artifact_record": {
+              "type": "string"
+            }
+          }
+        },
+        "uncertain": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            },
+            "partial": {
+              "ref": "partial"
+            }
+          }
+        },
+        "recovery_required": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            }
+          }
+        },
+        "intent_ready": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            }
+          }
+        },
+        "retired": {
+          "properties": {
+            "run_id": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "absent": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "partial": {
+      "properties": {
+        "output_directory": {
+          "ref": "observed_presence"
+        },
+        "output_file": {
+          "ref": "observed_file"
+        },
+        "artifact_record": {
+          "ref": "observed_file"
+        }
+      }
+    },
+    "observed_presence": {
+      "discriminator": "kind",
+      "mapping": {
+        "absent": {
+          "properties": {}
+        },
+        "present": {
+          "properties": {}
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "observed_file": {
+      "discriminator": "kind",
+      "mapping": {
+        "absent": {
+          "properties": {}
+        },
+        "present": {
+          "properties": {
+            "sha256": {
+              "type": "string"
+            },
+            "bytes": {
+              "ref": "byte_count"
+            }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "x-rust-type": "u64",
+        "description": "Exact owner u64 byte count, serialized as a JSON integer. JTD has no uint64 primitive; the generated Rust reader enforces integral range 0..18446744073709551615 without floating-point conversion."
+      }
+    },
+    "scope": {
+      "properties": {
+        "context": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "principal": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Fixed package error evidence; never authority. Schema must be 1. Required nullable evidence preserves null versus missing. view is a closed owner observation, including exact partial evidence; no free-form payload grants execution. An Err after possible admission cannot alone prove no effects. The later adapter enforces diagnostic bounds and owner/effect coherence.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-PACKAGE-WIRE-DECISION",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::fixed_package_action_error"
+    }
+  }
+}

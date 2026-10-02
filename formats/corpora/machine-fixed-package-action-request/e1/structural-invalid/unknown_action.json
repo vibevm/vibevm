@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "action": {
+    "kind": "prepare",
+    "key": "copy-key"
+  }
+}
