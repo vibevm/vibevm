@@ -159,11 +159,17 @@ impl FixedLifecycleRoute {
             }
             Action::Submit(s) => {
                 let Some(e) = bridge.accepted(&s.accepted_ref) else {
-                    return refuse(
+                    let mut e = error(
                         Code::UnknownReference,
                         "accepted reference is not retained by this owner bridge",
-                        false,
+                        Some(action),
+                        phase,
+                        host,
                     );
+                    if let Ok(Some(job)) = bridge.retained_job(&s.key) {
+                        enrich(&mut e, &job.evidence());
+                    }
+                    return failure(e, false);
                 };
                 bridge
                     .submit(&e, &s.key)

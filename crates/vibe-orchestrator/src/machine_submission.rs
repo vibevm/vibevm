@@ -29,6 +29,8 @@ mod lifecycle_plan;
 )]
 mod lifecycle_adapter;
 
+pub(crate) use lifecycle_adapter::FIXED_OPERATION;
+
 pub use lifecycle_adapter::{
     BindingSummary, EvidenceBasis, FixedOperationStatus, FixedOwnerEvidenceSnapshot,
     HostControlCapability, HostOwnedFixedOperation, ObservationHandle, ObservedPhase, ObservedWork,
@@ -39,6 +41,7 @@ mod policy_owner;
 pub use policy_owner::{PolicyError, PolicyOwner, PolicySnapshot, TrustedPolicySource};
 
 mod lifecycle_decisions;
+pub(crate) use lifecycle_decisions::FIXED_DOMAIN_OWNER;
 pub use lifecycle_decisions::submission::ScopedFixedJob;
 pub use lifecycle_decisions::{
     DecisionOutcome, FixedDecisionError, FixedLifecycleDecisionHost, HostPolicyFacts,

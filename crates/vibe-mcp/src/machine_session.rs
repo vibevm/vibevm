@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME");
 
+pub mod fixed;
 pub mod framing;
 pub mod incremental;
 pub mod responsive;

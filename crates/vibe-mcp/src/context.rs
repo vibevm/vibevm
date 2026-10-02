@@ -79,13 +79,38 @@ pub struct ServerContext {
 impl ServerContext {
     /// Explicit trusted host grant. No namespace, policy or provider is initialized.
     pub fn with_fixed_lifecycle_host(
-        mut self,
+        self,
         host: std::sync::Arc<vibe_orchestrator::machine_submission::FixedLifecycleDecisionHost>,
     ) -> Result<Self, vibe_orchestrator::machine_submission::FixedDecisionError> {
-        host.compare_context_root(&self.project_root)?;
-        self.fixed_lifecycle_bridge = Some(std::sync::Arc::new(
+        self.with_fixed_lifecycle_route(std::sync::Arc::new(
             vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute::new(host),
-        ));
+        ))
+    }
+    /// Retain an existing opaque route for a new connection, including its
+    /// accepted references and live jobs. The physical root is checked again;
+    /// no wire descriptor can supply this grant.
+    ///
+    /// ```no_run
+    /// use std::sync::Arc;
+    /// use vibe_mcp::{ServerContext, machine_session::fixed::FixedMachineSessionRunner};
+    /// use vibe_orchestrator::{machine_operation::fixed_lifecycle::FixedLifecycleRoute,
+    ///     machine_submission::FixedLifecycleDecisionHost};
+    /// fn reconnect(root: &std::path::Path, host: Arc<FixedLifecycleDecisionHost>) {
+    ///     let route = Arc::new(FixedLifecycleRoute::new(host));
+    ///     let context = ServerContext::with_store_root(root, root.join("unused"))
+    ///         .with_fixed_lifecycle_route(route.clone()).unwrap();
+    ///     let _connection = FixedMachineSessionRunner::new(context).unwrap();
+    ///     // The embedding retains route for another explicitly scoped connection.
+    /// }
+    /// ```
+    pub fn with_fixed_lifecycle_route(
+        mut self,
+        route: std::sync::Arc<
+            vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute,
+        >,
+    ) -> Result<Self, vibe_orchestrator::machine_submission::FixedDecisionError> {
+        route.compare_context_root(&self.project_root)?;
+        self.fixed_lifecycle_bridge = Some(route);
         Ok(self)
     }
     pub(crate) fn fixed_lifecycle_bridge(

@@ -60,7 +60,7 @@ use crate::values::LifecycleValues;
 // The target OS changes lifecycle behavior and belongs in this fixed
 // request. `observed_at` is execution evidence: retries retain the first
 // report timestamp instead of treating a fresh clock reading as new intent.
-pub(in crate::machine_submission) const FIXED_OPERATION: &str = "rust:vibe-lifecycle:validate";
+pub(crate) const FIXED_OPERATION: &str = "rust:vibe-lifecycle:validate";
 
 const VALIDATE_LINUX: &[u8] =
     b"{\"operation\":\"lifecycle.validate\",\"schema\":1,\"target_os\":\"linux\"}";
@@ -89,12 +89,12 @@ use crate::ports::{
 use crate::prelude::selected_under_lease;
 
 mod install;
-mod sequential_runs;
 #[allow(
     dead_code,
     reason = "private host integration atom; no public surface yet"
 )]
 mod live_owner;
+mod sequential_runs;
 #[allow(
     unused_imports,
     reason = "internal Install adapter is exercised by focused tests"
@@ -1533,8 +1533,7 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                 false,
             )?;
             ensure!(
-                store.state().run.slot_continuation.is_none()
-                    && store.delegated_rows().is_empty(),
+                store.state().run.slot_continuation.is_none() && store.delegated_rows().is_empty(),
                 "new protected header inherited parked work"
             );
             drop(store);
