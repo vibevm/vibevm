@@ -64,7 +64,11 @@ pub fn read_frame<R: Read>(reader: &mut R) -> Result<Option<SessionFrame>, Frame
     }
     let mut body = vec![0_u8; declared];
     read_exact_or(reader, &mut body, FrameCodecError::TruncatedBody)?;
-    let text = std::str::from_utf8(&body).map_err(|_| FrameCodecError::InvalidUtf8)?;
+    decode_body(&body).map(Some)
+}
+
+pub(super) fn decode_body(body: &[u8]) -> Result<SessionFrame, FrameCodecError> {
+    let text = std::str::from_utf8(body).map_err(|_| FrameCodecError::InvalidUtf8)?;
     let frame: SessionFrame = serde_json::from_str(text).map_err(|error| {
         if error.is_data() {
             FrameCodecError::InvalidShape
@@ -75,7 +79,7 @@ pub fn read_frame<R: Read>(reader: &mut R) -> Result<Option<SessionFrame>, Frame
     if frame.schema != FRAME_EPOCH {
         return Err(FrameCodecError::UnsupportedEpoch(frame.schema));
     }
-    Ok(Some(frame))
+    Ok(frame)
 }
 
 /// Serialize the generated value, then emit one bounded frame and flush it.
