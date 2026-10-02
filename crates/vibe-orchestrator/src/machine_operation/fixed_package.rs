@@ -14,6 +14,15 @@ use vibe_safefs::Project;
 
 const LAW: &str = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-PACKAGE";
 
+mod contract;
+mod dispatch;
+mod envelope;
+pub use contract::{PUBLICATION_CAP, REQUEST_CAP};
+pub use dispatch::{FixedPackageRoute, FixedPackageRouteError};
+pub use envelope::{DOMAIN_OWNER, OPERATION_ID};
+#[cfg(test)]
+mod native_tests;
+
 /// Refusals retain the lifecycle owner's typed error. An error after submit
 /// reaches that owner does not establish that no effect began.
 ///
