@@ -130,6 +130,41 @@ fn direct_typed_decisions_same_key_owner_run_and_before_effect_refusals() {
     f.count();
 }
 
+#[test]
+fn cold_unknown_reference_preserves_retained_run_and_effect_uncertainty() {
+    let f = Fixture::new();
+    let root = f.dir.path();
+    let route = FixedLifecycleRoute::new(f.host(true));
+    let accepted = approve(&route, root, RequestedOptionsControl::None);
+    call(&route, root, submit(&accepted, "once")).unwrap();
+    until(|| root.join("entered").exists());
+    f.release();
+    until(|| {
+        matches!(
+            row(call(&route, root, inspect("once")).unwrap()).status,
+            v::Status::ResultAvailable(_)
+        )
+    });
+    let run = row(call(&route, root, inspect("once")).unwrap())
+        .run_id
+        .unwrap();
+    drop(route);
+
+    let cold = FixedLifecycleRoute::new(f.host(true));
+    let refusal = call(&cold, root, submit(&accepted, "once")).unwrap_err();
+    assert_eq!(refusal.error.code, Code::UnknownReference);
+    assert_eq!(refusal.error.known_run_id.as_deref(), Some(run.as_str()));
+    assert!(refusal.effects_may_have_begun);
+    assert!(refusal.error.view_json.is_some());
+    assert_eq!(
+        row(call(&cold, root, inspect("once")).unwrap())
+            .run_id
+            .as_deref(),
+        Some(run.as_str())
+    );
+    f.count();
+}
+
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
     r = 1
