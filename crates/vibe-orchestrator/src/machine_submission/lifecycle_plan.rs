@@ -327,7 +327,7 @@ pub(crate) fn canonical_one_package_fixture_request(
 
 // Sort every object key independently of serde_json's optional map backend.
 // Arrays retain their authored order; this model contains no floating values.
-fn write_canonical(value: &Value, out: &mut Vec<u8>) -> Result<()> {
+pub(super) fn write_canonical(value: &Value, out: &mut Vec<u8>) -> Result<()> {
     match value {
         Value::Null => out.extend_from_slice(b"null"),
         Value::Bool(true) => out.extend_from_slice(b"true"),

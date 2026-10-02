@@ -71,6 +71,7 @@ pub(super) struct Binding {
     source: ScriptSourceWitness,
     selected: SelectedManifestLockWitness,
     started: String,
+    admitted_profile: bool,
     gate: control::Gate,
 }
 
@@ -283,6 +284,11 @@ impl ReadyObserver {
             source: source.clone(),
             selected: selected.clone(),
             started: started.to_owned(),
+            admitted_profile: serde_json::from_slice::<serde_json::Value>(canonical_request)
+                .ok()
+                .is_some_and(|value| {
+                    value["format"] == "vibevm.lifecycle.admitted-no-control-request/1"
+                }),
             owner: Arc::downgrade(&self.shared),
             coordinates: HostCoordinates {
                 root: lease.root().to_owned(),
@@ -363,6 +369,14 @@ fn inspect(shared: &Arc<Shared>) -> Result<Observation> {
                 && row.plan_sha256 == binding.plan_sha256,
             "retained C1 changed"
         );
+        if binding.admitted_profile {
+            check_admitted_capsule(
+                &lease,
+                &row.domain_run_id,
+                &row.request_sha256,
+                &row.plan_sha256,
+            )?;
+        }
         attach_existing_lifecycle(&lease, &c.namespace, &c.scope, &c.key, &canonical_request)
     })();
     match evidence {
@@ -404,6 +418,7 @@ pub(super) fn start(
         target_os,
         observed_at,
         deferred_stop: false,
+        profile: None,
         #[cfg(test)]
         fixture: None,
         #[cfg(test)]
@@ -421,6 +436,7 @@ struct OwnedDispatch {
     target_os: TargetOs,
     observed_at: Timestamp,
     deferred_stop: bool,
+    profile: Option<AdmittedProfile>,
     #[cfg(test)]
     fixture: Option<TestFixture>,
     #[cfg(test)]
@@ -503,6 +519,7 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                     None,
                     after_effect,
                     Some(&ready),
+                    dispatch.profile.as_ref(),
                 )
             }));
             // Submission locals have unwound/dropped. Release the active proof

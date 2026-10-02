@@ -37,7 +37,7 @@ pub use lifecycle_adapter::{
 mod lifecycle_decisions;
 pub use lifecycle_decisions::{
     DecisionOutcome, FixedDecisionError, FixedLifecycleDecisionHost, HostPolicyFacts,
-    PreparationEffects, ValidatedFixedPlanEvidence,
+    PreparationEffects, ReadonlyFixedJob, ValidatedFixedPlanEvidence,
 };
 
 /// Exact domain-journal observation under the same outer mutation lease.
