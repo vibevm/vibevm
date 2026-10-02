@@ -30,8 +30,9 @@ mod lifecycle_plan;
 mod lifecycle_adapter;
 
 pub use lifecycle_adapter::{
-    BindingSummary, FixedOperationStatus, HostControlCapability, HostOwnedFixedOperation,
-    ObservationHandle, Readiness,
+    BindingSummary, EvidenceBasis, FixedOperationStatus, FixedOwnerEvidenceSnapshot,
+    HostControlCapability, HostOwnedFixedOperation, ObservationHandle, ObservedPhase, ObservedWork,
+    Readiness,
 };
 
 mod policy_owner;

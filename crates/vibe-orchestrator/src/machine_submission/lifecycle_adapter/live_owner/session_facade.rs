@@ -284,6 +284,15 @@ impl HostOwnedFixedOperation {
         })
     }
 
+    /// Samples fresh domain status and bounded callback observations independently.
+    pub fn evidence(&self) -> FixedOwnerEvidenceSnapshot {
+        evidence::sample(
+            &self.inner.owner.shared,
+            &self.inner.coordinates.scope,
+            self.inspect(),
+        )
+    }
+
     pub fn inspect(&self) -> Result<FixedOperationStatus> {
         let observed = self.inner.owner.inspect()?;
         if matches!(observed, Observation::RecoveryRequired { run_id: None, .. }) {

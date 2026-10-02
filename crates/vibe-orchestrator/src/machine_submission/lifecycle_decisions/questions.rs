@@ -1,6 +1,6 @@
 use super::*;
 
-pub(super) const OPERATION: &str = "rust:vibe-lifecycle:validate";
+pub(super) const OPERATION: &str = super::super::lifecycle_adapter::FIXED_OPERATION;
 pub(super) const DOMAIN: &str = "rust:vibe-lifecycle";
 pub(super) fn choices(facts: &HostPolicyFacts) -> Vec<Choice> {
     [
