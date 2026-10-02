@@ -235,11 +235,29 @@ pub(super) fn sample(
 ) -> FixedOwnerEvidenceSnapshot {
     let binding = shared.record.lock().unwrap().binding.clone();
     let ledger = shared.ledger.lock().unwrap().clone();
+    // A verified cold replay/recovery can establish the C1 subject without
+    // minting a fresh live Ready binding or granting control.
+    let known_run = binding
+        .as_ref()
+        .map(|b| b.run_id.clone())
+        .or_else(|| match &inspection {
+            Ok(FixedOperationStatus::Running { run_id })
+            | Ok(FixedOperationStatus::ResultAvailable { run_id, .. })
+            | Ok(FixedOperationStatus::RecoveryRequired {
+                run_id: Some(run_id),
+                ..
+            }) => Some(run_id.clone()),
+            _ => None,
+        });
+    let known_scope = binding
+        .as_ref()
+        .map(|b| b.coordinates.scope.clone())
+        .or_else(|| known_run.as_ref().map(|_| scope.clone()));
     project(
         scope,
         shared.requested_phase,
-        binding.as_ref().map(|b| b.coordinates.scope.clone()),
-        binding.as_ref().map(|b| b.run_id.clone()),
+        known_scope,
+        known_run,
         ledger,
         inspection,
     )

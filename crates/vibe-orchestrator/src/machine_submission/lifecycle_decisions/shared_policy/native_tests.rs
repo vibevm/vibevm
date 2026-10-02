@@ -107,6 +107,14 @@ fn independent_actor_after_terminal_replays_same_real_c1_capsule_marker_and_resu
         observed, first,
         "retry must expose the actual retained run/result"
     );
+    let evidence_view = replay.evidence();
+    assert_eq!(evidence_view.bound_run_id(), Some(run.as_str()));
+    assert_eq!(evidence_view.bound_scope(), Some(&f.scope));
+    assert_eq!(evidence_view.status(), Some(&first));
+    assert_eq!(
+        evidence_view.basis(),
+        crate::machine_submission::EvidenceBasis::RetainedReport
+    );
     assert_eq!(b.inspect_existing("once").unwrap(), Some(first));
     assert_eq!(
         std::fs::read(f.dir.path().join("counter")).unwrap(),
@@ -168,6 +176,61 @@ fn same_shared_host_retry_while_real_provider_holds_lease_attaches_same_job() {
     drop(release);
     let outcome = terminal(&job);
     assert_eq!(terminal(&retry), outcome);
+    assert_eq!(
+        std::fs::read(f.dir.path().join("counter")).unwrap(),
+        b"effect\n"
+    );
+}
+
+#[test]
+fn independent_actor_changed_control_same_key_refuses_instead_of_returning_old_success() {
+    let f = Fixture::new(true);
+    let first_host = f.host();
+    let second_host = f.host();
+    let first_evidence = approved(&first_host);
+    let changed = super::tests::approval(&second_host, RequestedOptionsControl::Detach);
+    let second_evidence = match second_host.answer_typed(&changed).unwrap() {
+        DecisionOutcome::Validated(value) => value,
+        _ => panic!("actual independently approved changed plan"),
+    };
+    assert_ne!(first_evidence.identity(), second_evidence.identity());
+    let first = first_host
+        .submit_no_control(&first_evidence, "once", now())
+        .unwrap();
+    let original = terminal(&first);
+    assert!(matches!(
+        &original,
+        FixedOperationStatus::ResultAvailable { .. }
+    ));
+    let second = second_host
+        .submit_scoped(&second_evidence, "once", now())
+        .unwrap();
+    let mut observed = None;
+    until(|| {
+        let state = second.inspect().unwrap();
+        if matches!(
+            state,
+            FixedOperationStatus::Starting | FixedOperationStatus::Running { .. }
+        ) {
+            false
+        } else {
+            observed = Some(state);
+            true
+        }
+    });
+    let observed = observed.unwrap();
+    assert!(
+        !matches!(observed, FixedOperationStatus::ResultAvailable { .. }),
+        "a changed canonical intent must not inherit an old completed result: {observed:?}"
+    );
+    assert!(matches!(
+        observed,
+        FixedOperationStatus::RecoveryRequired { .. }
+    ));
+    assert_eq!(
+        second_host.inspect_existing("once").unwrap(),
+        Some(original)
+    );
     assert_eq!(
         std::fs::read(f.dir.path().join("counter")).unwrap(),
         b"effect\n"
