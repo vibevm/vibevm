@@ -335,8 +335,10 @@ impl Project {
     /// Open (creating when absent) `.vibe/<name>` through the capability,
     /// verify it is a regular single-link file, take an exclusive OS file lock
     /// on it, and then prove the path still names the object that was locked.
-    /// The handle is released by drop or process death; a second holder blocks
-    /// until this one finishes.
+    /// Dropping the guard explicitly unlocks before closing its handle, even
+    /// when an inherited descriptor alias remains open. A second holder blocks
+    /// until this one finishes. Process death releases the lock once all
+    /// descriptor aliases close.
     pub fn lock(&self, name: &str) -> Result<LockGuard> {
         match self.acquire(name, true)? {
             Some(guard) => Ok(guard),
@@ -413,12 +415,16 @@ impl Pinned {
             if !held {
                 return Ok(None);
             }
-            if still_named(self, name, &file, &display)? {
-                return Ok(Some(LockGuard { _file: file }));
+            let guard = LockGuard {
+                _file: file,
+                path: display.clone(),
+            };
+            if still_named(self, name, &guard._file, &display)? {
+                return Ok(Some(guard));
             }
-            // Dropping releases the lock on the object the name no longer
-            // means, so the next attempt can contend for the current one.
-            drop(file);
+            // Explicitly unlock the stale object before the next attempt,
+            // including when another process retains a descriptor alias.
+            drop(guard);
         }
         bail!(
             "`{}` was replaced under every one of {LOCK_ATTEMPTS} lock attempts; refusing to \
@@ -454,11 +460,30 @@ fn still_named(vibe: &Pinned, name: &str, locked: &std::fs::File, display: &Path
 }
 
 /// An exclusive cross-process lock held for one whole transaction.
+/// Drop explicitly unlocks before the file closes; descriptor aliases do not
+/// extend the guard's ownership. Unlock failures are reported as warnings.
 #[derive(Debug)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
 pub struct LockGuard {
-    /// Intentionally live: dropping it releases the OS lock.
+    /// Intentionally live until Drop explicitly releases the OS lock.
     _file: std::fs::File,
+    path: PathBuf,
+}
+
+impl Drop for LockGuard {
+    fn drop(&mut self) {
+        if let Err(error) = self._file.unlock() {
+            use std::io::Write;
+
+            // Drop cannot return an error. Report the failure without risking
+            // a second panic if stderr itself is unavailable.
+            let _ = writeln!(
+                std::io::stderr().lock(),
+                "warning: failed to unlock `{}`: {error}",
+                self.path.display()
+            );
+        }
+    }
 }
 
 include!("project/pinned.rs");

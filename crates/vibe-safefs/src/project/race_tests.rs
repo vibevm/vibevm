@@ -383,6 +383,106 @@ fn an_exclusive_lock_admits_one_holder_at_a_time() {
     );
 }
 
+/// Model a concurrent fork's inherited open-file-description alias without
+/// unsafe code or a production descriptor accessor. Closing the guard must
+/// release its ownership even while the native child retains the alias.
+#[test]
+#[cfg(unix)]
+fn dropping_lock_guard_releases_while_native_child_holds_descriptor_alias() {
+    use std::io::BufRead;
+    use std::process::{Command, Stdio};
+    use std::sync::mpsc;
+    use std::time::Duration;
+
+    struct ChildCleanup(std::process::Child);
+    impl Drop for ChildCleanup {
+        fn drop(&mut self) {
+            let _ = self.0.kill();
+            self.0.wait().expect("reap the bounded descriptor holder");
+        }
+    }
+
+    let (_dir, project) = project();
+    let held = project.try_lock("alias.lock").unwrap().unwrap();
+    let alias = held._file.try_clone().expect("clone the actual locked OFD");
+    let mut child = ChildCleanup(
+        Command::new(std::env::current_exe().unwrap())
+            .args([
+                "--exact",
+                "project::race_tests::lock_descriptor_alias_child",
+                "--nocapture",
+            ])
+            .env("VIBE_SAFEFS_LOCK_ALIAS_CHILD", "1")
+            .stdin(Stdio::from(alias))
+            .stdout(Stdio::piped())
+            .stderr(Stdio::null())
+            .spawn()
+            .expect("spawn the native descriptor holder"),
+    );
+    let stdout = child.0.stdout.take().unwrap();
+    let (ready_tx, ready_rx) = mpsc::channel();
+    let reader = std::thread::spawn(move || {
+        for line in std::io::BufReader::new(stdout).lines() {
+            if line.expect("read child readiness") == "LOCK_ALIAS_READY" {
+                let _ = ready_tx.send(());
+                return;
+            }
+        }
+    });
+    ready_rx
+        .recv_timeout(Duration::from_secs(5))
+        .expect("native child must announce readiness within the bound");
+    reader.join().unwrap();
+    assert!(child.0.try_wait().unwrap().is_none(), "child is alive");
+    assert!(
+        project.try_lock("alias.lock").unwrap().is_none(),
+        "a separate acquisition still refuses while the actual guard lives",
+    );
+
+    drop(held);
+    // Exactly one acquisition: no contention retry or timing accommodation.
+    let reacquired = project.try_lock("alias.lock").unwrap();
+    let child_alive = child.0.try_wait().unwrap().is_none();
+    let released = reacquired.is_some();
+    if released {
+        assert!(
+            project.try_lock("alias.lock").unwrap().is_none(),
+            "the new guard remains exclusive despite the old descriptor alias",
+        );
+    }
+    drop(reacquired);
+    drop(child);
+    assert!(
+        project.try_lock("alias.lock").unwrap().is_some(),
+        "after the child is reaped no alias or guard retains ownership",
+    );
+    assert!(child_alive, "the proof requires an alias in a live child");
+    assert!(
+        released,
+        "dropping the actual guard left Busy while its native child held an OFD alias",
+    );
+}
+
+/// Invoked only by the native alias proof; an ordinary suite run is a no-op.
+#[test]
+#[cfg(unix)]
+fn lock_descriptor_alias_child() {
+    use std::io::Write;
+    use std::sync::mpsc;
+    use std::time::Duration;
+
+    if std::env::var_os("VIBE_SAFEFS_LOCK_ALIAS_CHILD").is_none() {
+        return;
+    }
+    // Stdio retains the actual cloned locked descriptor as fd 0 until exit.
+    // No reopening, relocking, fake guard or ambient journal is involved.
+    let _stdin = std::io::stdin().lock();
+    println!("LOCK_ALIAS_READY");
+    std::io::stdout().flush().unwrap();
+    let (_hold, release) = mpsc::channel::<()>();
+    let _ = release.recv_timeout(Duration::from_secs(10));
+}
+
 #[test]
 fn pinned_directory_handles_contend_on_one_physical_lock_file() {
     let dir = tempfile::tempdir().unwrap();
