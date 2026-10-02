@@ -209,3 +209,43 @@ fn plain_suspend_blocks_due_heartbeats_and_resumes_after_nested_unwind() {
     assert!(writer.text().contains("[wait] owned terminal"));
     task.finish();
 }
+
+#[test]
+fn plain_suspend_stays_silent_through_long_input_and_resumes_on_ok_or_error() {
+    for fail_input in [false, true] {
+        let writer = SharedWriter::default();
+        let renderer = ProgressRenderer::plain(Box::new(writer.clone()), false);
+        let progress = Progress::new(renderer.clone());
+        let task = progress.task("Command init");
+        let Renderer::Plain(plain) = &renderer.renderer else {
+            panic!("plain renderer expected");
+        };
+        let before = writer.text();
+
+        let result: Result<(), &str> = renderer.suspend(|| {
+            for elapsed_seconds in [15, 45, 180, 3_600, 86_400] {
+                let mut tasks = plain.tasks.lock().expect("active tasks lock");
+                let state = tasks.get_mut(&task.id()).expect("active task");
+                state.started = Instant::now() - Duration::from_secs(elapsed_seconds);
+                state.last_update = Instant::now() - WAIT_INTERVAL;
+                drop(tasks);
+                plain.waiting();
+                assert_eq!(writer.text(), before);
+                assert_eq!(renderer.active_task_count(), 1);
+            }
+            if fail_input {
+                Err("input interrupted")
+            } else {
+                Ok(())
+            }
+        });
+        assert_eq!(result.is_err(), fail_input);
+        assert_eq!(writer.text(), before);
+
+        plain.waiting();
+        assert!(writer.text().contains("[wait] Command init"));
+        task.finish();
+        assert!(writer.text().contains("[done] Command init"));
+        assert_eq!(renderer.active_task_count(), 0);
+    }
+}

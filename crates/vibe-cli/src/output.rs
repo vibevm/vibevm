@@ -267,8 +267,8 @@ impl Context {
         self.verbose && self.progress_renderer.is_some()
     }
 
-    /// Temporarily clears interactive bars while ordinary output or a prompt
-    /// uses the terminal. Plain and suppressed modes run the closure directly.
+    /// Pauses animated progress and plain heartbeats while output or a prompt
+    /// uses the terminal; suppressed modes run the closure directly.
     pub fn suspend_progress<R>(&self, render: impl FnOnce() -> R) -> R {
         match &self.progress_renderer {
             Some(renderer) => renderer.suspend(render),
