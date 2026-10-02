@@ -34,6 +34,12 @@ pub use lifecycle_adapter::{
     ObservationHandle, Readiness,
 };
 
+mod lifecycle_decisions;
+pub use lifecycle_decisions::{
+    DecisionOutcome, FixedDecisionError, FixedLifecycleDecisionHost, HostPolicyFacts,
+    PreparationEffects, ValidatedFixedPlanEvidence,
+};
+
 /// Exact domain-journal observation under the same outer mutation lease.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum JournalState<T> {
