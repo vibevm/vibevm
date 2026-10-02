@@ -176,7 +176,7 @@ impl HostOwnedFixedOperation {
                 force: profile.force(),
                 agent_mode: RunAgentMode::Cli,
                 assume_yes: true,
-                trace_flag: false,
+                trace_flag: profile.trace(),
                 install_inputs: Default::default(),
                 policy: Default::default(),
             },

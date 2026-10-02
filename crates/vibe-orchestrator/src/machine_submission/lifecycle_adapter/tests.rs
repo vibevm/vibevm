@@ -1503,3 +1503,6 @@ fn workspace_member_refuses_before_reservation_or_run() {
     assert!(!dir.path().join(".vibe/lifecycle.toml").exists());
     assert!(!member.join(".vibe/lifecycle").exists());
 }
+
+#[path = "tests/fixed_trace.rs"]
+mod fixed_trace;

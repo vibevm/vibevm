@@ -256,6 +256,66 @@ fn defer_only_refuses_pre_then_native_active_stop_retains_partial_report_and_rec
     f.count();
 }
 #[test]
+fn fixed_trace_defer_only_refuses_pre_then_native_active_stop_retains_partial_report_and_receipt() {
+    let f = Fixture::new(false, true);
+    let e = f
+        .host
+        .trace_approved_for_test(false, RequestedOptionsControl::CancelDeferredBoundary);
+    let (job, release) = f.held(&e);
+    let summary = ready(&job);
+    let mut reader = job.attach().unwrap();
+    let m = cancel(&reader, "defer-stop");
+    assert_eq!(row(&job, &mut reader, &m).status, Status::Unavailable);
+    release.send(()).unwrap();
+    until(|| f.dir.path().join("entered").exists());
+    f.count();
+    let r = row(&job, &mut reader, &m);
+    assert_eq!(
+        (r.status, r.operation_effect_state),
+        (Status::Requested, Effect::Uncertain)
+    );
+    f.release();
+    let FixedOperationStatus::ResultAvailable {
+        marker,
+        report_bytes,
+        ..
+    } = terminal(&job)
+    else {
+        panic!("partial outcome")
+    };
+    assert_eq!(
+        (marker.outcome, marker.effect_state),
+        (Outcome::Uncertain, MarkerEffect::Uncertain)
+    );
+    let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+        serde_json::from_slice(report_bytes.as_ref().unwrap()).unwrap();
+    let trace = report.trace.unwrap();
+    assert_eq!(trace.run_id, summary.run_id());
+    assert_eq!(
+        trace.status,
+        vibe_wire::generated::shared::TraceReportStatus::Ok
+    );
+    assert!(trace.finalised);
+    assert_eq!(trace.snapshots, "0");
+    assert_eq!(fs::read(f.dir.path().join("artifact")).unwrap(), b"kept\n");
+    let reached = row(&job, &mut reader, &m);
+    assert_eq!(
+        (reached.status, reached.operation_effect_state),
+        (Status::ReachedSafeStop, Effect::Uncertain)
+    );
+    let late = cancel(&reader, "late-defer");
+    assert_eq!(
+        row(&job, &mut reader, &late).status,
+        Status::AlreadyTerminal
+    );
+    assert_eq!(row(&job, &mut reader, &m).status, Status::ReachedSafeStop);
+    assert_eq!(
+        ready(&f.host.submit_scoped(&e, "once", now()).unwrap()),
+        summary
+    );
+    f.count();
+}
+#[test]
 fn none_and_detach_refuse_cancel_pre_and_active_detach_keeps_one_job_alive() {
     for mode in [
         RequestedOptionsControl::None,

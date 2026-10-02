@@ -98,11 +98,12 @@ fn approved_options(
     host: &FixedLifecycleDecisionHost,
     options: RequestedOptions,
 ) -> ValidatedFixedPlanEvidence {
+    let selected_control = control_id(&options.control).to_owned();
     let mut q = host.prepare_requested_options(options).unwrap();
     if matches!(q.body, Body::SelectionQuestion(_)) {
         let mut answer = q.clone();
         answer.body = Body::SelectionAnswer(Box::new(BodySelectionAnswer {
-            choice_ids: vec!["none".into()],
+            choice_ids: vec![selected_control],
         }));
         q = match host.answer_typed(&answer).unwrap() {
             DecisionOutcome::Question(q) => q,
@@ -358,6 +359,36 @@ fn actual_dispatch_guard_rechecks_revocation_after_factory_and_before_c1() {
     f.no_effect();
 }
 #[test]
+fn fixed_trace_actual_dispatch_guard_rechecks_revocation_after_factory_and_before_c1() {
+    let f = Fixture::new(false);
+    let h = f.host();
+    let e = h.trace_approved_for_test(true, RequestedOptionsControl::None);
+    let mut profile = AdmittedProfile::from_owned(&h, &e).unwrap();
+    let revoke = h.clone();
+    profile.before_guard = Some(Arc::new(move || {
+        let mut facts = facts();
+        facts.approve_captured_script = false;
+        revoke.set_host_policy(facts).unwrap();
+    }));
+    let owner = HostOwnedFixedOperation::start_admitted(
+        f.dir.path().into(),
+        f.namespace.clone(),
+        f.scope.clone(),
+        "once".into(),
+        TargetOs::Linux,
+        now(),
+        profile,
+    )
+    .unwrap();
+    let job = ReadonlyFixedJob { owner };
+    assert!(matches!(
+        terminal(&job),
+        FixedOperationStatus::RecoveryRequired { run_id: None, .. }
+    ));
+    f.no_effect();
+    assert!(!f.dir.path().join(".vibe/trace").exists());
+}
+#[test]
 fn root_replacement_at_actual_guard_does_not_dispatch() {
     let f = Fixture::new(false);
     let h = f.host();
@@ -589,4 +620,248 @@ impl FixedLifecycleDecisionHost {
         requested.force = true;
         approved_options(self, requested)
     }
+}
+
+#[test]
+fn fixed_trace_force_matrix_binds_wrapper_and_preserves_identical_v4_capture() {
+    let f = Fixture::new(false);
+    let host = f.host();
+    let mut request_hashes = std::collections::BTreeSet::new();
+    let mut plan_hashes = std::collections::BTreeSet::new();
+    let mut base = None;
+    for (force, trace) in [(false, false), (true, false), (false, true), (true, true)] {
+        let mut requested = options(RequestedOptionsControl::None);
+        requested.force = force;
+        requested.trace = trace;
+        let e = approved_options(&host, requested);
+        let p = AdmittedProfile::from_owned(&host, &e).unwrap();
+        let pair = (e.base.request.clone(), e.base.plan.clone());
+        assert_eq!(base.get_or_insert(pair.clone()), &pair);
+        assert!(request_hashes.insert(digest(p.request(&e.base.request).unwrap())));
+        assert!(plan_hashes.insert(digest(p.plan(&e.base.plan).unwrap())));
+        let v: serde_json::Value = serde_json::from_slice(&e.base.plan).unwrap();
+        assert_eq!(v["force"], false);
+        assert_eq!(v["trace_flag"], false);
+        assert_eq!(v["effective_trace"], false);
+    }
+    assert_eq!((request_hashes.len(), plan_hashes.len()), (4, 4));
+    f.no_effect();
+}
+
+#[test]
+fn fixed_trace_native_ready_precedes_open_and_one_effect_survives_lost_response_replay() {
+    let f = Fixture::new(false);
+    let host = f.host();
+    let e = host.trace_approved_for_test(true, RequestedOptionsControl::None);
+    let ordinary = host.force_approved_for_test();
+    let mut profile = AdmittedProfile::from_owned(&host, &e).unwrap();
+    let root = f.dir.path().to_path_buf();
+    profile.after_ready = Some(Arc::new(move || {
+        assert!(!root.join(".vibe/trace").exists());
+        assert!(!root.join("counter").exists());
+        let index: serde_json::Value =
+            serde_json::from_slice(&fs::read(root.join(".vibe/machine-submissions.json")).unwrap())
+                .unwrap();
+        assert!(
+            index["namespaces"]
+                .as_object()
+                .unwrap()
+                .values()
+                .any(|n| n["keys"]["once"]["journal_ready"] == true)
+        );
+        let header = fs::read_to_string(root.join(".vibe/lifecycle.toml")).unwrap();
+        assert!(header.contains("compile_trace = true"));
+    }));
+    let owner = host.claim_owned(&e, "once", now(), profile).unwrap();
+    let job = ReadonlyFixedJob { owner };
+    let run = ready(&job);
+    until(|| f.dir.path().join("entered").exists());
+    let index_path = f
+        .dir
+        .path()
+        .join(".vibe/trace")
+        .join(&run)
+        .join("index.json");
+    let running: serde_json::Value =
+        serde_json::from_slice(&fs::read(&index_path).unwrap()).unwrap();
+    assert_eq!(running["status"], "running");
+    let calls: Vec<_> = (0..2)
+        .map(|_| {
+            let h = host.clone();
+            let evidence = e.clone();
+            std::thread::spawn(move || h.submit_no_control(&evidence, "once", now()).unwrap())
+        })
+        .collect();
+    for call in calls {
+        assert_eq!(ready(&call.join().unwrap()), run);
+    }
+    f.count_one();
+    f.release();
+    let result = terminal(&job);
+    let FixedOperationStatus::ResultAvailable {
+        marker,
+        report_bytes: Some(bytes),
+        ..
+    } = &result
+    else {
+        panic!("trace result: {result:?}")
+    };
+    assert_eq!(
+        marker.outcome,
+        vibe_wire::generated::lifecycle_outcome_marker::LifecycleOutcomeMarkerOutcome::Completed
+    );
+    let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+        serde_json::from_slice(bytes).unwrap();
+    let trace = report.trace.unwrap();
+    assert!(report.ok && trace.finalised);
+    assert_eq!(trace.run_id, run);
+    assert_eq!(
+        trace.status,
+        vibe_wire::generated::shared::TraceReportStatus::Ok
+    );
+    assert_eq!((&*trace.snapshots, &*trace.events), ("0", "0"));
+    let index = fs::read(&index_path).unwrap();
+    let fresh = host.trace_approved_for_test(true, RequestedOptionsControl::None);
+    assert_eq!(fresh.identity(), e.identity());
+    let retry = host.submit_no_control(&fresh, "once", now()).unwrap();
+    assert_eq!(terminal(&retry), result);
+    host.jobs.lock().unwrap().clear();
+    assert_eq!(
+        terminal(&host.submit_no_control(&fresh, "once", now()).unwrap()),
+        result
+    );
+    assert_eq!(fs::read(&index_path).unwrap(), index);
+    host.jobs.lock().unwrap().clear();
+    assert!(matches!(
+        terminal(&host.submit_no_control(&ordinary, "once", now()).unwrap()),
+        FixedOperationStatus::RecoveryRequired { .. }
+    ));
+    assert_eq!(fs::read(&index_path).unwrap(), index);
+    f.count_one();
+}
+
+impl FixedLifecycleDecisionHost {
+    pub(in crate::machine_submission) fn trace_approved_for_test(
+        &self,
+        force: bool,
+        control: RequestedOptionsControl,
+    ) -> ValidatedFixedPlanEvidence {
+        let mut requested = options(control);
+        requested.force = force;
+        requested.trace = true;
+        approved_options(self, requested)
+    }
+}
+
+#[test]
+fn fixed_trace_native_script_failure_and_missing_report_marker_remain_one_effect() {
+    for damage in ["failure", "report", "marker"] {
+        let f = Fixture::new(damage == "failure");
+        let host = f.host();
+        let e = host.trace_approved_for_test(false, RequestedOptionsControl::None);
+        let job = host.submit_no_control(&e, "once", now()).unwrap();
+        let run = ready(&job);
+        until(|| f.dir.path().join("entered").exists());
+        f.release();
+        let result = terminal(&job);
+        let FixedOperationStatus::ResultAvailable {
+            marker,
+            report_bytes: Some(bytes),
+            ..
+        } = result
+        else {
+            panic!("native result")
+        };
+        let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+            serde_json::from_slice(&bytes).unwrap();
+        let trace = report.trace.unwrap();
+        assert_eq!(trace.run_id, run);
+        assert!(trace.finalised);
+        assert_eq!(trace.snapshots, "0");
+        if damage == "failure" {
+            assert!(!report.ok);
+            assert_eq!(
+                trace.status,
+                vibe_wire::generated::shared::TraceReportStatus::Failed
+            );
+            assert_eq!(marker.outcome, vibe_wire::generated::lifecycle_outcome_marker::LifecycleOutcomeMarkerOutcome::Failed);
+        } else {
+            assert_eq!(
+                trace.status,
+                vibe_wire::generated::shared::TraceReportStatus::Ok
+            );
+            fs::remove_file(
+                f.dir
+                    .path()
+                    .join(".vibe/lifecycle-outcomes")
+                    .join(format!("{run}.{damage}.json")),
+            )
+            .unwrap();
+            assert!(matches!(
+                job.inspect().unwrap(),
+                FixedOperationStatus::RecoveryRequired { .. }
+            ));
+        }
+        let index_path = f
+            .dir
+            .path()
+            .join(".vibe/trace")
+            .join(&run)
+            .join("index.json");
+        let index = fs::read(&index_path).unwrap();
+        host.jobs.lock().unwrap().clear();
+        let retry = host.submit_no_control(&e, "once", now()).unwrap();
+        let retried = terminal(&retry);
+        if damage != "failure" {
+            assert!(matches!(
+                retried,
+                FixedOperationStatus::RecoveryRequired { .. }
+            ));
+        }
+        assert_eq!(fs::read(index_path).unwrap(), index);
+        f.count_one();
+    }
+}
+
+impl FixedLifecycleDecisionHost {
+    pub(in crate::machine_submission) fn trace_profile_for_test(&self) -> AdmittedProfile {
+        let e = self.trace_approved_for_test(false, RequestedOptionsControl::None);
+        AdmittedProfile::from_owned(self, &e).unwrap()
+    }
+}
+
+#[test]
+fn fixed_trace_native_open_refusal_observes_real_script_effect_and_exit() {
+    let f = Fixture::new(false);
+    let host = f.host();
+    let e = host.trace_approved_for_test(false, RequestedOptionsControl::None);
+    fs::write(f.dir.path().join(".vibe/trace"), "observer home refused").unwrap();
+    let job = host.submit_no_control(&e, "once", now()).unwrap();
+    let run = ready(&job);
+    until(|| f.dir.path().join("entered").exists());
+    f.count_one();
+    f.release();
+    let FixedOperationStatus::ResultAvailable {
+        marker,
+        report_bytes: Some(bytes),
+        ..
+    } = terminal(&job)
+    else {
+        panic!("observer cannot veto script")
+    };
+    assert_eq!(
+        marker.outcome,
+        vibe_wire::generated::lifecycle_outcome_marker::LifecycleOutcomeMarkerOutcome::Completed
+    );
+    let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+        serde_json::from_slice(&bytes).unwrap();
+    assert!(report.ok);
+    let trace = report.trace.unwrap();
+    assert_eq!(trace.run_id, run);
+    assert_eq!(
+        trace.status,
+        vibe_wire::generated::shared::TraceReportStatus::Unavailable
+    );
+    assert!(!trace.finalised && !trace.warnings.is_empty());
+    f.count_one();
 }

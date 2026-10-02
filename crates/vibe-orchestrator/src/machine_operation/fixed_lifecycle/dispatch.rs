@@ -97,13 +97,10 @@ impl FixedLifecycleRoute {
         }
         let result: Result<Reply, (Code, String, bool)> = match &request.action {
             Action::Prepare(p) => {
-                if p.phase != "validate"
-                    || p.requested_options.trace
-                    || p.requested_options.deploy_profile.is_some()
-                {
+                if p.phase != "validate" || p.requested_options.deploy_profile.is_some() {
                     return refuse(
                         Code::ImplementationGap,
-                        "fixed owner implements Validate without trace or deploy_profile",
+                        "fixed owner implements Validate without deploy_profile",
                         false,
                     );
                 }
