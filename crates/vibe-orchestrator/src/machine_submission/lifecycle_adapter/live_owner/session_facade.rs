@@ -151,6 +151,57 @@ impl HostOwnedFixedOperation {
         })
     }
 
+    /// Host opt-in for a deferred stop at this domain's protected callback boundary.
+    /// An acknowledged request may wait indefinitely for the direct provider to
+    /// exit naturally and the callback and after-effect hook to return. This
+    /// never kills providers or descendants; detach is observation only. Reached
+    /// means no further host work in this domain, not process-tree termination
+    /// or undoing script effects. The retained disposition is Uncertain.
+    #[allow(clippy::too_many_arguments)]
+    pub fn start_with_deferred_stop(
+        root: PathBuf,
+        namespace: SubmissionNamespace,
+        scope: SubmissionScope,
+        key: String,
+        request: DefaultLifecycleRequest,
+        target_os: TargetOs,
+        observed_at: Timestamp,
+    ) -> Result<Self> {
+        let coordinates = HostCoordinates {
+            root,
+            namespace,
+            scope,
+            key,
+        };
+        let (owner, initial_observer) = launch(OwnedDispatch {
+            path: coordinates.root.clone(),
+            namespace: coordinates.namespace.clone(),
+            scope: coordinates.scope.clone(),
+            key: coordinates.key.clone(),
+            request,
+            target_os,
+            observed_at,
+            deferred_stop: true,
+            #[cfg(test)]
+            fixture: None,
+            #[cfg(test)]
+            before_boundary: None,
+            #[cfg(test)]
+            after_effect: None,
+        })?;
+        drop(initial_observer);
+        Ok(Self {
+            inner: Arc::new(Inner { owner, coordinates }),
+        })
+    }
+
+    #[cfg(test)]
+    pub(super) fn from_test_owner(owner: LiveOwner, coordinates: HostCoordinates) -> Self {
+        Self {
+            inner: Arc::new(Inner { owner, coordinates }),
+        }
+    }
+
     /// A single finite wait, capped at ten seconds. Zero is a readiness poll.
     /// Ready is returned only for the actual incumbent binding; never guess IDs.
     pub fn wait_ready(&self, timeout: Duration) -> Result<Readiness> {

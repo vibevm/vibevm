@@ -1499,9 +1499,24 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             if let Some(after_effect) = self.agent.as_ref().and_then(|agent| agent.after_effect) {
                 after_effect()?;
             }
+            let deferred = self
+                .script
+                .as_ref()
+                .and_then(|script| script.ready)
+                .map(|ready| ready.close_deferred_gate())
+                .transpose()?
+                .flatten();
             match outcome {
                 PhaseOutcome::Completed(values) => {
                     let report_bytes = serde_json::to_vec(&values.into_report(None))?;
+                    if let Some(id) = deferred.as_deref() {
+                        return self
+                            .script
+                            .as_ref()
+                            .and_then(|script| script.ready)
+                            .context("deferred owner missing")?
+                            .retain_deferred_stop(&lease, id, &report_bytes);
+                    }
                     match create_lifecycle_outcome_marker(
                         run_id,
                         &reservation_ref,

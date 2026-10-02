@@ -4,6 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LI
 
 use super::*;
 mod control;
+mod deferred_stop;
 pub(super) mod observation;
 mod session_facade;
 mod stream;
@@ -120,6 +121,8 @@ struct Record {
     reason: String,
     subscriptions: BTreeSet<u64>,
     next_subscription: u64,
+    deferred_stop: bool,
+    provider_evidence: Option<deferred_stop::NativeEvidence>,
 }
 impl Record {
     // Only the incumbent under this record lock carries control state.
@@ -400,8 +403,13 @@ pub(super) fn start(
         request,
         target_os,
         observed_at,
+        deferred_stop: false,
         #[cfg(test)]
         fixture: None,
+        #[cfg(test)]
+        before_boundary: None,
+        #[cfg(test)]
+        after_effect: None,
     })
 }
 struct OwnedDispatch {
@@ -412,8 +420,13 @@ struct OwnedDispatch {
     request: DefaultLifecycleRequest,
     target_os: TargetOs,
     observed_at: Timestamp,
+    deferred_stop: bool,
     #[cfg(test)]
     fixture: Option<TestFixture>,
+    #[cfg(test)]
+    before_boundary: Option<Arc<dyn Fn(&Binding) + Send + Sync>>,
+    #[cfg(test)]
+    after_effect: Option<Arc<dyn Fn() -> Result<()> + Send + Sync>>,
 }
 #[cfg(test)]
 struct TestFixture {
@@ -434,6 +447,8 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
             reason: String::new(),
             subscriptions: BTreeSet::new(),
             next_subscription: 1,
+            deferred_stop: dispatch.deferred_stop,
+            provider_evidence: None,
         }),
         changed: Condvar::new(),
     });
@@ -452,12 +467,29 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                         .as_ref()
                         .and_then(|f| f.before_effect.clone()),
                 };
+                #[cfg(test)]
+                if let Some(hook) = dispatch.before_boundary {
+                    let shared = worker.clone();
+                    deferred_stop::BEFORE_CLOSURE.with(|slot| {
+                        *slot.borrow_mut() = Some(Box::new(move || {
+                            let binding = shared.record.lock().unwrap().binding.clone().unwrap();
+                            hook(&binding);
+                        }));
+                    });
+                }
                 static PROBE: SystemProbe = SystemProbe;
                 let process = observation::ObservedProcess::system(&worker);
                 #[cfg(test)]
                 let process = dispatch.fixture.as_ref().map_or(process, |fixture| {
                     observation::ObservedProcess::fixture(fixture.process.as_ref(), &worker)
                 });
+                #[cfg(test)]
+                let after_effect = dispatch
+                    .after_effect
+                    .as_ref()
+                    .map(|hook| hook.as_ref() as &dyn Fn() -> Result<()>);
+                #[cfg(not(test))]
+                let after_effect = None;
                 submit_one_script_validate_internal(
                     &dispatch.path,
                     &dispatch.namespace,
@@ -469,7 +501,7 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
                     &process,
                     &PROBE,
                     None,
-                    None,
+                    after_effect,
                     Some(&ready),
                 )
             }));
@@ -478,6 +510,17 @@ fn launch(dispatch: OwnedDispatch) -> Result<(LiveOwner, Observer)> {
             let lease = worker.record.lock().unwrap().lease.take();
             drop(lease);
             let mut record = worker.record.lock().unwrap();
+            // Callback/error/panic exits cannot leave a post-dispatch request
+            // looking pending once this owner has stopped. No receipt is minted.
+            if let Some(binding) = record.binding.as_mut() {
+                if let control::Gate::DeferredRequested(id) | control::Gate::DeferredStopping(id) =
+                    &binding.gate
+                {
+                    binding.gate = control::Gate::DeferredFailed(id.clone());
+                } else if matches!(binding.gate, control::Gate::DeferredOpen) {
+                    binding.gate = control::Gate::Closed;
+                }
+            }
             match result {
                 Ok(Ok(SubmissionOutcome::Invoked { .. } | SubmissionOutcome::Replayed { .. })) => {
                     if record.binding.is_some() {

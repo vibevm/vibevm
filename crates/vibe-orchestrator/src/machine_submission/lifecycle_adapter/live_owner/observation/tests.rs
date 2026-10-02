@@ -65,6 +65,9 @@ fn stop_before_dispatch_has_no_observation_claims() {
     });
     let c = &s.coordinates;
     let (owner, mut observer) = launch(OwnedDispatch {
+        before_boundary: None,
+        after_effect: None,
+        deferred_stop: false,
         path: c.root.clone(),
         namespace: c.namespace.clone(),
         scope: c.scope.clone(),
