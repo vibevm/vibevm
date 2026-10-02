@@ -285,30 +285,82 @@ fn planned_payload(
     }
 }
 
-fn selected_servers(
+fn server_filter(filter: Option<&str>) -> Result<Option<Vec<String>>> {
+    filter
+        .map(|filter| {
+            let requested: Vec<String> = if filter.trim_start().starts_with('[') {
+                serde_json::from_str(filter)
+                    .context("--server JSON selection must be a string array")?
+            } else {
+                filter
+                    .split(',')
+                    .map(|name| name.trim().to_owned())
+                    .collect()
+            };
+            if requested.is_empty() || requested.iter().any(String::is_empty) {
+                bail!("--server requires nonempty server names");
+            }
+            let mut names = Vec::new();
+            for name in requested {
+                if !names.contains(&name) {
+                    names.push(name);
+                }
+            }
+            Ok(names)
+        })
+        .transpose()
+}
+
+/// Internal selectors preserve exact manifest identities, including punctuation.
+pub(super) fn exact_server_filter(names: &[String]) -> Result<String> {
+    Ok(serde_json::to_string(names)?)
+}
+
+fn validate_server_names(names: &[String], available: &[&str]) -> Result<()> {
+    for name in names {
+        if !available.contains(&name.as_str()) {
+            bail!("requested MCP server `{name}` is missing or unknown in the selected package");
+        }
+    }
+    Ok(())
+}
+
+pub(super) fn selected_servers(
     root: &Path,
     package: &str,
     only_server: Option<&str>,
 ) -> Result<Vec<DeclaredMcpServer>> {
+    let names = server_filter(only_server)?;
     let coordinate = normalized_coordinate(package)?;
     let all =
         vibe_workspace::bins::collect_mcp_servers(root).map_err(|e| anyhow::anyhow!("{e}"))?;
     let found: Vec<_> = all
         .into_iter()
-        .filter(|s| s.package == coordinate && only_server.is_none_or(|n| s.decl.name == n))
+        .filter(|s| s.package == coordinate)
         .collect();
+    if found.is_empty() {
+        bail!("no installed MCP server matches `{package}`");
+    }
     for server in &found {
         ensure_requested_version(package, &server.version)?;
     }
-    if found.is_empty() {
-        bail!(
-            "no installed MCP server matches `{package}`{}",
-            only_server
-                .map(|s| format!(" --server {s}"))
-                .unwrap_or_default()
-        );
+    if let Some(names) = &names {
+        validate_server_names(
+            names,
+            &found
+                .iter()
+                .map(|s| s.decl.name.as_str())
+                .collect::<Vec<_>>(),
+        )?;
     }
-    Ok(found)
+    Ok(found
+        .into_iter()
+        .filter(|s| {
+            names
+                .as_ref()
+                .is_none_or(|names| names.contains(&s.decl.name))
+        })
+        .collect())
 }
 
 pub(super) fn package_version(root: &Path, package: &str) -> Result<String> {
@@ -358,14 +410,15 @@ mod remove;
 #[cfg(test)]
 mod tests;
 
+pub(crate) use lifecycle::GlobalAgentRegistration;
 #[cfg(test)]
 use lifecycle::preflight_owned_entries;
 pub(super) use lifecycle::{
     GlobalRemovalPlan, apply_global_removal, plan_global_removal, preflight_user_refresh,
     refresh_user_package, remove_from_configs, restore_global_removal,
-    user_agent_configs_for_package,
+    user_agent_configs_for_package, user_registration_statuses,
 };
-pub(super) use register::register;
 use register::register_one;
+pub(super) use register::{RegistrationPolicy, register, register_with_dirs};
 pub(super) use remove::remove_all_managed;
 use remove::remove_selected;

@@ -93,6 +93,7 @@ impl LifecycleArgs {
             packages: Vec::new(),
             global: false,
             agent: None,
+            server: None,
             from_source: false,
             local_source: false,
             path: self.path.clone(),

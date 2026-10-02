@@ -38,12 +38,17 @@ fn top_level_policy_inventory_matches_clap() {
 fn existing_roots_do_not_gain_duplicate_fallback_tasks() {
     for argv in [
         &["vibe", "install"][..],
+        &["vibe", "install", "-g", "mcp:ai.lev/fpf-mcp"][..],
         &["vibe", "self", "install"][..],
         &["vibe", "self", "update"][..],
         &["vibe", "self", "reinstall"][..],
         &["vibe", "self", "gc", "--build"][..],
     ] {
         assert_eq!(parsed_policy(argv, true), CommandPolicy::ExistingRoot);
+        assert_eq!(
+            parsed_policy(argv, true).progress_mode(true, false),
+            ProgressMode::Interactive
+        );
     }
     assert_eq!(
         parsed_policy(&["vibe", "install", "--global", "app:example"], true),

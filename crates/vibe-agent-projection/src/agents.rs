@@ -146,6 +146,39 @@ pub enum Agent {
     QwenCode,
 }
 
+/// User directories supplied by the caller when resolving agent config paths.
+/// Missing directories fail only for scopes that need them.
+///
+/// ```
+/// use vibe_agent_projection::agents::AgentUserDirectories;
+/// let directories = AgentUserDirectories::default();
+/// assert!(directories.home.is_none());
+/// assert!(directories.config.is_none());
+/// ```
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct AgentUserDirectories {
+    /// User home directory, used by all agents except Claude Desktop.
+    pub home: Option<PathBuf>,
+    /// Platform user-config directory, used by Claude Desktop.
+    pub config: Option<PathBuf>,
+}
+
+impl AgentUserDirectories {
+    /// Resolve the ambient home and config directories once, without reading
+    /// configuration files or creating directories.
+    ///
+    /// ```
+    /// use vibe_agent_projection::agents::AgentUserDirectories;
+    /// let _: AgentUserDirectories = AgentUserDirectories::ambient();
+    /// ```
+    pub fn ambient() -> Self {
+        Self {
+            home: dirs::home_dir(),
+            config: dirs::config_dir(),
+        }
+    }
+}
+
 /// JSON or TOML — the config-file format an agent reads.
 ///
 /// ```

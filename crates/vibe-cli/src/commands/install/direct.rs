@@ -44,6 +44,7 @@ use crate::commands::compile_trace::{
 };
 use crate::output;
 
+use super::confirm::{ConfirmationScope, UserProjectAction};
 use super::{
     InstallDisposition, InstallDraft, InstallExecution, InstallRun, PreparedSelection,
     SelectedManifest, acquire_lease, execute_prepared, resolve_project_root,
@@ -133,9 +134,44 @@ pub(crate) fn run(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
+    run_with_scope(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        ConfirmationScope::Project,
+    )
+}
+
+pub(crate) fn run_user_project(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    action: UserProjectAction,
+) -> Result<()> {
+    run_with_scope(
+        &ctx.progress_child(),
+        args,
+        embedded_root,
+        root_offline,
+        ConfirmationScope::UserProject {
+            notice: ctx,
+            action,
+        },
+    )
+}
+
+fn run_with_scope(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    scope: ConfirmationScope<'_>,
+) -> Result<()> {
     let overall = ctx.progress().task("Installing packages");
     let scoped = ctx.with_progress_scope(overall.progress());
-    let result = run_observed(&scoped, args, embedded_root, root_offline, &overall);
+    let result = run_observed(&scoped, args, embedded_root, root_offline, &overall, scope);
     if result.is_err() {
         overall.fail("package installation failed");
     }
@@ -148,6 +184,7 @@ fn run_observed(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
     overall: &vibe_core::progress::ProgressTask,
+    scope: ConfirmationScope<'_>,
 ) -> Result<()> {
     let PreparedInstall {
         lease,
@@ -170,6 +207,7 @@ fn run_observed(
             user_config,
             selection,
             metadata,
+            scope,
         },
         trace.recorder(),
     );
@@ -189,7 +227,7 @@ fn run_observed(
 }
 
 /// The prepared inputs the executed region owns.
-struct Execution {
+struct Execution<'a> {
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
@@ -197,6 +235,7 @@ struct Execution {
     user_config: UserConfig,
     selection: PreparedSelection,
     metadata: RunMetadata,
+    scope: ConfirmationScope<'a>,
 }
 
 /// The one boundary: everything after `prepare` and before `finalize`.
@@ -205,7 +244,7 @@ struct Execution {
 /// classified into the typed exit instead.
 fn execute_after_open(
     ctx: &output::Context,
-    execution: Execution,
+    execution: Execution<'_>,
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
 ) -> CommandExit<RegisteredReportDraft> {
     let Execution {
@@ -216,12 +255,13 @@ fn execute_after_open(
         user_config,
         selection,
         metadata,
+        scope,
     } = execution;
     // The failure draft below names the same root the execution used, taken
     // from the bundle rather than re-resolved: two canonicalisations are two
     // answers to "which node did this command act on".
     let failed_root = selection.root().to_path_buf();
-    let confirm_gate = super::CliConfirmGate::new(ctx, args.assume_yes, &failed_root);
+    let confirm_gate = super::CliConfirmGate::with_scope(ctx, args.assume_yes, &failed_root, scope);
     let install_observer = super::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let sources = super::CliPackageSourceFactory { args: &args };
     let manifest_mutation = super::CliGitSourceMutation { args: &args };

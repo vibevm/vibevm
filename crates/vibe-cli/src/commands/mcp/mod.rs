@@ -108,17 +108,50 @@ pub(crate) fn register_global_package(
     project_root: &Path,
     package: &str,
     agents: &[Agent],
+    only_server: Option<&str>,
     consent: bool,
 ) -> Result<()> {
     let version = package_registration::package_version(project_root, package)?;
-    let results = package_registration::register(
+    let servers = package_registration::selected_servers(project_root, package, only_server)?;
+    let selected = if only_server.is_none()
+        && !consent
+        && crate::commands::global_mcp_agents::interactive(ctx)
+        && servers.len() > 1
+    {
+        let labels: Vec<_> = servers
+            .iter()
+            .map(|server| server.decl.name.clone())
+            .collect();
+        let defaults: Vec<_> = (0..labels.len()).collect();
+        let indices = ctx.suspend_progress(|| {
+            crate::commands::global_mcp_choices::choose(
+                "Select MCP servers:",
+                "All servers (default)",
+                &labels,
+                &defaults,
+                "select a server with Space, or pass --server <name,name>",
+            )
+        })?;
+        Some(package_registration::exact_server_filter(
+            &indices
+                .into_iter()
+                .map(|index| labels[index].clone())
+                .collect::<Vec<_>>(),
+        )?)
+    } else {
+        only_server.map(str::to_owned)
+    };
+    let results = package_registration::register_with_dirs(
         project_root,
         package,
-        None,
+        selected.as_deref(),
         agents,
         Scope::User,
-        consent,
-        false,
+        package_registration::RegistrationPolicy {
+            consent,
+            dry_run: false,
+        },
+        &ctx.agent_user_dirs,
     )?;
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({ "ok": true, "command": "install", "global": true, "scope": "user", "package": package, "version": version, "results": results }))?;
@@ -138,8 +171,8 @@ pub(crate) fn register_global_package(
 
 /// Refresh only the agents that already have an owned registration for this
 /// package. A package update does not silently add new client integrations.
-pub(crate) fn preflight_refresh_global_package(package: &str) -> Result<()> {
-    package_registration::preflight_user_refresh(package)
+pub(crate) fn preflight_refresh_global_package(ctx: &output::Context, package: &str) -> Result<()> {
+    package_registration::preflight_user_refresh(package, &ctx.agent_user_dirs)
 }
 
 pub(crate) fn refresh_global_package(
@@ -149,14 +182,21 @@ pub(crate) fn refresh_global_package(
     consent: bool,
 ) -> Result<()> {
     let version = package_registration::package_version(project_root, package)?;
-    let agents: Vec<Agent> = package_registration::user_agent_configs_for_package(package)?
-        .into_iter()
-        .map(|(agent, _)| agent)
-        .collect();
+    let agents: Vec<Agent> =
+        package_registration::user_agent_configs_for_package(package, &ctx.agent_user_dirs)?
+            .into_iter()
+            .map(|(agent, _)| agent)
+            .collect();
     let results = if agents.is_empty() {
         Vec::new()
     } else {
-        package_registration::refresh_user_package(project_root, package, &agents, consent)?
+        package_registration::refresh_user_package(
+            project_root,
+            package,
+            &agents,
+            consent,
+            &ctx.agent_user_dirs,
+        )?
     };
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({ "ok": true, "command": "update", "global": true, "scope": "user", "package": package, "version": version, "results": results }))?;
@@ -184,15 +224,41 @@ pub(crate) struct GlobalMcpRemoval {
     plan: package_registration::GlobalRemovalPlan,
 }
 
-pub(crate) fn preflight_unregister_global_package(package: &str) -> Result<GlobalMcpRemoval> {
+pub(crate) fn preflight_unregister_global_package(
+    ctx: &output::Context,
+    package: &str,
+    agents: &[Agent],
+) -> Result<GlobalMcpRemoval> {
     let version = crate::commands::install::user_project_root()
         .ok()
         .and_then(|root| package_registration::package_version(&root, package).ok());
     Ok(GlobalMcpRemoval {
         package: package.to_owned(),
         version,
-        plan: package_registration::plan_global_removal(package)?,
+        plan: package_registration::plan_global_removal(package, agents, &ctx.agent_user_dirs)?,
     })
+}
+
+pub(crate) fn global_package_agents(ctx: &output::Context, package: &str) -> Result<Vec<Agent>> {
+    Ok(
+        package_registration::user_agent_configs_for_package(package, &ctx.agent_user_dirs)?
+            .into_iter()
+            .map(|(agent, _)| agent)
+            .collect(),
+    )
+}
+
+pub(crate) use package_registration::GlobalAgentRegistration;
+
+pub(crate) fn global_package_registration_statuses(
+    ctx: &output::Context,
+    package: &str,
+) -> Result<Vec<GlobalAgentRegistration>> {
+    package_registration::user_registration_statuses(package, &ctx.agent_user_dirs)
+}
+
+pub(crate) fn removes_global_package(removal: &GlobalMcpRemoval) -> bool {
+    removal.plan.package_removed
 }
 
 pub(crate) fn unregister_global_package(removal: &mut GlobalMcpRemoval) -> Result<()> {
@@ -208,8 +274,11 @@ pub(crate) fn report_global_uninstall(
     removal: &GlobalMcpRemoval,
 ) -> Result<()> {
     if ctx.is_json() {
-        ctx.emit_json(&serde_json::json!({ "ok": true, "command": "uninstall", "global": true, "scope": "user", "package": removal.package, "version": removal.version, "results": removal.plan.results }))?;
+        ctx.emit_json(&serde_json::json!({ "ok": true, "command": "uninstall", "global": true, "scope": "user", "package": removal.package, "version": removal.version, "results": removal.plan.results, "package_removed": removal.plan.package_removed }))?;
     } else {
+        if !removal.plan.package_removed {
+            ctx.summary("Global MCP package retained because other agent registrations remain.");
+        }
         for row in &removal.plan.results {
             ctx.step(&format!(
                 "{} {} (user) → {}",

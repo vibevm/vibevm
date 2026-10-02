@@ -362,3 +362,124 @@ fn unchanged_endpoint_refreshes_the_owned_version_for_exact_removal() {
     .unwrap();
     assert!(!receipt_path(&config).unwrap().exists());
 }
+
+#[test]
+fn explicit_server_subset_trims_deduplicates_and_validates_every_name() {
+    assert!(server_filter(None).unwrap().is_none());
+    let names = server_filter(Some(" fpf,second,fpf ")).unwrap().unwrap();
+    assert_eq!(names, ["fpf", "second"]);
+    validate_server_names(&names, &["fpf", "second", "unselected"]).unwrap();
+    assert!(validate_server_names(&names, &["fpf"]).is_err());
+    for filter in ["", " ", "fpf,", ",fpf", "fpf,,second"] {
+        assert!(server_filter(Some(filter)).is_err(), "{filter}");
+    }
+}
+
+#[test]
+fn selected_uninstall_validates_all_requested_names_before_any_write() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("config.toml");
+    let server = remote();
+    let payload = server_payload(Agent::Codex, dir.path(), &server, false).unwrap();
+    register_one(Agent::Codex, Scope::User, &path, &server, &payload, false).unwrap();
+    let config_before = fs::read(&path).unwrap();
+    let receipt_before = fs::read(receipt_path(&path).unwrap()).unwrap();
+    let destinations = [(Agent::Codex, Scope::User, path.clone())];
+    assert!(
+        remove_from_configs(&destinations, &server.package, Some("fpf,unknown"), false).is_err()
+    );
+    assert_eq!(fs::read(&path).unwrap(), config_before);
+    assert_eq!(
+        fs::read(receipt_path(&path).unwrap()).unwrap(),
+        receipt_before
+    );
+    assert_eq!(
+        remove_from_configs(&destinations, &server.package, Some(" fpf,fpf "), false)
+            .unwrap()
+            .len(),
+        1
+    );
+}
+
+#[test]
+fn exact_server_selector_preserves_literal_comma_names_through_removal() {
+    let names = vec!["a,b".to_owned(), " padded ".to_owned()];
+    let selector = exact_server_filter(&names).unwrap();
+    assert_eq!(server_filter(Some(&selector)).unwrap().unwrap(), names);
+    assert!(server_filter(Some("[]")).is_err());
+    assert!(server_filter(Some("[\"\"]")).is_err());
+    assert!(server_filter(Some("[1]")).is_err());
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("config.toml");
+    let mut server = remote();
+    server.decl.name = "a,b".into();
+    let payload = server_payload(Agent::Codex, dir.path(), &server, false).unwrap();
+    register_one(Agent::Codex, Scope::User, &path, &server, &payload, false).unwrap();
+    assert_eq!(
+        remove_all_managed(Agent::Codex, Scope::User, &path, None, false)
+            .unwrap()
+            .len(),
+        1
+    );
+    assert!(
+        read_toml(&path).unwrap()["mcp_servers"]
+            .get("a,b")
+            .is_none()
+    );
+}
+
+mod discovery_tests;
+
+#[test]
+fn local_stdio_keeps_binary_consent_and_registers_native_command_args() {
+    use vibe_core::manifest::BinaryDecl;
+    use vibe_workspace::bins::DeclaredBinary;
+
+    let dir = tempfile::tempdir().unwrap();
+    let mut server = remote();
+    server.decl.url = None;
+    server.decl.transport = None;
+    server.decl.binary = Some("fpf-server".into());
+    server.decl.args = vec!["--mode".into(), "local".into()];
+    server.binary = Some(DeclaredBinary {
+        decl: BinaryDecl {
+            name: "fpf-server".into(),
+            crate_dir: "server".into(),
+            description: None,
+        },
+        package: server.package.clone(),
+        group: server.group.clone(),
+        vibedeps_root: dir.path().join("deps"),
+        slot: dir.path().join("deps/fpf/1.0.0"),
+    });
+    ensure_scope_supported(Scope::User, &server).unwrap();
+    let error = server_payload(Agent::Codex, dir.path(), &server, false).unwrap_err();
+    assert!(error.to_string().contains("--assume-yes"));
+    assert!(!dir.path().join("deps").exists());
+    for agent in [Agent::Codex, Agent::QwenCode] {
+        let config = dir.path().join(if agent == Agent::Codex {
+            "config.toml"
+        } else {
+            "config.json"
+        });
+        let payload = server_payload(agent, dir.path(), &server, true).unwrap();
+        let expected = payload_json(&payload).unwrap();
+        assert!(
+            expected["command"]
+                .as_str()
+                .unwrap()
+                .starts_with(dir.path().to_str().unwrap())
+        );
+        assert_eq!(expected["args"], serde_json::json!(["--mode", "local"]));
+        register_one(agent, Scope::User, &config, &server, &payload, false).unwrap();
+        assert_eq!(
+            current_entry(agent, &config, "fpf").unwrap(),
+            Some(expected)
+        );
+        remove_selected(agent, Scope::User, &config, &server.package, None, false).unwrap();
+        assert!(current_entry(agent, &config, "fpf").unwrap().is_none());
+    }
+    // The established allow-list remains distinct from invocation consent.
+    server.binary.as_mut().unwrap().group = "org.vibevm".into();
+    assert!(server_payload(Agent::Codex, dir.path(), &server, false).is_ok());
+}

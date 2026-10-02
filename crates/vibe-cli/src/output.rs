@@ -180,6 +180,7 @@ pub struct Context {
     /// The one renderer for this invocation. Kept beside `progress` so
     /// ordinary output and prompts can suspend interactive bars safely.
     progress_renderer: Option<Arc<ProgressRenderer>>,
+    pub(crate) agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories,
     /// Detailed rendering policy belongs only to the CLI composition root.
     #[cfg(test)]
     verbose: bool,
@@ -219,6 +220,7 @@ impl Context {
             agent_mode,
             progress: Progress::default(),
             progress_renderer: None,
+            agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories::ambient(),
             #[cfg(test)]
             verbose: false,
         }
@@ -283,6 +285,13 @@ impl Context {
         child.suppress_output = true;
         child.progress = Progress::default();
         child.progress_renderer = None;
+        child
+    }
+
+    /// Suppress child reports while retaining invocation progress and prompt suspension.
+    pub fn progress_child(&self) -> Self {
+        let mut child = self.clone();
+        child.suppress_output = true;
         child
     }
 
