@@ -76,3 +76,15 @@ fn strict_generated_reader_refuses_structural_errors() {
         );
     }
 }
+
+#[test]
+fn raw_offset_is_required_by_generated_reader() {
+    let mut value = wire_support::read_json(
+        "formats/corpora/machine-operation-stream-message/e1/valid/event-raw_output.json",
+    );
+    value["body"]["event"]["payload"]
+        .as_object_mut()
+        .unwrap()
+        .remove("byte_offset");
+    assert!(serde_json::from_value::<OperationStreamMessage>(value).is_err());
+}

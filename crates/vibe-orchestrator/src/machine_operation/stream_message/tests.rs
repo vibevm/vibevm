@@ -147,7 +147,7 @@ fn progress_raw_bytes_and_utf8_limits_are_semantic() {
     assert!(check(progress("0", json!("00"))).is_err());
     let raw = |hex: String, count: u32| {
         value(event_body(
-            json!({"type":"raw_output","origin":"stderr","hex_bytes":hex,"byte_count":count,"truncated":true}),
+            json!({"type":"raw_output","origin":"stderr","byte_offset":"0","hex_bytes":hex,"byte_count":count,"truncated":true}),
         ))
     };
     check(raw("ff".repeat(2048), 2048)).unwrap();
@@ -417,4 +417,20 @@ fn no_effect_terminal_result_can_be_referenced_without_inventing_effects() {
     let message: OperationStreamMessage =
         serde_json::from_value(v).expect("no-effect terminal is a legitimate domain result");
     assert!(validate(&message, binding()).is_ok());
+}
+
+#[test]
+fn raw_offsets_require_canonical_u64_and_checked_end() {
+    let raw = |offset: &str, hex: &str, count: u32| {
+        value(event_body(
+            json!({"type":"raw_output","origin":"stdout","byte_offset":offset,
+            "hex_bytes":hex,"byte_count":count,"truncated":true}),
+        ))
+    };
+    check(raw("18446744073709551615", "", 0)).unwrap();
+    check(raw("18446744073709551614", "ff", 1)).unwrap();
+    assert!(check(raw("18446744073709551615", "ff", 1)).is_err());
+    for offset in ["", "00", "+0", "-1", "1.0", "18446744073709551616"] {
+        assert!(check(raw(offset, "", 0)).is_err());
+    }
 }

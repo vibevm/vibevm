@@ -14,7 +14,8 @@
         "origin": "stdout",
         "hex_bytes": "00ff",
         "byte_count": 2,
-        "truncated": true
+        "truncated": true,
+        "byte_offset": "0"
       }
     }
   }
