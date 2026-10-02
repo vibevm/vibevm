@@ -32,6 +32,36 @@
       <p><req-machine-operation-validation fact="true" status="spec/plan">`req r1`</req-machine-operation-validation></p>
       <p><MACHINE-OPERATION-VALIDATION-LAW fact="true" status="spec/plan">Use the registered generated reader and owning semantic validator before dispatch. Reject unknown fields, wrong optional types, unsupported epochs, missing required or required-nullable evidence, and values outside declared bounds instead of choosing a default or dropping a filter. A public adapter that advertises a restrictive input schema enforces that schema before invoking its tool, including existing adapters routed through this contract. Validate result, error and event shapes and owner/effect semantics before publication; validation failure retains original uncertain evidence through the owning error channel, never a fabricated normal success.</MACHINE-OPERATION-VALIDATION-LAW></p>
     </MACHINE-OPERATION-VALIDATION>
+    <MACHINE-INPUT-ADMISSION title="Owner-bound decisions and requested options">
+      <p><req-machine-input-admission fact="true" status="spec/plan">`req r1`</req-machine-input-admission></p>
+      <p><MACHINE-INPUT-ADMISSION-LAW fact="true" status="spec/plan">Registered
+      generated contracts carry selection, input and approval questions and
+      answers. The domain owner binds each question to its exact prepared
+      plan and source identity, trusted context, target and principal, and
+      owner-issued policy generation. An answer must match that current
+      binding and the question's declared value or choice vocabulary; an
+      unknown, stale, conflicting or foreign answer refuses before effects.
+      Selection produces an owner-validated resulting plan, never a client
+      spelling treated as a plan or source witness. Shape validation, a
+      matching opaque ID, free prose, an approval boolean and assume-yes
+      alone grant no effect authority. Actual admission separately checks
+      the resulting plan, unchanged scope and current owner policy. Missing
+      question, plan or policy evidence remains explicit unavailable
+      evidence, not an invented identity or implicit approval. Requested
+      force, trace, deploy profile and supported operation controls are
+      explicit typed values; a surface cannot silently substitute startup
+      defaults, discard an option or choose an incompatible inference
+      backend. Unsupported requests return an owned reason. CLI, MCP and
+      local API delegate equivalent machine requests, decisions and
+      effectful submissions to the same domain and C.1/C.2 reservation
+      owners. Errors retain actual operation/run identity, phase, requested
+      scope, measured completed effects and missing or uncertain final
+      evidence; an Err or absent report never proves no effects. These
+      contracts add no universal decision engine, new execution journal,
+      generic executor or expanded Public A/future B grant. Legacy MCP and
+      one-shot reaches remain independent under their coexistence
+      contract.</MACHINE-INPUT-ADMISSION-LAW></p>
+    </MACHINE-INPUT-ADMISSION>
     <MACHINE-OPERATION-SERVICE title="Shared domain delegation">
       <p><req-machine-operation-service fact="true" status="spec/plan">`req r1`</req-machine-operation-service></p>
       <p><MACHINE-OPERATION-SERVICE-LAW fact="true" status="spec/plan">One surface-neutral application service composes registered operations and delegates planning, effect admission, execution, inspection and recovery to their existing domain owners. Library and transport adapters preserve the same validated domain request/result/error identity and owner authorization. The facade offers no arbitrary eval or generic shell endpoint. Existing declared script, binary and native handlers remain possible only through their owning domain admission and explicit authority. A transport cannot manufacture a grant, infer execution from a callback, duplicate a domain engine or install a second parser/graph/scheduler. A missing service remains a visible gap; no stub is advertised as a working operation.</MACHINE-OPERATION-SERVICE-LAW></p>

@@ -307,7 +307,31 @@
         "crates/vibe-cli/src/commands/mod.rs",
         "crates/vibe-cli/src/commands/lifecycle.rs",
         "crates/vibe-orchestrator/Cargo.toml",
-        "crates/vibe-orchestrator/src/lib.rs"
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-cli/src/commands/deploy.rs",
+        "crates/vibe-cli/src/commands/install/",
+        "crates/vibe-orchestrator/src/install/",
+        "schemas/machine/",
+        "crates/vibe-wire/src/generated/machine/",
+        "crates/vibe-wire/src/generated/format_id/",
+        "xtask/src/codegen/",
+        "crates/vibe-orchestrator/src/machine_operation/",
+        "crates/vibe-mcp/src/machine_session/",
+        "crates/vibe-lifecycle/src/lease.rs",
+        "crates/vibe-lifecycle/src/state/",
+        "schemas/lifecycle_outcome_marker.jtd.json",
+        "schemas/lifecycle_report.jtd.json",
+        "crates/vibe-wire/src/generated/lifecycle_outcome_marker/",
+        "crates/vibe-wire/src/generated/lifecycle_report/",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/cli/lifecycle.rs",
+        "crates/vibe-mcp/src/tools/machine_operation.rs",
+        "crates/vibe-orchestrator/src/machine_submission/",
+        "formats/REGISTRY.toml",
+        "formats/EPOCHS.toml"
       ],
       "write_paths": [
         "crates/vibe-mcp/src/tools/",
@@ -321,7 +345,17 @@
         "crates/vibe-cli/src/commands/mod.rs",
         "crates/vibe-cli/src/commands/lifecycle.rs",
         "crates/vibe-orchestrator/Cargo.toml",
-        "crates/vibe-orchestrator/src/lib.rs"
+        "crates/vibe-orchestrator/src/lib.rs",
+        "schemas/machine/",
+        "crates/vibe-wire/src/generated/machine/",
+        "crates/vibe-wire/src/generated/format_id/",
+        "crates/vibe-wire/tests/",
+        "xtask/src/codegen/",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/cli/",
+        "crates/vibe-mcp/src/machine_session/",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
       ],
       "steps": [
         "Map domain NeedsSelection/input/approval requests to schemas bound to exact question, plan, scope and policy generation.",
@@ -356,7 +390,8 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Source-bound C4 refinement: owner-bound decision/admission values require registered JTD schemas, generated machine readers and semantic validation; actual CLI registration belongs to its clap owners and machine-session routing belongs to its incumbent service. This extends only the required schema/registration/adapter perimeter. All four steps and acceptance remain unchanged; legacy MCP coexistence, exact target/effect grants, Public A/future B and the ban on public 1.1.0 publication remain binding."
       ]
     }
   ]
