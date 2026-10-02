@@ -1,11 +1,21 @@
-//! Bounded memory tables retain actual opaque owner objects. No independent journal.
+//! Internal trusted fixed Validate route; no local/CLI surface is advertised.
+//! Bounded memory tables retain opaque owner objects, never a second journal.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE");
+mod contract;
+mod dispatch;
+mod error;
+mod observers;
+pub use contract::{PUBLICATION_CAP, REQUEST_CAP};
+pub use error::FixedLifecycleRouteError;
+#[cfg(all(test, target_os = "linux"))]
+mod native_tests;
+use crate::machine_submission::{
+    FixedDecisionError, FixedLifecycleDecisionHost, FixedOwnerEvidenceSnapshot, ScopedFixedJob,
+    ValidatedFixedPlanEvidence,
+};
 use std::{
     collections::BTreeMap,
     sync::{Arc, Mutex},
-};
-use vibe_orchestrator::machine_submission::{
-    FixedDecisionError, FixedLifecycleDecisionHost, FixedOwnerEvidenceSnapshot, ScopedFixedJob,
-    ValidatedFixedPlanEvidence,
 };
 struct Slot {
     job: Option<ScopedFixedJob>,
@@ -16,13 +26,39 @@ struct Tables {
     accepted: BTreeMap<String, ValidatedFixedPlanEvidence>,
     jobs: BTreeMap<String, Slot>,
 }
-pub(crate) struct Bridge {
-    pub(crate) host: Arc<FixedLifecycleDecisionHost>,
+/// Trusted fixed Validate action route with bounded connection-local references.
+/// Construction retains the embedding's existing host; it initializes no namespace,
+/// policy or provider. Every dispatch rechecks the embedding's physical root.
+/// The host remains the sole decision, C1/C2 journal and control owner.
+///
+/// ```no_run
+/// use std::{path::Path, sync::Arc};
+/// use vibe_orchestrator::{machine_operation::fixed_lifecycle::FixedLifecycleRoute,
+///     machine_submission::FixedLifecycleDecisionHost};
+/// fn inspect(host: Arc<FixedLifecycleDecisionHost>, root: &Path) {
+///     let route = FixedLifecycleRoute::new(host);
+///     let bytes = br#"{"schema":1,"action":{"kind":"inspect","key":"once"}}"#;
+///     let result = FixedLifecycleRoute::dispatch(Some(&route), bytes, root);
+///     if let Err(refusal) = result {
+///         // An error cannot establish absence of effects.
+///         let _ = (refusal.error, refusal.effects_may_have_begun);
+///     }
+/// }
+/// ```
+/// Data alone cannot construct the route:
+/// ```compile_fail
+/// use vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute;
+/// let route = FixedLifecycleRoute::new(serde_json::json!({"grant":true}));
+/// ```
+pub struct FixedLifecycleRoute {
+    host: Arc<FixedLifecycleDecisionHost>,
     tables: Mutex<Tables>,
-    pub(crate) observers: super::observers::Observers,
+    observers: observers::Observers,
 }
-impl Bridge {
-    pub(crate) fn new(host: Arc<FixedLifecycleDecisionHost>) -> Self {
+impl FixedLifecycleRoute {
+    /// Retain an explicit trusted host grant. See the type example for canonical use.
+    #[must_use]
+    pub fn new(host: Arc<FixedLifecycleDecisionHost>) -> Self {
         Self {
             host,
             tables: Mutex::new(Tables::default()),
@@ -82,7 +118,7 @@ impl Bridge {
                 .tables
                 .lock()
                 .map_err(|_| FixedDecisionError::Capacity)?;
-            let slot = t.jobs.get_mut(key).expect("reserved key");
+            let slot = t.jobs.get_mut(key).ok_or(FixedDecisionError::Capacity)?;
             slot.claims -= 1;
             if let Ok(job) = &result {
                 slot.job = Some(job.clone());

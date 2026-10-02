@@ -1,14 +1,14 @@
 //! Connection-local opaque subscriptions. Table -> clone -> unlock -> entry;
 //! never hold the table while calling filesystem, owner, replay or control.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STREAM");
-use super::{bridge::Bridge, contract::*};
+use super::{FixedLifecycleRoute, contract::*};
+use crate::machine_submission::{ObservationHandle, ScopedFixedJob};
 use LifecycleActionErrorCode as Code;
 use std::{
     collections::BTreeMap,
     path::Path,
     sync::{Arc, Mutex},
 };
-use vibe_orchestrator::machine_submission::{ObservationHandle, ScopedFixedJob};
 use vibe_wire::generated::machine::e1::operation_stream_message::OperationStreamMessage;
 type Failure = (Code, String, bool);
 struct Entry {
@@ -42,7 +42,7 @@ fn unknown() -> Failure {
 fn owner(e: impl std::fmt::Display) -> Failure {
     (Code::InspectionUnavailable, e.to_string(), true)
 }
-impl Bridge {
+impl FixedLifecycleRoute {
     pub(crate) fn attach_observer(&self, key: &str, root: &Path) -> Result<Reply, Failure> {
         {
             let mut t = self.observers.table.lock().map_err(|_| capacity())?;
@@ -97,7 +97,7 @@ impl Bridge {
         json: &str,
         control: bool,
     ) -> Result<Reply, Failure> {
-        if json.len() > vibe_orchestrator::machine_operation::stream_message::MAX_FRAME_BYTES {
+        if json.len() > crate::machine_operation::stream_message::MAX_FRAME_BYTES {
             return Err((
                 Code::InvalidRequest,
                 "stream frame exceeds 64KiB".into(),
@@ -149,7 +149,7 @@ impl Bridge {
         }
         let payload_json = encode(
             &response,
-            vibe_orchestrator::machine_operation::stream_message::MAX_FRAME_BYTES,
+            crate::machine_operation::stream_message::MAX_FRAME_BYTES,
         )
         .map_err(|e| (Code::PublicationUnavailable, e, true))?;
         Ok(Reply::StreamResponse(Box::new(ReplyStreamResponse {

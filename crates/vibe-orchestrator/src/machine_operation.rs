@@ -326,10 +326,11 @@ impl MachineOperationService {
 mod coverage;
 mod discovery;
 pub mod exchange;
-mod publication;
-pub mod stream_message;
+pub mod fixed_lifecycle;
 pub mod input_decision;
 pub mod lifecycle_view;
+mod publication;
+pub mod stream_message;
 pub use coverage::*;
 pub use publication::MachineEnvelopeValidationError;
 
