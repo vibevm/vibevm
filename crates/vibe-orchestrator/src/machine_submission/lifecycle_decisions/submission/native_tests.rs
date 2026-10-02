@@ -497,3 +497,11 @@ fn same_owner_terminal_inspections_serialize_fresh_native_evidence() {
     assert_eq!(ready(&retry), run);
     f.count_one();
 }
+
+impl FixedLifecycleDecisionHost {
+    pub(in crate::machine_submission) fn sequential_approved_for_test(
+        &self,
+    ) -> ValidatedFixedPlanEvidence {
+        approved(self, RequestedOptionsControl::None)
+    }
+}
