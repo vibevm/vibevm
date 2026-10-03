@@ -2402,3 +2402,23 @@ structure, and it goes when the file does.
 | @fact:B218-SEVERITY **severity** | P2 — a real architecture/activation gap. The kernel does not silently accept omitted obligations as complete, but the available fast path would knowingly leave the full-conservation planning rule unmet. |
 | @fact:B218-DISPOSITION **disposition** | `planned` — owner decision 2026-10-03: extend Zap with versioned per-branch lowering and coarse distant horizons, preserving conservation and completion blockers, verified by focused synthetic and migration tests. Do not use a knowingly partial strategy as the live campaign authority or force a flat 1,391-obligation graph before first work. The Zap source package 1.1.0 transition precedes this implementation. |
 | @fact:B218-FILED **filed by** | Zap autodogfooding during NEXT transition, 2026-10-03. |
+
+## B-219 — Lens cannot recover an uncertain coordinator after Wayfinder restart {#b-219}
+
+| field | value |
+|---|---|
+| @fact:B219-WHAT **what** | Wayfinder restart loses its in-memory coordinator launch while the durable project may still say `running` or retain an uncertain lifecycle action. `session.start.v1` can resume a saved `running` session, but `project.continue.v1` refuses `running`. If a pause without a live launch settles `uncertain`, both start and continue refuse; stop also remains uncertain without a control target. The exact project/context/session can be left without a Lens control route even though the Codex thread and source state survive. |
+| @fact:B219-EVIDENCE **evidence** | 2026-10-03 NEXT dogfood: old Wayfinder was stopped after a pending native Cargo approval, new Lens 1.1.0 read saved coordinator `waiting_for_user` and project execution `running` with no live process. Cancelling the stale approval left execution `running`; Continue returned `conflict`. Pause returned `uncertain` at revision 4. The same Codex thread was continued through the Codex app as an operational fallback. Code: Lens `workspace-service/control.ts` restores a missing launch only during Continue; `workspace-store/execution.ts` permits Continue only from paused/stopped. No live database row was edited manually. |
+| @fact:B219-SEVERITY **severity** | P2 — restart recovery can strand the First Agent → coordinator channel; saved plan and product work remain intact. |
+| @fact:B219-DISPOSITION **disposition** | `open` — owner question: authorize a distinct compare-and-swap recovery operation that binds the saved native thread to a newly observed process epoch, keeps an uncertain managed side explicit, and marks execution `running` only when coordinator and managed observations agree? A one-line state transition or fabricated settled receipt is insufficient. Keep the direct Codex-thread continuation as the current workaround. |
+| @fact:B219-FILED **filed by** | Zap/Lens autodogfooding during NEXT transition, 2026-10-03. |
+
+## B-220 — place unresolved Outcome horizons before later branch lowering {#b-220}
+
+| field | value |
+|---|---|
+| @fact:B220-WHAT **what** | Zap 1.1.0 branch lowering conserves distant obligations and supports a second Work-scoped horizon through the required economics admission. An Outcome-scoped horizon deliberately has no executable owner: direct consumption is refused. The imported NEXT plan has 306 obligations with ambiguous task ownership and 427 without a task descendant, so some horizons need a later, explicit placement decision. |
+| @fact:B220-EVIDENCE **evidence** | Branch event and coverage work through Zap `c9ebfa5`; focused tests show direct second branch is `Held`, admitted Work-scoped second branch succeeds, and Outcome-scoped direct consumption refuses. No versioned horizon placement event or tested successor strategy path has yet been selected. Main Zap store remains inactive at revision 1. |
+| @fact:B220-SEVERITY **severity** | P2 — does not block the first near Work-scoped frontier, but blocks honest execution of ambiguous obligations later. |
+| @fact:B220-DISPOSITION **disposition** | `open` — owner question: should Zap add a versioned meaning-bearing horizon placement event, binding exact obligation IDs, a target strategic node, prior question/refinement trigger and coverage revision to mandatory economics admission, while retaining debt/history? Alternative: require a new strategic revision and full re-admission for each such placement. Continue the approved Work-scoped B-218 route and read/query/replay integration while this choice is pending. |
+| @fact:B220-FILED **filed by** | Zap B-218 implementation review during NEXT transition, 2026-10-03. |
