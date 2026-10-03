@@ -4,9 +4,12 @@
 use serde_json::{Value, json};
 use std::{
     fs,
-    io::{Read, Write},
+    io::{BufRead, BufReader, Read, Write},
     path::PathBuf,
     process::{Child, Command, Stdio},
+    sync::{Arc, Barrier, mpsc},
+    thread,
+    time::Duration,
 };
 use vibe_wire::generated::{format_id::FormatId, machine::e1::session_frame as f};
 
@@ -189,17 +192,20 @@ fn envelope(frame: &f::SessionFrame) -> Value {
     serde_json::from_str(json).unwrap()
 }
 
-fn mcp_package_call(fixture: &Fixture, kind: &str, key: &str) -> Value {
-    let request = json!({"jsonrpc":"2.0","id":41,"method":"tools/call",
-        "params":{"name":"fixed_package_operation","arguments":{
-            "schema":1,"action":{"kind":kind,"key":key}}}});
+fn mcp_package_process(fixture: &Fixture) -> Child {
     let mut command = fixture.command();
     command
         .env("VIBE_NO_DEFAULT_REGISTRY", "1")
         .args(["--offline", "mcp", "serve", "--path"])
         .arg(fixture.root())
         .args(["--fixed-package", "reattach"]);
-    let mut child = command.spawn().unwrap();
+    command.spawn().unwrap()
+}
+
+fn mcp_package_response(mut child: Child, kind: &str, key: &str) -> Value {
+    let request = json!({"jsonrpc":"2.0","id":41,"method":"tools/call",
+        "params":{"name":"fixed_package_operation","arguments":{
+            "schema":1,"action":{"kind":kind,"key":key}}}});
     child
         .stdin
         .as_mut()
@@ -216,7 +222,11 @@ fn mcp_package_call(fixture: &Fixture, kind: &str, key: &str) -> Value {
     assert!(output.stderr.is_empty());
     let stdout = String::from_utf8(output.stdout).unwrap();
     assert_eq!(stdout.lines().count(), 1, "{stdout}");
-    let response: Value = serde_json::from_str(stdout.trim()).unwrap();
+    serde_json::from_str(stdout.trim()).unwrap()
+}
+
+fn mcp_package_call(fixture: &Fixture, kind: &str, key: &str) -> Value {
+    let response = mcp_package_response(mcp_package_process(fixture), kind, key);
     assert_eq!(response["result"]["isError"], false, "{response}");
     response["result"]["structuredContent"].clone()
 }
@@ -266,6 +276,164 @@ fn machine_submit_then_mcp_reattach_reuses_same_package_operation() {
     )
     .unwrap();
     assert_eq!(index["namespaces"].as_object().unwrap().len(), 1);
+    assert_eq!(
+        fs::read_dir(fixture.root().join(".vibe/package-operations"))
+            .unwrap()
+            .count(),
+        3,
+        "one intent, capsule and result"
+    );
+}
+
+#[test]
+fn machine_frame_and_mcp_race_one_fixed_package_key() {
+    let fixture = Fixture::new();
+    Client::new(
+        fixture
+            .package_command("issue", Some("60000"))
+            .spawn()
+            .unwrap(),
+    )
+    .finish();
+    let pointer = fs::read(fixture.pointer()).unwrap();
+    let mut machine = Client::new(fixture.package_command("reattach", None).spawn().unwrap());
+    let mut mcp = mcp_package_process(&fixture);
+    mcp.stdin
+        .as_mut()
+        .unwrap()
+        .write_all(b"{\"jsonrpc\":\"2.0\",\"id\":40,\"method\":\"tools/list\",\"params\":{}}\n")
+        .unwrap();
+    let mut ready_line = String::new();
+    BufReader::new(mcp.stdout.as_mut().unwrap())
+        .read_line(&mut ready_line)
+        .unwrap();
+    let ready: Value = serde_json::from_str(&ready_line).unwrap();
+    assert!(ready["error"].is_null(), "{ready}");
+    assert!(
+        ready["result"]["tools"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|tool| tool["name"] == "fixed_package_operation")
+    );
+    let barrier = Arc::new(Barrier::new(3));
+    let (tx, rx) = mpsc::channel::<(&'static str, Value)>();
+
+    let machine_start = Arc::clone(&barrier);
+    let machine_tx = tx.clone();
+    let machine_thread = thread::spawn(move || {
+        machine_start.wait();
+        let reply = machine.call(json!({"kind":"submit","key":"raced"}));
+        machine.finish();
+        machine_tx
+            .send(("machine", serde_json::to_value(reply).unwrap()))
+            .unwrap();
+    });
+    let mcp_start = Arc::clone(&barrier);
+    let mcp_thread = thread::spawn(move || {
+        mcp_start.wait();
+        let reply = mcp_package_response(mcp, "submit", "raced");
+        tx.send(("mcp", reply)).unwrap();
+    });
+    barrier.wait();
+    let first = rx
+        .recv_timeout(Duration::from_secs(30))
+        .expect("first fixed package surface timed out");
+    let second = rx
+        .recv_timeout(Duration::from_secs(30))
+        .expect("second fixed package surface timed out");
+    machine_thread.join().unwrap();
+    mcp_thread.join().unwrap();
+    assert_ne!(first.0, second.0);
+    let (machine, mcp) = if first.0 == "machine" {
+        (first.1, second.1)
+    } else {
+        (second.1, first.1)
+    };
+    let machine: f::SessionFrame = serde_json::from_value(machine).unwrap();
+    let machine_envelope = envelope(&machine);
+    let machine_payload: Value =
+        serde_json::from_str(machine_envelope["body"]["payload_json"].as_str().unwrap()).unwrap();
+    let mcp_payload = &mcp["result"]["structuredContent"];
+    let owner = match (
+        outcome(&machine).effect_state.clone(),
+        mcp["result"]["isError"].as_bool(),
+    ) {
+        (f::OutcomeEffectState::Completed, Some(false)) => {
+            assert_eq!(machine_payload, *mcp_payload);
+            machine_payload
+        }
+        (f::OutcomeEffectState::Completed, Some(true)) => {
+            assert_eq!(mcp_payload["code"], "submission_refused", "{mcp}");
+            assert_eq!(mcp_payload["effect_observation"], "unavailable", "{mcp}");
+            assert!(mcp_payload["known_run_id"].is_null(), "{mcp}");
+            assert!(
+                mcp_payload["message"]
+                    .as_str()
+                    .unwrap()
+                    .contains("lifecycle lease: another mutating lifecycle command owns"),
+                "{mcp}"
+            );
+            let replay = mcp_package_call(&fixture, "submit", "raced");
+            assert_eq!(replay, machine_payload);
+            machine_payload
+        }
+        (f::OutcomeEffectState::Uncertain, Some(false)) => {
+            assert_eq!(
+                outcome(&machine).completeness,
+                f::OutcomeCompleteness::Unavailable
+            );
+            assert_eq!(machine_payload["code"], "submission_refused");
+            assert_eq!(machine_payload["effect_observation"], "unavailable");
+            assert!(machine_payload["known_run_id"].is_null());
+            assert!(
+                machine_payload["message"]
+                    .as_str()
+                    .unwrap()
+                    .contains("lifecycle lease: another mutating lifecycle command owns"),
+                "{machine:?}"
+            );
+            let mut retry = Client::new(fixture.package_command("reattach", None).spawn().unwrap());
+            let replay = retry.call(json!({"kind":"submit","key":"raced"}));
+            assert_eq!(
+                outcome(&replay).effect_state,
+                f::OutcomeEffectState::Completed
+            );
+            let replay_envelope = envelope(&replay);
+            let replay_payload: Value =
+                serde_json::from_str(replay_envelope["body"]["payload_json"].as_str().unwrap())
+                    .unwrap();
+            retry.finish();
+            assert_eq!(replay_payload, *mcp_payload);
+            replay_payload
+        }
+        other => panic!("unexpected race outcome {other:?}: machine={machine:?}; mcp={mcp}"),
+    };
+    assert_eq!(owner["reply"]["kind"], "completed");
+    assert!(owner["reply"]["run_id"].as_str().is_some());
+    assert_eq!(fs::read(fixture.pointer()).unwrap(), pointer);
+    assert_eq!(
+        fs::read(
+            fixture
+                .root()
+                .join("target/vibe-package/launcher/launcher.bin")
+        )
+        .unwrap(),
+        b"launcher bytes\n"
+    );
+    let index: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    let namespaces = index["namespaces"].as_object().unwrap();
+    assert_eq!(namespaces.len(), 1);
+    assert_eq!(
+        namespaces.values().next().unwrap()["keys"]
+            .as_object()
+            .unwrap()
+            .len(),
+        1
+    );
     assert_eq!(
         fs::read_dir(fixture.root().join(".vibe/package-operations"))
             .unwrap()
