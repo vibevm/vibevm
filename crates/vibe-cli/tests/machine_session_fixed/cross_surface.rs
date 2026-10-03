@@ -149,6 +149,9 @@ fn cli_and_mcp_racing_one_scoped_key_share_the_c1_run_and_terminal_truth() {
     };
     assert_same_terminal_truth(&cli_terminal_row, &mcp_terminal);
     let run = cli_terminal_row.run_id.unwrap();
+    let replay = mcp_call(&route, &root, submit(&mcp_reference, "shared"));
+    assert_eq!(replay["isError"], false, "{replay}");
+    assert_eq!(mcp_row(&replay).run_id.as_deref(), Some(run.as_str()));
     let changed_reference = mcp_approve(&route, &root, "detach");
     let changed = mcp_call(&route, &root, submit(&changed_reference, "shared"));
     assert_eq!(changed["isError"], true, "{changed}");
@@ -162,4 +165,31 @@ fn cli_and_mcp_racing_one_scoped_key_share_the_c1_run_and_terminal_truth() {
         .unwrap();
     assert_eq!(keys.len(), 1);
     assert_eq!(keys["shared"]["domain_run_id"], run);
+}
+
+#[test]
+fn mcp_contender_cannot_replay_a_cli_key_with_different_approved_intent() {
+    let fixture = Fixture::new(true);
+    let root = fixture.root();
+    let mut cli = fixture.client("issue");
+    let cli_reference = approve(&mut cli);
+    let route = route_for_cli_root(&root);
+    let mcp_reference = mcp_approve(&route, &root, "detach");
+    cli.call(submit(&cli_reference, "shared"));
+    until(|| root.join("entered").exists());
+    let first = mcp_call(&route, &root, submit(&mcp_reference, "shared"));
+    assert!(
+        first["isError"] == false || first["structuredContent"]["code"] == "inspection_unavailable",
+        "{first}"
+    );
+    fixture.release();
+    let original = terminal(&mut cli, "shared").row();
+    cli.finish();
+    assert_eq!(fixture.index()["namespaces"].as_object().unwrap().len(), 1);
+    let refused = mcp_call(&route, &root, submit(&mcp_reference, "shared"));
+    assert_eq!(refused["isError"], true, "{refused}");
+    assert_eq!(refused["structuredContent"]["code"], "submission_refused");
+    let observed = mcp_row(&mcp_call(&route, &root, inspect("shared")));
+    assert_same_terminal_truth(&observed, &original);
+    fixture.count_one();
 }
