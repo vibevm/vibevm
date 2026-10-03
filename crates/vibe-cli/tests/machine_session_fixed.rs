@@ -23,6 +23,8 @@ use vibe_wire::generated::{
 
 #[path = "machine_session_fixed/cases.rs"]
 mod cases;
+#[path = "machine_session_fixed/cross_surface.rs"]
+mod cross_surface;
 
 const FLAGS: [&str; 4] = [
     "--approve-captured-script",
