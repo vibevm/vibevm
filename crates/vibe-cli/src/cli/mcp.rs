@@ -220,6 +220,11 @@ pub struct McpUpgradeArgs {
 }
 
 #[derive(Debug, clap::Args)]
+#[command(group(
+    clap::ArgGroup::new("fixed_host")
+        .args(["fixed_package", "fixed_cargo"])
+        .multiple(false)
+))]
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
     r = 2
@@ -233,11 +238,15 @@ pub struct McpServeArgs {
     pub path: PathBuf,
 
     /// Explicit cooperative fixed package host; omitted means no package grant.
-    #[arg(long, value_enum)]
+    #[arg(long, value_enum, conflicts_with = "fixed_cargo")]
     pub fixed_package: Option<McpFixedPackageMode>,
 
+    /// Explicit cooperative fixed offline Cargo host; omitted means no build grant.
+    #[arg(long, value_enum, conflicts_with = "fixed_package")]
+    pub fixed_cargo: Option<McpFixedCargoMode>,
+
     /// First issue lifetime in milliseconds; forbidden on reattach.
-    #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000), requires = "fixed_package")]
+    #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000), requires = "fixed_host")]
     pub ttl_ms: Option<u64>,
 
     /// Explicit absolute recovery store for manifest migration authority.
@@ -253,6 +262,12 @@ pub struct McpServeArgs {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum McpFixedPackageMode {
+    Issue,
+    Reattach,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum McpFixedCargoMode {
     Issue,
     Reattach,
 }

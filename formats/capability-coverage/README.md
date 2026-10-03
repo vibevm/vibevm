@@ -94,3 +94,9 @@ absolute-root `vibe mcp serve --fixed-package issue|reattach` choice, using the
 same host-owned package pointer as the local machine session. The default MCP
 entry remains ungranted. Exact process tests bind this one route; the inventory
 still does not admit general package execution or the remaining C4 surfaces.
+
+`fixed-cargo-mcp-serve-source-delta.json` binds the subsequent fixed Cargo
+startup bytes. Its host issue/reattach mode is mutually exclusive with fixed
+package, retains the incumbent build journal and exposes the existing
+ambient-rustup warning. It proves neither a hermetic toolchain nor general
+Cargo execution. Default `vibe mcp serve` remains ungranted.

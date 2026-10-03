@@ -67,12 +67,14 @@ use vibe_mcp::agent_config::{
 use vibe_mcp::agents::{Agent, ConfigFormat, ConfigPayload, Scope, What, detect_agents};
 use vibe_mcp::install::{AgentInstallReport, SkillInstallReport, install_skill};
 use vibe_mcp::{Server, ServerContext};
+use vibe_orchestrator::machine_operation::fixed_cargo::FixedCargoRoute;
 use vibe_orchestrator::machine_operation::fixed_package::FixedPackageRoute;
+use vibe_orchestrator::machine_submission::cargo_grant::CargoGrantService;
 use vibe_orchestrator::machine_submission::package_grant::PackageGrantService;
 
 use crate::cli::{
-    McpArgs, McpFixedPackageMode, McpInstallArgs, McpServeArgs, McpStatusArgs, McpSubcommand,
-    McpUninstallArgs, McpUpgradeArgs,
+    McpArgs, McpFixedCargoMode, McpFixedPackageMode, McpInstallArgs, McpServeArgs, McpStatusArgs,
+    McpSubcommand, McpUninstallArgs, McpUpgradeArgs,
 };
 use crate::exit_code::InstallError;
 use crate::output;
@@ -301,17 +303,19 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     // server needs a project root to load the lockfile from. When
     // launched by a user-scope MCP entry that omits `--path`, the
     // server uses CWD (default value `.`).
-    if args.fixed_package.is_some() && !args.path.is_absolute() {
+    if (args.fixed_package.is_some() || args.fixed_cargo.is_some()) && !args.path.is_absolute() {
         bail!(
-            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-PACKAGE-GRANT-DECISION: fixed package MCP host requires an explicit absolute --path; fix surface: --path <absolute-project-root>"
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT: fixed effectful MCP host requires an explicit absolute --path; fix surface: --path <absolute-project-root>"
         );
     }
-    match (args.fixed_package, args.ttl_ms) {
-        (Some(McpFixedPackageMode::Issue), Some(_))
-        | (Some(McpFixedPackageMode::Reattach), None)
-        | (None, None) => {}
+    match (args.fixed_package, args.fixed_cargo, args.ttl_ms) {
+        (Some(McpFixedPackageMode::Issue), None, Some(_))
+        | (Some(McpFixedPackageMode::Reattach), None, None)
+        | (None, Some(McpFixedCargoMode::Issue), Some(_))
+        | (None, Some(McpFixedCargoMode::Reattach), None)
+        | (None, None, None) => {}
         _ => bail!(
-            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-PACKAGE-GRANT-DECISION: fixed package issue requires --ttl-ms; reattach forbids it; fix surface: --fixed-package issue --ttl-ms <1..=86400000>, or reattach"
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT: fixed host issue requires --ttl-ms and reattach forbids it; fix surface: select exactly one --fixed-package or --fixed-cargo issue --ttl-ms <1..=86400000>, or reattach"
         ),
     }
     let project_root = resolve_project_root_required(&args.path)?;
@@ -328,6 +332,10 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     );
     let server_ctx = match args.fixed_package {
         Some(mode) => fixed_package_server_context(server_ctx, &project_root, mode, args.ttl_ms)?,
+        None => server_ctx,
+    };
+    let server_ctx = match args.fixed_cargo {
+        Some(mode) => fixed_cargo_server_context(server_ctx, &project_root, mode, args.ttl_ms)?,
         None => server_ctx,
     };
     let server_ctx = if let Some(store) = args.migration_recovery_store {
@@ -367,6 +375,33 @@ fn fixed_package_server_context(
         McpFixedPackageMode::Reattach => service.reattach()?,
     };
     Ok(context.with_fixed_package_route(Arc::new(FixedPackageRoute::new(Arc::new(host))))?)
+}
+
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-CARGO-BUILD-DECISION"
+)]
+fn fixed_cargo_server_context(
+    context: ServerContext,
+    project_root: &Path,
+    mode: McpFixedCargoMode,
+    ttl_ms: Option<u64>,
+) -> Result<ServerContext> {
+    let target_os = TargetOs::current().ok_or_else(|| {
+        anyhow::anyhow!("violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-CARGO-BUILD-DECISION: fixed Cargo MCP host requires a supported target platform; fix surface: run on a supported platform")
+    })?;
+    let project = Arc::new(vibe_safefs::Project::open(project_root)?);
+    let service = CargoGrantService::from_trusted_builtin_host(
+        project,
+        "vibe-cli-project-local/e1".into(),
+        target_os,
+    )?;
+    let host = match mode {
+        McpFixedCargoMode::Issue => service.issue(ttl_ms.ok_or_else(|| {
+            anyhow::anyhow!("fixed Cargo issue requires --ttl-ms <1..=86400000>")
+        })?)?,
+        McpFixedCargoMode::Reattach => service.reattach()?,
+    };
+    Ok(context.with_fixed_cargo_route(Arc::new(FixedCargoRoute::new(Arc::new(host))))?)
 }
 
 // ---------------------------------------------------------------------------

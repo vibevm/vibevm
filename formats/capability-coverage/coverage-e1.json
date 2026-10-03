@@ -87,7 +87,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/cli/mcp.rs",
       "path": "crates/vibe-cli/src/cli/mcp.rs",
-      "sha256": "a62d9d6400c354fd645c7317d833819a210bce798e1ab83da945ce1449803c59"
+      "sha256": "eb88200b6c2b5cd62d81d4c9741f52d175250e74bf53f0d554caf49fa80eb2dc"
     },
     {
       "source_id": "source:crates/vibe-cli/src/cli/pkg.rs",
@@ -292,7 +292,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/commands/mcp/mod.rs",
       "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
-      "sha256": "8c3e53c857beffc37290f145666a690f81068907fad1dbba2d87a112324e3e60"
+      "sha256": "078a34fac54e018a69360d1a4f1217286f935ea241a4773b213fb650df3a0ad9"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/mod.rs",
@@ -1307,7 +1307,7 @@
       "effects": [
         "Submit one fixed offline Cargo build through the incumbent C1/build journal, or inspect its retained result. Same scoped key attaches without a second Cargo invocation."
       ],
-      "authority": "An explicit trusted CargoGrantService host route must be installed in ServerContext. The default MCP context and request body cannot issue or reattach a namespace.",
+      "authority": "An explicit trusted CargoGrantService host route must be installed in ServerContext. The CLI MCP server can explicitly issue or reattach its existing finite Cargo pointer for an absolute project root; default serve and request bytes grant nothing.",
       "carrier": "Generated schema=1 fixed Cargo action request/reply/error, nested internally in the registered operation envelope. Nullable scope/run/view and owner effect observation remain explicit.",
       "schema_ref": "schemas/machine/e1/fixed_cargo_action_request.jtd.json; schemas/machine/e1/fixed_cargo_action_reply.jtd.json; schemas/machine/e1/fixed_cargo_action_error.jtd.json; schemas/machine/e1/operation_envelope.jtd.json",
       "implementation": "source-observed",
@@ -1317,9 +1317,13 @@
       "conformance_cases": [
         "proposed:current-native-registration",
         "proposed:owning-adapter-carriage",
-        "proposed:cross-surface-same-key"
+        "proposed:cross-surface-same-key",
+        "native:cli_mcp_fixed_cargo::explicit_cargo_issue_and_reattach_retain_one_build_run",
+        "native:cli_mcp_fixed_cargo::cargo_grant_from_machine_frame_can_be_reattached_by_mcp"
       ],
       "source_ids": [
+        "source:crates/vibe-cli/src/cli/mcp.rs",
+        "source:crates/vibe-cli/src/commands/mcp/mod.rs",
         "source:crates/vibe-mcp/src/tools.rs",
         "source:crates/vibe-mcp/src/context.rs",
         "source:crates/vibe-mcp/src/tools/fixed_cargo_operation.rs",
@@ -1333,7 +1337,7 @@
         "source:schemas/machine/e1/operation_envelope.jtd.json"
       ],
       "disposition": "operation",
-      "reason": "Current bounded C4 source delta for a newly registered fixed Cargo adapter; source/registration evidence does not itself grant the host, prove a hermetic toolchain or close the wider facade.",
+      "reason": "Current bounded C4 source and explicit CLI host issue/reattach evidence. Default registration does not grant a host, prove a hermetic toolchain or close the wider facade.",
       "operation_id": "operation.mcp.fixed_cargo_operation"
     },
     {
@@ -4410,22 +4414,24 @@
       "name": "serve",
       "aliases": [],
       "owner": "Actual clap grammar in crates/vibe-cli/src/cli/mcp.rs and stdio/context composition in crates/vibe-cli/src/commands/mcp/mod.rs. The MCP library retains each tool and domain owner.",
-      "target": "CLI route vibe mcp serve; explicit migration recovery-store/member selections and separate fixed package issue/reattach mode are present in its owning grammar.",
+      "target": "CLI route vibe mcp serve; explicit migration recovery-store/member selections and mutually exclusive fixed package or fixed Cargo issue/reattach modes are present in its owning grammar.",
       "effects": [
-        "Serve composes read-only/default lifecycle context, optional explicit migration authority and optional fixed package host authority before running the existing MCP stdio server.",
+        "Serve composes read-only/default lifecycle context, optional explicit migration authority and one optional fixed package or fixed Cargo host authority before running the existing MCP stdio server.",
         "Accepted D1 interface cli:vibe:refactor:migration-operation adds explicit MCP serve migration authority flags; ordinary serve effects remain separately scoped."
       ],
-      "authority": "Explicit migration store/file selections and, independently, an absolute-root fixed package host issue/reattach choice are passed to trusted context builders. The default server and this catalogue grant no project/file/package authority.",
+      "authority": "Explicit migration store/file selections and, independently, an absolute-root fixed package or fixed Cargo host issue/reattach choice are passed to trusted context builders. The default server and this catalogue grant no project/file/effect authority.",
       "carrier": "Newline JSON-RPC 2.0 remains the server transport. The fixed package subroute carries generated epoch-one action request/reply/error through its registered tool; migration and administrative commands retain their separate contracts.",
       "schema_ref": "unbound schema: no exact owned exchange epoch is established for this row",
       "implementation": "source-observed",
       "external_access": "structured",
-      "completeness": "Historical broad registration/accounting remains source-observed. The fixed package subroute has exact three-process CLI conformance only; other MCP operations and whole-product completeness are not inferred from it.",
-      "retention": "The fixed package subroute reattaches to the lifecycle package journal's retained C1 run and result; retention of other serve operations is not inferred from this case.",
+      "completeness": "Historical broad registration/accounting remains source-observed. The fixed package and fixed Cargo subroutes have exact process conformance only; other MCP operations and whole-product completeness are not inferred from them.",
+      "retention": "The fixed package and Cargo subroutes reattach to their respective lifecycle owner journals' retained C1 runs and results; retention of other serve operations is not inferred from these cases.",
       "conformance_cases": [
         "proposed:registration-accounting",
         "native:cli_mcp_fixed_package::explicit_issue_and_reattach_share_one_package_run_across_mcp_processes",
-        "native:cli_mcp_fixed_package::machine_frame_issued_package_grant_is_reused_by_mcp_reattach"
+        "native:cli_mcp_fixed_package::machine_frame_issued_package_grant_is_reused_by_mcp_reattach",
+        "native:cli_mcp_fixed_cargo::explicit_cargo_issue_and_reattach_retain_one_build_run",
+        "native:cli_mcp_fixed_cargo::cargo_grant_from_machine_frame_can_be_reattached_by_mcp"
       ],
       "source_ids": [
         "source:crates/vibe-cli/src/cli/mcp.rs",
