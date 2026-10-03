@@ -262,8 +262,6 @@ fn forged_foreign_shapes_options_policy_and_context_roots_refuse_before_provider
     }
     for (phase, force, trace, profile) in [
         ("build", false, false, Value::Null),
-        ("validate", true, false, Value::Null),
-        ("validate", false, true, Value::Null),
         ("validate", false, false, json!("posix")),
     ] {
         let r = call(
@@ -272,6 +270,18 @@ fn forged_foreign_shapes_options_policy_and_context_roots_refuse_before_provider
         );
         assert_eq!(r["structuredContent"]["code"], "implementation_gap");
     }
+    let force = call(
+        &mut s,
+        json!({"schema":1,"action":{"kind":"prepare","phase":"validate","requested_options":{"force":true,"trace":false,"deploy_profile":null,"control":"none"}}}),
+    );
+    assert_eq!(force["isError"], false, "{force}");
+    let force_question: d::InputDecisionMessage = serde_json::from_str(
+        force["structuredContent"]["reply"]["payload_json"]
+            .as_str()
+            .unwrap(),
+    )
+    .unwrap();
+    assert!(force_question.requested_options.force);
     let mut q = prepare(&mut s, "detach");
     q.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
     q.principal_id = Some("foreign".into());
@@ -296,6 +306,94 @@ fn forged_foreign_shapes_options_policy_and_context_roots_refuse_before_provider
         "context_root_mismatch"
     );
     f.no_provider();
+}
+
+#[test]
+fn explicit_trace_requires_typed_answer_and_retains_one_owner_run() {
+    let f = Fixture::new();
+    let mut s = f.server(f.host(true));
+    let prepared = call(
+        &mut s,
+        json!({"schema":1,"action":{"kind":"prepare","phase":"validate","requested_options":{"force":false,"trace":true,"deploy_profile":null,"control":"none"}}}),
+    );
+    assert_eq!(prepared["isError"], false, "{prepared}");
+    let mut question: d::InputDecisionMessage = serde_json::from_str(
+        prepared["structuredContent"]["reply"]["payload_json"]
+            .as_str()
+            .unwrap(),
+    )
+    .unwrap();
+    assert!(question.requested_options.trace);
+    assert!(matches!(question.body, d::Body::SelectionQuestion(_)));
+    let mut premature = question.clone();
+    premature.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    assert_eq!(answer(&mut s, &premature)["isError"], true);
+    let mut foreign = question.clone();
+    foreign.principal_id = Some("foreign".into());
+    foreign.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    assert_eq!(answer(&mut s, &foreign)["isError"], true);
+    f.no_provider();
+    question.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    let selected = answer(&mut s, &question);
+    assert_eq!(selected["isError"], false, "{selected}");
+    let mut approval: d::InputDecisionMessage = serde_json::from_str(
+        selected["structuredContent"]["reply"]["payload_json"]
+            .as_str()
+            .unwrap(),
+    )
+    .unwrap();
+    assert!(approval.requested_options.trace);
+    assert!(matches!(approval.body, d::Body::ApprovalQuestion(_)));
+    assert_ne!(approval.plan_id, question.plan_id);
+    let reference = approval.question_id.clone().unwrap();
+    approval.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let validated = answer(&mut s, &approval);
+    assert_eq!(validated["isError"], false, "{validated}");
+    assert_eq!(
+        validated["structuredContent"]["reply"]["accepted_ref"],
+        reference
+    );
+    let initial = submit(&mut s, &reference, "trace-once");
+    assert_eq!(initial["isError"], false, "{initial}");
+    until(|| f.dir.path().join("entered").exists());
+    f.release();
+    let mut terminal = Value::Null;
+    until(|| {
+        let observed = inspect(&mut s, "trace-once");
+        if observed["isError"] == false
+            && matches!(row(&observed).status, v::Status::ResultAvailable(_))
+        {
+            terminal = observed;
+            true
+        } else {
+            false
+        }
+    });
+    let run = row(&terminal).run_id.unwrap();
+    let retained: Value = serde_json::from_slice(
+        &fs::read(
+            f.dir
+                .path()
+                .join(format!(".vibe/lifecycle-outcomes/{run}.report.json")),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(retained["trace"]["run_id"], run);
+    assert_eq!(retained["trace"]["status"], "ok");
+    assert_eq!(retained["trace"]["finalised"], true);
+    let replay = submit(&mut s, &reference, "trace-once");
+    assert_eq!(replay["isError"], false, "{replay}");
+    assert_eq!(row(&replay).run_id.as_deref(), Some(run.as_str()));
+    assert_eq!(
+        row(&inspect(&mut s, "trace-once")).run_id.as_deref(),
+        Some(run.as_str())
+    );
+    f.count();
 }
 #[test]
 fn physical_root_replacement_and_source_drift_do_not_execute() {
