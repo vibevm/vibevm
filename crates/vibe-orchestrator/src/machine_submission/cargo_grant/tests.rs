@@ -57,6 +57,22 @@ fn no_effect(root: &std::path::Path) {
 }
 
 #[test]
+fn trusted_builtin_constructor_has_no_routes_or_issuance_before_issue() {
+    let root = fixture();
+    let grant = CargoGrantService::from_trusted_builtin_host(
+        Arc::new(Project::open(root.path()).unwrap()),
+        "shared-principal".into(),
+        TargetOs::current().unwrap(),
+    )
+    .unwrap();
+    assert!(grant.routes.is_empty());
+    verify_cargo_plane(&grant.registry, &grant.routes).unwrap();
+    assert!(!root.path().join(&grant.path).exists());
+    assert!(!root.path().join(".vibe/machine-submissions.json").exists());
+    no_effect(root.path());
+}
+
+#[test]
 fn first_issue_and_reattach_keep_one_cargo_namespace_and_current_policy() {
     let root = fixture();
     let grant = service(root.path());

@@ -27,6 +27,9 @@ pub struct MachineSessionArgs {
     /// Explicit cooperative same-project fixed package host mode.
     #[arg(long, value_enum, conflicts_with = "fixed_validate")]
     pub fixed_package: Option<FixedPackageMode>,
+    /// Explicit cooperative same-project fixed offline Cargo host mode.
+    #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package"])]
+    pub fixed_cargo: Option<FixedCargoMode>,
     /// First-issue lifetime in milliseconds (1..=86400000); issue only.
     #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000))]
     pub ttl_ms: Option<u64>,
@@ -52,6 +55,12 @@ pub enum FixedValidateMode {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum FixedPackageMode {
+    Issue,
+    Reattach,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum FixedCargoMode {
     Issue,
     Reattach,
 }
