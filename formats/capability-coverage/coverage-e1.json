@@ -87,7 +87,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/cli/mcp.rs",
       "path": "crates/vibe-cli/src/cli/mcp.rs",
-      "sha256": "eb88200b6c2b5cd62d81d4c9741f52d175250e74bf53f0d554caf49fa80eb2dc"
+      "sha256": "e3cee524b7cfdbbcf7f4211b0bd67f05326150fd763dcccd1c3205f5944a3210"
     },
     {
       "source_id": "source:crates/vibe-cli/src/cli/pkg.rs",
@@ -292,7 +292,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/commands/mcp/mod.rs",
       "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
-      "sha256": "078a34fac54e018a69360d1a4f1217286f935ea241a4773b213fb650df3a0ad9"
+      "sha256": "0e8f357bf988f60dac7db6d8d4a2e84f18b25d3559912be29889b2012dc3e10d"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/mod.rs",
@@ -1248,6 +1248,11 @@
       "source_id": "source:schemas/machine/e1/fixed_package_action_error.jtd.json",
       "path": "schemas/machine/e1/fixed_package_action_error.jtd.json",
       "sha256": "96882f55875448bc147bb13e7356b3d671970202dfc25f3fd82aac348c734c7f"
+    },
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/mcp/fixed_validate.rs",
+      "path": "crates/vibe-cli/src/commands/mcp/fixed_validate.rs",
+      "sha256": "f8f1100572982b53ce0297c7e25f39ebb6975dbae3f3859dbc9a168b9db27955"
     }
   ],
   "surfaces": [
@@ -1349,14 +1354,14 @@
       "owner": "crates/vibe-mcp/src/tools/lifecycle_operation.rs delegates to FixedLifecycleDecisionHost C1 through ServerContext::with_fixed_lifecycle_host.",
       "target": "Explicit startup host context/target/principal and physically compared project root; body and descriptor cannot mint namespace or override roots.",
       "effects": ["Prepare/answer owner-bound decisions, retain private accepted evidence, submit the fixed Validate declared-script profile as an asynchronous owner job, inspect fresh incumbent evidence."],
-      "authority": "Explicit trusted startup host required; ordinary default context may return unavailable_host. Registration, body, hashes and accepted references are not grants.",
+      "authority": "Explicit trusted startup host required; ordinary default context may return unavailable_host. The CLI MCP server can issue or reattach its finite fixed Validate pointer at an absolute root with explicit startup policy facts; registration, body, hashes and accepted references are not grants.",
       "carrier": "Generated schema=1 action request/reply/error; question payload is machine-input-decision-message, submitted/view payload is machine-lifecycle-submission-view. Nullable scope/run/view and unavailable effect observation remain explicit; an error does not prove NoEffects.",
       "schema_ref": "schemas/machine/e1/lifecycle_action_request.jtd.json; schemas/machine/e1/lifecycle_action_reply.jtd.json; schemas/machine/e1/lifecycle_action_error.jtd.json; schemas/machine/e1/lifecycle_submission_view.jtd.json",
       "implementation": "source-observed",
       "external_access": "structured",
-      "completeness": "Scoped prepare/answer/submit/inspect only, fixed Validate declared-script profile. Other phases, force, trace and deploy_profile are implementation gaps. Controls, streams, CLI, full legacy lifecycle and general owners are not provided; no whole API or native Windows/macOS proof.",
+      "completeness": "Fixed Validate declared-script prepare/answer/submit/inspect and owner-scoped attach/replay/control/detach are available. Explicit force/trace require the typed owner decision; other phases and deploy_profile remain gaps. No full legacy lifecycle, general owner, whole API or native Windows/macOS proof.",
       "retention": "Accepted references are ephemeral/private to the bridge. Keys bind actual owner jobs; inspect samples fresh state. Missing final report retains uncertainty; new keys are not force and normal freshness may NoOp.",
-      "conformance_cases": ["proposed:current-native-registration", "proposed:owning-adapter-carriage"],
+      "conformance_cases": ["proposed:current-native-registration", "proposed:owning-adapter-carriage", "native:cli_mcp_fixed_validate::issue_and_reattach_use_one_host_but_never_restore_a_process_local_question", "native:cli_mcp_fixed_validate::machine_frame_issued_validate_grant_is_reused_by_mcp"],
       "source_ids": [
         "source:crates/vibe-mcp/src/tools.rs",
         "source:crates/vibe-mcp/src/context.rs",
@@ -1366,10 +1371,13 @@
         "source:schemas/machine/e1/lifecycle_action_request.jtd.json",
         "source:schemas/machine/e1/lifecycle_action_reply.jtd.json",
         "source:schemas/machine/e1/lifecycle_action_error.jtd.json",
-        "source:schemas/machine/e1/lifecycle_submission_view.jtd.json"
+        "source:schemas/machine/e1/lifecycle_submission_view.jtd.json",
+        "source:crates/vibe-cli/src/cli/mcp.rs",
+        "source:crates/vibe-cli/src/commands/mcp/mod.rs",
+        "source:crates/vibe-cli/src/commands/mcp/fixed_validate.rs"
       ],
       "disposition": "operation",
-      "reason": "Bounded working-tree source delta recorded separately in lifecycle-operation-source-delta.json from historical c2a31e642 and baseline4a3f80a34. Registered=true differs from callable eligibility, execution and admission; lifecycle_run remains independently scoped.",
+      "reason": "Current bounded fixed Validate host/adapter evidence. The registered route and explicit CLI startup do not grant a default server or close the remaining machine facade.",
       "operation_id": "operation.mcp.lifecycle_operation"
     },
     {
@@ -4414,34 +4422,37 @@
       "name": "serve",
       "aliases": [],
       "owner": "Actual clap grammar in crates/vibe-cli/src/cli/mcp.rs and stdio/context composition in crates/vibe-cli/src/commands/mcp/mod.rs. The MCP library retains each tool and domain owner.",
-      "target": "CLI route vibe mcp serve; explicit migration recovery-store/member selections and mutually exclusive fixed package or fixed Cargo issue/reattach modes are present in its owning grammar.",
+      "target": "CLI route vibe mcp serve; explicit migration recovery-store/member selections and mutually exclusive fixed Validate, fixed package or fixed Cargo issue/reattach modes are present in its owning grammar.",
       "effects": [
-        "Serve composes read-only/default lifecycle context, optional explicit migration authority and one optional fixed package or fixed Cargo host authority before running the existing MCP stdio server.",
+        "Serve composes read-only/default lifecycle context, optional explicit migration authority and one optional fixed Validate, fixed package or fixed Cargo host authority before running the existing MCP stdio server.",
         "Accepted D1 interface cli:vibe:refactor:migration-operation adds explicit MCP serve migration authority flags; ordinary serve effects remain separately scoped."
       ],
-      "authority": "Explicit migration store/file selections and, independently, an absolute-root fixed package or fixed Cargo host issue/reattach choice are passed to trusted context builders. The default server and this catalogue grant no project/file/effect authority.",
+      "authority": "Explicit migration store/file selections and, independently, an absolute-root fixed Validate, fixed package or fixed Cargo host issue/reattach choice are passed to trusted context builders. Validate startup control facts are individually named flags. The default server and this catalogue grant no project/file/effect authority.",
       "carrier": "Newline JSON-RPC 2.0 remains the server transport. The fixed package subroute carries generated epoch-one action request/reply/error through its registered tool; migration and administrative commands retain their separate contracts.",
       "schema_ref": "unbound schema: no exact owned exchange epoch is established for this row",
       "implementation": "source-observed",
       "external_access": "structured",
-      "completeness": "Historical broad registration/accounting remains source-observed. The fixed package and fixed Cargo subroutes have exact process conformance only; other MCP operations and whole-product completeness are not inferred from them.",
-      "retention": "The fixed package and Cargo subroutes reattach to their respective lifecycle owner journals' retained C1 runs and results; retention of other serve operations is not inferred from these cases.",
+      "completeness": "Historical broad registration/accounting remains source-observed. The fixed Validate startup/decision, fixed package and fixed Cargo subroutes have exact process conformance only; other MCP operations and whole-product completeness are not inferred from them.",
+      "retention": "Fixed Validate reattaches its host pointer but does not restore process-local questions; fixed package and Cargo reattach to their respective owner journals' retained C1 runs and results. Other serve retention is not inferred.",
       "conformance_cases": [
         "proposed:registration-accounting",
         "native:cli_mcp_fixed_package::explicit_issue_and_reattach_share_one_package_run_across_mcp_processes",
         "native:cli_mcp_fixed_package::machine_frame_issued_package_grant_is_reused_by_mcp_reattach",
         "native:cli_mcp_fixed_cargo::explicit_cargo_issue_and_reattach_retain_one_build_run",
-        "native:cli_mcp_fixed_cargo::cargo_grant_from_machine_frame_can_be_reattached_by_mcp"
+        "native:cli_mcp_fixed_cargo::cargo_grant_from_machine_frame_can_be_reattached_by_mcp",
+        "native:cli_mcp_fixed_validate::issue_and_reattach_use_one_host_but_never_restore_a_process_local_question",
+        "native:cli_mcp_fixed_validate::machine_frame_issued_validate_grant_is_reused_by_mcp"
       ],
       "source_ids": [
         "source:crates/vibe-cli/src/cli/mcp.rs",
         "source:crates/vibe-cli/src/commands/mcp/mod.rs",
         "source:crates/vibe-mcp/src/agents.rs",
         "source:crates/vibe-mcp/src/install.rs",
-        "source:crates/vibe-mcp/src/pkg_servers.rs"
+        "source:crates/vibe-mcp/src/pkg_servers.rs",
+        "source:crates/vibe-cli/src/commands/mcp/fixed_validate.rs"
       ],
       "disposition": "operation",
-      "reason": "Current bounded source and process evidence for the fixed package issue/reattach subroute. Earlier broad census gaps remain outside this route; source and registration facts never grant an owner or establish whole-product completeness.",
+      "reason": "Current bounded source and process evidence for explicit fixed Validate, package and Cargo issue/reattach subroutes. Earlier broad census gaps remain outside these routes; source and registration facts never grant an owner or establish whole-product completeness.",
       "parent_surface_id": "surface.cli.vibe.mcp",
       "operation_id": "operation.cli.vibe.mcp.serve",
       "registered": true

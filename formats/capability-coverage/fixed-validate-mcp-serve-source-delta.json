@@ -1,0 +1,35 @@
+{
+  "receipt_id": "fixed-validate-mcp-serve-current-source-delta",
+  "scope": "Current-byte observation of explicit CLI MCP fixed Validate host issue/reattach grammar and composition. Earlier package/Cargo deltas remain historical.",
+  "historical_baseline_capture_id": "capability-baseline-4a3f80a34",
+  "historical_observation_capture_id": "entity-view-observed-c2a31e642",
+  "sources": [
+    {
+      "path": "crates/vibe-cli/src/cli/mcp.rs",
+      "sha256": "e3cee524b7cfdbbcf7f4211b0bd67f05326150fd763dcccd1c3205f5944a3210",
+      "previous_ledger_sha256": "eb88200b6c2b5cd62d81d4c9741f52d175250e74bf53f0d554caf49fa80eb2dc",
+      "change": "mutually exclusive fixed Validate startup grammar and named policy flags"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "sha256": "0e8f357bf988f60dac7db6d8d4a2e84f18b25d3559912be29889b2012dc3e10d",
+      "previous_ledger_sha256": "078a34fac54e018a69360d1a4f1217286f935ea241a4773b213fb650df3a0ad9",
+      "change": "fixed Validate host mode composition before MCP stdio"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/mcp/fixed_validate.rs",
+      "sha256": "f8f1100572982b53ce0297c7e25f39ebb6975dbae3f3859dbc9a168b9db27955",
+      "previous_ledger_sha256": null,
+      "change": "new exact CliGrantService host builder"
+    }
+  ],
+  "counts": {
+    "sources": 250,
+    "surfaces": 246,
+    "operation_identities": 218,
+    "registered_mcp": 18,
+    "models": 35,
+    "planned_families": 15
+  },
+  "limitations": "An explicit absolute-root issue/reattach choice and named policy facts are required. Default serve remains ungranted; other lifecycle phases and deploy profiles remain unavailable."
+}
