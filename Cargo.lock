@@ -4876,6 +4876,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "vibe-agent-projection",
  "vibe-core",
+ "vibe-extension-registry",
  "vibe-install",
  "vibe-lifecycle",
  "vibe-native-loader-build-provider-fixture",

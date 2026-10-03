@@ -22,6 +22,7 @@ serde_json.workspace = true
 specmark.workspace = true
 vibe-agent-projection.workspace = true
 vibe-core.workspace = true
+vibe-extension-registry.workspace = true
 vibe-install.workspace = true
 vibe-lifecycle.workspace = true
 vibe-registry.workspace = true
