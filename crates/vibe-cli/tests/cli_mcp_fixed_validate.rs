@@ -4,16 +4,167 @@ mod common;
 use common::UserScratch;
 use serde_json::{Value, json};
 use std::fs;
+#[cfg(target_os = "linux")]
+use std::{
+    io::{BufRead, BufReader, Write},
+    process::{Child, ChildStdin, ChildStdout, Command, Stdio},
+    time::{Duration, Instant},
+};
+#[cfg(target_os = "linux")]
+use vibe_orchestrator::machine_operation::{input_decision as d, lifecycle_view as v};
 
 fn project() -> tempfile::TempDir {
     let root = tempfile::tempdir().unwrap();
     fs::write(root.path().join("vibe.toml"), "[project]\nname='demo'\nversion='1.1.0'\n[[extension]]\nid='once'\npoint='phase:validate'\nhandler={kind='script',base='run'}\n").unwrap();
+    let quoted = root.path().to_str().unwrap().replace('\'', "'\\''");
     fs::write(
         root.path().join("run.sh"),
-        b"#!/bin/sh\nset -eu\nprintf 'effect\\n' >> counter\n",
+        format!("#!/bin/sh\nset -eu\ncd '{quoted}'\nprintf 'effect\\n' >> counter\n"),
     )
     .unwrap();
     root
+}
+
+#[cfg(target_os = "linux")]
+struct LiveServer {
+    child: Child,
+    input: ChildStdin,
+    output: BufReader<ChildStdout>,
+}
+
+#[cfg(target_os = "linux")]
+impl LiveServer {
+    fn start(user: &UserScratch, root: &std::path::Path, mode: &str) -> Self {
+        let mut command = Command::new(env!("CARGO_BIN_EXE_vibe"));
+        command
+            .env("VIBE_SETTINGS", &user.settings)
+            .env("VIBE_REGISTRY_CACHE", &user.cache)
+            .env("VIBEVM_SEARCH_CACHE_DIR", &user.search_cache)
+            .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+            .args(["--offline", "mcp", "serve", "--path"])
+            .arg(root)
+            .args(["--fixed-validate", mode, "--approve-captured-script"])
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped());
+        if mode == "issue" {
+            command.args(["--ttl-ms", "60000"]);
+        }
+        let mut child = command.spawn().unwrap();
+        let input = child.stdin.take().unwrap();
+        let output = BufReader::new(child.stdout.take().unwrap());
+        Self {
+            child,
+            input,
+            output,
+        }
+    }
+
+    fn call(&mut self, action: Value) -> Value {
+        self.input.write_all(request(action).as_bytes()).unwrap();
+        self.input.flush().unwrap();
+        let mut line = String::new();
+        assert!(
+            self.output.read_line(&mut line).unwrap() > 0,
+            "MCP reply before EOF"
+        );
+        let response: Value = serde_json::from_str(&line).unwrap();
+        assert!(response["error"].is_null(), "{response}");
+        response["result"].clone()
+    }
+
+    fn finish(self) {
+        drop(self.input);
+        let output = self.child.wait_with_output().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+}
+
+#[cfg(target_os = "linux")]
+fn typed_question(result: &Value) -> d::InputDecisionMessage {
+    assert_eq!(result["isError"], false, "{result}");
+    serde_json::from_str(
+        result["structuredContent"]["reply"]["payload_json"]
+            .as_str()
+            .unwrap(),
+    )
+    .unwrap()
+}
+
+#[cfg(target_os = "linux")]
+fn typed_view(result: &Value) -> v::LifecycleSubmissionView {
+    assert_eq!(result["isError"], false, "{result}");
+    serde_json::from_str(
+        result["structuredContent"]["reply"]["payload_json"]
+            .as_str()
+            .unwrap(),
+    )
+    .unwrap()
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn real_stdio_decision_submit_and_cold_inspect_retain_one_effect() {
+    let user = UserScratch::new();
+    let root = project();
+    let mut server = LiveServer::start(&user, root.path(), "issue");
+    let mut question = typed_question(
+        &server.call(json!({"kind":"prepare","phase":"validate",
+        "requested_options":{"force":false,"trace":false,"deploy_profile":null,"control":"none"}})),
+    );
+    assert!(matches!(question.body, d::Body::SelectionQuestion(_)));
+    question.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    question =
+        typed_question(&server.call(
+            json!({"kind":"answer","message_json":serde_json::to_string(&question).unwrap()}),
+        ));
+    assert!(matches!(question.body, d::Body::ApprovalQuestion(_)));
+    question.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let accepted = server
+        .call(json!({"kind":"answer","message_json":serde_json::to_string(&question).unwrap()}));
+    assert_eq!(accepted["isError"], false, "{accepted}");
+    let reference = accepted["structuredContent"]["reply"]["accepted_ref"]
+        .as_str()
+        .unwrap();
+    let started = server.call(json!({"kind":"submit","accepted_ref":reference,"key":"once"}));
+    let mut run = typed_view(&started).run_id;
+    let deadline = Instant::now() + Duration::from_secs(20);
+    loop {
+        let view = typed_view(&server.call(json!({"kind":"inspect","key":"once"})));
+        if let Some(observed) = &view.run_id {
+            match &run {
+                Some(expected) => assert_eq!(observed, expected),
+                None => run = Some(observed.clone()),
+            }
+        }
+        if matches!(view.status, v::Status::ResultAvailable(_)) {
+            assert!(
+                run.is_some(),
+                "terminal owner result retains its run identity"
+            );
+            break;
+        }
+        assert!(
+            Instant::now() < deadline,
+            "fixed Validate terminal deadline"
+        );
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    let run = run.unwrap();
+    server.finish();
+    assert_eq!(fs::read(root.path().join("counter")).unwrap(), b"effect\n");
+    let mut cold = LiveServer::start(&user, root.path(), "reattach");
+    let view = typed_view(&cold.call(json!({"kind":"inspect","key":"once"})));
+    assert_eq!(view.run_id.as_deref(), Some(run.as_str()));
+    assert!(matches!(view.status, v::Status::ResultAvailable(_)));
+    cold.finish();
+    assert_eq!(fs::read(root.path().join("counter")).unwrap(), b"effect\n");
 }
 fn request(action: Value) -> String {
     json!({"jsonrpc":"2.0","id":71,"method":"tools/call",

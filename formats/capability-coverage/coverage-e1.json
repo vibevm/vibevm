@@ -1361,7 +1361,7 @@
       "external_access": "structured",
       "completeness": "Fixed Validate declared-script prepare/answer/submit/inspect and owner-scoped attach/replay/control/detach are available. Explicit force/trace require the typed owner decision; other phases and deploy_profile remain gaps. No full legacy lifecycle, general owner, whole API or native Windows/macOS proof.",
       "retention": "Accepted references are ephemeral/private to the bridge. Keys bind actual owner jobs; inspect samples fresh state. Missing final report retains uncertainty; new keys are not force and normal freshness may NoOp.",
-      "conformance_cases": ["proposed:current-native-registration", "proposed:owning-adapter-carriage", "native:cli_mcp_fixed_validate::issue_and_reattach_use_one_host_but_never_restore_a_process_local_question", "native:cli_mcp_fixed_validate::machine_frame_issued_validate_grant_is_reused_by_mcp"],
+      "conformance_cases": ["proposed:current-native-registration", "proposed:owning-adapter-carriage", "native:cli_mcp_fixed_validate::issue_and_reattach_use_one_host_but_never_restore_a_process_local_question", "native:cli_mcp_fixed_validate::machine_frame_issued_validate_grant_is_reused_by_mcp", "native:cli_mcp_fixed_validate::real_stdio_decision_submit_and_cold_inspect_retain_one_effect"],
       "source_ids": [
         "source:crates/vibe-mcp/src/tools.rs",
         "source:crates/vibe-mcp/src/context.rs",
@@ -4441,7 +4441,8 @@
         "native:cli_mcp_fixed_cargo::explicit_cargo_issue_and_reattach_retain_one_build_run",
         "native:cli_mcp_fixed_cargo::cargo_grant_from_machine_frame_can_be_reattached_by_mcp",
         "native:cli_mcp_fixed_validate::issue_and_reattach_use_one_host_but_never_restore_a_process_local_question",
-        "native:cli_mcp_fixed_validate::machine_frame_issued_validate_grant_is_reused_by_mcp"
+        "native:cli_mcp_fixed_validate::machine_frame_issued_validate_grant_is_reused_by_mcp",
+        "native:cli_mcp_fixed_validate::real_stdio_decision_submit_and_cold_inspect_retain_one_effect"
       ],
       "source_ids": [
         "source:crates/vibe-cli/src/cli/mcp.rs",
