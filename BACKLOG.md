@@ -2442,3 +2442,13 @@ structure, and it goes when the file does.
 | @fact:B222-SEVERITY **severity** | P3 — local operator workaround exists, but old hooks may lag behind installed fixes across future updates. |
 | @fact:B222-DISPOSITION **disposition** | `open` — owner question: add a stable installer-owned active CLI binding or make the copied plugin resolve the validated current generation from its protected installation record? A durable fix needs an installer/plugin lifecycle contract and hook trust review; until then rebind the private wrappers after each source update and verify their exact target. |
 | @fact:B222-FILED **filed by** | Zap/Lens autodogfooding during NEXT transition, 2026-10-03. |
+
+## B-223 — fixed Deploy grant needs a recovery-only reattach decision {#b-223}
+
+| field | value |
+|---|---|
+| @fact:B223-WHAT **what** | A durable fixed Deploy host grant must pin three physical roots, one authored profile/target, generation observer identity, current policy and C1 namespace. After a restart, the manifest/profile, policy or generation may differ from the issued pointer. Treating old pointer facts as fresh effect authority would be unsafe; refusing every reattach could strand inspection of already reserved keys and their partial effects. |
+| @fact:B223-EVIDENCE **evidence** | M-16-C.4 fixed Deploy design after source-bound lifecycle permit `def69f52e` and library route `38a5f1034`. `ReadOnlyDeployAdmission` already supports cold inspection through retained capsule; the prospective durable grant has no reattach contract yet. No Deploy grant pointer has been written or submitted. |
+| @fact:B223-SEVERITY **severity** | P2 — blocks cross-process Deploy machine reach while leaving incumbent CLI Deploy and cold lifecycle inspection intact. |
+| @fact:B223-DISPOSITION **disposition** | `open` — owner question: should an exact old pointer with changed current manifest/profile/policy return a distinct **recovery-only host** that can inspect reserved keys but cannot submit fresh effects? Alternative: effectful reattach refuses and callers use the existing standalone read-only cold inspection API. A new effectful reattach always requires independently reconstructed trusted roots/profile/generation observer and current policy. No callback or process-local approval is serialized in the pointer. Recommend recovery-only reattach to keep same-surface old-key observation available; do not implement until the choice is reviewed. |
+| @fact:B223-FILED **filed by** | NEXT M-16-C.4 protected Deploy route review, 2026-10-03. |
