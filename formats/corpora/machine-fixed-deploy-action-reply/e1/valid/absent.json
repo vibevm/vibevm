@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "absent",
+    "key": "deploy-once"
+  }
+}

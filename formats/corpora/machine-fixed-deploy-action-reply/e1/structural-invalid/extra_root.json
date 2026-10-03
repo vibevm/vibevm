@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "completed",
+    "run_id": "run-1",
+    "receipt_format_id": "deploy-receipt",
+    "receipt_json": "{\"applied_at\":\"2026-10-03T12:00:00Z\",\"artifact_digest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"desired_config_digest\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"finalized_at\":\"2026-10-03T12:00:01Z\",\"generation\":0,\"identity\":{\"project\":\"org.example/demo\"},\"profile\":\"local\",\"provider\":{\"key\":\"org.vibevm/vibe#vibe-bin\"},\"resources\":[{\"post_digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"resource\":\"bin/local-helper\"}],\"reversible\":true,\"schema\":1,\"scope\":\"user\",\"status\":\"verified\",\"target\":\"local-helper\"}"
+  },
+  "grant": true
+}

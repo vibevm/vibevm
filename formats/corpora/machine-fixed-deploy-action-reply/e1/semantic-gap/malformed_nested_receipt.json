@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "completed",
+    "run_id": "run-1",
+    "receipt_format_id": "deploy-receipt",
+    "receipt_json": "{\"schema\":1}"
+  }
+}

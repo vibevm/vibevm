@@ -1,0 +1,185 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "code": {
+      "enum": [
+        "invalid_request",
+        "unavailable_host",
+        "context_root_mismatch",
+        "admission_refused",
+        "policy_refused",
+        "submission_refused",
+        "inspection_unavailable",
+        "publication_unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "message": {
+      "type": "string",
+      "metadata": {
+        "description": "Bounded diagnostic: at most 4096 UTF-8 bytes. The later adapter enforces this bound and sets message_truncated when truncating. Shape alone does not enforce length.",
+        "x-max-bytes": 4096
+      }
+    },
+    "message_truncated": {
+      "type": "boolean"
+    },
+    "requested_action": {
+      "type": "string",
+      "nullable": true
+    },
+    "requested_scope": {
+      "ref": "scope",
+      "nullable": true
+    },
+    "scope_unavailable_reason": {
+      "type": "string",
+      "nullable": true
+    },
+    "known_run_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "view": {
+      "ref": "reply",
+      "nullable": true
+    },
+    "effect_observation": {
+      "enum": [
+        "none",
+        "landed",
+        "uncertain",
+        "unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "requested_phase": {
+      "type": "string",
+      "nullable": true,
+      "metadata": {
+        "description": "When known, the fixed deploy phase; the adapter enforces the only supported value deploy."
+      }
+    }
+  },
+  "definitions": {
+    "reply": {
+      "discriminator": "kind",
+      "mapping": {
+        "completed": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            },
+            "receipt_format_id": {
+              "enum": [
+                "deploy-receipt"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "receipt_json": {
+              "type": "string",
+              "metadata": {
+                "description": "Nested canonical epoch-1 DeployReceipt JSON. The adapter must use the registered generated reader and validate_receipt, then compare exact DTO with the incumbent owner receipt before publication. Shape alone treats this as text.",
+                "x-max-bytes": 262144
+              }
+            }
+          }
+        },
+        "uncertain": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            },
+            "partial": {
+              "ref": "partial"
+            }
+          }
+        },
+        "recovery_required": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            }
+          }
+        },
+        "retired": {
+          "properties": {
+            "run_id": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "absent": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "partial": {
+      "properties": {
+        "intent": {
+          "ref": "record_observation"
+        },
+        "receipt": {
+          "ref": "record_observation"
+        },
+        "sidecar": {
+          "ref": "record_observation"
+        }
+      }
+    },
+    "scope": {
+      "properties": {
+        "context": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "principal": {
+          "type": "string"
+        }
+      }
+    },
+    "record_observation": {
+      "discriminator": "kind",
+      "mapping": {
+        "absent": {
+          "properties": {}
+        },
+        "present": {
+          "properties": {}
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Fixed bound Deploy refusal evidence, never authority. Required nullable scope/run/view/phase keep unavailable distinct from no effect. The adapter validates owner effect truth; Err after possible destination effect cannot become NoEffects.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::fixed_deploy_action_error"
+    }
+  }
+}

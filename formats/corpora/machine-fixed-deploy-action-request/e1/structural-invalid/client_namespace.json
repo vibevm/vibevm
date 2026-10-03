@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "action": {
+    "kind": "submit",
+    "key": "deploy-once",
+    "namespace": "client-value"
+  }
+}

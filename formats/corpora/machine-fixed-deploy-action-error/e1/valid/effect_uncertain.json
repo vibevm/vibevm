@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "code": "submission_refused",
+  "message": "owner outcome uncertain",
+  "message_truncated": false,
+  "requested_action": "submit",
+  "requested_phase": "deploy",
+  "requested_scope": {
+    "context": "host-context",
+    "target": "instance-a",
+    "principal": "owner"
+  },
+  "scope_unavailable_reason": null,
+  "known_run_id": "run-1",
+  "view": {
+    "kind": "uncertain",
+    "run_id": "run-1",
+    "partial": {
+      "intent": {
+        "kind": "present"
+      },
+      "receipt": {
+        "kind": "absent"
+      },
+      "sidecar": {
+        "kind": "unavailable",
+        "reason": "record unreadable"
+      }
+    }
+  },
+  "effect_observation": "uncertain"
+}
