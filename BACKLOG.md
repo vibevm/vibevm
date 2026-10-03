@@ -2462,3 +2462,13 @@ structure, and it goes when the file does.
 | @fact:B224-SEVERITY **severity** | P2 — duplicates raise boot size and leave M-06-G.1's whole-lane positive proof unresolved; no missing package text was observed. |
 | @fact:B224-DISPOSITION **disposition** | `open` — owner question: should the static lane deduplicate shared normal compiler nodes globally across separate entries, preserving each package's own otherwise-unused text, or is once-only scoped to each compiled entry while whole-lane duplication is accepted? A global fix needs source/section identity from the compiler, not raw-text substring removal. Keep the exact positive fixture runnable as an ignored regression and document the observed counts until the semantic ruling. |
 | @fact:B224-FILED **filed by** | NEXT M-06-G.1 cross-package XML consumer verification, 2026-10-03. |
+
+## B-225 — retirement checker rejects 22 adaptive local plan nodes absent from shared inventory {#b-225}
+
+| field | value |
+|---|---|
+| @fact:B225-WHAT **what** | The owner-local NEXT plan has 458 nodes while `campaigns/next/manifest.json` plus task contracts expects 436. The 22 extra stable IDs are M-16-C.4-R1…R13 and nine stable-transition nodes; none are missing. `retirement-check` requires exact equality and refuses before checking an otherwise prepared D-013 promotion. |
+| @fact:B225-EVIDENCE **evidence** | 2026-10-03, local plan rev396 after mechanical repair of 42 one-way mandate links. `python3 -B campaigns/next/campaign.py retirement-check --context … --unit NEXT-D-013` returned exit 2: `local/shared node inventory differs; merge/replan by stable IDs`. Read-only inventory comparison: 458 actual, 436 expected, 22 extra, 0 missing. The D-013 promotion candidate and deletion were not committed; its source remains active until this checker can use the current context. |
+| @fact:B225-SEVERITY **severity** | P2 — blocks campaign retirement checks while product implementation can continue; forcing a stale context would give false proof. |
+| @fact:B225-DISPOSITION **disposition** | `open` — owner question: should the 22 stable adaptive IDs be promoted into the shared campaign manifest inventory, or should the checker distinguish user-local adaptive plan nodes from repository-owned task/topology nodes and validate each under its own rule? Do not copy personal execution details into the repository merely to silence the count, or silently discard accepted adaptive history. Preserve exact IDs and repair the validator/source model before retiring D-013 or other temporary units. |
+| @fact:B225-FILED **filed by** | NEXT retirement attempt after local plan rev396, 2026-10-03. |
