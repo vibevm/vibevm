@@ -2,7 +2,7 @@
 mod common;
 
 use common::UserScratch;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use std::fs;
 #[cfg(target_os = "linux")]
 use std::{
@@ -164,6 +164,91 @@ fn real_stdio_decision_submit_and_cold_inspect_retain_one_effect() {
     assert_eq!(view.run_id.as_deref(), Some(run.as_str()));
     assert!(matches!(view.status, v::Status::ResultAvailable(_)));
     cold.finish();
+    assert_eq!(fs::read(root.path().join("counter")).unwrap(), b"effect\n");
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn real_stdio_explicit_trace_retains_report_and_replays_one_operation() {
+    let user = UserScratch::new();
+    let root = project();
+    let mut server = LiveServer::start(&user, root.path(), "issue");
+    let mut question = typed_question(&server.call(json!({
+        "kind":"prepare", "phase":"validate",
+        "requested_options":{"force":false,"trace":true,"deploy_profile":null,"control":"none"}
+    })));
+    assert!(question.requested_options.trace);
+    assert!(matches!(question.body, d::Body::SelectionQuestion(_)));
+
+    let mut premature = question.clone();
+    premature.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let refused = server.call(json!({
+        "kind":"answer", "message_json":serde_json::to_string(&premature).unwrap()
+    }));
+    assert_eq!(refused["isError"], true, "{refused}");
+    assert_eq!(refused["structuredContent"]["code"], "decision_refused");
+    assert!(!root.path().join("counter").exists());
+
+    question.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    let mut approval = typed_question(&server.call(json!({
+        "kind":"answer", "message_json":serde_json::to_string(&question).unwrap()
+    })));
+    assert!(approval.requested_options.trace);
+    assert!(matches!(approval.body, d::Body::ApprovalQuestion(_)));
+    assert_ne!(approval.plan_id, question.plan_id);
+    let accepted_ref = approval.question_id.clone().unwrap();
+    approval.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let accepted = server.call(json!({
+        "kind":"answer", "message_json":serde_json::to_string(&approval).unwrap()
+    }));
+    assert_eq!(accepted["isError"], false, "{accepted}");
+    assert_eq!(
+        accepted["structuredContent"]["reply"]["accepted_ref"],
+        accepted_ref
+    );
+
+    let key = "stdio-trace-once";
+    let first = typed_view(&server.call(json!({
+        "kind":"submit", "accepted_ref":accepted_ref, "key":key
+    })));
+    let mut run = first.run_id;
+    let deadline = Instant::now() + Duration::from_secs(20);
+    loop {
+        let view = typed_view(&server.call(json!({"kind":"inspect", "key":key})));
+        if let Some(observed) = &view.run_id {
+            if let Some(expected) = &run {
+                assert_eq!(observed, expected);
+            } else {
+                run = Some(observed.clone());
+            }
+        }
+        if matches!(view.status, v::Status::ResultAvailable(_)) {
+            break;
+        }
+        assert!(Instant::now() < deadline, "trace terminal deadline");
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    let run = run.expect("terminal result retains its run identity");
+    let report: Value = serde_json::from_slice(
+        &fs::read(
+            root.path()
+                .join(format!(".vibe/lifecycle-outcomes/{run}.report.json")),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(report["trace"]["run_id"], run);
+    assert_eq!(report["trace"]["status"], "ok");
+    assert_eq!(report["trace"]["finalised"], true);
+
+    let replay = typed_view(&server.call(json!({
+        "kind":"submit", "accepted_ref":accepted_ref, "key":key
+    })));
+    assert_eq!(replay.run_id.as_deref(), Some(run.as_str()));
+    assert!(matches!(replay.status, v::Status::ResultAvailable(_)));
+    server.finish();
     assert_eq!(fs::read(root.path().join("counter")).unwrap(), b"effect\n");
 }
 fn request(action: Value) -> String {
