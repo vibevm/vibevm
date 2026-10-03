@@ -8,5 +8,6 @@ locator are read from the resolved external Zap repository.
 
 Source: <https://github.com/vibevm/zap>
 
-The mutable application line is `refs/heads/1.0.0`. Each operation records the
+The mutable application line is `refs/heads/1.1.0`. Each operation records the
 exact resolved commit and portable source-tree digest before installation.
+There is no 1.1.0 binary release; this bridge selects the 1.1.0 source build.

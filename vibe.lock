@@ -1,12 +1,13 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-10-02T16:06:28Z"
+generated_at = "2026-10-03T01:23:30Z"
 schema_version = 7
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.1.0",
     "flow:org.vibevm.world/fast-rust-compiler@^1.1.0",
     "flow:org.vibevm.world/multi-user-planning@^1.1.0",
     "flow:org.vibevm.world/omnichannel@^1.1.0",
+    "flow:org.vibevm.zap/zap@=1.1.0",
     "org.vibevm.doc/web@^1.1.0",
     "org.vibevm.world/redbook@^1.1.0",
     "stack:org.vibevm.ai-native/rust-ai-native@^1.1.0",
@@ -62,6 +63,20 @@ content_hash = "sha256:457e6f07e9c492d531b371b545e317ad2637ca17dbe4b649a0ba90aa0
 files_written = []
 admitted_by = "root-edge"
 source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "zap"
+group = "org.vibevm.zap"
+version = "1.1.0"
+bridge = true
+authors = ["Oleg Chirukhin"]
+source_url = "file:///fast/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.zap/zap/v1.1.0"
+content_hash = "sha256:bdb5e861637927b1dfb25cd268c325037b6afb26b017aa426b2f914d8c67e87d"
+files_written = []
+admitted_by = "root-edge"
+source_kind = "registry"
+describes = "pkg:github/vibevm/zap@1.1.0"
 
 [[package]]
 kind = "app"

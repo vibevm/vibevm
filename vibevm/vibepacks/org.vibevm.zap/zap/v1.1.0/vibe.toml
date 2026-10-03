@@ -7,10 +7,10 @@ epoch = 1
 format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
-description = "Published bridge to the Zap user application source and verified releases"
+description = "Bridge to the Zap 1.1.0 user application source branch"
 keywords = ["zap", "agents", "application"]
 bridge = true
-describes = "pkg:github/vibevm/zap@1.0.0"
+describes = "pkg:github/vibevm/zap@1.1.0"
 
 [compatibility]
 min_vibe_version = "1.0.0"
@@ -19,16 +19,14 @@ requires_kinds = []
 [application_source]
 kind = "git"
 url = "https://github.com/vibevm/zap.git"
-tracked_ref = "refs/heads/1.0.0"
+tracked_ref = "refs/heads/1.1.0"
 registry_path = "vibevm/vibepacks"
 
-# The bridge carries the complete lightweight binary declaration so an
-# ordinary global install can verify the release before cloning the large,
-# mutable source repository. Source materialization stays available as a
-# deferred fallback and for an explicit `--from-source` request.
+# The 1.1.0 branch has no binary release. The bridge selects source only and
+# records the exact resolved commit.
 [application]
 id = "zap"
-installer_package = "org.vibevm.zap/lens@=1.0.0"
+installer_package = "org.vibevm.zap/lens@=1.1.0"
 runtime = "node"
 entry = "tooling/source-install/application.mjs"
 commands = [
@@ -44,8 +42,3 @@ commands = [
   "zap-mock-agent",
   "zap",
 ]
-
-[application.distribution]
-repository = "vibevm/zap"
-release_tag = "v1.0.0"
-index_asset = "DISTRIBUTIONS.json"
