@@ -327,6 +327,7 @@ mod coverage;
 mod discovery;
 pub mod exchange;
 pub mod fixed_cargo;
+pub mod fixed_deploy;
 pub mod fixed_lifecycle;
 pub mod fixed_package;
 pub mod input_decision;
