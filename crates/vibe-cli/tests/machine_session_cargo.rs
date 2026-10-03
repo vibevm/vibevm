@@ -7,6 +7,13 @@ use std::{
     io::{Read, Write},
     path::PathBuf,
     process::{Child, Command, Stdio},
+    sync::Arc,
+};
+use vibe_core::manifest::TargetOs;
+use vibe_mcp::ServerContext;
+use vibe_orchestrator::{
+    machine_operation::fixed_cargo::FixedCargoRoute,
+    machine_submission::cargo_grant::CargoGrantService,
 };
 use vibe_wire::generated::{format_id::FormatId, machine::e1::session_frame as f};
 
@@ -337,4 +344,85 @@ fn damaged_retained_output_is_not_reported_as_no_effects() {
         uncertain
     );
     second.finish();
+}
+
+#[test]
+fn cli_issued_scope_mcp_submit_and_local_reattach_share_one_cargo_run() {
+    let fixture = Fixture::new();
+    let issued = Client::new(
+        fixture
+            .cargo_command("issue", Some("60000"))
+            .spawn()
+            .unwrap(),
+    );
+    issued.finish();
+    let pointer = fs::read(fixture.pointer()).unwrap();
+    let service = CargoGrantService::from_trusted_builtin_host(
+        Arc::new(vibe_safefs::Project::open(&fixture.root()).unwrap()),
+        "vibe-cli-project-local/e1".into(),
+        TargetOs::current().unwrap(),
+    )
+    .unwrap();
+    let route = Arc::new(FixedCargoRoute::new(Arc::new(service.reattach().unwrap())));
+    let context = ServerContext::with_store_root(fixture.root(), fixture.root().join("unused"))
+        .with_fixed_cargo_route(route)
+        .unwrap();
+    let request = json!({"jsonrpc":"2.0","id":7,"method":"tools/call","params":{
+        "name":"fixed_cargo_operation","arguments":{"schema":1,"action":{"kind":"submit","key":"shared"}}
+    }});
+    let response: Value =
+        serde_json::from_str(&vibe_mcp::dispatch_one(context, &request.to_string()).unwrap())
+            .unwrap();
+    let mcp = &response["result"];
+    assert_eq!(mcp["isError"], false, "{response}");
+    assert_eq!(mcp["structuredContent"]["reply"]["kind"], "completed");
+    assert!(
+        mcp["structuredContent"]["reply"]["warning"]
+            .as_str()
+            .unwrap()
+            .contains("rustup")
+    );
+    let run = mcp["structuredContent"]["reply"]["run_id"]
+        .as_str()
+        .unwrap();
+    let output = fixture.root().join(
+        mcp["structuredContent"]["reply"]["output_relative"]
+            .as_str()
+            .unwrap(),
+    );
+    let output_bytes = fs::read(&output).unwrap();
+    let result_file = fixture
+        .root()
+        .join(format!(".vibe/build-operations/{run}.cargo-result.json"));
+    let retained = fs::read(&result_file).unwrap();
+
+    let mut local = Client::new(fixture.cargo_command("reattach", None).spawn().unwrap());
+    let inspected = local.call(json!({"kind":"inspect","key":"shared"}));
+    let view = envelope(&inspected);
+    let owner: Value =
+        serde_json::from_str(view["body"]["payload_json"].as_str().unwrap()).unwrap();
+    assert_eq!(owner, mcp["structuredContent"]);
+    let replay = local.call(json!({"kind":"submit","key":"shared"}));
+    assert_eq!(envelope(&replay), view);
+    local.finish();
+    assert_eq!(fs::read(fixture.pointer()).unwrap(), pointer);
+    assert_eq!(fs::read(&result_file).unwrap(), retained);
+    assert_eq!(fs::read(output).unwrap(), output_bytes);
+    let index: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(index["namespaces"].as_object().unwrap().len(), 1);
+    assert_eq!(
+        index["namespaces"]
+            .as_object()
+            .unwrap()
+            .values()
+            .next()
+            .unwrap()["keys"]
+            .as_object()
+            .unwrap()
+            .len(),
+        1
+    );
 }
