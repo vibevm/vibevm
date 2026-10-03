@@ -1,0 +1,44 @@
+[package]
+name = "zap"
+group = "org.vibevm.zap"
+kind = "flow"
+version = "1.1.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Bridge to the Zap 1.1.0 user application source branch"
+keywords = ["zap", "agents", "application"]
+bridge = true
+describes = "pkg:github/vibevm/zap@1.1.0"
+
+[compatibility]
+min_vibe_version = "1.0.0"
+requires_kinds = []
+
+[application_source]
+kind = "git"
+url = "https://github.com/vibevm/zap.git"
+tracked_ref = "refs/heads/1.1.0"
+registry_path = "vibevm/vibepacks"
+
+# The 1.1.0 branch has no binary release. The bridge selects source only and
+# records the exact resolved commit.
+[application]
+id = "zap"
+installer_package = "org.vibevm.zap/lens@=1.1.0"
+runtime = "node"
+entry = "tooling/source-install/application.mjs"
+commands = [
+  "codlens",
+  "codlens-mcp",
+  "quicklens-service",
+  "quicklens-web-auth",
+  "quicklens-web",
+  "zap-wayfinder",
+  "zap-server",
+  "zap-quicklens",
+  "zap-quick-lens",
+  "zap-mock-agent",
+  "zap",
+]
