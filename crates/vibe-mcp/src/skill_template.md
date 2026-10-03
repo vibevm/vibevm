@@ -134,6 +134,16 @@ Tools:
   observers are retained per bridge; references expire with their bridge.
   This flow does not change the separate
   `lifecycle_run` behavior.
+- **`fixed_cargo_operation`** — submit or inspect the one fixed offline Cargo
+  fixture build, target `fixture-tool`, only when the server embedding has
+  supplied its trusted Cargo host route. Send `schema: 1` and an `action` with
+  `kind: "submit"` or `"inspect"` plus a bounded `key`. The request cannot
+  choose a project root, C1 namespace, target, provider, argv, route or
+  toolchain; tool registration does not issue a grant. Reuse the same key to
+  attach to the owner's retained run instead of starting Cargo again. Preserve
+  `uncertain` and `recovery_required` results, and read the completed result's
+  `ambient-rustup-unproven` warning: this fixed operation does not attest a
+  hermetic toolchain or offer general Cargo execution.
 - **`plan_manifest_migration`** — plan a supported migration from supplied
   TOML text and explicit profiles/recipe. Inspect the exact in-memory edits
   or answer the returned questions; this tool reads no project, writes no

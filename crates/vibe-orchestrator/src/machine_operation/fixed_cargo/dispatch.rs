@@ -17,6 +17,22 @@ impl std::fmt::Display for FixedCargoRouteError {
     }
 }
 impl std::error::Error for FixedCargoRouteError {}
+impl FixedCargoRouteError {
+    /// Adapter encoder refusal before owner dispatch. Scope comes only from
+    /// an explicitly retained host grant, never from request arguments.
+    pub fn invalid_request(message: &str, grant: Option<&FixedCargoRoute>) -> Self {
+        failure(
+            grant,
+            err::FixedCargoActionErrorCode::InvalidRequest,
+            message,
+            None,
+            false,
+            None,
+            None,
+            None,
+        )
+    }
+}
 
 pub struct FixedCargoRoute {
     pub(super) host: Arc<FixedCargoHost>,

@@ -727,7 +727,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/context.rs",
       "path": "crates/vibe-mcp/src/context.rs",
-      "sha256": "9fe38a89cdda03f349a6caec1a80f4c2261163c11811e6c74170738e93df5677"
+      "sha256": "87b49da0c82c6361cc9073174054c61298f69c0f3d1c756b9136808745af3637"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/install.rs",
@@ -752,7 +752,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/tools.rs",
       "path": "crates/vibe-mcp/src/tools.rs",
-      "sha256": "a60343653dd5ce87da10ce906456d479f7e73a222d63ed42f7752eda89f70cff"
+      "sha256": "28b54dda9ce4d2e16118caf20cc23c0f86ec789c95f4eadaaea14b9c94a81018"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/tools/explain.rs",
@@ -1168,9 +1168,89 @@
       "source_id": "source:crates/vibe-orchestrator/src/machine_submission/cli_grant.rs",
       "path": "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs",
       "sha256": "b4f83c8770115d268720ab73419a0a483ac33cbd8593e9cff2eb163bbdaefca4"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/fixed_cargo_operation.rs",
+      "path": "crates/vibe-mcp/src/tools/fixed_cargo_operation.rs",
+      "sha256": "8f9dc79d61fc14995dd62f9d759028dfc1e76bb4e374903113dff179d387b187"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_cargo.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_cargo.rs",
+      "sha256": "a236ae63bc7053baca21477b5eb5a877f6ffdeb3f92f89470ca6c74f7d7449a7"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_cargo/dispatch.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_cargo/dispatch.rs",
+      "sha256": "90ea51ec4b88a80611ef7187722f7791cea7f77ec120ae34afbdef8cd7add962"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_cargo/envelope.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_cargo/envelope.rs",
+      "sha256": "be324d9c9395d731005b99666012de8a939569862c59dfea519b5bc32a544b38"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_submission/cargo_grant.rs",
+      "path": "crates/vibe-orchestrator/src/machine_submission/cargo_grant.rs",
+      "sha256": "30c872bde23771aaf70f63898e5c12ae04d650777d2c927262c2889fbbc18d6a"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_cargo_action_request.jtd.json",
+      "path": "schemas/machine/e1/fixed_cargo_action_request.jtd.json",
+      "sha256": "c2355dfb933ea8532f22940091380e006a137457abec38a59559c378e070d328"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_cargo_action_reply.jtd.json",
+      "path": "schemas/machine/e1/fixed_cargo_action_reply.jtd.json",
+      "sha256": "8b6c605130032c8896e939c1f37f59737182fcc01ea49d82528d5eb4a144ffdb"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_cargo_action_error.jtd.json",
+      "path": "schemas/machine/e1/fixed_cargo_action_error.jtd.json",
+      "sha256": "54f916fed4fdf9a0f8852109c5c8fdeee179515a694d246120547554cd58d8ad"
     }
   ],
   "surfaces": [
+    {
+      "surface_id": "surface.mcp.fixed_cargo_operation",
+      "kind": "mcp",
+      "registered": true,
+      "name": "fixed_cargo_operation",
+      "aliases": [],
+      "owner": "Registered adapter crates/vibe-mcp/src/tools/fixed_cargo_operation.rs delegates generated fixed Cargo actions to the existing FixedCargoRoute and lifecycle build journal.",
+      "target": "Only host-granted fixture-tool at a physically compared project root; MCP arguments cannot select root, namespace, principal, mechanism route or toolchain.",
+      "effects": [
+        "Submit one fixed offline Cargo build through the incumbent C1/build journal, or inspect its retained result. Same scoped key attaches without a second Cargo invocation."
+      ],
+      "authority": "An explicit trusted CargoGrantService host route must be installed in ServerContext. The default MCP context and request body cannot issue or reattach a namespace.",
+      "carrier": "Generated schema=1 fixed Cargo action request/reply/error, nested internally in the registered operation envelope. Nullable scope/run/view and owner effect observation remain explicit.",
+      "schema_ref": "schemas/machine/e1/fixed_cargo_action_request.jtd.json; schemas/machine/e1/fixed_cargo_action_reply.jtd.json; schemas/machine/e1/fixed_cargo_action_error.jtd.json; schemas/machine/e1/operation_envelope.jtd.json",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Only submit/inspect for the fixed dependency-free offline Cargo fixture target. No general Cargo, arbitrary package/provider/argv, hermetic rustup guarantee, new grant issuer or whole machine API.",
+      "retention": "The lifecycle build journal owns C1 reservation and result. Completed retains the ambient-rustup-unproven warning; missing or damaged result remains uncertain/recovery-required without redispatch.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage",
+        "proposed:cross-surface-same-key"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/context.rs",
+        "source:crates/vibe-mcp/src/tools/fixed_cargo_operation.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_cargo.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_cargo/dispatch.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_cargo/envelope.rs",
+        "source:crates/vibe-orchestrator/src/machine_submission/cargo_grant.rs",
+        "source:schemas/machine/e1/fixed_cargo_action_request.jtd.json",
+        "source:schemas/machine/e1/fixed_cargo_action_reply.jtd.json",
+        "source:schemas/machine/e1/fixed_cargo_action_error.jtd.json",
+        "source:schemas/machine/e1/operation_envelope.jtd.json"
+      ],
+      "disposition": "operation",
+      "reason": "Current bounded C4 source delta for a newly registered fixed Cargo adapter; source/registration evidence does not itself grant the host, prove a hermetic toolchain or close the wider facade.",
+      "operation_id": "operation.mcp.fixed_cargo_operation"
+    },
     {
       "surface_id": "surface.mcp.lifecycle_operation",
       "kind": "mcp",
