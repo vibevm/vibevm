@@ -46,7 +46,7 @@ name = "review-lab"</fence>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"/>
   </create-project>
   <scaffold title="Шаг 2: создать заготовку пакета">
-    <p>1. Добавьте в проект пакет. Это `flow`, пакет рабочих правил для агента, и он просит формат `normal`, смысл которого объясняет шаг 4. Заготовка пишет `normal` и тогда, когда `--format` не указан:</p>
+    <p>1. Добавьте в проект пакет `flow` с рабочими правилами для агента. Заготовка по умолчанию пишет `format = "normal"`; его смысл объясняет шаг 4. В примере `--format` опущен, чтобы показать это значение по умолчанию:</p>
     <example ref="init-package"/>
     <p>2. Откройте манифест, который написала заготовка:</p>
     <example ref="manifest"/>
@@ -61,6 +61,8 @@ link = "static"</fence>
     <p>[Тип связи](../glossary/index.xml#link-type) (*link type*) говорит, как текст пакета доходит до агента. При `static` vibe компилирует текст в тот единственный файл, который агент читает первым, целиком, в начале каждой сессии. При `dynamic`, выборе заготовки, он перечисляет файл, чтобы агент открыл его сам. Эта страница берёт `static`, чтобы вы увидели компилятор за работой.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-STATIC"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-DYNAMIC"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-082#INIT-PACKAGE-FORMAT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-082#INIT-PACKAGE-LINK"/>
   </scaffold>
   <anchors-and-facts title="Шаг 3: якоря и факты, в Markdown">
     <p>Пакету нужны два документа. Первый — заметка, которую агент читает в начале сессии, [стартовый фрагмент](../glossary/index.xml#boot-snippet) (*boot snippet*) пакета. Второй — контракт: сами правила, каждое со своим адресом.</p>

@@ -65,9 +65,9 @@ name = "review-lab"</fence>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"/>
   </create-project>
   <scaffold title="Step 2: scaffold the package">
-    <p>1. Add a package to the project. It is a `flow`, a package of working rules for an agent, and it asks for the `normal` format, whose meaning step 4 explains. The scaffold also writes `normal` when `--format` is omitted:</p>
+    <p>1. Add a `flow` package of working rules for an agent. The scaffold writes `format = "normal"` by default; step 4 explains that format. Here `--format` is omitted so the example shows the default:</p>
     <example id="init-package" fixture="xml-lab">
-      <run>vibe init package org.acme/review --kind flow --format normal</run>
+      <run>vibe init package org.acme/review --kind flow</run>
       <expect>Creating package `org.acme/review` in `&lt;TMP&gt;/work/review-lab`
   ✓ created  vibevm/vibepacks/org.acme/review/v0.1.0/vibe.toml
   ✓ created  vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/boot/10-flow-review.md
@@ -113,6 +113,8 @@ link = "static"</fence>
     <p>The [link type](../glossary/index.xml#link-type) says how the package's text reaches the agent. With `static`, vibe compiles the text into the one file an agent reads first, in full, at every session start. With `dynamic`, the scaffold's choice, it lists the file for the agent to open on its own. This page uses `static`, so that you can watch the compiler work.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-STATIC"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-DYNAMIC"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-082#INIT-PACKAGE-FORMAT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-082#INIT-PACKAGE-LINK"/>
   </scaffold>
   <anchors-and-facts title="Step 3: anchors and facts, in Markdown">
     <p>The package needs two documents. The first is the note an agent reads at session start, the package's [boot snippet](../glossary/index.xml#boot-snippet). The second is the contract: the rules themselves, each with an address.</p>
