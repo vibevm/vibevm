@@ -29,6 +29,7 @@ fn absent_migration_flags_preserve_compatibility() {
     let args = serve(&["probe", "serve"]);
     assert_eq!(args.path, PathBuf::from("."));
     assert_eq!(args.fixed_package, None);
+    assert_eq!(args.fixed_cargo, None);
     assert_eq!(args.ttl_ms, None);
     assert_eq!(args.migration_recovery_store, None);
     assert!(args.migration_file.is_empty());
@@ -67,6 +68,47 @@ fn fixed_package_mode_is_explicit_and_ttl_is_issue_only() {
     assert!(NativeMcpParser::try_parse_from(["probe", "serve", "--ttl-ms", "60000"]).is_err());
     assert!(
         NativeMcpParser::try_parse_from(["probe", "serve", "--fixed-package", "other"]).is_err()
+    );
+}
+
+#[test]
+fn fixed_cargo_mode_is_explicit_and_excludes_package_grant() {
+    let issue = serve(&[
+        "probe",
+        "serve",
+        "--path",
+        "/project",
+        "--fixed-cargo",
+        "issue",
+        "--ttl-ms",
+        "60000",
+    ]);
+    assert_eq!(issue.fixed_cargo, Some(mcp_args::McpFixedCargoMode::Issue));
+    assert_eq!(issue.fixed_package, None);
+    assert_eq!(issue.ttl_ms, Some(60_000));
+    let reattach = serve(&[
+        "probe",
+        "serve",
+        "--path",
+        "/project",
+        "--fixed-cargo",
+        "reattach",
+    ]);
+    assert_eq!(
+        reattach.fixed_cargo,
+        Some(mcp_args::McpFixedCargoMode::Reattach)
+    );
+    assert_eq!(reattach.ttl_ms, None);
+    assert!(
+        NativeMcpParser::try_parse_from([
+            "probe",
+            "serve",
+            "--fixed-package",
+            "issue",
+            "--fixed-cargo",
+            "issue",
+        ])
+        .is_err()
     );
 }
 

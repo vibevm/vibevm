@@ -144,6 +144,11 @@ Tools:
   `uncertain` and `recovery_required` results, and read the completed result's
   `ambient-rustup-unproven` warning: this fixed operation does not attest a
   hermetic toolchain or offer general Cargo execution.
+  The local CLI can grant this fixed route for one absolute project root with
+  `vibe mcp serve --path <absolute-project-root> --fixed-cargo issue --ttl-ms <1..=86400000>`;
+  after process loss, use the same root with `--fixed-cargo reattach`.
+  Ordinary `vibe mcp serve` stays ungranted, and failed reattach never issues
+  a replacement namespace.
 - **`fixed_package_operation`** — submit or inspect only the one fixed static-file
   package copy from `source.bin` to `target/vibe-package/launcher/launcher.bin`,
   when the embedding explicitly supplies a trusted package route. Send

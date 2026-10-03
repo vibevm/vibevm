@@ -1,0 +1,29 @@
+{
+  "receipt_id": "fixed-cargo-mcp-serve-current-source-delta",
+  "scope": "Current-byte observation of the explicit CLI MCP fixed Cargo host issue/reattach grammar and composition. Earlier captures and the package delta remain historical.",
+  "historical_baseline_capture_id": "capability-baseline-4a3f80a34",
+  "historical_observation_capture_id": "entity-view-observed-c2a31e642",
+  "sources": [
+    {
+      "path": "crates/vibe-cli/src/cli/mcp.rs",
+      "sha256": "eb88200b6c2b5cd62d81d4c9741f52d175250e74bf53f0d554caf49fa80eb2dc",
+      "previous_ledger_sha256": "a62d9d6400c354fd645c7317d833819a210bce798e1ab83da945ce1449803c59",
+      "change": "mutually exclusive fixed Cargo startup grammar"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "sha256": "078a34fac54e018a69360d1a4f1217286f935ea241a4773b213fb650df3a0ad9",
+      "previous_ledger_sha256": "8c3e53c857beffc37290f145666a690f81068907fad1dbba2d87a112324e3e60",
+      "change": "trusted fixed Cargo host composition for MCP stdio"
+    }
+  ],
+  "counts": {
+    "sources": 249,
+    "surfaces": 246,
+    "operation_identities": 218,
+    "registered_mcp": 18,
+    "models": 35,
+    "planned_families": 15
+  },
+  "limitations": "An explicit absolute-root issue/reattach choice is required for this fixed Cargo subroute. Default serve remains ungranted; ambient rustup remains unproven and no general Cargo capability is claimed."
+}
