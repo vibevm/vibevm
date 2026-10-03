@@ -1,0 +1,112 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "reply": {
+      "ref": "reply"
+    }
+  },
+  "definitions": {
+    "reply": {
+      "discriminator": "kind",
+      "mapping": {
+        "completed": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            },
+            "receipt_format_id": {
+              "enum": [
+                "deploy-receipt"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "receipt_json": {
+              "type": "string",
+              "metadata": {
+                "description": "Nested canonical epoch-1 DeployReceipt JSON. The adapter must use the registered generated reader and validate_receipt, then compare exact DTO with the incumbent owner receipt before publication. Shape alone treats this as text.",
+                "x-max-bytes": 262144
+              }
+            }
+          }
+        },
+        "uncertain": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            },
+            "partial": {
+              "ref": "partial"
+            }
+          }
+        },
+        "recovery_required": {
+          "properties": {
+            "run_id": {
+              "type": "string"
+            }
+          }
+        },
+        "retired": {
+          "properties": {
+            "run_id": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "absent": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "partial": {
+      "properties": {
+        "intent": {
+          "ref": "record_observation"
+        },
+        "receipt": {
+          "ref": "record_observation"
+        },
+        "sidecar": {
+          "ref": "record_observation"
+        }
+      }
+    },
+    "record_observation": {
+      "discriminator": "kind",
+      "mapping": {
+        "absent": {
+          "properties": {}
+        },
+        "present": {
+          "properties": {}
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Owner observation for only the fixed bound vibe-bin Deploy route; never authority. Completed carries the full generated deploy-receipt through a registered nested format. Partial intent/receipt/sidecar observations are explicit and do not prove completion. The adapter enforces epoch, bounds, receipt validation and owner equality.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::fixed_deploy_action_reply"
+    }
+  }
+}

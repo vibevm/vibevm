@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "action": {
+      "ref": "action"
+    }
+  },
+  "definitions": {
+    "action": {
+      "discriminator": "kind",
+      "mapping": {
+        "submit": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        },
+        "inspect": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Fixed host-admitted bound vibe-bin Deploy action data; never authority. Only submit/inspect and a bounded C1 key are request-owned. Profile, target, binding, three physical roots, generation, policy and namespace come from the trusted host.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::fixed_deploy_action_request"
+    }
+  }
+}

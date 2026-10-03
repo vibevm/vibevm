@@ -1569,3 +1569,30 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-fixed-cargo-action-error/e1"
 sunset = "none"
+
+[format.machine-fixed-deploy-action-request]
+epoch = 1
+schema = "schemas/machine/e1/fixed_deploy_action_request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-fixed-deploy-action-request/e1"
+sunset = "none"
+
+[format.machine-fixed-deploy-action-reply]
+epoch = 1
+schema = "schemas/machine/e1/fixed_deploy_action_reply.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-fixed-deploy-action-reply/e1"
+sunset = "none"
+
+[format.machine-fixed-deploy-action-error]
+epoch = 1
+schema = "schemas/machine/e1/fixed_deploy_action_error.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/machine-fixed-deploy-action-error/e1"
+sunset = "none"
