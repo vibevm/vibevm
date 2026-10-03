@@ -9,9 +9,13 @@ use super::bridge::{
 use super::state::{DeployState, DeploymentHome};
 use super::support::{Fixture, selection};
 use crate::process::propose_run_id;
+use crate::retained_mechanism::{
+    DeployColdHostFacts, DeployInspection, FixedDeployHostAdmission, submit_fixed_bound_vibe_bin,
+};
 use crate::{
     JournalAdmission, LifecycleLease, ReservationDecision, SubmissionReservations, SubmissionScope,
 };
+use vibe_core::manifest::{DeployTarget, Manifest};
 use vibe_wire::generated::shared::{
     EnvironmentOperationBindingTargetMode as Mode, EnvironmentOperationBindingTargetOs as Os,
     EnvironmentOperationBindingTargetRole as Role,
@@ -79,6 +83,398 @@ fn scope(instance: &str) -> SubmissionScope {
         target: instance.into(),
         principal: "principal-a".into(),
     }
+}
+
+fn authored_targets(fixture: &Fixture) -> Vec<DeployTarget> {
+    let source = concat!(
+        "[project]\nname = 'demo'\nversion = '1.1.0'\n\n",
+        "[[artifacts.build]]\nid = 'helper'\nmechanism = 'build:cargo'\n",
+        "outputs = [{ id = 'helper.exe', kind = 'executable' }]\n\n",
+        "[[deploy.target]]\nid = 'local-helper'\nartifact = 'helper.exe'\n",
+        "mechanism = 'deploy:vibe-bin'\ndepends_on = []\n",
+        "config = { command = 'local-helper' }\n\n",
+        "[deploy.profiles.local]\ntargets = ['local-helper']\n",
+    );
+    std::fs::write(fixture.project.path().join("vibe.toml"), source).unwrap();
+    Manifest::parse_str(source).unwrap().deploy.unwrap().targets
+}
+
+fn public_facts<'a>(
+    execution: &super::DeployExecution<'a>,
+    instance: &'a str,
+) -> DeployColdHostFacts<'a> {
+    DeployColdHostFacts {
+        host_context_id: "host-test-context",
+        instance_ref: instance,
+        selected_generation_ref: Some("generation-a"),
+        principal_ref: "principal-a",
+        admission_epoch: 1,
+        binding_nonce: instance,
+        allow_alias_resolution: false,
+        target_abi: None,
+        target_libc: None,
+        project_root: execution.project_root,
+        settings_root: execution.settings_root,
+        user_home: execution.user_home,
+    }
+}
+
+#[test]
+fn public_authored_fixed_deploy_submit_and_replay_keep_one_owner_run() {
+    let fixture = Fixture::new("public-bound-bytes");
+    let targets = authored_targets(&fixture);
+    let selected = selection("local", &["local-helper"]);
+    let state_home = fixture.state_home();
+    let execution = fixture.execution(&targets, &selected, &state_home);
+    let lease = LifecycleLease::acquire(execution.project_root).unwrap();
+    let trusted = scope("public-instance");
+    let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+    let mut generation = || Ok(Some("generation-a".to_owned()));
+    let permit = FixedDeployHostAdmission::issue_from_trusted_host(
+        &lease,
+        &namespace,
+        &trusted,
+        "same-key",
+        &execution,
+        public_facts(&execution, "public-instance"),
+        &mut generation,
+    )
+    .unwrap();
+    let first = submit_fixed_bound_vibe_bin(permit, "same-key", &mut generation).unwrap();
+    let DeployInspection::Completed { run_id, result } = &first else {
+        panic!("fixed authored deployment did not complete: {first:?}")
+    };
+    assert_eq!(result.receipt.profile, "local");
+    let record = execution.project_root.join(format!(
+        ".vibe/deploy-operations/{run_id}.bound-vibe-bin-result.json"
+    ));
+    let retained = std::fs::read(&record).unwrap();
+    let c1 = SubmissionReservations::inspect_existing_key(&lease, &namespace, &trusted, "same-key")
+        .unwrap()
+        .unwrap();
+    assert_eq!(&c1.domain_run_id, run_id);
+    assert_eq!(c1.journal_admission, JournalAdmission::Ready);
+    let mut generation = || Ok(Some("generation-a".to_owned()));
+    let replay = FixedDeployHostAdmission::issue_from_trusted_host(
+        &lease,
+        &namespace,
+        &trusted,
+        "same-key",
+        &execution,
+        public_facts(&execution, "public-instance"),
+        &mut generation,
+    )
+    .unwrap();
+    let mut no_second_effect = || -> Result<Option<String>, DeployError> {
+        panic!("same-key replay invoked generation or provider")
+    };
+    assert_eq!(
+        submit_fixed_bound_vibe_bin(replay, "same-key", &mut no_second_effect).unwrap(),
+        first
+    );
+    assert_eq!(std::fs::read(&record).unwrap(), retained);
+    assert_eq!(
+        SubmissionReservations::inspect_existing_key(&lease, &namespace, &trusted, "same-key")
+            .unwrap()
+            .unwrap()
+            .domain_run_id,
+        *run_id
+    );
+    let index: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(
+            execution
+                .project_root
+                .join(".vibe/machine-submissions.json"),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(index["namespaces"].as_object().unwrap().len(), 1);
+    SubmissionReservations::retire_namespace(&lease, &namespace, &trusted).unwrap();
+    let unreserved = FixedDeployHostAdmission::issue_from_trusted_host(
+        &lease,
+        &namespace,
+        &trusted,
+        "unreserved",
+        &execution,
+        public_facts(&execution, "public-instance"),
+        &mut generation,
+    )
+    .unwrap();
+    assert_eq!(
+        submit_fixed_bound_vibe_bin(unreserved, "unreserved", &mut no_second_effect).unwrap(),
+        DeployInspection::Retired { run_id: None },
+    );
+    std::fs::write(
+        execution.project_root.join("vibe.toml"),
+        b"new authored bytes",
+    )
+    .unwrap();
+    drop(lease);
+    let cold_lease = LifecycleLease::acquire(execution.project_root).unwrap();
+    let mut no_new_generation = || -> Result<Option<String>, DeployError> {
+        panic!("reserved old key reread current generation")
+    };
+    let third = FixedDeployHostAdmission::issue_from_trusted_host(
+        &cold_lease,
+        &namespace,
+        &trusted,
+        "same-key",
+        &execution,
+        public_facts(&execution, "public-instance"),
+        &mut no_new_generation,
+    )
+    .unwrap();
+    assert_eq!(
+        submit_fixed_bound_vibe_bin(third, "same-key", &mut no_second_effect).unwrap(),
+        first,
+        "old key must attach to retained capsule after current manifest drift"
+    );
+    assert_eq!(std::fs::read(&record).unwrap(), retained);
+}
+
+#[test]
+fn public_authored_deploy_refuses_profile_scope_generation_and_source_drift_before_effect() {
+    let fixture = Fixture::new("public-refusal-bytes");
+    let targets = authored_targets(&fixture);
+    let selected = selection("local", &["local-helper"]);
+    let foreign_profile = selection("foreign", &["local-helper"]);
+    let foreign_target = selection("local", &["other-target"]);
+    let mut altered_targets = targets.clone();
+    altered_targets[0].config = None;
+    let state_home = fixture.state_home();
+    let execution = fixture.execution(&targets, &selected, &state_home);
+    let bad_execution = fixture.execution(&targets, &foreign_profile, &state_home);
+    let bad_target_execution = fixture.execution(&targets, &foreign_target, &state_home);
+    let bad_config_execution = fixture.execution(&altered_targets, &selected, &state_home);
+    let lease = LifecycleLease::acquire(execution.project_root).unwrap();
+    let trusted = scope("refusal-instance");
+    let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+    let mut generation = || Ok(Some("generation-a".to_owned()));
+    assert!(
+        FixedDeployHostAdmission::issue_from_trusted_host(
+            &lease,
+            &namespace,
+            &trusted,
+            "new",
+            &bad_execution,
+            public_facts(&bad_execution, "refusal-instance"),
+            &mut generation,
+        )
+        .is_err()
+    );
+    assert!(
+        FixedDeployHostAdmission::issue_from_trusted_host(
+            &lease,
+            &namespace,
+            &trusted,
+            "new",
+            &bad_target_execution,
+            public_facts(&bad_target_execution, "refusal-instance"),
+            &mut generation,
+        )
+        .is_err()
+    );
+    assert!(
+        FixedDeployHostAdmission::issue_from_trusted_host(
+            &lease,
+            &namespace,
+            &trusted,
+            "new",
+            &bad_config_execution,
+            public_facts(&bad_config_execution, "refusal-instance"),
+            &mut generation,
+        )
+        .is_err()
+    );
+    let foreign = scope("other-instance");
+    assert!(matches!(
+        FixedDeployHostAdmission::issue_from_trusted_host(
+            &lease,
+            &namespace,
+            &foreign,
+            "new",
+            &execution,
+            public_facts(&execution, "other-instance"),
+            &mut generation,
+        ),
+        Err(
+            crate::retained_mechanism::RetainedMechanismError::Submission(
+                crate::SubmissionError::ForeignScope
+            )
+        )
+    ));
+    let mut stale_generation = || Ok(Some("generation-b".to_owned()));
+    assert!(
+        FixedDeployHostAdmission::issue_from_trusted_host(
+            &lease,
+            &namespace,
+            &trusted,
+            "new",
+            &execution,
+            public_facts(&execution, "refusal-instance"),
+            &mut stale_generation,
+        )
+        .is_err()
+    );
+    let mut wrong_root = public_facts(&execution, "refusal-instance");
+    wrong_root.settings_root = fixture.destination.path();
+    assert!(
+        FixedDeployHostAdmission::issue_from_trusted_host(
+            &lease,
+            &namespace,
+            &trusted,
+            "new",
+            &execution,
+            wrong_root,
+            &mut generation,
+        )
+        .is_err()
+    );
+    let permit = FixedDeployHostAdmission::issue_from_trusted_host(
+        &lease,
+        &namespace,
+        &trusted,
+        "new",
+        &execution,
+        public_facts(&execution, "refusal-instance"),
+        &mut generation,
+    )
+    .unwrap();
+    std::fs::write(execution.project_root.join("vibe.toml"), b"changed source").unwrap();
+    let refusal = submit_fixed_bound_vibe_bin(permit, "new", &mut generation).unwrap_err();
+    assert!(!refusal.effects_may_have_begun);
+    assert!(refusal.known_run_id.is_none() && refusal.owner_observation.is_none());
+    assert!(
+        SubmissionReservations::inspect_existing_key(&lease, &namespace, &trusted, "new")
+            .unwrap()
+            .is_none()
+    );
+    assert!(!execution.settings_root.join("bin").exists());
+    assert!(
+        !execution
+            .project_root
+            .join(".vibe/deploy-operations")
+            .exists()
+    );
+}
+
+#[test]
+fn public_damaged_result_attaches_as_uncertain_without_redeploy() {
+    let fixture = Fixture::new("public-damaged-bytes");
+    let targets = authored_targets(&fixture);
+    let selected = selection("local", &["local-helper"]);
+    let state_home = fixture.state_home();
+    let execution = fixture.execution(&targets, &selected, &state_home);
+    let lease = LifecycleLease::acquire(execution.project_root).unwrap();
+    let trusted = scope("damage-instance");
+    let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+    let mut generation = || Ok(Some("generation-a".to_owned()));
+    let permit = FixedDeployHostAdmission::issue_from_trusted_host(
+        &lease,
+        &namespace,
+        &trusted,
+        "damaged",
+        &execution,
+        public_facts(&execution, "damage-instance"),
+        &mut generation,
+    )
+    .unwrap();
+    let first = submit_fixed_bound_vibe_bin(permit, "damaged", &mut generation).unwrap();
+    let DeployInspection::Completed { run_id, .. } = first else {
+        panic!("first deploy completed")
+    };
+    std::fs::remove_file(execution.project_root.join(format!(
+        ".vibe/deploy-operations/{run_id}.bound-vibe-bin-result.json"
+    )))
+    .unwrap();
+    let permit = FixedDeployHostAdmission::issue_from_trusted_host(
+        &lease,
+        &namespace,
+        &trusted,
+        "damaged",
+        &execution,
+        public_facts(&execution, "damage-instance"),
+        &mut generation,
+    )
+    .unwrap();
+    let mut no_effect =
+        || -> Result<Option<String>, DeployError> { panic!("damaged key redeployed") };
+    assert!(
+        matches!(submit_fixed_bound_vibe_bin(permit, "damaged", &mut no_effect).unwrap(),
+        DeployInspection::Uncertain { run_id: seen, .. } if seen == run_id)
+    );
+}
+
+#[test]
+fn public_post_ready_generation_drift_keeps_run_and_partial_effect_truth() {
+    let fixture = Fixture::new("public-post-ready-bytes");
+    let targets = authored_targets(&fixture);
+    let selected = selection("local", &["local-helper"]);
+    let state_home = fixture.state_home();
+    let execution = fixture.execution(&targets, &selected, &state_home);
+    let lease = LifecycleLease::acquire(execution.project_root).unwrap();
+    let trusted = scope("post-ready-instance");
+    let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+    let mut observations = 0;
+    let mut drift_after_effect = || {
+        observations += 1;
+        Ok(Some(
+            if observations >= 7 {
+                "generation-b"
+            } else {
+                "generation-a"
+            }
+            .to_owned(),
+        ))
+    };
+    let permit = FixedDeployHostAdmission::issue_from_trusted_host(
+        &lease,
+        &namespace,
+        &trusted,
+        "interrupted",
+        &execution,
+        public_facts(&execution, "post-ready-instance"),
+        &mut drift_after_effect,
+    )
+    .unwrap();
+    let first =
+        submit_fixed_bound_vibe_bin(permit, "interrupted", &mut drift_after_effect).unwrap();
+    let DeployInspection::Uncertain { run_id, partial } = first else {
+        panic!("post-Ready generation drift claimed completion")
+    };
+    assert!(observations >= 7);
+    assert_eq!(partial.intent, "present");
+    assert_eq!(partial.sidecar, "present");
+    assert_eq!(
+        SubmissionReservations::journal_admission(
+            &lease,
+            &namespace,
+            &trusted,
+            "interrupted",
+            &run_id,
+        )
+        .unwrap(),
+        JournalAdmission::Ready
+    );
+    let mut current = || Ok(Some("generation-a".to_owned()));
+    let replay = FixedDeployHostAdmission::issue_from_trusted_host(
+        &lease,
+        &namespace,
+        &trusted,
+        "interrupted",
+        &execution,
+        public_facts(&execution, "post-ready-instance"),
+        &mut current,
+    )
+    .unwrap();
+    let mut no_second_effect = || -> Result<Option<String>, DeployError> {
+        panic!("post-Ready replay invoked generation/provider")
+    };
+    assert!(
+        matches!(submit_fixed_bound_vibe_bin(replay, "interrupted", &mut no_second_effect).unwrap(),
+        DeployInspection::Uncertain { run_id: seen, .. } if seen == run_id)
+    );
 }
 
 #[test]

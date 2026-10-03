@@ -1,15 +1,17 @@
-//! Read-only cold attachment to three fixed, retained mechanism owners.
+//! Narrow submission and cold attachment to fixed retained mechanism owners.
 //!
 //! The caller supplies a held lifecycle lease and host-retained C.1 token,
-//! trusted scope and key. No result variant grants an effect. Deploy also
-//! requires a freshly reissued host admission with held physical roots.
+//! trusted scope and key. No inspection result grants an effect. Deploy
+//! submission consumes a separate source-bound host admission; cold inspection
+//! requires a freshly reissued read-only grant with held physical roots.
 
 use std::path::Path;
 
 use chrono::Utc;
 use thiserror::Error;
-use vibe_core::manifest::MechanismRoutes;
+use vibe_core::manifest::{Manifest, MechanismKey, MechanismRoutes, TargetOs};
 use vibe_extension_registry::MechanismRegistry;
+use vibe_safefs::StableFileSnapshot;
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
 use vibe_wire::generated::shared::{
     EnvironmentOperationBindingTargetMode as Mode, EnvironmentOperationBindingTargetOs as Os,
@@ -25,7 +27,8 @@ use crate::mechanism::package::journal::{
     self as package, StaticFileJournalError, StaticFileJournalInspection,
 };
 use crate::{
-    BuildExecution, LifecycleLease, SubmissionError, SubmissionNamespace, SubmissionScope,
+    BuildExecution, DeployExecution, LifecycleLease, SubmissionError, SubmissionNamespace,
+    SubmissionReservations, SubmissionScope,
 };
 
 /// Historical status only. In particular there is no fresh Ready/dispatch
@@ -338,8 +341,9 @@ pub fn inspect_fixed_static_file_package(
 }
 
 /// Facts kept by the trusted host, never parsed from a request or capsule.
-/// These reconstruct only a read-only admission for the original fixed local
-/// UserProfile/ProducedToolRuntime deployment.
+/// These identify the original fixed local UserProfile/ProducedToolRuntime
+/// deployment. Values alone never grant either inspection or effects.
+#[derive(Clone, Copy)]
 pub struct DeployColdHostFacts<'a> {
     pub host_context_id: &'a str,
     pub instance_ref: &'a str,
@@ -363,36 +367,320 @@ pub struct ReadOnlyDeployAdmission {
 
 impl ReadOnlyDeployAdmission {
     pub fn reissue(facts: DeployColdHostFacts<'_>) -> Result<Self, RetainedMechanismError> {
-        let target_os = match std::env::consts::OS {
-            "linux" => Os::Linux,
-            "macos" => Os::Macos,
-            "windows" => Os::Windows,
-            other => {
-                return Err(RetainedMechanismError::Refused(format!(
-                    "unsupported host OS {other}"
-                )));
-            }
-        };
-        let admitted = AdmittedLocalDeployBinding::issue(TrustedLocalDeployFacts {
-            host_context_id: facts.host_context_id,
-            instance_ref: facts.instance_ref,
-            selected_generation_ref: facts.selected_generation_ref,
-            principal_ref: facts.principal_ref,
-            admission_epoch: facts.admission_epoch,
-            binding_nonce: facts.binding_nonce,
-            allow_alias_resolution: facts.allow_alias_resolution,
-            target_mode: Mode::UserProfile,
-            target_role: Role::ProducedToolRuntime,
-            target_os,
-            target_architecture: std::env::consts::ARCH,
-            target_abi: facts.target_abi,
-            target_libc: facts.target_libc,
-            project_root: facts.project_root,
-            settings_root: facts.settings_root,
-            user_home: facts.user_home,
+        Ok(Self {
+            admitted: issue_deploy_binding(&facts)?,
         })
-        .map_err(|error| RetainedMechanismError::Refused(error.to_string()))?;
-        Ok(Self { admitted })
+    }
+}
+
+fn issue_deploy_binding(
+    facts: &DeployColdHostFacts<'_>,
+) -> Result<AdmittedLocalDeployBinding, RetainedMechanismError> {
+    let target_os = match std::env::consts::OS {
+        "linux" => Os::Linux,
+        "macos" => Os::Macos,
+        "windows" => Os::Windows,
+        other => {
+            return Err(RetainedMechanismError::Refused(format!(
+                "unsupported host OS {other}"
+            )));
+        }
+    };
+    AdmittedLocalDeployBinding::issue(TrustedLocalDeployFacts {
+        host_context_id: facts.host_context_id,
+        instance_ref: facts.instance_ref,
+        selected_generation_ref: facts.selected_generation_ref,
+        principal_ref: facts.principal_ref,
+        admission_epoch: facts.admission_epoch,
+        binding_nonce: facts.binding_nonce,
+        allow_alias_resolution: facts.allow_alias_resolution,
+        target_mode: Mode::UserProfile,
+        target_role: Role::ProducedToolRuntime,
+        target_os,
+        target_architecture: std::env::consts::ARCH,
+        target_abi: facts.target_abi,
+        target_libc: facts.target_libc,
+        project_root: facts.project_root,
+        settings_root: facts.settings_root,
+        user_home: facts.user_home,
+    })
+    .map_err(|error| RetainedMechanismError::Refused(error.to_string()))
+}
+
+const DEPLOY_MANIFEST_CAP: usize = 1024 * 1024;
+
+/// A non-cloneable trusted-host permit bound to one key. A fresh key carries an
+/// authored source witness for one effect; a reserved key can only cold-inspect
+/// its retained capsule. Wire data cannot replace roots, profile, target or C1.
+pub struct FixedDeployHostAdmission<'a> {
+    lease: &'a LifecycleLease,
+    namespace: &'a SubmissionNamespace,
+    scope: &'a SubmissionScope,
+    key: String,
+    execution: &'a DeployExecution<'a>,
+    facts: DeployColdHostFacts<'a>,
+    source: Option<StableFileSnapshot>,
+    admitted: AdmittedLocalDeployBinding,
+}
+
+fn authored_fixed_deploy(
+    lease: &LifecycleLease,
+    execution: &DeployExecution<'_>,
+) -> Result<StableFileSnapshot, RetainedMechanismError> {
+    let source = lease
+        .project()
+        .read_file_snapshot_bounded("vibe.toml", DEPLOY_MANIFEST_CAP)
+        .map_err(|error| RetainedMechanismError::Refused(error.to_string()))?
+        .ok_or_else(|| {
+            RetainedMechanismError::Refused("authored deploy manifest is absent".into())
+        })?;
+    let text = std::str::from_utf8(&source.bytes).map_err(|error| {
+        RetainedMechanismError::Refused(format!("deploy manifest is not UTF-8: {error}"))
+    })?;
+    let manifest = Manifest::parse_str(text).map_err(|error| {
+        RetainedMechanismError::Refused(format!("authored deploy manifest: {error}"))
+    })?;
+    let section = manifest.deploy.as_ref().ok_or_else(|| {
+        RetainedMechanismError::Refused("authored deploy section is absent".into())
+    })?;
+    let os = TargetOs::current()
+        .ok_or_else(|| RetainedMechanismError::Refused("host deploy OS is unsupported".into()))?;
+    let projected = section
+        .project_profile(&execution.selection.profile, os)
+        .map_err(|error| {
+            RetainedMechanismError::Refused(format!("authored deploy profile: {error}"))
+        })?;
+    if projected.active_targets() != execution.selection.targets.as_slice()
+        || projected.active_targets().len() != 1
+        || section.targets.len() != 1
+        || execution.targets != section.targets.as_slice()
+    {
+        return Err(RetainedMechanismError::Refused(
+            "host deploy selection or target differs from the authored profile/target".into(),
+        ));
+    }
+    let target = &section.targets[0];
+    let fixed_mechanism: MechanismKey = "deploy:vibe-bin".parse().expect("fixed deploy key");
+    if target.mechanism != fixed_mechanism
+        || target.when.is_some()
+        || target
+            .depends_on
+            .as_ref()
+            .is_some_and(|deps| !deps.is_empty())
+    {
+        return Err(RetainedMechanismError::Refused(
+            "authored fixed deploy requires one unconditional independent vibe-bin target".into(),
+        ));
+    }
+    Ok(source)
+}
+
+impl<'a> FixedDeployHostAdmission<'a> {
+    /// The cooperative host supplies a held lease, C1 authority and physical
+    /// roots. A captured authored manifest independently validates its plan.
+    pub fn issue_from_trusted_host(
+        lease: &'a LifecycleLease,
+        namespace: &'a SubmissionNamespace,
+        scope: &'a SubmissionScope,
+        key: &str,
+        execution: &'a DeployExecution<'a>,
+        facts: DeployColdHostFacts<'a>,
+        current_generation: &mut dyn FnMut() -> Result<Option<String>, crate::DeployError>,
+    ) -> Result<Self, RetainedMechanismError> {
+        lease
+            .ensure_root(execution.project_root, "at fixed deploy admission")
+            .map_err(|error| RetainedMechanismError::Refused(error.to_string()))?;
+        if execution.project_root != facts.project_root
+            || execution.settings_root != facts.settings_root
+            || execution.user_home != facts.user_home
+            || execution.state_home != crate::deploy_state_home(facts.settings_root)
+            || scope.context != facts.host_context_id
+            || scope.target != facts.instance_ref
+            || scope.principal != facts.principal_ref
+            || execution.package.is_some()
+        {
+            return Err(RetainedMechanismError::Refused(
+                "fixed deploy roots, state home, package or C1 scope differ from trusted host"
+                    .into(),
+            ));
+        }
+        SubmissionReservations::validate_namespace(lease, namespace, scope)?;
+        // An existing C1 key is read through its retained capsule, not the
+        // present manifest. This also permits cold recovery after source drift.
+        let existing = SubmissionReservations::inspect_existing_key(lease, namespace, scope, key)?;
+        let source = if existing.is_some() {
+            None
+        } else {
+            Some(authored_fixed_deploy(lease, execution)?)
+        };
+        let admitted = issue_deploy_binding(&facts)?;
+        if source.is_some() {
+            let current = current_generation().map_err(|error| {
+                RetainedMechanismError::Refused(format!("current deploy generation: {error}"))
+            })?;
+            if current.as_deref() != facts.selected_generation_ref {
+                return Err(RetainedMechanismError::Refused(
+                    "current deploy generation differs from host admission".into(),
+                ));
+            }
+        }
+        Ok(Self {
+            lease,
+            namespace,
+            scope,
+            key: key.into(),
+            execution,
+            facts,
+            source,
+            admitted,
+        })
+    }
+}
+
+/// An unsuccessful call retains the owner's actual run/partial truth when it
+/// can be reobserved. Missing observation is never proof of no effects.
+#[derive(Debug, Error)]
+#[error("fixed bound deploy submission failed: {source}")]
+pub struct FixedDeploySubmitError {
+    #[source]
+    pub source: RetainedMechanismError,
+    pub known_run_id: Option<String>,
+    pub owner_observation: Option<DeployInspection>,
+    pub effects_may_have_begun: bool,
+}
+
+/// Submit only the captured, host-admitted one-target bound vibe-bin plan.
+/// The incumbent deploy bridge is the sole C1 reservation/effect journal.
+pub fn submit_fixed_bound_vibe_bin(
+    admission: FixedDeployHostAdmission<'_>,
+    key: &str,
+    current_generation: &mut dyn FnMut() -> Result<Option<String>, crate::DeployError>,
+) -> Result<DeployInspection, FixedDeploySubmitError> {
+    let FixedDeployHostAdmission {
+        lease,
+        namespace,
+        scope,
+        key: captured_key,
+        execution,
+        facts,
+        source,
+        admitted,
+    } = admission;
+    if key != captured_key {
+        return Err(FixedDeploySubmitError {
+            source: RetainedMechanismError::Refused("fixed deploy permit key differs".into()),
+            known_run_id: None,
+            owner_observation: None,
+            effects_may_have_begun: false,
+        });
+    }
+    // A reserved key belongs to its original owner capsule. Current manifest
+    // bytes cannot turn a same-key attach into a fresh effect or erase the
+    // retained result; only a new key needs the fresh source witness below.
+    let existing = SubmissionReservations::inspect_existing_key(lease, namespace, scope, key)
+        .map_err(|error| FixedDeploySubmitError {
+            source: error.into(),
+            known_run_id: None,
+            owner_observation: None,
+            effects_may_have_begun: true,
+        })?;
+    if let Some(existing) = existing {
+        return match deploy::inspect_host_admitted_bound_vibe_bin_cold(
+            lease,
+            namespace.id(),
+            scope,
+            key,
+            &admitted,
+        ) {
+            Ok(Some(observed)) => Ok(map_deploy_observation(Some(observed))),
+            Ok(None) => Err(FixedDeploySubmitError {
+                source: RetainedMechanismError::Refused(
+                    "reserved deploy key has no cold owner observation".into(),
+                ),
+                known_run_id: Some(existing.domain_run_id),
+                owner_observation: None,
+                effects_may_have_begun: true,
+            }),
+            Err(error) => Err(FixedDeploySubmitError {
+                source: deploy_error(error),
+                known_run_id: Some(existing.domain_run_id),
+                owner_observation: None,
+                effects_may_have_begun: true,
+            }),
+        };
+    }
+    let Some(source) = source else {
+        return Err(FixedDeploySubmitError {
+            source: RetainedMechanismError::Refused(
+                "existing deploy key lost its retained C1 reservation".into(),
+            ),
+            known_run_id: None,
+            owner_observation: None,
+            effects_may_have_begun: true,
+        });
+    };
+    let changed = lease
+        .project()
+        .read_file_snapshot_bounded("vibe.toml", DEPLOY_MANIFEST_CAP)
+        .map_err(|error| error.to_string());
+    if !matches!(changed, Ok(Some(ref current)) if *current == source) {
+        return Err(FixedDeploySubmitError {
+            source: RetainedMechanismError::Refused(
+                "authored deploy manifest changed before submit".into(),
+            ),
+            known_run_id: None,
+            owner_observation: None,
+            effects_may_have_begun: false,
+        });
+    }
+    let binding = admitted.binding().clone();
+    match deploy::submit_host_admitted_bound_vibe_bin(
+        lease,
+        namespace,
+        scope,
+        key,
+        execution,
+        &binding,
+        admitted,
+        facts.principal_ref,
+        current_generation,
+    ) {
+        Ok(observed) => Ok(map_deploy_observation(Some(observed))),
+        Err(error) => {
+            let known_run_id =
+                SubmissionReservations::inspect_existing_key(lease, namespace, scope, key)
+                    .ok()
+                    .flatten()
+                    .map(|row| row.domain_run_id);
+            let owner_observation = issue_deploy_binding(&facts)
+                .ok()
+                .and_then(|fresh| {
+                    deploy::inspect_host_admitted_bound_vibe_bin_cold(
+                        lease,
+                        namespace.id(),
+                        scope,
+                        key,
+                        &fresh,
+                    )
+                    .ok()
+                })
+                .map(map_deploy_observation);
+            let known_run_id = known_run_id.or_else(|| match owner_observation.as_ref() {
+                Some(
+                    DeployInspection::Completed { run_id, .. }
+                    | DeployInspection::Uncertain { run_id, .. }
+                    | DeployInspection::RecoveryRequired { run_id },
+                ) => Some(run_id.clone()),
+                Some(DeployInspection::Retired { run_id }) => run_id.clone(),
+                Some(DeployInspection::Absent) | None => None,
+            });
+            Err(FixedDeploySubmitError {
+                source: deploy_error(error),
+                known_run_id,
+                owner_observation,
+                effects_may_have_begun: true,
+            })
+        }
     }
 }
 
@@ -413,7 +701,11 @@ pub fn inspect_bound_vibe_bin_deploy(
         &admission.admitted,
     )
     .map_err(deploy_error)?;
-    Ok(match observed {
+    Ok(map_deploy_observation(observed))
+}
+
+fn map_deploy_observation(observed: Option<BoundDeployBridgeInspection>) -> DeployInspection {
+    match observed {
         None => RetainedInspection::Absent,
         Some(BoundDeployBridgeInspection::Retired { run_id }) => {
             RetainedInspection::Retired { run_id }
@@ -437,7 +729,7 @@ pub fn inspect_bound_vibe_bin_deploy(
             run_id,
             result: DeployCompletion { receipt },
         },
-    })
+    }
 }
 
 #[cfg(test)]
