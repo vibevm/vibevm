@@ -395,6 +395,100 @@ fn explicit_trace_requires_typed_answer_and_retains_one_owner_run() {
     );
     f.count();
 }
+
+#[test]
+fn explicit_force_requires_typed_answer_and_retains_effective_owner_intent() {
+    let f = Fixture::new();
+    let mut s = f.server(f.host(true));
+    let prepared = call(
+        &mut s,
+        json!({"schema":1,"action":{"kind":"prepare","phase":"validate","requested_options":{"force":true,"trace":false,"deploy_profile":null,"control":"none"}}}),
+    );
+    assert_eq!(prepared["isError"], false, "{prepared}");
+    let mut question: d::InputDecisionMessage = serde_json::from_str(
+        prepared["structuredContent"]["reply"]["payload_json"]
+            .as_str()
+            .unwrap(),
+    )
+    .unwrap();
+    assert!(question.requested_options.force);
+    assert!(matches!(question.body, d::Body::SelectionQuestion(_)));
+    let mut premature = question.clone();
+    premature.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    assert_eq!(answer(&mut s, &premature)["isError"], true);
+    let mut foreign = question.clone();
+    foreign.principal_id = Some("foreign".into());
+    foreign.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    assert_eq!(answer(&mut s, &foreign)["isError"], true);
+    f.no_provider();
+
+    question.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    let selected = answer(&mut s, &question);
+    assert_eq!(selected["isError"], false, "{selected}");
+    let mut approval: d::InputDecisionMessage = serde_json::from_str(
+        selected["structuredContent"]["reply"]["payload_json"]
+            .as_str()
+            .unwrap(),
+    )
+    .unwrap();
+    assert!(approval.requested_options.force);
+    assert!(matches!(approval.body, d::Body::ApprovalQuestion(_)));
+    assert_ne!(approval.plan_id, question.plan_id);
+    let reference = approval.question_id.clone().unwrap();
+    let mut changed = approval.clone();
+    changed.requested_options.force = false;
+    changed.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    assert_eq!(answer(&mut s, &changed)["isError"], true);
+    f.no_provider();
+    approval.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let validated = answer(&mut s, &approval);
+    assert_eq!(validated["isError"], false, "{validated}");
+    assert_eq!(
+        validated["structuredContent"]["reply"]["accepted_ref"],
+        reference
+    );
+
+    let initial = submit(&mut s, &reference, "force-once");
+    assert_eq!(initial["isError"], false, "{initial}");
+    until(|| f.dir.path().join("entered").exists());
+    f.release();
+    let mut terminal = Value::Null;
+    until(|| {
+        let observed = inspect(&mut s, "force-once");
+        if observed["isError"] == false
+            && matches!(row(&observed).status, v::Status::ResultAvailable(_))
+        {
+            terminal = observed;
+            true
+        } else {
+            false
+        }
+    });
+    let run = row(&terminal).run_id.unwrap();
+    let admitted: Value = serde_json::from_slice(
+        &fs::read(f.dir.path().join(format!(
+            ".vibe/lifecycle-outcomes/{run}.admitted-input.json"
+        )))
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(admitted["request"]["requested_options"]["force"], true);
+    assert_eq!(admitted["plan"]["requested_options"]["force"], true);
+    assert_eq!(admitted["plan"]["base_v4"]["force"], false);
+    let replay = submit(&mut s, &reference, "force-once");
+    assert_eq!(replay["isError"], false, "{replay}");
+    assert_eq!(row(&replay).run_id.as_deref(), Some(run.as_str()));
+    let lease = LifecycleLease::acquire(f.dir.path()).unwrap();
+    let c1 = SubmissionReservations::inspect_existing_key(&lease, &f.ns, &f.scope, "force-once")
+        .unwrap()
+        .unwrap();
+    assert_eq!(c1.domain_run_id, run);
+    f.count();
+}
 #[test]
 fn physical_root_replacement_and_source_drift_do_not_execute() {
     let f = Fixture::new();
