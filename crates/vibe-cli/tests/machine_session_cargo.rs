@@ -5,9 +5,11 @@ use serde_json::{Value, json};
 use std::{
     fs,
     io::{Read, Write},
-    path::PathBuf,
+    path::{Path, PathBuf},
     process::{Child, Command, Stdio},
-    sync::Arc,
+    sync::{Arc, Barrier, mpsc},
+    thread,
+    time::Duration,
 };
 use vibe_core::manifest::TargetOs;
 use vibe_mcp::ServerContext;
@@ -211,6 +213,26 @@ fn envelope(frame: &f::SessionFrame) -> Value {
         other => panic!("unexpected response: {other:?}"),
     };
     serde_json::from_str(json).unwrap()
+}
+
+fn mcp_cargo_context(root: &Path) -> ServerContext {
+    let service = CargoGrantService::from_trusted_builtin_host(
+        Arc::new(vibe_safefs::Project::open(root).unwrap()),
+        "vibe-cli-project-local/e1".into(),
+        TargetOs::current().unwrap(),
+    )
+    .unwrap();
+    let route = Arc::new(FixedCargoRoute::new(Arc::new(service.reattach().unwrap())));
+    ServerContext::with_store_root(root, root.join("unused"))
+        .with_fixed_cargo_route(route)
+        .unwrap()
+}
+
+fn mcp_cargo_submit(context: ServerContext, key: &str) -> Value {
+    let request = json!({"jsonrpc":"2.0","id":7,"method":"tools/call","params":{
+        "name":"fixed_cargo_operation","arguments":{"schema":1,"action":{"kind":"submit","key":key}}
+    }});
+    serde_json::from_str(&vibe_mcp::dispatch_one(context, &request.to_string()).unwrap()).unwrap()
 }
 
 #[test]
@@ -420,6 +442,142 @@ fn cli_issued_scope_mcp_submit_and_local_reattach_share_one_cargo_run() {
             .values()
             .next()
             .unwrap()["keys"]
+            .as_object()
+            .unwrap()
+            .len(),
+        1
+    );
+}
+
+#[test]
+fn cli_and_registered_mcp_race_one_scoped_cargo_key() {
+    let fixture = Fixture::new();
+    Client::new(
+        fixture
+            .cargo_command("issue", Some("60000"))
+            .spawn()
+            .unwrap(),
+    )
+    .finish();
+    let pointer = fs::read(fixture.pointer()).unwrap();
+    let root = fixture.root();
+    let context = mcp_cargo_context(&root);
+    let mut local = Client::new(fixture.cargo_command("reattach", None).spawn().unwrap());
+    let barrier = Arc::new(Barrier::new(3));
+    let (tx, rx) = mpsc::channel::<(&'static str, Value)>();
+
+    let local_start = Arc::clone(&barrier);
+    let local_tx = tx.clone();
+    let local_thread = thread::spawn(move || {
+        local_start.wait();
+        let response = local.call(json!({"kind":"submit","key":"raced"}));
+        local.finish();
+        local_tx
+            .send(("cli", serde_json::to_value(response).unwrap()))
+            .unwrap();
+    });
+    let mcp_start = Arc::clone(&barrier);
+    let mcp_thread = thread::spawn(move || {
+        mcp_start.wait();
+        let response = mcp_cargo_submit(context, "raced");
+        tx.send(("mcp", response)).unwrap();
+    });
+    barrier.wait();
+    let first = rx
+        .recv_timeout(Duration::from_secs(90))
+        .expect("first racing surface timed out");
+    let second = rx
+        .recv_timeout(Duration::from_secs(90))
+        .expect("second racing surface timed out");
+    local_thread.join().unwrap();
+    mcp_thread.join().unwrap();
+    assert_ne!(first.0, second.0);
+    let (local, mcp) = if first.0 == "cli" {
+        (first.1, second.1)
+    } else {
+        (second.1, first.1)
+    };
+    let local: f::SessionFrame = serde_json::from_value(local).unwrap();
+    let local_view = envelope(&local);
+    let local_payload: Value =
+        serde_json::from_str(local_view["body"]["payload_json"].as_str().unwrap()).unwrap();
+    let mcp_payload = &mcp["result"]["structuredContent"];
+    let owner = match (
+        outcome(&local).effect_state.clone(),
+        mcp["result"]["isError"].as_bool(),
+    ) {
+        (f::OutcomeEffectState::Completed, Some(false)) => {
+            assert_eq!(local_payload, *mcp_payload);
+            local_payload
+        }
+        (f::OutcomeEffectState::Completed, Some(true)) => {
+            assert_eq!(mcp_payload["code"], "submission_refused", "{mcp}");
+            assert_eq!(mcp_payload["effect_observation"], "none", "{mcp}");
+            assert!(mcp_payload["known_run_id"].is_null(), "{mcp}");
+            assert!(
+                mcp_payload["message"]
+                    .as_str()
+                    .unwrap()
+                    .contains("Lease(Busy"),
+                "{mcp}"
+            );
+            let retry = mcp_cargo_submit(mcp_cargo_context(&root), "raced");
+            assert_eq!(retry["result"]["isError"], false, "{retry}");
+            assert_eq!(retry["result"]["structuredContent"], local_payload);
+            local_payload
+        }
+        (f::OutcomeEffectState::NoEffects, Some(false)) => {
+            assert_eq!(local_payload["code"], "submission_refused", "{local:?}");
+            assert_eq!(local_payload["effect_observation"], "none", "{local:?}");
+            assert!(local_payload["known_run_id"].is_null(), "{local:?}");
+            assert!(
+                local_payload["message"]
+                    .as_str()
+                    .unwrap()
+                    .contains("Lease(Busy"),
+                "{local:?}"
+            );
+            let mut retry = Client::new(fixture.cargo_command("reattach", None).spawn().unwrap());
+            let replay = retry.call(json!({"kind":"submit","key":"raced"}));
+            assert_eq!(
+                outcome(&replay).effect_state,
+                f::OutcomeEffectState::Completed
+            );
+            let replay_view = envelope(&replay);
+            let replay_owner: Value =
+                serde_json::from_str(replay_view["body"]["payload_json"].as_str().unwrap())
+                    .unwrap();
+            retry.finish();
+            assert_eq!(replay_owner, *mcp_payload);
+            replay_owner
+        }
+        other => panic!("unexpected race outcome {other:?}: local={local:?}; mcp={mcp}"),
+    };
+    assert_eq!(owner["reply"]["kind"], "completed");
+    let run = owner["reply"]["run_id"].as_str().unwrap();
+    let result_dir = root.join(".vibe/build-operations");
+    let results = fs::read_dir(&result_dir)
+        .unwrap()
+        .map(|entry| entry.unwrap().path())
+        .filter(|path| path.to_string_lossy().ends_with(".cargo-result.json"))
+        .collect::<Vec<_>>();
+    assert_eq!(results.len(), 1, "one retained effect result: {results:?}");
+    assert_eq!(
+        results[0],
+        result_dir.join(format!("{run}.cargo-result.json"))
+    );
+    assert!(
+        root.join(owner["reply"]["output_relative"].as_str().unwrap())
+            .is_file()
+    );
+    assert_eq!(fs::read(fixture.pointer()).unwrap(), pointer);
+    let index: Value =
+        serde_json::from_slice(&fs::read(root.join(".vibe/machine-submissions.json")).unwrap())
+            .unwrap();
+    let namespaces = index["namespaces"].as_object().unwrap();
+    assert_eq!(namespaces.len(), 1);
+    assert_eq!(
+        namespaces.values().next().unwrap()["keys"]
             .as_object()
             .unwrap()
             .len(),
