@@ -73,8 +73,8 @@ use vibe_orchestrator::machine_submission::cargo_grant::CargoGrantService;
 use vibe_orchestrator::machine_submission::package_grant::PackageGrantService;
 
 use crate::cli::{
-    McpArgs, McpFixedCargoMode, McpFixedPackageMode, McpInstallArgs, McpServeArgs, McpStatusArgs,
-    McpSubcommand, McpUninstallArgs, McpUpgradeArgs,
+    McpArgs, McpFixedCargoMode, McpFixedPackageMode, McpFixedValidateMode, McpInstallArgs,
+    McpServeArgs, McpStatusArgs, McpSubcommand, McpUninstallArgs, McpUpgradeArgs,
 };
 use crate::exit_code::InstallError;
 use crate::output;
@@ -303,19 +303,28 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     // server needs a project root to load the lockfile from. When
     // launched by a user-scope MCP entry that omits `--path`, the
     // server uses CWD (default value `.`).
-    if (args.fixed_package.is_some() || args.fixed_cargo.is_some()) && !args.path.is_absolute() {
+    if (args.fixed_validate.is_some() || args.fixed_package.is_some() || args.fixed_cargo.is_some())
+        && !args.path.is_absolute()
+    {
         bail!(
             "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT: fixed effectful MCP host requires an explicit absolute --path; fix surface: --path <absolute-project-root>"
         );
     }
-    match (args.fixed_package, args.fixed_cargo, args.ttl_ms) {
-        (Some(McpFixedPackageMode::Issue), None, Some(_))
-        | (Some(McpFixedPackageMode::Reattach), None, None)
-        | (None, Some(McpFixedCargoMode::Issue), Some(_))
-        | (None, Some(McpFixedCargoMode::Reattach), None)
-        | (None, None, None) => {}
+    match (
+        args.fixed_validate,
+        args.fixed_package,
+        args.fixed_cargo,
+        args.ttl_ms,
+    ) {
+        (Some(McpFixedValidateMode::Issue), None, None, Some(_))
+        | (Some(McpFixedValidateMode::Reattach), None, None, None)
+        | (None, Some(McpFixedPackageMode::Issue), None, Some(_))
+        | (None, Some(McpFixedPackageMode::Reattach), None, None)
+        | (None, None, Some(McpFixedCargoMode::Issue), Some(_))
+        | (None, None, Some(McpFixedCargoMode::Reattach), None)
+        | (None, None, None, None) => {}
         _ => bail!(
-            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT: fixed host issue requires --ttl-ms and reattach forbids it; fix surface: select exactly one --fixed-package or --fixed-cargo issue --ttl-ms <1..=86400000>, or reattach"
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT: fixed host issue requires --ttl-ms and reattach forbids it; fix surface: select exactly one --fixed-validate, --fixed-package or --fixed-cargo issue --ttl-ms <1..=86400000>, or reattach"
         ),
     }
     let project_root = resolve_project_root_required(&args.path)?;
@@ -336,6 +345,12 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     };
     let server_ctx = match args.fixed_cargo {
         Some(mode) => fixed_cargo_server_context(server_ctx, &project_root, mode, args.ttl_ms)?,
+        None => server_ctx,
+    };
+    let server_ctx = match args.fixed_validate {
+        Some(mode) => {
+            fixed_validate::server_context(server_ctx, &project_root, mode, args.ttl_ms, &args)?
+        }
         None => server_ctx,
     };
     let server_ctx = if let Some(store) = args.migration_recovery_store {
@@ -547,6 +562,7 @@ pub(super) fn resolve_project_root_required(path: &Path) -> Result<PathBuf> {
     Ok(stripped)
 }
 
+mod fixed_validate;
 mod install;
 mod install_prompts;
 mod package_registration;

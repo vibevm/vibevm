@@ -99,6 +99,13 @@ Tools:
   supplied operation host. Registration alone does not
   provide that host: an ordinary default MCP context may return
   `unavailable_host`. Send generated action requests with `schema: 1`.
+  A local cooperating project can explicitly issue the fixed Validate host with
+  `vibe mcp serve --path <absolute-project-root> --fixed-validate issue --ttl-ms <1..=86400000> --approve-captured-script`;
+  use `--fixed-validate reattach` at the same root after process loss, repeating
+  the exact startup policy flags. Optional `--allow-detach`,
+  `--allow-cancel-pre-dispatch` and `--allow-cancel-deferred-boundary` grant only
+  their named control policies. Ordinary `vibe mcp serve` remains ungranted;
+  reattach never revives process-local questions or accepted references.
   Start with `action.kind: "prepare"`, `phase: "validate"`, and explicit
   `requested_options`: `force: false`, `trace: false`,
   `deploy_profile: null`, `control: "none"`. This owner supports the fixed
@@ -115,8 +122,10 @@ Tools:
   Use `action.kind: "inspect"` with the same key to obtain fresh owner state.
   Missing final reports and unavailable effect evidence retain uncertainty;
   a new key does not force execution, and normal freshness may produce NoOp.
-  Tool input cannot mint namespaces or override roots/principals. Other
-  phases, force, trace and deploy profiles are implementation gaps.
+  Tool input cannot mint namespaces or override roots/principals. Explicit
+  `force` and `trace` are available only for the fixed captured-script profile
+  after its typed owner decision and approval; a new key alone implies neither.
+  Other phases and deploy profiles remain implementation gaps.
   Attach a retained Ready job with `action.kind: "attach"` and its `key`.
   Keep the opaque `observer_ref` and actual context/target/operation/run/stream
   binding returned by the owner. `replay` and `control` take that reference

@@ -80,7 +80,7 @@ session and URI mapping are owner-declared, process-local or unverified where
 their domain sources have not been authenticated.
 
 The bounded fixed package MCP addition is recorded separately in
-`fixed-package-operation-source-delta.json`. The current candidate has 249
+`fixed-package-operation-source-delta.json`. That checkpoint had 249
 source rows, 246 surface rows, 218 operation identities, 18 registered MCP
 tools, 35 model families and 15 planned families. Its new MCP row binds the
 fixed package owner route and the already registered request/reply/error values.
@@ -100,3 +100,11 @@ startup bytes. Its host issue/reattach mode is mutually exclusive with fixed
 package, retains the incumbent build journal and exposes the existing
 ambient-rustup warning. It proves neither a hermetic toolchain nor general
 Cargo execution. Default `vibe mcp serve` remains ungranted.
+
+`fixed-validate-mcp-serve-source-delta.json` binds the later fixed Validate
+startup bytes. The current candidate has 250 source rows, 246 surfaces, 218
+operation identities and 18 registered MCP tools. An explicit absolute-root
+issue/reattach mode carries named captured-script and control policy flags;
+default serve remains ungranted. Reattach preserves the host pointer while
+process-local questions and accepted references expire. This proves the
+fixed Validate startup/decision route, not general lifecycle availability.

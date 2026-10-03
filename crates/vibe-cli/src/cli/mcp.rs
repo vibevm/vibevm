@@ -222,7 +222,7 @@ pub struct McpUpgradeArgs {
 #[derive(Debug, clap::Args)]
 #[command(group(
     clap::ArgGroup::new("fixed_host")
-        .args(["fixed_package", "fixed_cargo"])
+        .args(["fixed_validate", "fixed_package", "fixed_cargo"])
         .multiple(false)
 ))]
 #[specmark::spec(
@@ -237,17 +237,37 @@ pub struct McpServeArgs {
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
 
+    /// Explicit cooperative fixed Validate host; omitted means no lifecycle grant.
+    #[arg(long, value_enum, conflicts_with_all = ["fixed_package", "fixed_cargo"])]
+    pub fixed_validate: Option<McpFixedValidateMode>,
+
     /// Explicit cooperative fixed package host; omitted means no package grant.
-    #[arg(long, value_enum, conflicts_with = "fixed_cargo")]
+    #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_cargo"])]
     pub fixed_package: Option<McpFixedPackageMode>,
 
     /// Explicit cooperative fixed offline Cargo host; omitted means no build grant.
-    #[arg(long, value_enum, conflicts_with = "fixed_package")]
+    #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package"])]
     pub fixed_cargo: Option<McpFixedCargoMode>,
 
     /// First issue lifetime in milliseconds; forbidden on reattach.
     #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000), requires = "fixed_host")]
     pub ttl_ms: Option<u64>,
+
+    /// Permit typed approval of the exact captured Validate script.
+    #[arg(long, requires = "fixed_validate")]
+    pub approve_captured_script: bool,
+
+    /// Permit typed detach selection for the fixed Validate owner.
+    #[arg(long, requires = "fixed_validate")]
+    pub allow_detach: bool,
+
+    /// Permit typed cancellation before Validate dispatch.
+    #[arg(long, requires = "fixed_validate")]
+    pub allow_cancel_pre_dispatch: bool,
+
+    /// Permit typed cancellation at a deferred Validate boundary.
+    #[arg(long, requires = "fixed_validate")]
+    pub allow_cancel_deferred_boundary: bool,
 
     /// Explicit absolute recovery store for manifest migration authority.
     /// Omission leaves migration tools ungranted; no store is inferred.
@@ -268,6 +288,12 @@ pub enum McpFixedPackageMode {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum McpFixedCargoMode {
+    Issue,
+    Reattach,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum McpFixedValidateMode {
     Issue,
     Reattach,
 }

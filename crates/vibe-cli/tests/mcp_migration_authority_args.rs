@@ -30,9 +30,59 @@ fn absent_migration_flags_preserve_compatibility() {
     assert_eq!(args.path, PathBuf::from("."));
     assert_eq!(args.fixed_package, None);
     assert_eq!(args.fixed_cargo, None);
+    assert_eq!(args.fixed_validate, None);
     assert_eq!(args.ttl_ms, None);
     assert_eq!(args.migration_recovery_store, None);
     assert!(args.migration_file.is_empty());
+}
+
+#[test]
+fn fixed_validate_mode_requires_explicit_policy_flags_and_excludes_other_hosts() {
+    let issue = serve(&[
+        "probe",
+        "serve",
+        "--path",
+        "/project",
+        "--fixed-validate",
+        "issue",
+        "--ttl-ms",
+        "60000",
+        "--approve-captured-script",
+        "--allow-detach",
+    ]);
+    assert_eq!(
+        issue.fixed_validate,
+        Some(mcp_args::McpFixedValidateMode::Issue)
+    );
+    assert!(issue.approve_captured_script && issue.allow_detach);
+    assert!(!issue.allow_cancel_pre_dispatch && !issue.allow_cancel_deferred_boundary);
+    let cold = serve(&[
+        "probe",
+        "serve",
+        "--path",
+        "/project",
+        "--fixed-validate",
+        "reattach",
+    ]);
+    assert_eq!(
+        cold.fixed_validate,
+        Some(mcp_args::McpFixedValidateMode::Reattach)
+    );
+    assert!(!cold.approve_captured_script);
+    assert!(
+        NativeMcpParser::try_parse_from(["probe", "serve", "--approve-captured-script",]).is_err()
+    );
+    assert!(
+        NativeMcpParser::try_parse_from([
+            "probe",
+            "serve",
+            "--fixed-validate",
+            "issue",
+            "--fixed-package",
+            "issue",
+        ])
+        .is_err()
+    );
 }
 
 #[test]
