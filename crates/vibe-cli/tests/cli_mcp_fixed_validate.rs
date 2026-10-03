@@ -334,6 +334,30 @@ fn real_stdio_explicit_force_keeps_approved_intent_and_one_effect() {
     assert_eq!(fs::read(root.path().join("counter")).unwrap(), b"effect\n");
 }
 
+#[cfg(target_os = "linux")]
+#[test]
+fn real_stdio_unsupported_phase_and_profile_refuse_before_effect() {
+    let user = UserScratch::new();
+    let root = project();
+    let mut server = LiveServer::start(&user, root.path(), "issue");
+    for (phase, profile) in [("build", Value::Null), ("validate", json!("posix"))] {
+        let refused = server.call(json!({
+            "kind":"prepare", "phase":phase,
+            "requested_options":{
+                "force":false,"trace":false,"deploy_profile":profile,"control":"none"
+            }
+        }));
+        assert_eq!(refused["isError"], true, "{phase}: {refused}");
+        assert_eq!(
+            refused["structuredContent"]["code"], "implementation_gap",
+            "{phase}: {refused}"
+        );
+        assert!(!root.path().join("counter").exists());
+        assert!(!root.path().join(".vibe/lifecycle-outcomes").exists());
+    }
+    server.finish();
+}
+
 fn request(action: Value) -> String {
     json!({"jsonrpc":"2.0","id":71,"method":"tools/call",
         "params":{"name":"lifecycle_operation","arguments":{"schema":1,"action":action}}})
