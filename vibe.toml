@@ -26,6 +26,11 @@ link = "dynamic"
 version = "^1.1.0"
 link = "static-transitive"
 
+# The 1.1.0 Zap source bridge contributes no project boot instructions.
+[requires.packages."flow:org.vibevm.zap/zap"]
+version = "=1.1.0"
+link = "dynamic"
+
 [requires.packages."org.vibevm.world/redbook"]
 version = "^1.1.0"
 link = "static-transitive"
