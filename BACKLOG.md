@@ -2473,3 +2473,13 @@ structure, and it goes when the file does.
 | @fact:B225-SEVERITY **severity** | P2 — blocks campaign retirement checks while product implementation can continue; forcing a stale context would give false proof. |
 | @fact:B225-DISPOSITION **disposition** | `resolved` in `78faa8bdf`: the nine accepted `NEXT-STABLE` IDs are shared topology and now exist as planned nodes with no personal evidence in manifest/seed; the 13 `M-16-C.4-R…` atoms remain local, admitted only as exact contractless children of a declared task, with no declared→local dependency. Five stale M-16-C seed witnesses now match the current task file, while refinement children retain their separate witness. Six focused tests passed. The rev396 prototype-regime retirement check passed inventory and next refused only its then-unpromoted clause; no adaptive history was discarded. |
 | @fact:B225-FILED **filed by** | NEXT retirement attempt after local plan rev396, 2026-10-03. |
+
+## B-226 — M-14 release-impact capture import crosses the large-blob gate {#b-226}
+
+| field | value |
+|---|---|
+| @fact:B226-WHAT **what** | `NEXT-GATE-M-14` (environment workstream integration review) needs permanent before/after evidence for at least 33 M-14-B/C product commits before its release-impact records can be accepted. Candidate B and C combined captures exist only in local temporary storage; they have not been promoted to repository evidence. |
+| @fact:B226-EVIDENCE **evidence** | Eight prepared B/C `capture-e1` and `source-capture` JSON files under the operator-local `/tmp/vibevm-next-capture-author/M14-{B,C}-combined/` total 6,923,180 bytes. Their baseline/after subjects are `5e086010c`→`d04a93d74` for B and `3d249e326`→`4bfdf7fb2` for C. The tracked `docs/releases/developer-preview-1-to-2/evidence/environment-workstream-gate.md` names the 33-subject gap and keeps its acceptance open. Temporary paths are review leads, not a durable home. No candidate blob was copied or staged. |
+| @fact:B226-SEVERITY **severity** | P2 — blocks the M-14 gate and complete release-impact accounting; other product atoms and exact local tests can continue. |
+| @fact:B226-DISPOSITION **disposition** | `open` — owner question: authorize review and import of the eight exact captured files as large repository blobs, then bind the B/C records to them; or first approve a compact capture/evidence contract and validator change that preserves exact before/after provenance without those blobs? Do not silently use `/tmp` as permanent evidence, invent capture IDs, weaken the 33-subject denominator or import the blobs before the owner chooses. |
+| @fact:B226-FILED **filed by** | NEXT M-14 workstream gate review, 2026-10-03. |
