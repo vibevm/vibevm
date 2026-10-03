@@ -40,6 +40,7 @@ pub use lifecycle_adapter::{
 mod policy_owner;
 pub use policy_owner::{PolicyError, PolicyOwner, PolicySnapshot, TrustedPolicySource};
 
+pub mod cargo_grant;
 pub mod cli_grant;
 pub mod package_grant;
 
