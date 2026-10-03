@@ -24,8 +24,11 @@ pub struct MachineSessionArgs {
     /// Explicit cooperative same-project fixed Validate host mode.
     #[arg(long, value_enum)]
     pub fixed_validate: Option<FixedValidateMode>,
+    /// Explicit cooperative same-project fixed package host mode.
+    #[arg(long, value_enum, conflicts_with = "fixed_validate")]
+    pub fixed_package: Option<FixedPackageMode>,
     /// First-issue lifetime in milliseconds (1..=86400000); issue only.
-    #[arg(long, requires = "fixed_validate", required_if_eq("fixed_validate", "issue"), value_parser = clap::value_parser!(u64).range(1..=86_400_000))]
+    #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000))]
     pub ttl_ms: Option<u64>,
     /// Permit the caller's exact approval of a captured Validate script.
     #[arg(long, requires = "fixed_validate")]
@@ -43,6 +46,12 @@ pub struct MachineSessionArgs {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum FixedValidateMode {
+    Issue,
+    Reattach,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum FixedPackageMode {
     Issue,
     Reattach,
 }

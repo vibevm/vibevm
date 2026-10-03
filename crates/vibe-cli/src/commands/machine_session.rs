@@ -2,7 +2,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME");
 
 use crate::cli::{
-    AgentModeArg, Cli, FixedValidateMode, MachineArgs, MachineSessionArgs, MachineSubcommand,
+    AgentModeArg, Cli, FixedPackageMode, FixedValidateMode, MachineArgs, MachineSessionArgs,
+    MachineSubcommand,
 };
 use anyhow::{Result, bail};
 use std::{process::ExitCode, sync::Arc};
@@ -11,12 +12,15 @@ use vibe_mcp::{
     ServerContext,
     machine_session::{
         fixed::FixedMachineSessionRunner,
+        package::PackageMachineSessionRunner,
         runner::{MachineSessionRunner, RunnerError},
         state::{MachineSession, TrustedContextKind, TrustedContextSource},
     },
 };
+use vibe_orchestrator::machine_operation::fixed_package::FixedPackageRoute;
 use vibe_orchestrator::machine_submission::{
     HostPolicyFacts, TrustedPolicySource, cli_grant::CliGrantService,
+    package_grant::PackageGrantService,
 };
 
 #[specmark::spec(
@@ -39,22 +43,31 @@ pub(crate) fn run(args: &MachineArgs, cli: &Cli) -> ExitCode {
 }
 
 pub(crate) fn validate_mode(args: &MachineSessionArgs) -> Result<()> {
-    let valid = match args.fixed_validate {
-        Some(FixedValidateMode::Issue) => args
+    let valid = match (args.fixed_validate, args.fixed_package) {
+        (Some(FixedValidateMode::Issue), None) | (None, Some(FixedPackageMode::Issue)) => args
             .ttl_ms
             .is_some_and(|ttl| (1..=86_400_000).contains(&ttl)),
-        Some(FixedValidateMode::Reattach) => args.ttl_ms.is_none(),
-        None => {
+        (Some(FixedValidateMode::Reattach), None) | (None, Some(FixedPackageMode::Reattach)) => {
+            args.ttl_ms.is_none()
+        }
+        (None, None) => {
             args.ttl_ms.is_none()
                 && !args.approve_captured_script
                 && !args.allow_detach
                 && !args.allow_cancel_pre_dispatch
                 && !args.allow_cancel_deferred_boundary
         }
+        _ => false,
     };
+    let valid = valid
+        && (args.fixed_package.is_none()
+            || (!args.approve_captured_script
+                && !args.allow_detach
+                && !args.allow_cancel_pre_dispatch
+                && !args.allow_cancel_deferred_boundary));
     if !valid {
         bail!(
-            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-LOCAL-TRUST-DECISION: invalid fixed Validate mode/permissions/lifetime; fix surface: --fixed-validate issue --ttl-ms <1..=86400000> or --fixed-validate reattach; fixed-only flags require an explicit mode"
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-LOCAL-TRUST-DECISION: invalid fixed mode/permissions/lifetime; fix surface: --fixed-validate or --fixed-package issue --ttl-ms <1..=86400000>, or reattach; Validate permissions require --fixed-validate"
         );
     }
     Ok(())
@@ -85,6 +98,28 @@ fn exchange(args: &MachineSessionArgs) -> Result<()> {
     }
     let root = super::resolve_project_root(&args.root)?;
     debug_assert!(root.is_absolute());
+    if let Some(mode) = args.fixed_package {
+        let target_os = TargetOs::current().ok_or_else(|| anyhow::anyhow!(
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-PACKAGE-GRANT-DECISION: unsupported target platform; fix surface: run fixed package on a supported platform"
+        ))?;
+        let project = Arc::new(vibe_safefs::Project::open(&root)?);
+        let service = PackageGrantService::from_trusted_host(
+            project,
+            "vibe-cli-project-local/e1".into(),
+            target_os,
+        )?;
+        let host = match mode {
+            FixedPackageMode::Issue => service.issue(args.ttl_ms.ok_or_else(|| {
+                anyhow::anyhow!("fixed package issue requires --ttl-ms <1..=86400000>")
+            })?)?,
+            FixedPackageMode::Reattach => service.reattach()?,
+        };
+        let context = ServerContext::with_store_root(&root, root.join(".vibe/cache"))
+            .with_fixed_package_route(Arc::new(FixedPackageRoute::new(Arc::new(host))))?;
+        let mut runner = PackageMachineSessionRunner::new(context)?;
+        runner.run(&mut std::io::stdin().lock(), &mut std::io::stdout().lock())?;
+        return Ok(());
+    }
     if let Some(mode) = args.fixed_validate {
         let target_os = TargetOs::current().ok_or_else(|| anyhow::anyhow!(
             "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-LOCAL-TRUST-DECISION: unsupported target platform; fix surface: run fixed Validate on a supported platform"
