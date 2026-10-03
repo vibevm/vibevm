@@ -25,7 +25,8 @@ The actual before/after behavior, user migration and documentation actions
 for the 33 product subjects still require individual reviewed permanent
 records. The [B.1 preparation matrix](environment-b1-impact-preparation.md)
 states candidate topics for its ten subjects without accepting those
-dispositions. Current selected Linux tests in
+dispositions. The [B.2/C preparation matrix](environment-b2-c-impact-preparation.md)
+does the same for the other 23. Current selected Linux tests in
 [`M-14-GATE/current-selected.md`](../../../../campaigns/next/evidence/M-14-GATE/current-selected.md)
 cover five contract slices, not these missing dispositions or native
 macOS/Windows execution. No public 1.1.0 publication occurred.
