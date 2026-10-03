@@ -379,8 +379,26 @@ def validate_coverage(manifest, tasks, plan):
     nodes = validate_state(plan)
     need(set(tasks).issubset(nodes), "task contract missing from plan")
     parents = {a["id"] for a in manifest["atoms"]}
-    expected_nodes = set(tasks) | parents | {m["id"] for m in manifest["milestones"]} | set(manifest["auxiliary_nodes"])
-    need(set(nodes) == expected_nodes, "local/shared node inventory differs; merge/replan by stable IDs")
+    declared_nodes = set(tasks) | parents | {m["id"] for m in manifest["milestones"]} | set(manifest["auxiliary_nodes"])
+    missing = declared_nodes - set(nodes)
+    need(not missing, "declared node inventory missing: " + ", ".join(sorted(missing)))
+    adaptive = set(nodes) - declared_nodes
+    for key in sorted(adaptive):
+        parent, separator, suffix = key.rpartition("-R")
+        node = nodes[key]
+        need(separator and parent in tasks and re.fullmatch(r"[1-9][0-9]*", suffix),
+             f"undeclared node is not a local task refinement: {key}")
+        need(node["kind"] == "atom" and node["parent"] == parent and
+             not node.get("contract") and not node.get("contract_sha256"),
+             f"local task refinement has foreign kind/parent/contract: {key}")
+        for dependency in node["depends_on"]:
+            need(dependency in declared_nodes or
+                 (dependency in adaptive and nodes[dependency]["parent"] == parent),
+                 f"local task refinement has foreign dependency: {key} -> {dependency}")
+    for key in declared_nodes:
+        for dependency in nodes[key]["depends_on"]:
+            need(dependency not in adaptive,
+                 f"declared node depends on local refinement: {key} -> {dependency}")
     need(set(manifest["baseline_graph"]) == parents and len(parents) == 86, "baseline parent coverage lost")
     for parent in work_packages(manifest):
         need(parent["id"] in nodes, f"work-package parent missing: {parent['id']}")
