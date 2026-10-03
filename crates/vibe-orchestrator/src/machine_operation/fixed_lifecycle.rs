@@ -28,6 +28,18 @@ struct Tables {
     accepted: BTreeMap<String, ValidatedFixedPlanEvidence>,
     jobs: BTreeMap<String, Slot>,
 }
+fn stopped_without_run(snapshot: &FixedOwnerEvidenceSnapshot) -> bool {
+    snapshot.bound_run_id().is_none()
+        && matches!(
+            snapshot.status(),
+            Some(
+                crate::machine_submission::FixedOperationStatus::RecoveryRequired {
+                    run_id: None,
+                    ..
+                }
+            )
+        )
+}
 /// Trusted fixed Validate action route with bounded connection-local references.
 /// Construction retains the embedding's existing host; it initializes no namespace,
 /// policy or provider. Every dispatch rechecks the embedding's physical root.
@@ -93,7 +105,7 @@ impl FixedLifecycleRoute {
         &self,
         e: &ValidatedFixedPlanEvidence,
         key: &str,
-    ) -> Result<ScopedFixedJob, FixedDecisionError> {
+    ) -> Result<FixedOwnerEvidenceSnapshot, FixedDecisionError> {
         {
             let mut t = self
                 .tables
@@ -133,7 +145,14 @@ impl FixedLifecycleRoute {
                 t.jobs.remove(key);
             }
         }
-        result
+        let job = result?;
+        let live = job.evidence();
+        if stopped_without_run(&live) {
+            if let Some(retained) = self.host.matching_existing_evidence(e, key)? {
+                return Ok(retained);
+            }
+        }
+        Ok(live)
     }
     pub(crate) fn retained_job(
         &self,
@@ -167,17 +186,7 @@ impl FixedLifecycleRoute {
                 // lease. Its local no-run failure is not the key's retained
                 // truth. Prefer an independently validated C1/capsule/outcome
                 // observation once the winning owner releases the lease.
-                if live.bound_run_id().is_none()
-                    && matches!(
-                        live.status(),
-                        Some(
-                            crate::machine_submission::FixedOperationStatus::RecoveryRequired {
-                                run_id: None,
-                                ..
-                            }
-                        )
-                    )
-                {
+                if stopped_without_run(&live) {
                     match self.host.inspect_existing_evidence(key) {
                         Ok(Some(retained)) => return Ok(Some(retained)),
                         Ok(None) => {}

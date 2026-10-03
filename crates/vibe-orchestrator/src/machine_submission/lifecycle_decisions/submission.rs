@@ -40,6 +40,55 @@ pub(super) struct JobEntry {
     job: ReadonlyFixedJob,
 }
 impl FixedLifecycleDecisionHost {
+    /// A stopped local contender may observe a completed peer run only after
+    /// the retained C1 request and plan match this approved profile exactly.
+    /// This is read-only attachment to an existing key, never a new admission.
+    pub(crate) fn matching_existing_evidence(
+        &self,
+        evidence: &ValidatedFixedPlanEvidence,
+        key: &str,
+    ) -> Result<
+        Option<super::super::lifecycle_adapter::FixedOwnerEvidenceSnapshot>,
+        FixedDecisionError,
+    > {
+        if !Arc::ptr_eq(&self.holder, &evidence.holder) {
+            return Err(FixedDecisionError::ForeignScope);
+        }
+        supported(&evidence.options)?;
+        let profile = AdmittedProfile::from_owned(self, evidence)?;
+        profile.check_root_path(&self.root)?;
+        let request_id = digest(
+            profile
+                .request(&evidence.base.request)
+                .map_err(infrastructure)?,
+        );
+        let plan_id = digest(profile.plan(&evidence.base.plan).map_err(infrastructure)?);
+        let leased = self.scope_lease()?;
+        let lease = leased.retain_lease();
+        let Some(row) =
+            SubmissionReservations::inspect_existing_key(&lease, &self.namespace, &self.scope, key)
+                .map_err(infrastructure)?
+        else {
+            return Ok(None);
+        };
+        if row.request_sha256 != request_id || row.plan_sha256 != plan_id {
+            return Err(FixedDecisionError::AnswerConflict);
+        }
+        let status = super::super::lifecycle_adapter::inspect_fixed_existing(
+            &lease,
+            &self.namespace,
+            &self.scope,
+            key,
+        )
+        .map_err(infrastructure)?;
+        status
+            .map(|status| {
+                super::super::lifecycle_adapter::cold_snapshot(&self.scope, status)
+                    .map_err(infrastructure)
+            })
+            .transpose()
+    }
+
     /// Consume sealed, locally approved evidence into the same C1/C2 owner.
     /// Other controls retain an explicit gap; infrastructure may be written on
     /// failures. Readiness and effect truth come exclusively from the owner.

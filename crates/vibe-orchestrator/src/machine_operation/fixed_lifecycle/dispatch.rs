@@ -178,7 +178,7 @@ impl FixedLifecycleRoute {
                 bridge
                     .submit(&e, &s.key)
                     .map_err(|e| (owner_code(&e, Code::SubmissionRefused), e.to_string(), true))
-                    .and_then(|j| snapshot_reply(&j.evidence(), &s.key, true))
+                    .and_then(|snapshot| snapshot_reply(&snapshot, &s.key, true))
             }
             Action::Attach(a) => bridge.attach_observer(&a.key, trusted_root),
             Action::Replay(r) => bridge.stream_observer(&r.observer_ref, &r.message_json, false),
