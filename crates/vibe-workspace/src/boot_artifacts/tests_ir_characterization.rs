@@ -37,6 +37,108 @@ fn fixture() -> (TempDir, EffectiveBoot, String, String, String) {
     (ws, effective, alpha, simple, omega)
 }
 
+fn write_normal_doc(ws: &Path, slot: &str, rel: &str, body: &str) -> String {
+    let slot = crate::layout_paths::vibedeps(format!("{slot}/1.0.0"));
+    let path = crate::layout_paths::slot_specs(slot, rel);
+    let absolute = ws.join(&path);
+    fs::create_dir_all(absolute.parent().unwrap()).unwrap();
+    fs::write(absolute, body).unwrap();
+    path
+}
+
+fn cross_package_normal_fixture(ws: &Path) -> EffectiveBoot {
+    let umbrella = write_normal_doc(
+        ws,
+        "org.demo.umbrella",
+        "boot/entry.md",
+        "# Umbrella {#root}\n#use spec://org.demo/alpha/contract/root#root\n\nUMBRELLA_BODY\n",
+    );
+    let alpha = write_normal_doc(
+        ws,
+        "org.demo.alpha",
+        "contract/root.md",
+        "# Alpha root {#root}\n#use spec://org.demo/beta/contract/solution#solution\n\nALPHA_ROOT_BODY\n",
+    );
+    let beta = write_normal_doc(
+        ws,
+        "org.demo.beta",
+        "contract/solution.md",
+        "# Beta solution {#solution}\n#source spec://org.demo/beta/source/solution#implementation\n\nBETA_CONTRACT_BODY\n",
+    );
+    write_normal_doc(
+        ws,
+        "org.demo.beta",
+        "source/solution.md",
+        "# Beta implementation {#implementation}\n\nBETA_SOURCE_BODY\n",
+    );
+    boot(vec![
+        entry_normal(&umbrella, "org.demo/umbrella"),
+        entry_normal(&alpha, "org.demo/alpha"),
+        entry_normal(&beta, "org.demo/beta"),
+    ])
+}
+
+#[test]
+#[ignore = "B-224: cross-entry normal static dedup pending owner ruling"]
+fn xml_static_consumer_closes_cross_package_use_and_source_once() {
+    let ws = TempDir::new().unwrap();
+    let effective = cross_package_normal_fixture(ws.path());
+    let xml = render_static_with_spec_format(&effective, ws.path(), &coord(), SpecFormat::Xml)
+        .unwrap()
+        .unwrap();
+
+    for body in [
+        "UMBRELLA_BODY",
+        "ALPHA_ROOT_BODY",
+        "BETA_CONTRACT_BODY",
+        "BETA_SOURCE_BODY",
+    ] {
+        assert_eq!(
+            xml.matches(body).count(),
+            1,
+            "{body} must occur once: {xml}"
+        );
+    }
+    assert!(!xml.contains("#use spec://"), "unresolved use: {xml}");
+    assert!(!xml.contains("#source spec://"), "unresolved source: {xml}");
+    vibe_spec::minify_emitted_xml(&xml).expect("the generated static lane is strict XML");
+}
+
+#[test]
+fn xml_static_consumer_unresolved_normal_use_preserves_existing_boot_bytes() {
+    let ws = TempDir::new().unwrap();
+    let missing = write_normal_doc(
+        ws.path(),
+        "org.demo.umbrella",
+        "boot/entry.md",
+        "# Umbrella {#root}\n#use spec://org.missing/missing/contract/solution#solution\n",
+    );
+    let boot_dir = ws.path().join(crate::layout_paths::boot(""));
+    fs::create_dir_all(&boot_dir).unwrap();
+    let index = boot_dir.join(INDEX_FILE);
+    let static_xml = boot_dir.join(STATIC_XML_FILE);
+    fs::write(&index, b"INDEX-SENTINEL").unwrap();
+    fs::write(&static_xml, b"STATIC-SENTINEL\xff").unwrap();
+
+    let error = write_boot_artifacts_with_spec_format(
+        ws.path(),
+        ws.path(),
+        &coord(),
+        &boot(vec![entry_normal(&missing, "org.demo/umbrella")]),
+        SpecFormat::Xml,
+    )
+    .unwrap_err();
+    let WorkspaceError::InlineCompile { reason } = error else {
+        panic!("expected typed normal compile refusal: {error}");
+    };
+    assert!(
+        reason.contains("cannot resolve use spec://org.missing/missing/contract/solution#solution"),
+        "{reason}"
+    );
+    assert_eq!(fs::read(index).unwrap(), b"INDEX-SENTINEL");
+    assert_eq!(fs::read(static_xml).unwrap(), b"STATIC-SENTINEL\xff");
+}
+
 fn decoded_c1_comments(text: &str) -> Vec<String> {
     let mut decoded = Vec::new();
     let mut rest = text;
