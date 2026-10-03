@@ -1,5 +1,8 @@
 use super::*;
-use std::{fs, sync::Arc};
+use std::{
+    fs,
+    sync::{Arc, Barrier},
+};
 use vibe_lifecycle::{LifecycleLease, SubmissionReservations, SubmissionScope};
 use vibe_orchestrator::machine_operation::fixed_package::FixedPackageHost;
 
@@ -169,6 +172,64 @@ fn local_api_and_mcp_share_one_owner_run_for_the_same_key() {
             .unwrap()
             .count(),
         3
+    );
+}
+
+#[test]
+fn concurrent_local_api_and_mcp_retry_attach_to_one_package_run() {
+    let root = fixture();
+    let granted = route(root.path());
+    let start = Arc::new(Barrier::new(3));
+    let direct_route = granted.clone();
+    let direct_root = root.path().to_path_buf();
+    let direct_start = start.clone();
+    let direct = std::thread::spawn(move || {
+        direct_start.wait();
+        FixedPackageRoute::dispatch(
+            Some(&direct_route),
+            action("submit", "shared-race").to_string().as_bytes(),
+            &direct_root,
+        )
+    });
+    let mcp_route = granted.clone();
+    let mcp_root = root.path().to_path_buf();
+    let mcp_start = start.clone();
+    let mcp = std::thread::spawn(move || {
+        mcp_start.wait();
+        call(
+            context(&mcp_root, mcp_route),
+            action("submit", "shared-race"),
+        )
+    });
+    start.wait();
+    let direct_initial = direct.join().unwrap();
+    let mcp_initial = mcp.join().unwrap();
+    assert!(
+        direct_initial.is_ok() || mcp_initial["isError"] == false,
+        "at least one contender must own the run"
+    );
+    let direct_retry = FixedPackageRoute::dispatch(
+        Some(&granted),
+        action("submit", "shared-race").to_string().as_bytes(),
+        root.path(),
+    )
+    .unwrap();
+    let run = match direct_retry.reply {
+        Reply::Completed(row) => row.run_id,
+        other => panic!("expected retained completion: {other:?}"),
+    };
+    let mcp_retry = call(
+        context(root.path(), granted),
+        action("submit", "shared-race"),
+    );
+    assert_eq!(mcp_retry["structuredContent"]["reply"]["run_id"], run);
+    assert_eq!(mcp_retry["structuredContent"]["reply"]["kind"], "completed");
+    assert_eq!(
+        fs::read_dir(root.path().join(".vibe/package-operations"))
+            .unwrap()
+            .count(),
+        3,
+        "one intent, capsule and result after both contenders"
     );
 }
 

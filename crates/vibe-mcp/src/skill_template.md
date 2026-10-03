@@ -151,6 +151,11 @@ Tools:
   `key`. No request field selects a root, C1 namespace, target, source path,
   destination or provider. Reuse the same key to observe the retained owner
   run; `uncertain` and `recovery_required` remain distinct from completion.
+  The local CLI can grant this tool for one project with
+  `vibe mcp serve --path <absolute-project-root> --fixed-package issue --ttl-ms <1..=86400000>`;
+  after process loss, use the same root with `--fixed-package reattach`.
+  Ordinary `vibe mcp serve` remains ungranted. A failed reattach never issues a
+  replacement namespace or authorizes a second copy.
 - **`plan_manifest_migration`** — plan a supported migration from supplied
   TOML text and explicit profiles/recipe. Inspect the exact in-memory edits
   or answer the returned questions; this tool reads no project, writes no

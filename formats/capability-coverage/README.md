@@ -87,3 +87,10 @@ fixed package owner route and the already registered request/reply/error values.
 The descriptor is visible without a host grant; only an explicitly supplied
 `FixedPackageRoute` can submit or inspect the one static-file copy. These
 counts and source hashes are inventory evidence, not a C4 completion claim.
+
+`fixed-package-mcp-serve-source-delta.json` records the later CLI grammar and
+composition bytes. The registered tool can now be reached through an explicit
+absolute-root `vibe mcp serve --fixed-package issue|reattach` choice, using the
+same host-owned package pointer as the local machine session. The default MCP
+entry remains ungranted. Exact process tests bind this one route; the inventory
+still does not admit general package execution or the remaining C4 surfaces.

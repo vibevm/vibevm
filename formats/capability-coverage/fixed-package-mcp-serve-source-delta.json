@@ -1,0 +1,29 @@
+{
+  "receipt_id": "fixed-package-mcp-serve-current-source-delta",
+  "scope": "Current-byte observation of the explicit CLI MCP package host issue/reattach grammar and composition. The historical selected capture remains unchanged.",
+  "historical_baseline_capture_id": "capability-baseline-4a3f80a34",
+  "historical_observation_capture_id": "entity-view-observed-c2a31e642",
+  "sources": [
+    {
+      "path": "crates/vibe-cli/src/cli/mcp.rs",
+      "sha256": "a62d9d6400c354fd645c7317d833819a210bce798e1ab83da945ce1449803c59",
+      "previous_ledger_sha256": "b21b672b783471faf3ee774ac48f8b5654ea28ce517dd2f2f5b9dc089952a9e8",
+      "change": "explicit fixed package serve grammar"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "sha256": "8c3e53c857beffc37290f145666a690f81068907fad1dbba2d87a112324e3e60",
+      "previous_ledger_sha256": "005066f44379094d86716537d022f54e5f6e5a087308d83966390369aea786a4",
+      "change": "trusted fixed package host composition for MCP stdio"
+    }
+  ],
+  "counts": {
+    "sources": 249,
+    "surfaces": 246,
+    "operation_identities": 218,
+    "registered_mcp": 18,
+    "models": 35,
+    "planned_families": 15
+  },
+  "limitations": "An explicit absolute-root issue/reattach choice is required for this fixed package subroute. Default serve remains ungranted; this receipt asserts no general package or whole-facade availability."
+}

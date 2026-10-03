@@ -7,7 +7,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use std::path::PathBuf;
 
-use clap::Subcommand;
+use clap::{Subcommand, ValueEnum};
 
 #[derive(Debug, clap::Args)]
 pub struct McpArgs {
@@ -232,6 +232,14 @@ pub struct McpServeArgs {
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
 
+    /// Explicit cooperative fixed package host; omitted means no package grant.
+    #[arg(long, value_enum)]
+    pub fixed_package: Option<McpFixedPackageMode>,
+
+    /// First issue lifetime in milliseconds; forbidden on reattach.
+    #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000), requires = "fixed_package")]
+    pub ttl_ms: Option<u64>,
+
     /// Explicit absolute recovery store for manifest migration authority.
     /// Omission leaves migration tools ungranted; no store is inferred.
     #[arg(long)]
@@ -241,4 +249,10 @@ pub struct McpServeArgs {
     /// With an explicit store and no file flags, only root vibe.toml is granted.
     #[arg(long = "migration-file", requires = "migration_recovery_store")]
     pub migration_file: Vec<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum McpFixedPackageMode {
+    Issue,
+    Reattach,
 }

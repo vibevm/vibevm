@@ -87,7 +87,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/cli/mcp.rs",
       "path": "crates/vibe-cli/src/cli/mcp.rs",
-      "sha256": "b21b672b783471faf3ee774ac48f8b5654ea28ce517dd2f2f5b9dc089952a9e8"
+      "sha256": "a62d9d6400c354fd645c7317d833819a210bce798e1ab83da945ce1449803c59"
     },
     {
       "source_id": "source:crates/vibe-cli/src/cli/pkg.rs",
@@ -292,7 +292,7 @@
     {
       "source_id": "source:crates/vibe-cli/src/commands/mcp/mod.rs",
       "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
-      "sha256": "005066f44379094d86716537d022f54e5f6e5a087308d83966390369aea786a4"
+      "sha256": "8c3e53c857beffc37290f145666a690f81068907fad1dbba2d87a112324e3e60"
     },
     {
       "source_id": "source:crates/vibe-cli/src/commands/mod.rs",
@@ -1262,7 +1262,7 @@
       "effects": [
         "Submit the fixed package copy through the incumbent C1/package journal or inspect its retained result; the same scoped key never copies twice."
       ],
-      "authority": "The embedding must supply an explicit trusted FixedPackageRoute in ServerContext. Registration and request bytes cannot issue a namespace.",
+      "authority": "The embedding must supply an explicit trusted FixedPackageRoute in ServerContext. The CLI MCP server can explicitly issue or reattach the existing host-owned package pointer for an absolute project root; default serve and request bytes grant nothing.",
       "carrier": "Generated epoch-one fixed package request/reply/error inside the existing operation envelope; partial output and A2 evidence remain owner observations.",
       "schema_ref": "schemas/machine/e1/fixed_package_action_request.jtd.json; schemas/machine/e1/fixed_package_action_reply.jtd.json; schemas/machine/e1/fixed_package_action_error.jtd.json; schemas/machine/e1/operation_envelope.jtd.json",
       "implementation": "source-observed",
@@ -1272,9 +1272,14 @@
       "conformance_cases": [
         "native:tools::fixed_package_operation::tests::registered_descriptor_without_grant_refuses_without_owner_state",
         "native:tools::fixed_package_operation::tests::granted_submit_replay_and_damaged_output_retain_one_run",
-        "native:tools::fixed_package_operation::tests::local_api_and_mcp_share_one_owner_run_for_the_same_key"
+        "native:tools::fixed_package_operation::tests::local_api_and_mcp_share_one_owner_run_for_the_same_key",
+        "native:tools::fixed_package_operation::tests::concurrent_local_api_and_mcp_retry_attach_to_one_package_run",
+        "native:cli_mcp_fixed_package::explicit_issue_and_reattach_share_one_package_run_across_mcp_processes",
+        "native:cli_mcp_fixed_package::machine_frame_issued_package_grant_is_reused_by_mcp_reattach"
       ],
       "source_ids": [
+        "source:crates/vibe-cli/src/cli/mcp.rs",
+        "source:crates/vibe-cli/src/commands/mcp/mod.rs",
         "source:crates/vibe-mcp/src/tools.rs",
         "source:crates/vibe-mcp/src/context.rs",
         "source:crates/vibe-mcp/src/tools/fixed_package_operation.rs",
@@ -1288,7 +1293,7 @@
         "source:schemas/machine/e1/operation_envelope.jtd.json"
       ],
       "disposition": "operation",
-      "reason": "Bounded C4 source and registered-adapter evidence. It does not grant a host or close the remaining machine facade.",
+      "reason": "Bounded C4 source and registered-adapter evidence with explicit CLI host issue/reattach proof. It does not grant a default server or close the remaining machine facade.",
       "operation_id": "operation.mcp.fixed_package_operation"
     },
     {
@@ -4404,21 +4409,23 @@
       "kind": "cli",
       "name": "serve",
       "aliases": [],
-      "owner": "Actual source adapter crates/vibe-cli/src/commands/mcp/mod.rs: 94 #run; observed delegated reference edges vibe_core::machine_json_path, vibe_core::manifest::Manifest, vibe_core::user_config::UserConfig, vibe_mcp::agent_config::, vibe_mcp::agents::, vibe_mcp::install::, vibe_orchestrator::InstallPolicy, vibe_workspace::bins::collect_mcp_servers, vibe_mcp::pkg_servers::mark_managed (import/reference is not inspected delegated implementation)",
-      "target": "CLI route vibe mcp serve; now accepts explicit migration recovery-store/member selections in its owning grammar.",
+      "owner": "Actual clap grammar in crates/vibe-cli/src/cli/mcp.rs and stdio/context composition in crates/vibe-cli/src/commands/mcp/mod.rs. The MCP library retains each tool and domain owner.",
+      "target": "CLI route vibe mcp serve; explicit migration recovery-store/member selections and separate fixed package issue/reattach mode are present in its owning grammar.",
       "effects": [
-        "Observed adapter owner references: vibe_core::machine_json_path at crates/vibe-cli/src/commands/mcp/mod.rs:59; vibe_core::manifest::Manifest at crates/vibe-cli/src/commands/mcp/mod.rs:60; vibe_core::user_config::UserConfig at crates/vibe-cli/src/commands/mcp/mod.rs:61; vibe_mcp::agent_config:: at crates/vibe-cli/src/commands/mcp/mod.rs:62; vibe_mcp::agents:: at crates/vibe-cli/src/commands/mcp/mod.rs:65; vibe_mcp::install:: at crates/vibe-cli/src/commands/mcp/mod.rs:66; vibe_orchestrator::InstallPolicy at crates/vibe-cli/src/commands/mcp/mod.rs:111; vibe_workspace::bins::collect_mcp_servers at crates/vibe-cli/src/commands/mcp/mod.rs:167; vibe_mcp::pkg_servers::mark_managed at crates/vibe-cli/src/commands/mcp/mod.rs:470; reference edges are not complete semantic effect bodies",
+        "Serve composes read-only/default lifecycle context, optional explicit migration authority and optional fixed package host authority before running the existing MCP stdio server.",
         "Accepted D1 interface cli:vibe:refactor:migration-operation adds explicit MCP serve migration authority flags; ordinary serve effects remain separately scoped."
       ],
-      "authority": "Explicit CLI store/file selections are passed to the existing trusted MCP context authority builder; the catalogue grants no project/file/store authority.",
-      "carrier": "AgentInstallReport/SkillInstallReport: serde admin/skill result with path/status/note; user/project skill writes when not dry run | ConfigPayload/Agent: owner reexport, authoritative implementation unbound; pkgskill also reexports neutral projection at10 | Managed MCP config entry: JSON/TOML in-memory config transformations; external publish writer not bound | Observed adapter carriage/emission source snippets: crates/vibe-cli/src/commands/mcp/mod.rs:66 use vibe_mcp::install::{AgentInstallReport, SkillInstallReport, install_skill};; crates/vibe-cli/src/commands/mcp/mod.rs:131 struct StatusReport {; crates/vibe-cli/src/commands/mcp/mod.rs:138 results: Vec<AgentInstallReport>,; crates/vibe-cli/src/commands/mcp/mod.rs:143 skill_results: Vec<SkillInstallReport>,; crates/vibe-cli/src/commands/mcp/mod.rs:206 let mut results: Vec<AgentInstallReport> = Vec::new();; crates/vibe-cli/src/commands/mcp/mod.rs:207 let mut skill_results: Vec<SkillInstallReport> = Vec::new();; crates/vibe-cli/src/commands/mcp/mod.rs:230 let report = StatusReport {; crates/vibe-cli/src/commands/mcp/mod.rs:240 ctx.emit_json(&report)?;",
+      "authority": "Explicit migration store/file selections and, independently, an absolute-root fixed package host issue/reattach choice are passed to trusted context builders. The default server and this catalogue grant no project/file/package authority.",
+      "carrier": "Newline JSON-RPC 2.0 remains the server transport. The fixed package subroute carries generated epoch-one action request/reply/error through its registered tool; migration and administrative commands retain their separate contracts.",
       "schema_ref": "unbound schema: no exact owned exchange epoch is established for this row",
       "implementation": "source-observed",
       "external_access": "structured",
-      "completeness": "Finite source registration/adapter evidence only; no runtime, effect, conformance or whole-product completeness established.",
-      "retention": "unverified retention: source registration does not establish durable outcome or preservation",
+      "completeness": "Historical broad registration/accounting remains source-observed. The fixed package subroute has exact three-process CLI conformance only; other MCP operations and whole-product completeness are not inferred from it.",
+      "retention": "The fixed package subroute reattaches to the lifecycle package journal's retained C1 run and result; retention of other serve operations is not inferred from this case.",
       "conformance_cases": [
-        "proposed:registration-accounting"
+        "proposed:registration-accounting",
+        "native:cli_mcp_fixed_package::explicit_issue_and_reattach_share_one_package_run_across_mcp_processes",
+        "native:cli_mcp_fixed_package::machine_frame_issued_package_grant_is_reused_by_mcp_reattach"
       ],
       "source_ids": [
         "source:crates/vibe-cli/src/cli/mcp.rs",
@@ -4428,7 +4435,7 @@
         "source:crates/vibe-mcp/src/pkg_servers.rs"
       ],
       "disposition": "operation",
-      "reason": "FINAL census joined: declared route + owning adapter edge inspected; delegated library/runtime behavior unverified; carrier gaps stay explicit. Actual local adapter, delegated references and inspected family/carrier definitions have separate dispositions; family-level evidence is not exact subroute runtime/transport proof. Resolved carrier evidence: crates/vibe-mcp/src/install.rs:43, crates/vibe-mcp/src/agents.rs:8, crates/vibe-mcp/src/pkg_servers.rs:82. No helper/native handler/case executed. API/schema/runtime authorization and completeness gaps remain explicit. Registration DataRole is supplied original registry-set membership, not execution/authorization or a hide-missing flag. CLI/MCP name is local; parent_surface_id carries hierarchy. D1 amended existing serve arguments; no additional command node was introduced.",
+      "reason": "Current bounded source and process evidence for the fixed package issue/reattach subroute. Earlier broad census gaps remain outside this route; source and registration facts never grant an owner or establish whole-product completeness.",
       "parent_surface_id": "surface.cli.vibe.mcp",
       "operation_id": "operation.cli.vibe.mcp.serve",
       "registered": true
