@@ -144,6 +144,13 @@ Tools:
   `uncertain` and `recovery_required` results, and read the completed result's
   `ambient-rustup-unproven` warning: this fixed operation does not attest a
   hermetic toolchain or offer general Cargo execution.
+- **`fixed_package_operation`** — submit or inspect only the one fixed static-file
+  package copy from `source.bin` to `target/vibe-package/launcher/launcher.bin`,
+  when the embedding explicitly supplies a trusted package route. Send
+  `schema: 1` and `action` with `kind: "submit"` or `"inspect"` and a bounded
+  `key`. No request field selects a root, C1 namespace, target, source path,
+  destination or provider. Reuse the same key to observe the retained owner
+  run; `uncertain` and `recovery_required` remain distinct from completion.
 - **`plan_manifest_migration`** — plan a supported migration from supplied
   TOML text and explicit profiles/recipe. Inspect the exact in-memory edits
   or answer the returned questions; this tool reads no project, writes no

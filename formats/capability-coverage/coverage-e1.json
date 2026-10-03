@@ -752,7 +752,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/tools.rs",
       "path": "crates/vibe-mcp/src/tools.rs",
-      "sha256": "28b54dda9ce4d2e16118caf20cc23c0f86ec789c95f4eadaaea14b9c94a81018"
+      "sha256": "16832858993b903604404f2ba3a6128463c1120b28069459508f2848d4134fe9"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/tools/explain.rs",
@@ -1208,9 +1208,89 @@
       "source_id": "source:schemas/machine/e1/fixed_cargo_action_error.jtd.json",
       "path": "schemas/machine/e1/fixed_cargo_action_error.jtd.json",
       "sha256": "54f916fed4fdf9a0f8852109c5c8fdeee179515a694d246120547554cd58d8ad"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/fixed_package_operation.rs",
+      "path": "crates/vibe-mcp/src/tools/fixed_package_operation.rs",
+      "sha256": "778cc5b2134e9833cd823d51e5aa0465cb996499bcf89a17f0b26ff2b00003ce"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_package.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_package.rs",
+      "sha256": "03edaf2941c63c1c1b9e0747820b292f93a7aacc563ba63132256bfb4d0fec46"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_package/dispatch.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_package/dispatch.rs",
+      "sha256": "6829104efbef08b58a62b58f61455e1c290eaa6431b82db3d4e2dcff594b33d6"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_package/envelope.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_package/envelope.rs",
+      "sha256": "a6c1363f66ec75e10427e98cdc6e0fe3801e5dc31a13c7e6bf0e847fe06a0364"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_submission/package_grant.rs",
+      "path": "crates/vibe-orchestrator/src/machine_submission/package_grant.rs",
+      "sha256": "173c4b1ea1313f84ff28d9ef01a911bd68f17a82a1d3bc5aa1efd12dc27d0a8e"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_package_action_request.jtd.json",
+      "path": "schemas/machine/e1/fixed_package_action_request.jtd.json",
+      "sha256": "8a16bdecdc0edc14a91367ab85d1b985026e45782f6f2afd8989b3abe624ebdf"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_package_action_reply.jtd.json",
+      "path": "schemas/machine/e1/fixed_package_action_reply.jtd.json",
+      "sha256": "d9e3cabcf9d3108273bdbce5927d064532dca13c5f359db65c44dba1af72fa34"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_package_action_error.jtd.json",
+      "path": "schemas/machine/e1/fixed_package_action_error.jtd.json",
+      "sha256": "96882f55875448bc147bb13e7356b3d671970202dfc25f3fd82aac348c734c7f"
     }
   ],
   "surfaces": [
+    {
+      "surface_id": "surface.mcp.fixed_package_operation",
+      "kind": "mcp",
+      "registered": true,
+      "name": "fixed_package_operation",
+      "aliases": [],
+      "owner": "Registered adapter delegates generated fixed package actions to FixedPackageRoute and the lifecycle static-file package journal.",
+      "target": "Only host-granted source.bin to target/vibe-package/launcher/launcher.bin at the compared physical root; arguments cannot select paths, root, namespace, principal or provider.",
+      "effects": [
+        "Submit the fixed package copy through the incumbent C1/package journal or inspect its retained result; the same scoped key never copies twice."
+      ],
+      "authority": "The embedding must supply an explicit trusted FixedPackageRoute in ServerContext. Registration and request bytes cannot issue a namespace.",
+      "carrier": "Generated epoch-one fixed package request/reply/error inside the existing operation envelope; partial output and A2 evidence remain owner observations.",
+      "schema_ref": "schemas/machine/e1/fixed_package_action_request.jtd.json; schemas/machine/e1/fixed_package_action_reply.jtd.json; schemas/machine/e1/fixed_package_action_error.jtd.json; schemas/machine/e1/operation_envelope.jtd.json",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Only submit/inspect the fixed builtin copy. No general package phase, arbitrary target or provider, new grant issuer or whole machine facade.",
+      "retention": "The lifecycle package journal owns the C1 reservation, result and partial observations. A damaged output is never reported as completed or recopied.",
+      "conformance_cases": [
+        "native:tools::fixed_package_operation::tests::registered_descriptor_without_grant_refuses_without_owner_state",
+        "native:tools::fixed_package_operation::tests::granted_submit_replay_and_damaged_output_retain_one_run",
+        "native:tools::fixed_package_operation::tests::local_api_and_mcp_share_one_owner_run_for_the_same_key"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/context.rs",
+        "source:crates/vibe-mcp/src/tools/fixed_package_operation.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_package.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_package/dispatch.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_package/envelope.rs",
+        "source:crates/vibe-orchestrator/src/machine_submission/package_grant.rs",
+        "source:schemas/machine/e1/fixed_package_action_request.jtd.json",
+        "source:schemas/machine/e1/fixed_package_action_reply.jtd.json",
+        "source:schemas/machine/e1/fixed_package_action_error.jtd.json",
+        "source:schemas/machine/e1/operation_envelope.jtd.json"
+      ],
+      "disposition": "operation",
+      "reason": "Bounded C4 source and registered-adapter evidence. It does not grant a host or close the remaining machine facade.",
+      "operation_id": "operation.mcp.fixed_package_operation"
+    },
     {
       "surface_id": "surface.mcp.fixed_cargo_operation",
       "kind": "mcp",

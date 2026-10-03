@@ -78,3 +78,12 @@ Captured entity models keep
 logical/content/observation/occurrence identities separate, and their page
 session and URI mapping are owner-declared, process-local or unverified where
 their domain sources have not been authenticated.
+
+The bounded fixed package MCP addition is recorded separately in
+`fixed-package-operation-source-delta.json`. The current candidate has 249
+source rows, 246 surface rows, 218 operation identities, 18 registered MCP
+tools, 35 model families and 15 planned families. Its new MCP row binds the
+fixed package owner route and the already registered request/reply/error values.
+The descriptor is visible without a host grant; only an explicitly supplied
+`FixedPackageRoute` can submit or inspect the one static-file copy. These
+counts and source hashes are inventory evidence, not a C4 completion claim.

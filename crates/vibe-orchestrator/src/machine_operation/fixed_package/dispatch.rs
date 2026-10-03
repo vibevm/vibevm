@@ -32,6 +32,21 @@ impl std::error::Error for FixedPackageRouteError {
             .map(|e| e as &(dyn std::error::Error + 'static))
     }
 }
+impl FixedPackageRouteError {
+    /// Adapter encoding refusal before owner dispatch. The scope is supplied
+    /// only by the retained host, never by request arguments.
+    pub fn invalid_request(message: &str, grant: Option<&FixedPackageRoute>) -> Self {
+        failure(
+            grant,
+            err::FixedPackageActionErrorCode::InvalidRequest,
+            message,
+            None,
+            false,
+            None,
+            None,
+        )
+    }
+}
 /// Surface-neutral fixed package route retaining only the trusted embedding's host.
 ///
 /// ```no_run
