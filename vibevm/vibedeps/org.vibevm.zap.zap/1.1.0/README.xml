@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Zap application bridge</title>
+  <p>This package contains only the Vibe application source proxy for Zap. The
+application declaration, installer, source dependencies, and release index
+locator are read from the resolved external Zap repository.</p>
+  <section title="Upstream">
+    <p>Source: &lt;https://github.com/vibevm/zap&gt;</p>
+    <p>The mutable application line is `refs/heads/1.1.0`. Each operation records the
+exact resolved commit and portable source-tree digest before installation.
+There is no 1.1.0 binary release; this bridge selects the 1.1.0 source build.</p>
+  </section>
+</spec>
