@@ -8,7 +8,7 @@ use vibe_orchestrator::machine_submission::{
     HostPolicyFacts, TrustedPolicySource, cli_grant::CliGrantService,
 };
 
-use crate::cli::{McpFixedValidateMode, McpServeArgs};
+use crate::cli::McpFixedValidateMode;
 
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH-LAW"
@@ -18,7 +18,7 @@ pub(super) fn server_context(
     root: &Path,
     mode: McpFixedValidateMode,
     ttl_ms: Option<u64>,
-    args: &McpServeArgs,
+    facts: HostPolicyFacts,
 ) -> Result<ServerContext> {
     let target_os = TargetOs::current().ok_or_else(|| {
         anyhow::anyhow!("violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-LOCAL-TRUST-DECISION: fixed Validate MCP host requires a supported target platform; fix surface: run on a supported platform")
@@ -31,12 +31,7 @@ pub(super) fn server_context(
         "vibe-cli-project-local/e1".into(),
         target_os,
         TrustedPolicySource::from_host_identifier("vibe-cli/fixed-validate/e1".into())?,
-        HostPolicyFacts {
-            approve_captured_script: args.approve_captured_script,
-            allow_detach: args.allow_detach,
-            allow_cancel_pre_dispatch: args.allow_cancel_pre_dispatch,
-            allow_cancel_deferred_boundary: args.allow_cancel_deferred_boundary,
-        },
+        facts,
     )?;
     let host = match mode {
         McpFixedValidateMode::Issue => service.issue(ttl_ms.ok_or_else(|| {
