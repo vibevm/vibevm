@@ -1,0 +1,508 @@
+{
+  "kind": "M-14 B/C release-impact subject inventory",
+  "subject_tree": "a159dd4bd57087f97f863ff106b3e1e3bad6c4f8",
+  "source_reviews": [
+    "docs/releases/developer-preview-1-to-2/evidence/environment-b1/central-review.md",
+    "docs/releases/developer-preview-1-to-2/evidence/environment-b2/central-review.md",
+    "docs/releases/developer-preview-1-to-2/evidence/environment-c1/central-review.md",
+    "docs/releases/developer-preview-1-to-2/evidence/environment-c2/central-review.md",
+    "docs/releases/developer-preview-1-to-2/evidence/environment-c3/central-review.md",
+    "docs/releases/developer-preview-1-to-2/evidence/environment-workstream-gate.md"
+  ],
+  "groups": {
+    "B.1": 10,
+    "B.2": 3,
+    "C.1": 6,
+    "C.2": 9,
+    "C.3": 4,
+    "C.source": 1
+  },
+  "existing_release_impact_files": 71,
+  "matched_implementation_subjects": 0,
+  "missing_product_subjects": 33,
+  "excluded_review_or_task_commits": [
+    {
+      "commit": "8ed600577",
+      "reason": "B.2 task-perimeter assignment, not a product behavior source change"
+    },
+    {
+      "commit": "eaa448b49",
+      "reason": "C.1/C.2 task split, not a product behavior source change"
+    },
+    {
+      "commit": "e68c64679",
+      "reason": "C.1 retained review/log paths, separately dispositioned as evidence-only"
+    }
+  ],
+  "subjects": [
+    {
+      "group": "B.1",
+      "commit": "6513cfff9935c9ee027a917250adf0670c76148c",
+      "subject": "feat(environment): specify exact realization identities",
+      "affected_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "c7517ffd0c2caf5330ba1619c9328cd1013f6da7",
+      "subject": "feat(environment): specify macOS lexical target policy",
+      "affected_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "92d30ff72aae83097a9a25c002f8e240464d7bf7",
+      "subject": "feat(environment): bind selected target into lock identity",
+      "affected_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "aa5fc8d7edbaac64f929b59c98673630310fb32e",
+      "subject": "feat(environment): derive exact source-supplied identities",
+      "affected_paths": [
+        "crates/vibe-core/src/environment/exact.rs",
+        "crates/vibe-core/src/environment/mod.rs",
+        "crates/vibe-core/src/environment/platform.rs",
+        "crates/vibe-core/src/environment/target_path.rs"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "85e50713ad91234b0c14299d9067a3ec0fe4b2d5",
+      "subject": "fix(environment): align computed digests with wire values",
+      "affected_paths": [
+        "crates/vibe-core/src/environment/exact.rs"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "85358c52bb6ff986720fe6d8c0aa39ab9504be99",
+      "subject": "fix(environment): hash selected target role and platform",
+      "affected_paths": [
+        "crates/vibe-core/src/environment/exact.rs"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "a93bd20b28c14a1b39973ae9a73a1ff019de8793",
+      "subject": "fix(environment): bind captured configuration bytes",
+      "affected_paths": [
+        "crates/vibe-core/src/environment/exact.rs"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "87023f56ac0ec2b20edbbe39dca48891e64c7d21",
+      "subject": "refactor(environment): share shippable tree recipe",
+      "affected_paths": [
+        "crates/vibe-core/src/environment/exact.rs"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "0de05ea0d0adb2d540e2bd212429be6835d9d3d2",
+      "subject": "feat(formats): register environment realization values",
+      "affected_paths": [
+        "crates/vibe-wire/src/generated/application/e1/mod.rs",
+        "crates/vibe-wire/src/generated/application/mod.rs",
+        "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+        "crates/vibe-wire/src/generated/capability/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+        "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+        "crates/vibe-wire/src/generated/distribution/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/definition/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/exact_lock/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/generation_receipt/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/payload_inventory/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/realization_error/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/realization_request/mod.rs",
+        "crates/vibe-wire/src/generated/environment/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+        "crates/vibe-wire/src/generated/hello/mod.rs",
+        "crates/vibe-wire/src/generated/index/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index/mod.rs",
+        "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index_cli/mod.rs",
+        "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index_http/mod.rs",
+        "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+        "crates/vibe-wire/src/generated/journal/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+        "crates/vibe-wire/src/generated/llm/mod.rs",
+        "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+        "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+        "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "crates/vibe-wire/src/generated/machine/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/mod.rs",
+        "crates/vibe-wire/src/generated/mod.rs",
+        "crates/vibe-wire/src/generated/native/e1/mod.rs",
+        "crates/vibe-wire/src/generated/native/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/mod.rs",
+        "crates/vibe-wire/tests/environment_contract.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/environment-definition/e1/semantic-invalid/unsupported-epoch.json",
+        "formats/corpora/environment-definition/e1/structural-invalid/missing-schema.json",
+        "formats/corpora/environment-definition/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-definition/e1/valid/representative.json",
+        "formats/corpora/environment-exact-lock/e1/semantic-invalid/changed-abi-stale-digest.json",
+        "formats/corpora/environment-exact-lock/e1/semantic-invalid/reordered-equivalent-input.json",
+        "formats/corpora/environment-exact-lock/e1/semantic-invalid/unsupported-epoch.json",
+        "formats/corpora/environment-exact-lock/e1/structural-invalid/missing-schema.json",
+        "formats/corpora/environment-exact-lock/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-exact-lock/e1/valid/representative.json",
+        "formats/corpora/environment-generation-receipt/e1/semantic-invalid/changed-output-stale-digest.json",
+        "formats/corpora/environment-generation-receipt/e1/semantic-invalid/unsupported-epoch.json",
+        "formats/corpora/environment-generation-receipt/e1/structural-invalid/missing-schema.json",
+        "formats/corpora/environment-generation-receipt/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-generation-receipt/e1/valid/representative.json",
+        "formats/corpora/environment-payload-inventory/e1/semantic-invalid/changed-byte-stale-receipt.json",
+        "formats/corpora/environment-payload-inventory/e1/semantic-invalid/macos-linux-principal.json",
+        "formats/corpora/environment-payload-inventory/e1/semantic-invalid/unsupported-complete.json",
+        "formats/corpora/environment-payload-inventory/e1/semantic-invalid/unsupported-epoch.json",
+        "formats/corpora/environment-payload-inventory/e1/structural-invalid/missing-schema.json",
+        "formats/corpora/environment-payload-inventory/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-payload-inventory/e1/valid/representative.json",
+        "formats/corpora/environment-realization-error/e1/semantic-invalid/unsupported-epoch.json",
+        "formats/corpora/environment-realization-error/e1/structural-invalid/missing-schema.json",
+        "formats/corpora/environment-realization-error/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-realization-error/e1/valid/representative.json",
+        "formats/corpora/environment-realization-request/e1/semantic-invalid/unsupported-epoch.json",
+        "formats/corpora/environment-realization-request/e1/semantic-invalid/wrong-payload-role.json",
+        "formats/corpora/environment-realization-request/e1/structural-invalid/missing-schema.json",
+        "formats/corpora/environment-realization-request/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-realization-request/e1/valid/representative.json",
+        "schemas/environment/e1/definition.jtd.json",
+        "schemas/environment/e1/exact_lock.jtd.json",
+        "schemas/environment/e1/generation_receipt.jtd.json",
+        "schemas/environment/e1/payload_inventory.jtd.json",
+        "schemas/environment/e1/realization_error.jtd.json",
+        "schemas/environment/e1/realization_request.jtd.json"
+      ]
+    },
+    {
+      "group": "B.1",
+      "commit": "e1e1473d2238d5448fe216c8f55fef6b73a9e6f5",
+      "subject": "feat(environment): validate exact lock wire against capture",
+      "affected_paths": [
+        "crates/vibe-wire/src/behaviour/environment/mod.rs",
+        "crates/vibe-wire/src/behaviour/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/exact_lock/mod.rs",
+        "crates/vibe-wire/tests/environment_contract.rs",
+        "crates/vibe-wire/tests/environment_semantic.rs",
+        "formats/corpora/environment-exact-lock/e1/semantic-invalid/changed-abi-stale-digest.json",
+        "formats/corpora/environment-exact-lock/e1/semantic-invalid/reordered-equivalent-input.json",
+        "formats/corpora/environment-exact-lock/e1/semantic-invalid/unsupported-epoch.json",
+        "formats/corpora/environment-exact-lock/e1/structural-invalid/missing-schema.json",
+        "formats/corpora/environment-exact-lock/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-exact-lock/e1/valid/representative.json",
+        "schemas/environment/e1/exact_lock.jtd.json"
+      ]
+    },
+    {
+      "group": "B.2",
+      "commit": "99e048e3b0e84cfe1edc6e3f9fbc959c655ab068",
+      "subject": "feat(environment): specify legacy evidence migration",
+      "affected_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ]
+    },
+    {
+      "group": "B.2",
+      "commit": "1dc5a70976c2482bc192e41c6ded8d8835fe0797",
+      "subject": "feat(environment): classify legacy package evidence",
+      "affected_paths": [
+        "crates/vibe-core/src/environment/legacy.rs",
+        "crates/vibe-core/src/environment/mod.rs"
+      ]
+    },
+    {
+      "group": "B.2",
+      "commit": "d04a93d745350d07a2ab55667446695e72f3257c",
+      "subject": "feat(environment): read historical artifact evidence",
+      "affected_paths": [
+        "crates/vibe-core/src/environment/legacy.rs",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/record_tests.rs"
+      ]
+    },
+    {
+      "group": "C.1",
+      "commit": "0ef17ab5563424c9020632164bab52b6375d9434",
+      "subject": "feat(environment): specify opt-in target-bound operations",
+      "affected_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ]
+    },
+    {
+      "group": "C.1",
+      "commit": "b80b3ce83dd210b78031fcb5548010c057347374",
+      "subject": "feat(environment): bind opt-in deploy journal identity",
+      "affected_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ]
+    },
+    {
+      "group": "C.1",
+      "commit": "8f072d3325d49a2ffb6c77b6fc15d2f47476aa5c",
+      "subject": "feat(environment): distinguish target mode in binding",
+      "affected_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ]
+    },
+    {
+      "group": "C.1",
+      "commit": "d4d76a259e8311bc206fe31d9bd983759cf8b292",
+      "subject": "feat(formats): carry opt-in environment deploy binding",
+      "affected_paths": [
+        "crates/vibe-wire/src/behaviour/deploy_records/binding.rs",
+        "crates/vibe-wire/src/behaviour/deploy_records/errors.rs",
+        "crates/vibe-wire/src/behaviour/deploy_records/mod.rs",
+        "crates/vibe-wire/src/behaviour/deploy_records/tests.rs",
+        "crates/vibe-wire/src/generated/deploy_intent/mod.rs",
+        "crates/vibe-wire/src/generated/deploy_receipt/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/operation_binding/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/native/e1/deploy_request/mod.rs",
+        "crates/vibe-wire/src/generated/shared/mod.rs",
+        "crates/vibe-wire/tests/deploy_records_wire_corpus.rs",
+        "formats/REGISTRY.toml",
+        "formats/corpora/environment-operation-binding/e1/semantic-invalid/duplicate-root-role.json",
+        "formats/corpora/environment-operation-binding/e1/semantic-invalid/unsupported-binding-epoch.json",
+        "formats/corpora/environment-operation-binding/e1/structural-invalid/missing-selected-generation.json",
+        "formats/corpora/environment-operation-binding/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-operation-binding/e1/valid/local.json",
+        "formats/vocabularies.json",
+        "schemas/deploy_intent.jtd.json",
+        "schemas/deploy_receipt.jtd.json",
+        "schemas/environment/e1/operation_binding.jtd.json",
+        "schemas/native/e1/deploy_request.jtd.json"
+      ]
+    },
+    {
+      "group": "C.1",
+      "commit": "b82f245eadd60d57ee9f57c3b547cbeea5a8ddcd",
+      "subject": "fix(formats): require explicit environment target mode",
+      "affected_paths": [
+        "crates/vibe-wire/src/behaviour/deploy_records/binding.rs",
+        "crates/vibe-wire/src/behaviour/deploy_records/tests.rs",
+        "crates/vibe-wire/src/generated/deploy_intent/mod.rs",
+        "crates/vibe-wire/src/generated/deploy_receipt/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/operation_binding/mod.rs",
+        "crates/vibe-wire/src/generated/native/e1/deploy_request/mod.rs",
+        "crates/vibe-wire/src/generated/shared/mod.rs",
+        "formats/corpora/environment-operation-binding/e1/semantic-invalid/duplicate-root-role.json",
+        "formats/corpora/environment-operation-binding/e1/semantic-invalid/unsupported-binding-epoch.json",
+        "formats/corpora/environment-operation-binding/e1/structural-invalid/missing-selected-generation.json",
+        "formats/corpora/environment-operation-binding/e1/structural-invalid/missing-target-mode.json",
+        "formats/corpora/environment-operation-binding/e1/structural-invalid/unknown-root.json",
+        "formats/corpora/environment-operation-binding/e1/structural-invalid/unknown-target-mode.json",
+        "formats/corpora/environment-operation-binding/e1/valid/local.json",
+        "formats/vocabularies.json",
+        "schemas/environment/e1/operation_binding.jtd.json",
+        "schemas/native/e1/deploy_request.jtd.json"
+      ]
+    },
+    {
+      "group": "C.1",
+      "commit": "15e4df99613e43b2ae9755034278ee17681f4384",
+      "subject": "feat(deploy): isolate bound deployment state and replay",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/error.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/lock_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/native.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/skill/support.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/view.rs"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "592241b72c269d265ed2473e9897e479bbd2edca",
+      "subject": "feat(safefs): lock within pinned destination",
+      "affected_paths": [
+        "crates/vibe-safefs/src/project.rs",
+        "crates/vibe-safefs/src/project/race_tests.rs"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "50ccf41447bb146e9a1ce12bdcd526ac77ba10e5",
+      "subject": "feat(safefs): retain pinned descendant project",
+      "affected_paths": [
+        "crates/vibe-safefs/src/project.rs",
+        "crates/vibe-safefs/src/project/race_tests.rs"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "7ce63a97d8309f91d5a4953b0d18b2810bcfc221",
+      "subject": "feat(deploy): prepare pinned vibe-bin store operations",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "09bd6fe7415f4486e6adffa283c4a017806ebb4d",
+      "subject": "feat(deploy): lock and pin bound resource children",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound_tests.rs"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "681b5f19ffeecd571c86dec845229305b6f07c4a",
+      "subject": "feat(deploy): open bound state from pinned settings",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/error.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/view.rs"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "2965bdd59642e2c6206ee2f76478f442cb61bd71",
+      "subject": "feat(deploy): issue host-bound local target admission",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/binding.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/binding_tests.rs"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "93859cdf1bb92e31978de08464933ec2d9820748",
+      "subject": "feat(formats): bind durable deploy sidecars to target",
+      "affected_paths": [
+        "crates/vibe-wire/src/behaviour/deploy_records/binding.rs",
+        "crates/vibe-wire/src/behaviour/deploy_records/mod.rs",
+        "crates/vibe-wire/src/generated/deploy_checkpoints/mod.rs",
+        "crates/vibe-wire/src/generated/deploy_inverse/mod.rs",
+        "crates/vibe-wire/src/generated/deploy_lock_resources/mod.rs",
+        "crates/vibe-wire/tests/deploy_state_wire_corpus.rs",
+        "formats/corpora/deploy/e1/invalid/checkpoints_bound_missing_nullable.json",
+        "formats/corpora/deploy/e1/invalid/inverse_bound_unknown_field.json",
+        "formats/corpora/deploy/e1/invalid/lock_resources_bound_unknown_binding.json",
+        "formats/corpora/deploy/e1/valid/checkpoints_bound.json",
+        "formats/corpora/deploy/e1/valid/inverse_bound.json",
+        "formats/corpora/deploy/e1/valid/lock_resources_bound.json",
+        "schemas/deploy_checkpoints.jtd.json",
+        "schemas/deploy_inverse.jtd.json",
+        "schemas/deploy_lock_resources.jtd.json"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "d0b458c53cf417c4bb41c5f8f37e7f7a9bf84466",
+      "subject": "feat(deploy): prepare bound provider and durable carriers",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ledger.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/sidecar/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/error/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider_tests.rs"
+      ]
+    },
+    {
+      "group": "C.2",
+      "commit": "397f11456aa5f2af618cd4d90cef19a1650de2b2",
+      "subject": "fix(deploy): recheck bound generation and child roots",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/binding.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/binding_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs"
+      ]
+    },
+    {
+      "group": "C.3",
+      "commit": "4bfdf7fb29c4fc2dc95eae7b5c5dba7dacaa57fc",
+      "subject": "feat(deploy): apply host-admitted bound vibe-bin",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_effect_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/error/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs"
+      ]
+    },
+    {
+      "group": "C.3",
+      "commit": "7165cd7b8432448c1cb54fd92f48d325a5142655",
+      "subject": "fix(deploy): list bound receipts through held state",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+      ]
+    },
+    {
+      "group": "C.3",
+      "commit": "3b31a6e673985b5219bed13091b9d277bf3b8ffc",
+      "subject": "feat(deploy): prepare admitted bound builtin publication",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/bound_tests.rs"
+      ]
+    },
+    {
+      "group": "C.3",
+      "commit": "d643e2926df3a4cf3dd4d28ec8613e0d54fb5021",
+      "subject": "feat(deploy): journal first admitted bound transaction",
+      "affected_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/error.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/transaction_tests.rs"
+      ]
+    },
+    {
+      "group": "C.source",
+      "commit": "59812ce39e62c3ce0b9131e194c27a0354f67a88",
+      "subject": "feat(environment): specify portable physical target fence",
+      "affected_paths": [
+        "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+      ]
+    }
+  ],
+  "limitations": "Path and commit inventory only. Before/after captures, user/documentation impact decisions and native platform proof are not accepted by this file."
+}
