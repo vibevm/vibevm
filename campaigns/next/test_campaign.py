@@ -67,6 +67,84 @@ class CampaignChecks(unittest.TestCase):
         self.plan = MODULE["load_plan"](None)
         self.tasks = MODULE["load_tasks"](MANIFEST)
 
+    def local_refinement(self, parent="M-16-C.4", suffix="R1", dependencies=()):
+        node = copy.deepcopy(next(n for n in self.plan["node"] if n["id"] == parent))
+        node.update(id=f"{parent}-{suffix}", parent=parent, order=1001,
+                    kind="atom", title="Local adaptive implementation atom",
+                    state="planned", zoom="summary", depends_on=list(dependencies),
+                    mandates=[], acceptance=["Prove this bounded local atom."], evidence=[])
+        node.pop("contract", None)
+        node.pop("contract_sha256", None)
+        return node
+
+    def test_seed_declares_the_nine_shared_stable_nodes_without_personal_acceptance(self):
+        stable = {n["id"]: n for n in self.plan["node"] if n["id"].startswith("NEXT-STABLE")}
+        self.assertEqual(len(stable), 9)
+        self.assertTrue(set(stable).issubset(MANIFEST["auxiliary_nodes"]))
+        self.assertTrue(all(n["state"] == "planned" and not n["evidence"] for n in stable.values()))
+        MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
+
+    def test_local_r_atom_may_depend_on_a_declared_predecessor(self):
+        self.plan["node"].append(self.local_refinement(dependencies=["M-16-C.2.2"]))
+        MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
+
+    def test_overlap_task_keeps_base_witness_and_refined_children_keep_refinement_witness(self):
+        nodes = {node["id"]: node for node in self.plan["node"]}
+        self.assertEqual(nodes["M-16-C.2"]["contract_sha256"], MANIFEST["task_files_sha256"]["M-16-C"])
+        for index in range(1, 5):
+            self.assertEqual(
+                nodes[f"M-16-C.2.{index}"]["contract_sha256"],
+                MANIFEST["task_files_sha256"]["M-16-C.2"],
+            )
+        MODULE["validate_coverage"](MANIFEST, self.tasks, self.plan)
+
+    def test_overlap_witnesses_refuse_the_other_file_hash(self):
+        for node_id, wrong in (
+            ("M-16-C.2", "M-16-C.2"),
+            ("M-16-C.2.1", "M-16-C"),
+        ):
+            with self.subTest(node=node_id):
+                plan = copy.deepcopy(self.plan)
+                next(node for node in plan["node"] if node["id"] == node_id)["contract_sha256"] = MANIFEST["task_files_sha256"][wrong]
+                with self.assertRaisesRegex(MODULE["Refusal"], "task contract witness stale"):
+                    MODULE["validate_coverage"](MANIFEST, self.tasks, plan)
+
+    def test_arbitrary_extra_node_and_foreign_r_shape_are_rejected(self):
+        for change in (
+            lambda n: n.update(id="NEXT-ARBITRARY", parent="NEXT", kind="group"),
+            lambda n: n.update(parent="M-16-C.3"),
+            lambda n: n.update(kind="gate"),
+            lambda n: n.update(contract="repo:campaigns/next/tasks/M-16-C.json"),
+        ):
+            with self.subTest(change=change):
+                plan = copy.deepcopy(self.plan)
+                node = self.local_refinement()
+                change(node)
+                plan["node"].append(node)
+                with self.assertRaises(MODULE["Refusal"]):
+                    MODULE["validate_coverage"](MANIFEST, self.tasks, plan)
+
+    def test_local_dependencies_cannot_rewrite_shared_topology_or_fake_acceptance(self):
+        plan = copy.deepcopy(self.plan)
+        local = self.local_refinement()
+        plan["node"].append(local)
+        next(n for n in plan["node"] if n["id"] == "NEXT-CLOSE.3")["depends_on"].append(local["id"])
+        with self.assertRaisesRegex(MODULE["Refusal"], "declared node depends on local"):
+            MODULE["validate_coverage"](MANIFEST, self.tasks, plan)
+
+        plan = copy.deepcopy(self.plan)
+        plan["node"].append(self.local_refinement())
+        plan["node"][-1]["state"] = "accepted"
+        with self.assertRaisesRegex(MODULE["Refusal"], "accepted node without evidence"):
+            MODULE["validate_coverage"](MANIFEST, self.tasks, plan)
+
+        plan = copy.deepcopy(self.plan)
+        foreign = self.local_refinement(parent="M-13-A.1")
+        local = self.local_refinement(dependencies=[foreign["id"]])
+        plan["node"].extend([foreign, local])
+        with self.assertRaisesRegex(MODULE["Refusal"], "foreign dependency"):
+            MODULE["validate_coverage"](MANIFEST, self.tasks, plan)
+
     def test_real_seed_has_complete_acyclic_coverage(self):
         result = MODULE["check"](MANIFEST, None)
         self.assertEqual(result["baseline_work_packages"], 86)

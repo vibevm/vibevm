@@ -1,16 +1,16 @@
 schema = 1
 plan_id = "vibevm-next"
-revision = 17
+revision = 18
 root_node = "NEXT"
 current_node = "NEXT-PREPARE"
-updated_at = "2026-09-29T14:56:02Z"
+updated_at = "2026-10-03T05:31:15Z"
 
 [[mandate]]
 id = "NEXT-COMMISSION"
 source = "owner-chat:2026-09-11:next-campaign"
 text = "Create the next worktree and a cold-executable implementation campaign; consume temporary specifications only after permanent promotion and independent product proof."
 disposition = "owned"
-nodes = ["NEXT","NEXT-PREPARE","NEXT-P0","NEXT-P0.1","NEXT-P0.2","NEXT-P0.3","NEXT-P0-GATE","RETIRE-NEXT-A01","RETIRE-NEXT-A02","RETIRE-NEXT-A03","RETIRE-NEXT-A04","RETIRE-NEXT-A05","RETIRE-NEXT-A06","RETIRE-NEXT-A07","RETIRE-NEXT-A08","RETIRE-NEXT-A09","RETIRE-NEXT-A10","RETIRE-NEXT-A11","RETIRE-NEXT-A12","RETIRE-NEXT-A13","RETIRE-NEXT-A14","RETIRE-NEXT-A15","RETIRE-NEXT-A16","RETIRE-NEXT-A17","RETIRE-NEXT-A18","RETIRE-NEXT-A19","RETIRE-NEXT-A20","RETIRE-NEXT-A21","RETIRE-NEXT-A22","RETIRE-NEXT-A23","RETIRE-NEXT-A24","RETIRE-NEXT-A25","RETIRE-NEXT-G01","RETIRE-NEXT-G02","RETIRE-NEXT-G06","RETIRE-NEXT-G07","RETIRE-NEXT-G08","RETIRE-NEXT-G09","RETIRE-NEXT-G10","RETIRE-NEXT-G11","RETIRE-NEXT-G13","RETIRE-NEXT-D-001","RETIRE-NEXT-D-002","RETIRE-NEXT-D-003","RETIRE-NEXT-D-004","RETIRE-NEXT-D-005","RETIRE-NEXT-D-006","RETIRE-NEXT-D-007","RETIRE-NEXT-D-008","RETIRE-NEXT-D-009","RETIRE-NEXT-D-010","RETIRE-NEXT-D-011","RETIRE-NEXT-D-012","RETIRE-NEXT-D-013","RETIRE-NEXT-D-014","RETIRE-NEXT-D-015","RETIRE-NEXT-D-016","RETIRE-NEXT-D-017","RETIRE-NEXT-D-018","RETIRE-NEXT-D-019","RETIRE-NEXT-D-020","RETIRE-NEXT-D-021","RETIRE-NEXT-D-022","RETIRE-NEXT-D-023","RETIRE-NEXT-D-024","RETIRE-NEXT-D-025","RETIRE-NEXT-D-026","NEXT-CLOSE","NEXT-CLOSE.1","NEXT-CLOSE.2","NEXT-CLOSE.3"]
+nodes = ["NEXT","NEXT-PREPARE","NEXT-P0","NEXT-P0.1","NEXT-P0.2","NEXT-P0.3","NEXT-P0-GATE","RETIRE-NEXT-A01","RETIRE-NEXT-A02","RETIRE-NEXT-A03","RETIRE-NEXT-A04","RETIRE-NEXT-A05","RETIRE-NEXT-A06","RETIRE-NEXT-A07","RETIRE-NEXT-A08","RETIRE-NEXT-A09","RETIRE-NEXT-A10","RETIRE-NEXT-A11","RETIRE-NEXT-A12","RETIRE-NEXT-A13","RETIRE-NEXT-A14","RETIRE-NEXT-A15","RETIRE-NEXT-A16","RETIRE-NEXT-A17","RETIRE-NEXT-A18","RETIRE-NEXT-A19","RETIRE-NEXT-A20","RETIRE-NEXT-A21","RETIRE-NEXT-A22","RETIRE-NEXT-A23","RETIRE-NEXT-A24","RETIRE-NEXT-A25","RETIRE-NEXT-G01","RETIRE-NEXT-G02","RETIRE-NEXT-G06","RETIRE-NEXT-G07","RETIRE-NEXT-G08","RETIRE-NEXT-G09","RETIRE-NEXT-G10","RETIRE-NEXT-G11","RETIRE-NEXT-G13","RETIRE-NEXT-D-001","RETIRE-NEXT-D-002","RETIRE-NEXT-D-003","RETIRE-NEXT-D-004","RETIRE-NEXT-D-005","RETIRE-NEXT-D-006","RETIRE-NEXT-D-007","RETIRE-NEXT-D-008","RETIRE-NEXT-D-009","RETIRE-NEXT-D-010","RETIRE-NEXT-D-011","RETIRE-NEXT-D-012","RETIRE-NEXT-D-013","RETIRE-NEXT-D-014","RETIRE-NEXT-D-015","RETIRE-NEXT-D-016","RETIRE-NEXT-D-017","RETIRE-NEXT-D-018","RETIRE-NEXT-D-019","RETIRE-NEXT-D-020","RETIRE-NEXT-D-021","RETIRE-NEXT-D-022","RETIRE-NEXT-D-023","RETIRE-NEXT-D-024","RETIRE-NEXT-D-025","RETIRE-NEXT-D-026","NEXT-CLOSE","NEXT-CLOSE.1","NEXT-CLOSE.2","NEXT-CLOSE.3","NEXT-STABLE","NEXT-STABLE-101","NEXT-STABLE-MCP-BASE","NEXT-STABLE-RESOLUTION","NEXT-STABLE-MCP-FOLLOWUP","NEXT-STABLE-INIT-PAUSE","NEXT-STABLE-INIT-ROOT","NEXT-STABLE-INIT-IDENTITY","NEXT-STABLE-RELEASE"]
 
 [[mandate]]
 id = "D-001"
@@ -961,7 +961,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Meet baseline work-package scope: Responsive on-demand host/CLI/MCP service adapters; atomic scoped submission reservation, host-issued namespace epochs/expiry and compact dedup tombstones, pinned active/recovery identities; domain-journal linkage, progress/replay/control/attach, typed input/admission and partial outcomes; existing execution limits preserved","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json"
-contract_sha256 = "6d074790d5472f14df468e1c78544783ebd990ae250e45c171c97bba8839ca42"
+contract_sha256 = "1ce402fc0a96442dbdd2c1a321f811424559af6165d0a92aed36914df532b109"
 
 [[node]]
 id = "M-16-C.1"
@@ -976,7 +976,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.1","Fixture effect starts only after durable reservation and matching journal-ready proof.","Dedup index points at the fixture journal; real owners and adapters remain C.2/C.4 obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.1"
-contract_sha256 = "6d074790d5472f14df468e1c78544783ebd990ae250e45c171c97bba8839ca42"
+contract_sha256 = "1ce402fc0a96442dbdd2c1a321f811424559af6165d0a92aed36914df532b109"
 
 [[node]]
 id = "M-16-C.2"
@@ -991,7 +991,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.2","All four required domain children and cross-domain owner-lifetime proof are accepted; no fixture result substitutes for a real journal."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.2"
-contract_sha256 = "6d074790d5472f14df468e1c78544783ebd990ae250e45c171c97bba8839ca42"
+contract_sha256 = "1ce402fc0a96442dbdd2c1a321f811424559af6165d0a92aed36914df532b109"
 
 [[node]]
 id = "M-16-C.2.1"
@@ -1066,7 +1066,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.3","Stream ordering domains and cancellation capability limits are explicit.","Stopping trace observation never falsely cancels the underlying build."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.3"
-contract_sha256 = "6d074790d5472f14df468e1c78544783ebd990ae250e45c171c97bba8839ca42"
+contract_sha256 = "1ce402fc0a96442dbdd2c1a321f811424559af6165d0a92aed36914df532b109"
 
 [[node]]
 id = "M-16-C.4"
@@ -1081,7 +1081,7 @@ mandates = ["D-025","D-026","F-029","F-030","F-031","F-032","F-033","F-034"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-16-C.json#M-16-C.4","Machine mode has no hidden TTY prompt or omitted per-operation option.","Public A/future B and exact target/effect grants remain unchanged."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-16-C.json#M-16-C.4"
-contract_sha256 = "6d074790d5472f14df468e1c78544783ebd990ae250e45c171c97bba8839ca42"
+contract_sha256 = "1ce402fc0a96442dbdd2c1a321f811424559af6165d0a92aed36914df532b109"
 
 [[node]]
 id = "M-16-D"
@@ -6757,3 +6757,120 @@ source = "owner-chat:2026-09-29:portable-migration-concurrency"
 text = "Migration must work on Linux, macOS and Windows. Weaker coordinated guarantees are accepted where required; document limits and truthful warnings/effects. Lack of unrestricted CAS must not disable Linux. Preservation, durable recovery and authority remain required."
 disposition = "owned"
 nodes = ["M-13", "M-13-D", "M-13-D.1"]
+
+[[node]]
+id = "NEXT-STABLE"
+parent = "NEXT"
+order = 99
+kind = "group"
+title = "Reconcile stable 1.0.1–1.0.3 behavior into mutable next/1.1.0 before the remaining route"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-P0"]
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Inspect all commits from v1.0.0 through v1.0.3 and their actual diffs; classify already inherited, ported, required new behavior and inapplicable release/version metadata.", "Integrate compatible behavior into next/1.1.0 in source dependency order, preserving current architecture, version policy and no-publication hold.", "Accept with exact affected positive/negative tests and generated/traceability proof where changed; do not run full panels or routine mutation campaigns.", "Reconcile release-impact and documentation evidence, then resume M-16-C.4 and the full remaining NEXT route."]
+evidence = []
+
+[[node]]
+id = "NEXT-STABLE-101"
+parent = "NEXT-STABLE"
+order = 1
+kind = "atom"
+title = "Verify the 1.0.1 hotfix port and classify release-only changes"
+state = "planned"
+zoom = "summary"
+depends_on = []
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Map every v1.0.0..v1.0.1 commit: seven inherited from next's main fork point and ten later commits accounted for by the retained next port record.", "Keep the three product hotfixes and exact regressions; do not regress next/1.1.0 to release-only 1.0.1 metadata."]
+evidence = []
+
+[[node]]
+id = "NEXT-STABLE-MCP-BASE"
+parent = "NEXT-STABLE"
+order = 2
+kind = "atom"
+title = "Port the 1.0.2 remote and global MCP package capability"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-STABLE-101"]
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Port source c10082e8c behavior by current next owners: URL-only Streamable HTTP, exact project/user-scope registration, per-client config, owned-entry recovery and local stdio compatibility.", "Review independent worker diff and run exact affected positive/negative checks on the integrated next tree; exclude 1.0.2 release metadata."]
+evidence = []
+
+[[node]]
+id = "NEXT-STABLE-RESOLUTION"
+parent = "NEXT-STABLE"
+order = 3
+kind = "atom"
+title = "Port general resolution progress and install destination prerequisite"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-STABLE-101"]
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Port source d5d169068 resolution purposes, caller-owned progress and full canonical ordinary-project install destination without changing resolver outcomes or consent.", "Review worker diff and exact affected tests before the dependent MCP follow-up."]
+evidence = []
+
+[[node]]
+id = "NEXT-STABLE-MCP-FOLLOWUP"
+parent = "NEXT-STABLE"
+order = 4
+kind = "atom"
+title = "Port 1.0.3 global MCP selection, progress and owned selective removal"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-STABLE-MCP-BASE", "NEXT-STABLE-RESOLUTION"]
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Port source d0b5e2504 after both prerequisites: progress/typed service scope, agent/server subsets, native ownership evidence, safe selective lifetime, retained subset refresh and isolated directory authority.", "Preserve next authority and exact negative controls; run focused affected checks, no live user-home mutation."]
+evidence = []
+
+[[node]]
+id = "NEXT-STABLE-INIT-PAUSE"
+parent = "NEXT-STABLE"
+order = 5
+kind = "atom"
+title = "Port indefinite init prompt progress suspension"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-STABLE-101"]
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Port source 2e511f4d9 for both project/package field dialogs, preserving input, error and resumed progress; exact no-sleep heartbeat regression."]
+evidence = []
+
+[[node]]
+id = "NEXT-STABLE-INIT-ROOT"
+parent = "NEXT-STABLE"
+order = 6
+kind = "atom"
+title = "Port root project/package declaration and group choice"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-STABLE-INIT-PAUSE"]
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Port source 6a50de54d typed root role, explicit group/name, safe typed manifest writing and nested compatibility with no-write invalid-input controls; retain next/1.1.0 layout and wire APIs."]
+evidence = []
+
+[[node]]
+id = "NEXT-STABLE-INIT-IDENTITY"
+parent = "NEXT-STABLE"
+order = 7
+kind = "atom"
+title = "Port owner-ruled init identity explanation and prompt order"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-STABLE-INIT-ROOT"]
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Port source e31234290 introduction, group/name-before-role, fixed selected identity and hyphenated package manifest regressions; preserve noninteractive defaults and explicit flags."]
+evidence = []
+
+[[node]]
+id = "NEXT-STABLE-RELEASE"
+parent = "NEXT-STABLE"
+order = 8
+kind = "gate"
+title = "Classify 1.0.3 release metadata and prove the scoped port"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-STABLE-MCP-FOLLOWUP", "NEXT-STABLE-INIT-IDENTITY"]
+mandates = ["NEXT-COMMISSION"]
+acceptance = ["Classify source 306162afb and 16bdc30cb metadata/CI/release changes against the next/1.1.0 and no-publication contract; do not copy incompatible version pins or perform publication.", "Review all integrated source-diff subjects, exact changed-code and negative-case evidence, documentation/release impact, generated maps; retain no full panel or routine mutation claim.", "Restore the prior M-16-C.4 frontier after acceptance."]
+evidence = []
