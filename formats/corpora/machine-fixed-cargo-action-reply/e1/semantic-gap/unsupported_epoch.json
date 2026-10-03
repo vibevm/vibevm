@@ -1,0 +1,11 @@
+{
+  "schema": 2,
+  "reply": {
+    "kind": "completed",
+    "run_id": "run-1",
+    "output_relative": "target/release/r8probe",
+    "output_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "artifact_record": ".vibe/state/artifacts/fixture-tool.bin.json",
+    "warning": "ambient-rustup-unproven"
+  }
+}

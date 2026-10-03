@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "code": "submission_refused",
+  "message": "fixed Cargo result uncertain",
+  "message_truncated": false,
+  "requested_action": "submit",
+  "requested_scope": {
+    "context": "host-context",
+    "target": "fixture-tool",
+    "principal": "host-principal"
+  },
+  "scope_unavailable_reason": null,
+  "known_run_id": "run-1",
+  "view": {
+    "kind": "uncertain",
+    "run_id": "run-1",
+    "partial": {
+      "target_root": {
+        "kind": "present"
+      },
+      "cargo_home": {
+        "kind": "present"
+      },
+      "cargo_lock": {
+        "kind": "absent"
+      },
+      "artifact_record": {
+        "kind": "present",
+        "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "bytes": 42
+      }
+    }
+  },
+  "effect_observation": "uncertain"
+}

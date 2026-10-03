@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "reply": {
+    "kind": "uncertain",
+    "run_id": "run-1",
+    "partial": {
+      "target_root": {
+        "kind": "present"
+      },
+      "cargo_home": {
+        "kind": "present"
+      },
+      "cargo_lock": {
+        "kind": "absent"
+      },
+      "artifact_record": {
+        "kind": "present",
+        "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "bytes": 42
+      }
+    }
+  }
+}

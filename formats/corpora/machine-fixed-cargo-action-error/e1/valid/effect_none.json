@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "code": "context_root_mismatch",
+  "message": "invalid fixed Cargo request",
+  "message_truncated": false,
+  "requested_action": "submit",
+  "requested_scope": {
+    "context": "host-context",
+    "target": "fixture-tool",
+    "principal": "host-principal"
+  },
+  "scope_unavailable_reason": null,
+  "known_run_id": null,
+  "view": null,
+  "effect_observation": "none"
+}

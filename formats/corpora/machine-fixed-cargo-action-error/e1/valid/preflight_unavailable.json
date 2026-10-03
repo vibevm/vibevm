@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "code": "invalid_request",
+  "message": "invalid fixed Cargo request",
+  "message_truncated": false,
+  "requested_action": "submit",
+  "requested_scope": null,
+  "scope_unavailable_reason": "no host",
+  "known_run_id": null,
+  "view": null,
+  "effect_observation": "unavailable"
+}

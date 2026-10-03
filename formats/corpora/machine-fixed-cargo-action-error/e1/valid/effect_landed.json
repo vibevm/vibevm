@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "code": "publication_unavailable",
+  "message": "reply publication failed",
+  "message_truncated": false,
+  "requested_action": "submit",
+  "requested_scope": {
+    "context": "host-context",
+    "target": "fixture-tool",
+    "principal": "host-principal"
+  },
+  "scope_unavailable_reason": null,
+  "known_run_id": "run-1",
+  "view": {
+    "kind": "completed",
+    "run_id": "run-1",
+    "output_relative": "target/release/r8probe",
+    "output_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "artifact_record": ".vibe/state/artifacts/fixture-tool.bin.json",
+    "warning": "ambient-rustup-unproven"
+  },
+  "effect_observation": "landed"
+}
