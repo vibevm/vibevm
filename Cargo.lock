@@ -4729,6 +4729,7 @@ dependencies = [
 name = "vibe-lifecycle"
 version = "1.1.0"
 dependencies = [
+ "chrono",
  "core-ai-native-specmark",
  "getrandom 0.3.4",
  "glob",

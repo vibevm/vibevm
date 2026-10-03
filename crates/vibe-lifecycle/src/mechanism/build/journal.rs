@@ -8,7 +8,7 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use vibe_core::manifest::{ArtifactKind, ExtensionHandler};
+use vibe_core::manifest::{ArtifactBuildTarget, ArtifactKind, ArtifactOutput, ExtensionHandler};
 use vibe_extension_registry::resolve_mechanism;
 use vibe_safefs::{Project, StableFileSnapshot};
 
@@ -40,6 +40,28 @@ const HOME: [&str; 2] = [".vibe", "build-operations"];
 const FORMAT: &str = "vibevm.build.cargo-intent/1";
 const INTENT_CAP: usize = 16 * 1024;
 const C1_CAP: usize = 1024 * 1024;
+
+/// The sole target admitted by this journal. Callers cannot vary its
+/// package, binary, output, profile, or offline posture.
+pub(crate) fn fixed_target() -> ArtifactBuildTarget {
+    let select = toml::from_str::<toml::Table>("package = 'vibe-r8-fixture'\nbin = 'r8probe'\n")
+        .expect("fixed Cargo selector");
+    let config = toml::from_str::<toml::Table>("profile = 'release'\noffline = true\n")
+        .expect("fixed Cargo config");
+    ArtifactBuildTarget {
+        id: TARGET.into(),
+        mechanism: "build:cargo".parse().expect("fixed Cargo mechanism"),
+        provider: None,
+        workdir: ".".into(),
+        inputs: None,
+        outputs: vec![ArtifactOutput {
+            id: OUTPUT.into(),
+            kind: ArtifactKind::Executable,
+            select: Some(vibe_core::manifest::ExtensionConfig::from_table(select)),
+        }],
+        config: Some(vibe_core::manifest::ExtensionConfig::from_table(config)),
+    }
+}
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum BuildJournalError {
