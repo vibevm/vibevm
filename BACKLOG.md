@@ -2372,3 +2372,13 @@ structure, and it goes when the file does.
 | @fact:B215-SEVERITY **severity** | P3 — existing lint debt prevents an owning-target green result; it is not evidence of a runtime or new-helper failure. |
 | @fact:B215-DISPOSITION **disposition** | `open` — make bounded idiomatic repairs in the owning sources when that tooling work is selected. Keep the failed strict lint verdict explicit; do not suppress those lint families globally or broaden unrelated edits to manufacture a pass. |
 | @fact:B215-FILED **filed by** | capability inventory verification, 2026-09-29. |
+
+## B-216 — Zap/2 legacy import amplifies task-group storage and memory {#b-216}
+
+| field | value |
+|---|---|
+| @fact:B216-WHAT **what** | The current Zap/1 → Zap/2 importer preserves the source but repeats task-group material through event, current-record and revision-history storage. A synthetic 32-contract import from a 216,906-byte base produced a 34,611,200-byte Zap/2 database; the first import took 78.92 seconds and peaked at 1,663,532 KiB RSS. The larger next-plan migration (458 nodes, 222 contracts) completed, but used about 9.3 GiB RSS and published about 257 MiB of database. |
+| @fact:B216-EVIDENCE **evidence** | Zap maintainer's 2026-10-03 synthetic import probe and corrected physical-table measurement (`12a5953` in the local Zap checkout); the actual next-plan import receipt counted 458 nodes, 222 contracts, 73 mandates and 1,391 obligations at Zap/2 revision 1. The larger store has 203,821 index rows; their cost is not yet apportioned by family. |
+| @fact:B216-SEVERITY **severity** | P2 — the import succeeds with preserved inactive authority, but startup time, RAM and disk amplification are material on ordinary hardware. |
+| @fact:B216-DISPOSITION **disposition** | `open` — owner decision requested: authorize a bounded Zap import-v2 design/implementation atom with phase timing and synthetic scaling first, then artifact-backed shared task groups under a versioned event/record/artifact contract while preserving old replay, inactive authority and receipt recovery; or retain the current format for this campaign. Do not start the format change before the decision. |
+| @fact:B216-FILED **filed by** | next campaign Zap transition and maintainer investigation, 2026-10-03. |
