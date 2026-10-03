@@ -170,6 +170,16 @@ Tools:
   after process loss, use the same root with `--fixed-package reattach`.
   Ordinary `vibe mcp serve` remains ungranted. A failed reattach never issues a
   replacement namespace or authorizes a second copy.
+- **`fixed_deploy_operation`** — submit or inspect only an explicitly embedded,
+  host-bound fixed `deploy:vibe-bin` route. The embedding must already hold
+  separate project, settings and user-home roots, an authored target/profile,
+  current generation observer and one host-issued C1 namespace. Send
+  `schema: 1` with `action.kind: "submit"` or `"inspect"` and a bounded `key`.
+  Request fields cannot select any root, destination, target, profile or
+  namespace. Read `completed`, `uncertain` and `recovery_required` as distinct
+  owner outcomes; an error after admission does not prove no effects. Ordinary
+  `vibe mcp serve` has no Deploy grant, and no durable CLI reattach mode is
+  offered until its recovery policy is decided.
 - **`plan_manifest_migration`** — plan a supported migration from supplied
   TOML text and explicit profiles/recipe. Inspect the exact in-memory edits
   or answer the returned questions; this tool reads no project, writes no

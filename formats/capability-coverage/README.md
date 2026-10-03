@@ -102,9 +102,18 @@ ambient-rustup warning. It proves neither a hermetic toolchain nor general
 Cargo execution. Default `vibe mcp serve` remains ungranted.
 
 `fixed-validate-mcp-serve-source-delta.json` binds the later fixed Validate
-startup bytes. The current candidate has 250 source rows, 246 surfaces, 218
+startup bytes. That checkpoint had 250 source rows, 246 surfaces, 218
 operation identities and 18 registered MCP tools. An explicit absolute-root
 issue/reattach mode carries named captured-script and control policy flags;
 default serve remains ungranted. Reattach preserves the host pointer while
 process-local questions and accepted references expire. This proves the
 fixed Validate startup/decision route, not general lifecycle availability.
+
+`fixed-deploy-mcp-operation-source-delta.json` binds the new explicitly
+host-granted fixed Deploy adapter and the extracted `list_tools` cell. The
+current candidate has 258 sources, 247 surfaces, 219 operation identities and
+19 registered MCP tools. The Deploy descriptor is visible without a grant;
+an embedding must supply a live `FixedDeployRoute` holding three pinned roots,
+one authored target/profile and a C1 namespace. Native owner-to-MCP tests
+prove this bounded route. No default CLI grant or durable reattach pointer is
+claimed while the recovery-only reattach decision remains open.
