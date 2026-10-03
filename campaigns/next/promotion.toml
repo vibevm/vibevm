@@ -264,7 +264,7 @@ source_sha256 = "b7cba32825a0d8393631e30308095c804d23d58f2e22cecefecc0b02fec7da9
 
 [[unit]]
 id = "NEXT-D-019"
-state = "active"
+state = "retired"
 source_sha256 = "68a1e2edf120bd463464a0c8be47542821a8076acebbea12fd030edfcf0087ab"
 
 [[unit]]
@@ -2810,13 +2810,13 @@ id = "NEXT-D-013-LAW"
 unit = "NEXT-D-013"
 source_sha256 = "3e2f2b522c1b291c5e7d7841990b67552898f9dc596de26cd7c4f4145474eb02"
 state = "promoted"
-meaning_review = "The owner-controlled prototype and publication laws are retained in PROP-000; local preparation is campaign operation supported by the permanent readiness rule in PROP-081, not a new prototype-exit condition."
+meaning_review = "The owner-controlled prototype and publication laws are retained in PROP-000; local preparation is campaign operation supported by the permanent readiness rule in PROP-081, not a new prototype-exit condition. Re-reviewed after the Redbook composition amendment: D-013 meaning and all three anchors remain unchanged."
 reviewer = "central"
-acceptance_commit = "df5f7af9a67bd91bf89fbdda455255eb74854fdf"
+acceptance_commit = "9289a3bddf69a4e4613807fb5f614c32ff5f4fc6"
 targets = [
-  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "OWNED-PROTOTYPE-REGIME", sha256 = "f55bfd560be838e1bb81551b4160ae6a9b0440978fa26e06d02c85225d2ffcf1" },
-  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "OWNED-CURRENT-COHORT", sha256 = "f55bfd560be838e1bb81551b4160ae6a9b0440978fa26e06d02c85225d2ffcf1" },
-  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "NEXT-PUBLICATION-HOLD", sha256 = "f55bfd560be838e1bb81551b4160ae6a9b0440978fa26e06d02c85225d2ffcf1" },
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "OWNED-PROTOTYPE-REGIME", sha256 = "31fb288ab6083191958fa8b130c6c70199dc79f1a4694181b8134993dddfb754" },
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "OWNED-CURRENT-COHORT", sha256 = "31fb288ab6083191958fa8b130c6c70199dc79f1a4694181b8134993dddfb754" },
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "NEXT-PUBLICATION-HOLD", sha256 = "31fb288ab6083191958fa8b130c6c70199dc79f1a4694181b8134993dddfb754" },
 ]
 evidence = [
   { path = "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml", sha256 = "9657564982b5613f529676bf39316cb2c5f68dd8663d6abf6c6edf12f507e9db" },
@@ -2881,12 +2881,19 @@ evidence = []
 id = "NEXT-D-019-LAW"
 unit = "NEXT-D-019"
 source_sha256 = "98f6a050c6008b360bd3686d44d20c1efd9371543b57ab1a704e54f54651d1f5"
-state = "pending"
-meaning_review = ""
-reviewer = ""
-acceptance_commit = ""
-targets = []
-evidence = []
+state = "promoted"
+meaning_review = "The selected mutable 1.1.0 cohort, owner-controlled Redbook composition, future keep/new-version offer outside an already selected line, retained historical identities and publication hold are explicit in PROP-000. The local proof/readiness tail is campaign operation supported by PROP-081, not a separate product version rule."
+reviewer = "central"
+acceptance_commit = "9289a3bddf69a4e4613807fb5f614c32ff5f4fc6"
+targets = [
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "OWNED-CURRENT-COHORT", sha256 = "31fb288ab6083191958fa8b130c6c70199dc79f1a4694181b8134993dddfb754" },
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "REDBOOK-COMPOSITION-POLICY", sha256 = "31fb288ab6083191958fa8b130c6c70199dc79f1a4694181b8134993dddfb754" },
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "NEXT-PUBLICATION-HOLD", sha256 = "31fb288ab6083191958fa8b130c6c70199dc79f1a4694181b8134993dddfb754" },
+]
+evidence = [
+  { path = "vibevm/vibespecs/common/PROP-044-change-native-formats.xml", sha256 = "b42e638eb134b99800f2342841383b2c7d5bfaf6d6fe264eeb9505c6e9ff307f" },
+  { path = "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml", sha256 = "9657564982b5613f529676bf39316cb2c5f68dd8663d6abf6c6edf12f507e9db" },
+]
 
 [[clause]]
 id = "NEXT-D-020-LAW"

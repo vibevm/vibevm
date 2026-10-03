@@ -71608,7 +71608,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:651872e74eadcb39de90759154a1367d9f6adf0ab59ef452115a52a8a28e715b",
+      "content_hash": "sha256:0c81c91f64c16bd15566d998e7570707d36c365a18c8d6dc00f9824cd2a63483",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "PROP-000: Foundational technical decisions",
@@ -73030,7 +73030,7 @@
     },
     {
       "anchor": "prod-arch",
-      "content_hash": "sha256:44bf485c1221ca00be475896f4d0c28906c0cbd9b272024d4446d8558d1d10e4",
+      "content_hash": "sha256:07a535082cd81cdcaca4b86bf666974a329b97339e347595d56d7842704c6591",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
       "heading": "17. Production architecture in the prototype phase",
@@ -73075,10 +73075,10 @@
     },
     {
       "anchor": "REDBOOK-COMPOSITION-POLICY",
-      "content_hash": "sha256:1a7d584c9e28c0dccb009728677129a001a4739fc724925a49262215ed8484e0",
+      "content_hash": "sha256:8350380f610125d4eb552f430f95b366be96d24cc74d86d3e6c51618ea30f1c3",
       "doc_path": "common/PROP-000",
       "file": "vibevm/vibespecs/common/PROP-000.xml",
-      "heading": "The owner may change the tested roster of any Redbook edition. The next composition uses the explicitly selected 1.1.0 line; routine roster updates within that mutable line require no new-version offer, renewed version question or bump. Effective selection and delivered content remain explicit and inspectable. Preserve the published Developer Preview 1 boundary and immutable retained captures and content-hash objects; roster mutability grants neither history rewriting nor prototype graduation. Generic non-Redbook freeze law remains unchanged. Public distribution of the next line remains subject to [NEXT-PUBLICATION-HOLD](#NEXT-PUBLICATION-HOLD). @status:spec/done",
+      "heading": "The owner may change the tested roster of any Redbook edition. The next composition uses the explicitly selected 1.1.0 line; routine roster updates within that mutable line require no new-version offer, renewed version question or bump. For a future Redbook composition change outside an edition/version line already explicitly selected by the owner, offer keeping the current edition or selecting a new version before overwriting it, unless the owner has already made that choice. Effective selection and delivered content remain explicit and inspectable. Preserve the published Developer Preview 1 boundary and immutable retained captures and content-hash objects; roster mutability grants neither history rewriting nor prototype graduation. Generic non-Redbook freeze law remains unchanged. Public distribution of the next line remains subject to [NEXT-PUBLICATION-HOLD](#NEXT-PUBLICATION-HOLD). @status:spec/done",
       "line": 255,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#REDBOOK-COMPOSITION-POLICY"
     },
@@ -150865,33 +150865,6 @@
       "heading": "Полноценный сценарий включает existing-file edits, pre/post witnesses и build/test новой версии source. Disjoint-only демонстрация не закрывает доставку @status:spec/done",
       "line": 6,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-018#NEXT-D-018-LAW"
-    },
-    {
-      "anchor": "root",
-      "content_hash": "sha256:1ec7113fb369e009be3a99ecd4aebdfdbe1e3211eb9100a4ebbceac2d59a220e",
-      "doc_path": "terraforms/next/contracts/NEXT-D-019",
-      "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-019.xml",
-      "heading": "NEXT owner decision D-019",
-      "line": 3,
-      "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-019#root"
-    },
-    {
-      "anchor": "NEXT-D-019-STATE",
-      "content_hash": "sha256:de12da4148e492c4aafd73b7433658d4ffd6b6f8aa08e7bc031874f821e6eec9",
-      "doc_path": "terraforms/next/contracts/NEXT-D-019",
-      "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-019.xml",
-      "heading": "Owner state: accepted. This preference is settled; do not ask it again. @status:spec/done",
-      "line": 5,
-      "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-019#NEXT-D-019-STATE"
-    },
-    {
-      "anchor": "NEXT-D-019-LAW",
-      "content_hash": "sha256:07354d4a9e4178f5f1d42c29634f12d5dc4bc0839adcdc2788971b204115eacc",
-      "doc_path": "terraforms/next/contracts/NEXT-D-019",
-      "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-019.xml",
-      "heading": "Historical owner ruling: Комплектацию любой версии Redbook можно менять. Перед будущей перезаписью агент предлагает новую версию; нынешнее введение вариантов — existing 1.0.0 без bump. Все актуальные собственные продукты/пакеты проекта — 1.0.0. Current owner amendment: the next active-owned product and repository-package cohort is mutable 1.1.0 in one increment; the prior current-1.0.0 introduction is historical. Redbook composition remains owner-controlled, with future keep/new-version offer unless already explicitly chosen. Exact historical captures and foreign/upstream/fixture/epoch identities remain unchanged. Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required. @status:spec/done",
-      "line": 6,
-      "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-019#NEXT-D-019-LAW"
     },
     {
       "anchor": "root",
