@@ -160,7 +160,32 @@ impl FixedLifecycleRoute {
                 .and_then(|s| s.job.clone())
         };
         match job {
-            Some(j) => Ok(Some(j.evidence())),
+            Some(j) => {
+                let live = j.evidence();
+                // A concurrent surface can win the shared C1 key while this
+                // connection's worker stops on the incumbent nonblocking
+                // lease. Its local no-run failure is not the key's retained
+                // truth. Prefer an independently validated C1/capsule/outcome
+                // observation once the winning owner releases the lease.
+                if live.bound_run_id().is_none()
+                    && matches!(
+                        live.status(),
+                        Some(
+                            crate::machine_submission::FixedOperationStatus::RecoveryRequired {
+                                run_id: None,
+                                ..
+                            }
+                        )
+                    )
+                {
+                    match self.host.inspect_existing_evidence(key) {
+                        Ok(Some(retained)) => return Ok(Some(retained)),
+                        Ok(None) => {}
+                        Err(error) => return Err(error),
+                    }
+                }
+                Ok(Some(live))
+            }
             None => self.host.inspect_existing_evidence(key),
         }
     }
