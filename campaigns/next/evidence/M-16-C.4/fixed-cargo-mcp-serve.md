@@ -26,4 +26,5 @@ parser case and affected process tests then passed. The source-byte delta is
 This proves only the fixed offline Cargo fixture route. Ambient rustup is
 unproven, general Cargo remains unavailable, and C.4 still has other typed
 options and domain/surface obligations. No full panel or public 1.1.0 release
-ran. An unrelated unstaged `BACKLOG.md` change was not included in this atom.
+ran. The B-221 backlog design candidate was committed separately as
+`2775e08f6` and was not included in this atom.
