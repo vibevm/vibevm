@@ -25,6 +25,9 @@ pub use lifecycle_operation::LifecycleOperationMcpTool;
 pub mod fixed_cargo_operation;
 pub use fixed_cargo_operation::FixedCargoOperationMcpTool;
 
+pub mod fixed_package_operation;
+pub use fixed_package_operation::FixedPackageOperationMcpTool;
+
 pub mod machine_operation;
 pub use machine_operation::PlanManifestMigrationEnvelopeMcpTool;
 
@@ -94,6 +97,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(LifecycleRunMcpTool),
         Box::new(LifecycleOperationMcpTool),
         Box::new(FixedCargoOperationMcpTool),
+        Box::new(FixedPackageOperationMcpTool),
         Box::new(RequirementsQueryMcpTool),
         Box::new(ReadDocMcpTool),
         Box::new(PlanManifestMigrationMcpTool),

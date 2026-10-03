@@ -1,0 +1,35 @@
+{
+  "receipt_id": "fixed-package-operation-current-source-delta",
+  "scope": "Bounded current-byte observation of the fixed package MCP registration, adapter and owner route. No historical capture or whole-facade claim.",
+  "historical_baseline_capture_id": "capability-baseline-4a3f80a34",
+  "historical_observation_capture_id": "entity-view-observed-c2a31e642",
+  "sources": [
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "16832858993b903604404f2ba3a6128463c1120b28069459508f2848d4134fe9",
+      "previous_ledger_sha256": "28b54dda9ce4d2e16118caf20cc23c0f86ec789c95f4eadaaea14b9c94a81018",
+      "change": "rebound default MCP registration source"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/fixed_package_operation.rs",
+      "sha256": "778cc5b2134e9833cd823d51e5aa0465cb996499bcf89a17f0b26ff2b00003ce",
+      "previous_ledger_sha256": null,
+      "change": "new registered adapter source"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_package/dispatch.rs",
+      "sha256": "6829104efbef08b58a62b58f61455e1c290eaa6431b82db3d4e2dcff594b33d6",
+      "previous_ledger_sha256": "6b7caf55ee085b9de8ba454f441051335f596a4da591db819b66c58d44e38f9d",
+      "change": "bounded adapter preflight constructor on incumbent owner route"
+    }
+  ],
+  "counts": {
+    "sources": 249,
+    "surfaces": 246,
+    "operation_identities": 218,
+    "registered_mcp": 18,
+    "models": 35,
+    "planned_families": 15
+  },
+  "limitations": "Registration and current source hashes grant no host authority. Tests cover the fixed package route only; C4 remains active and no full gate, public publication or native Windows/macOS result is claimed."
+}
