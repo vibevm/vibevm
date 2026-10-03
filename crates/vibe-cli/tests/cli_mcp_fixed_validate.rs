@@ -2,7 +2,7 @@
 mod common;
 
 use common::UserScratch;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::fs;
 #[cfg(target_os = "linux")]
 use std::{
@@ -251,6 +251,89 @@ fn real_stdio_explicit_trace_retains_report_and_replays_one_operation() {
     server.finish();
     assert_eq!(fs::read(root.path().join("counter")).unwrap(), b"effect\n");
 }
+
+#[cfg(target_os = "linux")]
+#[test]
+fn real_stdio_explicit_force_keeps_approved_intent_and_one_effect() {
+    let user = UserScratch::new();
+    let root = project();
+    let mut server = LiveServer::start(&user, root.path(), "issue");
+    let mut selection = typed_question(&server.call(json!({
+        "kind":"prepare", "phase":"validate",
+        "requested_options":{"force":true,"trace":false,"deploy_profile":null,"control":"none"}
+    })));
+    assert!(selection.requested_options.force);
+    assert!(matches!(selection.body, d::Body::SelectionQuestion(_)));
+    selection.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    let mut approval = typed_question(&server.call(json!({
+        "kind":"answer", "message_json":serde_json::to_string(&selection).unwrap()
+    })));
+    assert!(approval.requested_options.force);
+    assert!(matches!(approval.body, d::Body::ApprovalQuestion(_)));
+    let accepted_ref = approval.question_id.clone().unwrap();
+
+    let mut changed = approval.clone();
+    changed.requested_options.force = false;
+    changed.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let refused = server.call(json!({
+        "kind":"answer", "message_json":serde_json::to_string(&changed).unwrap()
+    }));
+    assert_eq!(refused["isError"], true, "{refused}");
+    assert!(!root.path().join("counter").exists());
+
+    approval.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let accepted = server.call(json!({
+        "kind":"answer", "message_json":serde_json::to_string(&approval).unwrap()
+    }));
+    assert_eq!(accepted["isError"], false, "{accepted}");
+    assert_eq!(
+        accepted["structuredContent"]["reply"]["accepted_ref"],
+        accepted_ref
+    );
+
+    let key = "stdio-force-once";
+    let first = typed_view(&server.call(json!({
+        "kind":"submit", "accepted_ref":accepted_ref, "key":key
+    })));
+    let mut run = first.run_id;
+    let deadline = Instant::now() + Duration::from_secs(20);
+    loop {
+        let view = typed_view(&server.call(json!({"kind":"inspect", "key":key})));
+        if let Some(observed) = &view.run_id {
+            if let Some(expected) = &run {
+                assert_eq!(observed, expected);
+            } else {
+                run = Some(observed.clone());
+            }
+        }
+        if matches!(view.status, v::Status::ResultAvailable(_)) {
+            break;
+        }
+        assert!(Instant::now() < deadline, "force terminal deadline");
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    let run = run.expect("terminal result retains its run identity");
+    let admitted: Value = serde_json::from_slice(
+        &fs::read(root.path().join(format!(
+            ".vibe/lifecycle-outcomes/{run}.admitted-input.json"
+        )))
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(admitted["request"]["requested_options"]["force"], true);
+    assert_eq!(admitted["plan"]["requested_options"]["force"], true);
+    assert_eq!(admitted["plan"]["base_v4"]["force"], false);
+    let replay = typed_view(&server.call(json!({
+        "kind":"submit", "accepted_ref":accepted_ref, "key":key
+    })));
+    assert_eq!(replay.run_id.as_deref(), Some(run.as_str()));
+    assert!(matches!(replay.status, v::Status::ResultAvailable(_)));
+    server.finish();
+    assert_eq!(fs::read(root.path().join("counter")).unwrap(), b"effect\n");
+}
+
 fn request(action: Value) -> String {
     json!({"jsonrpc":"2.0","id":71,"method":"tools/call",
         "params":{"name":"lifecycle_operation","arguments":{"schema":1,"action":action}}})
