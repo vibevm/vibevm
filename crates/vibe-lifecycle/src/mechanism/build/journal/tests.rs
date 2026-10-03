@@ -83,6 +83,185 @@ fn execution<'a>(
 }
 
 #[test]
+fn public_fixed_cargo_submit_retains_first_owner_result_and_clock() {
+    let root = fixture();
+    let lease = LifecycleLease::acquire(root.path()).unwrap();
+    let trusted = scope();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+    let registry = registry();
+    let routes = MechanismRoutes::default();
+    let first = crate::retained_mechanism::submit_fixed_cargo_build(
+        &lease,
+        &namespace,
+        &trusted,
+        "public-build",
+        &registry,
+        &routes,
+    )
+    .unwrap();
+    let crate::retained_mechanism::BuildInspection::Completed { run_id, result } = &first else {
+        panic!("fixed Cargo owner must complete: {first:?}")
+    };
+    assert!(root.path().join(&result.output_relative).is_file());
+    assert!(result.warning.contains("rustup"));
+    let intent_home = root.path().join(".vibe/build-operations");
+    let record_before = std::fs::read(root.path().join(&result.artifact_record)).unwrap();
+    let record: serde_json::Value = serde_json::from_slice(&record_before).unwrap();
+    let first_time = record["created_at"]
+        .as_str()
+        .expect("first owner timestamp");
+    assert!(chrono::DateTime::parse_from_rfc3339(first_time).is_ok());
+    assert!(
+        intent_home
+            .join(format!("{run_id}.cargo-result.json"))
+            .is_file()
+    );
+    SubmissionReservations::retire_namespace(&lease, &namespace, &trusted).unwrap();
+    std::thread::sleep(std::time::Duration::from_millis(10));
+    let second = crate::retained_mechanism::submit_fixed_cargo_build(
+        &lease,
+        &namespace,
+        &trusted,
+        "public-build",
+        &registry,
+        &routes,
+    )
+    .unwrap();
+    assert_eq!(second, first);
+    assert_eq!(
+        std::fs::read(root.path().join(&result.artifact_record)).unwrap(),
+        record_before
+    );
+    assert_eq!(
+        std::fs::read_dir(intent_home)
+            .unwrap()
+            .filter_map(|entry| entry.ok())
+            .filter(|entry| entry
+                .file_name()
+                .to_string_lossy()
+                .ends_with(".cargo-result.json"))
+            .count(),
+        1
+    );
+}
+
+#[test]
+fn public_fixed_cargo_submit_refuses_foreign_route_and_retired_key_before_effect() {
+    let root = fixture();
+    let lease = LifecycleLease::acquire(root.path()).unwrap();
+    let trusted = scope();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+    let registry = registry();
+    let foreign = SubmissionScope {
+        principal: "foreign".into(),
+        ..trusted.clone()
+    };
+    let foreign_error = crate::retained_mechanism::submit_fixed_cargo_build(
+        &lease,
+        &namespace,
+        &foreign,
+        "foreign",
+        &registry,
+        &MechanismRoutes::default(),
+    )
+    .unwrap_err();
+    assert!(matches!(
+        foreign_error.source,
+        crate::retained_mechanism::RetainedMechanismError::Submission(
+            crate::SubmissionError::ForeignScope
+        )
+    ));
+    assert_eq!(foreign_error.owner_observation, None);
+    assert!(!foreign_error.effects_may_have_begun);
+    let mut routed = MechanismRoutes::default();
+    routed.insert(
+        "build:cargo".parse().unwrap(),
+        "org.vibevm/vibe#vibe-bin".parse().unwrap(),
+    );
+    assert!(
+        crate::retained_mechanism::submit_fixed_cargo_build(
+            &lease, &namespace, &trusted, "routed", &registry, &routed,
+        )
+        .is_err()
+    );
+    SubmissionReservations::retire_namespace(&lease, &namespace, &trusted).unwrap();
+    assert_eq!(
+        crate::retained_mechanism::submit_fixed_cargo_build(
+            &lease,
+            &namespace,
+            &trusted,
+            "retired",
+            &registry,
+            &MechanismRoutes::default(),
+        )
+        .unwrap(),
+        crate::retained_mechanism::BuildInspection::Retired { run_id: None }
+    );
+    assert!(!root.path().join("target").exists());
+    assert!(!root.path().join("Cargo.lock").exists());
+    assert!(!root.path().join(".vibe/build-operations").exists());
+}
+
+#[test]
+fn public_fixed_cargo_submit_error_after_ready_retains_may_effect_observation() {
+    let root = fixture();
+    let lease = LifecycleLease::acquire(root.path()).unwrap();
+    let trusted = scope();
+    let namespace = SubmissionReservations::issue_namespace(&lease, &trusted, 60_000).unwrap();
+    let registry = registry();
+    let routes = MechanismRoutes::default();
+    let ready_run = std::cell::RefCell::new(None);
+    let error = crate::retained_mechanism::submit_fixed_cargo_build_with_owner_call(
+        &lease,
+        &namespace,
+        &trusted,
+        "ready-error",
+        &registry,
+        &routes,
+        |execution| {
+            let BuildJournalInspection::IntentReady { run_id } =
+                reserve_fixed_cargo_intent(&lease, &namespace, &trusted, "ready-error", execution)
+                    .unwrap()
+            else {
+                panic!("owner must reach Ready before injected error")
+            };
+            assert_eq!(
+                SubmissionReservations::journal_admission(
+                    &lease,
+                    &namespace,
+                    &trusted,
+                    "ready-error",
+                    &run_id,
+                )
+                .unwrap(),
+                JournalAdmission::Ready
+            );
+            *ready_run.borrow_mut() = Some(run_id);
+            Err(BuildJournalError::Refused("injected after Ready".into()))
+        },
+    )
+    .unwrap_err();
+    assert!(matches!(
+        error.source,
+        crate::retained_mechanism::RetainedMechanismError::Refused(ref reason)
+            if reason == "injected after Ready"
+    ));
+    let Some(crate::retained_mechanism::BuildInspection::Uncertain { run_id, partial }) =
+        error.owner_observation
+    else {
+        panic!("Ready run must remain a named uncertain owner observation")
+    };
+    assert_eq!(Some(run_id), ready_run.into_inner());
+    assert_eq!(
+        partial.target_root,
+        crate::retained_mechanism::ObservedPresence::Absent
+    );
+    assert!(error.effects_may_have_begun);
+    assert!(!root.path().join("target").exists());
+    assert!(!root.path().join("Cargo.lock").exists());
+}
+
+#[test]
 fn retired_unreserved_cargo_key_remains_retired_without_intent_or_effect() {
     let root = fixture();
     let targets = [target()];

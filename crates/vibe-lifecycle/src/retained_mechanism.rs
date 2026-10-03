@@ -6,7 +6,10 @@
 
 use std::path::Path;
 
+use chrono::Utc;
 use thiserror::Error;
+use vibe_core::manifest::MechanismRoutes;
+use vibe_extension_registry::MechanismRegistry;
 use vibe_wire::generated::deploy_receipt::DeployReceipt;
 use vibe_wire::generated::shared::{
     EnvironmentOperationBindingTargetMode as Mode, EnvironmentOperationBindingTargetOs as Os,
@@ -21,7 +24,9 @@ use crate::mechanism::deploy::bridge::{
 use crate::mechanism::package::journal::{
     self as package, StaticFileJournalError, StaticFileJournalInspection,
 };
-use crate::{LifecycleLease, SubmissionError, SubmissionScope};
+use crate::{
+    BuildExecution, LifecycleLease, SubmissionError, SubmissionNamespace, SubmissionScope,
+};
 
 /// Historical status only. In particular there is no fresh Ready/dispatch
 /// variant, and inspecting a prior key never invokes its provider.
@@ -101,6 +106,18 @@ pub enum RetainedMechanismError {
     Refused(String),
 }
 
+/// A failed fixed Cargo submission retains both the original refusal and the
+/// owner's best available observation. Once an owner run exists, failure to
+/// finish this call does not prove that Cargo was never started.
+#[derive(Debug, Error)]
+#[error("fixed Cargo submission failed: {source}")]
+pub struct FixedCargoSubmitError {
+    #[source]
+    pub source: RetainedMechanismError,
+    pub owner_observation: Option<BuildInspection>,
+    pub effects_may_have_begun: bool,
+}
+
 fn build_error(error: BuildJournalError) -> RetainedMechanismError {
     match error {
         BuildJournalError::Submission(error) => error.into(),
@@ -164,7 +181,84 @@ pub fn inspect_fixed_cargo_build(
 ) -> Result<BuildInspection, RetainedMechanismError> {
     let observed =
         build::inspect_fixed_cargo_cold(lease, namespace_token, scope, key).map_err(build_error)?;
-    Ok(match observed {
+    Ok(map_build_inspection(observed))
+}
+
+/// Submit the one fixed offline Cargo fixture through its existing journal
+/// owner. The host supplies a held lease, issued namespace, trusted scope,
+/// and already collected mechanism plane. Existing keys only inspect the
+/// retained first-owner result and never run Cargo again.
+pub fn submit_fixed_cargo_build(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    registry: &MechanismRegistry,
+    routes: &MechanismRoutes,
+) -> Result<BuildInspection, FixedCargoSubmitError> {
+    submit_fixed_cargo_build_with_owner_call(
+        lease,
+        namespace,
+        scope,
+        key,
+        registry,
+        routes,
+        |execution| build::execute_fixed_cargo(lease, namespace, scope, key, execution),
+    )
+}
+
+/// The private owner-call seam lets the journal's Ready/error boundary be
+/// exercised without a Cargo subprocess. Production always supplies the
+/// incumbent journal executor above.
+pub(crate) fn submit_fixed_cargo_build_with_owner_call(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    registry: &MechanismRegistry,
+    routes: &MechanismRoutes,
+    owner_call: impl FnOnce(&BuildExecution<'_>) -> Result<BuildJournalInspection, BuildJournalError>,
+) -> Result<BuildInspection, FixedCargoSubmitError> {
+    let targets = [build::fixed_target()];
+    // The journal records this value only for a new owner. Existing-key
+    // inspection ignores this retry clock and uses the retained first plan.
+    let observed_at = Utc::now().to_rfc3339();
+    let execution = BuildExecution {
+        project_root: lease.root(),
+        targets: &targets,
+        registry,
+        routes,
+        build_root: BuildExecution::default_build_root(),
+        offline: true,
+        created_at: &observed_at,
+    };
+    let observed = owner_call(&execution).map_err(|error| {
+        let source = build_error(error);
+        let owner_observation = inspect_fixed_cargo_build(lease, namespace.id(), scope, key).ok();
+        // The typed foreign-scope refusal is issued before this caller
+        // can reserve an owner run; inspecting under that foreign scope
+        // correctly refuses too. All other inspection failures stay
+        // conservatively may-effect.
+        let foreign_scope = matches!(
+            &source,
+            RetainedMechanismError::Submission(SubmissionError::ForeignScope)
+        );
+        let effects_may_have_begun = !foreign_scope
+            && !matches!(
+                owner_observation.as_ref(),
+                Some(RetainedInspection::Absent | RetainedInspection::Retired { run_id: None })
+            );
+        FixedCargoSubmitError {
+            source,
+            owner_observation,
+            effects_may_have_begun,
+        }
+    })?;
+    Ok(map_build_inspection(Some(observed)))
+}
+
+fn map_build_inspection(observed: Option<BuildJournalInspection>) -> BuildInspection {
+    match observed {
         None => RetainedInspection::Absent,
         Some(BuildJournalInspection::Retired { run_id }) => RetainedInspection::Retired { run_id },
         Some(BuildJournalInspection::RecoveryRequired { run_id })
@@ -197,7 +291,7 @@ pub fn inspect_fixed_cargo_build(
                 warning,
             },
         },
-    })
+    }
 }
 
 /// Inspect the fixed local static-file owner without reading or copying its
