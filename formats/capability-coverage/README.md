@@ -117,3 +117,9 @@ an embedding must supply a live `FixedDeployRoute` holding three pinned roots,
 one authored target/profile and a C1 namespace. Native owner-to-MCP tests
 prove this bounded route. No default CLI grant or durable reattach pointer is
 claimed while the recovery-only reattach decision remains open.
+
+`mcp-startup-order-source-delta.json` binds the later CLI source bytes after
+migration authority validation moved before fixed Validate, package and Cargo
+host issue. The source and capability counts do not change. An invalid
+migration authority now refuses before any of those grants publishes its
+durable pointer or C1 namespace; default serve also refuses at that boundary.

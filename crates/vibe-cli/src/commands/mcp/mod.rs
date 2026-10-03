@@ -69,6 +69,7 @@ use vibe_mcp::install::{AgentInstallReport, SkillInstallReport, install_skill};
 use vibe_mcp::{Server, ServerContext};
 use vibe_orchestrator::machine_operation::fixed_cargo::FixedCargoRoute;
 use vibe_orchestrator::machine_operation::fixed_package::FixedPackageRoute;
+use vibe_orchestrator::machine_submission::HostPolicyFacts;
 use vibe_orchestrator::machine_submission::cargo_grant::CargoGrantService;
 use vibe_orchestrator::machine_submission::package_grant::PackageGrantService;
 
@@ -339,6 +340,15 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
         runtime.embedded_registry_root,
         runtime.seed_default_registry,
     );
+    // Pure migration authority validation must finish before any fixed host
+    // `issue` can publish a durable pointer or C1 namespace.
+    let server_ctx = if let Some(store) = args.migration_recovery_store {
+        server_ctx
+            .with_manifest_migration_authority(store, args.migration_file)
+            .context("MCP manifest migration authority refused (governed by spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES; fix: select an absolute disjoint recovery store and portable owned authored files within the trusted server project)")?
+    } else {
+        server_ctx
+    };
     let server_ctx = match args.fixed_package {
         Some(mode) => fixed_package_server_context(server_ctx, &project_root, mode, args.ttl_ms)?,
         None => server_ctx,
@@ -348,17 +358,19 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
         None => server_ctx,
     };
     let server_ctx = match args.fixed_validate {
-        Some(mode) => {
-            fixed_validate::server_context(server_ctx, &project_root, mode, args.ttl_ms, &args)?
-        }
+        Some(mode) => fixed_validate::server_context(
+            server_ctx,
+            &project_root,
+            mode,
+            args.ttl_ms,
+            HostPolicyFacts {
+                approve_captured_script: args.approve_captured_script,
+                allow_detach: args.allow_detach,
+                allow_cancel_pre_dispatch: args.allow_cancel_pre_dispatch,
+                allow_cancel_deferred_boundary: args.allow_cancel_deferred_boundary,
+            },
+        )?,
         None => server_ctx,
-    };
-    let server_ctx = if let Some(store) = args.migration_recovery_store {
-        server_ctx
-            .with_manifest_migration_authority(store, args.migration_file)
-            .context("MCP manifest migration authority refused (governed by spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES; fix: select an absolute disjoint recovery store and portable owned authored files within the trusted server project)")?
-    } else {
-        server_ctx
     };
     let mut server = Server::stdio(server_ctx);
     server.run().context("MCP server I/O error")?;

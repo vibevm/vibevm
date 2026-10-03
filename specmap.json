@@ -9479,18 +9479,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 395,
+      "line": 407,
       "symbol": "vibe_cli::commands::mcp::fixed_cargo_server_context",
-      "end_line": 420,
+      "end_line": 432,
       "fingerprint": "tok1:6262610df097972228e448970b272ad826bd660a2571645f419a4a628441841c"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 368,
+      "line": 380,
       "symbol": "vibe_cli::commands::mcp::fixed_package_server_context",
-      "end_line": 393,
+      "end_line": 405,
       "fingerprint": "tok1:98730a58aa55eb4e09c12a18d09f1937267677d19bdc8eccfc798502ad26a1be"
     },
     {
@@ -9499,8 +9499,8 @@
       "item_kind": "fn",
       "line": 13,
       "symbol": "vibe_cli::commands::mcp::fixed_validate::server_context",
-      "end_line": 48,
-      "fingerprint": "tok1:478ba3ba4ae3aa8f50610c7b82ea3dd54ed0fd89ada2131d946726e03c786baf"
+      "end_line": 43,
+      "fingerprint": "tok1:96c016620e108ec6fccba4c647a57d840d0514ee14a4cdf82602e4f204abfbc3"
     },
     {
       "crate_name": "vibe-cli",
@@ -9533,10 +9533,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 297,
+      "line": 298,
       "symbol": "vibe_cli::commands::mcp::run_serve",
-      "end_line": 366,
-      "fingerprint": "tok1:c4d6352f80d953a61ccc5ae3addec766ea7fdc093b7a41595042b277c7bd351f"
+      "end_line": 378,
+      "fingerprint": "tok1:e589eee9b06527e255ab57fa5f94aec60a084c51addbb3c634bdf2ffeb2a066e"
     },
     {
       "crate_name": "vibe-cli",
@@ -42554,7 +42554,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::fixed_cargo_server_context",
-      "line": 395,
+      "line": 407,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-CARGO-BUILD-DECISION",
       "verb": "implements"
@@ -42562,7 +42562,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::fixed_package_server_context",
-      "line": 368,
+      "line": 380,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-PACKAGE-GRANT-DECISION",
       "verb": "implements"
@@ -42602,7 +42602,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::run_serve",
-      "line": 297,
+      "line": 298,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
       "verb": "implements",

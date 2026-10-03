@@ -1,0 +1,29 @@
+{
+  "receipt_id": "mcp-startup-order-current-source-delta",
+  "scope": "Current-byte observation of the CLI MCP startup order for migration authority and all three fixed host grants.",
+  "historical_baseline_capture_id": "capability-baseline-4a3f80a34",
+  "historical_observation_capture_id": "entity-view-observed-c2a31e642",
+  "sources": [
+    {
+      "path": "crates/vibe-cli/src/commands/mcp/mod.rs",
+      "sha256": "3c0f2f6b6251355cf7d0dfdb777adcef79c84b094d86378c3d7f9669a6b44c87",
+      "previous_ledger_sha256": "0e8f357bf988f60dac7db6d8d4a2e84f18b25d3559912be29889b2012dc3e10d",
+      "change": "validate migration authority before fixed package, Cargo or Validate host issue"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/mcp/fixed_validate.rs",
+      "sha256": "8ae6913930fc67f83c6a7f52d6b880abacad0bb4c9397ed8d2e1002e9ad86410",
+      "previous_ledger_sha256": "f8f1100572982b53ce0297c7e25f39ebb6975dbae3f3859dbc9a168b9db27955",
+      "change": "accept policy facts by value after shared startup validation"
+    }
+  ],
+  "counts": {
+    "sources": 258,
+    "surfaces": 247,
+    "operation_identities": 219,
+    "registered_mcp": 19,
+    "models": 35,
+    "planned_families": 15
+  },
+  "limitations": "This startup refusal regression does not close the wider C.4 cross-surface equivalence work or authorize a default host grant."
+}
