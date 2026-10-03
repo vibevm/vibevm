@@ -326,8 +326,9 @@ impl MachineOperationService {
 mod coverage;
 mod discovery;
 pub mod exchange;
-pub mod fixed_package;
+pub mod fixed_cargo;
 pub mod fixed_lifecycle;
+pub mod fixed_package;
 pub mod input_decision;
 pub mod lifecycle_view;
 mod publication;
