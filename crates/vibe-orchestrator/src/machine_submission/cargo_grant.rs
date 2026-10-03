@@ -17,8 +17,11 @@ use crate::machine_operation::fixed_cargo::{
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use vibe_core::manifest::{MechanismRoutes, TargetOs};
-use vibe_extension_registry::MechanismRegistry;
+use vibe_core::manifest::{ExtensionsControl, MechanismRoutes, TargetOs};
+use vibe_extension_registry::{
+    ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, MechanismRegistry,
+    collect_mechanisms,
+};
 use vibe_lifecycle::process::SelectedFileWitness;
 use vibe_lifecycle::{
     LifecycleLease, LifecycleLeaseError, SubmissionError, SubmissionNamespace,
@@ -136,6 +139,39 @@ pub struct CargoGrantService {
     routes: Arc<MechanismRoutes>,
 }
 impl CargoGrantService {
+    /// Construct only the reviewed builtin mechanism plane in the trusted host.
+    /// No manifest, request, provider installation or route text enters this plane.
+    pub fn from_trusted_builtin_host(
+        project: Arc<Project>,
+        principal: String,
+        target_os: TargetOs,
+    ) -> Result<Self, CargoGrantError> {
+        let world = ExtensionWorld {
+            installed: Vec::new(),
+            host: HostExtensionSource {
+                provider: HostProvider {
+                    identity: HostIdentity::ungrouped_project("fixed-cargo-host"),
+                    root: ".".into(),
+                    version: env!("CARGO_PKG_VERSION").into(),
+                    kind: None,
+                    content_hash: None,
+                },
+                declarations: Vec::new(),
+                controls: ExtensionsControl::default(),
+                mechanisms: Vec::new(),
+            },
+            effective_stack: None,
+        };
+        let registry = collect_mechanisms(&world).map_err(infrastructure)?;
+        Self::from_trusted_host(
+            project,
+            principal,
+            target_os,
+            Arc::new(registry),
+            Arc::new(MechanismRoutes::default()),
+        )
+    }
+
     /// Host-only construction; no ambient root or principal lookup occurs.
     #[track_caller]
     pub fn from_trusted_host(

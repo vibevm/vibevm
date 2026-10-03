@@ -74,6 +74,8 @@ pub struct ServerContext {
     fixed_package_bridge: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::fixed_package::FixedPackageRoute>,
     >,
+    fixed_cargo_bridge:
+        Option<std::sync::Arc<vibe_orchestrator::machine_operation::fixed_cargo::FixedCargoRoute>>,
     fixed_lifecycle_bridge: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute>,
     >,
@@ -156,6 +158,23 @@ impl ServerContext {
         self.fixed_package_bridge.as_ref()
     }
 
+    /// Retain one trusted fixed Cargo route for this physical project root.
+    pub fn with_fixed_cargo_route(
+        mut self,
+        route: std::sync::Arc<vibe_orchestrator::machine_operation::fixed_cargo::FixedCargoRoute>,
+    ) -> Result<Self, vibe_orchestrator::machine_operation::fixed_cargo::FixedCargoHostError> {
+        route.compare_context_root(&self.project_root)?;
+        self.fixed_cargo_bridge = Some(route);
+        Ok(self)
+    }
+
+    pub(crate) fn fixed_cargo_bridge(
+        &self,
+    ) -> Option<&std::sync::Arc<vibe_orchestrator::machine_operation::fixed_cargo::FixedCargoRoute>>
+    {
+        self.fixed_cargo_bridge.as_ref()
+    }
+
     pub fn new(project_root: impl Into<PathBuf>) -> Self {
         let store_root = vibe_core::settings::settings_dir()
             .map(|home| home.join("cache"))
@@ -169,6 +188,7 @@ impl ServerContext {
             manifest_migration_authority: None,
             fixed_lifecycle_bridge: None,
             fixed_package_bridge: None,
+            fixed_cargo_bridge: None,
         }
     }
 
@@ -188,6 +208,7 @@ impl ServerContext {
             manifest_migration_authority: None,
             fixed_lifecycle_bridge: None,
             fixed_package_bridge: None,
+            fixed_cargo_bridge: None,
         }
     }
 
@@ -293,6 +314,7 @@ mod tests {
                 manifest_migration_authority,
                 fixed_lifecycle_bridge,
                 fixed_package_bridge,
+                fixed_cargo_bridge,
             } = context;
             let _ = (
                 project_root,
@@ -303,6 +325,7 @@ mod tests {
                 manifest_migration_authority,
                 fixed_lifecycle_bridge,
                 fixed_package_bridge,
+                fixed_cargo_bridge,
             );
         }
         let _ = destructure;
