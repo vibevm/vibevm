@@ -234,7 +234,7 @@ source_sha256 = "5b2b9c4e87fde18505f85d57514e670c462f05cf7d7607f2fce566f9084b0a7
 
 [[unit]]
 id = "NEXT-D-013"
-state = "active"
+state = "retired"
 source_sha256 = "826cf216ed69ef9fab74dbb86e5af41dce512aa1c275605b25bd61150c59cb1e"
 
 [[unit]]
@@ -2809,12 +2809,18 @@ evidence = []
 id = "NEXT-D-013-LAW"
 unit = "NEXT-D-013"
 source_sha256 = "3e2f2b522c1b291c5e7d7841990b67552898f9dc596de26cd7c4f4145474eb02"
-state = "pending"
-meaning_review = ""
-reviewer = ""
-acceptance_commit = ""
-targets = []
-evidence = []
+state = "promoted"
+meaning_review = "The owner-controlled prototype and publication laws are retained in PROP-000; local preparation is campaign operation supported by the permanent readiness rule in PROP-081, not a new prototype-exit condition."
+reviewer = "central"
+acceptance_commit = "df5f7af9a67bd91bf89fbdda455255eb74854fdf"
+targets = [
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "OWNED-PROTOTYPE-REGIME", sha256 = "f55bfd560be838e1bb81551b4160ae6a9b0440978fa26e06d02c85225d2ffcf1" },
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "OWNED-CURRENT-COHORT", sha256 = "f55bfd560be838e1bb81551b4160ae6a9b0440978fa26e06d02c85225d2ffcf1" },
+  { path = "vibevm/vibespecs/common/PROP-000.xml", anchor = "NEXT-PUBLICATION-HOLD", sha256 = "f55bfd560be838e1bb81551b4160ae6a9b0440978fa26e06d02c85225d2ffcf1" },
+]
+evidence = [
+  { path = "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml", sha256 = "9657564982b5613f529676bf39316cb2c5f68dd8663d6abf6c6edf12f507e9db" },
+]
 
 [[clause]]
 id = "NEXT-D-014-LAW"

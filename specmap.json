@@ -150733,33 +150733,6 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:86b6c8fb0616e460f1fa3d7d9695001cc4d94523d2c81ddab70e7aebc7339bb4",
-      "doc_path": "terraforms/next/contracts/NEXT-D-013",
-      "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-013.xml",
-      "heading": "NEXT owner decision D-013",
-      "line": 3,
-      "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-013#root"
-    },
-    {
-      "anchor": "NEXT-D-013-STATE",
-      "content_hash": "sha256:841d81000cc1f16a560e45368f608eaff660ea7193e260b80a14bddf9dddd72f",
-      "doc_path": "terraforms/next/contracts/NEXT-D-013",
-      "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-013.xml",
-      "heading": "Owner state: accepted. This preference is settled; do not ask it again. @status:spec/done",
-      "line": 5,
-      "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-013#NEXT-D-013-STATE"
-    },
-    {
-      "anchor": "NEXT-D-013-LAW",
-      "content_hash": "sha256:3b661a0f5ef5ddeb6c13f1435d5e7d6c52fec343c5812b7de0db7783a4033a95",
-      "doc_path": "terraforms/next/contracts/NEXT-D-013",
-      "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-013.xml",
-      "heading": "Historical owner ruling: Вся текущая собственная линейка — прототип без постоянных пользователей. Только владелец объявляет выход из prototype; после этого вводятся обязательства для крупных breaking changes. Публикация/номер версии сами режим не меняют. Current owner amendment: Developer Preview 1 has been released and already has users; the earlier no-users description is historical. Prototype exit remains an explicit owner decision and must not be inferred from publication, users, version or format flags. The next active-owned cohort is mutable 1.1.0 in one increment. Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required. @status:spec/done",
-      "line": 6,
-      "uri": "spec://org.vibevm.core/vibevm/terraforms/next/contracts/NEXT-D-013#NEXT-D-013-LAW"
-    },
-    {
-      "anchor": "root",
       "content_hash": "sha256:b34ec450ed792d81ebc681a9de946c0744f7bae1747d720a09ecc9016ee6de29",
       "doc_path": "terraforms/next/contracts/NEXT-D-014",
       "file": "vibevm/vibespecs/terraforms/next/contracts/NEXT-D-014.xml",
