@@ -1,0 +1,77 @@
+{
+  "receipt_id": "fixed-deploy-mcp-operation-current-source-delta",
+  "scope": "Current-byte observation of the in-process fixed Deploy MCP adapter, its explicitly held host route and list_tools module extraction. Historical captures remain unchanged.",
+  "historical_baseline_capture_id": "capability-baseline-4a3f80a34",
+  "historical_observation_capture_id": "entity-view-observed-c2a31e642",
+  "sources": [
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "e57fa60e3b551c74364ab307b9d9127ae809b6cd628504f8f363430297322e9a",
+      "previous_ledger_sha256": "16832858993b903604404f2ba3a6128463c1120b28069459508f2848d4134fe9",
+      "change": "registered fixed Deploy tool and extracted existing list_tools cell"
+    },
+    {
+      "path": "crates/vibe-mcp/src/context.rs",
+      "sha256": "96d2c1435c4ba4191157a115bdbaf5fdbeb84c75a93ff87e856a78e35e370213",
+      "previous_ledger_sha256": "87b49da0c82c6361cc9073174054c61298f69c0f3d1c756b9136808745af3637",
+      "change": "optional private fixed Deploy route with physical project-root comparison"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/list_tools.rs",
+      "sha256": "17220ade2b8bffcc36a7345e4e36eeca87baa9dfdf1f1b2e29c97ada73b49278",
+      "previous_ledger_sha256": null,
+      "change": "existing read-only cell moved from tools.rs"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/fixed_deploy_operation.rs",
+      "sha256": "b3b3516147198bb68896faa6f05500064629e6f8cf8499fd6233971e7e50daae",
+      "previous_ledger_sha256": null,
+      "change": "new registered closed fixed Deploy adapter"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_deploy/dispatch.rs",
+      "sha256": "3704512179c76240eb72d0c29c29b585e1dd537f9650fe0d5c48e5cdf844f6a3",
+      "previous_ledger_sha256": "3a58bb401860af972c4ab7c0fc014f509ac64706eb5da1c4b81ea298e45f8721",
+      "change": "typed adapter preflight refusal before owner dispatch"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_deploy.rs",
+      "sha256": "66f1f61d35950b4151590654ac246d111113b244775475fcde188b8ae7b1df1c",
+      "previous_ledger_sha256": null,
+      "change": "newly cited incumbent host source"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_deploy/envelope.rs",
+      "sha256": "ddeab25d26de51d4a35bc1b798784740b650304c5a1a28afc5b1d219ad342aa4",
+      "previous_ledger_sha256": null,
+      "change": "newly cited incumbent envelope source"
+    },
+    {
+      "path": "schemas/machine/e1/fixed_deploy_action_request.jtd.json",
+      "sha256": "52f508bb8c1e677340e69a2816d92a2d1a651777330327bbdae1844631e81259",
+      "previous_ledger_sha256": null,
+      "change": "newly cited registered request schema"
+    },
+    {
+      "path": "schemas/machine/e1/fixed_deploy_action_reply.jtd.json",
+      "sha256": "9b7831887bbd2ac772aff703c10408a8390c82cdf68d2e417945370a9bf725f7",
+      "previous_ledger_sha256": null,
+      "change": "newly cited registered reply schema"
+    },
+    {
+      "path": "schemas/machine/e1/fixed_deploy_action_error.jtd.json",
+      "sha256": "4af4e13d59bf7bbd7deaf1cc9eedb896df7ccd7e39f190e894260b6a88fb5bab",
+      "previous_ledger_sha256": null,
+      "change": "newly cited registered error schema"
+    }
+  ],
+  "counts": {
+    "sources": 258,
+    "surfaces": 247,
+    "operation_identities": 219,
+    "registered_mcp": 19,
+    "models": 35,
+    "planned_families": 15
+  },
+  "limitations": "The default MCP server has no Deploy grant, no CLI issue/reattach mode exists and no whole Deploy facade or recovery-only decision is inferred from these source rows."
+}

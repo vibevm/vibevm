@@ -76,6 +76,9 @@ pub struct ServerContext {
     >,
     fixed_cargo_bridge:
         Option<std::sync::Arc<vibe_orchestrator::machine_operation::fixed_cargo::FixedCargoRoute>>,
+    fixed_deploy_bridge: Option<
+        std::sync::Arc<vibe_orchestrator::machine_operation::fixed_deploy::FixedDeployRoute>,
+    >,
     fixed_lifecycle_bridge: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute>,
     >,
@@ -175,6 +178,37 @@ impl ServerContext {
         self.fixed_cargo_bridge.as_ref()
     }
 
+    /// Retain a trusted fixed Deploy route with its three independently pinned
+    /// roots. This context compares the project root; the owner rechecks all
+    /// three roots before every inspect or submit. No route is constructed
+    /// from request bytes or an ambient settings directory.
+    ///
+    /// ```no_run
+    /// use std::sync::Arc;
+    /// use vibe_mcp::ServerContext;
+    /// use vibe_orchestrator::machine_operation::fixed_deploy::FixedDeployRoute;
+    /// fn bind(root: &std::path::Path, route: Arc<FixedDeployRoute>) {
+    ///     let _ctx = ServerContext::with_store_root(root, root.join("unused"))
+    ///         .with_fixed_deploy_route(route).unwrap();
+    /// }
+    /// ```
+    pub fn with_fixed_deploy_route(
+        mut self,
+        route: std::sync::Arc<vibe_orchestrator::machine_operation::fixed_deploy::FixedDeployRoute>,
+    ) -> Result<Self, vibe_orchestrator::machine_operation::fixed_deploy::FixedDeployHostError>
+    {
+        route.compare_context_root(&self.project_root)?;
+        self.fixed_deploy_bridge = Some(route);
+        Ok(self)
+    }
+
+    pub(crate) fn fixed_deploy_bridge(
+        &self,
+    ) -> Option<&std::sync::Arc<vibe_orchestrator::machine_operation::fixed_deploy::FixedDeployRoute>>
+    {
+        self.fixed_deploy_bridge.as_ref()
+    }
+
     pub fn new(project_root: impl Into<PathBuf>) -> Self {
         let store_root = vibe_core::settings::settings_dir()
             .map(|home| home.join("cache"))
@@ -189,6 +223,7 @@ impl ServerContext {
             fixed_lifecycle_bridge: None,
             fixed_package_bridge: None,
             fixed_cargo_bridge: None,
+            fixed_deploy_bridge: None,
         }
     }
 
@@ -209,6 +244,7 @@ impl ServerContext {
             fixed_lifecycle_bridge: None,
             fixed_package_bridge: None,
             fixed_cargo_bridge: None,
+            fixed_deploy_bridge: None,
         }
     }
 
@@ -315,6 +351,7 @@ mod tests {
                 fixed_lifecycle_bridge,
                 fixed_package_bridge,
                 fixed_cargo_bridge,
+                fixed_deploy_bridge,
             } = context;
             let _ = (
                 project_root,
@@ -326,6 +363,7 @@ mod tests {
                 fixed_lifecycle_bridge,
                 fixed_package_bridge,
                 fixed_cargo_bridge,
+                fixed_deploy_bridge,
             );
         }
         let _ = destructure;

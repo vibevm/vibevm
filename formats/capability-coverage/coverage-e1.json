@@ -727,7 +727,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/context.rs",
       "path": "crates/vibe-mcp/src/context.rs",
-      "sha256": "87b49da0c82c6361cc9073174054c61298f69c0f3d1c756b9136808745af3637"
+      "sha256": "96d2c1435c4ba4191157a115bdbaf5fdbeb84c75a93ff87e856a78e35e370213"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/install.rs",
@@ -752,7 +752,7 @@
     {
       "source_id": "source:crates/vibe-mcp/src/tools.rs",
       "path": "crates/vibe-mcp/src/tools.rs",
-      "sha256": "16832858993b903604404f2ba3a6128463c1120b28069459508f2848d4134fe9"
+      "sha256": "e57fa60e3b551c74364ab307b9d9127ae809b6cd628504f8f363430297322e9a"
     },
     {
       "source_id": "source:crates/vibe-mcp/src/tools/explain.rs",
@@ -1253,9 +1253,88 @@
       "source_id": "source:crates/vibe-cli/src/commands/mcp/fixed_validate.rs",
       "path": "crates/vibe-cli/src/commands/mcp/fixed_validate.rs",
       "sha256": "f8f1100572982b53ce0297c7e25f39ebb6975dbae3f3859dbc9a168b9db27955"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/list_tools.rs",
+      "path": "crates/vibe-mcp/src/tools/list_tools.rs",
+      "sha256": "17220ade2b8bffcc36a7345e4e36eeca87baa9dfdf1f1b2e29c97ada73b49278"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/fixed_deploy_operation.rs",
+      "path": "crates/vibe-mcp/src/tools/fixed_deploy_operation.rs",
+      "sha256": "b3b3516147198bb68896faa6f05500064629e6f8cf8499fd6233971e7e50daae"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_deploy.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_deploy.rs",
+      "sha256": "66f1f61d35950b4151590654ac246d111113b244775475fcde188b8ae7b1df1c"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_deploy/dispatch.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_deploy/dispatch.rs",
+      "sha256": "3704512179c76240eb72d0c29c29b585e1dd537f9650fe0d5c48e5cdf844f6a3"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation/fixed_deploy/envelope.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation/fixed_deploy/envelope.rs",
+      "sha256": "ddeab25d26de51d4a35bc1b798784740b650304c5a1a28afc5b1d219ad342aa4"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_deploy_action_request.jtd.json",
+      "path": "schemas/machine/e1/fixed_deploy_action_request.jtd.json",
+      "sha256": "52f508bb8c1e677340e69a2816d92a2d1a651777330327bbdae1844631e81259"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_deploy_action_reply.jtd.json",
+      "path": "schemas/machine/e1/fixed_deploy_action_reply.jtd.json",
+      "sha256": "9b7831887bbd2ac772aff703c10408a8390c82cdf68d2e417945370a9bf725f7"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/fixed_deploy_action_error.jtd.json",
+      "path": "schemas/machine/e1/fixed_deploy_action_error.jtd.json",
+      "sha256": "4af4e13d59bf7bbd7deaf1cc9eedb896df7ccd7e39f190e894260b6a88fb5bab"
     }
   ],
   "surfaces": [
+    {
+      "surface_id": "surface.mcp.fixed_deploy_operation",
+      "kind": "mcp",
+      "registered": true,
+      "name": "fixed_deploy_operation",
+      "aliases": [],
+      "owner": "Registered adapter calls the incumbent FixedDeployRoute and lifecycle bound vibe-bin deployment journal; no second reservation or result store is added.",
+      "target": "Only one explicitly embedded authored fixed vibe-bin target/profile at three separately pinned project, settings and user-home roots. Request arguments cannot select any of them.",
+      "effects": [
+        "Submit the fixed authored deployment through the incumbent C1/deploy journal or inspect its retained result under the trusted host."
+      ],
+      "authority": "The embedding supplies an already validated FixedDeployRoute. Default MCP context, descriptor and request bytes cannot create or reattach a Deploy host grant.",
+      "carrier": "Generated epoch-one fixed Deploy request/reply/error inside the existing operation envelope; owner receipt, partial observations, scope and effect truth remain distinct.",
+      "schema_ref": "schemas/machine/e1/fixed_deploy_action_request.jtd.json; schemas/machine/e1/fixed_deploy_action_reply.jtd.json; schemas/machine/e1/fixed_deploy_action_error.jtd.json; schemas/machine/e1/operation_envelope.jtd.json",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Only in-process host-granted fixed vibe-bin submit/inspect. No durable CLI grant, cross-process reattach, arbitrary Deploy profile/target/destination or general deployment facade.",
+      "retention": "The lifecycle bound Deploy journal owns C1, receipt and uncertain/partial state. Cold inspection reads that owner; a damaged or absent result never becomes completion from shape alone.",
+      "conformance_cases": [
+        "native:tools::fixed_deploy_operation::tests::registered_but_ungranted_deploy_refuses_without_state",
+        "native:tools::fixed_deploy_operation::tests::forged_deploy_fields_refuse_before_owner_dispatch",
+        "native:tools::fixed_deploy_operation::tests::fixed_deploy_submit_and_cold_inspect_share_one_owner_run"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/context.rs",
+        "source:crates/vibe-mcp/src/tools/fixed_deploy_operation.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_deploy.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_deploy/dispatch.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation/fixed_deploy/envelope.rs",
+        "source:schemas/machine/e1/fixed_deploy_action_request.jtd.json",
+        "source:schemas/machine/e1/fixed_deploy_action_reply.jtd.json",
+        "source:schemas/machine/e1/fixed_deploy_action_error.jtd.json",
+        "source:schemas/machine/e1/operation_envelope.jtd.json"
+      ],
+      "disposition": "operation",
+      "reason": "Bounded C4 source and native owner-to-MCP conformance. The durable Deploy reattach policy remains an owner choice and is not implemented here.",
+      "operation_id": "operation.mcp.fixed_deploy_operation"
+    },
     {
       "surface_id": "surface.mcp.fixed_package_operation",
       "kind": "mcp",
@@ -6936,8 +7015,8 @@
       "kind": "mcp",
       "name": "list_tools",
       "aliases": [],
-      "owner": "Actual run adapter crates/vibe-mcp/src/tools.rs#ListToolsMcpTool::run line116; delegated owner vibe_workspace::tools::collect_tools",
-      "target": "MCP argument-selected server/workspace/project target; context availability and caller permission unexercised",
+      "owner": "Actual read-only adapter crates/vibe-mcp/src/tools/list_tools.rs delegates to vibe_workspace::tools::collect_tools; default registration remains in tools.rs.",
+      "target": "The server context supplies one project root; the tool takes no request arguments and cannot select another root.",
       "effects": [
         "vibe_workspace::tools::collect_tools"
       ],
@@ -6953,10 +7032,11 @@
       ],
       "source_ids": [
         "source:crates/vibe-mcp/src/tools.rs",
-        "source:crates/vibe-mcp/src/tools/output.rs"
+        "source:crates/vibe-mcp/src/tools/output.rs",
+        "source:crates/vibe-mcp/src/tools/list_tools.rs"
       ],
       "disposition": "operation",
-      "reason": "descriptor and body inspected; delegated domain semantics/runtime unverified; descriptor crates/vibe-mcp/src/tools.rs:102 and run crates/vibe-mcp/src/tools.rs:116 are source observations, not executed operation or complete facade proof. Registration DataRole is supplied original registry-set membership, not execution/authorization or a hide-missing flag. CLI/MCP name is local; parent_surface_id carries hierarchy.",
+      "reason": "Exact module extraction preserves the registered list_tools descriptor and compiled canonical-use doctest. The library owns tool collection; no broader caller authentication or whole-facade conclusion follows.",
       "operation_id": "operation.mcp.list_tools",
       "registered": true
     },

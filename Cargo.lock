@@ -4787,6 +4787,7 @@ dependencies = [
  "vibe-agent-projection",
  "vibe-core",
  "vibe-doc",
+ "vibe-extension-registry",
  "vibe-install",
  "vibe-lifecycle",
  "vibe-orchestrator",

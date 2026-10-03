@@ -3,6 +3,15 @@ use super::{FixedDeployHost, FixedDeployHostError, contract::*};
 use std::{path::Path, sync::Arc};
 use vibe_lifecycle::retained_mechanism::DeployInspection;
 
+/// Typed preflight or owner-publication refusal. A missing grant cannot begin
+/// a Deploy effect.
+///
+/// ```
+/// use vibe_orchestrator::machine_operation::fixed_deploy::FixedDeployRoute;
+/// let refusal = FixedDeployRoute::dispatch(None, b"{}", std::path::Path::new("/unbound"))
+///     .unwrap_err();
+/// assert!(!refusal.effects_may_have_begun);
+/// ```
 #[derive(Debug)]
 pub struct FixedDeployRouteError {
     pub error: err::FixedDeployActionError,
@@ -18,6 +27,34 @@ impl std::fmt::Display for FixedDeployRouteError {
 }
 impl std::error::Error for FixedDeployRouteError {}
 
+impl FixedDeployRouteError {
+    /// Refuse an adapter encoding before owner dispatch. Only the retained
+    /// host may supply scope; request bytes never supply one.
+    pub fn invalid_request(message: &str, grant: Option<&FixedDeployRoute>) -> Self {
+        failure(
+            grant,
+            err::FixedDeployActionErrorCode::InvalidRequest,
+            message,
+            None,
+            false,
+            None,
+            None,
+            None,
+            None,
+        )
+    }
+}
+
+/// One trusted host route; the generated envelope remains an error without it.
+///
+/// ```
+/// use vibe_orchestrator::machine_operation::fixed_deploy::FixedDeployRoute;
+/// use vibe_wire::generated::machine::e1::operation_envelope::Body;
+/// let envelope = FixedDeployRoute::exchange_local(
+///     None, b"{}", std::path::Path::new("/unbound")
+/// ).unwrap();
+/// assert!(matches!(envelope.body, Body::Error(_)));
+/// ```
 pub struct FixedDeployRoute {
     pub(super) host: Arc<FixedDeployHost>,
 }
