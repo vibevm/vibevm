@@ -189,6 +189,92 @@ fn envelope(frame: &f::SessionFrame) -> Value {
     serde_json::from_str(json).unwrap()
 }
 
+fn mcp_package_call(fixture: &Fixture, kind: &str, key: &str) -> Value {
+    let request = json!({"jsonrpc":"2.0","id":41,"method":"tools/call",
+        "params":{"name":"fixed_package_operation","arguments":{
+            "schema":1,"action":{"kind":kind,"key":key}}}});
+    let mut command = fixture.command();
+    command
+        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .args(["--offline", "mcp", "serve", "--path"])
+        .arg(fixture.root())
+        .args(["--fixed-package", "reattach"]);
+    let mut child = command.spawn().unwrap();
+    child
+        .stdin
+        .as_mut()
+        .unwrap()
+        .write_all(request.to_string().as_bytes())
+        .unwrap();
+    child.stdin.as_mut().unwrap().write_all(b"\n").unwrap();
+    let output = child.wait_with_output().unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(output.stderr.is_empty());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert_eq!(stdout.lines().count(), 1, "{stdout}");
+    let response: Value = serde_json::from_str(stdout.trim()).unwrap();
+    assert_eq!(response["result"]["isError"], false, "{response}");
+    response["result"]["structuredContent"].clone()
+}
+
+#[test]
+fn machine_submit_then_mcp_reattach_reuses_same_package_operation() {
+    let fixture = Fixture::new();
+    let mut machine = Client::new(
+        fixture
+            .package_command("issue", Some("60000"))
+            .spawn()
+            .unwrap(),
+    );
+    let submitted = machine.call(json!({"kind":"submit","key":"cross-surface"}));
+    assert_eq!(
+        outcome(&submitted).effect_state,
+        f::OutcomeEffectState::Completed
+    );
+    let machine_envelope = envelope(&submitted);
+    let machine_reply: Value =
+        serde_json::from_str(machine_envelope["body"]["payload_json"].as_str().unwrap()).unwrap();
+    assert_eq!(machine_reply["reply"]["kind"], "completed");
+    let run_id = machine_reply["reply"]["run_id"]
+        .as_str()
+        .unwrap()
+        .to_owned();
+    machine.finish();
+
+    let pointer = fs::read(fixture.pointer()).unwrap();
+    let inspected = mcp_package_call(&fixture, "inspect", "cross-surface");
+    assert_eq!(inspected["reply"]["run_id"], run_id);
+    assert_eq!(inspected, machine_reply);
+    let replay = mcp_package_call(&fixture, "submit", "cross-surface");
+    assert_eq!(replay, machine_reply);
+    assert_eq!(fs::read(fixture.pointer()).unwrap(), pointer);
+    assert_eq!(
+        fs::read(
+            fixture
+                .root()
+                .join("target/vibe-package/launcher/launcher.bin")
+        )
+        .unwrap(),
+        b"launcher bytes\n"
+    );
+    let index: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(index["namespaces"].as_object().unwrap().len(), 1);
+    assert_eq!(
+        fs::read_dir(fixture.root().join(".vibe/package-operations"))
+            .unwrap()
+            .count(),
+        3,
+        "one intent, capsule and result"
+    );
+}
+
 #[test]
 fn issue_and_reattach_keep_one_package_effect_and_owner_identity() {
     let fixture = Fixture::new();
