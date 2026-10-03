@@ -2,9 +2,10 @@
 //! The lifecycle build journal alone reserves C1 and retains effect truth.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-CARGO-BUILD");
 
+use crate::machine_submission::{HostPolicyFacts, PolicyError, PolicyOwner, TrustedPolicySource};
 use std::sync::Arc;
-use vibe_core::manifest::MechanismRoutes;
-use vibe_extension_registry::MechanismRegistry;
+use vibe_core::manifest::{ExtensionHandler, MechanismRoutes, ProviderPin};
+use vibe_extension_registry::{MechanismRegistry, resolve_mechanism};
 use vibe_lifecycle::{
     LifecycleLease, LifecycleLeaseError, SubmissionError, SubmissionNamespace,
     SubmissionReservations, SubmissionScope,
@@ -28,9 +29,11 @@ mod tests;
 pub enum FixedCargoHostError {
     ForeignRoot,
     ForeignTarget,
+    MechanismPlane(String),
     Root(String),
     Lease(LifecycleLeaseError),
     Namespace(SubmissionError),
+    Policy(PolicyError),
     Submit(FixedCargoSubmitError),
     Inspect(RetainedMechanismError),
     PostOwner {
@@ -54,6 +57,7 @@ pub struct FixedCargoHost {
     scope: SubmissionScope,
     registry: Arc<MechanismRegistry>,
     routes: Arc<MechanismRoutes>,
+    policy: Option<(Arc<PolicyOwner>, TrustedPolicySource)>,
 }
 impl FixedCargoHost {
     pub fn from_trusted_host(
@@ -66,6 +70,7 @@ impl FixedCargoHost {
         if scope.target != "fixture-tool" {
             return Err(FixedCargoHostError::ForeignTarget);
         }
+        verify_cargo_plane(&registry, &routes)?;
         let root_token = project.root_correlation_token().map_err(root_error)?;
         let host = Self {
             project,
@@ -74,11 +79,54 @@ impl FixedCargoHost {
             scope,
             registry,
             routes,
+            policy: None,
         };
         let lease = host.lease()?;
         SubmissionReservations::validate_namespace(&lease, &host.namespace, &host.scope)
             .map_err(FixedCargoHostError::Namespace)?;
         Ok(host)
+    }
+
+    /// Bind the current policy owner to an already issued Cargo namespace.
+    /// The route rereads this owner under its incumbent lease on every call.
+    pub fn with_shared_policy(
+        project: Arc<Project>,
+        namespace: SubmissionNamespace,
+        scope: SubmissionScope,
+        registry: Arc<MechanismRegistry>,
+        routes: Arc<MechanismRoutes>,
+        owner: Arc<PolicyOwner>,
+        source: TrustedPolicySource,
+    ) -> Result<Self, FixedCargoHostError> {
+        if owner.scope() != &scope {
+            return Err(FixedCargoHostError::Policy(PolicyError::ForeignScope));
+        }
+        let mut host = Self::from_trusted_host(project, namespace, scope, registry, routes)?;
+        let lease = host.lease()?;
+        let snapshot = owner
+            .current_under_lease(&lease)
+            .map_err(FixedCargoHostError::Policy)?;
+        if snapshot.source() != &source || snapshot.facts() != &cargo_policy_facts() {
+            return Err(FixedCargoHostError::Policy(
+                PolicyError::StartupDisagreement,
+            ));
+        }
+        host.policy = Some((owner, source));
+        Ok(host)
+    }
+
+    fn check_policy(&self, lease: &LifecycleLease) -> Result<(), FixedCargoHostError> {
+        if let Some((owner, source)) = &self.policy {
+            let snapshot = owner
+                .current_under_lease(lease)
+                .map_err(FixedCargoHostError::Policy)?;
+            if snapshot.source() != source || snapshot.facts() != &cargo_policy_facts() {
+                return Err(FixedCargoHostError::Policy(
+                    PolicyError::StartupDisagreement,
+                ));
+            }
+        }
+        Ok(())
     }
 
     pub fn submit(&self, key: &str) -> Result<BuildInspection, FixedCargoHostError> {
@@ -92,6 +140,7 @@ impl FixedCargoHost {
         let lease = self.lease()?;
         SubmissionReservations::validate_namespace(&lease, &self.namespace, &self.scope)
             .map_err(FixedCargoHostError::Namespace)?;
+        self.check_policy(&lease)?;
         let result = submit_fixed_cargo_build(
             &lease,
             &self.namespace,
@@ -114,6 +163,7 @@ impl FixedCargoHost {
         let lease = self.lease()?;
         SubmissionReservations::validate_namespace(&lease, &self.namespace, &self.scope)
             .map_err(FixedCargoHostError::Namespace)?;
+        self.check_policy(&lease)?;
         let result = inspect_fixed_cargo_build(&lease, self.namespace.id(), &self.scope, key)
             .map_err(FixedCargoHostError::Inspect)?;
         self.check_root(Some(&lease))
@@ -152,6 +202,41 @@ impl FixedCargoHost {
         Ok(())
     }
 }
+/// Reuse the incumbent selector with one fixed key and no caller route.
+/// This is checked at grant construction and again at host attachment.
+pub(crate) fn verify_cargo_plane(
+    registry: &MechanismRegistry,
+    routes: &MechanismRoutes,
+) -> Result<(), FixedCargoHostError> {
+    if !routes.is_empty() {
+        return Err(FixedCargoHostError::MechanismPlane(
+            "fixed Cargo grant requires an empty host route table".into(),
+        ));
+    }
+    let key = "build:cargo".parse().expect("fixed Cargo mechanism key");
+    let expected_pin: ProviderPin = "org.vibevm/vibe#cargo"
+        .parse()
+        .expect("incumbent builtin Cargo pin");
+    let selected = resolve_mechanism(registry, &key, None, routes)
+        .map_err(|error| FixedCargoHostError::MechanismPlane(error.to_string()))?;
+    if selected.row().pin() != &expected_pin
+        || !matches!(selected.row().handler(), ExtensionHandler::Builtin { name } if name == "cargo")
+    {
+        return Err(FixedCargoHostError::MechanismPlane(
+            "build:cargo did not resolve to the incumbent builtin Cargo provider".into(),
+        ));
+    }
+    Ok(())
+}
 fn root_error(error: impl std::fmt::Display) -> FixedCargoHostError {
     FixedCargoHostError::Root(error.to_string())
+}
+
+pub(crate) fn cargo_policy_facts() -> HostPolicyFacts {
+    HostPolicyFacts {
+        approve_captured_script: false,
+        allow_detach: false,
+        allow_cancel_pre_dispatch: false,
+        allow_cancel_deferred_boundary: false,
+    }
 }
