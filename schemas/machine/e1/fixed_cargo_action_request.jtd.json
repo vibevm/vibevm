@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "action": {
+      "ref": "action"
+    }
+  },
+  "definitions": {
+    "action": {
+      "discriminator": "kind",
+      "mapping": {
+        "submit": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        },
+        "inspect": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Fixed offline Cargo action data for rust:vibe-lifecycle:build-cargo-fixed, owner rust:vibe-lifecycle; never authority. The adapter must enforce schema exactly 1 and key bounds before dispatch. Physical root, C1 scope/namespace, mechanism plane, and first-owner clock are host supplied.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-CARGO-BUILD",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::fixed_cargo_action_request"
+    }
+  }
+}
