@@ -165,6 +165,7 @@ rust-ai-native-cli = { path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-nat
 rust-ai-native-env-audit = { path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-env-audit" }
 specmap-core = { package = "core-ai-native-specmap", path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap" }
 rust-ai-native-specmap = { path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-specmap" }
+lean-ai-native-check = { path = "vibevm/vibepacks/org.vibevm.ai-native/lean-ai-native-lang/v0.1.0/crates/lean-ai-native-check" }
 specmark = { package = "core-ai-native-specmark", path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark" }
 
 # Third-party (all permissive licenses — PROP-000 §3)

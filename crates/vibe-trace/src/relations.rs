@@ -134,19 +134,36 @@ fn host_outcome(source: &ProviderSource<'_>, request: &RelationRequest<'_>) -> P
         Ok(prefix) => prefix,
         Err(outcome) => return outcome,
     };
-    let config = match specmap_core::config::Config::load(root) {
+    let loaded = match crate::composition::load(root) {
         Ok(Some(config)) => config,
         Ok(None) => return unavailable(CONFIG_ABSENT),
+        Err(error)
+            if error
+                .to_string()
+                .contains("cross-package-proof-coverage-unsupported") =>
+        {
+            return unavailable("cross-package-proof-coverage-unsupported");
+        }
         Err(_) => return invalid(CONFIG_INVALID),
     };
     // The minted URIs use the config's namespace; the host identity is
     // the request's coordinate. A mismatch builds the WRONG tree, and
     // a zero-edge `current` would claim "built and found nothing" —
     // so it is a typed unavailable, never a false current.
-    if config.namespace != source.package {
+    if loaded.config.namespace != source.package {
         return unavailable(NAMESPACE_MISMATCH);
     }
-    let map = specmap_core::index::build(root, &config);
+    let map = match crate::composition::build(root, &loaded, None) {
+        Ok(map) => map,
+        Err(error)
+            if error
+                .to_string()
+                .contains("cross-package-proof-coverage-unsupported") =>
+        {
+            return unavailable("cross-package-proof-coverage-unsupported");
+        }
+        Err(_) => return unavailable("project-map-composition-incomplete"),
+    };
     finish_with_edges(&map, source, request, &prefix)
 }
 
@@ -278,6 +295,14 @@ fn finish_with_edges(
     prefix: &str,
 ) -> ProviderOutcome {
     let namespace = format!("spec://{}/", source.package);
+    if map.edges.iter().any(|edge| {
+        matches!(edge.verb, EdgeVerb::Verifies)
+            && edge.fromSymbol.starts_with("lean::")
+            && request.addresses.contains(&edge.uri)
+            && !edge.uri.starts_with(&namespace)
+    }) {
+        return unavailable("cross-package-proof-coverage-unsupported");
+    }
     let mut edges = Vec::new();
     for edge in &map.edges {
         // The adapter filters; it never asks the library to drop.

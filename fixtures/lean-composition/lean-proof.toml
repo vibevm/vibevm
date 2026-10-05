@@ -1,0 +1,14 @@
+schema = 1
+namespace = "org.example/same-subject"
+toolchain = "leanprover/lean4:v4.34.1"
+sources = ["Example.lean"]
+allowed_axioms = []
+timeout_seconds = 30
+
+[[proof]]
+subject = "spec://org.example/same-subject/Protocol#identity"
+spec_file = "vibevm/vibespecs/Protocol.md"
+spec_revision = 1
+module = "Example"
+theorem = "Example.identity"
+grade = "g1_model"

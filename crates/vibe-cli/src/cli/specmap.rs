@@ -18,4 +18,8 @@ pub struct SpecmapArgs {
     /// current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
+    /// Write the current consumer's composed specmap.json rather than a
+    /// package-carried map. Required for an opted-in mixed-language project.
+    #[arg(long)]
+    pub current: bool,
 }

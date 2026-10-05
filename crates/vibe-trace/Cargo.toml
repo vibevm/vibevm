@@ -46,6 +46,8 @@ vibe-doc.workspace = true
 # documentation» — read as TOML data, so a field this walk never looks at
 # cannot drop a package's pages out of the map.
 toml.workspace = true
+lean-ai-native-check.workspace = true
+tempfile.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

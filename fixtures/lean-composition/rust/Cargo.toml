@@ -1,0 +1,11 @@
+[package]
+name = "rust"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+publish = false
+
+[workspace]
+resolver = "3"

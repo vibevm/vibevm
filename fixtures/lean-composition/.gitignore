@@ -1,0 +1,6 @@
+/.targets/
+/.vibe/
+/specmap.json
+/rust/target/
+/proof-artifacts/
+/__pycache__/

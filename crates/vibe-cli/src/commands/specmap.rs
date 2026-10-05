@@ -25,8 +25,7 @@ use serde::Serialize;
 use serde_json::json;
 use specmap_core::config::Config;
 use specmap_core::generated::specmap::{EdgeVerb, Specmap};
-use specmap_core::index::{Summary, build, build_with_scanner, to_canonical_bytes};
-use specmap_core::scanner::{CodeScanner, CompositeScanner, DefaultScanner};
+use specmap_core::index::Summary;
 use vibe_core::PackageKind;
 use vibe_core::manifest::{Manifest, PackageMeta};
 use vibe_trace::docscan::DocScanner;
@@ -95,9 +94,10 @@ fn generate(dir: &Path) -> Result<Outcome> {
                 .into(),
         });
     }
-    let cfg = Config::load(dir)
+    let loaded = vibe_trace::composition::load(dir)
         .with_context(|| format!("reading specmap config in `{}`", dir.display()))?
-        .unwrap_or_default();
+        .context("specmap config disappeared")?;
+    let cfg = &loaded.config;
 
     let local_namespace = cfg.namespace.clone();
     let coordinate = coordinate_of(pkg);
@@ -113,27 +113,58 @@ fn generate(dir: &Path) -> Result<Outcome> {
     // vendored six times — so the reading happens on the host side and
     // reaches the engine through its own `CodeScanner` seam, composed with
     // the built-in set rather than replacing it.
+    if loaded.composition.is_some() && local_namespace != coordinate {
+        anyhow::bail!("composition namespace must equal the package coordinate");
+    }
+    let pages = DocScanner::new(coordinate.clone());
     let mut map = if pkg.kind == PackageKind::Doc {
-        let default = DefaultScanner::new();
-        let pages = DocScanner::new(coordinate.clone());
-        let composite = CompositeScanner::new(vec![&default as &dyn CodeScanner, &pages]);
-        build_with_scanner(dir, &cfg, &composite)
+        vibe_trace::composition::build(dir, &loaded, Some(&pages))?
     } else {
-        build(dir, &cfg)
+        vibe_trace::composition::build(dir, &loaded, None)?
     };
     let remapped = local_namespace != coordinate;
     remap_namespace(&mut map, &local_namespace, &coordinate);
 
     let summary = Summary::of(&map);
-    let bytes = to_canonical_bytes(&map).context("serialising the package spec map")?;
     let path = dir.join(MAP_FILENAME);
-    std::fs::write(&path, bytes).with_context(|| format!("writing {}", path.display()))?;
+    vibe_trace::composition::write_map(dir, MAP_FILENAME, &map)?;
     Ok(Outcome::Written {
         path,
         coordinate,
         local_namespace,
         remapped,
         summary,
+    })
+}
+
+fn generate_current(dir: &Path) -> Result<Outcome> {
+    let manifest = Manifest::read(dir.join(Manifest::FILENAME))?;
+    let coordinate = if let Some(package) = &manifest.package {
+        coordinate_of(package)
+    } else if let Some(project) = &manifest.project {
+        format!(
+            "{}/{}",
+            project
+                .group
+                .as_ref()
+                .context("current map requires project group")?,
+            project.name
+        )
+    } else {
+        anyhow::bail!("current map requires one project/package coordinate");
+    };
+    let loaded =
+        vibe_trace::composition::load(dir)?.context("current map requires specmap.toml")?;
+    if loaded.config.namespace != coordinate {
+        anyhow::bail!("current map namespace differs from the selected coordinate");
+    }
+    let map = vibe_trace::composition::write(dir, &loaded, "specmap.json", None)?;
+    Ok(Outcome::Written {
+        path: dir.join("specmap.json"),
+        local_namespace: coordinate.clone(),
+        coordinate,
+        remapped: false,
+        summary: Summary::of(&map),
     })
 }
 
@@ -195,7 +226,11 @@ fn verb_key(v: &EdgeVerb) -> u8 {
 
 /// Run `vibe specmap`: generate (or skip) and report in the active output mode.
 pub fn run(ctx: &output::Context, args: SpecmapArgs) -> Result<()> {
-    match generate(&args.path)? {
+    match if args.current {
+        generate_current(&args.path)
+    } else {
+        generate(&args.path)
+    }? {
         Outcome::Written {
             path,
             coordinate,
