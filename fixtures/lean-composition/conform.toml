@@ -1,0 +1,3 @@
+[rust]
+roots = ["rust"]
+gated = ["rust"]

@@ -321,9 +321,9 @@ fn real_selected_join_negative_matrix() {
         ),
         (
             "stale_spec_revision",
-            "vibevm/vibespecs/Protocol.md",
-            "req r1",
-            "req r2",
+            "lean-proof.toml",
+            "spec_file =",
+            "spec_revision = 1\nspec_file =",
             true,
             "composition_incomplete",
         ),

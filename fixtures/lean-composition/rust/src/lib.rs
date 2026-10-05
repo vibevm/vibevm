@@ -5,10 +5,11 @@
 #![register_tool(specmark)]
 
 /// Return the supplied unsigned integer unchanged.
-#[specmark::spec(
-    implements = "spec://org.example/same-subject/Protocol#identity",
-    r = 1
-)]
+///
+/// ```
+/// assert_eq!(rust::identity(7), 7);
+/// ```
+#[specmark::spec(implements = "spec://org.example/same-subject/Protocol#identity")]
 pub fn identity(value: u64) -> u64 {
     value
 }

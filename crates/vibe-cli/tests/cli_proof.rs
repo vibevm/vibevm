@@ -124,17 +124,8 @@ fn proof_help_names_both_required_inputs_and_trusted_overrides() {
     }
 }
 
-#[test]
-#[ignore = "requires the pinned real Lean and Rust toolchains in trusted startup environment"]
-fn real_selected_proof_cli_mcp_positive_parity() {
-    use std::fs;
-    use std::path::Path;
-    use vibe_trace::proof::Reply;
-
-    let lean = std::env::var_os("LEAN_AI_NATIVE_TOOLCHAIN_DIR")
-        .expect("set the real Lean toolchain directory for this explicitly selected test");
-    let rust = std::env::var_os("RUST_LEAN_RUST_TOOLCHAIN_DIR")
-        .expect("set the real Rust toolchain directory for this explicitly selected test");
+fn selected_fixture() -> tempfile::TempDir {
+    use std::{fs, path::Path};
     let root = tempfile::tempdir().unwrap();
     let source = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/lean-composition");
     for file in [
@@ -152,6 +143,20 @@ fn real_selected_proof_cli_mcp_positive_parity() {
         fs::create_dir_all(destination.parent().unwrap()).unwrap();
         fs::copy(source.join(file), destination).unwrap();
     }
+    root
+}
+
+#[test]
+#[ignore = "requires the pinned real Lean and Rust toolchains in trusted startup environment"]
+fn real_selected_proof_cli_mcp_positive_parity() {
+    use std::fs;
+    use vibe_trace::proof::Reply;
+
+    let lean = std::env::var_os("LEAN_AI_NATIVE_TOOLCHAIN_DIR")
+        .expect("set the real Lean toolchain directory for this explicitly selected test");
+    let rust = std::env::var_os("RUST_LEAN_RUST_TOOLCHAIN_DIR")
+        .expect("set the real Rust toolchain directory for this explicitly selected test");
+    let root = selected_fixture();
     let user = UserScratch::new();
     let run_cli = |verb: &str| -> Reply {
         let output = user
@@ -218,5 +223,50 @@ fn real_selected_proof_cli_mcp_positive_parity() {
     assert_eq!(
         fs::read(root.path().join("joined-proof.json")).unwrap(),
         witness_bytes
+    );
+}
+
+#[test]
+fn selected_fact_query_preserves_rust_and_lean_relations_without_writing() {
+    let root = selected_fixture();
+    let user = UserScratch::new();
+    let output = user
+        .vibe()
+        .args([
+            "requirements",
+            "--relations",
+            "--json",
+            "--address-prefix",
+            SUBJECT,
+        ])
+        .arg("--path")
+        .arg(root.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let report: Value = serde_json::from_slice(&output.stdout).unwrap();
+    let rows = report["rows"].as_array().unwrap();
+    assert_eq!(rows.len(), 1, "{report}");
+    assert_eq!(rows[0]["address"], SUBJECT);
+    let relations = rows[0]["relations"].as_array().unwrap();
+    assert_eq!(relations.len(), 2, "{report}");
+    assert!(
+        relations
+            .iter()
+            .any(|r| r["verb"] == "implements" && r["symbol"] == "rust::identity")
+    );
+    assert!(
+        relations
+            .iter()
+            .any(|r| r["verb"] == "verifies" && r["symbol"] == "lean::Example.identity")
+    );
+    assert_eq!(report["relation_sources"][0]["state"], "current");
+    assert!(
+        !root.path().join("specmap.json").exists(),
+        "query wrote a map"
     );
 }
