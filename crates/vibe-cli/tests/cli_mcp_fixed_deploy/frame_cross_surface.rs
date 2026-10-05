@@ -316,6 +316,73 @@ fn cli_frame_and_mcp_keep_damaged_deploy_result_uncertain() {
 }
 
 #[test]
+fn cli_frame_and_mcp_refuse_replay_without_deploy_bridge() {
+    let fixture = Fixture::new();
+    fixture.seed_artifact();
+    let (mut child, session, context, target) = connect(&fixture);
+    let (completed, _) = frame_action(&mut child, &session, &context, &target, "submit");
+    assert_eq!(completed["reply"]["kind"], "completed", "{completed}");
+    let run = completed["reply"]["run_id"].as_str().unwrap();
+    let launcher_path = fixture.dir.path().join("settings/bin/local-helper");
+    let launcher_before = fs::read(&launcher_path).unwrap();
+    let pointer_dir = fixture.root().join(".vibe/cli-deploy-host-grants");
+    let pointer = fs::read_dir(&pointer_dir)
+        .unwrap()
+        .next()
+        .unwrap()
+        .unwrap()
+        .path();
+    let pointer_before = fs::read(&pointer).unwrap();
+    drop(child.stdin.take());
+    assert!(child.wait_with_output().unwrap().status.success());
+
+    let bridge = fixture.root().join(format!(
+        ".vibe/deploy-operations/{run}.bound-vibe-bin-bridge.json"
+    ));
+    let result = fixture.root().join(format!(
+        ".vibe/deploy-operations/{run}.bound-vibe-bin-result.json"
+    ));
+    assert!(bridge.exists());
+    assert!(result.exists());
+    fs::remove_file(&bridge).unwrap();
+
+    for kind in ["inspect", "submit"] {
+        let mcp = mcp_reply(&fixture.mcp("reattach", false, &request(kind)));
+        assert_eq!(mcp["result"]["isError"], false, "{mcp}");
+        let observed = &mcp["result"]["structuredContent"]["reply"];
+        assert_eq!(observed["kind"], "recovery_required", "{mcp}");
+        assert_eq!(observed["run_id"], run);
+
+        let (mut child, session, context, target) = connect_mode(&fixture, "reattach");
+        let (cli, outcome) = frame_action(&mut child, &session, &context, &target, kind);
+        assert_eq!(cli["reply"], *observed);
+        assert_eq!(
+            serde_json::to_value(outcome.effect_state).unwrap(),
+            "uncertain"
+        );
+        drop(child.stdin.take());
+        assert!(child.wait_with_output().unwrap().status.success());
+    }
+
+    assert!(!bridge.exists());
+    assert!(result.exists());
+    assert_eq!(fs::read(&pointer).unwrap(), pointer_before);
+    assert_eq!(fs::read_dir(&pointer_dir).unwrap().count(), 1);
+    assert_eq!(fs::read(&launcher_path).unwrap(), launcher_before);
+    let index: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    let namespaces = index["namespaces"].as_object().unwrap();
+    assert_eq!(namespaces.len(), 1);
+    let keys = namespaces.values().next().unwrap()["keys"]
+        .as_object()
+        .unwrap();
+    assert_eq!(keys.len(), 1);
+    assert_eq!(keys["old-key"]["domain_run_id"], run);
+}
+
+#[test]
 fn cli_frame_and_mcp_process_race_one_fixed_deploy_key() {
     let fixture = Fixture::new();
     fixture.seed_artifact();
