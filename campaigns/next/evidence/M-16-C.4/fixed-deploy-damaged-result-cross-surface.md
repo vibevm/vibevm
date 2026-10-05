@@ -7,13 +7,16 @@ inspect the same key. Both return the same run ID and `uncertain`, with partial
 observations `intent=absent`, `receipt=present`, and `sidecar=present`. The CLI
 frame outcome also reports `effect_state=uncertain`.
 
-After inspection the result remains absent, the pointer and launcher bytes are
-unchanged, and the C1 index retains one namespace and one key for the original
-run. Only inspect actions follow the damage, so this fixture never retries the
-effect. It establishes post-effect uncertainty when the terminal result record
-is lost; it does not model an interruption during the effect.
+Both fresh processes then submit the same key again. MCP returns the retained
+typed partial reply, and the CLI frame returns that same reply with
+`effect_state=uncertain`. The result remains absent, the pointer and launcher
+bytes are unchanged, and the C1 index retains one namespace and one key for
+the original run. This proves same-key replay does not retry the effect after
+result loss. It establishes post-effect uncertainty when the terminal result
+record is lost; it does not model an interruption during the effect.
 
-Exact checks on 2026-10-05: the new case passed 1/1; the affected
-`frame_cross_surface::` family passed 3/3. Scoped rustfmt and `git diff --check`
-passed. The fixture redirects `HOME` and `VIBE_SETTINGS` to temporary
-directories and touches no public host.
+Exact checks on 2026-10-05: the extended case passed 1/1. The earlier affected
+`frame_cross_surface::` family passed 3/3 before this extension. Scoped rustfmt
+and `git diff --check` passed after applying rustfmt to one pre-existing stale
+assertion in the same test file. The fixture redirects `HOME` and `VIBE_SETTINGS`
+to temporary directories and touches no public host.

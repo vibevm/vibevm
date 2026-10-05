@@ -277,6 +277,27 @@ fn cli_frame_and_mcp_keep_damaged_deploy_result_uncertain() {
         String::from_utf8_lossy(&output.stderr)
     );
 
+    let mcp_replay = mcp_reply(&fixture.mcp("reattach", false, &request("submit")));
+    assert_eq!(mcp_replay["result"]["isError"], false, "{mcp_replay}");
+    assert_eq!(
+        mcp_replay["result"]["structuredContent"]["reply"],
+        *observed
+    );
+    let (mut child, session, context, target) = connect_mode(&fixture, "reattach");
+    let (cli_replay, outcome) = frame_action(&mut child, &session, &context, &target, "submit");
+    assert_eq!(cli_replay["reply"], *observed);
+    assert_eq!(
+        serde_json::to_value(outcome.effect_state).unwrap(),
+        "uncertain"
+    );
+    drop(child.stdin.take());
+    let output = child.wait_with_output().unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+
     assert!(!result.exists());
     assert_eq!(fs::read(&pointer).unwrap(), pointer_before);
     assert_eq!(fs::read_dir(&pointer_dir).unwrap().count(), 1);
@@ -398,11 +419,9 @@ fn cli_frame_and_mcp_process_race_one_fixed_deploy_key() {
             .count(),
         1
     );
-    assert!(
-        fixture
-            .dir
-            .path()
-            .join("settings/bin/local-helper")
-            .exists()
-    );
+    assert!(fixture
+        .dir
+        .path()
+        .join("settings/bin/local-helper")
+        .exists());
 }
