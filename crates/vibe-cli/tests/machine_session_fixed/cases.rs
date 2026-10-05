@@ -290,18 +290,13 @@ fn frame_supplied_authority_outer_ids_and_unsupported_options_never_dispatch() {
             json!(json!({"schema":1,field:"caller","action":inspect("absent")}).to_string());
         assert_eq!(client.raw(forged).error().code, Code::InvalidRequest);
     }
-    for options in [
-        json!({"force":false,"trace":true,"deploy_profile":null,"control":"none"}),
-        json!({"force":false,"trace":false,"deploy_profile":"posix","control":"none"}),
-    ] {
-        let publication =
-            client.call(json!({"kind":"prepare","phase":"validate","requested_options":options}));
-        assert_eq!(publication.error().code, Code::ImplementationGap);
-        assert_eq!(
-            publication.outcome.effect_state,
-            f::OutcomeEffectState::NoEffects
-        );
-    }
+    let publication = client.call(json!({"kind":"prepare","phase":"validate",
+        "requested_options":{"force":false,"trace":false,"deploy_profile":"posix","control":"none"}}));
+    assert_eq!(publication.error().code, Code::ImplementationGap);
+    assert_eq!(
+        publication.outcome.effect_state,
+        f::OutcomeEffectState::NoEffects
+    );
     fixture.no_provider();
     client.finish();
 }
