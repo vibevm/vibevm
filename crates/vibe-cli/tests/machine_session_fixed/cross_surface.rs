@@ -159,6 +159,125 @@ fn process_mcp_approve(mcp: &mut ProcessMcp, control: &str) -> String {
         .into()
 }
 
+fn cli_approve_combined_options(cli: &mut Client) -> String {
+    let mut question = cli
+        .call(json!({
+            "kind":"prepare", "phase":"validate",
+            "requested_options":{"force":true,"trace":true,"deploy_profile":null,"control":"none"}
+        }))
+        .question();
+    assert!(question.requested_options.force && question.requested_options.trace);
+    question.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    question = cli.call(answer(&question)).question();
+    assert!(question.requested_options.force && question.requested_options.trace);
+    question.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let Reply::Validated(reply) = cli.call(answer(&question)).reply().reply else {
+        panic!("combined options CLI approval")
+    };
+    reply.accepted_ref
+}
+
+fn process_mcp_approve_force_options(mcp: &mut ProcessMcp, trace: bool) -> String {
+    let mut question = mcp_question(&mcp.call(json!({
+        "kind":"prepare", "phase":"validate",
+        "requested_options":{"force":true,"trace":trace,"deploy_profile":null,"control":"none"}
+    })));
+    assert!(question.requested_options.force);
+    assert_eq!(question.requested_options.trace, trace);
+    question.body = d::Body::SelectionAnswer(Box::new(d::BodySelectionAnswer {
+        choice_ids: vec!["none".into()],
+    }));
+    question = mcp_question(&mcp.call(answer(&question)));
+    assert!(question.requested_options.force);
+    assert_eq!(question.requested_options.trace, trace);
+    question.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let accepted = mcp.call(answer(&question));
+    assert_eq!(accepted["isError"], false, "{accepted}");
+    accepted["structuredContent"]["reply"]["accepted_ref"]
+        .as_str()
+        .unwrap()
+        .into()
+}
+
+#[test]
+fn cli_frame_and_mcp_stdio_combined_options_share_one_run_and_trace() {
+    let fixture = Fixture::new(true);
+    let mut cli = fixture.client("issue");
+    let cli_reference = cli_approve_combined_options(&mut cli);
+    for name in ["config.toml", "settings.toml", "registry.toml"] {
+        fs::write(fixture.dir.path().join("home/.vibe").join(name), "").unwrap();
+    }
+    let mut mcp = ProcessMcp::reattach(&fixture);
+    let mcp_reference = process_mcp_approve_force_options(&mut mcp, true);
+    let key = "combined-cli-mcp";
+    let cli_submit = cli.call(submit(&cli_reference, key));
+    assert!(matches!(cli_submit.envelope.body, e::Body::Result(_)));
+    until(|| fixture.root().join("entered").exists());
+    fixture.count_one();
+    let mcp_submit = mcp.call(submit(&mcp_reference, key));
+    assert!(
+        mcp_submit["isError"] == false
+            || mcp_submit["structuredContent"]["code"] == "inspection_unavailable",
+        "{mcp_submit}"
+    );
+    fixture.release();
+    let cli_terminal = terminal(&mut cli, key).row();
+    let run = cli_terminal.run_id.clone().expect("terminal C1 run");
+    let deadline = Instant::now() + Duration::from_secs(20);
+    let mcp_terminal = loop {
+        let reply = mcp.call(inspect(key));
+        if reply["isError"] == false {
+            let view = mcp_row(&reply);
+            if matches!(view.status, v::Status::ResultAvailable(_)) {
+                break view;
+            }
+        } else {
+            assert_eq!(reply["structuredContent"]["code"], "inspection_unavailable");
+        }
+        assert!(
+            Instant::now() < deadline,
+            "MCP combined options terminal deadline"
+        );
+        std::thread::sleep(Duration::from_millis(10));
+    };
+    assert_same_terminal_truth(&cli_terminal, &mcp_terminal);
+    let replay = mcp.call(submit(&mcp_reference, key));
+    assert_eq!(replay["isError"], false, "{replay}");
+    assert_eq!(mcp_row(&replay).run_id.as_deref(), Some(run.as_str()));
+    let changed_ref = process_mcp_approve_force_options(&mut mcp, false);
+    let changed = mcp.call(submit(&changed_ref, key));
+    assert_eq!(changed["isError"], true, "{changed}");
+    assert_eq!(changed["structuredContent"]["code"], "submission_refused");
+    cli.finish();
+    mcp.finish();
+    fixture.count_one();
+    let admitted: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(format!(
+            ".vibe/lifecycle-outcomes/{run}.admitted-input.json"
+        )))
+        .unwrap(),
+    )
+    .unwrap();
+    for stage in ["request", "plan"] {
+        assert_eq!(admitted[stage]["requested_options"]["force"], true);
+        assert_eq!(admitted[stage]["requested_options"]["trace"], true);
+    }
+    let report: Value = serde_json::from_slice(
+        &fs::read(
+            fixture
+                .root()
+                .join(format!(".vibe/lifecycle-outcomes/{run}.report.json")),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(report["trace"]["run_id"], run);
+    assert_eq!(report["trace"]["status"], "ok");
+    assert_eq!(report["trace"]["finalised"], true);
+}
+
 #[test]
 fn real_cli_frame_and_mcp_stdio_race_one_fixed_validate_key() {
     let fixture = Fixture::new(true);
