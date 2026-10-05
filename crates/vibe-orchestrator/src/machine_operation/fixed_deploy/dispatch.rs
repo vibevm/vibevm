@@ -1,5 +1,5 @@
 //! Strict fixed Deploy action dispatch; host callback is private and test-only.
-use super::{FixedDeployHost, FixedDeployHostError, contract::*};
+use super::{FixedDeployHost, FixedDeployHostError, FixedDeployRecoveryHost, contract::*};
 use std::{path::Path, sync::Arc};
 use vibe_lifecycle::retained_mechanism::DeployInspection;
 
@@ -56,19 +56,48 @@ impl FixedDeployRouteError {
 /// assert!(matches!(envelope.body, Body::Error(_)));
 /// ```
 pub struct FixedDeployRoute {
-    pub(super) host: Arc<FixedDeployHost>,
+    pub(super) host: RouteHost,
+}
+pub(super) enum RouteHost {
+    Active(Arc<FixedDeployHost>),
+    RecoveryOnly(Arc<FixedDeployRecoveryHost>),
+}
+impl RouteHost {
+    fn scope(&self) -> &vibe_lifecycle::SubmissionScope {
+        match self {
+            Self::Active(host) => &host.scope,
+            Self::RecoveryOnly(host) => &host.scope,
+        }
+    }
 }
 impl FixedDeployRoute {
     pub fn new(host: Arc<FixedDeployHost>) -> Self {
-        Self { host }
+        Self {
+            host: RouteHost::Active(host),
+        }
+    }
+    /// An old pointer can inspect retained keys, but cannot submit effects.
+    pub fn recovery_only(host: Arc<FixedDeployRecoveryHost>) -> Self {
+        Self {
+            host: RouteHost::RecoveryOnly(host),
+        }
     }
     pub fn compare_context_root(&self, root: &Path) -> Result<(), FixedDeployHostError> {
-        self.host.check_roots(None)?;
+        let token = match &self.host {
+            RouteHost::Active(host) => {
+                host.check_roots(None)?;
+                &host.root_tokens[0]
+            }
+            RouteHost::RecoveryOnly(host) => {
+                host.check_roots(None)?;
+                &host.root_tokens[0]
+            }
+        };
         let supplied = vibe_safefs::Project::open(root).map_err(super::root_error)?;
         if supplied
             .root_correlation_token()
             .map_err(super::root_error)?
-            != self.host.root_tokens[0]
+            != *token
         {
             return Err(FixedDeployHostError::ForeignRoot);
         }
@@ -145,7 +174,40 @@ impl FixedDeployRoute {
                 None,
             )
         })?;
-        let observed = owner_call(&route.host, &request.action, key).map_err(|error| {
+        let observed = match &route.host {
+            RouteHost::Active(host) => owner_call(host, &request.action, key),
+            RouteHost::RecoveryOnly(host) => match &request.action {
+                req::Action::Inspect(_) => host.inspect(key),
+                req::Action::Submit(_) => {
+                    let inspection = host.inspect(key);
+                    return Err(match inspection {
+                        Ok(observation) => failure(
+                            grant,
+                            err::FixedDeployActionErrorCode::SubmissionRefused,
+                            "old Deploy grant is inspection-only; issue a new trusted host for effects",
+                            Some(action),
+                            !matches!(&observation, DeployInspection::Absent),
+                            Some(observation),
+                            None,
+                            Some(key),
+                            None,
+                        ),
+                        Err(error) => failure(
+                            grant,
+                            err::FixedDeployActionErrorCode::SubmissionRefused,
+                            "old Deploy grant is inspection-only; retained key inspection unavailable",
+                            Some(action),
+                            true,
+                            None,
+                            Some(error),
+                            Some(key),
+                            None,
+                        ),
+                    });
+                }
+            },
+        }
+        .map_err(|error| {
             let (may_effect, owner_observation, run) = owner_error_parts(&error);
             failure(
                 grant,
@@ -265,7 +327,7 @@ pub(super) fn failure(
             requested_action: action.map(str::to_owned),
             requested_phase: action.map(|_| "deploy".into()),
             requested_scope: grant.map(|route| {
-                let scope = &route.host.scope;
+                let scope = route.host.scope();
                 err::Scope {
                     context: scope.context.clone(),
                     target: scope.target.clone(),

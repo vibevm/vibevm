@@ -1,4 +1,5 @@
 use super::*;
+use crate::machine_operation::fixed_deploy::FixedDeployRoute;
 use serde_json::json;
 use std::{fs, path::Path};
 use vibe_core::manifest::{DeployTarget, ExtensionConfig, ExtensionsControl, MechanismRoutes};
@@ -332,6 +333,97 @@ fn generation_observer_drift_keeps_only_old_key_inspection() {
         recovery.inspect("old-key").unwrap(),
         DeployInspection::Absent
     ));
+}
+
+#[test]
+fn recovery_route_rejects_submit_with_retained_effect_truth() {
+    use vibe_wire::generated::machine::e1::{
+        fixed_deploy_action_error::FixedDeployActionErrorEffectObservation as Effect,
+        fixed_deploy_action_reply::Reply,
+    };
+
+    let fixture = Fixture::new();
+    let service = fixture.service();
+    let DeployInspection::Completed { run_id, .. } =
+        service.issue(60_000).unwrap().submit("once").unwrap()
+    else {
+        panic!("fixture Deploy did not complete");
+    };
+    let mut source = fs::read_to_string(fixture.project.path().join("vibe.toml")).unwrap();
+    source.push_str("# changed after the retained effect\n");
+    fs::write(fixture.project.path().join("vibe.toml"), source).unwrap();
+
+    let DeployGrantAttachment::RecoveryOnly(host) = fixture.service().reattach().unwrap() else {
+        panic!("drift retained effect authority");
+    };
+    let route = FixedDeployRoute::recovery_only(Arc::new(host));
+    let request = |kind: &str, key: &str| {
+        serde_json::to_vec(&json!({"schema":1,"action":{"kind":kind,"key":key}})).unwrap()
+    };
+    let reply = FixedDeployRoute::dispatch(
+        Some(&route),
+        &request("inspect", "once"),
+        fixture.project.path(),
+    )
+    .unwrap();
+    assert!(matches!(reply.reply, Reply::Completed(row) if row.run_id == run_id));
+
+    let old = FixedDeployRoute::dispatch(
+        Some(&route),
+        &request("submit", "once"),
+        fixture.project.path(),
+    )
+    .unwrap_err();
+    assert!(old.effects_may_have_begun);
+    assert_eq!(old.error.known_run_id.as_deref(), Some(run_id.as_str()));
+    assert_eq!(old.error.effect_observation, Effect::Landed);
+
+    let envelope = serde_json::to_vec(&json!({
+        "schema": 1,
+        "operation_id": crate::machine_operation::fixed_deploy::OPERATION_ID,
+        "domain_owner": crate::machine_operation::fixed_deploy::DOMAIN_OWNER,
+        "source_id": null,
+        "evidence_id": null,
+        "body": {
+            "stage": "input",
+            "format_id": vibe_wire::generated::format_id::FormatId::MachineFixedDeployActionRequest.id(),
+            "payload_json": String::from_utf8(request("submit", "once")).unwrap()
+        }
+    }))
+    .unwrap();
+    let published =
+        FixedDeployRoute::exchange_local(Some(&route), &envelope, fixture.project.path()).unwrap();
+    let vibe_wire::generated::machine::e1::operation_envelope::Body::Error(error) = published.body
+    else {
+        panic!("recovery-only submit did not publish a typed error");
+    };
+    assert_eq!(
+        error.effect_state,
+        vibe_wire::generated::machine::e1::operation_envelope::BodyErrorEffectState::Completed
+    );
+    assert_eq!(error.provenance_id.as_deref(), Some(run_id.as_str()));
+
+    let fresh = FixedDeployRoute::dispatch(
+        Some(&route),
+        &request("submit", "new-effect"),
+        fixture.project.path(),
+    )
+    .unwrap_err();
+    assert!(!fresh.effects_may_have_begun);
+    assert_eq!(fresh.error.effect_observation, Effect::None);
+    let lease = LifecycleLease::acquire(fixture.project.path()).unwrap();
+    let pointer = service.read(&lease).unwrap().unwrap();
+    let namespace = service.validate_namespace(&lease, &pointer).unwrap();
+    assert!(
+        SubmissionReservations::inspect_existing_key(
+            &lease,
+            &namespace,
+            &service.scope,
+            "new-effect"
+        )
+        .unwrap()
+        .is_none()
+    );
 }
 
 #[test]
