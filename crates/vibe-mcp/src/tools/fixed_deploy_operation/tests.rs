@@ -345,3 +345,59 @@ fn fixed_deploy_mcp_and_local_route_race_one_key() {
     let cold_local: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
     assert_eq!(cold_local, cold_mcp["structuredContent"]);
 }
+
+#[test]
+fn fixed_deploy_damaged_capsule_keeps_partial_truth_across_mcp_and_local() {
+    let fixture = Fixture::new();
+    let route = fixture.route();
+    let first = call(fixture.context(route.clone()), action("submit", "once"));
+    assert_eq!(first["isError"], false, "{first}");
+    let run_id = first["structuredContent"]["reply"]["run_id"]
+        .as_str()
+        .unwrap();
+    let capsule = fixture.project.path().join(format!(
+        ".vibe/deploy-operations/{run_id}.bound-vibe-bin-input.json"
+    ));
+    fs::remove_file(capsule).unwrap();
+
+    let mcp = call(fixture.context(fixture.route()), action("inspect", "once"));
+    assert_eq!(mcp["isError"], false, "{mcp}");
+    let partial = &mcp["structuredContent"]["reply"];
+    assert_eq!(partial["kind"], "uncertain", "{mcp}");
+    assert_eq!(partial["run_id"], run_id);
+    assert_eq!(partial["partial"]["receipt"]["kind"], "present");
+    assert_eq!(partial["partial"]["sidecar"]["kind"], "present");
+
+    let input = json!({
+        "schema":1,"operation_id":OPERATION_ID,"domain_owner":DOMAIN_OWNER,
+        "source_id":null,"evidence_id":null,
+        "body":{"stage":"input","format_id":FormatId::MachineFixedDeployActionRequest.id(),
+            "payload_json":action("inspect", "once").to_string()}
+    })
+    .to_string();
+    let cold = FixedDeployRoute::exchange_local(
+        Some(route.as_ref()),
+        input.as_bytes(),
+        fixture.project.path(),
+    )
+    .unwrap();
+    let e::Body::Result(row) = cold.body else {
+        panic!("cold local inspection did not publish a result");
+    };
+    let local: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
+    assert_eq!(local, mcp["structuredContent"]);
+
+    let replay = call(fixture.context(fixture.route()), action("submit", "once"));
+    assert_eq!(replay["structuredContent"], mcp["structuredContent"]);
+    let index: Value = serde_json::from_slice(
+        &fs::read(
+            fixture
+                .project
+                .path()
+                .join(".vibe/machine-submissions.json"),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(index["namespaces"].as_object().unwrap().len(), 1);
+}
