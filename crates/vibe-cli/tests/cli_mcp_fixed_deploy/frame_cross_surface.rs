@@ -64,7 +64,7 @@ fn frame_action(
     )
 }
 
-fn raw_frame_action(
+pub(super) fn raw_frame_action(
     child: &mut std::process::Child,
     session: &str,
     context: &str,
@@ -101,7 +101,10 @@ fn raw_frame_action(
     (serde_json::from_str(&payload).unwrap(), outcome)
 }
 
-fn connect_mode(fixture: &Fixture, mode: &str) -> (std::process::Child, String, String, String) {
+pub(super) fn connect_mode(
+    fixture: &Fixture,
+    mode: &str,
+) -> (std::process::Child, String, String, String) {
     let mut command = fixture.command();
     command
         .args(["machine", "session", "--root"])

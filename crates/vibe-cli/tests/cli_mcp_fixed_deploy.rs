@@ -12,6 +12,8 @@ use vibe_wire::{behaviour::artifact_record::validate, generated::artifact_record
 
 #[path = "cli_mcp_fixed_deploy/frame_cross_surface.rs"]
 mod frame_cross_surface;
+#[path = "cli_mcp_fixed_deploy/local_route.rs"]
+mod local_route;
 
 struct Fixture {
     dir: tempfile::TempDir,
