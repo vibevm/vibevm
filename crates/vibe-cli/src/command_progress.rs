@@ -43,6 +43,8 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "package",
     "prefs",
     "progress",
+    "proof-check",
+    "proof-verify",
     "query",
     "refactor",
     "registry",
@@ -229,6 +231,8 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | FactsSubcommand::Report { .. } => FiniteFallback("Command facts"),
         },
         Command::Requirements(_) => FiniteFallback("Command requirements"),
+        Command::ProofCheck(_) => FiniteFallback("Command proof-check"),
+        Command::ProofVerify(_) => FiniteFallback("Command proof-verify"),
         Command::Why(_) => FiniteFallback("Command why"),
         Command::Refactor(args) => match &args.command {
             RefactorCommand::PlanMigration(_) | RefactorCommand::MigrationOperation(_) => {

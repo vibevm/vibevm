@@ -25,6 +25,7 @@ mod mcp;
 mod pkg;
 mod prefs;
 mod progress;
+mod proof;
 mod query;
 mod registry;
 mod requirements;
@@ -52,6 +53,7 @@ pub use mcp::*;
 pub use pkg::*;
 pub use prefs::*;
 pub use progress::*;
+pub use proof::*;
 pub use query::*;
 pub use registry::*;
 pub use requirements::*;
@@ -393,6 +395,12 @@ pub enum Command {
     /// subgraph; the default is the deterministic text view. Contrast
     /// `vibe trace`, a delegating alias to the installed stack's `trace`.
     Explain(ExplainArgs),
+
+    /// Run uncached selected Rust/Lean checks and write their witness; returns JSON.
+    ProofCheck(ProofArgs),
+
+    /// Verify a saved selected-subject witness using fresh checks; returns JSON.
+    ProofVerify(ProofArgs),
 
     /// Search the code↔spec map by independent filters (A5A-MAPSEARCH):
     /// `--uri` (exact spec address), `--symbol` (substring of a code

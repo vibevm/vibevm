@@ -547,6 +547,8 @@ fn dispatch_tools_list_includes_every_cell() {
     assert!(names.contains(&"materialise_subskill"));
     assert!(names.contains(&"agentic_explain"));
     assert!(names.contains(&"read_doc"));
+    assert!(names.contains(&"proof_check"));
+    assert!(names.contains(&"proof_verify"));
 }
 
 // --- read_doc (PROP-057: the page an agent reads, by address) -----------
