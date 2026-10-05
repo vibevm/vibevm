@@ -5,6 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FR
 
 pub mod cargo;
 pub mod deploy;
+pub mod exact_local_install;
 pub mod fixed;
 pub mod framing;
 pub mod incremental;

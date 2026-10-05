@@ -108,8 +108,13 @@ Tools:
   reattach never revives process-local questions or accepted references.
   Start with `action.kind: "prepare"`, `phase: "validate"`, and explicit
   `requested_options`: `force: false`, `trace: false`,
-  `deploy_profile: null`, `control: "none"`. This owner supports the fixed
-  Validate declared-script profile only.
+  `deploy_profile: null`, `control: "none"`. With no `operation_id`, the tool
+  uses this fixed Validate host. An embedding may separately grant the exact
+  local Install owner; select it with top-level
+  `operation_id: "rust:vibe-lifecycle:install-exact-local"`, `phase: "install"`,
+  and explicit options. That owner currently accepts only false `force` and
+  `trace`, null `deploy_profile`, and `control: "none"`; other Install options
+  are refused. The selector never supplies the host grant or approval.
   Read the returned owner question in `reply.payload_json`; answer its
   original bound decision message through `action.kind: "answer"` and
   `message_json`, retaining the original identity and binding fields.

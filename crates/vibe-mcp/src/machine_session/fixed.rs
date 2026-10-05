@@ -192,7 +192,7 @@ impl FixedMachineSessionRunner {
         })
     }
 }
-fn outcome(envelope: &e::OperationEnvelope) -> Result<f::Outcome, FixedRunnerError> {
+pub(super) fn outcome(envelope: &e::OperationEnvelope) -> Result<f::Outcome, FixedRunnerError> {
     // exchange_local publishes only Result/Error, already checked against its
     // typed owner response. Mirror rather than fabricate outer completion.
     let (effect, completeness, provenance_id) = match &envelope.body {

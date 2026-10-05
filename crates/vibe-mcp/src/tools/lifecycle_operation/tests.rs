@@ -78,10 +78,49 @@ fn descriptor_is_authoritative_closed_projection() {
     assert_eq!(schema["additionalProperties"], false);
     let arms = schema["properties"]["action"]["oneOf"].as_array().unwrap();
     assert_eq!(arms.len(), 8);
+    assert_eq!(
+        schema["properties"]["operation_id"]["enum"]
+            .as_array()
+            .unwrap()
+            .len(),
+        2
+    );
     for arm in arms {
         assert_eq!(arm["additionalProperties"], false);
     }
     assert!(contract::size(&json!({"s":"\n".repeat(65536)}), REQUEST_CAP).is_err());
+}
+
+#[test]
+fn explicit_install_selector_without_host_is_bounded_structured_refusal() {
+    let dir = tempfile::tempdir().unwrap();
+    let absent = dir.path().join("absent");
+    let result = call(
+        ServerContext::with_store_root(&absent, dir.path().join("store")),
+        json!({"schema":1,"operation_id":vibe_orchestrator::machine_operation::exact_local_install::OPERATION_ID,
+            "action":{"kind":"inspect","key":"once"}}),
+    );
+    assert_eq!(result["isError"], true);
+    let error: LifecycleActionError =
+        serde_json::from_value(result["structuredContent"].clone()).unwrap();
+    assert_eq!(error.code, Code::UnavailableHost);
+    assert_eq!(error.requested_phase.as_deref(), Some("install"));
+    assert!(error.requested_scope.is_none());
+    assert!(!absent.exists());
+    assert!(!dir.path().join("store").exists());
+    let unknown = call(
+        ServerContext::new(&absent),
+        json!({"schema":1,"operation_id":"foreign","action":{"kind":"inspect","key":"once"}}),
+    );
+    assert_eq!(unknown["isError"], true);
+    assert!(unknown.get("structuredContent").is_none());
+    let wrong_type = call(
+        ServerContext::new(&absent),
+        json!({"schema":1,"operation_id":1,"action":{"kind":"inspect","key":"once"}}),
+    );
+    assert_eq!(wrong_type["isError"], true);
+    assert!(wrong_type.get("structuredContent").is_none());
+    assert!(!absent.exists());
 }
 
 #[test]

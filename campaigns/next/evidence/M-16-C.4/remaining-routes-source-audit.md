@@ -127,3 +127,15 @@ and read-only reattach with a retained source port after byte drift. A strict
 PinnedLocalFactory cannot be reconstructed from changed bytes after restart;
 the service does not infer a new effect grant from that state. CLI startup and
 MCP registration still need to compose this service with the action route.
+
+**MCP and framed adapter progress.** An explicit `ServerContext` grant now
+retains the exact-local Install route. The existing registered
+`lifecycle_operation` tool selects it with `operation_id`, while an omitted
+selector keeps fixed Validate. The new local session runner uses the same
+route and C1 namespace. In the focused cross-surface case, MCP prepares and
+submits while the framed session answers and inspects the same key/run; the
+outer frame mirrors the owner's effect/completeness and provenance. Unsupported
+options, unknown references, no host and unknown selectors refuse. MCP tests
+pass for the new session 3/3 and tool 5/5, with the incumbent fixed session
+10/10 and native tool 14/14 unchanged. CLI composition and actual competing
+submits from distinct surfaces remain open.
