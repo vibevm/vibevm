@@ -102,3 +102,17 @@ decision family 4/4. The accepted-answer seal is process-local, so cold result
 inspection is available but effectful submit cannot be reconstructed after a
 process restart. No CLI/MCP/local API route or general phase result projection
 is claimed; C.4 remains open.
+
+**Trusted local Install action and cold outcome.** A separate exact-local
+route now accepts the registered prepare/answer/submit/inspect actions and
+publishes the existing generated local envelope. Two route instances using
+one retained host and scoped key observe one C1 run and one package fetch.
+The sealed Install profile writes an admitted-input capsule; cold inspection
+validates its C1 hashes and exact Install request/plan formats before assigning
+the Install operation ID. A missing or damaged capsule is RecoveryRequired,
+and an unsealed Install cannot project as this operation. After one actual
+Install, deleting only the retained report payload yields a structured local
+Error with the same run and phase, partial owner view and Uncertain effect,
+never NoEffects. The focused fixture family passes 18/18 and the unsealed
+identity negative passes 1/1. This is a trusted local API route only; MCP,
+CLI and broader lifecycle phases remain open.

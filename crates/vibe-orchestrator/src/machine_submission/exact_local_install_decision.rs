@@ -13,7 +13,8 @@ use vibe_lifecycle::{LifecycleLease, SubmissionNamespace, SubmissionScope};
 use vibe_safefs::Project;
 
 use super::lifecycle_adapter::{
-    RetainedLifecycleResult, preflight_one_package_local_install_under_lease,
+    FixedOwnerEvidenceSnapshot, RetainedLifecycleResult, cold_snapshot_for_phase,
+    inspect_exact_local_install_existing, preflight_one_package_local_install_under_lease,
     submit_approved_one_package_local_install,
 };
 use super::{PolicyOwner, PolicySnapshot, SubmissionOutcome};
@@ -124,6 +125,45 @@ pub struct ExactLocalInstallDecisionHost {
     holder: Arc<()>,
 }
 impl ExactLocalInstallDecisionHost {
+    pub fn readonly_scope(&self) -> &SubmissionScope {
+        &self.scope
+    }
+
+    /// Recheck the physical root supplied by a trusted embedding.
+    pub fn compare_context_root(
+        &self,
+        root: &std::path::Path,
+    ) -> Result<(), ExactLocalInstallDecisionError> {
+        let observed = Project::open(root)
+            .map_err(infrastructure)?
+            .root_correlation_token()
+            .map_err(infrastructure)?;
+        if observed != self.root_token {
+            return Err(ExactLocalInstallDecisionError::ForeignScope);
+        }
+        Ok(())
+    }
+
+    /// Cold C1/C2 observation; a missing capsule is recovery-required, never
+    /// absence of effects. This method grants no fresh submission.
+    pub fn inspect_existing(
+        &self,
+        namespace: &SubmissionNamespace,
+        key: &str,
+    ) -> Result<Option<FixedOwnerEvidenceSnapshot>, ExactLocalInstallDecisionError> {
+        let leased = lease_default_lifecycle(&self.root).map_err(infrastructure)?;
+        self.compare_context_root(leased.retain_lease().root())?;
+        let lease = leased.retain_lease();
+        let status = inspect_exact_local_install_existing(&lease, namespace, &self.scope, key)
+            .map_err(infrastructure)?;
+        status
+            .map(|status| {
+                cold_snapshot_for_phase(&self.scope, Phase::Install, OPERATION, status)
+                    .map_err(infrastructure)
+            })
+            .transpose()
+    }
+
     /// Read-only host composition. Policy initialization is a separate,
     /// explicit trusted action; question preparation never initializes it.
     pub fn from_host(
