@@ -622,7 +622,10 @@ fn submit_one_script_validate_internal<'a>(
         Some(profile) => profile.source_capture_request(&request)?,
         None => request.clone(),
     };
-    let admitted = admit_one_script_validate_fixture(path, &capture_request, target_os)?;
+    // Keep preflight and reservation under one lease. A second process can
+    // otherwise take the lease between them and leave both owners stopped.
+    let leased = lease_default_lifecycle(path)?;
+    let admitted = preflight_one_script_under_lease(&leased, &capture_request, target_os)?;
     submit_protected_lifecycle_inner(
         path,
         namespace,
@@ -643,6 +646,7 @@ fn submit_one_script_validate_internal<'a>(
             ready,
         }),
         None,
+        Some(leased),
     )
 }
 
@@ -747,6 +751,7 @@ fn submit_one_agent_validate_internal<'a>(
             before_run,
             after_effect,
         }),
+        None,
     )
 }
 
@@ -770,6 +775,7 @@ pub(super) fn submit_protected_lifecycle(
         target_os,
         observed_at,
         phase,
+        None,
         None,
         None,
         None,
@@ -800,6 +806,7 @@ fn submit_protected_lifecycle_with_fixture<'a>(
         fixture,
         None,
         None,
+        None,
     )
 }
 
@@ -816,6 +823,7 @@ fn submit_protected_lifecycle_inner<'a>(
     fixture: Option<FixtureSourcePort<'a>>,
     mut script: Option<ScriptFixturePort<'a>>,
     agent: Option<AgentFixturePort<'a>>,
+    held_lease: Option<LeasedDefaultLifecycle>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     ensure!(
         usize::from(fixture.is_some())
@@ -874,7 +882,10 @@ fn submit_protected_lifecycle_inner<'a>(
             && !request.install_inputs.exact,
         "protected slice refuses install inputs"
     );
-    let leased = lease_default_lifecycle(path)?;
+    let leased = match held_lease {
+        Some(leased) => leased,
+        None => lease_default_lifecycle(path)?,
+    };
     let lease = leased.retain_lease();
     if let Some(ready) = script.as_ref().and_then(|s| s.ready) {
         ready.pin_root(&lease)?;
