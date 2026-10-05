@@ -1,4 +1,7 @@
 //! Explicit fixed Validate MCP startup over the retained lifecycle host.
+#[cfg(target_os = "linux")]
+#[path = "cli_mcp_fixed_validate/combined_options.rs"]
+mod combined_options;
 mod common;
 
 use common::UserScratch;
