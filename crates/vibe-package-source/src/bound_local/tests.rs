@@ -72,6 +72,21 @@ fn exact_local_factory_builds_only_pinned_offline_source() {
 }
 
 #[test]
+fn bound_source_port_accepts_only_its_original_witness_and_current_tree() {
+    let (_dir, registry, witness) = fixture();
+    let factory = PinnedLocalFactory::new(&registry, &pin(), &witness).unwrap();
+    let port: &dyn BoundOnePackageSource = &factory;
+    assert_eq!(port.source_root(), witness.root);
+    port.recheck_source_binding(&witness).unwrap();
+
+    let mut foreign = witness.clone();
+    foreign.tree_sha256 = format!("sha256:{}", "0".repeat(64));
+    assert!(port.recheck_source_binding(&foreign).is_err());
+    std::fs::write(witness.root.join("README.md"), b"changed after pin\n").unwrap();
+    assert!(port.recheck_source_binding(&witness).is_err());
+}
+
+#[test]
 fn foreign_pin_and_changed_registry_root_refuse() {
     let (dir, registry, witness) = fixture();
     let foreign = PackageRef::parse("flow:org.example/other@=1.1.0").unwrap();

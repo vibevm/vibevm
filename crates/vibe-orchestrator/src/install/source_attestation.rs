@@ -2,7 +2,8 @@
 //!
 //! The global cache may already have changed when `resolve_and_fetch`
 //! returns. A mismatch is therefore an uncertain partial effect, never a
-//! no-effect preflight refusal. No production submission route uses this yet.
+//! no-effect preflight refusal. The exact local route remains internal until
+//! typed operation admission and surface routing are ready.
 
 use std::collections::BTreeSet;
 use std::path::Path;

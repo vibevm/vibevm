@@ -1,8 +1,8 @@
 //! Internal, narrowly protected lifecycle submission through the incumbent runner.
 //!
-//! Only Validate and a one-node empty-world Install are admitted. General
-//! package install, providers, members and general trace cases
-//! remain unavailable.
+//! Validate, an empty-world Install and one exact bound local package Install
+//! are admitted internally. General package install, providers, members and
+//! general trace cases remain unavailable.
 
 use std::path::Path;
 use std::sync::Arc;
@@ -82,9 +82,9 @@ use crate::install::source_attestation::AttestingFactory;
 use crate::install::{PreparedSelection, SelectedManifest};
 use crate::phase::PhaseOutcome;
 use crate::ports::{
-    ConfirmGate, InstallNarration, InstallObserver, NoManifestMutation, PackageSource,
-    PackageSourceBuild, PackageSourceFactory, RegistryEnvironment, RegistryEnvironmentSnapshot,
-    RunObserver,
+    BoundOnePackageSource, ConfirmGate, InstallNarration, InstallObserver, NoManifestMutation,
+    PackageSource, PackageSourceBuild, PackageSourceFactory, RegistryEnvironment,
+    RegistryEnvironmentSnapshot, RunObserver,
 };
 use crate::prelude::selected_under_lease;
 
@@ -100,8 +100,11 @@ mod sequential_runs;
     reason = "internal Install adapter is exercised by focused tests"
 )]
 pub(crate) use install::submit_empty_world_install;
-#[cfg(test)]
-pub(crate) use install::submit_one_package_fixture_install;
+#[allow(
+    unused_imports,
+    reason = "internal Install admission awaits typed host routing"
+)]
+pub(crate) use install::submit_one_package_local_install;
 pub(in crate::machine_submission) use live_owner::evidence::cold_snapshot;
 pub use live_owner::{
     BindingSummary, EvidenceBasis, FixedOperationStatus, FixedOwnerEvidenceSnapshot,
@@ -109,19 +112,17 @@ pub use live_owner::{
     Readiness,
 };
 
-/// A caller-controlled source port is admitted only by the test-only fixture
-/// entry. The existing port cannot prove which tree its implementation serves;
-/// this is not a production package-install authority.
+/// The trusted host binds its local source to the witnessed tree. This port is
+/// internal until the operation's typed admission and adapters are complete.
 struct FixtureSourcePort<'a> {
-    source_root: &'a Path,
-    factory: &'a dyn PackageSourceFactory,
+    factory: &'a dyn BoundOnePackageSource,
     after_stage: Option<&'a dyn Fn()>,
     confirm: Option<&'a dyn ConfirmGate>,
 }
 
 struct FixtureRuntime<'a> {
     witness: PackageTreeWitness,
-    factory: &'a dyn PackageSourceFactory,
+    factory: &'a dyn BoundOnePackageSource,
     after_stage: Option<&'a dyn Fn()>,
     confirm: Option<&'a dyn ConfirmGate>,
 }
@@ -782,7 +783,6 @@ pub(super) fn submit_protected_lifecycle(
     )
 }
 
-#[cfg(test)]
 #[allow(clippy::too_many_arguments)]
 fn submit_protected_lifecycle_with_fixture<'a>(
     path: &Path,
@@ -894,8 +894,12 @@ fn submit_protected_lifecycle_inner<'a>(
         .map(|fixture| {
             ensure!(phase == Phase::Install, "fixture source is Install-only");
             let pin = vibe_core::PackageRef::parse(install::FIXTURE_PIN)?;
-            let witness =
-                capture_package_tree_witness(fixture.source_root, &pin, install::FIXTURE_FILES)?;
+            let witness = capture_package_tree_witness(
+                fixture.factory.source_root(),
+                &pin,
+                install::FIXTURE_FILES,
+            )?;
+            fixture.factory.recheck_source_binding(&witness)?;
             Ok(FixtureRuntime {
                 witness,
                 factory: fixture.factory,
@@ -1732,6 +1736,7 @@ impl SubmissionJournal for ProtectedJournal<'_> {
                     after_stage();
                 }
                 recheck_package_tree_witness(&fixture.witness)?;
+                fixture.factory.recheck_source_binding(&fixture.witness)?;
             }
             if let Some(agent) = &self.agent {
                 if let Some(before_run) = agent.before_run {
@@ -1783,7 +1788,10 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             let attested_factory = self
                 .fixture
                 .as_ref()
-                .map(|fixture| AttestingFactory::new(fixture.factory, &fixture.witness))
+                .map(|fixture| {
+                    fixture.factory.recheck_source_binding(&fixture.witness)?;
+                    AttestingFactory::new(fixture.factory, &fixture.witness)
+                })
                 .transpose()?;
             let mut ports = if self.phase == Phase::Validate {
                 validate_ports()

@@ -10,7 +10,9 @@ use anyhow::{Context, Result, bail, ensure};
 use vibe_core::PackageRef;
 use vibe_core::manifest::Lockfile;
 use vibe_lifecycle::process::{PackageTreeWitness, recheck_package_tree_witness};
-use vibe_orchestrator::ports::{PackageSource, PackageSourceBuild, PackageSourceFactory};
+use vibe_orchestrator::ports::{
+    BoundOnePackageSource, PackageSource, PackageSourceBuild, PackageSourceFactory,
+};
 use vibe_safefs::{FileIdentity, Project};
 
 use crate::{
@@ -166,6 +168,21 @@ impl PackageSourceFactory for PinnedLocalFactory {
             resolver,
             Box::new(ExactLocalQualifier(self.binding.package_pin.clone())),
         )))
+    }
+}
+
+impl BoundOnePackageSource for PinnedLocalFactory {
+    fn source_root(&self) -> &Path {
+        &self.binding.source_root
+    }
+
+    fn recheck_source_binding(&self, witness: &PackageTreeWitness) -> Result<()> {
+        ensure!(
+            witness == &self.witness,
+            "local source witness differs from pinned factory witness"
+        );
+        self.checked_serving_root()?;
+        Ok(())
     }
 }
 
