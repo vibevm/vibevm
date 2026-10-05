@@ -119,3 +119,58 @@ fn cli_frame_and_direct_local_route_share_one_cargo_run_then_mcp_inspects() {
     assert_eq!(keys.len(), 1);
     assert_eq!(keys[key]["domain_run_id"], run);
 }
+
+#[test]
+fn missing_cargo_result_keeps_uncertain_run_across_cli_local_and_mcp() {
+    let fixture = Fixture::new();
+    let key = "missing-result-three-surfaces";
+    let mut issue = Client::new(
+        fixture
+            .cargo_command("issue", Some("60000"))
+            .spawn()
+            .unwrap(),
+    );
+    let submitted = issue.call(json!({"kind":"submit","key":key}));
+    let submitted_envelope = envelope(&submitted);
+    let submitted_reply: Value =
+        serde_json::from_str(submitted_envelope["body"]["payload_json"].as_str().unwrap()).unwrap();
+    let run = submitted_reply["reply"]["run_id"].as_str().unwrap();
+    issue.finish();
+    let result = fixture
+        .root()
+        .join(format!(".vibe/build-operations/{run}.cargo-result.json"));
+    fs::remove_file(&result).unwrap();
+
+    let local_view = local(&route(&fixture), &fixture.root(), "inspect", key).unwrap();
+    assert_eq!(local_view["reply"]["kind"], "uncertain", "{local_view}");
+    assert_eq!(local_view["reply"]["run_id"], run);
+    let mcp = mcp_cargo_submit(mcp_cargo_context(&fixture.root()), key);
+    assert_eq!(mcp["result"]["isError"], false, "{mcp}");
+    assert_eq!(mcp["result"]["structuredContent"], local_view);
+
+    let mut cli = Client::new(fixture.cargo_command("reattach", None).spawn().unwrap());
+    let inspected = cli.call(json!({"kind":"inspect","key":key}));
+    let inspected_envelope = envelope(&inspected);
+    let cli_view: Value =
+        serde_json::from_str(inspected_envelope["body"]["payload_json"].as_str().unwrap()).unwrap();
+    assert_eq!(cli_view, local_view);
+    assert_eq!(
+        outcome(&inspected).effect_state,
+        f::OutcomeEffectState::Uncertain
+    );
+    let replay = cli.call(json!({"kind":"submit","key":key}));
+    assert_eq!(envelope(&replay), inspected_envelope);
+    cli.finish();
+    assert!(!result.exists());
+    let index: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    let namespaces = index["namespaces"].as_object().unwrap();
+    assert_eq!(namespaces.len(), 1);
+    let keys = namespaces.values().next().unwrap()["keys"]
+        .as_object()
+        .unwrap();
+    assert_eq!(keys.len(), 1);
+    assert_eq!(keys[key]["domain_run_id"], run);
+}
