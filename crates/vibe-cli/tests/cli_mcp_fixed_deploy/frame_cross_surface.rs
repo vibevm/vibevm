@@ -1,5 +1,5 @@
 use super::*;
-use std::io::{Read, Write};
+use std::io::{BufRead, BufReader, Read, Write};
 use vibe_wire::generated::{
     format_id::FormatId,
     machine::e1::{operation_envelope as e, session_frame as f},
@@ -50,6 +50,27 @@ fn frame_action(
     target: &str,
     kind: &str,
 ) -> (Value, f::Outcome) {
+    let (published, outcome) = raw_frame_action(child, session, context, target, kind);
+    let e::Body::Result(result) = published.body else {
+        panic!("fixed Deploy result: {published:?}")
+    };
+    assert_eq!(
+        result.format_id.as_deref(),
+        Some(FormatId::MachineFixedDeployActionReply.id())
+    );
+    (
+        serde_json::from_str(result.payload_json.as_deref().unwrap()).unwrap(),
+        outcome,
+    )
+}
+
+fn raw_frame_action(
+    child: &mut std::process::Child,
+    session: &str,
+    context: &str,
+    target: &str,
+    kind: &str,
+) -> (e::OperationEnvelope, f::Outcome) {
     let envelope = json!({
         "schema":1,
         "operation_id":vibe_orchestrator::machine_operation::fixed_deploy::OPERATION_ID,
@@ -71,28 +92,15 @@ fn frame_action(
             })),
         },
     );
-    let f::Body::Complete(body) = reply.body else {
-        panic!("fixed Deploy frame: {reply:?}")
+    let (payload, outcome) = match reply.body {
+        f::Body::Complete(body) => (body.envelope_json.unwrap(), body.outcome),
+        f::Body::Refusal(body) => (body.envelope_json.unwrap(), body.outcome),
+        other => panic!("fixed Deploy frame: {other:?}"),
     };
-    let published: e::OperationEnvelope =
-        serde_json::from_str(body.envelope_json.as_deref().unwrap()).unwrap();
-    let e::Body::Result(result) = published.body else {
-        panic!("fixed Deploy result: {published:?}")
-    };
-    assert_eq!(
-        result.format_id.as_deref(),
-        Some(FormatId::MachineFixedDeployActionReply.id())
-    );
-    (
-        serde_json::from_str(result.payload_json.as_deref().unwrap()).unwrap(),
-        body.outcome,
-    )
+    (serde_json::from_str(&payload).unwrap(), outcome)
 }
 
-#[test]
-fn cli_frame_real_deploy_replays_through_cold_mcp() {
-    let fixture = Fixture::new();
-    fixture.seed_artifact();
+fn connect(fixture: &Fixture) -> (std::process::Child, String, String, String) {
     let mut child = fixture
         .command()
         .args(["machine", "session", "--root"])
@@ -136,14 +144,20 @@ fn cli_frame_real_deploy_replays_through_cold_mcp() {
     };
     assert_eq!(body.selected_schemas.len(), FORMATS.len());
     let context = &body.contexts[0];
-    let session = initialized.session_id.as_deref().unwrap();
-    let (reply, outcome) = frame_action(
-        &mut child,
-        session,
-        &context.context_id,
-        &context.target_ids[0],
-        "submit",
-    );
+    (
+        child,
+        initialized.session_id.unwrap(),
+        context.context_id.clone(),
+        context.target_ids[0].clone(),
+    )
+}
+
+#[test]
+fn cli_frame_real_deploy_replays_through_cold_mcp() {
+    let fixture = Fixture::new();
+    fixture.seed_artifact();
+    let (mut child, session, context, target) = connect(&fixture);
+    let (reply, outcome) = frame_action(&mut child, &session, &context, &target, "submit");
     assert_eq!(reply["reply"]["kind"], "completed", "{reply}");
     assert_eq!(
         serde_json::to_value(outcome.effect_state).unwrap(),
@@ -198,4 +212,117 @@ fn cli_frame_real_deploy_replays_through_cold_mcp() {
         .unwrap();
     assert_eq!(keys.len(), 1);
     assert_eq!(keys["old-key"]["domain_run_id"], run);
+}
+
+#[test]
+fn cli_frame_and_mcp_process_race_one_fixed_deploy_key() {
+    let fixture = Fixture::new();
+    fixture.seed_artifact();
+    let (mut child, session, context, target) = connect(&fixture);
+    let mut mcp_child = fixture.mcp_command("reattach", false).spawn().unwrap();
+    mcp_child
+        .stdin
+        .as_mut()
+        .unwrap()
+        .write_all(request("inspect").as_bytes())
+        .unwrap();
+    let mut warm = String::new();
+    BufReader::new(mcp_child.stdout.as_mut().unwrap())
+        .read_line(&mut warm)
+        .unwrap();
+    let warm: Value = serde_json::from_str(&warm).unwrap();
+    assert_eq!(warm["result"]["isError"], false, "{warm}");
+    assert_eq!(
+        warm["result"]["structuredContent"]["reply"]["kind"],
+        "absent"
+    );
+    let barrier = std::sync::Barrier::new(3);
+    let (cli, mcp) = std::thread::scope(|scope| {
+        let cli_job = scope.spawn(|| {
+            barrier.wait();
+            raw_frame_action(&mut child, &session, &context, &target, "submit")
+        });
+        let mcp_job = scope.spawn(|| {
+            barrier.wait();
+            mcp_child
+                .stdin
+                .as_mut()
+                .unwrap()
+                .write_all(request("submit").as_bytes())
+                .unwrap();
+            drop(mcp_child.stdin.take());
+            mcp_reply(&mcp_child.wait_with_output().unwrap())
+        });
+        barrier.wait();
+        (cli_job.join().unwrap(), mcp_job.join().unwrap())
+    });
+    let cold = mcp_reply(&fixture.mcp("reattach", false, &request("submit")));
+    assert_eq!(cold["result"]["isError"], false, "{cold}");
+    let completed = &cold["result"]["structuredContent"]["reply"];
+    assert_eq!(completed["kind"], "completed", "{cold}");
+    let run = completed["run_id"].as_str().unwrap();
+    match &cli.0.body {
+        e::Body::Result(row) => {
+            let reply: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
+            assert_eq!(reply["reply"], *completed);
+        }
+        e::Body::Error(row) => {
+            assert_eq!(
+                serde_json::to_value(cli.1.effect_state).unwrap(),
+                "uncertain"
+            );
+            let error: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
+            assert_eq!(error["code"], "submission_refused", "{error}");
+            assert_eq!(error["effect_observation"], "unavailable", "{error}");
+            assert!(
+                error["message"].as_str().unwrap().contains("Lease(Busy"),
+                "{error}"
+            );
+            assert!(error["known_run_id"].is_null() || error["known_run_id"] == run);
+        }
+        other => panic!("unexpected fixed Deploy race stage: {other:?}"),
+    }
+    if mcp["result"]["isError"] == false {
+        assert_eq!(mcp["result"]["structuredContent"]["reply"], *completed);
+    } else {
+        let error = &mcp["result"]["structuredContent"];
+        assert_eq!(error["code"], "submission_refused", "{mcp}");
+        assert_eq!(error["effect_observation"], "unavailable", "{mcp}");
+        assert!(
+            error["message"].as_str().unwrap().contains("Lease(Busy"),
+            "{mcp}"
+        );
+        assert!(error["known_run_id"].is_null() || error["known_run_id"] == run);
+    }
+    drop(child.stdin.take());
+    let output = child.wait_with_output().unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let index: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    let namespaces = index["namespaces"].as_object().unwrap();
+    assert_eq!(namespaces.len(), 1);
+    let keys = namespaces.values().next().unwrap()["keys"]
+        .as_object()
+        .unwrap();
+    assert_eq!(keys.len(), 1);
+    assert_eq!(keys["old-key"]["domain_run_id"], run);
+    assert_eq!(
+        fs::read_dir(fixture.root().join(".vibe/cli-deploy-host-grants"))
+            .unwrap()
+            .count(),
+        1
+    );
+    assert!(
+        fixture
+            .dir
+            .path()
+            .join("settings/bin/local-helper")
+            .exists()
+    );
 }

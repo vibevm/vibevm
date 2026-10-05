@@ -1,7 +1,7 @@
 //! Real startup composition of one fixed Deploy grant across CLI and MCP.
 #![cfg(target_os = "linux")]
 
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{
     fs,
@@ -77,7 +77,7 @@ impl Fixture {
         }
         command.output().unwrap()
     }
-    fn mcp(&self, mode: &str, ttl: bool, request: &str) -> Output {
+    fn mcp_command(&self, mode: &str, ttl: bool) -> Command {
         let mut command = self.command();
         command
             .args(["--offline", "mcp", "serve", "--path"])
@@ -86,6 +86,10 @@ impl Fixture {
         if ttl {
             command.args(["--ttl-ms", "60000"]);
         }
+        command
+    }
+    fn mcp(&self, mode: &str, ttl: bool, request: &str) -> Output {
+        let mut command = self.mcp_command(mode, ttl);
         let mut child = command.spawn().unwrap();
         std::io::Write::write_all(child.stdin.as_mut().unwrap(), request.as_bytes()).unwrap();
         drop(child.stdin.take());
