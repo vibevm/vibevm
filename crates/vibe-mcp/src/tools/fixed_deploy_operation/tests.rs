@@ -172,6 +172,9 @@ fn registered_but_ungranted_deploy_refuses_without_state() {
     let root = tempfile::tempdir().unwrap();
     let descriptor = FixedDeployOperationMcpTool.descriptor();
     assert_eq!(descriptor.name, "fixed_deploy_operation");
+    assert!(descriptor
+        .description
+        .contains("fixed Deploy issue or reattach"));
     assert_eq!(descriptor.input_schema["additionalProperties"], false);
     let listed: Value = serde_json::from_str(
         &crate::dispatch_one(

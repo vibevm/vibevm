@@ -178,8 +178,11 @@ Tools:
   Request fields cannot select any root, destination, target, profile or
   namespace. Read `completed`, `uncertain` and `recovery_required` as distinct
   owner outcomes; an error after admission does not prove no effects. Ordinary
-  `vibe mcp serve` has no Deploy grant, and no durable CLI reattach mode is
-  offered until its recovery policy is decided.
+  `vibe mcp serve` has no Deploy grant. A local project can explicitly issue one
+  with `vibe mcp serve --path <absolute-project-root> --fixed-deploy issue
+  --deploy-profile <authored-profile> --ttl-ms <1..=86400000>` and reattach
+  with the same root and profile using `--fixed-deploy reattach`. A drifted
+  host can inspect already reserved keys but cannot submit another effect.
 - **`plan_manifest_migration`** — plan a supported migration from supplied
   TOML text and explicit profiles/recipe. Inspect the exact in-memory edits
   or answer the returned questions; this tool reads no project, writes no
