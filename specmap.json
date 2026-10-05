@@ -25587,6 +25587,33 @@
     },
     {
       "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/machine_session/deploy.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_mcp::machine_session::deploy",
+      "end_line": 3,
+      "fingerprint": "tok1:c9ee091ccadb52300d8580dbf70d6a813fd0c03ec9e33750d7c5afebbc116758"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/machine_session/deploy.rs",
+      "item_kind": "enum",
+      "line": 42,
+      "symbol": "vibe_mcp::machine_session::deploy::DeployRunnerError",
+      "end_line": 73,
+      "fingerprint": "tok1:303cdcd97a7e493990b8631d0b63263e5e57b5962ee1c45ff72b8b8274ad2341"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/machine_session/deploy.rs",
+      "item_kind": "enum",
+      "line": 21,
+      "symbol": "vibe_mcp::machine_session::deploy::DeploySessionBuildError",
+      "end_line": 41,
+      "fingerprint": "tok1:a1608b1b7e2889c5d3e9b0c6885b7b9fe41229810a11d5e98f2b3446e39ef59d"
+    },
+    {
+      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/machine_session/fixed.rs",
       "item_kind": "mod",
       "line": 3,
@@ -25796,9 +25823,9 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/machine_session/state.rs",
       "item_kind": "fn",
-      "line": 493,
+      "line": 546,
       "symbol": "vibe_mcp::machine_session::state::MachineSession::receive",
-      "end_line": 576,
+      "end_line": 629,
       "fingerprint": "tok1:c7e25c9037fe514f80456e84019df189eb9cf03ea332442074e6290040487205"
     },
     {
@@ -27513,6 +27540,24 @@
     },
     {
       "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_submission/deploy_grant.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_orchestrator::machine_submission::deploy_grant",
+      "end_line": 5,
+      "fingerprint": "tok1:4e246bca80723bab0a985803279059b21ef8ea67c5ac77aef51d203a8e1da9f0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_submission/deploy_grant/storage.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::machine_submission::deploy_grant::storage",
+      "end_line": 4,
+      "fingerprint": "tok1:4e246bca80723bab0a985803279059b21ef8ea67c5ac77aef51d203a8e1da9f0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner.rs",
       "item_kind": "mod",
       "line": 3,
@@ -27578,9 +27623,9 @@
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/machine_submission.rs",
       "item_kind": "fn",
-      "line": 176,
+      "line": 177,
       "symbol": "vibe_orchestrator::machine_submission::submit",
-      "end_line": 298,
+      "end_line": 299,
       "fingerprint": "tok1:9de3543c6f6122be6bb6c66b88407b4c1c317b82149476ea4c282d7f453ecdbf"
     },
     {
@@ -57451,6 +57496,48 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-mcp/src/machine_session/deploy.rs",
+      "from_symbol": "vibe_mcp::machine_session::deploy",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/machine_session/deploy.rs",
+      "from_symbol": "vibe_mcp::machine_session::deploy::DeployRunnerError",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/machine_session/deploy.rs",
+      "from_symbol": "vibe_mcp::machine_session::deploy::DeployRunnerError",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-mcp/src/machine_session/deploy.rs",
+      "from_symbol": "vibe_mcp::machine_session::deploy::DeploySessionBuildError",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/machine_session/deploy.rs",
+      "from_symbol": "vibe_mcp::machine_session::deploy::DeploySessionBuildError",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT",
+      "verb": "documents"
+    },
+    {
       "file": "crates/vibe-mcp/src/machine_session/fixed.rs",
       "from_symbol": "vibe_mcp::machine_session::fixed",
       "line": 3,
@@ -57662,7 +57749,7 @@
     {
       "file": "crates/vibe-mcp/src/machine_session/state.rs",
       "from_symbol": "vibe_mcp::machine_session::state::MachineSession::receive",
-      "line": 495,
+      "line": 548,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SESSION-NEGOTIATION",
       "verb": "implements",
@@ -59260,6 +59347,22 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-orchestrator/src/machine_submission/deploy_grant.rs",
+      "from_symbol": "vibe_orchestrator::machine_submission::deploy_grant",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH-DECISION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_submission/deploy_grant/storage.rs",
+      "from_symbol": "vibe_orchestrator::machine_submission::deploy_grant::storage",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH-DECISION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner.rs",
       "from_symbol": "vibe_orchestrator::machine_submission::lifecycle_adapter::live_owner",
       "line": 3,
@@ -59320,7 +59423,7 @@
     {
       "file": "crates/vibe-orchestrator/src/machine_submission.rs",
       "from_symbol": "vibe_orchestrator::machine_submission::submit",
-      "line": 180,
+      "line": 181,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
       "verb": "implements",
@@ -95951,7 +96054,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6d5a31960a0147bce75533370d8f20b8c324f2a6783293a303d166e03b7ebb70",
+      "content_hash": "sha256:390cc61b426de074536806ef171df59f535eceb2d7e242210df025ce92e5dc2b",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Machine operations and observability",
@@ -96059,7 +96162,7 @@
     },
     {
       "anchor": "machine-operation-contracts",
-      "content_hash": "sha256:ebd8fbf5c5a9d28f8ab435d3c954e8b581a8754a5e4553d31596e4b498665e88",
+      "content_hash": "sha256:73e4e7c3443fff430930d64c708a2b226fb9925998e8cf423814ba33efa5dcc6",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Desired strict operation and capability contracts",
@@ -96271,7 +96374,7 @@
     },
     {
       "anchor": "MACHINE-OPERATION-SERVICE",
-      "content_hash": "sha256:f5cd80ea0d4d2542de57512f6e421eb4d7ae2d823a87f72941e4f8122bc88738",
+      "content_hash": "sha256:84b7226ce47ff3169d4f16b4e5de1c6f5c81380c3940a157646e038c9dfb3540",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Shared domain delegation",
@@ -96393,12 +96496,41 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-CARGO-BUILD-DECISION"
     },
     {
+      "anchor": "MACHINE-FIXED-DEPLOY-REATTACH",
+      "content_hash": "sha256:a44398cca7d4618abb8bbb3e23a25596a68ed4881d5fe5211f685d74277d7843",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Fixed Deploy host reattachment",
+      "line": 88,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-machine-fixed-deploy-reattach",
+      "content_hash": "sha256:137e86cf4b18a553e3fea981a83ec41a37479911900e96f529cd56832832a918",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "`req r1` @status:spec/plan",
+      "line": 89,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-fixed-deploy-reattach"
+    },
+    {
+      "anchor": "MACHINE-FIXED-DEPLOY-REATTACH-DECISION",
+      "content_hash": "sha256:00c475b8b2f9605dda69ebdcc92bbb8a84753bab61de72801937251958f28327",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Decision: an explicitly issued fixed Deploy host pointer pins the three physical roots, one authored profile and target, generation observer identity, current policy and its C1 namespace and scope. Reattach validates the exact pointer and retained C1 binding under the incumbent lifecycle lease. If the current manifest, profile, policy or generation differs, the old pointer may open only a distinct read-only host for inspection of already reserved keys and their retained or partial effects; it cannot submit a new effect. A new effectful host requires independently reconstructed trusted roots, authored profile and target, generation observer and current policy. Neither a callback nor process-local approval is serialized in the pointer. Foreign, malformed, missing or unprovable pointers refuse; uncertainty never issues a replacement namespace. Why: old keys need truthful recovery after a restart without allowing stale host facts to authorize new deployment. Considered and rejected: treating old pointer facts as fresh effect authority, refusing all old-key inspection after drift, and accepting client-supplied profile or namespace values. Revisit when an exact cross-process recovery case demonstrates that the incumbent C1 or Deploy journal cannot retain the old key and its partial effect truth under this split. @status:spec/plan",
+      "line": 90,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH-DECISION"
+    },
+    {
       "anchor": "MACHINE-OWNER-LIFETIME",
       "content_hash": "sha256:b204504a507069b24d2122bf7813cc3e648fd20854621edb33399cec692a1971",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A short-lived owner and separate observers",
-      "line": 89,
+      "line": 93,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LIFETIME",
       "kind": "req",
       "revision": 1
@@ -96409,7 +96541,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 90,
+      "line": 94,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-owner-lifetime"
     },
     {
@@ -96418,7 +96550,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A\n      bounded owner advertises its exact connection-loss policy before an\n      observer attaches. ContinueCurrentDispatch keeps only the already\n      admitted domain dispatch alive while its owning host process survives;\n      loss or explicit detachment of an observer neither cancels that dispatch\n      nor grants another one. It does not promise survival of owner process\n      death. The host retains the owner independently of observer handles and\n      binds a live observation handle to the actual journal-ready run,\n      reservation, namespace, trusted scope, key and held physical root before\n      scratch or provider effects. A protected local attach checks that exact\n      binding without acquiring a second writer or invoking the domain again.\n      Running is an observation of the live owner, not completion evidence.\n      Terminal attachment revalidates the incumbent domain's retained result\n      under its lease; an in-memory remembered outcome cannot replace damaged\n      or missing owner evidence. Detach is real observer control and must not\n      be described as provider cancellation; unavailable cancellation remains\n      explicit until its domain proves a cooperative control boundary. A\n      stopped or panicked owner cannot remain advertised as Running. Process\n      death or loss of the live handle returns to domain journal inspection\n      with the same run identity, yielding retained truth or recovery-required\n      uncertainty without redispatch. This layer introduces no permanent\n      autonomous service, generic command runner, scheduler or competing\n      operation-result journal. @status:spec/plan",
-      "line": 91,
+      "line": 95,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LIFETIME-LAW"
     },
     {
@@ -96427,7 +96559,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Scoped bounded observations and cooperative control",
-      "line": 115,
+      "line": 119,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STREAM",
       "kind": "req",
       "revision": 1
@@ -96438,7 +96570,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 116,
+      "line": 120,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-stream"
     },
     {
@@ -96447,7 +96579,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A\n      registered versioned stream message owns typed state, phase, progress,\n      diagnostic, raw stdout/stderr and terminal-reference observations,\n      replay/gap responses and control request/response values. Each message\n      binds the host-assigned context and target, semantic operation, actual\n      domain run and owner-issued stream identity. Event sequences are\n      canonical decimal u64 values, start at one and increase within that\n      stream; zero is only a before-first replay cursor. Independent streams\n      have independent order, never a fabricated global clock order. Shape\n      decoding and pure semantic validation grant no execution authority.\n      The owning service separately checks the exact live binding and domain\n      evidence before publication or control. A terminal-reference event is a\n      pointer to incumbent retained evidence, never a new result journal or\n      evidence of completion by itself. Explicit bounds cover frame bytes,\n      event count and payload bytes, replay batches, subscriptions and pending\n      delivery. Slow consumers cannot hold the provider or block query/control\n      dispatch. Eviction, oversized payload loss and expired stream history\n      return explicit bounded gaps or expiry with the same domain result\n      identity; they cannot erase that identity or fabricate replayed bytes.\n      Raw output preserves its byte encoding and independent stdout/stderr\n      origin within the declared cap. Cancellation-requested acknowledges\n      only the admitted request. Reached-safe-stop requires the domain's\n      cooperative boundary and retained effect truth: committed effects stay\n      partial/recoverable and are never described as rolled back. A request\n      after an already retained terminal result is explicitly too late and\n      does not rewrite that result. Unsupported provider cancellation remains\n      unavailable. Observer detach and stopping trace observation never\n      falsely cancel an underlying build. Linux, macOS and Windows use their\n      incumbent portable lease and root owners; native execution evidence is\n      stated separately from source or compilation support. A descriptor,\n      shaped event or test transport cannot promote unimplemented streaming,\n      replay or control to an available production capability. @status:spec/plan",
-      "line": 117,
+      "line": 121,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STREAM-LAW"
     },
     {
@@ -96456,7 +96588,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Retained descriptor-only discovery",
-      "line": 150,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-DISCOVERY",
       "kind": "req",
       "revision": 1
@@ -96467,7 +96599,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 151,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-discovery"
     },
     {
@@ -96476,7 +96608,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Discovery reads retained, validated descriptor and schema identities from their owning source, including extension declarations, without invoking a handler, loading a native library, starting a provider or fetching/building a schema. Unknown, absent or unvalidated contributed schema remains unavailable with a reason. Retained metadata cannot promote an extension to an executable or authorized service; its later owner must separately prove that path. @status:spec/plan",
-      "line": 152,
+      "line": 156,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-DISCOVERY-LAW"
     },
     {
@@ -96485,7 +96617,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Authored retained extension schema source",
-      "line": 154,
+      "line": 158,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-EXTENSION-SCHEMA-SOURCE",
       "kind": "req",
       "revision": 1
@@ -96496,7 +96628,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 155,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-extension-schema-source"
     },
     {
@@ -96505,7 +96637,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "PROP-054's optional authored extension operation-schema declaration is the source for descriptor-only extension discovery. Validate its registered host-owned format IDs and epochs, bind the selected provider/declaration to the retained manifest or content capture, and keep source authenticity, implementation status, contextual availability and authorization separate. A parsed table without its owning retained-source evidence may be listed only with an explicit unverified or unavailable reason. A validated schema may be discoverable without loading the native handler, but is not a validated callable service until its domain owner and admission are separately proven. An arbitrary handler config or a schema inferred from a native ABI call is never this source. @status:spec/plan",
-      "line": 156,
+      "line": 160,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-EXTENSION-SCHEMA-SOURCE-LAW"
     },
     {
@@ -96514,7 +96646,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Logical, captured, observed and presented identities",
-      "line": 158,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
       "kind": "req",
       "revision": 2
@@ -96525,7 +96657,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r2` @status:spec/plan",
-      "line": 159,
+      "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-entity-references"
     },
     {
@@ -96534,7 +96666,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A public entity reference keeps four axes separate: the domain owner's minted logical address where one exists; the captured content/source identity and revision; the observation or projection identity; and the occurrence of that entity in one presentation or contribution. A shared logical entity reached twice has one logical address and two occurrence references. Every presented occurrence has its own projection-local occurrence ID: a page row must join that exact ID to one entity occurrence, and two distinct rows cannot reuse one single-occurrence entity reference. A content/source identity joins a selected capture only through an explicit owner-supplied binding, never because their opaque spellings happen to match. A content hash identifies bytes, not a selected world or a complete observation; a display line, host path, arena index and wall-clock timestamp are never universal entity or snapshot identities. Missing owner identities remain typed extraction gaps rather than newly minted guesses. Preserve PROP-032's location-independent address law and PROP-036's repeated DAG occurrence behavior. @status:spec/plan",
-      "line": 160,
+      "line": 164,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES-LAW"
     },
     {
@@ -96543,7 +96675,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Compatible multi-owner observations",
-      "line": 162,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
       "kind": "req",
       "revision": 1
@@ -96554,7 +96686,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 163,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-composite-snapshot"
     },
     {
@@ -96563,7 +96695,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A CompositeSnapshot records independently captured source, selected world, target and operation observations with each owner's revision or content witness, participation and completeness. Composition validates stated compatibility and returns a typed conflict, stale, missing or unverified reason where it cannot establish it; it does not imply one atomic read across domains. An absent component is not a complete empty component. A wall clock is diagnostic only and cannot substitute for any capture or revision identity. @status:spec/plan",
-      "line": 164,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT-LAW"
     },
     {
@@ -96572,7 +96704,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "One projection across filters and pages",
-      "line": 166,
+      "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
       "kind": "req",
       "revision": 1
@@ -96583,7 +96715,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 167,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-bound-paging"
     },
     {
@@ -96592,7 +96724,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A page, child expansion or chunk cursor is bound to one projection identity, source revisions, selected filter and authorized scope. Mixing pages from different projections or silently re-reading owners under one cursor refuses with a typed reason. A complete page sequence reconstructs the full authorized structure; truncation, unavailable children and redaction remain explicit and never masquerade as a complete final page. Cursor values convey no file or effect authority. @status:spec/plan",
-      "line": 168,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING-LAW"
     },
     {
@@ -96601,7 +96733,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Opaque resources and explicit position basis",
-      "line": 170,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
       "kind": "req",
       "revision": 1
@@ -96612,7 +96744,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 171,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-source-location"
     },
     {
@@ -96621,7 +96753,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A source location carries an opaque resource identity, captured revision, encoding and explicit position basis such as original bytes or a named text projection. A trusted owner maps that resource to a client URI within its authorized scope; arbitrary host paths are not public identities or URI grants. Projected Markdown line positions are never presented as original XML byte positions without a retained reversible source map. A non-UTF8 resource, unknown encoding, absent raw bytes or unavailable reverse mapping retains its exact opaque resource with a typed unavailable reason rather than a lossy or fabricated location. @status:spec/plan",
-      "line": 172,
+      "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION-LAW"
     },
     {
@@ -96630,7 +96762,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Bounded on-demand byte framing",
-      "line": 174,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME",
       "kind": "req",
       "revision": 1
@@ -96641,7 +96773,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 175,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-local-frame"
     },
     {
@@ -96650,7 +96782,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A separate local machine-session transport frames each generated request, reply, event, completion or refusal as a four-byte unsigned big-endian byte length followed by exactly that many UTF-8 JSON bytes. A zero, truncated, over-limit (initial bound eight MiB), invalid UTF-8/JSON, unknown shape or unsupported frame epoch refuses before domain dispatch; the declared length is checked before allocation. A frame is not an arbitrary JSON payload tunnel: referenced domain values use their registered generated readers and owning semantic validators. EOF closes the on-demand session; no permanent daemon, watcher or filesystem grant is created by framing. @status:spec/plan",
-      "line": 176,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME-LAW"
     },
     {
@@ -96659,7 +96791,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Fixed lifecycle values inside the existing frame",
-      "line": 177,
+      "line": 181,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-LIFECYCLE-EXCHANGE",
       "kind": "req",
       "revision": 1
@@ -96670,7 +96802,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 178,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-local-lifecycle-exchange"
     },
     {
@@ -96679,7 +96811,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "An explicitly host-granted fixed lifecycle local session carries the registered `OperationEnvelope` inside the existing `SessionFrame` request and completion/refusal bodies. An input envelope names the exact fixed operation and its registered lifecycle-action request format; the owning service decodes that inner value with its generated reader and validates the trusted outer context/target binding before dispatch. Result and error envelopes use the registered lifecycle-action reply/error formats and derive effect state, completeness and provenance from the incumbent domain owner. A shaped frame, an unrecognized format ID, a client-supplied root or a descriptor never creates the fixed host grant. Session completion means the reply was published, not that a submitted provider finished. Pure-planner and responsive observation modes keep their own negotiated formats and existing behavior; only an actually granted local mode advertises lifecycle-action formats. @status:spec/plan",
-      "line": 179,
+      "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-LIFECYCLE-EXCHANGE-LAW"
     },
     {
@@ -96688,7 +96820,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Decision: reuse the registered `OperationEnvelope` input/result/error stages and the current session-frame arms for the fixed lifecycle exchange. Why: the envelope already owns operation/domain identity, nested format identity and effect/completeness semantics, and the existing frame already carries that envelope for the pure planner; one semantic validation path can distinguish the action without a parallel outcome grammar. Considered and rejected: bare lifecycle JSON in `envelope_json` has no authenticated format selector, while new lifecycle-specific frame arms would duplicate stage and effect semantics already owned by the envelope. When to revisit: if any required fixed lifecycle action cannot round-trip through the generated envelope and owner validator with correct run, scope and effect truth, or if one focused local/MCP conformance case accepts an ambiguous format or fabricates `NoEffects`; the failing named test and its owner response are the trigger. @status:spec/plan",
-      "line": 180,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-LIFECYCLE-EXCHANGE-DECISION"
     },
     {
@@ -96697,7 +96829,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Fixed package values inside the existing frame",
-      "line": 182,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-PACKAGE-EXCHANGE",
       "kind": "req",
       "revision": 1
@@ -96708,7 +96840,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 183,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-local-package-exchange"
     },
     {
@@ -96717,7 +96849,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "An explicitly host-granted fixed package local session carries the registered package `OperationEnvelope` Input/Result/Error inside the incumbent `SessionFrame` request and completion/refusal arms. This mode negotiates only the session frame, operation envelope and three fixed package action format IDs it can actually dispatch; it advertises no lifecycle question, streaming, replay or control capability. The embedding supplies one actual `FixedPackageRoute`, physical project root and target; assigned outer session/context/target IDs bind that route but never replace its durable inner C1 scope. A shaped frame, descriptor, path, copied outer ID or arbitrary namespace token cannot create the grant. The route and lifecycle package owner validate the exact nested request, root, key and effect truth before publication. EOF or failed response publication closes the connection and retains the typed owner response/evidence for same-key inspection through a newly granted connection, without recopy or a permanent daemon. Pure planner, fixed Validate and responsive observation modes keep separate negotiated sets and behavior. @status:spec/plan",
-      "line": 184,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-PACKAGE-EXCHANGE-LAW"
     },
     {
@@ -96726,7 +96858,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Truthful machine handshake",
-      "line": 187,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SESSION-NEGOTIATION",
       "kind": "req",
       "revision": 1
@@ -96737,7 +96869,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 188,
+      "line": 192,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-session-negotiation"
     },
     {
@@ -96746,7 +96878,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Initialization chooses a mutually supported machine API version, registered schema epochs and position encoding from the client's offer and the executable's actual finite support. With no intersection it returns a typed refusal naming the supported set; it never responds with a fixed unsupported version. The initial position basis may be raw byte offsets while projected character columns lack an owner map. Streaming, replay and control are advertised only when the selected service truly implements each operation; a test fake or a shaped event frame does not make a production capability available. An operation request before successful initialization or under another negotiated version refuses. @status:spec/plan",
-      "line": 189,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SESSION-NEGOTIATION-LAW"
     },
     {
@@ -96755,7 +96887,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Surface-assigned session contexts",
-      "line": 191,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT",
       "kind": "req",
       "revision": 1
@@ -96766,7 +96898,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 192,
+      "line": 196,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-trusted-context"
     },
     {
@@ -96775,7 +96907,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "The owning CLI or embedding surface alone supplies finite workspace, member, HOME or container roots and target bindings to a session-local registry. Each client receives its own opaque session/context IDs; requests name only those assigned IDs, never a path or a manifest field that grants a new root. Unknown, foreign-session, stale or unavailable context/target identities refuse with a typed reason. A context whose owner cannot yet bind its physical scope is reported unavailable, not manufactured from ambient HOME, a request body or a project manifest. Context IDs and URI tokens convey no authority outside their supplying session. @status:spec/plan",
-      "line": 193,
+      "line": 197,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT-LAW"
     },
     {
@@ -96784,7 +96916,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Host-owned CLI lifecycle reattachment",
-      "line": 194,
+      "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH",
       "kind": "req",
       "revision": 1
@@ -96795,7 +96927,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 195,
+      "line": 199,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-cli-host-reattach"
     },
     {
@@ -96804,7 +96936,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "An effectful on-demand CLI session may issue or reattach a fixed lifecycle host only from a host-controlled, bounded reattach pointer under the incumbent lifecycle lease. It binds the physical project root correlation, a stable host-assigned submission scope (context, target and principal), the owner-issued finite namespace, target OS, trusted policy source and expiry. The durable submission scope's context is distinct from every connection-local frame context ID; a new connection maps its fresh outer ID to the retained host scope without granting authority by spelling. Startup independently checks the physical root and host authority, reads the current shared policy owner and validates the namespace against the C1 index before constructing the fixed route. Request bodies, frames, descriptors, ambient CWD/HOME and arbitrary caller namespace tokens cannot issue, renew or reattach the grant. Reattachment never restores process-local questions or approval: a new submission requires a new typed decision and current policy, while an existing key is inspected through C1 and the incumbent lifecycle outcome owner. Expired or retired namespaces preserve reserved-key recovery but cannot dispatch a fresh effect; missing, conflicting or uncertain pointer publication refuses rather than issuing a replacement namespace. The pointer is not an execution journal and never stores a result, approval, provider output or effect truth. @status:spec/plan",
-      "line": 196,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH-LAW"
     },
     {
@@ -96813,7 +96945,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Decision: retain only the trusted host reattach binding and reuse the existing C1 namespace, shared PolicyOwner and domain outcome journals. Why: a fresh namespace on every CLI invocation could execute the same key twice after process loss, while a wire context ID is deliberately ephemeral. Considered and rejected: accepting a client-supplied namespace as a grant, persisting a frame context ID, and adding a second result journal. Revisit when a named cross-process recovery test demonstrates that the incumbent lease, namespace or shared-policy owner cannot preserve exact scope and effect truth without a narrower owner record. @status:spec/plan",
-      "line": 197,
+      "line": 201,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH-DECISION"
     },
     {
@@ -96822,7 +96954,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Decision: the initial effectful CLI is a cooperative same-project host. Its explicit absolute root and permission to acquire that root's incumbent mutation lease define the local authority boundary; it derives the stable target from the physical root correlation, uses one project-local CLI principal and a versioned CLI policy source, and requires an explicit fixed-mode issue or reattach choice. Policy grants are CLI startup inputs with absent permissions denied; every operation still carries and validates its own typed requested options and approval. This is not OS-user authentication or isolation among hostile users who can write the same project. Considered and rejected: caller-selected principal/namespace strings, HOME or CWD identity, an automatically fresh namespace after reattach failure, and silently enabling script or control policy from defaults. Revisit before promising cross-user isolation, when a multi-user hostile-writer test or a platform owner supplies a portable authenticated principal and protected policy source. @status:spec/plan",
-      "line": 198,
+      "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-LOCAL-TRUST-DECISION"
     },
     {
@@ -96831,7 +96963,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Legacy MCP and one-shot reach remain independent",
-      "line": 201,
+      "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-MCP-COEXISTENCE",
       "kind": "req",
       "revision": 1
@@ -96842,7 +96974,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 202,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-mcp-coexistence"
     },
     {
@@ -96851,7 +96983,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "The existing MCP server remains JSON-RPC 2.0 over newline-delimited stdio with its observed fixed `initialize` protocol version `2024-11-05` and legacy tools. The new byte-framed machine session does not reinterpret MCP lines, claim that fixed response is negotiation or silently replace tool handlers. A library or one-shot CLI domain call needs no server startup; the framed process is entered only on explicit local-session reach. Neither path introduces a permanent daemon, LSP/DAP adapter, IDE plugin or MVP. @status:spec/plan",
-      "line": 203,
+      "line": 207,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-MCP-COEXISTENCE-LAW"
     },
     {
@@ -96860,7 +96992,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Durable pre-effect admission identity",
-      "line": 205,
+      "line": 209,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
       "kind": "req",
       "revision": 6
@@ -96871,7 +97003,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r6` @status:spec/plan",
-      "line": 206,
+      "line": 210,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-submission-reservation"
     },
     {
@@ -96880,7 +97012,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "An effectful machine submission uses an owner-issued namespace scoped to context, target and principal, with a finite epoch and expiry; a request body cannot create or renew one. Before any domain effect, one durable atomic reservation binds its idempotency key, canonical request/plan identity and an owner-selected domain run or journal identity under the domain's mutation lease. Identical concurrent submissions attach to one retained operation; the same key with different request or plan identity refuses. A lost response is recovered by that operation identity, not by invoking the action again. A domain run identity is reserved by at most one key across all namespaces; a duplicate stored identity invalidates the index rather than attaching a different request to one journal. The reservation and domain journal may be separate atomic files: under the same lease, a retry that finds the reservation but no durable journal initializes only the reserved identity, while an uncertain or present journal requires owner reconciliation or attachment and never a fresh effect invocation. No effect begins until both reservation and the necessary journal state are durably proven. Namespace expiry or result-payload collection retains compact durable tombstones while an operation is active, parked, uncertain or recoverable; a retired namespace cannot revive an old key. A reservation whose durable publication is uncertain blocks effect dispatch until the owner reconciles it. This record indexes the existing journal and never becomes a competing execution store. A lifecycle freshness header is not a terminal result journal: a matching run ID alone cannot turn EOF or an interrupted handler into success or license a second effect. The lifecycle owner retains a per-run outcome marker keyed by the reserved ID, with explicit completed, parked or failed/uncertain effect truth and a validated report payload digest or typed unavailability; an available report is durable and re-read before the marker is committed, and a reply follows only after both are proven. A missing or mismatched marker or payload remains recovery-required, never a second effect; the dedup index retains only the domain reference. Artifact records written after build or package apply, and registry fact logs written after remote publication, are not pre-effect operation journals. Such domains remain unavailable to protected machine submission until their own owner retains pre-effect identity, partial/terminal truth and recovery under the reservation fence. A platform lacking a stronger hostile-writer primitive states its weaker lease/cooperating-writer guarantee and reports detected contention or drift rather than pretending content CAS. @status:spec/plan",
-      "line": 207,
+      "line": 211,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION-LAW"
     },
     {
@@ -96889,7 +97021,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Decision: once the incumbent owner independently validates a prior C1-ready reservation and its terminal marker/report with no parked, delegated or continuation work, a different key may reserve a new run against the current source and plan. Changed manifest bytes can be new intent; old keys keep attaching to their retained run without rereading those bytes. Key novelty never sets `force`: the new request uses ordinary freshness unless its own typed force choice was explicitly approved. An uncertain, missing or nonterminal predecessor remains a refusal. Why: the validated terminal fence protects the prior effect while allowing a genuinely new operation to observe current inputs. Considered and rejected: treating all changed current sources as an uncertain prior run, deriving force from a fresh key, and using a lifecycle header alone as terminal proof. Revisit if an exact owner test shows a second effect without the prior marker/report and C1 correlation, or a fresh-key run mutates the prior retained result. @status:spec/plan",
-      "line": 208,
+      "line": 212,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SEQUENTIAL-FRESH-KEY-DECISION"
     },
     {
