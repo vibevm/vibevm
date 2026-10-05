@@ -1,5 +1,7 @@
 //! Actual CLI frames and MCP tools/call sharing one retained C1 host.
 use super::*;
+#[path = "cross_surface/report_publication.rs"]
+mod report_publication;
 use std::io::{BufRead, BufReader};
 use std::sync::Arc;
 use vibe_core::manifest::TargetOs;
