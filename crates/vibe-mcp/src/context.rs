@@ -82,6 +82,11 @@ pub struct ServerContext {
     fixed_lifecycle_bridge: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute>,
     >,
+    exact_local_install_bridge: Option<
+        std::sync::Arc<
+            vibe_orchestrator::machine_operation::exact_local_install::ExactLocalInstallRoute,
+        >,
+    >,
 }
 
 impl ServerContext {
@@ -127,6 +132,29 @@ impl ServerContext {
         &std::sync::Arc<vibe_orchestrator::machine_operation::fixed_lifecycle::FixedLifecycleRoute>,
     > {
         self.fixed_lifecycle_bridge.as_ref()
+    }
+
+    /// Retain one owner-granted exact-local Install route for this physical
+    /// root. Tool and frame bytes cannot create the host or C1 namespace.
+    pub fn with_exact_local_install_route(
+        mut self,
+        route: std::sync::Arc<
+            vibe_orchestrator::machine_operation::exact_local_install::ExactLocalInstallRoute,
+        >,
+    ) -> Result<Self, vibe_orchestrator::machine_submission::ExactLocalInstallDecisionError> {
+        route.compare_context_root(&self.project_root)?;
+        self.exact_local_install_bridge = Some(route);
+        Ok(self)
+    }
+
+    pub(crate) fn exact_local_install_bridge(
+        &self,
+    ) -> Option<
+        &std::sync::Arc<
+            vibe_orchestrator::machine_operation::exact_local_install::ExactLocalInstallRoute,
+        >,
+    > {
+        self.exact_local_install_bridge.as_ref()
     }
 
     /// Retain the embedding's explicit fixed package route after checking its
@@ -221,6 +249,7 @@ impl ServerContext {
             seed_default_registry: false,
             manifest_migration_authority: None,
             fixed_lifecycle_bridge: None,
+            exact_local_install_bridge: None,
             fixed_package_bridge: None,
             fixed_cargo_bridge: None,
             fixed_deploy_bridge: None,
@@ -242,6 +271,7 @@ impl ServerContext {
             seed_default_registry: false,
             manifest_migration_authority: None,
             fixed_lifecycle_bridge: None,
+            exact_local_install_bridge: None,
             fixed_package_bridge: None,
             fixed_cargo_bridge: None,
             fixed_deploy_bridge: None,
@@ -349,6 +379,7 @@ mod tests {
                 seed_default_registry,
                 manifest_migration_authority,
                 fixed_lifecycle_bridge,
+                exact_local_install_bridge,
                 fixed_package_bridge,
                 fixed_cargo_bridge,
                 fixed_deploy_bridge,
@@ -361,6 +392,7 @@ mod tests {
                 seed_default_registry,
                 manifest_migration_authority,
                 fixed_lifecycle_bridge,
+                exact_local_install_bridge,
                 fixed_package_bridge,
                 fixed_cargo_bridge,
                 fixed_deploy_bridge,

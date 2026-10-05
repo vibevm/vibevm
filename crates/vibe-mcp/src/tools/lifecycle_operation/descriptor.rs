@@ -67,5 +67,15 @@ fn project(node: &Value, defs: &Value, depth: usize) -> Result<Value, &'static s
 }
 pub fn input_schema() -> Value {
     let doc: Value = serde_json::from_str(JTD).expect("included authoritative JTD");
-    project(&doc, &doc["definitions"], 0).expect("bounded supported JTD subset")
+    let mut schema = project(&doc, &doc["definitions"], 0).expect("bounded supported JTD subset");
+    // This is a surface-only route selector. It is removed before the
+    // generated lifecycle action request is encoded and grants no host.
+    schema["properties"]["operation_id"] = json!({
+        "type":"string",
+        "enum":[
+            vibe_orchestrator::machine_operation::fixed_lifecycle::OPERATION_ID,
+            vibe_orchestrator::machine_operation::exact_local_install::OPERATION_ID
+        ]
+    });
+    schema
 }
