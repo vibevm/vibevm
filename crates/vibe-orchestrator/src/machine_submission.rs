@@ -40,6 +40,12 @@ pub use lifecycle_adapter::{
 mod policy_owner;
 pub use policy_owner::{PolicyError, PolicyOwner, PolicySnapshot, TrustedPolicySource};
 
+mod exact_local_install_decision;
+pub use exact_local_install_decision::{
+    ExactLocalInstallDecisionError, ExactLocalInstallDecisionHost,
+    PreparedExactLocalInstallEvidence,
+};
+
 pub mod cargo_grant;
 pub mod cli_grant;
 pub mod deploy_grant;

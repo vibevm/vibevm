@@ -89,6 +89,7 @@ use crate::ports::{
 use crate::prelude::selected_under_lease;
 
 mod install;
+pub(in crate::machine_submission) use install::preflight_one_package_local_install_under_lease;
 #[allow(
     dead_code,
     reason = "private host integration atom; no public surface yet"
