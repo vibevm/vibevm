@@ -116,3 +116,14 @@ Error with the same run and phase, partial owner view and Uncertain effect,
 never NoEffects. The focused fixture family passes 18/18 and the unsealed
 identity negative passes 1/1. This is a trusted local API route only; MCP,
 CLI and broader lifecycle phases remain open.
+
+**Trusted Install grant binding.** An explicit host service now persists an
+Issuing fence before policy and C1 namespace issuance, then binds the pointer
+to physical project root, exact scope, policy source/generation, target OS and
+canonical framed local-package witness. Reattach looks up the existing
+namespace and policy; it never reissues. The six focused tests cover same
+binding, changed root/source/policy, denied Install bit, incomplete issuance
+and read-only reattach with a retained source port after byte drift. A strict
+PinnedLocalFactory cannot be reconstructed from changed bytes after restart;
+the service does not infer a new effect grant from that state. CLI startup and
+MCP registration still need to compose this service with the action route.
