@@ -74,10 +74,14 @@ use vibe_orchestrator::machine_submission::cargo_grant::CargoGrantService;
 use vibe_orchestrator::machine_submission::package_grant::PackageGrantService;
 
 use crate::cli::{
-    McpArgs, McpFixedCargoMode, McpFixedDeployMode, McpFixedPackageMode, McpFixedValidateMode,
-    McpInstallArgs, McpServeArgs, McpStatusArgs, McpSubcommand, McpUninstallArgs, McpUpgradeArgs,
+    McpArgs, McpFixedCargoMode, McpFixedDeployMode, McpFixedInstallMode, McpFixedPackageMode,
+    McpFixedValidateMode, McpInstallArgs, McpServeArgs, McpStatusArgs, McpSubcommand,
+    McpUninstallArgs, McpUpgradeArgs,
 };
-use crate::commands::machine_session::{FixedDeployHostMode, fixed_deploy_context};
+use crate::commands::machine_session::{
+    ExactLocalInstallHostMode, FixedDeployHostMode, exact_local_install_context,
+    fixed_deploy_context,
+};
 use crate::exit_code::InstallError;
 use crate::output;
 
@@ -308,7 +312,8 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     if (args.fixed_validate.is_some()
         || args.fixed_package.is_some()
         || args.fixed_cargo.is_some()
-        || args.fixed_deploy.is_some())
+        || args.fixed_deploy.is_some()
+        || args.fixed_install.is_some())
         && !args.path.is_absolute()
     {
         bail!(
@@ -320,23 +325,41 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
         args.fixed_package,
         args.fixed_cargo,
         args.fixed_deploy,
+        args.fixed_install,
         args.ttl_ms,
     ) {
-        (Some(McpFixedValidateMode::Issue), None, None, None, Some(_))
-        | (Some(McpFixedValidateMode::Reattach), None, None, None, None)
-        | (None, Some(McpFixedPackageMode::Issue), None, None, Some(_))
-        | (None, Some(McpFixedPackageMode::Reattach), None, None, None)
-        | (None, None, Some(McpFixedCargoMode::Issue), None, Some(_))
-        | (None, None, Some(McpFixedCargoMode::Reattach), None, None)
-        | (None, None, None, Some(McpFixedDeployMode::Issue), Some(_))
-        | (None, None, None, Some(McpFixedDeployMode::Reattach), None)
-        | (None, None, None, None, None) => {}
+        (Some(McpFixedValidateMode::Issue), None, None, None, None, Some(_))
+        | (Some(McpFixedValidateMode::Reattach), None, None, None, None, None)
+        | (None, Some(McpFixedPackageMode::Issue), None, None, None, Some(_))
+        | (None, Some(McpFixedPackageMode::Reattach), None, None, None, None)
+        | (None, None, Some(McpFixedCargoMode::Issue), None, None, Some(_))
+        | (None, None, Some(McpFixedCargoMode::Reattach), None, None, None)
+        | (None, None, None, Some(McpFixedDeployMode::Issue), None, Some(_))
+        | (None, None, None, Some(McpFixedDeployMode::Reattach), None, None)
+        | (None, None, None, None, Some(McpFixedInstallMode::Issue), Some(_))
+        | (None, None, None, None, Some(McpFixedInstallMode::Reattach), None)
+        | (None, None, None, None, None, None) => {}
         _ => bail!(
             "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT: fixed host issue requires --ttl-ms and reattach forbids it; fix surface: select exactly one fixed host issue --ttl-ms <1..=86400000>, or reattach"
         ),
     }
     if args.fixed_deploy.is_some() != args.deploy_profile.is_some() {
         bail!("fixed Deploy requires exactly one --deploy-profile; other modes forbid it");
+    }
+    let install_source = args.registry_root.is_some()
+        && args.package_pin.as_ref().is_some_and(|pin| !pin.is_empty())
+        && (1..=8).contains(&args.source_files.len())
+        && args.source_files.iter().any(|file| file == "vibe.toml");
+    if args.fixed_install.is_some() != install_source
+        || (args.fixed_install.is_none()
+            && (args.registry_root.is_some()
+                || args.package_pin.is_some()
+                || !args.source_files.is_empty()
+                || args.approve_exact_local_install))
+    {
+        bail!(
+            "fixed Install requires --registry-root, --package-pin and --source-file vibe.toml; source and approval flags require fixed Install"
+        );
     }
     let project_root = resolve_project_root_required(&args.path)?;
     let user = UserConfig::load().context("loading user config for MCP lifecycle execution")?;
@@ -396,6 +419,28 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
                         .ok_or_else(|| anyhow::anyhow!("fixed Deploy issue requires --ttl-ms"))?,
                 ),
                 McpFixedDeployMode::Reattach => FixedDeployHostMode::Reattach,
+            },
+        )?,
+        None => server_ctx,
+    };
+    let server_ctx = match args.fixed_install {
+        Some(mode) => exact_local_install_context(
+            server_ctx,
+            &project_root,
+            args.registry_root
+                .as_deref()
+                .ok_or_else(|| anyhow::anyhow!("fixed Install requires --registry-root"))?,
+            args.package_pin
+                .as_deref()
+                .ok_or_else(|| anyhow::anyhow!("fixed Install requires --package-pin"))?,
+            &args.source_files,
+            args.approve_exact_local_install,
+            match mode {
+                McpFixedInstallMode::Issue => ExactLocalInstallHostMode::Issue(
+                    args.ttl_ms
+                        .ok_or_else(|| anyhow::anyhow!("fixed Install issue requires --ttl-ms"))?,
+                ),
+                McpFixedInstallMode::Reattach => ExactLocalInstallHostMode::Reattach,
             },
         )?,
         None => server_ctx,
@@ -609,3 +654,108 @@ mod package_registration;
 mod status;
 mod uninstall;
 mod upgrade;
+
+#[cfg(test)]
+mod exact_local_install_serve_tests {
+    use super::*;
+    use crate::cli::{Cli, Command};
+    use clap::Parser;
+
+    fn parsed(extra: &[&str]) -> std::result::Result<McpServeArgs, clap::Error> {
+        let mut argv = vec![
+            "vibe",
+            "mcp",
+            "serve",
+            "--path",
+            "/tmp/vibe-mcp-install-test",
+        ];
+        argv.extend_from_slice(extra);
+        let cli = Cli::try_parse_from(argv)?;
+        let Command::Mcp(mcp) = cli.command else {
+            panic!("MCP command expected")
+        };
+        let McpSubcommand::Serve(args) = mcp.command else {
+            panic!("serve expected")
+        };
+        Ok(args)
+    }
+
+    #[test]
+    fn fixed_install_serve_requires_explicit_source_and_issue_lifetime() {
+        let args = parsed(&[
+            "--fixed-install",
+            "issue",
+            "--registry-root",
+            "/tmp/vibe-registry-test",
+            "--package-pin",
+            "flow:org.example/fixture@=1.1.0",
+            "--source-file",
+            "vibe.toml",
+            "--source-file",
+            "README.md",
+            "--ttl-ms",
+            "60000",
+        ])
+        .unwrap();
+        assert!(matches!(
+            args.fixed_install,
+            Some(McpFixedInstallMode::Issue)
+        ));
+        assert!(!args.approve_exact_local_install);
+        assert!(
+            parsed(&[
+                "--fixed-install",
+                "reattach",
+                "--registry-root",
+                "/tmp/vibe-registry-test",
+                "--package-pin",
+                "flow:org.example/fixture@=1.1.0",
+                "--source-file",
+                "vibe.toml",
+                "--ttl-ms",
+                "60000",
+            ])
+            .is_ok()
+        );
+        let invalid = parsed(&[
+            "--fixed-install",
+            "reattach",
+            "--registry-root",
+            "/tmp/vibe-registry-test",
+            "--package-pin",
+            "flow:org.example/fixture@=1.1.0",
+            "--source-file",
+            "vibe.toml",
+            "--ttl-ms",
+            "60000",
+        ])
+        .unwrap();
+        assert!(
+            run_serve(
+                invalid,
+                McpRuntime {
+                    root_offline: false,
+                    embedded_registry_root: None,
+                    seed_default_registry: false,
+                }
+            )
+            .is_err()
+        );
+        assert!(
+            parsed(&[
+                "--fixed-install",
+                "issue",
+                "--registry-root",
+                "relative",
+                "--package-pin",
+                "flow:org.example/fixture@=1.1.0",
+                "--source-file",
+                "vibe.toml",
+                "--ttl-ms",
+                "60000",
+            ])
+            .is_err()
+        );
+        assert!(parsed(&["--approve-exact-local-install"]).is_err());
+    }
+}

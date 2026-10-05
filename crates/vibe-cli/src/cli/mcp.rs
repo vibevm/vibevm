@@ -222,7 +222,7 @@ pub struct McpUpgradeArgs {
 #[derive(Debug, clap::Args)]
 #[command(group(
     clap::ArgGroup::new("fixed_host")
-        .args(["fixed_validate", "fixed_package", "fixed_cargo", "fixed_deploy"])
+        .args(["fixed_validate", "fixed_package", "fixed_cargo", "fixed_deploy", "fixed_install"])
         .multiple(false)
 ))]
 #[specmark::spec(
@@ -252,6 +252,26 @@ pub struct McpServeArgs {
     /// Explicit project-local fixed Deploy host; omitted means no Deploy grant.
     #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package", "fixed_cargo"])]
     pub fixed_deploy: Option<McpFixedDeployMode>,
+
+    /// Explicit exact one-package local Install host.
+    #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package", "fixed_cargo", "fixed_deploy"])]
+    pub fixed_install: Option<McpFixedInstallMode>,
+
+    /// Absolute local registry root for the selected Install package.
+    #[arg(long, value_parser = absolute_registry_root, requires = "fixed_install")]
+    pub registry_root: Option<PathBuf>,
+
+    /// Fully qualified exact package pin selected by this host.
+    #[arg(long, requires = "fixed_install")]
+    pub package_pin: Option<String>,
+
+    /// Every file in the exact package source tree; repeat per file.
+    #[arg(long = "source-file", requires = "fixed_install")]
+    pub source_files: Vec<String>,
+
+    /// Permit a separate typed approval of this exact Install plan.
+    #[arg(long, requires = "fixed_install")]
+    pub approve_exact_local_install: bool,
 
     /// Authored Deploy profile; required for fixed Deploy and never inferred.
     #[arg(long, requires = "fixed_deploy")]
@@ -310,4 +330,18 @@ pub enum McpFixedDeployMode {
 pub enum McpFixedValidateMode {
     Issue,
     Reattach,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum McpFixedInstallMode {
+    Issue,
+    Reattach,
+}
+
+fn absolute_registry_root(value: &str) -> Result<PathBuf, String> {
+    let root = PathBuf::from(value);
+    if !root.is_absolute() {
+        return Err("fixed Install --registry-root must be absolute".into());
+    }
+    Ok(root)
 }
