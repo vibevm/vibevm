@@ -1,6 +1,10 @@
 use super::*;
 use sha2::{Digest, Sha256};
-use std::{fs, path::Path, sync::Arc};
+use std::{
+    fs,
+    path::Path,
+    sync::{Arc, Barrier},
+};
 use vibe_core::manifest::{DeployTarget, ExtensionConfig, ExtensionsControl, MechanismRoutes};
 use vibe_extension_registry::{
     ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, collect_mechanisms,
@@ -249,4 +253,95 @@ fn fixed_deploy_submit_and_cold_inspect_share_one_owner_run() {
     )
     .unwrap();
     assert_eq!(index["namespaces"].as_object().unwrap().len(), 1);
+}
+
+#[test]
+fn fixed_deploy_mcp_and_local_route_race_one_key() {
+    let fixture = Fixture::new();
+    let route = fixture.route();
+    let context = fixture.context(route.clone());
+    let root = fixture.project.path().to_path_buf();
+    let key = "raced-once";
+    let input = json!({
+        "schema":1,"operation_id":OPERATION_ID,"domain_owner":DOMAIN_OWNER,
+        "source_id":null,"evidence_id":null,
+        "body":{"stage":"input","format_id":FormatId::MachineFixedDeployActionRequest.id(),
+            "payload_json":action("submit", key).to_string()}
+    })
+    .to_string();
+    let cold_input = input.clone();
+    let barrier = Arc::new(Barrier::new(3));
+    let (mcp, local) = std::thread::scope(|scope| {
+        let mcp_barrier = barrier.clone();
+        let mcp = scope.spawn(move || {
+            mcp_barrier.wait();
+            call(context, action("submit", key))
+        });
+        let local_barrier = barrier.clone();
+        let local = scope.spawn(move || {
+            local_barrier.wait();
+            FixedDeployRoute::exchange_local(Some(route.as_ref()), input.as_bytes(), &root)
+                .map_err(|error| format!("{error:?}"))
+                .and_then(|envelope| match envelope.body {
+                    e::Body::Result(row) => serde_json::from_str::<Value>(
+                        row.payload_json.as_deref().expect("route result payload"),
+                    )
+                    .map_err(|error| error.to_string()),
+                    other => Err(format!("unexpected route publication: {other:?}")),
+                })
+        });
+        barrier.wait();
+        (mcp.join().unwrap(), local.join().unwrap())
+    });
+
+    let cold_mcp = call(fixture.context(fixture.route()), action("submit", key));
+    assert_eq!(
+        cold_mcp["isError"], false,
+        "mcp={mcp}; local={local:?}; cold={cold_mcp}"
+    );
+    let completed = &cold_mcp["structuredContent"]["reply"];
+    assert_eq!(completed["kind"], "completed", "{cold_mcp}");
+    let receipt: Value = serde_json::from_str(completed["receipt_json"].as_str().unwrap()).unwrap();
+    assert_eq!(receipt["status"], "verified");
+    assert_eq!(receipt["generation"], 0);
+    assert_eq!(
+        receipt["resources"].as_array().unwrap().len(),
+        2,
+        "{receipt}"
+    );
+    let run_id = completed["run_id"].as_str().unwrap();
+    assert!(
+        mcp["structuredContent"]["reply"]["run_id"] == run_id
+            || local
+                .as_ref()
+                .is_ok_and(|reply| reply["reply"]["run_id"] == run_id),
+        "neither raced surface observed the retained run: mcp={mcp}; local={local:?}"
+    );
+    if let Some(mcp_run) = mcp["structuredContent"]["reply"]["run_id"].as_str() {
+        assert_eq!(mcp_run, run_id);
+    }
+    if let Ok(reply) = &local {
+        if let Some(local_run) = reply["reply"]["run_id"].as_str() {
+            assert_eq!(local_run, run_id);
+        }
+    }
+
+    let results = fs::read_dir(fixture.project.path().join(".vibe/deploy-operations"))
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+        .filter(|name| name.ends_with(".bound-vibe-bin-result.json"))
+        .collect::<Vec<_>>();
+    assert_eq!(results, [format!("{run_id}.bound-vibe-bin-result.json")]);
+    let cold_route = fixture.route();
+    let cold_local = FixedDeployRoute::exchange_local(
+        Some(cold_route.as_ref()),
+        cold_input.as_bytes(),
+        fixture.project.path(),
+    )
+    .unwrap();
+    let e::Body::Result(row) = cold_local.body else {
+        panic!("cold local route did not publish a result");
+    };
+    let cold_local: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
+    assert_eq!(cold_local, cold_mcp["structuredContent"]);
 }
