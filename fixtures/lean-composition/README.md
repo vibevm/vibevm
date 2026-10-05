@@ -13,6 +13,13 @@ neither that the Rust implementation refines the Lean model nor that a whole
 product satisfies its specification. The tests are example evidence. An edge
 in a declaration map is not a successful checker result or acceptance decision.
 
+The selected subject is an authored `@fact:identity`, so the real requirements
+query exposes its row and both relations. Facts have no `r<N>` revision in the
+core grammar: both carriers leave the revision absent, and witnesses bind that
+absence plus exact spec content/file hashes. The authored `spec/done` marker
+describes the fixture specification, not Rust refinement or proof acceptance.
+An invented revision pin refuses rather than being silently ignored.
+
 ## One complete declaration map
 
 From a built host checkout, with this directory as `--path`:
@@ -129,11 +136,45 @@ Witness parents must already exist; source/map output overlap and links refuse.
 No output is published until both actual checks succeed.
 
 The composed host currently links the canonical Lean library by a repository
-source path. Family package versions stay at their existing values (Lean 0.1.0,
+source path at build time. Family package versions stay at their existing values (Lean 0.1.0,
 Rust/core 1.1.0); the host build contains both neutral-core crate versions as
 separate dependencies. No neutral family sources were edited. This is evidence
-for the selected host capability, not yet an installed-slot-only deployment
-recipe, generic multi-language plugin framework or cross-package proof join.
+for the selected host capability, not a generic multi-language plugin framework
+or cross-package proof join.
+
+## Installed consumer check
+
+Copy this fixture to a disposable consumer before installation. Install both
+families from a local source catalog, then build their declared tools in the
+materialized slots:
+
+```sh
+vibe install --path CONSUMER --offline --no-default-registry --registry CATALOG \
+  --exact --assume-yes stack:org.vibevm.ai-native/rust-ai-native@1.1.0 \
+  stack:org.vibevm.ai-native/lean-ai-native@0.1.0
+cd CONSUMER
+vibe bin build --offline --assume-yes rust-ai-native-conform \
+  rust-ai-native-specmap lean-ai-native lean-ai-native-mcp
+vibe bin exec rust-ai-native-conform -- --path . check --scope rust
+vibe bin exec lean-ai-native -- --path . check --carrier lean-proof.toml \
+  --subject spec://org.example/same-subject/Protocol#identity
+vibe requirements --path . --address-prefix \
+  spec://org.example/same-subject/Protocol#identity --relations --json
+```
+
+The selected gate builds and runs those installed artifacts with both canonical
+VibeVM checkout roots hidden and networking disabled. Installed Lean CLI/MCP
+return matching checked evidence; the host join's Lean contribution equals that
+installed result. The actual requirements query returns one fact row containing
+both current relations. The Rust conform policy gates this one crate without a
+frozen baseline; its usage doctest is executable separately with `cargo test
+--manifest-path rust/Cargo.toml --doc`.
+
+The host join remains a compiled-in checker: it does not dispatch to the installed
+Lean executable or infer checker availability from the installation lock. A new
+installed family version does not silently replace that compiled engine. This
+separation between build-time linkage, installed package availability and runtime
+checking is part of the gate result, not a claim of dynamic plugin discovery.
 
 ## Focused checks
 

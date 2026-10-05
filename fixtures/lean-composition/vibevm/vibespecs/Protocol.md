@@ -1,10 +1,6 @@
 # Selected-subject identity fixture {#root}
 
-## Identity {#identity}
-
-`req r1`
-
-The identity operation returns its argument unchanged.
+@fact:identity The identity operation returns its argument unchanged. @status:spec/done
 
 The Rust realization accepts a `u64` and is checked at zero and `u64::MAX`.
 The independent Lean theorem states reflexive equality for `Nat`.
