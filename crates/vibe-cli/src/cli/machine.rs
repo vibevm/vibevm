@@ -28,8 +28,14 @@ pub struct MachineSessionArgs {
     #[arg(long, value_enum, conflicts_with = "fixed_validate")]
     pub fixed_package: Option<FixedPackageMode>,
     /// Explicit cooperative same-project fixed offline Cargo host mode.
-    #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package"])]
+    #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package", "fixed_deploy"])]
     pub fixed_cargo: Option<FixedCargoMode>,
+    /// Explicit project-local fixed Deploy host mode.
+    #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package", "fixed_cargo"])]
+    pub fixed_deploy: Option<FixedDeployMode>,
+    /// Authored Deploy profile; required for fixed Deploy and never inferred.
+    #[arg(long, requires = "fixed_deploy")]
+    pub deploy_profile: Option<String>,
     /// First-issue lifetime in milliseconds (1..=86400000); issue only.
     #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000))]
     pub ttl_ms: Option<u64>,
@@ -61,6 +67,12 @@ pub enum FixedPackageMode {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum FixedCargoMode {
+    Issue,
+    Reattach,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum FixedDeployMode {
     Issue,
     Reattach,
 }
