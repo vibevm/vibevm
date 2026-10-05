@@ -213,7 +213,7 @@ impl ExactLocalInstallDecisionHost {
         let base = Base {
             request_id: digest(captured.canonical_request.clone()),
             plan_id: digest(captured.canonical_plan.clone()),
-            source_id: format!("sha256:{}", captured.source.tree_sha256),
+            source_id: captured.source.tree_sha256,
             request: captured.canonical_request,
             plan: captured.canonical_plan,
         };
