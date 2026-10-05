@@ -242,8 +242,6 @@ fn wrong_outer_ids_stage_identity_format_and_generated_shapes_refuse_without_pro
     }
     for (phase, force, trace, profile) in [
         ("build", false, false, Value::Null),
-        ("validate", true, false, Value::Null),
-        ("validate", false, true, Value::Null),
         ("validate", false, false, json!("posix")),
     ] {
         let r=c.call(json!({"kind":"prepare","phase":phase,"requested_options":{"force":force,"trace":trace,"deploy_profile":profile,"control":"none"}}));

@@ -24,6 +24,7 @@ use vibe_wire::generated::{
 };
 mod cases;
 mod failure_cases;
+mod local_options;
 fn facts(approve: bool) -> HostPolicyFacts {
     HostPolicyFacts {
         approve_captured_script: approve,
