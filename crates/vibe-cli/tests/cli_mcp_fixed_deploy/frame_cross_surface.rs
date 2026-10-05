@@ -50,7 +50,7 @@ fn frame_action(
     target: &str,
     kind: &str,
 ) -> (Value, f::Outcome) {
-    let (published, outcome) = raw_frame_action(child, session, context, target, kind);
+    let (published, outcome) = raw_frame_action(child, session, context, target, kind, "old-key");
     let e::Body::Result(result) = published.body else {
         panic!("fixed Deploy result: {published:?}")
     };
@@ -70,6 +70,7 @@ fn raw_frame_action(
     context: &str,
     target: &str,
     kind: &str,
+    key: &str,
 ) -> (e::OperationEnvelope, f::Outcome) {
     let envelope = json!({
         "schema":1,
@@ -77,7 +78,7 @@ fn raw_frame_action(
         "domain_owner":vibe_orchestrator::machine_operation::fixed_deploy::DOMAIN_OWNER,
         "source_id":null,"evidence_id":null,
         "body":{"stage":"input","format_id":FormatId::MachineFixedDeployActionRequest.id(),
-            "payload_json":json!({"schema":1,"action":{"kind":kind,"key":"old-key"}}).to_string()}
+            "payload_json":json!({"schema":1,"action":{"kind":kind,"key":key}}).to_string()}
     });
     let reply = exchange(
         child,
@@ -246,7 +247,8 @@ fn cli_frame_real_deploy_replays_through_cold_mcp() {
         );
     }
     let (mut child, session, context, target) = connect_mode(&fixture, "reattach");
-    let (published, outcome) = raw_frame_action(&mut child, &session, &context, &target, "submit");
+    let (published, outcome) =
+        raw_frame_action(&mut child, &session, &context, &target, "submit", "old-key");
     let e::Body::Error(row) = published.body else {
         panic!("expected fixed Deploy refusal: {published:?}")
     };
@@ -258,6 +260,29 @@ fn cli_frame_real_deploy_replays_through_cold_mcp() {
     );
     drop(child.stdin.take());
     assert!(child.wait_with_output().unwrap().status.success());
+
+    let mcp_new = mcp_reply(&fixture.mcp("reattach", false, &request_key("submit", "new-key")));
+    assert_eq!(mcp_new["result"]["isError"], true, "{mcp_new}");
+    let mcp_new_error = &mcp_new["result"]["structuredContent"];
+    assert_eq!(mcp_new_error["code"], "submission_refused");
+    assert!(mcp_new_error["known_run_id"].is_null());
+    assert_eq!(mcp_new_error["view"]["kind"], "absent");
+    assert_eq!(mcp_new_error["effect_observation"], "none");
+    let (mut child, session, context, target) = connect_mode(&fixture, "reattach");
+    let (published, outcome) =
+        raw_frame_action(&mut child, &session, &context, &target, "submit", "new-key");
+    let e::Body::Error(row) = published.body else {
+        panic!("expected new-key Deploy refusal: {published:?}")
+    };
+    let cli_new_error: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
+    assert_eq!(cli_new_error, *mcp_new_error);
+    assert_eq!(
+        serde_json::to_value(outcome.effect_state).unwrap(),
+        "no_effects"
+    );
+    drop(child.stdin.take());
+    assert!(child.wait_with_output().unwrap().status.success());
+
     assert_eq!(fs::read(&pointer).unwrap(), pointer_before);
     assert_eq!(
         fs::read(fixture.dir.path().join("settings/bin/local-helper")).unwrap(),
@@ -465,7 +490,7 @@ fn cli_frame_and_mcp_process_race_one_fixed_deploy_key() {
     let (cli, mcp) = std::thread::scope(|scope| {
         let cli_job = scope.spawn(|| {
             barrier.wait();
-            raw_frame_action(&mut child, &session, &context, &target, "submit")
+            raw_frame_action(&mut child, &session, &context, &target, "submit", "old-key")
         });
         let mcp_job = scope.spawn(|| {
             barrier.wait();
