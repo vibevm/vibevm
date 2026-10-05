@@ -279,6 +279,88 @@ fn cli_frame_and_mcp_stdio_combined_options_share_one_run_and_trace() {
 }
 
 #[test]
+fn cli_frame_and_mcp_stdio_share_failed_post_effect_truth() {
+    let fixture = Fixture::new(true);
+    let script = fixture.root().join("run.sh");
+    let mut bytes = fs::read(&script).unwrap();
+    bytes.extend_from_slice(b"exit 17\n");
+    fs::write(&script, bytes).unwrap();
+    let mut cli = fixture.client("issue");
+    let cli_reference = approve(&mut cli);
+    for name in ["config.toml", "settings.toml", "registry.toml"] {
+        fs::write(fixture.dir.path().join("home/.vibe").join(name), "").unwrap();
+    }
+    let mut mcp = ProcessMcp::reattach(&fixture);
+    let mcp_reference = process_mcp_approve(&mut mcp, "none");
+    let key = "failed-cli-mcp";
+    let started = cli.call(submit(&cli_reference, key));
+    assert!(matches!(started.envelope.body, e::Body::Result(_)));
+    until(|| fixture.root().join("entered").exists());
+    fixture.count_one();
+    let contender = mcp.call(submit(&mcp_reference, key));
+    assert!(
+        contender["isError"] == false
+            || contender["structuredContent"]["code"] == "inspection_unavailable",
+        "{contender}"
+    );
+    fixture.release();
+    let cli_terminal = terminal(&mut cli, key).row();
+    let run = cli_terminal.run_id.clone().expect("failed C1 run identity");
+    assert!(cli_terminal.partial);
+    assert_eq!(
+        cli_terminal
+            .last_phase
+            .as_ref()
+            .and_then(|p| p.status.as_deref()),
+        Some("fail")
+    );
+    assert!(
+        cli_terminal
+            .work_outcomes
+            .iter()
+            .any(|w| w.status == "fail")
+    );
+    assert!(matches!(
+        cli_terminal.status,
+        v::Status::ResultAvailable(ref result)
+            if matches!(result.outcome, v::StatusResultAvailableOutcome::Failed)
+                && matches!(result.effect_state, v::StatusResultAvailableEffectState::Uncertain)
+    ));
+    let deadline = Instant::now() + Duration::from_secs(20);
+    let mcp_terminal = loop {
+        let reply = mcp.call(inspect(key));
+        if reply["isError"] == false {
+            let view = mcp_row(&reply);
+            if matches!(view.status, v::Status::ResultAvailable(_)) {
+                break view;
+            }
+        } else {
+            assert_eq!(reply["structuredContent"]["code"], "inspection_unavailable");
+        }
+        assert!(Instant::now() < deadline, "failed MCP terminal deadline");
+        std::thread::sleep(Duration::from_millis(10));
+    };
+    assert_same_terminal_truth(&cli_terminal, &mcp_terminal);
+    let replay = mcp.call(submit(&mcp_reference, key));
+    assert_eq!(replay["isError"], false, "{replay}");
+    assert_eq!(mcp_row(&replay).run_id.as_deref(), Some(run.as_str()));
+    cli.finish();
+    mcp.finish();
+    fixture.count_one();
+    let keys = fixture.index()["namespaces"]
+        .as_object()
+        .unwrap()
+        .values()
+        .next()
+        .unwrap()["keys"]
+        .as_object()
+        .unwrap()
+        .clone();
+    assert_eq!(keys.len(), 1);
+    assert_eq!(keys[key]["domain_run_id"], run);
+}
+
+#[test]
 fn real_cli_frame_and_mcp_stdio_race_one_fixed_validate_key() {
     let fixture = Fixture::new(true);
     let mut cli = fixture.client("issue");
