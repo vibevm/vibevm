@@ -1,5 +1,5 @@
 //! Check 7 — the boot directory (`current_boot_dir()`, PROP-052 L2)
-//! exists and validates selected spec-source files. A legacy host uses
+//! exists when required and validates selected spec-source files. A legacy host uses
 //! Markdown/dialect-XML suffixes (PROP-045 ##LOADER-LAW); an opt-in host
 //! admits ordinary declared resources without Vibe interpretation.
 //! PROP-009 retired the `NN-` filename prefix;
@@ -29,17 +29,24 @@ pub struct BootDirectoryCheck;
 mod declared;
 use declared::declared_boot;
 
-/// `true` when the node's own manifest declares `kind = "doc"`.
+/// `true` when the package kind permits omitting a boot directory.
 ///
 /// An unreadable or absent manifest answers `false`: this cell is not
 /// the place that diagnoses a broken manifest, and answering `true`
 /// there would silence a real missing-directory finding on the strength
 /// of a file nobody could read.
-fn is_doc_package(project_root: &Path) -> bool {
+fn may_omit_boot_directory(project_root: &Path) -> bool {
     Manifest::read(project_root.join(Manifest::FILENAME))
         .ok()
         .and_then(|manifest| manifest.package)
-        .is_some_and(|package| package.kind == vibe_core::PackageKind::Doc)
+        .is_some_and(|package| {
+            matches!(
+                package.kind,
+                vibe_core::PackageKind::Doc
+                    | vibe_core::PackageKind::Stack
+                    | vibe_core::PackageKind::Mcp
+            )
+        })
 }
 
 impl Check for BootDirectoryCheck {
@@ -57,17 +64,18 @@ impl Check for BootDirectoryCheck {
         if !boot.is_dir() {
             // Empty / fresh project — `vibe init` creates it. If the
             // project's vibe.toml exists but boot/ doesn't, that's a
-            // structural error — unless the package is documentation,
-            // for which the ABSENCE is the required state: a `doc`
-            // package declares no boot snippet and never enters a boot
-            // lane, so demanding the directory would demand exactly
-            // what the kind forbids (PROP-057 `##KIND-DOC-MUST-NOT-EXECUTE`).
-            if project_root.join(Manifest::FILENAME).exists() && !is_doc_package(project_root) {
+            // structural error unless the kind permits absence. A `doc`
+            // package must not enter a boot lane (PROP-057), a family
+            // aggregator carries no snippet (PROP-028), and an MCP server's
+            // snippet is legal but optional (PROP-027).
+            if project_root.join(Manifest::FILENAME).exists()
+                && !may_omit_boot_directory(project_root)
+            {
                 // The message names the project-relative boot dir (the
                 // seam's name, so the R4 flip re-labels it for free) —
                 // computed before `boot_rel` moves into the finding.
                 let message = format!(
-                    "{boot_label}/ is missing — every project owns this directory; run `vibe \
+                    "{boot_label}/ is missing — this project or package requires it; run `vibe \
                      init` if it disappeared."
                 );
                 report.err(CheckId::BootDirectory, Some(boot_rel), None, message);
@@ -416,8 +424,8 @@ mod tests {
     /// A documentation package owns no boot directory, and the cell
     /// must not ask for one: `doc` declares no boot snippet and never
     /// enters a boot lane, so the absence is the required state, not a
-    /// structural defect (PROP-057 ##KIND-DOC-MUST-NOT-EXECUTE). Every
-    /// other kind still owes the directory.
+    /// structural defect (PROP-057 ##KIND-DOC-MUST-NOT-EXECUTE). A flow
+    /// remains the control that still owes the directory.
     #[test]
     fn a_doc_package_owes_no_boot_directory() {
         let doc = tempdir().unwrap();
@@ -468,6 +476,34 @@ kind = \"flow\"
             "every other kind still owes the directory; got: {:?}",
             report.findings
         );
+    }
+
+    #[test]
+    fn a_family_aggregator_and_mcp_package_may_omit_boot_directory() {
+        for (name, kind) in [("rust-ai-native", "stack"), ("rust-ai-native-mcp", "mcp")] {
+            let package = tempdir().unwrap();
+            let server = if kind == "mcp" {
+                "\n[[binary]]\nname = \"rust-ai-native-mcp\"\ncrate = \"crates/rust-ai-native-mcp\"\n\n[[mcp_server]]\nname = \"rust-ai-native\"\nbinary = \"rust-ai-native-mcp\"\n"
+            } else {
+                ""
+            };
+            fs::write(
+                package.path().join("vibe.toml"),
+                format!(
+                    "[package]\nname = \"{name}\"\ngroup = \"org.vibevm.ai-native\"\nkind = \"{kind}\"\nversion = \"1.1.0\"\n{server}"
+                ),
+            )
+            .unwrap();
+            let report = check_project(package.path(), &opts());
+            assert!(
+                !report
+                    .findings
+                    .iter()
+                    .any(|finding| finding.check == CheckId::BootDirectory),
+                "{kind} without a boot snippet must not require an empty directory: {:?}",
+                report.findings
+            );
+        }
     }
 
     /// PROP-045 ##LOADER-LAW: a dialect-XML boot file is a first-class
