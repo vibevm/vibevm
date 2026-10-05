@@ -1,12 +1,14 @@
 //! Real startup composition of one fixed Deploy grant across CLI and MCP.
 #![cfg(target_os = "linux")]
 
-use serde_json::{Value, json};
+use serde_json::{json, Value};
+use sha2::{Digest, Sha256};
 use std::{
     fs,
     path::PathBuf,
     process::{Command, Output, Stdio},
 };
+use vibe_wire::{behaviour::artifact_record::validate, generated::artifact_record::ArtifactRecord};
 
 struct Fixture {
     dir: tempfile::TempDir,
@@ -21,6 +23,31 @@ impl Fixture {
     }
     fn root(&self) -> PathBuf {
         self.dir.path().join("project")
+    }
+    fn seed_artifact(&self) {
+        let artifact = self.root().join("target/debug/helper.exe");
+        fs::create_dir_all(artifact.parent().unwrap()).unwrap();
+        fs::write(&artifact, b"one isolated deploy effect").unwrap();
+        let digest = format!("{:x}", Sha256::digest(fs::read(&artifact).unwrap()));
+        let record: ArtifactRecord = serde_json::from_value(json!({
+            "schema":1,"id":"helper.exe","kind":"executable","shape":"file",
+            "path_absolute":artifact.to_string_lossy().replace('\\', "/"),
+            "path_relative":{"root":"project","path":"target/debug/helper.exe"},
+            "digest":{"algorithm":"sha256","value":digest},
+            "producer":{"target":"helper","mechanism":"build:cargo",
+                "provider":{"key":"org.vibevm/vibe#cargo"}},
+            "freshness":{},"created_at":"2026-10-05T12:00:00Z",
+            "verification":{"status":"verified","evidence":"isolated Deploy fixture"}
+        }))
+        .unwrap();
+        validate(&record).unwrap();
+        let records = self.root().join(".vibe/state/artifacts");
+        fs::create_dir_all(&records).unwrap();
+        fs::write(
+            records.join("helper.exe.json"),
+            serde_json::to_vec(&record).unwrap(),
+        )
+        .unwrap();
     }
     fn command(&self) -> Command {
         let mut command = Command::new(env!("CARGO_BIN_EXE_vibe"));
@@ -84,6 +111,67 @@ fn request(kind: &str) -> String {
             "schema":1,"action":{"kind":kind,"key":"old-key"}}}})
     .to_string()
         + "\n"
+}
+
+fn mcp_reply(output: &Output) -> Value {
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    serde_json::from_slice(&output.stdout).unwrap()
+}
+
+#[test]
+fn mcp_issue_and_cold_reattach_retain_one_real_deploy_effect() {
+    let fixture = Fixture::new();
+    fixture.seed_artifact();
+    let first = mcp_reply(&fixture.mcp("issue", true, &request("submit")));
+    assert_eq!(first["result"]["isError"], false, "{first}");
+    let completed = &first["result"]["structuredContent"]["reply"];
+    assert_eq!(completed["kind"], "completed", "{first}");
+    let run = completed["run_id"].as_str().unwrap();
+    let receipt: Value = serde_json::from_str(completed["receipt_json"].as_str().unwrap()).unwrap();
+    assert_eq!(receipt["status"], "verified");
+    let launcher = fs::read(fixture.dir.path().join("settings/bin/local-helper")).unwrap();
+    assert!(launcher.starts_with(b"#!/bin/sh\n# vibevm-launcher"));
+    let pointer = fs::read_dir(fixture.root().join(".vibe/cli-deploy-host-grants"))
+        .unwrap()
+        .next()
+        .unwrap()
+        .unwrap()
+        .path();
+    let pointer_before = fs::read(&pointer).unwrap();
+
+    let cold = mcp_reply(&fixture.mcp("reattach", false, &request("submit")));
+    assert_eq!(cold["result"]["isError"], false, "{cold}");
+    assert_eq!(cold["result"]["structuredContent"]["reply"], *completed);
+    assert_eq!(fs::read(&pointer).unwrap(), pointer_before);
+
+    fs::write(
+        fixture.root().join("vibe.toml"),
+        manifest("\n# drift after effect\n"),
+    )
+    .unwrap();
+    let observed = mcp_reply(&fixture.mcp("reattach", false, &request("inspect")));
+    assert_eq!(observed["result"]["isError"], false, "{observed}");
+    assert_eq!(
+        observed["result"]["structuredContent"]["reply"]["run_id"],
+        run
+    );
+    let refused = mcp_reply(&fixture.mcp("reattach", false, &request("submit")));
+    assert_eq!(refused["result"]["isError"], true, "{refused}");
+    assert_eq!(refused["result"]["structuredContent"]["known_run_id"], run);
+    assert_eq!(fs::read(&pointer).unwrap(), pointer_before);
+    let index: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(index["namespaces"].as_object().unwrap().len(), 1);
+    assert_eq!(
+        fs::read(fixture.dir.path().join("settings/bin/local-helper")).unwrap(),
+        launcher
+    );
 }
 
 #[test]

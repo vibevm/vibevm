@@ -8176,8 +8176,8 @@
       "item_kind": "struct",
       "line": 222,
       "symbol": "vibe_cli::cli::mcp::McpServeArgs",
-      "end_line": 281,
-      "fingerprint": "tok1:7fa81c658798672a2e39b94ba1bfe18bfc2e99746bfd1a3213b63131c663cc49"
+      "end_line": 289,
+      "fingerprint": "tok1:9b4cc4b824d8597bf6155539c983fbea0aaa03ba45f4016b53655eba07a1ffee"
     },
     {
       "crate_name": "vibe-cli",
@@ -9459,11 +9459,20 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/machine_session/fixed_deploy.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::machine_session::fixed_deploy",
+      "end_line": 2,
+      "fingerprint": "tok1:c9ee091ccadb52300d8580dbf70d6a813fd0c03ec9e33750d7c5afebbc116758"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/machine_session.rs",
       "item_kind": "fn",
-      "line": 28,
+      "line": 32,
       "symbol": "vibe_cli::commands::machine_session::run",
-      "end_line": 45,
+      "end_line": 49,
       "fingerprint": "tok1:85ef0537abcf3751e0ae2776dfbb75716108dcd5c9474a0e0481a8dae84ad7af"
     },
     {
@@ -9479,18 +9488,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 407,
+      "line": 434,
       "symbol": "vibe_cli::commands::mcp::fixed_cargo_server_context",
-      "end_line": 432,
+      "end_line": 459,
       "fingerprint": "tok1:6262610df097972228e448970b272ad826bd660a2571645f419a4a628441841c"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 380,
+      "line": 407,
       "symbol": "vibe_cli::commands::mcp::fixed_package_server_context",
-      "end_line": 405,
+      "end_line": 432,
       "fingerprint": "tok1:98730a58aa55eb4e09c12a18d09f1937267677d19bdc8eccfc798502ad26a1be"
     },
     {
@@ -9533,10 +9542,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 298,
+      "line": 299,
       "symbol": "vibe_cli::commands::mcp::run_serve",
-      "end_line": 378,
-      "fingerprint": "tok1:e589eee9b06527e255ab57fa5f94aec60a084c51addbb3c634bdf2ffeb2a066e"
+      "end_line": 405,
+      "fingerprint": "tok1:eaa07c80fdb65c804e8954aac0640abea537d10317986166911042229409ece6"
     },
     {
       "crate_name": "vibe-cli",
@@ -42580,9 +42589,17 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/machine_session/fixed_deploy.rs",
+      "from_symbol": "vibe_cli::commands::machine_session::fixed_deploy",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/machine_session.rs",
       "from_symbol": "vibe_cli::commands::machine_session::run",
-      "line": 28,
+      "line": 32,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT",
       "verb": "implements",
@@ -42599,7 +42616,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::fixed_cargo_server_context",
-      "line": 407,
+      "line": 434,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-CARGO-BUILD-DECISION",
       "verb": "implements"
@@ -42607,7 +42624,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::fixed_package_server_context",
-      "line": 380,
+      "line": 407,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-PACKAGE-GRANT-DECISION",
       "verb": "implements"
@@ -42647,7 +42664,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::run_serve",
-      "line": 298,
+      "line": 299,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
       "verb": "implements",

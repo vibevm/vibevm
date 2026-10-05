@@ -140,7 +140,7 @@ impl McpTool for FixedDeployOperationMcpTool {
     fn descriptor(&self) -> ToolDescriptor {
         ToolDescriptor {
             name: "fixed_deploy_operation".into(),
-            description: "Submit or inspect only an explicitly embedded, host-bound fixed vibe-bin Deploy route. The request cannot select project/settings/home roots, profile, target, generation, namespace or destination. No default CLI grant or cross-process reattach is provided.".into(),
+            description: "Submit or inspect only an explicitly embedded, host-bound fixed vibe-bin Deploy route. The request cannot select project/settings/home roots, profile, target, generation, namespace or destination. Ordinary MCP startup has no grant; explicit fixed Deploy issue or reattach requires an absolute project root and authored profile.".into(),
             input_schema: json!({
                 "type":"object", "properties":{
                     "schema":{"type":"integer","const":1},
