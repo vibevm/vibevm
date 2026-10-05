@@ -153,3 +153,15 @@ cold inspection in that condition. The in-memory retained-port grant test
 does not establish cross-process recovery. A real concurrent three-surface
 same-key submit and the remaining general domain/option coverage are still
 needed before C.4 acceptance.
+
+**Per-operation Deploy profile contract.** Source inspection of
+`schemas/machine/e1/fixed_deploy_action_request.jtd.json` confirms that a
+fixed Deploy submit carries only its C1 key. The trusted host retains one
+profile, and `FixedDeployHost::submit` copies it into the domain request.
+The generated request grammar rejects a caller-supplied `profile`; the
+foreign-field negative proves the refusal, not an explicit option. The
+Validate-only lifecycle action likewise rejects `deploy_profile`, while
+legacy `lifecycle_run` passes no profile. A future explicit Deploy option
+must bind the caller's requested profile to the trusted selected target and
+policy under the existing owner before C1; widening the Validate route or
+accepting a field without owner comparison would leave the C.4 gap open.
