@@ -4,6 +4,81 @@ use super::*;
 use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Lockfile};
 use vibe_lifecycle::process::{PackageTreeWitness, capture_selected_manifest_lock};
 
+/// Read-only, exact local Install comparison bytes for a typed question.
+/// The eventual submit must repeat these checks under its own incumbent lease.
+pub(in crate::machine_submission) struct LocalInstallPreflight {
+    pub canonical_request: Vec<u8>,
+    pub canonical_plan: Vec<u8>,
+    pub source: PackageTreeWitness,
+}
+
+pub(in crate::machine_submission) fn preflight_one_package_local_install_under_lease(
+    leased: &LeasedDefaultLifecycle,
+    factory: &dyn BoundOnePackageSource,
+    target_os: TargetOs,
+) -> Result<LocalInstallPreflight> {
+    let lease = leased.retain_lease();
+    let source = factory.source_witness().clone();
+    factory.recheck_source_binding(&source)?;
+    recheck_package_tree_witness(&source)?;
+    let selected_root = leased.selected_root();
+    let (snapshot, witness) = SelectedManifest::read_witnessed(selected_root)?;
+    let selection = snapshot.prepare();
+    ensure!(
+        selection.loaded_root() == Some(lease.root())
+            && selection
+                .loaded_workspace()
+                .is_some_and(|world| world.iter_nodes().count() == 1)
+            && !selection.request(false)
+            && selected_under_lease(&selection, &lease)? == ".",
+        "local Install question requires one untraced root node"
+    );
+    require_one_package_fixture_world(&selection, &witness, &source)?;
+    ensure!(
+        LifecycleStateStore::peek_with_lease(&lease)?.is_none(),
+        "local Install question refuses prior lifecycle state"
+    );
+    let request = DefaultLifecycleRequest {
+        requested: Phase::Install,
+        force: false,
+        agent_mode: RunAgentMode::Cli,
+        assume_yes: true,
+        trace_flag: false,
+        install_inputs: Default::default(),
+        policy: crate::install::InstallPolicy {
+            offline: true,
+            slot_integrity: SlotIntegrity::Verify,
+            ..Default::default()
+        },
+    };
+    let canonical_request = canonical_one_package_fixture_request(&source, target_os)?;
+    let canonical_plan = canonical_lifecycle_pre_effect_plan(&LifecyclePreEffectPlanInput {
+        lease_root: lease.root(),
+        selected_root,
+        selected_node: ".",
+        witness: &witness,
+        workspace_witness: &witness,
+        package_source: Some(&source),
+        script_source: None,
+        prompt_source: None,
+        requested: Phase::Install,
+        agent_mode: &request.agent_mode,
+        trace_flag: false,
+        effective_trace: false,
+        force: false,
+        assume_yes: true,
+        policy: &request.policy,
+        install_inputs: &request.install_inputs,
+    })?;
+    factory.recheck_source_binding(&source)?;
+    recheck_package_tree_witness(&source)?;
+    Ok(LocalInstallPreflight {
+        canonical_request,
+        canonical_plan,
+        source,
+    })
+}
+
 #[cfg(test)]
 pub(super) const FIXTURE_PIN: &str = "flow:org.example/fixture@=1.1.0";
 #[cfg(test)]

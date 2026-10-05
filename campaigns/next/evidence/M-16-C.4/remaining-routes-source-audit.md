@@ -73,3 +73,17 @@ permission still grants no effect by itself: a typed Install question,
 approval, exact source/resulting-plan binding and current-generation check
 before C1 remain to implement. The ordinary MCP `assume_yes` path cannot mint
 that evidence.
+
+**Typed local Install preparation.** The retained host now captures the
+one-package request, pre-effect plan, source, physical root, scope and current
+Install policy generation under the incumbent lifecycle lease. It issues the
+registered JTD approval question with explicit requested options, validates a
+bounded answer against the original question, and rechecks current policy and
+source before returning process-local comparison evidence. A denied policy
+bit, false approval, foreign scope, stale generation, forged plan, changed
+source and unsupported force/trace/deploy-profile/control are refused; the
+three focused tests pass. Source read failures retain `SourceUnavailable`
+instead of being misreported as successful recapture with `SourceDrift`.
+This evidence cannot invoke Install or approve the Install confirmation gate:
+there is still no sealed C1/C2 submission profile or CLI/MCP/local API route.
+The four C.4 steps remain open.
