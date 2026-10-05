@@ -42,6 +42,7 @@ impl FixedLifecycleDecisionHost {
             state: Arc::new(Mutex::new(State {
                 facts: HostPolicyFacts {
                     approve_captured_script: false,
+                    approve_exact_local_install: false,
                     allow_detach: false,
                     allow_cancel_pre_dispatch: false,
                     allow_cancel_deferred_boundary: false,

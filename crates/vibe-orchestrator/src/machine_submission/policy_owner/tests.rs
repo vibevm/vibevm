@@ -14,6 +14,7 @@ fn source() -> TrustedPolicySource {
 fn facts() -> HostPolicyFacts {
     HostPolicyFacts {
         approve_captured_script: true,
+        approve_exact_local_install: false,
         allow_detach: false,
         allow_cancel_pre_dispatch: true,
         allow_cancel_deferred_boundary: false,
@@ -103,6 +104,48 @@ fn update_advances_revision_and_stale_actor_refuses_without_publication() {
         .unwrap();
     assert_ne!(third.generation(), fourth.generation());
     assert_eq!(fourth.source().identifier(), "second-source");
+}
+
+#[test]
+fn local_install_permission_is_denied_in_old_record_and_changes_generation_when_enabled() {
+    let (root, lease, denied) = initialized();
+    let old_bytes = bytes(&root);
+    assert!(!String::from_utf8_lossy(&old_bytes).contains("approve_exact_local_install"));
+    let old_record: Record = serde_json::from_slice(&old_bytes).unwrap();
+    assert_eq!(old_record.snapshot().generation(), denied.generation());
+    let mut same_revision: serde_json::Value = serde_json::from_slice(&old_bytes).unwrap();
+    same_revision["facts"]["approve_exact_local_install"] = true.into();
+    let enabled_same_revision: Record = serde_json::from_value(same_revision).unwrap();
+    assert_ne!(
+        old_record.snapshot().generation(),
+        enabled_same_revision.snapshot().generation(),
+    );
+    let owner = attached(&root);
+    assert!(
+        !owner
+            .current_under_lease(&lease)
+            .unwrap()
+            .facts()
+            .approve_exact_local_install
+    );
+    let mut allowed = facts();
+    allowed.approve_exact_local_install = true;
+    let enabled = owner
+        .update_under_lease(&lease, denied.generation(), source(), allowed.clone())
+        .unwrap();
+    assert_ne!(enabled.generation(), denied.generation());
+    assert!(enabled.facts().approve_exact_local_install);
+    assert!(
+        String::from_utf8_lossy(&bytes(&root)).contains("\"approve_exact_local_install\":true")
+    );
+    assert_eq!(
+        attached(&root).current_under_lease(&lease).unwrap(),
+        enabled
+    );
+    assert_eq!(
+        PolicyOwner::initialize_under_lease(&lease, &scope(), source(), facts()),
+        Err(PolicyError::StartupDisagreement)
+    );
 }
 
 #[test]

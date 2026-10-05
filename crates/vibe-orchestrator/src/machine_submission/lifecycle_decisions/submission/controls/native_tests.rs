@@ -34,6 +34,7 @@ impl Fixture {
             TargetOs::Linux,
             HostPolicyFacts {
                 approve_captured_script: true,
+                approve_exact_local_install: false,
                 allow_detach: true,
                 allow_cancel_pre_dispatch: pre,
                 allow_cancel_deferred_boundary: deferred,
@@ -446,6 +447,7 @@ fn changed_policy_denies_new_submission_and_same_key_before_any_job_lookup() {
     let e = f.evidence(RequestedOptionsControl::CancelPreDispatch);
     let mut facts = HostPolicyFacts {
         approve_captured_script: true,
+        approve_exact_local_install: false,
         allow_detach: true,
         allow_cancel_pre_dispatch: true,
         allow_cancel_deferred_boundary: false,
@@ -476,6 +478,7 @@ fn selected_control_and_changed_policy_conflict_after_terminal_without_redispatc
     f.host
         .set_host_policy(HostPolicyFacts {
             approve_captured_script: true,
+            approve_exact_local_install: false,
             allow_detach: false,
             allow_cancel_pre_dispatch: false,
             allow_cancel_deferred_boundary: false,

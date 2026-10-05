@@ -243,6 +243,7 @@ fn package_and_validate_have_distinct_scopes_and_pointers() {
         TrustedPolicySource::from_host_identifier("vibe-cli/fixed-validate/e1".into()).unwrap(),
         HostPolicyFacts {
             approve_captured_script: false,
+            approve_exact_local_install: false,
             allow_detach: false,
             allow_cancel_pre_dispatch: false,
             allow_cancel_deferred_boundary: false,

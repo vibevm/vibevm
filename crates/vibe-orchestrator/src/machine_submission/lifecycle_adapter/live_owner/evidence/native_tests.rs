@@ -16,6 +16,7 @@ fn decision_host(c: &HostCoordinates, approved: bool) -> FixedLifecycleDecisionH
         TargetOs::Linux,
         HostPolicyFacts {
             approve_captured_script: approved,
+            approve_exact_local_install: false,
             allow_detach: false,
             allow_cancel_pre_dispatch: false,
             allow_cancel_deferred_boundary: false,

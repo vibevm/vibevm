@@ -24,6 +24,8 @@ impl Scope {
 #[serde(deny_unknown_fields)]
 pub(super) struct Facts {
     approve_captured_script: bool,
+    #[serde(default, skip_serializing_if = "is_false")]
+    approve_exact_local_install: bool,
     allow_detach: bool,
     allow_cancel_pre_dispatch: bool,
     allow_cancel_deferred_boundary: bool,
@@ -32,6 +34,7 @@ impl Facts {
     pub(super) fn from_host(f: HostPolicyFacts) -> Self {
         Self {
             approve_captured_script: f.approve_captured_script,
+            approve_exact_local_install: f.approve_exact_local_install,
             allow_detach: f.allow_detach,
             allow_cancel_pre_dispatch: f.allow_cancel_pre_dispatch,
             allow_cancel_deferred_boundary: f.allow_cancel_deferred_boundary,
@@ -40,11 +43,15 @@ impl Facts {
     pub(super) fn host(&self) -> HostPolicyFacts {
         HostPolicyFacts {
             approve_captured_script: self.approve_captured_script,
+            approve_exact_local_install: self.approve_exact_local_install,
             allow_detach: self.allow_detach,
             allow_cancel_pre_dispatch: self.allow_cancel_pre_dispatch,
             allow_cancel_deferred_boundary: self.allow_cancel_deferred_boundary,
         }
     }
+}
+fn is_false(value: &bool) -> bool {
+    !*value
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -167,6 +174,11 @@ impl Record {
                 self.facts.allow_cancel_deferred_boundary as u8,
             ],
         );
+        // Preserve old generations when the new permission remains denied.
+        // An enabled Install grant must have a distinct generation.
+        if self.facts.approve_exact_local_install {
+            field(&mut bytes, b"exact-local-install:enabled");
+        }
         field(&mut bytes, self.root_token.as_bytes());
         scope_bytes(&mut bytes, &self.scope);
         PolicySnapshot {

@@ -29,6 +29,7 @@ mod option_race;
 fn facts(approve: bool) -> HostPolicyFacts {
     HostPolicyFacts {
         approve_captured_script: approve,
+        approve_exact_local_install: false,
         allow_detach: true,
         allow_cancel_pre_dispatch: true,
         allow_cancel_deferred_boundary: true,

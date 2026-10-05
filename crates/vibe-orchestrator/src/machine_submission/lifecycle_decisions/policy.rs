@@ -4,6 +4,9 @@ use super::*;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HostPolicyFacts {
     pub approve_captured_script: bool,
+    /// Separate trusted permission for an exact local Install. Existing script
+    /// approval never implies this permission.
+    pub approve_exact_local_install: bool,
     pub allow_detach: bool,
     pub allow_cancel_pre_dispatch: bool,
     pub allow_cancel_deferred_boundary: bool,
@@ -17,6 +20,8 @@ impl HostPolicyFacts {
             RequestedOptionsControl::CancelDeferredBoundary => self.allow_cancel_deferred_boundary,
         }
     }
+    /// The existing fixed Validate profile stays byte-compatible. Its
+    /// generation changes when a shared policy enables Install separately.
     pub(super) fn identity(&self) -> [bool; 4] {
         [
             self.approve_captured_script,

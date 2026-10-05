@@ -38,6 +38,7 @@ impl Fixture {
             TargetOs::Linux,
             HostPolicyFacts {
                 approve_captured_script: true,
+                approve_exact_local_install: false,
                 allow_detach: true,
                 allow_cancel_pre_dispatch: true,
                 allow_cancel_deferred_boundary: true,
