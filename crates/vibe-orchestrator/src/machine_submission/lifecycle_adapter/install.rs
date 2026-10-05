@@ -113,6 +113,38 @@ pub(super) fn submit_one_package_local_install(
         observed_at,
         Some(FixtureSourcePort {
             factory,
+            profile: None,
+            after_stage: None,
+            confirm: None,
+        }),
+    )
+}
+
+/// Private sealed entry. Its profile is retained by the decision owner and
+/// rechecked under this same lease before the new C1 reservation.
+#[allow(clippy::too_many_arguments)]
+pub(in crate::machine_submission) fn submit_approved_one_package_local_install<'a>(
+    path: &Path,
+    factory: &'a dyn BoundOnePackageSource,
+    namespace: &'a SubmissionNamespace,
+    scope: &'a SubmissionScope,
+    key: &'a str,
+    request: DefaultLifecycleRequest,
+    target_os: TargetOs,
+    observed_at: Timestamp,
+    profile: &'a super::super::exact_local_install_decision::AdmittedExactLocalInstallProfile<'a>,
+) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
+    submit_protected_lifecycle_with_fixture(
+        path,
+        namespace,
+        scope,
+        key,
+        request,
+        target_os,
+        observed_at,
+        Some(FixtureSourcePort {
+            factory,
+            profile: Some(profile),
             after_stage: None,
             confirm: None,
         }),
@@ -148,6 +180,7 @@ pub(crate) fn submit_one_package_fixture_install_with_hook<'a>(
         observed_at,
         Some(FixtureSourcePort {
             factory,
+            profile: None,
             after_stage,
             confirm,
         }),

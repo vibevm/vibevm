@@ -8,19 +8,27 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
 use vibe_core::manifest::TargetOs;
-use vibe_lifecycle::SubmissionScope;
 use vibe_lifecycle::process::{SelectedFileWitness, propose_run_id};
+use vibe_lifecycle::{LifecycleLease, SubmissionNamespace, SubmissionScope};
 use vibe_safefs::Project;
 
-use super::lifecycle_adapter::preflight_one_package_local_install_under_lease;
-use super::{PolicyOwner, PolicySnapshot};
-use crate::command::lease_default_lifecycle;
+use super::lifecycle_adapter::{
+    RetainedLifecycleResult, preflight_one_package_local_install_under_lease,
+    submit_approved_one_package_local_install,
+};
+use super::{PolicyOwner, PolicySnapshot, SubmissionOutcome};
+use crate::command::{DefaultLifecycleRequest, LeasedDefaultLifecycle, lease_default_lifecycle};
+use crate::install::InstallPolicy;
 use crate::machine_operation::input_decision::{self, ExpectedBinding};
 use crate::machine_operation::input_decision::{
     Body, BodyApprovalQuestion, InputDecisionMessage, MAX_FRAME_BYTES, RequestedOptions,
     RequestedOptionsControl,
 };
 use crate::ports::BoundOnePackageSource;
+use vibe_core::user_config::SlotIntegrity;
+use vibe_lifecycle::Phase;
+use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
+use vibe_wire::generated::shared::Timestamp;
 
 const OPERATION: &str = "rust:vibe-lifecycle:install-exact-local";
 const DOMAIN: &str = "rust:vibe-lifecycle";
@@ -66,6 +74,8 @@ fn supported(options: &RequestedOptions) -> Result<(), ExactLocalInstallDecision
 
 #[derive(Clone, PartialEq, Eq)]
 struct Base {
+    request: Vec<u8>,
+    plan: Vec<u8>,
     request_id: String,
     plan_id: String,
     source_id: String,
@@ -73,6 +83,7 @@ struct Base {
 struct Question {
     message: InputDecisionMessage,
     base: Base,
+    approved: bool,
 }
 struct State {
     counter: u64,
@@ -85,7 +96,9 @@ struct State {
 pub struct PreparedExactLocalInstallEvidence {
     identity: String,
     options: RequestedOptions,
-    _holder: Arc<()>,
+    holder: Arc<()>,
+    question_id: String,
+    base: Base,
 }
 impl PreparedExactLocalInstallEvidence {
     pub fn identity(&self) -> &str {
@@ -198,9 +211,11 @@ impl ExactLocalInstallDecisionHost {
             return Err(ExactLocalInstallDecisionError::Capacity);
         }
         let base = Base {
-            request_id: digest(captured.canonical_request),
-            plan_id: digest(captured.canonical_plan),
+            request_id: digest(captured.canonical_request.clone()),
+            plan_id: digest(captured.canonical_plan.clone()),
             source_id: format!("sha256:{}", captured.source.tree_sha256),
+            request: captured.canonical_request,
+            plan: captured.canonical_plan,
         };
         Ok((snapshot, base))
     }
@@ -264,6 +279,7 @@ impl ExactLocalInstallDecisionHost {
         state.questions.push(Question {
             message: question.clone(),
             base,
+            approved: false,
         });
         Ok(question)
     }
@@ -336,11 +352,220 @@ impl ExactLocalInstallDecisionHost {
         if question.plan_id.as_deref() != Some(expected_id.as_str()) {
             return Err(ExactLocalInstallDecisionError::SourceDrift);
         }
+        let question_id = question
+            .question_id
+            .clone()
+            .ok_or(ExactLocalInstallDecisionError::InvalidData)?;
+        let mut state = self.state.lock().map_err(infrastructure)?;
+        let retained = state
+            .questions
+            .iter_mut()
+            .find(|q| q.message.question_id.as_deref() == Some(&question_id))
+            .ok_or(ExactLocalInstallDecisionError::UnknownQuestion)?;
+        if retained.base != current || retained.message != question {
+            return Err(ExactLocalInstallDecisionError::SourceDrift);
+        }
+        retained.approved = true;
         Ok(PreparedExactLocalInstallEvidence {
             identity: expected_id,
             options: question.requested_options,
-            _holder: self.holder.clone(),
+            holder: self.holder.clone(),
+            question_id,
+            base: current,
         })
+    }
+
+    /// Internal owner route only. The typed answer and returned evidence are
+    /// insufficient without this host's retained approval record and C1 lease.
+    /// This seal is process-local: a new host cannot reconstruct an effectful
+    /// retry after restart. Cold C1/C2 result inspection remains separate.
+    pub(crate) fn submit_approved(
+        &self,
+        evidence: &PreparedExactLocalInstallEvidence,
+        namespace: &SubmissionNamespace,
+        key: &str,
+        observed_at: Timestamp,
+    ) -> Result<SubmissionOutcome<RetainedLifecycleResult>, ExactLocalInstallDecisionError> {
+        if key.is_empty()
+            || key.len() > 256
+            || key.trim() != key
+            || key.chars().any(char::is_control)
+        {
+            return Err(ExactLocalInstallDecisionError::InvalidData);
+        }
+        let profile = AdmittedExactLocalInstallProfile::from_owned(self, evidence)?;
+        let request = DefaultLifecycleRequest {
+            requested: Phase::Install,
+            force: false,
+            agent_mode: RunAgentMode::Cli,
+            assume_yes: true,
+            trace_flag: false,
+            install_inputs: Default::default(),
+            policy: InstallPolicy {
+                offline: true,
+                slot_integrity: SlotIntegrity::Verify,
+                ..Default::default()
+            },
+        };
+        submit_approved_one_package_local_install(
+            &self.root,
+            self.source.as_ref(),
+            namespace,
+            &self.scope,
+            key,
+            request,
+            self.target_os,
+            observed_at,
+            &profile,
+        )
+        .map_err(
+            |error| match error.downcast::<ExactLocalInstallDecisionError>() {
+                Ok(typed) => typed,
+                Err(other) => infrastructure(other),
+            },
+        )
+    }
+}
+
+/// A sealed local profile retains the owner and the exact accepted question.
+/// Only the owner can construct it; adapters can inspect and guard it.
+pub(in crate::machine_submission) struct AdmittedExactLocalInstallProfile<'a> {
+    host: &'a ExactLocalInstallDecisionHost,
+    evidence: &'a PreparedExactLocalInstallEvidence,
+    generation: String,
+}
+impl<'a> AdmittedExactLocalInstallProfile<'a> {
+    fn from_owned(
+        host: &'a ExactLocalInstallDecisionHost,
+        evidence: &'a PreparedExactLocalInstallEvidence,
+    ) -> Result<Self, ExactLocalInstallDecisionError> {
+        if !Arc::ptr_eq(&host.holder, &evidence.holder) {
+            return Err(ExactLocalInstallDecisionError::ForeignScope);
+        }
+        supported(&evidence.options)?;
+        let state = host.state.lock().map_err(infrastructure)?;
+        let retained = state
+            .questions
+            .iter()
+            .find(|q| q.message.question_id.as_deref() == Some(&evidence.question_id))
+            .ok_or(ExactLocalInstallDecisionError::UnknownQuestion)?;
+        if !retained.approved
+            || retained.base != evidence.base
+            || retained.message.plan_id.as_deref() != Some(&evidence.identity)
+            || retained.message.requested_options != evidence.options
+        {
+            return Err(ExactLocalInstallDecisionError::InvalidData);
+        }
+        let generation = retained
+            .message
+            .policy_generation
+            .clone()
+            .ok_or(ExactLocalInstallDecisionError::InvalidData)?;
+        Ok(Self {
+            host,
+            evidence,
+            generation,
+        })
+    }
+
+    pub(in crate::machine_submission) fn guard_before_attach(
+        &self,
+        lease: &LifecycleLease,
+        scope: &SubmissionScope,
+        base_request: &[u8],
+    ) -> Result<(), ExactLocalInstallDecisionError> {
+        if scope != &self.host.scope {
+            return Err(ExactLocalInstallDecisionError::ForeignScope);
+        }
+        let current = lease
+            .publication_journal_project()
+            .root_correlation_token()
+            .map_err(infrastructure)?;
+        let reopened = Project::open(lease.root())
+            .map_err(infrastructure)?
+            .root_correlation_token()
+            .map_err(infrastructure)?;
+        if current != self.host.root_token
+            || reopened != self.host.root_token
+            || self
+                .host
+                .project
+                .root_correlation_token()
+                .map_err(infrastructure)?
+                != self.host.root_token
+        {
+            return Err(ExactLocalInstallDecisionError::ForeignScope);
+        }
+        if base_request != self.evidence.base.request {
+            return Err(ExactLocalInstallDecisionError::SourceDrift);
+        }
+        // Keep the original true-answer record alive across replay; no wire
+        // approval or copied evidence can become a new owner.
+        Self::from_owned(self.host, self.evidence)?;
+        Ok(())
+    }
+
+    pub(in crate::machine_submission) fn guard_fresh(
+        &self,
+        leased: &LeasedDefaultLifecycle,
+        base_request: &[u8],
+        base_plan: &[u8],
+    ) -> Result<(), ExactLocalInstallDecisionError> {
+        let lease = leased.retain_lease();
+        self.guard_before_attach(&lease, &self.host.scope, base_request)?;
+        let snapshot = self
+            .host
+            .policy
+            .current_under_lease(&lease)
+            .map_err(infrastructure)?;
+        if snapshot.generation() != self.generation {
+            return Err(ExactLocalInstallDecisionError::StalePolicy);
+        }
+        if !snapshot.facts().approve_exact_local_install {
+            return Err(ExactLocalInstallDecisionError::PolicyDenied);
+        }
+        self.host
+            .source
+            .recheck_source_binding(self.host.source.source_witness())
+            .map_err(|e| ExactLocalInstallDecisionError::SourceUnavailable(format!("{e:#}")))?;
+        if base_plan != self.evidence.base.plan {
+            return Err(ExactLocalInstallDecisionError::SourceDrift);
+        }
+        Ok(())
+    }
+
+    fn wrap(&self, kind: &str, base: &[u8]) -> anyhow::Result<Vec<u8>> {
+        let base: serde_json::Value = serde_json::from_slice(base)?;
+        let value = serde_json::json!({
+            "format": kind,
+            "base": base,
+            "base_plan_sha256": self.evidence.base.plan_id,
+            "accepted_plan": self.evidence.identity,
+            "requested_options": self.evidence.options,
+            "policy_generation": self.generation,
+            "source": self.evidence.base.source_id,
+            "scope": {
+                "context": self.host.scope.context,
+                "target": self.host.scope.target,
+                "principal": self.host.scope.principal,
+            },
+        });
+        let mut out = Vec::new();
+        super::lifecycle_plan::write_canonical(&value, &mut out)?;
+        anyhow::ensure!(
+            out.len() <= CANONICAL_CAP,
+            "admitted Install canonical capacity"
+        );
+        Ok(out)
+    }
+    pub(in crate::machine_submission) fn request(&self, base: &[u8]) -> anyhow::Result<Vec<u8>> {
+        self.wrap(
+            "vibevm.lifecycle.admitted-exact-local-install-request/1",
+            base,
+        )
+    }
+    pub(in crate::machine_submission) fn plan(&self, base: &[u8]) -> anyhow::Result<Vec<u8>> {
+        self.wrap("vibevm.lifecycle.admitted-exact-local-install-plan/1", base)
     }
 }
 
