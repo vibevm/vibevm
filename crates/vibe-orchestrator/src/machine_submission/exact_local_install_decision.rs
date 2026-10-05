@@ -44,6 +44,7 @@ pub enum ExactLocalInstallDecisionError {
     UnknownQuestion,
     SourceDrift,
     SourceUnavailable(String),
+    RecoveryOnly,
     UnsupportedOptions,
     InvalidData,
     Capacity,
@@ -118,7 +119,7 @@ pub struct ExactLocalInstallDecisionHost {
     root_token: String,
     scope: SubmissionScope,
     policy: Arc<PolicyOwner>,
-    source: Arc<dyn BoundOnePackageSource>,
+    source: Option<Arc<dyn BoundOnePackageSource>>,
     target_os: TargetOs,
     issuer: String,
     state: Mutex<State>,
@@ -183,7 +184,7 @@ impl ExactLocalInstallDecisionHost {
             root_token,
             scope,
             policy,
-            source,
+            source: Some(source),
             target_os,
             issuer,
             state: Mutex::new(State {
@@ -192,6 +193,39 @@ impl ExactLocalInstallDecisionHost {
             }),
             holder: Arc::new(()),
         })
+    }
+
+    /// A cold read-only owner view. It retains no source port, questions or
+    /// approval evidence and cannot create a new Install submission.
+    pub fn from_recovery_host(
+        root: PathBuf,
+        policy: Arc<PolicyOwner>,
+        target_os: TargetOs,
+    ) -> Result<Self, ExactLocalInstallDecisionError> {
+        let project = Arc::new(Project::open(&root).map_err(infrastructure)?);
+        let root_token = project.root_correlation_token().map_err(infrastructure)?;
+        let issuer = propose_run_id(&root).map_err(infrastructure)?;
+        let scope = policy.scope().clone();
+        policy.observe_readonly().map_err(infrastructure)?;
+        Ok(Self {
+            root,
+            project,
+            root_token,
+            scope,
+            policy,
+            source: None,
+            target_os,
+            issuer,
+            state: Mutex::new(State {
+                counter: 0,
+                questions: Vec::new(),
+            }),
+            holder: Arc::new(()),
+        })
+    }
+
+    pub fn recovery_only(&self) -> bool {
+        self.source.is_none()
     }
 
     fn expected<'a>(question: &'a InputDecisionMessage) -> ExpectedBinding<'a> {
@@ -239,9 +273,13 @@ impl ExactLocalInstallDecisionHost {
         if !snapshot.facts().approve_exact_local_install {
             return Err(ExactLocalInstallDecisionError::PolicyDenied);
         }
+        let source = self
+            .source
+            .as_ref()
+            .ok_or(ExactLocalInstallDecisionError::RecoveryOnly)?;
         let captured = preflight_one_package_local_install_under_lease(
             &leased,
-            self.source.as_ref(),
+            source.as_ref(),
             self.target_os,
         )
         .map_err(|e| ExactLocalInstallDecisionError::SourceUnavailable(format!("{e:#}")))?;
@@ -433,6 +471,10 @@ impl ExactLocalInstallDecisionHost {
         {
             return Err(ExactLocalInstallDecisionError::InvalidData);
         }
+        let source = self
+            .source
+            .as_ref()
+            .ok_or(ExactLocalInstallDecisionError::RecoveryOnly)?;
         let profile = AdmittedExactLocalInstallProfile::from_owned(self, evidence)?;
         let request = DefaultLifecycleRequest {
             requested: Phase::Install,
@@ -449,7 +491,7 @@ impl ExactLocalInstallDecisionHost {
         };
         submit_approved_one_package_local_install(
             &self.root,
-            self.source.as_ref(),
+            source.as_ref(),
             namespace,
             &self.scope,
             key,
@@ -564,9 +606,13 @@ impl<'a> AdmittedExactLocalInstallProfile<'a> {
         if !snapshot.facts().approve_exact_local_install {
             return Err(ExactLocalInstallDecisionError::PolicyDenied);
         }
-        self.host
+        let source = self
+            .host
             .source
-            .recheck_source_binding(self.host.source.source_witness())
+            .as_ref()
+            .ok_or(ExactLocalInstallDecisionError::RecoveryOnly)?;
+        source
+            .recheck_source_binding(source.source_witness())
             .map_err(|e| ExactLocalInstallDecisionError::SourceUnavailable(format!("{e:#}")))?;
         if base_plan != self.evidence.base.plan {
             return Err(ExactLocalInstallDecisionError::SourceDrift);

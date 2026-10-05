@@ -231,6 +231,20 @@ impl ExactLocalInstallRoute {
                 false,
             ));
         }
+        if route.host.recovery_only() && !matches!(&request.action, Action::Inspect(_)) {
+            let may_have_begun = matches!(&request.action, Action::Submit(_));
+            let mut refusal = refuse(
+                LifecycleActionErrorCode::DecisionRefused,
+                "recovery-only Install host permits inspect only",
+                may_have_begun,
+            );
+            if let Some(key) = key {
+                if let Ok(Some(snapshot)) = route.host.inspect_existing(&route.namespace, key) {
+                    enrich(&mut refusal.error, &snapshot);
+                }
+            }
+            return Err(refusal);
+        }
         let result: Result<Reply, (LifecycleActionErrorCode, String, bool)> = match &request.action
         {
             Action::Prepare(row) => {
