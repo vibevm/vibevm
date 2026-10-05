@@ -10,8 +10,8 @@ use super::{
 };
 use crate::ports::BoundOnePackageSource;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
-use vibe_core::manifest::TargetOs;
+use std::{path::Path, sync::Arc};
+use vibe_core::{PackageRef, manifest::TargetOs};
 use vibe_lifecycle::process::SelectedFileWitness;
 use vibe_lifecycle::{
     LifecycleLease, LifecycleLeaseError, SubmissionError, SubmissionNamespace,
@@ -100,7 +100,111 @@ struct Pointer {
     target_os: String,
     policy_source: String,
     source_id: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    source_selection: Option<SourceSelection>,
     grant: GrantState,
+}
+
+/// Metadata retained at issue for cold inspection after source bytes drift.
+/// No file digest or wire-supplied value can turn this into an effect port.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct SourceSelection {
+    registry_path_id: String,
+    registry_token: String,
+    source_token: String,
+    package_pin: String,
+    files: Vec<String>,
+}
+impl SourceSelection {
+    fn capture(
+        registry: &Path,
+        pin: &PackageRef,
+        files: &[String],
+    ) -> Result<Self, ExactLocalInstallGrantError> {
+        if !registry.is_absolute()
+            || files.is_empty()
+            || files.len() > 8
+            || !files.iter().any(|file| file == "vibe.toml")
+            || !pin.is_qualified()
+            || !pin.version.is_exact_pin()
+            || pin.kind.is_none()
+        {
+            return Err(ExactLocalInstallGrantError::InvalidAuthority);
+        }
+        let group = pin
+            .group
+            .as_ref()
+            .ok_or(ExactLocalInstallGrantError::InvalidAuthority)?;
+        let version = pin.version.to_string();
+        let version = version
+            .strip_prefix('=')
+            .ok_or(ExactLocalInstallGrantError::InvalidAuthority)?;
+        let source_root = registry
+            .join(group.as_str())
+            .join(pin.name.as_str())
+            .join(format!("v{version}"));
+        let registry_token = Project::open(registry)
+            .map_err(source_unavailable)?
+            .root_correlation_token()
+            .map_err(source_unavailable)?;
+        let source_token = Project::open(&source_root)
+            .map_err(source_unavailable)?
+            .root_correlation_token()
+            .map_err(source_unavailable)?;
+        let mut path_bytes = b"vibevm/exact-local-install-grant/registry-path/e1\0".to_vec();
+        frame(&mut path_bytes, registry.as_os_str().as_encoded_bytes());
+        let supplied_len = files.len();
+        let mut files = files.to_vec();
+        files.sort();
+        files.dedup();
+        if files.len() != supplied_len {
+            return Err(ExactLocalInstallGrantError::InvalidAuthority);
+        }
+        Ok(Self {
+            registry_path_id: digest(path_bytes),
+            registry_token,
+            source_token,
+            package_pin: pin.to_string(),
+            files,
+        })
+    }
+    fn from_source(
+        source: &dyn BoundOnePackageSource,
+    ) -> Result<Self, ExactLocalInstallGrantError> {
+        let witness = source.source_witness();
+        witness.validate().map_err(source_unavailable)?;
+        let pin = &witness.package_pin;
+        let registry = witness
+            .root
+            .parent()
+            .and_then(Path::parent)
+            .and_then(Path::parent)
+            .ok_or(ExactLocalInstallGrantError::InvalidAuthority)?;
+        let files = witness
+            .files
+            .iter()
+            .map(|file| file.relative_path.clone())
+            .collect::<Vec<_>>();
+        let selected = Self::capture(registry, pin, &files)?;
+        let group = pin
+            .group
+            .as_ref()
+            .ok_or(ExactLocalInstallGrantError::InvalidAuthority)?;
+        let version = pin.version.to_string();
+        let version = version
+            .strip_prefix('=')
+            .ok_or(ExactLocalInstallGrantError::InvalidAuthority)?;
+        if witness.root
+            != registry
+                .join(group.as_str())
+                .join(pin.name.as_str())
+                .join(format!("v{version}"))
+        {
+            return Err(ExactLocalInstallGrantError::InvalidAuthority);
+        }
+        Ok(selected)
+    }
 }
 
 /// A trusted route composition. The namespace is data only until C1 validates
@@ -131,8 +235,9 @@ pub struct ExactLocalInstallGrantService {
     target_os: TargetOs,
     policy_source: TrustedPolicySource,
     facts: HostPolicyFacts,
-    source: Arc<dyn BoundOnePackageSource>,
-    source_id: String,
+    source: Option<Arc<dyn BoundOnePackageSource>>,
+    source_id: Option<String>,
+    source_selection: SourceSelection,
 }
 impl ExactLocalInstallGrantService {
     pub fn from_trusted_host(
@@ -163,6 +268,7 @@ impl ExactLocalInstallGrantService {
             &digest(location)[7..]
         );
         let source_id = Self::capture_source_id(source.as_ref())?;
+        let source_selection = SourceSelection::from_source(source.as_ref())?;
         let service = Self {
             project,
             root_token,
@@ -171,8 +277,58 @@ impl ExactLocalInstallGrantService {
             target_os,
             policy_source,
             facts,
-            source,
-            source_id,
+            source: Some(source),
+            source_id: Some(source_id),
+            source_selection,
+        };
+        service.check_root(None)?;
+        Ok(service)
+    }
+
+    /// Read-only cross-process reattach. Exact host selection and physical
+    /// registry/source roots are compared with the issued pointer, but source
+    /// file bytes are neither captured nor accepted as a fresh effect port.
+    pub fn from_trusted_recovery_host(
+        project: Arc<Project>,
+        scope: SubmissionScope,
+        target_os: TargetOs,
+        policy_source: TrustedPolicySource,
+        facts: HostPolicyFacts,
+        registry_root: &Path,
+        package_pin: &PackageRef,
+        source_files: &[String],
+    ) -> Result<Self, ExactLocalInstallGrantError> {
+        if !valid_identity(&scope.context)
+            || !valid_identity(&scope.target)
+            || !valid_identity(&scope.principal)
+            || facts.approve_captured_script
+            || facts.allow_detach
+            || facts.allow_cancel_pre_dispatch
+            || facts.allow_cancel_deferred_boundary
+        {
+            return Err(ExactLocalInstallGrantError::InvalidAuthority);
+        }
+        let root_token = project.root_correlation_token().map_err(infrastructure)?;
+        let mut location = b"vibevm/exact-local-install-grant/location/e1\0".to_vec();
+        for value in [&scope.context, &scope.target, &scope.principal] {
+            frame(&mut location, value.as_bytes());
+        }
+        let path = format!(
+            ".vibe/exact-local-install-grants/{}.json",
+            &digest(location)[7..]
+        );
+        let source_selection = SourceSelection::capture(registry_root, package_pin, source_files)?;
+        let service = Self {
+            project,
+            root_token,
+            scope,
+            path,
+            target_os,
+            policy_source,
+            facts,
+            source: None,
+            source_id: None,
+            source_selection,
         };
         service.check_root(None)?;
         Ok(service)
@@ -182,6 +338,9 @@ impl ExactLocalInstallGrantService {
         &self,
         ttl_ms: u64,
     ) -> Result<ExactLocalInstallGrant, ExactLocalInstallGrantError> {
+        if self.source.is_none() {
+            return Err(ExactLocalInstallGrantError::InvalidAuthority);
+        }
         if ttl_ms == 0 || ttl_ms > MAX_TTL_MS {
             return Err(ExactLocalInstallGrantError::InvalidTtl);
         }
@@ -222,14 +381,13 @@ impl ExactLocalInstallGrantService {
         self.publish(&lease, &pointer)?;
         let owner = self.current_owner(&lease, &pointer)?;
         drop(lease);
-        self.construct_checked(pointer, namespace, owner)
+        self.construct_checked(pointer, namespace, owner, false)
     }
 
     /// Lookup only. Retired and expired namespaces remain readable for C1/C2
     /// result inspection; C1 itself refuses a fresh key in either state.
-    /// A retained source port can restore cold inspection after content drift.
-    /// Reconstructing a strict pinned source port after process restart may
-    /// itself require the original tree and is outside this service.
+    /// An explicit recovery service can restore cold inspection after content
+    /// drift using retained selection metadata, with no source port.
     pub fn reattach(&self) -> Result<ExactLocalInstallGrant, ExactLocalInstallGrantError> {
         let lease = self.lease()?;
         let pointer = self
@@ -238,7 +396,31 @@ impl ExactLocalInstallGrantService {
         let namespace = self.validate_namespace(&lease, &pointer)?;
         let owner = self.current_owner(&lease, &pointer)?;
         drop(lease);
-        self.construct_checked(pointer, namespace, owner)
+        self.construct_checked(pointer, namespace, owner, self.source.is_none())
+    }
+
+    /// A legacy schema-1 pointer can be looked up only while its original
+    /// source still validates. The returned host remains inspection-only.
+    pub fn reattach_readonly_legacy(
+        &self,
+    ) -> Result<ExactLocalInstallGrant, ExactLocalInstallGrantError> {
+        if self.source.is_none() {
+            return Err(ExactLocalInstallGrantError::InvalidAuthority);
+        }
+        self.check_source()?;
+        let lease = self.lease()?;
+        let pointer = self
+            .read(&lease)?
+            .ok_or(ExactLocalInstallGrantError::MissingPointer)?;
+        if pointer.schema != 1 {
+            return Err(ExactLocalInstallGrantError::InvalidPointer(
+                "not a legacy pointer".into(),
+            ));
+        }
+        let namespace = self.validate_namespace(&lease, &pointer)?;
+        let owner = self.current_owner(&lease, &pointer)?;
+        drop(lease);
+        self.construct_checked(pointer, namespace, owner, true)
     }
 
     fn construct_checked(
@@ -246,14 +428,27 @@ impl ExactLocalInstallGrantService {
         pointer: Pointer,
         namespace: SubmissionNamespace,
         owner: Arc<PolicyOwner>,
+        recovery_only: bool,
     ) -> Result<ExactLocalInstallGrant, ExactLocalInstallGrantError> {
         let host = Arc::new(
-            ExactLocalInstallDecisionHost::from_host(
-                self.project.root_path().into(),
-                owner.clone(),
-                self.source.clone(),
-                self.target_os,
-            )
+            match &self.source {
+                _ if recovery_only => ExactLocalInstallDecisionHost::from_recovery_host(
+                    self.project.root_path().into(),
+                    owner.clone(),
+                    self.target_os,
+                ),
+                Some(source) => ExactLocalInstallDecisionHost::from_host(
+                    self.project.root_path().into(),
+                    owner.clone(),
+                    source.clone(),
+                    self.target_os,
+                ),
+                None => ExactLocalInstallDecisionHost::from_recovery_host(
+                    self.project.root_path().into(),
+                    owner.clone(),
+                    self.target_os,
+                ),
+            }
             .map_err(ExactLocalInstallGrantError::Host)?,
         );
         if host.readonly_scope() != &self.scope {
@@ -267,6 +462,9 @@ impl ExactLocalInstallGrantService {
         }
         self.validate_namespace(&lease, &pointer)?;
         self.validate_current_policy(&lease, &pointer, &owner)?;
+        if recovery_only && self.source.is_some() {
+            self.check_source()?;
+        }
         Ok(ExactLocalInstallGrant { host, namespace })
     }
 
@@ -292,36 +490,74 @@ impl ExactLocalInstallGrantService {
         Ok(digest(bytes))
     }
     fn check_source(&self) -> Result<(), ExactLocalInstallGrantError> {
-        if Self::capture_source_id(self.source.as_ref())? != self.source_id {
+        let source = self
+            .source
+            .as_ref()
+            .ok_or(ExactLocalInstallGrantError::InvalidAuthority)?;
+        if Some(Self::capture_source_id(source.as_ref())?) != self.source_id
+            || SourceSelection::from_source(source.as_ref())? != self.source_selection
+        {
             return Err(ExactLocalInstallGrantError::ForeignBinding);
         }
-        self.source
-            .recheck_source_binding(self.source.source_witness())
+        source
+            .recheck_source_binding(source.source_witness())
             .map_err(source_unavailable)?;
         Ok(())
     }
     fn pointer(&self, grant: GrantState) -> Pointer {
         Pointer {
-            schema: 1,
+            schema: 2,
             root_token: self.root_token.clone(),
             scope: Scope::from(&self.scope),
             target_os: self.target_os.as_str().into(),
             policy_source: self.policy_source.identifier().into(),
-            source_id: self.source_id.clone(),
+            source_id: self.source_id.clone().expect("issue requires bound source"),
+            source_selection: Some(self.source_selection.clone()),
             grant,
         }
     }
     fn validate_binding(&self, pointer: &Pointer) -> Result<(), ExactLocalInstallGrantError> {
-        if pointer.schema != 1 {
+        if pointer.schema != 1 && pointer.schema != 2 {
             return Err(ExactLocalInstallGrantError::InvalidPointer(
                 "unsupported version".into(),
+            ));
+        }
+        if pointer.schema == 1 && self.source.is_none() {
+            return Err(ExactLocalInstallGrantError::InvalidPointer(
+                "legacy pointer has no cold source selection".into(),
+            ));
+        }
+        if pointer.schema == 2 && pointer.source_selection.as_ref() != Some(&self.source_selection)
+        {
+            return Err(ExactLocalInstallGrantError::ForeignBinding);
+        }
+        if pointer.schema == 1 && pointer.source_selection.is_some() {
+            return Err(ExactLocalInstallGrantError::InvalidPointer(
+                "legacy selection field".into(),
+            ));
+        }
+        let valid_source_id = pointer
+            .source_id
+            .strip_prefix("sha256:")
+            .is_some_and(|hex| {
+                hex.len() == 64
+                    && hex
+                        .bytes()
+                        .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+            });
+        if !valid_source_id {
+            return Err(ExactLocalInstallGrantError::InvalidPointer(
+                "source ID shape".into(),
             ));
         }
         if pointer.root_token != self.root_token
             || pointer.scope != Scope::from(&self.scope)
             || pointer.target_os != self.target_os.as_str()
             || pointer.policy_source != self.policy_source.identifier()
-            || pointer.source_id != self.source_id
+            || self
+                .source_id
+                .as_ref()
+                .is_some_and(|source_id| &pointer.source_id != source_id)
         {
             return Err(ExactLocalInstallGrantError::ForeignBinding);
         }

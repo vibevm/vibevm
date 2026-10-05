@@ -171,6 +171,198 @@ fn retained_source_port_can_reattach_for_cold_inspection_after_content_drift() {
     ));
 }
 
+fn recovery(
+    project: &Path,
+    registry: &Path,
+    pin: &str,
+    files: &[String],
+) -> Result<ExactLocalInstallGrantService, ExactLocalInstallGrantError> {
+    ExactLocalInstallGrantService::from_trusted_recovery_host(
+        Arc::new(Project::open(project).unwrap()),
+        scope(),
+        TargetOs::Linux,
+        TrustedPolicySource::from_host_identifier("trusted-install-policy".into()).unwrap(),
+        facts(true),
+        registry,
+        &PackageRef::parse(pin).unwrap(),
+        files,
+    )
+}
+
+#[test]
+fn cross_process_cold_reattach_after_drift_inspects_but_cannot_prepare_or_issue() {
+    let (_dir, project, registry) = setup();
+    let active = service(&project, &registry, true);
+    let issued = active.issue(60_000).unwrap();
+    let namespace = issued.namespace().id().to_owned();
+    let before = index(&project);
+    drop(issued);
+    fs::write(
+        registry.join("org.example/fixture/v1.1.0/README.md"),
+        b"# Changed\n",
+    )
+    .unwrap();
+    let files = vec!["vibe.toml".into(), "README.md".into()];
+    let cold = recovery(
+        &project,
+        &registry,
+        "flow:org.example/fixture@=1.1.0",
+        &files,
+    )
+    .unwrap();
+    let attached = cold.reattach().unwrap();
+    assert_eq!(attached.namespace().id(), namespace);
+    assert!(attached.host().recovery_only());
+    assert!(
+        attached
+            .host()
+            .inspect_existing(attached.namespace(), "not-issued")
+            .unwrap()
+            .is_none()
+    );
+    let (host, namespace) = attached.into_parts();
+    let route = crate::machine_operation::exact_local_install::ExactLocalInstallRoute::new(
+        host.clone(),
+        namespace,
+    );
+    for (action, may_have_begun) in [
+        (
+            serde_json::json!({"kind":"prepare","phase":"install","requested_options":{"force":false,"trace":false,"deploy_profile":null,"control":"none"}}),
+            false,
+        ),
+        (
+            serde_json::json!({"kind":"answer","message_json":"{}"}),
+            false,
+        ),
+        (
+            serde_json::json!({"kind":"submit","accepted_ref":"forged","key":"new"}),
+            true,
+        ),
+    ] {
+        let bytes = serde_json::to_vec(&serde_json::json!({"schema":1,"action":action})).unwrap();
+        let refused =
+            crate::machine_operation::exact_local_install::ExactLocalInstallRoute::dispatch(
+                Some(&route),
+                &bytes,
+                &project,
+            )
+            .unwrap_err();
+        assert_eq!(refused.error.code,
+            vibe_wire::generated::machine::e1::lifecycle_action_error::LifecycleActionErrorCode::DecisionRefused);
+        assert_eq!(refused.effects_may_have_begun, may_have_begun);
+    }
+    assert_eq!(index(&project), before);
+    let options = crate::machine_operation::input_decision::RequestedOptions {
+        force: false,
+        trace: false,
+        deploy_profile: None,
+        control: crate::machine_operation::input_decision::RequestedOptionsControl::None,
+    };
+    assert_eq!(
+        host.prepare_requested_options(options).unwrap_err(),
+        ExactLocalInstallDecisionError::RecoveryOnly
+    );
+    assert!(matches!(
+        cold.issue(60_000),
+        Err(ExactLocalInstallGrantError::InvalidAuthority)
+    ));
+    assert_eq!(index(&project), before);
+    assert!(matches!(
+        active.check_source(),
+        Err(ExactLocalInstallGrantError::SourceUnavailable(_))
+    ));
+}
+
+#[test]
+fn cold_reattach_refuses_foreign_selection_and_physical_registry_replacement() {
+    let (dir, project, registry) = setup();
+    service(&project, &registry, true).issue(60_000).unwrap();
+    let before = index(&project);
+    let files = vec!["README.md".into(), "vibe.toml".into()];
+    let wrong_files = vec!["vibe.toml".into()];
+    assert!(matches!(
+        recovery(
+            &project,
+            &registry,
+            "flow:org.example/fixture@=1.1.0",
+            &wrong_files
+        )
+        .unwrap()
+        .reattach(),
+        Err(ExactLocalInstallGrantError::ForeignBinding)
+    ));
+    assert!(matches!(
+        recovery(&project, &registry, "flow:org.example/other@=1.1.0", &files),
+        Err(ExactLocalInstallGrantError::SourceUnavailable(_))
+    ));
+    let old_registry = dir.path().join("old-registry");
+    fs::rename(&registry, &old_registry).unwrap();
+    fs::create_dir_all(registry.join("org.example/fixture/v1.1.0")).unwrap();
+    fs::write(
+        registry.join("org.example/fixture/v1.1.0/vibe.toml"),
+        b"replacement",
+    )
+    .unwrap();
+    assert!(matches!(
+        recovery(
+            &project,
+            &registry,
+            "flow:org.example/fixture@=1.1.0",
+            &files
+        )
+        .unwrap()
+        .reattach(),
+        Err(ExactLocalInstallGrantError::ForeignBinding)
+    ));
+    assert_eq!(index(&project), before);
+}
+
+#[test]
+fn legacy_pointer_recovers_readonly_only_with_original_source_bytes() {
+    let (_dir, project, registry) = setup();
+    let active = service(&project, &registry, true);
+    active.issue(60_000).unwrap();
+    let mut pointer: Pointer =
+        serde_json::from_slice(&fs::read(project.join(&active.path)).unwrap()).unwrap();
+    pointer.schema = 1;
+    pointer.source_selection = None;
+    fs::write(
+        project.join(&active.path),
+        serde_json::to_vec(&pointer).unwrap(),
+    )
+    .unwrap();
+    let files = vec!["vibe.toml".into(), "README.md".into()];
+    let cold = recovery(
+        &project,
+        &registry,
+        "flow:org.example/fixture@=1.1.0",
+        &files,
+    )
+    .unwrap();
+    assert!(matches!(
+        cold.reattach(),
+        Err(ExactLocalInstallGrantError::InvalidPointer(_))
+    ));
+    let attached = active.reattach_readonly_legacy().unwrap();
+    assert!(attached.host().recovery_only());
+    assert!(
+        attached
+            .host()
+            .inspect_existing(attached.namespace(), "never")
+            .unwrap()
+            .is_none()
+    );
+    fs::write(
+        registry.join("org.example/fixture/v1.1.0/README.md"),
+        b"changed\n",
+    )
+    .unwrap();
+    assert!(matches!(
+        active.reattach_readonly_legacy(),
+        Err(ExactLocalInstallGrantError::SourceUnavailable(_))
+    ));
+}
+
 #[test]
 fn changed_policy_generation_source_or_install_bit_refuses_reconnect() {
     let (_dir, project, registry) = setup();
