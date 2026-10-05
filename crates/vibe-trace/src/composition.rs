@@ -22,6 +22,8 @@ pub struct Composition {
     pub subject: String,
     pub rust_symbol: String,
     pub lean_carrier: String,
+    /// Optional selected-check policy; declaration scans do not execute it.
+    pub proof_policy: Option<String>,
 }
 
 pub struct Loaded {

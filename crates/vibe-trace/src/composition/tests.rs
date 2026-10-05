@@ -134,3 +134,45 @@ fn rust_only_map_remains_the_core_map() {
         specmap_core::index::to_canonical_bytes(&new).unwrap()
     );
 }
+
+#[test]
+fn fresh_read_refuses_missing_scanner_inputs_and_foreign_proof_coverage() {
+    let temp = fixture();
+    let root = temp.path();
+    let loaded = load(root).unwrap().unwrap();
+    write(root, &loaded, "specmap.json", None).unwrap();
+    let saved = fs::read(root.join("specmap.json")).unwrap();
+    let sources = [ProviderSource {
+        kind: RequirementSourceKind::Host,
+        package: "org.example/demo",
+        root: Some(root),
+        expected_content_hash: None,
+    }];
+    let addresses = [SUBJECT.to_owned()];
+    let query = || {
+        crate::SpecmapRelationProvider
+            .relations(&RelationRequest {
+                selected_root: root,
+                workspace_root: root,
+                sources: &sources,
+                addresses: &addresses,
+            })
+            .unwrap()
+    };
+    fs::remove_file(root.join("Example.lean")).unwrap();
+    let answer = query();
+    assert!(
+        matches!(&answer[0].1, ProviderOutcome::Unavailable { reason } if reason == "project-map-composition-incomplete")
+    );
+    let config = fs::read_to_string(root.join("specmap.toml")).unwrap();
+    fs::write(
+        root.join("specmap.toml"),
+        config.replace(SUBJECT, "spec://org.other/demo/Protocol#identity"),
+    )
+    .unwrap();
+    let answer = query();
+    assert!(
+        matches!(&answer[0].1, ProviderOutcome::Unavailable { reason } if reason == "cross-package-proof-coverage-unsupported")
+    );
+    assert_eq!(fs::read(root.join("specmap.json")).unwrap(), saved);
+}

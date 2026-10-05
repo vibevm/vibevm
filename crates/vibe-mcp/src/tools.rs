@@ -96,6 +96,8 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(MaterialiseSubskillMcpTool),
         Box::new(AgenticExplainMcpTool),
         Box::new(ExplainMcpTool),
+        Box::new(ProofCheckMcpTool),
+        Box::new(ProofVerifyMcpTool),
         Box::new(QueryMcpTool),
         Box::new(SelectMcpTool),
         Box::new(ListToolsMcpTool),
@@ -540,6 +542,8 @@ impl McpTool for AgenticExplainMcpTool {
 
 pub mod explain;
 pub use explain::ExplainMcpTool;
+pub mod proof;
+pub use proof::{ProofCheckMcpTool, ProofVerifyMcpTool};
 pub mod query;
 pub use query::QueryMcpTool;
 pub mod select;

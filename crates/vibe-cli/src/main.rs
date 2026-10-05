@@ -267,6 +267,12 @@ fn main() -> ExitCode {
         Command::Refactor(args) => commands::refactor::run(&ctx, args),
         Command::Friends(args) => commands::friends::run(&ctx, args),
         Command::Explain(args) => commands::explain::run(&ctx, args),
+        Command::ProofCheck(args) => {
+            commands::proof::run(&ctx, args, commands::proof::Operation::Check)
+        }
+        Command::ProofVerify(args) => {
+            commands::proof::run(&ctx, args, commands::proof::Operation::Verify)
+        }
         Command::Query(args) => commands::query::run(&ctx, args),
         Command::Select(args) => commands::select::run(&ctx, args),
         Command::Specmap(args) => commands::specmap::run(&ctx, args),

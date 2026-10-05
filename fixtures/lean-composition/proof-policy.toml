@@ -1,0 +1,15 @@
+schema = 1
+subject = "spec://org.example/same-subject/Protocol#identity"
+grade = "g1_model"
+
+[rust]
+execution_id = "org.example/same-subject#rust-identity-boundaries"
+manifest = "rust/Cargo.toml"
+sources = ["rust/src/lib.rs"]
+tests = ["tests::zero_is_unchanged", "tests::maximum_is_unchanged"]
+target = "x86_64-unknown-linux-gnu"
+rustc_release = "1.101.0-nightly"
+rustc_commit = "c36f1457196e315bc204b9564a6a5a7fe7f5a51f"
+
+[lean]
+execution_id = "org.example/same-subject#lean-identity-model"
