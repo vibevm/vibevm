@@ -4,9 +4,13 @@ use super::*;
 use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Lockfile};
 use vibe_lifecycle::process::{PackageTreeWitness, capture_selected_manifest_lock};
 
+#[cfg(test)]
 pub(super) const FIXTURE_PIN: &str = "flow:org.example/fixture@=1.1.0";
+#[cfg(test)]
 pub(super) const FIXTURE_FILES: &[&str] = &["vibe.toml", "README.md"];
+#[cfg(test)]
 pub(super) const FIXTURE_PROJECT_MANIFEST: &str = "[project]\nname = 'consumer'\nversion = '1.1.0'\n[requires.packages]\n'flow:org.example/fixture' = '=1.1.0'\n";
+#[cfg(test)]
 pub(super) const FIXTURE_PACKAGE_MANIFEST: &str =
     "[package]\ngroup = 'org.example'\nname = 'fixture'\nkind = 'flow'\nversion = '1.1.0'\n";
 
@@ -56,7 +60,7 @@ pub(crate) fn submit_one_package_fixture_install_with_hook<'a>(
     confirm: Option<&'a dyn ConfirmGate>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     ensure!(
-        factory.source_root() == source_root,
+        factory.source_witness().root == source_root,
         "controlled fixture source root differs from witnessed root"
     );
     submit_protected_lifecycle_with_fixture(
@@ -83,18 +87,41 @@ pub(super) fn require_one_package_fixture_world(
     let manifest = selection
         .parsed_ref()
         .context("selected manifest did not parse")?;
-    let pin = vibe_core::PackageRef::parse(FIXTURE_PIN)?;
-    ensure!(source.package_pin == pin, "fixture source pin differs");
-    let expected_project = vibe_core::manifest::Manifest::parse_str(FIXTURE_PROJECT_MANIFEST)?;
+    let pin = &source.package_pin;
+    let version_spec = pin.version.to_string();
+    let version = version_spec
+        .strip_prefix('=')
+        .context("local source pin is not exact")?;
+    ensure!(
+        pin.group.is_some() && pin.kind.is_some() && !version.is_empty(),
+        "local source pin needs an exact qualified kind"
+    );
+    let project = manifest
+        .project
+        .as_ref()
+        .context("local Install requires a project")?;
+    ensure!(
+        project.group.is_none()
+            && project.spec_format.is_none()
+            && project.sources.is_empty()
+            && project.authors.is_empty()
+            && !project.name.is_empty()
+            && !project.version.is_empty(),
+        "one-package local Install requires a simple project identity"
+    );
+    let mut expected_project =
+        vibe_core::manifest::Manifest::parse_str("[project]\nname = 'bound'\nversion = '1.1.0'\n")?;
+    expected_project.project = Some(project.clone());
+    expected_project.requires.packages.push(pin.clone());
     ensure!(
         manifest == &expected_project,
-        "one-package fixture refuses unreviewed root manifest declarations"
+        "one-package local Install refuses unreviewed root manifest declarations"
     );
     require_empty_lock(witness)?;
     let source_files = capture_selected_manifest_lock(&source.root)?;
     ensure!(
         source_files.lock.is_none(),
-        "fixture source lock is not allowed"
+        "local source lock is not allowed"
     );
     let source_manifest = source
         .files
@@ -104,15 +131,21 @@ pub(super) fn require_one_package_fixture_world(
     ensure!(
         source_manifest.bytes == source_files.manifest.size
             && source_manifest.sha256 == source_files.manifest.sha256,
-        "fixture source manifest differs from tree witness"
+        "local source manifest differs from tree witness"
     );
     let source_text = std::str::from_utf8(&source_files.manifest.bytes)?;
     let package_manifest = vibe_core::manifest::Manifest::parse_str(source_text)?;
     let package = package_manifest.require_package()?;
-    let expected_package = vibe_core::manifest::Manifest::parse_str(FIXTURE_PACKAGE_MANIFEST)?;
+    let expected_package = vibe_core::manifest::Manifest::parse_str(&format!(
+        "[package]\ngroup = '{}'\nname = '{}'\nkind = '{}'\nversion = '{}'\n",
+        pin.group.as_ref().expect("checked group"),
+        pin.name,
+        pin.kind.as_ref().expect("checked kind"),
+        version,
+    ))?;
     ensure!(
         package.as_package_ref()? == source.package_pin && package_manifest == expected_package,
-        "fixture package carries unreviewed declarations"
+        "local package carries unreviewed declarations"
     );
     Ok(())
 }

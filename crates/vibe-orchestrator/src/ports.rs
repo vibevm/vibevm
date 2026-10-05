@@ -387,7 +387,8 @@ pub trait PackageSourceFactory: Send + Sync {
 /// stage, before the incumbent source can enter a cache or project effect.
 /// Implementations are host composition ports, never wire-supplied claims.
 pub trait BoundOnePackageSource: PackageSourceFactory {
-    fn source_root(&self) -> &Path;
+    /// The host's captured exact tree, retained independently of wire input.
+    fn source_witness(&self) -> &vibe_lifecycle::process::PackageTreeWitness;
     fn recheck_source_binding(
         &self,
         witness: &vibe_lifecycle::process::PackageTreeWitness,
