@@ -3,6 +3,9 @@
 #[path = "cli_mcp_fixed_validate/combined_options.rs"]
 mod combined_options;
 mod common;
+#[cfg(target_os = "linux")]
+#[path = "cli_mcp_fixed_validate/partial_effect.rs"]
+mod partial_effect;
 
 use common::UserScratch;
 use serde_json::{Value, json};
