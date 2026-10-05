@@ -24,6 +24,44 @@ fn unchanged_join_snapshot_returns_its_exact_digest() {
     assert_eq!(digest, files::hash(b"{}\n"));
 }
 
+#[test]
+fn added_scan_root_member_at_checker_boundary_refuses_publication() {
+    let root = fixture();
+    let loaded = crate::composition::load(root.path()).unwrap().unwrap();
+    let before = crate::composition::build(root.path(), &loaded, None).unwrap();
+    let bytes = specmap_core::index::to_canonical_bytes(&before).unwrap();
+    let output = root.path().join("joined-proof.json");
+    fs::write(&output, b"saved-join-sentinel").unwrap();
+    let result = with_stable_composed_map(root.path(), &loaded, &bytes, || {
+        // Deterministic external writer action after the first complete scan,
+        // at the same injected checker boundary used by production.
+        fs::write(root.path().join("rust/src/added.rs"), "#[specmark::spec(implements = \"spec://org.example/same-subject/Protocol#identity\", r = 1)]\npub fn added(n: u64) -> u64 { n }\n").unwrap();
+        Ok(())
+    });
+    assert_eq!(result.unwrap_err().code, "composition_unstable");
+    assert_eq!(fs::read(output).unwrap(), b"saved-join-sentinel");
+}
+
+#[test]
+fn removed_spec_root_member_at_checker_boundary_refuses_publication() {
+    let root = fixture();
+    let extra = root.path().join("vibevm/vibespecs/Other.md");
+    fs::write(
+        &extra,
+        "# Additional unit {#other}\n`req r1`\n\nAdditional source membership.\n",
+    )
+    .unwrap();
+    let loaded = crate::composition::load(root.path()).unwrap().unwrap();
+    let before = crate::composition::build(root.path(), &loaded, None).unwrap();
+    let bytes = specmap_core::index::to_canonical_bytes(&before).unwrap();
+    let result = with_stable_composed_map(root.path(), &loaded, &bytes, || {
+        fs::remove_file(extra).unwrap();
+        Ok(())
+    });
+    assert_eq!(result.unwrap_err().code, "composition_unstable");
+    assert!(!root.path().join("joined-proof.json").exists());
+}
+
 pub(super) fn fixture() -> tempfile::TempDir {
     let root = tempfile::tempdir().unwrap();
     let source = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/lean-composition");

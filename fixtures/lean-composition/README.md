@@ -121,6 +121,10 @@ Each Rust subprocess is limited to 120 seconds and 1 MiB output, with process
 group cleanup on timeout. The Lean carrier has its own bounded checker policy.
 Inputs are rechecked in both the original tree and the captured snapshot; selected
 Rust source inventory and Rust toolchain are checked again after Lean completes.
+The entire composed map is then rebuilt and its canonical bytes must equal the
+first scan, so added or removed scan/spec-root members cannot leave an old
+`map_sha256` marked current. This is the same two-snapshot boundary, without a
+promise of future path stability.
 Witness parents must already exist; source/map output overlap and links refuse.
 No output is published until both actual checks succeed.
 
