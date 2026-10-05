@@ -381,3 +381,15 @@ pub trait PackageSourceFactory: Send + Sync {
     /// Build the source for one run.
     fn build(&self, input: PackageSourceBuild<'_>) -> Result<Box<dyn PackageSource>>;
 }
+
+/// A trusted host's exact local package source. The binding is checked against
+/// the captured tree before reservation and again after the durable Install
+/// stage, before the incumbent source can enter a cache or project effect.
+/// Implementations are host composition ports, never wire-supplied claims.
+pub trait BoundOnePackageSource: PackageSourceFactory {
+    fn source_root(&self) -> &Path;
+    fn recheck_source_binding(
+        &self,
+        witness: &vibe_lifecycle::process::PackageTreeWitness,
+    ) -> Result<()>;
+}

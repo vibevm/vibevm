@@ -1,4 +1,4 @@
-//! Empty-world Install entry, pure preflight and read-only environment.
+//! Bounded Install entries, pure preflight and read-only environment.
 
 use super::*;
 use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Lockfile};
@@ -10,23 +10,13 @@ pub(super) const FIXTURE_PROJECT_MANIFEST: &str = "[project]\nname = 'consumer'\
 pub(super) const FIXTURE_PACKAGE_MANIFEST: &str =
     "[package]\ngroup = 'org.example'\nname = 'fixture'\nkind = 'flow'\nversion = '1.1.0'\n";
 
-/// Test harness admission only. Production PackageSourceFactory has no
-/// provenance method; this claim is checked against the selected source path
-/// here and backed by the controlled fixture implementation in tests.
-#[cfg(test)]
-pub(crate) trait ControlledFixtureFactory: PackageSourceFactory {
-    fn serving_source_root(&self) -> &Path;
-}
-
-/// Test-only admission of one exact offline source. The source factory is a
-/// controlled test port; no production surface may infer its provenance from
-/// this fixture's manifest or from the tree witness alone.
-#[cfg(test)]
+/// Internal admission of one exact offline source. The host's bound factory
+/// proves the served tree; typed machine approval is a separate requirement
+/// before this route can be exposed to a wire adapter.
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn submit_one_package_fixture_install<F: ControlledFixtureFactory>(
+pub(crate) fn submit_one_package_local_install(
     path: &Path,
-    source_root: &Path,
-    factory: &F,
+    factory: &dyn BoundOnePackageSource,
     namespace: &SubmissionNamespace,
     scope: &SubmissionScope,
     key: &str,
@@ -34,27 +24,28 @@ pub(crate) fn submit_one_package_fixture_install<F: ControlledFixtureFactory>(
     target_os: TargetOs,
     observed_at: Timestamp,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
-    submit_one_package_fixture_install_with_hook(
+    submit_protected_lifecycle_with_fixture(
         path,
-        source_root,
-        factory,
         namespace,
         scope,
         key,
         request,
         target_os,
         observed_at,
-        None,
-        None,
+        Some(FixtureSourcePort {
+            factory,
+            after_stage: None,
+            confirm: None,
+        }),
     )
 }
 
 #[cfg(test)]
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn submit_one_package_fixture_install_with_hook<'a, F: ControlledFixtureFactory>(
+pub(crate) fn submit_one_package_fixture_install_with_hook<'a>(
     path: &Path,
     source_root: &'a Path,
-    factory: &'a F,
+    factory: &'a dyn BoundOnePackageSource,
     namespace: &'a SubmissionNamespace,
     scope: &'a SubmissionScope,
     key: &'a str,
@@ -65,7 +56,7 @@ pub(crate) fn submit_one_package_fixture_install_with_hook<'a, F: ControlledFixt
     confirm: Option<&'a dyn ConfirmGate>,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
     ensure!(
-        factory.serving_source_root() == source_root,
+        factory.source_root() == source_root,
         "controlled fixture source root differs from witnessed root"
     );
     submit_protected_lifecycle_with_fixture(
@@ -77,7 +68,6 @@ pub(crate) fn submit_one_package_fixture_install_with_hook<'a, F: ControlledFixt
         target_os,
         observed_at,
         Some(FixtureSourcePort {
-            source_root,
             factory,
             after_stage,
             confirm,

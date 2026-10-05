@@ -37,3 +37,17 @@ incumbent lease and prove Ready before effects. Produce the owner-bound typed
 question and retained result/error first; register CLI, MCP and local API only
 after that route exists. Bind tests to that owner seam and affected adapters.
 The ordinary `lifecycle_run` shortcut cannot supply this authority.
+
+## Exact local source binding progress (2026-10-05)
+
+The internal one-package Install entry now compiles in production code and
+requires a `BoundOnePackageSource` host port. Its root and exact tree witness
+are checked before C1 reservation, after the durable install-entered stage,
+and again before the attesting source factory is built. The concrete
+`PinnedLocalFactory` implements that port with its retained registry/root
+identity and original witness. The orchestrator's actual one-package install
+and replay test passes, as does the post-stage source-drift refusal; the
+package-source port test accepts the original witness and refuses a changed
+witness or source bytes. This is a source-binding seam, not a registered
+machine operation: no typed Install question, approval, controls or
+CLI/MCP/local API route has been added. All four C.4 steps remain open.

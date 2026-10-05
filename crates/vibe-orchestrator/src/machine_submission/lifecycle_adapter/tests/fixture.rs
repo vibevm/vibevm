@@ -1,6 +1,5 @@
 //! Actual one-package install through a controlled local fixture source.
-//! The production package-source port does not expose a source-root proof, so
-//! this route remains test-only even when the local effect itself passes.
+//! The bound source port checks its serving root against the selected tree.
 
 use super::*;
 use std::collections::BTreeSet;
@@ -61,15 +60,14 @@ fn fixture_request() -> DefaultLifecycleRequest {
 
 fn fixture_call(
     project: &Path,
-    source: &Path,
+    _source: &Path,
     factory: &FixtureFactory,
     namespace: &SubmissionNamespace,
     scope: &SubmissionScope,
     key: &str,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
-    submit_one_package_fixture_install(
+    submit_one_package_local_install(
         project,
-        source,
         factory,
         namespace,
         scope,
@@ -119,9 +117,16 @@ impl FixtureFactory {
     }
 }
 
-impl install::ControlledFixtureFactory for FixtureFactory {
-    fn serving_source_root(&self) -> &Path {
+impl BoundOnePackageSource for FixtureFactory {
+    fn source_root(&self) -> &Path {
         &self.source_root
+    }
+    fn recheck_source_binding(&self, witness: &PackageTreeWitness) -> Result<()> {
+        ensure!(
+            self.source_root == witness.root,
+            "fixture source root differs from witness"
+        );
+        Ok(recheck_package_tree_witness(witness)?)
     }
 }
 
