@@ -100,6 +100,8 @@ fn exact_local_install_approval_is_typed_and_retained_without_submit() {
     let host = host(root.clone(), policy, source);
     let question = host.prepare_requested_options(no_options()).unwrap();
     assert_eq!(question.operation_id.as_deref(), Some(OPERATION));
+    assert!(question.source_id.as_deref().unwrap().starts_with("sha256:"));
+    assert!(!question.source_id.as_deref().unwrap().starts_with("sha256:sha256:"));
     assert_eq!(question.policy_generation.is_some(), true);
     assert!(matches!(question.body, Body::ApprovalQuestion(_)));
     let refusal = host.answer_typed(&answer(&question, false)).err().unwrap();
