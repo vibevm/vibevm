@@ -18,7 +18,7 @@ pub(super) const FIXTURE_PACKAGE_MANIFEST: &str =
 /// proves the served tree; typed machine approval is a separate requirement
 /// before this route can be exposed to a wire adapter.
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn submit_one_package_local_install(
+pub(super) fn submit_one_package_local_install(
     path: &Path,
     factory: &dyn BoundOnePackageSource,
     namespace: &SubmissionNamespace,

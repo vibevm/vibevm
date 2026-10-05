@@ -666,7 +666,7 @@ fn another_exact_local_package_uses_its_own_reserved_install_plan() {
     let scope = scope();
     let namespace = issue(&project, &scope);
     let call = || {
-        submit_one_package_local_install(
+        install::submit_one_package_local_install(
             &project,
             &factory,
             &namespace,
@@ -721,7 +721,7 @@ fn local_source_pin_must_match_project_requirement_before_reservation() {
     );
     let scope = scope();
     let namespace = issue(&project, &scope);
-    let error = submit_one_package_local_install(
+    let error = install::submit_one_package_local_install(
         &project,
         &factory,
         &namespace,

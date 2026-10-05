@@ -100,11 +100,6 @@ mod sequential_runs;
     reason = "internal Install adapter is exercised by focused tests"
 )]
 pub(crate) use install::submit_empty_world_install;
-#[allow(
-    unused_imports,
-    reason = "internal Install admission awaits typed host routing"
-)]
-pub(crate) use install::submit_one_package_local_install;
 pub(in crate::machine_submission) use live_owner::evidence::cold_snapshot;
 pub use live_owner::{
     BindingSummary, EvidenceBasis, FixedOperationStatus, FixedOwnerEvidenceSnapshot,

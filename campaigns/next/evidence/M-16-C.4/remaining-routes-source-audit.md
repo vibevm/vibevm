@@ -61,3 +61,12 @@ requirement refuses before reservation or fetch. The 13 focused orchestrator
 Install cases pass serially. This still exposes no new machine operation or
 general registry choice; typed approval and cross-surface admission remain
 the next owner boundary.
+
+**Authority boundary before adapter work.** `PolicyOwner` currently persists
+`approve_captured_script` and three control permissions, with a generation
+derived from those facts. It has no Install permission; using that script bit
+would silently widen an existing grant. The new nonempty Install submit entry
+therefore remains visible only inside the lifecycle adapter. The next typed
+Install admission must add its own explicit trusted policy fact and bind the
+current generation, exact source witness and resulting plan before any C1
+reservation. The ordinary MCP `assume_yes` path cannot mint that evidence.
