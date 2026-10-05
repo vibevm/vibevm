@@ -74,9 +74,10 @@ use vibe_orchestrator::machine_submission::cargo_grant::CargoGrantService;
 use vibe_orchestrator::machine_submission::package_grant::PackageGrantService;
 
 use crate::cli::{
-    McpArgs, McpFixedCargoMode, McpFixedPackageMode, McpFixedValidateMode, McpInstallArgs,
-    McpServeArgs, McpStatusArgs, McpSubcommand, McpUninstallArgs, McpUpgradeArgs,
+    McpArgs, McpFixedCargoMode, McpFixedDeployMode, McpFixedPackageMode, McpFixedValidateMode,
+    McpInstallArgs, McpServeArgs, McpStatusArgs, McpSubcommand, McpUninstallArgs, McpUpgradeArgs,
 };
+use crate::commands::machine_session::{FixedDeployHostMode, fixed_deploy_context};
 use crate::exit_code::InstallError;
 use crate::output;
 
@@ -304,7 +305,10 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
     // server needs a project root to load the lockfile from. When
     // launched by a user-scope MCP entry that omits `--path`, the
     // server uses CWD (default value `.`).
-    if (args.fixed_validate.is_some() || args.fixed_package.is_some() || args.fixed_cargo.is_some())
+    if (args.fixed_validate.is_some()
+        || args.fixed_package.is_some()
+        || args.fixed_cargo.is_some()
+        || args.fixed_deploy.is_some())
         && !args.path.is_absolute()
     {
         bail!(
@@ -315,18 +319,24 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
         args.fixed_validate,
         args.fixed_package,
         args.fixed_cargo,
+        args.fixed_deploy,
         args.ttl_ms,
     ) {
-        (Some(McpFixedValidateMode::Issue), None, None, Some(_))
-        | (Some(McpFixedValidateMode::Reattach), None, None, None)
-        | (None, Some(McpFixedPackageMode::Issue), None, Some(_))
-        | (None, Some(McpFixedPackageMode::Reattach), None, None)
-        | (None, None, Some(McpFixedCargoMode::Issue), Some(_))
-        | (None, None, Some(McpFixedCargoMode::Reattach), None)
-        | (None, None, None, None) => {}
+        (Some(McpFixedValidateMode::Issue), None, None, None, Some(_))
+        | (Some(McpFixedValidateMode::Reattach), None, None, None, None)
+        | (None, Some(McpFixedPackageMode::Issue), None, None, Some(_))
+        | (None, Some(McpFixedPackageMode::Reattach), None, None, None)
+        | (None, None, Some(McpFixedCargoMode::Issue), None, Some(_))
+        | (None, None, Some(McpFixedCargoMode::Reattach), None, None)
+        | (None, None, None, Some(McpFixedDeployMode::Issue), Some(_))
+        | (None, None, None, Some(McpFixedDeployMode::Reattach), None)
+        | (None, None, None, None, None) => {}
         _ => bail!(
-            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT: fixed host issue requires --ttl-ms and reattach forbids it; fix surface: select exactly one --fixed-validate, --fixed-package or --fixed-cargo issue --ttl-ms <1..=86400000>, or reattach"
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT: fixed host issue requires --ttl-ms and reattach forbids it; fix surface: select exactly one fixed host issue --ttl-ms <1..=86400000>, or reattach"
         ),
+    }
+    if args.fixed_deploy.is_some() != args.deploy_profile.is_some() {
+        bail!("fixed Deploy requires exactly one --deploy-profile; other modes forbid it");
     }
     let project_root = resolve_project_root_required(&args.path)?;
     let user = UserConfig::load().context("loading user config for MCP lifecycle execution")?;
@@ -368,6 +378,23 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
                 allow_detach: args.allow_detach,
                 allow_cancel_pre_dispatch: args.allow_cancel_pre_dispatch,
                 allow_cancel_deferred_boundary: args.allow_cancel_deferred_boundary,
+            },
+        )?,
+        None => server_ctx,
+    };
+    let server_ctx = match args.fixed_deploy {
+        Some(mode) => fixed_deploy_context(
+            server_ctx,
+            &project_root,
+            args.deploy_profile
+                .as_deref()
+                .ok_or_else(|| anyhow::anyhow!("fixed Deploy requires --deploy-profile"))?,
+            match mode {
+                McpFixedDeployMode::Issue => FixedDeployHostMode::Issue(
+                    args.ttl_ms
+                        .ok_or_else(|| anyhow::anyhow!("fixed Deploy issue requires --ttl-ms"))?,
+                ),
+                McpFixedDeployMode::Reattach => FixedDeployHostMode::Reattach,
             },
         )?,
         None => server_ctx,

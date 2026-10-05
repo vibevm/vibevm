@@ -222,7 +222,7 @@ pub struct McpUpgradeArgs {
 #[derive(Debug, clap::Args)]
 #[command(group(
     clap::ArgGroup::new("fixed_host")
-        .args(["fixed_validate", "fixed_package", "fixed_cargo"])
+        .args(["fixed_validate", "fixed_package", "fixed_cargo", "fixed_deploy"])
         .multiple(false)
 ))]
 #[specmark::spec(
@@ -248,6 +248,14 @@ pub struct McpServeArgs {
     /// Explicit cooperative fixed offline Cargo host; omitted means no build grant.
     #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package"])]
     pub fixed_cargo: Option<McpFixedCargoMode>,
+
+    /// Explicit project-local fixed Deploy host; omitted means no Deploy grant.
+    #[arg(long, value_enum, conflicts_with_all = ["fixed_validate", "fixed_package", "fixed_cargo"])]
+    pub fixed_deploy: Option<McpFixedDeployMode>,
+
+    /// Authored Deploy profile; required for fixed Deploy and never inferred.
+    #[arg(long, requires = "fixed_deploy")]
+    pub deploy_profile: Option<String>,
 
     /// First issue lifetime in milliseconds; forbidden on reattach.
     #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000), requires = "fixed_host")]
@@ -288,6 +296,12 @@ pub enum McpFixedPackageMode {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum McpFixedCargoMode {
+    Issue,
+    Reattach,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum McpFixedDeployMode {
     Issue,
     Reattach,
 }

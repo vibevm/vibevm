@@ -339,13 +339,13 @@ fn deploy_targets(manifest: &Manifest) -> Vec<vibe_core::manifest::DeployTarget>
 /// place either is resolved. Nothing below a command surface calls
 /// `settings_dir()`, so a test that relocates `$VIBE_SETTINGS` relocates
 /// the whole deployment, destination included.
-struct StateRoots {
-    settings: std::path::PathBuf,
+pub(crate) struct StateRoots {
+    pub(crate) settings: std::path::PathBuf,
     deployments: std::path::PathBuf,
 }
 
 /// Resolve them, once.
-fn state_roots() -> Result<StateRoots> {
+pub(crate) fn state_roots() -> Result<StateRoots> {
     let settings = vibe_core::settings::settings_dir().ok_or_else(|| {
         anyhow::anyhow!(
             "the vibevm settings directory could not be resolved, so deployment receipts have \
@@ -387,7 +387,8 @@ fn state_roots() -> Result<StateRoots> {
 /// eager refusals here would make every deploy depend on three unrelated
 /// CLIs. The typed absence travels down and the provider that selected that
 /// client refuses with remediation.
-fn client_authority() -> Result<(std::path::PathBuf, vibe_lifecycle::ClientExecutables)> {
+pub(crate) fn client_authority() -> Result<(std::path::PathBuf, vibe_lifecycle::ClientExecutables)>
+{
     let home = dirs::home_dir().ok_or_else(|| {
         anyhow::anyhow!(
             "the invoking user's home directory could not be resolved, so a client deployment has \
@@ -402,7 +403,7 @@ fn client_authority() -> Result<(std::path::PathBuf, vibe_lifecycle::ClientExecu
 /// The selected node's identity — the same rendering the dispatch
 /// assembles, so a receipt written by `vibe deploy` and one read by
 /// `vibe undeploy` key under one name.
-fn identity(manifest: &Manifest) -> String {
+pub(crate) fn identity(manifest: &Manifest) -> String {
     if let Some(package) = &manifest.package {
         return format!("{}/{}", package.group, package.name);
     }
