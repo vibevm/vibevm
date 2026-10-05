@@ -1,8 +1,16 @@
 use super::*;
 use serde_json::{Value, json};
-use std::{fs, io::Cursor};
+use std::{
+    fs,
+    io::Cursor,
+    sync::{
+        Barrier,
+        atomic::{AtomicUsize, Ordering},
+    },
+    thread,
+};
 use vibe_core::{PackageRef, manifest::TargetOs};
-use vibe_lifecycle::process::capture_package_tree_witness;
+use vibe_lifecycle::process::{PackageTreeWitness, capture_package_tree_witness};
 use vibe_lifecycle::{LifecycleLease, SubmissionReservations, SubmissionScope};
 use vibe_orchestrator::{
     machine_operation::input_decision as d,
@@ -10,6 +18,7 @@ use vibe_orchestrator::{
         HostPolicyFacts, TrustedPolicySource,
         exact_local_install_grant::ExactLocalInstallGrantService,
     },
+    ports::{BoundOnePackageSource, PackageSource, PackageSourceBuild, PackageSourceFactory},
 };
 use vibe_package_source::PinnedLocalFactory;
 use vibe_safefs::Project;
@@ -20,6 +29,28 @@ use vibe_wire::generated::{
         lifecycle_action_reply::{LifecycleActionReply, Reply},
     },
 };
+
+struct CountingLocalFactory {
+    inner: PinnedLocalFactory,
+    builds: Arc<AtomicUsize>,
+}
+
+impl BoundOnePackageSource for CountingLocalFactory {
+    fn source_witness(&self) -> &PackageTreeWitness {
+        self.inner.source_witness()
+    }
+
+    fn recheck_source_binding(&self, witness: &PackageTreeWitness) -> anyhow::Result<()> {
+        self.inner.recheck_source_binding(witness)
+    }
+}
+
+impl PackageSourceFactory for CountingLocalFactory {
+    fn build(&self, input: PackageSourceBuild<'_>) -> anyhow::Result<Box<dyn PackageSource>> {
+        self.builds.fetch_add(1, Ordering::SeqCst);
+        self.inner.build(input)
+    }
+}
 
 #[test]
 fn ungranted_context_refuses_without_creating_root() {
@@ -41,6 +72,7 @@ fn fixture() -> (
     SubmissionScope,
     Arc<ExactLocalInstallRoute>,
     vibe_lifecycle::SubmissionNamespace,
+    Arc<AtomicUsize>,
 ) {
     let dir = tempfile::tempdir().unwrap();
     let project = dir.path().join("project");
@@ -58,7 +90,11 @@ fn fixture() -> (
     let pin = PackageRef::parse("flow:org.example/fixture@=1.1.0").unwrap();
     let witness =
         capture_package_tree_witness(&package, &pin, &["README.md", "vibe.toml"]).unwrap();
-    let source = Arc::new(PinnedLocalFactory::new(&registry, &pin, &witness).unwrap());
+    let builds = Arc::new(AtomicUsize::new(0));
+    let source = Arc::new(CountingLocalFactory {
+        inner: PinnedLocalFactory::new(&registry, &pin, &witness).unwrap(),
+        builds: builds.clone(),
+    });
     let scope = SubmissionScope {
         context: "mcp-exact-install".into(),
         target: "project".into(),
@@ -82,7 +118,7 @@ fn fixture() -> (
     let grant = service.issue(60_000).unwrap();
     let (host, namespace) = grant.into_parts();
     let route = Arc::new(ExactLocalInstallRoute::new(host, namespace.clone()));
-    (dir, project, scope, route, namespace)
+    (dir, project, scope, route, namespace, builds)
 }
 fn context(project: &std::path::Path, route: Arc<ExactLocalInstallRoute>) -> ServerContext {
     ServerContext::with_store_root(project, project.join("unused-store"))
@@ -165,10 +201,22 @@ fn action_reply(envelope: &e::OperationEnvelope) -> LifecycleActionReply {
     serde_json::from_str(result.payload_json.as_deref().unwrap()).unwrap()
 }
 
+fn reply_run_id(reply: &LifecycleActionReply) -> String {
+    let payload = match &reply.reply {
+        Reply::Submitted(row) => &row.payload_json,
+        Reply::View(row) => &row.payload_json,
+        other => panic!("expected retained submission view, got {other:?}"),
+    };
+    serde_json::from_str::<Value>(payload).unwrap()["run_id"]
+        .as_str()
+        .unwrap()
+        .to_owned()
+}
+
 #[test]
 fn mcp_answer_and_local_inspect_share_one_route_namespace_and_key() {
     assert!(vibe_test_support::isolated_home().is_some());
-    let (_dir, project, scope, route, namespace) = fixture();
+    let (_dir, project, scope, route, namespace, _builds) = fixture();
     let prepare = mcp(
         &project,
         route.clone(),
@@ -229,8 +277,193 @@ fn mcp_answer_and_local_inspect_share_one_route_namespace_and_key() {
 }
 
 #[test]
+fn concurrent_api_mcp_and_frame_submit_invoke_one_exact_local_install() {
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, scope, route, namespace, builds) = fixture();
+    let prepare = mcp(
+        &project,
+        route.clone(),
+        json!({"kind":"prepare","phase":"install","requested_options":{"force":false,"trace":false,"deploy_profile":null,"control":"none"}}),
+    );
+    assert_eq!(prepare["isError"], false, "{prepare}");
+    let prepared: LifecycleActionReply =
+        serde_json::from_value(prepare["structuredContent"].clone()).unwrap();
+    let Reply::Question(question) = prepared.reply else {
+        panic!("question");
+    };
+    let mut answer: d::InputDecisionMessage = serde_json::from_str(&question.payload_json).unwrap();
+    let reference = answer.question_id.clone().unwrap();
+    answer.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let mut runner =
+        ExactLocalInstallMachineSessionRunner::new(context(&project, route.clone())).unwrap();
+    let ids = initialized(&mut runner);
+    let (refused, envelope, _) = local(
+        &mut runner,
+        &ids,
+        "race-answer",
+        json!({"kind":"answer","message_json":serde_json::to_string(&answer).unwrap()}),
+    );
+    assert!(!refused, "{envelope:?}");
+    assert!(matches!(action_reply(&envelope).reply, Reply::Validated(_)));
+    assert_eq!(builds.load(Ordering::SeqCst), 0);
+
+    let gate = Arc::new(Barrier::new(4));
+    let (api, mcp_result, frame, mut runner) = thread::scope(|scope| {
+        let api_gate = gate.clone();
+        let api_route = route.clone();
+        let api_ref = reference.clone();
+        let api_project = &project;
+        let api = scope.spawn(move || {
+            api_gate.wait();
+            ExactLocalInstallRoute::dispatch(
+                Some(&api_route),
+                json!({"schema":1,"action":{"kind":"submit","accepted_ref":api_ref,"key":"race"}})
+                    .to_string()
+                    .as_bytes(),
+                api_project,
+            )
+        });
+        let mcp_gate = gate.clone();
+        let mcp_route = route.clone();
+        let mcp_ref = reference.clone();
+        let mcp_project = &project;
+        let mcp_request = scope.spawn(move || {
+            mcp_gate.wait();
+            mcp(
+                mcp_project,
+                mcp_route,
+                json!({"kind":"submit","accepted_ref":mcp_ref,"key":"race"}),
+            )
+        });
+        let frame_gate = gate.clone();
+        let frame_ref = reference.clone();
+        let frame_ids = ids.clone();
+        let framed = scope.spawn(move || {
+            frame_gate.wait();
+            let reply = local(
+                &mut runner,
+                &frame_ids,
+                "race-submit",
+                json!({"kind":"submit","accepted_ref":frame_ref,"key":"race"}),
+            );
+            (reply, runner)
+        });
+        gate.wait();
+        let api = api.join().unwrap();
+        let mcp_result = mcp_request.join().unwrap();
+        let (frame, runner) = framed.join().unwrap();
+        (api, mcp_result, frame, runner)
+    });
+
+    assert!(
+        api.is_ok() || mcp_result["isError"] == false || !frame.0,
+        "all competing submissions refused: api={api:?}, mcp={mcp_result}, frame={frame:?}"
+    );
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    let reserved = SubmissionReservations::inspect_existing_key(&lease, &namespace, &scope, "race")
+        .unwrap()
+        .unwrap();
+    drop(lease);
+    assert_eq!(
+        builds.load(Ordering::SeqCst),
+        1,
+        "domain source built more than once"
+    );
+    assert!(project.join("vibe.lock").is_file());
+
+    // A concurrent lease loser must attach to the retained run on retry.
+    let api_replay = ExactLocalInstallRoute::dispatch(
+        Some(&route),
+        json!({"schema":1,"action":{"kind":"submit","accepted_ref":reference,"key":"race"}})
+            .to_string()
+            .as_bytes(),
+        &project,
+    )
+    .unwrap();
+    assert_eq!(reply_run_id(&api_replay), reserved.domain_run_id);
+    let mcp_replay = mcp(
+        &project,
+        route.clone(),
+        json!({"kind":"submit","accepted_ref":reference,"key":"race"}),
+    );
+    assert_eq!(mcp_replay["isError"], false, "{mcp_replay}");
+    let mcp_replay: LifecycleActionReply =
+        serde_json::from_value(mcp_replay["structuredContent"].clone()).unwrap();
+    assert_eq!(reply_run_id(&mcp_replay), reserved.domain_run_id);
+    let (refused, frame_replay, replay_outcome) = local(
+        &mut runner,
+        &ids,
+        "race-replay",
+        json!({"kind":"submit","accepted_ref":reference,"key":"race"}),
+    );
+    assert!(!refused, "{frame_replay:?}");
+    assert_eq!(
+        reply_run_id(&action_reply(&frame_replay)),
+        reserved.domain_run_id
+    );
+    assert_eq!(
+        replay_outcome.provenance_id.as_deref(),
+        Some(reserved.domain_run_id.as_str())
+    );
+
+    let inspected = ExactLocalInstallRoute::dispatch(
+        Some(&route),
+        json!({"schema":1,"action":{"kind":"inspect","key":"race"}})
+            .to_string()
+            .as_bytes(),
+        &project,
+    )
+    .unwrap();
+    assert!(matches!(inspected.reply, Reply::View(_)));
+    assert_eq!(reply_run_id(&inspected), reserved.domain_run_id);
+    let mcp_inspected = mcp(
+        &project,
+        route.clone(),
+        json!({"kind":"inspect","key":"race"}),
+    );
+    assert_eq!(mcp_inspected["isError"], false, "{mcp_inspected}");
+    let mcp_reply: LifecycleActionReply =
+        serde_json::from_value(mcp_inspected["structuredContent"].clone()).unwrap();
+    assert!(matches!(mcp_reply.reply, Reply::View(_)));
+    assert_eq!(reply_run_id(&mcp_reply), reserved.domain_run_id);
+    let (refused, framed_inspected, outcome) = local(
+        &mut runner,
+        &ids,
+        "race-inspect",
+        json!({"kind":"inspect","key":"race"}),
+    );
+    assert!(!refused, "{framed_inspected:?}");
+    assert!(matches!(
+        action_reply(&framed_inspected).reply,
+        Reply::View(_)
+    ));
+    assert_eq!(
+        reply_run_id(&action_reply(&framed_inspected)),
+        reserved.domain_run_id
+    );
+    assert_eq!(
+        outcome.provenance_id.as_deref(),
+        Some(reserved.domain_run_id.as_str())
+    );
+
+    let conflict = ExactLocalInstallRoute::dispatch(
+        Some(&route),
+        json!({"schema":1,"action":{"kind":"submit","accepted_ref":"foreign-reference","key":"race"}})
+            .to_string()
+            .as_bytes(),
+        &project,
+    )
+    .unwrap_err();
+    assert_eq!(
+        conflict.error.code,
+        LifecycleActionErrorCode::UnknownReference
+    );
+    assert_eq!(builds.load(Ordering::SeqCst), 1);
+}
+
+#[test]
 fn unsupported_options_and_unknown_key_refuse_without_effects() {
-    let (_dir, project, _scope, route, _namespace) = fixture();
+    let (_dir, project, _scope, route, _namespace, _builds) = fixture();
     let result = mcp(
         &project,
         route.clone(),
