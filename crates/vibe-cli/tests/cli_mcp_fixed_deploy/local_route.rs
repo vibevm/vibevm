@@ -63,7 +63,7 @@ fn route(fixture: &Fixture) -> FixedDeployRoute {
     }
 }
 
-fn local(fixture: &Fixture, kind: &str, key: &str) -> Value {
+fn local_envelope(fixture: &Fixture, kind: &str, key: &str) -> e::OperationEnvelope {
     let input = json!({
         "schema":1,
         "operation_id":vibe_orchestrator::machine_operation::fixed_deploy::OPERATION_ID,
@@ -72,16 +72,97 @@ fn local(fixture: &Fixture, kind: &str, key: &str) -> Value {
         "body":{"stage":"input","format_id":FormatId::MachineFixedDeployActionRequest.id(),
             "payload_json":json!({"schema":1,"action":{"kind":kind,"key":key}}).to_string()}
     });
-    let envelope = FixedDeployRoute::exchange_local(
+    FixedDeployRoute::exchange_local(
         Some(&route(fixture)),
         input.to_string().as_bytes(),
         &fixture.root(),
     )
-    .unwrap();
+    .unwrap()
+}
+
+fn local(fixture: &Fixture, kind: &str, key: &str) -> Value {
+    let envelope = local_envelope(fixture, kind, key);
     let e::Body::Result(result) = envelope.body else {
         panic!("expected fixed Deploy result: {envelope:?}")
     };
     serde_json::from_str(result.payload_json.as_deref().unwrap()).unwrap()
+}
+
+#[test]
+fn damaged_deploy_result_has_same_partial_truth_in_local_cli_and_mcp() {
+    let fixture = Fixture::new();
+    fixture.seed_artifact();
+    let first = mcp_reply(&fixture.mcp("issue", true, &request_key("submit", "partial-key")));
+    assert_eq!(first["result"]["isError"], false, "{first}");
+    let run = first["result"]["structuredContent"]["reply"]["run_id"]
+        .as_str()
+        .unwrap();
+    let launcher_path = fixture.dir.path().join("settings/bin/local-helper");
+    let launcher_before = fs::read(&launcher_path).unwrap();
+    let pointer = fs::read_dir(fixture.root().join(".vibe/cli-deploy-host-grants"))
+        .unwrap()
+        .next()
+        .unwrap()
+        .unwrap()
+        .path();
+    let pointer_before = fs::read(&pointer).unwrap();
+    let result = fixture.root().join(format!(
+        ".vibe/deploy-operations/{run}.bound-vibe-bin-result.json"
+    ));
+    assert!(result.exists());
+    fs::remove_file(&result).unwrap();
+
+    let local_view = local(&fixture, "inspect", "partial-key");
+    assert_eq!(local_view["reply"]["kind"], "uncertain", "{local_view}");
+    assert_eq!(local_view["reply"]["run_id"], run);
+    for (field, expected) in [
+        ("intent", "absent"),
+        ("receipt", "present"),
+        ("sidecar", "present"),
+    ] {
+        assert_eq!(local_view["reply"]["partial"][field]["kind"], expected);
+    }
+    assert_eq!(local(&fixture, "submit", "partial-key"), local_view);
+    let mcp = mcp_reply(&fixture.mcp("reattach", false, &request_key("submit", "partial-key")));
+    assert_eq!(mcp["result"]["isError"], false, "{mcp}");
+    assert_eq!(mcp["result"]["structuredContent"], local_view);
+
+    let (mut child, session, context, target) =
+        frame_cross_surface::connect_mode(&fixture, "reattach");
+    let (cli, outcome) = frame_cross_surface::raw_frame_action(
+        &mut child,
+        &session,
+        &context,
+        &target,
+        "submit",
+        "partial-key",
+    );
+    let e::Body::Result(row) = cli.body else {
+        panic!("fixed Deploy partial replay: {cli:?}")
+    };
+    let cli_view: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
+    assert_eq!(cli_view, local_view);
+    assert_eq!(
+        serde_json::to_value(outcome.effect_state).unwrap(),
+        "uncertain"
+    );
+    drop(child.stdin.take());
+    assert!(child.wait_with_output().unwrap().status.success());
+
+    assert!(!result.exists());
+    assert_eq!(fs::read(&pointer).unwrap(), pointer_before);
+    assert_eq!(fs::read(&launcher_path).unwrap(), launcher_before);
+    let index: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    let namespaces = index["namespaces"].as_object().unwrap();
+    assert_eq!(namespaces.len(), 1);
+    let keys = namespaces.values().next().unwrap()["keys"]
+        .as_object()
+        .unwrap();
+    assert_eq!(keys.len(), 1);
+    assert_eq!(keys["partial-key"]["domain_run_id"], run);
 }
 
 #[test]
