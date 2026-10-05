@@ -147,12 +147,12 @@ captured tree witness, pinned local factory, installed grant service and the
 same exact-local route. Issue requires a TTL; reattach forbids it; the
 Install approval policy bit defaults false. Four focused CLI tests cover
 issue/reattach with the same binding, changed policy/source and undeclared
-files, and mode/flag conflicts. A fresh CLI process cannot rebuild a strict
-PinnedLocalFactory after source bytes drift, so its reattach cannot yet serve
-cold inspection in that condition. The in-memory retained-port grant test
-does not establish cross-process recovery. A real concurrent three-surface
-same-key submit and the remaining general domain/option coverage are still
-needed before C.4 acceptance.
+files, and mode/flag conflicts. A fresh CLI process originally could not
+rebuild a strict PinnedLocalFactory after source bytes drift, so its reattach
+could not serve cold inspection. The in-memory retained-port grant test alone
+did not establish cross-process recovery; the later cold-recovery atom below
+closes this exact gap. General domain/option coverage remains before C.4
+acceptance.
 
 **Per-operation Deploy profile contract.** Source inspection of
 `schemas/machine/e1/fixed_deploy_action_request.jtd.json` confirms that a
@@ -165,3 +165,33 @@ legacy `lifecycle_run` passes no profile. A future explicit Deploy option
 must bind the caller's requested profile to the trusted selected target and
 policy under the existing owner before C1; widening the Validate route or
 accepting a field without owner comparison would leave the C.4 gap open.
+The current e1 schema explicitly documents profile as trusted-host owned;
+silently adding a request field would change that registered contract, and
+selecting a different profile would exceed the host's one-profile grant. A
+versioned request and a trusted allowed-profile set are needed before this
+can become a per-operation choice. The selected profile must enter the C1
+intent and retained result identity; e1 remains a bounded fixed-profile
+compatibility route.
+
+**Concurrent exact-local Install surfaces.** A barrier now releases actual
+local API, JSON-RPC MCP and framed session Submit calls for one scoped key.
+A counting bound source records one package-source build, and all three
+surfaces reattach to the same retained C1/domain run on retry and Inspect.
+An unrecognized accepted reference refuses without a second build. The
+focused MCP session tests pass 4/4. This establishes the exact-local Install
+slice across three surfaces; it does not establish the general lifecycle
+domain route or per-operation Deploy profile.
+
+**Cold exact-local Install recovery.** Newly issued schema-2 grant pointers
+retain exact local registry selection, physical registry and source tokens,
+source digest, policy generation, scope and C1 namespace. CLI Reattach
+compares the caller's selection with that pointer and constructs an
+inspection-only host without recapturing changed source bytes or creating a
+new effect port. Prepare, Answer and Submit refuse; a Submit for an existing
+key carries the retained run/view and conservative effect truth. A focused
+temp Install completes once, changes source bytes, and a new CLI context
+inspects the same result while C1 index and lock bytes remain unchanged.
+Schema-1 pointers can still reattach read-only when original source bytes
+remain available; changed bytes refuse. Focused orchestrator 9/9, CLI 4/4
+and CLI check pass. This closes cold inspection for the exact-local slice,
+not the general C.4 domain route.
