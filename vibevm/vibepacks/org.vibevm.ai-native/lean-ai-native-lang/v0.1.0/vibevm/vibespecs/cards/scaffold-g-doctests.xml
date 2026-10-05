@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">AI-Native Lean card G — Named checked examples</title>
+  <status stage="spec" state="work" comment="BETA projection; narrower checker scope and WISH gaps are explicit."/>
+  <band-one title="Band 1 — Identity and recognition">
+    <p><CARD-ID fact="true" status="spec/work">spec://org.vibevm.ai-native/lean-ai-native-lang/cards/scaffold-g-doctests#root</CARD-ID></p>
+    <p><CLASSIFICATION fact="true" status="spec/work">layer=E; mechanism=scaffold G; maturity=BETA; evidence=[E-hyp].</CLASSIFICATION></p>
+    <p><INTENT fact="true" status="spec/work">Use a named theorem in checked source when an example needs a G1 witness.</INTENT></p>
+    <p><ALSO-KNOWN-AS fact="true" status="spec/work">Named checked examples</ALSO-KNOWN-AS></p>
+    <p><APPLICABILITY fact="true" status="spec/work">A guide example is being used as evidence that a property holds.</APPLICABILITY></p>
+  </band-one>
+  <band-two title="Band 2 — Justification and tradeoffs">
+    <p><MOTIVATION fact="true" status="spec/work">A reader should consume an explicit, checkable operation rather than infer a claim from prose or a stale artifact.</MOTIVATION></p>
+    <p><STRUCTURE fact="true" status="spec/work">Example module, explicit theorem subject, real checker and artifact identity.</STRUCTURE></p>
+    <p><COLLABORATIONS fact="true" status="spec/work">spec://org.vibevm.ai-native/lean-ai-native-lang/lean/GUIDE-AI-NATIVE-LEAN#PARITY; spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#MODEL-GRADE.</COLLABORATIONS></p>
+    <p><SCOPE fact="true" status="spec/work">The targeted checker checks registered named examples. Automatic extraction/checking of documentation fences is WISH; prose examples are explanatory until checked as source.</SCOPE></p>
+    <p><CONSEQUENCES fact="true" status="spec/work">Makes the declared boundary reviewable; requires explicit inputs, assumptions and checker time. No broader proof grade follows.</CONSEQUENCES></p>
+    <p><ALTERNATIVES fact="true" status="spec/work">An anonymous example is useful Lean code, but cannot substitute for a selected named carrier theorem.</ALTERNATIVES></p>
+    <p><RISKS fact="true" status="spec/work">A copied snippet can drift from its checked source; retire or update it when theorem/source identity changes. Sunset: revise or retire this card when an accepted checker/representation makes its routine obsolete.</RISKS></p>
+    <p><EVIDENCE fact="true" status="spec/work">No package-specific empirical result is claimed. [E-hyp]. This BETA card is grounded in the machine contract spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#root; required runner acceptance cases are at spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#NEGATIVE-CASES. WISH fields identify absent machinery.</EVIDENCE></p>
+  </band-two>
+  <band-three title="Band 3 — Operation">
+    <fence lang="card-ops">trigger: WHEN A guide example is being used as evidence that a property holds.
+mode: gate
+routine:
+  1. Locate the actual example source.
+  2. Give the property a named theorem.
+  3. Bind its exact subject.
+  4. Run the pinned checker.
+  5. Keep explanatory prose distinct from the resulting witness.
+checker: lean-ai-native --path . check --carrier lean-proof.toml --subject &lt;fully-qualified-subject&gt;
+raid_role: layer=proof; order=after:independent-contract; batch=theorem
+budget: active_rules=1; first_signal=one targeted operation within its configured bound</fence>
+  </band-three>
+</spec>

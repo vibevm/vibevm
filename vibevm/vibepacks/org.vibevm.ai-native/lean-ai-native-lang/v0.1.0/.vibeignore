@@ -1,0 +1,7 @@
+# Derived Lean state and local toolchain installs are not package source.
+.lake/
+.elan/
+.lean-ai-native/
+**/*.olean
+**/*.ilean
+**/*.trace

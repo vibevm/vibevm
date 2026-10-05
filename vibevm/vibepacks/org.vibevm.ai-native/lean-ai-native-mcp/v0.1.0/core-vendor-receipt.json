@@ -1,0 +1,203 @@
+{
+  "schema": 1,
+  "source": "flow:org.vibevm.ai-native/core-ai-native",
+  "version": "1.1.0",
+  "files": [
+    {
+      "path": "crates/vendor/core-ai-native-mcp/Cargo.toml",
+      "sha256": "615e496fcb3b61953351ed3842cd21594d50d03f4dc85f355c8c0d7dedcf2d87"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-mcp/src/capture.rs",
+      "sha256": "4807e10927b606c52c4eebc56183d23b3ff7331c1ba0d9848c1e7d9f3b1f6460"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-mcp/src/error.rs",
+      "sha256": "a31cc2d1f71472f77a424f785ccca90893c7e4aab85a411fc78fc16c2338e5de"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-mcp/src/lib.rs",
+      "sha256": "3d4f7972529971a6d3a1aa4d33d11988468ed6ffef529bfc322bf0255a11af36"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-mcp/src/server.rs",
+      "sha256": "5844a82bc4fefb397c92d4ebaad5bcd60b8966ebecbf8ce3c8d9fb7261691693"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-mcp/src/toolset.rs",
+      "sha256": "0c528956cc0a1ad3197d681fb0c666024b2f997d3b431f8195213f9fb9507fb9"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-mcp/src/wire.rs",
+      "sha256": "e926a9f165c45acbae7fefe91293f28a9d6d0c3d82ce8d319390f1a0adae9bfa"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/Cargo.toml",
+      "sha256": "df2d31ef92d9e3388261d9a89afb09ef8a32bbe53d1e21ededdc4bc50b20dee9"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/config.rs",
+      "sha256": "0f43c87919b1805babb09b85a3048c6627b2b0bb06fa91bc2ccbe1769afadcfc"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/cscan.rs",
+      "sha256": "f7e721d5254249b4d550b78e156394f74b3e8ca0c5d93d207373f9cb9ccde192"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/explain.rs",
+      "sha256": "e26298c83fa8f35e19ebd6bc4bb6ecccc5fc09b6cd05ab51980cca5325fb213a"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/fingerprint.rs",
+      "sha256": "5fdfca31db37429a79e44b41c23817e2d0b9bd6ea9d6adce31f4d531abce7385"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/generated/mod.rs",
+      "sha256": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs",
+      "sha256": "f32d3ece661f5acd708d486828dbaca6a2a1679e2d9aa95d94c13dbfa575ccad"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/index.rs",
+      "sha256": "7329984b45b10242f714f8a079dd74787f55e71ddd91b81e90b9336f08534ab1"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/index/tests.rs",
+      "sha256": "bc18e921caa246f571db20b04266bf687b1f8dbc88595730b21328affed66dc9"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/jtd.rs",
+      "sha256": "0e15f8d5ca16ba993044aeebce3d57a1313799e0249d43e6749257488d54fd3e"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/jtd/contained_path.rs",
+      "sha256": "4e4875a6fb904a899b72813ca53cf87d56389d3012e7d969f149555d2ff278ca"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/jtd/contained_path/tests.rs",
+      "sha256": "9bdbe5268781a8c548dcba6284c728b73ddfb04cee4efd969f9723aeef4dcff0"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/jtd/positions.rs",
+      "sha256": "739dc73724a60c332b21c17f4b35880e3d74f9d8069318177f5abe47a32fec91"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs",
+      "sha256": "583a743cd269def6d98b67340ed26b6b6d6be8bc2d6a4222a7a53c38df16977b"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/ledger.rs",
+      "sha256": "2d4aa45832414b53a832c567e2a15e4eb3093173bf8adb47ca3d257d7ce49883"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/lib.rs",
+      "sha256": "73846811f1a54bf8e8aa3073aa44551cde1ee5108a896160143a993faca5e9b2"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/mdspec.rs",
+      "sha256": "2cc203d7cbd31aa934e2c6a2ce074cfefefdf06ba94c40b5cc34db36775b711f"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/mdspec/excludes.rs",
+      "sha256": "a7b9cb850d334ddf3d5168439e9b38f0766244aea89f0564c98ccb3ad1061dc4"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/mdspec/lines.rs",
+      "sha256": "96a443f49a552a26e1b98d035c27233e99b3e583ebff0c1ea0f6e6a72f4fec30"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs",
+      "sha256": "8dc1a7b01f694d0f18de29f5843a340739690b3e8e747f9e1e2b063c89fab313"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs",
+      "sha256": "b783c1d639c610586525201bf66d1b60dce9dea5b028a0d206dcc0b006a3b17f"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/ratchet.rs",
+      "sha256": "9afa9a4b07b01baeaea8aa0d93cdc1b99c8d0e9aa3469db039f2c76bcbf021b3"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/rscan.rs",
+      "sha256": "8ce233570ce4eb53f10ec1ad68d29c6f5cabebb8362618fff0d55e2c0021bf18"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/scanner.rs",
+      "sha256": "dd235748a45873ee2591f97c83c6ad3a05e6c9ac6256d6edc1e3d548356041bf"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/testgate.rs",
+      "sha256": "5a27e13c190a73bec6ad02f7d1c136ebd4e4390c499d5662f4bcab2dccf41efc"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/tripwire.rs",
+      "sha256": "f395095e6de7ed02f6451c3a117c4e6d7f595ee3f8f0ee39d09b917d206e6342"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec.rs",
+      "sha256": "c2a13559f4109b8f7f13eab98015babc8af3b058da1b03abf66dc6ba80b7c952"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs",
+      "sha256": "2110687d09e2b63740b532831fa5b92590b0ab2f34b1207908d90b2d1559d5bf"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs",
+      "sha256": "e737145a42efe05e15662564b858286a085e173c1043412a6d99da1ddbda0978"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs",
+      "sha256": "627f92c3db22abd0ac9f3e939c4c7f38ff121b082c7fda9a81aca11b04e30aca"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs",
+      "sha256": "70f607e20b1488e9bf7da56733f5140089758df0bf330dca3bcc82f871e327d9"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs",
+      "sha256": "c2eab11b5581bac340d2aa548deb0601c3d2065bcb6670ee4463dab4f1e5e08e"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/requirements.rs",
+      "sha256": "835c40a00b9303dc04c1c095e36ba3bc1dc095ec4308db4b92b7333671445ee8"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/requirements_tests.rs",
+      "sha256": "bca3d860662944632f519cc3b33af982c685ef02c24df71d085b699fbb1797f8"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/td_tests.rs",
+      "sha256": "ea6f79228227e7365707650cd1f7f3ff2fdb43c87039405cd98767e3f88d471f"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs",
+      "sha256": "117f4d1fc6dc9d143bacd36dd56f3bda9d156f69ca25af7be4a2dfcc63786df5"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmark/Cargo.toml",
+      "sha256": "17444834b7122cca8ef8dcb0102b343b02817c4ace716d6084c84460fa7b3b17"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmark/src/lib.rs",
+      "sha256": "b3b47781e0cc6c119603ffbc28f22449a9a3fa1bf01e80c6bdb1b454b36d91cb"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmark/tests/usage.rs",
+      "sha256": "52598f168e29028d748f632371dafdbff9e6aa1f6a1086cf42dcd9c6ba374359"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmark-grammar/Cargo.toml",
+      "sha256": "d13d5bc78493be32a8990b2a1fc8f6f83e8fb2e2c2a99494255675c3b55f2e05"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmark-grammar/src/lib.rs",
+      "sha256": "7ec35f63d71ebd7b4981f4dd9c6ea47ce75767f8493014a3d4c89adddc328c01"
+    },
+    {
+      "path": "crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs",
+      "sha256": "9407fbc9b6d73e941cc163febfb2b4b805a0e9e47fec0cae6f832d8e489c70f1"
+    }
+  ]
+}

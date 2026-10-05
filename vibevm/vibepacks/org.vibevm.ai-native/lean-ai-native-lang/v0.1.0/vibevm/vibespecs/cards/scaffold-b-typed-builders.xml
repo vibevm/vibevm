@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">AI-Native Lean card B — Typed builders and indexed state</title>
+  <status stage="spec" state="work" comment="BETA projection; narrower checker scope and WISH gaps are explicit."/>
+  <band-one title="Band 1 — Identity and recognition">
+    <p><CARD-ID fact="true" status="spec/work">spec://org.vibevm.ai-native/lean-ai-native-lang/cards/scaffold-b-typed-builders#root</CARD-ID></p>
+    <p><CLASSIFICATION fact="true" status="spec/work">layer=A; mechanism=scaffold B; maturity=BETA; evidence=[E-hyp].</CLASSIFICATION></p>
+    <p><INTENT fact="true" status="spec/work">Use ordinary Lean types and explicit evidence to make the modeled invariant visible.</INTENT></p>
+    <p><ALSO-KNOWN-AS fact="true" status="spec/work">Typed builders and indexed state</ALSO-KNOWN-AS></p>
+    <p><APPLICABILITY fact="true" status="spec/work">An API can construct an invalid modeled state or omit a required proof.</APPLICABILITY></p>
+  </band-one>
+  <band-two title="Band 2 — Justification and tradeoffs">
+    <p><MOTIVATION fact="true" status="spec/work">A reader should consume an explicit, checkable operation rather than infer a claim from prose or a stale artifact.</MOTIVATION></p>
+    <p><STRUCTURE fact="true" status="spec/work">Inductive/structure definitions, checked constructors and named preservation theorem.</STRUCTURE></p>
+    <p><COLLABORATIONS fact="true" status="spec/work">spec://org.vibevm.ai-native/lean-ai-native-lang/lean/GUIDE-AI-NATIVE-LEAN#PARITY; spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#MODEL-GRADE.</COLLABORATIONS></p>
+    <p><SCOPE fact="true" status="spec/work">Lean elaboration checks the selected source; there is no package-specific builder generator or proof that the modeled invariant matches the world.</SCOPE></p>
+    <p><CONSEQUENCES fact="true" status="spec/work">Makes the declared boundary reviewable; requires explicit inputs, assumptions and checker time. No broader proof grade follows.</CONSEQUENCES></p>
+    <p><ALTERNATIVES fact="true" status="spec/work">A simple data type plus explicit validation can be clearer than excessive dependent indexing.</ALTERNATIVES></p>
+    <p><RISKS fact="true" status="spec/work">Types can encode the wrong model; revisit an encoding when its proof burden obscures the independent contract. Sunset: revise or retire this card when an accepted checker/representation makes its routine obsolete.</RISKS></p>
+    <p><EVIDENCE fact="true" status="spec/work">No package-specific empirical result is claimed. [E-hyp]. This BETA card is grounded in the machine contract spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#root; required runner acceptance cases are at spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#NEGATIVE-CASES. WISH fields identify absent machinery.</EVIDENCE></p>
+  </band-two>
+  <band-three title="Band 3 — Operation">
+    <fence lang="card-ops">trigger: WHEN An API can construct an invalid modeled state or omit a required proof.
+mode: gate
+routine:
+  1. Read the independent invariant.
+  2. Identify the invalid states that matter.
+  3. Choose an ordinary Lean representation.
+  4. Register a named theorem and its subject.
+  5. Run the targeted check and inspect assumptions.
+checker: lean-ai-native --path . check --carrier lean-proof.toml --subject &lt;fully-qualified-subject&gt;
+raid_role: layer=proof; order=after:independent-contract; batch=theorem
+budget: active_rules=1; first_signal=one targeted operation within its configured bound</fence>
+  </band-three>
+</spec>

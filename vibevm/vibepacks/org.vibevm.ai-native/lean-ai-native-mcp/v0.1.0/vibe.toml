@@ -1,0 +1,29 @@
+[package]
+name = "lean-ai-native-mcp"
+group = "org.vibevm.ai-native"
+kind = "mcp"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "AI-Native Lean carrier scanning, model checking and witness verification over MCP using the language family's shared engine"
+keywords = ["lean", "ai-native", "mcp", "proof", "verification"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[requires]
+packages = { "lang:org.vibevm.ai-native/lean-ai-native-lang" = "=0.1.0" }
+
+[[binary]]
+name = "lean-ai-native-mcp"
+crate = "crates/lean-ai-native-mcp"
+description = "The stdio MCP server for the shared Lean checking engine"
+
+[[mcp_server]]
+name = "lean-ai-native"
+binary = "lean-ai-native-mcp"
+description = "Lean carrier inventory, selected model proofs and witness verification"
+args = ["--path", "{project_root}"]

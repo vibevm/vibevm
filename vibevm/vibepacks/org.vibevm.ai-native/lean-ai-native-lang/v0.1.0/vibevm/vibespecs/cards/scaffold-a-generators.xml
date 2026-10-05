@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">AI-Native Lean card A — Generators</title>
+  <status stage="spec" state="work" comment="BETA projection; narrower checker scope and WISH gaps are explicit."/>
+  <band-one title="Band 1 — Identity and recognition">
+    <p><CARD-ID fact="true" status="spec/work">spec://org.vibevm.ai-native/lean-ai-native-lang/cards/scaffold-a-generators#root</CARD-ID></p>
+    <p><CLASSIFICATION fact="true" status="spec/work">layer=C; mechanism=scaffold A; maturity=BETA; evidence=[E-hyp].</CLASSIFICATION></p>
+    <p><INTENT fact="true" status="spec/work">Give repeated structure explicit typed inputs before considering generation.</INTENT></p>
+    <p><ALSO-KNOWN-AS fact="true" status="spec/work">Generators</ALSO-KNOWN-AS></p>
+    <p><APPLICABILITY fact="true" status="spec/work">Repeated model, carrier or glue structure invites automated emission.</APPLICABILITY></p>
+  </band-one>
+  <band-two title="Band 2 — Justification and tradeoffs">
+    <p><MOTIVATION fact="true" status="spec/work">A reader should consume an explicit, checkable operation rather than infer a claim from prose or a stale artifact.</MOTIVATION></p>
+    <p><STRUCTURE fact="true" status="spec/work">Model/carrier author and a future deterministic generator.</STRUCTURE></p>
+    <p><COLLABORATIONS fact="true" status="spec/work">spec://org.vibevm.ai-native/lean-ai-native-lang/lean/GUIDE-AI-NATIVE-LEAN#PARITY; spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#MODEL-GRADE.</COLLABORATIONS></p>
+    <p><SCOPE fact="true" status="spec/work">General Lean source/carrier generation is WISH: the initial runner scans/checks, and no generator is commissioned. Generated text would still require ordinary checking.</SCOPE></p>
+    <p><CONSEQUENCES fact="true" status="spec/work">Makes the declared boundary reviewable; requires explicit inputs, assumptions and checker time. No broader proof grade follows.</CONSEQUENCES></p>
+    <p><ALTERNATIVES fact="true" status="spec/work">A handwritten theorem is clearer while there is no repeated structural need.</ALTERNATIVES></p>
+    <p><RISKS fact="true" status="spec/work">If repetition disappears, retire the generator idea; generated source must never manufacture proof success. Sunset: revise or retire this card when an accepted checker/representation makes its routine obsolete.</RISKS></p>
+    <p><EVIDENCE fact="true" status="spec/work">No package-specific empirical result is claimed. [E-hyp]. This BETA card is grounded in the machine contract spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#root; required runner acceptance cases are at spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#NEGATIVE-CASES. WISH fields identify absent machinery.</EVIDENCE></p>
+  </band-two>
+  <band-three title="Band 3 — Operation">
+    <fence lang="card-ops">trigger: WHEN Repeated model, carrier or glue structure invites automated emission.
+mode: gate
+routine:
+  1. Identify the repeated structure and its inputs.
+  2. Keep a reviewed explicit instance.
+  3. Record generation as WISH until an actual generator and drift check exist.
+  4. Check any emitted theorem through the normal selected subject.
+checker: WISH: no general Lean generator command.
+raid_role: layer=proof; order=after:independent-contract; batch=theorem
+budget: active_rules=1; first_signal=one targeted operation within its configured bound</fence>
+  </band-three>
+</spec>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">AI-Native Lean — guide</title>
+  <status stage="spec" state="done"/>
+  <p><SCOPE fact="true" status="spec/done">This guide projects the common discipline into idiomatic Lean and the initial G1 model-proof runner. The contract is spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#root. Family version 0.1.0, Lean version 4.34.1 and wire/carrier versions have separate meanings.</SCOPE></p>
+  <p><IDIOMATIC-LEAN fact="true" status="spec/done">Keep ordinary Lean definitions, inductive types, structures, theorem statements and proof terms. Put subject bindings in the checked sidecar; do not invent a Lean dialect or copy Rust attributes. Small theorem/model modules and explicit definitions make review practical. A missing style checker is recorded as WISH rather than presented as enforced.</IDIOMATIC-LEAN></p>
+  <p><INDEPENDENT-SPEC fact="true" status="spec/done">State the intended property independently of the implementation being evaluated. Prove meaningful assumptions and nonempty witnesses where relevant. Current behavior can supply counterexamples and migration evidence; an old/new match does not prove a flawed behavior correct. A model theorem establishes only the formal statement under its declared assumptions.</INDEPENDENT-SPEC></p>
+  <p><THEOREM-SUBJECT fact="true" status="spec/done">Bind the selected property to an exact fully qualified spec subject and named Lean theorem. The initial selector supports ASCII dotted module/theorem names: letter first in each component, then letters, digits, underscore or apostrophe. Quoted/Unicode selectors are unsupported; this is a carrier/runner selection limitation, not a ban on ordinary Lean source syntax. Preserve the actual authored spec revision; an unrevisioned unit has no revision and is not guessed to be revision 1. A verifies edge is declaration inventory until checking succeeds.</THEOREM-SUBJECT></p>
+  <p><PROOF-LOOP fact="true" status="spec/done">Select one subject; inspect its carrier and theorem; change only the relevant model/proof; run scan for binding diagnostics; run check --subject; inspect theorem/axiom/source scope; freshly verify a saved witness before claiming it current. This is a targeted loop, not a project-wide proof or Rust floor.</PROOF-LOOP></p>
+  <p><ASSUMPTIONS fact="true" status="spec/done">Inspect the actual theorem axiom dependencies. allowed_axioms may contain only propext, Quot.sound and Classical.choice; [] requests none of those assumptions. Custom, sorry/proof-hole and native-evaluation proof axioms are refused. An allowed axiom remains recorded and limits the claim; it must never be hidden to make a check pass.</ASSUMPTIONS></p>
+  <p><TOOLCHAIN fact="true" status="spec/done">The carrier pins leanprover/lean4:v4.34.1. Supply a reproducible externally installed Lean 4.34.1 distribution with --toolchain-dir or LEAN_AI_NATIVE_TOOLCHAIN_DIR; bin/lib identity and actual version are checked. List local source modules explicitly in dependency-first order. Arbitrary Lake dependency scripts and unrecorded external imports are unsupported. Lean source is trusted project code; running elaboration is not sandboxed. No private machine path or automatic download belongs in this package.</TOOLCHAIN></p>
+  <p><FRESHNESS fact="true" status="spec/done">A saved witness is not reusable proof merely because its bytes parse. verify-witness --subject binds exact current source, dependencies, theorem/statement, assumptions, checker and subject and reruns the checker. Any unsupported or stale boundary remains explicit.</FRESHNESS></p>
+  <p><PARITY fact="true" status="spec/done">The parity rule is spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#PARITY-ACROSS-PROJECTIONS. This is the initial targeted proof lane, not a complete Rust-equivalent discipline floor. The nine scaffold dispositions below record the narrower implementation and the reason; unsupported commands are not silently advertised.</PARITY></p>
+  <p><DEV-NO-RUST-RULES fact="true" status="spec/done">Lean elaboration and the kernel check Lean typing/proof obligations. Rust unwrap/clippy/borrow rules have no direct Lean syntax analogue and are not mechanically copied. A language-specific counterpart needs its own intended property and checker. General maintainability rules without a Lean checker remain WISH.</DEV-NO-RUST-RULES></p>
+  <p><DEV-FLOOR fact="true" status="spec/done">Full init/floor/conform/health/sweep, automatic card delivery and general language maintenance gates are WISH in this version. Reason: the commissioned runnable surface is the targeted proof/carrier runner; these mechanisms have not been implemented or accepted. This records the parity gap and does not exempt it permanently.</DEV-FLOOR></p>
+  <p><DEV-REFINEMENT fact="true" status="spec/done">G2 conformance and G3/G4 implementation/system refinement are unsupported proof grades here. Reason: this lane checks Lean model theorems and has no accepted extraction/representation or adapter-composition proof. A shared spec subject does not create that missing correspondence.</DEV-REFINEMENT></p>
+  <p><DEV-SCAFFOLDS fact="true" status="spec/done">Class A general source generators, Class D differential harnesses, Class H automatic exploration/simulation engines and Class I codemods remain WISH. Classes B/C rely on ordinary Lean declarations and actual targeted checking; E is the targeted command loop; F is runner/carrier diagnostics; G is named checked proof examples, not automatic execution of prose fences. Each card records its narrower checker and limitation.</DEV-SCAFFOLDS></p>
+  <p><DELIVERY fact="true" status="spec/done">The card format comes from spec://org.vibevm.ai-native/core-ai-native/01-PATTERN-CARD-FORMAT#root; the catalog is spec://org.vibevm.ai-native/core-ai-native/02-EXECUTABLE-SCAFFOLDS#root. Read Band 3 for an applicable operation and Bands 1–2 for authoring/review. No automatic trigger matcher is claimed.</DELIVERY></p>
+  <p><COMMAND-INTERFACE fact="true" status="spec/done">Invoke lean-ai-native --path PROJECT [--toolchain-dir INSTALL_ROOT] scan --carrier lean-proof.toml; check --carrier lean-proof.toml --subject URI; or verify-witness --carrier lean-proof.toml --subject URI --witness proof.json. The path/toolchain options precede the command. Commands return JSON Reply{ok,result?,error?}; only a successful check result contains a witness. verify-witness accepts the extracted witness object, not the enclosing Reply.</COMMAND-INTERFACE></p>
+  <example title="Minimal named theorem and sidecar">
+    <p><EXAMPLE-LAYOUT fact="true" status="spec/done">Save the three explanatory fragments as Example.lean, vibevm/vibespecs/Protocol.md, and lean-proof.toml under one project root. The named theorem uses no extra axiom. A guide fragment is not a proof receipt; run the exact checker before claiming success.</EXAMPLE-LAYOUT></p>
+    <fence lang="lean">namespace Example
+
+theorem identity (n : Nat) : n = n := rfl
+
+end Example
+</fence>
+    <fence lang="markdown"># Protocol {#root}
+
+## Identity {#identity}
+
+`req r1`
+
+Every natural number equals itself.
+</fence>
+    <fence lang="toml">schema = 1
+namespace = "org.example/demo"
+toolchain = "leanprover/lean4:v4.34.1"
+sources = ["Example.lean"]
+allowed_axioms = []
+timeout_seconds = 30
+
+[[proof]]
+subject = "spec://org.example/demo/Protocol#identity"
+spec_file = "vibevm/vibespecs/Protocol.md"
+spec_revision = 1
+module = "Example"
+theorem = "Example.identity"
+grade = "g1_model"
+</fence>
+  </example>
+  <commands title="Targeted invocation">
+    <p><COMMAND-PATH fact="true" status="spec/done">Replace /path/to/lean-4.34.1 with the root of the pinned external distribution. This is a portable placeholder, not a packaged or developer-local installation.</COMMAND-PATH></p>
+    <fence lang="sh">lean-ai-native --path . --toolchain-dir /path/to/lean-4.34.1 scan --carrier lean-proof.toml
+lean-ai-native --path . --toolchain-dir /path/to/lean-4.34.1 check --carrier lean-proof.toml --subject spec://org.example/demo/Protocol#identity
+lean-ai-native --path . --toolchain-dir /path/to/lean-4.34.1 verify-witness --carrier lean-proof.toml --subject spec://org.example/demo/Protocol#identity --witness proof.json
+</fence>
+    <p><WITNESS-EXTRACTION fact="true" status="spec/done">A successful check returns Reply.result as the ProofWitness itself. Require Reply.ok == true and save that result object as proof.json; do not save the outer Reply. verify-witness reads the direct object, freshly checks it and on success returns Reply.result {status: "matched", witness: ...}. jq below is an optional JSON utility, not a runtime dependency; any JSON client can perform the same checked extraction.</WITNESS-EXTRACTION></p>
+  </commands>
+  <result-example title="Saving and freshly checking a witness">
+    <fence lang="sh">lean-ai-native --path . --toolchain-dir /path/to/lean-4.34.1 check --carrier lean-proof.toml --subject spec://org.example/demo/Protocol#identity &gt; check.json
+jq -e 'if .ok == true then .result else error("proof check failed; no witness") end' check.json &gt; proof.json
+lean-ai-native --path . --toolchain-dir /path/to/lean-4.34.1 verify-witness --carrier lean-proof.toml --subject spec://org.example/demo/Protocol#identity --witness proof.json
+</fence>
+    <p><SELECTOR-DEVIATION fact="true" status="spec/done">The ASCII selection subset is a recorded initial parity limitation. Reason: 0.1.0 has a bounded deterministic carrier/inspector selector rather than a complete parser for all Lean declaration-name syntax. Broader quoted/Unicode selection is WISH until implemented and checked; unsupported selectors cannot silently select a different theorem.</SELECTOR-DEVIATION></p>
+  </result-example>
+</spec>

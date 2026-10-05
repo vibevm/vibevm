@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">AI-Native Lean MCP surface</title>
+  <status stage="impl" state="work"/>
+  <arguments title="Arguments and startup authority">
+    <p><MCP-TOOLS fact="true" status="spec/done">The server exposes exactly lean_ai_native_scan(carrier), lean_ai_native_check(carrier, subject), and lean_ai_native_verify_witness(carrier, subject, witness). Arguments are objects with the named string members only. Unknown, missing and wrongly typed members refuse before engine execution.</MCP-TOOLS></p>
+    <p><MCP-CONTEXT fact="true" status="spec/done">Server startup fixes the project root and optional trusted toolchain directory. Tool calls cannot supply operation, project root or toolchain overrides. Carrier and witness paths are relative to that root; the shared engine enforces containment.</MCP-CONTEXT></p>
+  </arguments>
+  <parity title="One runner and one result">
+    <p><MCP-REPLY fact="true" status="spec/done">Every valid tool call directly invokes lean-ai-native-check::execute with the same typed Request used by the language CLI. MCP text content is the serialized Reply without reconstructed status or extra report fields; isError equals the negation of Reply.ok. Invalid arguments use Reply::invalid_request. The server never dispatches a CLI found through PATH.</MCP-REPLY></p>
+    <p><MCP-CLAIM-BOUNDARY fact="true" status="spec/done">A carrier association is declared traceability. A successful model check grants only the engine's explicit model claim under its recorded assumptions. It does not establish a Rust implementation refinement, current host mixed-language composition, or owner acceptance.</MCP-CLAIM-BOUNDARY></p>
+  </parity>
+</spec>

@@ -1,0 +1,20 @@
+[package]
+name = "lean-ai-native-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "AI-Native Lean targeted proof runner"
+
+[[bin]]
+name = "lean-ai-native"
+path = "src/main.rs"
+
+[dependencies]
+lean-ai-native-check.workspace = true
+serde_json.workspace = true
+clap.workspace = true
