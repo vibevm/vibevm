@@ -1,9 +1,9 @@
 schema = 1
 plan_id = "vibevm-next"
-revision = 18
+revision = 19
 root_node = "NEXT"
 current_node = "NEXT-PREPARE"
-updated_at = "2026-10-03T05:31:15Z"
+updated_at = "2026-10-05T15:23:38.507770+00:00"
 
 [[mandate]]
 id = "NEXT-COMMISSION"
@@ -6873,4 +6873,76 @@ zoom = "summary"
 depends_on = ["NEXT-STABLE-MCP-FOLLOWUP", "NEXT-STABLE-INIT-IDENTITY"]
 mandates = ["NEXT-COMMISSION"]
 acceptance = ["Classify source 306162afb and 16bdc30cb metadata/CI/release changes against the next/1.1.0 and no-publication contract; do not copy incompatible version pins or perform publication.", "Review all integrated source-diff subjects, exact changed-code and negative-case evidence, documentation/release impact, generated maps; retain no full panel or routine mutation claim.", "Restore the prior M-16-C.4 frontier after acceptance."]
+evidence = []
+
+[[mandate]]
+id = "NEXT-OWNER-LEAN-2026-10-05"
+source = "owner-chat:2026-10-05:zap-lean-priority"
+text = "Hold every remaining NEXT implementation atom after the clean M-16-C.4 checkpoint until AI-Native Lean and an exact same-method Rust + Lean composition/proof-witness gate are accepted. Preserve the historical 36 accepted contracts. Resume M-16-C.4 only after the gate; Zap decision-kernel verification is the priority programme, and PodBay decision-kernel migration is later."
+disposition = "owned"
+nodes = ["NEXT-LEAN-A0", "NEXT-LEAN-A0.1", "NEXT-LEAN-A0.2", "NEXT-LEAN-A0.3", "NEXT-LEAN-A0-GATE"]
+
+[[node]]
+id = "NEXT-LEAN-A0"
+parent = "NEXT"
+order = 100
+kind = "group"
+title = "Commission same-method Rust + Lean checking before the remaining NEXT route"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-STABLE"]
+mandates = ["NEXT-OWNER-LEAN-2026-10-05"]
+acceptance = ["Accept the AI-Native Lean family and one exact same-method Rust + Lean consumer proof path before resuming M-16-C.4 or any other pending NEXT atom.", "Preserve separate implementation and proof identities; never infer Rust correctness from a Lean model theorem without a proved correspondence boundary.", "Use only focused positive/negative checks, keep the existing accepted 36 and the public-release hold."]
+evidence = ["owner-priority:2026-10-05; clean VibeVM HEAD d6b37a359; research /fast/git/v/research/2026-10-05-vibevm-rust-lean-capability-audit.md; repo campaigns/next/evidence/NEXT-LEAN-A0/capability-gate.md"]
+
+[[node]]
+id = "NEXT-LEAN-A0.1"
+parent = "NEXT-LEAN-A0"
+order = 1
+kind = "atom"
+title = "Review Zap kernel and AI-Native Lean architecture research"
+state = "planned"
+zoom = "expanded"
+depends_on = []
+mandates = ["NEXT-OWNER-LEAN-2026-10-05"]
+acceptance = ["Review Astra/Max source-mapped Zap state-machine design, Lean verification boundary and AI-Native Lean family architecture; record exact limits and owner decisions before implementation.", "Confirm the same-method VibeVM capability audit against source and bounded probe; keep model proof and Rust implementation proof distinct."]
+evidence = ["candidate:research /fast/git/v/research/2026-10-05-vibevm-rust-lean-capability-audit.md and /fast/git/v/research/2026-10-05-lean-verification-ai-native-lean-design.md; Zap kernel study still in progress"]
+
+[[node]]
+id = "NEXT-LEAN-A0.2"
+parent = "NEXT-LEAN-A0"
+order = 2
+kind = "atom"
+title = "Implement the minimal AI-Native Lean family and exact checker witness"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-LEAN-A0.1"]
+mandates = ["NEXT-OWNER-LEAN-2026-10-05"]
+acceptance = ["Ship a content-minimal lean-ai-native aggregator with exact-pinned lean-ai-native-lang and lean-ai-native-mcp packages, a reproducibly pinned Lean checker, carrier/scanner, axiom audit and versioned exact-subject witness.", "Use shared core only for neutral composition/result contracts; keep consumer proof-worthy subject and assumption policy explicit.", "No claim of Rust implementation correctness follows from a model theorem or a traceability relation alone."]
+evidence = []
+
+[[node]]
+id = "NEXT-LEAN-A0.3"
+parent = "NEXT-LEAN-A0"
+order = 3
+kind = "atom"
+title = "Compose Rust and Lean checks for one VibeVM spec method"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-LEAN-A0.2"]
+mandates = ["NEXT-OWNER-LEAN-2026-10-05"]
+acceptance = ["One fully qualified spec method retains separate Rust implements and Lean verifies symbols across one composed scan/write and fresh host relation query; no family driver overwrites the other with a partial map.", "Invoke both exact checker contributions with distinct IDs and join fresh spec, source, dependency, toolchain, assumptions, result and correspondence-grade witness; preserve Rust-only consumers.", "Expose identical typed status through CLI and MCP; unsupported cross-package inbound proof coverage is explicit rather than silently complete."]
+evidence = []
+
+[[node]]
+id = "NEXT-LEAN-A0-GATE"
+parent = "NEXT-LEAN-A0"
+order = 4
+kind = "gate"
+title = "Accept exact same-method dual-checker proof before resuming NEXT"
+state = "planned"
+zoom = "summary"
+depends_on = ["NEXT-LEAN-A0.3"]
+mandates = ["NEXT-OWNER-LEAN-2026-10-05"]
+acceptance = ["Focused positive evidence runs Rust and Lean checks on the same exact spec subject and preserves both current symbols/results in one map and witness.", "Focused negative evidence refuses missing, failing, stale, forged, wrong-subject or disallowed-assumption Lean proof; spec/source/dependency/toolchain drift and partial-index overwrite never project a current proof.", "Record the actual theorem/implementation correspondence grade and its limits; only then resume M-16-C.4 and the remaining NEXT route without rechecking the historical 36."]
 evidence = []
