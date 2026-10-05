@@ -1,0 +1,10 @@
+namespace = "org.example/same-subject"
+scan_roots = ["rust"]
+spec_roots = ["vibevm/vibespecs"]
+
+[composition]
+schema = 1
+kind = "rust_lean"
+subject = "spec://org.example/same-subject/Protocol#identity"
+rust_symbol = "rust::identity"
+lean_carrier = "lean-proof.toml"

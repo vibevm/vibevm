@@ -700,7 +700,7 @@ name = "core-ai-native-conform"
 version = "1.1.0"
 dependencies = [
  "anyhow",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "serde",
  "serde_json",
  "sha2",
@@ -710,11 +710,30 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmap"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "core-ai-native-specmark 0.1.0",
+ "core-ai-native-specmark-grammar 0.1.0",
+ "glob",
+ "proc-macro2",
+ "quick-xml",
+ "quote",
+ "serde",
+ "serde_json",
+ "sha2",
+ "syn 2.0.117",
+ "toml 0.9.12+spec-1.1.0",
+ "walkdir",
+]
+
+[[package]]
+name = "core-ai-native-specmap"
 version = "1.1.0"
 dependencies = [
  "anyhow",
- "core-ai-native-specmark",
- "core-ai-native-specmark-grammar",
+ "core-ai-native-specmark 1.1.0",
+ "core-ai-native-specmark-grammar 1.1.0",
  "glob",
  "proc-macro2",
  "quick-xml",
@@ -729,11 +748,29 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark"
-version = "1.1.0"
+version = "0.1.0"
 dependencies = [
- "core-ai-native-specmark-grammar",
+ "core-ai-native-specmark-grammar 0.1.0",
  "proc-macro2",
  "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "core-ai-native-specmark"
+version = "1.1.0"
+dependencies = [
+ "core-ai-native-specmark-grammar 1.1.0",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "core-ai-native-specmark-grammar"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
  "syn 2.0.117",
 ]
 
@@ -2020,6 +2057,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
+name = "lean-ai-native-check"
+version = "0.1.0"
+dependencies = [
+ "core-ai-native-specmap 0.1.0",
+ "core-ai-native-specmark 0.1.0",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "toml 0.9.12+spec-1.1.0",
+]
+
+[[package]]
 name = "leb128fmt"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2632,7 +2682,7 @@ version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "glob",
  "serde",
  "serde_json",
@@ -3333,7 +3383,7 @@ dependencies = [
  "anyhow",
  "clap",
  "core-ai-native-conform",
- "core-ai-native-specmap",
+ "core-ai-native-specmap 1.1.0",
  "rust-ai-native-conform",
  "rust-ai-native-conform-frontend",
  "rust-ai-native-specmap",
@@ -3357,7 +3407,7 @@ name = "rust-ai-native-conform-frontend"
 version = "1.1.0"
 dependencies = [
  "core-ai-native-conform",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "proc-macro2",
  "quote",
  "syn 2.0.117",
@@ -3367,7 +3417,7 @@ dependencies = [
 name = "rust-ai-native-env-audit"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
 ]
 
 [[package]]
@@ -3376,7 +3426,7 @@ version = "1.1.0"
 dependencies = [
  "anyhow",
  "clap",
- "core-ai-native-specmap",
+ "core-ai-native-specmap 1.1.0",
 ]
 
 [[package]]
@@ -4427,7 +4477,7 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 name = "vibe-actions"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
@@ -4439,7 +4489,7 @@ name = "vibe-agent-projection"
 version = "1.1.0"
 dependencies = [
  "anyhow",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "dirs",
  "serde",
  "serde_json",
@@ -4459,7 +4509,7 @@ name = "vibe-check"
 version = "1.1.0"
 dependencies = [
  "anyhow",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "semver",
  "tempfile",
  "thiserror 2.0.18",
@@ -4486,8 +4536,8 @@ dependencies = [
  "chrono",
  "clap",
  "console",
- "core-ai-native-specmap",
- "core-ai-native-specmark",
+ "core-ai-native-specmap 1.1.0",
+ "core-ai-native-specmark 1.1.0",
  "dialoguer",
  "dirs",
  "futures",
@@ -4553,7 +4603,7 @@ name = "vibe-core"
 version = "1.1.0"
 dependencies = [
  "anyhow",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "indexmap",
  "semver",
  "serde",
@@ -4572,7 +4622,7 @@ name = "vibe-doc"
 version = "1.1.0"
 dependencies = [
  "chrono",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "progress-core",
  "regex",
  "semver",
@@ -4598,7 +4648,7 @@ version = "1.1.0"
 dependencies = [
  "axum",
  "chrono",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "serde_json",
  "tempfile",
  "thiserror 2.0.18",
@@ -4614,7 +4664,7 @@ name = "vibe-doc-shell"
 version = "1.1.0"
 dependencies = [
  "base64",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "include_dir",
  "serde",
  "serde_json",
@@ -4629,7 +4679,7 @@ dependencies = [
 name = "vibe-ext"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "serde_json",
  "vibe-wire",
 ]
@@ -4638,7 +4688,7 @@ dependencies = [
 name = "vibe-extension-registry"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "glob",
  "syn 2.0.117",
  "thiserror 2.0.18",
@@ -4650,7 +4700,7 @@ dependencies = [
 name = "vibe-facts"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "progress-core",
  "serde",
  "sha2",
@@ -4682,7 +4732,7 @@ dependencies = [
  "axum",
  "chrono",
  "clap",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "flate2",
  "predicates",
  "reqwest 0.12.28",
@@ -4709,7 +4759,7 @@ dependencies = [
 name = "vibe-install"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "semver",
  "serde_json",
  "tempfile",
@@ -4730,7 +4780,7 @@ name = "vibe-lifecycle"
 version = "1.1.0"
 dependencies = [
  "chrono",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "getrandom 0.3.4",
  "glob",
  "libc",
@@ -4759,7 +4809,7 @@ dependencies = [
 name = "vibe-llm"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "reqwest 0.12.28",
  "serde_json",
  "tempfile",
@@ -4774,7 +4824,7 @@ version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "dirs",
  "getrandom 0.3.4",
  "serde",
@@ -4804,7 +4854,7 @@ dependencies = [
 name = "vibe-native-loader"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "libloading 0.9.0",
  "serde_json",
  "tempfile",
@@ -4869,7 +4919,7 @@ version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "serde",
  "serde_json",
  "tempfile",
@@ -4899,7 +4949,7 @@ name = "vibe-package-source"
 version = "1.1.0"
 dependencies = [
  "anyhow",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "tempfile",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
@@ -4919,7 +4969,7 @@ dependencies = [
  "anyhow",
  "axum",
  "chrono",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "futures",
  "reqwest 0.12.28",
  "rust-ai-native-env-audit",
@@ -4946,7 +4996,7 @@ version = "1.1.0"
 dependencies = [
  "anyhow",
  "axum",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "reqwest 0.12.28",
  "semver",
  "serde",
@@ -4967,7 +5017,7 @@ dependencies = [
 name = "vibe-requirements"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "progress-core",
  "serde_json",
  "sha2",
@@ -4986,7 +5036,7 @@ dependencies = [
 name = "vibe-resolver"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "proptest",
  "resolvo",
  "semver",
@@ -5007,7 +5057,7 @@ dependencies = [
  "anyhow",
  "cap-fs-ext",
  "cap-std",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "icu_normalizer",
  "libc",
  "sha2",
@@ -5025,7 +5075,7 @@ dependencies = [
  "cap-fs-ext",
  "cap-std",
  "command-group",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "proc-macro2",
  "quick-xml",
  "quote",
@@ -5048,7 +5098,7 @@ dependencies = [
 name = "vibe-settings"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "serde",
  "tempfile",
  "thiserror 2.0.18",
@@ -5061,7 +5111,7 @@ name = "vibe-spec"
 version = "1.1.0"
 dependencies = [
  "base64",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "quick-xml",
  "serde",
  "serde_json",
@@ -5080,7 +5130,7 @@ dependencies = [
 name = "vibe-specdoc"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "progress-core",
  "pulldown-cmark",
  "quick-xml",
@@ -5103,8 +5153,9 @@ name = "vibe-trace"
 version = "1.1.0"
 dependencies = [
  "anyhow",
- "core-ai-native-specmap",
- "core-ai-native-specmark",
+ "core-ai-native-specmap 1.1.0",
+ "core-ai-native-specmark 1.1.0",
+ "lean-ai-native-check",
  "semver",
  "serde",
  "serde_json",
@@ -5123,7 +5174,7 @@ name = "vibe-wire"
 version = "1.1.0"
 dependencies = [
  "chrono",
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "semver",
  "serde",
  "serde_json",
@@ -5137,7 +5188,7 @@ dependencies = [
 name = "vibe-workspace"
 version = "1.1.0"
 dependencies = [
- "core-ai-native-specmark",
+ "core-ai-native-specmark 1.1.0",
  "glob",
  "libc",
  "proptest",
@@ -5919,8 +5970,8 @@ dependencies = [
  "chrono",
  "clap",
  "core-ai-native-conform",
- "core-ai-native-specmap",
- "core-ai-native-specmark",
+ "core-ai-native-specmap 1.1.0",
+ "core-ai-native-specmark 1.1.0",
  "rust-ai-native-cli",
  "rust-ai-native-conform",
  "rust-ai-native-conform-frontend",

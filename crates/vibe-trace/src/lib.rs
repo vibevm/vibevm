@@ -23,6 +23,9 @@ use std::path::Path;
 use anyhow::Result;
 use serde_json::Value;
 
+/// Explicit fixed Rust/Lean composition. Legacy family parsers refuse the
+/// opt-in table instead of overwriting a complete map with partial output.
+pub mod composition;
 /// The documentation-page scanner (PROP-057 `##PIPE-EDGES-HOST-SIDE`):
 /// `rule` citations become `documents` edges through the engine's own
 /// `CodeScanner` seam, so the vendored engine and its dialect are never
