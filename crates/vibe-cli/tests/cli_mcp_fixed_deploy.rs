@@ -1,7 +1,7 @@
 //! Real startup composition of one fixed Deploy grant across CLI and MCP.
 #![cfg(target_os = "linux")]
 
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use std::{
     fs,
@@ -113,9 +113,13 @@ fn manifest(extra: &str) -> String {
 }
 
 fn request(kind: &str) -> String {
+    request_key(kind, "old-key")
+}
+
+fn request_key(kind: &str, key: &str) -> String {
     json!({"jsonrpc":"2.0","id":1,"method":"tools/call",
         "params":{"name":"fixed_deploy_operation","arguments":{
-            "schema":1,"action":{"kind":kind,"key":"old-key"}}}})
+            "schema":1,"action":{"kind":kind,"key":key}}}})
     .to_string()
         + "\n"
 }
