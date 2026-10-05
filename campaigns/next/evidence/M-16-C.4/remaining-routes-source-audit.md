@@ -139,3 +139,17 @@ options, unknown references, no host and unknown selectors refuse. MCP tests
 pass for the new session 3/3 and tool 5/5, with the incumbent fixed session
 10/10 and native tool 14/14 unchanged. CLI composition and actual competing
 submits from distinct surfaces remain open.
+
+**Explicit CLI composition.** `vibe machine session --fixed-install` and
+`vibe mcp serve --fixed-install` now use one trusted builder: absolute local
+registry root, exact qualified pin, complete bounded source-file census,
+captured tree witness, pinned local factory, installed grant service and the
+same exact-local route. Issue requires a TTL; reattach forbids it; the
+Install approval policy bit defaults false. Four focused CLI tests cover
+issue/reattach with the same binding, changed policy/source and undeclared
+files, and mode/flag conflicts. A fresh CLI process cannot rebuild a strict
+PinnedLocalFactory after source bytes drift, so its reattach cannot yet serve
+cold inspection in that condition. The in-memory retained-port grant test
+does not establish cross-process recovery. A real concurrent three-surface
+same-key submit and the remaining general domain/option coverage are still
+needed before C.4 acceptance.

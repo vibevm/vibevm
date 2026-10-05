@@ -114,7 +114,15 @@ Tools:
   `operation_id: "rust:vibe-lifecycle:install-exact-local"`, `phase: "install"`,
   and explicit options. That owner currently accepts only false `force` and
   `trace`, null `deploy_profile`, and `control: "none"`; other Install options
-  are refused. The selector never supplies the host grant or approval.
+  are refused. The selector never supplies the host grant or approval. A local
+  host may issue this route with `vibe mcp serve --path <absolute-project-root>
+  --fixed-install issue --ttl-ms <1..=86400000> --registry-root
+  <absolute-local-registry> --package-pin <exact-qualified-pin> --source-file
+  vibe.toml` and another `--source-file` for each remaining package file.
+  Add `--approve-exact-local-install` only when the host intends to permit
+  the separate typed approval. Reattach uses `--fixed-install reattach` with
+  the same root, pin, file list and policy flag, without `--ttl-ms`; it cannot
+  reconstruct a changed source tree into a fresh strict local source port.
   Read the returned owner question in `reply.payload_json`; answer its
   original bound decision message through `action.kind: "answer"` and
   `message_json`, retaining the original identity and binding fields.
