@@ -1,7 +1,7 @@
 //! Trusted fixed Validate route shared by explicit library and adapter grants.
 //! Bounded memory tables retain opaque owner objects, never a second journal.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE");
-mod contract;
+pub(crate) mod contract;
 mod dispatch;
 mod envelope;
 mod error;

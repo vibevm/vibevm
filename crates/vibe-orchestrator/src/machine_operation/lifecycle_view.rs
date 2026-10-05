@@ -90,7 +90,11 @@ fn size(v: &LifecycleSubmissionView) -> Check<usize> {
 /// No report bytes, stdout or error payloads are copied into the view.
 pub fn project_snapshot(s: &FixedOwnerEvidenceSnapshot) -> Check<LifecycleSubmissionView> {
     require(
-        s.operation_id() == "rust:vibe-lifecycle:validate",
+        matches!(
+            (s.requested_phase().as_str(), s.operation_id()),
+            ("validate", "rust:vibe-lifecycle:validate")
+                | ("install", "rust:vibe-lifecycle:install-exact-local")
+        ),
         "operation identity",
     )?;
     require(s.phases().len() + s.work_outcomes().len() <= 32, "row cap")?;

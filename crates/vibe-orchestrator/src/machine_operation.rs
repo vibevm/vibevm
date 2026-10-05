@@ -325,6 +325,7 @@ impl MachineOperationService {
 
 mod coverage;
 mod discovery;
+pub mod exact_local_install;
 pub mod exchange;
 pub mod fixed_cargo;
 pub mod fixed_deploy;

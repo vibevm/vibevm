@@ -103,6 +103,7 @@ mod sequential_runs;
 )]
 pub(crate) use install::submit_empty_world_install;
 pub(in crate::machine_submission) use live_owner::evidence::cold_snapshot;
+pub(in crate::machine_submission) use live_owner::evidence::cold_snapshot_for_phase;
 pub use live_owner::{
     BindingSummary, EvidenceBasis, FixedOperationStatus, FixedOwnerEvidenceSnapshot,
     HostControlCapability, HostOwnedFixedOperation, ObservationHandle, ObservedPhase, ObservedWork,
@@ -942,7 +943,9 @@ fn submit_protected_lifecycle_inner<'a>(
     if let Some(attached) =
         attach_existing_lifecycle(&lease, namespace, scope, key, &canonical_request)?
     {
-        if script.as_ref().is_some_and(|s| s.profile.is_some()) {
+        if script.as_ref().is_some_and(|s| s.profile.is_some())
+            || fixture.as_ref().is_some_and(|f| f.profile.is_some())
+        {
             if let Some(row) =
                 SubmissionReservations::inspect_existing_key(&lease, namespace, scope, key)?
             {
@@ -1288,6 +1291,49 @@ pub(super) fn inspect_fixed_existing(
     ))
 }
 
+/// A cold Install view needs the admitted operation identity as well as C1
+/// hashes. A different lifecycle profile sharing a scope/key is not Install.
+pub(super) fn inspect_exact_local_install_existing(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+) -> Result<Option<FixedOperationStatus>> {
+    let Some(row) = SubmissionReservations::inspect_existing_key(lease, namespace, scope, key)?
+    else {
+        return Ok(None);
+    };
+    let capsule = match check_admitted_capsule(
+        lease,
+        &row.domain_run_id,
+        &row.request_sha256,
+        &row.plan_sha256,
+    ) {
+        Ok(capsule) => capsule,
+        Err(error) => {
+            return Ok(Some(FixedOperationStatus::RecoveryRequired {
+                run_id: Some(row.domain_run_id),
+                reason: format!("input capsule: {error:#}"),
+            }));
+        }
+    };
+    let request_format = capsule
+        .pointer("/request/format")
+        .and_then(serde_json::Value::as_str);
+    let plan_format = capsule
+        .pointer("/plan/format")
+        .and_then(serde_json::Value::as_str);
+    if request_format != Some("vibevm.lifecycle.admitted-exact-local-install-request/1")
+        || plan_format != Some("vibevm.lifecycle.admitted-exact-local-install-plan/1")
+    {
+        return Ok(Some(FixedOperationStatus::RecoveryRequired {
+            run_id: Some(row.domain_run_id),
+            reason: "input capsule belongs to another lifecycle operation".into(),
+        }));
+    }
+    inspect_fixed_existing(lease, namespace, scope, key)
+}
+
 // Immutable input evidence belongs to the incumbent protected journal, not a
 // second result journal. Only the new profile publishes this capsule; default
 // v4 bytes and its existing inspection route stay unchanged.
@@ -1487,7 +1533,9 @@ impl SubmissionJournal for ProtectedJournal<'_> {
         if let Some(reason) = &self.post_effect_error {
             return Ok(JournalState::Uncertain(reason.clone()));
         }
-        if self.script.as_ref().is_some_and(|s| s.profile.is_some()) {
+        if self.script.as_ref().is_some_and(|s| s.profile.is_some())
+            || self.fixture.as_ref().is_some_and(|f| f.profile.is_some())
+        {
             let row = SubmissionReservations::inspect_existing_key(
                 lease,
                 self.namespace,
@@ -1583,7 +1631,9 @@ impl SubmissionJournal for ProtectedJournal<'_> {
             if LifecycleStateStore::peek_with_lease(&lease)?.is_some() {
                 sequential_runs::inspect_previous_terminal(&lease, run_id)?;
             }
-            if self.script.as_ref().is_some_and(|s| s.profile.is_some()) {
+            if self.script.as_ref().is_some_and(|s| s.profile.is_some())
+                || self.fixture.as_ref().is_some_and(|f| f.profile.is_some())
+            {
                 let bytes = admitted_capsule(&self.canonical_request, self.canonical_plan)?;
                 let home = lease
                     .publication_journal_project()

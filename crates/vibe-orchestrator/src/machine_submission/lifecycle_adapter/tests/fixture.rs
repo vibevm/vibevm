@@ -639,6 +639,357 @@ fn one_package_install_is_staged_then_retained_and_replayed_without_second_effec
 }
 
 #[test]
+fn approved_local_install_capsule_is_required_for_cold_result() {
+    let _guard = fixture_guard();
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    let factory = Arc::new(FixtureFactory::new(
+        source
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .to_path_buf(),
+    ));
+    let scope = scope();
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    let policy_source = crate::machine_submission::TrustedPolicySource::from_host_identifier(
+        "fixture/exact-local-install/e1".into(),
+    )
+    .unwrap();
+    crate::machine_submission::PolicyOwner::initialize_under_lease(
+        &lease,
+        &scope,
+        policy_source,
+        crate::machine_submission::HostPolicyFacts {
+            approve_captured_script: false,
+            approve_exact_local_install: true,
+            allow_detach: false,
+            allow_cancel_pre_dispatch: false,
+            allow_cancel_deferred_boundary: false,
+        },
+    )
+    .unwrap();
+    drop(lease);
+    let namespace = issue(&project, &scope);
+    let policy = Arc::new(
+        crate::machine_submission::PolicyOwner::attach_readonly(
+            Arc::new(vibe_safefs::Project::open(&project).unwrap()),
+            scope.clone(),
+        )
+        .unwrap(),
+    );
+    let source_port: Arc<dyn BoundOnePackageSource> = factory.clone();
+    let host = Arc::new(
+        crate::machine_submission::ExactLocalInstallDecisionHost::from_host(
+            project.clone(),
+            policy,
+            source_port,
+            TargetOs::current().unwrap(),
+        )
+        .unwrap(),
+    );
+    let question = host
+        .prepare_requested_options(crate::machine_operation::input_decision::RequestedOptions {
+            force: false,
+            trace: false,
+            deploy_profile: None,
+            control: crate::machine_operation::input_decision::RequestedOptionsControl::None,
+        })
+        .unwrap();
+    let mut answer = question.clone();
+    answer.body = crate::machine_operation::input_decision::Body::ApprovalAnswer(Box::new(
+        crate::machine_operation::input_decision::BodyApprovalAnswer { approved: true },
+    ));
+    let evidence = host.answer_typed(&answer).unwrap();
+    let first = host
+        .submit_approved(
+            &evidence,
+            &namespace,
+            "approved-install",
+            "2026-10-05T00:00:05Z".parse().unwrap(),
+        )
+        .unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("approved Install must invoke exactly once: {first:?}")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Completed);
+    let capsule = project
+        .join(".vibe/lifecycle-outcomes")
+        .join(format!("{run_id}.admitted-input.json"));
+    assert!(capsule.is_file());
+    let snapshot = host
+        .inspect_existing(&namespace, "approved-install")
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        snapshot.operation_id(),
+        "rust:vibe-lifecycle:install-exact-local"
+    );
+    assert!(matches!(
+        snapshot.status(),
+        Some(FixedOperationStatus::ResultAvailable { .. })
+    ));
+    let original = std::fs::read(&capsule).unwrap();
+    std::fs::write(&capsule, b"changed capsule").unwrap();
+    let damaged = host
+        .inspect_existing(&namespace, "approved-install")
+        .unwrap()
+        .unwrap();
+    assert!(matches!(
+        damaged.status(),
+        Some(FixedOperationStatus::RecoveryRequired { .. })
+    ));
+    std::fs::remove_file(&capsule).unwrap();
+    let missing = host
+        .inspect_existing(&namespace, "approved-install")
+        .unwrap()
+        .unwrap();
+    assert!(matches!(
+        missing.status(),
+        Some(FixedOperationStatus::RecoveryRequired { .. })
+    ));
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    std::fs::write(&capsule, original).unwrap();
+    assert!(matches!(
+        host.inspect_existing(&namespace, "approved-install")
+            .unwrap()
+            .unwrap()
+            .status(),
+        Some(FixedOperationStatus::ResultAvailable { .. })
+    ));
+    // The domain has already applied the package. Remove only its final
+    // report payload under this isolated test root; the retained marker and
+    // C1 key must not turn a later Err into NoEffects or lose run/phase.
+    std::fs::remove_file(
+        project
+            .join(".vibe/lifecycle-outcomes")
+            .join(format!("{run_id}.report.json")),
+    )
+    .unwrap();
+    let route =
+        crate::machine_operation::exact_local_install::ExactLocalInstallRoute::new(host, namespace);
+    let input = vibe_wire::generated::machine::e1::operation_envelope::OperationEnvelope {
+        schema: 1,
+        operation_id: Some("rust:vibe-lifecycle:install-exact-local".into()),
+        domain_owner: Some("rust:vibe-lifecycle".into()),
+        source_id: None,
+        evidence_id: None,
+        body: vibe_wire::generated::machine::e1::operation_envelope::Body::Input(Box::new(
+            vibe_wire::generated::machine::e1::operation_envelope::BodyInput {
+                format_id: vibe_wire::generated::format_id::FormatId::MachineLifecycleActionRequest
+                    .id()
+                    .into(),
+                payload_json: serde_json::to_string(&serde_json::json!({
+                    "schema": 1, "action": {"kind": "inspect", "key": "approved-install"}
+                }))
+                .unwrap(),
+            },
+        )),
+    };
+    let error =
+        crate::machine_operation::exact_local_install::ExactLocalInstallRoute::exchange_local(
+            Some(&route),
+            &serde_json::to_vec(&input).unwrap(),
+            &project,
+        )
+        .unwrap();
+    let vibe_wire::generated::machine::e1::operation_envelope::Body::Error(error) = error.body
+    else {
+        panic!("missing final report must publish structured owner error")
+    };
+    assert_eq!(
+        error.effect_state,
+        vibe_wire::generated::machine::e1::operation_envelope::BodyErrorEffectState::Uncertain
+    );
+    assert_eq!(error.provenance_id.as_deref(), Some(run_id.as_str()));
+    let action_error: vibe_wire::generated::machine::e1::lifecycle_action_error::LifecycleActionError =
+        serde_json::from_str(error.payload_json.as_deref().unwrap()).unwrap();
+    assert_eq!(action_error.requested_phase.as_deref(), Some("install"));
+    assert_eq!(action_error.known_run_id.as_deref(), Some(run_id.as_str()));
+    let view: crate::machine_operation::lifecycle_view::LifecycleSubmissionView =
+        serde_json::from_str(action_error.view_json.as_deref().unwrap()).unwrap();
+    assert!(view.partial);
+    assert_eq!(view.run_id.as_deref(), Some(run_id.as_str()));
+}
+
+#[test]
+fn exact_local_install_action_routes_share_one_c1_run_and_effect() {
+    use crate::machine_operation::exact_local_install::ExactLocalInstallRoute;
+    use crate::machine_operation::fixed_lifecycle::contract::{LifecycleActionReply, Reply};
+
+    let _guard = fixture_guard();
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    let factory = Arc::new(FixtureFactory::new(
+        source
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .to_path_buf(),
+    ));
+    let scope = scope();
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    crate::machine_submission::PolicyOwner::initialize_under_lease(
+        &lease,
+        &scope,
+        crate::machine_submission::TrustedPolicySource::from_host_identifier(
+            "fixture/exact-local-route/e1".into(),
+        )
+        .unwrap(),
+        crate::machine_submission::HostPolicyFacts {
+            approve_captured_script: false,
+            approve_exact_local_install: true,
+            allow_detach: false,
+            allow_cancel_pre_dispatch: false,
+            allow_cancel_deferred_boundary: false,
+        },
+    )
+    .unwrap();
+    drop(lease);
+    let namespace = issue(&project, &scope);
+    let policy = Arc::new(
+        crate::machine_submission::PolicyOwner::attach_readonly(
+            Arc::new(vibe_safefs::Project::open(&project).unwrap()),
+            scope,
+        )
+        .unwrap(),
+    );
+    let source_port: Arc<dyn BoundOnePackageSource> = factory.clone();
+    let host = Arc::new(
+        crate::machine_submission::ExactLocalInstallDecisionHost::from_host(
+            project.clone(),
+            policy,
+            source_port,
+            TargetOs::current().unwrap(),
+        )
+        .unwrap(),
+    );
+    let first = ExactLocalInstallRoute::new(host.clone(), namespace.clone());
+    let second = ExactLocalInstallRoute::new(host, namespace);
+    let action = |route: &ExactLocalInstallRoute, value: serde_json::Value| {
+        ExactLocalInstallRoute::dispatch(
+            Some(route),
+            &serde_json::to_vec(&value).unwrap(),
+            &project,
+        )
+    };
+    let prepare = serde_json::json!({
+        "schema": 1,
+        "action": {"kind": "prepare", "phase": "install", "requested_options": {
+            "force": false, "trace": false, "deploy_profile": null, "control": "none"
+        }}
+    });
+    let question = action(&first, prepare.clone()).unwrap();
+    let Reply::Question(question) = question.reply else {
+        panic!("Install question expected")
+    };
+    let mut answer: crate::machine_operation::input_decision::InputDecisionMessage =
+        serde_json::from_str(&question.payload_json).unwrap();
+    let mut denied = answer.clone();
+    denied.body = crate::machine_operation::input_decision::Body::ApprovalAnswer(Box::new(
+        crate::machine_operation::input_decision::BodyApprovalAnswer { approved: false },
+    ));
+    let false_approval = action(&first, serde_json::json!({
+        "schema": 1, "action": {"kind": "answer", "message_json": serde_json::to_string(&denied).unwrap()}
+    })).unwrap_err();
+    assert_eq!(
+        false_approval.error.requested_phase.as_deref(),
+        Some("install")
+    );
+    answer.body = crate::machine_operation::input_decision::Body::ApprovalAnswer(Box::new(
+        crate::machine_operation::input_decision::BodyApprovalAnswer { approved: true },
+    ));
+    let answer_action = serde_json::json!({
+        "schema": 1, "action": {"kind": "answer", "message_json": serde_json::to_string(&answer).unwrap()}
+    });
+    let validated = action(&first, answer_action.clone()).unwrap();
+    let Reply::Validated(validated) = validated.reply else {
+        panic!("Install acceptance expected")
+    };
+    let same = action(&second, answer_action).unwrap();
+    let Reply::Validated(same) = same.reply else {
+        panic!("same owner acceptance expected")
+    };
+    assert_eq!(validated.plan_id, same.plan_id);
+    let submit = |reference: &str| {
+        serde_json::json!({
+            "schema": 1, "action": {"kind": "submit", "accepted_ref": reference, "key": "shared"}
+        })
+    };
+    let original = action(&first, submit(&validated.accepted_ref)).unwrap();
+    let replay = action(&second, submit(&same.accepted_ref)).unwrap();
+    let Reply::Submitted(original) = original.reply else {
+        panic!("submitted view expected")
+    };
+    let Reply::Submitted(replay) = replay.reply else {
+        panic!("replayed view expected")
+    };
+    assert_eq!(original.payload_json, replay.payload_json);
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    let view: crate::machine_operation::lifecycle_view::LifecycleSubmissionView =
+        serde_json::from_str(&original.payload_json).unwrap();
+    assert_eq!(view.operation_id, "rust:vibe-lifecycle:install-exact-local");
+    assert_eq!(view.requested_phase, "install");
+    assert!(view.run_id.is_some());
+    let _typed: LifecycleActionReply = action(
+        &second,
+        serde_json::json!({
+            "schema": 1, "action": {"kind": "inspect", "key": "shared"}
+        }),
+    )
+    .unwrap();
+    let local_inspect = vibe_wire::generated::machine::e1::operation_envelope::OperationEnvelope {
+        schema: 1,
+        operation_id: Some("rust:vibe-lifecycle:install-exact-local".into()),
+        domain_owner: Some("rust:vibe-lifecycle".into()),
+        source_id: None,
+        evidence_id: None,
+        body: vibe_wire::generated::machine::e1::operation_envelope::Body::Input(Box::new(
+            vibe_wire::generated::machine::e1::operation_envelope::BodyInput {
+                format_id: vibe_wire::generated::format_id::FormatId::MachineLifecycleActionRequest
+                    .id()
+                    .into(),
+                payload_json: serde_json::to_string(&serde_json::json!({
+                    "schema": 1, "action": {"kind": "inspect", "key": "shared"}
+                }))
+                .unwrap(),
+            },
+        )),
+    };
+    let local = ExactLocalInstallRoute::exchange_local(
+        Some(&second),
+        &serde_json::to_vec(&local_inspect).unwrap(),
+        &project,
+    )
+    .unwrap();
+    let vibe_wire::generated::machine::e1::operation_envelope::Body::Result(result) = local.body
+    else {
+        panic!("local Install must publish a generated result envelope: {local:?}")
+    };
+    assert_ne!(
+        result.effect_state,
+        vibe_wire::generated::machine::e1::operation_envelope::BodyResultEffectState::NoEffects
+    );
+    assert_eq!(result.provenance_id, view.run_id);
+    let changed = action(
+        &second,
+        serde_json::json!({
+            "schema": 1, "action": {"kind": "prepare", "phase": "install", "requested_options": {
+                "force": true, "trace": false, "deploy_profile": null, "control": "none"
+            }}
+        }),
+    )
+    .unwrap_err();
+    assert_eq!(changed.error.requested_phase.as_deref(), Some("install"));
+}
+
+#[test]
 fn another_exact_local_package_uses_its_own_reserved_install_plan() {
     let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());

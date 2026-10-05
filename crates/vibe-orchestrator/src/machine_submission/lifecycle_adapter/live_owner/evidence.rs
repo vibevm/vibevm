@@ -57,6 +57,7 @@ impl ObservedWork {
 /// No constructor, serialization, or capability promotion is provided.
 #[derive(Debug, Clone)]
 pub struct FixedOwnerEvidenceSnapshot {
+    operation_id: &'static str,
     requested_scope: SubmissionScope,
     requested_phase: Phase,
     bound_scope: Option<SubmissionScope>,
@@ -81,7 +82,7 @@ impl FixedOwnerEvidenceSnapshot {
         self.requested_phase
     }
     pub fn operation_id(&self) -> &'static str {
-        FIXED_OPERATION
+        self.operation_id
     }
     pub fn bound_scope(&self) -> Option<&SubmissionScope> {
         self.bound_scope.as_ref()
@@ -254,6 +255,7 @@ pub(super) fn sample(
         .map(|b| b.coordinates.scope.clone())
         .or_else(|| known_run.as_ref().map(|_| scope.clone()));
     project(
+        FIXED_OPERATION,
         scope,
         shared.requested_phase,
         known_scope,
@@ -268,6 +270,21 @@ pub(in crate::machine_submission) fn cold_snapshot(
     scope: &SubmissionScope,
     status: FixedOperationStatus,
 ) -> Result<FixedOwnerEvidenceSnapshot> {
+    cold_snapshot_for_phase(scope, Phase::Validate, FIXED_OPERATION, status)
+}
+
+pub(in crate::machine_submission) fn cold_snapshot_for_phase(
+    scope: &SubmissionScope,
+    phase: Phase,
+    operation_id: &'static str,
+    status: FixedOperationStatus,
+) -> Result<FixedOwnerEvidenceSnapshot> {
+    ensure!(
+        (phase == Phase::Validate && operation_id == FIXED_OPERATION)
+            || (phase == Phase::Install
+                && operation_id == "rust:vibe-lifecycle:install-exact-local"),
+        "cold evidence operation/phase mismatch"
+    );
     if let FixedOperationStatus::ResultAvailable {
         report_bytes: Some(bytes),
         ..
@@ -275,8 +292,8 @@ pub(in crate::machine_submission) fn cold_snapshot(
     {
         let report: LifecycleReport = serde_json::from_slice(bytes)?;
         ensure!(
-            report.command == "lifecycle" && report.requested == "validate",
-            "cold evidence refuses non-fixed Validate profile"
+            report.command == "lifecycle" && report.requested == phase.as_str(),
+            "cold evidence refuses a different lifecycle phase"
         );
     }
     let run = match &status {
@@ -288,8 +305,9 @@ pub(in crate::machine_submission) fn cold_snapshot(
         _ => None,
     };
     Ok(project(
+        operation_id,
         scope,
-        Phase::Validate,
+        phase,
         run.as_ref().map(|_| scope.clone()),
         run,
         Ledger::default(),
@@ -328,6 +346,7 @@ fn diagnostic(error: &anyhow::Error) -> (String, bool) {
     (writer.text, writer.truncated)
 }
 fn project(
+    operation_id: &'static str,
     scope: &SubmissionScope,
     requested_phase: Phase,
     bound_scope: Option<SubmissionScope>,
@@ -380,6 +399,7 @@ fn project(
                 .zip(ledger.terminals)
                 .is_none_or(|(total, count)| total != count));
     FixedOwnerEvidenceSnapshot {
+        operation_id,
         requested_scope: scope.clone(),
         requested_phase,
         bound_scope,
@@ -405,3 +425,37 @@ fn project(
 mod native_tests;
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod install_operation_identity_tests {
+    use super::*;
+
+    #[test]
+    fn unsealed_install_snapshot_cannot_claim_exact_local_operation() {
+        let scope = SubmissionScope {
+            context: "context".into(),
+            target: "target".into(),
+            principal: "principal".into(),
+        };
+        let unsealed = project(
+            FIXED_OPERATION,
+            &scope,
+            Phase::Install,
+            None,
+            None,
+            Ledger::default(),
+            Ok(FixedOperationStatus::Starting),
+        );
+        assert_eq!(unsealed.operation_id(), FIXED_OPERATION);
+        assert!(crate::machine_operation::lifecycle_view::project_snapshot(&unsealed).is_err());
+        assert!(
+            cold_snapshot_for_phase(
+                &scope,
+                Phase::Validate,
+                "rust:vibe-lifecycle:install-exact-local",
+                FixedOperationStatus::Starting,
+            )
+            .is_err()
+        );
+    }
+}
