@@ -42,6 +42,7 @@ pub use policy_owner::{PolicyError, PolicyOwner, PolicySnapshot, TrustedPolicySo
 
 pub mod cargo_grant;
 pub mod cli_grant;
+pub mod deploy_grant;
 pub mod package_grant;
 
 mod lifecycle_decisions;

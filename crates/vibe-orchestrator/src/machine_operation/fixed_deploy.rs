@@ -2,9 +2,11 @@
 //! The lifecycle deploy bridge alone owns C1 reservation and destination truth.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE");
 
+use crate::machine_submission::{HostPolicyFacts, PolicyError, PolicyOwner, TrustedPolicySource};
 use std::sync::Arc;
 use vibe_core::manifest::{DeployTarget, ExtensionHandler, MechanismRoutes, ProviderPin};
 use vibe_extension_registry::{MechanismRegistry, resolve_mechanism};
+use vibe_lifecycle::process::SelectedFileWitness;
 use vibe_lifecycle::{
     ClientExecutables, DeployError, DeployExecution, DeploySelection, LifecycleLease,
     LifecycleLeaseError, SubmissionError, SubmissionNamespace, SubmissionReservations,
@@ -34,6 +36,7 @@ pub enum FixedDeployHostError {
     Root(String),
     Lease(LifecycleLeaseError),
     Namespace(SubmissionError),
+    Policy(PolicyError),
     Admission(RetainedMechanismError),
     Submit(FixedDeploySubmitError),
     Inspect(RetainedMechanismError),
@@ -71,7 +74,114 @@ pub struct FixedDeployHost {
     admission_epoch: u32,
     generation: Arc<GenerationObserver>,
     state_home: std::path::PathBuf,
+    policy: Option<(Arc<PolicyOwner>, TrustedPolicySource, String, String)>,
 }
+
+pub(crate) fn deploy_policy_facts() -> HostPolicyFacts {
+    HostPolicyFacts {
+        approve_captured_script: false,
+        allow_detach: false,
+        allow_cancel_pre_dispatch: false,
+        allow_cancel_deferred_boundary: false,
+    }
+}
+
+/// Old-key recovery after the trusted host facts changed. This carrier has no
+/// submit method and cannot turn retained pointer values into effect authority.
+pub struct FixedDeployRecoveryHost {
+    project: Arc<Project>,
+    settings: Arc<Project>,
+    home: Arc<Project>,
+    root_tokens: [String; 3],
+    namespace: SubmissionNamespace,
+    scope: SubmissionScope,
+    selected_generation_ref: Option<String>,
+    binding_nonce: String,
+    admission_epoch: u32,
+}
+
+impl FixedDeployRecoveryHost {
+    /// Only a pointer owner that has checked the old binding under the
+    /// incumbent lease may reconstitute these held facts.
+    #[allow(
+        clippy::too_many_arguments,
+        reason = "recovery facts remain explicit and cannot be confused with current host policy"
+    )]
+    pub(crate) fn from_pinned(
+        project: Arc<Project>,
+        settings: Arc<Project>,
+        home: Arc<Project>,
+        root_tokens: [String; 3],
+        namespace: SubmissionNamespace,
+        scope: SubmissionScope,
+        selected_generation_ref: Option<String>,
+        binding_nonce: String,
+        admission_epoch: u32,
+    ) -> Result<Self, FixedDeployHostError> {
+        let host = Self {
+            project,
+            settings,
+            home,
+            root_tokens,
+            namespace,
+            scope,
+            selected_generation_ref,
+            binding_nonce,
+            admission_epoch,
+        };
+        host.check_roots(None)?;
+        Ok(host)
+    }
+
+    pub fn inspect(&self, key: &str) -> Result<DeployInspection, FixedDeployHostError> {
+        self.check_roots(None)?;
+        let lease = LifecycleLease::acquire(self.project.root_path())
+            .map_err(FixedDeployHostError::Lease)?;
+        self.check_roots(Some(&lease))?;
+        SubmissionReservations::validate_namespace(&lease, &self.namespace, &self.scope)
+            .map_err(FixedDeployHostError::Namespace)?;
+        let admission = ReadOnlyDeployAdmission::reissue(DeployColdHostFacts {
+            host_context_id: &self.scope.context,
+            instance_ref: &self.scope.target,
+            selected_generation_ref: self.selected_generation_ref.as_deref(),
+            principal_ref: &self.scope.principal,
+            admission_epoch: self.admission_epoch,
+            binding_nonce: &self.binding_nonce,
+            allow_alias_resolution: false,
+            target_abi: None,
+            target_libc: None,
+            project_root: self.project.root_path(),
+            settings_root: self.settings.root_path(),
+            user_home: self.home.root_path(),
+        })
+        .map_err(FixedDeployHostError::Admission)?;
+        let result = inspect_bound_vibe_bin_deploy(
+            &lease,
+            self.namespace.id(),
+            &self.scope,
+            key,
+            &admission,
+        )
+        .map_err(FixedDeployHostError::Inspect)?;
+        self.check_roots(Some(&lease))
+            .map_err(|cause| FixedDeployHostError::PostOwner {
+                observation: result.clone(),
+                cause: Box::new(cause),
+            })?;
+        Ok(result)
+    }
+
+    fn check_roots(&self, lease: Option<&LifecycleLease>) -> Result<(), FixedDeployHostError> {
+        check_held_roots(
+            &self.project,
+            &self.settings,
+            &self.home,
+            &self.root_tokens,
+            lease,
+        )
+    }
+}
+
 impl FixedDeployHost {
     #[allow(
         clippy::too_many_arguments,
@@ -158,11 +268,41 @@ impl FixedDeployHost {
             admission_epoch,
             generation,
             state_home,
+            policy: None,
         };
         let lease = host.lease()?;
         SubmissionReservations::validate_namespace(&lease, &host.namespace, &host.scope)
             .map_err(FixedDeployHostError::Namespace)?;
         Ok(host)
+    }
+
+    /// Attach the current durable policy observation to this effectful host.
+    /// Every submit re-reads it under the same lease as C1 admission.
+    pub(crate) fn bind_shared_policy(
+        mut self,
+        owner: Arc<PolicyOwner>,
+        source: TrustedPolicySource,
+        generation: String,
+        manifest_sha256: String,
+    ) -> Result<Self, FixedDeployHostError> {
+        if owner.scope() != &self.scope {
+            return Err(FixedDeployHostError::Policy(PolicyError::ForeignScope));
+        }
+        let lease = self.lease()?;
+        let current = owner
+            .current_under_lease(&lease)
+            .map_err(FixedDeployHostError::Policy)?;
+        if current.source() != &source
+            || current.facts() != &deploy_policy_facts()
+            || current.generation() != generation
+            || self.current_manifest_hash()? != manifest_sha256
+        {
+            return Err(FixedDeployHostError::Policy(
+                PolicyError::StartupDisagreement,
+            ));
+        }
+        self.policy = Some((owner, source, generation, manifest_sha256));
+        Ok(self)
     }
 
     fn facts(&self) -> DeployColdHostFacts<'_> {
@@ -205,6 +345,20 @@ impl FixedDeployHost {
         let lease = self.lease()?;
         SubmissionReservations::validate_namespace(&lease, &self.namespace, &self.scope)
             .map_err(FixedDeployHostError::Namespace)?;
+        if let Some((owner, source, generation, manifest_sha256)) = &self.policy {
+            let current = owner
+                .current_under_lease(&lease)
+                .map_err(FixedDeployHostError::Policy)?;
+            if current.source() != source
+                || current.facts() != &deploy_policy_facts()
+                || current.generation() != generation
+                || self.current_manifest_hash()? != *manifest_sha256
+            {
+                return Err(FixedDeployHostError::Policy(
+                    PolicyError::StartupDisagreement,
+                ));
+            }
+        }
         let selection = DeploySelection {
             profile: self.profile.clone(),
             targets: vec![self.target.id.clone()],
@@ -259,35 +413,59 @@ impl FixedDeployHost {
         self.check_roots(Some(&lease))?;
         Ok(lease)
     }
-    fn check_roots(&self, lease: Option<&LifecycleLease>) -> Result<(), FixedDeployHostError> {
-        for (root, token) in [
-            (&self.project, &self.root_tokens[0]),
-            (&self.settings, &self.root_tokens[1]),
-            (&self.home, &self.root_tokens[2]),
-        ] {
-            if root.root_correlation_token().map_err(root_error)? != *token
-                || Project::open(root.root_path())
-                    .map_err(root_error)?
-                    .root_correlation_token()
-                    .map_err(root_error)?
-                    != *token
-            {
-                return Err(FixedDeployHostError::ForeignRoot);
-            }
-        }
-        if let Some(lease) = lease {
-            if lease.root() != self.project.root_path()
-                || lease
-                    .publication_journal_project()
-                    .root_correlation_token()
-                    .map_err(root_error)?
-                    != self.root_tokens[0]
-            {
-                return Err(FixedDeployHostError::ForeignRoot);
-            }
-        }
-        Ok(())
+    fn current_manifest_hash(&self) -> Result<String, FixedDeployHostError> {
+        let bytes = self
+            .project
+            .read_file_bounded("vibe.toml", 1024 * 1024)
+            .map_err(root_error)?
+            .ok_or_else(|| FixedDeployHostError::InvalidHost("missing authored manifest".into()))?;
+        Ok(SelectedFileWitness::from_bytes(bytes).sha256)
     }
+    fn check_roots(&self, lease: Option<&LifecycleLease>) -> Result<(), FixedDeployHostError> {
+        check_held_roots(
+            &self.project,
+            &self.settings,
+            &self.home,
+            &self.root_tokens,
+            lease,
+        )
+    }
+}
+
+fn check_held_roots(
+    project: &Project,
+    settings: &Project,
+    home: &Project,
+    root_tokens: &[String; 3],
+    lease: Option<&LifecycleLease>,
+) -> Result<(), FixedDeployHostError> {
+    for (root, token) in [
+        (project, &root_tokens[0]),
+        (settings, &root_tokens[1]),
+        (home, &root_tokens[2]),
+    ] {
+        if root.root_correlation_token().map_err(root_error)? != *token
+            || Project::open(root.root_path())
+                .map_err(root_error)?
+                .root_correlation_token()
+                .map_err(root_error)?
+                != *token
+        {
+            return Err(FixedDeployHostError::ForeignRoot);
+        }
+    }
+    if let Some(lease) = lease {
+        if lease.root() != project.root_path()
+            || lease
+                .publication_journal_project()
+                .root_correlation_token()
+                .map_err(root_error)?
+                != root_tokens[0]
+        {
+            return Err(FixedDeployHostError::ForeignRoot);
+        }
+    }
+    Ok(())
 }
 fn root_error(error: impl std::fmt::Display) -> FixedDeployHostError {
     FixedDeployHostError::Root(error.to_string())
