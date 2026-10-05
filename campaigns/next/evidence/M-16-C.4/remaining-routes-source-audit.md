@@ -87,3 +87,18 @@ instead of being misreported as successful recapture with `SourceDrift`.
 This evidence cannot invoke Install or approve the Install confirmation gate:
 there is still no sealed C1/C2 submission profile or CLI/MCP/local API route.
 The four C.4 steps remain open.
+
+**Sealed exact local Install submit.** The owner now consumes its retained true
+answer into a private profile. An admitted request and plan wrap the v3 source
+and plan with scope, policy generation, approved options and resulting plan;
+same-key replay checks the seal and physical root before attaching to C1, even
+after Install has changed manifest/lock. A new key repeats current policy,
+source and v3 plan checks under the incumbent lease immediately before C1.
+The actual nonempty Install test invokes once and replays the same run without
+a second fetch; a revised policy and changed source refuse before C1, and a
+different admitted intent conflicts on the same key. Typed refusal causes
+survive the adapter. The focused fixture family passes 16/16 and the typed
+decision family 4/4. The accepted-answer seal is process-local, so cold result
+inspection is available but effectful submit cannot be reconstructed after a
+process restart. No CLI/MCP/local API route or general phase result projection
+is claimed; C.4 remains open.

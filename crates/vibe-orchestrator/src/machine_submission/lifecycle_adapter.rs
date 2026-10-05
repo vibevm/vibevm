@@ -90,6 +90,7 @@ use crate::prelude::selected_under_lease;
 
 mod install;
 pub(in crate::machine_submission) use install::preflight_one_package_local_install_under_lease;
+pub(in crate::machine_submission) use install::submit_approved_one_package_local_install;
 #[allow(
     dead_code,
     reason = "private host integration atom; no public surface yet"
@@ -112,6 +113,7 @@ pub use live_owner::{
 /// internal until the operation's typed admission and adapters are complete.
 struct FixtureSourcePort<'a> {
     factory: &'a dyn BoundOnePackageSource,
+    profile: Option<&'a super::exact_local_install_decision::AdmittedExactLocalInstallProfile<'a>>,
     after_stage: Option<&'a dyn Fn()>,
     confirm: Option<&'a dyn ConfirmGate>,
 }
@@ -119,6 +121,7 @@ struct FixtureSourcePort<'a> {
 struct FixtureRuntime<'a> {
     witness: PackageTreeWitness,
     factory: &'a dyn BoundOnePackageSource,
+    profile: Option<&'a super::exact_local_install_decision::AdmittedExactLocalInstallProfile<'a>>,
     after_stage: Option<&'a dyn Fn()>,
     confirm: Option<&'a dyn ConfirmGate>,
 }
@@ -890,10 +893,21 @@ fn submit_protected_lifecycle_inner<'a>(
         .map(|fixture| {
             ensure!(phase == Phase::Install, "fixture source is Install-only");
             let witness = fixture.factory.source_witness().clone();
-            fixture.factory.recheck_source_binding(&witness)?;
+            fixture.factory.recheck_source_binding(&witness).map_err(|error| {
+                if fixture.profile.is_some() {
+                    anyhow::Error::new(
+                        super::exact_local_install_decision::ExactLocalInstallDecisionError::SourceUnavailable(
+                            format!("{error:#}"),
+                        ),
+                    )
+                } else {
+                    error
+                }
+            })?;
             Ok(FixtureRuntime {
                 witness,
                 factory: fixture.factory,
+                profile: fixture.profile,
                 after_stage: fixture.after_stage,
                 confirm: fixture.confirm,
             })
@@ -906,7 +920,7 @@ fn submit_protected_lifecycle_inner<'a>(
             script.admitted = preflight_one_script_under_lease(&leased, &base, target_os)?;
         }
     }
-    let canonical_request = if let Some(agent) = &agent {
+    let base_request = if let Some(agent) = &agent {
         agent.admitted.canonical_request.clone()
     } else if let Some(script) = &script {
         if let Some(profile) = script.profile {
@@ -918,6 +932,12 @@ fn submit_protected_lifecycle_inner<'a>(
         canonical_one_package_fixture_request(&fixture.witness, target_os)?
     } else {
         request_bytes(phase, target_os).to_vec()
+    };
+    let canonical_request = if let Some(profile) = fixture.as_ref().and_then(|f| f.profile) {
+        profile.guard_before_attach(&lease, scope, &base_request)?;
+        profile.request(&base_request)?
+    } else {
+        base_request.clone()
     };
     if let Some(attached) =
         attach_existing_lifecycle(&lease, namespace, scope, key, &canonical_request)?
@@ -1094,6 +1114,9 @@ fn submit_protected_lifecycle_inner<'a>(
         } else {
             plan
         }
+    } else if let Some(profile) = fixture.as_ref().and_then(|f| f.profile) {
+        profile.guard_fresh(&leased, &base_request, &plan)?;
+        profile.plan(&plan)?
     } else {
         plan
     };

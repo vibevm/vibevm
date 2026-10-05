@@ -223,3 +223,39 @@ fn exact_local_install_policy_bit_is_independent_from_approval() {
         ExactLocalInstallDecisionError::PolicyDenied
     );
 }
+
+#[test]
+fn exact_local_install_foreign_evidence_cannot_enter_submit() {
+    let (_dir, root, policy, source) = setup();
+    let first = host(root.clone(), Arc::clone(&policy), Arc::clone(&source));
+    let second = host(root.clone(), policy, source);
+    let question = first.prepare_requested_options(no_options()).unwrap();
+    let evidence = first.answer_typed(&answer(&question, true)).unwrap();
+    let namespace = {
+        let lease = LifecycleLease::acquire(&root).unwrap();
+        vibe_lifecycle::SubmissionReservations::issue_namespace(&lease, &scope(), 60_000).unwrap()
+    };
+    assert_eq!(
+        second
+            .submit_approved(
+                &evidence,
+                &namespace,
+                "foreign",
+                "2026-10-05T00:00:05Z".parse().unwrap()
+            )
+            .err()
+            .unwrap(),
+        ExactLocalInstallDecisionError::ForeignScope,
+    );
+    let lease = LifecycleLease::acquire(&root).unwrap();
+    assert!(
+        vibe_lifecycle::SubmissionReservations::inspect_existing_key(
+            &lease,
+            &namespace,
+            &scope(),
+            "foreign"
+        )
+        .unwrap()
+        .is_none()
+    );
+}

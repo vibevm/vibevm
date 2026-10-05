@@ -868,3 +868,238 @@ fn factory_bound_to_another_source_root_refuses_before_reservation() {
     assert_eq!(factory.builds.load(Ordering::SeqCst), 0);
     assert!(!project.join(".vibe/lifecycle-outcomes").exists());
 }
+
+fn approved_install_host(
+    project: &Path,
+    factory: Arc<FixtureFactory>,
+) -> crate::machine_submission::ExactLocalInstallDecisionHost {
+    use crate::machine_submission::{HostPolicyFacts, PolicyOwner, TrustedPolicySource};
+    let lease = LifecycleLease::acquire(project).unwrap();
+    PolicyOwner::initialize_under_lease(
+        &lease,
+        &scope(),
+        TrustedPolicySource::from_host_identifier("fixture-exact-install".into()).unwrap(),
+        HostPolicyFacts {
+            approve_captured_script: false,
+            approve_exact_local_install: true,
+            allow_detach: false,
+            allow_cancel_pre_dispatch: false,
+            allow_cancel_deferred_boundary: false,
+        },
+    )
+    .unwrap();
+    drop(lease);
+    let owner = Arc::new(
+        PolicyOwner::attach_readonly(
+            Arc::new(vibe_safefs::Project::open(project).unwrap()),
+            scope(),
+        )
+        .unwrap(),
+    );
+    crate::machine_submission::ExactLocalInstallDecisionHost::from_host(
+        project.to_path_buf(),
+        owner,
+        factory,
+        TargetOs::current().unwrap(),
+    )
+    .unwrap()
+}
+
+fn approved_install_evidence(
+    host: &crate::machine_submission::ExactLocalInstallDecisionHost,
+) -> crate::machine_submission::PreparedExactLocalInstallEvidence {
+    use crate::machine_operation::input_decision::{
+        Body, BodyApprovalAnswer, RequestedOptions, RequestedOptionsControl,
+    };
+    let question = host
+        .prepare_requested_options(RequestedOptions {
+            force: false,
+            trace: false,
+            deploy_profile: None,
+            control: RequestedOptionsControl::None,
+        })
+        .unwrap();
+    let mut answer = question.clone();
+    answer.body = Body::ApprovalAnswer(Box::new(BodyApprovalAnswer { approved: true }));
+    host.answer_typed(&answer).unwrap()
+}
+
+fn advance_install_policy_generation(project: &Path) {
+    use crate::machine_submission::{HostPolicyFacts, PolicyOwner, TrustedPolicySource};
+    let owner = PolicyOwner::attach_readonly(
+        Arc::new(vibe_safefs::Project::open(project).unwrap()),
+        scope(),
+    )
+    .unwrap();
+    let lease = LifecycleLease::acquire(project).unwrap();
+    let current = owner.current_under_lease(&lease).unwrap();
+    owner
+        .update_under_lease(
+            &lease,
+            current.generation(),
+            TrustedPolicySource::from_host_identifier("fixture-exact-install".into()).unwrap(),
+            HostPolicyFacts {
+                approve_captured_script: false,
+                approve_exact_local_install: true,
+                allow_detach: false,
+                allow_cancel_pre_dispatch: false,
+                allow_cancel_deferred_boundary: false,
+            },
+        )
+        .unwrap();
+}
+
+#[test]
+fn approved_local_install_reserves_wrapped_intent_and_replays_once() {
+    let _guard = fixture_guard();
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let factory = Arc::new(FixtureFactory::new(registry));
+    let host = approved_install_host(&project, Arc::clone(&factory));
+    let evidence = approved_install_evidence(&host);
+    let namespace = issue(&project, &scope());
+    let first = host
+        .submit_approved(
+            &evidence,
+            &namespace,
+            "approved",
+            "2026-10-05T00:00:05Z".parse().unwrap(),
+        )
+        .unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("approved Install must invoke: {first:?}")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Completed);
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    assert!(project.join("vibe.lock").is_file());
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    let row =
+        SubmissionReservations::inspect_existing_key(&lease, &namespace, &scope(), "approved")
+            .unwrap()
+            .unwrap();
+    let unapproved =
+        canonical_one_package_fixture_request(&factory.witness, TargetOs::current().unwrap())
+            .unwrap();
+    assert_ne!(
+        row.request_sha256,
+        vibe_lifecycle::process::SelectedFileWitness::from_bytes(unapproved).sha256
+    );
+    drop(lease);
+    let replay = host
+        .submit_approved(
+            &evidence,
+            &namespace,
+            "approved",
+            "2026-10-05T00:00:06Z".parse().unwrap(),
+        )
+        .unwrap();
+    assert_eq!(replay, SubmissionOutcome::Replayed { run_id, outcome });
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+
+    // A second true answer under a new policy generation has different
+    // admitted intent. Restore only the fixture's preflight files; C1 stays.
+    advance_install_policy_generation(&project);
+    std::fs::remove_file(project.join("vibe.lock")).unwrap();
+    std::fs::remove_file(project.join(".vibe/lifecycle.toml")).unwrap();
+    let changed = approved_install_evidence(&host);
+    let conflict = host
+        .submit_approved(
+            &changed,
+            &namespace,
+            "approved",
+            "2026-10-05T00:00:07Z".parse().unwrap(),
+        )
+        .unwrap_err()
+        .to_string();
+    assert!(conflict.contains("different request or plan"), "{conflict}");
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn approved_local_install_source_drift_refuses_before_c1_or_fetch() {
+    let _guard = fixture_guard();
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let factory = Arc::new(FixtureFactory::new(registry));
+    let host = approved_install_host(&project, Arc::clone(&factory));
+    let evidence = approved_install_evidence(&host);
+    let namespace = issue(&project, &scope());
+    std::fs::write(source.join("README.md"), b"changed before C1\n").unwrap();
+    let error = host
+        .submit_approved(
+            &evidence,
+            &namespace,
+            "drift",
+            "2026-10-05T00:00:05Z".parse().unwrap(),
+        )
+        .unwrap_err();
+    assert!(
+        matches!(
+            error,
+            crate::machine_submission::ExactLocalInstallDecisionError::SourceUnavailable(ref reason)
+                if reason.contains("changed") || reason.contains("witness")
+        ),
+        "{error}"
+    );
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    assert!(
+        SubmissionReservations::inspect_existing_key(&lease, &namespace, &scope(), "drift")
+            .unwrap()
+            .is_none()
+    );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 0);
+    assert!(!project.join("vibe.lock").exists());
+}
+
+#[test]
+fn approved_local_install_stale_policy_refuses_before_c1_or_fetch() {
+    let _guard = fixture_guard();
+    let (_dir, project, source) = setup();
+    let registry = source
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let factory = Arc::new(FixtureFactory::new(registry));
+    let host = approved_install_host(&project, Arc::clone(&factory));
+    let evidence = approved_install_evidence(&host);
+    let namespace = issue(&project, &scope());
+    advance_install_policy_generation(&project);
+    let error = host
+        .submit_approved(
+            &evidence,
+            &namespace,
+            "stale",
+            "2026-10-05T00:00:05Z".parse().unwrap(),
+        )
+        .unwrap_err();
+    assert_eq!(
+        error,
+        crate::machine_submission::ExactLocalInstallDecisionError::StalePolicy
+    );
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    assert!(
+        SubmissionReservations::inspect_existing_key(&lease, &namespace, &scope(), "stale")
+            .unwrap()
+            .is_none()
+    );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 0);
+}
