@@ -259,84 +259,85 @@ fn check(
             "selected snapshot does not reproduce the current composed map",
         ));
     }
-    let rust = rustcheck::check(
-        context,
-        snapshot.path(),
-        &policy.rust,
-        &composition.rust_symbol,
-        rust_inputs,
-    )?;
-    inputs.recheck(snapshot.path())?;
-    let lean_context = lean_ai_native_check::Context {
-        project_root: snapshot.path().to_path_buf(),
-        toolchain_dir: context.lean_toolchain_dir.clone(),
-    };
-    let lean_request = if let Some(saved) = saved {
-        let path = PathBuf::from("_selected_saved_lean.json");
-        fs::write(
-            snapshot.path().join(&path),
-            serde_json::to_vec(&saved.lean.proof).map_err(files::input)?,
-        )
-        .map_err(files::input)?;
-        lean_ai_native_check::Request::VerifyWitness {
-            carrier: composition.lean_carrier.clone().into(),
-            subject: subject.into(),
-            witness: path,
+    with_stable_composed_map(root, &loaded, &current_map_bytes, || {
+        let rust = rustcheck::check(
+            context,
+            snapshot.path(),
+            &policy.rust,
+            &composition.rust_symbol,
+            rust_inputs,
+        )?;
+        inputs.recheck(snapshot.path())?;
+        let lean_context = lean_ai_native_check::Context {
+            project_root: snapshot.path().to_path_buf(),
+            toolchain_dir: context.lean_toolchain_dir.clone(),
+        };
+        let lean_request = if let Some(saved) = saved {
+            let path = PathBuf::from("_selected_saved_lean.json");
+            fs::write(
+                snapshot.path().join(&path),
+                serde_json::to_vec(&saved.lean.proof).map_err(files::input)?,
+            )
+            .map_err(files::input)?;
+            lean_ai_native_check::Request::VerifyWitness {
+                carrier: composition.lean_carrier.clone().into(),
+                subject: subject.into(),
+                witness: path,
+            }
+        } else {
+            lean_ai_native_check::Request::Check {
+                carrier: composition.lean_carrier.clone().into(),
+                subject: subject.into(),
+            }
+        };
+        let reply = lean_ai_native_check::execute(&lean_context, lean_request);
+        if !reply.ok {
+            let error = reply.error.ok_or_else(|| {
+                Diagnostic::new("lean_checker_invalid", "Lean failure lacked a diagnostic")
+            })?;
+            return Err(Diagnostic::new(
+                format!("lean_{}", error.code),
+                error.message,
+            ));
         }
-    } else {
-        lean_ai_native_check::Request::Check {
-            carrier: composition.lean_carrier.clone().into(),
-            subject: subject.into(),
+        let value = reply
+            .result
+            .ok_or_else(|| Diagnostic::new("lean_checker_invalid", "Lean witness absent"))?;
+        let proof: ProofWitness = serde_json::from_value(if saved.is_some() {
+            value
+                .get("witness")
+                .cloned()
+                .ok_or_else(|| Diagnostic::new("lean_checker_invalid", "verified witness absent"))?
+        } else {
+            value
+        })
+        .map_err(|e| Diagnostic::new("lean_checker_invalid", e.to_string()))?;
+        let unit = current_map
+            .specUnits
+            .iter()
+            .find(|u| u.uri == subject)
+            .ok_or_else(|| Diagnostic::new("subject_mismatch", "map subject absent"))?;
+        if proof.subject != subject
+            || proof.spec.unit_hash != unit.contentHash
+            || proof.spec.revision != unit.revision.as_deref().copied()
+            || proof.grade != "g1_model"
+            || proof.outcome != "passed"
+        {
+            return Err(Diagnostic::new(
+                "subject_mismatch",
+                "fresh Lean witness does not bind the selected map unit",
+            ));
         }
-    };
-    let reply = lean_ai_native_check::execute(&lean_context, lean_request);
-    if !reply.ok {
-        let error = reply.error.ok_or_else(|| {
-            Diagnostic::new("lean_checker_invalid", "Lean failure lacked a diagnostic")
-        })?;
-        return Err(Diagnostic::new(
-            format!("lean_{}", error.code),
-            error.message,
-        ));
-    }
-    let value = reply
-        .result
-        .ok_or_else(|| Diagnostic::new("lean_checker_invalid", "Lean witness absent"))?;
-    let proof: ProofWitness = serde_json::from_value(if saved.is_some() {
-        value
-            .get("witness")
-            .cloned()
-            .ok_or_else(|| Diagnostic::new("lean_checker_invalid", "verified witness absent"))?
-    } else {
-        value
-    })
-    .map_err(|e| Diagnostic::new("lean_checker_invalid", e.to_string()))?;
-    let unit = current_map
-        .specUnits
-        .iter()
-        .find(|u| u.uri == subject)
-        .ok_or_else(|| Diagnostic::new("subject_mismatch", "map subject absent"))?;
-    if proof.subject != subject
-        || proof.spec.unit_hash != unit.contentHash
-        || proof.spec.revision != unit.revision.as_deref().copied()
-        || proof.grade != "g1_model"
-        || proof.outcome != "passed"
-    {
-        return Err(Diagnostic::new(
-            "subject_mismatch",
-            "fresh Lean witness does not bind the selected map unit",
-        ));
-    }
-    inputs.recheck(root)?;
-    inputs.recheck(snapshot.path())?;
-    rustcheck::recheck_toolchain(context, &rust)?;
-    if rustcheck::capture(root, &policy.rust, &mut Capture::default())? != rust.inputs {
-        return Err(Diagnostic::new(
-            "inputs_unstable",
-            "Rust source closure changed during checks",
-        ));
-    }
-    let witness = JoinedWitness {
+        inputs.recheck(root)?;
+        inputs.recheck(snapshot.path())?;
+        rustcheck::recheck_toolchain(context, &rust)?;
+        if rustcheck::capture(root, &policy.rust, &mut Capture::default())? != rust.inputs {
+            return Err(Diagnostic::new(
+                "inputs_unstable",
+                "Rust source closure changed during checks",
+            ));
+        }
+        let witness = JoinedWitness {
         schema: SCHEMA.into(), subject: subject.into(), grade: "g1_model".into(), correspondence: "not_established".into(), spec: proof.spec.clone(),
         consumer: files::binding("vibe.toml", &consumer), selection: files::binding("specmap.toml", &selection), policy: files::binding(policy_path, &policy_bytes), map_sha256: files::hash(current_map_bytes.as_bytes()),
         checker_source_sha256: checker_source_hash(), rust,
@@ -348,7 +349,34 @@ fn check(
             "Two equal file snapshots do not lock paths against future or intervening external writes".into(),
         ],
     };
-    Ok(witness)
+        Ok(witness)
+    })
+}
+
+/// Bind the complete scan result on both sides of the expensive checkers.
+/// Known-file rechecks alone cannot detect newly discovered scan-root members.
+/// These are two observations, not a lock against future/intervening writes.
+fn with_stable_composed_map<T>(
+    root: &Path,
+    loaded: &crate::composition::Loaded,
+    before: &str,
+    check: impl FnOnce() -> wire::Result<T>,
+) -> wire::Result<T> {
+    let checked = check()?;
+    let final_map = crate::composition::build(root, loaded, None).map_err(|error| {
+        Diagnostic::new(
+            "composition_unstable",
+            format!("complete map changed during checks: {error}"),
+        )
+    })?;
+    let after = specmap_core::index::to_canonical_bytes(&final_map).map_err(files::input)?;
+    if after != before {
+        return Err(Diagnostic::new(
+            "composition_unstable",
+            "complete map bytes changed during fresh checking",
+        ));
+    }
+    Ok(checked)
 }
 
 fn checker_source_hash() -> String {
