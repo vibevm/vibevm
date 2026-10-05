@@ -4,6 +4,7 @@ use super::*;
 fn exact_permissions_do_not_imply_the_other_cancellation_mode() {
     let pre = HostPolicyFacts {
         approve_captured_script: true,
+        approve_exact_local_install: false,
         allow_detach: false,
         allow_cancel_pre_dispatch: true,
         allow_cancel_deferred_boundary: false,

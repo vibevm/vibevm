@@ -375,6 +375,7 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
             args.ttl_ms,
             HostPolicyFacts {
                 approve_captured_script: args.approve_captured_script,
+                approve_exact_local_install: false,
                 allow_detach: args.allow_detach,
                 allow_cancel_pre_dispatch: args.allow_cancel_pre_dispatch,
                 allow_cancel_deferred_boundary: args.allow_cancel_deferred_boundary,

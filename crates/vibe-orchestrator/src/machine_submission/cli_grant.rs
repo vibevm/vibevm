@@ -129,7 +129,8 @@ fn valid_identity(text: &str) -> bool {
 /// let project = Arc::new(vibe_safefs::Project::open(std::path::Path::new("/authenticated/project"))?);
 /// let service = CliGrantService::from_trusted_host(project, "target".into(), "principal".into(),
 ///     TargetOs::Linux, TrustedPolicySource::from_host_identifier("host-config".into())?,
-///     HostPolicyFacts { approve_captured_script: true, allow_detach: false,
+///     HostPolicyFacts { approve_captured_script: true, approve_exact_local_install: false,
+///         allow_detach: false,
 ///         allow_cancel_pre_dispatch: false, allow_cancel_deferred_boundary: false })?;
 /// let first_host = service.issue(60_000)?;
 /// drop(first_host);

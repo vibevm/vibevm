@@ -62,11 +62,14 @@ Install cases pass serially. This still exposes no new machine operation or
 general registry choice; typed approval and cross-surface admission remain
 the next owner boundary.
 
-**Authority boundary before adapter work.** `PolicyOwner` currently persists
-`approve_captured_script` and three control permissions, with a generation
-derived from those facts. It has no Install permission; using that script bit
-would silently widen an existing grant. The new nonempty Install submit entry
-therefore remains visible only inside the lifecycle adapter. The next typed
-Install admission must add its own explicit trusted policy fact and bind the
-current generation, exact source witness and resulting plan before any C1
-reservation. The ordinary MCP `assume_yes` path cannot mint that evidence.
+**Authority boundary before adapter work.** At `1cc67a12f`, `PolicyOwner`
+persisted only `approve_captured_script` and three control permissions; using
+that script bit for Install would widen an existing grant. The nonempty Install
+submit entry was therefore confined to the lifecycle adapter. A subsequent
+policy atom adds `approve_exact_local_install`, denied by default for old
+records and every existing host startup. Enabling it changes the policy
+generation while the old denied generation remains byte-compatible. The
+permission still grants no effect by itself: a typed Install question,
+approval, exact source/resulting-plan binding and current-generation check
+before C1 remain to implement. The ordinary MCP `assume_yes` path cannot mint
+that evidence.

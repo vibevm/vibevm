@@ -235,6 +235,7 @@ fn root_error(error: impl std::fmt::Display) -> FixedCargoHostError {
 pub(crate) fn cargo_policy_facts() -> HostPolicyFacts {
     HostPolicyFacts {
         approve_captured_script: false,
+        approve_exact_local_install: false,
         allow_detach: false,
         allow_cancel_pre_dispatch: false,
         allow_cancel_deferred_boundary: false,

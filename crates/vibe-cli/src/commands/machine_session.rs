@@ -193,6 +193,7 @@ fn exchange(args: &MachineSessionArgs) -> Result<()> {
             TrustedPolicySource::from_host_identifier("vibe-cli/fixed-validate/e1".into())?,
             HostPolicyFacts {
                 approve_captured_script: args.approve_captured_script,
+                approve_exact_local_install: false,
                 allow_detach: args.allow_detach,
                 allow_cancel_pre_dispatch: args.allow_cancel_pre_dispatch,
                 allow_cancel_deferred_boundary: args.allow_cancel_deferred_boundary,
