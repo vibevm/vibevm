@@ -1,0 +1,43 @@
+# The server authors only crates/lean-ai-native-mcp. The checker mirrors
+# lang:org.vibevm.ai-native/lean-ai-native-lang; neutral crates mirror core.
+[workspace]
+resolver = "3"
+members = [
+    "crates/lean-ai-native-mcp",
+    "crates/lean-ai-native-check",
+    "crates/vendor/core-ai-native-mcp",
+    "crates/vendor/core-ai-native-specmap",
+    "crates/vendor/core-ai-native-specmark",
+    "crates/vendor/core-ai-native-specmark-grammar",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+license-file = "LICENSE.md"
+publish = false
+repository = "https://gitverse.ru/vibevm/vibevm"
+homepage = "https://gitverse.ru/vibevm/vibevm"
+
+[workspace.dependencies]
+lean-ai-native-check = { path = "crates/lean-ai-native-check" }
+mcp-core = { package = "core-ai-native-mcp", path = "crates/vendor/core-ai-native-mcp" }
+specmap-core = { package = "core-ai-native-specmap", path = "crates/vendor/core-ai-native-specmap" }
+specmark = { package = "core-ai-native-specmark", path = "crates/vendor/core-ai-native-specmark" }
+specmark-grammar = { package = "core-ai-native-specmark-grammar", path = "crates/vendor/core-ai-native-specmark-grammar" }
+anyhow = "1"
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.10"
+toml = "0.9"
+walkdir = "2"
+glob = "0.3"
+quick-xml = "0.41.0"
+syn = { version = "2", features = ["full", "visit"] }
+quote = "1"
+proc-macro2 = { version = "1", features = ["span-locations"] }
+clap = { version = "4", features = ["derive"] }
+tempfile = "3"

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "source": "lang:org.vibevm.ai-native/lean-ai-native-lang",
+  "version": "0.1.0",
+  "files": [
+    {
+      "path": "Cargo.toml",
+      "sha256": "5fa3f83eefc9608b15ecc09bf865d5cbe62398fae528b4f365d70171b63cdcd7"
+    },
+    {
+      "path": "src/carrier.rs",
+      "sha256": "e8f8226335c978079946cc9a52ec45ea42f7dca0545ebf1c92c6d0de35690bd4"
+    },
+    {
+      "path": "src/files.rs",
+      "sha256": "dc65e6b96340f7f3a0a8b3df5ef4a7ef41d34b495769eddc6816f3cabc2426a7"
+    },
+    {
+      "path": "src/inspector.lean",
+      "sha256": "686990d970c64872f81992ee1a565fdc777b9c1a3be55998ef57f33a046c9c86"
+    },
+    {
+      "path": "src/lib.rs",
+      "sha256": "20ea886ac56067e767817f1225b875dc485b716be6109e02b04d99e757edd6f7"
+    },
+    {
+      "path": "src/process.rs",
+      "sha256": "ec21cc4b4cf21f5ff40d73b7059c957cada7914eeb0b642fb33a46e69b748d54"
+    },
+    {
+      "path": "src/proof.rs",
+      "sha256": "bbaad22156dcfb2ee9af4b7e8262cffe3985fc70cfa125091858a51a0e0d7331"
+    },
+    {
+      "path": "src/wire.rs",
+      "sha256": "ec3c52d2492d437d2fe1898d0240ba25ba3f25a5c29c8d66b691be18c8478ce5"
+    },
+    {
+      "path": "tests/contracts.rs",
+      "sha256": "f6b6b5aad010c255e0c4ecdaa809d16b9669874d15ba58f05b681d48c3c0fa80"
+    }
+  ]
+}

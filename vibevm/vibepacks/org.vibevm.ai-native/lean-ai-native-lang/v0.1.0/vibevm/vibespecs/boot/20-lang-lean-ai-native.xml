@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">AI-Native Lean — session projection</title>
+  <status stage="spec" state="done"/>
+  <p><LEAN-BOOT fact="true" status="spec/done">For Lean proof work, read spec://org.vibevm.ai-native/lean-ai-native-lang/lean/GUIDE-AI-NATIVE-LEAN#root and activate only the relevant card from vibevm/vibespecs/cards/INDEX.md. The language-neutral method comes from flow:org.vibevm.ai-native/core-ai-native.</LEAN-BOOT></p>
+  <p><LEAN-PROOF-BOUNDARY fact="true" status="spec/done">Use ordinary Lean syntax, exact named theorem/subject bindings and the pinned checker. scan is inventory; only successful actual checking produces G1 evidence. verify-witness freshly rechecks. G1 does not establish Rust/TypeScript implementation refinement. See spec://org.vibevm.ai-native/lean-ai-native-lang/mechanisms/LEAN-PROOF-RUNNER#MODEL-GRADE.</LEAN-PROOF-BOUNDARY></p>
+  <p><LEAN-PARITY fact="true" status="spec/done">This 0.1.0 proof lane is narrower than a complete discipline floor. The guide and cards record missing mechanisms explicitly; a WISH is not an installed checker. Card activation remains a manual reading convention unless a separate delivery tool implements it.</LEAN-PARITY></p>
+</spec>

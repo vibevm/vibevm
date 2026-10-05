@@ -1,0 +1,7 @@
+# Derived proof state and local toolchains are never published.
+.lake/
+.elan/
+.lean-ai-native/
+**/*.olean
+**/*.ilean
+**/*.trace

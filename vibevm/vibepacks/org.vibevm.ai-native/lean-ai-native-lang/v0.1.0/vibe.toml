@@ -1,0 +1,27 @@
+[package]
+name = "lean-ai-native-lang"
+group = "org.vibevm.ai-native"
+kind = "lang"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "AI-Native Lean model-proof runner, checked theorem carrier, guide and explicit discipline parity"
+keywords = ["lean", "ai-native", "model-proof", "traceability", "lang"]
+
+[compatibility]
+min_vibe_version = "1.0.0"
+requires_kinds = []
+
+[requires]
+packages = { "flow:org.vibevm.ai-native/core-ai-native" = "^1.1.0" }
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/20-lang-lean-ai-native.xml"
+category = "stack"
+
+[[binary]]
+name = "lean-ai-native"
+crate = "crates/lean-ai-native-cli"
+description = "Targeted Lean model proof: scan, check and fresh verify-witness"

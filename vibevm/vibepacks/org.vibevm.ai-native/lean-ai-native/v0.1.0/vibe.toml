@@ -1,0 +1,18 @@
+[package]
+name = "lean-ai-native"
+group = "org.vibevm.ai-native"
+kind = "stack"
+version = "0.1.0"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "AI-Native Lean family aggregator with exact language and MCP member pins"
+keywords = ["lean", "ai-native", "proof", "aggregator"]
+
+[compatibility]
+min_vibe_version = "1.0.0"
+requires_kinds = []
+
+[requires]
+packages = { "lang:org.vibevm.ai-native/lean-ai-native-lang" = "=0.1.0", "mcp:org.vibevm.ai-native/lean-ai-native-mcp" = "=0.1.0" }
