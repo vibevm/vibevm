@@ -172,8 +172,8 @@ impl PackageSourceFactory for PinnedLocalFactory {
 }
 
 impl BoundOnePackageSource for PinnedLocalFactory {
-    fn source_root(&self) -> &Path {
-        &self.binding.source_root
+    fn source_witness(&self) -> &PackageTreeWitness {
+        &self.witness
     }
 
     fn recheck_source_binding(&self, witness: &PackageTreeWitness) -> Result<()> {

@@ -51,3 +51,13 @@ package-source port test accepts the original witness and refuses a changed
 witness or source bytes. This is a source-binding seam, not a registered
 machine operation: no typed Install question, approval, controls or
 CLI/MCP/local API route has been added. All four C.4 steps remain open.
+
+The next internal atom removes the fixture package identity from that seam:
+the trusted bound factory now retains the exact tree witness and pin, while
+the owner checks a simple project with that one exact requirement and a
+declaration-free source package. A second package and a different project
+identity complete an Install and replay the same run; a mismatched project
+requirement refuses before reservation or fetch. The 13 focused orchestrator
+Install cases pass serially. This still exposes no new machine operation or
+general registry choice; typed approval and cross-surface admission remain
+the next owner boundary.

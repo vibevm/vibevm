@@ -10,6 +10,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_install::InstallSource;
+use vibe_lifecycle::process::capture_package_tree_witness;
 use vibe_package_source::{
     InstallResolver, PackageQualifier, PackageSourceOptions, RegistryPackageSource,
     build_install_resolver_with_progress,
@@ -60,14 +61,15 @@ fn fixture_request() -> DefaultLifecycleRequest {
 
 fn fixture_call(
     project: &Path,
-    _source: &Path,
+    source: &Path,
     factory: &FixtureFactory,
     namespace: &SubmissionNamespace,
     scope: &SubmissionScope,
     key: &str,
 ) -> Result<SubmissionOutcome<RetainedLifecycleResult>> {
-    submit_one_package_local_install(
+    install::submit_one_package_fixture_install_with_hook(
         project,
+        source,
         factory,
         namespace,
         scope,
@@ -75,10 +77,12 @@ fn fixture_call(
         fixture_request(),
         TargetOs::current().expect("supported fixture platform"),
         "2026-09-30T00:00:05Z".parse().unwrap(),
+        None,
+        None,
     )
 }
 
-struct ExactQualifier;
+struct ExactQualifier(PackageRef);
 impl PackageQualifier for ExactQualifier {
     fn qualify(
         &self,
@@ -87,7 +91,7 @@ impl PackageQualifier for ExactQualifier {
         _locked: &Lockfile,
     ) -> Result<PackageRef> {
         ensure!(
-            pkgref.to_string() == install::FIXTURE_PIN,
+            pkgref == &self.0,
             "fixture qualifier refused a nonfixed pin"
         );
         Ok(pkgref.clone())
@@ -97,6 +101,8 @@ impl PackageQualifier for ExactQualifier {
 struct FixtureFactory {
     registry_root: PathBuf,
     source_root: PathBuf,
+    witness: PackageTreeWitness,
+    pin: PackageRef,
     builds: AtomicUsize,
     fetches: Arc<AtomicUsize>,
     fail_after_fetch: bool,
@@ -105,10 +111,24 @@ struct FixtureFactory {
 
 impl FixtureFactory {
     fn new(registry_root: PathBuf) -> Self {
-        let source_root = registry_root.join("org.example/fixture/v1.1.0");
+        Self::with_pin(
+            registry_root,
+            PackageRef::parse(install::FIXTURE_PIN).unwrap(),
+        )
+    }
+    fn with_pin(registry_root: PathBuf, pin: PackageRef) -> Self {
+        let version = pin.version.to_string();
+        let source_root = registry_root
+            .join(pin.group.as_ref().unwrap().as_str())
+            .join(pin.name.as_str())
+            .join(format!("v{}", version.strip_prefix('=').unwrap()));
+        let witness =
+            capture_package_tree_witness(&source_root, &pin, install::FIXTURE_FILES).unwrap();
         Self {
             registry_root,
             source_root,
+            witness,
+            pin,
             builds: AtomicUsize::new(0),
             fetches: Arc::new(AtomicUsize::new(0)),
             fail_after_fetch: false,
@@ -118,8 +138,8 @@ impl FixtureFactory {
 }
 
 impl BoundOnePackageSource for FixtureFactory {
-    fn source_root(&self) -> &Path {
-        &self.source_root
+    fn source_witness(&self) -> &PackageTreeWitness {
+        &self.witness
     }
     fn recheck_source_binding(&self, witness: &PackageTreeWitness) -> Result<()> {
         ensure!(
@@ -151,7 +171,8 @@ impl PackageSourceFactory for FixtureFactory {
             input.progress,
         )?;
         Ok(Box::new(FixtureSource {
-            inner: RegistryPackageSource::new(resolver, Box::new(ExactQualifier)),
+            inner: RegistryPackageSource::new(resolver, Box::new(ExactQualifier(self.pin.clone()))),
+            pin: self.pin.clone(),
             fetches: Arc::clone(&self.fetches),
             fail_after_fetch: self.fail_after_fetch,
             cache_fault: self.cache_fault,
@@ -162,6 +183,7 @@ impl PackageSourceFactory for FixtureFactory {
 
 struct FixtureSource {
     inner: RegistryPackageSource,
+    pin: PackageRef,
     fetches: Arc<AtomicUsize>,
     fail_after_fetch: bool,
     cache_fault: CacheFault,
@@ -188,10 +210,7 @@ impl ConfirmGate for MutatingConfirm {
 
 impl PackageSource for FixtureSource {
     fn qualify(&self, pkgref: &PackageRef, _locked: &Lockfile) -> Result<PackageRef> {
-        ensure!(
-            pkgref.to_string() == install::FIXTURE_PIN,
-            "fixture source refused a nonfixed pin"
-        );
+        ensure!(pkgref == &self.pin, "fixture source refused a nonfixed pin");
         Ok(pkgref.clone())
     }
 }
@@ -620,6 +639,112 @@ fn one_package_install_is_staged_then_retained_and_replayed_without_second_effec
 }
 
 #[test]
+fn another_exact_local_package_uses_its_own_reserved_install_plan() {
+    let _guard = fixture_guard();
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, original) = setup();
+    let registry = original
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let pin = PackageRef::parse("flow:org.example/second@=1.1.0").unwrap();
+    let source = registry.join("org.example/second/v1.1.0");
+    std::fs::create_dir_all(&source).unwrap();
+    std::fs::write(
+        source.join("vibe.toml"),
+        "[package]\ngroup = 'org.example'\nname = 'second'\nkind = 'flow'\nversion = '1.1.0'\n",
+    )
+    .unwrap();
+    std::fs::write(source.join("README.md"), b"# Second\n").unwrap();
+    std::fs::write(project.join("vibe.toml"),
+        "[project]\nname = 'another-consumer'\nversion = '2.0.0'\n[requires.packages]\n'flow:org.example/second' = '=1.1.0'\n").unwrap();
+    let factory = FixtureFactory::with_pin(registry, pin);
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let call = || {
+        submit_one_package_local_install(
+            &project,
+            &factory,
+            &namespace,
+            &scope,
+            "second",
+            fixture_request(),
+            TargetOs::current().unwrap(),
+            "2026-09-30T00:00:05Z".parse().unwrap(),
+        )
+    };
+    let first = call().unwrap();
+    let SubmissionOutcome::Invoked { run_id, outcome } = first else {
+        panic!("second package must invoke one Install: {first:?}")
+    };
+    assert_eq!(outcome.marker.outcome, MarkerOutcome::Completed);
+    assert!(
+        project
+            .join("vibevm/vibedeps/org.example.second/1.1.0")
+            .is_dir()
+    );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+    assert_eq!(
+        call().unwrap(),
+        SubmissionOutcome::Replayed { run_id, outcome }
+    );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn local_source_pin_must_match_project_requirement_before_reservation() {
+    let _guard = fixture_guard();
+    let (_dir, project, original) = setup();
+    let registry = original
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
+    let source = registry.join("org.example/second/v1.1.0");
+    std::fs::create_dir_all(&source).unwrap();
+    std::fs::write(
+        source.join("vibe.toml"),
+        "[package]\ngroup = 'org.example'\nname = 'second'\nkind = 'flow'\nversion = '1.1.0'\n",
+    )
+    .unwrap();
+    std::fs::write(source.join("README.md"), b"# Second\n").unwrap();
+    let factory = FixtureFactory::with_pin(
+        registry,
+        PackageRef::parse("flow:org.example/second@=1.1.0").unwrap(),
+    );
+    let scope = scope();
+    let namespace = issue(&project, &scope);
+    let error = submit_one_package_local_install(
+        &project,
+        &factory,
+        &namespace,
+        &scope,
+        "mismatch",
+        fixture_request(),
+        TargetOs::current().unwrap(),
+        "2026-09-30T00:00:05Z".parse().unwrap(),
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("unreviewed root manifest"), "{error}");
+    let lease = LifecycleLease::acquire(&project).unwrap();
+    assert!(
+        SubmissionReservations::inspect_existing_key(&lease, &namespace, &scope, "mismatch")
+            .unwrap()
+            .is_none()
+    );
+    assert_eq!(factory.fetches.load(Ordering::SeqCst), 0);
+    assert!(!project.join("vibe.lock").exists());
+}
+
+#[test]
 fn changed_source_subject_conflicts_with_same_key_without_second_fetch() {
     let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());
@@ -632,7 +757,7 @@ fn changed_source_subject_conflicts_with_same_key_without_second_fetch() {
         .parent()
         .unwrap()
         .to_path_buf();
-    let factory = FixtureFactory::new(registry);
+    let factory = FixtureFactory::new(registry.clone());
     let scope = scope();
     let namespace = issue(&project, &scope);
     assert!(matches!(
@@ -640,21 +765,32 @@ fn changed_source_subject_conflicts_with_same_key_without_second_fetch() {
         SubmissionOutcome::Invoked { .. }
     ));
     std::fs::write(source.join("README.md"), b"changed fixture source\n").unwrap();
-    let mismatch = fixture_call(&project, &source, &factory, &namespace, &scope, "one")
-        .unwrap_err()
-        .to_string();
+    let changed_factory = FixtureFactory::new(registry);
+    let mismatch = fixture_call(
+        &project,
+        &source,
+        &changed_factory,
+        &namespace,
+        &scope,
+        "one",
+    )
+    .unwrap_err()
+    .to_string();
     assert!(mismatch.contains("different request or plan"), "{mismatch}");
     assert_eq!(factory.fetches.load(Ordering::SeqCst), 1);
 }
 
 #[test]
-fn nonfixed_root_manifest_refuses_before_reservation_or_source_port() {
+fn project_authors_refuse_before_reservation_or_source_port() {
     let _guard = fixture_guard();
     assert!(vibe_test_support::isolated_home().is_some());
     let (_dir, project, source) = setup();
     std::fs::write(
         project.join("vibe.toml"),
-        install::FIXTURE_PROJECT_MANIFEST.replace("name = 'consumer'", "name = 'other'"),
+        install::FIXTURE_PROJECT_MANIFEST.replace(
+            "version = '1.1.0'",
+            "version = '1.1.0'\nauthors = ['Someone']",
+        ),
     )
     .unwrap();
     let registry = source
@@ -671,7 +807,7 @@ fn nonfixed_root_manifest_refuses_before_reservation_or_source_port() {
     let refused = fixture_call(&project, &source, &factory, &namespace, &scope, "one")
         .unwrap_err()
         .to_string();
-    assert!(refused.contains("unreviewed root manifest"), "{refused}");
+    assert!(refused.contains("simple project identity"), "{refused}");
     assert_eq!(factory.builds.load(Ordering::SeqCst), 0);
     assert!(!project.join(".vibe/lifecycle-outcomes").exists());
     assert!(!project.join("vibe.lock").exists());
@@ -714,6 +850,14 @@ fn factory_bound_to_another_source_root_refuses_before_reservation() {
     let _guard = fixture_guard();
     let (_dir, project, source) = setup();
     let foreign = tempfile::tempdir().unwrap();
+    let foreign_source = foreign.path().join("org.example/fixture/v1.1.0");
+    std::fs::create_dir_all(&foreign_source).unwrap();
+    std::fs::write(
+        foreign_source.join("vibe.toml"),
+        install::FIXTURE_PACKAGE_MANIFEST,
+    )
+    .unwrap();
+    std::fs::write(foreign_source.join("README.md"), b"# Fixture\n").unwrap();
     let factory = FixtureFactory::new(foreign.path().to_path_buf());
     let scope = scope();
     let namespace = issue(&project, &scope);

@@ -76,7 +76,7 @@ fn bound_source_port_accepts_only_its_original_witness_and_current_tree() {
     let (_dir, registry, witness) = fixture();
     let factory = PinnedLocalFactory::new(&registry, &pin(), &witness).unwrap();
     let port: &dyn BoundOnePackageSource = &factory;
-    assert_eq!(port.source_root(), witness.root);
+    assert_eq!(port.source_witness(), &witness);
     port.recheck_source_binding(&witness).unwrap();
 
     let mut foreign = witness.clone();

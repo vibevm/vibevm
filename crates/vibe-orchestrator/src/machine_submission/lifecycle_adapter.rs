@@ -16,8 +16,8 @@ use vibe_lifecycle::agent::{
     AgentCompletion, AgentRequest, PromptRequest, ResolvedPrompt, SelectedWorldPromptResolver,
 };
 use vibe_lifecycle::process::{
-    PackageTreeWitness, SelectedManifestLockWitness, capture_package_tree_witness,
-    recheck_package_tree_witness, recheck_selected_manifest_lock,
+    PackageTreeWitness, SelectedManifestLockWitness, recheck_package_tree_witness,
+    recheck_selected_manifest_lock,
 };
 use vibe_lifecycle::process::{
     ProcessRunner, PromptSourceWitness, ScriptSourceWitness, SourceSnapshotError,
@@ -893,12 +893,7 @@ fn submit_protected_lifecycle_inner<'a>(
     let fixture = fixture
         .map(|fixture| {
             ensure!(phase == Phase::Install, "fixture source is Install-only");
-            let pin = vibe_core::PackageRef::parse(install::FIXTURE_PIN)?;
-            let witness = capture_package_tree_witness(
-                fixture.factory.source_root(),
-                &pin,
-                install::FIXTURE_FILES,
-            )?;
+            let witness = fixture.factory.source_witness().clone();
             fixture.factory.recheck_source_binding(&witness)?;
             Ok(FixtureRuntime {
                 witness,
