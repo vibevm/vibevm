@@ -13,6 +13,9 @@ use std::{
 };
 use vibe_wire::generated::{format_id::FormatId, machine::e1::session_frame as f};
 
+#[path = "machine_session_package/local_route.rs"]
+mod local_route;
+
 struct Fixture {
     dir: tempfile::TempDir,
 }
