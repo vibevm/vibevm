@@ -48,6 +48,7 @@ pub use exact_local_install_decision::{
 
 pub mod cargo_grant;
 pub mod cli_grant;
+pub mod exact_local_install_grant;
 pub mod deploy_grant;
 pub mod package_grant;
 
