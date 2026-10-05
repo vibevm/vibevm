@@ -10,6 +10,9 @@ use std::{
 };
 use vibe_wire::{behaviour::artifact_record::validate, generated::artifact_record::ArtifactRecord};
 
+#[path = "cli_mcp_fixed_deploy/frame_cross_surface.rs"]
+mod frame_cross_surface;
+
 struct Fixture {
     dir: tempfile::TempDir,
 }
