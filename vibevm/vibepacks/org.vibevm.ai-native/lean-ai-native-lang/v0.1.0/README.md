@@ -14,7 +14,12 @@
 
 Run `lean-ai-native --path PROJECT [--toolchain-dir INSTALL_ROOT]` followed by `scan --carrier lean-proof.toml`, `check --carrier lean-proof.toml --subject URI`, or `verify-witness --carrier lean-proof.toml --subject URI --witness proof.json`. Global options precede the command.
 
-Commands return JSON `Reply{ok,result?,error?}`. A successful `check` has the witness directly in `result`; extract it only after confirming `ok == true`. `verify-witness` consumes that object and returns `{status:"matched",witness:...}` in `result`. `scan` returns declared inventory and no proof verdict.
+Commands return JSON `Reply{ok,result?,error?}`. A successful `check` has the witness directly in `result`; extract it only after confirming `ok == true`. `verify-witness` consumes that object and returns `{status:"matched",witness_sha256:...,witness:...}` in `result`. `scan` returns declared inventory and no proof verdict.
+
+`matched` binds the exact saved-witness bytes observed before and after the
+fresh checker. `witness_sha256` hashes those file bytes, including formatting.
+It is not a promise that an external writer cannot replace the path after the
+final read. A replacement during the check returns `witness_unstable`.
 
 Malformed CLI operation arguments produce an `invalid_request` JSON reply and
 exit 2. `--help` and `--version` retain their ordinary display. A refused
