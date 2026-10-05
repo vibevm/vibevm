@@ -211,6 +211,63 @@ fn cli_frame_real_deploy_replays_through_cold_mcp() {
         .unwrap();
     assert_eq!(keys.len(), 1);
     assert_eq!(keys["old-key"]["domain_run_id"], run);
+
+    fs::write(
+        fixture.root().join("vibe.toml"),
+        manifest("\n# source drift\n"),
+    )
+    .unwrap();
+    let mcp_inspect = mcp_reply(&fixture.mcp("reattach", false, &request("inspect")));
+    assert_eq!(mcp_inspect["result"]["isError"], false, "{mcp_inspect}");
+    assert_eq!(
+        mcp_inspect["result"]["structuredContent"]["reply"],
+        reply["reply"]
+    );
+    let (mut child, session, context, target) = connect_mode(&fixture, "reattach");
+    let (cli_inspect, _) = frame_action(&mut child, &session, &context, &target, "inspect");
+    assert_eq!(cli_inspect["reply"], reply["reply"]);
+    drop(child.stdin.take());
+    assert!(child.wait_with_output().unwrap().status.success());
+
+    let mcp_denied = mcp_reply(&fixture.mcp("reattach", false, &request("submit")));
+    assert_eq!(mcp_denied["result"]["isError"], true, "{mcp_denied}");
+    let mcp_error = &mcp_denied["result"]["structuredContent"];
+    assert_eq!(mcp_error["code"], "submission_refused");
+    assert_eq!(mcp_error["known_run_id"], run);
+    assert_eq!(mcp_error["view"]["kind"], "completed");
+    assert_eq!(mcp_error["effect_observation"], "landed");
+    assert_eq!(mcp_error["requested_phase"], "deploy");
+    for field in ["context", "target", "principal"] {
+        assert!(
+            mcp_error["requested_scope"][field]
+                .as_str()
+                .is_some_and(|value| !value.is_empty()),
+            "{mcp_error}"
+        );
+    }
+    let (mut child, session, context, target) = connect_mode(&fixture, "reattach");
+    let (published, outcome) = raw_frame_action(&mut child, &session, &context, &target, "submit");
+    let e::Body::Error(row) = published.body else {
+        panic!("expected fixed Deploy refusal: {published:?}")
+    };
+    let cli_error: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
+    assert_eq!(cli_error, *mcp_error);
+    assert_eq!(
+        serde_json::to_value(outcome.effect_state).unwrap(),
+        "completed"
+    );
+    drop(child.stdin.take());
+    assert!(child.wait_with_output().unwrap().status.success());
+    assert_eq!(fs::read(&pointer).unwrap(), pointer_before);
+    assert_eq!(
+        fs::read(fixture.dir.path().join("settings/bin/local-helper")).unwrap(),
+        launcher
+    );
+    let after: Value = serde_json::from_slice(
+        &fs::read(fixture.root().join(".vibe/machine-submissions.json")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(after, index);
 }
 
 #[test]
