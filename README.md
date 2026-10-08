@@ -154,6 +154,7 @@ Beside the manual:
 
 - [Runtime guide](RUNTIME-GUIDE.md) — machine requirements, paths and environment for running `vibe`.
 - [Developer guide](DEV-GUIDE.md) — clone, build, test, and contributor setup.
+- [Development build environment](docs/development-build-environment.md) — verified Rust backend, worktree and source-built Aeneas/Charon notes for Zap proof work.
 - [Changelog](CHANGELOG.md) — milestone history and release changes.
 - [`docs-legacy/`](docs-legacy/) — the archived 1.0.0 alpha layer: alpha notes, the old command pages, architecture notes and the site manifest. Readable, not normative.
 
