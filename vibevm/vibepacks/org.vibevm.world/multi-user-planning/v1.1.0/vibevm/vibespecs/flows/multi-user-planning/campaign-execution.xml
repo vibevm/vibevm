@@ -122,6 +122,17 @@ outputs, relevant interfaces, current delta and known pitfalls needed for this
 packet. Name them explicitly; do not dump the complete campaign or require every
 worker to rediscover its context. A missing governing input is a packet defect
 to report, not permission to silently widen scope.</WORKER-PACKET></p>
+    <p><WORKER-LAUNCH-DISCLOSURE fact="true" status="spec/done">Before each
+worker launch or new assignment, the owner-facing central session tells the
+Owner in chat the concrete task, why it advances the current campaign, the
+actual harness and model (or that selection remains unresolved), the worker's
+read, write and action scope, the expected artifact and deciding acceptance
+gate, and remaining limitations. Update that announcement before the worker
+acts on a material expansion of its assignment or scope. Report a rejected
+launch or failed worker plainly, including what is known to have happened.
+The announcement is communication, not a grant of authority; the current
+owner instruction, project policy and explicit worker packet still bound the
+work.</WORKER-LAUNCH-DISCLOSURE></p>
     <p><WORKER-REVIEW fact="true" status="spec/done">Review a worker result like
 an untrusted but capable pull request: compare the actual artifact to the
 packet, verify every consequential claim, and inspect whether its tests exercise
