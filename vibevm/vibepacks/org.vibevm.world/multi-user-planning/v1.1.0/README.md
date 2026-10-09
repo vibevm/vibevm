@@ -61,6 +61,14 @@ evidence mechanics that any capable agent or human coordinator can use.
   review, gate-economy, recovery and wisdom-promotion discipline in
   `campaign-execution.xml`, including essential-first verification and the
   suspicion-triggered bounded mutation policy. @status:impl/done
+- @fact:CONTENT-SIMULATION A deterministic, synthetic campaign decision model,
+  strict event schemas, actor-grant and execution-scope checks, complete-plan
+  trace oracle, bounded manual real-agent gate and baseline-reconciled
+  meaning-based correction records in `campaign-simulation.xml`. Mechanical
+  correction validation checks internal identities and recorded approval;
+  inventory provenance and semantic reviewer authority remain manual.
+  Ordinary simulator tests have no live-agent mode and touch no personal plan,
+  network or project execution state. @status:impl/done
 - @fact:CONTENT-VERIFICATION Target-first affected checks, bounded scope
   escalation, compatible evidence reuse and fail-fast panel resumption in
   `verification-selection.xml`. @status:impl/done

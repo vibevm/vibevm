@@ -1,0 +1,127 @@
+schema = 1
+plan_id = "simulation-campaign"
+revision = 7
+root_node = "ROOT"
+current_node = "MAIN-CANDIDATE"
+updated_at = "2040-01-01T00:00:00Z"
+campaign_contract = "synthetic-only"
+
+[[mandate]]
+id = "M-COMPLETE"
+source = "fixture:owner"
+text = "Preserve the complete route and truthful acceptance boundary."
+disposition = "owned"
+nodes = ["ROOT", "MAIN", "ALT"]
+
+[[node]]
+id = "ROOT"
+parent = ""
+order = 0
+kind = "portfolio"
+title = "Synthetic portfolio"
+state = "active"
+depends_on = []
+mandates = ["M-COMPLETE"]
+acceptance = ["Both campaigns have explicit dispositions."]
+evidence = []
+extension_owner = "fixture-integrator"
+
+[[node]]
+id = "MAIN"
+parent = "ROOT"
+order = 10
+kind = "campaign"
+title = "Primary synthetic campaign"
+state = "active"
+depends_on = []
+mandates = ["M-COMPLETE"]
+acceptance = ["The final campaign panel is complete."]
+evidence = []
+route_extension = { lane = "primary", preserve = true }
+
+[[node]]
+id = "MAIN-ACCEPTED"
+parent = "MAIN"
+order = 10
+kind = "atom"
+title = "Accepted prerequisite"
+state = "accepted"
+depends_on = []
+mandates = ["M-COMPLETE"]
+acceptance = ["Central review and affected checks passed."]
+evidence = ["fixture:evidence:accepted"]
+
+[[node]]
+id = "MAIN-CANDIDATE"
+parent = "MAIN"
+order = 20
+kind = "atom"
+title = "Worker-produced candidate"
+state = "candidate"
+depends_on = ["MAIN-ACCEPTED"]
+mandates = ["M-COMPLETE"]
+acceptance = ["Central review and exact affected proof are complete."]
+evidence = ["fixture:worker-report"]
+candidate_extension = "must-survive"
+
+[[node]]
+id = "MAIN-DEPENDENT"
+parent = "MAIN"
+order = 30
+kind = "atom"
+title = "Accepted-interface consumer"
+state = "planned"
+depends_on = ["MAIN-ACCEPTED"]
+mandates = ["M-COMPLETE"]
+acceptance = ["Consumer behavior passes against the accepted interface."]
+evidence = []
+required_prerequisite_tier = "accepted"
+preparation_inputs_available = true
+
+[[node]]
+id = "MAIN-DISTANT"
+parent = "MAIN"
+order = 40
+kind = "horizon"
+title = "Distant integration stage"
+state = "planned"
+depends_on = ["MAIN-DEPENDENT"]
+mandates = ["M-COMPLETE"]
+acceptance = ["Integration obligations are reconciled."]
+evidence = []
+
+[[node]]
+id = "MAIN-FINAL"
+parent = "MAIN"
+order = 50
+kind = "gate"
+title = "Comprehensive final gate"
+state = "blocked"
+depends_on = ["MAIN-DISTANT"]
+mandates = ["M-COMPLETE"]
+acceptance = ["All four declared panel steps pass on the acceptance subject."]
+evidence = []
+
+[[node]]
+id = "ALT"
+parent = "ROOT"
+order = 20
+kind = "campaign"
+title = "Alternate synthetic campaign"
+state = "planned"
+depends_on = []
+mandates = ["M-COMPLETE"]
+acceptance = ["The alternate campaign has an owner-approved disposition."]
+evidence = []
+
+[[node]]
+id = "ALT-A"
+parent = "ALT"
+order = 10
+kind = "atom"
+title = "Alternate planning atom"
+state = "planned"
+depends_on = []
+mandates = ["M-COMPLETE"]
+acceptance = ["The alternate route is refined without implementation."]
+evidence = []

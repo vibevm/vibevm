@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "id": "retired-redundant-permission-question",
+  "immutable": true,
+  "retired_case_id": "repeat-approval-after-casual-interruption",
+  "retired_revision": 1,
+  "prior_case_sha256": "e188bb0cd8635dca5d1dd9313c98c32703f94e5c32bb94018cd640b2385d76fd",
+  "reason": "The case encoded a redundant permission question that contradicts existing execution authority.",
+  "replacement_coverage": [
+    "casual-interruption-no-repeat-approval",
+    "explicit-continue-no-redundant-question",
+    "planning-hold-survives-interruption"
+  ],
+  "governing_spec": "spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#LAW-EXECUTION-SCOPE"
+}
