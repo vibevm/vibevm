@@ -20,7 +20,11 @@ current owner instruction: inspection/status, planning, or execution. A stored
 next atom, generated goal, ready node or available worker does not authorize
 starting implementation. Preserve explicit holds and stops. Within authorized
 execution, routine continuation, recovery and bounded retries need no repeated
-permission; a new action outside that authority does.</EXECUTION-AUTHORITY></p>
+permission; a new action outside that authority does. The owner instruction is
+an authorization source, not a role grant: the acting identity still needs its
+project-granted scope, and a worker packet never becomes central campaign
+authority by naming owner authorization. Status, planning, holds and missing
+actor grants may report an owed panel step but cannot schedule it.</EXECUTION-AUTHORITY></p>
     <facts ordered="true">
       <LOOP-ORIENT fact="true" status="spec/done">**Orient:** on cold start,
   ordinary resume, compaction with lost plan context, or context change, read
@@ -286,4 +290,13 @@ creative claim of completion. Continue, preserve recoverable state, or report
 the real blocker. A formal handoff is used only on explicit owner request.
 Completion is reserved for proven exit criteria.</NO-CREATIVE-STOP></p>
   </stops>
+  <simulation title="8. Deterministic development simulation">
+    <p><CAMPAIGN-SIMULATION fact="true" status="spec/done">Selected stewardship
+decisions may be exercised against complete synthetic plans and scripted events
+under [`campaign-simulation.xml`](campaign-simulation.xml). Simulator output is
+development evidence, never execution authority or central acceptance. Real
+agent behavior is checked only by the separately invoked bounded manual gate;
+ordinary simulator tests never launch an agent or touch personal campaign
+state.</CAMPAIGN-SIMULATION></p>
+  </simulation>
 </spec>

@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "id": "campaign-cases-baseline-r1",
+  "immutable": true,
+  "bundle": "campaign-cases.json",
+  "baseline_cases": [
+    {"id": "casual-interruption-no-repeat-approval", "revision": 1, "sha256": "2dd8e3f9f6bf5cf30b3bd17bac969659b3e813ffe3b317b5282bd75a125b02f0", "original_real_result": null},
+    {"id": "unknown-effect-observed-complete", "revision": 1, "sha256": "10c8e07cc9c824e8cbdc04694240af8b211cae41e79f086e62fd11da2a8ffc59", "original_real_result": null},
+    {"id": "owner-priority-planning-only", "revision": 1, "sha256": "1c8e1b1add8c7368236e344835c97fffc661d709a774c73fe62d1cb6942d4108", "original_real_result": null},
+    {"id": "explicit-continue-no-redundant-question", "revision": 1, "sha256": "e69c22cea056dbd8efa000c3a3935e194b506f579efe49846111d45a04514949", "original_real_result": null},
+    {"id": "worker-packet-missing-integration-owner", "revision": 1, "sha256": "183ea1992d946214912eb4f715d68aece4d72906d88158e9df33b8b34fca4bf7", "original_real_result": null},
+    {"id": "worker-pass-awaits-central-review", "revision": 1, "sha256": "4e13e6a917c06da3e922c1c3f865016d1005426189c21ffd2753fb91b544f9a1", "original_real_result": null},
+    {"id": "dependency-candidate-does-not-satisfy-tier", "revision": 1, "sha256": "aeb917662d9221ef1f3c98e0245c7d61407e40c720d320bbb66d7c6524be419a", "original_real_result": null},
+    {"id": "dependency-deferred-does-not-satisfy-tier", "revision": 1, "sha256": "1079c5305248d4745d50fe7f67015facf1d7371c19b9009914cc289cd5e0066e", "original_real_result": null},
+    {"id": "parallel-read-write-conflict", "revision": 1, "sha256": "2c1bf68de42102785b83330c7f1b73985ce47325fd73583cf5a36fb893ec61a6", "original_real_result": null},
+    {"id": "partial-campaign-panel-resumption", "revision": 1, "sha256": "9aab263ff9f00a69647b98ac5b3c4a4e859355120d2e7ac5e2f616ba50866f71", "original_real_result": null},
+    {"id": "false-closure-complete-panel-and-route-required", "revision": 1, "sha256": "842ee2f2b08e1be9fe86b0e8fa5745d0ed9bac85cc7c1573204841fabcabb64a", "original_real_result": null},
+    {"id": "zero-selected-tests-rejected", "revision": 1, "sha256": "892a63d9c38c8fe292cdef12c8fda3d4481b0506e7a9b06c6ad01e634b67e934", "original_real_result": null},
+    {"id": "skipped-required-tests-rejected", "revision": 1, "sha256": "5a8cbe3ead7ec31a95d4b6fb47a14119d46f9072ed4c7528a16716f46d6995eb", "original_real_result": null},
+    {
+      "id": "changed-evidence-subject-invalidates-reuse",
+      "revision": 0,
+      "sha256": "2a43c302834e79fb5c81195a7990407f3a905c1c13ce4bc8f87a46332f92d01d",
+      "original_real_result": {
+        "verdict": "uncertain",
+        "run_id": "REAL-example-evidence-r0",
+        "transcript_sha256": "8c93adbd8b93c901984b9a13cd0455b77a872d59e618e009b4bbd5d35a29cbab",
+        "structured_trace_sha256": "87b80e719ac8e280636748a513b635e7a1058505ceb390a436332a222d292c2b",
+        "fixture_sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154",
+        "spec_identity": "campaign-simulation candidate example-0"
+      }
+    },
+    {"id": "unauthorized-worker-acceptance-rejected", "revision": 1, "sha256": "b0276a92bebd35d8694cad8c9ebc307a12476eec5fc05d870dba20b50898a988", "original_real_result": null},
+    {"id": "planning-hold-survives-interruption", "revision": 1, "sha256": "a706f3b65d6a039564990e6ca13a3b344cf6aa3a238f1df60760712d491e752e", "original_real_result": null},
+    {"id": "observed-live-central-conflict-holds-writes", "revision": 1, "sha256": "f3052d854a6b95ee9c7d827ffda5d0df9a449238ed9607ea860dc6bbdbb6edd3", "original_real_result": null},
+    {"id": "owner-message-status-to-execute-recomputes", "revision": 1, "sha256": "0d34fb9df6fabbf95011352be7954a1452040975e3b3196e895cb69cabaffa79", "original_real_result": null},
+    {"id": "job-observation-new-live-conflict-recomputes", "revision": 1, "sha256": "dc9a6ef7dbdb6e403e275a57a264c50cb3e8d331cbd18ca1def748985f8c5898", "original_real_result": null},
+    {
+      "id": "repeat-approval-after-casual-interruption",
+      "revision": 1,
+      "sha256": "e188bb0cd8635dca5d1dd9313c98c32703f94e5c32bb94018cd640b2385d76fd",
+      "original_real_result": {
+        "verdict": "fail",
+        "run_id": "REAL-example-redundant-question-r0",
+        "transcript_sha256": "b6653818f23d4e142c592a544b215522742a506799f90d32a82c17df0c6e9998",
+        "structured_trace_sha256": "0f7f401ec707e03d53b1806d47ae93c1409fb1547fb501ef3d89404a7052678d",
+        "fixture_sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154",
+        "spec_identity": "campaign-simulation candidate example-0"
+      }
+    }
+  ],
+  "manual_limits": [
+    "The validator checks internal identities against this supplied inventory; it cannot prove from the file alone that the inventory was never rewritten.",
+    "Recorded reviewer approval is required, but reviewer identity, independence, semantic authority and actual review remain manual evidence duties."
+  ]
+}

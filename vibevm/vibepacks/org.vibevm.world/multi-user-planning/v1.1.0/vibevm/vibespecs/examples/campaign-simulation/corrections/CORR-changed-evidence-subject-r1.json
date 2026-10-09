@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "id": "CORR-changed-evidence-subject-r1",
+  "immutable": true,
+  "classification": "case_defect",
+  "case_ids": ["changed-evidence-subject-invalidates-reuse"],
+  "operations": [
+    {
+      "kind": "modify",
+      "case_id": "changed-evidence-subject-invalidates-reuse",
+      "before_revision": 0,
+      "after_revision": 1,
+      "before_sha256": "2a43c302834e79fb5c81195a7990407f3a905c1c13ce4bc8f87a46332f92d01d",
+      "after_sha256": "c5c2924413985703379496e055290b2130d1cc4bc2e8ac5e0ca479d043f9d7f5",
+      "tombstone": false,
+      "tombstone_path": null,
+      "tombstone_sha256": null,
+      "replacement_coverage": [],
+      "authorized_reason": null
+    }
+  ],
+  "original_real_result": {
+    "verdict": "uncertain",
+    "run_id": "REAL-example-evidence-r0",
+    "transcript_sha256": "8c93adbd8b93c901984b9a13cd0455b77a872d59e618e009b4bbd5d35a29cbab",
+    "structured_trace_sha256": "87b80e719ac8e280636748a513b635e7a1058505ceb390a436332a222d292c2b",
+    "fixture_sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154",
+    "spec_identity": "campaign-simulation candidate example-0"
+  },
+  "evidence_refs": ["external-real-runs/REAL-example-evidence-r0/transcript.json", "external-real-runs/REAL-example-evidence-r0/verdict.json"],
+  "rationale": "The old case omitted the evidence input identity, so its uncertainty could not distinguish valid reuse from a changed subject. Revision 1 adds the identity and requires targeted invalidation without tuning any wording.",
+  "governing_specs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#STEP-SUBJECT", "spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-simulation#CORRECTION-ADOPTION"],
+  "reviewer": {"id": "example-reviewer", "verdict": "approved"},
+  "coverage_impact": {"added": ["changed subject invalidates evidence"], "removed": [], "preserved": ["matching-subject evidence may be reused"]},
+  "simulator_run_ids": ["SIM-example-full-r1"],
+  "real_recheck_run_ids": ["REAL-example-evidence-r1"]
+}

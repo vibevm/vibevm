@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "id": "CORR-retire-redundant-permission-r1",
+  "immutable": true,
+  "classification": "case_defect",
+  "case_ids": ["repeat-approval-after-casual-interruption"],
+  "operations": [
+    {
+      "kind": "delete",
+      "case_id": "repeat-approval-after-casual-interruption",
+      "before_revision": 1,
+      "after_revision": null,
+      "before_sha256": "e188bb0cd8635dca5d1dd9313c98c32703f94e5c32bb94018cd640b2385d76fd",
+      "after_sha256": null,
+      "tombstone": true,
+      "tombstone_path": "../retired/redundant-permission-question.tombstone.json",
+      "tombstone_sha256": "47c08706bd8813c126c045494cd26a94861757e1e25731df15490bd5d9b957b5",
+      "replacement_coverage": ["casual-interruption-no-repeat-approval", "explicit-continue-no-redundant-question", "planning-hold-survives-interruption"],
+      "authorized_reason": null
+    }
+  ],
+  "original_real_result": {
+    "verdict": "fail",
+    "run_id": "REAL-example-redundant-question-r0",
+    "transcript_sha256": "b6653818f23d4e142c592a544b215522742a506799f90d32a82c17df0c6e9998",
+    "structured_trace_sha256": "0f7f401ec707e03d53b1806d47ae93c1409fb1547fb501ef3d89404a7052678d",
+    "fixture_sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154",
+    "spec_identity": "campaign-simulation candidate example-0"
+  },
+  "evidence_refs": ["external-real-runs/REAL-example-redundant-question-r0/transcript.json", "vibevm/vibespecs/examples/campaign-simulation/retired/redundant-permission-question.tombstone.json"],
+  "rationale": "The retired case required a repeated owner approval after an ordinary interruption. That requirement contradicted the execution-scope law, so the record preserves the failure and replaces the invalid case with three explicit routes.",
+  "governing_specs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#LAW-EXECUTION-SCOPE", "spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-simulation#CORRECTION-DELETION"],
+  "reviewer": {"id": "example-reviewer", "verdict": "approved"},
+  "coverage_impact": {"added": ["hold survives interruption"], "removed": ["redundant approval question"], "preserved": ["ordinary continuation", "explicit execution authority"]},
+  "simulator_run_ids": ["SIM-example-full-r1"],
+  "real_recheck_run_ids": ["REAL-example-continuation-r1"]
+}

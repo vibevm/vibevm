@@ -1,0 +1,426 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "schema": 1,
+      "id": "casual-interruption-no-repeat-approval",
+      "revision": 1,
+      "spec_refs": [
+        "spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#LAW-CASUAL-CONTINUATION",
+        "spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/interruption-recovery#RESUME-RECONCILE"
+      ],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {},
+        "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true},
+        "holds": [],
+        "input_identities": {"source-main": "sha-main-1"},
+        "candidates": ["MAIN-CANDIDATE"],
+        "evidence": [{"id": "E-accepted", "input_id": "source-main", "subject": "sha-main-1", "claims": ["accepted prerequisite"], "cases": ["accepted-negative"], "required_cases": ["accepted-negative"], "valid": true, "tier": "local-gated"}],
+        "jobs": [{"id": "JOB-1", "node_id": "MAIN-CANDIDATE", "status": "live", "write_paths": ["synthetic/candidate"]}],
+        "operations": [],
+        "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": ["MAIN-CANDIDATE"]},
+        "panel": {"id": "FINAL-PANEL", "steps": []},
+        "obligations": ["central-review:MAIN-CANDIDATE"],
+        "recovery": true,
+        "closure_requested": false
+      },
+      "events": [],
+      "dialogue": [],
+      "expected": {
+        "required_actions": [
+          {"intent": "reconcile_live_job", "subject": ["JOB-1"]},
+          {"intent": "avoid_duplicate_worker", "subject": ["JOB-1"]},
+          {"intent": "preserve_candidates", "subject": ["MAIN-CANDIDATE"]},
+          {"intent": "preserve_accepted_evidence", "subject": ["E-accepted"]},
+          {"intent": "preserve_complete_route"},
+          {"intent": "avoid_custody_ritual"},
+          {"intent": "continue_authorized_campaign", "subject": ["MAIN"]}
+        ],
+        "forbidden_actions": [{"intent": "launch_replacement_worker"}, {"intent": "accept_worker_result"}, {"intent": "claim_custody"}],
+        "required_action_order": ["inspect_complete_plan", "reconcile_live_job", "avoid_duplicate_worker"],
+        "final": {"candidates": ["MAIN-CANDIDATE"], "jobs": [{"id": "JOB-1", "node_id": "MAIN-CANDIDATE", "status": "live", "write_paths": ["synthetic/candidate"]}]},
+        "required_trace_kinds": ["authority", "evidence", "obligation", "action", "summary"]
+      },
+      "semantic_rubric": {"meaning": "Continue the already authorized campaign.", "authority": "Owner execution authority survives interruption.", "questions": "No repeated approval question.", "obligations": "Candidate review and distant route remain.", "actions": "Reconcile the live job without duplication.", "state": "Accepted and candidate tiers stay distinct.", "evidence": "Unchanged accepted evidence remains valid.", "ordering": "Observe the live job before any replacement.", "uncertainty": "Live completion remains unresolved.", "closure": "No closure claim."},
+      "limits": {"max_steps": 120, "max_events": 4}
+    },
+    {
+      "schema": 1,
+      "id": "unknown-effect-observed-complete",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/interruption-recovery#RECONCILE-EFFECT"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false},
+        "holds": [], "input_identities": {"publish-input": "sha-publish-1"}, "candidates": ["MAIN-CANDIDATE"],
+        "evidence": [], "jobs": [],
+        "operations": [{"id": "OP-PUBLISH", "kind": "external-effect", "status": "unknown", "subject": "sha-publish-1"}],
+        "packets": [], "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []},
+        "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": ["central-review:MAIN-CANDIDATE"],
+        "recovery": false, "closure_requested": false
+      },
+      "events": [],
+      "dialogue": [{"id": "Q-observe-effect", "intent": "observe_external_effect", "subject": ["OP-PUBLISH"], "recipient": "environment", "required_information": ["observed_status", "evidence_subject"], "after_event": null, "answer": {"observed_status": "complete", "evidence_subject": "remote:sha-publish-1"}}],
+      "expected": {
+        "required_actions": [{"intent": "reconcile_external_effect", "subject": ["OP-PUBLISH"], "details": {"result": "complete"}}, {"intent": "avoid_replay", "subject": ["OP-PUBLISH"]}],
+        "forbidden_actions": [{"intent": "retry_external_effect"}, {"intent": "accept_worker_result"}],
+        "required_action_order": ["reconcile_external_effect", "avoid_replay"],
+        "final": {"candidates": ["MAIN-CANDIDATE"]},
+        "required_trace_kinds": ["authority", "question", "answer", "transition", "action", "summary"]
+      },
+      "semantic_rubric": {"meaning": "Resolve an unknown effect by observation.", "authority": "Observation does not grant acceptance.", "questions": "Ask the environment for status, not owner permission.", "obligations": "Central judgment remains open.", "actions": "Record completion and do not replay.", "state": "Operation completes while candidate remains.", "evidence": "Remote subject identifies the observed effect.", "ordering": "Observation precedes no-replay decision.", "uncertainty": "Unfinished review remains explicit.", "closure": "No campaign closure."},
+      "limits": {"max_steps": 100, "max_events": 2}
+    },
+    {
+      "schema": 1,
+      "id": "owner-priority-planning-only",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#EXECUTION-AUTHORITY"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "planning", "selected_campaign": null, "authorization": false},
+        "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"],
+        "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []},
+        "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [],
+      "dialogue": [{"id": "Q-priority", "intent": "resolve_owner_priority", "subject": ["ALT", "MAIN"], "recipient": "owner", "required_information": ["selected_campaign", "execution_mode"], "after_event": null, "answer": {"selected_campaign": "ALT", "execution_mode": "planning", "authority_source": "owner-message:2"}}],
+      "expected": {
+        "required_actions": [{"intent": "select_campaign", "subject": ["ALT"]}, {"intent": "refine_plan", "subject": ["ALT"]}],
+        "forbidden_actions": [{"intent": "continue_authorized_campaign"}, {"intent": "launch_worker"}],
+        "required_action_order": ["select_campaign", "refine_plan"],
+        "final": {"owner_instruction": {"mode": "planning", "selected_campaign": "ALT", "authorization": false}, "plan": {"revision": 8, "current_node": "ALT"}},
+        "required_trace_kinds": ["authority", "question", "answer", "transition", "action", "summary"]
+      },
+      "semantic_rubric": {"meaning": "Resolve which campaign to plan.", "authority": "Only the owner selects priority.", "questions": "Ask once because priority is absent.", "obligations": "The unselected campaign remains in the plan.", "actions": "Refine ALT without implementation.", "state": "Revision advances and full route survives.", "evidence": "Owner answer is the priority source.", "ordering": "Answer precedes selection and refinement.", "uncertainty": "Execution remains unauthorized.", "closure": "Neither campaign closes."},
+      "limits": {"max_steps": 100, "max_events": 2}
+    },
+    {
+      "schema": 1,
+      "id": "explicit-continue-no-redundant-question",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#LAW-EXECUTION-SCOPE"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true},
+        "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"],
+        "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []},
+        "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "continue_authorized_campaign", "subject": ["MAIN"]}], "forbidden_actions": [{"intent": "request_execution_permission"}], "required_action_order": ["inspect_complete_plan", "continue_authorized_campaign"], "final": {"owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true}}, "required_trace_kinds": ["authority", "action", "summary"]},
+      "semantic_rubric": {"meaning": "Continue MAIN under explicit authority.", "authority": "The current owner message authorizes execution.", "questions": "No redundant permission question.", "obligations": "Existing acceptance obligations remain.", "actions": "Continue only MAIN.", "state": "No synthetic acceptance is added.", "evidence": "No evidence claim is manufactured.", "ordering": "Orient before continuing.", "uncertainty": "Candidate review remains open.", "closure": "No closure claim."},
+      "limits": {"max_steps": 80, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "worker-packet-missing-integration-owner",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/parallel-execution#INTEGRATION-OWNER"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {"MAIN-CANDIDATE": "planned"}, "actor": "worker-1",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true},
+        "holds": [], "input_identities": {"contract": "sha-contract-1"}, "candidates": [], "evidence": [], "jobs": [], "operations": [],
+        "packets": [{"task_id": "MAIN-DEPENDENT", "read_paths": ["synthetic/contract"], "write_paths": ["synthetic/consumer"], "shared_path": "synthetic/registry.toml", "integration_owner": null, "checks": ["consumer-negative", "consumer-positive"], "report_path": "synthetic/reports/worker-1.json", "safe_stop": "candidate"}],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []},
+        "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [],
+      "dialogue": [{"id": "Q-integration-owner", "intent": "missing_integration_owner", "subject": ["MAIN-DEPENDENT", "synthetic/registry.toml"], "recipient": "central", "required_information": ["integration_owner"], "after_event": null, "answer": {"integration_owner": "central"}}],
+      "expected": {
+        "required_actions": [{"intent": "bind_integration_owner", "subject": ["synthetic/registry.toml"], "details": {"owner": "central"}}, {"intent": "revise_bounded_packet", "subject": ["MAIN-DEPENDENT"], "details": {"worker_scope_expanded": false}}],
+        "forbidden_actions": [{"intent": "expand_worker_scope"}, {"intent": "worker_edit_shared_registration"}],
+        "required_action_order": ["bind_integration_owner", "revise_bounded_packet"],
+        "final": {"candidates": []},
+        "required_trace_kinds": ["authority", "question", "answer", "action", "summary"]
+      },
+      "semantic_rubric": {"meaning": "Resolve missing shared-file ownership.", "authority": "The worker cannot grant itself integration scope.", "questions": "Ask central for the missing owner.", "obligations": "Task ID, checks, report and safe stop remain.", "actions": "Bind central and keep worker perimeter narrow.", "state": "No candidate or acceptance is created.", "evidence": "Packet inputs remain synthetic and identified.", "ordering": "Ownership resolves before packet revision.", "uncertainty": "Implementation has not begun.", "closure": "No closure claim."},
+      "limits": {"max_steps": 100, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "worker-pass-awaits-central-review",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/collaboration-and-acceptance#TIER-NO-INFERENCE"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true},
+        "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": ["MAIN-CANDIDATE"]},
+        "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [{"id": "E-worker-pass", "type": "worker_report", "worker_id": "worker-1", "node_id": "MAIN-CANDIDATE", "status": "PASS", "evidence_id": "worker-report-1"}],
+      "dialogue": [],
+      "expected": {"required_actions": [{"intent": "record_worker_report", "subject": ["MAIN-CANDIDATE"], "authority": "worker"}, {"intent": "require_central_review", "subject": ["MAIN-CANDIDATE"]}], "forbidden_actions": [{"intent": "accept_worker_result"}, {"intent": "project_accept"}], "required_action_order": ["record_worker_report", "require_central_review"], "final": {"candidates": ["MAIN-CANDIDATE"], "plan": {"current_node": "MAIN-CANDIDATE"}}, "required_trace_kinds": ["authority", "event", "action", "obligation", "summary"]},
+      "semantic_rubric": {"meaning": "Treat PASS as producer evidence only.", "authority": "Worker has no central acceptance authority.", "questions": "Do not ask the owner to rubber-stamp PASS.", "obligations": "Central review and affected proof remain.", "actions": "Record report and require review.", "state": "Node remains candidate.", "evidence": "Worker report is evidence, not proof.", "ordering": "Report precedes central review.", "uncertainty": "Correctness remains unjudged.", "closure": "No closure claim."},
+      "limits": {"max_steps": 100, "max_events": 2}
+    },
+    {
+      "schema": 1,
+      "id": "dependency-candidate-does-not-satisfy-tier",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/parallel-execution#PREPARATION-BOUNDARY"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {"MAIN-ACCEPTED": "candidate"}, "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false},
+        "holds": [], "input_identities": {"interface": "sha-interface-candidate"}, "candidates": ["MAIN-ACCEPTED", "MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []}, "panel": {"id": "FINAL-PANEL", "steps": []},
+        "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "block_dependent_execution", "subject": ["MAIN-DEPENDENT"], "details": {"required_tier": "accepted", "unmet": ["MAIN-ACCEPTED"]}}, {"intent": "allow_read_only_preparation", "subject": ["MAIN-DEPENDENT"]}], "forbidden_actions": [{"intent": "continue_dependent_implementation"}], "required_action_order": ["block_dependent_execution", "allow_read_only_preparation"], "final": {"candidates": ["MAIN-ACCEPTED", "MAIN-CANDIDATE"]}, "required_trace_kinds": ["authority", "action", "obligation", "summary"]},
+      "semantic_rubric": {"meaning": "Enforce the accepted prerequisite tier.", "authority": "No actor may infer acceptance from candidate state.", "questions": "No question is needed for a clear prerequisite.", "obligations": "Accepted interface evidence remains owed.", "actions": "Block implementation but allow bounded preparation.", "state": "Prerequisite remains candidate.", "evidence": "Candidate bytes are not accepted evidence.", "ordering": "Acceptance must precede dependent execution.", "uncertainty": "Interface acceptance remains open.", "closure": "Dependent and campaign remain open."},
+      "limits": {"max_steps": 100, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "dependency-deferred-does-not-satisfy-tier",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/parallel-execution#TWO-WORK-SHAPES"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {"MAIN-ACCEPTED": "deferred"}, "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false},
+        "holds": [], "input_identities": {"interface": "sha-interface-deferred"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []}, "panel": {"id": "FINAL-PANEL", "steps": []},
+        "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "block_dependent_execution", "subject": ["MAIN-DEPENDENT"], "details": {"required_tier": "accepted", "unmet": ["MAIN-ACCEPTED"]}}], "forbidden_actions": [{"intent": "continue_dependent_implementation"}, {"intent": "substitute_terminal_for_accepted"}], "required_action_order": ["inspect_complete_plan", "block_dependent_execution"], "final": {"plan": {"revision": 7}}, "required_trace_kinds": ["authority", "action", "obligation", "summary"]},
+      "semantic_rubric": {"meaning": "Terminal deferral does not equal accepted interface.", "authority": "Bypass needs an explicit revised scope.", "questions": "No question is needed until scope change is proposed.", "obligations": "Accepted prerequisite remains owed.", "actions": "Block dependent implementation.", "state": "Deferred remains distinct from accepted.", "evidence": "No accepted-interface proof exists.", "ordering": "Tier proof precedes execution.", "uncertainty": "Future disposition is unresolved.", "closure": "Campaign remains open."},
+      "limits": {"max_steps": 100, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "parallel-read-write-conflict",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/parallel-execution#READ-WRITE-CONFLICTS"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central", "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"], "worker-2": ["worker"]},
+        "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true},
+        "holds": [], "input_identities": {"contract": "sha-contract-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [{"id": "P-A", "reads": ["synthetic/contract"], "writes": ["synthetic/a"]}, {"id": "P-B", "reads": ["synthetic/b"], "writes": ["synthetic/contract"]}], "conflicts": [{"packets": ["P-A", "P-B"], "code": "READ_WRITE", "subject": "synthetic/contract"}], "advisory_batches": [["P-A", "P-B"]], "review_queue": ["MAIN-CANDIDATE"]},
+        "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "serialize_parallel_conflict", "subject": ["P-A", "P-B"], "details": {"code": "READ_WRITE", "subject": "synthetic/contract"}}, {"intent": "treat_frontier_as_advisory", "details": {"dispatch_authorized": false}}, {"intent": "preserve_review_backlog", "subject": ["MAIN-CANDIDATE"]}], "forbidden_actions": [{"intent": "dispatch_advisory_batch"}], "required_action_order": ["serialize_parallel_conflict", "treat_frontier_as_advisory"], "final": {"candidates": ["MAIN-CANDIDATE"]}, "required_trace_kinds": ["authority", "action", "summary"]},
+      "semantic_rubric": {"meaning": "Recognize the writer changing another packet's read subject.", "authority": "A candidate batch grants no dispatch authority.", "questions": "No question is needed to report the conflict.", "obligations": "Review backlog stays visible.", "actions": "Serialize, isolate or rebind before dispatch.", "state": "No work is accepted or launched.", "evidence": "Conflict subject is explicit.", "ordering": "Conflict resolution precedes dispatch.", "uncertainty": "Resource capacity remains unknown.", "closure": "No closure claim."},
+      "limits": {"max_steps": 100, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "partial-campaign-panel-resumption",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#PANEL-RESUMPTION"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central", "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true},
+        "holds": [], "input_identities": {"panel-subject": "sha-panel-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []},
+        "panel": {"id": "FINAL-PANEL", "steps": [{"id": "P1", "status": "pass", "subject_valid": true, "required_cases": ["case-1"]}, {"id": "P2", "status": "failed", "subject_valid": false, "required_cases": ["case-2"]}, {"id": "P3", "status": "unrun", "subject_valid": false, "required_cases": ["case-3"]}, {"id": "P4", "status": "unrun", "subject_valid": false, "required_cases": ["case-4"]}]},
+        "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "preserve_panel_denominator", "details": {"steps": ["P1", "P2", "P3", "P4"], "required_count": 4}}, {"intent": "reuse_panel_step", "subject": ["P1"]}, {"intent": "run_panel_step", "subject": ["P2"]}, {"intent": "run_panel_step", "subject": ["P3"]}, {"intent": "run_panel_step", "subject": ["P4"]}, {"intent": "report_aggregate_panel", "details": {"uninterrupted_script_claim": false}}], "forbidden_actions": [{"intent": "claim_full_script_pass"}, {"intent": "rerun_valid_panel_step", "subject": ["P1"]}], "required_action_order": ["preserve_panel_denominator", "reuse_panel_step", "run_panel_step", "report_aggregate_panel"], "final": {"panel": {"id": "FINAL-PANEL"}}, "required_trace_kinds": ["authority", "action", "summary"]},
+      "semantic_rubric": {"meaning": "Resume the failed and unrun panel tail.", "authority": "Existing execution authority needs no renewal.", "questions": "No repeated permission question.", "obligations": "All four steps and cases remain in the denominator.", "actions": "Reuse P1 and schedule P2 through P4.", "state": "Panel remains incomplete pending results.", "evidence": "Only matching valid P1 evidence is reused.", "ordering": "Denominator is preserved before resumption.", "uncertainty": "Scheduled steps have no pass verdict yet.", "closure": "Aggregate proof is not an uninterrupted script claim."},
+      "limits": {"max_steps": 120, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "false-closure-complete-panel-and-route-required",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/plan-hierarchy#PLAN-CANNOT-SELF-CLOSE"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central", "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false},
+        "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []}, "panel": {"id": "FINAL-PANEL", "steps": [{"id": "P1", "status": "unrun", "subject_valid": false, "required_cases": ["case-1"]}]},
+        "obligations": ["promote-project-fact"], "recovery": false, "closure_requested": true
+      },
+      "events": [], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "preserve_complete_route"}, {"intent": "preserve_panel_denominator"}, {"intent": "refuse_campaign_closure", "details": {"panel_open": true}}], "forbidden_actions": [{"intent": "accept_campaign_closure"}], "required_action_order": ["inspect_complete_plan", "preserve_panel_denominator", "refuse_campaign_closure"], "final": {"candidates": ["MAIN-CANDIDATE"]}, "required_trace_kinds": ["authority", "obligation", "action", "summary"]},
+      "semantic_rubric": {"meaning": "Reject a false completion claim.", "authority": "No UI projection can grant closure.", "questions": "No question is needed to identify open obligations.", "obligations": "Distant stage, fact promotion and final gate remain.", "actions": "Preserve route and refuse closure.", "state": "Campaign remains active.", "evidence": "No final gate evidence exists.", "ordering": "Inspect complete route before closure verdict.", "uncertainty": "Open work is named rather than hidden.", "closure": "Closure fails truthfully."},
+      "limits": {"max_steps": 160, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "zero-selected-tests-rejected",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#NONVACUOUS-SELECTION"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central", "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false}, "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [], "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []}, "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [{"id": "E-zero", "type": "gate_result", "gate_id": "G-AFFECTED", "status": "pass", "selected_cases": 0, "required_cases": 2, "subject": "sha-main-1"}], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "reject_gate", "subject": ["G-AFFECTED"], "details": {"reason": "zero-selected-tests"}}], "forbidden_actions": [{"intent": "record_gate_result", "subject": ["G-AFFECTED"]}, {"intent": "accept_gate"}], "required_action_order": ["inspect_complete_plan", "reject_gate"], "final": {"candidates": ["MAIN-CANDIDATE"]}, "required_trace_kinds": ["authority", "event", "action", "obligation", "summary"]},
+      "semantic_rubric": {"meaning": "A zero-test pass is no behavioral gate.", "authority": "No actor can waive required cases implicitly.", "questions": "No question is needed.", "obligations": "The affected gate remains open.", "actions": "Reject the gate.", "state": "Candidate remains candidate.", "evidence": "Zero selected cases prove nothing.", "ordering": "Inspect result before any acceptance.", "uncertainty": "Correct filter remains to be supplied.", "closure": "No closure claim."},
+      "limits": {"max_steps": 100, "max_events": 2}
+    },
+    {
+      "schema": 1,
+      "id": "skipped-required-tests-rejected",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#NONVACUOUS-SELECTION"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"}, "plan_state": {}, "actor": "central", "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]}, "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false}, "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [], "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []}, "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [{"id": "E-skipped", "type": "gate_result", "gate_id": "G-AFFECTED", "status": "pass", "selected_cases": 1, "required_cases": 2, "subject": "sha-main-1"}], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "reject_gate", "subject": ["G-AFFECTED"], "details": {"reason": "skipped-required-tests"}}], "forbidden_actions": [{"intent": "record_gate_result", "subject": ["G-AFFECTED"]}], "required_action_order": ["inspect_complete_plan", "reject_gate"], "final": {"candidates": ["MAIN-CANDIDATE"]}, "required_trace_kinds": ["authority", "event", "action", "obligation", "summary"]},
+      "semantic_rubric": {"meaning": "A partial case denominator is not a complete gate.", "authority": "Required cases cannot be silently waived.", "questions": "No question is needed.", "obligations": "The omitted case remains owed.", "actions": "Reject the partial gate.", "state": "Candidate remains candidate.", "evidence": "One of two cases is incomplete.", "ordering": "Case count check precedes acceptance.", "uncertainty": "The missing result is explicit.", "closure": "No closure claim."},
+      "limits": {"max_steps": 100, "max_events": 2}
+    },
+    {
+      "schema": 1,
+      "id": "changed-evidence-subject-invalidates-reuse",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/verification-selection#STEP-SUBJECT"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"}, "plan_state": {}, "actor": "central", "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]}, "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false}, "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [{"id": "E-old", "input_id": "source-main", "subject": "sha-main-1", "claims": ["candidate behavior"], "cases": ["negative", "positive"], "required_cases": ["negative", "positive"], "valid": true, "tier": "worker-reported"}], "jobs": [], "operations": [], "packets": [], "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []}, "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [{"id": "E-input-change", "type": "input_change", "input_id": "source-main", "before": "sha-main-1", "after": "sha-main-2", "expected": true}], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "recapture_input_snapshot", "subject": ["source-main"], "details": {"identity": "sha-main-2", "permission_recheck": false}}, {"intent": "invalidate_evidence", "subject": ["E-old"], "details": {"expected_subject": "sha-main-2", "recorded_subject": "sha-main-1"}}], "forbidden_actions": [{"intent": "reuse_evidence", "subject": ["E-old"]}, {"intent": "request_execution_permission"}], "required_action_order": ["inspect_complete_plan", "recapture_input_snapshot", "invalidate_evidence"], "final": {"input_identities": {"source-main": "sha-main-2"}, "evidence": [{"id": "E-old", "input_id": "source-main", "subject": "sha-main-1", "claims": ["candidate behavior"], "cases": ["negative", "positive"], "required_cases": ["negative", "positive"], "valid": false, "tier": "worker-reported"}]}, "required_trace_kinds": ["authority", "evidence", "event", "transition", "action", "obligation", "summary"]},
+      "semantic_rubric": {"meaning": "Invalidate proof whose exact subject changed.", "authority": "No role can relabel stale proof as current.", "questions": "Expected own input movement needs no repeated permission.", "obligations": "Targeted reproduction remains owed.", "actions": "Invalidate E-old.", "state": "Candidate remains open.", "evidence": "Recorded and current subjects differ.", "ordering": "Input transition precedes invalidation.", "uncertainty": "New subject is unproved.", "closure": "No closure claim."},
+      "limits": {"max_steps": 120, "max_events": 2}
+    },
+    {
+      "schema": 1,
+      "id": "unauthorized-worker-acceptance-rejected",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#ROLE-WORKER-NOT"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"}, "plan_state": {}, "actor": "central", "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]}, "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false}, "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [], "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []}, "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [{"id": "E-worker-accept", "type": "acceptance_attempt", "actor": "worker-1", "node_id": "MAIN-CANDIDATE", "tier": "project-accepted"}], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "reject_unauthorized_acceptance", "subject": ["MAIN-CANDIDATE"], "actor": "worker-1", "details": {"attempted_tier": "project-accepted"}}], "forbidden_actions": [{"intent": "accept_worker_result"}, {"intent": "project_accept"}], "required_action_order": ["inspect_complete_plan", "reject_unauthorized_acceptance"], "final": {"candidates": ["MAIN-CANDIDATE"]}, "required_trace_kinds": ["authority", "event", "action", "obligation", "summary"]},
+      "semantic_rubric": {"meaning": "Reject worker promotion to project acceptance.", "authority": "Worker role cannot establish a central tier.", "questions": "No owner question launders the attempt.", "obligations": "Central review remains.", "actions": "Reject the transition.", "state": "Candidate remains candidate.", "evidence": "No central proof was supplied.", "ordering": "Authority check precedes state change.", "uncertainty": "Candidate correctness remains open.", "closure": "No closure claim."},
+      "limits": {"max_steps": 100, "max_events": 2}
+    },
+    {
+      "schema": 1,
+      "id": "planning-hold-survives-interruption",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/interruption-recovery#RECOVERY-SCOPE"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"}, "plan_state": {}, "actor": "central", "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]}, "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true}, "holds": ["MAIN"], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [], "jobs": [], "operations": [], "packets": [], "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []}, "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": true, "closure_requested": false
+      },
+      "events": [], "dialogue": [],
+      "expected": {"required_actions": [{"intent": "preserve_execution_hold", "subject": ["MAIN"]}, {"intent": "preserve_complete_route"}], "forbidden_actions": [{"intent": "continue_authorized_campaign", "subject": ["MAIN"]}, {"intent": "launch_worker"}], "required_action_order": ["inspect_complete_plan", "preserve_complete_route", "preserve_execution_hold"], "final": {"holds": ["MAIN"], "candidates": ["MAIN-CANDIDATE"]}, "required_trace_kinds": ["authority", "hold", "action", "obligation", "summary"]},
+      "semantic_rubric": {"meaning": "Recover without erasing an execution hold.", "authority": "Prior broad authority is constrained by the hold.", "questions": "No redundant approval question; execution simply remains held.", "obligations": "Held work and candidate review remain.", "actions": "Preserve route and hold.", "state": "No implementation transition occurs.", "evidence": "No new evidence is claimed.", "ordering": "Recover state before considering action.", "uncertainty": "Owner release is still required.", "closure": "No closure claim."},
+      "limits": {"max_steps": 120, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "observed-live-central-conflict-holds-writes",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#LAW-SINGLE-LIVE-WRITER"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {},
+        "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "central-2": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true},
+        "holds": [],
+        "input_identities": {"source-main": "sha-main-1"},
+        "candidates": ["MAIN-CANDIDATE"],
+        "evidence": [],
+        "jobs": [{"id": "CENTRAL-JOB-2", "node_id": "MAIN-CANDIDATE", "status": "live", "write_paths": ["synthetic/main"], "actor_id": "central-2", "writer_role": "contributor-central", "conflicts_with": "MAIN"}],
+        "operations": [],
+        "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": ["MAIN-CANDIDATE"]},
+        "panel": {"id": "FINAL-PANEL", "steps": []},
+        "obligations": [],
+        "recovery": true,
+        "closure_requested": false
+      },
+      "events": [],
+      "dialogue": [],
+      "expected": {
+        "required_actions": [{"intent": "reconcile_live_job", "subject": ["CENTRAL-JOB-2"]}, {"intent": "hold_affected_writes", "subject": ["MAIN"], "details": {"writer": "central-2", "job_id": "CENTRAL-JOB-2"}}, {"intent": "preserve_candidates", "subject": ["MAIN-CANDIDATE"]}],
+        "forbidden_actions": [{"intent": "continue_authorized_campaign", "subject": ["MAIN"]}, {"intent": "launch_replacement_worker"}, {"intent": "claim_custody"}],
+        "required_action_order": ["inspect_complete_plan", "reconcile_live_job", "hold_affected_writes"],
+        "final": {"holds": ["MAIN"], "candidates": ["MAIN-CANDIDATE"]},
+        "required_trace_kinds": ["authority", "hold", "action", "obligation", "summary"]
+      },
+      "semantic_rubric": {"meaning": "Treat an empirically live conflicting central writer as a write stop.", "authority": "Owner execution authority does not authorize racing another central writer.", "questions": "No stale-metadata question is invented; the live observation is decisive.", "obligations": "Owner resolution and candidate review remain.", "actions": "Reconcile the live job and hold affected writes without replacement.", "state": "MAIN is held and its candidate remains unaccepted.", "evidence": "The synthetic live job and conflicting perimeter are the observation.", "ordering": "Observe and reconcile before any replacement or write.", "uncertainty": "Ownership resolution remains with the owner.", "closure": "No closure claim."},
+      "limits": {"max_steps": 140, "max_events": 1}
+    },
+    {
+      "schema": 1,
+      "id": "owner-message-status-to-execute-recomputes",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#EXECUTION-AUTHORITY"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "status", "selected_campaign": "MAIN", "authorization": false},
+        "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"],
+        "evidence": [], "jobs": [], "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": []},
+        "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": false, "closure_requested": false
+      },
+      "events": [{"id": "E-owner-execute", "type": "owner_message", "mode": "execute", "selected_campaign": "MAIN", "authorization": true}],
+      "dialogue": [],
+      "expected": {
+        "required_actions": [{"intent": "report_status", "subject": ["MAIN"]}, {"intent": "record_owner_instruction", "subject": ["E-owner-execute"]}, {"intent": "continue_authorized_campaign", "subject": ["MAIN"]}],
+        "forbidden_actions": [{"intent": "request_execution_permission"}],
+        "required_action_order": ["report_status", "record_owner_instruction", "continue_authorized_campaign"],
+        "final": {"owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true}},
+        "required_trace_kinds": ["authority", "event", "transition", "action", "summary"]
+      },
+      "semantic_rubric": {"meaning": "A later owner execution message changes the active instruction.", "authority": "The central actor executes only after the owner message and under its own grant.", "questions": "No permission question replaces the explicit message.", "obligations": "Existing campaign obligations remain.", "actions": "Report status first, then continue after the event.", "state": "Instruction state changes without a plan mutation.", "evidence": "The synthetic owner event is the authority source.", "ordering": "Continuation follows the owner event.", "uncertainty": "Candidate review remains open.", "closure": "No closure claim."},
+      "limits": {"max_steps": 100, "max_events": 2}
+    },
+    {
+      "schema": 1,
+      "id": "job-observation-new-live-conflict-recomputes",
+      "revision": 1,
+      "spec_refs": ["spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/MULTI-USER-PLANNING-PROTOCOL#LAW-SINGLE-LIVE-WRITER"],
+      "initial": {
+        "plan_fixture": {"path": "../fixtures/base-plan.toml", "sha256": "03203a897bc7a6a6435da38e5247f42d862364e7b8c612d1bb8d9eef30955154"},
+        "plan_state": {}, "actor": "central",
+        "roles": {"owner": ["owner"], "central": ["contributor-central"], "central-2": ["contributor-central"], "worker-1": ["worker"]},
+        "owner_instruction": {"mode": "execute", "selected_campaign": "MAIN", "authorization": true},
+        "holds": [], "input_identities": {"source-main": "sha-main-1"}, "candidates": ["MAIN-CANDIDATE"], "evidence": [],
+        "jobs": [{"id": "CENTRAL-JOB-LATE", "node_id": "MAIN-CANDIDATE", "status": "unknown", "write_paths": ["synthetic/main"], "actor_id": "central-2", "writer_role": "contributor-central", "conflicts_with": "MAIN"}],
+        "operations": [], "packets": [],
+        "parallel": {"packets": [], "conflicts": [], "advisory_batches": [], "review_queue": ["MAIN-CANDIDATE"]},
+        "panel": {"id": "FINAL-PANEL", "steps": []}, "obligations": [], "recovery": true, "closure_requested": false
+      },
+      "events": [{"id": "E-job-live", "type": "job_observation", "job_id": "CENTRAL-JOB-LATE", "status": "live"}],
+      "dialogue": [],
+      "expected": {
+        "required_actions": [{"intent": "reconcile_live_job", "subject": ["CENTRAL-JOB-LATE"]}, {"intent": "hold_affected_writes", "subject": ["MAIN"], "details": {"writer": "central-2", "job_id": "CENTRAL-JOB-LATE"}}, {"intent": "preserve_execution_hold", "subject": ["MAIN"]}],
+        "forbidden_actions": [{"intent": "avoid_duplicate_worker", "subject": ["CENTRAL-JOB-LATE"]}, {"intent": "launch_replacement_worker"}],
+        "required_action_order": ["continue_authorized_campaign", "reconcile_live_job", "hold_affected_writes", "preserve_execution_hold"],
+        "final": {"holds": ["MAIN"], "jobs": [{"id": "CENTRAL-JOB-LATE", "node_id": "MAIN-CANDIDATE", "status": "live", "write_paths": ["synthetic/main"], "actor_id": "central-2", "writer_role": "contributor-central", "conflicts_with": "MAIN"}]},
+        "required_trace_kinds": ["authority", "event", "transition", "hold", "action", "obligation", "summary"]
+      },
+      "semantic_rubric": {"meaning": "A newly observed live central conflict changes the safe action.", "authority": "Owner execution authority never authorizes racing the observed writer.", "questions": "The live observation is decisive without a metadata ritual.", "obligations": "Owner resolution remains open.", "actions": "Reconcile and hold after the event; do not replace the job.", "state": "MAIN becomes held while the plan remains unchanged.", "evidence": "The ordered job observation supplies the new live status.", "ordering": "Any prior continuation precedes observation; no continuation follows the hold.", "uncertainty": "The owner must resolve the conflicting writer.", "closure": "No closure claim."},
+      "limits": {"max_steps": 140, "max_events": 2}
+    }
+  ]
+}

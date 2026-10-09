@@ -95,7 +95,10 @@ report`. Recency alone grants no authority.</AUTHORITY-ORDER></p>
   governs execution.** A stored goal, ready frontier or recovery checkpoint does
   not start a campaign when the owner requested planning, inspection or a stop.
   Existing authorization survives ordinary interruption within its scope;
-  continuation does not require repeating already resolved approvals.</LAW-EXECUTION-SCOPE>
+  continuation does not require repeating already resolved approvals. That
+  authorization remains distinct from the actor's role and bounded scope: an
+  owner instruction does not promote a worker, widen its packet or exempt any
+  action from actor-grant, hold and subject checks.</LAW-EXECUTION-SCOPE>
       <LAW-RECOVER-EVIDENCE fact="true" status="spec/done">**Recover evidence
   before repeating work.** Provider failure does not prove a failed operation.
   Inspect surviving artifacts, live jobs and remote effects before retrying;
@@ -141,6 +144,11 @@ product diff is integrated or intentionally rejected, then clean it.</NO-EARLY-C
   [`goal-projection.xml`](goal-projection.xml).</DOC-GOAL>
       <DOC-EXECUTION fact="true" status="spec/done">Central campaign execution:
   [`campaign-execution.xml`](campaign-execution.xml).</DOC-EXECUTION>
+      <DOC-SIMULATION fact="true" status="spec/done">Deterministic synthetic
+  campaign decisions, independent trace checking, bounded manual real-agent
+  comparison and immutable recorded-test correction:
+  [`campaign-simulation.xml`](campaign-simulation.xml). Ordinary simulation has
+  no live-agent mode or execution authority.</DOC-SIMULATION>
       <DOC-PARALLEL fact="true" status="spec/done">Parallel packets, shared
   resource coordination and advisory frontier analysis:
   [`parallel-execution.xml`](parallel-execution.xml). Existing dependencies and

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Deterministic campaign simulation and recorded-test correction</title>
+  <status stage="spec" state="done"/>
+  <scope title="1. Scope and authority">
+    <p><SIMULATION-PURPOSE fact="true" status="spec/done">The campaign
+simulator is a deterministic executable model of selected multi-user-planning
+decisions over complete synthetic state. It cheaply tests question necessity,
+authority, preserved obligations, action intents, evidence and state
+transitions. It is development evidence about the model and cases, never an
+agent, scheduler, execution authority or proof that arbitrary natural-language
+behavior complies with this flow.</SIMULATION-PURPOSE></p>
+    <p><SIMULATION-BOUNDARY fact="true" status="spec/done">Ordinary simulation
+does not launch Codex or another agent, execute packet commands, inspect live
+jobs, read a personal plan or `~/.vibe/steward`, access a network, mutate a
+project tree, or perform an external effect. All plans, roles, jobs, results,
+effects and owner answers are local synthetic data. The package adds no product
+runtime feature, `vibe` subcommand, scheduled automation or live-mode fallback.
+The separately invoked real gate in §7 is a manual procedure and is not a mode
+of the simulator CLI.</SIMULATION-BOUNDARY></p>
+    <p><EXISTING-LAWS-WIN fact="true" status="spec/done">Cases cite exact
+anchors in the existing multi-user-planning specifications. They do not replace
+those laws. A simulator disagreement can expose a model or case defect; it does
+not silently revise campaign execution, verification, acceptance, parallelism,
+plan hierarchy or recovery rules.</EXISTING-LAWS-WIN></p>
+  </scope>
+  <format title="2. Strict synthetic inputs">
+    <p><CASE-FORMAT fact="true" status="spec/done">A schema-1 case has a stable
+`id` and positive `revision`; anchored `spec_refs`; complete synthetic initial
+plan, owner instruction, actor and role grants, holds, input identities,
+candidates, evidence, jobs, operations, packets, parallel observations, panel
+and unresolved obligations; ordered events; expected dialogue; expected trace
+and final-state oracle; a ten-field semantic rubric; and explicit maximum event
+and step counts. A fixture reference includes the lowercase SHA-256 of its raw
+bytes and resolves to a complete schema-1 plan before simulation.</CASE-FORMAT></p>
+    <p><STRICT-INPUTS fact="true" status="spec/done">Case, run and correction
+JSON is strict UTF-8 without BOM. Duplicate keys, unknown control fields,
+invalid identifiers and non-finite numbers are refusals. Fixture TOML is strict
+UTF-8 without BOM; duplicate keys, non-finite numbers, missing nodes,
+dependencies, parents, roots and cycles are refusals. Plan control fields are
+validated while campaign-specific extension fields remain opaque and survive
+every simulation transition. Every event type has an exact required field set,
+exact scalar types that do not treat booleans as integers, closed enums and
+references to existing synthetic actors, campaigns, nodes, jobs or inputs.
+Malformed events are rejected before model execution.</STRICT-INPUTS></p>
+    <p><COMPLETE-ROUTE fact="true" status="spec/done">A fixture plan is rooted
+and every node is reachable from its declared root. The normalized case keeps
+the complete route, not only a visible frontier. Plan mutations increment the
+revision, retain stable ids and record before/after identities and rationale.
+Projection and observation alone do not change the plan.</COMPLETE-ROUTE></p>
+    <p><QUESTION-FORMAT fact="true" status="spec/done">Each expected question
+records its stable case-local id, intent, ordered subject, recipient, required
+information, causal event position and scripted answer. The runner releases an
+answer only after the model emits a question matching all semantic fields.
+Exactly one answer with the declared recipient must follow that question before
+any answer-dependent selection, refinement or action, including current-node
+and plan-revision transitions and their matching history record. `after_event`
+is carried into the emitted question and
+provider request, then checked against the event that actually precedes the
+question in the trace rather than trusted as a label. A later event may reopen
+a previously resolved priority ambiguity and require a new causally positioned
+question. Missing, extra, mistimed or redundant permission questions, misbound
+answers and unused required answers fail. A case with an empty dialogue
+explicitly requires no question.</QUESTION-FORMAT></p>
+  </format>
+  <separation title="3. Model, runner and oracle separation">
+    <p><MODEL-ORACLE-SEPARATION fact="true" status="spec/done">The campaign
+model receives normalized initial inputs, ordered events, limits and only those
+answers released after matching questions. It does not read expected actions,
+forbidden actions, expected final state or the semantic rubric. A separately
+authored trace checker compares the resulting trace to those oracles. Helper or
+model output can never serve as its own expected result.</MODEL-ORACLE-SEPARATION></p>
+    <p><FRONTIER-REMAINS-ADVISORY fact="true" status="spec/done">A simulation
+may consume observations equivalent to `steward-parallel`, but an advisory
+frontier never authorizes dispatch. `dispatch_authorized = false`, missing
+bindings, recorded active plan nodes and observed live jobs remain distinct.
+Path-disjoint output cannot prove semantic independence or resource capacity.
+The independent oracle asserts campaign obligations rather than trusting a
+frontier batch.</FRONTIER-REMAINS-ADVISORY></p>
+    <p><DETERMINISM fact="true" status="spec/done">Logical time begins at
+`T+0000` and advances by one per trace entry. Entry and trace identities derive
+only from case identity, revision and canonical synthetic input. Event order is
+explicit; hierarchy ties use declared order then stable id. Wall clock,
+randomness, hash-map order, host process discovery and environmental state do
+not enter a result. Limits stop execution rather than silently dropping an
+event or obligation.</DETERMINISM></p>
+  </separation>
+  <trace title="4. Structured decisions and checker invariants">
+    <p><TRACE-CONTENTS fact="true" status="spec/done">A trace records role
+authority, active holds, evidence with subjects, questions and linked answers,
+synthetic events, action intents with actors and authority, state transitions,
+opened and final unresolved obligations, and a complete-route summary. The
+field and revision transitions for each plan mutation record the same exact
+question or event cause and before/after revision identity; repeated equal
+field values in later owner-answer epochs remain distinct occurrences. A panel
+acceptance or result-derived reuse records the exact gate-result event, step,
+subject, matching input identity and immutable case denominator that caused it. The
+final state contains the preserved plan and extension fields, plan history,
+instruction, holds, input identities, candidates, evidence, synthetic jobs,
+operations, packets, panel and unresolved obligations.</TRACE-CONTENTS></p>
+    <p><TRACE-CHECK fact="true" status="spec/done">The checker verifies case
+and revision identity, deterministic sequence and unique ids, step and event
+bounds, exact question/answer semantics, required and forbidden action
+patterns, causal action ordering, required trace kinds, expected final state,
+event coverage, granted authority, evidence subjects, non-vacuous test counts
+and parent closure. It independently projects the complete plan from inputs,
+compares the full ordered node identity and opaque extension fields, reconciles
+candidate and accepted summaries with node states, and requires one revisioned
+history record plus matching causally referenced field and revision transitions
+for every plan mutation. It resolves each cause against the earlier original
+question/answer or event content and order rather than trusting the claimed
+reference. Unknown,
+duplicate or skipped cases and zero selected cases cannot produce a green
+complete-suite claim. A report independently reloads the explicitly supplied
+case bundle and binds its raw hash plus every case id, revision and source hash;
+discovered and full-suite completeness derive from that trusted inventory, not
+from aggregate counts inside the run report.</TRACE-CHECK></p>
+    <p><AUTHORITY-INVARIANTS fact="true" status="spec/done">A worker PASS and
+structured summary are evidence only. They cannot become central review,
+local-gated or project-accepted state. A worker cannot assign itself an
+integration file or broaden its packet. An answer from an authorized central or
+owner role is recorded with that source; it does not retroactively expand the
+worker grant. Every action is checked against the acting identity's actual
+grant. An owner instruction may be the authorization source for a central
+action, but is never the actor grant and never turns a worker packet into
+campaign execution scope.</AUTHORITY-INVARIANTS></p>
+    <p><DEPENDENCY-INVARIANTS fact="true" status="spec/done">A dependent that
+requires an accepted prerequisite remains blocked while that prerequisite is a
+candidate or is merely terminal through deferral, dropping or supersession.
+Read-only preparation may proceed only on named available inputs. Any bypass
+requires an explicit authorized scope change; terminal state is not substituted
+for the declared tier.</DEPENDENCY-INVARIANTS></p>
+    <p><EVIDENCE-INVARIANTS fact="true" status="spec/done">Reusable evidence
+names its exact subject, claims and complete required cases. A changed subject
+invalidates affected evidence; zero selected tests, skipped required cases,
+setup-only success and a wrapper that loses child status are not passing gates.
+A partial fail-fast panel retains its full denominator, valid matching earlier
+steps, failed or invalidated steps and unrun tail. Aggregate proof never becomes
+a claim that an unexecuted uninterrupted script passed. A gate event for a
+panel step is checked against that step's immutable required case identities;
+the event cannot shrink or self-declare the denominator, make an incomplete
+step pass or make it reusable. Final panel reconciliation preserves the exact
+ordered initial step identities and required-case lists, then projects every
+step through recorded gate results, bound-input invalidation and supported
+scheduling transitions. A scheduled or otherwise incomplete step cannot become
+a final pass without a valid result.</EVIDENCE-INVARIANTS></p>
+    <p><PANEL-RESULT-CAUSALITY fact="true" status="spec/done">Every panel
+acceptance and every reuse derived from an ordered gate result binds the exact
+gate-result event id, step, subject and immutable required-case identities. An
+unrelated owner or job event does not end that attribution; only a newer result
+for the same step supersedes it, while a change to an input identity bound to
+the result's subject invalidates it. The checker examines every such action across
+the full trace, resolves its claimed cause to the original earlier event and
+rejects missing, forged, incomplete, mismatched, superseded or subject-stale
+causes. A valid
+step already present in the initial synthetic panel may retain its declared
+fixture reuse without pretending that an ordered gate-result event occurred.</PANEL-RESULT-CAUSALITY></p>
+    <p><PANEL-TRANSITION-CAUSALITY fact="true" status="spec/done">Every panel
+status and subject-validity transition is positionally bound to the exact
+preceding gate-result or input-change event, or to the exact panel-scheduling
+action, that independently projects it. The transition occurs after that
+trigger and before the next event, panel-scheduling action or final summary;
+matching cause labels, transition values and final state do not compensate for
+a transition outside that interval. An unrelated event ends the transition
+interval but does not by itself invalidate later reuse of an unchanged passing
+result.</PANEL-TRANSITION-CAUSALITY></p>
+    <p><PANEL-AUTHORITY-INVARIANTS fact="true" status="spec/done">Panel
+denominators, valid reusable results and owed steps may be reported in status,
+planning or held modes. Scheduling a failed, invalidated or unrun step is a
+separate execution action and requires an active execute instruction, no hold
+on the selected campaign and a coordinating actor grant. Reporting debt never
+changes a panel step to scheduled.</PANEL-AUTHORITY-INVARIANTS></p>
+    <p><RECOVERY-INVARIANTS fact="true" status="spec/done">Ordinary
+interruption preserves current authority and execution holds without a renewed
+approval ritual. A surviving job is reconciled before replacement. An unknown
+external effect is observed before replay; observed completion is recorded and
+not repeated. Accepted unchanged evidence and candidate status survive.
+Incomplete judgment remains an obligation. A newly observed live conflicting
+central writer is reconciled and creates an execution hold even when the
+initial state did not declare interruption recovery.</RECOVERY-INVARIANTS></p>
+    <p><EVENT-REEVALUATION fact="true" status="spec/done">Ordered owner
+messages, job observations and gate results invalidate the affected prior
+decision latch. The model reevaluates authorization, holds, recovery, panel and
+closure consequences after the event. A status-to-execute owner message may
+enable later execution; a newly live conflicting central job creates a later
+hold; and a panel gate result changes subsequent reuse or owed-step reporting.
+Identical actions are deduplicated only within one initial or event-driven
+decision epoch, so execute-to-status-to-execute permits a renewed authorized
+action. Earlier actions remain judged against what was known at their causal
+position.</EVENT-REEVALUATION></p>
+    <p><CLOSURE-INVARIANTS fact="true" status="spec/done">A short completed
+panel or UI projection does not close a campaign. Open route nodes, candidates,
+unpromoted facts, incomplete panel steps and other unresolved obligations are
+retained and cause a closure refusal. Parent acceptance cannot hide an open
+required child.</CLOSURE-INVARIANTS></p>
+  </trace>
+  <corpus title="5. Required representative corpus">
+    <p><CORPUS-POSITIVE fact="true" status="spec/done">The ordinary corpus
+covers casual interruption without repeated approval; an unknown external
+effect observed complete; an owner-priority question and planning-only answer;
+explicit continuation without a redundant question; a worker packet missing a
+shared integration owner; worker PASS awaiting central review; candidate and
+deferred prerequisite-tier variants; a parallel read/write conflict; partial
+campaign-panel resumption; status-to-execute instruction change; an initially
+unknown job newly observed as a live central conflict; and false closure with a
+distant route or final gate still open. Focused controls also cover
+`ALT→MAIN→ALT→MAIN` across distinct owner question/answer epochs and a failed
+panel result followed by an unrelated owner event and a later passing result
+for the same step. A passing result also remains reusable across an unrelated
+event while its own bound input subject is unchanged.</CORPUS-POSITIVE></p>
+    <p><CORPUS-NEGATIVE fact="true" status="spec/done">Negative controls cover
+planning holds surviving interruption, an observed live central conflict versus
+an expected own input change, skipped and zero selected tests, a missing panel
+tail, changed evidence subject, unauthorized worker acceptance,
+missing/extra/redundant questions, duplicate answers, misbound answers, worker
+campaign execution, unauthorized panel scheduling, duplicate suite selection,
+malformed event controls, dropped or falsely accepted plan nodes, unrecorded
+corrections, plan mutation before its authorizing answer, plan mutation without
+revision/history, forged truncated full-suite reports, self-declared panel
+denominators, reused original real-run ids, globally latched actions and
+mispositioned event-triggered priority questions. They also move the final
+repeated campaign switch before its own answer and inject acceptance of a
+failed panel result after an unrelated event. Focused panel controls forge
+reuse after a bound subject change, reuse a superseded pass, turn scheduled
+steps into unsupported final passes, shrink a final required-case list, and
+move result, invalidation or scheduling transitions before their triggers or
+across a later unrelated event boundary.
+Tests deliberately damage
+otherwise valid traces to prove the independent oracle turns red.</CORPUS-NEGATIVE></p>
+  </corpus>
+  <cli title="6. Local CLI boundary">
+    <p><CLI-OPERATIONS fact="true" status="spec/done">The package-local CLI
+supports only `simulate`, `validate` and `report` over explicitly supplied local
+synthetic files. `simulate` runs one or all known cases and reports discovered,
+selected, passed and failed counts. `validate` checks cases, fixture identities
+and correction records against the supplied baseline/history inventory.
+`report` validates unique per-case identities and derives passed, failed and
+selected totals from their verdicts instead of trusting stored aggregate
+counts. It requires the case bundle as a separate trusted input and derives
+discovered/full-suite state from that bundle's bound inventory; honestly
+partial selected reports remain valid and explicitly partial. Zero selected
+cases, duplicate or unknown selections, incomplete full-suite identity sets
+and malformed reports are refusals. There is no live
+flag, launcher import, agent fallback, shell command execution, network path or
+personal-state lookup.</CLI-OPERATIONS></p>
+  </cli>
+  <real-gate title="7. Separately invoked bounded real-agent gate">
+    <p><REAL-GATE-PRECONDITION fact="true" status="spec/done">A real-agent gate
+may begin only after the exact candidate package's complete simulator suite and
+correction validation pass. It is manually invoked outside the simulator CLI,
+uses isolated synthetic state and simulated operational effects, and declares
+model and harness identity, exact input hashes, response/scenario bounds and
+time or token limits before execution. Exhaustion leaves the gate incomplete;
+it does not extend the budget or convert uncertainty to pass.</REAL-GATE-PRECONDITION></p>
+    <p><REAL-GATE-DEFAULT-BOUND fact="true" status="spec/done">The default gate
+has at most six scenarios covering interruption, priority, packet scope,
+acceptance, dependency and closure; at most eight agent responses per scenario;
+and at most one correction/recheck round of six further scenarios. A project may
+choose a smaller bound or an explicitly reviewed alternative before starting.
+No ordinary automated test launches this gate.</REAL-GATE-DEFAULT-BOUND></p>
+    <p><SEMANTIC-RUBRIC fact="true" status="spec/done">Review records
+`pass | fail | uncertain` separately for meaning and intent; actor, grant,
+scope and holds; question recipient, subject, necessity and timing; preserved
+obligations; required and forbidden actions and safe stop; state and acceptance
+transitions; evidence subject, cases, validity and provenance; causal ordering;
+remaining uncertainty and next discriminating check; and truthful closure with
+complete route and gate denominator. Each verdict cites actual transcript or
+artifact references.</SEMANTIC-RUBRIC></p>
+    <p><SEMANTIC-MATCH fact="true" status="spec/done">Paraphrase and harmless
+narration differences are allowed, as is reordering independent observations
+without violating causality. A `may` cannot become `must`, a proposal cannot
+become an executed action, and a candidate cannot become accepted. Ambiguity is
+`uncertain`, with competing interpretations and the exact deciding evidence;
+success elsewhere cannot average away an authority violation or omitted
+obligation. An agent's structured summary is evidence, not proof that its
+transcript and actions agree.</SEMANTIC-MATCH></p>
+  </real-gate>
+  <corrections title="8. Meaning-based recorded-test correction">
+    <p><CORRECTION-FREEZE fact="true" status="spec/done">Before proposing any
+correction, freeze the original failed or uncertain real transcript, structured
+trace, semantic verdict, fixture and spec identities, harness/model identity and
+input hashes. Never overwrite, relabel or delete the prior failure because a
+later run passes. The supplied baseline/history inventory records the prior
+case revision and hash plus that frozen original result for every corrected or
+retired case.</CORRECTION-FREEZE></p>
+    <p><CORRECTION-CLASSIFY fact="true" status="spec/done">Classify the
+discrepancy as `agent_failure | model_defect | case_defect |
+ambiguous_specification | evidence_harness_failure`. State the competing
+meanings and governing evidence. A valid case is not tuned to one model's
+wording merely because that model failed it; an ambiguous specification is
+resolved in its authority plane before changing the oracle.</CORRECTION-CLASSIFY></p>
+    <p><CORRECTION-RECORD fact="true" status="spec/done">An adopted change has
+a uniquely named immutable schema-1 correction record. It identifies affected
+case ids and revisions, add/modify/delete operations, before and after hashes,
+the original verdict and frozen artifact hashes, classification, evidence,
+rationale, governing spec anchors, reviewer and verdict, coverage added,
+removed and preserved, full-simulator run ids and affected real-route recheck
+ids. Raw real transcripts remain outside ordinary fixtures; only reviewed
+identities and relevant evidence references enter the package.</CORRECTION-RECORD></p>
+    <p><CORRECTION-DELETION fact="true" status="spec/done">Deleting a test
+requires an immutable tombstone, the prior content hash and either named
+replacement coverage or an explicit authorized reason that the obligation no
+longer applies. Deletion never erases its original failed or uncertain verdict.
+Silent removal, revision reuse and a shared mutable correction counter are
+forbidden.</CORRECTION-DELETION></p>
+    <p><CORRECTION-ADOPTION fact="true" status="spec/done">After review, rerun
+the complete cheap simulator suite, including strict schema, coverage and
+correction-record validation. Validation compares the unique active case
+identities with the supplied baseline/history inventory; every add, modify or
+delete requires exactly one approved correction with matching before/after
+identity, and deletion replacement ids must exist in the active bundle and
+match its tombstone. A rejected review cannot authorize adoption. Only after
+that suite passes, recheck the affected
+real route against the revised package and case set. Record a later result with
+a new run id beside the frozen original. Recheck ids are unique and disjoint
+from the original failed or uncertain run id; simulator validation cannot prove
+that the named external run occurred later or that its result is true. A
+simulator-only pass leaves the real semantic gate outstanding.</CORRECTION-ADOPTION></p>
+  </corrections>
+  <limits title="9. Honest limits">
+    <p><SIMULATION-LIMITS fact="true" status="spec/done">Mechanical checks can
+establish deterministic traces, hashes, schema, declared authority, dependency
+predicates, plan preservation, case counts and explicit coverage. They cannot
+prove that arbitrary prose expresses owner intent, that architecture or paths
+are semantically independent, or that a real artifact supports an agent's
+claim. The validator also cannot prove from a supplied file alone that the
+baseline inventory was never rewritten, or that a named reviewer is
+independent, authorized or actually performed semantic review. It enforces
+internal identity and recorded-approval consistency; inventory provenance and
+reviewer authority remain manual semantic review duties at the bounded real
+gate.</SIMULATION-LIMITS></p>
+  </limits>
+</spec>
