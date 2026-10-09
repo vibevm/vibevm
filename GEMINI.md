@@ -72,6 +72,16 @@ Keep it current-state; prune stale lines.
   files, resolved `gpt-5.6-sol` / `xhigh`, and left product work unstaged.
   Without the late effort override this machine's user layer reported `ultra`
   despite the launcher's earlier xhigh default.
+- **Direct CLI worker routing (verified 2026-10-10):** for a bounded CLI
+  implementation or review that must run in the named session, add
+  `-c features.multi_agent=false` and explicitly tell the packet recipient to
+  implement/review itself. On local Codex CLI 0.159.3, `codex -c
+  features.multi_agent=false features list` reports the stable feature as false;
+  subsequent implementation runs edited the named worktree directly. Earlier
+  ephemeral CLI runs delegated internally despite a no-delegation packet, and
+  one inherited fork failed because its parent had no persisted rollout. Root
+  still owns packet scope, independent review and acceptance; a live CLI handle
+  remains the same job until its process is terminal.
 - **Current v1 launcher / post-clean build (updated 2026-09-29):** the
   specspace-root `fractality.ps1` / `fractality.sh` launchers now target
   `fractality/v1.1.0/target/debug/fractality.exe`; their example packet is
