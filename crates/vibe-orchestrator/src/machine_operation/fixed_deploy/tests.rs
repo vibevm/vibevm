@@ -137,6 +137,20 @@ fn completed() -> DeployInspection {
 }
 
 #[test]
+fn explicit_profile_matches_trusted_selection_before_c1() {
+    let fixture = Fixture::new();
+    let host = fixture.host();
+    assert!(host.check_requested_profile("local").is_ok());
+    for requested in ["", "other", "LOCAL", " local "] {
+        assert!(matches!(
+            host.submit_with_requested_profile("profile-key", requested),
+            Err(FixedDeployHostError::RequestedProfileMismatch)
+        ));
+        fixture.no_c1_key("profile-key");
+    }
+}
+
+#[test]
 fn strict_wire_and_host_root_refuse_before_owner_call() {
     let fixture = Fixture::new();
     let route = FixedDeployRoute::new(fixture.host());

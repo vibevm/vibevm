@@ -32,6 +32,7 @@ mod tests;
 pub enum FixedDeployHostError {
     ForeignRoot,
     ForeignScope,
+    RequestedProfileMismatch,
     InvalidHost(String),
     Root(String),
     Lease(LifecycleLeaseError),
@@ -342,7 +343,30 @@ impl FixedDeployHost {
             created_at,
         }
     }
+    /// A caller that carries an explicit profile must name the one selected
+    /// by this trusted host. A different name cannot reach C1 or the deploy
+    /// bridge, even when it reuses an existing key.
+    pub fn submit_with_requested_profile(
+        &self,
+        key: &str,
+        requested_profile: &str,
+    ) -> Result<DeployInspection, FixedDeployHostError> {
+        self.check_requested_profile(requested_profile)?;
+        self.submit_bound(key)
+    }
+
+    fn check_requested_profile(&self, requested_profile: &str) -> Result<(), FixedDeployHostError> {
+        if requested_profile != self.profile {
+            return Err(FixedDeployHostError::RequestedProfileMismatch);
+        }
+        Ok(())
+    }
+
     pub fn submit(&self, key: &str) -> Result<DeployInspection, FixedDeployHostError> {
+        self.submit_with_requested_profile(key, &self.profile)
+    }
+
+    fn submit_bound(&self, key: &str) -> Result<DeployInspection, FixedDeployHostError> {
         let lease = self.lease()?;
         SubmissionReservations::validate_namespace(&lease, &self.namespace, &self.scope)
             .map_err(FixedDeployHostError::Namespace)?;
