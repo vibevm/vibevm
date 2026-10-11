@@ -2483,3 +2483,23 @@ structure, and it goes when the file does.
 | @fact:B226-SEVERITY **severity** | P2 — blocks the M-14 gate and complete release-impact accounting; other product atoms and exact local tests can continue. |
 | @fact:B226-DISPOSITION **disposition** | `open` — owner question: authorize review and import of the eight exact captured files as large repository blobs, then bind the B/C records to them; or first approve a compact capture/evidence contract and validator change that preserves exact before/after provenance without those blobs? Do not silently use `/tmp` as permanent evidence, invent capture IDs, weaken the 33-subject denominator or import the blobs before the owner chooses. |
 | @fact:B226-FILED **filed by** | NEXT M-14 workstream gate review, 2026-10-03. |
+
+## B-227 — wire-diff prerequisite rejects unchanged index golden projection {#b-227}
+
+| field | value |
+|---|---|
+| @fact:B227-WHAT **what** | During the C4 profiled Deploy increment, wire-diff exited 1 before inspecting the new format: prerequisite rebuild --check reported drift in formats/corpora/index/e1/repomd.json relative to its index journal. |
+| @fact:B227-EVIDENCE **evidence** | Public executor report 2026-10-11T23:35:24.434Z in research/2026-10-12-vibevm-first-agent-start/current-turn-public.jsonl. Root observed no Git delta in that repomd or its journal. The new format has a separate corpus/reader test and two reported byte-identical codegen runs; these do not make the global wire-diff green. Exact final logs remain in the C4 execution evidence. |
+| @fact:B227-SEVERITY **severity** | P2 — global gate evidence is unavailable; affected C4 behavior has narrower proof under campaigns/next/verification-policy.json. Revisit before the final complete product panel if still failing. |
+| @fact:B227-DISPOSITION **disposition** | deferred — diagnose the baseline index projection/journal discrepancy when its scope is needed. Do not rebuild or rewrite unrelated fixture/journal as part of C4, and do not count this refused global gate as passed. |
+| @fact:B227-FILED **filed by** | First Agent C4 integration review, 2026-10-12. |
+
+## B-228 — scoped vibe-mcp conform has pre-existing findings outside C4 {#b-228}
+
+| field | value |
+|---|---|
+| @fact:B228-WHAT **what** | The C4 executor's scoped conform run reported 100 findings with an empty baseline, mostly in existing files; one example is lifecycle_operation/native_tests.rs at 689 lines. Two expect calls moved into the new negotiation module were identified for removal in this candidate. |
+| @fact:B228-EVIDENCE **evidence** | current-turn-public.jsonl public2026-10-11T23:38:16.191Z under /fast/git/v/research/2026-10-12-vibevm-first-agent-start. The initial count is not a final remaining count; exact final conform logs must distinguish candidate-added findings from old debt. |
+| @fact:B228-SEVERITY **severity** | P2 — conform verdict is red; no complete product conformance claim. Targeted C4 behavioral proof is separate. |
+| @fact:B228-DISPOSITION **disposition** | deferred — address old findings when their code or final conformance gate is required. Remove current candidate violations before accepting this increment; do not turn all existing crate debt into immediate C4 cleanup. |
+| @fact:B228-FILED **filed by** | First Agent C4 review, 2026-10-12. |
