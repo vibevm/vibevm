@@ -462,6 +462,97 @@ fn concurrent_api_mcp_and_frame_submit_invoke_one_exact_local_install() {
 }
 
 #[test]
+fn missing_final_report_preserves_same_partial_install_truth_across_three_surfaces() {
+    assert!(vibe_test_support::isolated_home().is_some());
+    let (_dir, project, _scope, route, _namespace, builds) = fixture();
+    let prepared = mcp(
+        &project,
+        route.clone(),
+        json!({"kind":"prepare","phase":"install",
+        "requested_options":{"force":false,"trace":false,"deploy_profile":null,"control":"none"}}),
+    );
+    let Reply::Question(question) =
+        serde_json::from_value::<LifecycleActionReply>(prepared["structuredContent"].clone())
+            .unwrap()
+            .reply
+    else {
+        panic!("question")
+    };
+    let mut answer: d::InputDecisionMessage = serde_json::from_str(&question.payload_json).unwrap();
+    let reference = answer.question_id.clone().unwrap();
+    answer.body = d::Body::ApprovalAnswer(Box::new(d::BodyApprovalAnswer { approved: true }));
+    let accepted = mcp(
+        &project,
+        route.clone(),
+        json!({"kind":"answer",
+        "message_json":serde_json::to_string(&answer).unwrap()}),
+    );
+    assert_eq!(accepted["isError"], false, "{accepted}");
+    let submitted = mcp(
+        &project,
+        route.clone(),
+        json!({"kind":"submit",
+        "accepted_ref":reference,"key":"lost-report"}),
+    );
+    assert_eq!(submitted["isError"], false, "{submitted}");
+    let reply: LifecycleActionReply =
+        serde_json::from_value(submitted["structuredContent"].clone()).unwrap();
+    let run = reply_run_id(&reply);
+    assert_eq!(builds.load(Ordering::SeqCst), 1);
+    let report = project.join(format!(".vibe/lifecycle-outcomes/{run}.report.json"));
+    fs::remove_file(&report).unwrap();
+
+    let action = json!({"kind":"inspect","key":"lost-report"});
+    let input = json!({"schema":1,
+        "operation_id":vibe_orchestrator::machine_operation::exact_local_install::OPERATION_ID,
+        "domain_owner":vibe_orchestrator::machine_operation::exact_local_install::DOMAIN_OWNER,
+        "source_id":null,"evidence_id":null,
+        "body":{"stage":"input","format_id":FormatId::MachineLifecycleActionRequest.id(),
+            "payload_json":json!({"schema":1,"action":action}).to_string()}});
+    let api = ExactLocalInstallRoute::exchange_local(
+        Some(&route),
+        input.to_string().as_bytes(),
+        &project,
+    )
+    .unwrap();
+    let e::Body::Error(api_error) = api.body else {
+        panic!("API error")
+    };
+    let owner_error: LifecycleActionError =
+        serde_json::from_str(api_error.payload_json.as_deref().unwrap()).unwrap();
+    assert_eq!(owner_error.requested_phase.as_deref(), Some("install"));
+    assert_eq!(owner_error.known_run_id.as_deref(), Some(run.as_str()));
+    let view: Value = serde_json::from_str(owner_error.view_json.as_deref().unwrap()).unwrap();
+    assert_eq!(view["partial"], true);
+    assert_eq!(view["run_id"], run);
+    assert_eq!(api_error.effect_state, e::BodyErrorEffectState::Uncertain);
+    assert_eq!(
+        api_error.completeness,
+        e::BodyErrorCompleteness::Unavailable
+    );
+
+    let mcp_result = mcp(&project, route.clone(), action.clone());
+    assert_eq!(mcp_result["isError"], true, "{mcp_result}");
+    assert_eq!(
+        mcp_result["structuredContent"],
+        serde_json::to_value(&owner_error).unwrap()
+    );
+    let mut runner = ExactLocalInstallMachineSessionRunner::new(context(&project, route)).unwrap();
+    let ids = initialized(&mut runner);
+    let (refused, frame, outcome) = local(&mut runner, &ids, "lost-report-inspect", action);
+    assert!(refused);
+    let e::Body::Error(frame_error) = frame.body else {
+        panic!("frame error")
+    };
+    assert_eq!(frame_error.payload_json, api_error.payload_json);
+    assert_eq!(outcome.effect_state, f::OutcomeEffectState::Uncertain);
+    assert_eq!(outcome.completeness, f::OutcomeCompleteness::Unavailable);
+    assert_eq!(outcome.provenance_id.as_deref(), Some(run.as_str()));
+    assert_eq!(builds.load(Ordering::SeqCst), 1);
+    assert!(!report.exists());
+}
+
+#[test]
 fn unsupported_options_and_unknown_key_refuse_without_effects() {
     let (_dir, project, _scope, route, _namespace, _builds) = fixture();
     let result = mcp(
