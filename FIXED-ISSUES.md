@@ -142,6 +142,12 @@
 - Причина: Root packet ошибочно назвал existing workspace-store/recovery.test.ts новым.
 - Действие: остановлены старые доработки; immutable baseline и partialworktree сохранены. Восстановление/merge обязательно только если candidate понадобится для конкретного следующего блокера.
 
+## Install missing-report verification — no observed product defect
+
+The existing exact-local Install path passed MCP family5/5 and a cold CLI/MCP fixture1/1, with0 ignored. Accepted test commit is recorded in Git as test(api): retain partial install truth across cold adapters. After completed Install and fixture report deletion, all adapters retain the original install run, partial view and uncertain effect; cold inspection leaves the C1 index and lock bytes unchanged. This establishes reading that scenario, not automatic reconstruction of a lost final report or full C4 completion.
+
+Operator read-only path mistakes in this step: worker queried absent lifecycle_adapter/decision.rs and machine_operation/exact_local_install/; actual definitions are lifecycle_decisions.rs and exact_local_install.rs. Root also guessed an absent exact_local_install/tests.rs before resolving source files with rg --files. No product state was changed by these failed probes. Exact selected test logs and report are preserved under research/2026-10-12-vibevm-first-agent-start; event times for the probes were not separately captured.
+
 ## PodBay
 
 Отдельного нового подтверждённого сбоя PodBay в этом операционном запуске пока не выявлено. Старые незавершённые задачи не превращаем в новые инциденты без реального воспроизведения. Они сохранены в Zap BACKLOG P2-014 и полном deferred inventory.
