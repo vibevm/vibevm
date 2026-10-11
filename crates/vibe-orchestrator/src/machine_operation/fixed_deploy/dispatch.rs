@@ -3,6 +3,25 @@ use super::{FixedDeployHost, FixedDeployHostError, FixedDeployRecoveryHost, cont
 use std::{path::Path, sync::Arc};
 use vibe_lifecycle::retained_mechanism::DeployInspection;
 
+#[derive(Clone)]
+pub(super) enum ParsedAction {
+    Submit {
+        key: String,
+        requested_profile: Option<String>,
+    },
+    Inspect {
+        key: String,
+    },
+}
+impl ParsedAction {
+    pub(super) fn kind_key(&self) -> (&'static str, &str) {
+        match self {
+            Self::Submit { key, .. } => ("submit", key),
+            Self::Inspect { key } => ("inspect", key),
+        }
+    }
+}
+
 /// Typed preflight or owner-publication refusal. A missing grant cannot begin
 /// a Deploy effect.
 ///
@@ -116,11 +135,25 @@ impl FixedDeployRoute {
         root: &Path,
         cap: usize,
     ) -> Result<(rep::FixedDeployActionReply, DeployInspection), FixedDeployRouteError> {
-        Self::dispatch_owned_with_owner_call(grant, bytes, root, cap, |host, action, key| {
-            match action {
-                req::Action::Submit(_) => host.submit(key),
-                req::Action::Inspect(_) => host.inspect(key),
-            }
+        Self::dispatch_owned_with_owner_call(grant, bytes, root, cap, |host, action| match action {
+            ParsedAction::Submit { key, .. } => host.submit(key),
+            ParsedAction::Inspect { key } => host.inspect(key),
+        })
+    }
+    pub(super) fn dispatch_profiled_owned(
+        grant: Option<&Self>,
+        bytes: &[u8],
+        root: &Path,
+        cap: usize,
+    ) -> Result<(rep::FixedDeployActionReply, DeployInspection), FixedDeployRouteError> {
+        let request = decode_profiled(bytes).map_err(|reason| invalid(grant, &reason))?;
+        Self::dispatch_parsed(grant, request, root, cap, |host, action| match action {
+            ParsedAction::Submit {
+                key,
+                requested_profile: Some(profile),
+            } => host.submit_with_requested_profile(key, profile),
+            ParsedAction::Inspect { key } => host.inspect(key),
+            ParsedAction::Submit { .. } => unreachable!("profiled submit always names a profile"),
         })
     }
     pub(super) fn dispatch_owned_with_owner_call(
@@ -130,24 +163,23 @@ impl FixedDeployRoute {
         cap: usize,
         owner_call: impl FnOnce(
             &FixedDeployHost,
-            &req::Action,
-            &str,
+            &ParsedAction,
         ) -> Result<DeployInspection, FixedDeployHostError>,
     ) -> Result<(rep::FixedDeployActionReply, DeployInspection), FixedDeployRouteError> {
-        let request = decode(bytes).map_err(|reason| {
-            failure(
-                grant,
-                err::FixedDeployActionErrorCode::InvalidRequest,
-                &reason,
-                None,
-                false,
-                None,
-                None,
-                None,
-                None,
-            )
-        })?;
-        let (action, key) = action_key(&request);
+        let request = decode_legacy(bytes).map_err(|reason| invalid(grant, &reason))?;
+        Self::dispatch_parsed(grant, request, root, cap, owner_call)
+    }
+    fn dispatch_parsed(
+        grant: Option<&Self>,
+        request: ParsedAction,
+        root: &Path,
+        cap: usize,
+        owner_call: impl FnOnce(
+            &FixedDeployHost,
+            &ParsedAction,
+        ) -> Result<DeployInspection, FixedDeployHostError>,
+    ) -> Result<(rep::FixedDeployActionReply, DeployInspection), FixedDeployRouteError> {
+        let (action, key) = request.kind_key();
         let route = grant.ok_or_else(|| {
             failure(
                 None,
@@ -175,10 +207,10 @@ impl FixedDeployRoute {
             )
         })?;
         let observed = match &route.host {
-            RouteHost::Active(host) => owner_call(host, &request.action, key),
-            RouteHost::RecoveryOnly(host) => match &request.action {
-                req::Action::Inspect(_) => host.inspect(key),
-                req::Action::Submit(_) => {
+            RouteHost::Active(host) => owner_call(host, &request),
+            RouteHost::RecoveryOnly(host) => match &request {
+                ParsedAction::Inspect { .. } => host.inspect(key),
+                ParsedAction::Submit { .. } => {
                     let inspection = host.inspect(key);
                     return Err(match inspection {
                         Ok(observation) => failure(
@@ -262,27 +294,75 @@ pub(super) fn owner_error_parts(
             owner_run(observation).map(str::to_owned),
         ),
         FixedDeployHostError::Inspect(_) => (true, None, None),
+        FixedDeployHostError::RequestedProfileMismatch => (false, None, None),
         // A host failure can race or follow an already reserved key. Only the
         // outer generated-shape/root preflight above proves no dispatch here.
         _ => (true, None, None),
     }
 }
-pub(super) fn decode(bytes: &[u8]) -> Result<req::FixedDeployActionRequest, String> {
+fn invalid(grant: Option<&FixedDeployRoute>, reason: &str) -> FixedDeployRouteError {
+    failure(
+        grant,
+        err::FixedDeployActionErrorCode::InvalidRequest,
+        reason,
+        None,
+        false,
+        None,
+        None,
+        None,
+        None,
+    )
+}
+pub(super) fn decode_legacy(bytes: &[u8]) -> Result<ParsedAction, String> {
     if bytes.len() > REQUEST_CAP {
         return Err("request exceeds cap".into());
     }
     let value: req::FixedDeployActionRequest =
         serde_json::from_slice(bytes).map_err(|_| "generated request shape refused".to_owned())?;
-    if value.schema != 1 || !key(action_key(&value).1) {
+    if value.schema != 1 {
         return Err("request epoch or key refused".into());
     }
-    Ok(value)
-}
-pub(super) fn action_key(value: &req::FixedDeployActionRequest) -> (&'static str, &str) {
-    match &value.action {
-        req::Action::Submit(row) => ("submit", &row.key),
-        req::Action::Inspect(row) => ("inspect", &row.key),
+    let action = match value.action {
+        req::Action::Submit(row) => ParsedAction::Submit {
+            key: row.key,
+            requested_profile: None,
+        },
+        req::Action::Inspect(row) => ParsedAction::Inspect { key: row.key },
+    };
+    if !key(action.kind_key().1) {
+        return Err("request epoch or key refused".into());
     }
+    Ok(action)
+}
+pub(super) fn decode_profiled(bytes: &[u8]) -> Result<ParsedAction, String> {
+    if bytes.len() > REQUEST_CAP {
+        return Err("request exceeds cap".into());
+    }
+    let value: profiled_req::ProfiledDeployActionRequest = serde_json::from_slice(bytes)
+        .map_err(|_| "generated profiled request shape refused".to_owned())?;
+    if value.schema != 1 {
+        return Err("profiled request epoch refused".into());
+    }
+    let action = match value.action {
+        profiled_req::Action::Submit(row) => {
+            if row.deploy_profile.is_empty()
+                || row.deploy_profile.len() > 256
+                || row.deploy_profile.trim() != row.deploy_profile
+                || row.deploy_profile.chars().any(char::is_control)
+            {
+                return Err("requested deploy profile refused".into());
+            }
+            ParsedAction::Submit {
+                key: row.key,
+                requested_profile: Some(row.deploy_profile),
+            }
+        }
+        profiled_req::Action::Inspect(row) => ParsedAction::Inspect { key: row.key },
+    };
+    if !key(action.kind_key().1) {
+        return Err("profiled request key refused".into());
+    }
+    Ok(action)
 }
 pub(super) fn failure(
     grant: Option<&FixedDeployRoute>,

@@ -166,7 +166,7 @@ fn strict_wire_and_host_root_refuse_before_owner_call() {
         &action("submit", "once"),
         foreign.path(),
         PUBLICATION_CAP,
-        |_, _, _| {
+        |_, _| {
             calls.fetch_add(1, Ordering::SeqCst);
             Ok(completed())
         },
@@ -186,7 +186,7 @@ fn strict_wire_and_host_root_refuse_before_owner_call() {
                 &bytes,
                 fixture.project.path(),
                 PUBLICATION_CAP,
-                |_, _, _| {
+                |_, _| {
                     calls.fetch_add(1, Ordering::SeqCst);
                     Ok(completed())
                 },
@@ -208,7 +208,7 @@ fn full_receipt_and_cold_replay_projection_leave_c1_to_owner() {
         &action("submit", "same"),
         fixture.project.path(),
         PUBLICATION_CAP,
-        |_, _, _| {
+        |_, _| {
             calls.fetch_add(1, Ordering::SeqCst);
             Ok(completed())
         },
@@ -232,7 +232,7 @@ fn full_receipt_and_cold_replay_projection_leave_c1_to_owner() {
         &action("inspect", "same"),
         fixture.project.path(),
         PUBLICATION_CAP,
-        |_, _, _| {
+        |_, _| {
             calls.fetch_add(1, Ordering::SeqCst);
             Ok(completed())
         },
@@ -265,7 +265,7 @@ fn partial_and_post_effect_error_keep_run_scope_and_uncertainty() {
         &action("inspect", "once"),
         fixture.project.path(),
         PUBLICATION_CAP,
-        |_, _, _| Ok(partial.clone()),
+        |_, _| Ok(partial.clone()),
     )
     .unwrap()
     .0;
@@ -288,7 +288,7 @@ fn partial_and_post_effect_error_keep_run_scope_and_uncertainty() {
         &action("submit", "once"),
         fixture.project.path(),
         PUBLICATION_CAP,
-        |_, _, _| Err(FixedDeployHostError::Submit(failure)),
+        |_, _| Err(FixedDeployHostError::Submit(failure)),
     )
     .unwrap_err();
     assert!(refused.effects_may_have_begun);
@@ -319,7 +319,7 @@ fn partial_and_post_effect_error_keep_run_scope_and_uncertainty() {
         &action("submit", "once"),
         fixture.project.path(),
         PUBLICATION_CAP,
-        |_, _, _| {
+        |_, _| {
             Err(FixedDeployHostError::Admission(
                 vibe_lifecycle::retained_mechanism::RetainedMechanismError::Refused(
                     "owner admission unavailable".into(),

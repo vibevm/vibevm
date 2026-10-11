@@ -24,5 +24,6 @@ pub mod lifecycle_submission_view;
 pub mod operation_descriptor;
 pub mod operation_envelope;
 pub mod operation_stream_message;
+pub mod profiled_deploy_action_request;
 pub mod session_frame;
 pub mod source_location;

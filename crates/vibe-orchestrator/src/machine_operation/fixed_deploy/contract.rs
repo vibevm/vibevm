@@ -4,7 +4,7 @@ use std::io::Write;
 use vibe_lifecycle::retained_mechanism::DeployInspection as Owner;
 pub(super) use vibe_wire::generated::machine::e1::{
     fixed_deploy_action_error as err, fixed_deploy_action_reply as rep,
-    fixed_deploy_action_request as req,
+    fixed_deploy_action_request as req, profiled_deploy_action_request as profiled_req,
 };
 use vibe_wire::{
     behaviour::deploy_records::validate_receipt,

@@ -33,6 +33,7 @@ pub(crate) fn context(
     context: ServerContext,
     root: &Path,
     profile: &str,
+    additional_profiles: &[String],
     mode: FixedDeployHostMode,
 ) -> Result<ServerContext> {
     let os = TargetOs::current()
@@ -42,6 +43,21 @@ pub(crate) fn context(
     if manifest.project.is_none() || manifest.package.is_some() {
         bail!("fixed Deploy project-local mode requires one authored [project] node");
     }
+    if additional_profiles.len() > 8 {
+        bail!("fixed Deploy accepts at most eight additional profiles");
+    }
+    let mut allowed_names = additional_profiles.to_vec();
+    allowed_names.sort();
+    if allowed_names
+        .iter()
+        .any(|name| name == profile || name.is_empty())
+        || allowed_names.windows(2).any(|pair| pair[0] == pair[1])
+    {
+        bail!("fixed Deploy allowed profiles must be distinct from the primary profile");
+    }
+    let issued_allowed = matches!(mode, FixedDeployHostMode::Issue(_))
+        .then(|| allowed_targets(&manifest, &allowed_names, os))
+        .transpose()?;
     let resolution = resolve_profile(
         manifest.deploy.as_ref(),
         Some(profile),
@@ -106,14 +122,30 @@ pub(crate) fn context(
     let (home_path, clients) = deploy::client_authority()?;
     let home = Arc::new(Project::open(&home_path)?);
     let loaded = vibe_orchestrator::inspect(root)?;
+    let profile_set = SelectedFileWitness::from_bytes(
+        format!(
+            "vibevm/fixed-deploy-allowed-profiles/e1\0{profile}\0{}",
+            allowed_names.join("\0")
+        )
+        .into_bytes(),
+    )
+    .sha256;
+    let scope_target = if allowed_names.is_empty() {
+        format!("physical-root:{token}:deploy-profile:{profile}")
+    } else {
+        format!("physical-root:{token}:deploy-profile-set:{profile_set}")
+    };
     let scope = SubmissionScope {
         context: "vibe-cli-project-local/e1".into(),
-        target: format!("physical-root:{token}:deploy-profile:{profile}"),
+        target: scope_target,
         principal: "cooperating-project-cli".into(),
     };
-    let binding_nonce = SelectedFileWitness::from_bytes(
-        format!("vibevm/project-local-fixed-deploy/e1\0{token}\0{profile}").into_bytes(),
-    )
+    let binding_nonce = SelectedFileWitness::from_bytes(if allowed_names.is_empty() {
+        format!("vibevm/project-local-fixed-deploy/e1\0{token}\0{profile}").into_bytes()
+    } else {
+        format!("vibevm/project-local-fixed-deploy/profiles/e1\0{token}\0{profile_set}")
+            .into_bytes()
+    })
     .sha256;
     let service = DeployGrantService::from_trusted_host(
         project,
@@ -138,10 +170,52 @@ pub(crate) fn context(
         FixedDeployHostMode::Reattach => service.reattach()?,
     };
     let route = match attachment {
-        DeployGrantAttachment::Active(host) => FixedDeployRoute::new(Arc::new(host)),
+        DeployGrantAttachment::Active(host) => {
+            let additional = match issued_allowed {
+                Some(rows) => rows,
+                None => allowed_targets(&manifest, &allowed_names, os)?,
+            };
+            FixedDeployRoute::new(Arc::new(host.with_allowed_profiles(additional)?))
+        }
         DeployGrantAttachment::RecoveryOnly(host) => {
             FixedDeployRoute::recovery_only(Arc::new(host))
         }
     };
     Ok(context.with_fixed_deploy_route(Arc::new(route))?)
+}
+
+fn allowed_targets(
+    manifest: &Manifest,
+    names: &[String],
+    os: TargetOs,
+) -> Result<Vec<(String, DeployTarget)>> {
+    if !names.is_empty()
+        && manifest
+            .deploy
+            .as_ref()
+            .is_none_or(|deploy| deploy.targets.len() != 1)
+    {
+        bail!("profiled fixed Deploy requires one authored target shared by allowed profiles");
+    }
+    names
+        .iter()
+        .map(|name| {
+            let resolution = resolve_profile(
+                manifest.deploy.as_ref(),
+                Some(name),
+                ProfileMode::Forward(os),
+            )?
+            .ok_or_else(|| anyhow::anyhow!("allowed Deploy profile is not authored"))?;
+            let [target_id] = resolution.selection().targets.as_slice() else {
+                bail!("allowed Deploy profile must select exactly one active authored target");
+            };
+            let target = manifest
+                .deploy
+                .as_ref()
+                .and_then(|deploy| deploy.targets.iter().find(|target| &target.id == target_id))
+                .cloned()
+                .ok_or_else(|| anyhow::anyhow!("allowed Deploy target is absent"))?;
+            Ok((name.clone(), target))
+        })
+        .collect()
 }

@@ -140,12 +140,13 @@ impl McpTool for FixedDeployOperationMcpTool {
     fn descriptor(&self) -> ToolDescriptor {
         ToolDescriptor {
             name: "fixed_deploy_operation".into(),
-            description: "Submit or inspect only an explicitly embedded, host-bound fixed vibe-bin Deploy route. The request cannot select project/settings/home roots, profile, target, generation, namespace or destination. Ordinary MCP startup has no grant; explicit fixed Deploy issue or reattach requires an absolute project root and authored profile.".into(),
+            description: "Submit or inspect an explicitly embedded, host-bound fixed vibe-bin Deploy route. A submit may name one profile from the host's explicit authored allowlist; the legacy key-only submit retains its primary host profile. The request cannot select roots, target, generation, namespace or destination. Ordinary MCP startup has no grant; fixed Deploy issue or reattach is explicit.".into(),
             input_schema: json!({
                 "type":"object", "properties":{
                     "schema":{"type":"integer","const":1},
                     "action":{"oneOf":[
                         {"type":"object","properties":{"kind":{"type":"string","const":"submit"},"key":{"type":"string"}},"required":["kind","key"],"additionalProperties":false},
+                        {"type":"object","properties":{"kind":{"type":"string","const":"submit"},"key":{"type":"string"},"deploy_profile":{"type":"string"}},"required":["kind","key","deploy_profile"],"additionalProperties":false},
                         {"type":"object","properties":{"kind":{"type":"string","const":"inspect"},"key":{"type":"string"}},"required":["kind","key"],"additionalProperties":false}
                     ]}
                 },"required":["schema","action"],"additionalProperties":false
@@ -161,9 +162,18 @@ impl McpTool for FixedDeployOperationMcpTool {
                 return preflight(FixedDeployRouteError::invalid_request(&reason, grant));
             }
         };
+        let format = if args
+            .get("action")
+            .and_then(|action| action.get("deploy_profile"))
+            .is_some()
+        {
+            FormatId::MachineProfiledDeployActionRequest
+        } else {
+            FormatId::MachineFixedDeployActionRequest
+        };
         let input = json!({"schema":1,"operation_id":OPERATION_ID,"domain_owner":DOMAIN_OWNER,
             "source_id":null,"evidence_id":null,"body":{"stage":"input",
-                "format_id":FormatId::MachineFixedDeployActionRequest.id(),"payload_json":payload}});
+                "format_id":format.id(),"payload_json":payload}});
         let input = match bounded(&input, PUBLICATION_CAP) {
             Ok(input) => input,
             Err(reason) => {
