@@ -126,6 +126,7 @@ pub enum FormatId {
     MachineOperationDescriptor,
     MachineOperationEnvelope,
     MachineOperationStreamMessage,
+    MachineProfiledDeployActionRequest,
     MachineSessionFrame,
     MachineSourceLocation,
     Manifest,

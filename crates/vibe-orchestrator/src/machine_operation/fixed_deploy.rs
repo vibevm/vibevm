@@ -3,8 +3,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE");
 
 use crate::machine_submission::{HostPolicyFacts, PolicyError, PolicyOwner, TrustedPolicySource};
-use std::sync::Arc;
-use vibe_core::manifest::{DeployTarget, ExtensionHandler, MechanismRoutes, ProviderPin};
+use std::{collections::BTreeMap, sync::Arc};
+use vibe_core::manifest::{DeployTarget, ExtensionHandler, Manifest, MechanismRoutes, ProviderPin};
 use vibe_extension_registry::{MechanismRegistry, resolve_mechanism};
 use vibe_lifecycle::process::SelectedFileWitness;
 use vibe_lifecycle::{
@@ -66,6 +66,7 @@ pub struct FixedDeployHost {
     scope: SubmissionScope,
     profile: String,
     target: DeployTarget,
+    allowed_profiles: BTreeMap<String, DeployTarget>,
     registry: Arc<MechanismRegistry>,
     routes: Arc<MechanismRoutes>,
     clients: ClientExecutables,
@@ -221,31 +222,7 @@ impl FixedDeployHost {
                 "invalid host identity or profile".into(),
             ));
         }
-        if !routes.is_empty()
-            || target.when.is_some()
-            || target
-                .depends_on
-                .as_ref()
-                .is_some_and(|rows| !rows.is_empty())
-            || target.provider.is_some()
-            || target.mechanism != "deploy:vibe-bin".parse().expect("fixed Deploy key")
-        {
-            return Err(FixedDeployHostError::InvalidHost(
-                "only one unconditional independent builtin vibe-bin target is admitted".into(),
-            ));
-        }
-        let expected: ProviderPin = "org.vibevm/vibe#vibe-bin"
-            .parse()
-            .expect("fixed builtin pin");
-        let selected = resolve_mechanism(&registry, &target.mechanism, None, &routes)
-            .map_err(|error| FixedDeployHostError::InvalidHost(error.to_string()))?;
-        if selected.row().pin() != &expected
-            || !matches!(selected.row().handler(), ExtensionHandler::Builtin { name } if name == "vibe-bin")
-        {
-            return Err(FixedDeployHostError::InvalidHost(
-                "deploy:vibe-bin did not select incumbent builtin".into(),
-            ));
-        }
+        validate_fixed_target(&registry, &routes, &target)?;
         let root_tokens = [
             project.root_correlation_token().map_err(root_error)?,
             settings.root_correlation_token().map_err(root_error)?,
@@ -259,6 +236,7 @@ impl FixedDeployHost {
             root_tokens,
             namespace,
             scope,
+            allowed_profiles: BTreeMap::from([(profile.clone(), target.clone())]),
             profile,
             target,
             registry,
@@ -307,6 +285,67 @@ impl FixedDeployHost {
         Ok(self)
     }
 
+    /// Extend a trusted grant with explicitly allowed authored profiles.
+    /// The caller's startup selection is bound by the grant's nonce; every
+    /// profile/target pair is rechecked against the same current manifest.
+    pub fn with_allowed_profiles(
+        mut self,
+        additional: Vec<(String, DeployTarget)>,
+    ) -> Result<Self, FixedDeployHostError> {
+        let lease = self.lease()?;
+        let bytes = self
+            .project
+            .read_file_bounded("vibe.toml", 1024 * 1024)
+            .map_err(root_error)?
+            .ok_or_else(|| FixedDeployHostError::InvalidHost("missing authored manifest".into()))?;
+        let hash = SelectedFileWitness::from_bytes(bytes.clone()).sha256;
+        if self
+            .policy
+            .as_ref()
+            .is_some_and(|(_, _, _, expected)| *expected != hash)
+        {
+            return Err(FixedDeployHostError::InvalidHost(
+                "allowed-profile source differs from granted manifest".into(),
+            ));
+        }
+        let source = std::str::from_utf8(&bytes)
+            .map_err(|error| FixedDeployHostError::InvalidHost(error.to_string()))?;
+        let manifest = Manifest::parse_str(source)
+            .map_err(|error| FixedDeployHostError::InvalidHost(error.to_string()))?;
+        let deploy = manifest
+            .deploy
+            .ok_or_else(|| FixedDeployHostError::InvalidHost("missing authored Deploy".into()))?;
+        for (profile, target) in std::iter::once((&self.profile, &self.target))
+            .chain(additional.iter().map(|(profile, target)| (profile, target)))
+        {
+            if profile.is_empty()
+                || profile.len() > 256
+                || profile.trim() != profile
+                || profile.chars().any(char::is_control)
+                || deploy
+                    .profiles
+                    .get(profile)
+                    .map(|row| row.targets.as_slice())
+                    != Some(std::slice::from_ref(&target.id))
+                || !deploy.targets.contains(target)
+            {
+                return Err(FixedDeployHostError::InvalidHost(
+                    "allowed profile/target differs from authored manifest".into(),
+                ));
+            }
+            validate_fixed_target(&self.registry, &self.routes, target)?;
+        }
+        for (profile, target) in additional {
+            if self.allowed_profiles.insert(profile, target).is_some() {
+                return Err(FixedDeployHostError::InvalidHost(
+                    "duplicate allowed profile".into(),
+                ));
+            }
+        }
+        self.check_roots(Some(&lease))?;
+        Ok(self)
+    }
+
     fn facts(&self) -> DeployColdHostFacts<'_> {
         DeployColdHostFacts {
             host_context_id: &self.scope.context,
@@ -327,10 +366,11 @@ impl FixedDeployHost {
         &'a self,
         created_at: &'a str,
         selection: &'a DeploySelection,
+        target: &'a DeployTarget,
     ) -> DeployExecution<'a> {
         DeployExecution {
             project_root: self.project.root_path(),
-            targets: std::slice::from_ref(&self.target),
+            targets: std::slice::from_ref(target),
             selection,
             registry: &self.registry,
             routes: &self.routes,
@@ -352,21 +392,27 @@ impl FixedDeployHost {
         requested_profile: &str,
     ) -> Result<DeployInspection, FixedDeployHostError> {
         self.check_requested_profile(requested_profile)?;
-        self.submit_bound(key)
+        self.submit_bound(key, requested_profile, true)
     }
 
     fn check_requested_profile(&self, requested_profile: &str) -> Result<(), FixedDeployHostError> {
-        if requested_profile != self.profile {
+        if !self.allowed_profiles.contains_key(requested_profile) {
             return Err(FixedDeployHostError::RequestedProfileMismatch);
         }
         Ok(())
     }
 
     pub fn submit(&self, key: &str) -> Result<DeployInspection, FixedDeployHostError> {
-        self.submit_with_requested_profile(key, &self.profile)
+        self.check_requested_profile(&self.profile)?;
+        self.submit_bound(key, &self.profile, false)
     }
 
-    fn submit_bound(&self, key: &str) -> Result<DeployInspection, FixedDeployHostError> {
+    fn submit_bound(
+        &self,
+        key: &str,
+        requested_profile: &str,
+        profiled: bool,
+    ) -> Result<DeployInspection, FixedDeployHostError> {
         let lease = self.lease()?;
         SubmissionReservations::validate_namespace(&lease, &self.namespace, &self.scope)
             .map_err(FixedDeployHostError::Namespace)?;
@@ -384,14 +430,23 @@ impl FixedDeployHost {
                 ));
             }
         }
+        let target = self
+            .allowed_profiles
+            .get(requested_profile)
+            .ok_or(FixedDeployHostError::RequestedProfileMismatch)?;
         let selection = DeploySelection {
-            profile: self.profile.clone(),
-            targets: vec![self.target.id.clone()],
+            profile: requested_profile.into(),
+            targets: vec![target.id.clone()],
         };
         let created_at = vibe_core::timestamp::now_utc();
-        let execution = self.execution(&created_at, &selection);
+        let execution = self.execution(&created_at, &selection, target);
         let mut current = || (self.generation)();
-        let permit = FixedDeployHostAdmission::issue_from_trusted_host(
+        let issue = if profiled {
+            FixedDeployHostAdmission::issue_profiled_from_trusted_host
+        } else {
+            FixedDeployHostAdmission::issue_from_trusted_host
+        };
+        let permit = issue(
             &lease,
             &self.namespace,
             &self.scope,
@@ -494,4 +549,37 @@ fn check_held_roots(
 }
 fn root_error(error: impl std::fmt::Display) -> FixedDeployHostError {
     FixedDeployHostError::Root(error.to_string())
+}
+
+fn validate_fixed_target(
+    registry: &MechanismRegistry,
+    routes: &MechanismRoutes,
+    target: &DeployTarget,
+) -> Result<(), FixedDeployHostError> {
+    if !routes.is_empty()
+        || target.when.is_some()
+        || target
+            .depends_on
+            .as_ref()
+            .is_some_and(|rows| !rows.is_empty())
+        || target.provider.is_some()
+        || target.mechanism != "deploy:vibe-bin".parse().expect("fixed Deploy key")
+    {
+        return Err(FixedDeployHostError::InvalidHost(
+            "only unconditional independent builtin vibe-bin targets are admitted".into(),
+        ));
+    }
+    let expected: ProviderPin = "org.vibevm/vibe#vibe-bin"
+        .parse()
+        .expect("fixed builtin pin");
+    let selected = resolve_mechanism(registry, &target.mechanism, None, routes)
+        .map_err(|error| FixedDeployHostError::InvalidHost(error.to_string()))?;
+    if selected.row().pin() != &expected
+        || !matches!(selected.row().handler(), ExtensionHandler::Builtin { name } if name == "vibe-bin")
+    {
+        return Err(FixedDeployHostError::InvalidHost(
+            "deploy:vibe-bin did not select incumbent builtin".into(),
+        ));
+    }
+    Ok(())
 }

@@ -4921,6 +4921,22 @@
       "end_line": 41
     },
     {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/profiled_deploy_action_request.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "profiled_deploy_action_request",
+      "end_line": 44
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/machine/e1/profiled_deploy_action_request.jtd.json",
+      "item_kind": "schema-def",
+      "line": 11,
+      "symbol": "profiled_deploy_action_request::action",
+      "end_line": 32
+    },
+    {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/lib.rs",
       "item_kind": "mod",
@@ -6770,486 +6786,504 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 267,
+      "line": 269,
       "symbol": "vibe agentic",
-      "end_line": 272,
+      "end_line": 274,
       "fingerprint": "tok1:38d2c7c84dbc9027225d4def9f39afe3748240181c35a687610f0482adf04d8e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 244,
+      "line": 246,
       "symbol": "vibe aiui",
-      "end_line": 248,
+      "end_line": 250,
       "fingerprint": "tok1:55e1694e709d4faadda95473101940a572d1d6169ceb282b3d53349b7c70303a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 379,
+      "line": 381,
       "symbol": "vibe bin",
-      "end_line": 386,
+      "end_line": 388,
       "fingerprint": "tok1:fa28839d0a2d9eb3130cab2ea9b2eeda91b18d37bd59b58be3537b394d89a27f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 178,
+      "line": 180,
       "symbol": "vibe build",
-      "end_line": 179,
+      "end_line": 181,
       "fingerprint": "tok1:036e0d456e8801b9e1808068561b822e3e3e531d1975155a1106a1ff15cb332a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 345,
+      "line": 347,
       "symbol": "vibe cache",
-      "end_line": 353,
+      "end_line": 355,
       "fingerprint": "tok1:6a35c24edfa5b22c29374adab93625e3ea8ff7ed571b18a3f8f4b9207329b57b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 292,
+      "line": 294,
       "symbol": "vibe check",
-      "end_line": 293,
+      "end_line": 295,
       "fingerprint": "tok1:38fcbbc45c7ad30c975d15d0086afc07aa2e4fca1dfdf72c62f969ca46df6118"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 211,
+      "line": 213,
       "symbol": "vibe clean",
-      "end_line": 214,
+      "end_line": 216,
       "fingerprint": "tok1:7bf42926379ba9585e9243cf398ebd32009a780f9c096b7047560fc39870f92b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 274,
+      "line": 276,
       "symbol": "vibe command",
-      "end_line": 280,
+      "end_line": 282,
       "fingerprint": "tok1:ef53bda5ded39eceee051d99ca027cdb39dced3df83fea0808f23940514540d6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 187,
+      "line": 189,
       "symbol": "vibe create",
-      "end_line": 188,
+      "end_line": 190,
       "fingerprint": "tok1:c97d95a2578610ca645757ca375a39adb3befa95173ae403b170df0158120648"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 196,
+      "line": 198,
       "symbol": "vibe deploy",
-      "end_line": 199,
+      "end_line": 201,
       "fingerprint": "tok1:a2a8795ee83b3e1f14e6353bece4fa926223886ef4ff9599303b5d370bda6d92"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 206,
+      "line": 208,
       "symbol": "vibe deployments",
-      "end_line": 209,
+      "end_line": 211,
       "fingerprint": "tok1:1114054625d7b16a5b378ebe5407f019bc431f093b30b767d997b6074cc814d6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 295,
+      "line": 297,
       "symbol": "vibe doc",
-      "end_line": 298,
+      "end_line": 300,
       "fingerprint": "tok1:221d1b929fa4a18986ff257db4cf3b0159acf0102dae72f0d72f4abc41622091"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 388,
+      "line": 390,
       "symbol": "vibe explain",
-      "end_line": 395,
+      "end_line": 397,
       "fingerprint": "tok1:58c34bfb60261b47d8861f07462898d5ae5c28a9d44f2ae4624b8ed1a0bfe1f7"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 166,
+      "line": 168,
       "symbol": "vibe extensions",
-      "end_line": 167,
+      "end_line": 169,
       "fingerprint": "tok1:acbe42bbe60139be195063d1143d208e86c1e59261c8f788fd6cd8cfabf63b86"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 300,
+      "line": 302,
       "symbol": "vibe facts",
-      "end_line": 301,
+      "end_line": 303,
       "fingerprint": "tok1:d7dd96f48f6f2689d1d7d87f56e3424ef5f2b265c027a14946dbe1d337f92213"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 255,
+      "line": 257,
       "symbol": "vibe frame",
-      "end_line": 258,
+      "end_line": 260,
       "fingerprint": "tok1:4985ceaa5272c36e1c73077f882fc30a4aec1244e308099d8257582bec0f79a8"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 319,
+      "line": 321,
       "symbol": "vibe friends",
-      "end_line": 323,
+      "end_line": 325,
       "fingerprint": "tok1:655f25b8fc752269ccab00637c8a5cfe5797e8321bfe2ac6cc626c64419f9073"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 175,
+      "line": 177,
       "symbol": "vibe generate",
-      "end_line": 176,
+      "end_line": 178,
       "fingerprint": "tok1:67fd0ea725b8ab727bad0f4ff416b00a7152ee9a3cce69d9ead43f0fc4f868e9"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 160,
+      "line": 162,
       "symbol": "vibe init",
-      "end_line": 161,
+      "end_line": 163,
       "fingerprint": "tok1:ffec579e9ea56fbad7427db2d4deaf2b75d1fe85bb76e1dc2a4d2f07baea2b20"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 172,
+      "line": 174,
       "symbol": "vibe install",
-      "end_line": 173,
+      "end_line": 175,
       "fingerprint": "tok1:b38bd68a6fe42780d421692d2536b0c9df5b559fe60377adc411ac362e06b30f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 163,
+      "line": 165,
       "symbol": "vibe list",
-      "end_line": 164,
+      "end_line": 166,
       "fingerprint": "tok1:2a1bcc9e9b5c5335104e94830edba85a9d3d095e366088576450e1ab3fe90946"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 241,
+      "line": 243,
       "symbol": "vibe machine",
-      "end_line": 242,
+      "end_line": 244,
       "fingerprint": "tok1:7752bb8541dd4320ddb4c3a4cdc43a4c96253152046f9c33446ce86d0fc6d86c"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 234,
+      "line": 236,
       "symbol": "vibe mcp",
-      "end_line": 239,
+      "end_line": 241,
       "fingerprint": "tok1:f37a9c7d50509325b588f478574f851ff11d7bdafae86f5d4cef35c487b4cb73"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 220,
+      "line": 222,
       "symbol": "vibe outdated",
-      "end_line": 224,
+      "end_line": 226,
       "fingerprint": "tok1:d1073beb727d86daaab1588ec6deaaf7fc97e4a3df0fdb2548587e350480885a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 193,
+      "line": 195,
       "symbol": "vibe package",
-      "end_line": 194,
+      "end_line": 196,
       "fingerprint": "tok1:90b8ba854977ebf8e07a82d54538ce18cd1b49dd71b5a36624e529c2e156b1b6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 328,
+      "line": 330,
       "symbol": "vibe prefs",
-      "end_line": 332,
+      "end_line": 334,
       "fingerprint": "tok1:c37b655b66cbc0af9ccfdabf5d84ba9d067cbea39dd9d1c89b5e4a77f79d4009"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 449,
+      "line": 457,
       "symbol": "vibe progress",
-      "end_line": 452,
+      "end_line": 460,
       "fingerprint": "tok1:0343b59ebde2d3646b75f27f0c451ee131c5f3f4a2415b9d79ab4ef092fca9c0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 397,
+      "line": 399,
+      "symbol": "vibe proof-check",
+      "end_line": 400,
+      "fingerprint": "tok1:c43b5f06c496569650b3c5509695cb930003b534ca79e2c00b751476b2df8c9e"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli.rs",
+      "item_kind": "command",
+      "line": 402,
+      "symbol": "vibe proof-verify",
+      "end_line": 403,
+      "fingerprint": "tok1:395a70847425082d589fbc10c03743c9d20bbc3bbedf8c170897efd49ae637df"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli.rs",
+      "item_kind": "command",
+      "line": 405,
       "symbol": "vibe query",
-      "end_line": 406,
+      "end_line": 414,
       "fingerprint": "tok1:36680144f94d98e3b9a8bd38c89c746ee621dbdfadb21422f0ff7bffe4c1e069"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 316,
+      "line": 318,
       "symbol": "vibe refactor",
-      "end_line": 317,
+      "end_line": 319,
       "fingerprint": "tok1:c3af138c24767234b956446b0d4e040f1941d8052390ceaf2883c8f1618c5d83"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 342,
+      "line": 344,
       "symbol": "vibe registry",
-      "end_line": 343,
+      "end_line": 345,
       "fingerprint": "tok1:510e526eda2f3774a369c2ecad541147e0de8643662891a8c9e2dd3af384f70e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 288,
+      "line": 290,
       "symbol": "vibe reinstall",
-      "end_line": 290,
+      "end_line": 292,
       "fingerprint": "tok1:6e67dfc6071d8f65b58e5ff6a848695dc0f1da97f80ed1c92bf8f1f409d0f755"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 303,
+      "line": 305,
       "symbol": "vibe requirements",
-      "end_line": 309,
+      "end_line": 311,
       "fingerprint": "tok1:ebb51eed8e04d814f77c6aa6f3d641730cd72e3bdd9c3f2bd127b9a3c840e47d"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 184,
+      "line": 186,
       "symbol": "vibe run",
-      "end_line": 185,
+      "end_line": 187,
       "fingerprint": "tok1:f112b98299825c28687506debff1be6aaf89213f46b0869892749831239c73df"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 216,
+      "line": 218,
       "symbol": "vibe scrape",
-      "end_line": 218,
+      "end_line": 220,
       "fingerprint": "tok1:840261b1822a74c1ef6916714171118ae0bdc76bd3fda49a6a0ab4a7135eda22"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 226,
+      "line": 228,
       "symbol": "vibe search",
-      "end_line": 232,
+      "end_line": 234,
       "fingerprint": "tok1:b47b591a719431fd92337bfb669e9141237a1180367223d594d4c2e9aa549524"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 408,
+      "line": 416,
       "symbol": "vibe select",
-      "end_line": 419,
+      "end_line": 427,
       "fingerprint": "tok1:16e391d4035c196770cac77470dedaa7ff004a71e0a48dc88ecc3b5aeccda1b1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 361,
+      "line": 363,
       "symbol": "vibe self",
-      "end_line": 367,
+      "end_line": 369,
       "fingerprint": "tok1:3587ac93f410662938dfdb2e5a411a952a847f14338cd21bc4aaff4b1b1cdd23"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 325,
+      "line": 327,
       "symbol": "vibe show",
-      "end_line": 326,
+      "end_line": 328,
       "fingerprint": "tok1:12c7f4b09b59503b8a56b9c4b3965d3f73e0e62f78a2df10a7b4425c94c89cf5"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 260,
+      "line": 262,
       "symbol": "vibe skill",
-      "end_line": 265,
+      "end_line": 267,
       "fingerprint": "tok1:0f2269b52a3046796d5ce3c6c1633b17564ae4fa4b4a5f91d478e0f5404476ee"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 421,
+      "line": 429,
       "symbol": "vibe specmap",
-      "end_line": 429,
+      "end_line": 437,
       "fingerprint": "tok1:95fe1742b042d98c18fa9ddca05706d6b6a8129fb78a25ee827349929b9ba012"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 250,
+      "line": 252,
       "symbol": "vibe term",
-      "end_line": 253,
+      "end_line": 255,
       "fingerprint": "tok1:6de072333697fa577d56d6b6437e4be14b04ef83495a35d0db8c1a234077b846"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 181,
+      "line": 183,
       "symbol": "vibe test",
-      "end_line": 182,
+      "end_line": 184,
       "fingerprint": "tok1:76357bfd53419ff32fc4070f68158c8d995aa77f44462753716378614f721a6a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 369,
+      "line": 371,
       "symbol": "vibe tools",
-      "end_line": 377,
+      "end_line": 379,
       "fingerprint": "tok1:160baa5bced8144814d419728f9e456b1d4c9648edb498bb5b94cfcce812b2e0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 431,
+      "line": 439,
       "symbol": "vibe trace",
-      "end_line": 440,
+      "end_line": 448,
       "fingerprint": "tok1:f3b1c393c3e385763d9a81c5ad9f9f19d6c16d2a1a2c0bbdad8db90494f7af9a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 334,
+      "line": 336,
       "symbol": "vibe tree",
-      "end_line": 340,
+      "end_line": 342,
       "fingerprint": "tok1:8027f7f6f7878e12ba2eb4bfdc137ac5c46f0d31af6015ecbd40d91d439a5f12"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 201,
+      "line": 203,
       "symbol": "vibe undeploy",
-      "end_line": 204,
+      "end_line": 206,
       "fingerprint": "tok1:de1e98b07e4f8e5b89e54c20f6629912cc395f86380f39c4d5f513fe9d1ae233"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 282,
+      "line": 284,
       "symbol": "vibe uninstall",
-      "end_line": 283,
+      "end_line": 285,
       "fingerprint": "tok1:e7544f7fabc8952fa2a094e32d923d60121a134be5aca63306fdadd16b5a585f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 285,
+      "line": 287,
       "symbol": "vibe update",
-      "end_line": 286,
+      "end_line": 288,
       "fingerprint": "tok1:14a6b49ed5a4cc88ad74c7c738b1db06604785819538b588a78d124d9b87f362"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 169,
+      "line": 171,
       "symbol": "vibe validate",
-      "end_line": 170,
+      "end_line": 172,
       "fingerprint": "tok1:8cca275e78ec883e3f4609d448d5485777b55b8e3d75938f647a20f71d1c5d33"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 442,
+      "line": 450,
       "symbol": "vibe vars",
-      "end_line": 447,
+      "end_line": 455,
       "fingerprint": "tok1:af6c5c4b0395cb84cb619b17b19d77a249e673553a62f01587ef9cf48dd847ae"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 190,
+      "line": 192,
       "symbol": "vibe verify",
-      "end_line": 191,
+      "end_line": 193,
       "fingerprint": "tok1:ea70875de57aa1689a45722c113d075326c04774665c7d0de1e0bff18a5e0b06"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 454,
+      "line": 462,
       "symbol": "vibe version",
-      "end_line": 455,
+      "end_line": 463,
       "fingerprint": "tok1:33315f272409a4c8ad6648ba9671fc4df16e2b163ceb37e3c58d6b44af2f16f1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 311,
+      "line": 313,
       "symbol": "vibe why",
-      "end_line": 314,
+      "end_line": 316,
       "fingerprint": "tok1:9b76974e8b4a3d3129ff66bc15a3164b1a6f812b631c52e440b5914ef53cf71e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 355,
+      "line": 357,
       "symbol": "vibe workspace",
-      "end_line": 359,
+      "end_line": 361,
       "fingerprint": "tok1:ac2163fa0ecd131bbca2d73185a0d8cbf06ae47e50276d68a969ea05ac6ee8ac"
     },
     {
@@ -8176,8 +8210,8 @@
       "item_kind": "struct",
       "line": 222,
       "symbol": "vibe_cli::cli::mcp::McpServeArgs",
-      "end_line": 289,
-      "fingerprint": "tok1:9b4cc4b824d8597bf6155539c983fbea0aaa03ba45f4016b53655eba07a1ffee"
+      "end_line": 313,
+      "fingerprint": "tok1:7a946d53793def8dd00f5bb5a805c15ee71497d0ba153a63f9ea16ddbc536554"
     },
     {
       "crate_name": "vibe-cli",
@@ -8205,6 +8239,15 @@
       "symbol": "vibe_cli::cli::progress",
       "end_line": 5,
       "fingerprint": "tok1:6c170af9b8c822237050ea46164922f9d35d2030a3a05add5f1bb7b58ac1b1e7"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/proof.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::cli::proof",
+      "end_line": 3,
+      "fingerprint": "tok1:254ae7c1e271c6d6438d494b2deb2e5c9e80925c20573491b95c358a48235738"
     },
     {
       "crate_name": "vibe-cli",
@@ -9470,9 +9513,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/machine_session.rs",
       "item_kind": "fn",
-      "line": 32,
+      "line": 37,
       "symbol": "vibe_cli::commands::machine_session::run",
-      "end_line": 49,
+      "end_line": 54,
       "fingerprint": "tok1:85ef0537abcf3751e0ae2776dfbb75716108dcd5c9474a0e0481a8dae84ad7af"
     },
     {
@@ -9488,18 +9531,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 434,
+      "line": 481,
       "symbol": "vibe_cli::commands::mcp::fixed_cargo_server_context",
-      "end_line": 459,
+      "end_line": 506,
       "fingerprint": "tok1:6262610df097972228e448970b272ad826bd660a2571645f419a4a628441841c"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 407,
+      "line": 454,
       "symbol": "vibe_cli::commands::mcp::fixed_package_server_context",
-      "end_line": 432,
+      "end_line": 479,
       "fingerprint": "tok1:98730a58aa55eb4e09c12a18d09f1937267677d19bdc8eccfc798502ad26a1be"
     },
     {
@@ -9542,10 +9585,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "item_kind": "fn",
-      "line": 299,
+      "line": 303,
       "symbol": "vibe_cli::commands::mcp::run_serve",
-      "end_line": 405,
-      "fingerprint": "tok1:eaa07c80fdb65c804e8954aac0640abea537d10317986166911042229409ece6"
+      "end_line": 452,
+      "fingerprint": "tok1:06ccbe76ded83a7941f9c18732f4bb9ef0ecba8cc445447f9da44d52879b7a50"
     },
     {
       "crate_name": "vibe-cli",
@@ -9960,6 +10003,15 @@
       "symbol": "vibe_cli::commands::progress_evidence::SpecmapEvidence::evidence_for",
       "end_line": 162,
       "fingerprint": "tok1:935c562fadeedeaaecaa47cf451d1eadd49d78b3c05a59042bee9da80289795b"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/proof.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_cli::commands::proof",
+      "end_line": 5,
+      "fingerprint": "tok1:254ae7c1e271c6d6438d494b2deb2e5c9e80925c20573491b95c358a48235738"
     },
     {
       "crate_name": "vibe-cli",
@@ -12305,9 +12357,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 399,
+      "line": 405,
       "symbol": "vibe_cli::promote_user_config_env",
-      "end_line": 524,
+      "end_line": 530,
       "fingerprint": "tok1:f0612709ef928387b8644bab2915337cbcfbcc54cff8d3f3609c9fbc229d5ebd"
     },
     {
@@ -25411,8 +25463,8 @@
       "item_kind": "struct",
       "line": 33,
       "symbol": "vibe_mcp::context::ServerContext",
-      "end_line": 85,
-      "fingerprint": "tok1:a5753746c355890314f4f6a8eaab2e0d3151279ab4884e1f6e49358494a3d2fd"
+      "end_line": 90,
+      "fingerprint": "tok1:230a55bba413b4b7635f38ca97e31b3f7c86dd9f75a73d27f84980b184d59a6f"
     },
     {
       "crate_name": "vibe-mcp",
@@ -25823,19 +25875,28 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/machine_session/state.rs",
       "item_kind": "fn",
-      "line": 143,
+      "line": 147,
       "symbol": "vibe_mcp::machine_session::state::MachineSession::new",
-      "end_line": 210,
-      "fingerprint": "tok1:b8cac94b16ca0ce10604a6398c9e612ed038daf59b9f6c9c0e56df483e0f2e7e"
+      "end_line": 215,
+      "fingerprint": "tok1:77fbb3ff55708d781d4948431055e54d78603cc4994213ccdc04bb14ffe570aa"
     },
     {
       "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/machine_session/state.rs",
+      "file": "crates/vibe-mcp/src/machine_session/state/negotiation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_mcp::machine_session::state::negotiation",
+      "end_line": 2,
+      "fingerprint": "tok1:22a2716b1bd09142c949d27ca812d5c23cc838ee64c850cd435a99d47cc235be"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/machine_session/state/negotiation.rs",
       "item_kind": "fn",
-      "line": 546,
-      "symbol": "vibe_mcp::machine_session::state::MachineSession::receive",
-      "end_line": 629,
-      "fingerprint": "tok1:c7e25c9037fe514f80456e84019df189eb9cf03ea332442074e6290040487205"
+      "line": 48,
+      "symbol": "vibe_mcp::machine_session::state::negotiation::MachineSession::receive",
+      "end_line": 145,
+      "fingerprint": "tok1:60a26a2d7059a6cc609cb6c01b18326d9354c183798ab200c9d7214b52d87f32"
     },
     {
       "crate_name": "vibe-mcp",
@@ -25913,18 +25974,18 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 480,
+      "line": 482,
       "symbol": "vibe_mcp::tools::AgenticExplainMcpTool",
-      "end_line": 492,
+      "end_line": 494,
       "fingerprint": "tok1:bb751a7ac693f9ebf04766449fa37569b5ef2770f50134a0d2254a810d6b39e3"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 340,
+      "line": 342,
       "symbol": "vibe_mcp::tools::MaterialiseSubskillMcpTool",
-      "end_line": 350,
+      "end_line": 352,
       "fingerprint": "tok1:7a65232d99728dda7430a8f91d406bd4b6db0c79bece520d3c6c61700a8c63d0"
     },
     {
@@ -25940,18 +26001,18 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 120,
+      "line": 122,
       "symbol": "vibe_mcp::tools::QueryPackageMcpTool",
-      "end_line": 129,
+      "end_line": 131,
       "fingerprint": "tok1:ba43260b8c954a14d387560ebbc7e9997492fc0741b3ec22ac0cd174be0a0aa5"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 207,
+      "line": 209,
       "symbol": "vibe_mcp::tools::ReadSubskillMcpTool",
-      "end_line": 216,
+      "end_line": 218,
       "fingerprint": "tok1:fb755a2dc3313eba121e287265c26e3d4c3769203e53433e864657da436cd68a"
     },
     {
@@ -25960,8 +26021,8 @@
       "item_kind": "fn",
       "line": 86,
       "symbol": "vibe_mcp::tools::default_tools",
-      "end_line": 114,
-      "fingerprint": "tok1:2c47e8fbb2e797ee0faacc20299b67e113c29838acba56bd24c20d62eacbd93b"
+      "end_line": 116,
+      "fingerprint": "tok1:5c2b3fd9519a755e707144994bec308fa1d49104feeaf4aa86aba609f5dc4da2"
     },
     {
       "crate_name": "vibe-mcp",
@@ -26313,6 +26374,33 @@
       "symbol": "vibe_mcp::tools::output::ToolOutput::executed_failure_text",
       "end_line": 210,
       "fingerprint": "tok1:68129e6d35d4f6fa39923d8f767f1742b913f6b0ee403a66e37594c7d18d8cc4"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/proof.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_mcp::tools::proof",
+      "end_line": 5,
+      "fingerprint": "tok1:254ae7c1e271c6d6438d494b2deb2e5c9e80925c20573491b95c358a48235738"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/proof.rs",
+      "item_kind": "struct",
+      "line": 17,
+      "symbol": "vibe_mcp::tools::proof::ProofCheckMcpTool",
+      "end_line": 20,
+      "fingerprint": "tok1:fadc42e8e34fdfc66c4dd90c5187abcee0e02543571fc5424abc587a8c910b9b"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/proof.rs",
+      "item_kind": "struct",
+      "line": 22,
+      "symbol": "vibe_mcp::tools::proof::ProofVerifyMcpTool",
+      "end_line": 25,
+      "fingerprint": "tok1:ee28ee6d0b4260de41ea58fbe843ff43157bbec4ac9d71dfbc489ccd152879fb"
     },
     {
       "crate_name": "vibe-mcp",
@@ -27153,6 +27241,15 @@
     },
     {
       "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_operation/exact_local_install.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_orchestrator::machine_operation::exact_local_install",
+      "end_line": 3,
+      "fingerprint": "tok1:fdc51eedcc655795ebd9ab83ede9fa40c8158b9668b3203b105960bf7f4838c3"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/machine_operation/exchange.rs",
       "item_kind": "mod",
       "line": 4,
@@ -27533,18 +27630,18 @@
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs",
       "item_kind": "fn",
-      "line": 185,
+      "line": 186,
       "symbol": "vibe_orchestrator::machine_submission::cli_grant::CliGrantService::issue",
-      "end_line": 230,
+      "end_line": 231,
       "fingerprint": "tok1:82b72d4faca4e075ff64041489a369a9e110973a562adc424a00042aa2f4107e"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs",
       "item_kind": "fn",
-      "line": 232,
+      "line": 233,
       "symbol": "vibe_orchestrator::machine_submission::cli_grant::CliGrantService::reattach",
-      "end_line": 246,
+      "end_line": 247,
       "fingerprint": "tok1:37db2e4bd77bc784aa8094f1aeaae0416f3944199f7852222cee590f79fab6dc"
     },
     {
@@ -27564,6 +27661,15 @@
       "symbol": "vibe_orchestrator::machine_submission::deploy_grant::storage",
       "end_line": 4,
       "fingerprint": "tok1:4e246bca80723bab0a985803279059b21ef8ea67c5ac77aef51d203a8e1da9f0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_orchestrator::machine_submission::exact_local_install_decision",
+      "end_line": 5,
+      "fingerprint": "tok1:fdc51eedcc655795ebd9ab83ede9fa40c8158b9668b3203b105960bf7f4838c3"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -27632,9 +27738,9 @@
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/machine_submission.rs",
       "item_kind": "fn",
-      "line": 177,
+      "line": 184,
       "symbol": "vibe_orchestrator::machine_submission::submit",
-      "end_line": 299,
+      "end_line": 306,
       "fingerprint": "tok1:9de3543c6f6122be6bb6c66b88407b4c1c317b82149476ea4c282d7f453ecdbf"
     },
     {
@@ -40133,6 +40239,14 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/machine/e1/profiled_deploy_action_request.jtd.json",
+      "from_symbol": "profiled_deploy_action_request",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-INPUT-ADMISSION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/progress-core/src/lib.rs",
       "from_symbol": "progress_core",
       "line": 23,
@@ -41475,6 +41589,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/proof.rs",
+      "from_symbol": "vibe_cli::cli::proof",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#VERIFY-EVIDENCE-IDENTITY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/cli/query.rs",
       "from_symbol": "vibe_cli::cli::query",
       "line": 5,
@@ -42599,7 +42721,7 @@
     {
       "file": "crates/vibe-cli/src/commands/machine_session.rs",
       "from_symbol": "vibe_cli::commands::machine_session::run",
-      "line": 32,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT",
       "verb": "implements",
@@ -42616,7 +42738,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::fixed_cargo_server_context",
-      "line": 434,
+      "line": 481,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-CARGO-BUILD-DECISION",
       "verb": "implements"
@@ -42624,7 +42746,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::fixed_package_server_context",
-      "line": 407,
+      "line": 454,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-PACKAGE-GRANT-DECISION",
       "verb": "implements"
@@ -42664,7 +42786,7 @@
     {
       "file": "crates/vibe-cli/src/commands/mcp/mod.rs",
       "from_symbol": "vibe_cli::commands::mcp::run_serve",
-      "line": 299,
+      "line": 303,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
       "verb": "implements",
@@ -43036,6 +43158,14 @@
       "line": 152,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#evidence",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/proof.rs",
+      "from_symbol": "vibe_cli::commands::proof",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#VERIFY-EVIDENCE-IDENTITY",
       "verb": "implements"
     },
     {
@@ -45167,7 +45297,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 477,
+      "line": 483,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -57757,16 +57887,24 @@
     {
       "file": "crates/vibe-mcp/src/machine_session/state.rs",
       "from_symbol": "vibe_mcp::machine_session::state::MachineSession::new",
-      "line": 145,
+      "line": 149,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT",
       "verb": "implements",
       "pinned_r": 1
     },
     {
-      "file": "crates/vibe-mcp/src/machine_session/state.rs",
-      "from_symbol": "vibe_mcp::machine_session::state::MachineSession::receive",
-      "line": 548,
+      "file": "crates/vibe-mcp/src/machine_session/state/negotiation.rs",
+      "from_symbol": "vibe_mcp::machine_session::state::negotiation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SESSION-NEGOTIATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/machine_session/state/negotiation.rs",
+      "from_symbol": "vibe_mcp::machine_session::state::negotiation::MachineSession::receive",
+      "line": 50,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SESSION-NEGOTIATION",
       "verb": "implements",
@@ -57853,7 +57991,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::AgenticExplainMcpTool",
-      "line": 491,
+      "line": 493,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#transports",
       "verb": "implements"
@@ -57861,7 +57999,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::MaterialiseSubskillMcpTool",
-      "line": 349,
+      "line": 351,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -57877,7 +58015,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::QueryPackageMcpTool",
-      "line": 128,
+      "line": 130,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -57885,7 +58023,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::ReadSubskillMcpTool",
-      "line": 215,
+      "line": 217,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -58231,6 +58369,30 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-DIAGNOSTIC-FAILURE",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/proof.rs",
+      "from_symbol": "vibe_mcp::tools::proof",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#VERIFY-EVIDENCE-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/proof.rs",
+      "from_symbol": "vibe_mcp::tools::proof::ProofCheckMcpTool",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/proof.rs",
+      "from_symbol": "vibe_mcp::tools::proof::ProofVerifyMcpTool",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-mcp/src/tools/query.rs",
@@ -58991,6 +59153,14 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-orchestrator/src/machine_operation/exact_local_install.rs",
+      "from_symbol": "vibe_orchestrator::machine_operation::exact_local_install",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-INPUT-ADMISSION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-orchestrator/src/machine_operation/exchange.rs",
       "from_symbol": "vibe_orchestrator::machine_operation::exchange",
       "line": 4,
@@ -59348,7 +59518,7 @@
     {
       "file": "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs",
       "from_symbol": "vibe_orchestrator::machine_submission::cli_grant::CliGrantService::issue",
-      "line": 187,
+      "line": 188,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH",
       "verb": "implements",
@@ -59357,7 +59527,7 @@
     {
       "file": "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs",
       "from_symbol": "vibe_orchestrator::machine_submission::cli_grant::CliGrantService::reattach",
-      "line": 235,
+      "line": 236,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH",
       "verb": "implements",
@@ -59377,6 +59547,14 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH-DECISION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision.rs",
+      "from_symbol": "vibe_orchestrator::machine_submission::exact_local_install_decision",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-INPUT-ADMISSION",
       "verb": "implements"
     },
     {
@@ -59440,7 +59618,7 @@
     {
       "file": "crates/vibe-orchestrator/src/machine_submission.rs",
       "from_symbol": "vibe_orchestrator::machine_submission::submit",
-      "line": 181,
+      "line": 188,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
       "verb": "implements",
@@ -96071,7 +96249,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:390cc61b426de074536806ef171df59f535eceb2d7e242210df025ce92e5dc2b",
+      "content_hash": "sha256:5ddaa2ed58752cd417f48ac2458b613096619314668b3fd5687d62a553f36139",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Machine operations and observability",
@@ -96179,7 +96357,7 @@
     },
     {
       "anchor": "machine-operation-contracts",
-      "content_hash": "sha256:73e4e7c3443fff430930d64c708a2b226fb9925998e8cf423814ba33efa5dcc6",
+      "content_hash": "sha256:3b82633f1dd7003815c0e57c922afc341dad69c516d5d2961789e96815cab2d8",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Desired strict operation and capability contracts",
@@ -96391,7 +96569,7 @@
     },
     {
       "anchor": "MACHINE-OPERATION-SERVICE",
-      "content_hash": "sha256:84b7226ce47ff3169d4f16b4e5de1c6f5c81380c3940a157646e038c9dfb3540",
+      "content_hash": "sha256:e2501e968a77ea266212d6251dd1c1aad79575298575fd7e272da2e03ff46775",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Shared domain delegation",
@@ -96542,12 +96720,30 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-FIXED-DEPLOY-REATTACH-DECISION"
     },
     {
+      "anchor": "MACHINE-PROFILED-DEPLOY",
+      "content_hash": "sha256:3f383c2bed16443fe2e51a5aaaf7aa253462c873888ab5e113741dc1d0c34e2f",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Explicit profile selection for fixed Deploy",
+      "line": 92,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-PROFILED-DEPLOY"
+    },
+    {
+      "anchor": "MACHINE-PROFILED-DEPLOY-DECISION",
+      "content_hash": "sha256:50ca2d5aa33c99b33669008f92231bf827b19c8a9b1ecbfd22dd01c3f0aa3f36",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Decision: the separately registered machine-profiled-deploy-action-request carries an explicit profile as data for the incumbent fixed one-target builtin vibe-bin owner. A trusted host may name up to eight additional authored profiles; the sorted allowlist binds its C1 scope and host nonce, and every profile/target is checked against the current authored manifest before a fresh effect. The new canonical intent retains requested_deploy_profile; legacy key-only requests keep their original canonical bytes. Changing the requested profile or changing explicit versus omitted choice under one key conflicts even when the resulting target matches. Identical intent attaches to one retained run across CLI, MCP and local API. A five-schema legacy frame offer remains valid; the optional new format is callable only when negotiated. Reattach requires the original allowed-set binding; historical inspection after source drift remains recovery-only. Why: an explicit per-operation choice must neither widen host authority nor borrow another request's retained result. Considered and rejected: treating a requested profile as a grant, changing old e1 bytes, requiring a new schema from legacy clients, and allocating a fresh namespace per adapter. Linux fixture proof covers this fixed owner, not arbitrary targets or full adapter/campaign conformance. Revisit when the next actual operation needs a broader authored target boundary. @status:spec/plan",
+      "line": 93,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-PROFILED-DEPLOY-DECISION"
+    },
+    {
       "anchor": "MACHINE-OWNER-LIFETIME",
       "content_hash": "sha256:b204504a507069b24d2122bf7813cc3e648fd20854621edb33399cec692a1971",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A short-lived owner and separate observers",
-      "line": 93,
+      "line": 96,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LIFETIME",
       "kind": "req",
       "revision": 1
@@ -96558,7 +96754,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 94,
+      "line": 97,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-owner-lifetime"
     },
     {
@@ -96567,7 +96763,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A\n      bounded owner advertises its exact connection-loss policy before an\n      observer attaches. ContinueCurrentDispatch keeps only the already\n      admitted domain dispatch alive while its owning host process survives;\n      loss or explicit detachment of an observer neither cancels that dispatch\n      nor grants another one. It does not promise survival of owner process\n      death. The host retains the owner independently of observer handles and\n      binds a live observation handle to the actual journal-ready run,\n      reservation, namespace, trusted scope, key and held physical root before\n      scratch or provider effects. A protected local attach checks that exact\n      binding without acquiring a second writer or invoking the domain again.\n      Running is an observation of the live owner, not completion evidence.\n      Terminal attachment revalidates the incumbent domain's retained result\n      under its lease; an in-memory remembered outcome cannot replace damaged\n      or missing owner evidence. Detach is real observer control and must not\n      be described as provider cancellation; unavailable cancellation remains\n      explicit until its domain proves a cooperative control boundary. A\n      stopped or panicked owner cannot remain advertised as Running. Process\n      death or loss of the live handle returns to domain journal inspection\n      with the same run identity, yielding retained truth or recovery-required\n      uncertainty without redispatch. This layer introduces no permanent\n      autonomous service, generic command runner, scheduler or competing\n      operation-result journal. @status:spec/plan",
-      "line": 95,
+      "line": 98,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OWNER-LIFETIME-LAW"
     },
     {
@@ -96576,7 +96772,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Scoped bounded observations and cooperative control",
-      "line": 119,
+      "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STREAM",
       "kind": "req",
       "revision": 1
@@ -96587,7 +96783,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 120,
+      "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-stream"
     },
     {
@@ -96596,7 +96792,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A\n      registered versioned stream message owns typed state, phase, progress,\n      diagnostic, raw stdout/stderr and terminal-reference observations,\n      replay/gap responses and control request/response values. Each message\n      binds the host-assigned context and target, semantic operation, actual\n      domain run and owner-issued stream identity. Event sequences are\n      canonical decimal u64 values, start at one and increase within that\n      stream; zero is only a before-first replay cursor. Independent streams\n      have independent order, never a fabricated global clock order. Shape\n      decoding and pure semantic validation grant no execution authority.\n      The owning service separately checks the exact live binding and domain\n      evidence before publication or control. A terminal-reference event is a\n      pointer to incumbent retained evidence, never a new result journal or\n      evidence of completion by itself. Explicit bounds cover frame bytes,\n      event count and payload bytes, replay batches, subscriptions and pending\n      delivery. Slow consumers cannot hold the provider or block query/control\n      dispatch. Eviction, oversized payload loss and expired stream history\n      return explicit bounded gaps or expiry with the same domain result\n      identity; they cannot erase that identity or fabricate replayed bytes.\n      Raw output preserves its byte encoding and independent stdout/stderr\n      origin within the declared cap. Cancellation-requested acknowledges\n      only the admitted request. Reached-safe-stop requires the domain's\n      cooperative boundary and retained effect truth: committed effects stay\n      partial/recoverable and are never described as rolled back. A request\n      after an already retained terminal result is explicitly too late and\n      does not rewrite that result. Unsupported provider cancellation remains\n      unavailable. Observer detach and stopping trace observation never\n      falsely cancel an underlying build. Linux, macOS and Windows use their\n      incumbent portable lease and root owners; native execution evidence is\n      stated separately from source or compilation support. A descriptor,\n      shaped event or test transport cannot promote unimplemented streaming,\n      replay or control to an available production capability. @status:spec/plan",
-      "line": 121,
+      "line": 124,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-STREAM-LAW"
     },
     {
@@ -96605,7 +96801,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Retained descriptor-only discovery",
-      "line": 154,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-DISCOVERY",
       "kind": "req",
       "revision": 1
@@ -96616,7 +96812,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 155,
+      "line": 158,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-operation-discovery"
     },
     {
@@ -96625,7 +96821,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Discovery reads retained, validated descriptor and schema identities from their owning source, including extension declarations, without invoking a handler, loading a native library, starting a provider or fetching/building a schema. Unknown, absent or unvalidated contributed schema remains unavailable with a reason. Retained metadata cannot promote an extension to an executable or authorized service; its later owner must separately prove that path. @status:spec/plan",
-      "line": 156,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-DISCOVERY-LAW"
     },
     {
@@ -96634,7 +96830,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Authored retained extension schema source",
-      "line": 158,
+      "line": 161,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-EXTENSION-SCHEMA-SOURCE",
       "kind": "req",
       "revision": 1
@@ -96645,7 +96841,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 159,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-extension-schema-source"
     },
     {
@@ -96654,7 +96850,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "PROP-054's optional authored extension operation-schema declaration is the source for descriptor-only extension discovery. Validate its registered host-owned format IDs and epochs, bind the selected provider/declaration to the retained manifest or content capture, and keep source authenticity, implementation status, contextual availability and authorization separate. A parsed table without its owning retained-source evidence may be listed only with an explicit unverified or unavailable reason. A validated schema may be discoverable without loading the native handler, but is not a validated callable service until its domain owner and admission are separately proven. An arbitrary handler config or a schema inferred from a native ABI call is never this source. @status:spec/plan",
-      "line": 160,
+      "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-EXTENSION-SCHEMA-SOURCE-LAW"
     },
     {
@@ -96663,7 +96859,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Logical, captured, observed and presented identities",
-      "line": 162,
+      "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES",
       "kind": "req",
       "revision": 2
@@ -96674,7 +96870,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r2` @status:spec/plan",
-      "line": 163,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-entity-references"
     },
     {
@@ -96683,7 +96879,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A public entity reference keeps four axes separate: the domain owner's minted logical address where one exists; the captured content/source identity and revision; the observation or projection identity; and the occurrence of that entity in one presentation or contribution. A shared logical entity reached twice has one logical address and two occurrence references. Every presented occurrence has its own projection-local occurrence ID: a page row must join that exact ID to one entity occurrence, and two distinct rows cannot reuse one single-occurrence entity reference. A content/source identity joins a selected capture only through an explicit owner-supplied binding, never because their opaque spellings happen to match. A content hash identifies bytes, not a selected world or a complete observation; a display line, host path, arena index and wall-clock timestamp are never universal entity or snapshot identities. Missing owner identities remain typed extraction gaps rather than newly minted guesses. Preserve PROP-032's location-independent address law and PROP-036's repeated DAG occurrence behavior. @status:spec/plan",
-      "line": 164,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-ENTITY-REFERENCES-LAW"
     },
     {
@@ -96692,7 +96888,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Compatible multi-owner observations",
-      "line": 166,
+      "line": 169,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT",
       "kind": "req",
       "revision": 1
@@ -96703,7 +96899,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 167,
+      "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-composite-snapshot"
     },
     {
@@ -96712,7 +96908,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A CompositeSnapshot records independently captured source, selected world, target and operation observations with each owner's revision or content witness, participation and completeness. Composition validates stated compatibility and returns a typed conflict, stale, missing or unverified reason where it cannot establish it; it does not imply one atomic read across domains. An absent component is not a complete empty component. A wall clock is diagnostic only and cannot substitute for any capture or revision identity. @status:spec/plan",
-      "line": 168,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-COMPOSITE-SNAPSHOT-LAW"
     },
     {
@@ -96721,7 +96917,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "One projection across filters and pages",
-      "line": 170,
+      "line": 173,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING",
       "kind": "req",
       "revision": 1
@@ -96732,7 +96928,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 171,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-bound-paging"
     },
     {
@@ -96741,7 +96937,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A page, child expansion or chunk cursor is bound to one projection identity, source revisions, selected filter and authorized scope. Mixing pages from different projections or silently re-reading owners under one cursor refuses with a typed reason. A complete page sequence reconstructs the full authorized structure; truncation, unavailable children and redaction remain explicit and never masquerade as a complete final page. Cursor values convey no file or effect authority. @status:spec/plan",
-      "line": 172,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-BOUND-PAGING-LAW"
     },
     {
@@ -96750,7 +96946,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Opaque resources and explicit position basis",
-      "line": 174,
+      "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION",
       "kind": "req",
       "revision": 1
@@ -96761,7 +96957,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 175,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-source-location"
     },
     {
@@ -96770,7 +96966,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A source location carries an opaque resource identity, captured revision, encoding and explicit position basis such as original bytes or a named text projection. A trusted owner maps that resource to a client URI within its authorized scope; arbitrary host paths are not public identities or URI grants. Projected Markdown line positions are never presented as original XML byte positions without a retained reversible source map. A non-UTF8 resource, unknown encoding, absent raw bytes or unavailable reverse mapping retains its exact opaque resource with a typed unavailable reason rather than a lossy or fabricated location. @status:spec/plan",
-      "line": 176,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SOURCE-LOCATION-LAW"
     },
     {
@@ -96779,7 +96975,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Bounded on-demand byte framing",
-      "line": 178,
+      "line": 181,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME",
       "kind": "req",
       "revision": 1
@@ -96790,7 +96986,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 179,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-local-frame"
     },
     {
@@ -96799,7 +96995,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "A separate local machine-session transport frames each generated request, reply, event, completion or refusal as a four-byte unsigned big-endian byte length followed by exactly that many UTF-8 JSON bytes. A zero, truncated, over-limit (initial bound eight MiB), invalid UTF-8/JSON, unknown shape or unsupported frame epoch refuses before domain dispatch; the declared length is checked before allocation. A frame is not an arbitrary JSON payload tunnel: referenced domain values use their registered generated readers and owning semantic validators. EOF closes the on-demand session; no permanent daemon, watcher or filesystem grant is created by framing. @status:spec/plan",
-      "line": 180,
+      "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME-LAW"
     },
     {
@@ -96808,7 +97004,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Fixed lifecycle values inside the existing frame",
-      "line": 181,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-LIFECYCLE-EXCHANGE",
       "kind": "req",
       "revision": 1
@@ -96819,7 +97015,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 182,
+      "line": 185,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-local-lifecycle-exchange"
     },
     {
@@ -96828,7 +97024,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "An explicitly host-granted fixed lifecycle local session carries the registered `OperationEnvelope` inside the existing `SessionFrame` request and completion/refusal bodies. An input envelope names the exact fixed operation and its registered lifecycle-action request format; the owning service decodes that inner value with its generated reader and validates the trusted outer context/target binding before dispatch. Result and error envelopes use the registered lifecycle-action reply/error formats and derive effect state, completeness and provenance from the incumbent domain owner. A shaped frame, an unrecognized format ID, a client-supplied root or a descriptor never creates the fixed host grant. Session completion means the reply was published, not that a submitted provider finished. Pure-planner and responsive observation modes keep their own negotiated formats and existing behavior; only an actually granted local mode advertises lifecycle-action formats. @status:spec/plan",
-      "line": 183,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-LIFECYCLE-EXCHANGE-LAW"
     },
     {
@@ -96837,7 +97033,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Decision: reuse the registered `OperationEnvelope` input/result/error stages and the current session-frame arms for the fixed lifecycle exchange. Why: the envelope already owns operation/domain identity, nested format identity and effect/completeness semantics, and the existing frame already carries that envelope for the pure planner; one semantic validation path can distinguish the action without a parallel outcome grammar. Considered and rejected: bare lifecycle JSON in `envelope_json` has no authenticated format selector, while new lifecycle-specific frame arms would duplicate stage and effect semantics already owned by the envelope. When to revisit: if any required fixed lifecycle action cannot round-trip through the generated envelope and owner validator with correct run, scope and effect truth, or if one focused local/MCP conformance case accepts an ambiguous format or fabricates `NoEffects`; the failing named test and its owner response are the trigger. @status:spec/plan",
-      "line": 184,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-LIFECYCLE-EXCHANGE-DECISION"
     },
     {
@@ -96846,7 +97042,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Fixed package values inside the existing frame",
-      "line": 186,
+      "line": 189,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-PACKAGE-EXCHANGE",
       "kind": "req",
       "revision": 1
@@ -96857,7 +97053,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 187,
+      "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-local-package-exchange"
     },
     {
@@ -96866,7 +97062,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "An explicitly host-granted fixed package local session carries the registered package `OperationEnvelope` Input/Result/Error inside the incumbent `SessionFrame` request and completion/refusal arms. This mode negotiates only the session frame, operation envelope and three fixed package action format IDs it can actually dispatch; it advertises no lifecycle question, streaming, replay or control capability. The embedding supplies one actual `FixedPackageRoute`, physical project root and target; assigned outer session/context/target IDs bind that route but never replace its durable inner C1 scope. A shaped frame, descriptor, path, copied outer ID or arbitrary namespace token cannot create the grant. The route and lifecycle package owner validate the exact nested request, root, key and effect truth before publication. EOF or failed response publication closes the connection and retains the typed owner response/evidence for same-key inspection through a newly granted connection, without recopy or a permanent daemon. Pure planner, fixed Validate and responsive observation modes keep separate negotiated sets and behavior. @status:spec/plan",
-      "line": 188,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-PACKAGE-EXCHANGE-LAW"
     },
     {
@@ -96875,7 +97071,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Truthful machine handshake",
-      "line": 191,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SESSION-NEGOTIATION",
       "kind": "req",
       "revision": 1
@@ -96886,7 +97082,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 192,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-session-negotiation"
     },
     {
@@ -96895,7 +97091,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Initialization chooses a mutually supported machine API version, registered schema epochs and position encoding from the client's offer and the executable's actual finite support. With no intersection it returns a typed refusal naming the supported set; it never responds with a fixed unsupported version. The initial position basis may be raw byte offsets while projected character columns lack an owner map. Streaming, replay and control are advertised only when the selected service truly implements each operation; a test fake or a shaped event frame does not make a production capability available. An operation request before successful initialization or under another negotiated version refuses. @status:spec/plan",
-      "line": 193,
+      "line": 196,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SESSION-NEGOTIATION-LAW"
     },
     {
@@ -96904,7 +97100,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Surface-assigned session contexts",
-      "line": 195,
+      "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT",
       "kind": "req",
       "revision": 1
@@ -96915,7 +97111,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 196,
+      "line": 199,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-trusted-context"
     },
     {
@@ -96924,7 +97120,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "The owning CLI or embedding surface alone supplies finite workspace, member, HOME or container roots and target bindings to a session-local registry. Each client receives its own opaque session/context IDs; requests name only those assigned IDs, never a path or a manifest field that grants a new root. Unknown, foreign-session, stale or unavailable context/target identities refuse with a typed reason. A context whose owner cannot yet bind its physical scope is reported unavailable, not manufactured from ambient HOME, a request body or a project manifest. Context IDs and URI tokens convey no authority outside their supplying session. @status:spec/plan",
-      "line": 197,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-TRUSTED-CONTEXT-LAW"
     },
     {
@@ -96933,7 +97129,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Host-owned CLI lifecycle reattachment",
-      "line": 198,
+      "line": 201,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH",
       "kind": "req",
       "revision": 1
@@ -96944,7 +97140,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 199,
+      "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-cli-host-reattach"
     },
     {
@@ -96953,7 +97149,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "An effectful on-demand CLI session may issue or reattach a fixed lifecycle host only from a host-controlled, bounded reattach pointer under the incumbent lifecycle lease. It binds the physical project root correlation, a stable host-assigned submission scope (context, target and principal), the owner-issued finite namespace, target OS, trusted policy source and expiry. The durable submission scope's context is distinct from every connection-local frame context ID; a new connection maps its fresh outer ID to the retained host scope without granting authority by spelling. Startup independently checks the physical root and host authority, reads the current shared policy owner and validates the namespace against the C1 index before constructing the fixed route. Request bodies, frames, descriptors, ambient CWD/HOME and arbitrary caller namespace tokens cannot issue, renew or reattach the grant. Reattachment never restores process-local questions or approval: a new submission requires a new typed decision and current policy, while an existing key is inspected through C1 and the incumbent lifecycle outcome owner. Expired or retired namespaces preserve reserved-key recovery but cannot dispatch a fresh effect; missing, conflicting or uncertain pointer publication refuses rather than issuing a replacement namespace. The pointer is not an execution journal and never stores a result, approval, provider output or effect truth. @status:spec/plan",
-      "line": 200,
+      "line": 203,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH-LAW"
     },
     {
@@ -96962,7 +97158,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Decision: retain only the trusted host reattach binding and reuse the existing C1 namespace, shared PolicyOwner and domain outcome journals. Why: a fresh namespace on every CLI invocation could execute the same key twice after process loss, while a wire context ID is deliberately ephemeral. Considered and rejected: accepting a client-supplied namespace as a grant, persisting a frame context ID, and adding a second result journal. Revisit when a named cross-process recovery test demonstrates that the incumbent lease, namespace or shared-policy owner cannot preserve exact scope and effect truth without a narrower owner record. @status:spec/plan",
-      "line": 201,
+      "line": 204,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-HOST-REATTACH-DECISION"
     },
     {
@@ -96971,7 +97167,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Decision: the initial effectful CLI is a cooperative same-project host. Its explicit absolute root and permission to acquire that root's incumbent mutation lease define the local authority boundary; it derives the stable target from the physical root correlation, uses one project-local CLI principal and a versioned CLI policy source, and requires an explicit fixed-mode issue or reattach choice. Policy grants are CLI startup inputs with absent permissions denied; every operation still carries and validates its own typed requested options and approval. This is not OS-user authentication or isolation among hostile users who can write the same project. Considered and rejected: caller-selected principal/namespace strings, HOME or CWD identity, an automatically fresh namespace after reattach failure, and silently enabling script or control policy from defaults. Revisit before promising cross-user isolation, when a multi-user hostile-writer test or a platform owner supplies a portable authenticated principal and protected policy source. @status:spec/plan",
-      "line": 202,
+      "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-CLI-LOCAL-TRUST-DECISION"
     },
     {
@@ -96980,7 +97176,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Legacy MCP and one-shot reach remain independent",
-      "line": 205,
+      "line": 208,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-MCP-COEXISTENCE",
       "kind": "req",
       "revision": 1
@@ -96991,7 +97187,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r1` @status:spec/plan",
-      "line": 206,
+      "line": 209,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-mcp-coexistence"
     },
     {
@@ -97000,7 +97196,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "The existing MCP server remains JSON-RPC 2.0 over newline-delimited stdio with its observed fixed `initialize` protocol version `2024-11-05` and legacy tools. The new byte-framed machine session does not reinterpret MCP lines, claim that fixed response is negotiation or silently replace tool handlers. A library or one-shot CLI domain call needs no server startup; the framed process is entered only on explicit local-session reach. Neither path introduces a permanent daemon, LSP/DAP adapter, IDE plugin or MVP. @status:spec/plan",
-      "line": 207,
+      "line": 210,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-MCP-COEXISTENCE-LAW"
     },
     {
@@ -97009,7 +97205,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Durable pre-effect admission identity",
-      "line": 209,
+      "line": 212,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION",
       "kind": "req",
       "revision": 6
@@ -97020,7 +97216,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "`req r6` @status:spec/plan",
-      "line": 210,
+      "line": 213,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#req-machine-submission-reservation"
     },
     {
@@ -97029,7 +97225,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "An effectful machine submission uses an owner-issued namespace scoped to context, target and principal, with a finite epoch and expiry; a request body cannot create or renew one. Before any domain effect, one durable atomic reservation binds its idempotency key, canonical request/plan identity and an owner-selected domain run or journal identity under the domain's mutation lease. Identical concurrent submissions attach to one retained operation; the same key with different request or plan identity refuses. A lost response is recovered by that operation identity, not by invoking the action again. A domain run identity is reserved by at most one key across all namespaces; a duplicate stored identity invalidates the index rather than attaching a different request to one journal. The reservation and domain journal may be separate atomic files: under the same lease, a retry that finds the reservation but no durable journal initializes only the reserved identity, while an uncertain or present journal requires owner reconciliation or attachment and never a fresh effect invocation. No effect begins until both reservation and the necessary journal state are durably proven. Namespace expiry or result-payload collection retains compact durable tombstones while an operation is active, parked, uncertain or recoverable; a retired namespace cannot revive an old key. A reservation whose durable publication is uncertain blocks effect dispatch until the owner reconciles it. This record indexes the existing journal and never becomes a competing execution store. A lifecycle freshness header is not a terminal result journal: a matching run ID alone cannot turn EOF or an interrupted handler into success or license a second effect. The lifecycle owner retains a per-run outcome marker keyed by the reserved ID, with explicit completed, parked or failed/uncertain effect truth and a validated report payload digest or typed unavailability; an available report is durable and re-read before the marker is committed, and a reply follows only after both are proven. A missing or mismatched marker or payload remains recovery-required, never a second effect; the dedup index retains only the domain reference. Artifact records written after build or package apply, and registry fact logs written after remote publication, are not pre-effect operation journals. Such domains remain unavailable to protected machine submission until their own owner retains pre-effect identity, partial/terminal truth and recovery under the reservation fence. A platform lacking a stronger hostile-writer primitive states its weaker lease/cooperating-writer guarantee and reports detected contention or drift rather than pretending content CAS. @status:spec/plan",
-      "line": 211,
+      "line": 214,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SUBMISSION-RESERVATION-LAW"
     },
     {
@@ -97038,7 +97234,7 @@
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Decision: once the incumbent owner independently validates a prior C1-ready reservation and its terminal marker/report with no parked, delegated or continuation work, a different key may reserve a new run against the current source and plan. Changed manifest bytes can be new intent; old keys keep attaching to their retained run without rereading those bytes. Key novelty never sets `force`: the new request uses ordinary freshness unless its own typed force choice was explicitly approved. An uncertain, missing or nonterminal predecessor remains a refusal. Why: the validated terminal fence protects the prior effect while allowing a genuinely new operation to observe current inputs. Considered and rejected: treating all changed current sources as an uncertain prior run, deriving force from a fresh key, and using a lifecycle header alone as terminal proof. Revisit if an exact owner test shows a second effect without the prior marker/report and C1 correlation, or a fresh-key run mutates the prior retained result. @status:spec/plan",
-      "line": 212,
+      "line": 215,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-SEQUENTIAL-FRESH-KEY-DECISION"
     },
     {

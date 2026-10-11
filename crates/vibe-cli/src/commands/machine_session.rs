@@ -149,6 +149,7 @@ fn exchange(args: &MachineSessionArgs) -> Result<()> {
             args.deploy_profile
                 .as_deref()
                 .ok_or_else(|| anyhow::anyhow!("fixed Deploy requires --deploy-profile"))?,
+            &args.deploy_allow_profiles,
             mode,
         )?;
         let mut runner = DeployMachineSessionRunner::new(context)?;

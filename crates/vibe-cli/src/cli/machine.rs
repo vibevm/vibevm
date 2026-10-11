@@ -51,6 +51,10 @@ pub struct MachineSessionArgs {
     /// Authored Deploy profile; required for fixed Deploy and never inferred.
     #[arg(long, requires = "fixed_deploy")]
     pub deploy_profile: Option<String>,
+    /// Additional authored fixed Deploy profiles this host may accept from a
+    /// versioned per-operation request. Reattach must repeat the same set.
+    #[arg(long = "deploy-allow-profile", requires = "fixed_deploy")]
+    pub deploy_allow_profiles: Vec<String>,
     /// First-issue lifetime in milliseconds (1..=86400000); issue only.
     #[arg(long, value_parser = clap::value_parser!(u64).range(1..=86_400_000))]
     pub ttl_ms: Option<u64>,

@@ -7,6 +7,7 @@ use vibe_extension_registry::{
     ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, collect_mechanisms,
 };
 use vibe_lifecycle::ClientExecutable;
+use vibe_wire::generated::format_id::FormatId;
 use vibe_wire::{behaviour::artifact_record::validate, generated::artifact_record::ArtifactRecord};
 
 fn registry() -> Arc<MechanismRegistry> {
@@ -135,6 +136,8 @@ impl Fixture {
         .unwrap()
     }
 }
+
+mod profiled;
 
 #[test]
 fn old_deploy_pointer_recovers_known_run_after_manifest_drift() {

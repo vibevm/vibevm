@@ -413,6 +413,7 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
             args.deploy_profile
                 .as_deref()
                 .ok_or_else(|| anyhow::anyhow!("fixed Deploy requires --deploy-profile"))?,
+            &args.deploy_allow_profiles,
             match mode {
                 McpFixedDeployMode::Issue => FixedDeployHostMode::Issue(
                     args.ttl_ms

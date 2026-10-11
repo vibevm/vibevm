@@ -1,7 +1,7 @@
 //! Real startup composition of one fixed Deploy grant across CLI and MCP.
 #![cfg(target_os = "linux")]
 
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{
     fs,
@@ -14,6 +14,8 @@ use vibe_wire::{behaviour::artifact_record::validate, generated::artifact_record
 mod frame_cross_surface;
 #[path = "cli_mcp_fixed_deploy/local_route.rs"]
 mod local_route;
+#[path = "cli_mcp_fixed_deploy/profiled_cross_surface.rs"]
+mod profiled_cross_surface;
 
 struct Fixture {
     dir: tempfile::TempDir,
@@ -92,6 +94,14 @@ impl Fixture {
     }
     fn mcp(&self, mode: &str, ttl: bool, request: &str) -> Output {
         let mut command = self.mcp_command(mode, ttl);
+        self.run_mcp(&mut command, request)
+    }
+    fn mcp_allowed(&self, mode: &str, ttl: bool, request: &str) -> Output {
+        let mut command = self.mcp_command(mode, ttl);
+        command.args(["--deploy-allow-profile", "alt"]);
+        self.run_mcp(&mut command, request)
+    }
+    fn run_mcp(&self, command: &mut Command, request: &str) -> Output {
         let mut child = command.spawn().unwrap();
         std::io::Write::write_all(child.stdin.as_mut().unwrap(), request.as_bytes()).unwrap();
         drop(child.stdin.take());
@@ -122,6 +132,14 @@ fn request_key(kind: &str, key: &str) -> String {
     json!({"jsonrpc":"2.0","id":1,"method":"tools/call",
         "params":{"name":"fixed_deploy_operation","arguments":{
             "schema":1,"action":{"kind":kind,"key":key}}}})
+    .to_string()
+        + "\n"
+}
+
+fn profiled_request(key: &str, profile: &str) -> String {
+    json!({"jsonrpc":"2.0","id":1,"method":"tools/call",
+        "params":{"name":"fixed_deploy_operation","arguments":{
+            "schema":1,"action":{"kind":"submit","key":key,"deploy_profile":profile}}}})
     .to_string()
         + "\n"
 }

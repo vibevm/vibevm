@@ -3,7 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATIO
 use super::{
     FixedDeployRoute, FixedDeployRouteError,
     contract::*,
-    dispatch::{action_key, decode, failure},
+    dispatch::{decode_legacy, decode_profiled, failure},
 };
 use std::path::Path;
 use vibe_wire::generated::{format_id::FormatId, machine::e1::operation_envelope as e};
@@ -146,7 +146,7 @@ impl FixedDeployRoute {
         root: &Path,
         cap: usize,
     ) -> Result<e::OperationEnvelope, FixedDeployRouteError> {
-        let admitted = (|| -> Result<String, String> {
+        let admitted = (|| -> Result<(String, bool), String> {
             if bytes.len() > PUBLICATION_CAP {
                 return Err("envelope exceeds cap".into());
             }
@@ -163,16 +163,26 @@ impl FixedDeployRoute {
             let e::Body::Input(body) = input.body else {
                 return Err("expected Input stage".into());
             };
-            if body.format_id != FormatId::MachineFixedDeployActionRequest.id() {
-                return Err("exact registered request format required".into());
+            let profiled = match body.format_id.as_str() {
+                id if id == FormatId::MachineFixedDeployActionRequest.id() => false,
+                id if id == FormatId::MachineProfiledDeployActionRequest.id() => true,
+                _ => return Err("exact registered request format required".into()),
+            };
+            if profiled {
+                decode_profiled(body.payload_json.as_bytes())?;
+            } else {
+                decode_legacy(body.payload_json.as_bytes())?;
             }
-            decode(body.payload_json.as_bytes())?;
-            Ok(body.payload_json)
+            Ok((body.payload_json, profiled))
         })();
         let (request, response) = match admitted {
-            Ok(bytes) => {
-                let r = Self::dispatch_owned(grant, bytes.as_bytes(), root, PUBLICATION_CAP);
-                (Some(bytes), r)
+            Ok((bytes, profiled)) => {
+                let r = if profiled {
+                    Self::dispatch_profiled_owned(grant, bytes.as_bytes(), root, PUBLICATION_CAP)
+                } else {
+                    Self::dispatch_owned(grant, bytes.as_bytes(), root, PUBLICATION_CAP)
+                };
+                (Some((bytes, profiled)), r)
             }
             Err(s) => (
                 None,
@@ -196,10 +206,14 @@ impl FixedDeployRoute {
                     Ok(value)
                 })
                 .map_err(|reason| {
-                    let metadata = request
-                        .as_ref()
-                        .and_then(|bytes| decode(bytes.as_bytes()).ok());
-                    let (action, key) = metadata.as_ref().map(action_key).unzip();
+                    let metadata = request.as_ref().and_then(|(bytes, profiled)| {
+                        if *profiled {
+                            decode_profiled(bytes.as_bytes()).ok()
+                        } else {
+                            decode_legacy(bytes.as_bytes()).ok()
+                        }
+                    });
+                    let (action, key) = metadata.as_ref().map(|row| row.kind_key()).unzip();
                     failure(
                         grant,
                         err::FixedDeployActionErrorCode::PublicationUnavailable,

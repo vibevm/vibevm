@@ -147,16 +147,24 @@ impl Fixture {
     }
 }
 
-const FORMATS: [FormatId; 5] = [
+const FORMATS: [FormatId; 6] = [
     FormatId::MachineSessionFrame,
     FormatId::MachineOperationEnvelope,
     FormatId::MachineFixedDeployActionRequest,
+    FormatId::MachineProfiledDeployActionRequest,
     FormatId::MachineFixedDeployActionReply,
     FormatId::MachineFixedDeployActionError,
 ];
 fn connect(
     fixture: &Fixture,
     route: Arc<FixedDeployRoute>,
+) -> (DeployMachineSessionRunner, String, String, String) {
+    connect_with_formats(fixture, route, &FORMATS)
+}
+fn connect_with_formats(
+    fixture: &Fixture,
+    route: Arc<FixedDeployRoute>,
+    formats: &[FormatId],
 ) -> (DeployMachineSessionRunner, String, String, String) {
     let context = ServerContext::with_store_root(
         fixture.project.path(),
@@ -172,7 +180,7 @@ fn connect(
         body: f::Body::InitializeOffer(Box::new(f::BodyInitializeOffer {
             api_versions: vec!["1".into()],
             position_encodings: vec!["raw-byte-offsets".into()],
-            schema_offers: FORMATS
+            schema_offers: formats
                 .iter()
                 .map(|id| f::SchemaOffer {
                     format_id: id.id().into(),
@@ -190,7 +198,7 @@ fn connect(
     let f::Body::Initialized(body) = initialized.body else {
         panic!("initialization refused")
     };
-    assert_eq!(body.selected_schemas.len(), FORMATS.len());
+    assert_eq!(body.selected_schemas.len(), formats.len());
     assert_eq!(
         body.actual_capabilities,
         f::Capabilities {
@@ -254,6 +262,64 @@ fn call(
     let envelope: e::OperationEnvelope = serde_json::from_str(&payload).unwrap();
     assert_eq!(outcome, super::outcome(&envelope).unwrap());
     (envelope, outcome, refused)
+}
+
+#[test]
+fn legacy_five_schema_session_refuses_unnegotiated_profiled_request() {
+    let fixture = Fixture::new();
+    let host = fixture.service().issue(60_000).unwrap();
+    let route = Arc::new(FixedDeployRoute::new(Arc::new(host)));
+    let legacy = [
+        FormatId::MachineSessionFrame,
+        FormatId::MachineOperationEnvelope,
+        FormatId::MachineFixedDeployActionRequest,
+        FormatId::MachineFixedDeployActionReply,
+        FormatId::MachineFixedDeployActionError,
+    ];
+    let (mut runner, session, context, target) = connect_with_formats(&fixture, route, &legacy);
+    let envelope = json!({"schema":1,
+        "operation_id":vibe_orchestrator::machine_operation::fixed_deploy::OPERATION_ID,
+        "domain_owner":vibe_orchestrator::machine_operation::fixed_deploy::DOMAIN_OWNER,
+        "source_id":null,"evidence_id":null,
+        "body":{"stage":"input","format_id":FormatId::MachineProfiledDeployActionRequest.id(),
+            "payload_json":json!({"schema":1,"action":{"kind":"submit","key":"old-offer",
+                "deploy_profile":"local"}}).to_string()}});
+    let reply = send(
+        &mut runner,
+        &f::SessionFrame {
+            schema: 1,
+            session_id: Some(session),
+            request_id: Some("unnegotiated".into()),
+            body: f::Body::Request(Box::new(f::BodyRequest {
+                context_id: context,
+                target_id: Some(target),
+                envelope_json: envelope.to_string(),
+            })),
+        },
+    );
+    assert!(matches!(
+        reply.body,
+        f::Body::Refusal(row) if row.reason == f::BodyRefusalReason::UnsupportedVersion
+    ));
+    let bytes = std::fs::read(
+        fixture
+            .project
+            .path()
+            .join(".vibe/machine-submissions.json"),
+    )
+    .unwrap();
+    let state: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+    assert!(
+        state["namespaces"]
+            .as_object()
+            .unwrap()
+            .values()
+            .next()
+            .unwrap()["keys"]
+            .as_object()
+            .unwrap()
+            .is_empty()
+    );
 }
 #[test]
 fn active_inspect_returns_retained_completed_run() {

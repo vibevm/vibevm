@@ -1,0 +1,44 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint8"
+    },
+    "action": {
+      "ref": "action"
+    }
+  },
+  "definitions": {
+    "action": {
+      "discriminator": "kind",
+      "mapping": {
+        "submit": {
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "deploy_profile": {
+              "type": "string"
+            }
+          }
+        },
+        "inspect": {
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Explicit profiled fixed Deploy request; a requested profile is data and must match the trusted host allowlist before C1. The legacy machine-fixed-deploy-action-request remains a separate registered format with its original host-selected profile semantics.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-INPUT-ADMISSION",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::machine::e1::profiled_deploy_action_request"
+    }
+  }
+}

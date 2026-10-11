@@ -172,9 +172,11 @@ fn registered_but_ungranted_deploy_refuses_without_state() {
     let root = tempfile::tempdir().unwrap();
     let descriptor = FixedDeployOperationMcpTool.descriptor();
     assert_eq!(descriptor.name, "fixed_deploy_operation");
-    assert!(descriptor
-        .description
-        .contains("fixed Deploy issue or reattach"));
+    assert!(
+        descriptor
+            .description
+            .contains("fixed Deploy issue or reattach")
+    );
     assert_eq!(descriptor.input_schema["additionalProperties"], false);
     let listed: Value = serde_json::from_str(
         &crate::dispatch_one(
@@ -347,6 +349,81 @@ fn fixed_deploy_mcp_and_local_route_race_one_key() {
     };
     let cold_local: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
     assert_eq!(cold_local, cold_mcp["structuredContent"]);
+}
+
+#[test]
+fn profiled_deploy_mcp_and_local_route_race_one_key() {
+    let fixture = Fixture::new();
+    let route = fixture.route();
+    let context = fixture.context(route.clone());
+    let root = fixture.project.path().to_path_buf();
+    let key = "profiled-race";
+    let action = json!({"schema":1,"action":{"kind":"submit","key":key,
+        "deploy_profile":"local"}});
+    let input = json!({"schema":1,"operation_id":OPERATION_ID,"domain_owner":DOMAIN_OWNER,
+        "source_id":null,"evidence_id":null,
+        "body":{"stage":"input","format_id":FormatId::MachineProfiledDeployActionRequest.id(),
+            "payload_json":action.to_string()}})
+    .to_string();
+    let barrier = Arc::new(Barrier::new(3));
+    let (mcp, local) = std::thread::scope(|scope| {
+        let mcp_barrier = barrier.clone();
+        let mcp_action = action.clone();
+        let mcp = scope.spawn(move || {
+            mcp_barrier.wait();
+            call(context, mcp_action)
+        });
+        let local_barrier = barrier.clone();
+        let local = scope.spawn(move || {
+            local_barrier.wait();
+            FixedDeployRoute::exchange_local(Some(route.as_ref()), input.as_bytes(), &root).unwrap()
+        });
+        barrier.wait();
+        (mcp.join().unwrap(), local.join().unwrap())
+    });
+    let cold = call(fixture.context(fixture.route()), action);
+    assert_eq!(
+        cold["isError"], false,
+        "mcp={mcp}; local={local:?}; cold={cold}"
+    );
+    let run = cold["structuredContent"]["reply"]["run_id"]
+        .as_str()
+        .unwrap();
+    let receipt: Value = serde_json::from_str(
+        cold["structuredContent"]["reply"]["receipt_json"]
+            .as_str()
+            .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(receipt["profile"], "local");
+    if let Some(observed) = mcp["structuredContent"]["reply"]["run_id"].as_str() {
+        assert_eq!(observed, run);
+    }
+    if let e::Body::Result(row) = &local.body {
+        let reply: Value = serde_json::from_str(row.payload_json.as_deref().unwrap()).unwrap();
+        assert_eq!(reply["reply"]["run_id"], run);
+    } else {
+        panic!("local route did not retain profiled result: {local:?}");
+    }
+    let index: Value = serde_json::from_slice(
+        &fs::read(
+            fixture
+                .project
+                .path()
+                .join(".vibe/machine-submissions.json"),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    let namespaces = index["namespaces"].as_object().unwrap();
+    assert_eq!(namespaces.len(), 1);
+    assert_eq!(
+        namespaces.values().next().unwrap()["keys"]
+            .as_object()
+            .unwrap()
+            .len(),
+        1
+    );
 }
 
 #[test]

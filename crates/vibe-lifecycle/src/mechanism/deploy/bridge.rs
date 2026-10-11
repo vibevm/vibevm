@@ -25,7 +25,10 @@ const BRIDGE_FORMAT: &str = "vibevm.deploy.bound-vibe-bin-bridge/1";
 const RESULT_FORMAT: &str = "vibevm.deploy.bound-vibe-bin-result/1";
 
 mod capsule;
+mod request;
 pub(crate) use capsule::inspect_host_admitted_bound_vibe_bin_cold;
+use request::canonical_request_with_mode;
+pub(crate) use request::{RequestMode, canonical_profiled_request, canonical_request};
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum BoundDeployBridgeError {
@@ -155,59 +158,6 @@ fn publish<T: Serialize>(
         return Err(refused("owner record changed on readback"));
     }
     Ok(())
-}
-
-pub(super) fn canonical_request(
-    execution: &DeployExecution<'_>,
-    binding: &EnvironmentOperationBinding,
-    principal: &str,
-) -> Result<Vec<u8>> {
-    let [target_id] = execution.selection.targets.as_slice() else {
-        return Err(refused("one selected target required"));
-    };
-    let target = execution
-        .targets
-        .iter()
-        .find(|row| &row.id == target_id)
-        .ok_or_else(|| refused("selected target absent"))?;
-    if target.mechanism.to_string() != "deploy:vibe-bin"
-        || target.when.is_some()
-        || target
-            .depends_on
-            .as_ref()
-            .is_some_and(|rows| !rows.is_empty())
-    {
-        return Err(refused(
-            "only unconditional independent vibe-bin is admitted",
-        ));
-    }
-    let path = |value: &std::path::Path| -> Result<String> {
-        if !value.is_absolute() {
-            return Err(refused("root is not absolute"));
-        }
-        value
-            .to_str()
-            .map(str::to_owned)
-            .ok_or_else(|| refused("root is not UTF-8"))
-    };
-    let bytes = serde_json::to_vec(&serde_json::json!({
-        "format": "vibevm.deploy.bound-vibe-bin-request/1",
-        "binding": binding, "principal": principal,
-        "project_root": path(execution.project_root)?,
-        "settings_root": path(execution.settings_root)?,
-        "user_home": path(execution.user_home)?,
-        "state_home": path(execution.state_home)?,
-        "project": execution.project, "package": execution.package,
-        "profile": execution.selection.profile,
-        "target": target.id, "artifact": target.artifact,
-        "mechanism": target.mechanism.to_string(),
-        "provider": target.provider.as_ref().map(ToString::to_string),
-        "config": target.config.as_ref().map(|row| row.as_table()),
-    }))?;
-    if bytes.len() > C1_CAP {
-        return Err(refused("request exceeds C.1 cap"));
-    }
-    Ok(bytes)
 }
 
 fn partial(settings: &vibe_safefs::Project, home: &DeploymentHome) -> BoundDeployPartial {
@@ -390,6 +340,57 @@ pub(crate) fn submit_host_admitted_bound_vibe_bin(
     principal: &str,
     current_generation: &mut dyn FnMut() -> std::result::Result<Option<String>, DeployError>,
 ) -> Result<BoundDeployBridgeInspection> {
+    submit_with_request_mode(
+        lease,
+        namespace,
+        scope,
+        key,
+        execution,
+        request_binding,
+        admitted,
+        principal,
+        current_generation,
+        RequestMode::Legacy,
+    )
+}
+
+pub(crate) fn submit_host_admitted_bound_vibe_bin_profiled(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    execution: &DeployExecution<'_>,
+    request_binding: &EnvironmentOperationBinding,
+    admitted: AdmittedLocalDeployBinding,
+    principal: &str,
+    current_generation: &mut dyn FnMut() -> std::result::Result<Option<String>, DeployError>,
+) -> Result<BoundDeployBridgeInspection> {
+    submit_with_request_mode(
+        lease,
+        namespace,
+        scope,
+        key,
+        execution,
+        request_binding,
+        admitted,
+        principal,
+        current_generation,
+        RequestMode::Profiled,
+    )
+}
+
+fn submit_with_request_mode(
+    lease: &LifecycleLease,
+    namespace: &SubmissionNamespace,
+    scope: &SubmissionScope,
+    key: &str,
+    execution: &DeployExecution<'_>,
+    request_binding: &EnvironmentOperationBinding,
+    admitted: AdmittedLocalDeployBinding,
+    principal: &str,
+    current_generation: &mut dyn FnMut() -> std::result::Result<Option<String>, DeployError>,
+    mode: RequestMode,
+) -> Result<BoundDeployBridgeInspection> {
     lease.ensure_root(execution.project_root, "at protected bound deploy")?;
     if admitted.binding() != request_binding
         || principal != request_binding.principal_ref
@@ -401,7 +402,7 @@ pub(crate) fn submit_host_admitted_bound_vibe_bin(
     }
     admitted.reobserve_roots().map_err(refused)?;
     let roots = capsule::RootTokens::capture(&admitted)?;
-    let request = canonical_request(execution, request_binding, principal)?;
+    let request = canonical_request_with_mode(execution, request_binding, principal, mode)?;
     let target_id = &execution.selection.targets[0];
     let home = DeploymentHome::new_bound(
         execution.state_home,
