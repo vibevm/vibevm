@@ -27,16 +27,16 @@ fn write(root: &Path, relative: &str, body: &str) {
     fs::create_dir_all(p.parent().unwrap()).unwrap();
     fs::write(p, body).unwrap();
 }
-struct Fixture {
-    owned: tempfile::TempDir,
-    origin: PathBuf,
-    alpha: PathBuf,
-    beta: PathBuf,
-    alpha_slot: PathBuf,
-    beta_slot: PathBuf,
+pub(super) struct Fixture {
+    pub(super) owned: tempfile::TempDir,
+    pub(super) origin: PathBuf,
+    pub(super) alpha: PathBuf,
+    pub(super) beta: PathBuf,
+    pub(super) alpha_slot: PathBuf,
+    pub(super) beta_slot: PathBuf,
 }
 impl Fixture {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let owned = tempfile::tempdir().unwrap();
         let origin = owned.path().join("origin");
         let alpha = owned.path().join("alpha");
@@ -102,7 +102,7 @@ impl Fixture {
             beta_slot,
         }
     }
-    fn assert_origin_leaves_unchanged(&self) {
+    pub(super) fn assert_origin_leaves_unchanged(&self) {
         for (path, bytes) in [
             ("vibe.toml", ORIGIN_MANIFEST.as_bytes()),
             (ORIGIN_PATH, ORIGIN_DOC.as_bytes()),

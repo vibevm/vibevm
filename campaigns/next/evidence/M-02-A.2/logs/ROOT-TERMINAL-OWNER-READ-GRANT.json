@@ -1,0 +1,87 @@
+{
+  "http": 200,
+  "result": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.b9bf20b5-8124-4f5d-950b-f5ac77273225",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.1d8d7efc-e4ec-428b-bad5-166d388a9836",
+        "title": "A2 terminal/evidence defining READ",
+        "introductionMarkdown": "Same M-02-A.2. Existing terminal.rs imports EvidenceProvider and exact parsed marker/requirements owners. Need bind actual provider/work-coverage API before selecting cases; no runtime edits.",
+        "items": [
+          {
+            "questionItemId": "a2_terminal_owner_read",
+            "header": "Terminal owners",
+            "promptMarkdown": "Grant exact READ progress-core/src/evidence.rs, terminal/tests.rs, model.rs, model/artifacts.rs, doc.rs and parse/mod.rs?",
+            "contextMarkdown": "All literal paths confirmed by bounded rg --files from granted lib modules. Needed for exported terminal registration/case, evidence provider/coverage distinction and parsing accepted A1 native facts without a new parser. WRITE remains requirements/change/fixtures/PROP071 only; no progress-core or facts write.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant exact READ",
+                "description": "Reuse existing parser/evidence/terminal owners and precise test fixtures.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "correct",
+                "label": "Correct exact owner",
+                "description": "Supply narrower defining owners for these APIs.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact correction",
+              "multiline": true,
+              "maximumLength": 4000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Imported forwarders and test registration must resolve to real definitions before calling Cargo."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T20:11:08.305Z",
+        "updatedAt": "2026-10-12T20:12:11.412Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.22463318-39bf-43c5-861c-a6493e6956c8",
+        "questionGroupId": "question-group.b9bf20b5-8124-4f5d-950b-f5ac77273225",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "a2_terminal_owner_read",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants exactly READ crates/progress-core/src/evidence.rs, terminal/tests.rs, model.rs, model/artifacts.rs, doc.rs and parse/mod.rs. All six real paths verified. Bind actual evidence/coverage/terminal semantics and valid existing parsing to A1 fixture; no second parser, progress-core/facts WRITE, runtime evaluator/scheduler or real personal-state access. A2 WRITE remains literal requirements/change/fixtures/PROP071 ceiling. Exercise observed valid evidence and exact missing-implementation negatives, with shared intent byte identity under separate owned personal/adoption perturbations. Continue same sole actor and select actual nonzero target/case from registration before Cargo."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T20:12:11.412Z",
+        "metadata": {}
+      }
+    }
+  }
+}

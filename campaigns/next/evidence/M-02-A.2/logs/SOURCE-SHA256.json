@@ -1,0 +1,42 @@
+[
+  {
+    "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+    "sha256": "7d2c88549fca3a5f8db03f8240c009a6e33b520df47c2fc239b1bc9483de2cfe",
+    "lines": 15
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/mod.rs",
+    "sha256": "0cf076eb4423bb24bbcd87f113004fbb72ad0201dee9d9af09a8620a4fe29bd0",
+    "lines": 4
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/m_02_a_1_cases.rs",
+    "sha256": "4f9923d82a93a340200893f93f83d287ec30d7ed1daa95a771e655d5106ea7ba",
+    "lines": 360
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/m_02_a_2_cases.rs",
+    "sha256": "c9dcfac9524d9d46590334fb099f13704b02d698ab864b482625182c95db369e",
+    "lines": 424
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/personal/plan-before.toml",
+    "sha256": "87e88096966ef7b3e052ad1456d111a43582abb5a12fca9026b4efef274f491a",
+    "lines": 8
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/personal/plan-after.toml",
+    "sha256": "1cae27ca5a2c42231233f7e71f41c14829cf8e1613764b82e31687fbe9f3031a",
+    "lines": 12
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/evidence/work-refs-only.json",
+    "sha256": "0de05a9b6eb2069addb255bdffd43cbc085d690224a82dd5a023941cfecb82d4",
+    "lines": 1
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/evidence/known-artifacts.json",
+    "sha256": "87a2588aadf7d389077b94cefff3aeae3b26724e670678761cc18b1de9855cfd",
+    "lines": 1
+  }
+]

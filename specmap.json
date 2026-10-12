@@ -30330,6 +30330,15 @@
     },
     {
       "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_a_2_cases.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::change::m_02_a_2_cases",
+      "end_line": 2,
+      "fingerprint": "tok1:c346163902304d4676be342cd8f02582fd4bf623927864d544ea950d5ff6bac7"
+    },
+    {
+      "crate_name": "vibe-requirements",
       "file": "crates/vibe-requirements/src/digest.rs",
       "item_kind": "mod",
       "line": 19,
@@ -62440,6 +62449,14 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#ORIGIN-LOCAL-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_a_2_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_a_2_cases",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#BINDING-PLANNING-INDEPENDENCE",
       "verb": "implements"
     },
     {
@@ -98554,7 +98571,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:0490c89be0e5a8654e4c9aa081f697f4f53dd34aeaa10b1c9334df3fbfe18de8",
+      "content_hash": "sha256:f30d29252367f3dde9c2026a1f83992ecdd13cf3c68b1be3828d3640cdd47215",
       "doc_path": "common/PROP-071",
       "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
       "heading": "PROP-071: Change origin bindings and project-owned closure",
@@ -98590,7 +98607,7 @@
     },
     {
       "anchor": "observation",
-      "content_hash": "sha256:fd5e33e5b9aa99b04fb37e99906d71680b76a0e8eb51d3565a1a664472a76973",
+      "content_hash": "sha256:d25e0cacbc590e75d7091760bbd37db2341ed007ff1e9a8136d7c90f5ff871a5",
       "doc_path": "common/PROP-071",
       "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
       "heading": "2. Fixture observation and explicit limits",
@@ -98614,6 +98631,24 @@
       "heading": "A package's authored done status, an absent or recorded adoption observation, and a copied status marker do not satisfy a selected local acceptance obligation. A copied paragraph, if valid local markup, is observed at its own local address; it does not replace a different selected local fact. Missing selected acceptance stays missing. Even a local done marker is not terminal proof by itself: PROP-043's declared artifact obligations and independent evidence remain separate. The metadata query reports no portable terminal verdict, and these fixture tests must not claim an acceptance runtime exists. @status:spec/plan",
       "line": 11,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#LOCAL-ACCEPTANCE-NOT-INHERITED"
+    },
+    {
+      "anchor": "BINDING-PLANNING-INDEPENDENCE",
+      "content_hash": "sha256:d72be7f9d7ce0c257d2c48ead6c2159c831fa2a955f0c518868f7367854dd703",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "Shared change intent and origin/local selections contain no personal owner/current/done scheduler state. Fixture personal-plan and work-coverage bytes are separate observations; editing them cannot rewrite shared binding, authored local obligations or immutable origin bytes. An adoption registry observation may change while shared intent stays unchanged. No second cursor or scheduler is created by observing these axes. @status:spec/plan",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#BINDING-PLANNING-INDEPENDENCE"
+    },
+    {
+      "anchor": "BINDING-TERMINAL-EVIDENCE-AXES",
+      "content_hash": "sha256:00e775e8a73e65acb4b2ccdf899338a5174b3926fd5284f05ae3ca1b90c9fc91",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "The incumbent terminal resolver receives the exact addressed fact's authored marker/requirements and an independently typed evidence-provider observation. Work coverage, adoption, authoring status and terminal artifacts are distinct. A work edge or personal done flag cannot replace missing or unavailable implementing evidence. Valid existing artifacts may be observed without fabricating a work item. Fixture checks use the existing terminal API and retain per-artifact states/locators, without promoting the requirements metadata report into a portable acceptance runtime. The initial fixture work observation is separate personal-plan data and an unattributed legacy refs bag; it defines no typed Work artifact or new registered relation. @status:spec/plan",
+      "line": 13,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#BINDING-TERMINAL-EVIDENCE-AXES"
     },
     {
       "anchor": "root",

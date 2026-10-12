@@ -1,0 +1,12 @@
+# Deliberate private-state perturbation, not implementing evidence.
+schema = 1
+owner = "fixture-other-person"
+current = "work-beta"
+[[work]]
+id = "work-alpha"
+address = "spec://org.fixture/alpha/CHANGE-001#ALPHA-ACCEPTANCE"
+done = true
+[[work]]
+id = "work-beta"
+address = "spec://org.fixture/beta/CHANGE-001#BETA-ACCEPTANCE"
+done = true
