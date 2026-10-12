@@ -29,6 +29,13 @@
 
 use std::fmt;
 
+pub(crate) mod resource;
+pub use resource::{ResourceAddress, ResourceAddressError, ResourceAddressKind};
+
+#[cfg(test)]
+#[path = "address/m_01_a_1_cases.rs"]
+mod m_01_a_1_cases;
+
 /// A parsed `spec://` address. Purely syntactic: it records what the address
 /// names, not where it lands on disk (that is the router's job, with the
 /// install context).

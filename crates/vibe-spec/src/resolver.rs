@@ -502,6 +502,7 @@ impl FileResolver {
 /// answers "which `spec/` root does this authority mean", everything there
 /// answers "which file inside a root does this doc-path mean".
 mod lookup;
+mod resource;
 pub use lookup::canonical_doc_path;
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
 

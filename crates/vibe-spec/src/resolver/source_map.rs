@@ -139,6 +139,15 @@ impl ValidatedDescriptorMap {
         self.by_output.get(output)
     }
 
+    /// An exact physical legacy stem may convert only when the selected Vibe
+    /// map already owns that output. A raw same-stem resource cannot borrow a
+    /// Vibe address merely because the old suffix lookup found its file.
+    pub(super) fn owns_vibe_output(&self, physical: &Path) -> bool {
+        self.by_address
+            .values()
+            .any(|row| self.slot_root.join(&row.output) == physical)
+    }
+
     pub(super) fn resolve(&self, doc_path: &str) -> Option<ResolvedSourceFile> {
         let row = self.by_address.get(doc_path)?;
         let path = self.slot_root.join(&row.output);
