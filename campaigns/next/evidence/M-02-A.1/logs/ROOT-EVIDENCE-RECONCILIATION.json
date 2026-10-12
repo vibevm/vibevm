@@ -1,0 +1,14 @@
+{
+  "producer_entries": 20,
+  "matching_entries": 19,
+  "root_generated_after_producer_seal": [
+    {
+      "path": "ROOT-FINAL-SPECMAP.log",
+      "producer_sha256": "157fa9b388cbb693f1ae57fd9f0b439b64e5c090aaebb8db3c2222c28e0e6d5d",
+      "current_sha256": "66fec3309cfd58822523d8eb49166abec43be2b2bca97276beddc5927e10239b"
+    }
+  ],
+  "root_specmap_exit": 0,
+  "gated_orphans": 138,
+  "unresolved_host_edges": 0
+}

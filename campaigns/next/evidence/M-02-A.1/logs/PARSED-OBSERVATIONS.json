@@ -1,0 +1,1239 @@
+{
+  "reports": [
+    {
+      "case": "copied-status-selected-local-missing",
+      "report": {
+        "observation": {
+          "observation_id": "sha256:4de49ec5f643ebe90e957efb168b7cd31bb257b52e7b9f1ff6b60305f491cb63",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "selected": ".",
+          "source_digest": "sha256:ffa2a92f8a270f5a0634e0f934757cf010b5bb620037ce11bf60417e84e36350"
+        },
+        "query": {
+          "limit": 100,
+          "relations": false
+        },
+        "relation_sources": [
+          {
+            "package": "org.fixture/alpha",
+            "provenance": "none",
+            "state": "not-requested"
+          },
+          {
+            "package": "org.fixture/reusable-intent",
+            "provenance": "none",
+            "state": "not-requested"
+          }
+        ],
+        "requirements": 2,
+        "rows": [
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-REFINEMENT",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#DELIVERY",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#FAILURE",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification",
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            },
+            "state": "available",
+            "digest": "sha256:e95168dbfb7714bed416d1188c9ff0d2dc08035255547119df2cc0c2cabf0337"
+          },
+          {
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            },
+            "state": "available",
+            "digest": "sha256:acfc87392f6d26d7007cf63231a4e16fc8765e7bc74bb23285d43826e1aed9cc"
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "case": "alpha-no-implicit-adoption",
+      "report": {
+        "observation": {
+          "observation_id": "sha256:c58ac352ce0db11e96ad1c802aeefa19898a6f7e5732eb83a7e4899f61e6ba4f",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "selected": ".",
+          "source_digest": "sha256:7c3b124fd6d2a83924c04f457bc363e5f57eb825ee935a4f0719fd7cfc38d28e"
+        },
+        "query": {
+          "limit": 100,
+          "relations": false
+        },
+        "relation_sources": [
+          {
+            "package": "org.fixture/alpha",
+            "provenance": "none",
+            "state": "not-requested"
+          },
+          {
+            "package": "org.fixture/reusable-intent",
+            "provenance": "none",
+            "state": "not-requested"
+          }
+        ],
+        "requirements": 2,
+        "rows": [
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-ACCEPTANCE",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "test",
+                "state": "plan"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-REFINEMENT",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#FAILURE",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification",
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            },
+            "state": "available",
+            "digest": "sha256:23312a6d2bb3363e865b86b4b7a0e5dd6d207c04393e88062ae2eda370199501"
+          },
+          {
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            },
+            "state": "available",
+            "digest": "sha256:acfc87392f6d26d7007cf63231a4e16fc8765e7bc74bb23285d43826e1aed9cc"
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "case": "native-origin",
+      "report": {
+        "observation": {
+          "observation_id": "sha256:c58ac352ce0db11e96ad1c802aeefa19898a6f7e5732eb83a7e4899f61e6ba4f",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "selected": ".",
+          "source_digest": "sha256:7c3b124fd6d2a83924c04f457bc363e5f57eb825ee935a4f0719fd7cfc38d28e"
+        },
+        "query": {
+          "limit": 100,
+          "relations": false
+        },
+        "relation_sources": [
+          {
+            "package": "org.fixture/alpha",
+            "provenance": "none",
+            "state": "not-requested"
+          },
+          {
+            "package": "org.fixture/reusable-intent",
+            "provenance": "none",
+            "state": "not-requested"
+          }
+        ],
+        "requirements": 2,
+        "rows": [
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-ACCEPTANCE",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "test",
+                "state": "plan"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-REFINEMENT",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#FAILURE",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification",
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            },
+            "state": "available",
+            "digest": "sha256:23312a6d2bb3363e865b86b4b7a0e5dd6d207c04393e88062ae2eda370199501"
+          },
+          {
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            },
+            "state": "available",
+            "digest": "sha256:acfc87392f6d26d7007cf63231a4e16fc8765e7bc74bb23285d43826e1aed9cc"
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "case": "copied-selected-done-is-metadata-not-terminal-proof",
+      "report": {
+        "observation": {
+          "observation_id": "sha256:598e26ec596742cc1333ff4dd94409ffee73aaa1d0ce921bde6e3c87a86feb7b",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "selected": ".",
+          "source_digest": "sha256:aba2debf58445e49b758a6deef8e3e908ecfbabaef7a628ab3ae05ae8147f907"
+        },
+        "query": {
+          "limit": 100,
+          "relations": false
+        },
+        "relation_sources": [
+          {
+            "package": "org.fixture/alpha",
+            "provenance": "none",
+            "state": "not-requested"
+          },
+          {
+            "package": "org.fixture/reusable-intent",
+            "provenance": "none",
+            "state": "not-requested"
+          }
+        ],
+        "requirements": 2,
+        "rows": [
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-ACCEPTANCE",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-REFINEMENT",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#DELIVERY",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#FAILURE",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification",
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            },
+            "state": "available",
+            "digest": "sha256:6921ead1793818c530c5057350e46d3d9035ceb2e45d0fb67d156c5ea35b7f42"
+          },
+          {
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            },
+            "state": "available",
+            "digest": "sha256:acfc87392f6d26d7007cf63231a4e16fc8765e7bc74bb23285d43826e1aed9cc"
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "case": "alpha",
+      "report": {
+        "observation": {
+          "observation_id": "sha256:c58ac352ce0db11e96ad1c802aeefa19898a6f7e5732eb83a7e4899f61e6ba4f",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "selected": ".",
+          "source_digest": "sha256:7c3b124fd6d2a83924c04f457bc363e5f57eb825ee935a4f0719fd7cfc38d28e"
+        },
+        "query": {
+          "limit": 100,
+          "relations": false
+        },
+        "relation_sources": [
+          {
+            "package": "org.fixture/alpha",
+            "provenance": "none",
+            "state": "not-requested"
+          },
+          {
+            "package": "org.fixture/reusable-intent",
+            "provenance": "none",
+            "state": "not-requested"
+          }
+        ],
+        "requirements": 2,
+        "rows": [
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-ACCEPTANCE",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "test",
+                "state": "plan"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/alpha/CHANGE-001#ALPHA-REFINEMENT",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#FAILURE",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification",
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/alpha"
+            },
+            "state": "available",
+            "digest": "sha256:23312a6d2bb3363e865b86b4b7a0e5dd6d207c04393e88062ae2eda370199501"
+          },
+          {
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            },
+            "state": "available",
+            "digest": "sha256:acfc87392f6d26d7007cf63231a4e16fc8765e7bc74bb23285d43826e1aed9cc"
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "case": "beta-no-implicit-adoption",
+      "report": {
+        "observation": {
+          "observation_id": "sha256:4729879e1828bc3839f5ef3cd597d98aa6d3998ec69563b18652b65a5171ce26",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "selected": ".",
+          "source_digest": "sha256:ed56f556c08246b1e1cc0908da6ffafc6f272e385240dc55e46ea68b00ab4777"
+        },
+        "query": {
+          "limit": 100,
+          "relations": false
+        },
+        "relation_sources": [
+          {
+            "package": "org.fixture/beta",
+            "provenance": "none",
+            "state": "not-requested"
+          },
+          {
+            "package": "org.fixture/reusable-intent",
+            "provenance": "none",
+            "state": "not-requested"
+          }
+        ],
+        "requirements": 2,
+        "rows": [
+          {
+            "address": "spec://org.fixture/beta/CHANGE-001#BETA-ACCEPTANCE",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "test",
+                "state": "plan"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/beta"
+            }
+          },
+          {
+            "address": "spec://org.fixture/beta/CHANGE-001#BETA-REFINEMENT",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/beta"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#FAILURE",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification",
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/beta"
+            },
+            "state": "available",
+            "digest": "sha256:12fbd309d889822c583573045f3c5e5eb693441d1b9c873be39b1a1cb323e2dc"
+          },
+          {
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            },
+            "state": "available",
+            "digest": "sha256:acfc87392f6d26d7007cf63231a4e16fc8765e7bc74bb23285d43826e1aed9cc"
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "case": "beta",
+      "report": {
+        "observation": {
+          "observation_id": "sha256:4729879e1828bc3839f5ef3cd597d98aa6d3998ec69563b18652b65a5171ce26",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "selected": ".",
+          "source_digest": "sha256:ed56f556c08246b1e1cc0908da6ffafc6f272e385240dc55e46ea68b00ab4777"
+        },
+        "query": {
+          "limit": 100,
+          "relations": false
+        },
+        "relation_sources": [
+          {
+            "package": "org.fixture/beta",
+            "provenance": "none",
+            "state": "not-requested"
+          },
+          {
+            "package": "org.fixture/reusable-intent",
+            "provenance": "none",
+            "state": "not-requested"
+          }
+        ],
+        "requirements": 2,
+        "rows": [
+          {
+            "address": "spec://org.fixture/beta/CHANGE-001#BETA-ACCEPTANCE",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "test",
+                "state": "plan"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/beta"
+            }
+          },
+          {
+            "address": "spec://org.fixture/beta/CHANGE-001#BETA-REFINEMENT",
+            "adoption": {
+              "presence": "not-applicable"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/beta"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "impl",
+                "state": "done"
+              },
+              "requires": [
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          },
+          {
+            "address": "spec://org.fixture/reusable-intent/FEAT-001#FAILURE",
+            "adoption": {
+              "presence": "absent"
+            },
+            "authoring": {
+              "presence": "marked",
+              "status": {
+                "stage": "spec",
+                "state": "done"
+              },
+              "requires": [
+                "specification",
+                "implementation",
+                "verification"
+              ]
+            },
+            "relations": [],
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "source": {
+              "kind": "host",
+              "package": "org.fixture/beta"
+            },
+            "state": "available",
+            "digest": "sha256:12fbd309d889822c583573045f3c5e5eb693441d1b9c873be39b1a1cb323e2dc"
+          },
+          {
+            "source": {
+              "kind": "package",
+              "package": "org.fixture/reusable-intent"
+            },
+            "state": "available",
+            "digest": "sha256:acfc87392f6d26d7007cf63231a4e16fc8765e7bc74bb23285d43826e1aed9cc"
+          }
+        ],
+        "truncated": false
+      }
+    }
+  ],
+  "leaf_observations": [
+    {
+      "role": "origin",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "origin",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "origin",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "origin",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "origin",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "origin",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "origin",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "origin",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "origin",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibe.toml",
+      "sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264
+    },
+    {
+      "role": "origin",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "alpha-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    },
+    {
+      "role": "beta-slot",
+      "path": "vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295
+    }
+  ],
+  "metadata": [
+    {
+      "label": "M02_A1_NEGATIVE",
+      "payload": {
+        "selected_local_acceptance": "spec://org.fixture/alpha/CHANGE-001#ALPHA-ACCEPTANCE",
+        "selected_local_fact_present": false,
+        "copied_status_address": "spec://org.fixture/alpha/CHANGE-001#DELIVERY",
+        "runtime_acceptance_verdict": null
+      }
+    },
+    {
+      "label": "M02_A1_ORIGIN",
+      "payload": {
+        "package": "feat:org.fixture/reusable-intent@=1.0.0",
+        "document_sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+        "manifest_sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+        "facts": [
+          "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+          "spec://org.fixture/reusable-intent/FEAT-001#FAILURE"
+        ]
+      }
+    },
+    {
+      "label": "M02_A1_BINDINGS",
+      "payload": {
+        "alpha": {
+          "change_id": "alpha-stable-outcome",
+          "local": {
+            "acceptance": [
+              "spec://org.fixture/alpha/CHANGE-001#ALPHA-ACCEPTANCE"
+            ],
+            "refinements": [
+              "spec://org.fixture/alpha/CHANGE-001#ALPHA-REFINEMENT"
+            ]
+          },
+          "origin": {
+            "document_sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+            "facts": [
+              "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+              "spec://org.fixture/reusable-intent/FEAT-001#FAILURE"
+            ],
+            "manifest_sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+            "package": "feat:org.fixture/reusable-intent@=1.0.0"
+          },
+          "schema": 1
+        },
+        "beta": {
+          "change_id": "beta-stable-outcome",
+          "local": {
+            "acceptance": [
+              "spec://org.fixture/beta/CHANGE-001#BETA-ACCEPTANCE"
+            ],
+            "refinements": [
+              "spec://org.fixture/beta/CHANGE-001#BETA-REFINEMENT"
+            ]
+          },
+          "origin": {
+            "document_sha256": "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+            "facts": [
+              "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY",
+              "spec://org.fixture/reusable-intent/FEAT-001#FAILURE"
+            ],
+            "manifest_sha256": "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+            "package": "feat:org.fixture/reusable-intent@=1.0.0"
+          },
+          "schema": 1
+        },
+        "origin_exact_bytes_equal": true,
+        "temporary_owned_root": "/tmp/.tmpJS88EC"
+      }
+    }
+  ]
+}

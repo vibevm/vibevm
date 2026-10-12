@@ -1,0 +1,74 @@
+[
+  {
+    "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+    "sha256": "a1ec7d3fb4b784feab8833809d429e6e03ed5162bc11b10482cf1b7a5d09e7af",
+    "lines": 13,
+    "bytes": 2682
+  },
+  {
+    "path": "crates/vibe-requirements/src/lib.rs",
+    "sha256": "0ffa7a994081e048fbc396dae082ec52bf7d522224d1059204716a0d2b59e4af",
+    "lines": 93,
+    "bytes": 3618
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/mod.rs",
+    "sha256": "939f7d0bc29ebfb6fb7d6a4e6aabfd29650063169d22eafadb0dfcd4cf895fff",
+    "lines": 3,
+    "bytes": 190
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/m_02_a_1_cases.rs",
+    "sha256": "a3f7907bae593b73f104c6914cbfa6a117374af575fa102ed224b2c2ef45f478",
+    "lines": 360,
+    "bytes": 13500
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/alpha/change.toml",
+    "sha256": "c137645c4efeefb06364003d70e80b9508a5436bb063543c00cbe0793c4b5806",
+    "lines": 13,
+    "bytes": 624
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/alpha/vibe.toml",
+    "sha256": "5d1c94e2ab004b142698236795a6e0bf7f94542c34d1f3c511f2fb1690cac4dd",
+    "lines": 7,
+    "bytes": 132
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/alpha/vibevm/vibespecs/CHANGE-001.md",
+    "sha256": "4bf3ffdb0dc6ed424190ad8c876e932e3f6c6dc5a45618a0b548829c0c778c39",
+    "lines": 7,
+    "bytes": 399
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/beta/change.toml",
+    "sha256": "e8eac054549f696d43179e59d7de6f7d0c790ec74d6141db30679401123f4ba3",
+    "lines": 13,
+    "bytes": 619
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/beta/vibe.toml",
+    "sha256": "a1e05820237b8c608ef2f46462cf803a3658b42366d921ec51a5c903dadd1f53",
+    "lines": 7,
+    "bytes": 131
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/beta/vibevm/vibespecs/CHANGE-001.md",
+    "sha256": "40b93fe8912ee2abf0b136a6492df88d876b92ab307bd8387627148e7435e98b",
+    "lines": 7,
+    "bytes": 436
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/origin/vibe.toml",
+    "sha256": "a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+    "lines": 13,
+    "bytes": 264
+  },
+  {
+    "path": "crates/vibe-requirements/tests/fixtures/change/origin/vibevm/vibespecs/FEAT-001-native-intent.md",
+    "sha256": "1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+    "lines": 5,
+    "bytes": 295
+  }
+]

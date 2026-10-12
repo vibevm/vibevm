@@ -1,0 +1,10 @@
+{
+  "new_cases_passed": 4,
+  "ignored": 0,
+  "parsed_real_reports": 6,
+  "origin_leaf_hashes_and_both_binding_addresses_verified": true,
+  "copied_status_does_not_restore_selected_local_fact": true,
+  "test_sha256": "a58a8a7e4a025916474e854d7eb2fd4bf08a87e04e2ac019e5add81a2cba46e7",
+  "log_sha256": "050dd01d1a4fa5bc18fd2398f9aaef39af9b758e562a1aadfc70b1a5cbb68e4e",
+  "scope": "fixture observations only; no terminal evaluation/durable parser claim"
+}

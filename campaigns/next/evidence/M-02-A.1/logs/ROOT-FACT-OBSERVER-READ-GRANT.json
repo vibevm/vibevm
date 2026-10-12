@@ -1,0 +1,87 @@
+{
+  "http": 200,
+  "result": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.5d984432-bd77-46c0-a45b-5bb8752023d0",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.84999872-c815-405e-8586-eb1652af0206",
+        "title": "A1 defining fact-observation READ",
+        "introductionMarkdown": "Same M-02-A.1. Current lib.rs reexports the observation seam; queries already connect through it. No durable change parser or runtime write requested.",
+        "items": [
+          {
+            "questionItemId": "a1_fact_observation_read",
+            "header": "Defining owner",
+            "promptMarkdown": "Grant exact READ crates/vibe-facts/src/scan.rs and crates/vibe-facts/src/scan/declared.rs for actual observe_declared_source/observation definitions?",
+            "contextMarkdown": "Both literal paths found by bounded rg --files. Needed to bind direct captured native origin observation and package/local address behavior without an independent parser. Existing requirements owner/subtree remains the only Rust WRITE scope; fixture authoring and exact query tests continue independently.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant exact READ",
+                "description": "Reuse incumbent captured observation definitions.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "correct",
+                "label": "Correct exact owner",
+                "description": "Supply the actual narrower defining path.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact correction",
+              "multiline": true,
+              "maximumLength": 4000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "The granted lib.rs is a reexport; no new fact grammar should be invented."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T19:49:40.655Z",
+        "updatedAt": "2026-10-12T19:50:50.185Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.6ee9b661-7c55-4a30-99f6-0a6dd298340a",
+        "questionGroupId": "question-group.5d984432-bd77-46c0-a45b-5bb8752023d0",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "a1_fact_observation_read",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants exactly READ crates/vibe-facts/src/scan.rs and crates/vibe-facts/src/scan/declared.rs; both actual defining files verified. Reuse observe_declared_source/current observation types to bind real native origin and local addresses. No facts WRITE/new fact parser/runtime dependency or durable change parser is implicitly authorized. Keep original A1 WRITE perimeter and package byte invariance/local acceptance distinction. Continue same sole writer; exact fixture tests and source/evidence hashes remain the acceptance route."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T19:50:50.185Z",
+        "metadata": {}
+      }
+    }
+  }
+}

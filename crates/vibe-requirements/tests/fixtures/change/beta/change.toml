@@ -1,0 +1,13 @@
+# Fixture-only binding; no durable runtime parser is claimed.
+schema = 1
+change_id = "beta-stable-outcome"
+
+[origin]
+package = "feat:org.fixture/reusable-intent@=1.0.0"
+facts = ["spec://org.fixture/reusable-intent/FEAT-001#DELIVERY", "spec://org.fixture/reusable-intent/FEAT-001#FAILURE"]
+document_sha256 = "sha256:1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8"
+manifest_sha256 = "sha256:a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b"
+
+[local]
+refinements = ["spec://org.fixture/beta/CHANGE-001#BETA-REFINEMENT"]
+acceptance = ["spec://org.fixture/beta/CHANGE-001#BETA-ACCEPTANCE"]

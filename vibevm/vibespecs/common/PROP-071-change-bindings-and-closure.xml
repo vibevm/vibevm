@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-071: Change origin bindings and project-owned closure</title>
+  <status stage="spec" state="plan"/>
+  <origin title="1. Reusable native package intent">
+    <p><NATIVE-ORIGIN-FIXTURE fact="true" status="spec/plan">A reusable feat declares native addressable facts and their explicit artifact requirements using PROP-043. Its intent is independent of a programming stack. A fixture binding selects an exact package coordinate/version together with exact fact addresses and captured authored manifest/document byte identities. The observed fact address and the versioned package selection are distinct; versionless fact metadata does not mean newest-slot authority. Leaf digests in this fixture establish byte identity, not original-package authentication.</NATIVE-ORIGIN-FIXTURE></p>
+    <p><ORIGIN-LOCAL-IDENTITY fact="true" status="spec/plan">Two consuming projects may reference the same immutable origin while authoring different local refinement and acceptance facts. Package fact addresses retain the package coordinate; local addresses retain their own project coordinate. A reference never copies package status into local authority. Consumer-owned materialization may add derived records but may not modify the authored package leaf bytes.</ORIGIN-LOCAL-IDENTITY></p>
+  </origin>
+  <observation title="2. Fixture observation and explicit limits">
+    <p><BINDING-OBSERVATION-FIXTURE fact="true" status="spec/plan">The initial change fixtures use the incumbent declared fact observation and requirements metadata query, retaining exact package/local addresses, authored artifact sets and separate authoring/adoption observations. Test-only fixture metadata does not commission a durable change parser, a closure evaluator or publication machinery. Fixture evidence may land before those later owners.</BINDING-OBSERVATION-FIXTURE></p>
+    <p><LOCAL-ACCEPTANCE-NOT-INHERITED fact="true" status="spec/plan">A package's authored done status, an absent or recorded adoption observation, and a copied status marker do not satisfy a selected local acceptance obligation. A copied paragraph, if valid local markup, is observed at its own local address; it does not replace a different selected local fact. Missing selected acceptance stays missing. Even a local done marker is not terminal proof by itself: PROP-043's declared artifact obligations and independent evidence remain separate. The metadata query reports no portable terminal verdict, and these fixture tests must not claim an acceptance runtime exists.</LOCAL-ACCEPTANCE-NOT-INHERITED></p>
+  </observation>
+</spec>
