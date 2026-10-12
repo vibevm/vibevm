@@ -1,0 +1,24 @@
+{
+  "status": "producer still running; not accepted",
+  "observed_logs": {
+    "core-family.log": {
+      "sha256": "642e0493433b4754ca7af0b138a95a8a94609c219484b90091e4f55ff27cb91f",
+      "results": [
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 596 filtered out; finished in 0.00s"
+      ]
+    },
+    "requirements-family.log": {
+      "sha256": "b056c7087d3b811a21303144dbff9afafe35a5b65e77e57f5abf014f1772777b",
+      "results": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 60 filtered out; finished in 0.00s"
+      ]
+    },
+    "core-registry-corpus.log": {
+      "sha256": "b2d9a8cb1a20d17a467cf65a16688f076684958ac1b7772724a4a319ae122a77",
+      "results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 602 filtered out; finished in 0.00s"
+      ]
+    }
+  },
+  "root_review": "Inspected actual registered corpus test: parses representative via shared ChangeManifest and asserts typed UnknownEpoch/Path/Role/Syntax for refused corpora; explicit deny registry policy. Raw URI regression execution still to verify."
+}

@@ -1,0 +1,12 @@
+{
+  "core_results": [
+    "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 596 filtered out; finished in 0.00s"
+  ],
+  "requirements_results": [
+    "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 60 filtered out; finished in 0.00s"
+  ],
+  "actual_migration_only_schema_token_changed": true,
+  "saved_file_equals_before": true,
+  "unchanged_files_count": 4,
+  "source_writing_status": "not yet stopped; final acceptance pending"
+}

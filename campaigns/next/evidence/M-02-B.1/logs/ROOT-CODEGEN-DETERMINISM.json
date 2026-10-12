@@ -1,0 +1,5 @@
+{
+  "checked_outputs": 194,
+  "changed_since_before_check": [],
+  "interpretation": "check-codegen uses git diff against unstaged tracked content; current FormatId candidate addition causes expected red. Repeated output hashes are separate deterministic evidence; not a global green claim."
+}

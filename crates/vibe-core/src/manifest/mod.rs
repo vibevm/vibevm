@@ -11,6 +11,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
 mod artifact;
+pub mod change;
 mod compile;
 mod consumer;
 mod declarant_path;
@@ -60,6 +61,16 @@ pub use mechanism::{
     MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
     ProviderPin, ProviderPinParseError, is_portable_token,
 };
+/// Pure M13 token replay for an independently validated authored document.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-MIGRATION-REPLAY"
+)]
+pub(crate) fn replay_authored_tokens(
+    text: &str,
+    edits: &[MigrationTokenEdit],
+) -> std::result::Result<String, MigrationRefusal> {
+    migration::replay_edits(text, edits)
+}
 pub use migration::{
     BOOT_SOURCE_INSERT, CURRENT_ABSENT, CURRENT_EPOCH1, IDENTITY, LEGACY_ABSENT,
     ManifestMigrationEpoch, ManifestMigrationOutcome, ManifestMigrationPlan,
