@@ -31329,6 +31329,15 @@
     },
     {
       "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/m_01_e_1_cases.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_safefs::file::m_01_e_1_cases",
+      "end_line": 2,
+      "fingerprint": "tok1:b364b4de7fa68b5d70ca0762bbb8621544bc167eb74fed36e2ce5df51901b08d"
+    },
+    {
+      "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file/stable.rs",
       "item_kind": "mod",
       "line": 3,
@@ -36006,6 +36015,15 @@
       "symbol": "vibe_spec::pipeline::qualify_characterization_tests::top_level_reorder_is_bound_by_seed_meta_and_simple_address",
       "end_line": 338,
       "fingerprint": "tok1:9524d856ba03e04cabd9d5988c11294c16547ea470df798cded4995347bc8375"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/m_01_e_1_cases.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::resolver::m_01_e_1_cases",
+      "end_line": 2,
+      "fingerprint": "tok1:b364b4de7fa68b5d70ca0762bbb8621544bc167eb74fed36e2ce5df51901b08d"
     },
     {
       "crate_name": "vibe-spec",
@@ -63343,6 +63361,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-safefs/src/file/m_01_e_1_cases.rs",
+      "from_symbol": "vibe_safefs::file::m_01_e_1_cases",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-OBSERVATION-FIXTURES",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-safefs/src/file/stable.rs",
       "from_symbol": "vibe_safefs::file::stable",
       "line": 3,
@@ -67582,6 +67608,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/resolver/m_01_e_1_cases.rs",
+      "from_symbol": "vibe_spec::resolver::m_01_e_1_cases",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-OBSERVATION-FIXTURES",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-spec/src/resolver/portable.rs",
@@ -98059,7 +98093,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6f0060784b0a52d4a02e7eabd247fd78847c7dc050f32301743c2dc04fc979fa",
+      "content_hash": "sha256:348f8b0f74c3543d99b606c5c90f2e6226bd29529cb9b49c9d83f8d7b8edf5b2",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "PROP-070: Validated resource addresses and selected resolution",
@@ -98212,7 +98246,7 @@
     },
     {
       "anchor": "source-observation",
-      "content_hash": "sha256:e49f05833203bf9b3785c12c7ce58bf7c1a498e3427499ea8c74604c37939e08",
+      "content_hash": "sha256:9e1eae9ed35070cf8249fd3cd0938e5230a4bcae72da376b22e912154ec0a1af",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "6. One retained physical observation",
@@ -98229,12 +98263,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#RETAINED-SOURCE-OBSERVATION"
     },
     {
+      "anchor": "SOURCE-OBSERVATION-FIXTURES",
+      "content_hash": "sha256:13b3b96d38547d9d4375b3e2f4707176a474db4d8dab189476e0ff3d869da5b2",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "Owned temporary fixtures exercise actual nested lookup, portable component and Unicode/case alias refusals, duplicate anchors, failed enumeration, no-follow single-link reads and replacement during the retained observation window. A large authorized verified stream may be cancelled by dropping its reader; incomplete delivery remains uncertain rather than complete. Refusal performs no fixture publication, lock, directory or copy creation. A deliberate race injection is recorded separately from query effects and its resulting state is preserved. Evidence distinguishes executed native primitives from portable lexical or identity-hook simulations; unavailable Windows/macOS primitives remain open for the appropriate host. These finite observations do not establish hostile-ABA prevention or native behavior on another host. @status:spec/plan",
+      "line": 34,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-OBSERVATION-FIXTURES"
+    },
+    {
       "anchor": "source-membership",
       "content_hash": "sha256:3f498d07803c59c9c2dd3e3a7f82272280bc11d5d97d13162cb636f4daa4dfd7",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "7. Independent original-source membership",
-      "line": 36,
+      "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#source-membership"
     },
     {
@@ -98243,7 +98286,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "A source-proven result requires a bounded complete capture of the original package tree, replayed with the existing named content-hash recipe and checked against the independently selected source hash and exact package pin in the current prepared world. Only after that comparison may an immutable path-to-captured-bytes index grant original-file membership. The supported bounded recipe-zero replay has explicit count, size and depth limits; an unsupported recipe or incomplete capture remains unavailable offline rather than falling back to a new local hash or fetching the package. A document absent from the verified original index cannot become source-proven because an installed slot contains it. @status:spec/plan",
-      "line": 37,
+      "line": 38,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP"
     },
     {
@@ -98252,7 +98295,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "An observed result states only that the held source bytes were read. Record-consistent states that selected slot-record rows, source mapping and materialized output bytes agree locally. Source-proven additionally establishes that the returned original source bytes are a member of the independently verified original capture under the selected package hash. Record-only, payload-only and coordinated record-plus-payload changes cannot promote local agreement to source proof. A development or in-place source without independent captured package proof remains observed. A transformed output can carry proof of its original source member but remains at most record-consistent as returned output until a separate converter/overlay derivation is proved; the source and output strengths are never conflated. Strict requests for absent required capture or unsupported recipe refuse without provider, cache or rebuild effects. @status:spec/plan",
-      "line": 38,
+      "line": 39,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-STRENGTH-LAW"
     },
     {
@@ -98261,7 +98304,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "8. Builtin derivation and materialized semantic location",
-      "line": 41,
+      "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#derivation"
     },
     {
@@ -98270,7 +98313,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "Derivation-proven materialized bytes require the opaque source-proven capture minted by the canonical original-tree replay, an authored Vibe source descriptor selecting those exact original bytes, the named current builtin converter recipe, an authorized package adoption overlay whose independently observed identity agrees with the selected slot record, and that record's exact source-to-output row. The converter runs purely in memory over captured bytes, applies the authorized overlay, and its emitted bytes must equal the held materialized output byte-for-byte before the derived strength is returned. A caller-supplied output digest, raw catalogue, editable record or output file cannot mint this proof. Converter, overlay, mapping or output drift refuses. A native/custom converter has no implicit execution path and remains unavailable until separately proved. @status:spec/plan",
-      "line": 42,
+      "line": 43,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#BUILTIN-DERIVATION-PROOF"
     },
     {
@@ -98279,7 +98322,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "The logical document stem and anchor are source-neutral. A separately versioned hash of the canonical SpecDoc IR node has the same value for semantically equivalent Markdown and XML materializations; it is distinct from original-source SHA-256, materialized-output SHA-256 and specmap's existing source-span `content_hash`, whose meaning is never silently changed. A materialized locator is resolved from the actual selected output bytes and carries that output's real extension and native line range. Whole-slot `Mixed` is a materialization policy, not a document parser: copied or Mixed Vibe outputs retain the selected source descriptor's media, while converted outputs use the named converter's target media. The selected interpretation opens the matching Spec or Doc vocabulary, including Doc-only blocks, before native positions are returned. Original-source file/line and raw hash cannot be published as an installed-output locator or as evidence of cross-form semantic drift. A new wire representation versions its schema rather than reinterpreting any e1 field. @status:spec/plan",
-      "line": 43,
+      "line": 44,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CANONICAL-NODE-LOCATION"
     },
     {
@@ -98288,7 +98331,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "9. Classified captured extraction and shared node selection",
-      "line": 45,
+      "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#extraction"
     },
     {
@@ -98297,7 +98340,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "A prepared source query consumes the selected authored descriptor and held captured bytes before choosing a parser. Only declared VibeSpec or VibeDoc opens the matching SpecDoc vocabulary; CommonMark exports use the ordinary CommonMark reader and preserve literal Vibe-looking annotations. XmlData and opaque resources retain their exact bytes and cannot mint Vibe fact facets. An unavailable optional structured view does not hide raw content. Same-stem ordinary resources are distinct selected rows, not competing Vibe serializations. No extraction fetches, rebuilds or promotes a local digest to original-source proof. @status:spec/plan",
-      "line": 46,
+      "line": 47,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CLASSIFIED-SOURCE-EXTRACTION"
     },
     {
@@ -98306,7 +98349,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "One shared SpecDoc IR selector serves selected read_spec content and the compiler's exact #embed selection. It selects a whole document, an exact section subtree, or one addressed fact carrier in a paragraph, list item, table cell or other position permitted by the selected vocabulary. Authored documentation pNN anchors use their retained IR identity rather than inventing facts in ordinary prose. A dotted path follows the actual anchored ancestry. Unknown and ambiguous paths refuse with candidates; no nearby node or whole-document fallback replaces the requested node. With children=false a section returns only its own heading, status and direct blocks; nested sections are excluded. Outline and per-node canonical representation byte sizes and heading chains are derived from the captured IR without a prebuilt specmap. @status:spec/plan",
-      "line": 47,
+      "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SHARED-SPECDOC-SELECTION"
     },
     {
@@ -98315,7 +98358,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "Every extracted result identifies selected descriptor/manifest and capture identities, media/interpretation, encoding, representation recipe and exact span basis. A raw span refers only to exact captured bytes; an emitted IR fragment or XML-to-Markdown projection carries its own explicit representation basis and never pretends its positions are raw source coordinates. Original-source, materialized-output and canonical semantic hashes retain their existing distinct strengths. Selection and optional inspection have explicit bounded resource limits and truthful unavailable outcomes. @status:spec/plan",
-      "line": 48,
+      "line": 49,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SELECTION-REPRESENTATION-BASIS"
     },
     {
@@ -98324,7 +98367,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "Canonical specmap extraction inventories each permitted table-cell fact and permitted quote facts in the same document anchor namespace as paragraph/list facts. Header positions confer facts only where the selected dictionary permits them; ordinary table header structure does not itself mint a fact. Equivalent Markdown and XML td carriers expose the same addressed facts and explain reachability. A literal inline-code marker, an ordinary resource or a foreign dictionary position cannot mint a fact. Source/projection index positions and actual selected-output locations remain distinct. @status:spec/plan",
-      "line": 49,
+      "line": 50,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#TABLE-FACT-INDEX"
     },
     {
@@ -98333,7 +98376,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "10. Generated selected-source query surfaces",
-      "line": 51,
+      "line": 52,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#query-service"
     },
     {
@@ -98342,7 +98385,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "The epoch-one source query request, result and refusal are registered generated contracts. CLI spec read and MCP read_spec call one read-only selected-source service; spec_resolve uses the same address/observation owner. ServerContext supplies the host project root, never an argument root, provider or effect bridge. Preparation and query are distinct: the host prepares bounded selected membership, lock, descriptor and held output observations through incumbent owners; an unavailable prepared world refuses without fetching, hydrating or rebuilding. Strict selected read_doc composition uses this same source resolver while retaining its documented whole-page, projection and translation behavior. Legacy standalone four-source documentation composition remains explicit, never an implicit strict fallback. @status:spec/plan",
-      "line": 52,
+      "line": 53,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#GENERATED-SOURCE-QUERY-CONTRACT"
     },
     {
@@ -98351,7 +98394,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "The owning service validates success and refusal, including epoch and closed input fields, before a surface renders them. Expected resolution, selected source and captured document hashes and continuation cursors bind one measured observation and exact request selection/format; stale data never mixes with old bytes. A cursor bounds exact UTF-8 content chunks of that selected representation, never widens a node to a whole-document fallback. Unknown package/document/anchor and ambiguity return typed bounded candidates. The returned canonical address, dictionary/status, heading chain, selected/full representation sizes and proof strength preserve their distinct roles. @status:spec/plan",
-      "line": 53,
+      "line": 54,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-OBSERVATION-BINDING"
     },
     {
@@ -98360,7 +98403,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "A source-neutral document/anchor locator is resolved against actual retained selected output bytes at query time. Results name the real materialized slot extension, native line range and explicit native encoding/span basis, separately from emitted content recipe and chunk offsets. An unavailable or ambiguous range, stale observation, failed copied-unconverted structured representation or unsupported transform refuses instead of publishing original-source or projection coordinates as a slot location. No query gains lifecycle effects from machine discovery descriptors or optional server effect hosts. @status:spec/plan",
-      "line": 54,
+      "line": 55,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-NATIVE-LOCATION"
     },
     {
@@ -98369,7 +98412,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "Explicit schema=1 read_doc validates its closed generated address/format/language request before preparation and uses the same selected captured resolver as read_spec. Its existing whole-page projection ignores the anchor, numbers documentation blocks and may select an admitted language adaptation or fall back to the captured source language. It never falls back to an in-tree package, store or newest slot when strict capture is unavailable. The generated reply separates the returned page projection recipe/byte size from selected input observation and native location; input coordinates and hashes do not describe the expanded page bytes. No-schema read_doc preserves standalone four-source compatibility with an explicit legacy-four-source authority label. Original-source or derivation-proven strength is never inferred from this projection. PROP-045's Doc Markdown projection is intentionally one-way: strict semantic Doc reading requires retained compatible XML pivot bytes. A converted Markdown-only Doc returns explicit structured unavailable while its exact raw captured bytes remain retrievable; no Example/Prompt nodes are guessed from prose and no original capture is fetched or rebuilt. @status:spec/plan",
-      "line": 55,
+      "line": 56,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-DOC-COMPATIBILITY"
     },
     {
@@ -98378,7 +98421,7 @@
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "A continuation binds the exact request, representation and captured source object through the existing SafeFS same-host observation correlation token. Object replacement with equal bytes cannot reuse an old cursor when the observed identity differs. Correlation is finite and non-authoritative: operating-system identity reuse or hostile ABA can defeat this observation window, and a token is not portable across hosts or an authenticated source proof. @status:spec/plan",
-      "line": 56,
+      "line": 57,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-CURSOR-CORRELATION"
     },
     {

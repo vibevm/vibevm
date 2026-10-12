@@ -1,0 +1,123 @@
+[
+  {
+    "log": "representative-held-resolver.log",
+    "exit": 0,
+    "passed": 0,
+    "failed": 0,
+    "ignored": 0,
+    "note": "wrong exact selector; NOT proof",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-spec --lib resolver::m_01_c_1_cases::projected_embed_and_raw_digest_use_one_held_source_buffer -- --exact",
+    "cwd": "/tmp",
+    "sha256": "3eb00029c861a410e9ba38cdbe576dca0874c36c5a8e06798e52750de2fd8282"
+  },
+  {
+    "log": "representative-held-resolver-corrected.log",
+    "exit": 0,
+    "passed": 1,
+    "failed": 0,
+    "ignored": 0,
+    "note": "existing connected consumer",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-spec --lib resolver::read::m_01_c_1_cases::projected_embed_and_raw_digest_use_one_held_source_buffer -- --exact",
+    "cwd": "/tmp",
+    "sha256": "2b59782efd5041e8c6246da57cc87380f397f92745f01e26854afe7b6b2a8946"
+  },
+  {
+    "log": "safefs-e1-first.log",
+    "exit": 0,
+    "passed": 5,
+    "failed": 0,
+    "ignored": 0,
+    "note": "new SafeFS family",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-safefs --lib file::m_01_e_1_cases::",
+    "cwd": "/tmp",
+    "sha256": "8bf88c02b1c714b9c5d9b88fdae9ef12f8fd8c29606b70f88d91494c913e6f6c"
+  },
+  {
+    "log": "spec-e1-first.log",
+    "exit": 101,
+    "passed": 0,
+    "failed": 0,
+    "ignored": 0,
+    "note": "E0277 fixture compile; no tests",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-spec --lib resolver::m_01_e_1_cases::",
+    "cwd": "/tmp",
+    "sha256": "c611bc67404b831784096de08256f350891ace7a6d4892cfac50afc467011575"
+  },
+  {
+    "log": "spec-e1-fixed-fixture.log",
+    "exit": 101,
+    "passed": 5,
+    "failed": 1,
+    "ignored": 0,
+    "note": "fixture diagnostic assertion failed; repository cwd",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-spec --lib resolver::m_01_e_1_cases::",
+    "cwd": "/fast/git/v/vibevm-next",
+    "sha256": "f35d300de6f7754715dad85f731096b89419f088d5d0810245797516b1e63f59"
+  },
+  {
+    "log": "spec-e1-final.log",
+    "exit": 101,
+    "passed": 5,
+    "failed": 1,
+    "ignored": 0,
+    "note": "assertion replacement missed; /tmp cwd",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-spec --lib resolver::m_01_e_1_cases::",
+    "cwd": "/tmp",
+    "sha256": "eff40a8443917659f9f1f1bfc0f35ab346dd3e3dbdd69c462855131f7a536630"
+  },
+  {
+    "log": "spec-e1-anchor-corrected.log",
+    "exit": 0,
+    "passed": 1,
+    "failed": 0,
+    "ignored": 0,
+    "note": "failed case repaired; exact final test",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-spec --lib resolver::m_01_e_1_cases::duplicate_anchor_refuses_both_candidates -- --exact",
+    "cwd": "/tmp",
+    "sha256": "3ed76ecd86d1b1f06b04724e21eeeece6afeccb7a831b41b559a7c011d6cd988"
+  },
+  {
+    "log": "workspace-fmt.log",
+    "exit": 1,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "13 historical entries",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly fmt --manifest-path /fast/git/v/vibevm-next/Cargo.toml --all -- --check",
+    "cwd": "/tmp",
+    "sha256": "e0815a42446aacc3696dbc681dcd3ef48599db79fbabbfedca83891489f72a66"
+  },
+  {
+    "log": "touched-rustfmt-final.log",
+    "exit": 0,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "four touched Rust files",
+    "command": "RUSTUP_AUTO_INSTALL=0 rustfmt +nightly --edition 2024 --config skip_children=true --check /fast/git/v/vibevm-next/crates/vibe-safefs/src/file.rs /fast/git/v/vibevm-next/crates/vibe-safefs/src/file/m_01_e_1_cases.rs /fast/git/v/vibevm-next/crates/vibe-spec/src/resolver.rs /fast/git/v/vibevm-next/crates/vibe-spec/src/resolver/m_01_e_1_cases.rs",
+    "cwd": "/tmp",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "log": "diff-check-final.log",
+    "exit": 0,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "unstaged tree diff",
+    "command": "git diff --check",
+    "cwd": "/fast/git/v/vibevm-next",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "log": "xml-parse.log",
+    "exit": 0,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "governing XML",
+    "command": "Python xml.etree.ElementTree.parse(PROP-070) and exact anchor count=1",
+    "cwd": "/tmp",
+    "sha256": "661f581f9c9ecd6c9dd97db1eff654394993f8dc4045d591ce7434425d0c7f40"
+  }
+]

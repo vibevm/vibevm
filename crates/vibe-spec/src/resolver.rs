@@ -571,3 +571,6 @@ mod m_01_a_2_cases;
 mod m_01_a_3_cases;
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod m_01_e_1_cases;

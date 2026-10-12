@@ -1,0 +1,9 @@
+{
+  "review": "Root inspected temporary-state snapshots, cancel/full-stream control, native link/identity replacement, deterministic identity hook and growth-cap fixtures",
+  "safefs_passed": 5,
+  "ignored": 0,
+  "source_sha256": "a257224322fdc25c0058cc4f7d69277eb479d833f0b7359009115443192509d1",
+  "log_sha256": "8bf88c02b1c714b9c5d9b88fdae9ef12f8fd8c29606b70f88d91494c913e6f6c",
+  "resolver_result": "E0277 compile failure, no executed cases yet",
+  "native_scope": "Linux execution only; portable identity hook is simulation, not Windows/macOS native proof"
+}

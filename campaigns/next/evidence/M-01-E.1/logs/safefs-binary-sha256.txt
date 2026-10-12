@@ -1,0 +1,1 @@
+8d285fae04662315be337a66190672cebe4627de1f82d1592927cfd147378e89  /fast/git/v/.build/c4-first-agent-target/debug/build/vibe-safefs/02f12f72c3b7e342/out/vibe_safefs-02f12f72c3b7e342

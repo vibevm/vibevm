@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "task": "M-01-E.1",
+  "status": "accepted_by_first_agent",
+  "candidate_base": "23dce2e7185aa6b30c34d29f0fee54a7f15e1961",
+  "accepted_at": "2026-10-12T18:43:37.007413+00:00",
+  "product_files": [
+    {
+      "path": "FIXED-ISSUES.md",
+      "sha256": "e2bb0f8e6f953796bf6809361af70ecc734fdb1eb31f76c0d0660c0938501063",
+      "bytes": 109228,
+      "lines": 473,
+      "owner": "root integration"
+    },
+    {
+      "path": "crates/vibe-safefs/src/file.rs",
+      "sha256": "d8f5895f9e922256b95d79137375827a3ef93bd99f87ed3b151d5502a62aac7a",
+      "bytes": 8339,
+      "lines": 230,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-safefs/src/file/m_01_e_1_cases.rs",
+      "sha256": "a257224322fdc25c0058cc4f7d69277eb479d833f0b7359009115443192509d1",
+      "bytes": 7125,
+      "lines": 199,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver.rs",
+      "sha256": "9e2697f1aa7511e46e4a83a825f69224ced303f141cc5de0fee1ac2effc60796",
+      "bytes": 25291,
+      "lines": 576,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/m_01_e_1_cases.rs",
+      "sha256": "1d765b06b71204e245e7ca8e60cae2ad511a1729c380eaee11c9189a2da36ebe",
+      "bytes": 7904,
+      "lines": 222,
+      "owner": "product"
+    },
+    {
+      "path": "specmap.json",
+      "sha256": "a39b2b0203394da745c944f16753ee27b2a39a57dd820419f19c3326822e7424",
+      "bytes": 9777729,
+      "lines": 165920,
+      "owner": "root integration"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "sha256": "44429977d4de8305277e719158f58543aea67342a3b43607aad19c2db0a355e0",
+      "bytes": 24771,
+      "lines": 59,
+      "owner": "product"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/BOUND-PLAN.md",
+      "raw_sha256": "a55c733125cea3039d30c141427edf8011d2f018fc2f11126cec2ac88f35823c",
+      "sha256": "a55c733125cea3039d30c141427edf8011d2f018fc2f11126cec2ac88f35823c",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/CANDIDATE-REPORT.md",
+      "raw_sha256": "a901563b321e82c861eb1b56b9be43d432bf93a62d5d44862d27ae178795d166",
+      "sha256": "a901563b321e82c861eb1b56b9be43d432bf93a62d5d44862d27ae178795d166",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/COMMANDS.json",
+      "raw_sha256": "cc1c4bf118102538ac059dc81a20b2e4346726486adc5c95bf4a7b52496e1c83",
+      "sha256": "cc1c4bf118102538ac059dc81a20b2e4346726486adc5c95bf4a7b52496e1c83",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/INCIDENTS.md",
+      "raw_sha256": "8ce5647d04dab6b5ae0b473d8ee5e791941da5a2afc67ec5d2c1da2ede3615a8",
+      "sha256": "8ce5647d04dab6b5ae0b473d8ee5e791941da5a2afc67ec5d2c1da2ede3615a8",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/ROOT-ACCEPTANCE-CHECK.json",
+      "raw_sha256": "db88e8fd8b31a2b5081d3720cddc2d0b2e524aaa2cf5e8952ae1e499292300a6",
+      "sha256": "db88e8fd8b31a2b5081d3720cddc2d0b2e524aaa2cf5e8952ae1e499292300a6",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/ROOT-DUPLICATE-ASSERTION-CORRECTION.json",
+      "raw_sha256": "5490b372db08403e2d984140060bcaf2e5d22858b37ba122fd79cd26664ab8c6",
+      "sha256": "5490b372db08403e2d984140060bcaf2e5d22858b37ba122fd79cd26664ab8c6",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/ROOT-FINAL-SPECMAP.log",
+      "raw_sha256": "e39ae8a356bd0bc3aaffc5133af04d67667e46323861ce871abb8e921f73a9bb",
+      "sha256": "e39ae8a356bd0bc3aaffc5133af04d67667e46323861ce871abb8e921f73a9bb",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/ROOT-FIRST-E1-REVIEW.json",
+      "raw_sha256": "0f14e787a59ec181259c4b382cb8b922b9f5f5eaba29745126c933addc9080f2",
+      "sha256": "0f14e787a59ec181259c4b382cb8b922b9f5f5eaba29745126c933addc9080f2",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/ROOT-OBSERVED-DUPLICATE-ASSERTION-FAILURE.json",
+      "raw_sha256": "93e2af5e008073cd2b0c891f112dd66ed1032fcc05dd2f517ba07e4909301d0d",
+      "sha256": "93e2af5e008073cd2b0c891f112dd66ed1032fcc05dd2f517ba07e4909301d0d",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/ROOT-OBSERVED-DUPLICATE-ASSERTION-FAILURE.log",
+      "raw_sha256": "eff40a8443917659f9f1f1bfc0f35ab346dd3e3dbdd69c462855131f7a536630",
+      "sha256": "eff40a8443917659f9f1f1bfc0f35ab346dd3e3dbdd69c462855131f7a536630",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/ROOT-REPRESENTATIVE-SELECTOR-CORRECTION.json",
+      "raw_sha256": "390af961a98099278ae34545e7f0b683b3a75d8d758fd3bcb03e9393f639f1a2",
+      "sha256": "390af961a98099278ae34545e7f0b683b3a75d8d758fd3bcb03e9393f639f1a2",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/SHA256SUMS",
+      "raw_sha256": "ec5173d62590958542563c59dd14bbbb60d68b45a03699c4c872c218b57ac709",
+      "sha256": "ec5173d62590958542563c59dd14bbbb60d68b45a03699c4c872c218b57ac709",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/SOURCE-SHA256.json",
+      "raw_sha256": "5780fca449d5d255506e3f4cb8fb1733e98466b0b3ba646708933b6546c23d1d",
+      "sha256": "5780fca449d5d255506e3f4cb8fb1733e98466b0b3ba646708933b6546c23d1d",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/diff-check-final.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/diff-check.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/hash-verification.log",
+      "raw_sha256": "e12bb844de1303cfc393cabba900dac1a96d2c9914c4c2d2a97ebcbd2d7e4775",
+      "sha256": "e12bb844de1303cfc393cabba900dac1a96d2c9914c4c2d2a97ebcbd2d7e4775",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/representative-held-resolver-corrected.log",
+      "raw_sha256": "2b59782efd5041e8c6246da57cc87380f397f92745f01e26854afe7b6b2a8946",
+      "sha256": "2c65a157e7fc9098d9895811c2ad1c937395fde0ea4b23944cb34de2d7f31418",
+      "normalization": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/representative-held-resolver.log",
+      "raw_sha256": "3eb00029c861a410e9ba38cdbe576dca0874c36c5a8e06798e52750de2fd8282",
+      "sha256": "65b3eb1514416a575cd13fa8c68e1356e52b3556d68fb08a0670ea28145c1a14",
+      "normalization": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/safefs-binary-sha256.txt",
+      "raw_sha256": "f8ffde270471867eccd9ede543c5c52af501e538513ecc1cb70e82a9d9d8b4d6",
+      "sha256": "f8ffde270471867eccd9ede543c5c52af501e538513ecc1cb70e82a9d9d8b4d6",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/safefs-e1-first.log",
+      "raw_sha256": "8bf88c02b1c714b9c5d9b88fdae9ef12f8fd8c29606b70f88d91494c913e6f6c",
+      "sha256": "1678346a6ab9137eb51fb730902dff081f2f01d38381f2b04cbbd42cfa86c44a",
+      "normalization": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/spec-binary-sha256.txt",
+      "raw_sha256": "3459d17d08012e847f2afcd60e23140305ea1398143baab11f20e3aa76693dac",
+      "sha256": "3459d17d08012e847f2afcd60e23140305ea1398143baab11f20e3aa76693dac",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/spec-e1-anchor-corrected.log",
+      "raw_sha256": "3ed76ecd86d1b1f06b04724e21eeeece6afeccb7a831b41b559a7c011d6cd988",
+      "sha256": "b39d877714261dc975bfe88a6ec866c28fd03fc6267d076b7ffce898bb4e963c",
+      "normalization": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/spec-e1-final.log",
+      "raw_sha256": "eff40a8443917659f9f1f1bfc0f35ab346dd3e3dbdd69c462855131f7a536630",
+      "sha256": "eff40a8443917659f9f1f1bfc0f35ab346dd3e3dbdd69c462855131f7a536630",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/spec-e1-first.log",
+      "raw_sha256": "c611bc67404b831784096de08256f350891ace7a6d4892cfac50afc467011575",
+      "sha256": "c611bc67404b831784096de08256f350891ace7a6d4892cfac50afc467011575",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/spec-e1-fixed-fixture.log",
+      "raw_sha256": "f35d300de6f7754715dad85f731096b89419f088d5d0810245797516b1e63f59",
+      "sha256": "f35d300de6f7754715dad85f731096b89419f088d5d0810245797516b1e63f59",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/touched-rustfmt-final.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/touched-rustfmt.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/workspace-fmt.log",
+      "raw_sha256": "e0815a42446aacc3696dbc681dcd3ef48599db79fbabbfedca83891489f72a66",
+      "sha256": "9f827d53bed3f257d17ff0630849b39fe62666929112ce36ec877610fb58b7ee",
+      "normalization": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.1/logs/xml-parse.log",
+      "raw_sha256": "661f581f9c9ecd6c9dd97db1eff654394993f8dc4045d591ce7434425d0c7f40",
+      "sha256": "661f581f9c9ecd6c9dd97db1eff654394993f8dc4045d591ce7434425d0c7f40",
+      "normalization": "none"
+    }
+  ],
+  "checks": {
+    "new_distinct_cases_passed": 11,
+    "safefs_family": 5,
+    "resolver_unchanged_passed_in_mixed_run": 5,
+    "resolver_corrected_exact": 1,
+    "representative": 1,
+    "sealed_hashes": 31,
+    "source_hashes": 5,
+    "specmap_exit": 0,
+    "gated_orphans": 138,
+    "unresolved_host_edges": 0
+  },
+  "unperformed": [
+    "native Windows reparse/ADS/device",
+    "native macOS primitives",
+    "permission-denied enumeration",
+    "remote service cancellation transport",
+    "hostile ABA exclusion"
+  ],
+  "matching_scope": "unchanged successful cases plus precise corrected assertion; not a claimed single all-green resolver invocation"
+}
