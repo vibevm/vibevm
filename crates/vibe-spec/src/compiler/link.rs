@@ -19,6 +19,8 @@ pub(crate) const LINK_PASS_NAME: &str = "link";
 
 mod digest;
 use digest::digest_input;
+mod normal_once;
+use normal_once::normal_body_once;
 
 pub(crate) struct LinkPass {
     name: PassName,
@@ -178,6 +180,20 @@ fn plan_stream(closure: &ClosureIr) -> Result<PlannedLink, LinkPassError> {
 
     let mut contributions = Vec::with_capacity(closure.contributions.len());
     let mut occurrences = Vec::new();
+    // A normal root can be reached through an earlier normal root and also be
+    // a direct static entry. The close graph shares its nodes, but each root
+    // still has an emission occurrence. Track authored section identity at
+    // this whole-lane linker boundary so a later whole-document seed retains
+    // its otherwise unused siblings without re-emitting the reached sections.
+    let mut emitted_sections: BTreeMap<(String, String), Vec<String>> = BTreeMap::new();
+    let mut emitted_whole_documents: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    let mut emitted_preambles: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    let cross_root = closure
+        .contributions
+        .iter()
+        .filter(|row| matches!(row, ClosureContribution::Normal { .. }))
+        .count()
+        > 1;
     for (contribution, current) in closure.contributions.iter().enumerate() {
         match current {
             ClosureContribution::Normal {
@@ -227,13 +243,24 @@ fn plan_stream(closure: &ClosureIr) -> Result<PlannedLink, LinkPassError> {
                         address.without_pin(),
                         current.requested_address.without_pin()
                     );
+                    let body = if cross_root {
+                        normal_body_once(
+                            &current.requested_address,
+                            &document.tree,
+                            &mut emitted_sections,
+                            &mut emitted_whole_documents,
+                            &mut emitted_preambles,
+                        )
+                    } else {
+                        document.tree.text(document.tree.root())
+                    };
                     occurrences.push(InputOccurrence::Normal {
                         contribution,
                         occurrence,
                         node: current.node,
                         address: current.requested_address.clone(),
                         marker: LinkMarkerKey::from_address(&current.requested_address),
-                        body: document.tree.text(document.tree.root()),
+                        body,
                     });
                 }
             }

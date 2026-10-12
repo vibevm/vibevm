@@ -165,3 +165,13 @@ Operator probe correction during boundary review: Root first guessed short PROP-
 ### OP-010 — Root committed log mirrors after whitespace check refused
 
 Root's shell sequence continued to git commit after diff --cached --check reported trailing blank lines in four log copies. Corrected by EOF-normalizing only repository mirrors and recording raw/repository SHA256 pairs; external raw evidence remains unchanged. History is preserved. Future multi-command mutation scripts must stop on failed checks. This is an operator command-guard failure, not a product or test failure.
+
+## B-224 — normal compiled units repeat in the final consumer lane
+
+Current M-06-G.1 fixture reproduces the ignored whole-lane regression: alpha2 instead of1, exit101,0/1. Separate units are internally once-only; combined lane repeats1/2/3/3. Root selected final-consumer-lane identity-based once-only under existing PROP-035/038; PROP-009 partial compiled-artifact residual does not excuse direct normal entries. This is an actual task blocker, not a new qualification prerequisite. Native candidate and preservation/short-link/order proof remain unaccepted. Evidence: M06-G1/REPORT.md, cross-entry-ignored.log and B224 scope/hook reports under the current startup evidence directory.
+
+M06-G1 operator fixture failure: first #source placement test reused root anchor in multiple merged sources and correctly failed duplicate-fact validation, exit101. Corrected fixture uses distinct anchors; exactcase1/1. Simple/normal, embed, unresolved-precommit and perunit/wholelane characterization each passed1/1. NativeWindows remains unperformed; no product pass is inferred from the failed draft.
+
+B-224 nested follow-up: Root review identified top-level-only traversal. Executed nested H2 fixture failed0/1,exit101 with BETA_NESTED_SOLUTION twice. Native switched to existing DocTree::sections() and structural text_without spans; exact nested retry1/1 retains parent and unused sibling. Post-fix affected checks and candidate acceptance still pending. Raw first/fixed logs are preserved in M06-G1/nested-overlap-first.log and nested-overlap-fixed.log.
+
+B-224 preamble follow-up: three distinct normal entries partial→whole→direct reproduced BETA_PREAMBLE2instead1,exit101. Same-document preamble coverage corrected in the existing linker; exactcase1/1 and7affectedrechecks1/1each. Root later found candidate files656/687lines; new helper/tests extracted into sibling modules, final sizes578/85/494/199. Nine post-extraction exactcases1/1,0ignored; Root reviewed source/logs and accepted G1/B224. Native Windows remains open. No further product failure or broad baseline repair is claimed.

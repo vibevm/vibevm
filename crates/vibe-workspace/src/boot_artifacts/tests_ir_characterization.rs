@@ -57,7 +57,7 @@ fn cross_package_normal_fixture(ws: &Path) -> EffectiveBoot {
         ws,
         "org.demo.alpha",
         "contract/root.md",
-        "# Alpha root {#root}\n#use spec://org.demo/beta/contract/solution#solution\n\nALPHA_ROOT_BODY\n",
+        "# Alpha root {#root}\n#use spec://org.demo/beta/contract/solution#solution\n\nALPHA_ROOT_BODY\n# Alpha unused {#unused}\nALPHA_UNUSED_BODY\n",
     );
     let beta = write_normal_doc(
         ws,
@@ -78,8 +78,10 @@ fn cross_package_normal_fixture(ws: &Path) -> EffectiveBoot {
     ])
 }
 
+#[path = "tests_ir_characterization/g1_cases.rs"]
+mod g1_cases;
+
 #[test]
-#[ignore = "B-224: cross-entry normal static dedup pending owner ruling"]
 fn xml_static_consumer_closes_cross_package_use_and_source_once() {
     let ws = TempDir::new().unwrap();
     let effective = cross_package_normal_fixture(ws.path());
@@ -90,6 +92,7 @@ fn xml_static_consumer_closes_cross_package_use_and_source_once() {
     for body in [
         "UMBRELLA_BODY",
         "ALPHA_ROOT_BODY",
+        "ALPHA_UNUSED_BODY",
         "BETA_CONTRACT_BODY",
         "BETA_SOURCE_BODY",
     ] {
@@ -99,8 +102,16 @@ fn xml_static_consumer_closes_cross_package_use_and_source_once() {
             "{body} must occur once: {xml}"
         );
     }
-    assert!(!xml.contains("#use spec://"), "unresolved use: {xml}");
-    assert!(!xml.contains("#source spec://"), "unresolved source: {xml}");
+    assert!(
+        !xml.lines()
+            .any(|line| line.trim_start().starts_with("#use ")),
+        "unresolved use: {xml}"
+    );
+    assert!(
+        !xml.lines()
+            .any(|line| line.trim_start().starts_with("#source ")),
+        "unresolved source: {xml}"
+    );
     vibe_spec::minify_emitted_xml(&xml).expect("the generated static lane is strict XML");
 }
 

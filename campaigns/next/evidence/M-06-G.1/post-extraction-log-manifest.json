@@ -1,0 +1,47 @@
+[
+  {
+    "file": "extract-normal_root_definitions_and_fences_do_not_leak_to_the_next_root.log",
+    "sha256": "16e612c3771cf9d1a2a2edd999695f3db90b16a5f5b4d558413c2673e6417543",
+    "result": "1 passed,0 failed,0 ignored"
+  },
+  {
+    "file": "extract-unclosed_fence_makes_shared_occurrences_contextual_and_positional.log",
+    "sha256": "8e4fa1023471f5a4ee2b0c3af89a7466463f810ad92c8f8130b02063e2ffc672",
+    "result": "1 passed,0 failed,0 ignored"
+  },
+  {
+    "file": "extract-xml_cross_package_normal_units_and_consumer_lane_close_once.log",
+    "sha256": "79b38ddeda62e80cf4cb806eb9b070076e2362a09461c350a74ff7fde2f05535",
+    "result": "1 passed,0 failed,0 ignored"
+  },
+  {
+    "file": "extract-xml_direct_normal_unused_sibling_survives_once.log",
+    "sha256": "1395374777696dbfa06cde8f25b3d05314bb81b180ccd8e1535a997a95ed0bb7",
+    "result": "1 passed,0 failed,0 ignored"
+  },
+  {
+    "file": "extract-xml_equal_prose_from_distinct_authored_documents_is_not_deduplicated.log",
+    "sha256": "3e1aacd6e179d6067298bf40fd51419132325cc3fe6589c98e8f70d1a6e0c508",
+    "result": "1 passed,0 failed,0 ignored"
+  },
+  {
+    "file": "extract-xml_nested_use_and_direct_normal_entry_emit_solution_and_unused_sibling_once.log",
+    "sha256": "14612a9f58f90ba452806c758a2d9d0d0a378ba70ee291258053d6b9f5099f4c",
+    "result": "1 passed,0 failed,0 ignored"
+  },
+  {
+    "file": "extract-xml_normal_source_before_section_and_mid_section_both_fold.log",
+    "sha256": "48c0c3b14e3c0065883e040017fd35623e1b231bb800bdd211d3b9fe209f678a",
+    "result": "1 passed,0 failed,0 ignored"
+  },
+  {
+    "file": "extract-xml_partial_then_whole_then_direct_normal_keeps_preamble_once.log",
+    "sha256": "b5372ea8fb75bfa2e804d40c6eadf092c02b24d0a903ec5626259323896acf6c",
+    "result": "1 passed,0 failed,0 ignored"
+  },
+  {
+    "file": "extract-xml_static_consumer_closes_cross_package_use_and_source_once.log",
+    "sha256": "faaabccb9ed0ac8bac8c45487f7a30e7ecfd80e04f2791e756d6a7c871b285ba",
+    "result": "1 passed,0 failed,0 ignored"
+  }
+]
