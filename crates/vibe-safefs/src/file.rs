@@ -224,3 +224,7 @@ mod publish_verify_tests;
 #[cfg(test)]
 #[path = "file/stable_tests.rs"]
 mod stable_tests;
+
+#[cfg(test)]
+#[path = "file/m_01_e_1_cases.rs"]
+mod m_01_e_1_cases;

@@ -1,0 +1,9 @@
+{
+  "sealed_hashes_matched": 31,
+  "source_hashes_matched": 5,
+  "specmap_exit": 0,
+  "gated_orphans": 138,
+  "unresolved_host_edges": 0,
+  "scope": "11 distinct current cases: SafeFS5 + unchanged resolver5 from mixed red run + corrected exact1; no claimed single green resolver6 invocation",
+  "root_verifier_correction": "Initial relative-only assumption rejected declared absolute5 source paths; exact source allow-list restored correct check."
+}

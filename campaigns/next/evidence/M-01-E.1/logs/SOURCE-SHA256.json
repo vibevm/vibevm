@@ -1,0 +1,22 @@
+{
+  "crates/vibe-safefs/src/file.rs": {
+    "sha256": "d8f5895f9e922256b95d79137375827a3ef93bd99f87ed3b151d5502a62aac7a",
+    "lines": 230
+  },
+  "crates/vibe-safefs/src/file/m_01_e_1_cases.rs": {
+    "sha256": "a257224322fdc25c0058cc4f7d69277eb479d833f0b7359009115443192509d1",
+    "lines": 199
+  },
+  "crates/vibe-spec/src/resolver.rs": {
+    "sha256": "9e2697f1aa7511e46e4a83a825f69224ced303f141cc5de0fee1ac2effc60796",
+    "lines": 576
+  },
+  "crates/vibe-spec/src/resolver/m_01_e_1_cases.rs": {
+    "sha256": "1d765b06b71204e245e7ca8e60cae2ad511a1729c380eaee11c9189a2da36ebe",
+    "lines": 222
+  },
+  "vibevm/vibespecs/common/PROP-070-resource-resolution.xml": {
+    "sha256": "44429977d4de8305277e719158f58543aea67342a3b43607aad19c2db0a355e0",
+    "lines": 59
+  }
+}

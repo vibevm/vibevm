@@ -1,0 +1,6 @@
+{
+  "observed_from": "spec-e1-final.log",
+  "saved_as": "ROOT-OBSERVED-DUPLICATE-ASSERTION-FAILURE.log",
+  "sha256": "eff40a8443917659f9f1f1bfc0f35ab346dd3e3dbdd69c462855131f7a536630",
+  "result": "executed5/6; expected legacy refusal; wrong fixture text expectation"
+}

@@ -1,0 +1,1 @@
+4a8abf310e3cefd70007c50774468c03c92a29e158928c3255e13541200e8e94  /fast/git/v/.build/c4-first-agent-target/debug/build/vibe-spec/46122795f8bffb04/out/vibe_spec-46122795f8bffb04
