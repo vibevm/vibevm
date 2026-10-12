@@ -148,6 +148,10 @@ The existing exact-local Install path passed MCP family5/5 and a cold CLI/MCP fi
 
 Operator read-only path mistakes in this step: worker queried absent lifecycle_adapter/decision.rs and machine_operation/exact_local_install/; actual definitions are lifecycle_decisions.rs and exact_local_install.rs. Root also guessed an absent exact_local_install/tests.rs before resolving source files with rg --files. No product state was changed by these failed probes. Exact selected test logs and report are preserved under research/2026-10-12-vibevm-first-agent-start; event times for the probes were not separately captured.
 
+## Acceptance-binding boundary review — pending classification
+
+Root independently found that the five C1/C2 lifecycle-route matrix does not classify the registered effectful manifest_migration_operation tool. The tool has apply/inspect/recover and its own explicit host authority and migration journal. A missing classification is not yet a demonstrated implementation defect. Root requested a bounded read-only source/contract/receipt addendum through Zap (message.d81469a2-752c-48e4-b3d7-8f985e957eed); no new migration implementation or competing journal is authorized by this finding. Boundary resolved before acceptance: PROP-015 MIGRATION-CELL-LAW assigns migration its sole PROP-044 contract without hosted lifecycle/provider authority. Root accepted C4 lifecycle scope in campaigns/next/evidence/M-16-C.4/accepted-2026-10-12.md; migration runtime completion is not newly claimed.
+
 ## PodBay
 
 Отдельного нового подтверждённого сбоя PodBay в этом операционном запуске пока не выявлено. Старые незавершённые задачи не превращаем в новые инциденты без реального воспроизведения. Они сохранены в Zap BACKLOG P2-014 и полном deferred inventory.
@@ -155,3 +159,5 @@ Operator read-only path mistakes in this step: worker queried absent lifecycle_a
 ## Свидетельства и стоимость
 
 Подробные последовательные события: campaigns/next/operations/INCIDENTS.jsonl и /fast/git/v/research/2026-10-12-vibevm-first-agent-start/{START-REPORT.md,progress.json,incident.jsonl}. Время/стоимость считать по измеренным данным этих записей; неизвестные величины не оценивать задним числом. Текущая цель — продвижение VibeVM; чиним только наблюдённый блокер очередного этапа.
+
+Operator probe correction during boundary review: Root first guessed short PROP-015.xml/PROP-044.xml filenames; rg refused. Resolved actual PROP-015-mcp-integration.xml and PROP-044-change-native-formats.xml via rg --files and checked the sole-contract clause. Read-only failures changed no product state.
