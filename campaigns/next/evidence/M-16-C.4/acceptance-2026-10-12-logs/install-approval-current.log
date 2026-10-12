@@ -548,4 +548,3 @@ running 1 test
 test machine_submission::exact_local_install_decision::tests::exact_local_install_policy_bit_is_independent_from_approval ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 0.01s
-

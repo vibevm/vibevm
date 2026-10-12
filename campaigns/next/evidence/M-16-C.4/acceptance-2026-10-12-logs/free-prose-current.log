@@ -548,4 +548,3 @@ running 1 test
 test machine_operation::input_decision::tests::scope::approval_true_and_false_and_free_prose_have_no_authority_return ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 563 filtered out; finished in 0.01s
-

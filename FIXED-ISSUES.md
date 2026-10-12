@@ -161,3 +161,7 @@ Root independently found that the five C1/C2 lifecycle-route matrix does not cla
 Подробные последовательные события: campaigns/next/operations/INCIDENTS.jsonl и /fast/git/v/research/2026-10-12-vibevm-first-agent-start/{START-REPORT.md,progress.json,incident.jsonl}. Время/стоимость считать по измеренным данным этих записей; неизвестные величины не оценивать задним числом. Текущая цель — продвижение VibeVM; чиним только наблюдённый блокер очередного этапа.
 
 Operator probe correction during boundary review: Root first guessed short PROP-015.xml/PROP-044.xml filenames; rg refused. Resolved actual PROP-015-mcp-integration.xml and PROP-044-change-native-formats.xml via rg --files and checked the sole-contract clause. Read-only failures changed no product state.
+
+### OP-010 — Root committed log mirrors after whitespace check refused
+
+Root's shell sequence continued to git commit after diff --cached --check reported trailing blank lines in four log copies. Corrected by EOF-normalizing only repository mirrors and recording raw/repository SHA256 pairs; external raw evidence remains unchanged. History is preserved. Future multi-command mutation scripts must stop on failed checks. This is an operator command-guard failure, not a product or test failure.
