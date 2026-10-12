@@ -57,6 +57,9 @@ toml.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+# Exercise the incumbent held-read race hook through the actual FsSectionSource
+# consumer. The feature is absent from shipped vibe-spec builds.
+vibe-safefs = { workspace = true, features = ["inject-failures"] }
 # The syntax-aware source fence parses the plan production cells as an AST
 # (R4.1 round 1, C2): grouped/renamed imports, fully-qualified paths, type
 # paths, macros and trait objects are classified structurally, so a string

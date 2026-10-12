@@ -202,6 +202,10 @@ pub(crate) fn verify_regular_single_link(file: &std::fs::File, display: &Path) -
 mod bounded_tests;
 
 #[cfg(test)]
+#[path = "file/m_01_c_1_cases.rs"]
+mod m_01_c_1_cases;
+
+#[cfg(test)]
 #[path = "file/stream_tests.rs"]
 mod stream_tests;
 

@@ -190,6 +190,8 @@ pub enum ResolveError {
     SourceUnreadable { path: String, reason: String },
     #[error("source `{path}` changed during resolution: {reason}")]
     SourceUnstable { path: String, reason: String },
+    #[error("source `{path}` has no stable held observation: {reason}")]
+    SourceObservationUnavailable { path: String, reason: String },
     #[error("pattern member `{name}` is ambiguous across installed slots: {roots}")]
     AmbiguousPatternMember { name: String, roots: String },
 }
