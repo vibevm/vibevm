@@ -223,5 +223,6 @@ pub(super) fn validate(
         id,
         wire,
         directory: directory.to_path_buf(),
+        coordinate: context.coordinate.clone(),
     })
 }

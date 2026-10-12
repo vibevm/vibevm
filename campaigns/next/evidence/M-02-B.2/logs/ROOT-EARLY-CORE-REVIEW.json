@@ -1,0 +1,20 @@
+{
+  "status": "WIP independent core review; no compiled verdict",
+  "source_hashes": {
+    "crates/vibe-core/src/manifest/change/identity.rs": "7e15cbf92109ed5fdc3d062521d1fb9cee07acf6db869b46f466a33a75dd7514",
+    "crates/vibe-core/src/manifest/change/work.rs": "0d562a454685631b2ddb076a1b6fa38a1de1f4893eda85ea8af7fe5d018aac24"
+  },
+  "observed": [
+    "Graph merges all explicitly supplied documents into one ID map; checks duplicates and all predecessor existence before nonrecursive Kahn cycle validation.",
+    "Graph items remain private and are returned immutably; canonical edge/need/touch ordering occurs before accepted graph construction.",
+    "Selected contribution traverses complete predecessor closure with a deduplicated set and emits sorted IDs.",
+    "Intent requires exact normative observation set: extra/missing/duplicate reject before hashing.",
+    "Intent frames immutable scope, sorted origins and exact normative role/path bytes; cosmetics, work and closure excluded.",
+    "Work and selected contribution have separate versioned domains and explicit collection counts."
+  ],
+  "remaining": [
+    "Requirements connection to held actual input observations",
+    "Nonzero behavioral tests and B1 compatibility",
+    "Final source epoch and evidence seal"
+  ]
+}

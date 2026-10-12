@@ -1,0 +1,389 @@
+{
+  "schema": 1,
+  "task": "M-02-B.2",
+  "status": "accepted_by_first_agent",
+  "candidate_base": "4adf1e35a0ea5f8ba3e84106092ea57680e92ae4",
+  "accepted_at": "2026-10-12T21:24:03.728243+00:00",
+  "product_files": [
+    {
+      "path": "FIXED-ISSUES.md",
+      "sha256": "c41643d524bdf7bb811dfe3b26d81821f389ec8310a577009663afab1b9bd39f",
+      "bytes": 129246,
+      "lines": 533,
+      "owner": "root integration"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/identity.rs",
+      "sha256": "b3947ec1df7fa104972f5b39d74439a889dcf4b37ee2f5a13d956069fb523572",
+      "bytes": 6482,
+      "lines": 183,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "sha256": "82478e78938065f27c33e3791fc7e7ce87aa6dca3d0f2f135a05581d7fcdd872",
+      "bytes": 9273,
+      "lines": 249,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/mod.rs",
+      "sha256": "7d5f5b35be0947d2eb73ce21d3d3f4d589eba3b7bf75e88d84a08eca9a03272c",
+      "bytes": 8239,
+      "lines": 292,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/validation.rs",
+      "sha256": "c0923b92bb7f3ff9dd80476e2d6658c6d199421b780bd3e50c1a21d1341dfda9",
+      "bytes": 8318,
+      "lines": 228,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/work.rs",
+      "sha256": "40e43ed6751b5d4376774ec1145b029ec13e0920fc01bf7e66feda31da460dc0",
+      "bytes": 7617,
+      "lines": 212,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/identity.rs",
+      "sha256": "c48c473c3ea32cc924a2d69a325279d99615036e73e7c7d15c581d9efdca3e2b",
+      "bytes": 2411,
+      "lines": 60,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "sha256": "3fdebe9548fd5c33ec9e49bbe6c36c1bebad7621cfe3a774f41cdf06da42fc4b",
+      "bytes": 5934,
+      "lines": 171,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/mod.rs",
+      "sha256": "03f845598c07b1e7ce76ed361fa59614fc2f68e586b5f268711f7588928a0a62",
+      "bytes": 456,
+      "lines": 14,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "specmap.json",
+      "sha256": "b39a12ab4e5958311000c71f48ed1d46019ff819d0ce04eb0938ae9779103f86",
+      "bytes": 9804099,
+      "lines": 166363,
+      "owner": "root integration"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "sha256": "ec117b3ff5bbf9a6cdaa11f6ff69375b7e7e3590a76f8742760a0c9738daf5ba",
+      "bytes": 9280,
+      "lines": 26,
+      "owner": "Zap candidate"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/BOUND-PLAN.md",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/BOUND-PLAN.md",
+      "raw_sha256": "44b636d7619c64a96a11e1efd485375390f65332dc7098e39af44ea870c98919",
+      "sha256": "44b636d7619c64a96a11e1efd485375390f65332dc7098e39af44ea870c98919",
+      "bytes": 2337,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/CANDIDATE-REPORT.md",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/CANDIDATE-REPORT.md",
+      "raw_sha256": "30e6650098153b81ee96f838ab492338358e416947bba362783615511099b0ec",
+      "sha256": "30e6650098153b81ee96f838ab492338358e416947bba362783615511099b0ec",
+      "bytes": 5286,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/COMMANDS.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/COMMANDS.json",
+      "raw_sha256": "35addfbb4f5a6f377e68a79c57178537952ebbb37bc132fc9c4986b733311e93",
+      "sha256": "35addfbb4f5a6f377e68a79c57178537952ebbb37bc132fc9c4986b733311e93",
+      "bytes": 5317,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/EVIDENCE-SHA256.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/EVIDENCE-SHA256.json",
+      "raw_sha256": "b95503c94eccccdab6c8d6f5333066233843931cbdd893cf54d008fce9f375ac",
+      "sha256": "b95503c94eccccdab6c8d6f5333066233843931cbdd893cf54d008fce9f375ac",
+      "bytes": 2229,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/FILE-INVENTORY.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/FILE-INVENTORY.json",
+      "raw_sha256": "b65fcd4f4a7cccd18d6303894626bf59a3caae8cab4ac6182f21fb7eaabd547a",
+      "sha256": "b65fcd4f4a7cccd18d6303894626bf59a3caae8cab4ac6182f21fb7eaabd547a",
+      "bytes": 1010,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/HASH-VERIFY.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/HASH-VERIFY.log",
+      "raw_sha256": "1b74867c2c66cee6fefd8aa4f534fd5add7c13e6ba3cf30955aab319fd51026e",
+      "sha256": "1b74867c2c66cee6fefd8aa4f534fd5add7c13e6ba3cf30955aab319fd51026e",
+      "bytes": 99,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/INCIDENTS.md",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/INCIDENTS.md",
+      "raw_sha256": "46c8b70a06de578b60a9c4cf9facac5fceab4935a7015b6de5b7fcd4a41e68fe",
+      "sha256": "46c8b70a06de578b60a9c4cf9facac5fceab4935a7015b6de5b7fcd4a41e68fe",
+      "bytes": 1126,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/INHERITED-FMT-SUBJECT.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/INHERITED-FMT-SUBJECT.json",
+      "raw_sha256": "1d897155e05abaac0916fb329d8c61f5d603815962638096ed8c7d231ff2c5ca",
+      "sha256": "1d897155e05abaac0916fb329d8c61f5d603815962638096ed8c7d231ff2c5ca",
+      "bytes": 214,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/INTENT-RECIPE-VECTOR.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/INTENT-RECIPE-VECTOR.json",
+      "raw_sha256": "e8fc58fb0db0562ffea0c0b8f9b4cc078cc0175bc8f3051091d2d7b71d79fc0c",
+      "sha256": "e8fc58fb0db0562ffea0c0b8f9b4cc078cc0175bc8f3051091d2d7b71d79fc0c",
+      "bytes": 2131,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/PARSED-IDENTITY-COUNTEREXAMPLES.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/PARSED-IDENTITY-COUNTEREXAMPLES.json",
+      "raw_sha256": "91a91c1ead0001f8ae39b386034348218cbb32417fff1c4c4b7cef0978a1c0b8",
+      "sha256": "91a91c1ead0001f8ae39b386034348218cbb32417fff1c4c4b7cef0978a1c0b8",
+      "bytes": 890,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/ROOT-ACTUAL-HASH-COUNTEREXAMPLES.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/ROOT-ACTUAL-HASH-COUNTEREXAMPLES.json",
+      "raw_sha256": "76b5de5b929603ef365be41a008be5c5a8e539cb6e31aa99ee5bdd3f802a32b6",
+      "sha256": "76b5de5b929603ef365be41a008be5c5a8e539cb6e31aa99ee5bdd3f802a32b6",
+      "bytes": 1201,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/ROOT-CONNECTED-IDENTITY-REVIEW.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/ROOT-CONNECTED-IDENTITY-REVIEW.json",
+      "raw_sha256": "47dbfafc39cd8fd08f157546d75a2192de9edf1f3a80f445dd290688c902ec8d",
+      "sha256": "47dbfafc39cd8fd08f157546d75a2192de9edf1f3a80f445dd290688c902ec8d",
+      "bytes": 1406,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/ROOT-EARLY-CORE-REVIEW.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/ROOT-EARLY-CORE-REVIEW.json",
+      "raw_sha256": "c2cfc792a2c8c8d90b6db2f0d09f6cdaa5aa5656dee46e32c8a6cc463ae14a52",
+      "sha256": "c2cfc792a2c8c8d90b6db2f0d09f6cdaa5aa5656dee46e32c8a6cc463ae14a52",
+      "bytes": 1288,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/ROOT-FINAL-SPECMAP.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/ROOT-FINAL-SPECMAP.log",
+      "raw_sha256": "60060cce8795562c22e6e71389a23d6566d4b5e1cc777f2fe4b840c43a593d19",
+      "sha256": "60060cce8795562c22e6e71389a23d6566d4b5e1cc777f2fe4b840c43a593d19",
+      "bytes": 164210,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/ROOT-FMT-BASELINE-COMPARISON.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/ROOT-FMT-BASELINE-COMPARISON.json",
+      "raw_sha256": "527be54030d08b43abfc2b722a3d99ab834722401aa629a2a5b4967a79ff88e3",
+      "sha256": "527be54030d08b43abfc2b722a3d99ab834722401aa629a2a5b4967a79ff88e3",
+      "bytes": 2986,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/ROOT-INTENT-VECTOR-CHECK.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/ROOT-INTENT-VECTOR-CHECK.json",
+      "raw_sha256": "2ee4a6df5b4ab5678acb4639f7291202be5f7414db16bc1f3900e645b1a16bb2",
+      "sha256": "2ee4a6df5b4ab5678acb4639f7291202be5f7414db16bc1f3900e645b1a16bb2",
+      "bytes": 367,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/ROOT-PLAN-REVIEW.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/ROOT-PLAN-REVIEW.json",
+      "raw_sha256": "8f781c82527c5c20c00986560121b997b941ba5063ea73598386aacbd8d172be",
+      "sha256": "8f781c82527c5c20c00986560121b997b941ba5063ea73598386aacbd8d172be",
+      "bytes": 896,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/ROOT-SEAL-VERIFY.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/ROOT-SEAL-VERIFY.json",
+      "raw_sha256": "c1f4fdbf6a1839fcc644348fc5139df9d7e60bc89551b7efda2e894a47c3275b",
+      "sha256": "c1f4fdbf6a1839fcc644348fc5139df9d7e60bc89551b7efda2e894a47c3275b",
+      "bytes": 60,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/SHA256SUMS",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/SHA256SUMS",
+      "raw_sha256": "6d31674da18aaa0062ba597ba2f105184b0a1f0204cdb32416e56564e10d78cd",
+      "sha256": "6d31674da18aaa0062ba597ba2f105184b0a1f0204cdb32416e56564e10d78cd",
+      "bytes": 2227,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/SOURCE-SHA256.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/SOURCE-SHA256.json",
+      "raw_sha256": "72e136e4497b00455d3d2db29b3e0bfbf435ec32a3be0f4fe5d612998525c20e",
+      "sha256": "72e136e4497b00455d3d2db29b3e0bfbf435ec32a3be0f4fe5d612998525c20e",
+      "bytes": 1114,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/core-b1-compat.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/core-b1-compat.log",
+      "raw_sha256": "d382ff12121f97c13b1d118d95a52a120818c1355df6816bcc2a677d78f155d3",
+      "sha256": "7f2c6795ed5a62b62c19666cd42f381a1b55bc3a7ba94669f242f8b0d770344d",
+      "bytes": 14800,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/core-complete.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/core-complete.log",
+      "raw_sha256": "80446883ab624e086516d2dd0d69f701abda20d7818bc13a417c36eabd176ee9",
+      "sha256": "43b876d7c3445e82fe2c81d514820bff9d29bb90b947fded4ddb3a779957e769",
+      "bytes": 15266,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/core-family.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/core-family.log",
+      "raw_sha256": "93e2249099ec205b32188818508d8be8f51f7f42ece5bb736047395d60435100",
+      "sha256": "af29a1c50562221cc51eb1b6cf69f09510b1e2068f4757ea9ecf00d228b148e1",
+      "bytes": 15266,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/core-final.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/core-final.log",
+      "raw_sha256": "02e66c90593d326ad35f7499b6dfdca1e612af41d5b9f235745b0d8955fc6aff",
+      "sha256": "9ea8b04796fdee38a839faed5eb748191d86be42ae050bb7399875a2288d115e",
+      "bytes": 15266,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/core-representative.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/core-representative.log",
+      "raw_sha256": "61c0ca1a1d1ce147b08c961391736090f94a01757611a5848dff9beadb9528b1",
+      "sha256": "a11c79612e2c4e20ec7db05eb5c0ac7a07b3cd4f26f6f218bb5ed5dceafecf3e",
+      "bytes": 14801,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/core-sealed.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/core-sealed.log",
+      "raw_sha256": "5ea6a82817012000dda5f5913d5cd2c8a993df7e4ed15b5525f99c28281c20ec",
+      "sha256": "82ff541032a1c7fadfe60ac69b357db90a76e37a6bfde944ef57a340a3386588",
+      "bytes": 15193,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/diff-check-final.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/diff-check-final.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/diff-check.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/diff-check.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/full-fmt.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/full-fmt.log",
+      "raw_sha256": "7cdad9ac9c90a045550ccfd85e54a2042727d55c2890ccaa25cc115a9c895628",
+      "sha256": "1170992674771adaf5e35a4d1c5a9576b9c868aa81e32ea6f2ab3ed5d22e8f39",
+      "bytes": 7769,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/requirements-b1-compat.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/requirements-b1-compat.log",
+      "raw_sha256": "fe3937333e2b110ccac0cf8f127efec1c487260dcf66fbfbef7f769b3ce2569c",
+      "sha256": "b916318ca70c7e037020d0a0e3d413482268c69a1627ccddbf522eea5c1c4bf3",
+      "bytes": 21535,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/requirements-family.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/requirements-family.log",
+      "raw_sha256": "0573327f66ac8fb969fdc796c9dc27e83f9e37a652e89138b17feb8107ea2c24",
+      "sha256": "ba3cfa724f7ebc86b6dbf5f6605d17256ee979bce8bd53b629a6c88d32c1c499",
+      "bytes": 22504,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/requirements-sealed.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/requirements-sealed.log",
+      "raw_sha256": "8191dcd79c182fc61741bffa0323817927545b6da70030b110098d7cbc59590f",
+      "sha256": "12b2cd973bf34618aacc539aa9c55e73b0bf95bba8d4a12edb00faec2ad4d472",
+      "bytes": 21507,
+      "normalization": "log trailing whitespace only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/touched-fmt-final.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/touched-fmt-final.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/touched-fmt.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/touched-fmt.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.2/logs/xml-parse.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B2/xml-parse.log",
+      "raw_sha256": "b69d150e6f071b496b06b0239d3853291ead1aef02bbf4c2275ef3cef65109b1",
+      "sha256": "b69d150e6f071b496b06b0239d3853291ead1aef02bbf4c2275ef3cef65109b1",
+      "bytes": 71,
+      "normalization": "none"
+    }
+  ],
+  "checks": {
+    "source_hashes": 9,
+    "producer_evidence_hashes": 24,
+    "distinct_new_cases": 9,
+    "core_family": 6,
+    "requirements_family": 3,
+    "b1_representatives": 2,
+    "vector_decoded_fields": 17,
+    "specmap_exit": 0,
+    "gated_orphans": 138,
+    "unresolved_host_edges": 0,
+    "fullfmt_hunks": 14,
+    "fullfmt_files": 9
+  },
+  "limits": [
+    "exact authored normative bytes, no semantic whitespace equivalence",
+    "origin capture declarations not authentication",
+    "per-file retained observations not atomic multifile snapshots",
+    "structural graph/contribution not scheduler or execution authority",
+    "fullfmt14inherited hunks, no global green claim"
+  ]
+}

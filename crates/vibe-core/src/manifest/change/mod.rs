@@ -6,12 +6,19 @@ use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
 };
+mod identity;
 mod migration;
 mod validation;
+mod work;
+pub use identity::{
+    INTENT_RECIPE, IntentIdentity, NormativeInput, WORK_CONTRIBUTION_RECIPE, WORK_RECIPE,
+    WorkIdentity,
+};
 pub use migration::{
     CHANGE_IDENTITY, CHANGE_UPGRADE, ChangeMigrationPlan, ChangeMigrationSelection,
     plan_change_migration,
 };
+pub use work::{WorkGraph, WorkItem, WorkNeed, WorkNeedKind};
 pub const CHANGE_SCHEMA: u32 = 1;
 pub const CHANGES_DIR: &str = "changes";
 pub const CHANGE_MANIFEST: &str = "change.toml";
@@ -35,6 +42,9 @@ pub enum ChangeErrorKind {
     Role,
     MissingRole,
     Migration,
+    Work,
+    Cycle,
+    Input,
 }
 pub(crate) fn invalid(
     kind: ChangeErrorKind,
@@ -210,6 +220,7 @@ pub struct ChangeManifest {
     id: ChangeId,
     wire: Wire,
     directory: PathBuf,
+    coordinate: String,
 }
 impl ChangeManifest {
     pub fn parse_str(
@@ -255,6 +266,12 @@ impl ChangeManifest {
     pub fn metadata(&self) -> &BTreeMap<String, toml::Value> {
         &self.wire.metadata
     }
+    pub fn selected_node(&self) -> &str {
+        &self.wire.change.selected_node
+    }
+    pub fn coordinate(&self) -> &str {
+        &self.coordinate
+    }
 }
 pub fn validate_change_catalog(changes: &[ChangeManifest]) -> Result<(), ChangeError> {
     let mut ids = std::collections::BTreeSet::new();
@@ -271,3 +288,5 @@ pub fn validate_change_catalog(changes: &[ChangeManifest]) -> Result<(), ChangeE
 }
 #[cfg(test)]
 mod m_02_b_1_cases;
+#[cfg(test)]
+mod m_02_b_2_cases;

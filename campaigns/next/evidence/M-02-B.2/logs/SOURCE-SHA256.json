@@ -1,0 +1,11 @@
+{
+  "crates/vibe-core/src/manifest/change/identity.rs": "b3947ec1df7fa104972f5b39d74439a889dcf4b37ee2f5a13d956069fb523572",
+  "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs": "82478e78938065f27c33e3791fc7e7ce87aa6dca3d0f2f135a05581d7fcdd872",
+  "crates/vibe-core/src/manifest/change/mod.rs": "7d5f5b35be0947d2eb73ce21d3d3f4d589eba3b7bf75e88d84a08eca9a03272c",
+  "crates/vibe-core/src/manifest/change/validation.rs": "c0923b92bb7f3ff9dd80476e2d6658c6d199421b780bd3e50c1a21d1341dfda9",
+  "crates/vibe-core/src/manifest/change/work.rs": "40e43ed6751b5d4376774ec1145b029ec13e0920fc01bf7e66feda31da460dc0",
+  "crates/vibe-requirements/src/change/identity.rs": "c48c473c3ea32cc924a2d69a325279d99615036e73e7c7d15c581d9efdca3e2b",
+  "crates/vibe-requirements/src/change/m_02_b_2_cases.rs": "3fdebe9548fd5c33ec9e49bbe6c36c1bebad7621cfe3a774f41cdf06da42fc4b",
+  "crates/vibe-requirements/src/change/mod.rs": "03f845598c07b1e7ce76ed361fa59614fc2f68e586b5f268711f7588928a0a62",
+  "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml": "ec117b3ff5bbf9a6cdaa11f6ff69375b7e7e3590a76f8742760a0c9738daf5ba"
+}

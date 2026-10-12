@@ -1,0 +1,8 @@
+{
+  "vector_sha256": "e8fc58fb0db0562ffea0c0b8f9b4cc078cc0175bc8f3051091d2d7b71d79fc0c",
+  "digest_verified": "sha256:5b9039445a19da392f03766344d84e49dc0cbc9836988972db3dfbefde155790",
+  "decoded_field_count": 17,
+  "recipe_seed_verified": true,
+  "distinct_normative_byte_frames_verified": true,
+  "scope": "one concrete declared vector, not universal hash proof"
+}

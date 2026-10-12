@@ -1,0 +1,42 @@
+{
+  "base": "4adf1e35a0ea5f8ba3e84106092ea57680e92ae4",
+  "files": [
+    {
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "lines": 26
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/mod.rs",
+      "lines": 292
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/validation.rs",
+      "lines": 228
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/work.rs",
+      "lines": 212
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/identity.rs",
+      "lines": 183
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "lines": 249
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/mod.rs",
+      "lines": 14
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/identity.rs",
+      "lines": 60
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "lines": 171
+    }
+  ],
+  "excluded_root_owned": "FIXED-ISSUES.md"
+}

@@ -1,0 +1,13 @@
+{
+  "status": "WIP plan reviewed; not accepted/tested",
+  "plan_sha256": "44b636d7619c64a96a11e1efd485375390f65332dc7098e39af44ea870c98919",
+  "review_obligations": [
+    "Production identity APIs consume accepted ChangeManifest and held input bytes, no fixture-only hash",
+    "Intent excludes cosmetics/work/closure but includes normative bytes and origin bindings",
+    "Work canonical ordering stable; selected contribution includes full predecessor closure and excludes unrelated items",
+    "Duplicate IDs checked across combined work documents; cycles/unknown predecessors/forbidden state fields precise refusals",
+    "Missing extra duplicate normative observations refuse, no partial hash",
+    "Versioned distinct domains and length/count framing"
+  ],
+  "observed": "Only registrations/context/spec edits currently; owner still writing new modules. No compiler or test verdict yet."
+}

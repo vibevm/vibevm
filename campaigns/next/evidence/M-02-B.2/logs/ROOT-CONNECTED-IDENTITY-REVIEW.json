@@ -1,0 +1,21 @@
+{
+  "status": "partial review; producer running",
+  "source_hashes": {
+    "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs": "65fbe8a629438c8c0bf5e04d0cba53ed7b7d98754384cd9353418aaee22b4755",
+    "crates/vibe-requirements/src/change/identity.rs": "c48c473c3ea32cc924a2d69a325279d99615036e73e7c7d15c581d9efdca3e2b",
+    "crates/vibe-requirements/src/change/m_02_b_2_cases.rs": "84c3c7f9c46993c26670fb1381888439cfa8e04de4a29e4913b8af6103e0e414"
+  },
+  "core_result": [
+    "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 604 filtered out; finished in 0.00s"
+  ],
+  "observations": [
+    "Tests compare actual parsed graphs, reordered authored items, unrelated work edits and selected predecessor edits; selected contribution excludes unrelated work but includes ancestors.",
+    "Core tests compare normative mutations/captures to cosmetic/metadata/closure changes and distinguish versioned domains and concatenation ambiguities.",
+    "Requirements identity_analysis uses retained StableFileSnapshot bytes through shared ChangeManifest.intent_identity and WorkGraph; no disk read in that operation.",
+    "Actual fixture tests reread changed files separately and verify retained prior snapshot identity remains stable; tests also compare file inventories before/after analysis."
+  ],
+  "remaining": [
+    "Requirements execution result",
+    "Final seal and source-writing stop"
+  ]
+}
