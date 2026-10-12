@@ -18,6 +18,8 @@ use predicates::prelude::*;
 
 mod common;
 
+#[path = "cli_init/init_package_host_format.rs"]
+mod init_package_host_format;
 #[path = "cli_init/init_root_roles.rs"]
 mod init_root_roles;
 
