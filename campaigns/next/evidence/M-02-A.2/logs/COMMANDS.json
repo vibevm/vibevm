@@ -1,0 +1,67 @@
+[
+  {
+    "log": "representative-adoption-query.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib tests_query::authoring_and_adoption_map_through_all_their_states -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 1,
+    "ignored": 0,
+    "sha256": "a490e4a6bdaacc7e750ca0a5f5f619a32adbf673eed2be57ebf0bd9db1fbede1"
+  },
+  {
+    "log": "terminal-representative.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p progress-core --lib terminal::tests::known_zero_unavailable_and_positive_without_locators_stay_distinct -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 1,
+    "ignored": 0,
+    "sha256": "a553842b90edf92e887d260ed8036283f6a126ac8fc20d9f8dc53d43d27785d9"
+  },
+  {
+    "log": "change-first.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib change::m_02_a_2_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 4,
+    "ignored": 0,
+    "sha256": "67603e3c274a959f709d2adae3d5cd968e2aaee33edc0f1d61cb82f40fdf7beb"
+  },
+  {
+    "log": "change-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib change::m_02_a_2_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 4,
+    "ignored": 0,
+    "sha256": "2ddac842ca53c9e911ee5f471d1a2388ee1b307dcfdb8fae724af77b5641780c"
+  },
+  {
+    "log": "full-fmt.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly fmt --manifest-path /fast/git/v/vibevm-next/Cargo.toml --all -- --check",
+    "cwd": "/tmp",
+    "exit": 1,
+    "note": "13 old findings",
+    "sha256": "e0815a42446aacc3696dbc681dcd3ef48599db79fbabbfedca83891489f72a66"
+  },
+  {
+    "log": "touched-fmt.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 rustfmt +nightly --edition 2024 --config skip_children=true --check crates/vibe-requirements/src/change/mod.rs crates/vibe-requirements/src/change/m_02_a_1_cases.rs crates/vibe-requirements/src/change/m_02_a_2_cases.rs",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "log": "diff-check.log",
+    "command": "git diff --check",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "log": "xml-parse.log",
+    "command": "Python ElementTree.parse PROP071 and two unique governing anchors",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "sha256": "183beeb41215f461d56c2770c658d6fae04df6cb3440f4636c09b821f8dde949"
+  }
+]

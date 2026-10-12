@@ -1,0 +1,86 @@
+{
+  "new_cases": 4,
+  "ignored": 0,
+  "shared_pairs_equal": [
+    "work-and-done",
+    "valid-artifacts-no-work",
+    "private-plan",
+    "adoption"
+  ],
+  "terminal_observations": {
+    "work-ref-known-zero-missing": {
+      "outcome": "pending",
+      "artifacts": [
+        {
+          "kind": "implementation",
+          "state": "missing",
+          "count": 0
+        },
+        {
+          "kind": "verification",
+          "state": "missing",
+          "count": 0
+        }
+      ]
+    },
+    "no-provider-unavailable": {
+      "outcome": "pending",
+      "artifacts": [
+        {
+          "kind": "implementation",
+          "state": "unavailable"
+        },
+        {
+          "kind": "verification",
+          "state": "unavailable"
+        }
+      ]
+    },
+    "provider-supplied-known-artifacts": {
+      "outcome": "terminal",
+      "artifacts": [
+        {
+          "kind": "implementation",
+          "state": "satisfied",
+          "count": 1
+        },
+        {
+          "kind": "verification",
+          "state": "satisfied",
+          "count": 1
+        }
+      ]
+    },
+    "local-plan-despite-artifacts": {
+      "outcome": "pending",
+      "artifacts": [
+        {
+          "kind": "implementation",
+          "state": "satisfied",
+          "count": 1
+        },
+        {
+          "kind": "verification",
+          "state": "satisfied",
+          "count": 1
+        }
+      ]
+    },
+    "self-carried-specification": {
+      "outcome": "terminal",
+      "artifacts": [
+        {
+          "kind": "specification",
+          "state": "satisfied",
+          "count": 1,
+          "locators": [
+            "spec://org.fixture/alpha/CHANGE-001#ALPHA-REFINEMENT"
+          ]
+        }
+      ]
+    }
+  },
+  "source_sha256": "bd4cc6d2e3b598be2f231ce2fe4f6d318d9ce5dec35a5f26331632a0ec31f218",
+  "log_sha256": "67603e3c274a959f709d2adae3d5cd968e2aaee33edc0f1d61cb82f40fdf7beb",
+  "scope": "actual incumbent parser/fact-marker/resolve_terminal plus provider-supplied known counts; no new artifact validator or typed work API"
+}

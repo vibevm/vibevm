@@ -2553,3 +2553,13 @@ structure, and it goes when the file does.
 | @fact:B233-SEVERITY **severity** | P3 — measurement-ledger completeness improvement, not a failed product purity case or new behavior gate. Root independent joined-call audit covers this subject. |
 | @fact:B233-DISPOSITION **disposition** | deferred — normalize split records before ledger/ancestry attribution when reusing the observer; preserve exact exec/query boundaries and calibrated descriptor/mapping/transport classification. Keep Linux observer an optional host test adapter, not a product dependency or OS security framework. |
 | @fact:B233-FILED **filed by** | First Agent E2 acceptance, 2026-10-12. |
+
+## B-234 — typed work-coverage observation is not exposed by current evidence seam {#b-234}
+
+| field | value |
+|---|---|
+| @fact:B234-WHAT **what** | Current EvidenceProvider exposes independent implements/verifies counts and deliberately unattributed legacy refs. Work/personal coverage can be recorded separately, but these evidence/requirements APIs do not expose typed Work attribution. Provider-supplied positive counts are observations, not a new artifact validator. |
+| @fact:B234-EVIDENCE **evidence** | M-02-A.2 actual terminal/query fixtures: personal/work done with Known0 stays Missing; NoEvidence stays Unavailable; valid supplied counts need no work item. Shared intent survives plan/adoption perturbations. Canonical A2 receipt and Root work-boundary answer. |
+| @fact:B234-SEVERITY **severity** | P2 — explicit observation capability limit; no current fixture/prototype or campaign blocker. |
+| @fact:B234-DISPOSITION **disposition** | deferred — when a concrete consumer needs typed work coverage, connect its actual semantic owner and provenance separately from implementation/verification evidence. Preserve absence versus unavailable, shared binding authority and personal-plan separation; do not add a second cursor/evaluator or promote merged refs/personal done to evidence. |
+| @fact:B234-FILED **filed by** | First Agent A2 acceptance, 2026-10-12. |

@@ -1,0 +1,87 @@
+{
+  "http": 200,
+  "result": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.56446e4f-4815-4add-98d1-11ea763ba008",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.a1764d40-2729-4acc-9daa-54d81ec5f3f0",
+        "title": "A2 work-coverage boundary",
+        "introductionMarkdown": "Same A2. Actual terminal Evidence exposes implements/verifies/ref bag; requirements relation verbs omit work. No typed work coverage API found in named owners.",
+        "items": [
+          {
+            "questionItemId": "a2_work_coverage_boundary",
+            "header": "Coverage seam",
+            "promptMarkdown": "Bind work coverage to separate owned personal-plan/work-edge fixture data plus existing legacy Evidence refs, while implementation/verifies counts remain independently zero; or name an existing typed work-coverage owner to READ?",
+            "contextMarkdown": "EvidenceProvider default artifact adapter maps only implements/verifies and deliberately declines to attribute merged refs. Negative can exercise that real adapter with work refs/personal done and assert exact Missing, distinct from NoEvidence Unavailable. Positive uses existing Evidence snapshot with nonzero implementation/verifies counts and no work item, not a new acceptance evaluator. WRITE unchanged.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "bounded",
+                "label": "Use existing bounded seam",
+                "description": "Retain work data as explicit untyped/separate observation and exercise actual terminal adapter.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "owner",
+                "label": "Name typed coverage owner",
+                "description": "Grant exact existing owner for typed work coverage without new ABI.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact owner/ruling",
+              "multiline": true,
+              "maximumLength": 5000
+            },
+            "recommendation": {
+              "optionIds": [
+                "bounded"
+              ],
+              "explanationMarkdown": "Named APIs do not expose typed work evidence; preserving that limitation avoids inventing a new runtime contract."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T20:15:51.751Z",
+        "updatedAt": "2026-10-12T20:17:43.941Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.882fbc9e-918c-49bf-863d-1e6d256c2883",
+        "questionGroupId": "question-group.56446e4f-4815-4add-98d1-11ea763ba008",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "a2_work_coverage_boundary",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "bounded"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation confirms existing bounded seam. Root inspected actual EvidenceProvider default adapter: typed implementation/verifies counts stay separate; merged refs are deliberately unattributed. Use separate owned temporary personal-plan/work-edge fixture plus legacy refs as explicit untyped coverage observation, not invented typed Work evidence. Missing implementation/verifies Known0 must remain Missing even with workref/personal done; NoEvidence remains Unavailable, distinct. Positive uses actual existing Evidence snapshot/provider API with valid nonzero implementation/verification observations and no work item; describe provider-supplied observation/validity boundary precisely, not a new runtime artifact validator. Do not silently substitute planning/work count for implementation or coerce unavailable to0. Preserve unchanged shared binding/origin/local identity and no owner/current/done scheduler fields. No progress-core/facts WRITE or new schema/evaluator/secondcursor authorized. Record typed work-coverage capability limit in final report; if future integration is needed, Root will backlog it without blocking this characterization."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T20:17:43.941Z",
+        "metadata": {}
+      }
+    }
+  }
+}

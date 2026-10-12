@@ -1,0 +1,77 @@
+[
+  {
+    "path": "A1-MANIFEST-INVENTORY.json",
+    "sha256": "115d07c4654bde70dc0326d238dffcc063f3f59ad70ad8082282a8f67e17cf56",
+    "bytes": 11580
+  },
+  {
+    "path": "BOUND-PLAN.md",
+    "sha256": "d0df47c9ba85e341ec204b68d7cb13a58a56787210c74cfbe1cf499c6db5b490",
+    "bytes": 2019
+  },
+  {
+    "path": "CANDIDATE-REPORT.md",
+    "sha256": "5b28dae37e3429518b810f6be9e387b69b539833e0f16d24d320210b957f9830",
+    "bytes": 5194
+  },
+  {
+    "path": "COMMANDS.json",
+    "sha256": "3289faa80414a14a806ea89011f5b14d14d7b649180500445d15921ed977652c",
+    "bytes": 3274
+  },
+  {
+    "path": "INCIDENTS.md",
+    "sha256": "aa5291f627c5e4d05492076e170bebd77e705e416301b988b3d4ed26e0551505",
+    "bytes": 506
+  },
+  {
+    "path": "PARSED-OBSERVATIONS.json",
+    "sha256": "600e56a86dc2785280124aed066be9ccdee3dd66445673fc853ff386ab167a89",
+    "bytes": 416589
+  },
+  {
+    "path": "SOURCE-SHA256.json",
+    "sha256": "2a98e19270a460526b14a911fe7ccd9f4c409c8aae6f8d7869c762cc7874efaf",
+    "bytes": 1491
+  },
+  {
+    "path": "change-final.log",
+    "sha256": "2ddac842ca53c9e911ee5f471d1a2388ee1b307dcfdb8fae724af77b5641780c",
+    "bytes": 121581
+  },
+  {
+    "path": "change-first.log",
+    "sha256": "67603e3c274a959f709d2adae3d5cd968e2aaee33edc0f1d61cb82f40fdf7beb",
+    "bytes": 120336
+  },
+  {
+    "path": "diff-check.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "full-fmt.log",
+    "sha256": "e0815a42446aacc3696dbc681dcd3ef48599db79fbabbfedca83891489f72a66",
+    "bytes": 7020
+  },
+  {
+    "path": "representative-adoption-query.log",
+    "sha256": "a490e4a6bdaacc7e750ca0a5f5f619a32adbf673eed2be57ebf0bd9db1fbede1",
+    "bytes": 20528
+  },
+  {
+    "path": "terminal-representative.log",
+    "sha256": "a553842b90edf92e887d260ed8036283f6a126ac8fc20d9f8dc53d43d27785d9",
+    "bytes": 14874
+  },
+  {
+    "path": "touched-fmt.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "xml-parse.log",
+    "sha256": "183beeb41215f461d56c2770c658d6fae04df6cb3440f4636c09b821f8dde949",
+    "bytes": 71
+  }
+]

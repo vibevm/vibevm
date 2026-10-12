@@ -1,0 +1,8 @@
+# Owned test-only personal state; never a shared change or real steward plan.
+schema = 1
+owner = "fixture-person"
+current = "work-alpha"
+[[work]]
+id = "work-alpha"
+address = "spec://org.fixture/alpha/CHANGE-001#ALPHA-ACCEPTANCE"
+done = false
