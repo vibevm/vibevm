@@ -71,6 +71,7 @@ spec://&lt;package&gt;/&lt;doc-path&gt;#&lt;anchor&gt;~r&lt;N&gt;       — a un
   register is convention rather than a boundary the parser enforces.
   Immutability and tombstoning bind fact anchors exactly as
   heading anchors.</FACT-ANCHORS-MINT-THE-FINEST-GRAIN>
+        <FACT-CELL-AND-QUOTE-GRAIN fact="true" status="spec/plan">The fact-unit inventory also includes authored IDs at permitted table body-cell and quoted paragraph leads, using the existing fact grammar and one document anchor namespace. Equivalent Markdown and XML td/quote carriers expose those IDs to index and explain. A table header or delimiter remains structural unless the selected dictionary explicitly permits an addressed fact there; plain status-only cells receive no invented ID. Inline-code marker quotations never define a fact. Content hashes and line decorations retain their source/projection-span role; this extension does not relabel them as installed-output coordinates or canonical semantic hashes.</FACT-CELL-AND-QUOTE-GRAIN>
         <FACT-UNITS-CARRY-NO-KIND-LINE fact="true" status="impl/done">Fact units carry no `kind:` line (§2.2 typing stays a heading-unit
   discipline); their normativity signal is the id register. Edges cite
   them exactly as heading units (`implements`, `verifies`, `documents`),

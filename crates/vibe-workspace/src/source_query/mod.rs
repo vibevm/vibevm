@@ -16,10 +16,12 @@ use crate::extension_world::{ExtensionWorldEpoch, ExtensionWorldError};
 mod capture;
 mod visibility;
 pub use capture::{
-    BoundSourceInputs, CanonicalNodeIdentity, CapturedSourceFile, MaterializedVibeMedia,
-    PreparedOwnerCapture, PreparedWorldWitness, RecordedOutput, SourceMembershipIndex,
-    SourceStrength, WitnessedSourceWorld, canonical_node_of_output, captured_manifest_closure,
-    native_xml_range_of_output,
+    BoundSourceInputs, CanonicalNodeIdentity, CapturedSourceFile, CommonMarkExtraction,
+    ExtractedSource, ExtractionError, ExtractionProvenance, MaterializedVibeMedia,
+    PreparedOwnerCapture, PreparedWorldWitness, RecordedOutput, RepresentationWitness,
+    SelectedDescriptorWitness, SourceEncoding, SourceMembershipIndex, SourceStrength, SpanBasis,
+    SpecExtraction, SpecOutline, StructuredView, WitnessedSourceWorld, canonical_node_of_output,
+    captured_manifest_closure, native_xml_range_of_output,
 };
 
 #[derive(Debug, thiserror::Error)]

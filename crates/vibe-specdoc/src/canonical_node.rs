@@ -7,7 +7,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-070#CANONICAL-NODE-L
 
 use sha2::{Digest, Sha256};
 
-use crate::doc::{Block, BlockNode, Section, SpecDoc, Unit};
+use crate::doc::SpecDoc;
 
 /// The canonical IR hash recipe. Changing the selected IR node or its
 /// serialization requires a new recipe identifier.
@@ -16,115 +16,27 @@ pub const NODE_HASH_RECIPE: &str = "sha256-specdoc-node/1";
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum NodeHashError {
     AmbiguousAnchor,
+    SelectionLimitExceeded,
 }
 
 /// Hash the addressed title, section or fact as canonical SpecDoc IR.
 /// No source location or representation bytes enter this value.
 pub fn canonical_node_hash(doc: &SpecDoc, anchor: &str) -> Result<Option<String>, NodeHashError> {
-    let mut matches = Vec::new();
-    if doc.title.as_ref().and_then(|title| title.id.as_deref()) == Some(anchor) {
-        matches.push(crate::to_xml(doc));
-    }
-    collect_blocks(&doc.preamble, anchor, &mut matches);
-    for section in &doc.sections {
-        collect_section(section, anchor, &mut matches);
-    }
-    if matches.len() > 1 {
-        return Err(NodeHashError::AmbiguousAnchor);
-    }
-    Ok(matches.pop().map(|canonical| {
-        format!(
+    match crate::selection::select_exact_anchor(doc, anchor, true, crate::doc::Vocabulary::Doc) {
+        Ok(selected) => Ok(Some(format!(
             "{NODE_HASH_RECIPE}:{:x}",
-            Sha256::digest(canonical.as_bytes())
-        )
-    }))
-}
-
-fn collect_section(section: &Section, anchor: &str, matches: &mut Vec<String>) {
-    if section.id.as_deref() == Some(anchor) {
-        matches.push(crate::to_xml(&SpecDoc {
-            sections: vec![section.clone()],
-            ..SpecDoc::default()
-        }));
-    }
-    collect_blocks(&section.blocks, anchor, matches);
-    for child in &section.sections {
-        collect_section(child, anchor, matches);
-    }
-}
-
-fn collect_blocks(blocks: &[BlockNode], anchor: &str, matches: &mut Vec<String>) {
-    for (index, block) in blocks.iter().enumerate() {
-        let bound_fence = blocks.get(index + 1).filter(
-            |next| matches!(&next.block, Block::Fence { fact: Some(id), .. } if id == anchor),
-        );
-        match &block.block {
-            Block::Paragraph(unit) | Block::Quote(unit) => {
-                collect_unit(unit, block.clone(), anchor, bound_fence, matches)
-            }
-            Block::List { ordered, items } => {
-                for unit in items {
-                    collect_unit(
-                        unit,
-                        BlockNode {
-                            when: block.when.clone(),
-                            block: Block::List {
-                                ordered: *ordered,
-                                items: vec![unit.clone()],
-                            },
-                        },
-                        anchor,
-                        bound_fence,
-                        matches,
-                    );
-                }
-            }
-            Block::Table { rows } => {
-                for unit in rows.iter().flatten() {
-                    collect_unit(
-                        unit,
-                        BlockNode {
-                            when: block.when.clone(),
-                            block: Block::Table {
-                                rows: vec![vec![unit.clone()]],
-                            },
-                        },
-                        anchor,
-                        bound_fence,
-                        matches,
-                    );
-                }
-            }
-            Block::Note { body, .. } => {
-                collect_unit(body, block.clone(), anchor, bound_fence, matches)
-            }
-            Block::Figure { caption, .. } => {
-                collect_unit(caption, block.clone(), anchor, bound_fence, matches)
-            }
-            Block::Fence { .. }
-            | Block::Example { .. }
-            | Block::ExampleRef { .. }
-            | Block::Rule { .. }
-            | Block::Derived { .. }
-            | Block::Prompt { .. } => {}
+            Sha256::digest(crate::to_xml(&selected.ir).as_bytes())
+        ))),
+        Err(crate::selection::SelectionError::Ambiguous { .. }) => {
+            Err(NodeHashError::AmbiguousAnchor)
         }
-    }
-}
-
-fn collect_unit(
-    unit: &Unit,
-    selected: BlockNode,
-    anchor: &str,
-    bound_fence: Option<&BlockNode>,
-    matches: &mut Vec<String>,
-) {
-    if unit.fact.as_ref().and_then(|fact| fact.id.as_deref()) == Some(anchor) {
-        let mut preamble = vec![selected];
-        preamble.extend(bound_fence.cloned());
-        matches.push(crate::to_xml(&SpecDoc {
-            preamble,
-            ..SpecDoc::default()
-        }));
+        Err(crate::selection::SelectionError::LimitExceeded(_)) => {
+            Err(NodeHashError::SelectionLimitExceeded)
+        }
+        Err(
+            crate::selection::SelectionError::Unknown { .. }
+            | crate::selection::SelectionError::InvalidPath(_),
+        ) => Ok(None),
     }
 }
 

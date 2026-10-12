@@ -19,7 +19,13 @@ use crate::vibedeps::{
 use super::{BoundSourceInputs, CaptureOwner, PreparedOwnerCapture, validate_snapshot};
 use crate::source_query::SourceQueryUnavailable;
 
+mod extract;
 mod membership;
+pub use extract::{
+    CommonMarkExtraction, ExtractedSource, ExtractionError, ExtractionProvenance,
+    RepresentationWitness, SelectedDescriptorWitness, SourceEncoding, SpanBasis, SpecExtraction,
+    SpecOutline, StructuredView,
+};
 pub use membership::{
     CanonicalNodeIdentity, CapturedSourceFile, MaterializedVibeMedia, RecordedOutput,
     SourceMembershipIndex, SourceStrength, canonical_node_of_output, native_xml_range_of_output,
