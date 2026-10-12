@@ -1,0 +1,6 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.22s
+     Running tests/cli_spec_format.rs (<private-target>/debug/build/vibe-cli/7783d0dcf514bb15/out/cli_spec_format-7783d0dcf514bb15)
+running 2 tests
+test c4_cases::json_applied_closure_counts_converted_and_failed_once ... ok
+test c4_cases::default_cli_warns_once_and_check_reports_stored_issue_then_strict_fresh_refuses ... ok
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.43s

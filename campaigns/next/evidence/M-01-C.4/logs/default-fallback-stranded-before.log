@@ -1,0 +1,7 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.24s
+     Running unittests src/lib.rs (<private-target>/debug/build/vibe-workspace/265de07f0764d636/out/vibe_workspace-265de07f0764d636)
+running 1 test
+test vibedeps::derived::m_01_c_4_cases::default_selected_failed_conversion_copies_with_reason_ordinary_readme_stays_copied ... FAILED
+thread 'vibedeps::derived::m_01_c_4_cases::default_selected_failed_conversion_copies_with_reason_ordinary_readme_stays_copied' (1267178) panicked at crates/vibe-workspace/src/vibedeps/derived/m_01_c_4_cases.rs:53:6:
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 656 filtered out; finished in 0.00s
+error: test failed, to rerun pass `-p vibe-workspace --lib`

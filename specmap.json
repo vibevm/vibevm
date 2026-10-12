@@ -6228,7 +6228,23 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "slot_record",
-      "end_line": 81
+      "end_line": 103
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/slot_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 87,
+      "symbol": "slot_record::conversion_failure",
+      "end_line": 91
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/slot_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 92,
+      "symbol": "slot_record::conversion_issue",
+      "end_line": 101
     },
     {
       "crate_name": "<schema>",
@@ -6236,7 +6252,7 @@
       "item_kind": "schema-def",
       "line": 55,
       "symbol": "slot_record::slot_file",
-      "end_line": 79
+      "end_line": 86
     },
     {
       "crate_name": "<schema>",
@@ -7839,9 +7855,9 @@
       "crate_name": "vibe-check",
       "file": "crates/vibe-check/src/lib.rs",
       "item_kind": "fn",
-      "line": 460,
+      "line": 464,
       "symbol": "vibe_check::check_project",
-      "end_line": 497,
+      "end_line": 501,
       "fingerprint": "tok1:960a450b6cb89ad0c8e2457c40c868e245fdb18f7befe0f36973b3633020ce89"
     },
     {
@@ -9297,18 +9313,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 67,
+      "line": 68,
       "symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
-      "end_line": 81,
+      "end_line": 82,
       "fingerprint": "tok1:b53d8f0ac303dd7c44e1fa8246df9329f0fce41bf9b9e028a906cd2472dc3731"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 118,
+      "line": 119,
       "symbol": "vibe_cli::commands::install::flag_tests::the_projection_copies_exactly_the_ten_builder_fields",
-      "end_line": 159,
+      "end_line": 160,
       "fingerprint": "tok1:7b11c92ca946ba2b0b9401d4789d38b25393affd8d619e579b4cefa706e29e62"
     },
     {
@@ -12888,9 +12904,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_spec_format.rs",
       "item_kind": "fn",
-      "line": 40,
+      "line": 42,
       "symbol": "vibe_cli::tests::cli_spec_format::redbook_polygon_follows_each_static_target_and_switches_without_an_orphan",
-      "end_line": 105,
+      "end_line": 107,
       "fingerprint": "tok1:bc6a53d37c9c1107057218794870cb0e9db5e9b90211e088f8f24425800a9f98"
     },
     {
@@ -19282,6 +19298,24 @@
       "symbol": "vibe_install::apply",
       "end_line": 5,
       "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/apply/report.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_install::apply::report",
+      "end_line": 3,
+      "fingerprint": "tok1:f3378888c5e43bf3027524a5a2cd1df62a9ad5a7c5c8f721ae10f3693aba97c8"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/apply/strict_conversion.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_install::apply::strict_conversion",
+      "end_line": 3,
+      "fingerprint": "tok1:c8ea7faf0a1974ecdd983268a18765fddf62c3532c06fae3aa066cf2fb1d3338"
     },
     {
       "crate_name": "vibe-install",
@@ -26948,16 +26982,16 @@
       "item_kind": "struct",
       "line": 15,
       "symbol": "vibe_orchestrator::install::args::InstallInputs",
-      "end_line": 46,
-      "fingerprint": "tok1:88425f38e3f5a4338cbcf7733a085dee9279d35673478ce0520c500b3bf44581"
+      "end_line": 49,
+      "fingerprint": "tok1:90f64f94be48859b2f2e4606c8997df68231152e6874af483838849967e64545"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/install/args.rs",
       "item_kind": "struct",
-      "line": 48,
+      "line": 51,
       "symbol": "vibe_orchestrator::install::args::InstallPolicy",
-      "end_line": 73,
+      "end_line": 76,
       "fingerprint": "tok1:fa86ce530f3225deb34a534bebeccb315833cde2773f1e0f80cf69444739c1fa"
     },
     {
@@ -28233,18 +28267,18 @@
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/ports.rs",
       "item_kind": "struct",
-      "line": 216,
+      "line": 219,
       "symbol": "vibe_orchestrator::ports::PackageSourceBuild",
-      "end_line": 236,
+      "end_line": 239,
       "fingerprint": "tok1:00bd3853c8bd00baa835df80a3e6184fb7c2d0c5382f83d7f8fe0c0662221305"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/ports.rs",
       "item_kind": "struct",
-      "line": 205,
+      "line": 208,
       "symbol": "vibe_orchestrator::ports::RegistryEnvironmentSnapshot",
-      "end_line": 214,
+      "end_line": 217,
       "fingerprint": "tok1:866060df7ec1ba331e2794cb73d7ef69bf61baed87cc599ec30d5c84fe4bc58b"
     },
     {
@@ -38239,6 +38273,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/materialise.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_workspace::install::materialise",
+      "end_line": 3,
+      "fingerprint": "tok1:aac7fbfe8f312004bbd0f2ddde36eb14ef3748b61f164d741d6633441a7ae84a"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/model.rs",
       "item_kind": "mod",
       "line": 6,
@@ -38250,9 +38293,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/model.rs",
       "item_kind": "fn",
-      "line": 181,
+      "line": 223,
       "symbol": "vibe_workspace::install::model::PostInstallPlan::resume_for_targets",
-      "end_line": 221,
+      "end_line": 263,
       "fingerprint": "tok1:6e153525adf16e85530c690060feb3511304c75ab158c3ab617006f3394a12dc"
     },
     {
@@ -39238,6 +39281,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/derived/manifest.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_workspace::vibedeps::derived::manifest",
+      "end_line": 3,
+      "fingerprint": "tok1:ba80ab5fb2c0aa9e3ed4f213fb5389b0b3f108097ebcbebb47dc5f25a290e9ca"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/derived/selection.rs",
       "item_kind": "mod",
       "line": 3,
@@ -39296,6 +39348,15 @@
       "item_kind": "mod",
       "line": 3,
       "symbol": "vibe_workspace::vibedeps::slot_record",
+      "end_line": 3,
+      "fingerprint": "tok1:43803a3f1daa354b5533b378487c5e4349a6ff2e72ab6237a9d003bf4db08aaa"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/slot_record/validation.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_workspace::vibedeps::slot_record::validation",
       "end_line": 3,
       "fingerprint": "tok1:43803a3f1daa354b5533b378487c5e4349a6ff2e72ab6237a9d003bf4db08aaa"
     },
@@ -41382,7 +41443,7 @@
     {
       "file": "crates/vibe-check/src/lib.rs",
       "from_symbol": "vibe_check::check_project",
-      "line": 480,
+      "line": 484,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter",
       "verb": "implements"
@@ -42681,7 +42742,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
-      "line": 70,
+      "line": 71,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -42690,7 +42751,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::the_projection_copies_exactly_the_ten_builder_fields",
-      "line": 122,
+      "line": 123,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "verifies"
@@ -45965,7 +46026,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_spec_format.rs",
       "from_symbol": "vibe_cli::tests::cli_spec_format::redbook_polygon_follows_each_static_target_and_switches_without_an_orphan",
-      "line": 41,
+      "line": 43,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SCENARIO-ZERO",
       "verb": "verifies"
@@ -45973,7 +46034,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_spec_format.rs",
       "from_symbol": "vibe_cli::tests::cli_spec_format::redbook_polygon_follows_each_static_target_and_switches_without_an_orphan",
-      "line": 42,
+      "line": 44,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#polygon",
       "verb": "verifies"
@@ -51928,6 +51989,22 @@
       "line": 5,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/apply/report.rs",
+      "from_symbol": "vibe_install::apply::report",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/apply/strict_conversion.rs",
+      "from_symbol": "vibe_install::apply::strict_conversion",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#FAILED-CONVERSION-OUTCOME",
       "verb": "implements"
     },
     {
@@ -59041,7 +59118,7 @@
     {
       "file": "crates/vibe-orchestrator/src/install/args.rs",
       "from_symbol": "vibe_orchestrator::install::args::InstallPolicy",
-      "line": 62,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "documents"
@@ -60254,7 +60331,7 @@
     {
       "file": "crates/vibe-orchestrator/src/ports.rs",
       "from_symbol": "vibe_orchestrator::ports::PackageSourceBuild",
-      "line": 220,
+      "line": 223,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "documents"
@@ -60262,7 +60339,7 @@
     {
       "file": "crates/vibe-orchestrator/src/ports.rs",
       "from_symbol": "vibe_orchestrator::ports::RegistryEnvironmentSnapshot",
-      "line": 208,
+      "line": 211,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "documents"
@@ -69528,6 +69605,14 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-workspace/src/install/materialise.rs",
+      "from_symbol": "vibe_workspace::install::materialise",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/install/model.rs",
       "from_symbol": "vibe_workspace::install::model",
       "line": 6,
@@ -69538,7 +69623,7 @@
     {
       "file": "crates/vibe-workspace/src/install/model.rs",
       "from_symbol": "vibe_workspace::install::model::PostInstallPlan::resume_for_targets",
-      "line": 195,
+      "line": 237,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME",
       "verb": "implements"
@@ -70473,6 +70558,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/vibedeps/derived/manifest.rs",
+      "from_symbol": "vibe_workspace::vibedeps::derived::manifest",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/vibedeps/derived/selection.rs",
       "from_symbol": "vibe_workspace::vibedeps::derived::selection",
       "line": 3,
@@ -70523,6 +70616,14 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
       "from_symbol": "vibe_workspace::vibedeps::slot_record",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/slot_record/validation.rs",
+      "from_symbol": "vibe_workspace::vibedeps::slot_record::validation",
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD",
@@ -83676,7 +83777,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:3148b962c3da6e0c7b984c2ec90048536b2a3675d20f8dbaf7e93b1741e63511",
+      "content_hash": "sha256:1e84962ab3973637697c8f468306fd415bcc74cb894f33ae104e4674d8b6635b",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "PROP-045: XML spec sources and materialisation targets",
@@ -83820,7 +83921,7 @@
     },
     {
       "anchor": "materialisation",
-      "content_hash": "sha256:1525768519fd633e35929f6de7e63ad9676d56b811c4f56e6ee00fd3cc0c12e0",
+      "content_hash": "sha256:f165bbf80642773030471aca6fee486dcd1102f574d2a3cf948aa10ffad348f6",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "3. The materialisation setting and the three targets",
@@ -83882,12 +83983,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#HASH-LAW"
     },
     {
+      "anchor": "FAILED-CONVERSION-OUTCOME",
+      "content_hash": "sha256:3d6accf1036df5e64fc5849f7e9be6492121de421e097e816834796a4f93dd3f",
+      "doc_path": "common/PROP-045",
+      "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "heading": "A descriptor-selected Vibe Markdown source, or a source selected by the existing bounded legacy spec-layout route, requested as XML can fail the builtin parser while ordinary data still copies normally. This does not classify arbitrary Markdown as Vibe input. The default install keeps that source's exact Markdown bytes at its source path, warns once for that file with the selected path and the same structured parser issue class/line as `vibe facts check`, and records a schema-2 `copied-unconverted` file disposition with a required typed reason. Such a row is neither `converted` nor an ordinary `copied` row; malformed reason/disposition combinations refuse validation, and schema-1 records retain their historical meaning. A strict-conversion request preflights the selected conversion before any committed manifest, dependency-slot or lock mutation and refuses the failed source rather than publishing a half new slot. `vibe check` reports the recorded issue. The applied-slot closure report counts `converted` and `copied-unconverted` rows exactly once per applied slot, never by filename suffix or by scanning unrelated workspace slots. @status:spec/plan",
+      "line": 298,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#FAILED-CONVERSION-OUTCOME"
+    },
+    {
       "anchor": "BOOT-LANE-SCOPE",
       "content_hash": "sha256:6c89fe5368a6c5f58aa696f3df28a0e6e70b8ae33757605e21c0f22ba99515ff",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Boot-lane law under the setting (revised by the\nowner's scenario ruling, 2026-08-21, and completed by `##STATIC-FOLLOWS-THE-TARGET`).** Boot artifacts are generated\nprojections. The static compiler consumes snippets in WHATEVER format the\nslots materialised (an XML-materialised snippet pivots through the shared\nIR) and emits the selected target format: `STATIC.xml` for `xml`,\n`STATIC.md` for `markdown|mixed`. The dynamic lane's entries point at the\nfiles as materialised — under `spec_format = \"xml\"` a dynamic INCLUDE target\nIS an `.xml` file, and `INDEX.md` carries that path honestly. The dynamic\nROUTER is the reading agent itself (PROP-009: boot is pure file-reading; a\ndynamic entry is an INCLUDE resolved by the reader), which is why §5a\nmeasures agents, not code. The former “compiled static stays Markdown” /\n“fully-XML is follow-up” wording is superseded; the XML polygon and current\nhost `STATIC.xml` are its landed proof. @status:impl/done",
-      "line": 298,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-LANE-SCOPE"
     },
     {
@@ -83896,7 +84006,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The owner's named scenario — acceptance case №0\n(ruling 2026-08-21, verbatim: «все спеки в spec написаны в Markdown,\nвнутренние пакеты в packages — в Markdown, а формат материализации —\nXML. Лоадеры и все остальное должны быть к этому готовы. и статические,\nи динамические, все»).** Sources are 100 % Markdown (the host `spec/`\ntree and every `packages/` member); `spec_format = \"xml\"`; after\ninstall/materialisation: every vibedeps spec file is dialect XML, the\nstatic lane compiles clean from those XML snippets, the dynamic lane's\nINCLUDE targets are `.xml` and resolve, and every reader — `vibe\nprogress check`, specmap, `vibe check`, `vibe tree», the boot readers —\nis green over the result. This is the polygon's primary run; the three\nmixed-input runs of §5 ride beside it. @status:spec/work",
-      "line": 311,
+      "line": 312,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SCENARIO-ZERO"
     },
     {
@@ -83905,7 +84015,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "4. Loaders and scanners read all three",
-      "line": 324,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#loaders"
     },
     {
@@ -83914,7 +84024,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "Every consumer of classified native spec sources (`##SOURCE-CLASSIFICATION-LAW`) — the progress scanner and\n`vibe progress check», the specmap unit parser, `vibe check`, the tree/\nboot readers, mirror views — accepts `.md` and `.xml` spec files and a\ntree mixing both. XML goes through the XML frontend into the same pivot\nthe MD frontend feeds, so every downstream mechanism (facts, verdicts,\nstaleness hashes, unit counts, anchors, specmap units) works unchanged\non either source. *Построй по замеру: точный список интеграционных точек\n(`*.md`-фильтры) даёт XML-MEASURE; каждая точка получает парную `.xml»\nветку, ни одна — молча.* @status:spec/work",
-      "line": 325,
+      "line": 326,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#LOADER-LAW"
     },
     {
@@ -83923,7 +84033,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Decision (ADR-part): scanners read XML through its\ncanonical Markdown projection — one dispatch layer above the parser, no\ndependency cycle.** `vibe-specdoc` depends on `progress-core` (its MD\nfrontend is the adapter), so progress-core cannot itself call specdoc.\nThe consumers dispatch instead: a classified native `.xml` spec entering any scanner\n(progress, check, specmap-host, show) is first projected\n`from_xml → to_markdown` — deterministic and canonical by S1's emitter —\nand the projection feeds the existing MD machinery; units, facts,\nanchors, hashes and verdict staleness all work unchanged, and a source\nedit moves the projection exactly when it moves meaning. Alternatives\nweighed: a native XML unit-walker in every scanner (a fifth and sixth\nparser family — the disease the measure named), and inverting the crate\ndependency (progress-core consuming specdoc — a cycle). RECORDED\nDEGRADATION, honest: a diagnostic for an XML source cites\nprojection-relative line numbers, and v1 marks such diagnostics with\nthe projection notice rather than pretending; native source positions\nare follow-up work riding the specmap-engine slice (S4b). @status:spec/work",
-      "line": 334,
+      "line": 335,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#PROJECTION-READ"
     },
     {
@@ -83932,7 +84042,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "Within classified native sources, `spec://` addressing is format-blind: anchors\nare `id` attributes in XML and `{#…}`/first-token anchors in MD, minted\ninto the same address space; a document's address does not change when\nits serialisation does. @status:spec/work",
-      "line": 351,
+      "line": 352,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ADDRESSING-UNCHANGED"
     },
     {
@@ -83941,7 +84051,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5. The redbook polygon — acceptance",
-      "line": 356,
+      "line": 357,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#polygon"
     },
     {
@@ -83950,7 +84060,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "A dedicated test project imports `org.vibevm.world/redbook`\n(the largest real corpus of house-style markup) plus locally-authored\nXML and MD specs, and the suite drives all three targets end-to-end:\n**(a)** XML+MD → `xml`: every materialised spec file is dialect XML,\ngoldens pinned, and the round-trip MD→XML→MD over redbook files is\nsemantically stable (units, facts, anchors, statuses, tables, fences —\ncounted equal; the degradation measure); **(b)** XML+MD → `markdown`:\nevery file is MD, XML-authored sources render with nested headings per\nthe degradation law; **(c)** XML+MD → `mixed`: byte-identical\ncopy-through. In all three, the loaders prove themselves: `vibe progress\ncheck` clean, specmap builds, boot regenerates. @status:spec/work",
-      "line": 357,
+      "line": 358,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#POLYGON"
     },
     {
@@ -83959,7 +84069,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The C++-inheritance machinery is\nformat-blind — verified, not assumed (owner clause 2026-08-22,\nverbatim: «проверь что все механизмы \"наследования как в C++\" которые\nмы сделали для Markdown, точно так же работают и для XML, включая\nновый синтаксис секций и фактов. Если нет, это тоже нужно\nулучшить»).** The B-011 family — `#use spec://… as X` aliasing, `@!X`\nreferences, the qualified splice (rename-on-splice with every\nreference kept valid), hoist/elision stubs, de-substitution of covered\nunits, rename tombstones, and the dynamic-STATIC case — must produce\nBYTE-IDENTICAL compiled closures whether a dependency is authored in\nMarkdown or in dialect XML (generic and named shapes both). Pinned by\na twin-test family in vibe-spec's pipeline: each mechanism runs over\nan MD twin and its to_xml serialisation, outputs compared\nbyte-for-byte; mixed trees (one dep MD, one XML) ride the same pins.\nGaps found by the twins are fixed in the machinery, never by relaxing\nthe assert. Landed: eight twins (four in vibe-spec's pipeline — alias +\n`@!X`, an alias declared inside the projected node over a mixed tree,\nthe three-way same-short-anchor splice, fact-grain through an alias —\ncomparing lane AND rename map; four on the bootgen floor — the\nstatic-transitive zone, single-copy hoist, de-substitution over a mixed\nlane, and the dynamic-STATIC install case), every twin minting its XML\nat run time so the family always carries the live dialect form. Parity\nheld out of the box at the compile floor: byte-identical, no machinery\nchange. The twins NAMED the lawful residue at the install floor —\n`vibe:static` provenance comments cite the true source file (extension\nincluded) and INDEX raw-snippet paths carry the materialised extension,\nwhile the dynamic-STATIC target stays the generated, extension-stable\n`STATIC.md` — honest provenance, not a format leak. @status:impl/done",
-      "line": 368,
+      "line": 369,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#INHERITANCE-PARITY"
     },
     {
@@ -83968,7 +84078,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5a. The dynamic-router measurement — external agents",
-      "line": 396,
+      "line": 397,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#agent-routing"
     },
     {
@@ -83977,7 +84087,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The hardest part, named by the owner\n(2026-08-21): measuring the dynamic routers in EXTERNAL agents.** The\ndynamic lane has no code router — the reading agent resolves dynamic\nINCLUDEs itself — so readiness for XML targets is an empirical property\nof live agent harnesses, not of this repository's code, and it is\nMEASURED, not assumed. At measurement time the instrument used one\nClaude-family external lane and codexrunner as the GPT-family lane. The former\nsubscription-backed lane was retired by owner ruling 2026-09-08 and is not a\ncurrent or repeatable runner; the reusable stand now exposes only its Codex\npath. Protocol: the\npolygon project (scenario №0 state — XML-materialised tree, honest\n`INDEX.md` with static and dynamic entries, at least one `when`-guarded\nconditional entry) plus a probe packet that orders a cold worker to\nperform the standard boot (read STATIC in full, then every INDEX entry,\nresolving dynamic INCLUDEs) and then answer control questions whose\nanswers exist ONLY inside dynamically-included XML files (one per\ndynamic entry, plus one inside a `when`-inactive entry that must NOT be\nanswered — the negative control). Scoring is by artifact: each answer\ncites the file it came from; the measure is answered/missed per lane,\nper agent family. The run is repeated over the `markdown» and `mixed»\nmaterialisations of the same tree as the baseline — the DELTA between\nXML and MD scores is the finding, not the absolute number. Results are\nrecorded in the polygon's report and this section's facts flip to\n`impl/…` with the measured numbers cited. *Проверь при постройке: probe\nне должен подсказывать формат — пакет говорит «выполни бут по\nCLAUDE.md/INDEX», не «прочитай XML».* MEASURED (2026-08-22, on the\nfinal dialect — named sections and facts, specdoc/3): **36/36 PASS,\nXML−MD delta = 0 everywhere.** The polygon (redbook closure + three\n`org.vibevm.probe` flows: two `os:windows` beacons, one `os:linux`\nnegative control) ran three materialisations × three lanes — codex\ngpt-5.5@low ×2 sweeps, codex gpt-5.6-sol@xhigh, claudez GLM big — with\na format-blind probe; every beacon answered with its exact\nmaterialised source path, and the inactive entry was correctly\nreported unreadable in all nine cells with zero beacon leakage.\nReport: `campaigns/packages-2026-09/xml-measure/RESULTS-2026-08-22.md`;\nthe harness is a reusable regression stand (`setup.sh` + the weak-tier\nsweep as the sensitive detector). @status:impl/done",
-      "line": 397,
+      "line": 398,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MEASURE"
     },
     {
@@ -83986,7 +84096,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Model tiers are a measurement dimension —\nthe simpler models go first (owner's advice, verbatim, 2026-08-21: «при\nизмерении воркеров через Codex я бы советовал попользоваться не моделью\ngpt-5.6-sol, а в первую очередь более простыми моделями, чтобы проверить\nнасколько они вообще справляются с новыми режимами»).** A strong model\nmasks format friction; the weak model is the sensitive instrument. The\nCodex-lane probes therefore run the SIMPLER available tiers first\n(`CODEXRUNNER_MODEL`/`CODEXRUNNER_EFFORT` are the launcher's overrides;\nthe measurement slice enumerates which tiers the installed codex\nactually serves and records the list), with the pinned strong tier\n(gpt-5.6-sol) run last as the ceiling reference — the per-tier score\ntable, not one number, is the deliverable. The symmetric extension on\nthe Claude-family lane (a small slot exists there too) is the builder's\nown addition, applied with the same first-simple ordering unless the\nowner says otherwise. The lane DEFAULT for work tasks is untouched: this\ntiering is the measurement protocol's, not the launcher's. MEASURED\n(2026-08-22): the installed codex serves exactly two tiers — `gpt-5.5`\nand `gpt-5.6-sol` (`gpt-5.5-codex`, `gpt-5.1-codex-mini`,\n`codex-mini-latest` error on the ping; list recorded in the stand's\n`tiers.txt`); effort served as the second simplicity axis. The\nsensitive instrument went first per the owner's ordering — gpt-5.5@low,\ntwo full sweeps, 18/18 — and the ceiling gpt-5.6-sol@xhigh matched it\n9/9: the per-tier table shows NO tier gradient, i.e. the final\ndialect's format friction sits below even the cheap tier's noise\nfloor. Claude-family symmetric run: claudez big 9/9. @status:impl/done",
-      "line": 434,
+      "line": 435,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MODEL-TIERS"
     },
     {
@@ -83995,7 +84105,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5b. Questions the build surfaced — dispositions",
-      "line": 460,
+      "line": 461,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#surfaced"
     },
     {
@@ -84004,7 +84114,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**REVIEW markers and comments (S4 finding,\ndisposed).** The dialect legally SKIPS XML comments as layout and the\npivot deliberately drops them, so a projection loses `<!-- REVIEW: -->`\nmarkers. The law therefore is: comment-consuming readers (review aging,\nmanaged-block scanners) read RAW SOURCE TEXT of both forms — the comment\nsyntax is shared by MD and XML — and never the projection; S4 built\nreview aging exactly so, with source-relative lines. A comment-carrying\npivot was weighed and refused: comments are the one construct whose\nwhole point is to be invisible to the document model. @status:impl/done",
-      "line": 461,
+      "line": 462,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#REVIEW-COMMENTS-LAW"
     },
     {
@@ -84013,7 +84123,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The `normal` boot format over XML slots is\nnamed residue (S4 finding, open).** `compile_normal_entry` reads its\nclosure through vibe-spec's own MD section source, which the projection\ncannot feed without touching that crate; `simple` snippets and authored\nboot files carry XML materialisation fully today. The residue rides the\nS4b family (the engine/vibe-spec lane), recorded here so scenario №0's\npolygon states honestly which snippet formats its packages use. @status:spec/work",
-      "line": 470,
+      "line": 471,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#NORMAL-FORMAT-RESIDUE"
     },
     {
@@ -84022,7 +84132,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**`show effective`'s boot-origin match is\nlogical-document keyed (S4 finding, closed by S5).** The literal-name\nmatch silently degraded a transformed snippet's origin to `user»; the\nS5 landing keys the match on the logical stem (`10-flow-wal.xml` and\n`10-flow-wal.xml` are one contribution), pinned by the polygon's\norigin test — a snippet materialised into `.xml` reports its package. @status:impl/done",
-      "line": 477,
+      "line": 478,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-ORIGIN-LITERAL-MATCH"
     },
     {
@@ -84031,7 +84141,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Generated boot artifacts are\noutside the derived identity (S5 polygon finding, law).** Boot\nregeneration writes a child target-selected `vibevm/vibespecs/boot/STATIC.xml|STATIC.md`\nplus `INDEX.md` INTO a dependency slot after materialisation — so the\nderived hash excludes them: they are outside the slot record's owned payload,\njust as the record file itself is outside content identity. The format-purity claim never counts them: a\ntransformed slot's «no foreign-form spec files» is asserted over SOURCES,\nnot over projections the machine regenerates at will. The polygon caught both\nfailure shapes live before this law existed: a stale derived hash the\nmoment boot regenerated, and a fake purity violation on the one slot\nwhose snippet compiles to a child STATIC. @status:impl/done",
-      "line": 483,
+      "line": 484,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#GENERATED-ARTIFACTS-OUTSIDE-DERIVED"
     },
     {
@@ -84040,7 +84150,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "6. Build order",
-      "line": 496,
+      "line": 497,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#build-order"
     },
     {
@@ -84049,7 +84159,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "S1 pivot + XML frontend/backend + golden round-trips over the\nredbook corpus → S2 MD backend (XML→MD) + degradation tests → S3 the\nsetting + transforming materialisation + the hash law → S4 the scanner/\nchecker/specmap/boot-compiler integration points (the measured `*.md`\nlist; the static splice learns XML input, INDEX carries materialised\npaths) → S5 the redbook polygon E2E: scenario №0 first, then the three\nmixed-input targets → S5a the historical external-agent router measurement\n(§5a, two agent families over the polygon; only the Codex path remains\nrunnable) → S6 docs, ALPHA-NOTES, judging.\nEach slice lands with its own gates; the polygon plus the agent\nmeasurement are the wave's exit. @status:spec/work",
-      "line": 497,
+      "line": 498,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SLICES"
     },
     {
@@ -84058,7 +84168,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "7. The documentation vocabulary — the dialect reopened for one genre",
-      "line": 509,
+      "line": 510,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#documentation-vocabulary"
     },
     {
@@ -84067,7 +84177,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Decision (ADR-part; the recorded reopening of `##XML-DIALECT-IS-THE-MD-SUBSET`, 2026-09-11).**\nThe decision-records law lets a decision be reopened only by a named trigger,\nand the trigger is named: a consumer appeared that needs constructs Markdown\ncannot express — the documentation genre of\n[PROP-057](PROP-057-documentation-packages-and-site.xml): a verifiable\nexample with its expected output, a live citation of a specification rule, a\ngenerated reference block, an agent prompt with asserts. The dialect gains a\n**second, additive vocabulary** for that genre. The spec vocabulary keeps the\nMD-subset law unchanged; the documentation vocabulary is open only inside\npackages of kind `doc` and projects to Markdown one way, by law, not by\ndefect. @status:spec/done",
-      "line": 510,
+      "line": 511,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-REOPENING"
     },
     {
@@ -84076,7 +84186,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The vocabulary is a parameter of the reader, not of the document.** `Vocabulary::{Spec, Doc}` (default `Spec`) selects the accepted element set through additive entry points (`from_xml_with`, `load_spec_text_with`, `project_spec_text_with`); the mapping «package kind → vocabulary» is the caller's, because the pivot knows no `PackageKind` by the separability law. A document declares nothing about its vocabulary. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 522,
+      "line": 523,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-BY-KIND"
     },
     {
@@ -84085,7 +84195,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "A documentation element met under the `Spec` vocabulary is a **loud error** with a genre-naming message («open only in packages of kind `doc`»), never a silent skip — the same closed-vocabulary law as everywhere in the dialect. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 523,
+      "line": 524,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-LOUD-IN-SPEC"
     },
     {
@@ -84094,7 +84204,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The discriminator against name collisions.** `example`, `rule`, `derived` and `run` already live in the corpus as named sections (`<example title=\"…\">`). The rule: **a documentation block never carries `title=`; a named section always does.** `<example title=\"…\">` is a section under any vocabulary; `<example>` without `title` is a block under `Doc`. The writer does not depend on the vocabulary: the elementability blacklist does not grow, and one IR serialises to the same bytes under both vocabularies. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 524,
+      "line": 525,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-DISCRIMINATOR"
     },
     {
@@ -84103,7 +84213,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**`when` is a property of the slot, not of a block kind:** `Section.blocks` and `SpecDoc.preamble` hold `BlockNode { when: Option<Cond>, block }`, so a condition applies to any block and to sections. `Cond` is a closed list — the boot lane's condition vocabulary (`os:…`, agent) — with a nearest-legal hint on error. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 525,
+      "line": 526,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-WHEN-SLOT"
     },
     {
@@ -84112,7 +84222,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The Markdown projection of the documentation genre is one-way, and this is pinned.** `md_out` emits the best projection of every element (the table below); parsing that projection back yields a different IR (`Conversion::IrDivergent`), and the expectation test `doc_genre_is_not_round_trippable_through_markdown` pins it. The projection exists because the host scanners (`facts check`, `progress`) read XML only through it (`##PROJECTION-READ`) — the documentation stays observed. Authoring documentation is XML only; `md_in` is not widened, and cannot be: the Markdown block kinds are closed in `progress-core`. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 526,
+      "line": 527,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-MD-ONE-WAY"
     },
     {
@@ -84121,7 +84231,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "The texts of `run`, `expect`, `stderr`, the body of `prompt` and each `assert` are verbatim like `Fence::text`; CDATA is admitted in exactly these elements by an explicit list. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 527,
+      "line": 528,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-VERBATIM-TEXTS"
     },
     {
@@ -84130,7 +84240,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "The address of a `rule` drops any `~rN` revision suffix: a pin that strays into the attribute never becomes a pin on the `documents` edge (PROP-057 §14 — citations are live and unpinned). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 528,
+      "line": 529,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-RULE-ADDRESS"
     },
     {
@@ -84139,7 +84249,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "There is no tabs element on purpose; `when` replaces it. Step-by-step procedures are an ordered list with `example` blocks inside. Inline content stays Markdown (`##INLINE-STAYS-MARKDOWN`). @status:spec/done",
-      "line": 529,
+      "line": 530,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-NO-TABS"
     },
     {
@@ -84148,7 +84258,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "Known limit: the README and specs of packages of other kinds cannot carry verifiable examples — the vocabulary opens by package kind. Their fences render at level 0 as they are, unverified. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 530,
+      "line": 531,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-README-LIMIT"
     },
     {
@@ -84157,7 +84267,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "The elements, their Markdown projection and their checker (the semantics of each checker are PROP-057 §10 and §14): @status:spec/done",
-      "line": 532,
+      "line": 533,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-table-lead"
     },
     {
@@ -84166,7 +84276,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Why:** the owner chose the named-element form — a named tag is self-describing for an agent, and an example is verifiable by construction. A second vocabulary rather than a widened one keeps the spec dialect exactly as measured and pinned; gating by kind keeps a `flow` README from silently acquiring unverified «examples». @status:spec/done",
-      "line": 590,
+      "line": 591,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-why"
     },
     {
@@ -84175,7 +84285,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Considered and rejected:** Markdown with directives; conventions inside the present dialect (a fence pair «by agreement» — nothing can check it); a tabs element; own examples in translations; widening `md_in` (the Markdown block kinds are closed in `progress-core`). @status:spec/done",
-      "line": 591,
+      "line": 592,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-rejected"
     },
     {
@@ -84184,7 +84294,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Revisit when:** two authors' requests for a construct outside this set, or for verifiable examples in the README of an ordinary package, are recorded in BACKLOG. @status:spec/done",
-      "line": 592,
+      "line": 593,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-revisit"
     },
     {

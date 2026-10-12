@@ -1,0 +1,5 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 27.70s
+     Running unittests src/lib.rs (<private-target>/debug/build/vibe-wire/97ddc3da103af283/out/vibe_wire-97ddc3da103af283)
+running 1 test
+test m_01_c_4_cases::schema_two_decodes_copied_unconverted_issues_and_refuses_unknown_class ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 241 filtered out; finished in 0.00s

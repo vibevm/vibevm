@@ -72,6 +72,7 @@ pub enum Plan {
 /// the plan did not produce.
 #[derive(Debug)]
 pub struct PlannedInstall {
+    pub(crate) strict_conversion: bool,
     pub(crate) project_root: PathBuf,
     pub(crate) request: InstallRequest,
     pub(crate) manifest: Manifest,
@@ -94,6 +95,14 @@ pub struct PlannedInstall {
     /// snapshot of a tree the command is midway through changing.
     pub(crate) workspace: Workspace,
     pub(crate) progress: vibe_core::progress::Progress,
+}
+
+impl PlannedInstall {
+    /// The outer owner sets this after planning, before any apply write.
+    /// A Fresh plan is checked separately against its retained slot records.
+    pub fn set_strict_conversion(&mut self, strict: bool) {
+        self.strict_conversion = strict;
+    }
 }
 
 /// Plan an install transaction over `source` for the project at
@@ -508,6 +517,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         .collect();
 
     Ok(Plan::Ready(Box::new(PlannedInstall {
+        strict_conversion: false,
         project_root: project_root.to_path_buf(),
         request,
         manifest: manifest.clone(),

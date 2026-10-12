@@ -1,0 +1,6 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.71s
+     Running tests/format_registry_completeness.rs (<private-target>/debug/build/vibe-wire/4aa1e84748bc1b28/out/format_registry_completeness-4aa1e84748bc1b28)
+running 2 tests
+test catalog_format_family_agrees_on_its_epoch ... ok
+test format_id_completeness ... ok
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

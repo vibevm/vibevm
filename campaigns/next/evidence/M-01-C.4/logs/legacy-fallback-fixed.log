@@ -1,0 +1,5 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.59s
+     Running unittests src/lib.rs (<private-target>/debug/build/vibe-workspace/0be44ca03d94f575/out/vibe_workspace-0be44ca03d94f575)
+running 1 test
+test vibedeps::derived::m_01_c_4_cases::legacy_requested_markdown_failure_is_recorded_ordinary_other_path_is_copied ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 658 filtered out; finished in 0.00s

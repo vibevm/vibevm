@@ -332,7 +332,7 @@ impl WitnessedSourceWorld {
             interpretation: row.interpretation,
             converter_recipe: record.converter_recipe,
             overlay_hash: record.overlay_hash,
-            disposition: recorded.disposition,
+            disposition: recorded.disposition.clone(),
         }))
     }
 

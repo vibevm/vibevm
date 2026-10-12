@@ -23,25 +23,42 @@ use super::{
 };
 use crate::{WorkspaceError, path_to_slash};
 
+#[cfg(test)]
+mod m_01_c_4_cases;
+mod manifest;
 mod overlay;
 mod selection;
 #[cfg(test)]
 mod tests;
 mod transform;
 
+pub use manifest::{format_is_current, read_derived_manifest};
 use overlay::apply_overlay;
 use selection::{
     SelectedMaterialization, classify, materialise_mixed_descriptor, read_descriptor_package,
     require_exact_sources, reserve_output,
 };
 use transform::{
-    is_spec_document, transform_declared_bytes, transform_declared_file, transform_file,
+    is_spec_document, recorded_transform, transform_declared_bytes, transform_declared_file,
+    transform_file,
 };
 
 /// Legacy transformed-slot identity filename, retained read-only.
 pub const DERIVED_MANIFEST_FILENAME: &str = ".vibe-derived.toml";
 /// Current specdoc pivot recipe recorded in transformed-slot manifests.
 pub const CONVERTER_RECIPE: &str = vibe_specdoc::CONVERTER_RECIPE;
+
+/// One transformed slot prepared wholly before its publication boundary.
+/// Strict install can retain this value across its all-package preflight;
+/// the ordinary path prepares and publishes immediately through the same
+/// incumbent reconciliation owner.
+pub struct PreparedTransformedSlot {
+    slot: PathBuf,
+    source_root: PathBuf,
+    incoming: Vec<PreparedSlotFile>,
+    record: SlotRecord,
+    descriptor_owned: bool,
+}
 
 /// Replay the incumbent declared-source selection and builtin transform over
 /// caller-held original bytes. It is an inert pure conversion, not a proof;
@@ -191,6 +208,38 @@ pub(crate) fn materialise_with_spec_format_report(
             source_hash,
         );
     }
+    prepare_transformed_slot(
+        workspace_root,
+        group,
+        name,
+        version,
+        content_src,
+        mode,
+        spec_format,
+        source_hash,
+    )?
+    .publish_report()
+}
+
+/// Prepare the exact transformed payload and record without changing the
+/// dependency slot. `Mixed` has no transformed preparation and refuses.
+#[allow(clippy::too_many_arguments)]
+pub fn prepare_transformed_slot(
+    workspace_root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    content_src: &Path,
+    mode: CopyMode,
+    spec_format: SpecFormat,
+    source_hash: &ContentHash,
+) -> Result<PreparedTransformedSlot, WorkspaceError> {
+    if spec_format == SpecFormat::Mixed {
+        return Err(WorkspaceError::SpecMaterialization {
+            path: content_src.to_path_buf(),
+            reason: "mixed slots have no transformed preparation".into(),
+        });
+    }
     let package = format!("{group}/{name}");
     let registry =
         Registry::load(workspace_root).map_err(|error| WorkspaceError::SpecMaterialization {
@@ -248,24 +297,30 @@ pub(crate) fn materialise_with_spec_format_report(
                             });
                         }
                     }
-                    transform_declared_file(
-                        &declared.project,
-                        &source,
+                    recorded_transform(
                         &rel,
-                        spec_format,
-                        &package,
-                        &overlay,
-                        interpretation,
-                        media,
-                    )?
+                        transform_declared_file(
+                            &declared.project,
+                            &source,
+                            &rel,
+                            spec_format,
+                            &package,
+                            &overlay,
+                            interpretation,
+                            media,
+                        )?,
+                    )
                 }
             }
         } else {
-            transform_file(&source, &rel, spec_format, &package, &overlay)?
+            recorded_transform(
+                &rel,
+                transform_file(&source, &rel, spec_format, &package, &overlay)?,
+            )
         };
         let output_rel = transformed
             .as_ref()
-            .map_or_else(|| rel.clone(), |(path, _)| path.clone());
+            .map_or_else(|| rel.clone(), |(path, _, _)| path.clone());
         let output_wire = path_to_slash(&output_rel);
         if descriptors.is_some() {
             reserve_output(
@@ -284,10 +339,10 @@ pub(crate) fn materialise_with_spec_format_report(
                 ),
             });
         }
-        let (prepared, disposition) = if let Some((_, bytes)) = transformed {
+        let (prepared, disposition) = if let Some((_, bytes, disposition)) = transformed {
             (
                 PreparedSlotFile::from_bytes(output_rel.clone(), bytes),
-                SlotFileDisposition::Converted,
+                disposition,
             )
         } else if rel == Path::new("vibe.toml") && descriptors.is_some() {
             (
@@ -330,111 +385,54 @@ pub(crate) fn materialise_with_spec_format_report(
         derived_hash: Some(derived_hash),
         files,
     };
-    if descriptors.is_some() {
-        reconcile_slot_descriptor(&slot, &incoming, &record).map_err(|error| WorkspaceError::SpecMaterialization {
-            path: slot,
-            reason: format!("descriptor slot publication refused; state may be partial and requires inspection before retry: {error}"),
-        })
-    } else {
-        reconcile_slot(&slot, &incoming, &record)
-    }
+    Ok(PreparedTransformedSlot {
+        slot,
+        source_root: content_src.to_path_buf(),
+        incoming,
+        record,
+        descriptor_owned: descriptors.is_some(),
+    })
 }
 
-/// Read and validate the typed derived manifest from `slot`.
-pub fn read_derived_manifest(slot: &Path) -> Result<DerivedManifest, String> {
-    let record_path = slot.join(SLOT_RECORD_FILENAME);
-    match fs::symlink_metadata(&record_path) {
-        Ok(_) => {
-            let record = read_slot_record(slot)?;
-            if record.spec_format == SpecFormat::Mixed {
-                return Err("slot record describes a mixed slot, not a derived slot".to_string());
-            }
-            let converter_recipe = record
-                .converter_recipe
-                .ok_or_else(|| "transformed slot record has no converter_recipe".to_string())?;
-            let derived_hash = record
-                .derived_hash
-                .ok_or_else(|| "transformed slot record has no derived_hash".to_string())?;
-            let files = record
-                .files
-                .into_iter()
-                .map(|file| {
-                    let source = file.source.ok_or_else(|| {
-                        format!("transformed slot row `{}` has no source", file.path)
-                    })?;
-                    let disposition = match file.disposition.ok_or_else(|| {
-                        format!("transformed slot row `{}` has no disposition", file.path)
-                    })? {
-                        SlotFileDisposition::Converted => DerivedFileDisposition::Converted,
-                        SlotFileDisposition::Copied => DerivedFileDisposition::Copied,
-                    };
-                    Ok(DerivedFile {
-                        source,
-                        output: file.path,
-                        disposition,
-                    })
-                })
-                .collect::<Result<Vec<_>, String>>()?;
-            return Ok(DerivedManifest {
-                schema: DERIVED_MANIFEST_SCHEMA,
-                source_hash: record.source_hash.as_str().to_string(),
-                output_format: record.spec_format,
-                converter_recipe,
-                overlay_hash: record.overlay_hash.map(|hash| hash.as_str().to_string()),
-                derived_hash: derived_hash.as_str().to_string(),
-                files,
-            });
-        }
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-        Err(error) => {
-            return Err(format!(
-                "cannot inspect slot record `{}`: {error}",
-                record_path.display()
-            ));
-        }
-    }
-    let path = slot.join(DERIVED_MANIFEST_FILENAME);
-    let text = fs::read_to_string(&path).map_err(|e| format!("cannot read manifest: {e}"))?;
-    let manifest: DerivedManifest =
-        toml::from_str(&text).map_err(|e| format!("cannot parse manifest: {e}"))?;
-    if manifest.schema != DERIVED_MANIFEST_SCHEMA {
-        return Err(format!(
-            "schema is {}, current schema is {DERIVED_MANIFEST_SCHEMA}",
-            manifest.schema
-        ));
-    }
-    Ok(manifest)
-}
-
-/// Cheap freshness gate consulted before presence trust. New slot records are
-/// preferred; legacy derived manifests remain readable when no record exists.
-pub fn format_is_current(slot: &Path, expected: SpecFormat) -> bool {
-    let record_path = slot.join(SLOT_RECORD_FILENAME);
-    match fs::symlink_metadata(&record_path) {
-        Ok(_) => {
-            return read_slot_record(slot).is_ok_and(|record| {
-                record.spec_format == expected
-                    && match expected {
-                        SpecFormat::Mixed => true,
-                        SpecFormat::Markdown | SpecFormat::Xml => {
-                            record.converter_recipe.as_deref() == Some(CONVERTER_RECIPE)
-                                && record.overlay_hash.as_ref().map(ContentHash::as_str)
-                                    == current_overlay_hash_for_slot(slot).as_deref()
-                        }
-                    }
-            });
-        }
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-        Err(_) => return false,
-    }
-    let manifest_path = slot.join(DERIVED_MANIFEST_FILENAME);
-    match expected {
-        SpecFormat::Mixed => !manifest_path.exists(),
-        SpecFormat::Markdown | SpecFormat::Xml => {
-            read_derived_manifest(slot).is_ok_and(|manifest| {
-                manifest.output_format == expected
-                    && manifest.overlay_hash == current_overlay_hash_for_slot(slot)
+impl PreparedTransformedSlot {
+    pub fn first_failed_conversion(&self) -> Option<(&str, &crate::vibedeps::ConversionFailure)> {
+        self.record
+            .files
+            .iter()
+            .find_map(|file| match &file.disposition {
+                Some(SlotFileDisposition::CopiedUnconverted(reason)) => Some((
+                    file.source
+                        .as_deref()
+                        .expect("validated failed row has source"),
+                    reason,
+                )),
+                _ => None,
             })
+    }
+
+    pub(crate) fn matches_selection(
+        &self,
+        slot: &Path,
+        source_root: &Path,
+        format: SpecFormat,
+        source_hash: &ContentHash,
+    ) -> bool {
+        self.slot == slot
+            && self.source_root == source_root
+            && self.record.spec_format == format
+            && &self.record.source_hash == source_hash
+    }
+
+    pub(crate) fn publish_report(&self) -> Result<MaterialiseReport, WorkspaceError> {
+        if self.descriptor_owned {
+            reconcile_slot_descriptor(&self.slot, &self.incoming, &self.record).map_err(|error| {
+                WorkspaceError::SpecMaterialization {
+                    path: self.slot.clone(),
+                    reason: format!("descriptor slot publication refused; state may be partial and requires inspection before retry: {error}"),
+                }
+            })
+        } else {
+            reconcile_slot(&self.slot, &self.incoming, &self.record)
         }
     }
 }

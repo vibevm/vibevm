@@ -41,8 +41,9 @@ pub use build_ignore::{BUILD_OUTPUT_IGNORES, ensure_build_output_ignores};
 pub(crate) use derived::materialise_with_spec_format_report;
 pub use derived::{
     CONVERTER_RECIPE, DERIVED_MANIFEST_FILENAME, DerivedFile, DerivedFileDisposition,
-    DerivedManifest, compute_derived_hash, format_is_current, materialise_with_spec_format,
-    read_derived_manifest, replay_declared_captured,
+    DerivedManifest, PreparedTransformedSlot, compute_derived_hash, format_is_current,
+    materialise_with_spec_format, prepare_transformed_slot, read_derived_manifest,
+    replay_declared_captured,
 };
 pub use descriptor_map::{
     read_validated_descriptor_map, read_validated_descriptor_map_for_citation,
@@ -51,9 +52,10 @@ pub use descriptor_map::{
 pub(crate) use slot_cow::detach_recorded_hardlinks;
 pub(crate) use slot_diff::MaterialiseReport;
 pub use slot_record::{
-    SLOT_RECORD_FILENAME, SLOT_RECORD_SCHEMA, SlotFile, SlotFileDisposition, SlotRecord,
-    compute_recorded_payload_hash, read_slot_record, read_slot_record_bytes, sha256_bytes,
-    sha256_file, verify_recorded_files, write_slot_record,
+    ConversionFailure, ConversionFailureClass, ConversionIssue, SLOT_RECORD_FILENAME,
+    SLOT_RECORD_SCHEMA, SlotFile, SlotFileDisposition, SlotRecord, compute_recorded_payload_hash,
+    read_slot_record, read_slot_record_bytes, sha256_bytes, sha256_file, verify_recorded_files,
+    write_slot_record,
 };
 
 /// Directory name of the materialisation tree's final component.

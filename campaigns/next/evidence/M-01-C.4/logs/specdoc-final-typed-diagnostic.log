@@ -1,0 +1,5 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.10s
+     Running unittests src/lib.rs (<private-target>/debug/build/vibe-specdoc/55156aa109725aa4/out/vibe_specdoc-55156aa109725aa4)
+running 1 test
+test md_in::m_01_c_4_cases::stranded_status_keeps_facts_check_issue_code_line_and_message ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 132 filtered out; finished in 0.00s

@@ -4,7 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#SELF-HEAL");
 
 use std::path::PathBuf;
 
-use super::super::SlotRecord;
+use super::super::{ConversionFailure, SlotFileDisposition, SlotRecord};
 
 /// Internal reconciliation facts used by install orchestration.
 ///
@@ -18,6 +18,9 @@ pub(crate) struct MaterialiseReport {
     pub(crate) removed: Vec<PathBuf>,
     pub(crate) migrated: bool,
     pub(crate) identity_changed: bool,
+    /// Exact transformed rows of this reconciled slot, each counted once.
+    pub(crate) converted: usize,
+    pub(crate) copied_unconverted: Vec<(String, ConversionFailure)>,
 }
 
 impl MaterialiseReport {
@@ -35,12 +38,37 @@ impl MaterialiseReport {
                 || old.converter_recipe != next.converter_recipe
                 || old.overlay_hash != next.overlay_hash
         });
+        let converted = next
+            .files
+            .iter()
+            .filter(|file| {
+                matches!(
+                    file.disposition.as_ref(),
+                    Some(SlotFileDisposition::Converted)
+                )
+            })
+            .count();
+        let copied_unconverted = next
+            .files
+            .iter()
+            .filter_map(|file| match &file.disposition {
+                Some(SlotFileDisposition::CopiedUnconverted(reason)) => Some((
+                    file.source
+                        .clone()
+                        .expect("validated failed row has source"),
+                    reason.clone(),
+                )),
+                _ => None,
+            })
+            .collect();
         Self {
             footprint,
             written,
             removed,
             migrated,
             identity_changed,
+            converted,
+            copied_unconverted,
         }
     }
 

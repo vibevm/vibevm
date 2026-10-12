@@ -698,7 +698,7 @@ sunset = "none"
 
 # ── Derived workspace state ────────────────────────────────────────────────
 [format.slot-record]
-epoch = 1
+epoch = 2
 schema = "schemas/slot_record.jtd.json"
 recoverable = true
 foreign_parsers = "none"

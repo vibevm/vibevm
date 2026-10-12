@@ -191,6 +191,8 @@ pub(crate) struct RegistrySlotVerifier {
     /// The expected `content_hash` per resolved `(group, name)` — the
     /// fetch's own hash, i.e. the value the next `vibe.lock` pins.
     expected: HashMap<(Group, String), String>,
+    /// Strict C4 preflight's exact prepared outputs, reused at publication.
+    prepared: HashMap<(Group, String), vibe_workspace::vibedeps::PreparedTransformedSlot>,
 }
 
 impl RegistrySlotVerifier {
@@ -209,7 +211,26 @@ impl RegistrySlotVerifier {
                     )
                 })
                 .collect(),
+            prepared: HashMap::new(),
         }
+    }
+
+    pub(crate) fn retain_prepared(
+        &mut self,
+        dep: &ResolvedDep,
+        prepared: vibe_workspace::vibedeps::PreparedTransformedSlot,
+    ) -> Result<(), String> {
+        if self
+            .prepared
+            .insert((dep.group.clone(), dep.name.clone()), prepared)
+            .is_some()
+        {
+            return Err(format!(
+                "duplicate prepared conversion for {}/{}",
+                dep.group, dep.name
+            ));
+        }
+        Ok(())
     }
 
     fn verify_legacy_mixed(&self, dep: &ResolvedDep, slot_abs: &Path) -> SlotCheck {
@@ -390,6 +411,13 @@ impl RegistrySlotVerifier {
 }
 
 impl SlotVerifier for RegistrySlotVerifier {
+    fn prepared_transformed_slot(
+        &self,
+        dep: &ResolvedDep,
+    ) -> Option<&vibe_workspace::vibedeps::PreparedTransformedSlot> {
+        self.prepared.get(&(dep.group.clone(), dep.name.clone()))
+    }
+
     fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
         self.expected
             .get(&(dep.group.clone(), dep.name.clone()))

@@ -1,0 +1,7 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.23s
+     Running unittests src/lib.rs (<private-target>/debug/build/vibe-workspace/265de07f0764d636/out/vibe_workspace-265de07f0764d636)
+running 3 tests
+test vibedeps::derived::m_01_c_4_cases::legacy_requested_markdown_failure_is_recorded_ordinary_other_path_is_copied ... ok
+test vibedeps::derived::m_01_c_4_cases::default_selected_failed_conversion_copies_with_reason_ordinary_readme_stays_copied ... ok
+test vibedeps::derived::m_01_c_4_cases::applied_slot_counts_each_conversion_once_and_skipped_repeat_counts_zero ... ok
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 656 filtered out; finished in 0.01s

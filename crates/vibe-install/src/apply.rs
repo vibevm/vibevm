@@ -4,9 +4,21 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use crate::InstallSource;
+use crate::error::{Error, Result};
+use crate::fetched::Fetched;
+use crate::lifecycle::{
+    InstallProgress, InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver,
+    SlotLifecycleReport,
+};
+use crate::plan::PlannedInstall;
+use crate::record::{
+    exact_pinned_pkgref, finalize_pkgref_for_manifest, locked_package_from_fetched,
+    merge_manifest_requires, merge_root_dependencies, replace_root_dependencies,
+};
+use crate::slot_verify::RegistrySlotVerifier;
 use std::collections::BTreeSet;
 use std::sync::Arc;
-
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
@@ -21,67 +33,15 @@ use vibe_workspace::install::{
 };
 use vibe_workspace::vibedeps;
 
-use crate::InstallSource;
-use crate::error::{Error, Result};
-use crate::fetched::Fetched;
-use crate::lifecycle::{
-    InstallProgress, InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver,
-    SlotLifecycleReport,
-};
-use crate::plan::PlannedInstall;
-use crate::record::{
-    exact_pinned_pkgref, finalize_pkgref_for_manifest, locked_package_from_fetched,
-    merge_manifest_requires, merge_root_dependencies, replace_root_dependencies,
-};
-use crate::slot_verify::RegistrySlotVerifier;
-
 mod deferred;
 mod native;
+mod strict_conversion;
 use deferred::materialise_deferred_in_place;
 use native::NativeApplyPreparation;
+use strict_conversion::prepare_strict_conversion;
 
-/// What [`apply`] did — the caller renders it.
-#[derive(Debug)]
-pub struct ApplyReport {
-    /// Materialised / skipped / pruned slots, the regenerated nodes, and
-    /// the `pre-install` hook reports — straight from the workspace
-    /// orchestrator.
-    pub outcome: InstallOutcome,
-    /// `post-install` hook reports (PROP-020 §2.1), gathered after the
-    /// lockfile was written. Empty when no payload-changing package declares a
-    /// `post-install` hook; the CLI renders them with the pre-install
-    /// reports carried on `outcome.hook_reports`.
-    pub post_install_reports: Vec<HookReport>,
-    /// Legacy `[hooks]` translated to `slot:` contributions and executed by
-    /// the lifecycle handler engine. Empty only on compatibility entry points.
-    pub lifecycle_reports: Vec<SlotLifecycleReport>,
-    /// The same canonical run used by slot callbacks; the caller rebinds it
-    /// to the durable world before dispatching normal phase contributions.
-    pub lifecycle_run: Option<LifecycleRunHandle>,
-    /// What this apply changed, in the one slot-level shape every install-family
-    /// report renders — so no caller re-derives it from `outcome` and no report
-    /// invents a per-file census the engine never measured.
-    pub progress: InstallProgress,
-}
-
-/// [`ApplyReport`] plus the workspace AS OF the end of this apply.
-///
-/// A separate type on purpose. `ApplyReport` is public 1.0 surface, and a new
-/// `pub` field on it breaks every downstream struct literal and exhaustive
-/// pattern — a semver-major change for what is additive information. So the
-/// prepared sibling returns this, the existing entry points return only
-/// `.report`, and nothing outside this crate has to change.
-///
-/// Step 7 of the apply rewrites `[requires]` with the finalised roots and
-/// rebuilds the tree so the boot computation reads them. A caller that plans a
-/// post-durability world needs exactly that snapshot: the pre-apply one it
-/// passed in does not yet contain the requirements this apply just recorded.
-pub struct PreparedApplyReport {
-    pub report: ApplyReport,
-    pub workspace: Workspace,
-    /// Present only on the native-aware production sibling.
-    pub native: Option<vibe_workspace::install::NativeInstallCarriage>,
-}
+mod report;
+pub use report::{ApplyReport, PreparedApplyReport};
 
 /// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
 /// materialise-diff strategy (the caller reads it from the user
@@ -348,6 +308,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
     let PlannedInstall {
+        strict_conversion,
         project_root,
         request,
         mut manifest,
@@ -362,6 +323,16 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         workspace: _pre_apply_workspace,
         progress,
     } = planned;
+
+    // All applicable conversions are prepared before this function's first
+    // manifest/slot/lock write, and the prepared bytes are reused below.
+    let strict_prepared = prepare_strict_conversion(
+        strict_conversion,
+        spec_format,
+        &project_root,
+        &resolution,
+        &fetched,
+    )?;
 
     // 6. Update `vibe.toml` `[requires].packages` with the requested
     //    roots — caret by default, `exact` pins `=<resolved>`, an
@@ -439,7 +410,8 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //    a divergence re-materialises it and warns — the fetched set the
     //    verifier reads is post-deferral, so an incrementally-updated
     //    in-place slot (which never consults it) still records fresh.
-    let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
+    let slot_verifier =
+        strict_prepared.unwrap_or_else(|| RegistrySlotVerifier::from_fetched(&fetched));
     let apply_task = progress.task("Applying resolved packages");
     apply_task.set_progress(0, Some(resolution.len() as u64), "packages");
     let (mut outcome, native) = match native {

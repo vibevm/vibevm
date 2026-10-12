@@ -44,6 +44,7 @@ impl InstallArgs {
             all_features: self.all_features,
             language: self.language.clone(),
             exact: self.exact,
+            strict_conversion: self.strict_conversion,
         }
     }
 
@@ -153,6 +154,11 @@ pub struct InstallArgs {
     /// supplied on the CLI, including explicit caret / tilde / range.
     #[arg(long)]
     pub exact: bool,
+
+    /// Refuse a failed requested builtin spec conversion before publishing
+    /// any selected dependency slot, manifest change or replacement lock.
+    #[arg(long = "strict-conversion")]
+    pub strict_conversion: bool,
 
     /// Strict authentication gate — when set, a 401 / 403 against an
     /// `auth = "none"` (public) registry halts the install instead of

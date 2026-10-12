@@ -42,6 +42,7 @@ pub fn run(ctx: &output::Context, args: CheckArgs) -> Result<()> {
     // its findings here where the vibe-workspace stack is available.
     let boot = ctx.progress().task("Checking installed boot graph");
     append_boot_graph_findings(&project_root, &mut report);
+    append_recorded_conversion_findings(&project_root, &mut report);
     boot.finish();
     let errors = report.count(Severity::Error);
     let warnings = report.count(Severity::Warning);
@@ -214,5 +215,124 @@ fn append_boot_graph_findings(project_root: &Path, report: &mut CheckReport) {
                 "stale boot artifact for {group}/{name} — its fingerprint is out of date; run `vibe reinstall`"
             ),
         });
+    }
+}
+
+/// Read only lock-selected dependency slots. A schema-2 failure row is the
+/// diagnostic authority; an ordinary `.md` suffix is no evidence of failure.
+fn append_recorded_conversion_findings(project_root: &Path, report: &mut CheckReport) {
+    let Ok(lock) = vibe_core::manifest::Lockfile::read(project_root.join("vibe.lock")) else {
+        return;
+    };
+    for package in &lock.packages {
+        let slot = vibe_workspace::vibedeps::slot_abs_path(
+            project_root,
+            &package.group,
+            package.name.as_str(),
+            &package.version,
+        );
+        let Ok(record) = vibe_workspace::vibedeps::read_slot_record(&slot) else {
+            continue;
+        };
+        for file in &record.files {
+            let Some(vibe_workspace::vibedeps::SlotFileDisposition::CopiedUnconverted(reason)) =
+                &file.disposition
+            else {
+                continue;
+            };
+            let source = file.source.as_deref().unwrap_or(&file.path);
+            let relative = vibe_workspace::vibedeps::slot_rel_path(
+                &package.group,
+                package.name.as_str(),
+                &package.version,
+            );
+            for issue in &reason.issues {
+                report.findings.push(Finding {
+                    check: CheckId::SourceConversion,
+                    severity: Severity::Warning,
+                    path: Some(PathBuf::from(&relative).join(source)),
+                    line: usize::try_from(issue.line).ok(),
+                    message: format!(
+                        "[{:?}] {} — requested conversion failed; original bytes retained",
+                        issue.class, issue.message
+                    ),
+                });
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod m_01_c_4_cases {
+    use super::*;
+    use vibe_core::manifest::SpecFormat;
+    use vibe_core::{ContentHash, Group};
+    use vibe_workspace::vibedeps::{
+        ConversionFailure, ConversionFailureClass, ConversionIssue, SLOT_RECORD_SCHEMA, SlotFile,
+        SlotFileDisposition, SlotRecord, write_slot_record,
+    };
+
+    #[test]
+    fn recorded_failed_conversion_reports_selected_path_class_and_line() {
+        let project = tempfile::tempdir().unwrap();
+        std::fs::write(project.path().join("vibe.lock"),
+            "[meta]\ngenerated_by='test'\ngenerated_at='2026-10-12T00:00:00Z'\nschema_version=7\n\n[[package]]\nkind='flow'\ngroup='org.demo'\nname='dep'\nversion='1.0.0'\nsource_url='file:///source'\ncontent_hash='sha256:1111111111111111111111111111111111111111111111111111111111111111'\n",
+        ).unwrap();
+        let group = Group::parse("org.demo").unwrap();
+        let slot = vibe_workspace::vibedeps::slot_abs_path(
+            project.path(),
+            &group,
+            "dep",
+            &"1.0.0".parse().unwrap(),
+        );
+        std::fs::create_dir_all(&slot).unwrap();
+        write_slot_record(
+            &slot,
+            &SlotRecord {
+                schema: SLOT_RECORD_SCHEMA,
+                source_hash: ContentHash::parse(
+                    "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                )
+                .unwrap(),
+                spec_format: SpecFormat::Xml,
+                converter_recipe: Some("specdoc/4".into()),
+                derived_hash: Some(
+                    ContentHash::parse(
+                        "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                    )
+                    .unwrap(),
+                ),
+                overlay_hash: None,
+                files: vec![SlotFile {
+                    path: "vibevm/vibespecs/DOC.md".into(),
+                    sha256: "a".repeat(64),
+                    source: Some("vibevm/vibespecs/DOC.md".into()),
+                    disposition: Some(SlotFileDisposition::CopiedUnconverted(ConversionFailure {
+                        issues: vec![ConversionIssue {
+                            class: ConversionFailureClass::Stranded,
+                            line: 7,
+                            message: "standalone marker between paragraphs".into(),
+                        }],
+                    })),
+                }],
+            },
+        )
+        .unwrap();
+        let mut report = CheckReport::default();
+        append_recorded_conversion_findings(project.path(), &mut report);
+        assert_eq!(report.findings.len(), 1);
+        let issue = &report.findings[0];
+        assert_eq!(issue.check, CheckId::SourceConversion);
+        assert_eq!(issue.severity, Severity::Warning);
+        assert_eq!(issue.line, Some(7));
+        assert!(
+            issue
+                .path
+                .as_ref()
+                .unwrap()
+                .to_string_lossy()
+                .ends_with("vibevm/vibespecs/DOC.md")
+        );
+        assert!(issue.message.contains("[Stranded]"));
     }
 }

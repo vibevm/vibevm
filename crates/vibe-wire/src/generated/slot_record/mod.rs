@@ -14,8 +14,10 @@ pub enum SlotRecordSpecFormat {
     Xml,
 }
 
-/// `.vibe-slot.toml` schema 1 — the source identity and complete materialiser-
-/// owned file footprint for one dependency slot (PROP-054 §14.3).
+/// `.vibe-slot.toml` schema 2 — source identity, complete materialiser-owned
+/// footprint and typed failed-conversion outcome for one dependency slot (PROP-
+/// 054 §14.3, PROP-045 #FAILED-CONVERSION-OUTCOME). Schema 1 remains readable
+/// with its original meanings.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SlotRecord {
@@ -40,12 +42,80 @@ pub struct SlotRecord {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConversionFailure {
+    pub issues: Vec<ConversionIssue>,
+}
+
+/// The progress-core IssueCode variant rendered by facts check, or PivotAdapter
+/// when markup parsed but the converter adapter refused.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConversionIssueClass {
+    #[serde(rename = "DuplicateId")]
+    DuplicateId,
+
+    #[serde(rename = "DuplicateStatus")]
+    DuplicateStatus,
+
+    #[serde(rename = "FenceBinding")]
+    FenceBinding,
+
+    #[serde(rename = "Malformed")]
+    Malformed,
+
+    #[serde(rename = "MidParagraph")]
+    MidParagraph,
+
+    #[serde(rename = "MissingAnchor")]
+    MissingAnchor,
+
+    #[serde(rename = "MissingAttr")]
+    MissingAttr,
+
+    #[serde(rename = "PivotAdapter")]
+    PivotAdapter,
+
+    #[serde(rename = "Stranded")]
+    Stranded,
+
+    #[serde(rename = "SwallowedAnchor")]
+    SwallowedAnchor,
+
+    #[serde(rename = "TerminalRequirements")]
+    TerminalRequirements,
+
+    #[serde(rename = "Unmarked")]
+    Unmarked,
+
+    #[serde(rename = "Vocabulary")]
+    Vocabulary,
+
+    #[serde(rename = "WrapperMismatch")]
+    WrapperMismatch,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConversionIssue {
+    /// The progress-core IssueCode variant rendered by facts check, or
+    /// PivotAdapter when markup parsed but the converter adapter refused.
+    pub class: ConversionIssueClass,
+
+    pub line: u32,
+
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SlotFileDisposition {
     #[serde(rename = "converted")]
     Converted,
 
     #[serde(rename = "copied")]
     Copied,
+
+    #[serde(rename = "copied-unconverted")]
+    CopiedUnconverted,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -54,6 +124,12 @@ pub struct SlotFile {
     pub path: String,
 
     pub sha256: String,
+
+    /// Required only when disposition is copied-unconverted; contains every
+    /// fatal parser issue from the same captured source bytes, while install
+    /// emits one warning for the failed file.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub conversion_failure: Option<ConversionFailure>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub disposition: Option<SlotFileDisposition>,

@@ -1,5 +1,7 @@
 //! PROP-045 redbook polygon through all materialisation and STATIC targets.
 
+#[path = "cli_spec_format/c4_cases.rs"]
+mod c4_cases;
 mod common;
 
 use std::collections::BTreeMap;

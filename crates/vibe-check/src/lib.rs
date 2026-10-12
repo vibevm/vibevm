@@ -151,6 +151,9 @@ pub enum CheckId {
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
     BootGraphIntegrity,
+    /// PROP-045: a selected slot retained authored bytes after failed
+    /// requested conversion; the record carries the original parser issues.
+    SourceConversion,
 }
 
 impl CheckId {
@@ -177,11 +180,12 @@ impl CheckId {
             CheckId::DocTranslation => "doc_translation",
             CheckId::DocMedia => "doc_media",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
+            CheckId::SourceConversion => "source_conversion",
         }
     }
 
     /// Every **cell-backed** check id, for documenting / iterating in tests.
-    /// Excludes [`CheckId::BootGraphIntegrity`], which is wired externally in
+    /// Excludes [`CheckId::BootGraphIntegrity`] and [`CheckId::SourceConversion`], wired externally in
     /// `vibe check` over the installed workspace (PROP-038 §3) rather than as a
     /// vibe-check cell — it has no project-file-only cell to register here.
     pub fn all() -> &'static [CheckId] {
