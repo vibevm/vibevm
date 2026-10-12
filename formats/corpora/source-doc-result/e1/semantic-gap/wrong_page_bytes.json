@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "address": "spec://com.example/host/guide",
+  "format": "md",
+  "lang": "en",
+  "source": "checkout",
+  "page_bytes": 72,
+  "page": "# Guide {#root}\n\n[p01] Whole page.\n\n> **Tip**\n> [p02] A doc-only tip.\n\n",
+  "page_recipe": "vibe-doc-agent-page/1",
+  "source_authority": "selected-captured",
+  "selection": {
+    "address": "spec://com.example/host/guide",
+    "chunk": {
+      "end": 0,
+      "next_cursor": null,
+      "offset": 0,
+      "total": 0
+    },
+    "content": "",
+    "dictionary": "vibe-doc",
+    "document_bytes": 59,
+    "format": "md",
+    "heading_chain": [
+      "Guide"
+    ],
+    "location": {
+      "basis": "native-xml",
+      "line_end": 1,
+      "line_start": 1,
+      "path": "vibevm/vibespecs/guide.md"
+    },
+    "mode": "resolve",
+    "observation": {
+      "captured_bytes": 135,
+      "descriptor_identity": "com.example/host:vibevm/vibespecs/guide.md",
+      "document_hash": "sha256:55c954c42404744af0c5ad5465231eb727598f198777ee0056226b158fb9662a",
+      "encoding": "utf8",
+      "manifest_hash": "sha256:a4de03af5b91954e901d5496f593afa1fc19b352ed414e4056838332281eb017",
+      "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+      "resolution_hash": "sha256-query-resolution/1:9a83dc4a51194564009759d8266bc64f33e183c34d50c31f63a52056f413eac9",
+      "semantic_hash": "sha256-specdoc-node/1:82ab1035e6af0f10bcd78fe7044f852816076e6654d067a98589acbb7682336b",
+      "source_hash": null,
+      "strength": "observed"
+    },
+    "outline": [],
+    "schema": 1,
+    "selected_bytes": 59,
+    "status": null
+  }
+}

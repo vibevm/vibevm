@@ -53,10 +53,80 @@ use std::path::{Component, Path};
 
 use vibe_specdoc::doc::{Block, SpecDoc};
 
-use crate::citations::sources::SpecSources;
+use super::Adapted;
+use crate::citations::sources::{CapturedMedia, SpecSources};
 use crate::content::ExampleBody;
+use crate::error::{DocError, Result};
 use crate::manifest;
 use crate::pages;
+
+/// The source documentation `package_dir` adapts, located.
+///
+/// `Ok(None)` means the package declares no `[translates]` — it is a
+/// source documentation, and there is nothing to look for.
+///
+/// One lookup, two callers: the mirror check ([`check`]) reads the source
+/// to compare structure, and [`borrowed`] reads it for the example bodies
+/// a translation's pages borrow. A second spelling of «which source does
+/// this package adapt» would be the day one of them looked in a different
+/// tree than the other reported on.
+///
+/// Both refusals are errors rather than a silent `None`: a coordinate that
+/// is not `<group>/<name>` is a manifest defect, and a source no source
+/// holds leaves a mirror check with no verdict to give — green would be
+/// the worst of the three possible answers there.
+///
+/// ```
+/// use vibe_doc::citations::SpecSources;
+/// use vibe_doc::translations::adapted;
+///
+/// let dir = tempfile::tempdir().unwrap();
+/// std::fs::write(
+///     dir.path().join("vibe.toml"),
+///     "[package]\nname = \"pair\"\ngroup = \"com.example.docs\"\n",
+/// )
+/// .unwrap();
+///
+/// // A source documentation adapts nothing, so there is nothing to find
+/// // — and that is not a failure.
+/// assert_eq!(adapted(dir.path(), &SpecSources::new())?, None);
+/// # Ok::<(), vibe_doc::DocError>(())
+/// ```
+pub fn adapted(package_dir: &Path, sources: &SpecSources) -> Result<Option<Adapted>> {
+    let relations = match sources
+        .selected_manifest_at(package_dir)
+        .map_err(|message| DocError::Translation {
+            adapts: String::new(),
+            message,
+        })? {
+        Some(text) => {
+            manifest::relations_text(&package_dir.join("vibe.toml"), &text, super::TRANSLATES)?
+        }
+        None => manifest::relations(package_dir, super::TRANSLATES)?,
+    };
+    let Some((coordinate, _constraint)) = relations.into_iter().next() else {
+        return Ok(None);
+    };
+    let (group, name) = coordinate
+        .split_once('/')
+        .ok_or_else(|| DocError::Translation {
+            adapts: coordinate.clone(),
+            message: "`[translates].package` is not a `<group>/<name>` coordinate".to_owned(),
+        })?;
+    let instance = sources
+        .instance_of(group, name)
+        .ok_or_else(|| DocError::Translation {
+            adapts: coordinate.clone(),
+            message: format!(
+                "no source holds it, so there is nothing to mirror against; warm it with \
+                 `vibe cache add {coordinate}`, or point the check at a tree that carries it"
+            ),
+        })?;
+    Ok(Some(Adapted {
+        coordinate,
+        instance,
+    }))
+}
 
 /// Every example the source of the translation at `package_dir` authors,
 /// by page address and then by id.
@@ -183,6 +253,29 @@ pub fn borrowed_by(
     let Ok(Some(adapted)) = super::adapted(package_dir, sources) else {
         return BTreeMap::new();
     };
+    if sources.has_selected_service() {
+        let uri = format!(
+            "spec://{}/{}",
+            adapted.coordinate,
+            vibe_spec::canonical_doc_path(page)
+        );
+        let Ok(address) = vibe_spec::SpecAddress::parse(&uri) else {
+            return BTreeMap::new();
+        };
+        let Ok(located) = sources.locate(&address) else {
+            return BTreeMap::new();
+        };
+        let Some(captured) = located.captured else {
+            return BTreeMap::new();
+        };
+        let parsed = match captured.media {
+            CapturedMedia::Markdown => vibe_specdoc::from_markdown(&captured.text).ok(),
+            CapturedMedia::Xml => {
+                vibe_specdoc::from_xml_with(&captured.text, captured.vocabulary).ok()
+            }
+        };
+        return parsed.map(|doc| authored(&doc)).unwrap_or_default();
+    }
     let path = adapted.instance.root.join(pages::SPEC_ROOT).join(page);
     let Ok(text) = std::fs::read_to_string(&path) else {
         return BTreeMap::new();

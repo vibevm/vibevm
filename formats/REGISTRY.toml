@@ -1605,3 +1605,49 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/machine-fixed-deploy-action-error/e1"
 sunset = "none"
+
+# Selected-source query service and CLI/MCP adapters (PROP-070).
+[format.source-query-request]
+epoch = 1
+schema = "schemas/source_query/e1/request.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/source-query-request/e1"
+sunset = "none"
+
+[format.source-query-result]
+epoch = 1
+schema = "schemas/source_query/e1/result.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/source-query-result/e1"
+sunset = "none"
+
+[format.source-query-error]
+epoch = 1
+schema = "schemas/source_query/e1/error.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/source-query-error/e1"
+sunset = "none"
+
+[format.source-doc-request]
+epoch = 1
+schema = "schemas/source_query/e1/doc_request.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/source-doc-request/e1"
+sunset = "none"
+
+[format.source-doc-result]
+epoch = 1
+schema = "schemas/source_query/e1/doc_result.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/source-doc-result/e1"
+sunset = "none"

@@ -45,5 +45,6 @@ pub mod release_manifest;
 pub(crate) mod required_nullable;
 pub mod requirements_report;
 pub(crate) mod scalars;
+pub mod source_query;
 pub mod verification_evidence;
 pub mod vocabularies;

@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "code": "unknown_anchor",
+  "message": "Unknown exact node",
+  "boundary": "node selection",
+  "candidates": [
+    "root.solution"
+  ],
+  "root": "/foreign"
+}

@@ -1,0 +1,12 @@
+{
+  "passed": 8,
+  "ignored": 0,
+  "log_sha256": "840b4abbec8e4b379b270139c1105131be309d6dd4205a0bba07e3919f4f1e0a",
+  "inspected_assertions": "Native MD projection typed structured_unavailable with one-way reason; captured_bytes equals actual selected slot and remains same; lock unchanged/store absent. Native XML Doc MD response carries run/expect; XML response keeps reference. Legacy/shape/unselected tests preserved.",
+  "subject_hashes": {
+    "crates/vibe-mcp/src/tools/read_doc/tests.rs": "d4dff5561b1e2b9c260bd594847c196ef325f5fc9a2d25be602f162d998fec79",
+    "crates/vibe-mcp/src/tools/read_doc.rs": "326273e26356fd082f7db377d23474075b7ac3780bbf6147dc215dcdf480c0c9",
+    "crates/vibe-workspace/src/source_query/capture/continuity/service/document.rs": "bc069244510515e4833a457ad733074144be6593170fefca471c4a61e9dbf674"
+  },
+  "limitation": "raw-access proof here is public library captured_bytes, not a new CLI/MCP raw method; final binary/source coverage and root specmap pending"
+}

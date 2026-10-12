@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "description": "Explicit selected captured documentation page compatibility. Returned page and selected source metadata have distinct bases.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-DOC-COMPATIBILITY",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::source_query::e1::doc_request"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "address": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "format": {
+      "enum": [
+        "md",
+        "xml"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "x-default": null
+      }
+    },
+    "lang": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  }
+}

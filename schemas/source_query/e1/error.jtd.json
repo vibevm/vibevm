@@ -1,0 +1,10 @@
+{
+  "metadata": { "description": "Validated finite selected-source refusal; no domain effects.", "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-OBSERVATION-BINDING", "r": 1 }, "rustOptions": { "package": "vibe_wire::source_query::e1::error" } },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "code": { "enum": ["invalid_request", "unsupported_epoch", "unavailable_world", "stale_world", "unknown_package", "wrong_version", "unknown_document", "ambiguous_document", "unknown_anchor", "ambiguous_anchor", "unsupported_interpretation", "structured_unavailable", "stale_expectation", "stale_cursor", "location_unavailable", "limit_exceeded"], "metadata": { "x-vocabulary": "closed" } },
+    "message": { "type": "string" },
+    "boundary": { "type": "string" },
+    "candidates": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+  }
+}

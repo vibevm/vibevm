@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "address": "spec://com.example/host/guide#p01",
+  "format": "md",
+  "lang": "ru",
+  "root": "/foreign"
+}

@@ -42,32 +42,26 @@ impl McpTool for ReadDocMcpTool {
         ToolDescriptor {
             name: "read_doc".to_string(),
             description:
-                "Read one page of a documentation package by its `spec://` address — the extended documentation of a package (kind `doc`), as opposed to the specifications themselves. Give `address` as `spec://<group>/<name>[@<version>]/<document>`; a `#anchor` is accepted and ignored, because this returns the whole page. `format` is `md` (default — the text of every cited rule substituted in, which is what you want to READ) or `xml` (the citation ADDRESSES kept, which is what you want if you will resolve them yourself). `lang` asks for a translation: one documentation package is one language, so `lang` looks for the adaptation published as `<name>-<lang>` and falls back to the source, telling you in the `lang` field which one you got. Both projections carry the `pNN` block numbers the website and the local reader show, so `spec://…/<document>#p12` means one block everywhere. The package is looked for in this checkout, its in-tree packages, the lock file's slots and the machine store, in that order; warm one with `vibe cache add <coordinate>`. Read-only. Use `explain` to find WHICH page documents a rule, then this to read it."
+                "With `schema:1`, read exclusively through the host's prepared selected captured world; unavailable strict captures never fall back to an in-tree package/store. Without `schema`, preserve the explicitly weaker legacy-four-source whole-page/translation contract. Read one page of a documentation package by its `spec://` address — the extended documentation of a package (kind `doc`), as opposed to the specifications themselves. Give `address` as `spec://<group>/<name>[@<version>]/<document>`; a `#anchor` is accepted and ignored, because this returns the whole page. `format` is `md` (default — the text of every cited rule substituted in, which is what you want to READ) or `xml` (the citation ADDRESSES kept, which is what you want if you will resolve them yourself). `lang` asks for a translation: one documentation package is one language, so `lang` looks for the adaptation published as `<name>-<lang>` and falls back to the source, telling you in the `lang` field which one you got. Both projections carry the `pNN` block numbers the website and the local reader show, so `spec://…/<document>#p12` means one block everywhere. The package is looked for in this checkout, its in-tree packages, the lock file's slots and the machine store, in that order; warm one with `vibe cache add <coordinate>`. Read-only. Use `explain` to find WHICH page documents a rule, then this to read it."
                     .to_string(),
-            input_schema: json!({
-                "type": "object",
-                "properties": {
-                    "address": {
-                        "type": "string",
-                        "description": "`spec://<group>/<name>[@<version>]/<document>` — the page to read. A trailing `#anchor` is ignored."
-                    },
-                    "format": {
-                        "type": "string",
-                        "enum": ["md", "xml"],
-                        "description": "`md` substitutes each cited rule's current text; `xml` keeps the addresses. Default: `md`."
-                    },
-                    "lang": {
-                        "type": "string",
-                        "description": "BCP-47 tag of the language you want. Falls back to the source language and says so."
-                    }
-                },
-                "required": ["address"],
-                "additionalProperties": false
-            }),
+            input_schema: doc_input_schema(),
         }
     }
 
     fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
+        if args.get("schema").is_some() {
+            return selected_page(args, ctx);
+        }
+        let shape = doc_input_schema();
+        if !args.as_object().is_some_and(|object| {
+            object
+                .keys()
+                .all(|key| shape["properties"].get(key).is_some())
+        }) {
+            return Err(ToolError::InvalidArguments(
+                "read_doc rejects unknown fields".into(),
+            ));
+        }
         let address = args
             .get("address")
             .and_then(|v| v.as_str())
@@ -93,8 +87,95 @@ impl McpTool for ReadDocMcpTool {
             "lang": page.lang,
             "source": page.source.as_str(),
             "page": page.text,
+            "source_authority": "legacy-four-source",
         })))
     }
+}
+
+fn doc_input_schema() -> Value {
+    let mut schema = vibe_wire::behaviour::source_query::doc_request_json_schema();
+    // Epoch is required by the strict generated contract; omission selects
+    // the existing unversioned compatibility surface, explicitly labelled.
+    schema["required"] = json!(["address"]);
+    schema["properties"]["schema"]["description"] =
+        json!("1 = strict captured selection; absent = legacy four-source compatibility");
+    schema
+}
+
+fn query_refusal(error: vibe_wire::generated::source_query::e1::error::Error) -> ToolError {
+    ToolError::StructuredPreflight {
+        message: error.message.clone(),
+        report: serde_json::to_value(error).expect("generated source refusal"),
+    }
+}
+
+fn doc_refusal(code: &str, boundary: &str, message: &str) -> ToolError {
+    let report =
+        json!({"schema":1,"code":code,"boundary":boundary,"message":message,"candidates":[]});
+    vibe_wire::behaviour::source_query::read_error(&report).expect("owning documentation refusal");
+    ToolError::StructuredPreflight {
+        message: message.into(),
+        report,
+    }
+}
+
+fn selected_page(args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
+    use std::sync::Arc;
+    use vibe_wire::generated::source_query::e1::doc_request::DocRequestFormat;
+    use vibe_workspace::source_query::SourceQueryService;
+    let request =
+        vibe_wire::behaviour::source_query::read_doc_request(args).map_err(|boundary| {
+            doc_refusal(
+                if boundary == "epoch" {
+                    "unsupported_epoch"
+                } else {
+                    "invalid_request"
+                },
+                boundary,
+                "Documentation request does not match its registered contract",
+            )
+        })?;
+    let format = match request.format {
+        Some(DocRequestFormat::Xml) => Format::Xml,
+        _ => Format::Md,
+    };
+    let service =
+        Arc::new(SourceQueryService::prepare_host(&ctx.project_root).map_err(query_refusal)?);
+    let sources = SpecSources::new().with_selected_service(service.clone());
+    let page =
+        vibe_doc::agent::read_page(&request.address, format, request.lang.as_deref(), &sources)
+            .map_err(|_| match service.captured_document(&request.address) {
+                Err(error) => query_refusal(error),
+                Ok(_) => doc_refusal(
+                    "structured_unavailable",
+                    "documentation projection",
+                    "Captured documentation page projection is unavailable",
+                ),
+            })?;
+    let captured = service
+        .captured_document(&page.address)
+        .map_err(query_refusal)?;
+    let selection_request = vibe_wire::behaviour::source_query::read_request(&json!({
+        "schema":1,"address":captured.canonical_address,"mode":"resolve","format":format.as_str(),"children":true,
+    })).expect("generated selected page metadata request");
+    let selection = service.query(&selection_request).map_err(query_refusal)?;
+    if page.text.len() > vibe_wire::behaviour::source_query::MAX_CONTENT_BYTES as usize {
+        return Err(doc_refusal(
+            "limit_exceeded",
+            "documentation projection bytes",
+            "Projected page exceeds its byte bound",
+        ));
+    }
+    let value = json!({"schema":1,"address":captured.canonical_address,"format":format.as_str(),
+        "lang":page.lang,"source":page.source.as_str(),"page_bytes":page.text.len(),"page":page.text,
+        "page_recipe":"vibe-doc-agent-page/1","source_authority":"selected-captured","selection":selection});
+    vibe_wire::behaviour::source_query::read_doc_result(&value).map_err(|boundary| {
+        ToolError::Internal(format!(
+            "generated documentation result invariant: {boundary}"
+        ))
+    })?;
+    service.revalidate().map_err(query_refusal)?;
+    Ok(ToolOutput::ok(value))
 }
 
 /// The four sources a documentation address resolves through

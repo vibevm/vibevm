@@ -21,9 +21,10 @@ use super::{SourceQueryUnavailable, select_owner_roots};
 mod continuity;
 pub use continuity::{
     CanonicalNodeIdentity, CapturedSourceFile, CommonMarkExtraction, ExtractedSource,
-    ExtractionError, ExtractionProvenance, MaterializedVibeMedia, PreparedWorldWitness,
-    RecordedOutput, RepresentationWitness, SelectedDescriptorWitness, SourceEncoding,
-    SourceMembershipIndex, SourceStrength, SpanBasis, SpecExtraction, SpecOutline, StructuredView,
+    ExtractionError, ExtractionProvenance, MaterializedVibeMedia, PreparedDocInstance,
+    PreparedDocument, PreparedWorldWitness, RecordedOutput, RepresentationWitness,
+    SelectedDescriptorWitness, SourceEncoding, SourceMembershipIndex, SourceQueryResponse,
+    SourceQueryService, SourceStrength, SpanBasis, SpecExtraction, SpecOutline, StructuredView,
     WitnessedSourceWorld, canonical_node_of_output, native_xml_range_of_output,
 };
 
@@ -341,13 +342,22 @@ fn validate_owner_capture(
                     "captured output differs from descriptor digest",
                 ));
             }
-            let package = manifest
-                .package
-                .as_ref()
-                .ok_or_else(|| invalid(&label, "descriptor owner has no package manifest"))?;
-            let selection = package
-                .select_source(&row.source)
-                .map_err(|error| invalid(&label, format!("source selection: {error:?}")))?;
+            let selection = if let Some(package) = &manifest.package {
+                package.select_source(&row.source)
+            } else if let Some(project) = &manifest.project {
+                let coordinate = project
+                    .group
+                    .as_ref()
+                    .map(|group| format!("{group}/{}", project.name))
+                    .unwrap_or_else(|| "self".into());
+                vibe_core::manifest::select_source_rows(&coordinate, &project.sources, &row.source)
+            } else {
+                return Err(invalid(
+                    &label,
+                    "descriptor owner has no authored node manifest",
+                ));
+            }
+            .map_err(|error| invalid(&label, format!("source selection: {error:?}")))?;
             let interpretation = match selection {
                 SelectedSource::Unclassified { .. } => None,
                 SelectedSource::Descriptor { descriptor, .. } => Some(descriptor.interpretation()),

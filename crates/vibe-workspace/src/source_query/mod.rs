@@ -18,8 +18,9 @@ mod visibility;
 pub use capture::{
     BoundSourceInputs, CanonicalNodeIdentity, CapturedSourceFile, CommonMarkExtraction,
     ExtractedSource, ExtractionError, ExtractionProvenance, MaterializedVibeMedia,
-    PreparedOwnerCapture, PreparedWorldWitness, RecordedOutput, RepresentationWitness,
-    SelectedDescriptorWitness, SourceEncoding, SourceMembershipIndex, SourceStrength, SpanBasis,
+    PreparedDocInstance, PreparedDocument, PreparedOwnerCapture, PreparedWorldWitness,
+    RecordedOutput, RepresentationWitness, SelectedDescriptorWitness, SourceEncoding,
+    SourceMembershipIndex, SourceQueryResponse, SourceQueryService, SourceStrength, SpanBasis,
     SpecExtraction, SpecOutline, StructuredView, WitnessedSourceWorld, canonical_node_of_output,
     captured_manifest_closure, native_xml_range_of_output,
 };

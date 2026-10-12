@@ -1,0 +1,17 @@
+{
+  "consultation": "Astra Medium, read-only, no builds or edits",
+  "cause": "Doc XML-to-Markdown intentionally loses Example/ExampleRef IR; generic Markdown parser cannot recover it.",
+  "contract": [
+    "PROP-045 TARGET-MD",
+    "PROP-045 DOC-VOCAB-MD-ONE-WAY"
+  ],
+  "decision": "Keep native XML Doc semantic reads in MD/XML outputs; typed semantic unavailable for Doc materialized Markdown without compatible captured pivot; preserve raw captured access and normal Spec slot parity.",
+  "minimal_owners": [
+    "service/document.rs",
+    "read_doc/tests.rs",
+    "existing D2 governing contract"
+  ],
+  "rejected": "Silent XML retention in Markdown slot changes contract; generic-fence reconstruction prohibited.",
+  "root_answer": "ROOT-DOC-ONE-WAY-BOUNDARY-ANSWER.json",
+  "pending": "corrected refusal/raw preservation corpus and final D2 binding"
+}

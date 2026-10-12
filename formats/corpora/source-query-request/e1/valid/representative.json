@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "address": "spec://org.demo/self/DOC#root.solution",
+  "mode": "read",
+  "format": "md",
+  "children": true
+}
