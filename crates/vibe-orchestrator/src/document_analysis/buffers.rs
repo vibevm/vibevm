@@ -14,6 +14,18 @@ pub(super) struct ClientBuffers {
     pub open: BTreeMap<ResourceId, Buffer>,
     pub versions: BTreeMap<ResourceId, u64>,
     pub captures: u64,
+    pub generation: u64,
+    pub watch_sequence: u64,
+    pub watch_gap: bool,
+}
+impl ClientBuffers {
+    pub fn advance(&mut self) -> Result<(), DocumentAnalysisError> {
+        self.generation = self
+            .generation
+            .checked_add(1)
+            .ok_or(DocumentAnalysisError::Unavailable)?;
+        Ok(())
+    }
 }
 impl DocumentClient {
     pub fn open(
@@ -45,6 +57,7 @@ impl DocumentClient {
         }
         let underlying = self.host.disk(resource)?;
         self.validate_intent(resource, &intent, &underlying)?;
+        state.advance()?;
         state.versions.insert(resource, version);
         state.open.insert(
             resource,
@@ -87,6 +100,7 @@ impl DocumentClient {
         }
         self.validate_intent(resource, &intent, &old.underlying)?;
         let underlying = old.underlying.clone();
+        state.advance()?;
         state.open.insert(
             resource,
             Buffer {
@@ -122,6 +136,7 @@ impl DocumentClient {
         {
             return Err(DocumentAnalysisError::StaleVersion);
         }
+        state.advance()?;
         state.open.remove(&resource);
         Ok(())
     }

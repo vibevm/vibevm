@@ -1,0 +1,87 @@
+{
+  "positions-representative.log": {
+    "sha256": "dda5770bb4840c038bdef12a752a79f1a9074105f836e88370a75e9c295c1742",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1005 filtered out; finished in 0.00s"
+  },
+  "capture-position-representative.log": {
+    "sha256": "5a385d0b3bfb212d977ae27d35ad3038b363c33b83c54d752952834bd5d01644",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.00s"
+  },
+  "orchestrator-family.log": {
+    "sha256": "8ef3ef14d006e7100e4968babb3e30311246f3af60f02c1e42ae9c9124c7ae98",
+    "exit": 101,
+    "result": "test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  "orchestrator-fixed.log": {
+    "sha256": "6b385b2a6b8703bdfbe6022a295443cb7dc39f2c821aa8e97c05c268650ad0ae",
+    "exit": 101,
+    "result": "test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  "orchestrator-final.log": {
+    "sha256": "a5fa858fb0c6b035b0171da7d5ce969a27f647b9aa9a67a06836fc0dee40168b",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  "orchestrator-sealed.log": {
+    "sha256": "497de49a61236cc1f59412838c8e07a25b7c6db284cf08b370880ff1cdd93d52",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  "orchestrator-bound-results.log": {
+    "sha256": "caaceaa4aaf69ad84bc9f49f0f8e1ac0003f038267abb5dc29584387de329db1",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  "mcp-context.log": {
+    "sha256": "0fa24fad2aaa9bbd5b63f3e408b13c62c30b6ab36964686f4edb0757418088bd",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  "spec-final.log": {
+    "sha256": "75753628984ec556f3d9d341b0d2291ca76d986d1fb2efc2a5c0ab41206e0ea3",
+    "exit": 0,
+    "result": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1004 filtered out; finished in 0.00s"
+  },
+  "buffer-compat.log": {
+    "sha256": "0b8b46595529db7ab1f2cb7503f11052f5b33b4052ff53f7bff849b3fe7c1b7a",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.00s"
+  },
+  "mcp-final.log": {
+    "sha256": "ef2afdb3c145f11676eff3e4922badeb986063f4fcb314f4e939c39a0410a662",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  "gap-promotion-before.log": {
+    "sha256": "1d46bb2ff1ab8aa1f72855cd4c125a62667987fd88a969605e214991e68b61da",
+    "exit": 101,
+    "result": "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.00s"
+  },
+  "orchestrator-gap-fixed.log": {
+    "sha256": "f42aa338bbc3e4ead0f3afac70540887e936e2b2655379b5dc49c52c1c08606d",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  "mcp-gap-fixed.log": {
+    "sha256": "692b4794f5e817c41f2e7c0d658ad4350a0c7aded0636bef9c380b45809d0a59",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  "orchestrator-final-basis.log": {
+    "sha256": "4316c95abbea086b5383b44e0c7cf57efcbb3138724461bc2ead5a5ed139b179",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  "mcp-final-basis.log": {
+    "sha256": "76de7487f5d959b262ffd260aea47c4a686b2209ae019f5e40c11aa31a3c53ee",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  "mcp-sealed.log": {
+    "sha256": "85909c80281eb2c2d487fe2fa949212161d796d67a3e2eee3897c47f6f7a35cd",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  }
+}
