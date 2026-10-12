@@ -1,0 +1,62 @@
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-conform/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-conform` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-mcp/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-mcp` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-specmark-grammar/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-specmark-grammar` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-specmap/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-specmap` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-specmark/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-specmark` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/lib.rs (/fast/git/v/.build/c4-first-agent-target/debug/build/core-ai-native-specmap/3708686dc6aee018/out/core_ai_native_specmap-3708686dc6aee018)
+
+running 1 test
+test explain::tests::json_subgraph_has_all_four_tables ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 164 filtered out; finished in 0.00s

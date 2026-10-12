@@ -1,0 +1,21 @@
+{
+  "schema": 4,
+  "traceability_exit": 0,
+  "unresolved_host_edges": 0,
+  "gated_orphans": 138,
+  "baseline_orphans": 138,
+  "registered_mirrors": [
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap"
+  ],
+  "mirror_file_count": 37,
+  "mirrors_byte_identical": true,
+  "root_metadata_only_changes": [
+    "crates/vibe-install/src/slot_verify/derivation.rs",
+    "crates/vibe-specdoc/src/canonical_node.rs"
+  ]
+}

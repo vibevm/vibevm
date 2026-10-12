@@ -80,6 +80,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
 
+pub mod canonical_node;
 pub mod doc;
 pub mod load;
 
@@ -132,7 +133,7 @@ pub use xml_comment::{
     XmlCommentCodecError, decode_generated_xml_comment, decode_generated_xml_comment_payload,
     encode_generated_xml_comment,
 };
-pub use xml_in::{from_xml, from_xml_with};
+pub use xml_in::{from_xml, from_xml_with, native_anchor_range_with};
 pub use xml_out::to_xml;
 
 /// Versioned deterministic-converter identity recorded in every transformed

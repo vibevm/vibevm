@@ -1,0 +1,66 @@
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-conform/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-conform` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-mcp/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-mcp` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-specmark-grammar/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-specmark-grammar` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-specmap/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-specmap` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/core-ai-native-specmark/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `core-ai-native-specmark` (manifest) generated 1 warning
+   Compiling core-ai-native-specmap v1.1.0 (/fast/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.65s
+     Running unittests src/lib.rs (/fast/git/v/.build/c4-first-agent-target/debug/build/core-ai-native-specmap/3708686dc6aee018/out/core_ai_native_specmap-3708686dc6aee018)
+
+running 4 tests
+test m_01_c_3_cases::duplicate_xml_anchor_cannot_be_resolved_by_first_match ... ok
+test m_01_c_3_cases::vibe_markdown_fact_spelling_has_a_native_anchor_line ... ok
+test m_01_c_3_cases::xml_native_section_and_fact_ranges_follow_selected_bytes ... ok
+test m_01_c_3_cases::markdown_native_section_range_ends_at_next_peer ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 162 filtered out; finished in 0.00s

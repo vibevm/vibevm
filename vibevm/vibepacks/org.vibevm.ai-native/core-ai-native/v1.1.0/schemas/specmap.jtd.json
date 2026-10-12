@@ -26,7 +26,7 @@
                 "file": {
                     "type": "string",
                     "metadata": {
-                        "description": "Forward-slash repo-relative markdown path on disk (for file:line navigation)."
+                        "description": "Legacy source/projection decoration: forward-slash authored source path. It is not a query-selected installed slot locator."
                     }
                 },
                 "anchor": {
@@ -41,7 +41,7 @@
                 "content_hash": {
                     "type": "string",
                     "metadata": {
-                        "description": "`sha256:<hex>` over the unit span (heading line + body), line endings normalised to LF."
+                        "description": "Legacy `sha256:<hex>` over the Markdown source span or the XML scanner's canonical Markdown projection span, with LF line endings. It is not a canonical SpecDoc IR hash."
                     }
                 },
                 "line": {
@@ -52,6 +52,18 @@
                 }
             },
             "optionalProperties": {
+                "canonical_node": {
+                    "ref": "canonical_node",
+                    "metadata": {
+                        "description": "Schema 4: versioned hash of the selected canonical SpecDoc IR node. Absent for scanner-only or legacy rows; distinct from content_hash."
+                    }
+                },
+                "materialized_locator": {
+                    "ref": "materialized_locator",
+                    "metadata": {
+                        "description": "Schema 4: query-time location in the actually selected materialized slot. Absent from source-only committed maps."
+                    }
+                },
                 "kind": {
                     "enum": ["prop", "req", "design", "guide"],
                     "metadata": {
@@ -76,6 +88,22 @@
                         "description": "For `disputed` status: the other anchor of the conflicts_with pair."
                     }
                 }
+            }
+        },
+        "canonical_node": {
+            "properties": {
+                "recipe": { "type": "string" },
+                "hash": { "type": "string" }
+            }
+        },
+        "materialized_locator": {
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "metadata": { "description": "Actual selected slot output path, including its representation extension." }
+                },
+                "start_line": { "type": "uint32" },
+                "end_line": { "type": "uint32" }
             }
         },
         "code_item": {

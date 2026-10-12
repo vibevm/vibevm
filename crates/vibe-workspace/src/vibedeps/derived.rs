@@ -9,9 +9,9 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use vibe_core::layout;
-use vibe_core::manifest::SpecFormat;
+use vibe_core::manifest::{PackageMeta, SpecFormat};
 use vibe_core::{ContentHash, Group};
-use vibe_facts::{Registry, overlay_file_hash};
+use vibe_facts::{PackageOverlay, Registry, overlay_file_hash};
 
 use super::slot_diff::{
     MaterialiseReport, PreparedSlotFile, compute_prepared_payload_hash, reconcile_slot,
@@ -34,12 +34,45 @@ use selection::{
     SelectedMaterialization, classify, materialise_mixed_descriptor, read_descriptor_package,
     require_exact_sources, reserve_output,
 };
-use transform::{is_spec_document, transform_declared_file, transform_file};
+use transform::{
+    is_spec_document, transform_declared_bytes, transform_declared_file, transform_file,
+};
 
 /// Legacy transformed-slot identity filename, retained read-only.
 pub const DERIVED_MANIFEST_FILENAME: &str = ".vibe-derived.toml";
 /// Current specdoc pivot recipe recorded in transformed-slot manifests.
 pub const CONVERTER_RECIPE: &str = vibe_specdoc::CONVERTER_RECIPE;
+
+/// Replay the incumbent declared-source selection and builtin transform over
+/// caller-held original bytes. It is an inert pure conversion, not a proof;
+/// only the install owner's verified capture and selected-output join may
+/// promote its result.
+pub fn replay_declared_captured(
+    package_meta: &PackageMeta,
+    source: &Path,
+    format: SpecFormat,
+    overlay: &PackageOverlay,
+    bytes: &[u8],
+) -> Result<Option<(PathBuf, Vec<u8>)>, WorkspaceError> {
+    let selection = classify(package_meta, source)?;
+    let SelectedMaterialization::Vibe {
+        interpretation,
+        media,
+    } = selection
+    else {
+        return Ok(None);
+    };
+    let coordinate = format!("{}/{}", package_meta.group, package_meta.name);
+    transform_declared_bytes(
+        source,
+        format,
+        &coordinate,
+        overlay,
+        interpretation,
+        media,
+        bytes,
+    )
+}
 
 const DERIVED_MANIFEST_SCHEMA: u32 = 1;
 const LEGACY0_EXCLUDES: &[&str] = &[".git", ".vibe", "target", "node_modules", ".vibeignore"];

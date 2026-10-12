@@ -30,6 +30,15 @@ pub struct Specmap {
     pub warnings: Vec<Warning>,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct CanonicalNode {
+    #[serde(rename = "hash")]
+    pub hash: String,
+
+    #[serde(rename = "recipe")]
+    pub recipe: String,
+}
+
 /// A tagged code item (fn, struct, enum, trait, impl, mod). Only items carrying
 /// at least one edge appear; the full-orphan inventory is a later-phase table.
 #[derive(Serialize, Deserialize)]
@@ -133,6 +142,20 @@ pub struct Edge {
     pub reason: Option<Box<String>>,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct MaterializedLocator {
+    #[serde(rename = "end_line")]
+    pub endLine: u32,
+
+    /// Actual selected slot output path, including its representation
+    /// extension.
+    #[serde(rename = "path")]
+    pub path: String,
+
+    #[serde(rename = "start_line")]
+    pub startLine: u32,
+}
+
 /// From the unit's kind line (GUIDE-SPEC-AUTHORING §3); absent on legacy-
 /// unmarked units.
 #[derive(Serialize, Deserialize)]
@@ -168,8 +191,9 @@ pub struct SpecUnit {
     #[serde(rename = "anchor")]
     pub anchor: String,
 
-    /// `sha256:<hex>` over the unit span (heading line + body), line endings
-    /// normalised to LF.
+    /// Legacy `sha256:<hex>` over the Markdown source span or the XML scanner's
+    /// canonical Markdown projection span, with LF line endings. It is not a
+    /// canonical SpecDoc IR hash.
     #[serde(rename = "content_hash")]
     pub contentHash: String,
 
@@ -180,8 +204,8 @@ pub struct SpecUnit {
     #[serde(rename = "doc_path")]
     pub docPath: String,
 
-    /// Forward-slash repo-relative markdown path on disk (for file:line
-    /// navigation).
+    /// Legacy source/projection decoration: forward-slash authored source path.
+    /// It is not a query-selected installed slot locator.
     #[serde(rename = "file")]
     pub file: String,
 
@@ -198,6 +222,12 @@ pub struct SpecUnit {
     #[serde(rename = "uri")]
     pub uri: String,
 
+    /// Schema 4: versioned hash of the selected canonical SpecDoc IR node.
+    /// Absent for scanner-only or legacy rows; distinct from content_hash.
+    #[serde(rename = "canonical_node")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub canonicalNode: Option<Box<CanonicalNode>>,
+
     /// For `disputed` status: the other anchor of the conflicts_with pair.
     #[serde(rename = "disputes")]
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -208,6 +238,12 @@ pub struct SpecUnit {
     #[serde(rename = "kind")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<Box<SpecUnitKind>>,
+
+    /// Schema 4: query-time location in the actually selected materialized
+    /// slot. Absent from source-only committed maps.
+    #[serde(rename = "materialized_locator")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub materializedLocator: Option<Box<MaterializedLocator>>,
 
     /// Author-asserted semantic revision `rN`.
     #[serde(rename = "revision")]

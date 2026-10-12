@@ -2513,3 +2513,13 @@ structure, and it goes when the file does.
 | @fact:B229-SEVERITY **severity** | P2 — limitation of strict proof availability, not a blocker to current MVP development with explicit weaker strength. Native Windows/macOS and stronger hostile-ABA guarantees are also unperformed; no additional gate is imposed by this finding. |
 | @fact:B229-DISPOSITION **disposition** | deferred — extend bounded replay using the canonical named recipes/caps when a concrete product use requires stronger proof for a larger or Tree1 package. Preserve immutable captured bytes, independently selected pin, complete membership and resource bounds; do not fall back to payload-owned digests. Converter/overlay proof remains the existing M-01-C.3 task, not this backlog improvement. |
 | @fact:B229-FILED **filed by** | First Agent C2 acceptance, 2026-10-12. |
+
+## B-230 — sync gate rejects two pre-existing unregistered Lean vendor trees {#b-230}
+
+| field | value |
+|---|---|
+| @fact:B230-WHAT **what** | During M-01-C.3, normal sync-engines synchronized only the six registered specmap mirrors. All nine active sets compare clean, but the overall check exits1 because old Lean language/MCP v0.1.0 vendor directories are outside the sync registry. |
+| @fact:B230-EVIDENCE **evidence** | campaigns/next/evidence/M-01-C.3/manifest.json and accepted receipt retain sync-engines-before/final-check outcomes. The current C3 mirrors have complete byte-identical file sets; no Lean source was changed. |
+| @fact:B230-SEVERITY **severity** | P2 — global generator gate remains red; does not block current changed-owner proof or MVP development. |
+| @fact:B230-DISPOSITION **disposition** | deferred — reconcile the two historical trees with project topology when this complete gate is required. Preserve stopped Lean campaign evidence and owner state before deciding registration/retirement; do not resume Lean work or clean unrelated trees as part of C3. |
+| @fact:B230-FILED **filed by** | First Agent C3 acceptance, 2026-10-12. |

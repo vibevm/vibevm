@@ -97,6 +97,15 @@ fn explain_unit(map: &Specmap, uri: &str) -> Result<String> {
     for u in units {
         out.push_str(&format!("spec unit {uri}\n  {}\n", unit_line(u)));
         out.push_str(&format!("  hash {}\n", &u.contentHash));
+        if let Some(node) = &u.canonicalNode {
+            out.push_str(&format!("  canonical IR {} {}\n", node.recipe, node.hash));
+        }
+        if let Some(locator) = &u.materializedLocator {
+            out.push_str(&format!(
+                "  selected materialization {}:{}-{}\n",
+                locator.path, locator.startLine, locator.endLine
+            ));
+        }
     }
     let edges: Vec<&Edge> = map.edges.iter().filter(|e| e.uri == uri).collect();
     if edges.is_empty() {
@@ -262,11 +271,20 @@ pub fn explain_json(map: &Specmap, target: &str) -> Result<serde_json::Value> {
         .iter()
         .filter(|u| uris.contains(&u.uri))
         .map(|u| {
-            serde_json::json!({
+            let mut value = serde_json::json!({
                 "uri": u.uri, "heading": u.heading,
                 "revision": u.revision.as_deref(),
                 "content_hash": u.contentHash, "file": u.file, "line": u.line,
-            })
+            });
+            if let Some(object) = value.as_object_mut() {
+                if let Some(node) = &u.canonicalNode {
+                    object.insert("canonical_node".into(), serde_json::json!(node));
+                }
+                if let Some(locator) = &u.materializedLocator {
+                    object.insert("materialized_locator".into(), serde_json::json!(locator));
+                }
+            }
+            value
         })
         .collect();
     let suspects: Vec<_> = map
@@ -312,6 +330,8 @@ mod tests {
                     anchor: "req-conditional-grammar".to_string(),
                     heading: "The predicate grammar".to_string(),
                     contentHash: "sha256:aa".to_string(),
+                    canonicalNode: None,
+                    materializedLocator: None,
                     line: 400,
                     kind: Some(Box::new(SpecUnitKind::Req)),
                     revision: Some(Box::new(1)),
@@ -325,6 +345,8 @@ mod tests {
                     anchor: "req-conditional-composition".to_string(),
                     heading: "Boolean composition over predicates".to_string(),
                     contentHash: "sha256:bb".to_string(),
+                    canonicalNode: None,
+                    materializedLocator: None,
                     line: 420,
                     kind: Some(Box::new(SpecUnitKind::Req)),
                     revision: Some(Box::new(1)),

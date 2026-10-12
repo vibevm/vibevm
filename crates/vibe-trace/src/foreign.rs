@@ -270,7 +270,9 @@ fn render_foreign(map: &Specmap, target: &str, json: bool, coordinate: &str) -> 
         if let Some(obj) = value.as_object_mut() {
             obj.insert(
                 "source".to_string(),
-                json!({ "from": "carried-map", "coordinate": coordinate }),
+                json!({ "from": "carried-map", "coordinate": coordinate,
+                    "file_line": "carried-source-or-projection",
+                    "content_hash": "source-or-projection-span", "selected_materialization": false }),
             );
         }
         Ok(Explain::Json(value))
@@ -279,7 +281,7 @@ fn render_foreign(map: &Specmap, target: &str, json: bool, coordinate: &str) -> 
         let deps = vibedeps_display();
         Ok(Explain::Text(format!(
             "note: answered from the carried map under `spec://{coordinate}/` \
-             ({deps}/…/{MAP_FILENAME}), not built fresh from this tree\n{body}"
+             ({deps}/…/{MAP_FILENAME}); file:line and content hash are carried source/projection decorations, not a selected materialized locator or canonical IR identity\n{body}"
         )))
     }
 }

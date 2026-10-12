@@ -202,6 +202,7 @@ pub(super) fn fact_element(
         }
     }
     let mut text = String::new();
+    let mut end_line = at as u32;
     if !was_empty {
         loop {
             match p.evs.get(p.i) {
@@ -212,6 +213,7 @@ pub(super) fn fact_element(
                     ));
                 }
                 Some(Ev::End(n)) if n == element_name => {
+                    end_line = p.poss[p.i] as u32;
                     p.i += 1;
                     break;
                 }
@@ -237,6 +239,7 @@ pub(super) fn fact_element(
             requirements,
             status,
             line: at as u32,
+            end_line,
         },
         text,
     ))

@@ -87,28 +87,9 @@ pub(super) fn transform_declared_file(
             "selected Vibe source is outside the supported specs-root/README layout",
         ));
     }
-    let target_extension = match format {
-        SpecFormat::Xml => "xml",
-        SpecFormat::Markdown => "md",
-        SpecFormat::Mixed => return Ok(None),
-    };
-    let target_media = if format == SpecFormat::Xml {
-        "application/xml"
-    } else {
-        "text/markdown"
-    };
-    let address_prefix = format!(
-        "spec://{package}/{}#",
-        vibe_spec::canonical_doc_path(&path_to_slash(rel))
-    );
-    let overlay_applies = overlay.contains_document(&address_prefix);
-    if media == target_media
-        && rel.extension().and_then(|e| e.to_str()) == Some(target_extension)
-        && !overlay_applies
-    {
+    if !needs_declared_conversion(rel, format, package, overlay, media) {
         return Ok(None);
     }
-
     let relative = path_to_slash(rel);
     let snapshot = project
         .read_file_snapshot_bounded(&relative, MAX_DECLARED_VIBE_SOURCE_BYTES)
@@ -119,9 +100,49 @@ pub(super) fn transform_declared_file(
             )
         })?
         .ok_or_else(|| source_error(source, "declared Vibe source disappeared before capture"))?;
-    let bytes = snapshot.bytes;
-    let text = std::str::from_utf8(&bytes)
-        .map_err(|_| source_error(source, "declared Vibe source is not UTF-8"))?;
+    transform_declared_bytes(
+        rel,
+        format,
+        package,
+        overlay,
+        interpretation,
+        media,
+        &snapshot.bytes,
+    )
+}
+
+/// The materializer's pure builtin kernel, also used for replay over an
+/// already-verified original capture. It never opens a source or output path.
+pub(super) fn transform_declared_bytes(
+    rel: &Path,
+    format: SpecFormat,
+    package: &str,
+    overlay: &PackageOverlay,
+    interpretation: SourceInterpretation,
+    media: &str,
+    bytes: &[u8],
+) -> Result<Option<(PathBuf, Vec<u8>)>, WorkspaceError> {
+    if !is_spec_document(rel) {
+        return Err(source_error(
+            rel,
+            "selected Vibe source is outside the supported specs-root/README layout",
+        ));
+    }
+    let target_extension = match format {
+        SpecFormat::Xml => "xml",
+        SpecFormat::Markdown => "md",
+        SpecFormat::Mixed => return Ok(None),
+    };
+    if !needs_declared_conversion(rel, format, package, overlay, media) {
+        return Ok(None);
+    }
+    let address_prefix = format!(
+        "spec://{package}/{}#",
+        vibe_spec::canonical_doc_path(&path_to_slash(rel))
+    );
+
+    let text = std::str::from_utf8(bytes)
+        .map_err(|_| source_error(rel, "declared Vibe source is not UTF-8"))?;
     let mut doc = match (interpretation, media) {
         (SourceInterpretation::VibeSpec, "application/xml") => {
             vibe_specdoc::from_xml_with(text, Vocabulary::Spec)
@@ -132,14 +153,14 @@ pub(super) fn transform_declared_file(
         (SourceInterpretation::VibeSpec, "text/markdown") => vibe_specdoc::from_markdown(text),
         _ => {
             return Err(source_error(
-                source,
+                rel,
                 "declared Vibe media has no compatible parser",
             ));
         }
     }
     .map_err(|error| {
         source_error(
-            source,
+            rel,
             format!("declared Vibe source cannot enter the pivot: {error}"),
         )
     })?;
@@ -153,6 +174,27 @@ pub(super) fn transform_declared_file(
         rel.with_extension(target_extension),
         converted.into_bytes(),
     )))
+}
+
+fn needs_declared_conversion(
+    rel: &Path,
+    format: SpecFormat,
+    package: &str,
+    overlay: &PackageOverlay,
+    media: &str,
+) -> bool {
+    let (target_media, target_extension) = match format {
+        SpecFormat::Xml => ("application/xml", "xml"),
+        SpecFormat::Markdown => ("text/markdown", "md"),
+        SpecFormat::Mixed => return false,
+    };
+    let address_prefix = format!(
+        "spec://{package}/{}#",
+        vibe_spec::canonical_doc_path(&path_to_slash(rel))
+    );
+    media != target_media
+        || rel.extension().and_then(|e| e.to_str()) != Some(target_extension)
+        || overlay.contains_document(&address_prefix)
 }
 
 pub(super) fn is_spec_document(rel: &Path) -> bool {
