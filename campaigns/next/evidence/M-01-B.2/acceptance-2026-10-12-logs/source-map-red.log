@@ -1,0 +1,479 @@
+warning: unused field `description` in `workspace.package`
+  --> Cargo.toml:91:1
+   |
+91 | description = "The disciplined runtime for spec-driven vibecoding"
+   | ^^^^^^^^^^^
+   |
+   = note: `cargo::unused_workspace_package_fields` is set to `warn` by default
+help: consider removing the field `workspace.package.description`
+warning: unused field `keywords` in `workspace.package`
+  --> Cargo.toml:92:1
+   |
+92 | keywords = ["spec-driven", "ai", "cli", "package-manager"]
+   | ^^^^^^^^
+   |
+help: consider removing the field `workspace.package.keywords`
+warning: unused field `categories` in `workspace.package`
+  --> Cargo.toml:93:1
+   |
+93 | categories = ["command-line-utilities", "development-tools"]
+   | ^^^^^^^^^^
+   |
+help: consider removing the field `workspace.package.categories`
+warning: workspace (manifest) generated 3 warnings
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-test-support/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-test-support` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/progress-core/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `progress-core` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-package-source/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-package-source` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> xtask/Cargo.toml:11:1
+   |
+10 | repository.workspace = true
+   | ----------
+11 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `xtask` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-spec/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-spec` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-lifecycle/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-lifecycle` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-actions/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-actions` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-orchestrator/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-orchestrator` (manifest) generated 1 warning
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-cli/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-cli` (manifest) generated 2 warnings
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-safefs/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-safefs` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-facts/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-facts` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-mcp/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-mcp` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-registry/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-registry` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-check/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-check` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-install/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-install` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-trace/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-trace` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-publish/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-publish` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-core/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-core` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-ext/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-ext` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-specdoc/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-specdoc` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-workspace/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-workspace` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-extension-registry/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-extension-registry` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-native-loader/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-native-loader` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-requirements/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-requirements` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-wire/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-wire` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-resolver/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-resolver` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-agent-projection/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-agent-projection` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc-server/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc-server` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc-shell/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc-shell` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-graph/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-graph` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-scrape/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-scrape` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-llm/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-llm` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-index/Cargo.toml:10:12
+   |
+10 | homepage = "https://gitverse.ru/vibevm/vibevm"
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 | repository = "https://gitverse.ru/vibevm/vibevm"
+   |              -----------------------------------
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-index` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-settings/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-settings` (manifest) generated 1 warning
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running unittests src/lib.rs (/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-workspace/0be44ca03d94f575/out/vibe_workspace-0be44ca03d94f575)
+
+running 1 test
+test source_query::capture::continuity::m_01_b_2_cases::unchanged_output_hash_cannot_join_different_record_source ... FAILED
+
+failures:
+
+---- source_query::capture::continuity::m_01_b_2_cases::unchanged_output_hash_cannot_join_different_record_source stdout ----
+
+thread 'source_query::capture::continuity::m_01_b_2_cases::unchanged_output_hash_cannot_join_different_record_source' (977724) panicked at crates/vibe-workspace/src/source_query/capture/m_01_b_2_cases.rs:427:5:
+Ok(WitnessedSourceWorld { prepared: BoundSourceInputs { host: HostExtensionSource { provider: HostProvider { identity: Coordinate(DependencyProviderId { group: Group("org.demo"), name: PackageName("member") }), root: "/tmp/.tmpDrF96x/member", version: "1.0.0", kind: Some(Flow), content_hash: None }, declarations: [], controls: ExtensionsControl { uses: [], disable: [] }, mechanisms: [] }, node_root: "/tmp/.tmpDrF96x/member", resolution_identity: OrderedResolutionIdentity(..), visible: {"org.demo/dep"}, selected: {("org.demo", "dep"): SelectedPackage { version: "1.0.0", root: "/tmp/.tmpDrF96x/vibevm/vibedeps/org.demo.dep/1.0.0" }}, captured: {SelfNode: PreparedOwnerCapture { owner: SelfNode, root: "/tmp/.tmpDrF96x/member", manifest: StableFileSnapshot { bytes: [91, 112, 97, 99, 107, 97, 103, 101, 93, 10, 103, 114, 111, 117, 112, 61, 39, 111, 114, 103, 46, 100, 101, 109, 111, 39, 10, 110, 97, 109, 101, 61, 39, 109, 101, 109, 98, 101, 114, 39, 10, 107, 105, 110, 100, 61, 39, 102, 108, 111, 119, 39, 10, 118, 101, 114, 115, 105, 111, 110, 61, 39, 49, 46, 48, 46, 48, 39, 10, 10, 91, 114, 101, 113, 117, 105, 114, 101, 115, 46, 112, 97, 99, 107, 97, 103, 101, 115, 93, 10, 39, 111, 114, 103, 46, 100, 101, 109, 111, 47, 100, 101, 112, 39, 61, 39, 61, 49, 46, 48, 46, 48, 39, 10], sha256: "81d0f5b6e3d5b839a17385271a467363aa7a29702b6e63272f269636f4248983", size: 114, unix_mode: Some(384), identity: FileIdentity { volume: 43, index: 9051764 } }, outputs: {"spec/common/DOC.md": StableFileSnapshot { bytes: [35, 32, 83, 101, 108, 101, 99, 116, 101, 100, 32, 123, 35, 115, 101, 108, 101, 99, 116, 101, 100, 125, 10, 10, 80, 82, 69, 80, 65, 82, 69, 68, 95, 66, 50, 10], sha256: "88d41587a65c36e6865eb27e0af45bd741e3be711abc96a14d6a11eb31c4db7d", size: 36, unix_mode: Some(384), identity: FileIdentity { volume: 43, index: 9051765 } }}, descriptor: None }, Dependency { group: "org.demo", name: "dep" }: PreparedOwnerCapture { owner: Dependency { group: "org.demo", name: "dep" }, root: "/tmp/.tmpDrF96x/vibevm/vibedeps/org.demo.dep/1.0.0", manifest: StableFileSnapshot { bytes: [91, 112, 97, 99, 107, 97, 103, 101, 93, 10, 103, 114, 111, 117, 112, 61, 39, 111, 114, 103, 46, 100, 101, 109, 111, 39, 10, 110, 97, 109, 101, 61, 39, 100, 101, 112, 39, 10, 107, 105, 110, 100, 61, 39, 102, 108, 111, 119, 39, 10, 118, 101, 114, 115, 105, 111, 110, 61, 39, 49, 46, 48, 46, 48, 39, 10, 10, 91, 91, 112, 97, 99, 107, 97, 103, 101, 46, 115, 111, 117, 114, 99, 101, 115, 93, 93, 10, 102, 105, 108, 101, 61, 39, 115, 112, 101, 99, 47, 99, 111, 109, 109, 111, 110, 47, 65, 46, 109, 100, 39, 10, 109, 101, 100, 105, 97, 61, 39, 116, 101, 120, 116, 47, 109, 97, 114, 107, 100, 111, 119, 110, 39, 10, 105, 110, 116, 101, 114, 112, 114, 101, 116, 97, 116, 105, 111, 110, 61, 39, 99, 111, 109, 109, 111, 110, 109, 97, 114, 107, 39, 10, 114, 111, 108, 101, 61, 39, 114, 101, 115, 111, 117, 114, 99, 101, 39, 10, 108, 111, 97, 100, 105, 110, 103, 61, 39, 101, 120, 112, 108, 105, 99, 105, 116, 39, 10, 10, 91, 91, 112, 97, 99, 107, 97, 103, 101, 46, 115, 111, 117, 114, 99, 101, 115, 93, 93, 10, 102, 105, 108, 101, 61, 39, 115, 112, 101, 99, 47, 99, 111, 109, 109, 111, 110, 47, 66, 46, 109, 100, 39, 10, 109, 101, 100, 105, 97, 61, 39, 116, 101, 120, 116, 47, 109, 97, 114, 107, 100, 111, 119, 110, 39, 10, 105, 110, 116, 101, 114, 112, 114, 101, 116, 97, 116, 105, 111, 110, 61, 39, 99, 111, 109, 109, 111, 110, 109, 97, 114, 107, 39, 10, 114, 111, 108, 101, 61, 39, 114, 101, 115, 111, 117, 114, 99, 101, 39, 10, 108, 111, 97, 100, 105, 110, 103, 61, 39, 101, 120, 112, 108, 105, 99, 105, 116, 39, 10], sha256: "ebce9a86f7824952a901f521b9097890efe34d7b6be6e4796f29ee8726381fce", size: 326, unix_mode: Some(384), identity: FileIdentity { volume: 43, index: 9051777 } }, outputs: {"spec/common/DOC.md": StableFileSnapshot { bytes: [35, 32, 83, 101, 108, 101, 99, 116, 101, 100, 32, 123, 35, 115, 101, 108, 101, 99, 116, 101, 100, 125, 10, 10, 80, 82, 69, 80, 65, 82, 69, 68, 95, 66, 50, 10], sha256: "88d41587a65c36e6865eb27e0af45bd741e3be711abc96a14d6a11eb31c4db7d", size: 36, unix_mode: Some(384), identity: FileIdentity { volume: 43, index: 9051778 } }}, descriptor: Some(ValidatedDescriptorMap { slot_root: "/tmp/.tmpDrF96x/vibevm/vibedeps/org.demo.dep/1.0.0", spec_root: "/tmp/.tmpDrF96x/vibevm/vibedeps/org.demo.dep/1.0.0/spec", source_witness: "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", manifest_sha256: "ebce9a86f7824952a901f521b9097890efe34d7b6be6e4796f29ee8726381fce", by_address: {}, by_output: {"spec/common/DOC.md": DescriptorOutputRow { output: "spec/common/DOC.md", source: "spec/common/A.md", interpretation: Some(Commonmark), output_sha256: "88d41587a65c36e6865eb27e0af45bd741e3be711abc96a14d6a11eb31c4db7d", document_address: None }} }) }} }, workspace_root: "/tmp/.tmpDrF96x", membership: [(".", "/tmp/.tmpDrF96x", StableFileSnapshot { bytes: [91, 112, 114, 111, 106, 101, 99, 116, 93, 10, 110, 97, 109, 101, 61, 39, 114, 111, 111, 116, 39, 10, 118, 101, 114, 115, 105, 111, 110, 61, 39, 49, 46, 48, 46, 48, 39, 10, 10, 91, 119, 111, 114, 107, 115, 112, 97, 99, 101, 93, 10, 109, 101, 109, 98, 101, 114, 115, 61, 91, 39, 109, 101, 109, 98, 101, 114, 39, 44, 39, 98, 114, 111, 107, 101, 110, 39, 93, 10], sha256: "bfff2e03f6cd3e86a1a05917289308c9aa580f92e02e512741207bb2ccc8df79", size: 79, unix_mode: Some(384), identity: FileIdentity { volume: 43, index: 9051760 } }), ("member", "/tmp/.tmpDrF96x/member", StableFileSnapshot { bytes: [91, 112, 97, 99, 107, 97, 103, 101, 93, 10, 103, 114, 111, 117, 112, 61, 39, 111, 114, 103, 46, 100, 101, 109, 111, 39, 10, 110, 97, 109, 101, 61, 39, 109, 101, 109, 98, 101, 114, 39, 10, 107, 105, 110, 100, 61, 39, 102, 108, 111, 119, 39, 10, 118, 101, 114, 115, 105, 111, 110, 61, 39, 49, 46, 48, 46, 48, 39, 10, 10, 91, 114, 101, 113, 117, 105, 114, 101, 115, 46, 112, 97, 99, 107, 97, 103, 101, 115, 93, 10, 39, 111, 114, 103, 46, 100, 101, 109, 111, 47, 100, 101, 112, 39, 61, 39, 61, 49, 46, 48, 46, 48, 39, 10], sha256: "81d0f5b6e3d5b839a17385271a467363aa7a29702b6e63272f269636f4248983", size: 114, unix_mode: Some(384), identity: FileIdentity { volume: 43, index: 9051764 } })], lock_rows: {("org.demo", "dep"): LockedPackage { kind: Flow, name: PackageName("dep"), group: Group("org.demo"), version: Version { major: 1, minor: 0, patch: 0 }, bridge: false, authors: [], registry: None, source_url: SourceUrl("file:///selected-dep"), source_ref: None, resolved_commit: None, content_hash: ContentHash("sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), embedded_sources: [], boot_snippet: None, files_written: [], dependencies: [], admitted_by: None, via_override: None, overridden: false, source_kind: None, via_redirect: None, features: [], subskills_active: [], describes: None, language: None, materialization: Copy }}, closure_manifests: {("org.demo", "dep"): ("/tmp/.tmpDrF96x/vibevm/vibedeps/org.demo.dep/1.0.0", StableFileSnapshot { bytes: [91, 112, 97, 99, 107, 97, 103, 101, 93, 10, 103, 114, 111, 117, 112, 61, 39, 111, 114, 103, 46, 100, 101, 109, 111, 39, 10, 110, 97, 109, 101, 61, 39, 100, 101, 112, 39, 10, 107, 105, 110, 100, 61, 39, 102, 108, 111, 119, 39, 10, 118, 101, 114, 115, 105, 111, 110, 61, 39, 49, 46, 48, 46, 48, 39, 10, 10, 91, 91, 112, 97, 99, 107, 97, 103, 101, 46, 115, 111, 117, 114, 99, 101, 115, 93, 93, 10, 102, 105, 108, 101, 61, 39, 115, 112, 101, 99, 47, 99, 111, 109, 109, 111, 110, 47, 65, 46, 109, 100, 39, 10, 109, 101, 100, 105, 97, 61, 39, 116, 101, 120, 116, 47, 109, 97, 114, 107, 100, 111, 119, 110, 39, 10, 105, 110, 116, 101, 114, 112, 114, 101, 116, 97, 116, 105, 111, 110, 61, 39, 99, 111, 109, 109, 111, 110, 109, 97, 114, 107, 39, 10, 114, 111, 108, 101, 61, 39, 114, 101, 115, 111, 117, 114, 99, 101, 39, 10, 108, 111, 97, 100, 105, 110, 103, 61, 39, 101, 120, 112, 108, 105, 99, 105, 116, 39, 10, 10, 91, 91, 112, 97, 99, 107, 97, 103, 101, 46, 115, 111, 117, 114, 99, 101, 115, 93, 93, 10, 102, 105, 108, 101, 61, 39, 115, 112, 101, 99, 47, 99, 111, 109, 109, 111, 110, 47, 66, 46, 109, 100, 39, 10, 109, 101, 100, 105, 97, 61, 39, 116, 101, 120, 116, 47, 109, 97, 114, 107, 100, 111, 119, 110, 39, 10, 105, 110, 116, 101, 114, 112, 114, 101, 116, 97, 116, 105, 111, 110, 61, 39, 99, 111, 109, 109, 111, 110, 109, 97, 114, 107, 39, 10, 114, 111, 108, 101, 61, 39, 114, 101, 115, 111, 117, 114, 99, 101, 39, 10, 108, 111, 97, 100, 105, 110, 103, 61, 39, 101, 120, 112, 108, 105, 99, 105, 116, 39, 10], sha256: "ebce9a86f7824952a901f521b9097890efe34d7b6be6e4796f29ee8726381fce", size: 326, unix_mode: Some(384), identity: FileIdentity { volume: 43, index: 9051777 } })}, slot_records: {("org.demo", "dep"): StableFileSnapshot { bytes: [115, 99, 104, 101, 109, 97, 32, 61, 32, 49, 10, 115, 111, 117, 114, 99, 101, 95, 104, 97, 115, 104, 32, 61, 32, 34, 115, 104, 97, 50, 53, 54, 58, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 34, 10, 115, 112, 101, 99, 95, 102, 111, 114, 109, 97, 116, 32, 61, 32, 34, 109, 97, 114, 107, 100, 111, 119, 110, 34, 10, 99, 111, 110, 118, 101, 114, 116, 101, 114, 95, 114, 101, 99, 105, 112, 101, 32, 61, 32, 34, 116, 101, 115, 116, 45, 114, 101, 99, 105, 112, 101, 34, 10, 100, 101, 114, 105, 118, 101, 100, 95, 104, 97, 115, 104, 32, 61, 32, 34, 115, 104, 97, 50, 53, 54, 58, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 97, 34, 10, 10, 91, 91, 102, 105, 108, 101, 93, 93, 10, 112, 97, 116, 104, 32, 61, 32, 34, 115, 112, 101, 99, 47, 99, 111, 109, 109, 111, 110, 47, 68, 79, 67, 46, 109, 100, 34, 10, 115, 104, 97, 50, 53, 54, 32, 61, 32, 34, 56, 56, 100, 52, 49, 53, 56, 55, 97, 54, 53, 99, 51, 54, 101, 54, 56, 54, 53, 101, 98, 50, 55, 101, 48, 97, 102, 52, 53, 98, 100, 55, 52, 49, 101, 51, 98, 101, 55, 49, 49, 97, 98, 99, 57, 54, 97, 49, 52, 100, 54, 97, 49, 49, 101, 98, 51, 49, 99, 52, 100, 98, 55, 100, 34, 10, 100, 105, 115, 112, 111, 115, 105, 116, 105, 111, 110, 32, 61, 32, 34, 99, 111, 110, 118, 101, 114, 116, 101, 100, 34, 10, 115, 111, 117, 114, 99, 101, 32, 61, 32, 34, 115, 112, 101, 99, 47, 99, 111, 109, 109, 111, 110, 47, 66, 46, 109, 100, 34, 10, 10, 91, 91, 102, 105, 108, 101, 93, 93, 10, 112, 97, 116, 104, 32, 61, 32, 34, 118, 105, 98, 101, 46, 116, 111, 109, 108, 34, 10, 115, 104, 97, 50, 53, 54, 32, 61, 32, 34, 101, 98, 99, 101, 57, 97, 56, 54, 102, 55, 56, 50, 52, 57, 53, 50, 97, 57, 48, 49, 102, 53, 50, 49, 98, 57, 48, 57, 55, 56, 57, 48, 101, 102, 101, 51, 52, 100, 55, 98, 54, 98, 101, 54, 101, 52, 55, 57, 54, 102, 50, 57, 101, 101, 56, 55, 50, 54, 51, 56, 49, 102, 99, 101, 34, 10, 100, 105, 115, 112, 111, 115, 105, 116, 105, 111, 110, 32, 61, 32, 34, 99, 111, 112, 105, 101, 100, 34, 10, 115, 111, 117, 114, 99, 101, 32, 61, 32, 34, 118, 105, 98, 101, 46, 116, 111, 109, 108, 34, 10], sha256: "20faf7940d3c46f13cd9bbb97ab302b3b0bc02094fa52c1c526b1e6adf136cd7", size: 563, unix_mode: Some(384), identity: FileIdentity { volume: 43, index: 9051782 } }}, has_lock: true })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    source_query::capture::continuity::m_01_b_2_cases::unchanged_output_hash_cannot_join_different_record_source
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 647 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p vibe-workspace --lib`

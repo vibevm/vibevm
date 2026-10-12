@@ -18,6 +18,9 @@ use crate::extension_world::{ExtensionWorldEpoch, OrderedResolutionIdentity};
 
 use super::{SourceQueryUnavailable, select_owner_roots};
 
+mod continuity;
+pub use continuity::{PreparedWorldWitness, WitnessedSourceWorld};
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 enum CaptureOwner {
     SelfNode,

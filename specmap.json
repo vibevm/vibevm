@@ -38968,6 +38968,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/source_query/capture/continuity.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_workspace::source_query::capture::continuity",
+      "end_line": 4,
+      "fingerprint": "tok1:9924192bb8c3daf88eceeeea13dcd25641d3bef1b2ea4587b2abdebebe73291a"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/tools.rs",
       "item_kind": "mod",
       "line": 16,
@@ -70134,6 +70143,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/source_query/capture/continuity.rs",
+      "from_symbol": "vibe_workspace::source_query::capture::continuity",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SELECTED-WORLD-CONTINUITY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/tools.rs",
       "from_symbol": "vibe_workspace::tools",
       "line": 16,
@@ -94948,7 +94965,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:09a0e0fdf9376af59a792d79350fc2d415cfdd175b0a9a45afdd225f8ef3a91f",
+      "content_hash": "sha256:e01bd768a39a7afe99d7104a912339c25a5883500deee8880dbb2a441f5b6536",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "PROP-070: Validated resource addresses and selected resolution",
@@ -95074,7 +95091,7 @@
     },
     {
       "anchor": "prepared-world",
-      "content_hash": "sha256:6270999d80392f498622beb0a70ddba298f04fa4567b0f033dc2ddf76e73e4ca",
+      "content_hash": "sha256:3d6e2d7342579bb8754221593eb12157677a0f741ca0bcf6073d14a8bf6f24bb",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "5. Selected visible source authority",
@@ -95089,6 +95106,15 @@
       "heading": "A query receives one opaque prepared authority for the selected node, never free lock rows or an ambient dependency-directory scan. The constructor consumes the node's exact authored identity/root, the already ordered selected resolution, the owner visibility verdict and caller-supplied captured source bytes plus descriptor identities. The node is its own self authority; admitted dependencies come only from that node's effective visible closure at their selected versions and materialised roots. A hidden, unselected, newest-but-not-selected or wrong-owner package cannot become readable by the presence of a slot. Parsed declarations, a package content hash, a descriptor row and a portable physical preflight are distinct from captured bytes and never manufacture them. Missing prepared capture returns unavailable. Construction performs no provider fetch, hydration, cache fill or current-source read; the separate preparation owner must supply captures. This initial world binding does not by itself prove later membership continuity or a retained-handle query read, which belong to the following owners. @status:spec/plan",
       "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#PREPARED-VISIBLE-SOURCE-AUTHORITY"
+    },
+    {
+      "anchor": "SELECTED-WORLD-CONTINUITY",
+      "content_hash": "sha256:274df29811d95e99425b6d9f8b9e817b34d3c0bce40965022fcd0fd0f47c2fdc",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "A prepared point query retains the exact selected resolution and the authored membership chain from the workspace root to its selected node. The preparation owner supplies bounded snapshots of the governing lock and those membership manifests; the query constructor does not fetch or rebuild them. Before captured bytes can be used, current no-follow observations must agree with the retained selected lock rows, selected-node membership, selected source manifests, descriptor identities and captured outputs. A changed selected lock or descriptor refuses as stale; missing or unreadable required evidence makes the selected world unavailable. Only the selected node's ancestor chain, retained dependency metadata required to establish its visibility, and effective visible source outputs are inspected: an unrelated broken workspace member or unselected slot cannot veto a proven point query. Observation is detection-bound, not an atomic filesystem transaction or a claim that source names cannot change after the final check; a query never combines prepared old-world bytes with a newly observed source. @status:spec/plan",
+      "line": 29,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SELECTED-WORLD-CONTINUITY"
     },
     {
       "anchor": "root",
