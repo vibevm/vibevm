@@ -1,0 +1,6 @@
+{
+  "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+  "head_byte_identical": true,
+  "sha256": "6a3f45f1bcca237688b61f36b50be507625c9e69e887b070b2dd9f57f5a4a7fe",
+  "full_fmt_diff_findings": 14
+}

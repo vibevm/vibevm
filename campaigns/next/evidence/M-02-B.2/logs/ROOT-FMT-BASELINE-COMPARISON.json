@@ -1,0 +1,41 @@
+{
+  "B1": {
+    "diff_hunks": 13,
+    "unique_files": 8,
+    "headers": [
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs:571:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:3:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:10:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:3:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:83:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:92:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:234:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs:100:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs:2:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission.rs:48:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs:34:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs:184:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs:277:"
+    ]
+  },
+  "B2": {
+    "diff_hunks": 14,
+    "unique_files": 9,
+    "headers": [
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs:571:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:3:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:10:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs:188:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:3:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:83:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:92:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:234:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs:100:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs:2:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission.rs:48:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs:34:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs:184:",
+      "Diff in /fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs:277:"
+    ]
+  }
+}

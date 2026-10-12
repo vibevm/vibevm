@@ -1,0 +1,16 @@
+{
+  "M02_B2_WORK": {
+    "whole_before": "sha256:41e9277839849ce150bd3547523edbf32de9a7075c8581353c4ca3beb4f2b34b",
+    "whole_after": "sha256:7df1dc1d4971cc95cc331c169e693f53cff734ca0f2eb675b6a74a3c711590f1",
+    "selected_before": "sha256:13e1d3332fcfb47ea3ba2fe6d9c8ace1469039d2330c6885fc0aeeda6e2f3fa5",
+    "selected_after": "sha256:13e1d3332fcfb47ea3ba2fe6d9c8ace1469039d2330c6885fc0aeeda6e2f3fa5"
+  },
+  "M02_B2_IDENTITIES": {
+    "intent_before": "sha256:8ef47bf71f001286fbd3b52b23e5ced3fd09c7678096983ad565c7f651e64db9",
+    "intent_after": "sha256:fb1fa0f261cf976b7be5f7fe2e5df567c7423ce2bc0253afa92a96d4d250fbb3",
+    "work_before": "sha256:41e9277839849ce150bd3547523edbf32de9a7075c8581353c4ca3beb4f2b34b",
+    "work_after": "sha256:41e9277839849ce150bd3547523edbf32de9a7075c8581353c4ca3beb4f2b34b",
+    "retained_snapshot_unchanged": true,
+    "query_files_unchanged": 7
+  }
+}
