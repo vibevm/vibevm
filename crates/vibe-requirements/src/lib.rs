@@ -88,3 +88,6 @@ mod tests_query;
 mod tests_query_declared;
 #[cfg(test)]
 mod tests_requirements;
+
+#[cfg(test)]
+mod change;

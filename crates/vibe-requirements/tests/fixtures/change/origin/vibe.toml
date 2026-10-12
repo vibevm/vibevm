@@ -1,0 +1,13 @@
+[package]
+group = "org.fixture"
+name = "reusable-intent"
+kind = "feat"
+version = "1.0.0"
+format = "normal"
+
+[[package.sources]]
+file = "vibevm/vibespecs/FEAT-001-native-intent.md"
+media = "text/markdown"
+interpretation = "vibe-spec"
+role = "spec"
+loading = "scan"

@@ -1,0 +1,7 @@
+[project]
+group = "org.fixture"
+name = "beta"
+version = "1.0.0"
+
+[requires.packages]
+"feat:org.fixture/reusable-intent" = "=1.0.0"

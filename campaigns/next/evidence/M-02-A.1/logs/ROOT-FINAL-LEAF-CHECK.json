@@ -1,0 +1,9 @@
+{
+  "final_family_passed": 4,
+  "ignored": 0,
+  "leaf_observations": 30,
+  "origin_and_both_slots_leaf_hash_size_equal": true,
+  "final_log_sha256": "fbf68e3e69cfd32f6604f379213a035fc8340c66f10af0fc164f099d2ce5bb59",
+  "current_test_sha256": "a3f7907bae593b73f104c6914cbfa6a117374af575fa102ed224b2c2ef45f478",
+  "earlier_report_check": "ROOT-ORIGIN-LOCAL-REPORT-CHECK.json retains earlier output epoch; fixture behavior unchanged, added leaf evidence now separately bound"
+}

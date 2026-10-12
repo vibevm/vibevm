@@ -30312,6 +30312,24 @@
     },
     {
       "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/mod.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::change",
+      "end_line": 2,
+      "fingerprint": "tok1:191235e8ee774a5e8ead17c0534c84d62b70f750b8a702f1537ad3a4bf499f96"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_a_1_cases.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::change::m_02_a_1_cases",
+      "end_line": 2,
+      "fingerprint": "tok1:5a0ddac8c4115985d2877ff27c75b4d4ed668d58bdf1ba001a2099388d68aa23"
+    },
+    {
+      "crate_name": "vibe-requirements",
       "file": "crates/vibe-requirements/src/digest.rs",
       "item_kind": "mod",
       "line": 19,
@@ -62406,6 +62424,22 @@
       "line": 59,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/mod.rs",
+      "from_symbol": "vibe_requirements::change",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#BINDING-OBSERVATION-FIXTURE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_a_1_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_a_1_cases",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#ORIGIN-LOCAL-IDENTITY",
       "verb": "implements"
     },
     {
@@ -98517,6 +98551,69 @@
       "heading": "Source delivery conformance compares validated library, CLI and MCP outcomes with owned fixture file and directory inventories and measured relevant network and filesystem mutation-attempt counters. Fixture preparation and intentional tampering are separate from the query observation interval. Missing captures remain unavailable offline; point reads never fetch, hydrate, seed settings or repair records. Expectations and local integrity strength remain explicit. Unsupported strict-grade surface input refuses its closed contract and is not evidence of successful stronger proof; existing verified-original and builtin-derivation owners are exercised separately. Platform-specific instrumentation proves only its executed host and finite interval, without creating a product runtime dependency. @status:spec/plan",
       "line": 58,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-PURITY-EVIDENCE"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:0490c89be0e5a8654e4c9aa081f697f4f53dd34aeaa10b1c9334df3fbfe18de8",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "PROP-071: Change origin bindings and project-owned closure",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#root"
+    },
+    {
+      "anchor": "origin",
+      "content_hash": "sha256:8937bf49b523801fcd0aaed989165e288d208cd02f4948d14910ea6169651dd6",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "1. Reusable native package intent",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#origin"
+    },
+    {
+      "anchor": "NATIVE-ORIGIN-FIXTURE",
+      "content_hash": "sha256:8d482d1fe43f5c1786bb648fa3c1fddb85887220142c760885d5a36904c92b2e",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "A reusable feat declares native addressable facts and their explicit artifact requirements using PROP-043. Its intent is independent of a programming stack. A fixture binding selects an exact package coordinate/version together with exact fact addresses and captured authored manifest/document byte identities. The observed fact address and the versioned package selection are distinct; versionless fact metadata does not mean newest-slot authority. Leaf digests in this fixture establish byte identity, not original-package authentication. @status:spec/plan",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#NATIVE-ORIGIN-FIXTURE"
+    },
+    {
+      "anchor": "ORIGIN-LOCAL-IDENTITY",
+      "content_hash": "sha256:041e7a064499444981a3d3bbe2d60bb05d6740071def5475174252a5d1e4d509",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "Two consuming projects may reference the same immutable origin while authoring different local refinement and acceptance facts. Package fact addresses retain the package coordinate; local addresses retain their own project coordinate. A reference never copies package status into local authority. Consumer-owned materialization may add derived records but may not modify the authored package leaf bytes. @status:spec/plan",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#ORIGIN-LOCAL-IDENTITY"
+    },
+    {
+      "anchor": "observation",
+      "content_hash": "sha256:fd5e33e5b9aa99b04fb37e99906d71680b76a0e8eb51d3565a1a664472a76973",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "2. Fixture observation and explicit limits",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#observation"
+    },
+    {
+      "anchor": "BINDING-OBSERVATION-FIXTURE",
+      "content_hash": "sha256:0df873e9da637965797de05871ed77019ae8d10d130988fb0f36314bfaaa647b",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "The initial change fixtures use the incumbent declared fact observation and requirements metadata query, retaining exact package/local addresses, authored artifact sets and separate authoring/adoption observations. Test-only fixture metadata does not commission a durable change parser, a closure evaluator or publication machinery. Fixture evidence may land before those later owners. @status:spec/plan",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#BINDING-OBSERVATION-FIXTURE"
+    },
+    {
+      "anchor": "LOCAL-ACCEPTANCE-NOT-INHERITED",
+      "content_hash": "sha256:eae9751984ef800d7279d32958973720001cb4312bb59faaf87699bd72aac21b",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "A package's authored done status, an absent or recorded adoption observation, and a copied status marker do not satisfy a selected local acceptance obligation. A copied paragraph, if valid local markup, is observed at its own local address; it does not replace a different selected local fact. Missing selected acceptance stays missing. Even a local done marker is not terminal proof by itself: PROP-043's declared artifact obligations and independent evidence remain separate. The metadata query reports no portable terminal verdict, and these fixture tests must not claim an acceptance runtime exists. @status:spec/plan",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#LOCAL-ACCEPTANCE-NOT-INHERITED"
     },
     {
       "anchor": "root",

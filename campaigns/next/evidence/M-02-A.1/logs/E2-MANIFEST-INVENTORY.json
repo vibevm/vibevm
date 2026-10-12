@@ -1,0 +1,1870 @@
+{
+  "schema": 1,
+  "task": "M-01-E.2",
+  "status": "accepted_by_first_agent",
+  "candidate_base": "8187ba0dfc13fff26eacad4dc84f70354556ab64",
+  "accepted_at": "2026-10-12T19:38:24.613925+00:00",
+  "product_files": [
+    {
+      "path": "BACKLOG.md",
+      "sha256": "bcb21ba64a362b9aaf9361415775a8567c9df6ffafac4afb89b85ba7904bcf4d",
+      "bytes": 491561,
+      "lines": 2555,
+      "owner": "root integration"
+    },
+    {
+      "path": "FIXED-ISSUES.md",
+      "sha256": "7e09a7e5ce06f48b7d99f02e8dbbdbad87eed26babbef117da774b9adbe7aa14",
+      "bytes": 117409,
+      "lines": 497,
+      "owner": "root integration"
+    },
+    {
+      "path": "crates/vibe-cli/tests/m_01_e_2_cases.rs",
+      "sha256": "e9ab56a74b3883e29f6c55032b1b473164e3cda7ad8015dd9a89a74a5920d443",
+      "bytes": 6178,
+      "lines": 165,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-cli/tests/m_01_e_2_cases/fixture.rs",
+      "sha256": "2f537a74637d94168c163aa0d8e713ed06902ad6e61fda4e992e4514342ed70f",
+      "bytes": 7473,
+      "lines": 200,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-cli/tests/m_01_e_2_cases/proof.rs",
+      "sha256": "2f87dddca5ac012c8a9bd4cfefcf81e2f20dcb1ed09c5c5b99ed6771f254074c",
+      "bytes": 5994,
+      "lines": 144,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/read_spec.rs",
+      "sha256": "db0d5f9980f7975f908d6255bd8a97ff20cfb86e08dad12214120d727c743d5e",
+      "bytes": 3198,
+      "lines": 60,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/read_spec/m_01_e_2_cases.rs",
+      "sha256": "6b427e997c37abb3af1dce99cf6ee2bfae07727bcbe8745a9a64a1d369d317e6",
+      "bytes": 4338,
+      "lines": 102,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+      "sha256": "76b699b2cb21c313f16bde8d5edb1f1fef270925cf3ffd23440cb3ddb7f13b9c",
+      "bytes": 22800,
+      "lines": 574,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_d_2_cases.rs",
+      "sha256": "a5e53134517b3b455aaeabdba40411912a98b94ef2bcda3bb3469047bb872008",
+      "bytes": 22870,
+      "lines": 469,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_e_2_cases.rs",
+      "sha256": "d747ce0914caba29a2c20fc0c8d3d7adc48d8c677abf3d714ed17ba0e6b6087d",
+      "bytes": 5593,
+      "lines": 154,
+      "owner": "product"
+    },
+    {
+      "path": "specmap.json",
+      "sha256": "5fee980e1d91a36e26ea58dfc0d19f812fd2471e04e795c5664631256af334bc",
+      "bytes": 9782247,
+      "lines": 166014,
+      "owner": "root integration"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "sha256": "c8ea7024bcb4bcadc5578a2ccd93894f22ebf78118370b96d76dabfc31091028",
+      "bytes": 25672,
+      "lines": 60,
+      "owner": "product"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ASTRA-COUNTER-AUDIT.json",
+      "raw_sha256": "20dcf8084979f272f95ecad207198234ede7f523648ca2ea9454182fcf576240",
+      "raw_bytes": 1011,
+      "sha256": "20dcf8084979f272f95ecad207198234ede7f523648ca2ea9454182fcf576240",
+      "bytes": 1011,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ASTRA-FINAL-COUNTER-AUDIT.json",
+      "raw_sha256": "9c671a465f344842270eff0079627cba5dfa84ae9ba360a3ac22b306c75cc115",
+      "raw_bytes": 1395,
+      "sha256": "9c671a465f344842270eff0079627cba5dfa84ae9ba360a3ac22b306c75cc115",
+      "bytes": 1395,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/BOUND-PLAN.md",
+      "raw_sha256": "f34c60aeda9ef8b2deb0a0199ed10e78043c198de958600b8937cdd170608164",
+      "raw_bytes": 2520,
+      "sha256": "f34c60aeda9ef8b2deb0a0199ed10e78043c198de958600b8937cdd170608164",
+      "bytes": 2520,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/CANDIDATE-REPORT.md",
+      "raw_sha256": "ddf84e35c93a09408e89e1dafcc97707faf074a63762d3c4d031e18e5e51502d",
+      "raw_bytes": 10488,
+      "sha256": "ddf84e35c93a09408e89e1dafcc97707faf074a63762d3c4d031e18e5e51502d",
+      "bytes": 10488,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/COMMANDS.json",
+      "raw_sha256": "fe97861ec9f510d358a54b69275a0d1eed15fd2cdc3fe4ab749934712fad41d3",
+      "raw_bytes": 32721,
+      "sha256": "fe97861ec9f510d358a54b69275a0d1eed15fd2cdc3fe4ab749934712fad41d3",
+      "bytes": 32721,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/EVIDENCE-SHA256.json",
+      "raw_sha256": "8724b60ed023503fdc95b61acc4558d480ac03515bd8bd92d39b0a76b6f92868",
+      "raw_bytes": 34698,
+      "sha256": "8724b60ed023503fdc95b61acc4558d480ac03515bd8bd92d39b0a76b6f92868",
+      "bytes": 34698,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/FINAL-COUNTER-SUMMARY.json",
+      "raw_sha256": "189d49bdd5790e8dcfb8fd0010eaf62acd25610c1bde5bac9688903e350eb0f2",
+      "raw_bytes": 1100,
+      "sha256": "189d49bdd5790e8dcfb8fd0010eaf62acd25610c1bde5bac9688903e350eb0f2",
+      "bytes": 1100,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/FINAL-FRONTIER.json",
+      "raw_sha256": "93ee2d1664236176be36bd7278742889fabce4403d748f8403b930ef05b8de68",
+      "raw_bytes": 2586,
+      "sha256": "93ee2d1664236176be36bd7278742889fabce4403d748f8403b930ef05b8de68",
+      "bytes": 2586,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/FINAL-INDEPENDENT-SURFACE-PARITY.json",
+      "raw_sha256": "84fc39ff15df816e75b7bf7cfab1d000a655b9bd8ba564a0077ac6d914306076",
+      "raw_bytes": 32110,
+      "sha256": "84fc39ff15df816e75b7bf7cfab1d000a655b9bd8ba564a0077ac6d914306076",
+      "bytes": 32110,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/FINAL-SNAPSHOT-PAIRS.json.gz",
+      "raw_sha256": "0fad6c42c29d0d692ba82ad663bd046544ec571c9a1a59e7f9750d34f00a911f",
+      "raw_bytes": 1118780,
+      "sha256": "1589e727d5f9d3e19a308c83929e109fc2a04020e9885f2e44b6ddbafeb237cf",
+      "bytes": 21793,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/FINAL-SURFACE-PAYLOADS.json",
+      "raw_sha256": "3182ea7deaf56420e29c260d687eb5344da7dbbab9af9f1017fd9ac36b211fa2",
+      "raw_bytes": 10796,
+      "sha256": "3182ea7deaf56420e29c260d687eb5344da7dbbab9af9f1017fd9ac36b211fa2",
+      "bytes": 10796,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/INCIDENTS.md",
+      "raw_sha256": "0cdb803887ef12fe94f0553e29bd1b4fb0981f8e99c5d6426a8c5dbdafc4df42",
+      "raw_bytes": 1926,
+      "sha256": "0cdb803887ef12fe94f0553e29bd1b4fb0981f8e99c5d6426a8c5dbdafc4df42",
+      "bytes": 1926,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/M-01-D.2-manifest-inventory.json",
+      "raw_sha256": "b4731d9033de7be3e5e0897acdf322e1b5c457ef0ac9cdca06177491b66b33ff",
+      "raw_bytes": 82396,
+      "sha256": "b4731d9033de7be3e5e0897acdf322e1b5c457ef0ac9cdca06177491b66b33ff",
+      "bytes": 82396,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/M-01-E.1-manifest-inventory.json",
+      "raw_sha256": "5b1ab546b1b77862d3584d523ed1cf302e7e596d3cc591eaf9222d8b44c075d2",
+      "raw_bytes": 11188,
+      "sha256": "5b1ab546b1b77862d3584d523ed1cf302e7e596d3cc591eaf9222d8b44c075d2",
+      "bytes": 11188,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-AUDIT-DELIVERY.json",
+      "raw_sha256": "22e076a01f81be29cea1490f73b63365ab0cc7e70cdba39657ca35a0c5547d13",
+      "raw_bytes": 95,
+      "sha256": "22e076a01f81be29cea1490f73b63365ab0cc7e70cdba39657ca35a0c5547d13",
+      "bytes": 95,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-EARLY-E2-SUBJECT-REVIEW.json",
+      "raw_sha256": "853fe182c3bc8aa88e133dc47d95b8b155c6b46295abdeb33f3a4aa8bf2264d4",
+      "raw_bytes": 967,
+      "sha256": "853fe182c3bc8aa88e133dc47d95b8b155c6b46295abdeb33f3a4aa8bf2264d4",
+      "bytes": 967,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-FINAL-SPECMAP.log",
+      "raw_sha256": "72b8100bbeb543385d87d0752de32cfced4abddd234262a43982170605724913",
+      "raw_bytes": 163490,
+      "sha256": "72b8100bbeb543385d87d0752de32cfced4abddd234262a43982170605724913",
+      "bytes": 163490,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-FINAL-SURFACE-PARITY-CHECK.json",
+      "raw_sha256": "ca8ced7c0827be2898274c14fd0219d9aaf4b52eef12d12f4a9bd2b7fd4f02b5",
+      "raw_bytes": 177,
+      "sha256": "ca8ced7c0827be2898274c14fd0219d9aaf4b52eef12d12f4a9bd2b7fd4f02b5",
+      "bytes": 177,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-FINALIZATION-GUIDANCE.json",
+      "raw_sha256": "3eb346c6aa9311f750b0c72365735255a27edf3cbffa99c4c97455a955ca0a79",
+      "raw_bytes": 95,
+      "sha256": "3eb346c6aa9311f750b0c72365735255a27edf3cbffa99c4c97455a955ca0a79",
+      "bytes": 95,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-INTEGRATION-E2-RESULT.json",
+      "raw_sha256": "0f47c95e4324c8bdd13c23197e207e1c304c8716ba26b73e59f6a2b3c1a17f5c",
+      "raw_bytes": 596,
+      "sha256": "0f47c95e4324c8bdd13c23197e207e1c304c8716ba26b73e59f6a2b3c1a17f5c",
+      "bytes": 596,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-MCP-E2-RESULT.json",
+      "raw_sha256": "34e7528ec739176f9e7d7f7df05c4419666e214b1767dc71db282ed8a80a9bdc",
+      "raw_bytes": 355,
+      "sha256": "34e7528ec739176f9e7d7f7df05c4419666e214b1767dc71db282ed8a80a9bdc",
+      "bytes": 355,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-PROOF-BOUNDARY-ANSWER.json",
+      "raw_sha256": "838fe37f7c973f265074eca0571a71e0c104e7eaab8e5eaddd56181cd11739b2",
+      "raw_bytes": 5708,
+      "sha256": "838fe37f7c973f265074eca0571a71e0c104e7eaab8e5eaddd56181cd11739b2",
+      "bytes": 5708,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-SEALED-SNAPSHOT-CHECK.json",
+      "raw_sha256": "9f6118a70b9b1f3c7edf05ab45fa895d81fcb36416a2370c25ff198425ff5bcd",
+      "raw_bytes": 2503,
+      "sha256": "9f6118a70b9b1f3c7edf05ab45fa895d81fcb36416a2370c25ff198425ff5bcd",
+      "bytes": 2503,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-SOURCE-HASH-CHECK.json",
+      "raw_sha256": "e2f0adc6fd3b6f22c814848b5950f84428a2ef8fca1934cbe8c339816c7e8bf3",
+      "raw_bytes": 187,
+      "sha256": "e2f0adc6fd3b6f22c814848b5950f84428a2ef8fca1934cbe8c339816c7e8bf3",
+      "bytes": 187,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-TARGET-OWNER-READ-GRANT.json",
+      "raw_sha256": "d17b2fe427361c27752af9fab37a7f3e60c01abfb1ab9323013930c48d2d6d39",
+      "raw_bytes": 4371,
+      "sha256": "d17b2fe427361c27752af9fab37a7f3e60c01abfb1ab9323013930c48d2d6d39",
+      "bytes": 4371,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/ROOT-TRACE-COVERAGE-CORRECTION.json",
+      "raw_sha256": "f5623257b76cbe1086221941296d0a788a9631cff3d8204c279301c8137a8fbb",
+      "raw_bytes": 95,
+      "sha256": "f5623257b76cbe1086221941296d0a788a9631cff3d8204c279301c8137a8fbb",
+      "bytes": 95,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/SHA256SUMS",
+      "raw_sha256": "826ae0a52644ddeffc8003048e182c9e33a9777b05c1bd3d14f3bf9d50074dc6",
+      "raw_bytes": 23683,
+      "sha256": "826ae0a52644ddeffc8003048e182c9e33a9777b05c1bd3d14f3bf9d50074dc6",
+      "bytes": 23683,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/SOURCE-SHA256.json",
+      "raw_sha256": "c016d3cdae6072bfb7a4f5d7f6af1000446187161e0dc9d84eb0ce27fd2625d9",
+      "raw_bytes": 1803,
+      "sha256": "c016d3cdae6072bfb7a4f5d7f6af1000446187161e0dc9d84eb0ce27fd2625d9",
+      "bytes": 1803,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-complete-oracle-command.json",
+      "raw_sha256": "c904bcb026eafbd678e05910409998e54bc8ab1f8d60a288f2791109cccf7992",
+      "raw_bytes": 1531,
+      "sha256": "c904bcb026eafbd678e05910409998e54bc8ab1f8d60a288f2791109cccf7992",
+      "bytes": 1531,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-complete-oracle-counters.json",
+      "raw_sha256": "3f731cdaf0d2d66f4bd405c847e469b3367fa8b405ca33aa1cf65f4d945de9cc",
+      "raw_bytes": 167845,
+      "sha256": "3f731cdaf0d2d66f4bd405c847e469b3367fa8b405ca33aa1cf65f4d945de9cc",
+      "bytes": 167845,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-complete-oracle-run.log",
+      "raw_sha256": "b6f3e854b37d7901bad5ef127c9cb15851a2d5492d9da75b16d6999d720a3efc",
+      "raw_bytes": 154,
+      "sha256": "b6f3e854b37d7901bad5ef127c9cb15851a2d5492d9da75b16d6999d720a3efc",
+      "bytes": 154,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-complete-oracle.stderr.log",
+      "raw_sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "raw_bytes": 1656,
+      "sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "bytes": 1656,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-complete-oracle.stdout.log",
+      "raw_sha256": "416ade91a6df35de93ecd8b269b722a55f3a2b746c0feadded6fd2447387a3aa",
+      "raw_bytes": 255536,
+      "sha256": "a545d3bf99d1a6f489601dc4ea02a7891c98631b4e45e63adbb8ea2824ffc24b",
+      "bytes": 255535,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-corrected-fixture.log",
+      "raw_sha256": "92acd171ea147b57f2e77196a6b93e22de59074a47b83be756c5f5659e62b135",
+      "raw_bytes": 142339,
+      "sha256": "26b1e19d78245397c8719c5ed62e7ff2f3c8e13cc503c25a1349ead9bdcfe33a",
+      "bytes": 142338,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-final-observed-command.json",
+      "raw_sha256": "09ac600c206505fedc466381fc8517da066b65179a4004c19add51d42548e776",
+      "raw_bytes": 912,
+      "sha256": "09ac600c206505fedc466381fc8517da066b65179a4004c19add51d42548e776",
+      "bytes": 912,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-final-observed-counters.json",
+      "raw_sha256": "e59313240b8f8fd359b53bae54cfc7c6d718ef04ea2421f3b0c5a8bf152d8acf",
+      "raw_bytes": 9358,
+      "sha256": "e59313240b8f8fd359b53bae54cfc7c6d718ef04ea2421f3b0c5a8bf152d8acf",
+      "bytes": 9358,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-final-observed.stderr.log",
+      "raw_sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "raw_bytes": 1656,
+      "sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "bytes": 1656,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-final-observed.stdout.log",
+      "raw_sha256": "20be0ec77201e136f1ade986e56170643c0274732711a63e6bad2db552810ae6",
+      "raw_bytes": 8516,
+      "sha256": "a4f001477127f0b02aa77e6b22e59331fa88d972460592be340dcb1a6b881904",
+      "bytes": 8515,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-final-observed.strace.gz",
+      "raw_sha256": "cb3b6af718123e4f8a391cf83835f4acb319f1b3d12eab921c3f8a801049be0d",
+      "raw_bytes": 11416918,
+      "sha256": "83b9da5bb2f408d06a7abdca05313b40b6210a6e3d7be726b19935b24a29744f",
+      "bytes": 184093,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-final-observer-run.log",
+      "raw_sha256": "c49b06a71258775cb8e8dac56a92739678cdd082dd9b8b1f60219c7e35a2a47b",
+      "raw_bytes": 153,
+      "sha256": "c49b06a71258775cb8e8dac56a92739678cdd082dd9b8b1f60219c7e35a2a47b",
+      "bytes": 153,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-final-scope-compile.log",
+      "raw_sha256": "8fe5dbc152247cc2aab96f69da5ec7793975e5ffa3e2db60981f2668f7263a29",
+      "raw_bytes": 132167,
+      "sha256": "8fe5dbc152247cc2aab96f69da5ec7793975e5ffa3e2db60981f2668f7263a29",
+      "bytes": 132167,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-first.log",
+      "raw_sha256": "14ec52b445397b6cfa825aef6f415e2f34fc247e72b060177ee3dde017cc9ff1",
+      "raw_bytes": 134903,
+      "sha256": "14ec52b445397b6cfa825aef6f415e2f34fc247e72b060177ee3dde017cc9ff1",
+      "bytes": 134903,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-full-oracle-command.json",
+      "raw_sha256": "dd16f0d2f60587b89d42b38bcf757ab10fbc5bdaa2c6cf873cfb988e56695373",
+      "raw_bytes": 1483,
+      "sha256": "dd16f0d2f60587b89d42b38bcf757ab10fbc5bdaa2c6cf873cfb988e56695373",
+      "bytes": 1483,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-full-oracle-counters.json",
+      "raw_sha256": "45d21b59273c40ed50374c6deec38843ed27f399c51d95444e0202fc091ea495",
+      "raw_bytes": 167431,
+      "sha256": "45d21b59273c40ed50374c6deec38843ed27f399c51d95444e0202fc091ea495",
+      "bytes": 167431,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-full-oracle-run.log",
+      "raw_sha256": "4ef414e7680cf23f40eb6dba847a07413c54a41ed418e7efdd1a959e824e1db4",
+      "raw_bytes": 150,
+      "sha256": "4ef414e7680cf23f40eb6dba847a07413c54a41ed418e7efdd1a959e824e1db4",
+      "bytes": 150,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-full-oracle.stderr.log",
+      "raw_sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "raw_bytes": 1656,
+      "sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "bytes": 1656,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-full-oracle.stdout.log",
+      "raw_sha256": "416ade91a6df35de93ecd8b269b722a55f3a2b746c0feadded6fd2447387a3aa",
+      "raw_bytes": 255536,
+      "sha256": "a545d3bf99d1a6f489601dc4ea02a7891c98631b4e45e63adbb8ea2824ffc24b",
+      "bytes": 255535,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-full-oracle.strace.gz",
+      "raw_sha256": "8a520afcc305b968751e97b8869c2de802fa59556b33dc08eb7a223d443fa0fa",
+      "raw_bytes": 22667306,
+      "sha256": "5dcd45090b3e177df26ba7d11cb528a6e2aec92c5d9502ebf118175397fc1535",
+      "bytes": 742911,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-hermetic-final.log",
+      "raw_sha256": "c8ce4a2a743d2bb4885015a03ff884a625c7817133f6a9c2de7f377b3932460e",
+      "raw_bytes": 142339,
+      "sha256": "06ea80a89fbbd7bef70accfb9fe852d35552fee189c778201042ffdd6345686f",
+      "bytes": 142338,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-hermetic-observed-command.json",
+      "raw_sha256": "f745a9708d2d5c7c6a11904ae9afbaa168d0880ecceb8fa5cfb2c1367b5fe0e4",
+      "raw_bytes": 921,
+      "sha256": "f745a9708d2d5c7c6a11904ae9afbaa168d0880ecceb8fa5cfb2c1367b5fe0e4",
+      "bytes": 921,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-hermetic-observed-counters.json",
+      "raw_sha256": "7b699e4622df195e76b266a4a5a994312c610e4e0ac71baf2e76da3a048c425a",
+      "raw_bytes": 9361,
+      "sha256": "7b699e4622df195e76b266a4a5a994312c610e4e0ac71baf2e76da3a048c425a",
+      "bytes": 9361,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-hermetic-observed-run.log",
+      "raw_sha256": "ba61d2c25b18c262e334041f8ceee87540458f4ff0f42579c8643e2ebe0b3a67",
+      "raw_bytes": 156,
+      "sha256": "ba61d2c25b18c262e334041f8ceee87540458f4ff0f42579c8643e2ebe0b3a67",
+      "bytes": 156,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-hermetic-observed.stderr.log",
+      "raw_sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "raw_bytes": 1656,
+      "sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "bytes": 1656,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-hermetic-observed.stdout.log",
+      "raw_sha256": "96aaf1f1e3cb346d43e5f7b22a5dbda8e75cb7929662dd1326f87467f1d6d7bd",
+      "raw_bytes": 8516,
+      "sha256": "a5a442a2657375af7254a6fb0a5f107efc33052ee3e3cba139a3a263c76a6d03",
+      "bytes": 8515,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-hermetic-observed.strace.gz",
+      "raw_sha256": "cdfa18342defb2df711662815feebb38aa31848ce4f36596837cfe6d7f251a62",
+      "raw_bytes": 11415194,
+      "sha256": "d31d6363d10065309cb3b67ac448b14c9b958ce3f935589d2cef2f8282c81785",
+      "bytes": 183870,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-observed-command.json",
+      "raw_sha256": "6c3b2d8e2eaef6f86ee59fb5bd8fad437c6686d40bc8eae0d53589dc3577aeb6",
+      "raw_bytes": 828,
+      "sha256": "6c3b2d8e2eaef6f86ee59fb5bd8fad437c6686d40bc8eae0d53589dc3577aeb6",
+      "bytes": 828,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-observed-counters.json",
+      "raw_sha256": "860caa6edfbc193c4744ec9b75c30456e646f7757e42c5dfa9a706f158de92c4",
+      "raw_bytes": 9352,
+      "sha256": "860caa6edfbc193c4744ec9b75c30456e646f7757e42c5dfa9a706f158de92c4",
+      "bytes": 9352,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-observed.stderr.log",
+      "raw_sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "raw_bytes": 1656,
+      "sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "bytes": 1656,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-observed.stdout.log",
+      "raw_sha256": "8e240cbb575ec6737b0a87196f40f40172e7eb654b434f9906cf1f123f1de3df",
+      "raw_bytes": 8516,
+      "sha256": "e185655315be2d776aaa06b0fd35fea580dd62a5bc78ea85299c99f97b2f9033",
+      "bytes": 8515,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-observed.strace.gz",
+      "raw_sha256": "8cd4f45bab0c484ab34b7b5ed406ab5bd113733b481c9323e687d6fb4b283d34",
+      "raw_bytes": 11413990,
+      "sha256": "a7c1f14361471c4a3e328dd55e566e18638656d3dafff2a004c3b9c5998de2d0",
+      "bytes": 183927,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-observer-run.log",
+      "raw_sha256": "dc9186ad4f33970e1834ccb9362e5b5eb2ce80227ec2b6dabba7bb8b8d591b67",
+      "raw_bytes": 147,
+      "sha256": "dc9186ad4f33970e1834ccb9362e5b5eb2ce80227ec2b6dabba7bb8b8d591b67",
+      "bytes": 147,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-sealed-observed-command.json",
+      "raw_sha256": "80022d1fb6f9ee5b209c7ecfcb5f3e92dec78631df26f34f99b92a58179fade3",
+      "raw_bytes": 915,
+      "sha256": "80022d1fb6f9ee5b209c7ecfcb5f3e92dec78631df26f34f99b92a58179fade3",
+      "bytes": 915,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-sealed-observed-counters.json",
+      "raw_sha256": "346e0d5ff456c301c5595ff329609bb9051a4c5e18566e0c2de490ff2282c75a",
+      "raw_bytes": 9359,
+      "sha256": "346e0d5ff456c301c5595ff329609bb9051a4c5e18566e0c2de490ff2282c75a",
+      "bytes": 9359,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-sealed-observed-run.log",
+      "raw_sha256": "f110ccade59d05719fc464b5095b30b93438cceb47b0c1646ebf569a741b5454",
+      "raw_bytes": 154,
+      "sha256": "f110ccade59d05719fc464b5095b30b93438cceb47b0c1646ebf569a741b5454",
+      "bytes": 154,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-sealed-observed.stderr.log",
+      "raw_sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "raw_bytes": 1656,
+      "sha256": "8892513c795768a9d8879a115494e8f456bf770db332fff73b3c931b5a0bdfb0",
+      "bytes": 1656,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-sealed-observed.stdout.log",
+      "raw_sha256": "cfef85935e91c89e0ab0309f2b2e243d6fc7ea4b22d7de54f656962535d016de",
+      "raw_bytes": 255536,
+      "sha256": "5c04811710db0da05e0e2b2956ba4793d70e13ab146ed3e964e813c4a8048c2f",
+      "bytes": 255535,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-sealed-observed.strace.gz",
+      "raw_sha256": "989056b98afe22da4559816a5802294096dd13ef77c1db0e5d3129f48cd962da",
+      "raw_bytes": 11791533,
+      "sha256": "02e4f1383a8e944588b4c29a936f0c1227de8980d217b7c31b70d6c969b500b9",
+      "bytes": 218595,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/cli-sealed.log",
+      "raw_sha256": "b8c1cf974a29c87e9c3f4da11a67f469d52920a6b2b1dc37fda4710186fc8ffb",
+      "raw_bytes": 389359,
+      "sha256": "7395728eabc14b89919b82a34b6b6c2b386fa62d077ff9bc63b29975d8fd195f",
+      "bytes": 389358,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/diff-check-final.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/diff-check.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/01-success-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/01-success-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/02-repeat-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/02-repeat-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/03-stale-document-cli.stdout.json",
+      "raw_sha256": "5c11e8dd0be78293a0214a0fde958948a705b30d187c359114bf9efac72893b6",
+      "raw_bytes": 158,
+      "sha256": "5c11e8dd0be78293a0214a0fde958948a705b30d187c359114bf9efac72893b6",
+      "bytes": 158,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/03-stale-document-mcp.stdout.jsonl",
+      "raw_sha256": "ed6c99f02ab6d94c43169b10c546f17cedf409720a58e24aaf564dbf1e5b3df8",
+      "raw_bytes": 687,
+      "sha256": "ed6c99f02ab6d94c43169b10c546f17cedf409720a58e24aaf564dbf1e5b3df8",
+      "bytes": 687,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/04-unsupported-strict-grade-cli.stdout.json",
+      "raw_sha256": "5a2430c0b0dc031588436ee1b972b658c6e03638a83a9ba444bddcc9a1dc048f",
+      "raw_bytes": 147,
+      "sha256": "5a2430c0b0dc031588436ee1b972b658c6e03638a83a9ba444bddcc9a1dc048f",
+      "bytes": 147,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/04-unsupported-strict-grade-mcp.stdout.jsonl",
+      "raw_sha256": "be700940e2b2d998a81a56ca6f8e9e8fcd020e0ebc8fe5b93768a5b2c4b925c7",
+      "raw_bytes": 674,
+      "sha256": "be700940e2b2d998a81a56ca6f8e9e8fcd020e0ebc8fe5b93768a5b2c4b925c7",
+      "bytes": 674,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/05-missing-capture-cli.stdout.json",
+      "raw_sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "raw_bytes": 152,
+      "sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "bytes": 152,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/05-missing-capture-mcp.stdout.jsonl",
+      "raw_sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "raw_bytes": 665,
+      "sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "bytes": 665,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/06-record-only-control-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/06-record-only-control-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/07-record-only-cli.stdout.json",
+      "raw_sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "raw_bytes": 152,
+      "sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "bytes": 152,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/07-record-only-mcp.stdout.jsonl",
+      "raw_sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "raw_bytes": 665,
+      "sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "bytes": 665,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/08-payload-only-control-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/08-payload-only-control-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/09-payload-only-cli.stdout.json",
+      "raw_sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "raw_bytes": 152,
+      "sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "bytes": 152,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/09-payload-only-mcp.stdout.jsonl",
+      "raw_sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "raw_bytes": 665,
+      "sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "bytes": 665,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/10-coordinated-control-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/10-coordinated-control-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/11-coordinated-cli.stdout.json",
+      "raw_sha256": "1134273863937315da46feb52c1fde4dc75527d0d611cd8f0833dbcc61d9afb6",
+      "raw_bytes": 1155,
+      "sha256": "1134273863937315da46feb52c1fde4dc75527d0d611cd8f0833dbcc61d9afb6",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/11-coordinated-mcp.stdout.jsonl",
+      "raw_sha256": "8a3f8ddb4469abc2598357e681fd01af2e069115a46ad632a16b5a93fd27c7ab",
+      "raw_bytes": 2906,
+      "sha256": "8a3f8ddb4469abc2598357e681fd01af2e069115a46ad632a16b5a93fd27c7ab",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/12-coordinated-pristine-expectation-cli.stdout.json",
+      "raw_sha256": "5c11e8dd0be78293a0214a0fde958948a705b30d187c359114bf9efac72893b6",
+      "raw_bytes": 158,
+      "sha256": "5c11e8dd0be78293a0214a0fde958948a705b30d187c359114bf9efac72893b6",
+      "bytes": 158,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/final-real-surfaces/12-coordinated-pristine-expectation-mcp.stdout.jsonl",
+      "raw_sha256": "ed6c99f02ab6d94c43169b10c546f17cedf409720a58e24aaf564dbf1e5b3df8",
+      "raw_bytes": 687,
+      "sha256": "ed6c99f02ab6d94c43169b10c546f17cedf409720a58e24aaf564dbf1e5b3df8",
+      "bytes": 687,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-fmt.log",
+      "raw_sha256": "e0815a42446aacc3696dbc681dcd3ef48599db79fbabbfedca83891489f72a66",
+      "raw_bytes": 7020,
+      "sha256": "9f827d53bed3f257d17ff0630849b39fe62666929112ce36ec877610fb58b7ee",
+      "bytes": 7014,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/01-success-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/01-success-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/02-repeat-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/02-repeat-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/03-stale-document-cli.stdout.json",
+      "raw_sha256": "5c11e8dd0be78293a0214a0fde958948a705b30d187c359114bf9efac72893b6",
+      "raw_bytes": 158,
+      "sha256": "5c11e8dd0be78293a0214a0fde958948a705b30d187c359114bf9efac72893b6",
+      "bytes": 158,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/03-stale-document-mcp.stdout.jsonl",
+      "raw_sha256": "ed6c99f02ab6d94c43169b10c546f17cedf409720a58e24aaf564dbf1e5b3df8",
+      "raw_bytes": 687,
+      "sha256": "ed6c99f02ab6d94c43169b10c546f17cedf409720a58e24aaf564dbf1e5b3df8",
+      "bytes": 687,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/04-unsupported-strict-grade-cli.stdout.json",
+      "raw_sha256": "5a2430c0b0dc031588436ee1b972b658c6e03638a83a9ba444bddcc9a1dc048f",
+      "raw_bytes": 147,
+      "sha256": "5a2430c0b0dc031588436ee1b972b658c6e03638a83a9ba444bddcc9a1dc048f",
+      "bytes": 147,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/04-unsupported-strict-grade-mcp.stdout.jsonl",
+      "raw_sha256": "be700940e2b2d998a81a56ca6f8e9e8fcd020e0ebc8fe5b93768a5b2c4b925c7",
+      "raw_bytes": 674,
+      "sha256": "be700940e2b2d998a81a56ca6f8e9e8fcd020e0ebc8fe5b93768a5b2c4b925c7",
+      "bytes": 674,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/05-missing-capture-cli.stdout.json",
+      "raw_sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "raw_bytes": 152,
+      "sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "bytes": 152,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/05-missing-capture-mcp.stdout.jsonl",
+      "raw_sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "raw_bytes": 665,
+      "sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "bytes": 665,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/06-record-only-control-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/06-record-only-control-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/07-record-only-cli.stdout.json",
+      "raw_sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "raw_bytes": 152,
+      "sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "bytes": 152,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/07-record-only-mcp.stdout.jsonl",
+      "raw_sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "raw_bytes": 665,
+      "sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "bytes": 665,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/08-payload-only-control-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/08-payload-only-control-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/09-payload-only-cli.stdout.json",
+      "raw_sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "raw_bytes": 152,
+      "sha256": "bb851948dddaaa7a4f676e55d01e802c9aa7b8832bc343b523a8607ec7014a4f",
+      "bytes": 152,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/09-payload-only-mcp.stdout.jsonl",
+      "raw_sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "raw_bytes": 665,
+      "sha256": "e5e233dc7bfb223259211a7dd66a322a76f19b6d1a41b56d3b5dbf5debdc1b8b",
+      "bytes": 665,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/10-coordinated-control-cli.stdout.json",
+      "raw_sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "raw_bytes": 1155,
+      "sha256": "3a6d18bf25aa625d3b21b9b8ca4525d25136f00f0373823975d2f5e50f76734c",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/10-coordinated-control-mcp.stdout.jsonl",
+      "raw_sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "raw_bytes": 2906,
+      "sha256": "6d3106c818e3f9b81350437d57d510577f8ddcd1f82988cfa9d24e56037909f2",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/11-coordinated-cli.stdout.json",
+      "raw_sha256": "1134273863937315da46feb52c1fde4dc75527d0d611cd8f0833dbcc61d9afb6",
+      "raw_bytes": 1155,
+      "sha256": "1134273863937315da46feb52c1fde4dc75527d0d611cd8f0833dbcc61d9afb6",
+      "bytes": 1155,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/11-coordinated-mcp.stdout.jsonl",
+      "raw_sha256": "8a3f8ddb4469abc2598357e681fd01af2e069115a46ad632a16b5a93fd27c7ab",
+      "raw_bytes": 2906,
+      "sha256": "8a3f8ddb4469abc2598357e681fd01af2e069115a46ad632a16b5a93fd27c7ab",
+      "bytes": 2906,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/12-coordinated-pristine-expectation-cli.stdout.json",
+      "raw_sha256": "5c11e8dd0be78293a0214a0fde958948a705b30d187c359114bf9efac72893b6",
+      "raw_bytes": 158,
+      "sha256": "5c11e8dd0be78293a0214a0fde958948a705b30d187c359114bf9efac72893b6",
+      "bytes": 158,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/full-oracle-real-surfaces/12-coordinated-pristine-expectation-mcp.stdout.jsonl",
+      "raw_sha256": "ed6c99f02ab6d94c43169b10c546f17cedf409720a58e24aaf564dbf1e5b3df8",
+      "raw_bytes": 687,
+      "sha256": "ed6c99f02ab6d94c43169b10c546f17cedf409720a58e24aaf564dbf1e5b3df8",
+      "bytes": 687,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-complete-oracle-command.json",
+      "raw_sha256": "1b85ee996dc862b647aa5f940a51a2c0fd3701a78f249de4abcb89f17b298b35",
+      "raw_bytes": 1567,
+      "sha256": "1b85ee996dc862b647aa5f940a51a2c0fd3701a78f249de4abcb89f17b298b35",
+      "bytes": 1567,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-complete-oracle-counters.json",
+      "raw_sha256": "b8b7245719788d48b7a9ee927906401ad4cc3ba9439ea0955d56d28783e01709",
+      "raw_bytes": 4607,
+      "sha256": "b8b7245719788d48b7a9ee927906401ad4cc3ba9439ea0955d56d28783e01709",
+      "bytes": 4607,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-complete-oracle-run.log",
+      "raw_sha256": "1b6d8afb6eeb0140e9febc13a42d9efc36d772fb024b9dd4b098684291ee4b12",
+      "raw_bytes": 152,
+      "sha256": "1b6d8afb6eeb0140e9febc13a42d9efc36d772fb024b9dd4b098684291ee4b12",
+      "bytes": 152,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-complete-oracle.stderr.log",
+      "raw_sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "raw_bytes": 280,
+      "sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "bytes": 280,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-complete-oracle.stdout.log",
+      "raw_sha256": "5b39a4a2310269418db7130c4ec8a4a8e36bc998871d33d48c53ea84d6e9e4d0",
+      "raw_bytes": 18111,
+      "sha256": "95375a17d5236cda344111cc04f812716af8c22ea2ccb5b512d22cb3c1212751",
+      "bytes": 18110,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-first.log",
+      "raw_sha256": "f45c1f7889efa82b8b3b0fde0bfe14e6f40afd173c45b97516e17170c2a626e8",
+      "raw_bytes": 23316,
+      "sha256": "68ff5bcb91967a067cdb9527cc7159418c08e7ce1866d60cf9a8a74ea997d7d7",
+      "bytes": 23315,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-full-oracle-command.json",
+      "raw_sha256": "59fdee38836d001a7434a67403c277926c1c5e2a046608c80c39d6da3a4b2b00",
+      "raw_bytes": 1519,
+      "sha256": "59fdee38836d001a7434a67403c277926c1c5e2a046608c80c39d6da3a4b2b00",
+      "bytes": 1519,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-full-oracle-counters.json",
+      "raw_sha256": "7be8a4a5cd1992c5b8e764b2d01cbc1ee1c41a09d331eb0a97c64c4cb9f67d4c",
+      "raw_bytes": 4457,
+      "sha256": "7be8a4a5cd1992c5b8e764b2d01cbc1ee1c41a09d331eb0a97c64c4cb9f67d4c",
+      "bytes": 4457,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-full-oracle-run.log",
+      "raw_sha256": "0473ac022332234c24bda4afa1400eecc2b4e28a0dd804c39389b34e1f2a5c1f",
+      "raw_bytes": 148,
+      "sha256": "0473ac022332234c24bda4afa1400eecc2b4e28a0dd804c39389b34e1f2a5c1f",
+      "bytes": 148,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-full-oracle.stderr.log",
+      "raw_sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "raw_bytes": 280,
+      "sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "bytes": 280,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-full-oracle.stdout.log",
+      "raw_sha256": "5b39a4a2310269418db7130c4ec8a4a8e36bc998871d33d48c53ea84d6e9e4d0",
+      "raw_bytes": 18111,
+      "sha256": "95375a17d5236cda344111cc04f812716af8c22ea2ccb5b512d22cb3c1212751",
+      "bytes": 18110,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-full-oracle.strace.gz",
+      "raw_sha256": "8b954368661590a366e3990dc091b6d364d75db00e7f7fa8e9375ac180d62c0a",
+      "raw_bytes": 1099902,
+      "sha256": "6337de5fc6041cd7d68388705587f4bc365e3eabb811d2a12207dd5b302af41b",
+      "bytes": 23890,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-hermetic-observed-command.json",
+      "raw_sha256": "ff21277188575f83516d839c8f77d9703e4e38fbbb3cb27d24f4e065cafdfe53",
+      "raw_bytes": 957,
+      "sha256": "ff21277188575f83516d839c8f77d9703e4e38fbbb3cb27d24f4e065cafdfe53",
+      "bytes": 957,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-hermetic-observed-counters.json",
+      "raw_sha256": "29f3b692680d2aa84da8ba8af3866955bb8058218570a4a6926cf445695c0e5f",
+      "raw_bytes": 1214,
+      "sha256": "29f3b692680d2aa84da8ba8af3866955bb8058218570a4a6926cf445695c0e5f",
+      "bytes": 1214,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-hermetic-observed-run.log",
+      "raw_sha256": "3936e1240cf8d1d916aa17b42d81a2c41f0d94819d935a57252ee864c0ae5ec8",
+      "raw_bytes": 154,
+      "sha256": "3936e1240cf8d1d916aa17b42d81a2c41f0d94819d935a57252ee864c0ae5ec8",
+      "bytes": 154,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-hermetic-observed.stderr.log",
+      "raw_sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "raw_bytes": 280,
+      "sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "bytes": 280,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-hermetic-observed.stdout.log",
+      "raw_sha256": "8c65eb66103cba85524f1d4653326a7917e808b85fcca053d67e7698ab309a74",
+      "raw_bytes": 330,
+      "sha256": "daa0c75c4597a88dc414b715aab78ca656d8f12b6064ba547944f87581e244c3",
+      "bytes": 329,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-hermetic-observed.strace.gz",
+      "raw_sha256": "373731005b091c008741095714abace56c87ac752bc3d274629ca5972c21d1f5",
+      "raw_bytes": 579213,
+      "sha256": "f0c987c4263f515a4688e802c191b3b704df5e46bd7914d508d0b76df51a643f",
+      "bytes": 9825,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-observed-command.json",
+      "raw_sha256": "9b44f9fd8b298ceb2ed67170c169577d764b88a99d54bbf8b77896c4c53cec30",
+      "raw_bytes": 930,
+      "sha256": "9b44f9fd8b298ceb2ed67170c169577d764b88a99d54bbf8b77896c4c53cec30",
+      "bytes": 930,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-observed-counters.json",
+      "raw_sha256": "60b7a4d7d783bd494813bbd6a5791f719c28ea4b9b41b17dd08382cae2cf7f18",
+      "raw_bytes": 1205,
+      "sha256": "60b7a4d7d783bd494813bbd6a5791f719c28ea4b9b41b17dd08382cae2cf7f18",
+      "bytes": 1205,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-observed-run.log",
+      "raw_sha256": "431a4ac8ca81f894db086d50a1423d2b94b3b2e268989384ea7e651d80668c46",
+      "raw_bytes": 145,
+      "sha256": "431a4ac8ca81f894db086d50a1423d2b94b3b2e268989384ea7e651d80668c46",
+      "bytes": 145,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-observed.stderr.log",
+      "raw_sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "raw_bytes": 280,
+      "sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "bytes": 280,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-observed.stdout.log",
+      "raw_sha256": "8c65eb66103cba85524f1d4653326a7917e808b85fcca053d67e7698ab309a74",
+      "raw_bytes": 330,
+      "sha256": "daa0c75c4597a88dc414b715aab78ca656d8f12b6064ba547944f87581e244c3",
+      "bytes": 329,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-observed.strace.gz",
+      "raw_sha256": "ac583bf65e025b9e5be6db86b61bda9496d6c3ee4ae2c6799af0a286e289e3ed",
+      "raw_bytes": 580312,
+      "sha256": "8f515229b69e50abed5f51d72424834f9fe56aa088352e0865a49205da7f960f",
+      "bytes": 9945,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-sealed-observed-command.json",
+      "raw_sha256": "7fa99bfc40582bbb8e33358679ee76d3bcb5fa7864ae8288e1be3a3d7c41e25e",
+      "raw_bytes": 951,
+      "sha256": "7fa99bfc40582bbb8e33358679ee76d3bcb5fa7864ae8288e1be3a3d7c41e25e",
+      "bytes": 951,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-sealed-observed-counters.json",
+      "raw_sha256": "4c3a65e3124a1567e202804b56068333393566741e5812aa84cb27ca549744d8",
+      "raw_bytes": 1212,
+      "sha256": "4c3a65e3124a1567e202804b56068333393566741e5812aa84cb27ca549744d8",
+      "bytes": 1212,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-sealed-observed-run.log",
+      "raw_sha256": "b7c9294193e80f369c3a3f61050880775628ea512ec6f5757bacc3edceaada0e",
+      "raw_bytes": 152,
+      "sha256": "b7c9294193e80f369c3a3f61050880775628ea512ec6f5757bacc3edceaada0e",
+      "bytes": 152,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-sealed-observed.stderr.log",
+      "raw_sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "raw_bytes": 280,
+      "sha256": "885ae079d4bdf42053721f21e79cc930538887385888bf07b47139c803434782",
+      "bytes": 280,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-sealed-observed.stdout.log",
+      "raw_sha256": "b0b141d47a2e097b262af44d4023216b3d19bf64184416df34c1eaad83e49d7d",
+      "raw_bytes": 18111,
+      "sha256": "809af00596c3d28fddecd09a4f8d53903026f1849b8c14f1846a15ca8c5d0c0e",
+      "bytes": 18110,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-sealed-observed.strace.gz",
+      "raw_sha256": "8b1184ed3c4a9f6fdb64edc881f5f355f3c7ee1aee0c0057118ba55a83effbce",
+      "raw_bytes": 607895,
+      "sha256": "86bdd0958b6ee7a9fedcb148e79384c02ae0e23259bfcbd6afccc590d1872b9e",
+      "bytes": 12857,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/mcp-sealed.log",
+      "raw_sha256": "185cad38ccbbf309458c41d9058f828bfea904d69f310c2b8ba1052d4e493284",
+      "raw_bytes": 40249,
+      "sha256": "7376640bddf86795d053d23963980f401430e78bffa9a2d752ac085471d7fe29",
+      "bytes": 40248,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observe_queries.py",
+      "raw_sha256": "b332cb5facb4e9b5d4dfbddb52a55cdf9ac788cb8d33518c6c2bb5c88b6f1cc9",
+      "raw_bytes": 10267,
+      "sha256": "b332cb5facb4e9b5d4dfbddb52a55cdf9ac788cb8d33518c6c2bb5c88b6f1cc9",
+      "bytes": 10267,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observe_queries_narrow_epoch.py",
+      "raw_sha256": "b14b284b63ee6653d55d5a52cdbeee33eab8c4309d6d7add8040695466f030e7",
+      "raw_bytes": 4542,
+      "sha256": "b14b284b63ee6653d55d5a52cdbeee33eab8c4309d6d7add8040695466f030e7",
+      "bytes": 4542,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-command.json",
+      "raw_sha256": "e28649829f3ead9aa0530dea2340c8ce603a472e5347bad3212c3188eae5da6c",
+      "raw_bytes": 1591,
+      "sha256": "e28649829f3ead9aa0530dea2340c8ce603a472e5347bad3212c3188eae5da6c",
+      "bytes": 1591,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-counters.json",
+      "raw_sha256": "9ac09085a6318ad900f7ddd25e18a54d092abf02f344f319c2f87f27b823dce8",
+      "raw_bytes": 4587,
+      "sha256": "9ac09085a6318ad900f7ddd25e18a54d092abf02f344f319c2f87f27b823dce8",
+      "bytes": 4587,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-final-command.json",
+      "raw_sha256": "7d4ec0ed02ef2ed418bf05fe0be0885c5ca5ae786240c76fa4fd6f36fcd62cc1",
+      "raw_bytes": 1645,
+      "sha256": "7d4ec0ed02ef2ed418bf05fe0be0885c5ca5ae786240c76fa4fd6f36fcd62cc1",
+      "bytes": 1645,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-final-counters.json",
+      "raw_sha256": "9b06e8fab8f46479701bac6a05f373fad1f543c0d9e2257a0f827d9aceef2057",
+      "raw_bytes": 5024,
+      "sha256": "9b06e8fab8f46479701bac6a05f373fad1f543c0d9e2257a0f827d9aceef2057",
+      "bytes": 5024,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-final-run.log",
+      "raw_sha256": "f2ac900c16c9403a4ad1cb7af7da5f38419ca130ba1051b0dff1ac7de5e46196",
+      "raw_bytes": 147,
+      "sha256": "f2ac900c16c9403a4ad1cb7af7da5f38419ca130ba1051b0dff1ac7de5e46196",
+      "bytes": 147,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-final.stderr.log",
+      "raw_sha256": "0fced398c6ffcbb65baedcc7d3647db058cd2bc2fedd49ad4167b7e737ccc16d",
+      "raw_bytes": 162,
+      "sha256": "0fced398c6ffcbb65baedcc7d3647db058cd2bc2fedd49ad4167b7e737ccc16d",
+      "bytes": 162,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-final.stdout.log",
+      "raw_sha256": "3609920a797a74eedd6c95603c63cf3b8d1d983d2058c1278127c80e2d985281",
+      "raw_bytes": 44,
+      "sha256": "3609920a797a74eedd6c95603c63cf3b8d1d983d2058c1278127c80e2d985281",
+      "bytes": 44,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-final.strace.gz",
+      "raw_sha256": "ef2cf8f3c61ae3762b15cd6d5e44cccccf13570209a73526c6b4509b12bccdc4",
+      "raw_bytes": 11489,
+      "sha256": "506b7634502549e82d249a5d715f205c439689b315616b62a7744c105eac7392",
+      "bytes": 1735,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-run.log",
+      "raw_sha256": "19ecddaf375f2893aaeeb8c896a3c6289fd0653f01821f9652361658fee53c6b",
+      "raw_bytes": 146,
+      "sha256": "19ecddaf375f2893aaeeb8c896a3c6289fd0653f01821f9652361658fee53c6b",
+      "bytes": 146,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-v2-command.json",
+      "raw_sha256": "093d38c75eb02be35a17a7899b90ba5474130539ff4d40ddbf340236b12cf56e",
+      "raw_bytes": 1618,
+      "sha256": "093d38c75eb02be35a17a7899b90ba5474130539ff4d40ddbf340236b12cf56e",
+      "bytes": 1618,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-v2-counters.json",
+      "raw_sha256": "a1f2e48020ff5c3250bdf6df45aff9f4a77f45bbbe79b40152be5078256ffae6",
+      "raw_bytes": 5000,
+      "sha256": "a1f2e48020ff5c3250bdf6df45aff9f4a77f45bbbe79b40152be5078256ffae6",
+      "bytes": 5000,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-v2-run.log",
+      "raw_sha256": "35ae4ff41f2a40240ceb3c7896b47c335cf0986c1d2fd8f8a92fca82904161cc",
+      "raw_bytes": 1466,
+      "sha256": "35ae4ff41f2a40240ceb3c7896b47c335cf0986c1d2fd8f8a92fca82904161cc",
+      "bytes": 1466,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-v2.stderr.log",
+      "raw_sha256": "0fced398c6ffcbb65baedcc7d3647db058cd2bc2fedd49ad4167b7e737ccc16d",
+      "raw_bytes": 162,
+      "sha256": "0fced398c6ffcbb65baedcc7d3647db058cd2bc2fedd49ad4167b7e737ccc16d",
+      "bytes": 162,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-v2.stdout.log",
+      "raw_sha256": "3609920a797a74eedd6c95603c63cf3b8d1d983d2058c1278127c80e2d985281",
+      "raw_bytes": 44,
+      "sha256": "3609920a797a74eedd6c95603c63cf3b8d1d983d2058c1278127c80e2d985281",
+      "bytes": 44,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control-v2.strace.gz",
+      "raw_sha256": "c0c7efa22b78f60c9a73a53ec37588ed14ded1c0af80ddc3c2c56eaea79e0d9a",
+      "raw_bytes": 11444,
+      "sha256": "802e24ece739b64814f6edf15e58cdbdd9e19b55fe01069d94a72796f432ee9a",
+      "bytes": 1728,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control.stderr.log",
+      "raw_sha256": "0fced398c6ffcbb65baedcc7d3647db058cd2bc2fedd49ad4167b7e737ccc16d",
+      "raw_bytes": 162,
+      "sha256": "0fced398c6ffcbb65baedcc7d3647db058cd2bc2fedd49ad4167b7e737ccc16d",
+      "bytes": 162,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control.stdout.log",
+      "raw_sha256": "3609920a797a74eedd6c95603c63cf3b8d1d983d2058c1278127c80e2d985281",
+      "raw_bytes": 44,
+      "sha256": "3609920a797a74eedd6c95603c63cf3b8d1d983d2058c1278127c80e2d985281",
+      "bytes": 44,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer-positive-control.strace.gz",
+      "raw_sha256": "bc89d9b0c5fdf92436520dc13f6df207e53b5c5e115d94cdf0243f7a37d59730",
+      "raw_bytes": 11330,
+      "sha256": "f33433b90205f42b8757d5edd7cf486898fbf41f6bc55f13f920c0d74405834e",
+      "bytes": 1716,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/observer_positive_control.c",
+      "raw_sha256": "806c217da29a947e1b68f6b4d6a7738553db4ec6e3d670b4dc5ec3b57808e999",
+      "raw_bytes": 1909,
+      "sha256": "806c217da29a947e1b68f6b4d6a7738553db4ec6e3d670b4dc5ec3b57808e999",
+      "bytes": 1909,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/positive-control-scratch",
+      "raw_sha256": "01bb7d9e1469459d109dd542b3bb8b57be1e8d6a1e5a35906337f231e10314df",
+      "raw_bytes": 4096,
+      "sha256": "a891374b21c86d01f09302b0a39f877bf1f98a7d596c141ef1bee53d67015d3f",
+      "bytes": 4097,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/positive-control-scratch-final",
+      "raw_sha256": "01bb7d9e1469459d109dd542b3bb8b57be1e8d6a1e5a35906337f231e10314df",
+      "raw_bytes": 4096,
+      "sha256": "a891374b21c86d01f09302b0a39f877bf1f98a7d596c141ef1bee53d67015d3f",
+      "bytes": 4097,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/positive-control-scratch-v2",
+      "raw_sha256": "01bb7d9e1469459d109dd542b3bb8b57be1e8d6a1e5a35906337f231e10314df",
+      "raw_bytes": 4096,
+      "sha256": "a891374b21c86d01f09302b0a39f877bf1f98a7d596c141ef1bee53d67015d3f",
+      "bytes": 4097,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-cli-command.json",
+      "raw_sha256": "c88ae5adda9fd8f34ed9307ceae6b049f573e6af7c20e4c6137b19ce79b6527f",
+      "raw_bytes": 921,
+      "sha256": "681a6ef16ce19e1adfec068f590ac07675230a939ef54c5ccc7143ab1f0e80ae",
+      "bytes": 922,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-cli-counters.json",
+      "raw_sha256": "aa8d17691d632157fcadaf45001b0a1f382669ce0fbcdf531f7f357f021c9542",
+      "raw_bytes": 298,
+      "sha256": "aa8d17691d632157fcadaf45001b0a1f382669ce0fbcdf531f7f357f021c9542",
+      "bytes": 298,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-cli.stderr.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-cli.stdout.json",
+      "raw_sha256": "06ab1402b069433a2fdceb2f7ed38c1150383549d9ec364d4bcb5737e3c70bfb",
+      "raw_bytes": 1070,
+      "sha256": "06ab1402b069433a2fdceb2f7ed38c1150383549d9ec364d4bcb5737e3c70bfb",
+      "bytes": 1070,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-cli.strace.gz",
+      "raw_sha256": "18c00d9f742c4659f8592e62218970d0a07b107f724551ac302f6596ca463f01",
+      "raw_bytes": 153604,
+      "sha256": "396a37059aa5eaf931fdec5aa6472272704c787deef82a6c7eea6f7170722595",
+      "bytes": 2398,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-fixture/home/.vibe/e2-preserved-settings.txt",
+      "raw_sha256": "1da9bbd76c9b47df546c45ccebe604734d27032c45c258793a8152b7dc2f576a",
+      "raw_bytes": 21,
+      "sha256": "1da9bbd76c9b47df546c45ccebe604734d27032c45c258793a8152b7dc2f576a",
+      "bytes": 21,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-fixture/host/vibe.toml",
+      "raw_sha256": "52d0ab8ea618620e570dad3b6f3cda7c2cf007ee06d52e29331e80265d5e898a",
+      "raw_bytes": 198,
+      "sha256": "52d0ab8ea618620e570dad3b6f3cda7c2cf007ee06d52e29331e80265d5e898a",
+      "bytes": 198,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-fixture/host/vibevm/vibespecs/DOC.md",
+      "raw_sha256": "cc54ba8995ec5db1afd1908393d84006eec0b24c7892095ad0314e936229e5ab",
+      "raw_bytes": 76,
+      "sha256": "cc54ba8995ec5db1afd1908393d84006eec0b24c7892095ad0314e936229e5ab",
+      "bytes": 76,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/representative-mcp-service.log",
+      "raw_sha256": "e1abb40003365d859fbde799b89e7936cb6347c3d7baa4fdd6fa48abe1b5aa2c",
+      "raw_bytes": 23297,
+      "sha256": "443912c59c3ebd6f87e7f419079a8de494dc937082c16e201637cc5098ff4abd",
+      "bytes": 23296,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/touched-fmt-final.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/touched-fmt.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-complete-oracle-command.json",
+      "raw_sha256": "faadb2f638afbe936984550ae7eac4c1d07900deb68d10d7a4546e4e6bf90569",
+      "raw_bytes": 1659,
+      "sha256": "faadb2f638afbe936984550ae7eac4c1d07900deb68d10d7a4546e4e6bf90569",
+      "bytes": 1659,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-complete-oracle-counters.json",
+      "raw_sha256": "4fbe3db5d60ac17a93f6df5bf5b194bd710e527cce930cc3c596fcf40da73aac",
+      "raw_bytes": 8013,
+      "sha256": "4fbe3db5d60ac17a93f6df5bf5b194bd710e527cce930cc3c596fcf40da73aac",
+      "bytes": 8013,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-complete-oracle-run.log",
+      "raw_sha256": "58e220fd06463de4d170f2cbdc30de3375e3145f4b81b31eb742e493abd010e9",
+      "raw_bytes": 158,
+      "sha256": "58e220fd06463de4d170f2cbdc30de3375e3145f4b81b31eb742e493abd010e9",
+      "bytes": 158,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-complete-oracle.stderr.log",
+      "raw_sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "raw_bytes": 528,
+      "sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "bytes": 528,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-complete-oracle.stdout.log",
+      "raw_sha256": "eb9963a89ca0895585a1dab5f4c48d0a1b9d81e180cc74fc197f2cb57d170727",
+      "raw_bytes": 79856,
+      "sha256": "f9dced8198825785d3d1b34e184af882b61c17e86e3beeb3801e3160be32e45c",
+      "bytes": 79855,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-corrected.log",
+      "raw_sha256": "7ab3103dfdf51c9e248a866541e43552a7ddf6d1f6ddeb7e84f53c952bf05c70",
+      "raw_bytes": 17423,
+      "sha256": "851ac5269ed2a709c38ed59ed80ec7a05e8749009db1a609b80f2d206bd2c332",
+      "bytes": 17422,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-first.log",
+      "raw_sha256": "acb18293d9a80d7b5e8b9b4fbb779b6a55004b9fe9e5ca851a98a4fcc2fab894",
+      "raw_bytes": 18170,
+      "sha256": "acb18293d9a80d7b5e8b9b4fbb779b6a55004b9fe9e5ca851a98a4fcc2fab894",
+      "bytes": 18170,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-full-oracle-command.json",
+      "raw_sha256": "b4627f498b5944801f4358ed1334bc6deb6093f2ad3f891026c3e9537247aef9",
+      "raw_bytes": 1605,
+      "sha256": "b4627f498b5944801f4358ed1334bc6deb6093f2ad3f891026c3e9537247aef9",
+      "bytes": 1605,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-full-oracle-counters.json",
+      "raw_sha256": "fdda3561566b1465f7a87db6c0aa626bf3efaa79ac5a7d772060d8b422d2960b",
+      "raw_bytes": 7863,
+      "sha256": "fdda3561566b1465f7a87db6c0aa626bf3efaa79ac5a7d772060d8b422d2960b",
+      "bytes": 7863,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-full-oracle-run.log",
+      "raw_sha256": "f1d7b0c429e3297f5b5e9463136cae471d0b3c00298a74b3fc5d54fd04770979",
+      "raw_bytes": 154,
+      "sha256": "f1d7b0c429e3297f5b5e9463136cae471d0b3c00298a74b3fc5d54fd04770979",
+      "bytes": 154,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-full-oracle.stderr.log",
+      "raw_sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "raw_bytes": 528,
+      "sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "bytes": 528,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-full-oracle.stdout.log",
+      "raw_sha256": "eb9963a89ca0895585a1dab5f4c48d0a1b9d81e180cc74fc197f2cb57d170727",
+      "raw_bytes": 79856,
+      "sha256": "f9dced8198825785d3d1b34e184af882b61c17e86e3beeb3801e3160be32e45c",
+      "bytes": 79855,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-full-oracle.strace.gz",
+      "raw_sha256": "e41b8425cae852eda16d14f2077ebefce41a608d697b7c45cacf88389d5e8f17",
+      "raw_bytes": 4802152,
+      "sha256": "dac3292db95891bbc3f5001e89954954d49f05cd4aa79ed82c99908ceb5e8e11",
+      "bytes": 165901,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-hermetic-observed-command.json",
+      "raw_sha256": "3023dd5583f5d57373be39f7257cad759c8c04bfa45f4b13e768264a208e7fef",
+      "raw_bytes": 1013,
+      "sha256": "3023dd5583f5d57373be39f7257cad759c8c04bfa45f4b13e768264a208e7fef",
+      "bytes": 1013,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-hermetic-observed-counters.json",
+      "raw_sha256": "6072971868db8a3268c8f525268660f84c4b6f78e4bd53e236955a26ec1a7317",
+      "raw_bytes": 1815,
+      "sha256": "6072971868db8a3268c8f525268660f84c4b6f78e4bd53e236955a26ec1a7317",
+      "bytes": 1815,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-hermetic-observed-run.log",
+      "raw_sha256": "6519151772d010a38b1a6e52094e4a6e10b471bb41b95871c6352033c974748b",
+      "raw_bytes": 160,
+      "sha256": "6519151772d010a38b1a6e52094e4a6e10b471bb41b95871c6352033c974748b",
+      "bytes": 160,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-hermetic-observed.stderr.log",
+      "raw_sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "raw_bytes": 528,
+      "sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "bytes": 528,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-hermetic-observed.stdout.log",
+      "raw_sha256": "ec6ae6f301ab6f0d2c37b4038df2a0737e387c742bac9f5780143af11b5ddee8",
+      "raw_bytes": 604,
+      "sha256": "bb85ee391e634a783742acf042ad39576602354fe95ba34552c3cc728adf31a9",
+      "bytes": 603,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-hermetic-observed.strace.gz",
+      "raw_sha256": "9eef788fe8ababecd0da5600f6059651fec17737c8deee8c7b35f8c67ba473fa",
+      "raw_bytes": 2367474,
+      "sha256": "7912226d7ff6254412904cdff3c02f4e60d81aa2b27e67f4baec9c19ad9b0f0b",
+      "bytes": 39721,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-observed-command.json",
+      "raw_sha256": "60edf9d407de225ebf6d77ffe955c56af5de52a838508194ef0d4afce7cab799",
+      "raw_bytes": 986,
+      "sha256": "60edf9d407de225ebf6d77ffe955c56af5de52a838508194ef0d4afce7cab799",
+      "bytes": 986,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-observed-counters.json",
+      "raw_sha256": "11a5cdf09dc547754dce03e23cba7ca98206c6e818d270ba20b3e8ab36d09d5a",
+      "raw_bytes": 1806,
+      "sha256": "11a5cdf09dc547754dce03e23cba7ca98206c6e818d270ba20b3e8ab36d09d5a",
+      "bytes": 1806,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-observed-run.log",
+      "raw_sha256": "200527967a388f7a89eb26c330c47ba3284f2e50186949dc13820760011d9b1b",
+      "raw_bytes": 151,
+      "sha256": "200527967a388f7a89eb26c330c47ba3284f2e50186949dc13820760011d9b1b",
+      "bytes": 151,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-observed.stderr.log",
+      "raw_sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "raw_bytes": 528,
+      "sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "bytes": 528,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-observed.stdout.log",
+      "raw_sha256": "5d4517bc3df1e689330a88eeaf33b93109b7e0a2665d2cec7b4bbd684864f853",
+      "raw_bytes": 604,
+      "sha256": "bece6442017968e7973dcac7570080a53bf8d1f9ca5e8e254412154d5885dbcc",
+      "bytes": 603,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-observed.strace.gz",
+      "raw_sha256": "633610f4623ee40880050274711daa5eea862d6df3ae8fc8ff9eff9fea97ecc5",
+      "raw_bytes": 2368805,
+      "sha256": "13977308b1e4bda825d00a53970e5726c32f28248095f0c85fb99c6bb8b41ecb",
+      "bytes": 39890,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-sealed-observed-command.json",
+      "raw_sha256": "096a0024a112fd3c3f4a37520eeb9409607ff8a934c4f9c43184f666f58ecfa1",
+      "raw_bytes": 1007,
+      "sha256": "096a0024a112fd3c3f4a37520eeb9409607ff8a934c4f9c43184f666f58ecfa1",
+      "bytes": 1007,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-sealed-observed-counters.json",
+      "raw_sha256": "d6f9387c7974ee134c63f2c9d1a1f94b11950c56833dda5fe3cae2166ecf5071",
+      "raw_bytes": 1813,
+      "sha256": "d6f9387c7974ee134c63f2c9d1a1f94b11950c56833dda5fe3cae2166ecf5071",
+      "bytes": 1813,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-sealed-observed-run.log",
+      "raw_sha256": "15c3a03fb24394213a51240e44f525ca919aacfeca9df0311ac1802680854053",
+      "raw_bytes": 158,
+      "sha256": "15c3a03fb24394213a51240e44f525ca919aacfeca9df0311ac1802680854053",
+      "bytes": 158,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-sealed-observed.stderr.log",
+      "raw_sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "raw_bytes": 528,
+      "sha256": "075107d353df5bd9b8677e806d812d3120d4b6664e64b411e2657eaad4edef50",
+      "bytes": 528,
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-sealed-observed.stdout.log",
+      "raw_sha256": "abad2552e8bea0afb0c445c141802c1cf63649344796fcb2e9bc1c73d1688e4e",
+      "raw_bytes": 79856,
+      "sha256": "613b0b92dc3a728102e2c17123533486e92163302898026713c00b01083084b8",
+      "bytes": 79855,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-sealed-observed.strace.gz",
+      "raw_sha256": "1600464448464dba30dcffdbf4546e948393903608c92863d1b0f4ecfd488339",
+      "raw_bytes": 2480539,
+      "sha256": "4f5023d605e862e7262d3f3418eccc6d05eec5deaac481bd2e7ac8854db75bd8",
+      "bytes": 49729,
+      "representation": "lossless gzip, original bytes recoverable"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/workspace-sealed.log",
+      "raw_sha256": "6e2334de7e1115b9d5a0a0759d9645eaf387d57d67649243b4c2b7196546ca67",
+      "raw_bytes": 96675,
+      "sha256": "9ddfb33fc05858ca78091cc6744a62905a74ccdf8ce3ea6da9bc83c3ba05f790",
+      "bytes": 96674,
+      "representation": "physical trailing whitespace/final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-01-E.2/logs/xml-parse.log",
+      "raw_sha256": "af7373b7ba2dcd97f70a35fa065c695f8f3500f373b50165bcd31bf69b3db768",
+      "raw_bytes": 65,
+      "sha256": "af7373b7ba2dcd97f70a35fa065c695f8f3500f373b50165bcd31bf69b3db768",
+      "bytes": 65,
+      "representation": "exact bytes"
+    }
+  ],
+  "omitted_derived_binaries": [
+    {
+      "path": "observer_positive_control",
+      "raw_sha256": "bb78614f88c9059de2385c088dbc35301b603d0312d9290790d7c6a3fdf831b0",
+      "reason": "derived executable retained in research; source/command and executable hash in trace command retained"
+    }
+  ],
+  "checks": {
+    "workspace": 4,
+    "mcp": 2,
+    "integration": 3,
+    "actual_surface_payload_triples": 12,
+    "snapshot_pairs_equal": 27,
+    "marked_query_intervals": 35,
+    "surface_exec_to_exit_scopes": 24,
+    "control_fd_mutation_attempts": 4,
+    "control_mapping_attempts": 3,
+    "control_network_attempts": 3,
+    "query_network_mutation_diagnostics": 0,
+    "specmap_exit": 0,
+    "gated_orphans": 138,
+    "unresolved_host_edges": 0
+  },
+  "scope_limits": [
+    "Linux observation only",
+    "interval/exec-to-exit attribution",
+    "split-call auxiliary ledger completeness deferredB233",
+    "strict public query grade unavailableB232",
+    "13historical formatting findings",
+    "no whole campaign/autonomy/native-platform qualification"
+  ]
+}
