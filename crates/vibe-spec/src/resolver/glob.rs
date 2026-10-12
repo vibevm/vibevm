@@ -34,7 +34,7 @@ use std::path::{Path, PathBuf};
 use crate::address::{Authority, SpecAddress};
 
 use super::{
-    FileResolver, ResolveError, read_dir_or_empty, resolve_doc, specs_root_under, version_order,
+    FileResolver, ResolveError, portable, resolve_doc, specs_root_under, version_order,
     vibedeps_root_under,
 };
 
@@ -86,11 +86,14 @@ impl FileResolver {
         // matching stays group-blind even now that the directory carries one.
         let vibedeps = vibedeps_root_under(&self.ws_root);
         let mut matched: Vec<(String, PathBuf)> = Vec::new();
-        for entry in read_dir_or_empty(&vibedeps) {
+        if !portable::existing_directory(&vibedeps)? {
+            return Ok(Vec::new());
+        }
+        for entry in portable::entries(&vibedeps)?.ok_or_else(|| ResolveError::SourceUnstable {
+            path: vibedeps.display().to_string(),
+            reason: "dependency root disappeared while listing slots".to_owned(),
+        })? {
             let slot_dir = entry.path();
-            if !slot_dir.is_dir() {
-                continue;
-            }
             let Some(dir_name) = slot_dir.file_name().and_then(|s| s.to_str()) else {
                 continue;
             };
@@ -101,6 +104,21 @@ impl FileResolver {
             };
             if pkg_name.is_empty() || !name_matches(pat, pkg_name) {
                 continue;
+            }
+            let kind = entry
+                .file_type()
+                .map_err(|error| portable::unreadable(&slot_dir, error.to_string()))?;
+            if kind.is_symlink() {
+                return Err(portable::unsafe_path(
+                    &slot_dir.display().to_string(),
+                    "symlinked pattern slot",
+                ));
+            }
+            if !kind.is_dir() {
+                return Err(portable::unreadable(
+                    &slot_dir,
+                    "pattern slot is not a directory",
+                ));
             }
             matched.push((pkg_name.to_string(), slot_dir));
         }
@@ -115,7 +133,14 @@ impl FileResolver {
             std::cmp::Ordering::Equal => a.1.cmp(&b.1),
             ord => ord,
         });
-        matched.dedup_by(|a, b| a.0 == b.0);
+        for pair in matched.windows(2) {
+            if pair[0].0 == pair[1].0 {
+                return Err(ResolveError::AmbiguousPatternMember {
+                    name: pair[0].0.clone(),
+                    roots: format!("{}, {}", pair[0].1.display(), pair[1].1.display()),
+                });
+            }
+        }
 
         let mut out: Vec<SpecAddress> = Vec::new();
         for (name, slot_dir) in matched {
@@ -123,13 +148,19 @@ impl FileResolver {
             // the freshest installed version (law 6 — B-028, no second version
             // rule). A matched package missing the doc is not a member; this is
             // not silent swallowing — both halves of the address define the set.
-            let Some(spec_root) = freshest_spec_root(&slot_dir) else {
+            let Some(spec_root) = freshest_spec_root(&slot_dir)? else {
                 continue; // no version installed → not a resolvable member
             };
-            if resolve_doc(&spec_root, &addr.doc_path).is_ok()
-                && let Some(concrete) = build_address(group, &name, &addr.doc_path, &addr.anchor)
-            {
-                out.push(concrete);
+            match resolve_doc(&spec_root, &addr.doc_path) {
+                Ok(_) => {
+                    if let Some(concrete) =
+                        build_address(group, &name, &addr.doc_path, &addr.anchor)
+                    {
+                        out.push(concrete);
+                    }
+                }
+                Err(ResolveError::DocNotFound { .. }) => {}
+                Err(error) => return Err(error),
             }
             // (Kept as two conditions so a doc-miss never builds an address.)
         }
@@ -178,22 +209,32 @@ fn name_matches(pattern: &str, name: &str) -> bool {
 /// `None` when the slot holds no version directory. Reuses
 /// `version_order::newest` (B-028) so there is one version rule, not two. A
 /// directory whose name does not start with a digit is not a version candidate.
-fn freshest_spec_root(slot_dir: &Path) -> Option<PathBuf> {
-    let candidates: Vec<String> = read_dir_or_empty(slot_dir)
-        .filter_map(|e| {
-            let p = e.path();
-            if !p.is_dir() {
-                return None;
-            }
-            let n = p.file_name()?.to_str()?;
-            n.chars()
-                .next()
-                .is_some_and(|c| c.is_ascii_digit())
-                .then_some(n.to_string())
-        })
-        .collect();
-    let newest = version_order::newest(candidates.iter().map(String::as_str))?;
-    Some(specs_root_under(&slot_dir.join(newest)))
+fn freshest_spec_root(slot_dir: &Path) -> Result<Option<PathBuf>, ResolveError> {
+    let entries = portable::entries(slot_dir)?.ok_or_else(|| ResolveError::SourceUnstable {
+        path: slot_dir.display().to_string(),
+        reason: "pattern slot disappeared while listing versions".to_owned(),
+    })?;
+    let mut candidates = Vec::new();
+    for entry in entries {
+        let name = entry.file_name();
+        let Some(name) = name.to_str() else { continue };
+        if !name.chars().next().is_some_and(|c| c.is_ascii_digit()) {
+            continue;
+        }
+        let kind = entry
+            .file_type()
+            .map_err(|error| portable::unreadable(&entry.path(), error.to_string()))?;
+        if kind.is_symlink() {
+            return Err(portable::unsafe_path(name, "symlinked pattern version"));
+        }
+        if kind.is_dir() {
+            candidates.push(name.to_owned());
+        }
+    }
+    let Some(newest) = version_order::newest(candidates.iter().map(String::as_str)) else {
+        return Ok(None);
+    };
+    Ok(Some(specs_root_under(&slot_dir.join(newest))))
 }
 
 /// Build the canonical concrete address for a matched package and round-trip it

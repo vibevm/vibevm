@@ -147,3 +147,57 @@ fn unsupported_composition(expanded: &str) -> Vec<String> {
         .map(|directive| format!("{} {}", directive.kind.keyword(), directive.address.raw))
         .collect()
 }
+
+#[cfg(test)]
+mod m_01_a_3_cases {
+    use std::collections::BTreeMap;
+    use std::fs;
+
+    use super::*;
+
+    fn request(root: &std::path::Path, address: &str) -> PromptRequest {
+        PromptRequest {
+            address: address.into(),
+            provider_root: root.to_path_buf(),
+            provider_group: "org.demo".into(),
+            provider_name: "tools".into(),
+            selected_world: BTreeMap::new(),
+        }
+    }
+
+    #[test]
+    fn provider_prompt_unreadable_is_not_reported_missing() {
+        let root = tempfile::tempdir().unwrap();
+        fs::create_dir(root.path().join("spec")).unwrap();
+        fs::write(root.path().join("spec/common"), "not a directory").unwrap();
+        let resolver = SelectedWorldPromptResolver::new(root.path());
+        let error = resolver
+            .resolve(&request(
+                root.path(),
+                "spec://org.demo/tools/common/DOC#root",
+            ))
+            .unwrap_err();
+        assert!(error.contains("unreadable"), "{error}");
+        assert!(!error.contains("not found"), "{error}");
+    }
+
+    #[test]
+    fn provider_prompt_duplicate_anchor_never_returns_first_body() {
+        let root = tempfile::tempdir().unwrap();
+        let dir = root.path().join("spec/common");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(
+            dir.join("DOC.md"),
+            "# First {#same}\n\nFIRST_ONLY\n\n# Second {#same}\n\nSECOND_ONLY\n",
+        )
+        .unwrap();
+        let resolver = SelectedWorldPromptResolver::new(root.path());
+        let error = resolver
+            .resolve(&request(
+                root.path(),
+                "spec://org.demo/tools/common/DOC#same",
+            ))
+            .unwrap_err();
+        assert!(error.contains("ambiguous"), "{error}");
+    }
+}

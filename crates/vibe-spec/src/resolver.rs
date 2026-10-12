@@ -186,6 +186,12 @@ pub enum ResolveError {
     UnsafeSourcePath { path: String, reason: String },
     #[error("source path `{requested}` aliases on a portable filesystem with `{observed}`")]
     PortableSourceAlias { requested: String, observed: String },
+    #[error("source `{path}` is unreadable: {reason}")]
+    SourceUnreadable { path: String, reason: String },
+    #[error("source `{path}` changed during resolution: {reason}")]
+    SourceUnstable { path: String, reason: String },
+    #[error("pattern member `{name}` is ambiguous across installed slots: {roots}")]
+    AmbiguousPatternMember { name: String, roots: String },
 }
 
 impl FileResolver {
@@ -467,30 +473,45 @@ impl FileResolver {
         version: Option<&str>,
     ) -> Result<PathBuf, ResolveError> {
         let slot_dir = vibedeps_root_under(&self.ws_root).join(format!("{group}.{name}"));
-        if !slot_dir.is_dir() {
+        if !portable::existing_directory(&slot_dir)? {
             return Err(ResolveError::PackageSlotNotFound(name.to_string()));
         }
 
         match version {
-            Some(v) => Ok(slot_dir.join(v)),
+            Some(v) => {
+                let (parents, _) = portable::split(v)?;
+                if !parents.is_empty() {
+                    return Err(portable::unsafe_path(v, "version is not one component"));
+                }
+                Ok(slot_dir.join(v))
+            }
             None => {
                 // The freshest installed version: collect names that look like
                 // versions (a version directory starts with its major number —
                 // a stray non-version folder is not a candidate, B-028 У1) and
                 // take the semver-newest. Zero candidates ⇒ not installed.
-                let candidates: Vec<String> = read_dir_or_empty(&slot_dir)
-                    .filter_map(|e| {
-                        let p = e.path();
-                        if !p.is_dir() {
-                            return None;
-                        }
-                        let n = p.file_name()?.to_str()?;
-                        n.chars()
-                            .next()
-                            .is_some_and(|c| c.is_ascii_digit())
-                            .then_some(n.to_string())
-                    })
-                    .collect();
+                let mut candidates = Vec::new();
+                for entry in
+                    portable::entries(&slot_dir)?.ok_or_else(|| ResolveError::SourceUnstable {
+                        path: slot_dir.display().to_string(),
+                        reason: "slot disappeared while listing versions".to_owned(),
+                    })?
+                {
+                    let name = entry.file_name();
+                    let Some(name) = name.to_str() else { continue };
+                    if !name.chars().next().is_some_and(|c| c.is_ascii_digit()) {
+                        continue;
+                    }
+                    let kind = entry
+                        .file_type()
+                        .map_err(|error| portable::unreadable(&entry.path(), error.to_string()))?;
+                    if kind.is_symlink() {
+                        return Err(portable::unsafe_path(name, "symlinked version slot"));
+                    }
+                    if kind.is_dir() {
+                        candidates.push(name.to_owned());
+                    }
+                }
                 match version_order::newest(candidates.iter().map(String::as_str)) {
                     Some(v) => Ok(slot_dir.join(v)),
                     None => Err(ResolveError::PackageSlotNotFound(name.to_string())),
@@ -507,9 +528,11 @@ impl FileResolver {
 /// answers "which file inside a root does this doc-path mean".
 mod lookup;
 mod portable;
+mod read;
 mod resource;
 pub use lookup::canonical_doc_path;
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
+pub(crate) use read::project_source;
 
 #[derive(Debug)]
 pub(crate) struct ResolvedSourceFile {
@@ -519,13 +542,13 @@ pub(crate) struct ResolvedSourceFile {
 }
 // The layout roots stay reachable under their historical path for the tests
 // that assert both physical layouts fold onto one address.
+use lookup::resolve_doc;
 #[cfg(test)]
 pub(crate) use lookup::{
     LEGACY_SPECS_ROOT, LEGACY_VIBEDEPS_ROOT, NEW_SPECS_ROOT, NEW_VIBEDEPS_ROOT,
 };
 #[cfg(test)]
 use lookup::{id_file_matches, is_id_stem};
-use lookup::{read_dir_or_empty, resolve_doc};
 mod source_map;
 pub use source_map::{DescriptorOutputRow, ValidatedDescriptorMap};
 
@@ -541,5 +564,7 @@ pub use glob::is_pattern;
 
 #[cfg(test)]
 mod m_01_a_2_cases;
+#[cfg(test)]
+mod m_01_a_3_cases;
 #[cfg(test)]
 mod tests;

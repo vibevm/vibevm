@@ -43,7 +43,10 @@ pub(super) fn resolve_doc_with_formats(
         return Err(not_found(base_spec, doc_path));
     };
     let Some(entries) = portable::entries(&dir)? else {
-        return Err(not_found(base_spec, doc_path));
+        return Err(portable::disappeared(
+            &dir,
+            "directory disappeared before listing",
+        ));
     };
 
     if is_id_stem(&last) {
@@ -376,12 +379,6 @@ pub(super) fn is_id_stem(s: &str) -> bool {
         return false;
     };
     (kind == "PROP" || kind == "FEAT") && !num.is_empty() && num.bytes().all(|b| b.is_ascii_digit())
-}
-
-/// Iterate a directory's entries, yielding nothing if it is unreadable or
-/// absent (the resolver degrades to "not found", never panics).
-pub(super) fn read_dir_or_empty(dir: &Path) -> impl Iterator<Item = fs::DirEntry> {
-    fs::read_dir(dir).into_iter().flatten().flatten()
 }
 
 /// The PROP-052 half of [`canonical_doc_path`]: both physical layouts

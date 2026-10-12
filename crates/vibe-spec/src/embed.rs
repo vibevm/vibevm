@@ -238,10 +238,10 @@ impl FsSectionSource {
     ) -> Result<ResolvedSource, String> {
         if metadata.format() == "markdown" {
             let src = match self.overlay.get(metadata.origin()) {
-                Some(bytes) => project_overlay(metadata.origin(), bytes)?,
-                None => vibe_specdoc::load_spec_text(metadata.origin())
-                    .map(|(src, _kind)| src)
-                    .map_err(|error| error.to_string())?,
+                Some(bytes) => crate::resolver::project_source(metadata.origin(), bytes)?,
+                None => self
+                    .resolver
+                    .read_projected_source(addr, metadata.origin())?,
             };
             return resolve_section(&src, metadata.origin(), addr)
                 .map(|text| ResolvedSource::markdown(text, metadata.physical_stem));
@@ -250,7 +250,10 @@ impl FsSectionSource {
         let bytes = match self.overlay.get(metadata.origin()) {
             Some(bytes) => bytes.as_ref(),
             None => {
-                owned = std::fs::read(metadata.origin()).map_err(|error| error.to_string())?;
+                owned = self
+                    .resolver
+                    .read_preflighted_source(addr, metadata.origin())
+                    .map_err(|error| error.to_string())?;
                 &owned
             }
         };
@@ -279,10 +282,8 @@ impl SectionSource for FsSectionSource {
             .resolve_file(addr)
             .map_err(|e| e.to_string())?;
         let src = match self.overlay.get(&file) {
-            Some(bytes) => project_overlay(&file, bytes)?,
-            None => vibe_specdoc::load_spec_text(&file)
-                .map(|(src, _kind)| src)
-                .map_err(|e| e.to_string())?,
+            Some(bytes) => crate::resolver::project_source(&file, bytes)?,
+            None => self.resolver.read_projected_source(addr, &file)?,
         };
         resolve_section(&src, &file, addr)
     }
@@ -316,27 +317,19 @@ fn logical_stem(addr: &SpecAddress) -> String {
         .to_owned()
 }
 
-fn project_overlay(file: &Path, bytes: &[u8]) -> Result<String, String> {
-    let raw = std::str::from_utf8(bytes).map_err(|error| {
-        format!(
-            "overlay spec source `{}` is not UTF-8: {error}",
-            file.display()
-        )
-    })?;
-    vibe_specdoc::project_spec_text(file, raw)
-        .map(|(src, _kind)| src)
-        .map_err(|error| error.to_string())
-}
-
 fn resolve_section(src: &str, file: &Path, addr: &SpecAddress) -> Result<String, String> {
     let tree = DocTree::parse(src);
+    if tree
+        .duplicate_anchors()
+        .iter()
+        .any(|id| addr.anchor.contains(id))
+    {
+        return Err(format!("ambiguous anchor in {}", file.display()));
+    }
     let node = match tree.resolve_path(&addr.anchor) {
         Some(node) => node,
         None => {
-            // B-011 §6.1 layer 3: a missed short anchor answers with its
-            // qualified heirs, never emptiness. The flat segment being
-            // resolved is the lookup's short name; the tree's
-            // `<origin-slug>--<short>` tails are the rename's heirs.
+            // B-011 §6.1: a missed short anchor reports qualified heirs.
             let candidates = addr
                 .anchor
                 .first()
