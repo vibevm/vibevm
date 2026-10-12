@@ -1,0 +1,87 @@
+{
+  "http": 200,
+  "result": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.f0a7ec42-ebe4-4818-8eaa-24f879bd2ce6",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.d0faeb10-d63f-4ec7-a096-626e304e4107",
+        "title": "E2 strict proof boundary and defining READ",
+        "introductionMarkdown": "Same E2, sole writer. Current epoch-one request has expectations but no proof-strength input; installed service explicitly returns observed/record-consistent. Need preserve commissioned strict-proof case without inventing ABI.",
+        "items": [
+          {
+            "questionItemId": "e2_proof_boundary",
+            "header": "Proof boundary",
+            "promptMarkdown": "Bind strict-proof E2 to existing install verified-original/derivation public API availability/refusals plus explicit weaker surface strength and closed-shape refusal of unsupported proof input, without new request/schema fields?",
+            "contextMarkdown": "schemas/source_query/e1/request.jtd.json has no proof input. service.rs rejects SourceProven as unavailable at existing owner boundary. Proposed READ crates/vibe-install/src/slot_verify.rs and slot_verify/derivation.rs, slot_verify/m_01_c_2_cases.rs, tests/m_01_c_3_cases.rs; no install WRITE. Proposed actual Linux syscall counters via existing strace on owned CLI/MCP/test processes (network calls and filesystem mutation attempts), plus before/after trees; no OS policy change or remote providers.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "existing",
+                "label": "Existing proof boundaries",
+                "description": "Grant named defining READ, preserve existing ABI and exercise explicit supported/refused proof levels.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "correct",
+                "label": "Correct packet boundary",
+                "description": "Name required existing strict public route or exact narrowly authorized alternative.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact correction",
+              "multiline": true,
+              "maximumLength": 5000
+            },
+            "recommendation": {
+              "optionIds": [
+                "existing"
+              ],
+              "explanationMarkdown": "Current contracts cannot request proof strength; use actual original-proof owner without weakening C2 or inventing request semantics."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T18:48:07.412Z",
+        "updatedAt": "2026-10-12T18:50:33.796Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.3fb754a2-f019-4f1f-81a6-0b36d5c344a2",
+        "questionGroupId": "question-group.f0a7ec42-ebe4-4818-8eaa-24f879bd2ce6",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "e2_proof_boundary",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "existing"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation confirms existing proof boundaries, no invented epoch-one proof field. Grant exactly READ crates/vibe-install/src/slot_verify.rs, slot_verify/derivation.rs, slot_verify/m_01_c_2_cases.rs and tests/m_01_c_3_cases.rs (all four real paths verified); no install WRITE. Exercise actual supported/refused verified-original/derivation owner API against owned fixtures with precise outcomes and counters/snapshots; preserve C2/C3 proof invariants. CLI/MCP/current service must show their actual explicit observed/record-consistent strength and precise closed-shape refusal for unsupported proof inputs. Such shape refusal is not a genuine successful strict-grade query: mark that surface capability unavailable rather than pretending parity proves a stronger grade. Do not silently drop the strict owner tests or replace tamper with unsupported-input validation alone. Existing /usr/bin/strace is available and permitted for observing owned local fixture CLI/MCP/test subprocesses only, network and filesystem mutation attempts plus independent before/after trees. No attach to production/other users, no host policy/settings change, no remote provider use or product dependency on Linux strace. Label Linux observation separately from portable contract, capture exact counters/trace scope and distinguish startup/control effects from query effects honestly; do not hide attempts by reporting only successful writes. If observation fails, retain exact error and ask for bounded alternative, no security mechanism expansion. Same E2, existing WRITE ceiling only; keep independent work moving."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T18:50:33.796Z",
+        "metadata": {}
+      }
+    }
+  }
+}

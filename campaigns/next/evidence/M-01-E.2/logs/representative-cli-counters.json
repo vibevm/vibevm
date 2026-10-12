@@ -1,0 +1,8 @@
+{
+  "network_syscalls": 0,
+  "filesystem_mutation_attempts": 0,
+  "fixture_state_unchanged": true,
+  "observed_strength": "observed",
+  "binary_sha256": "163679720175a1322a826b266394d12fada2cff385506ef760f445aeeea5663f",
+  "source_epoch": "accepted D2 production; E1 is tests/documentation only"
+}

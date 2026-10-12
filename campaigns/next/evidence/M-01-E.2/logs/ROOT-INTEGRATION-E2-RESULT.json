@@ -1,0 +1,8 @@
+{
+  "integration_cases": 3,
+  "ignored": 0,
+  "log_sha256": "92acd171ea147b57f2e77196a6b93e22de59074a47b83be756c5f5659e62b135",
+  "reviewed_proof_case_sha256": "2919d17fdb714b4d8688fb8f83a1fe5339ac467bbc7e8ae16a0abe6358e3c6b5",
+  "scope": "Real library/CLI/stdio MCP success, expectation, missing/record/payload/coordinated cases; genuine original replay/Mixed source-proven and XML builtin derivation plus missing/coordinated/original poison refusals",
+  "not_proved": "Full fd/mapping syscall counter coverage/control still pending; unsupported schema input not genuine strict surface grade"
+}

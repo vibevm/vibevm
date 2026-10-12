@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "strace",
+    "-f",
+    "-yy",
+    "-s",
+    "16384",
+    "-o",
+    "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle.strace",
+    "-e",
+    "trace=%file,%network,%desc,%memory,%process",
+    "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-workspace/7d1164f5caceee07/out/vibe_workspace-7d1164f5caceee07",
+    "source_query::capture::continuity::service::m_01_e_2_cases::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "cwd": "/tmp",
+  "exit": 0,
+  "env": {
+    "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home",
+    "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.vibe",
+    "VIBE_NO_DEFAULT_REGISTRY": "1",
+    "VIBE_NO_PROGRESS": "1",
+    "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.config",
+    "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.cache",
+    "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.local/state",
+    "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.local/share",
+    "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/runtime"
+  },
+  "binary_sha256": "b4b97fe047afcea4707e0e520e75cc32c78c982b72ca9fa5c50316b2596c876e"
+}

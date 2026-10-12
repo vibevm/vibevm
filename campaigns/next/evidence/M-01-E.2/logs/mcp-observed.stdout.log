@@ -1,0 +1,6 @@
+
+running 2 tests
+test tools::read_spec::m_01_e_2_cases::dispatcher_missing_capture_never_fetches_or_recreates ... ok
+test tools::read_spec::m_01_e_2_cases::dispatcher_offline_repeat_and_expectation_keep_empty_store_unchanged ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 202 filtered out; finished in 0.25s

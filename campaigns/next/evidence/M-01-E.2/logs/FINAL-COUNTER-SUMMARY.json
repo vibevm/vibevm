@@ -1,0 +1,35 @@
+{
+  "workspace-complete-oracle": {
+    "passed": 4,
+    "ignored": 0,
+    "query_intervals": 8,
+    "whole_surface_processes": 0,
+    "network_attempts": 0,
+    "filesystem_mutation_attempts": 0,
+    "raw_trace_sha256": "e41b8425cae852eda16d14f2077ebefce41a608d697b7c45cacf88389d5e8f17",
+    "raw_trace": "workspace-full-oracle.strace",
+    "analysis_only_replay": true
+  },
+  "mcp-complete-oracle": {
+    "passed": 2,
+    "ignored": 0,
+    "query_intervals": 5,
+    "whole_surface_processes": 0,
+    "network_attempts": 0,
+    "filesystem_mutation_attempts": 0,
+    "raw_trace_sha256": "8b954368661590a366e3990dc091b6d364d75db00e7f7fa8e9375ac180d62c0a",
+    "raw_trace": "mcp-full-oracle.strace",
+    "analysis_only_replay": true
+  },
+  "cli-complete-oracle": {
+    "passed": 3,
+    "ignored": 0,
+    "query_intervals": 22,
+    "whole_surface_processes": 24,
+    "network_attempts": 0,
+    "filesystem_mutation_attempts": 0,
+    "raw_trace_sha256": "8a520afcc305b968751e97b8869c2de802fa59556b33dc08eb7a223d443fa0fa",
+    "raw_trace": "cli-full-oracle.strace",
+    "analysis_only_replay": true
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "strace",
+    "-f",
+    "-s",
+    "8192",
+    "-o",
+    "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/representative-cli.strace",
+    "-e",
+    "trace=%file,%network",
+    "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+    "--json",
+    "spec",
+    "read",
+    "--path",
+    "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/representative-fixture/host",
+    "--request-json",
+    "{\"schema\": 1, \"address\": \"spec://org.demo/self/DOC#root.solution\", \"mode\": \"read\", \"format\": \"md\", \"children\": true}"
+  ],
+  "cwd": "/tmp",
+  "env": {
+    "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/representative-fixture/home",
+    "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/representative-fixture/home/.vibe",
+    "VIBE_NO_DEFAULT_REGISTRY": "1",
+    "VIBE_NO_PROGRESS": "1"
+  },
+  "exit": 0
+}

@@ -1,0 +1,108 @@
+{
+  "label": "observer-positive-control",
+  "linux_only": true,
+  "complete_query_intervals": 3,
+  "whole_surface_processes": 0,
+  "scopes": {
+    "2373271:control-fd:0": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 4,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373271:control-map:1": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 3,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373271:control-network:2": {
+      "network_attempts": 2,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    }
+  },
+  "mutation_or_network_attempts": [
+    {
+      "scope": "2373271:control-fd:0",
+      "reason": "file/unknown descriptor mutation attempt",
+      "line": "2373271 pwrite64(3</fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/positive-control-scratch>, \"X\", 1, 0) = 1"
+    },
+    {
+      "scope": "2373271:control-fd:0",
+      "reason": "file/unknown descriptor mutation attempt",
+      "line": "2373271 pwrite64(4</fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/positive-control-scratch>, \"Y\", 1, 1) = -1 EBADF (Bad file descriptor)"
+    },
+    {
+      "scope": "2373271:control-fd:0",
+      "reason": "path/descriptor mutation",
+      "line": "2373271 ftruncate(3</fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/positive-control-scratch>, 4096) = 0"
+    },
+    {
+      "scope": "2373271:control-fd:0",
+      "reason": "path/descriptor mutation",
+      "line": "2373271 fchmod(3</fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/positive-control-scratch>, 0600) = 0"
+    },
+    {
+      "scope": "2373271:control-map:1",
+      "reason": "attempted shared writable file mapping",
+      "line": "2373271 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, 4</fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/positive-control-scratch>, 0) = -1 EACCES (Permission denied)"
+    },
+    {
+      "scope": "2373271:control-map:1",
+      "reason": "shared file mapping protection/sync/remap attempt",
+      "line": "2373271 mprotect(0x778e7b95c000, 4096, PROT_READ|PROT_WRITE) = 0"
+    },
+    {
+      "scope": "2373271:control-map:1",
+      "reason": "shared file mapping protection/sync/remap attempt",
+      "line": "2373271 msync(0x778e7b95c000, 4096, MS_SYNC) = 0"
+    },
+    {
+      "scope": "2373271:control-network:2",
+      "reason": "network attempt",
+      "line": "2373271 socket(AF_INET, SOCK_STREAM, IPPROTO_IP) = 6<TCP:[51797138]>"
+    },
+    {
+      "scope": "2373271:control-network:2",
+      "reason": "network attempt",
+      "line": "2373271 connect(6<TCP:[51797138]>, {sa_family=AF_INET, sin_port=htons(40035), sin_addr=inet_addr(\"127.0.0.1\")}, 16) = 0"
+    }
+  ],
+  "trace_sha256": "bc89d9b0c5fdf92436520dc13f6df207e53b5c5e115d94cdf0243f7a37d59730",
+  "runtime_exit": 0,
+  "allowances": [
+    {
+      "scope": "2373271:control-fd:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373271 write(2<pipe:[51783995]>, \"E2_QUERY_END control-fd\\n\", 24) = 24"
+    },
+    {
+      "scope": "2373271:control-map:1",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2373271 mmap(NULL, 4096, PROT_READ, MAP_SHARED, 3</fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/positive-control-scratch>, 0) = 0x778e7b95c000"
+    },
+    {
+      "scope": "2373271:control-map:1",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2373271 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE, 3</fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/positive-control-scratch>, 0) = 0x778e7b95c000"
+    },
+    {
+      "scope": "2373271:control-map:1",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2373271 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x778e7b95c000"
+    },
+    {
+      "scope": "2373271:control-map:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373271 write(2<pipe:[51783995]>, \"E2_QUERY_END control-map\\n\", 25) = 25"
+    },
+    {
+      "scope": "2373271:control-network:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373271 write(2<pipe:[51783995]>, \"E2_QUERY_END control-network\\n\", 29) = 29"
+    }
+  ],
+  "oracle_scope": "pathname + descriptor + memory/mapping + network attempts; failed calls included"
+}

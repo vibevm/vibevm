@@ -1,0 +1,6 @@
+E2_QUERY_BEGIN control-fd
+E2_QUERY_END control-fd
+E2_QUERY_BEGIN control-map
+E2_QUERY_END control-map
+E2_QUERY_BEGIN control-network
+E2_QUERY_END control-network

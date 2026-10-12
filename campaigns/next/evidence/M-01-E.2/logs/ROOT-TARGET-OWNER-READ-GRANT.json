@@ -1,0 +1,87 @@
+{
+  "http": 200,
+  "result": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.54269789-f146-46fc-bf1b-db49acdb4283",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.8e064fc2-fee3-495a-8164-2c7ad5f327f9",
+        "title": "E2 executable-target defining READ",
+        "introductionMarkdown": "Same E2. Representative actual CLI syscall trace and MCP tool case pass. Binding new integration target and strict existing proof owner before compile.",
+        "items": [
+          {
+            "questionItemId": "e2_target_owners",
+            "header": "Target owners",
+            "promptMarkdown": "Grant exact READ crates/vibe-cli/Cargo.toml, crates/vibe-registry/src/shippable.rs and shippable/bounded.rs for existing canonical hash fixture API, and crates/vibe-facts/src/lib.rs for existing RegistrySnapshot overlay preparation API?",
+            "contextMarkdown": "No WRITE expansion or dependency update requested. Needed to confirm integration dependencies/target and use actual independent hash/authorized overlay owners in new E2 tests, rather than duplicate recipe/proof. Production CLI commands remain unchanged.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant exact READ",
+                "description": "Bind current integration and verified/derivation fixture to incumbent owners.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "correct",
+                "label": "Correct defining paths",
+                "description": "Supply narrower exact existing defining owners.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact correction",
+              "multiline": true,
+              "maximumLength": 4000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "These existing definitions determine the executable tests and canonical replay/overlay inputs."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T18:51:30.354Z",
+        "updatedAt": "2026-10-12T18:52:34.815Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.801797b7-4515-496f-902c-d38b7b04c61d",
+        "questionGroupId": "question-group.54269789-f146-46fc-bf1b-db49acdb4283",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "e2_target_owners",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants exactly READ crates/vibe-cli/Cargo.toml, crates/vibe-registry/src/shippable.rs, crates/vibe-registry/src/shippable/bounded.rs and crates/vibe-facts/src/lib.rs. All four files verified. Reuse incumbent canonical hashing, bounded replay and authorized overlay APIs; no install/registry/facts/CLI-command WRITE, dependency update or proof recipe duplication implicitly granted. Bind actual integration target and explicit supported/unavailable proof outcomes. Continue same E2 and preserve trace/counter subject plus snapshots, failed attempts and current ABI. If an essential defining child outside these reads is needed, name the exact smallest path, not an unrelated dependency crawl."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T18:52:34.815Z",
+        "metadata": {}
+      }
+    }
+  }
+}

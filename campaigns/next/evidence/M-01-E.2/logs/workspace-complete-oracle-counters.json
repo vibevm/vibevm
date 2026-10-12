@@ -1,0 +1,208 @@
+{
+  "label": "workspace-complete-oracle",
+  "linux_only": true,
+  "complete_query_intervals": 8,
+  "whole_surface_processes": 0,
+  "scopes": {
+    "2373955:local-strength:0": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373955:expected_document_hash:1": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373955:expected_source_hash:2": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373955:expected_resolution_hash:3": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373990:missing-prepared:4": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373991:payload-tamper:5": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373993:prepared-repeat-a:6": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2373993:prepared-repeat-b:7": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    }
+  },
+  "mutation_or_network_attempts": [],
+  "trace_sha256": "e41b8425cae852eda16d14f2077ebefce41a608d697b7c45cacf88389d5e8f17",
+  "runtime_exit": 0,
+  "allowances": [
+    {
+      "scope": "2373955:local-strength:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"E2_QUERY_END \", 13) = 13"
+    },
+    {
+      "scope": "2373955:local-strength:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"local-strength\", 14) = 14"
+    },
+    {
+      "scope": "2373955:local-strength:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2373955:expected_document_hash:1",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2373955 mprotect(0x7ead30021000, 20480, PROT_READ|PROT_WRITE) = 0"
+    },
+    {
+      "scope": "2373955:expected_document_hash:1",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2373955 mprotect(0x7ead30026000, 12288, PROT_READ|PROT_WRITE) = 0"
+    },
+    {
+      "scope": "2373955:expected_document_hash:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"E2_QUERY_END \", 13) = 13"
+    },
+    {
+      "scope": "2373955:expected_document_hash:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"expected_document_hash\", 22) = 22"
+    },
+    {
+      "scope": "2373955:expected_document_hash:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2373955:expected_source_hash:2",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2373955 mprotect(0x7ead30029000, 4096, PROT_READ|PROT_WRITE) = 0"
+    },
+    {
+      "scope": "2373955:expected_source_hash:2",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2373955 mprotect(0x7ead3002a000, 4096, PROT_READ|PROT_WRITE) = 0"
+    },
+    {
+      "scope": "2373955:expected_source_hash:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"E2_QUERY_END \", 13) = 13"
+    },
+    {
+      "scope": "2373955:expected_source_hash:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"expected_source_hash\", 20) = 20"
+    },
+    {
+      "scope": "2373955:expected_source_hash:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2373955:expected_resolution_hash:3",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2373955 mprotect(0x7ead3002b000, 8192, PROT_READ|PROT_WRITE) = 0"
+    },
+    {
+      "scope": "2373955:expected_resolution_hash:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"E2_QUERY_END \", 13) = 13"
+    },
+    {
+      "scope": "2373955:expected_resolution_hash:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"expected_resolution_hash\", 24) = 24"
+    },
+    {
+      "scope": "2373955:expected_resolution_hash:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373955 write(2<pipe:[51799443]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2373990:missing-prepared:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373990 write(2<pipe:[51799443]>, \"E2_QUERY_END \", 13) = 13"
+    },
+    {
+      "scope": "2373990:missing-prepared:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373990 write(2<pipe:[51799443]>, \"missing-prepared\", 16) = 16"
+    },
+    {
+      "scope": "2373990:missing-prepared:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373990 write(2<pipe:[51799443]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2373991:payload-tamper:5",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373991 write(2<pipe:[51799443]>, \"E2_QUERY_END \", 13) = 13"
+    },
+    {
+      "scope": "2373991:payload-tamper:5",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373991 write(2<pipe:[51799443]>, \"payload-tamper\", 14) = 14"
+    },
+    {
+      "scope": "2373991:payload-tamper:5",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373991 write(2<pipe:[51799443]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2373993:prepared-repeat-a:6",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373993 write(2<pipe:[51799443]>, \"E2_QUERY_END \", 13) = 13"
+    },
+    {
+      "scope": "2373993:prepared-repeat-a:6",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373993 write(2<pipe:[51799443]>, \"prepared-repeat-a\", 17) = 17"
+    },
+    {
+      "scope": "2373993:prepared-repeat-a:6",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373993 write(2<pipe:[51799443]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2373993:prepared-repeat-b:7",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373993 write(2<pipe:[51799443]>, \"E2_QUERY_END \", 13) = 13"
+    },
+    {
+      "scope": "2373993:prepared-repeat-b:7",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373993 write(2<pipe:[51799443]>, \"prepared-repeat-b\", 17) = 17"
+    },
+    {
+      "scope": "2373993:prepared-repeat-b:7",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2373993 write(2<pipe:[51799443]>, \"\\n\", 1) = 1"
+    }
+  ],
+  "oracle_scope": "pathname + descriptor + memory/mapping + network attempts; failed calls included",
+  "surface_attribution_boundary": "observed initial vibe exec to exit; preexec ancestry not included; own initial exec counted in process_spawn"
+}

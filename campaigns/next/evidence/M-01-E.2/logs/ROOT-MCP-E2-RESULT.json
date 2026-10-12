@@ -1,0 +1,7 @@
+{
+  "mcp_cases": 2,
+  "ignored": 0,
+  "log_sha256": "f45c1f7889efa82b8b3b0fde0bfe14e6f40afd173c45b97516e17170c2a626e8",
+  "test_sha256": "7c14dfc29bb252004270a0ba799056638074c86a8bd409302dacb1870b780e37",
+  "counter_status": "first22interval/24process producer report uses limited scope; fd/mapping coverage and positive control not finally proved yet"
+}

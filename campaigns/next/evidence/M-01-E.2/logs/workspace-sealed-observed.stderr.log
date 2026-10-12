@@ -1,0 +1,16 @@
+E2_QUERY_BEGIN local-strength
+E2_QUERY_END local-strength
+E2_QUERY_BEGIN expected_document_hash
+E2_QUERY_END expected_document_hash
+E2_QUERY_BEGIN expected_source_hash
+E2_QUERY_END expected_source_hash
+E2_QUERY_BEGIN expected_resolution_hash
+E2_QUERY_END expected_resolution_hash
+E2_QUERY_BEGIN missing-prepared
+E2_QUERY_END missing-prepared
+E2_QUERY_BEGIN payload-tamper
+E2_QUERY_END payload-tamper
+E2_QUERY_BEGIN prepared-repeat-a
+E2_QUERY_END prepared-repeat-a
+E2_QUERY_BEGIN prepared-repeat-b
+E2_QUERY_END prepared-repeat-b

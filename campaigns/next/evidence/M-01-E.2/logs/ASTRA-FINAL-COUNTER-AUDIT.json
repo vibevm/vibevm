@@ -1,0 +1,35 @@
+{
+  "verdict": "sufficient for commissioned Linux observation at exact exec/interval boundaries; Root owns acceptance",
+  "trace_hashes_matched": 4,
+  "runtime_exits": 0,
+  "query_intervals": {
+    "workspace": 8,
+    "mcp": 5,
+    "cli_library_proof": 22
+  },
+  "surface_exec_to_exit_processes": 24,
+  "positive_control": {
+    "mutation_attempts": 7,
+    "network_attempts": 2,
+    "covers": [
+      "successful/failed pwrite64",
+      "ftruncate",
+      "fchmod",
+      "failed shared-writable file mmap",
+      "shared map mprotect/msync",
+      "loopback socket/connect"
+    ],
+    "excluded": [
+      "private/anonymous mappings",
+      "marker pipes"
+    ]
+  },
+  "independent_production_review": "No missed effect after joining split records;456scoped CLI mappings432private/24anonymous, noMAP_SHARED; writes are pipe transport; ioctl queries failENOTTY.",
+  "nonblocking_qualifications": [
+    "parser allowance ledger254vs456due202split private/anonymous mapping records omitted; no observed effect missed",
+    "coverage begins at exec;72preexecdup2/24chdir excluded, no surface descendants",
+    "current C source extra socket write not in audited control trace, so that operation not claimed calibrated"
+  ],
+  "earlier_omissions": "shared mapping and fd/network control resolved for commissioned scope",
+  "followup_policy": "no additional behavior gate for these ledger limits"
+}

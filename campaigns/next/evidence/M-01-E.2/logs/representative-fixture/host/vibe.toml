@@ -1,0 +1,11 @@
+[package]
+group='org.demo'
+name='self'
+kind='flow'
+version='1.0.0'
+[[package.sources]]
+file='vibevm/vibespecs/DOC.md'
+media='text/markdown'
+interpretation='vibe-spec'
+role='spec'
+loading='explicit'

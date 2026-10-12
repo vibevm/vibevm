@@ -1,0 +1,5 @@
+{
+  "source_files_matched": 9,
+  "manifest_shape": "list records",
+  "root_verifier_correction": "initial E1 dictionary assumption failed before verdict; normalized actual list format"
+}

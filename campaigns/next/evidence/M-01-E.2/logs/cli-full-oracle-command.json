@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "strace",
+    "-f",
+    "-yy",
+    "-s",
+    "16384",
+    "-o",
+    "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle.strace",
+    "-e",
+    "trace=%file,%network,%desc,%memory,%process",
+    "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-cli/37dc2b91773137a8/out/m_01_e_2_cases-37dc2b91773137a8",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "cwd": "/tmp",
+  "exit": 0,
+  "env": {
+    "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home",
+    "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.vibe",
+    "VIBE_NO_DEFAULT_REGISTRY": "1",
+    "VIBE_NO_PROGRESS": "1",
+    "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.config",
+    "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.cache",
+    "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.local/state",
+    "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.local/share",
+    "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/runtime"
+  },
+  "binary_sha256": "2ff36c3385b664f6f89677f01980e1af9e71e43cb3e9a696cc07bd85e14d8345"
+}

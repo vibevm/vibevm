@@ -13131,6 +13131,33 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/m_01_e_2_cases.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::m_01_e_2_cases",
+      "end_line": 2,
+      "fingerprint": "tok1:247fda31a1fd85cf1d73e6043fe76f55648a644e47c6619517f202686fdc3989"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/m_01_e_2_cases/fixture.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::m_01_e_2_cases::fixture",
+      "end_line": 2,
+      "fingerprint": "tok1:247fda31a1fd85cf1d73e6043fe76f55648a644e47c6619517f202686fdc3989"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/m_01_e_2_cases/proof.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::m_01_e_2_cases::proof",
+      "end_line": 2,
+      "fingerprint": "tok1:247fda31a1fd85cf1d73e6043fe76f55648a644e47c6619517f202686fdc3989"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/machine_session.rs",
       "item_kind": "mod",
       "line": 2,
@@ -26685,6 +26712,15 @@
     },
     {
       "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/read_spec/m_01_e_2_cases.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_mcp::tools::read_spec::m_01_e_2_cases",
+      "end_line": 2,
+      "fingerprint": "tok1:247fda31a1fd85cf1d73e6043fe76f55648a644e47c6619517f202686fdc3989"
+    },
+    {
+      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/requirements_query.rs",
       "item_kind": "mod",
       "line": 32,
@@ -39348,6 +39384,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_e_2_cases.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::source_query::capture::continuity::service::m_01_e_2_cases",
+      "end_line": 2,
+      "fingerprint": "tok1:247fda31a1fd85cf1d73e6043fe76f55648a644e47c6619517f202686fdc3989"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/tools.rs",
       "item_kind": "mod",
       "line": 16,
@@ -46417,6 +46462,30 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/m_01_e_2_cases.rs",
+      "from_symbol": "vibe_cli::tests::m_01_e_2_cases",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-PURITY-EVIDENCE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/m_01_e_2_cases/fixture.rs",
+      "from_symbol": "vibe_cli::tests::m_01_e_2_cases::fixture",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-PURITY-EVIDENCE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/m_01_e_2_cases/proof.rs",
+      "from_symbol": "vibe_cli::tests::m_01_e_2_cases::proof",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-PURITY-EVIDENCE",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-cli/tests/machine_session.rs",
@@ -59018,6 +59087,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-mcp/src/tools/read_spec/m_01_e_2_cases.rs",
+      "from_symbol": "vibe_mcp::tools::read_spec::m_01_e_2_cases",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-PURITY-EVIDENCE",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-mcp/src/tools/requirements_query.rs",
       "from_symbol": "vibe_mcp::tools::requirements_query",
       "line": 32,
@@ -70785,6 +70862,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-DOC-COMPATIBILITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_e_2_cases.rs",
+      "from_symbol": "vibe_workspace::source_query::capture::continuity::service::m_01_e_2_cases",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-PURITY-EVIDENCE",
       "verb": "implements"
     },
     {
@@ -98093,7 +98178,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:348f8b0f74c3543d99b606c5c90f2e6226bd29529cb9b49c9d83f8d7b8edf5b2",
+      "content_hash": "sha256:d4820d035951443bcfeb66fcf36797cb2c317663051cc3af4bf643b5a844ded4",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "PROP-070: Validated resource addresses and selected resolution",
@@ -98372,7 +98457,7 @@
     },
     {
       "anchor": "query-service",
-      "content_hash": "sha256:efae90709d40ac16d8e228f13e2efb8a85ffb6576171fff04ea1bfa8ffc2b161",
+      "content_hash": "sha256:385587ac622c274296cb4e177a1c3f7d9a2a9f1f4c0f0bd008e4ab24154f6857",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "10. Generated selected-source query surfaces",
@@ -98423,6 +98508,15 @@
       "heading": "A continuation binds the exact request, representation and captured source object through the existing SafeFS same-host observation correlation token. Object replacement with equal bytes cannot reuse an old cursor when the observed identity differs. Correlation is finite and non-authoritative: operating-system identity reuse or hostile ABA can defeat this observation window, and a token is not portable across hosts or an authenticated source proof. @status:spec/plan",
       "line": 57,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-CURSOR-CORRELATION"
+    },
+    {
+      "anchor": "SOURCE-QUERY-PURITY-EVIDENCE",
+      "content_hash": "sha256:08ca555e051f7c328cc17b8d13c070edd6e912c2bd5ea363de12828685fb8c79",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "Source delivery conformance compares validated library, CLI and MCP outcomes with owned fixture file and directory inventories and measured relevant network and filesystem mutation-attempt counters. Fixture preparation and intentional tampering are separate from the query observation interval. Missing captures remain unavailable offline; point reads never fetch, hydrate, seed settings or repair records. Expectations and local integrity strength remain explicit. Unsupported strict-grade surface input refuses its closed contract and is not evidence of successful stronger proof; existing verified-original and builtin-derivation owners are exercised separately. Platform-specific instrumentation proves only its executed host and finite interval, without creating a product runtime dependency. @status:spec/plan",
+      "line": 58,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-PURITY-EVIDENCE"
     },
     {
       "anchor": "root",

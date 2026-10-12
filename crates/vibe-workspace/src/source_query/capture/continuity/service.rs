@@ -569,3 +569,6 @@ fn selected_status(selected: &vibe_specdoc::selection::NodeSelection) -> Option<
 
 #[cfg(test)]
 mod m_01_d_2_cases;
+
+#[cfg(test)]
+mod m_01_e_2_cases;

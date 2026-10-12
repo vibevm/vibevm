@@ -1,0 +1,117 @@
+{
+  "exact_saved_snapshot_pairs_equal": 21,
+  "pairs": [
+    {
+      "surface": "workspace",
+      "case": "unnamed-library",
+      "entries": 26
+    },
+    {
+      "surface": "workspace",
+      "case": "unnamed-library",
+      "entries": 25
+    },
+    {
+      "surface": "workspace",
+      "case": "unnamed-library",
+      "entries": 26
+    },
+    {
+      "surface": "workspace",
+      "case": "unnamed-library",
+      "entries": 26
+    },
+    {
+      "surface": "mcp",
+      "case": "missing",
+      "entries": 8
+    },
+    {
+      "surface": "mcp",
+      "case": "repeat-a",
+      "entries": 9
+    },
+    {
+      "surface": "mcp",
+      "case": "repeat-b",
+      "entries": 9
+    },
+    {
+      "surface": "mcp",
+      "case": "stale",
+      "entries": 9
+    },
+    {
+      "surface": "mcp",
+      "case": "unsupported-proof",
+      "entries": 9
+    },
+    {
+      "surface": "cli",
+      "case": "success",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "repeat",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "stale-document",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "unsupported-strict-grade",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "missing-capture",
+      "entries": 22
+    },
+    {
+      "surface": "cli",
+      "case": "record-only-control",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "record-only",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "payload-only-control",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "payload-only",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "coordinated-control",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "coordinated",
+      "entries": 23
+    },
+    {
+      "surface": "cli",
+      "case": "coordinated-pristine-expectation",
+      "entries": 23
+    }
+  ],
+  "counter_scope": "current named/fd syscall set only; mapping/control correction pending",
+  "source_logs": {
+    "workspace": "abad2552e8bea0afb0c445c141802c1cf63649344796fcb2e9bc1c73d1688e4e",
+    "mcp": "b0b141d47a2e097b262af44d4023216b3d19bf64184416df34c1eaad83e49d7d",
+    "cli": "cfef85935e91c89e0ab0309f2b2e243d6fc7ea4b22d7de54f656962535d016de"
+  },
+  "root_parser_correction": "library snapshot starts directly with JSON, unlike named MCP/CLI snapshots; first uniform-name assumption failed before result, corrected structural JSON boundary"
+}

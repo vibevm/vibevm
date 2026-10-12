@@ -1,0 +1,287 @@
+{
+  "label": "cli-sealed-observed",
+  "linux_only": true,
+  "complete_query_intervals": 22,
+  "whole_surface_processes": 24,
+  "scopes": {
+    "2354296:library-success:0": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354297": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354303": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354296:library-repeat:1": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354309": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354313": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354296:library-stale-document:2": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354315": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354316": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354296:library-unsupported-strict-grade:3": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354317": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354318": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354296:library-missing-capture:4": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354319": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354321": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354322:library-record-only-control:5": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354326": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354335": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354322:library-record-only:6": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354338": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354339": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354322:library-payload-only-control:7": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354340": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354346": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354322:library-payload-only:8": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354347": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354348": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354322:library-coordinated-control:9": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354351": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354354": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354322:library-coordinated:10": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354393": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354402": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354322:library-coordinated-pristine-expectation:11": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2354406": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2354407": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2354409:mandatory-replay:12": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:missing-strict-proof:13": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:original-strict-positive:14": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:coordinated-proof-refusal:15": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:poisoned-original-replay:16": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:mandatory-replay:17": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:missing-strict-proof:18": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:builtin-derivation:19": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:coordinated-proof-refusal:20": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2354409:poisoned-original-replay:21": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    }
+  },
+  "mutation_or_network_attempts": [],
+  "trace_sha256": "989056b98afe22da4559816a5802294096dd13ef77c1db0e5d3129f48cd962da",
+  "runtime_exit": 0
+}
