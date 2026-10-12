@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-REPRESENTATION-COLLISION");
 
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -12,7 +13,7 @@ use vibe_core::{ContentHash, Group};
 use vibe_safefs::Project;
 use vibe_spec::{DescriptorOutputRow, ValidatedDescriptorMap, canonical_doc_path};
 
-use super::slot_record::{SLOT_RECORD_FILENAME, read_slot_record_bytes};
+use super::slot_record::{SLOT_RECORD_FILENAME, SlotFileDisposition, read_slot_record_bytes};
 
 const MANIFEST_CAP: usize = 1024 * 1024;
 const RECORD_CAP: usize = 8 * 1024 * 1024;
@@ -226,9 +227,12 @@ fn read_validated_descriptor_map_with_optional_format(
         let selection = package
             .select_source(source)
             .map_err(|error| format!("selected source `{source}`: {error:?}"))?;
-        let interpretation = match selection {
-            SelectedSource::Unclassified { .. } => None,
-            SelectedSource::Descriptor { descriptor, .. } => Some(descriptor.interpretation()),
+        let (interpretation, original_media) = match selection {
+            SelectedSource::Unclassified { .. } => (None, None),
+            SelectedSource::Descriptor { descriptor, .. } => (
+                Some(descriptor.interpretation()),
+                Some(descriptor.media().to_owned()),
+            ),
             SelectedSource::NeedsInput {
                 declaration_indices,
                 ..
@@ -245,7 +249,20 @@ fn read_validated_descriptor_map_with_optional_format(
         if !Path::new(&file.path).starts_with(&spec_relative) && !is_vibe {
             continue;
         }
-        selected.push((file, source.to_owned(), interpretation));
+        let media = if is_vibe {
+            if matches!(&file.disposition, Some(SlotFileDisposition::Converted)) {
+                Some(match record.spec_format {
+                    SpecFormat::Markdown => "text/markdown".to_owned(),
+                    SpecFormat::Xml => "application/xml".to_owned(),
+                    SpecFormat::Mixed => return Err("mixed copied output claims conversion".into()),
+                })
+            } else {
+                original_media
+            }
+        } else {
+            None
+        };
+        selected.push((file, source.to_owned(), interpretation, media));
         if selected.len() > limits.max_outputs {
             return Err(format!(
                 "descriptor map has more than {} selected outputs",
@@ -254,9 +271,10 @@ fn read_validated_descriptor_map_with_optional_format(
         }
     }
     let mut rows = Vec::with_capacity(selected.len());
+    let mut materialized_media = BTreeMap::new();
     let mut observed_outputs = Vec::with_capacity(selected.len());
     let mut remaining = limits.max_total_bytes;
-    for (file, source, interpretation) in selected {
+    for (file, source, interpretation, media) in selected {
         if remaining == 0 {
             return Err(format!(
                 "descriptor map exceeds {} total output bytes",
@@ -272,6 +290,9 @@ fn read_validated_descriptor_map_with_optional_format(
         }
         remaining -= state.bytes;
         observed_outputs.push((file.path.clone(), state));
+        if let Some(media) = media {
+            materialized_media.insert(file.path.clone(), media);
+        }
         let address = matches!(
             interpretation,
             Some(SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc)
@@ -327,6 +348,7 @@ fn read_validated_descriptor_map_with_optional_format(
         manifest.sha256,
         rows,
     )
+    .and_then(|map| map.with_materialized_media(materialized_media))
     .map_err(|error| error.to_string())?;
     Ok(Some(map))
 }

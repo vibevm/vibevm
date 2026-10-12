@@ -16,6 +16,7 @@ use specmark_grammar::is_valid_anchor;
 use crate::config::SectionGrain;
 use crate::content_hash;
 
+mod cell_facts;
 /// Pure line-classification primitives (heading / fence / list-item /
 /// `##<ID>` fact-anchor detection) — the syntactic helper layer this pass
 /// composes. Lives in the `lines` child module so the main file stays within
@@ -206,6 +207,30 @@ fn segment_block_facts(
             disputes: None,
         });
     }
+    for fact in cell_facts::carriers(lines, start, end) {
+        let line_no = (fact.line + 1) as u32;
+        if seen_anchors.contains(&fact.id) {
+            warnings.push(duplicate_anchor_warning(&fact.id, file, line_no));
+        } else {
+            seen_anchors.push(fact.id.clone());
+        }
+        units.push(SpecUnit {
+            uri: format!("spec://{namespace}/{doc_path}#{}", fact.id),
+            docPath: doc_path.to_string(),
+            file: file.to_string(),
+            anchor: fact.id,
+            heading: fact.heading,
+            contentHash: content_hash(&fact.span),
+            canonicalNode: None,
+            materializedLocator: None,
+            line: line_no,
+            kind: None,
+            revision: None,
+            status: None,
+            disputes: None,
+        });
+    }
+    units.sort_by_key(|unit| unit.line);
     (units, warnings)
 }
 
@@ -296,6 +321,9 @@ pub fn native_anchor_range(text: &str, anchor: &str) -> Result<Option<(u32, u32)
             }
             end += 1;
         }
+    } else if lines[start].trim_start().starts_with('|') {
+        // Cell facts are carried by this exact row. Later rows are different
+        // carriers, even without a separating blank line.
     } else {
         while end < lines.len()
             && !fenced[end]

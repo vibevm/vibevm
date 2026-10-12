@@ -83,6 +83,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
 pub mod canonical_node;
 pub mod doc;
 pub mod load;
+pub mod selection;
 
 pub mod commonmark;
 mod convert;

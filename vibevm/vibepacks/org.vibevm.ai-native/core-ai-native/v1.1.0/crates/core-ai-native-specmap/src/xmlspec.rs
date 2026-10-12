@@ -301,11 +301,8 @@ impl Minter<'_> {
         }
     }
 
-    /// Fact units out of a block list: from `<p>` and `<item>` carriers (the
-    /// Markdown unit grain). Three carriers are BELOW that grain and mint
-    /// nothing — each mirroring `mdspec` over the projection: a `<td>`/`
-    /// `<quote>` fact (the projection's line opens with `|` / `> `, not the
-    /// anchor), and a fact the NEXT block's fence is bound to (the
+    /// Fact units from permitted paragraph/item/table body-cell/quote carriers.
+    /// Header structure and a fact the NEXT block's fence is bound to (the
     /// projection spells it `@fact/code:`, which the markdown scanner does
     /// not read as an anchor — the typed binding is progress grain, not
     /// specmap grain).
@@ -319,6 +316,23 @@ impl Minter<'_> {
                 XBlock::List { items, ordered } => {
                     for (j, item) in items.iter().enumerate() {
                         self.item_fact(item, j, *ordered, typed);
+                    }
+                }
+                XBlock::Table { rows } => {
+                    for unit in rows.iter().skip(1).flatten() {
+                        self.para_fact(unit, None);
+                    }
+                }
+                XBlock::Quote(unit) => {
+                    let before = self.units.len();
+                    self.para_fact(unit, typed);
+                    if self.units.len() > before {
+                        let span = para_line(unit, typed)
+                            .lines()
+                            .map(|line| format!("> {line}"))
+                            .collect::<Vec<_>>()
+                            .join("\n");
+                        self.units.last_mut().unwrap().contentHash = crate::content_hash(&span);
                     }
                 }
                 _ => {}

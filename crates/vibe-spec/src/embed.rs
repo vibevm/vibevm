@@ -7,6 +7,8 @@ use crate::address::SpecAddress;
 use crate::directives::{DirectiveKind, Directives};
 use crate::doctree::DocTree;
 use crate::resolver::FileResolver;
+mod selection;
+use selection::resolve_section;
 
 pub trait SectionSource {
     fn section_text(&self, addr: &SpecAddress) -> Result<String, String>;
@@ -237,6 +239,9 @@ impl FsSectionSource {
         metadata: ResolvedSourceMetadata,
     ) -> Result<ResolvedSource, String> {
         if metadata.format() == "markdown" {
+            if let Some(text) = self.classified_text(addr, metadata.origin())? {
+                return Ok(ResolvedSource::markdown(text, metadata.physical_stem));
+            }
             let src = match self.overlay.get(metadata.origin()) {
                 Some(bytes) => crate::resolver::project_source(metadata.origin(), bytes)?,
                 None => self
@@ -281,6 +286,9 @@ impl SectionSource for FsSectionSource {
             .resolver
             .resolve_file(addr)
             .map_err(|e| e.to_string())?;
+        if let Some(text) = self.classified_text(addr, &file)? {
+            return Ok(text);
+        }
         let src = match self.overlay.get(&file) {
             Some(bytes) => crate::resolver::project_source(&file, bytes)?,
             None => self.resolver.read_projected_source(addr, &file)?,
@@ -315,41 +323,6 @@ fn logical_stem(addr: &SpecAddress) -> String {
         .next()
         .unwrap_or(&addr.doc_path)
         .to_owned()
-}
-
-fn resolve_section(src: &str, file: &Path, addr: &SpecAddress) -> Result<String, String> {
-    let tree = DocTree::parse(src);
-    if tree
-        .duplicate_anchors()
-        .iter()
-        .any(|id| addr.anchor.contains(id))
-    {
-        return Err(format!("ambiguous anchor in {}", file.display()));
-    }
-    let node = match tree.resolve_path(&addr.anchor) {
-        Some(node) => node,
-        None => {
-            // B-011 §6.1: a missed short anchor reports qualified heirs.
-            let candidates = addr
-                .anchor
-                .first()
-                .map(|short| tree.qualified_candidates(short.as_str()))
-                .filter(|c| !c.is_empty())
-                .map(|c| {
-                    format!(
-                        " (qualified candidates for `{}`: {})",
-                        addr.anchor.first().map(String::as_str).unwrap_or(""),
-                        c.join(", ")
-                    )
-                })
-                .unwrap_or_default();
-            return Err(format!(
-                "anchor not found in {}{candidates}",
-                file.display()
-            ));
-        }
-    };
-    Ok(tree.text(node))
 }
 
 #[cfg(test)]

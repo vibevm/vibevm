@@ -37,6 +37,7 @@ pub struct ValidatedDescriptorMap {
     manifest_sha256: String,
     by_address: BTreeMap<String, DescriptorOutputRow>,
     by_output: BTreeMap<String, DescriptorOutputRow>,
+    materialized_media: BTreeMap<String, String>,
 }
 
 impl ValidatedDescriptorMap {
@@ -119,7 +120,73 @@ impl ValidatedDescriptorMap {
             manifest_sha256,
             by_address,
             by_output,
+            materialized_media: BTreeMap::new(),
         })
+    }
+
+    /// The preparation owner supplies media from its captured authored
+    /// descriptor and validated record disposition. This is metadata, not
+    /// independent source proof. Existing row literal shape stays unchanged.
+    pub fn with_materialized_media(
+        mut self,
+        media: BTreeMap<String, String>,
+    ) -> Result<Self, ResolveError> {
+        for (output, value) in &media {
+            let row = self
+                .by_output
+                .get(output)
+                .ok_or_else(|| invalid("media has no selected output row"))?;
+            let supported = match row.interpretation {
+                Some(SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc) => {
+                    matches!(value.as_str(), "text/markdown" | "application/xml")
+                }
+                _ => false,
+            };
+            if !supported {
+                return Err(invalid("materialized Vibe media is incompatible"));
+            }
+        }
+        if self
+            .by_address
+            .values()
+            .any(|row| !media.contains_key(&row.output))
+        {
+            return Err(invalid(
+                "selected Vibe output is missing materialized media",
+            ));
+        }
+        self.materialized_media = media;
+        Ok(self)
+    }
+
+    pub(super) fn source_context(
+        &self,
+        path: &Path,
+    ) -> Result<(SourceInterpretation, &str, &str), ResolveError> {
+        let relative = path
+            .strip_prefix(&self.slot_root)
+            .ok()
+            .and_then(Path::to_str)
+            .map(|value| value.replace('\\', "/"))
+            .ok_or_else(|| invalid("source path is outside selected slot"))?;
+        let row = self
+            .by_output
+            .get(&relative)
+            .ok_or_else(|| invalid("source path is absent from selected map"))?;
+        let interpretation = row
+            .interpretation
+            .filter(|value| {
+                matches!(
+                    value,
+                    SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc
+                )
+            })
+            .ok_or_else(|| invalid("ordinary resource has no Vibe selection context"))?;
+        let media = self
+            .materialized_media
+            .get(&relative)
+            .ok_or_else(|| invalid("selected Vibe output has no materialized media witness"))?;
+        Ok((interpretation, media, &row.output_sha256))
     }
 
     pub fn spec_root(&self) -> &Path {

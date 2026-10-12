@@ -379,11 +379,9 @@ fn an_invalid_section_id_warns_and_skips_but_content_still_scans() {
 }
 
 #[test]
-fn table_and_quote_facts_are_below_the_unit_grain() {
-    // A <td>/<quote> fact is a progress fact, not a specmap unit: the
-    // markdown scanner reads units only from a line's or item's FIRST
-    // token, and the projection's table/quote lines open with `|` / `> `.
-    // The section unit's hash still covers them (they are in its span).
+fn anchored_quote_is_a_unit_while_unanchored_table_cell_stays_unminted() {
+    // D1 extends the permitted carrier grain. An authored quote ID mints
+    // a unit; a merely status-marked cell still has no invented anchor.
     let xml = concat!(
         "<spec xmlns=\"https://vibevm.org/spec/1\">\n",
         "  <section id=\"s\" title=\"S\">\n",
@@ -395,7 +393,7 @@ fn table_and_quote_facts_are_below_the_unit_grain() {
     let (units, warnings) = parse_units("spec/test/DOC.xml", xml, NS);
     assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
     let anchors: Vec<&str> = units.iter().map(|u| u.anchor.as_str()).collect();
-    assert_eq!(anchors, ["s"]);
+    assert_eq!(anchors, ["s", "Q"]);
 }
 
 #[test]

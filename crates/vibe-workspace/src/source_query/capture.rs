@@ -20,9 +20,11 @@ use super::{SourceQueryUnavailable, select_owner_roots};
 
 mod continuity;
 pub use continuity::{
-    CanonicalNodeIdentity, CapturedSourceFile, MaterializedVibeMedia, PreparedWorldWitness,
-    RecordedOutput, SourceMembershipIndex, SourceStrength, WitnessedSourceWorld,
-    canonical_node_of_output, native_xml_range_of_output,
+    CanonicalNodeIdentity, CapturedSourceFile, CommonMarkExtraction, ExtractedSource,
+    ExtractionError, ExtractionProvenance, MaterializedVibeMedia, PreparedWorldWitness,
+    RecordedOutput, RepresentationWitness, SelectedDescriptorWitness, SourceEncoding,
+    SourceMembershipIndex, SourceStrength, SpanBasis, SpecExtraction, SpecOutline, StructuredView,
+    WitnessedSourceWorld, canonical_node_of_output, native_xml_range_of_output,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]

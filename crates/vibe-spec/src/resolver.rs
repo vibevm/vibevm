@@ -532,6 +532,7 @@ mod lookup;
 mod portable;
 mod read;
 mod resource;
+mod selection;
 pub use lookup::canonical_doc_path;
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
 pub(crate) use read::project_source;

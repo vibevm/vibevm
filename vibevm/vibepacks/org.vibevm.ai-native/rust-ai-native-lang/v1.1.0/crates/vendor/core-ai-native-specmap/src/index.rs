@@ -465,4 +465,6 @@ pub fn vacuity_warning(summary: &Summary) -> Option<String> {
 }
 
 #[cfg(test)]
+mod m_01_d_1_cases;
+#[cfg(test)]
 mod tests;
