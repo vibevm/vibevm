@@ -1,0 +1,8 @@
+
+running 4 tests
+test source_query::capture::continuity::service::m_01_e_2_cases::changed_expectation_refuses_and_local_strength_stays_explicit ... ok
+test source_query::capture::continuity::service::m_01_e_2_cases::missing_capture_is_unavailable_without_recreation ... ok
+test source_query::capture::continuity::service::m_01_e_2_cases::payload_tamper_refuses_without_repair ... ok
+test source_query::capture::continuity::service::m_01_e_2_cases::prepared_offline_query_repeats_without_state_drift ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 683 filtered out; finished in 0.91s

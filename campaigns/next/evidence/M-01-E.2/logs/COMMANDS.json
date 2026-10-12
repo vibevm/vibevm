@@ -1,0 +1,702 @@
+[
+  {
+    "log": "representative-mcp-service.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-mcp --lib tools::read_spec::m_01_d_2_cases::actual_tool_returns_validated_self_solution -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 1,
+    "failed": 0,
+    "ignored": 0,
+    "note": "early actual consumer",
+    "artifact_sha256": "e1abb40003365d859fbde799b89e7936cb6347c3d7baa4fdd6fa48abe1b5aa2c"
+  },
+  {
+    "log": "workspace-first.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-workspace --lib source_query::capture::continuity::service::m_01_e_2_cases:: -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 101,
+    "passed": 3,
+    "failed": 1,
+    "ignored": 0,
+    "note": "",
+    "artifact_sha256": "acb18293d9a80d7b5e8b9b4fbb779b6a55004b9fe9e5ca851a98a4fcc2fab894"
+  },
+  {
+    "log": "workspace-corrected.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-workspace --lib source_query::capture::continuity::service::m_01_e_2_cases:: -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 4,
+    "failed": 0,
+    "ignored": 0,
+    "note": "",
+    "artifact_sha256": "7ab3103dfdf51c9e248a866541e43552a7ddf6d1f6ddeb7e84f53c952bf05c70"
+  },
+  {
+    "log": "cli-first.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-cli --test m_01_e_2_cases -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 101,
+    "passed": 0,
+    "failed": 0,
+    "ignored": 0,
+    "note": "compile failure has no executed test verdict",
+    "artifact_sha256": "14ec52b445397b6cfa825aef6f415e2f34fc247e72b060177ee3dde017cc9ff1"
+  },
+  {
+    "log": "cli-corrected-fixture.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-cli --test m_01_e_2_cases -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 3,
+    "failed": 0,
+    "ignored": 0,
+    "note": "",
+    "artifact_sha256": "92acd171ea147b57f2e77196a6b93e22de59074a47b83be756c5f5659e62b135"
+  },
+  {
+    "log": "mcp-first.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-mcp --lib tools::read_spec::m_01_e_2_cases:: -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 2,
+    "failed": 0,
+    "ignored": 0,
+    "note": "",
+    "artifact_sha256": "f45c1f7889efa82b8b3b0fde0bfe14e6f40afd173c45b97516e17170c2a626e8"
+  },
+  {
+    "log": "cli-hermetic-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-cli --test m_01_e_2_cases -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 3,
+    "failed": 0,
+    "ignored": 0,
+    "note": "",
+    "artifact_sha256": "c8ce4a2a743d2bb4885015a03ff884a625c7817133f6a9c2de7f377b3932460e"
+  },
+  {
+    "log": "workspace-sealed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-workspace --lib source_query::capture::continuity::service::m_01_e_2_cases:: -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 4,
+    "failed": 0,
+    "ignored": 0,
+    "note": "",
+    "artifact_sha256": "6e2334de7e1115b9d5a0a0759d9645eaf387d57d67649243b4c2b7196546ca67"
+  },
+  {
+    "log": "mcp-sealed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-mcp --lib tools::read_spec::m_01_e_2_cases:: -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 2,
+    "failed": 0,
+    "ignored": 0,
+    "note": "",
+    "artifact_sha256": "185cad38ccbbf309458c41d9058f828bfea904d69f310c2b8ba1052d4e493284"
+  },
+  {
+    "log": "cli-sealed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-cli --test m_01_e_2_cases -- --nocapture --test-threads=1",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": 3,
+    "failed": 0,
+    "ignored": 0,
+    "note": "",
+    "artifact_sha256": "b8c1cf974a29c87e9c3f4da11a67f469d52920a6b2b1dc37fda4710186fc8ffb"
+  },
+  {
+    "log": "cli-final-scope-compile.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-cli --test m_01_e_2_cases --no-run",
+    "cwd": "/tmp",
+    "exit": 0,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "metadata scope compile, not a test verdict",
+    "artifact_sha256": "8fe5dbc152247cc2aab96f69da5ec7793975e5ffa3e2db60981f2668f7263a29"
+  },
+  {
+    "log": "full-fmt.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly fmt --manifest-path /fast/git/v/vibevm-next/Cargo.toml --all -- --check",
+    "cwd": "/tmp",
+    "exit": 1,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "13 historical diff entries outside owners",
+    "artifact_sha256": "e0815a42446aacc3696dbc681dcd3ef48599db79fbabbfedca83891489f72a66"
+  },
+  {
+    "log": "touched-fmt-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 rustfmt +nightly --edition 2024 --config skip_children=true --check /fast/git/v/vibevm-next/crates/vibe-workspace/src/source_query/capture/continuity/service.rs /fast/git/v/vibevm-next/crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_d_2_cases.rs /fast/git/v/vibevm-next/crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_e_2_cases.rs /fast/git/v/vibevm-next/crates/vibe-mcp/src/tools/read_spec.rs /fast/git/v/vibevm-next/crates/vibe-mcp/src/tools/read_spec/m_01_e_2_cases.rs /fast/git/v/vibevm-next/crates/vibe-cli/tests/m_01_e_2_cases.rs /fast/git/v/vibevm-next/crates/vibe-cli/tests/m_01_e_2_cases/fixture.rs /fast/git/v/vibevm-next/crates/vibe-cli/tests/m_01_e_2_cases/proof.rs",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "",
+    "artifact_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "log": "diff-check-final.log",
+    "command": "git diff --check",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "",
+    "artifact_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "log": "xml-parse.log",
+    "command": "Python ElementTree.parse(PROP-070), unique SOURCE-QUERY-PURITY-EVIDENCE anchor",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "passed": null,
+    "failed": null,
+    "ignored": null,
+    "note": "",
+    "artifact_sha256": "af7373b7ba2dcd97f70a35fa065c695f8f3500f373b50165bcd31bf69b3db768"
+  },
+  {
+    "artifact": "cli-final-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-final-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-cli/37dc2b91773137a8/out/m_01_e_2_cases-37dc2b91773137a8",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-final-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-final-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "10834d66ab552eff477d83959d3edba2273e7846682b298fd42a87bb59d7389d",
+    "artifact_sha256": "09ac600c206505fedc466381fc8517da066b65179a4004c19add51d42548e776"
+  },
+  {
+    "artifact": "cli-hermetic-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-hermetic-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-cli/37dc2b91773137a8/out/m_01_e_2_cases-37dc2b91773137a8",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-hermetic-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-hermetic-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "c261a4507b36a4398ca3a23a9ac9689187c5156700539e243784394252f0fa04",
+    "artifact_sha256": "f745a9708d2d5c7c6a11904ae9afbaa168d0880ecceb8fa5cfb2c1367b5fe0e4"
+  },
+  {
+    "artifact": "cli-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-cli/37dc2b91773137a8/out/m_01_e_2_cases-37dc2b91773137a8",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "b76e80f7a75a3e82a9b0657624e97d102af937d3d1e29721c44e9e74f72e421f",
+    "artifact_sha256": "6c3b2d8e2eaef6f86ee59fb5bd8fad437c6686d40bc8eae0d53589dc3577aeb6"
+  },
+  {
+    "artifact": "cli-sealed-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-sealed-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-cli/37dc2b91773137a8/out/m_01_e_2_cases-37dc2b91773137a8",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-sealed-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-sealed-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "2ff36c3385b664f6f89677f01980e1af9e71e43cb3e9a696cc07bd85e14d8345",
+    "artifact_sha256": "80022d1fb6f9ee5b209c7ecfcb5f3e92dec78631df26f34f99b92a58179fade3"
+  },
+  {
+    "artifact": "mcp-hermetic-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-hermetic-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-mcp/d0b2fe9bebba2208/out/vibe_mcp-d0b2fe9bebba2208",
+      "tools::read_spec::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-hermetic-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-hermetic-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "839a4634ba6841cea759f18c2ad9558ec0d9bf2567bc154bbb2d2f36104842dc",
+    "artifact_sha256": "ff21277188575f83516d839c8f77d9703e4e38fbbb3cb27d24f4e065cafdfe53"
+  },
+  {
+    "artifact": "mcp-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-mcp/d0b2fe9bebba2208/out/vibe_mcp-d0b2fe9bebba2208",
+      "tools::read_spec::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "839a4634ba6841cea759f18c2ad9558ec0d9bf2567bc154bbb2d2f36104842dc",
+    "artifact_sha256": "9b44f9fd8b298ceb2ed67170c169577d764b88a99d54bbf8b77896c4c53cec30"
+  },
+  {
+    "artifact": "mcp-sealed-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-sealed-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-mcp/d0b2fe9bebba2208/out/vibe_mcp-d0b2fe9bebba2208",
+      "tools::read_spec::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-sealed-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-sealed-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "af8e1b40299e4ac47ee0801960910d4c9643ad1884d61fe6c791c996035f4487",
+    "artifact_sha256": "7fa99bfc40582bbb8e33358679ee76d3bcb5fa7864ae8288e1be3a3d7c41e25e"
+  },
+  {
+    "artifact": "representative-cli-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-s",
+      "8192",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/representative-cli.strace",
+      "-e",
+      "trace=%file,%network",
+      "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+      "--json",
+      "spec",
+      "read",
+      "--path",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/representative-fixture/host",
+      "--request-json",
+      "{\"schema\": 1, \"address\": \"spec://org.demo/self/DOC#root.solution\", \"mode\": \"read\", \"format\": \"md\", \"children\": true}"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/representative-fixture/home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/representative-fixture/home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "exit": 0,
+    "artifact_sha256": "c88ae5adda9fd8f34ed9307ceae6b049f573e6af7c20e4c6137b19ce79b6527f"
+  },
+  {
+    "artifact": "workspace-hermetic-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-hermetic-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-workspace/7d1164f5caceee07/out/vibe_workspace-7d1164f5caceee07",
+      "source_query::capture::continuity::service::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-hermetic-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-hermetic-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "8978dbddd88e935a7e56a1cc7a7fdba94cc75625feb2479c6517fde037edc801",
+    "artifact_sha256": "3023dd5583f5d57373be39f7257cad759c8c04bfa45f4b13e768264a208e7fef"
+  },
+  {
+    "artifact": "workspace-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-workspace/7d1164f5caceee07/out/vibe_workspace-7d1164f5caceee07",
+      "source_query::capture::continuity::service::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "8978dbddd88e935a7e56a1cc7a7fdba94cc75625feb2479c6517fde037edc801",
+    "artifact_sha256": "60edf9d407de225ebf6d77ffe955c56af5de52a838508194ef0d4afce7cab799"
+  },
+  {
+    "artifact": "workspace-sealed-observed-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-sealed-observed.strace",
+      "-e",
+      "trace=%file,%network,%process,write,writev,pwrite64,pwritev,pwritev2,ftruncate,fchmod,fchown,fsync,fdatasync",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-workspace/7d1164f5caceee07/out/vibe_workspace-7d1164f5caceee07",
+      "source_query::capture::continuity::service::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-sealed-observed-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-sealed-observed-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1"
+    },
+    "binary_sha256": "b4b97fe047afcea4707e0e520e75cc32c78c982b72ca9fa5c50316b2596c876e",
+    "artifact_sha256": "096a0024a112fd3c3f4a37520eeb9409607ff8a934c4f9c43184f666f58ecfa1"
+  },
+  {
+    "artifact": "workspace-full-oracle-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle.strace",
+      "-e",
+      "trace=%file,%network,%desc,%memory,%process",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-workspace/7d1164f5caceee07/out/vibe_workspace-7d1164f5caceee07",
+      "source_query::capture::continuity::service::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1",
+      "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.config",
+      "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.cache",
+      "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.local/state",
+      "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.local/share",
+      "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/runtime"
+    },
+    "binary_sha256": "b4b97fe047afcea4707e0e520e75cc32c78c982b72ca9fa5c50316b2596c876e"
+  },
+  {
+    "artifact": "mcp-full-oracle-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle.strace",
+      "-e",
+      "trace=%file,%network,%desc,%memory,%process",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-mcp/d0b2fe9bebba2208/out/vibe_mcp-d0b2fe9bebba2208",
+      "tools::read_spec::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1",
+      "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.config",
+      "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.cache",
+      "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.local/state",
+      "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.local/share",
+      "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/runtime"
+    },
+    "binary_sha256": "af8e1b40299e4ac47ee0801960910d4c9643ad1884d61fe6c791c996035f4487"
+  },
+  {
+    "artifact": "cli-full-oracle-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle.strace",
+      "-e",
+      "trace=%file,%network,%desc,%memory,%process",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-cli/37dc2b91773137a8/out/m_01_e_2_cases-37dc2b91773137a8",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1",
+      "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.config",
+      "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.cache",
+      "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.local/state",
+      "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.local/share",
+      "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/runtime"
+    },
+    "binary_sha256": "2ff36c3385b664f6f89677f01980e1af9e71e43cb3e9a696cc07bd85e14d8345"
+  },
+  {
+    "artifact": "workspace-complete-oracle-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle.strace",
+      "-e",
+      "trace=%file,%network,%desc,%memory,%process",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-workspace/7d1164f5caceee07/out/vibe_workspace-7d1164f5caceee07",
+      "source_query::capture::continuity::service::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1",
+      "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.config",
+      "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.cache",
+      "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.local/state",
+      "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/.local/share",
+      "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/workspace-full-oracle-observer-home/runtime"
+    },
+    "binary_sha256": "b4b97fe047afcea4707e0e520e75cc32c78c982b72ca9fa5c50316b2596c876e",
+    "analysis_only_replay_of": "workspace-full-oracle"
+  },
+  {
+    "artifact": "mcp-complete-oracle-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle.strace",
+      "-e",
+      "trace=%file,%network,%desc,%memory,%process",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-mcp/d0b2fe9bebba2208/out/vibe_mcp-d0b2fe9bebba2208",
+      "tools::read_spec::m_01_e_2_cases::",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1",
+      "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.config",
+      "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.cache",
+      "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.local/state",
+      "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/.local/share",
+      "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/mcp-full-oracle-observer-home/runtime"
+    },
+    "binary_sha256": "af8e1b40299e4ac47ee0801960910d4c9643ad1884d61fe6c791c996035f4487",
+    "analysis_only_replay_of": "mcp-full-oracle"
+  },
+  {
+    "artifact": "cli-complete-oracle-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle.strace",
+      "-e",
+      "trace=%file,%network,%desc,%memory,%process",
+      "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-cli/37dc2b91773137a8/out/m_01_e_2_cases-37dc2b91773137a8",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1",
+      "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.config",
+      "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.cache",
+      "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.local/state",
+      "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/.local/share",
+      "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-full-oracle-observer-home/runtime"
+    },
+    "binary_sha256": "2ff36c3385b664f6f89677f01980e1af9e71e43cb3e9a696cc07bd85e14d8345",
+    "analysis_only_replay_of": "cli-full-oracle"
+  },
+  {
+    "command": "cc -Wall -Wextra -Werror -o observer_positive_control observer_positive_control.c",
+    "cwd": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2",
+    "exit": 0,
+    "purpose": "owned measurement positive control only"
+  },
+  {
+    "artifact": "observer-positive-control-final-command.json",
+    "argv": [
+      "strace",
+      "-f",
+      "-yy",
+      "-s",
+      "16384",
+      "-o",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer-positive-control-final.strace",
+      "-e",
+      "trace=%file,%network,%desc,%memory,%process",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer_positive_control",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/positive-control-scratch-final"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "env": {
+      "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer-positive-control-final-observer-home",
+      "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer-positive-control-final-observer-home/.vibe",
+      "VIBE_NO_DEFAULT_REGISTRY": "1",
+      "VIBE_NO_PROGRESS": "1",
+      "XDG_CONFIG_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer-positive-control-final-observer-home/.config",
+      "XDG_CACHE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer-positive-control-final-observer-home/.cache",
+      "XDG_STATE_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer-positive-control-final-observer-home/.local/state",
+      "XDG_DATA_HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer-positive-control-final-observer-home/.local/share",
+      "XDG_RUNTIME_DIR": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/observer-positive-control-final-observer-home/runtime"
+    },
+    "binary_sha256": "bb78614f88c9059de2385c088dbc35301b603d0312d9290790d7c6a3fdf831b0"
+  }
+]

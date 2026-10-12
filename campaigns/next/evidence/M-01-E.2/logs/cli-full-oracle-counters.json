@@ -1,0 +1,2750 @@
+{
+  "label": "cli-full-oracle",
+  "linux_only": true,
+  "complete_query_intervals": 22,
+  "whole_surface_processes": 24,
+  "scopes": {
+    "2374025:library-success:0": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374035": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374037": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374025:library-repeat:1": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374041": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374043": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374025:library-stale-document:2": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374064": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374070": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374025:library-unsupported-strict-grade:3": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374072": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374073": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374025:library-missing-capture:4": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374074": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374075": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374077:library-record-only-control:5": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374099": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374101": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374077:library-record-only:6": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374104": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374105": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374077:library-payload-only-control:7": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374109": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374110": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374077:library-payload-only:8": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374114": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374115": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374077:library-coordinated-control:9": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374121": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374126": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374077:library-coordinated:10": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374137": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374139": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374077:library-coordinated-pristine-expectation:11": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "surface-process-2374143": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "surface-process-2374145": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 1,
+      "kind": "whole CLI/MCP child including startup"
+    },
+    "2374147:mandatory-replay:12": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:missing-strict-proof:13": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:original-strict-positive:14": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:coordinated-proof-refusal:15": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:poisoned-original-replay:16": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:mandatory-replay:17": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:missing-strict-proof:18": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:builtin-derivation:19": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:coordinated-proof-refusal:20": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374147:poisoned-original-replay:21": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    }
+  },
+  "mutation_or_network_attempts": [],
+  "trace_sha256": "8a520afcc305b968751e97b8869c2de802fa59556b33dc08eb7a223d443fa0fa",
+  "runtime_exit": 0,
+  "allowances": [
+    {
+      "scope": "2374025:library-success:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374025:library-success:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"success\", 7) = 7"
+    },
+    {
+      "scope": "2374025:library-success:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x73e70df4c000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x73e70df1e000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70df22000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x73e70df22000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70df46000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x73e70df46000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70df4a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x73e70df4a000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x73e70ddf8000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70de0a000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x73e70de0a000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70deaa000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x73e70deaa000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70df1c000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x73e70df1c000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x73e70da00000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70da28000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x73e70da28000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70dbc0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x73e70dbc0000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70dc0e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x73e70dc0e000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(0x73e70dc14000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x73e70dc14000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x73e70ddf6000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374035 mprotect(0x73e70dc0e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374035 mprotect(0x73e70df1c000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374035 mprotect(0x73e70df4a000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374035 mprotect(0x58d830c38000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374035 mprotect(0x73e70dfa5000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x73e70df5d000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374035 mprotect(0x73e70df5d000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x73e70df5c000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374035 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x73e70df5b000"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374035 write(1<pipe:[51720687]>, \"{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"\", 984) = 984"
+    },
+    {
+      "scope": "surface-process-2374035",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374035 write(1<pipe:[51720687]>, \"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}\\n\", 171 <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374037 mprotect(0x79c23fa0e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374037 mprotect(0x79c23fc18000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374037 mprotect(0x79c23fc46000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374037 mprotect(0x557beac68000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374037 mprotect(0x79c23fca1000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374037 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x79c23fc59000"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374037 mprotect(0x79c23fc59000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374037 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x79c23fc58000"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374037 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x79c23fc57000"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374037 write(1<pipe:[51595945]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374037 write(1<pipe:[51595945]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\n  \\\\\\\"address\\\\\\\": \\\\\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\\\\\",\\\\n  \\\\\\\"chunk\\\\\\\": {\\\\n    \\\\\\\"end\\\\\\\": 40,\\\\n    \\\\\\\"next_cursor\\\\\\\": null,\\\\n    \\\\\\\"offset\\\\\\\": 0,\\\\n    \\\\\\\"total\\\\\\\": 40\\\\n  },\\\\n  \\\\\\\"content\\\\\\\": \\\\\\\"@fact:ITEM Original. @status:impl/done\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\n  \\\\\\\"dictionary\\\\\\\": \\\\\\\"vibe-spec\\\\\\\",\\\\n  \\\\\\\"document_bytes\\\\\\\": 60,\\\\n  \\\\\\\"format\\\\\\\": \\\\\\\"md\\\\\\\",\\\\n  \\\\\\\"heading_chain\\\\\\\": [\\\\n    \\\\\\\"Document\\\\\\\"\\\\n  ],\\\\n  \\\\\\\"location\\\\\\\": {\\\\n    \\\\\\\"basis\\\\\\\": \\\\\\\"native-markdown\\\\\\\",\\\\n    \\\\\\\"line_end\\\\\\\": 3,\\\\n    \\\\\\\"line_start\\\\\\\": 3,\\\\n    \\\\\\\"path\\\\\\\": \\\\\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\\\\\"\\\\n  },\\\\n  \\\\\\\"mode\\\\\\\": \\\\\\\"read\\\\\\\",\\\\n  \\\\\\\"observation\\\\\\\": {\\\\n    \\\\\\\"captured_bytes\\\\\\\": 59,\\\\n    \\\\\\\"descriptor_identity\\\\\\\": \\\\\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\\\\\",\\\\n    \\\\\\\"document_hash\\\\\\\": \\\\\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\\\\\",\\\\n    \\\\\\\"encoding\\\\\\\": \\\\\\\"utf8\\\\\\\",\\\\n    \\\\\\\"manifest_hash\\\\\\\": \\\\\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\\\\\",\\\\n    \\\\\\\"representation_recipe\\\\\\\": \\\\\\\"specdoc/4+specdoc-selection/1+md\\\\\\\",\\\\n    \\\\\\\"resolution_hash\\\\\\\": \\\\\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\\\\\",\\\\n    \\\\\\\"semantic_hash\\\\\\\": \\\\\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\\\\\",\\\\n    \\\\\\\"source_hash\\\\\\\": \\\\\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\\\\\",\\\\n    \\\\\\\"strength\\\\\\\": \\\\\\\"record-consistent\\\\\\\"\\\\n  },\\\\n  \\\\\\\"outline\\\\\\\": [],\\\\n  \\\\\\\"schema\\\\\\\": 1,\\\\n  \\\\\\\"selected_bytes\\\\\\\": 40,\\\\n  \\\\\\\"status\\\\\\\": \\\\\\\"impl/done\\\\\\\"\\\\n}\\\"}],\\\"isError\\\":false,\\\"structuredContent\\\":{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}}}\", 2740) = 2740"
+    },
+    {
+      "scope": "surface-process-2374037",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374037 write(1<pipe:[51595945]>, \"\\n\", 1 <unfinished ...>"
+    },
+    {
+      "scope": "2374025:library-repeat:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374025:library-repeat:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"repeat\", 6) = 6"
+    },
+    {
+      "scope": "2374025:library-repeat:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x7f0fe440a000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x7f0fe43dc000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe43e0000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x7f0fe43e0000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe4404000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x7f0fe4404000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe4408000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x7f0fe4408000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x7f0fe42b6000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe42c8000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x7f0fe42c8000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe4368000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x7f0fe4368000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe43da000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x7f0fe43da000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x7f0fe4000000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe4028000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x7f0fe4028000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe41c0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x7f0fe41c0000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe420e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x7f0fe420e000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(0x7f0fe4214000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f0fe4214000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0fe42b4000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374041 mprotect(0x7f0fe420e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374041 mprotect(0x7f0fe43da000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374041 mprotect(0x7f0fe4408000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374041 mprotect(0x5f78c219a000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374041 mprotect(0x7f0fe4463000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f0fe441b000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374041 mprotect(0x7f0fe441b000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x7f0fe441a000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374041 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f0fe4419000"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374041 write(1<pipe:[51719368]>, \"{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"\", 984) = 984"
+    },
+    {
+      "scope": "surface-process-2374041",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374041 write(1<pipe:[51719368]>, \"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}\\n\", 171 <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374043 mprotect(0x76471d40e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374043 mprotect(0x76471d608000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374043 mprotect(0x76471d636000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374043 mprotect(0x57182ee1d000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374043 mprotect(0x76471d691000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374043 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x76471d649000"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374043 mprotect(0x76471d649000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374043 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x76471d648000"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374043 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x76471d647000"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374043 write(1<pipe:[51782636]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374043 write(1<pipe:[51782636]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\n  \\\\\\\"address\\\\\\\": \\\\\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\\\\\",\\\\n  \\\\\\\"chunk\\\\\\\": {\\\\n    \\\\\\\"end\\\\\\\": 40,\\\\n    \\\\\\\"next_cursor\\\\\\\": null,\\\\n    \\\\\\\"offset\\\\\\\": 0,\\\\n    \\\\\\\"total\\\\\\\": 40\\\\n  },\\\\n  \\\\\\\"content\\\\\\\": \\\\\\\"@fact:ITEM Original. @status:impl/done\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\n  \\\\\\\"dictionary\\\\\\\": \\\\\\\"vibe-spec\\\\\\\",\\\\n  \\\\\\\"document_bytes\\\\\\\": 60,\\\\n  \\\\\\\"format\\\\\\\": \\\\\\\"md\\\\\\\",\\\\n  \\\\\\\"heading_chain\\\\\\\": [\\\\n    \\\\\\\"Document\\\\\\\"\\\\n  ],\\\\n  \\\\\\\"location\\\\\\\": {\\\\n    \\\\\\\"basis\\\\\\\": \\\\\\\"native-markdown\\\\\\\",\\\\n    \\\\\\\"line_end\\\\\\\": 3,\\\\n    \\\\\\\"line_start\\\\\\\": 3,\\\\n    \\\\\\\"path\\\\\\\": \\\\\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\\\\\"\\\\n  },\\\\n  \\\\\\\"mode\\\\\\\": \\\\\\\"read\\\\\\\",\\\\n  \\\\\\\"observation\\\\\\\": {\\\\n    \\\\\\\"captured_bytes\\\\\\\": 59,\\\\n    \\\\\\\"descriptor_identity\\\\\\\": \\\\\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\\\\\",\\\\n    \\\\\\\"document_hash\\\\\\\": \\\\\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\\\\\",\\\\n    \\\\\\\"encoding\\\\\\\": \\\\\\\"utf8\\\\\\\",\\\\n    \\\\\\\"manifest_hash\\\\\\\": \\\\\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\\\\\",\\\\n    \\\\\\\"representation_recipe\\\\\\\": \\\\\\\"specdoc/4+specdoc-selection/1+md\\\\\\\",\\\\n    \\\\\\\"resolution_hash\\\\\\\": \\\\\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\\\\\",\\\\n    \\\\\\\"semantic_hash\\\\\\\": \\\\\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\\\\\",\\\\n    \\\\\\\"source_hash\\\\\\\": \\\\\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\\\\\",\\\\n    \\\\\\\"strength\\\\\\\": \\\\\\\"record-consistent\\\\\\\"\\\\n  },\\\\n  \\\\\\\"outline\\\\\\\": [],\\\\n  \\\\\\\"schema\\\\\\\": 1,\\\\n  \\\\\\\"selected_bytes\\\\\\\": 40,\\\\n  \\\\\\\"status\\\\\\\": \\\\\\\"impl/done\\\\\\\"\\\\n}\\\"}],\\\"isError\\\":false,\\\"structuredContent\\\":{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}}}\", 2740) = 2740"
+    },
+    {
+      "scope": "surface-process-2374043",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374043 write(1<pipe:[51782636]>, \"\\n\", 1 <unfinished ...>"
+    },
+    {
+      "scope": "2374025:library-stale-document:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374025:library-stale-document:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"stale-document\", 14) = 14"
+    },
+    {
+      "scope": "2374025:library-stale-document:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x71ec772da000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x71ec772ac000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec772b0000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x71ec772b0000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec772d4000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x71ec772d4000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec772d8000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x71ec772d8000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x71ec77186000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec77198000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x71ec77198000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec77238000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x71ec77238000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec772aa000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x71ec772aa000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x71ec76e00000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec76e28000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x71ec76e28000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec76fc0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x71ec76fc0000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec7700e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x71ec7700e000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(0x71ec77014000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x71ec77014000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x71ec77184000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374064 mprotect(0x71ec7700e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374064 mprotect(0x71ec772aa000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374064 mprotect(0x71ec772d8000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374064 mprotect(0x60723f04b000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374064 mprotect(0x71ec77333000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x71ec772eb000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374064 mprotect(0x71ec772eb000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x71ec772ea000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374064 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x71ec772e9000"
+    },
+    {
+      "scope": "surface-process-2374064",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374064 write(1<pipe:[51687076]>, \"{\\\"boundary\\\":\\\"document expectation\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"stale_expectation\\\",\\\"message\\\":\\\"Expected identity differs from the retained observation\\\",\\\"schema\\\":1}\\n\", 158) = 158"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374070 mprotect(0x76b08640e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374070 mprotect(0x76b0866c8000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374070 mprotect(0x76b0866f6000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374070 mprotect(0x5d8676276000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374070 mprotect(0x76b086751000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374070 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x76b086709000"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374070 mprotect(0x76b086709000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374070 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x76b086708000"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374070 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x76b086707000"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374070 write(1<pipe:[51803373]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374070",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374070 write(1<pipe:[51803373]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"structured preflight: Expected identity differs from the retained observation (governed by spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT; fix: inspect the typed report and pass arguments matching the tool's inputSchema)\\\"}],\\\"isError\\\":true,\\\"structuredContent\\\":{\\\"boundary\\\":\\\"document expectation\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"stale_expectation\\\",\\\"message\\\":\\\"Expected identity differs from the retained observation\\\",\\\"schema\\\":1}}}\\n\", 522) = 522"
+    },
+    {
+      "scope": "2374025:library-unsupported-strict-grade:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374025:library-unsupported-strict-grade:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"unsupported-strict-grade\", 24) = 24"
+    },
+    {
+      "scope": "2374025:library-unsupported-strict-grade:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x7fb39d8b9000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x7fb39d88b000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d88f000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x7fb39d88f000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d8b3000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x7fb39d8b3000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d8b7000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x7fb39d8b7000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x7fb39d765000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d777000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x7fb39d777000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d817000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x7fb39d817000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d889000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x7fb39d889000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x7fb39d400000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d428000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x7fb39d428000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d5c0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x7fb39d5c0000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d60e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x7fb39d60e000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(0x7fb39d614000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fb39d614000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fb39d763000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374072 mprotect(0x7fb39d60e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374072 mprotect(0x7fb39d889000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374072 mprotect(0x7fb39d8b7000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374072 mprotect(0x62635be2e000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374072 mprotect(0x7fb39d912000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7fb39d8ca000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374072 mprotect(0x7fb39d8ca000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x7fb39d8c9000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374072 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fb39d8c8000"
+    },
+    {
+      "scope": "surface-process-2374072",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374072 write(1<pipe:[51784286]>, \"{\\\"boundary\\\":\\\"request shape\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"invalid_request\\\",\\\"message\\\":\\\"Source request does not match its registered contract\\\",\\\"schema\\\":1}\\n\", 147) = 147"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374073 mprotect(0x7aa03100e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374073 mprotect(0x7aa0312c2000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374073 mprotect(0x7aa0312f0000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374073 mprotect(0x5f7d4618f000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374073 mprotect(0x7aa03134b000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374073 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7aa031303000"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374073 mprotect(0x7aa031303000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374073 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x7aa031302000"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374073 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7aa031301000"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374073 write(1<pipe:[51804164]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374073",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374073 write(1<pipe:[51804164]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"structured preflight: Source request does not match its registered contract (governed by spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT; fix: inspect the typed report and pass arguments matching the tool's inputSchema)\\\"}],\\\"isError\\\":true,\\\"structuredContent\\\":{\\\"boundary\\\":\\\"request shape\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"invalid_request\\\",\\\"message\\\":\\\"Source request does not match its registered contract\\\",\\\"schema\\\":1}}}\\n\", 509 <unfinished ...>"
+    },
+    {
+      "scope": "2374025:library-missing-capture:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374025:library-missing-capture:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"missing-capture\", 15) = 15"
+    },
+    {
+      "scope": "2374025:library-missing-capture:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374025 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x7c09d0443000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x7c09d0415000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d0419000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x7c09d0419000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d043d000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x7c09d043d000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d0441000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x7c09d0441000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x7c09d02ef000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d0301000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x7c09d0301000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d03a1000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x7c09d03a1000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d0413000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x7c09d0413000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x7c09d0000000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d0028000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x7c09d0028000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d01c0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x7c09d01c0000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d020e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x7c09d020e000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(0x7c09d0214000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7c09d0214000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7c09d02ed000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374074 mprotect(0x7c09d020e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374074 mprotect(0x7c09d0413000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374074 mprotect(0x7c09d0441000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374074 mprotect(0x5dd1e7731000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374074 mprotect(0x7c09d049c000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7c09d0454000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374074 mprotect(0x7c09d0454000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x7c09d0453000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374074 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7c09d0452000"
+    },
+    {
+      "scope": "surface-process-2374074",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374074 write(1<pipe:[51804167]>, \"{\\\"boundary\\\":\\\"selected descriptor/output map\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"unavailable_world\\\",\\\"message\\\":\\\"Prepared selected source is unavailable\\\",\\\"schema\\\":1}\\n\", 152) = 152"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374075 mprotect(0x7c9553a0e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374075 mprotect(0x7c9553d00000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374075 mprotect(0x7c9553d2e000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374075 mprotect(0x613835fdc000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374075 mprotect(0x7c9553d89000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374075 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7c9553d41000"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374075 mprotect(0x7c9553d41000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374075 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x7c9553d40000"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374075 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7c9553d3f000"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374075 write(1<pipe:[51804170]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374075",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374075 write(1<pipe:[51804170]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"structured preflight: Prepared selected source is unavailable (governed by spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT; fix: inspect the typed report and pass arguments matching the tool's inputSchema)\\\"}],\\\"isError\\\":true,\\\"structuredContent\\\":{\\\"boundary\\\":\\\"selected descriptor/output map\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"unavailable_world\\\",\\\"message\\\":\\\"Prepared selected source is unavailable\\\",\\\"schema\\\":1}}}\\n\", 500) = 500"
+    },
+    {
+      "scope": "2374077:library-record-only-control:5",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374077:library-record-only-control:5",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"record-only-control\", 19) = 19"
+    },
+    {
+      "scope": "2374077:library-record-only-control:5",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x713b2f37b000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x713b2f34d000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f351000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x713b2f351000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f375000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x713b2f375000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f379000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x713b2f379000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x713b2f227000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f239000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x713b2f239000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f2d9000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x713b2f2d9000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f34b000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x713b2f34b000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x713b2f000000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f028000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x713b2f028000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f1c0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x713b2f1c0000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f20e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x713b2f20e000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(0x713b2f214000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x713b2f214000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x713b2f225000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374099 mprotect(0x713b2f20e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374099 mprotect(0x713b2f34b000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374099 mprotect(0x713b2f379000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374099 mprotect(0x5918cbd16000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374099 mprotect(0x713b2f3d4000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x713b2f38c000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374099 mprotect(0x713b2f38c000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x713b2f38b000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374099 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x713b2f38a000"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374099 write(1<pipe:[51767042]>, \"{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"\", 984) = 984"
+    },
+    {
+      "scope": "surface-process-2374099",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374099 write(1<pipe:[51767042]>, \"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}\\n\", 171 <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374101 mprotect(0x77ce0860e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374101 mprotect(0x77ce08793000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374101 mprotect(0x77ce087c1000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374101 mprotect(0x559dd0090000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374101 mprotect(0x77ce0881c000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374101 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x77ce087d4000"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374101 mprotect(0x77ce087d4000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374101 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x77ce087d3000"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374101 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x77ce087d2000"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374101 write(1<pipe:[51802059]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374101 write(1<pipe:[51802059]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\n  \\\\\\\"address\\\\\\\": \\\\\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\\\\\",\\\\n  \\\\\\\"chunk\\\\\\\": {\\\\n    \\\\\\\"end\\\\\\\": 40,\\\\n    \\\\\\\"next_cursor\\\\\\\": null,\\\\n    \\\\\\\"offset\\\\\\\": 0,\\\\n    \\\\\\\"total\\\\\\\": 40\\\\n  },\\\\n  \\\\\\\"content\\\\\\\": \\\\\\\"@fact:ITEM Original. @status:impl/done\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\n  \\\\\\\"dictionary\\\\\\\": \\\\\\\"vibe-spec\\\\\\\",\\\\n  \\\\\\\"document_bytes\\\\\\\": 60,\\\\n  \\\\\\\"format\\\\\\\": \\\\\\\"md\\\\\\\",\\\\n  \\\\\\\"heading_chain\\\\\\\": [\\\\n    \\\\\\\"Document\\\\\\\"\\\\n  ],\\\\n  \\\\\\\"location\\\\\\\": {\\\\n    \\\\\\\"basis\\\\\\\": \\\\\\\"native-markdown\\\\\\\",\\\\n    \\\\\\\"line_end\\\\\\\": 3,\\\\n    \\\\\\\"line_start\\\\\\\": 3,\\\\n    \\\\\\\"path\\\\\\\": \\\\\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\\\\\"\\\\n  },\\\\n  \\\\\\\"mode\\\\\\\": \\\\\\\"read\\\\\\\",\\\\n  \\\\\\\"observation\\\\\\\": {\\\\n    \\\\\\\"captured_bytes\\\\\\\": 59,\\\\n    \\\\\\\"descriptor_identity\\\\\\\": \\\\\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\\\\\",\\\\n    \\\\\\\"document_hash\\\\\\\": \\\\\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\\\\\",\\\\n    \\\\\\\"encoding\\\\\\\": \\\\\\\"utf8\\\\\\\",\\\\n    \\\\\\\"manifest_hash\\\\\\\": \\\\\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\\\\\",\\\\n    \\\\\\\"representation_recipe\\\\\\\": \\\\\\\"specdoc/4+specdoc-selection/1+md\\\\\\\",\\\\n    \\\\\\\"resolution_hash\\\\\\\": \\\\\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\\\\\",\\\\n    \\\\\\\"semantic_hash\\\\\\\": \\\\\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\\\\\",\\\\n    \\\\\\\"source_hash\\\\\\\": \\\\\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\\\\\",\\\\n    \\\\\\\"strength\\\\\\\": \\\\\\\"record-consistent\\\\\\\"\\\\n  },\\\\n  \\\\\\\"outline\\\\\\\": [],\\\\n  \\\\\\\"schema\\\\\\\": 1,\\\\n  \\\\\\\"selected_bytes\\\\\\\": 40,\\\\n  \\\\\\\"status\\\\\\\": \\\\\\\"impl/done\\\\\\\"\\\\n}\\\"}],\\\"isError\\\":false,\\\"structuredContent\\\":{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}}}\", 2740) = 2740"
+    },
+    {
+      "scope": "surface-process-2374101",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374101 write(1<pipe:[51802059]>, \"\\n\", 1 <unfinished ...>"
+    },
+    {
+      "scope": "2374077:library-record-only:6",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374077:library-record-only:6",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"record-only\", 11) = 11"
+    },
+    {
+      "scope": "2374077:library-record-only:6",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x7fe278bbf000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x7fe278b91000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278b95000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x7fe278b95000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278bb9000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x7fe278bb9000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278bbd000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x7fe278bbd000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x7fe278a6b000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278a7d000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x7fe278a7d000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278b1d000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x7fe278b1d000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278b8f000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x7fe278b8f000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x7fe278800000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278828000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x7fe278828000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe2789c0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x7fe2789c0000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278a0e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x7fe278a0e000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(0x7fe278a14000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fe278a14000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fe278a69000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374104 mprotect(0x7fe278a0e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374104 mprotect(0x7fe278b8f000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374104 mprotect(0x7fe278bbd000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374104 mprotect(0x57aafe7f2000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374104 mprotect(0x7fe278c18000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7fe278bd0000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374104 mprotect(0x7fe278bd0000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x7fe278bcf000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374104 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fe278bce000"
+    },
+    {
+      "scope": "surface-process-2374104",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374104 write(1<pipe:[51784311]>, \"{\\\"boundary\\\":\\\"selected descriptor/output map\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"unavailable_world\\\",\\\"message\\\":\\\"Prepared selected source is unavailable\\\",\\\"schema\\\":1}\\n\", 152) = 152"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374105 mprotect(0x74b169c0e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374105 mprotect(0x74b169e05000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374105 mprotect(0x74b169e33000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374105 mprotect(0x6441e7db5000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374105 mprotect(0x74b169e8e000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374105 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x74b169e46000"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374105 mprotect(0x74b169e46000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374105 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x74b169e45000"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374105 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x74b169e44000"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374105 write(1<pipe:[51776717]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374105",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374105 write(1<pipe:[51776717]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"structured preflight: Prepared selected source is unavailable (governed by spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT; fix: inspect the typed report and pass arguments matching the tool's inputSchema)\\\"}],\\\"isError\\\":true,\\\"structuredContent\\\":{\\\"boundary\\\":\\\"selected descriptor/output map\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"unavailable_world\\\",\\\"message\\\":\\\"Prepared selected source is unavailable\\\",\\\"schema\\\":1}}}\\n\", 500) = 500"
+    },
+    {
+      "scope": "2374077:library-payload-only-control:7",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374077:library-payload-only-control:7",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"payload-only-control\", 20) = 20"
+    },
+    {
+      "scope": "2374077:library-payload-only-control:7",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x7e7424aa5000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x7e7424a77000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e7424a7b000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x7e7424a7b000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e7424a9f000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x7e7424a9f000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e7424aa3000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x7e7424aa3000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x7e7424951000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e7424963000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x7e7424963000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e7424a03000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x7e7424a03000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e7424a75000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x7e7424a75000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x7e7424600000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e7424628000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x7e7424628000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e74247c0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x7e74247c0000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e742480e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x7e742480e000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(0x7e7424814000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7e7424814000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7e742494f000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374109 mprotect(0x7e742480e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374109 mprotect(0x7e7424a75000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374109 mprotect(0x7e7424aa3000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374109 mprotect(0x64829cfeb000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374109 mprotect(0x7e7424afe000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7e7424ab6000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374109 mprotect(0x7e7424ab6000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x7e7424ab5000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374109 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7e7424ab4000"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374109 write(1<pipe:[51806224]>, \"{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"\", 984) = 984"
+    },
+    {
+      "scope": "surface-process-2374109",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374109 write(1<pipe:[51806224]>, \"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}\\n\", 171 <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374110 mprotect(0x73fa3f20e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374110 mprotect(0x73fa3f45a000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374110 mprotect(0x73fa3f488000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374110 mprotect(0x64a8e895b000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374110 mprotect(0x73fa3f4e3000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374110 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x73fa3f49b000"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374110 mprotect(0x73fa3f49b000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374110 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x73fa3f49a000"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374110 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x73fa3f499000"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374110 write(1<pipe:[51595957]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374110 write(1<pipe:[51595957]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\n  \\\\\\\"address\\\\\\\": \\\\\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\\\\\",\\\\n  \\\\\\\"chunk\\\\\\\": {\\\\n    \\\\\\\"end\\\\\\\": 40,\\\\n    \\\\\\\"next_cursor\\\\\\\": null,\\\\n    \\\\\\\"offset\\\\\\\": 0,\\\\n    \\\\\\\"total\\\\\\\": 40\\\\n  },\\\\n  \\\\\\\"content\\\\\\\": \\\\\\\"@fact:ITEM Original. @status:impl/done\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\n  \\\\\\\"dictionary\\\\\\\": \\\\\\\"vibe-spec\\\\\\\",\\\\n  \\\\\\\"document_bytes\\\\\\\": 60,\\\\n  \\\\\\\"format\\\\\\\": \\\\\\\"md\\\\\\\",\\\\n  \\\\\\\"heading_chain\\\\\\\": [\\\\n    \\\\\\\"Document\\\\\\\"\\\\n  ],\\\\n  \\\\\\\"location\\\\\\\": {\\\\n    \\\\\\\"basis\\\\\\\": \\\\\\\"native-markdown\\\\\\\",\\\\n    \\\\\\\"line_end\\\\\\\": 3,\\\\n    \\\\\\\"line_start\\\\\\\": 3,\\\\n    \\\\\\\"path\\\\\\\": \\\\\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\\\\\"\\\\n  },\\\\n  \\\\\\\"mode\\\\\\\": \\\\\\\"read\\\\\\\",\\\\n  \\\\\\\"observation\\\\\\\": {\\\\n    \\\\\\\"captured_bytes\\\\\\\": 59,\\\\n    \\\\\\\"descriptor_identity\\\\\\\": \\\\\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\\\\\",\\\\n    \\\\\\\"document_hash\\\\\\\": \\\\\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\\\\\",\\\\n    \\\\\\\"encoding\\\\\\\": \\\\\\\"utf8\\\\\\\",\\\\n    \\\\\\\"manifest_hash\\\\\\\": \\\\\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\\\\\",\\\\n    \\\\\\\"representation_recipe\\\\\\\": \\\\\\\"specdoc/4+specdoc-selection/1+md\\\\\\\",\\\\n    \\\\\\\"resolution_hash\\\\\\\": \\\\\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\\\\\",\\\\n    \\\\\\\"semantic_hash\\\\\\\": \\\\\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\\\\\",\\\\n    \\\\\\\"source_hash\\\\\\\": \\\\\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\\\\\",\\\\n    \\\\\\\"strength\\\\\\\": \\\\\\\"record-consistent\\\\\\\"\\\\n  },\\\\n  \\\\\\\"outline\\\\\\\": [],\\\\n  \\\\\\\"schema\\\\\\\": 1,\\\\n  \\\\\\\"selected_bytes\\\\\\\": 40,\\\\n  \\\\\\\"status\\\\\\\": \\\\\\\"impl/done\\\\\\\"\\\\n}\\\"}],\\\"isError\\\":false,\\\"structuredContent\\\":{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}}}\", 2740) = 2740"
+    },
+    {
+      "scope": "surface-process-2374110",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374110 write(1<pipe:[51595957]>, \"\\n\", 1 <unfinished ...>"
+    },
+    {
+      "scope": "2374077:library-payload-only:8",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374077:library-payload-only:8",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"payload-only\", 12) = 12"
+    },
+    {
+      "scope": "2374077:library-payload-only:8",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x733756610000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x7337565e2000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x7337565e6000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x7337565e6000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x73375660a000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x73375660a000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x73375660e000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x73375660e000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x7337564bc000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x7337564ce000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x7337564ce000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x73375656e000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x73375656e000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x7337565e0000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x7337565e0000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x733756200000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x733756228000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x733756228000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x7337563c0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x7337563c0000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x73375640e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x73375640e000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(0x733756414000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x733756414000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7337564ba000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374114 mprotect(0x73375640e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374114 mprotect(0x7337565e0000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374114 mprotect(0x73375660e000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374114 mprotect(0x58ca896fe000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374114 mprotect(0x733756669000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x733756621000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374114 mprotect(0x733756621000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x733756620000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374114 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x73375661f000"
+    },
+    {
+      "scope": "surface-process-2374114",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374114 write(1<pipe:[51800294]>, \"{\\\"boundary\\\":\\\"selected descriptor/output map\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"unavailable_world\\\",\\\"message\\\":\\\"Prepared selected source is unavailable\\\",\\\"schema\\\":1}\\n\", 152) = 152"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374115 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x76ac82504000"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374115 mprotect(0x76ac8220e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374115 mprotect(0x76ac824c0000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374115 mprotect(0x76ac824ee000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374115 mprotect(0x5a039c39f000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374115 mprotect(0x76ac82549000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374115 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x76ac82501000"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374115 mprotect(0x76ac82501000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374115 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x76ac82500000"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374115 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x76ac824ff000"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374115 write(1<pipe:[51768587]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374115",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374115 write(1<pipe:[51768587]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"structured preflight: Prepared selected source is unavailable (governed by spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT; fix: inspect the typed report and pass arguments matching the tool's inputSchema)\\\"}],\\\"isError\\\":true,\\\"structuredContent\\\":{\\\"boundary\\\":\\\"selected descriptor/output map\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"unavailable_world\\\",\\\"message\\\":\\\"Prepared selected source is unavailable\\\",\\\"schema\\\":1}}}\\n\", 500) = 500"
+    },
+    {
+      "scope": "2374077:library-coordinated-control:9",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374077:library-coordinated-control:9",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"coordinated-control\", 19) = 19"
+    },
+    {
+      "scope": "2374077:library-coordinated-control:9",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x728c1bdad000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x728c1bd7f000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bd83000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x728c1bd83000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bda7000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x728c1bda7000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bdab000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x728c1bdab000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x728c1bc59000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bc6b000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x728c1bc6b000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bd0b000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x728c1bd0b000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bd7d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x728c1bd7d000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x728c1ba00000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1ba28000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x728c1ba28000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bbc0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x728c1bbc0000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bc0e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x728c1bc0e000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(0x728c1bc14000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x728c1bc14000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x728c1bc57000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374121 mprotect(0x728c1bc0e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374121 mprotect(0x728c1bd7d000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374121 mprotect(0x728c1bdab000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374121 mprotect(0x57dd028a1000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374121 mprotect(0x728c1be06000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x728c1bdbe000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374121 mprotect(0x728c1bdbe000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x728c1bdbd000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374121 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x728c1bdbc000"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374121 write(1<pipe:[51727674]>, \"{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"\", 984) = 984"
+    },
+    {
+      "scope": "surface-process-2374121",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374121 write(1<pipe:[51727674]>, \"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}\\n\", 171 <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374126 mprotect(0x7b8ebbe0e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374126 mprotect(0x7b8ebc10a000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374126 mprotect(0x7b8ebc138000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374126 mprotect(0x580f84177000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374126 mprotect(0x7b8ebc193000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374126 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7b8ebc14b000"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374126 mprotect(0x7b8ebc14b000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374126 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x7b8ebc14a000"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374126 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7b8ebc149000"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374126 write(1<pipe:[51806228]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374126 write(1<pipe:[51806228]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\n  \\\\\\\"address\\\\\\\": \\\\\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\\\\\",\\\\n  \\\\\\\"chunk\\\\\\\": {\\\\n    \\\\\\\"end\\\\\\\": 40,\\\\n    \\\\\\\"next_cursor\\\\\\\": null,\\\\n    \\\\\\\"offset\\\\\\\": 0,\\\\n    \\\\\\\"total\\\\\\\": 40\\\\n  },\\\\n  \\\\\\\"content\\\\\\\": \\\\\\\"@fact:ITEM Original. @status:impl/done\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\n  \\\\\\\"dictionary\\\\\\\": \\\\\\\"vibe-spec\\\\\\\",\\\\n  \\\\\\\"document_bytes\\\\\\\": 60,\\\\n  \\\\\\\"format\\\\\\\": \\\\\\\"md\\\\\\\",\\\\n  \\\\\\\"heading_chain\\\\\\\": [\\\\n    \\\\\\\"Document\\\\\\\"\\\\n  ],\\\\n  \\\\\\\"location\\\\\\\": {\\\\n    \\\\\\\"basis\\\\\\\": \\\\\\\"native-markdown\\\\\\\",\\\\n    \\\\\\\"line_end\\\\\\\": 3,\\\\n    \\\\\\\"line_start\\\\\\\": 3,\\\\n    \\\\\\\"path\\\\\\\": \\\\\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\\\\\"\\\\n  },\\\\n  \\\\\\\"mode\\\\\\\": \\\\\\\"read\\\\\\\",\\\\n  \\\\\\\"observation\\\\\\\": {\\\\n    \\\\\\\"captured_bytes\\\\\\\": 59,\\\\n    \\\\\\\"descriptor_identity\\\\\\\": \\\\\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\\\\\",\\\\n    \\\\\\\"document_hash\\\\\\\": \\\\\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\\\\\",\\\\n    \\\\\\\"encoding\\\\\\\": \\\\\\\"utf8\\\\\\\",\\\\n    \\\\\\\"manifest_hash\\\\\\\": \\\\\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\\\\\",\\\\n    \\\\\\\"representation_recipe\\\\\\\": \\\\\\\"specdoc/4+specdoc-selection/1+md\\\\\\\",\\\\n    \\\\\\\"resolution_hash\\\\\\\": \\\\\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\\\\\",\\\\n    \\\\\\\"semantic_hash\\\\\\\": \\\\\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\\\\\",\\\\n    \\\\\\\"source_hash\\\\\\\": \\\\\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\\\\\",\\\\n    \\\\\\\"strength\\\\\\\": \\\\\\\"record-consistent\\\\\\\"\\\\n  },\\\\n  \\\\\\\"outline\\\\\\\": [],\\\\n  \\\\\\\"schema\\\\\\\": 1,\\\\n  \\\\\\\"selected_bytes\\\\\\\": 40,\\\\n  \\\\\\\"status\\\\\\\": \\\\\\\"impl/done\\\\\\\"\\\\n}\\\"}],\\\"isError\\\":false,\\\"structuredContent\\\":{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM Original. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d\\\",\\\"source_hash\\\":\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}}}\", 2740) = 2740"
+    },
+    {
+      "scope": "surface-process-2374126",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374126 write(1<pipe:[51806228]>, \"\\n\", 1 <unfinished ...>"
+    },
+    {
+      "scope": "2374077:library-coordinated:10",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374077:library-coordinated:10",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"coordinated\", 11) = 11"
+    },
+    {
+      "scope": "2374077:library-coordinated:10",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x74f568943000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x74f56892f000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x74f568901000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f568905000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x74f568905000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f568929000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x74f568929000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f56892d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x74f56892d000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x74f5687db000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f5687ed000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x74f5687ed000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f56888d000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x74f56888d000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f5688ff000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x74f5688ff000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x74f568400000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f568428000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x74f568428000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f5685c0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x74f5685c0000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f56860e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x74f56860e000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(0x74f568614000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x74f568614000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x74f5687d9000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374137 mprotect(0x74f56860e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374137 mprotect(0x74f5688ff000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374137 mprotect(0x74f56892d000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374137 mprotect(0x6377db2eb000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374137 mprotect(0x74f568988000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x74f568940000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374137 mprotect(0x74f568940000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x74f56893f000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374137 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x74f56893e000"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374137 write(1<pipe:[51572501]>, \"{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM POISONED. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:7dda8d038e392206a2958786aa3a4d49296a7088629e4df66bb182a4b1079a2d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:745d3a2fa9a3227aed63970ae595beb96fc4a0070e6e1e887883fd6428ef7d09\\\",\\\"source_hash\\\":\\\"\", 984) = 984"
+    },
+    {
+      "scope": "surface-process-2374137",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374137 write(1<pipe:[51572501]>, \"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}\\n\", 171 <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374139 mprotect(0x71cbc160e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374139 mprotect(0x71cbc186b000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374139 mprotect(0x71cbc1899000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374139 mprotect(0x564ca0aa3000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374139 mprotect(0x71cbc18f4000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374139 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x71cbc18ac000"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374139 mprotect(0x71cbc18ac000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374139 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x71cbc18ab000"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374139 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x71cbc18aa000"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374139 write(1<pipe:[51794013]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374139 write(1<pipe:[51794013]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\n  \\\\\\\"address\\\\\\\": \\\\\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\\\\\",\\\\n  \\\\\\\"chunk\\\\\\\": {\\\\n    \\\\\\\"end\\\\\\\": 40,\\\\n    \\\\\\\"next_cursor\\\\\\\": null,\\\\n    \\\\\\\"offset\\\\\\\": 0,\\\\n    \\\\\\\"total\\\\\\\": 40\\\\n  },\\\\n  \\\\\\\"content\\\\\\\": \\\\\\\"@fact:ITEM POISONED. @status:impl/done\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\n  \\\\\\\"dictionary\\\\\\\": \\\\\\\"vibe-spec\\\\\\\",\\\\n  \\\\\\\"document_bytes\\\\\\\": 60,\\\\n  \\\\\\\"format\\\\\\\": \\\\\\\"md\\\\\\\",\\\\n  \\\\\\\"heading_chain\\\\\\\": [\\\\n    \\\\\\\"Document\\\\\\\"\\\\n  ],\\\\n  \\\\\\\"location\\\\\\\": {\\\\n    \\\\\\\"basis\\\\\\\": \\\\\\\"native-markdown\\\\\\\",\\\\n    \\\\\\\"line_end\\\\\\\": 3,\\\\n    \\\\\\\"line_start\\\\\\\": 3,\\\\n    \\\\\\\"path\\\\\\\": \\\\\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\\\\\"\\\\n  },\\\\n  \\\\\\\"mode\\\\\\\": \\\\\\\"read\\\\\\\",\\\\n  \\\\\\\"observation\\\\\\\": {\\\\n    \\\\\\\"captured_bytes\\\\\\\": 59,\\\\n    \\\\\\\"descriptor_identity\\\\\\\": \\\\\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\\\\\",\\\\n    \\\\\\\"document_hash\\\\\\\": \\\\\\\"sha256:7dda8d038e392206a2958786aa3a4d49296a7088629e4df66bb182a4b1079a2d\\\\\\\",\\\\n    \\\\\\\"encoding\\\\\\\": \\\\\\\"utf8\\\\\\\",\\\\n    \\\\\\\"manifest_hash\\\\\\\": \\\\\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\\\\\",\\\\n    \\\\\\\"representation_recipe\\\\\\\": \\\\\\\"specdoc/4+specdoc-selection/1+md\\\\\\\",\\\\n    \\\\\\\"resolution_hash\\\\\\\": \\\\\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\\\\\",\\\\n    \\\\\\\"semantic_hash\\\\\\\": \\\\\\\"sha256-specdoc-node/1:745d3a2fa9a3227aed63970ae595beb96fc4a0070e6e1e887883fd6428ef7d09\\\\\\\",\\\\n    \\\\\\\"source_hash\\\\\\\": \\\\\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\\\\\",\\\\n    \\\\\\\"strength\\\\\\\": \\\\\\\"record-consistent\\\\\\\"\\\\n  },\\\\n  \\\\\\\"outline\\\\\\\": [],\\\\n  \\\\\\\"schema\\\\\\\": 1,\\\\n  \\\\\\\"selected_bytes\\\\\\\": 40,\\\\n  \\\\\\\"status\\\\\\\": \\\\\\\"impl/done\\\\\\\"\\\\n}\\\"}],\\\"isError\\\":false,\\\"structuredContent\\\":{\\\"address\\\":\\\"spec://org.demo/dep@1.0.0/DOC#ITEM\\\",\\\"chunk\\\":{\\\"end\\\":40,\\\"next_cursor\\\":null,\\\"offset\\\":0,\\\"total\\\":40},\\\"content\\\":\\\"@fact:ITEM POISONED. @status:impl/done\\\\n\\\\n\\\",\\\"dictionary\\\":\\\"vibe-spec\\\",\\\"document_bytes\\\":60,\\\"format\\\":\\\"md\\\",\\\"heading_chain\\\":[\\\"Document\\\"],\\\"location\\\":{\\\"basis\\\":\\\"native-markdown\\\",\\\"line_end\\\":3,\\\"line_start\\\":3,\\\"path\\\":\\\"vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md\\\"},\\\"mode\\\":\\\"read\\\",\\\"observation\\\":{\\\"captured_bytes\\\":59,\\\"descriptor_identity\\\":\\\"org.demo/dep:vibevm/vibespecs/DOC.md\\\",\\\"document_hash\\\":\\\"sha256:7dda8d038e392206a2958786aa3a4d49296a7088629e4df66bb182a4b1079a2d\\\",\\\"encoding\\\":\\\"utf8\\\",\\\"manifest_hash\\\":\\\"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\\\",\\\"representation_recipe\\\":\\\"specdoc/4+specdoc-selection/1+md\\\",\\\"resolution_hash\\\":\\\"sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18\\\",\\\"semantic_hash\\\":\\\"sha256-specdoc-node/1:745d3a2fa9a3227aed63970ae595beb96fc4a0070e6e1e887883fd6428ef7d09\\\",\\\"source_hash\\\":\\\"sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1\\\",\\\"strength\\\":\\\"record-consistent\\\"},\\\"outline\\\":[],\\\"schema\\\":1,\\\"selected_bytes\\\":40,\\\"status\\\":\\\"impl/done\\\"}}}\", 2740) = 2740"
+    },
+    {
+      "scope": "surface-process-2374139",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374139 write(1<pipe:[51794013]>, \"\\n\", 1 <unfinished ...>"
+    },
+    {
+      "scope": "2374077:library-coordinated-pristine-expectation:11",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"E2_QUERY_END library-\", 21) = 21"
+    },
+    {
+      "scope": "2374077:library-coordinated-pristine-expectation:11",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"coordinated-pristine-expectation\", 32) = 32"
+    },
+    {
+      "scope": "2374077:library-coordinated-pristine-expectation:11",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374077 write(2<pipe:[51784283]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(NULL, 80267, PROT_READ, MAP_PRIVATE, 3</etc/ld.so.cache>, 0) = 0x740b6f119000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(NULL, 185256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0) = 0x740b6f0eb000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6f0ef000, 147456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x4000) = 0x740b6f0ef000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6f113000, 16384, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x28000) = 0x740b6f113000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6f117000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, 0x2c000) = 0x740b6f117000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(NULL, 1200152, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0) = 0x740b6efc5000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6efd7000, 655360, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x12000) = 0x740b6efd7000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6f077000, 466944, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0xb2000) = 0x740b6f077000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6f0e9000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libm.so.6>, 0x123000) = 0x740b6f0e9000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(NULL, 2231696, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0) = 0x740b6ec00000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6ec28000, 1671168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x28000) = 0x740b6ec28000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6edc0000, 319488, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x1c0000) = 0x740b6edc0000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6ee0e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3</usr/lib/x86_64-linux-gnu/libc.so.6>, 0x20e000) = 0x740b6ee0e000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(0x740b6ee14000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x740b6ee14000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x740b6efc3000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374143 mprotect(0x740b6ee0e000, 16384, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374143 mprotect(0x740b6f0e9000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374143 mprotect(0x740b6f117000, 4096, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374143 mprotect(0x58139cc02000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374143 mprotect(0x740b6f172000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x740b6f12a000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374143 mprotect(0x740b6f12a000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x740b6f129000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374143 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x740b6f128000"
+    },
+    {
+      "scope": "surface-process-2374143",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374143 write(1<pipe:[51792209]>, \"{\\\"boundary\\\":\\\"document expectation\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"stale_expectation\\\",\\\"message\\\":\\\"Expected identity differs from the retained observation\\\",\\\"schema\\\":1}\\n\", 158) = 158"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374145 mprotect(0x77d1ef00e000, 16384, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374145 mprotect(0x77d1ef2f1000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374145 mprotect(0x77d1ef31f000, 4096, PROT_READ <unfinished ...>"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374145 mprotect(0x576ad62ed000, 4063232, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374145 mprotect(0x77d1ef37a000, 8192, PROT_READ) = 0"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374145 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x77d1ef332000"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374145 mprotect(0x77d1ef332000, 4096, PROT_NONE) = 0"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374145 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_DROPPABLE|MAP_ANONYMOUS, -1, 0) = 0x77d1ef331000"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "anonymous/private mapping or nonwritable shared mapping",
+      "line": "2374145 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x77d1ef330000"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374145 write(1<pipe:[51792212]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"result\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"serverInfo\\\":{\\\"name\\\":\\\"vibe-mcp\\\",\\\"version\\\":\\\"1.1.0\\\"},\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":false}}}}\\n\", 165) = 165"
+    },
+    {
+      "scope": "surface-process-2374145",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374145 write(1<pipe:[51792212]>, \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"structured preflight: Expected identity differs from the retained observation (governed by spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-TOOL-PREFLIGHT; fix: inspect the typed report and pass arguments matching the tool's inputSchema)\\\"}],\\\"isError\\\":true,\\\"structuredContent\\\":{\\\"boundary\\\":\\\"document expectation\\\",\\\"candidates\\\":[],\\\"code\\\":\\\"stale_expectation\\\",\\\"message\\\":\\\"Expected identity differs from the retained observation\\\",\\\"schema\\\":1}}}\\n\", 522) = 522"
+    },
+    {
+      "scope": "2374147:mandatory-replay:12",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END mandatory-replay\\n\", 30) = 30"
+    },
+    {
+      "scope": "2374147:missing-strict-proof:13",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END missing-strict-proof\\n\", 34) = 34"
+    },
+    {
+      "scope": "2374147:original-strict-positive:14",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END original-strict-positive\\n\", 38) = 38"
+    },
+    {
+      "scope": "2374147:coordinated-proof-refusal:15",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END coordinated-proof-refusal\\n\", 39) = 39"
+    },
+    {
+      "scope": "2374147:poisoned-original-replay:16",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END poisoned-original-replay\\n\", 38) = 38"
+    },
+    {
+      "scope": "2374147:mandatory-replay:17",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END mandatory-replay\\n\", 30) = 30"
+    },
+    {
+      "scope": "2374147:missing-strict-proof:18",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END missing-strict-proof\\n\", 34) = 34"
+    },
+    {
+      "scope": "2374147:builtin-derivation:19",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END builtin-derivation\\n\", 32) = 32"
+    },
+    {
+      "scope": "2374147:coordinated-proof-refusal:20",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END coordinated-proof-refusal\\n\", 39) = 39"
+    },
+    {
+      "scope": "2374147:poisoned-original-replay:21",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374147 write(2<pipe:[51784283]>, \"E2_QUERY_END poisoned-original-replay\\n\", 38) = 38"
+    }
+  ],
+  "oracle_scope": "pathname + descriptor + memory/mapping + network attempts; failed calls included"
+}

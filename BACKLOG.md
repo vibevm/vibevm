@@ -2533,3 +2533,23 @@ structure, and it goes when the file does.
 | @fact:B231-SEVERITY **severity** | P2 — explicit semantic capability limitation of the selected projection, not corruption or an MVP launch gate. Normal VibeSpec MD/XML behavior and captured XML Doc semantic reading remain supported. |
 | @fact:B231-DISPOSITION **disposition** | deferred — if concrete product use needs semantic documentation from Markdown-target slots, define an explicit bounded captured Doc pivot/retention contract and publication recipe before implementation. Preserve selected authority and actual slot coordinates; no guessed reconstruction, hidden original-file lookup or silent materialization exception. Current D2 must verify truthful typed refusal and raw access instead. |
 | @fact:B231-FILED **filed by** | First Agent D2 contract review, 2026-10-12. |
+
+## B-232 — source-query surfaces have no requested strict proof grade {#b-232}
+
+| field | value |
+|---|---|
+| @fact:B232-WHAT **what** | Epoch-one CLI/MCP source requests expose expected hashes but no requested proof-strength field. Results remain explicitly observed/record-consistent; unsupported proof input refuses by shape. Genuine verified-original and builtin-derivation APIs already exist separately, but their stronger grade is not a selectable query-surface capability. |
+| @fact:B232-EVIDENCE **evidence** | Accepted D2 contracts and E2 actual service/CLI/MCP parity, separate source-proven/derivation positive and tamper refusal API cases; canonical M-01-E.2 receipt/manifest. Unsupported input is not counted as a genuine strict-grade query. |
+| @fact:B232-SEVERITY **severity** | P2 — explicit surface capability limitation, not an MVP or current campaign blocker. Existing expectation and proof-owner checks remain required. |
+| @fact:B232-DISPOSITION **disposition** | deferred — add an explicit versioned request/context contract for stronger proof only when a concrete consumer needs it. Reuse authenticated existing owners and bounded availability; preserve absence/refusal and do not derive authenticity from mutable rows. No schema expansion during E2. |
+| @fact:B232-FILED **filed by** | First Agent E2 acceptance, 2026-10-12. |
+
+## B-233 — Linux trace allowance ledger does not normalize all split calls {#b-233}
+
+| field | value |
+|---|---|
+| @fact:B233-WHAT **what** | The bounded E2 observer counts exact query intervals and surface exec-to-exit scopes, but its auxiliary ancestry/allowance parser does not fully join unfinished/resumed syscalls. Independent audit reconstructs456 scoped private/anonymous CLI mappings versus254 listed allowances; preexec child descriptor/chdir setup is outside scope. No domain effect was lost in the audited cases. |
+| @fact:B233-EVIDENCE **evidence** | E2 ASTRA-FINAL-COUNTER-AUDIT.json, raw full/complete oracle traces and final positive control4fd/3mapping/3network; canonical E2 receipt records the precise scope. All actual scope traces show no shared file mapping or query mutation/network. |
+| @fact:B233-SEVERITY **severity** | P3 — measurement-ledger completeness improvement, not a failed product purity case or new behavior gate. Root independent joined-call audit covers this subject. |
+| @fact:B233-DISPOSITION **disposition** | deferred — normalize split records before ledger/ancestry attribution when reusing the observer; preserve exact exec/query boundaries and calibrated descriptor/mapping/transport classification. Keep Linux observer an optional host test adapter, not a product dependency or OS security framework. |
+| @fact:B233-FILED **filed by** | First Agent E2 acceptance, 2026-10-12. |

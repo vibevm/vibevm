@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "strace",
+    "-f",
+    "-yy",
+    "-s",
+    "16384",
+    "-o",
+    "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-observed.strace",
+    "-e",
+    "trace=%file,%network,%process,write,writev",
+    "/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-cli/37dc2b91773137a8/out/m_01_e_2_cases-37dc2b91773137a8",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "cwd": "/tmp",
+  "exit": 0,
+  "env": {
+    "HOME": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-observed-observer-home",
+    "VIBE_SETTINGS": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-E2/cli-observed-observer-home/.vibe",
+    "VIBE_NO_DEFAULT_REGISTRY": "1",
+    "VIBE_NO_PROGRESS": "1"
+  },
+  "binary_sha256": "b76e80f7a75a3e82a9b0657624e97d102af937d3d1e29721c44e9e74f72e421f"
+}

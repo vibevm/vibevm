@@ -1,0 +1,124 @@
+{
+  "label": "mcp-full-oracle",
+  "linux_only": true,
+  "complete_query_intervals": 5,
+  "whole_surface_processes": 0,
+  "scopes": {
+    "2374010:mcp-missing:0": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374011:mcp-repeat-a:1": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374011:mcp-repeat-b:2": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374011:mcp-stale:3": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2374011:mcp-unsupported-proof:4": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    }
+  },
+  "mutation_or_network_attempts": [],
+  "trace_sha256": "8b954368661590a366e3990dc091b6d364d75db00e7f7fa8e9375ac180d62c0a",
+  "runtime_exit": 0,
+  "allowances": [
+    {
+      "scope": "2374010:mcp-missing:0",
+      "reason": "private/anonymous or nonwritable protection operation",
+      "line": "2374010 mprotect(0x70ddd8021000, 16384, PROT_READ|PROT_WRITE) = 0"
+    },
+    {
+      "scope": "2374010:mcp-missing:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374010 write(2<pipe:[51784280]>, \"E2_QUERY_END mcp-\", 17) = 17"
+    },
+    {
+      "scope": "2374010:mcp-missing:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374010 write(2<pipe:[51784280]>, \"missing\", 7) = 7"
+    },
+    {
+      "scope": "2374010:mcp-missing:0",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374010 write(2<pipe:[51784280]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2374011:mcp-repeat-a:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"E2_QUERY_END mcp-\", 17) = 17"
+    },
+    {
+      "scope": "2374011:mcp-repeat-a:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"repeat-a\", 8) = 8"
+    },
+    {
+      "scope": "2374011:mcp-repeat-a:1",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2374011:mcp-repeat-b:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"E2_QUERY_END mcp-\", 17) = 17"
+    },
+    {
+      "scope": "2374011:mcp-repeat-b:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"repeat-b\", 8) = 8"
+    },
+    {
+      "scope": "2374011:mcp-repeat-b:2",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2374011:mcp-stale:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"E2_QUERY_END mcp-\", 17) = 17"
+    },
+    {
+      "scope": "2374011:mcp-stale:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"stale\", 5) = 5"
+    },
+    {
+      "scope": "2374011:mcp-stale:3",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"\\n\", 1) = 1"
+    },
+    {
+      "scope": "2374011:mcp-unsupported-proof:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"E2_QUERY_END mcp-\", 17) = 17"
+    },
+    {
+      "scope": "2374011:mcp-unsupported-proof:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"unsupported-proof\", 17) = 17"
+    },
+    {
+      "scope": "2374011:mcp-unsupported-proof:4",
+      "reason": "decoded transport/anonymous-control descriptor",
+      "line": "2374011 write(2<pipe:[51784280]>, \"\\n\", 1) = 1"
+    }
+  ],
+  "oracle_scope": "pathname + descriptor + memory/mapping + network attempts; failed calls included"
+}

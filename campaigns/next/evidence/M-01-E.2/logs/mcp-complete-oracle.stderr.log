@@ -1,0 +1,10 @@
+E2_QUERY_BEGIN mcp-missing
+E2_QUERY_END mcp-missing
+E2_QUERY_BEGIN mcp-repeat-a
+E2_QUERY_END mcp-repeat-a
+E2_QUERY_BEGIN mcp-repeat-b
+E2_QUERY_END mcp-repeat-b
+E2_QUERY_BEGIN mcp-stale
+E2_QUERY_END mcp-stale
+E2_QUERY_BEGIN mcp-unsupported-proof
+E2_QUERY_END mcp-unsupported-proof

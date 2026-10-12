@@ -178,7 +178,7 @@ fn copied_unconverted_refuses_structured_query_without_losing_raw_bytes() {
     assert_eq!(std::fs::read(host.join("vibe.lock")).unwrap(), before_lock);
 }
 
-fn installed(format: vibe_core::manifest::SpecFormat) -> (tempfile::TempDir, PathBuf) {
+pub(super) fn installed(format: vibe_core::manifest::SpecFormat) -> (tempfile::TempDir, PathBuf) {
     use vibe_core::{ContentHash, manifest::Lockfile};
     let root = tempfile::tempdir().unwrap();
     let host = root.path().join("host");

@@ -54,3 +54,7 @@ mod m_01_d_2_cases {
         assert!(!root.path().join("unused").exists());
     }
 }
+
+#[cfg(test)]
+#[path = "read_spec/m_01_e_2_cases.rs"]
+mod m_01_e_2_cases;

@@ -1,0 +1,878 @@
+[
+  {
+    "case": "success",
+    "service": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "cli": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "mcp": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "repeat",
+    "service": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "cli": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "mcp": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "stale-document",
+    "service": {
+      "boundary": "document expectation",
+      "candidates": [],
+      "code": "stale_expectation",
+      "message": "Expected identity differs from the retained observation",
+      "schema": 1
+    },
+    "cli": {
+      "boundary": "document expectation",
+      "candidates": [],
+      "code": "stale_expectation",
+      "message": "Expected identity differs from the retained observation",
+      "schema": 1
+    },
+    "mcp": {
+      "boundary": "document expectation",
+      "candidates": [],
+      "code": "stale_expectation",
+      "message": "Expected identity differs from the retained observation",
+      "schema": 1
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "unsupported-strict-grade",
+    "service": {
+      "boundary": "request shape",
+      "candidates": [],
+      "code": "invalid_request",
+      "message": "Source request does not match its registered contract",
+      "schema": 1
+    },
+    "cli": {
+      "boundary": "request shape",
+      "candidates": [],
+      "code": "invalid_request",
+      "message": "Source request does not match its registered contract",
+      "schema": 1
+    },
+    "mcp": {
+      "boundary": "request shape",
+      "candidates": [],
+      "code": "invalid_request",
+      "message": "Source request does not match its registered contract",
+      "schema": 1
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "missing-capture",
+    "service": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "cli": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "mcp": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "record-only-control",
+    "service": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "cli": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "mcp": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "record-only",
+    "service": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "cli": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "mcp": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "payload-only-control",
+    "service": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "cli": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "mcp": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "payload-only",
+    "service": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "cli": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "mcp": {
+      "boundary": "selected descriptor/output map",
+      "candidates": [],
+      "code": "unavailable_world",
+      "message": "Prepared selected source is unavailable",
+      "schema": 1
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "coordinated-control",
+    "service": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "cli": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "mcp": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM Original. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:1f8485ac2da11d192aad6d51262489336ae4720f838775110b32dde07596ac4d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:001f95fc215a56a04318fa72b0c330817aaccc26aeda2b67b06c86720d437d0d",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "coordinated",
+    "service": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM POISONED. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:7dda8d038e392206a2958786aa3a4d49296a7088629e4df66bb182a4b1079a2d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:745d3a2fa9a3227aed63970ae595beb96fc4a0070e6e1e887883fd6428ef7d09",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "cli": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM POISONED. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:7dda8d038e392206a2958786aa3a4d49296a7088629e4df66bb182a4b1079a2d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:745d3a2fa9a3227aed63970ae595beb96fc4a0070e6e1e887883fd6428ef7d09",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "mcp": {
+      "address": "spec://org.demo/dep@1.0.0/DOC#ITEM",
+      "chunk": {
+        "end": 40,
+        "next_cursor": null,
+        "offset": 0,
+        "total": 40
+      },
+      "content": "@fact:ITEM POISONED. @status:impl/done\n\n",
+      "dictionary": "vibe-spec",
+      "document_bytes": 60,
+      "format": "md",
+      "heading_chain": [
+        "Document"
+      ],
+      "location": {
+        "basis": "native-markdown",
+        "line_end": 3,
+        "line_start": 3,
+        "path": "vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md"
+      },
+      "mode": "read",
+      "observation": {
+        "captured_bytes": 59,
+        "descriptor_identity": "org.demo/dep:vibevm/vibespecs/DOC.md",
+        "document_hash": "sha256:7dda8d038e392206a2958786aa3a4d49296a7088629e4df66bb182a4b1079a2d",
+        "encoding": "utf8",
+        "manifest_hash": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "representation_recipe": "specdoc/4+specdoc-selection/1+md",
+        "resolution_hash": "sha256-query-resolution/1:8cf0b36f04e3de4796aa2a2f0a652e49fd279c13dadce7d7598b6c7842f42c18",
+        "semantic_hash": "sha256-specdoc-node/1:745d3a2fa9a3227aed63970ae595beb96fc4a0070e6e1e887883fd6428ef7d09",
+        "source_hash": "sha256:01f12fb9b145cfa65ca68772b2d751dad5b03b342f4d54de324504206e6710a1",
+        "strength": "record-consistent"
+      },
+      "outline": [],
+      "schema": 1,
+      "selected_bytes": 40,
+      "status": "impl/done"
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  },
+  {
+    "case": "coordinated-pristine-expectation",
+    "service": {
+      "boundary": "document expectation",
+      "candidates": [],
+      "code": "stale_expectation",
+      "message": "Expected identity differs from the retained observation",
+      "schema": 1
+    },
+    "cli": {
+      "boundary": "document expectation",
+      "candidates": [],
+      "code": "stale_expectation",
+      "message": "Expected identity differs from the retained observation",
+      "schema": 1
+    },
+    "mcp": {
+      "boundary": "document expectation",
+      "candidates": [],
+      "code": "stale_expectation",
+      "message": "Expected identity differs from the retained observation",
+      "schema": 1
+    },
+    "source": "full descriptor/memory oracle raw stdout writes"
+  }
+]

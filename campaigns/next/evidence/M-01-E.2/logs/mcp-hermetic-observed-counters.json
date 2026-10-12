@@ -1,0 +1,41 @@
+{
+  "label": "mcp-hermetic-observed",
+  "linux_only": true,
+  "complete_query_intervals": 5,
+  "whole_surface_processes": 0,
+  "scopes": {
+    "2348091:mcp-missing:0": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2348092:mcp-repeat-a:1": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2348092:mcp-repeat-b:2": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2348092:mcp-stale:3": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    },
+    "2348092:mcp-unsupported-proof:4": {
+      "network_attempts": 0,
+      "filesystem_mutation_attempts": 0,
+      "process_spawn_attempts": 0,
+      "kind": "explicit query interval"
+    }
+  },
+  "mutation_or_network_attempts": [],
+  "trace_sha256": "373731005b091c008741095714abace56c87ac752bc3d274629ca5972c21d1f5",
+  "runtime_exit": 0
+}

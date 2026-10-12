@@ -1,0 +1,80 @@
+{
+  "status": "candidate_pending_root_acceptance",
+  "head": "8187ba0dfc13fff26eacad4dc84f70354556ab64",
+  "source_hashes": [
+    {
+      "path": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "sha256": "c8ea7024bcb4bcadc5578a2ccd93894f22ebf78118370b96d76dabfc31091028",
+      "lines": 60,
+      "bytes": 25672
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+      "sha256": "76b699b2cb21c313f16bde8d5edb1f1fef270925cf3ffd23440cb3ddb7f13b9c",
+      "lines": 574,
+      "bytes": 22800
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_d_2_cases.rs",
+      "sha256": "a5e53134517b3b455aaeabdba40411912a98b94ef2bcda3bb3469047bb872008",
+      "lines": 469,
+      "bytes": 22870
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_e_2_cases.rs",
+      "sha256": "d747ce0914caba29a2c20fc0c8d3d7adc48d8c677abf3d714ed17ba0e6b6087d",
+      "lines": 154,
+      "bytes": 5593
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/read_spec.rs",
+      "sha256": "db0d5f9980f7975f908d6255bd8a97ff20cfb86e08dad12214120d727c743d5e",
+      "lines": 60,
+      "bytes": 3198
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/read_spec/m_01_e_2_cases.rs",
+      "sha256": "6b427e997c37abb3af1dce99cf6ee2bfae07727bcbe8745a9a64a1d369d317e6",
+      "lines": 102,
+      "bytes": 4338
+    },
+    {
+      "path": "crates/vibe-cli/tests/m_01_e_2_cases.rs",
+      "sha256": "e9ab56a74b3883e29f6c55032b1b473164e3cda7ad8015dd9a89a74a5920d443",
+      "lines": 165,
+      "bytes": 6178
+    },
+    {
+      "path": "crates/vibe-cli/tests/m_01_e_2_cases/fixture.rs",
+      "sha256": "2f537a74637d94168c163aa0d8e713ed06902ad6e61fda4e992e4514342ed70f",
+      "lines": 200,
+      "bytes": 7473
+    },
+    {
+      "path": "crates/vibe-cli/tests/m_01_e_2_cases/proof.rs",
+      "sha256": "2f87dddca5ac012c8a9bd4cfefcf81e2f20dcb1ed09c5c5b99ed6771f254074c",
+      "lines": 144,
+      "bytes": 5994
+    }
+  ],
+  "root_reported_specmap": {
+    "exit": 0,
+    "old_orphans": 138,
+    "host_unresolved": 0
+  },
+  "positive_control_final": {
+    "fd": 4,
+    "mapping": 3,
+    "network": 3,
+    "trace_sha256": "ef2cf8f3c61ae3762b15cd6d5e44cccccf13570209a73526c6b4509b12bccdc4"
+  },
+  "audit_sha256": "9c671a465f344842270eff0079627cba5dfa84ae9ba360a3ac22b306c75cc115",
+  "query_intervals": [
+    8,
+    5,
+    22
+  ],
+  "surface_boundary": "24 observed initial vibe execs through exit; excludes preexec72dup2/24chdir",
+  "snapshot_pairs": 27,
+  "new_cases": 9
+}

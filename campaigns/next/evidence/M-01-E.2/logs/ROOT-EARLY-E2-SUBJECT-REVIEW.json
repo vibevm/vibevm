@@ -1,0 +1,12 @@
+{
+  "library_cases_passed": 4,
+  "ignored": 0,
+  "library_log_sha256": "7ab3103dfdf51c9e248a866541e43552a7ddf6d1f6ddeb7e84f53c952bf05c70",
+  "reviewed_subjects": {
+    "crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_e_2_cases.rs": "89856bc1343c9baef378fdfbfcd87474fb5696e64d51898b30614b8b9d68d855",
+    "crates/vibe-cli/tests/m_01_e_2_cases.rs": "69406369fcec972b4b36e9f53a91e1bdd54be2f282134bc5f0c1e07e6c327628",
+    "crates/vibe-cli/tests/m_01_e_2_cases/proof.rs": "15f1f5ce8ec8ae445d2e0db8ec66011a05f0010f0c19a8ec45cf9674b7979199"
+  },
+  "inspection": "Repeated prepared queries, missing output, payload poison and3expectation roles with snapshots; process tests keep coordinated tamper record-consistent and require pristine expectation refusal; genuine replay/derivation API separate from unsupported shape input",
+  "remaining": "Actual integration results, wider fd/mapping trace oracle/control and final hash closure not proved yet"
+}
