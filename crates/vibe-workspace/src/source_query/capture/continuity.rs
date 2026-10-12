@@ -20,7 +20,10 @@ use super::{BoundSourceInputs, CaptureOwner, PreparedOwnerCapture, validate_snap
 use crate::source_query::SourceQueryUnavailable;
 
 mod membership;
-pub use membership::{CapturedSourceFile, RecordedOutput, SourceMembershipIndex, SourceStrength};
+pub use membership::{
+    CanonicalNodeIdentity, CapturedSourceFile, MaterializedVibeMedia, RecordedOutput,
+    SourceMembershipIndex, SourceStrength, canonical_node_of_output, native_xml_range_of_output,
+};
 
 const MANIFEST_CAP: usize = 1024 * 1024;
 const LOCK_CAP: usize = 8 * 1024 * 1024;
@@ -65,6 +68,12 @@ pub struct WitnessedSourceWorld {
 }
 
 impl WitnessedSourceWorld {
+    /// Root of the retained consumer workspace, for a selected output's
+    /// root-relative display path. It is not a new filesystem read grant.
+    pub fn workspace_root(&self) -> &Path {
+        &self.workspace_root
+    }
+
     /// Join an already-selected node and epoch to caller-prepared snapshots.
     /// No provider, workspace discovery or filesystem read occurs here.
     pub fn from_prepared_node(

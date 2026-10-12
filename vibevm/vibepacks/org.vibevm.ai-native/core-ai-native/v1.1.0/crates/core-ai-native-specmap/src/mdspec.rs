@@ -197,6 +197,8 @@ fn segment_block_facts(
             anchor: id,
             heading,
             contentHash: content_hash(&span_text),
+            canonicalNode: None,
+            materializedLocator: None,
             line: line_no,
             kind: None,
             revision: None,
@@ -262,6 +264,49 @@ pub fn canonical_doc_path(file: &str) -> String {
 /// [`parse_units_with`] carrying the live config.
 pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, Vec<Warning>) {
     parse_units_with(file, text, namespace, 0, SectionGrain::Leaf)
+}
+
+/// Native line range of one addressed Markdown node in observed bytes. The
+/// section end follows the same heading/fence rule as `parse_units`; a fact
+/// range covers its paragraph/item text, not a projected XML position.
+pub fn native_anchor_range(text: &str, anchor: &str) -> Result<Option<(u32, u32)>, String> {
+    let (units, warnings) = parse_units("spec/DOC.md", text, "materialized");
+    if warnings
+        .iter()
+        .any(|warning| warning.code == "duplicate-anchor")
+    {
+        return Err("duplicate materialized anchor".into());
+    }
+    let mut selected = units.iter().filter(|unit| unit.anchor == anchor);
+    let Some(unit) = selected.next() else {
+        return Ok(None);
+    };
+    if selected.next().is_some() {
+        return Err("duplicate materialized anchor".into());
+    }
+    let lines = text.lines().collect::<Vec<_>>();
+    let start = usize::try_from(unit.line - 1).map_err(|_| "materialized line overflow")?;
+    let fenced = fence_mask(&lines);
+    let mut end = start + 1;
+    if let Some((level, _, _)) = parse_heading(lines[start]) {
+        while end < lines.len() {
+            if !fenced[end] && heading_level(lines[end]).is_some_and(|candidate| candidate <= level)
+            {
+                break;
+            }
+            end += 1;
+        }
+    } else {
+        while end < lines.len()
+            && !fenced[end]
+            && !lines[end].trim().is_empty()
+            && heading_level(lines[end]).is_none()
+            && list_item_content(lines[end]).is_none()
+        {
+            end += 1;
+        }
+    }
+    Ok(Some((unit.line, end as u32)))
 }
 
 /// [`parse_units`] carrying the `long-section` quality policy.
@@ -416,6 +461,8 @@ fn parse_units_with(
             anchor,
             heading,
             contentHash: content_hash(&span_text),
+            canonicalNode: None,
+            materializedLocator: None,
             line: heading_line_no,
             kind: kind.map(Box::new),
             revision: revision.map(Box::new),

@@ -123,10 +123,109 @@ pub fn from_xml_with(xml: &str, vocab: Vocabulary) -> Result<SpecDoc> {
     Ok(doc)
 }
 
+/// Native inclusive line span of one anchor in a document accepted by this
+/// exact vocabulary. The dialect frontend validates the whole document first;
+/// this pass only attaches its already-collected event positions to the same
+/// title/section/fact anchors, including Doc-only blocks within sections.
+pub fn native_anchor_range_with(
+    xml: &str,
+    vocab: Vocabulary,
+    anchor: &str,
+) -> Result<Option<(u32, u32)>> {
+    from_xml_with(xml, vocab)?;
+    let events = Parser::collect(xml, vocab)?;
+    let mut stack: Vec<(String, Option<String>, usize)> = Vec::new();
+    let mut matches = Vec::new();
+    let mut title_start = None;
+    let mut root_end = None;
+    for ((event, pos), start_pos) in events.evs.iter().zip(&events.poss).zip(&events.starts) {
+        match event {
+            Ev::Start(name, attrs) => {
+                stack.push((name.clone(), event_anchor(name, attrs), start_pos.0));
+            }
+            Ev::Empty(name, attrs) => {
+                if event_anchor(name, attrs).as_deref() == Some(anchor) {
+                    if name == "title" {
+                        title_start = Some(start_pos.0);
+                    } else {
+                        matches.push((start_pos.0, pos.0));
+                    }
+                }
+            }
+            Ev::End(name) => {
+                let Some((_, id, start)) = stack.pop() else {
+                    continue;
+                };
+                if name == "spec" {
+                    root_end = Some(pos.0);
+                }
+                if id.as_deref() == Some(anchor) {
+                    if name == "title" {
+                        title_start = Some(start);
+                    } else {
+                        matches.push((start, pos.0));
+                    }
+                }
+            }
+            Ev::Text(_) | Ev::CData(_) => {}
+        }
+    }
+    if let (Some(start), Some(end)) = (title_start, root_end) {
+        matches.push((start, end));
+    }
+    if matches.len() > 1 {
+        return Err(Error::at(0, "duplicate materialized anchor"));
+    }
+    matches
+        .pop()
+        .map(|(start, end)| {
+            Ok((
+                u32::try_from(start).map_err(|_| Error::at(0, "native line overflow"))?,
+                u32::try_from(end).map_err(|_| Error::at(0, "native line overflow"))?,
+            ))
+        })
+        .transpose()
+}
+
+fn event_anchor(name: &str, attrs: &[(String, String)]) -> Option<String> {
+    let attr = |key: &str| {
+        attrs
+            .iter()
+            .find(|(name, _)| name == key)
+            .map(|(_, value)| value.clone())
+    };
+    match name {
+        "title" | "section" | "fact" => attr("id"),
+        _ if attr("title").is_some() && crate::xml_out::anchor_is_elementable(name) => {
+            Some(name.to_owned())
+        }
+        _ if attr("fact").as_deref() == Some("true") => Some(name.to_owned()),
+        _ => None,
+    }
+}
+
+fn push_text_with_start(
+    evs: &mut Vec<Ev>,
+    poss: &mut Vec<(usize, usize)>,
+    starts: &mut Vec<(usize, usize)>,
+    text: String,
+    at: (usize, usize),
+    start: (usize, usize),
+) {
+    let before = evs.len();
+    push_text(evs, text, poss, at);
+    if evs.len() > before {
+        starts.push(start);
+    }
+}
+
 pub(super) struct Parser<'a> {
     pub(super) evs: Vec<Ev>,
     /// (1-based line, byte column) per event, parallel to `evs`.
     pub(super) poss: Vec<(usize, usize)>,
+    /// Position before each collected event. `poss` keeps its historical
+    /// after-event diagnostic position; native ranges use this first line.
+    starts: Vec<(usize, usize)>,
     pub(super) i: usize,
     /// Which element set this reader has open (##DOC-VOCAB-BY-KIND).
     pub(super) vocab: Vocabulary,
@@ -140,7 +239,9 @@ impl<'a> Parser<'a> {
         let mut reader = Reader::from_str(xml);
         let mut evs: Vec<Ev> = Vec::new();
         let mut poss: Vec<(usize, usize)> = Vec::new();
+        let mut starts: Vec<(usize, usize)> = Vec::new();
         loop {
+            let start = pos_of(xml, reader.buffer_position() as usize);
             let ev = reader.read_event().map_err(|e| {
                 let at = pos_of(xml, reader.error_position() as usize);
                 Error::at(at.0, format!("ill-formed XML: {e}"))
@@ -165,23 +266,33 @@ impl<'a> Parser<'a> {
                     let attrs = decode_attrs(&e, at)?;
                     evs.push(Ev::Start(name_of(&e), attrs));
                     poss.push(at);
+                    starts.push(start);
                 }
                 Event::End(e) => {
                     evs.push(Ev::End(
                         String::from_utf8_lossy(e.name().as_ref()).into_owned(),
                     ));
                     poss.push(at);
+                    starts.push(start);
                 }
                 Event::Empty(e) => {
                     let attrs = decode_attrs(&e, at)?;
                     evs.push(Ev::Empty(name_of(&e), attrs));
                     poss.push(at);
+                    starts.push(start);
                 }
                 Event::Text(t) => {
                     let s = t
                         .decode()
                         .map_err(|e| Error::at(at.0, format!("undecodable text content: {e}")))?;
-                    push_text(&mut evs, s.into_owned(), &mut poss, at);
+                    push_text_with_start(
+                        &mut evs,
+                        &mut poss,
+                        &mut starts,
+                        s.into_owned(),
+                        at,
+                        start,
+                    );
                 }
                 Event::CData(c) => {
                     let s = c
@@ -189,10 +300,18 @@ impl<'a> Parser<'a> {
                         .map_err(|e| Error::at(at.0, format!("undecodable CDATA content: {e}")))?;
                     evs.push(Ev::CData(s.into_owned()));
                     poss.push(at);
+                    starts.push(start);
                 }
                 Event::GeneralRef(r) => {
                     if let Ok(Some(ch)) = r.resolve_char_ref() {
-                        push_text(&mut evs, ch.to_string(), &mut poss, at);
+                        push_text_with_start(
+                            &mut evs,
+                            &mut poss,
+                            &mut starts,
+                            ch.to_string(),
+                            at,
+                            start,
+                        );
                         continue;
                     }
                     let name = r.decode().unwrap_or_default().into_owned();
@@ -205,7 +324,14 @@ impl<'a> Parser<'a> {
                         _ => None,
                     };
                     match resolved {
-                        Some(ch) => push_text(&mut evs, ch.to_string(), &mut poss, at),
+                        Some(ch) => push_text_with_start(
+                            &mut evs,
+                            &mut poss,
+                            &mut starts,
+                            ch.to_string(),
+                            at,
+                            start,
+                        ),
                         None => {
                             return Err(Error::at(
                                 at.0,
@@ -222,6 +348,7 @@ impl<'a> Parser<'a> {
         Ok(Parser {
             evs,
             poss,
+            starts,
             i: 0,
             vocab,
             ids: Vec::new(),

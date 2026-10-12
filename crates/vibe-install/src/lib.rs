@@ -43,7 +43,10 @@ mod lifecycle;
 mod plan;
 mod record;
 mod slot_verify;
-pub use slot_verify::{VerifiedSourceMembership, source_strength, verify_original_source_capture};
+pub use slot_verify::{
+    DerivedMaterializationProof, PreparedPackageOverlay, VerifiedSourceMembership, source_strength,
+    verify_original_source_capture,
+};
 mod visibility_projection;
 
 pub use apply::{

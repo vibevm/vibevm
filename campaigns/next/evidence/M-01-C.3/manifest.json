@@ -1,0 +1,505 @@
+{
+  "schema": 1,
+  "task": "M-01-C.3",
+  "base_commit": "4e1386dec0a085a84ae8c895ecd30019c5cd92df",
+  "raw_logs": [
+    {
+      "name": "canonical-core-fmt.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/canonical-core-fmt.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "repository_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "name": "full-workspace-fmt-baseline.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/full-workspace-fmt-baseline.log",
+      "raw_sha256": "4a5b44295b2eaa1c0b343c198b651dce6a39e08da0d41788efa423557600d0c3",
+      "repository_sha256": "47b364fb02bac65489a7cd8989d8f6afd542a767d0362e33c379f85535eb9265"
+    },
+    {
+      "name": "host-package-fmt-after-path.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/host-package-fmt-after-path.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "repository_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "name": "host-package-fmt-corrections.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/host-package-fmt-corrections.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "repository_sha256": null
+    },
+    {
+      "name": "host-package-fmt-final-corrections.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/host-package-fmt-final-corrections.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "repository_sha256": null
+    },
+    {
+      "name": "host-package-fmt.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/host-package-fmt.log",
+      "raw_sha256": "56a3c543c1a4c424d0125a361c5d9245dc9f19fd961e1d2d79523612fc94f5d3",
+      "repository_sha256": null
+    },
+    {
+      "name": "install-c2-slot-format-compat.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-c2-slot-format-compat.log",
+      "raw_sha256": "8aae2a81c36fc635d8edf05aa945875d1490dd271f4ffb9093c432b678867f0b",
+      "repository_sha256": "0a9e92fefacee0ead1ff84e5a01e42569536a716c41a20fc343e654d190bc311"
+    },
+    {
+      "name": "install-included-owner-compat.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-included-owner-compat.log",
+      "raw_sha256": "8f0ce1e1de0460334c864bd032fe4214637b260907018066d9bb299411e72652",
+      "repository_sha256": "f18b29a7918555b4acb2aa76e84a7e434f5334430232c08965d53f9f0baf9565"
+    },
+    {
+      "name": "install-package-fmt-after-xml.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-package-fmt-after-xml.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "repository_sha256": null
+    },
+    {
+      "name": "install-proof-after-media-fixed.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-proof-after-media-fixed.log",
+      "raw_sha256": "3a24baa21aa9a2801979fc1017ec3cab73fd9b3eac416ca77724a2dbd70b8c4d",
+      "repository_sha256": "c551d9f296eb43bfb85437c6f741961884e4206ef74c4d31936f40a5560ecb00"
+    },
+    {
+      "name": "install-proof-after-media.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-proof-after-media.log",
+      "raw_sha256": "8fa8b01aa6af9b88a3f544bb7edaedb3e349869c119f6652674b3dfa83519811",
+      "repository_sha256": null
+    },
+    {
+      "name": "install-proof-check.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-proof-check.log",
+      "raw_sha256": "dc3068273f96f1315205ec7ab5ba158d2d8fdfddb44938a30ed0b48be607d687",
+      "repository_sha256": null
+    },
+    {
+      "name": "install-proof-matrix-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-proof-matrix-final.log",
+      "raw_sha256": "f077a52514973727fe597adbf1b60e0c89a59009a06e6e139d2f1b2a92842b63",
+      "repository_sha256": null
+    },
+    {
+      "name": "install-proof-matrix-initial.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-proof-matrix-initial.log",
+      "raw_sha256": "4c2c5b0ea0d06f327d7c6581811373e69791a15fde630b2d08564b2d5e120085",
+      "repository_sha256": "4c2c5b0ea0d06f327d7c6581811373e69791a15fde630b2d08564b2d5e120085"
+    },
+    {
+      "name": "install-proof-matrix-layout-fixed.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-proof-matrix-layout-fixed.log",
+      "raw_sha256": "3f93fd833dbb653d11cdd7c3edf3d1ef0b1401daa602d49d305ce7cd58245cff",
+      "repository_sha256": null
+    },
+    {
+      "name": "install-proof-matrix-seven.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-proof-matrix-seven.log",
+      "raw_sha256": "4ba123523557e64dee93ed89da30ea8f663352d0e4501659eb5e2a1e19041910",
+      "repository_sha256": null
+    },
+    {
+      "name": "install-proof-matrix-six.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-proof-matrix-six.log",
+      "raw_sha256": "34addb23aaab49c122dbdaa1a409b350090f733839cf17766d4e33544465d6c6",
+      "repository_sha256": null
+    },
+    {
+      "name": "install-xml-original-initial.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-xml-original-initial.log",
+      "raw_sha256": "a42a9bc443a821dc7481e95b33f4c45d3be029a819849cdb71767ffa51acab08",
+      "repository_sha256": "a42a9bc443a821dc7481e95b33f4c45d3be029a819849cdb71767ffa51acab08"
+    },
+    {
+      "name": "install-xml-original-valid.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/install-xml-original-valid.log",
+      "raw_sha256": "6e62b83c1388c9a95a2b267c48766cfd3df6e198674ef3fc4d76f115706529f8",
+      "repository_sha256": null
+    },
+    {
+      "name": "root-scope-fmt.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/root-scope-fmt.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "repository_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "name": "root-specmap-current.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/root-specmap-current.log",
+      "raw_sha256": "2322c8eecf5144c2c5f58893b5ba10e5ff2fb99c2dffc12c5f3169114acc1dce",
+      "repository_sha256": null
+    },
+    {
+      "name": "root-specmap-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/root-specmap-final.log",
+      "raw_sha256": "f01388191f91e14bb3aca90ebe9bad510be7b2f32a083754118aa2ad9f984d98",
+      "repository_sha256": "f01388191f91e14bb3aca90ebe9bad510be7b2f32a083754118aa2ad9f984d98"
+    },
+    {
+      "name": "schema4-codegen-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/schema4-codegen-final.log",
+      "raw_sha256": "4f59f9507304f1c23497fd04291085a89aedcd3887926d9ed8a11d59876fb19c",
+      "repository_sha256": "4f59f9507304f1c23497fd04291085a89aedcd3887926d9ed8a11d59876fb19c"
+    },
+    {
+      "name": "schema4-codegen.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/schema4-codegen.log",
+      "raw_sha256": "14581e7b61788bbf090b814886490aca86889e8ae5bb71a60e10c12a0c130ec4",
+      "repository_sha256": null
+    },
+    {
+      "name": "specdoc-canonical-after-fence.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-canonical-after-fence.log",
+      "raw_sha256": "1cac17f4670653c70b39571d50ee30e379d8886ce919da0037aa3549348bf7c5",
+      "repository_sha256": null
+    },
+    {
+      "name": "specdoc-canonical-carrier.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-canonical-carrier.log",
+      "raw_sha256": "354674d90462d564e289dbacf07062c82c268633f25f8d88199302ca6a4c96be",
+      "repository_sha256": null
+    },
+    {
+      "name": "specdoc-canonical-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-canonical-final.log",
+      "raw_sha256": "8bc4365444601ff8a974a89dc1a8bf8765ca8c44d7141cb339a560dce94d6e7b",
+      "repository_sha256": null
+    },
+    {
+      "name": "specdoc-canonical.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-canonical.log",
+      "raw_sha256": "653134d2f82e8712fc7f26c377041bbd1311961cb88b9f19ff4d93e856b268cd",
+      "repository_sha256": null
+    },
+    {
+      "name": "specdoc-doc-compat.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-doc-compat.log",
+      "raw_sha256": "63b9146e23233b47a031c73b1b70aa9ff381f90e4cedbb9190b37068192e3c36",
+      "repository_sha256": "013f5a33db1953e759f25780c1b7dbeff39fa4d806781ba67686c6ba22eeaa6d"
+    },
+    {
+      "name": "specdoc-doc-native-initial.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-doc-native-initial.log",
+      "raw_sha256": "74b86a99313534fcacf8e457690f381f675b97fd898d5d3a693b64dff50bd8b1",
+      "repository_sha256": null
+    },
+    {
+      "name": "specdoc-duplicate-compat.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-duplicate-compat.log",
+      "raw_sha256": "17acce738594946f993273f4d13d0444d435b5d7bbd8780f6226a8fae75d5eee",
+      "repository_sha256": "78c537e83036a5807f02453099c7117ab1abda549ea98212a37e5114d3a8c10f"
+    },
+    {
+      "name": "specdoc-multiline-start-after.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-multiline-start-after.log",
+      "raw_sha256": "0d26fbacae1125654bca484098e9b9bfae560b8ca5f08b8303930339e50d5780",
+      "repository_sha256": "3de3b4efa43960736b52464ddcb46712d18c2f412d2c98c995e719fcd302ec80"
+    },
+    {
+      "name": "specdoc-multiline-start-before.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-multiline-start-before.log",
+      "raw_sha256": "4bdf4b4c7b3b73e49c50ec50f95bcdc9c57510b4dc16c8b281c68e31f9e4e678",
+      "repository_sha256": "4bdf4b4c7b3b73e49c50ec50f95bcdc9c57510b4dc16c8b281c68e31f9e4e678"
+    },
+    {
+      "name": "specdoc-native-final-seven.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specdoc-native-final-seven.log",
+      "raw_sha256": "d4c5637b12373a48b811ff19d7000b8dd7bc9b5becf1ccb98af46ad4cf55b92c",
+      "repository_sha256": "a493bb7465839a2bab9f27e7294167bc089cef592a5c8cebaf5dc4368771cee1"
+    },
+    {
+      "name": "specmap-legacy-explain.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specmap-legacy-explain.log",
+      "raw_sha256": "5a86020f6bfb73819a1ca71fdc2ae77da3ad59e88ceafa09550093f5c99d8267",
+      "repository_sha256": "c27f931a926cd1c5e8e9e47a676560d1ed7f62f9aa02567801f4a3cbcb773921"
+    },
+    {
+      "name": "specmap-md-fact-before.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specmap-md-fact-before.log",
+      "raw_sha256": "aebc61c34b3e0aefe8dfda8083880449759bed8a606c12fc57bcc2ecba0a59ba",
+      "repository_sha256": null
+    },
+    {
+      "name": "specmap-native-ranges-canonical.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specmap-native-ranges-canonical.log",
+      "raw_sha256": "e98a19f40f5c50538d95fd4adbe0eb45849d7fd835afaaff2c77b3ddf53a47eb",
+      "repository_sha256": null
+    },
+    {
+      "name": "specmap-native-ranges-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specmap-native-ranges-final.log",
+      "raw_sha256": "6339cca999e27ac6e6b3a08d3f942d7da663843d0052bd9f14a742817b34bca6",
+      "repository_sha256": null
+    },
+    {
+      "name": "specmap-native-ranges-four.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specmap-native-ranges-four.log",
+      "raw_sha256": "636d3b9e8f45e8d79286820f451b307c1a09a262f07c03ec4196730aa1852c93",
+      "repository_sha256": "10a98e74c447270de377b3fdd987ffe3695e6e06ea4f507f1e1ae6690374c5e6"
+    },
+    {
+      "name": "specmap-native-ranges-initial.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specmap-native-ranges-initial.log",
+      "raw_sha256": "bbc2e0a829cbdea18fe4884e35fe858104e100109686979733e5ad8e72cd2161",
+      "repository_sha256": null
+    },
+    {
+      "name": "specmap-schema4-check-exact.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specmap-schema4-check-exact.log",
+      "raw_sha256": "7c75f86565101351c9e64bcbd048ab684ca59a57b24dd5a1388be4cc3f7d344c",
+      "repository_sha256": null
+    },
+    {
+      "name": "specmap-schema4-check.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/specmap-schema4-check.log",
+      "raw_sha256": "26faf6a4c44e61132f761926c62bd558fcd44cb5c9c0868743ffff46c95669c9",
+      "repository_sha256": null
+    },
+    {
+      "name": "sync-engines-after.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/sync-engines-after.log",
+      "raw_sha256": "cfa711b2ceb207f0c02f0934a342d397d5d98c2f3fea264e764c661307dcd9d2",
+      "repository_sha256": null
+    },
+    {
+      "name": "sync-engines-before.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/sync-engines-before.log",
+      "raw_sha256": "c1f1d80e234126af9aa31e648dcadb329ab208ff8d82873dc6b4bbcf1a74df63",
+      "repository_sha256": null
+    },
+    {
+      "name": "sync-engines-c3.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/sync-engines-c3.log",
+      "raw_sha256": "45c44f91bc310bfd63b195f848c5462733fba2f47de6451487682ca81c14e573",
+      "repository_sha256": null
+    },
+    {
+      "name": "sync-engines-final-check.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/sync-engines-final-check.log",
+      "raw_sha256": "b114be62b8562f9c7e8a55991b9662b3acb960d815cf630fcebde119f14ec105",
+      "repository_sha256": "b114be62b8562f9c7e8a55991b9662b3acb960d815cf630fcebde119f14ec105"
+    },
+    {
+      "name": "sync-engines-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/sync-engines-final.log",
+      "raw_sha256": "272a0baf0d22ffea3147ba729096f42495677b327068e8772f3e47ac34cc7c06",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-doc-before.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-doc-before.log",
+      "raw_sha256": "2624e2c4e83c6e20e7e3945cf877db8804bed0393067424e71171132bcf2e2d2",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-doc-complete-fixture.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-doc-complete-fixture.log",
+      "raw_sha256": "02db2e298618626ac7575551c56b5a9ad73a71df5536034a442fb123995d77da",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-doc-selected-after.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-doc-selected-after.log",
+      "raw_sha256": "9d72f019eeb2e41e6a994daa3bb1b8e8b14d18a2933f6880bd659028454f253f",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-doc-titled-before.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-doc-titled-before.log",
+      "raw_sha256": "6c90bb4dba56a3d652422f51af2a84238e0c7211dc22df50ebbbb12c8f1d8bba",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-doc-valid-before.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-doc-valid-before.log",
+      "raw_sha256": "fd954503c1efcf6911d735d05f45b53823830228517b8ffb48aa07addfd61bd4",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-legacy-foreign.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-legacy-foreign.log",
+      "raw_sha256": "08cc630738566fec64112c391254e62c2eb9290068a60e5d5e4371e96904c88e",
+      "repository_sha256": "a209000d1e10b5472db038fdb2ce23aed61138f482093614abfd1841cf5afdea"
+    },
+    {
+      "name": "trace-mixed-after.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-mixed-after.log",
+      "raw_sha256": "c6cf00556ac74eb095ad065a9d91fdcabf994d4625fc6b88ff5af1580cccc16a",
+      "repository_sha256": "a2baa6130974360567bbe40053f4f398bd2c4117d9f8b0ccd739b12e08ee95cf"
+    },
+    {
+      "name": "trace-mixed-before.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-mixed-before.log",
+      "raw_sha256": "7127e5ddcd390d8289b1440d4b8ecdb9a3fd448b1226bbf122dd54b113b4031c",
+      "repository_sha256": "7127e5ddcd390d8289b1440d4b8ecdb9a3fd448b1226bbf122dd54b113b4031c"
+    },
+    {
+      "name": "trace-old-xml-after-media.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-old-xml-after-media.log",
+      "raw_sha256": "3c9949abb68bd8c2434f8c4696ca3b78e0bc716a064773cc2ed6d4b36cb296ac",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-selected-final-four-provenance.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-selected-final-four-provenance.log",
+      "raw_sha256": "5045be3260c5deff5cb72f498bf617fe5662e1eaf3053be9dd54b5a8e905065d",
+      "repository_sha256": "c2ef645b7bf05c9059f41aabdfb2280dbb7cf8d71a1caf7f21d3d7f0bc370895"
+    },
+    {
+      "name": "trace-selected-final-four.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-selected-final-four.log",
+      "raw_sha256": "59ac2c82cc101443b71660d7677f5f2e3014c1beb1dc3068f1be8db4097c6ada",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-selected-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-selected-final.log",
+      "raw_sha256": "27dc8af473fdd255101c089abb0883c430258592c5b54eec93975a86f1ebb7f9",
+      "repository_sha256": null
+    },
+    {
+      "name": "trace-selected-initial.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/trace-selected-initial.log",
+      "raw_sha256": "a8c13d736a94e0d3058fe0297ae5315f0e180b3a08bb7dd7748c5d0f60e7a078",
+      "repository_sha256": null
+    },
+    {
+      "name": "workspace-canonical-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/workspace-canonical-final.log",
+      "raw_sha256": "2e6812b1ced553523f5f00b8cff86e649db575ea6b37bb01eefd7d9993baca44",
+      "repository_sha256": null
+    },
+    {
+      "name": "workspace-canonical-initial.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/workspace-canonical-initial.log",
+      "raw_sha256": "06a2e24b567cbd7a4118502f4deee76773b20f172f7fe8ef425a821038a9b9ab",
+      "repository_sha256": null
+    },
+    {
+      "name": "workspace-kernel-compat.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/workspace-kernel-compat.log",
+      "raw_sha256": "3866496a33d3b753b7e70d2a4d7f1e0a71ccd0862554633766a410674774b53a",
+      "repository_sha256": "830644f9d683c50d0b0fcf024d1fe6856f7e923caa349e5235bd4c4d56635441"
+    },
+    {
+      "name": "workspace-kernel-media-compat.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/workspace-kernel-media-compat.log",
+      "raw_sha256": "5b0e845d42bbe0bf9032b25fb3d1f45d91e541388aeef01c7c5bd7e500b24df7",
+      "repository_sha256": "e4f0039a5f2f57fe2b74339ce7482c8a356a4817b574f8d88cb91f8d3f99a17d"
+    },
+    {
+      "name": "workspace-media-correction.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/workspace-media-correction.log",
+      "raw_sha256": "c9044eb5162751d6199e685a2110a39a0d5b731f7b9bf329763136e5767d500a",
+      "repository_sha256": null
+    },
+    {
+      "name": "workspace-media-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C3/workspace-media-final.log",
+      "raw_sha256": "aac6aa6ae571ea66a2c31556a8a6bf6295eb2ad47c960a8cc3d5aaf73426dfcb",
+      "repository_sha256": "76f0acec4a24eeab201e55de276bbb5b7826e47d5d22093444d8da0fcec1ff13"
+    }
+  ],
+  "accepted_source_sha256": {
+    "crates/vibe-install/src/lib.rs": "5e0fc6724a5c03f61e47fa01d5e891a2497af0bece3e93e1213ea6241456c1cd",
+    "crates/vibe-install/src/slot_verify.rs": "039251613ac71a2e280c264d6879b863d4d643ef7c0bcc3614544ff34b58ccab",
+    "crates/vibe-install/src/slot_verify/derivation.rs": "1deffdf4d59d9eb6cd28a009e4db003199c63eab9d3eb448370947b597117c8c",
+    "crates/vibe-install/tests/m_01_c_3_cases.rs": "167a86e9c4dcd88fee1a9d21e9b94a015ca002054c4475da0e8e972e54ab495f",
+    "crates/vibe-specdoc/src/canonical_node.rs": "dd1e7b1c5f678b0eaa7156d5f5817c1d0fbfa97eab05f53d115f65d1e26083fe",
+    "crates/vibe-specdoc/src/lib.rs": "ace1ada1d4f66db25868a48abaa4fde4d7eddbbd1a552370d741ba5779a9fa66",
+    "crates/vibe-specdoc/src/xml_in.rs": "36758a2a5ab31d16f44f4067f36cfc7da2d2a8cb05306e8fa939a218dc867a07",
+    "crates/vibe-trace/src/foreign.rs": "d073b8908c8dfad41a319b71ad39e858727fe240efcb29b86aeca187d5c91832",
+    "crates/vibe-trace/src/lib.rs": "e7d6dae7b2b884c680ee7b47a3a35e530449118ed7fbbfcc4152292df975c594",
+    "crates/vibe-trace/src/selected_materialized.rs": "454ada5e79107f92eaf2c4812d299724be5d03faabd8f0875c058bbab335446c",
+    "crates/vibe-trace/src/selected_materialized/m_01_c_3_cases.rs": "9deabf1c4d71235a5ecc00538c7eb39edf8517ad2bb20b4ec1901aada5fd02b4",
+    "crates/vibe-workspace/src/source_query/capture.rs": "b55cbef06680f4404b31d6cde7122084af85c7ca6de22b1ec0d69c2ca9ce01e4",
+    "crates/vibe-workspace/src/source_query/capture/continuity.rs": "42b46be5307961f240c5b79a48368420da5bb5485957a69599928412b5aa17c1",
+    "crates/vibe-workspace/src/source_query/capture/continuity/membership.rs": "ed94fb543fdf1fd092ad25c40a6ebff74356f7b36083e006101765db4439f9b9",
+    "crates/vibe-workspace/src/source_query/m_01_c_3_cases.rs": "16cc4cfb80457f794293d897cc2203d4f867c46a57449c4c16ff37e9e0e81ce1",
+    "crates/vibe-workspace/src/source_query/mod.rs": "86011a461a004ef1e1f586bef3bb0ec6233ba84a57ecb7cb7ef4154f85196e44",
+    "crates/vibe-workspace/src/vibedeps.rs": "787cc188a23649fd179659a0e16a63b7eac02de4c5a0aff2bfe1a9b1c5829e5c",
+    "crates/vibe-workspace/src/vibedeps/derived.rs": "6c033fae79084f7903c6872f61529ccf2c7d7318e6c2102e4dc06993413c0e00",
+    "crates/vibe-workspace/src/vibedeps/derived/transform.rs": "c1a62827416e385e44afb6c87a8d782df701908f2758b41e2df2bb8c749ccb34",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/explain.rs": "adf8a3a792b974f85bcf28aafe2be2ce5f2222017dd348e8ff1ffb286e169944",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/index.rs": "7b42aac602a4d9d9dec788ab0e163fb832410275b25b54fa687356c4b42777f7",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/lib.rs": "d82c2c4c186a76bdcd087bf95af52e1347706e1715dfa7e7f68aa5edce1426ff",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/m_01_c_3_cases.rs": "1d5eb087fdd8200ed90b86dd869a13d81d7822b78d2fd6e55f214979703e92ef",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/mdspec.rs": "bc770533d847a90507f38ee57f082bfc70423985903d73162852a88f26d5e8af",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/xmlspec.rs": "321c91890b0c2b591a4a28d4ae846bbe628d43eeeb6549c88597277bcb695442",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/xmlspec/facts.rs": "acfa79d4d87758024a4c0875ef5a1a7e57f020e4bd31863dee302b2ae6c2e828",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/schemas/specmap.example.json": "f76391c652db0d48d1262523cc67aaa4ec7b55e01795b869bbb33a59648ad579",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/schemas/specmap.jtd.json": "50db7777e510410f0e9b86ea92d59b2c1e0c6c69d137f0a838d11f2757a71d1b",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml": "c0ca5dce68ee68642333ca111597336859efb9f8a1374f6a6da086c2c16b7621",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/explain.rs": "adf8a3a792b974f85bcf28aafe2be2ce5f2222017dd348e8ff1ffb286e169944",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/index.rs": "7b42aac602a4d9d9dec788ab0e163fb832410275b25b54fa687356c4b42777f7",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/lib.rs": "d82c2c4c186a76bdcd087bf95af52e1347706e1715dfa7e7f68aa5edce1426ff",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/m_01_c_3_cases.rs": "1d5eb087fdd8200ed90b86dd869a13d81d7822b78d2fd6e55f214979703e92ef",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs": "bc770533d847a90507f38ee57f082bfc70423985903d73162852a88f26d5e8af",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec.rs": "321c91890b0c2b591a4a28d4ae846bbe628d43eeeb6549c88597277bcb695442",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs": "acfa79d4d87758024a4c0875ef5a1a7e57f020e4bd31863dee302b2ae6c2e828",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/explain.rs": "adf8a3a792b974f85bcf28aafe2be2ce5f2222017dd348e8ff1ffb286e169944",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/index.rs": "7b42aac602a4d9d9dec788ab0e163fb832410275b25b54fa687356c4b42777f7",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/lib.rs": "d82c2c4c186a76bdcd087bf95af52e1347706e1715dfa7e7f68aa5edce1426ff",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/m_01_c_3_cases.rs": "1d5eb087fdd8200ed90b86dd869a13d81d7822b78d2fd6e55f214979703e92ef",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs": "bc770533d847a90507f38ee57f082bfc70423985903d73162852a88f26d5e8af",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec.rs": "321c91890b0c2b591a4a28d4ae846bbe628d43eeeb6549c88597277bcb695442",
+    "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs": "acfa79d4d87758024a4c0875ef5a1a7e57f020e4bd31863dee302b2ae6c2e828",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/explain.rs": "adf8a3a792b974f85bcf28aafe2be2ce5f2222017dd348e8ff1ffb286e169944",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/index.rs": "7b42aac602a4d9d9dec788ab0e163fb832410275b25b54fa687356c4b42777f7",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/lib.rs": "d82c2c4c186a76bdcd087bf95af52e1347706e1715dfa7e7f68aa5edce1426ff",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/m_01_c_3_cases.rs": "1d5eb087fdd8200ed90b86dd869a13d81d7822b78d2fd6e55f214979703e92ef",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs": "bc770533d847a90507f38ee57f082bfc70423985903d73162852a88f26d5e8af",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec.rs": "321c91890b0c2b591a4a28d4ae846bbe628d43eeeb6549c88597277bcb695442",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs": "acfa79d4d87758024a4c0875ef5a1a7e57f020e4bd31863dee302b2ae6c2e828",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/explain.rs": "adf8a3a792b974f85bcf28aafe2be2ce5f2222017dd348e8ff1ffb286e169944",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/index.rs": "7b42aac602a4d9d9dec788ab0e163fb832410275b25b54fa687356c4b42777f7",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/lib.rs": "d82c2c4c186a76bdcd087bf95af52e1347706e1715dfa7e7f68aa5edce1426ff",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/m_01_c_3_cases.rs": "1d5eb087fdd8200ed90b86dd869a13d81d7822b78d2fd6e55f214979703e92ef",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs": "bc770533d847a90507f38ee57f082bfc70423985903d73162852a88f26d5e8af",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec.rs": "321c91890b0c2b591a4a28d4ae846bbe628d43eeeb6549c88597277bcb695442",
+    "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs": "acfa79d4d87758024a4c0875ef5a1a7e57f020e4bd31863dee302b2ae6c2e828",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/explain.rs": "adf8a3a792b974f85bcf28aafe2be2ce5f2222017dd348e8ff1ffb286e169944",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/index.rs": "7b42aac602a4d9d9dec788ab0e163fb832410275b25b54fa687356c4b42777f7",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/lib.rs": "d82c2c4c186a76bdcd087bf95af52e1347706e1715dfa7e7f68aa5edce1426ff",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/m_01_c_3_cases.rs": "1d5eb087fdd8200ed90b86dd869a13d81d7822b78d2fd6e55f214979703e92ef",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs": "bc770533d847a90507f38ee57f082bfc70423985903d73162852a88f26d5e8af",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec.rs": "321c91890b0c2b591a4a28d4ae846bbe628d43eeeb6549c88597277bcb695442",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs": "acfa79d4d87758024a4c0875ef5a1a7e57f020e4bd31863dee302b2ae6c2e828",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/explain.rs": "adf8a3a792b974f85bcf28aafe2be2ce5f2222017dd348e8ff1ffb286e169944",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/index.rs": "7b42aac602a4d9d9dec788ab0e163fb832410275b25b54fa687356c4b42777f7",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/lib.rs": "d82c2c4c186a76bdcd087bf95af52e1347706e1715dfa7e7f68aa5edce1426ff",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/m_01_c_3_cases.rs": "1d5eb087fdd8200ed90b86dd869a13d81d7822b78d2fd6e55f214979703e92ef",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs": "bc770533d847a90507f38ee57f082bfc70423985903d73162852a88f26d5e8af",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec.rs": "321c91890b0c2b591a4a28d4ae846bbe628d43eeeb6549c88597277bcb695442",
+    "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.1.0/crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs": "acfa79d4d87758024a4c0875ef5a1a7e57f020e4bd31863dee302b2ae6c2e828",
+    "vibevm/vibespecs/common/PROP-070-resource-resolution.xml": "0f02ebc5b8589cc6b448cdc6437ba887d02b6a8939a389d15c133770975e6512",
+    "specmap.json": "3c83f9ec890ab27b45fb5a09072fdbb1e20d1a3f7b74abc85953967f3b3ace1f",
+    "BACKLOG.md": "3654a42e287a3e6c5c01eca6331e65e10f82a85ab5fe5f6c5518b7de084b23e7"
+  },
+  "root_metadata_only_changes": [
+    "crates/vibe-install/src/slot_verify/derivation.rs",
+    "crates/vibe-specdoc/src/canonical_node.rs"
+  ],
+  "specmap": {
+    "exit_code": 0,
+    "schema": 4,
+    "unresolved_host_edges": 0,
+    "gated_orphans": 138,
+    "baseline_orphans": 138
+  },
+  "full_gate_limits": {
+    "sync": "Nineactive sets clean;twohistorical unregisteredLean dirs exit1,B230",
+    "format": "13 outside-owner Diff entries,exit1"
+  },
+  "review_reports": [
+    "CONVERTER-OVERLAY-REVIEW.md",
+    "TRACE-LOCATOR-REVIEW.md"
+  ]
+}

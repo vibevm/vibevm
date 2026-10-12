@@ -4,8 +4,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-
 
 use std::collections::BTreeMap;
 
+use crate::vibedeps::SlotFileDisposition;
 use sha2::{Digest, Sha256};
-use vibe_core::manifest::{Manifest, SpecFormat};
+use vibe_core::manifest::{Manifest, SelectedSource, SourceInterpretation, SpecFormat};
 use vibe_core::{ContentHash, PackageRef};
 use vibe_safefs::{StableFileSnapshot, split_relative};
 
@@ -108,6 +109,12 @@ impl SourceMembershipIndex {
         self.files.contains_key(relative)
     }
 
+    /// Captured ORIGINAL bytes; this inert accessor grants no proof by itself.
+    /// Only the install replay owner retains this index in its private seal.
+    pub fn snapshot(&self, relative: &str) -> Option<&StableFileSnapshot> {
+        self.files.get(relative)
+    }
+
     pub fn member_matches(&self, relative: &str, observed: &StableFileSnapshot) -> bool {
         self.files.get(relative).is_some_and(|source| {
             source.bytes == observed.bytes && source.sha256 == observed.sha256
@@ -126,16 +133,80 @@ pub enum SourceStrength {
     SourceProven,
 }
 
+/// Parser media of the selected OUTPUT, distinct from whole-slot
+/// materialization mode (`SpecFormat::Mixed` may hold either form).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MaterializedVibeMedia {
+    Markdown,
+    Xml,
+}
+
 /// Locally agreed selected slot row and held output. It establishes only
 /// record consistency; the install replay owner may separately promote an
 /// original Mixed source member after checking its private verified index.
 pub struct RecordedOutput<'a> {
+    pub slot_root: &'a std::path::Path,
     pub snapshot: &'a StableFileSnapshot,
     pub source_path: &'a str,
-    pub format: SpecFormat,
+    pub slot_format: SpecFormat,
+    pub media: Option<MaterializedVibeMedia>,
+    pub interpretation: Option<SourceInterpretation>,
+    pub converter_recipe: Option<String>,
+    pub overlay_hash: Option<ContentHash>,
+    pub disposition: Option<SlotFileDisposition>,
 }
 
 impl WitnessedSourceWorld {
+    /// Resolve one source-neutral path only inside this selected descriptor
+    /// map. No caller-supplied visible set or directory search widens it.
+    pub fn selected_document_output(
+        &self,
+        group: &str,
+        name: &str,
+        doc_path: &str,
+    ) -> Result<(String, RecordedOutput<'_>), SourceQueryUnavailable> {
+        let prepared = self.revalidate_current()?;
+        let capture = prepared
+            .captured
+            .get(&CaptureOwner::Dependency {
+                group: group.to_owned(),
+                name: name.to_owned(),
+            })
+            .ok_or(SourceQueryUnavailable::DerivationUnavailable(
+                "selected document owner",
+            ))?;
+        let map =
+            capture
+                .descriptor
+                .as_ref()
+                .ok_or(SourceQueryUnavailable::DerivationUnavailable(
+                    "selected descriptor map",
+                ))?;
+        let mut selected = capture.outputs.keys().filter(|output| {
+            map.output_row(output).is_some_and(|row| {
+                matches!(
+                    row.interpretation,
+                    Some(SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc)
+                ) && vibe_spec::canonical_doc_path(&row.output) == doc_path
+            })
+        });
+        let output = selected
+            .next()
+            .ok_or(SourceQueryUnavailable::DerivationUnavailable(
+                "materialized document address",
+            ))?
+            .clone();
+        if selected.next().is_some() {
+            return Err(SourceQueryUnavailable::DerivationUnavailable(
+                "ambiguous materialized document address",
+            ));
+        }
+        let recorded = self.recorded_output(group, name, &output)?.ok_or(
+            SourceQueryUnavailable::DerivationUnavailable("selected materialized document"),
+        )?;
+        Ok((output, recorded))
+    }
+
     /// The selected lock pin and independent source hash, after B2 continuity.
     pub fn selected_source_pin(
         &self,
@@ -213,10 +284,55 @@ impl WitnessedSourceWorld {
                 "recorded payload",
             ));
         }
+        let manifest_text = std::str::from_utf8(&capture.manifest.bytes).map_err(|_| {
+            SourceQueryUnavailable::DerivationUnavailable("selected descriptor manifest")
+        })?;
+        let manifest = Manifest::parse_str(manifest_text).map_err(|_| {
+            SourceQueryUnavailable::DerivationUnavailable("selected descriptor manifest")
+        })?;
+        let package = manifest.require_package().map_err(|_| {
+            SourceQueryUnavailable::DerivationUnavailable("selected descriptor package")
+        })?;
+        let selected = package.select_source(&row.source).map_err(|_| {
+            SourceQueryUnavailable::DerivationUnavailable("selected source descriptor")
+        })?;
+        let source_media = match selected {
+            SelectedSource::Descriptor { descriptor, .. }
+                if Some(descriptor.interpretation()) == row.interpretation =>
+            {
+                match descriptor.media() {
+                    "text/markdown" => Some(MaterializedVibeMedia::Markdown),
+                    "application/xml" => Some(MaterializedVibeMedia::Xml),
+                    _ => None,
+                }
+            }
+            _ => None,
+        };
+        let media = if !matches!(
+            row.interpretation,
+            Some(SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc)
+        ) {
+            None
+        } else if recorded.disposition == Some(SlotFileDisposition::Converted) {
+            match record.spec_format {
+                SpecFormat::Markdown => Some(MaterializedVibeMedia::Markdown),
+                SpecFormat::Xml => Some(MaterializedVibeMedia::Xml),
+                SpecFormat::Mixed => None,
+            }
+        } else {
+            // Mixed and copied transformed rows retain the authored media.
+            source_media
+        };
         Ok(Some(RecordedOutput {
+            slot_root: &capture.root,
             snapshot: observed,
             source_path: &row.source,
-            format: record.spec_format,
+            slot_format: record.spec_format,
+            media,
+            interpretation: row.interpretation,
+            converter_recipe: record.converter_recipe,
+            overlay_hash: record.overlay_hash,
+            disposition: recorded.disposition,
         }))
     }
 
@@ -237,6 +353,85 @@ impl WitnessedSourceWorld {
             SourceStrength::Observed
         })
     }
+}
+
+/// Semantic identity of one selected node. Its recipe and digest are
+/// separately typed so a raw output SHA cannot stand in for this value.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CanonicalNodeIdentity {
+    pub recipe: &'static str,
+    pub hash: String,
+}
+
+/// Pure semantic projection of the exact selected output observation. It
+/// never reads a path or reinterprets the source-span `contentHash`.
+pub fn canonical_node_of_output(
+    recorded: &RecordedOutput<'_>,
+    anchor: &str,
+) -> Result<Option<CanonicalNodeIdentity>, SourceQueryUnavailable> {
+    let text = std::str::from_utf8(&recorded.snapshot.bytes).map_err(|_| {
+        SourceQueryUnavailable::DerivationUnavailable("materialized document UTF-8")
+    })?;
+    let doc = match (recorded.media, recorded.interpretation) {
+        (Some(MaterializedVibeMedia::Xml), Some(SourceInterpretation::VibeDoc)) => {
+            vibe_specdoc::from_xml_with(text, vibe_specdoc::doc::Vocabulary::Doc)
+        }
+        (Some(MaterializedVibeMedia::Xml), Some(SourceInterpretation::VibeSpec)) => {
+            vibe_specdoc::from_xml_with(text, vibe_specdoc::doc::Vocabulary::Spec)
+        }
+        (Some(MaterializedVibeMedia::Markdown), Some(SourceInterpretation::VibeSpec)) => {
+            vibe_specdoc::from_markdown(text)
+        }
+        _ => {
+            return Err(SourceQueryUnavailable::DerivationUnavailable(
+                "selected Vibe output",
+            ));
+        }
+    }
+    .map_err(|_| SourceQueryUnavailable::DerivationUnavailable("materialized SpecDoc IR"))?;
+    let recipe = vibe_specdoc::canonical_node::NODE_HASH_RECIPE;
+    vibe_specdoc::canonical_node::canonical_node_hash(&doc, anchor)
+        .map_err(|_| {
+            SourceQueryUnavailable::DerivationUnavailable("ambiguous materialized anchor")
+        })?
+        .map(|value| {
+            value
+                .strip_prefix(&format!("{recipe}:"))
+                .map(|digest| CanonicalNodeIdentity {
+                    recipe,
+                    hash: format!("sha256:{digest}"),
+                })
+                .ok_or(SourceQueryUnavailable::DerivationUnavailable(
+                    "canonical hash recipe",
+                ))
+        })
+        .transpose()
+}
+
+/// Native XML range under the same selected Spec/Doc vocabulary used for
+/// semantic parsing. Doc-only blocks are valid only for selected VibeDoc.
+pub fn native_xml_range_of_output(
+    recorded: &RecordedOutput<'_>,
+    anchor: &str,
+) -> Result<Option<(u32, u32)>, SourceQueryUnavailable> {
+    let vocabulary = match (recorded.media, recorded.interpretation) {
+        (Some(MaterializedVibeMedia::Xml), Some(SourceInterpretation::VibeSpec)) => {
+            vibe_specdoc::doc::Vocabulary::Spec
+        }
+        (Some(MaterializedVibeMedia::Xml), Some(SourceInterpretation::VibeDoc)) => {
+            vibe_specdoc::doc::Vocabulary::Doc
+        }
+        _ => {
+            return Err(SourceQueryUnavailable::DerivationUnavailable(
+                "selected XML vocabulary",
+            ));
+        }
+    };
+    let text = std::str::from_utf8(&recorded.snapshot.bytes).map_err(|_| {
+        SourceQueryUnavailable::DerivationUnavailable("materialized document UTF-8")
+    })?;
+    vibe_specdoc::native_anchor_range_with(text, vocabulary, anchor)
+        .map_err(|_| SourceQueryUnavailable::DerivationUnavailable("materialized native XML range"))
 }
 
 #[cfg(test)]

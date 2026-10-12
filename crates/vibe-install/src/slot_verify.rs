@@ -32,6 +32,10 @@ use vibe_workspace::source_query::{
 
 use crate::fetched::Fetched;
 
+#[path = "slot_verify/derivation.rs"]
+mod derivation;
+pub use derivation::{DerivedMaterializationProof, PreparedPackageOverlay};
+
 /// Replay a complete, caller-captured ORIGINAL package tree under the
 /// incumbent bounded recipe, then join it to the independently selected hash.
 /// The caller obtains `package_pin` and `selected_hash` from its trusted
@@ -129,7 +133,7 @@ impl VerifiedSourceMembership {
         if pin == self.package_pin
             && hash == self.selected_hash
             && recorded.as_ref().is_some_and(|row| {
-                row.format == SpecFormat::Mixed
+                row.slot_format == SpecFormat::Mixed
                     && row.source_path == output
                     && self.index.member_matches(row.source_path, row.snapshot)
             })

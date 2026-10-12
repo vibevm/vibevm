@@ -100,6 +100,67 @@ pub(super) struct XFact {
     status: Option<XStatus>,
     /// Native line of the `<fact>` element (the anchor's own line).
     line: u32,
+    /// Native closing-tag line, inclusive; equal to `line` for empty facts.
+    end_line: u32,
+}
+
+/// Native span of one XML anchor in the exact materialized bytes. Duplicate
+/// anchors refuse instead of selecting whichever node the indexer saw first.
+pub fn native_anchor_range(xml: &str, anchor: &str) -> Result<Option<(u32, u32)>, String> {
+    let doc = reader::read_document(xml).map_err(|error| error.message)?;
+    let mut spans = Vec::new();
+    if let Some(title) = &doc.title
+        && title.id.as_deref() == Some(anchor)
+    {
+        spans.push((title.line, doc.end_line));
+    }
+    collect_native_blocks(&doc.preamble, anchor, &mut spans);
+    for section in &doc.sections {
+        collect_native_section(section, anchor, &mut spans);
+    }
+    if spans.len() > 1 {
+        return Err("duplicate materialized anchor".into());
+    }
+    Ok(spans.pop())
+}
+
+fn collect_native_section(section: &XSection, anchor: &str, spans: &mut Vec<(u32, u32)>) {
+    if section.id.as_deref() == Some(anchor) {
+        spans.push((section.line, section.end_line));
+    }
+    collect_native_blocks(&section.blocks, anchor, spans);
+    for child in &section.sections {
+        collect_native_section(child, anchor, spans);
+    }
+}
+
+fn collect_native_blocks(blocks: &[XBlock], anchor: &str, spans: &mut Vec<(u32, u32)>) {
+    for block in blocks {
+        match block {
+            XBlock::Para { unit, .. } | XBlock::Quote(unit) => {
+                collect_native_unit(unit, anchor, spans);
+            }
+            XBlock::List { items, .. } => {
+                for unit in items {
+                    collect_native_unit(unit, anchor, spans);
+                }
+            }
+            XBlock::Table { rows } => {
+                for unit in rows.iter().flatten() {
+                    collect_native_unit(unit, anchor, spans);
+                }
+            }
+            XBlock::Fence { .. } => {}
+        }
+    }
+}
+
+fn collect_native_unit(unit: &XUnit, anchor: &str, spans: &mut Vec<(u32, u32)>) {
+    if let Some(fact) = &unit.fact
+        && fact.id.as_deref() == Some(anchor)
+    {
+        spans.push((fact.line, fact.end_line));
+    }
 }
 
 impl XFact {
@@ -406,6 +467,8 @@ impl Minter<'_> {
             anchor,
             heading: heading.to_string(),
             contentHash: crate::content_hash(span),
+            canonicalNode: None,
+            materializedLocator: None,
             line,
             kind: k,
             revision: r,

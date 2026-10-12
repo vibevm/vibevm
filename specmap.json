@@ -19449,27 +19449,45 @@
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/slot_verify.rs",
       "item_kind": "struct",
-      "line": 81,
+      "line": 85,
       "symbol": "vibe_install::slot_verify::VerifiedSourceMembership",
-      "end_line": 90,
+      "end_line": 94,
       "fingerprint": "tok1:181af81e62b72a80848b93c4a229b393ec1ecdafb0fa2e669923246be61389c8"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/slot_verify/derivation.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_install::slot_verify::derivation",
+      "end_line": 3,
+      "fingerprint": "tok1:49f9fb0fca750658ea412a40421d13a7c610b4e2dd4bb95157a6d2c836ef5549"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/slot_verify/derivation.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_install::slot_verify::derivation::VerifiedSourceMembership::derive_builtin_output",
+      "end_line": 181,
+      "fingerprint": "tok1:b58095abe7be77dd841b7908cb865dba36b383183aa6546b459ba309a52a50a4"
     },
     {
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/slot_verify.rs",
       "item_kind": "fn",
-      "line": 149,
+      "line": 153,
       "symbol": "vibe_install::slot_verify::source_strength",
-      "end_line": 180,
+      "end_line": 184,
       "fingerprint": "tok1:e68d15131eb3d38a169f91dda8a19c2455a4de4dda06c22dbf8f263a812ad9f5"
     },
     {
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/slot_verify.rs",
       "item_kind": "fn",
-      "line": 35,
+      "line": 39,
       "symbol": "vibe_install::slot_verify::verify_original_source_capture",
-      "end_line": 79,
+      "end_line": 83,
       "fingerprint": "tok1:4026d1a875b88ea69aea0f4a8e537190533d5e7fa1744bed7aefb665744f345b"
     },
     {
@@ -35989,6 +36007,15 @@
     },
     {
       "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/canonical_node.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_specdoc::canonical_node",
+      "end_line": 6,
+      "fingerprint": "tok1:f7d397b9eb0c081da31d0c9ee972c54f1b3cfa40934364f98fc85e86c56011cc"
+    },
+    {
+      "crate_name": "vibe-specdoc",
       "file": "crates/vibe-specdoc/src/commonmark.rs",
       "item_kind": "mod",
       "line": 8,
@@ -36247,6 +36274,15 @@
       "symbol": "vibe_trace::select::parse",
       "end_line": 12,
       "fingerprint": "tok1:9cf768b01cdf0c2fabad294bbffd12abff101b480ef5f2ba2f395133d76b91c1"
+    },
+    {
+      "crate_name": "vibe-trace",
+      "file": "crates/vibe-trace/src/selected_materialized.rs",
+      "item_kind": "fn",
+      "line": 12,
+      "symbol": "vibe_trace::selected_materialized::explain_selected_materialized",
+      "end_line": 100,
+      "fingerprint": "tok1:e3bc6f158c3f193c2bf95f87806e614e67ffa2fe8457e5ae84841d9eba8c961e"
     },
     {
       "crate_name": "vibe-wire",
@@ -39024,9 +39060,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/source_query/capture/continuity/membership.rs",
       "item_kind": "enum",
-      "line": 118,
+      "line": 125,
       "symbol": "vibe_workspace::source_query::capture::continuity::membership::SourceStrength",
-      "end_line": 127,
+      "end_line": 134,
       "fingerprint": "tok1:3c3ae26c75e5e6982e427cdc362a7bae799cd4f90b7ef673a63991c76142641c"
     },
     {
@@ -52042,15 +52078,31 @@
     {
       "file": "crates/vibe-install/src/slot_verify.rs",
       "from_symbol": "vibe_install::slot_verify::VerifiedSourceMembership",
-      "line": 83,
+      "line": 87,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP",
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-install/src/slot_verify/derivation.rs",
+      "from_symbol": "vibe_install::slot_verify::derivation",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#BUILTIN-DERIVATION-PROOF",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/slot_verify/derivation.rs",
+      "from_symbol": "vibe_install::slot_verify::derivation::VerifiedSourceMembership::derive_builtin_output",
+      "line": 98,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#BUILTIN-DERIVATION-PROOF",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-install/src/slot_verify.rs",
       "from_symbol": "vibe_install::slot_verify::source_strength",
-      "line": 152,
+      "line": 156,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-STRENGTH-LAW",
       "verb": "implements"
@@ -52058,7 +52110,7 @@
     {
       "file": "crates/vibe-install/src/slot_verify.rs",
       "from_symbol": "vibe_install::slot_verify::verify_original_source_capture",
-      "line": 40,
+      "line": 44,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP",
       "verb": "implements"
@@ -67339,6 +67391,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-specdoc/src/canonical_node.rs",
+      "from_symbol": "vibe_specdoc::canonical_node",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CANONICAL-NODE-LOCATION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-specdoc/src/commonmark.rs",
       "from_symbol": "vibe_specdoc::commonmark",
       "line": 8,
@@ -67568,6 +67628,14 @@
       "line": 12,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#map-select",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-trace/src/selected_materialized.rs",
+      "from_symbol": "vibe_trace::selected_materialized::explain_selected_materialized",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CANONICAL-NODE-LOCATION",
       "verb": "implements"
     },
     {
@@ -70247,7 +70315,7 @@
     {
       "file": "crates/vibe-workspace/src/source_query/capture/continuity/membership.rs",
       "from_symbol": "vibe_workspace::source_query::capture::continuity::membership::SourceStrength",
-      "line": 121,
+      "line": 128,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-STRENGTH-LAW",
       "verb": "implements"
@@ -70714,7 +70782,7 @@
       "verb": "implements"
     }
   ],
-  "schema": 3,
+  "schema": 4,
   "spec_units": [
     {
       "anchor": "root",
@@ -95067,7 +95135,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7319cb7da2037ce9ef742bb39c5a47b86b750ba162e3c39b5a083142c38e1682",
+      "content_hash": "sha256:a1096697ec2513412e3441ae4cddab09ee525852620f61cdbeea9f2f78bd82fc",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "PROP-070: Validated resource addresses and selected resolution",
@@ -95262,6 +95330,33 @@
       "heading": "An observed result states only that the held source bytes were read. Record-consistent states that selected slot-record rows, source mapping and materialized output bytes agree locally. Source-proven additionally establishes that the returned original source bytes are a member of the independently verified original capture under the selected package hash. Record-only, payload-only and coordinated record-plus-payload changes cannot promote local agreement to source proof. A development or in-place source without independent captured package proof remains observed. A transformed output can carry proof of its original source member but remains at most record-consistent as returned output until a separate converter/overlay derivation is proved; the source and output strengths are never conflated. Strict requests for absent required capture or unsupported recipe refuse without provider, cache or rebuild effects. @status:spec/plan",
       "line": 38,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-STRENGTH-LAW"
+    },
+    {
+      "anchor": "derivation",
+      "content_hash": "sha256:b195f8c64e2a982bbe85e84fe6ba6ccf0ef2c46a44ce064bfbd73448deab9c1b",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "8. Builtin derivation and materialized semantic location",
+      "line": 41,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#derivation"
+    },
+    {
+      "anchor": "BUILTIN-DERIVATION-PROOF",
+      "content_hash": "sha256:8f3a84b714ed1b828d59609e2050a4567731a2dddb9b9c556cb7795dd9958da9",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "Derivation-proven materialized bytes require the opaque source-proven capture minted by the canonical original-tree replay, an authored Vibe source descriptor selecting those exact original bytes, the named current builtin converter recipe, an authorized package adoption overlay whose independently observed identity agrees with the selected slot record, and that record's exact source-to-output row. The converter runs purely in memory over captured bytes, applies the authorized overlay, and its emitted bytes must equal the held materialized output byte-for-byte before the derived strength is returned. A caller-supplied output digest, raw catalogue, editable record or output file cannot mint this proof. Converter, overlay, mapping or output drift refuses. A native/custom converter has no implicit execution path and remains unavailable until separately proved. @status:spec/plan",
+      "line": 42,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#BUILTIN-DERIVATION-PROOF"
+    },
+    {
+      "anchor": "CANONICAL-NODE-LOCATION",
+      "content_hash": "sha256:614fd418c06298aa383153a4d6db6f5fd6f76a64dc0c19b5afea7d9055720266",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "The logical document stem and anchor are source-neutral. A separately versioned hash of the canonical SpecDoc IR node has the same value for semantically equivalent Markdown and XML materializations; it is distinct from original-source SHA-256, materialized-output SHA-256 and specmap's existing source-span `content_hash`, whose meaning is never silently changed. A materialized locator is resolved from the actual selected output bytes and carries that output's real extension and native line range. Whole-slot `Mixed` is a materialization policy, not a document parser: copied or Mixed Vibe outputs retain the selected source descriptor's media, while converted outputs use the named converter's target media. The selected interpretation opens the matching Spec or Doc vocabulary, including Doc-only blocks, before native positions are returned. Original-source file/line and raw hash cannot be published as an installed-output locator or as evidence of cross-form semantic drift. A new wire representation versions its schema rather than reinterpreting any e1 field. @status:spec/plan",
+      "line": 43,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CANONICAL-NODE-LOCATION"
     },
     {
       "anchor": "root",

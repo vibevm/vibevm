@@ -47,6 +47,9 @@ pub mod testgate;
 pub mod tripwire;
 pub mod xmlspec;
 
+#[cfg(test)]
+mod m_01_c_3_cases;
+
 /// `sha256:<hex>` over the given text with line endings normalised to
 /// LF — the same content-hash format the lockfile uses, so hashes read
 /// uniformly across the project.

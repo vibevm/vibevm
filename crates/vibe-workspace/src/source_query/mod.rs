@@ -16,9 +16,10 @@ use crate::extension_world::{ExtensionWorldEpoch, ExtensionWorldError};
 mod capture;
 mod visibility;
 pub use capture::{
-    BoundSourceInputs, CapturedSourceFile, PreparedOwnerCapture, PreparedWorldWitness,
-    RecordedOutput, SourceMembershipIndex, SourceStrength, WitnessedSourceWorld,
-    captured_manifest_closure,
+    BoundSourceInputs, CanonicalNodeIdentity, CapturedSourceFile, MaterializedVibeMedia,
+    PreparedOwnerCapture, PreparedWorldWitness, RecordedOutput, SourceMembershipIndex,
+    SourceStrength, WitnessedSourceWorld, canonical_node_of_output, captured_manifest_closure,
+    native_xml_range_of_output,
 };
 
 #[derive(Debug, thiserror::Error)]
@@ -43,6 +44,8 @@ pub enum SourceQueryUnavailable {
     SourceProofUnavailable(&'static str),
     #[error("original source capture differs from the independently selected package hash")]
     SourceHashMismatch,
+    #[error("builtin source derivation is unavailable at {0}")]
+    DerivationUnavailable(&'static str),
 }
 
 /// Exact selected roots from one node's own world. This stays crate-private
@@ -56,6 +59,10 @@ pub(crate) struct OwnerRoots {
 #[cfg(test)]
 #[path = "m_01_b_1_cases.rs"]
 mod prepared_cases;
+
+#[cfg(test)]
+#[path = "m_01_c_3_cases.rs"]
+mod m_01_c_3_cases;
 
 pub(crate) fn select_owner_roots(
     epoch: &ExtensionWorldEpoch,
