@@ -93,7 +93,8 @@ pub(super) fn sort_prepared_files(files: &mut [PreparedSlotFile]) {
     files.sort_by_cached_key(PreparedSlotFile::path_wire);
 }
 
-/// Walk and hash a mixed source tree without touching its destination slot.
+/// Walk and hash authored mixed source files without touching the slot.
+/// Generated package boot lanes and transaction files are derived output.
 pub(super) fn prepare_source_tree(
     root: &Path,
     mode: CopyMode,
@@ -554,6 +555,9 @@ fn collect_source_files(
             continue;
         }
         let source = entry.path();
+        if super::derived::is_generated_boot_artifact(root, &source) {
+            continue;
+        }
         let file_type = entry.file_type().map_err(|error| io_err(&source, error))?;
         if file_type.is_dir() {
             collect_source_files(&source, root, mode, files)?;

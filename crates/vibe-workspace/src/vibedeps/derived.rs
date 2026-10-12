@@ -474,6 +474,9 @@ fn collect_files(
             continue;
         }
         let path = entry.path();
+        if is_generated_boot_artifact(root, &path) {
+            continue;
+        }
         let kind = entry.file_type().map_err(|e| io_err(&path, e))?;
         if kind.is_dir() {
             collect_files(&path, root, out)?;
@@ -491,10 +494,11 @@ fn collect_files(
     Ok(())
 }
 
-/// True for the slot's generated boot artifacts (either `STATIC` spelling and
-/// `INDEX.md`) — projections bootgen regenerates after
+/// True for the package's generated boot artifacts (either `STATIC` spelling,
+/// `INDEX.md` and the boot transaction's private files) — projections bootgen regenerates after
 /// materialisation, excluded from the derived hash and the format-purity
-/// claim exactly like the derived manifest itself.
+/// claim exactly like the derived manifest itself. Used at package-source
+/// collection as well; project-authored files are not traversed by that path.
 pub(crate) fn is_generated_boot_artifact(root: &Path, path: &Path) -> bool {
     let Ok(rel) = path.strip_prefix(root) else {
         return false;
@@ -502,7 +506,16 @@ pub(crate) fn is_generated_boot_artifact(root: &Path, path: &Path) -> bool {
     rel == layout::current_boot_static_md()
         || rel == layout::current_boot_static_xml()
         || rel == layout::current_boot_index()
+        || (rel.parent() == Some(layout::current_boot_dir().as_path())
+            && rel
+                .file_name()
+                .and_then(|name| name.to_str())
+                .is_some_and(|name| name.starts_with(".vibe-boot-")))
 }
+
+#[cfg(test)]
+#[path = "derived/g3_tests.rs"]
+mod g3_tests;
 
 fn collect_hash_files(
     dir: &Path,

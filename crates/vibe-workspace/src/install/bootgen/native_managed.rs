@@ -19,7 +19,7 @@ use super::replay_prepare::{
 };
 use super::{
     ResolvedDep, build_unit_table, desubstitute_covered_units, node_dependency_boot, node_own_boot,
-    root_self_coordinate,
+    publish_node_boot, root_self_coordinate,
 };
 
 pub(crate) struct BoundBootRegeneration {
@@ -153,6 +153,9 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         .collect::<Vec<_>>();
     let mut nodes = Vec::new();
     for (rel, manifest) in workspace.iter_nodes() {
+        if !publish_node_boot(rel, manifest, resolution) {
+            continue;
+        }
         let node_dir = workspace.node_abs_path(rel);
         let own = node_own_boot(&node_dir, rel)?;
         let inherited = if rel == "." {
@@ -164,6 +167,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             &workspace.root,
             manifest,
             resolution,
+            &table,
             &with_static,
             spec_format,
         );

@@ -5,6 +5,8 @@
 
 // This file is itself loaded through a `#[path]` module declaration, so its
 // children are spelled explicitly rather than inherited from a directory.
+#[path = "tests_hybrid/g3_cases.rs"]
+mod g3_cases;
 #[path = "tests_hybrid/transaction.rs"]
 mod transaction;
 
