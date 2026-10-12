@@ -11,7 +11,7 @@ use crate::address::{
     Authority, ResourceAddress, ResourceAddressError, SpecAddress, SpecAddressError,
 };
 
-use super::{FileResolver, ResolveError, lookup};
+use super::{FileResolver, ResolveError, lookup, portable};
 
 impl FileResolver {
     /// Construct a classified Vibe resource from strict spelling and an exact
@@ -82,6 +82,13 @@ impl FileResolver {
             }
             Err(error) => return Err(error.into()),
         };
+        if !portable::checked_file(&base, &path)? {
+            return Err(ResolveError::DocNotFound {
+                doc_path: address.doc_path.clone(),
+                base: base.display().to_string(),
+            }
+            .into());
+        }
         let relative = path
             .strip_prefix(&base)
             .map_err(|_| ResourceAddressError::VibeSourceRequired)?;

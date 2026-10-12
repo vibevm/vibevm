@@ -9,7 +9,8 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use super::ResolveError;
+use super::{ResolveError, portable};
+use vibe_safefs::identity_key;
 
 /// Resolve a doc-path (relative to a `spec/` root) to a spec-source file —
 /// either serialisation (`.md` or `.xml`; a document's address does not
@@ -33,16 +34,57 @@ pub(super) fn resolve_doc_with_formats(
     doc_path: &str,
     active_formats: &[String],
 ) -> Result<ResolvedDoc, ResolveError> {
-    let (dir, last) = match doc_path.rsplit_once('/') {
-        Some((d, l)) => (base_spec.join(d), l),
-        None => (base_spec.to_path_buf(), doc_path),
+    // Refuse hostile components before looking at any selected directory.
+    let (parents, last) = portable::split(doc_path)?;
+    for format in active_formats {
+        portable::split(&format!("probe.{format}"))?;
+    }
+    let Some(dir) = portable::directory(base_spec, &parents)? else {
+        return Err(not_found(base_spec, doc_path));
+    };
+    let Some(entries) = portable::entries(&dir)? else {
+        return Err(not_found(base_spec, doc_path));
     };
 
-    if is_id_stem(last) {
-        let matches: Vec<PathBuf> = read_dir_or_empty(&dir)
-            .map(|e| e.path())
-            .filter(|p| id_file_matches_with_formats(p, last, active_formats))
-            .collect();
+    if is_id_stem(&last) {
+        let mut matches = Vec::new();
+        let mut identities = std::collections::BTreeMap::new();
+        let id_key = identity_key(&last);
+        for entry in &entries {
+            let name = entry.file_name();
+            let Some(name) = name.to_str() else {
+                continue;
+            };
+            let path = entry.path();
+            let Some(stem) = path.file_stem().and_then(|value| value.to_str()) else {
+                continue;
+            };
+            let candidate = id_file_matches_with_formats(&path, &last, active_formats);
+            let stem_key = identity_key(stem);
+            if !candidate
+                && (stem_key == id_key || stem_key.starts_with(&format!("{id_key}-")))
+                && active_extension(&path, active_formats)
+            {
+                return Err(ResolveError::PortableSourceAlias {
+                    requested: dir.join(format!("{last}…")).display().to_string(),
+                    observed: path.display().to_string(),
+                });
+            }
+            if !candidate {
+                continue;
+            }
+            portable::split(name)?;
+            let key = identity_key(name);
+            if let Some(first) = identities.insert(key, path.clone()) {
+                return Err(ResolveError::PortableSourceAlias {
+                    requested: first.display().to_string(),
+                    observed: path.display().to_string(),
+                });
+            }
+            if portable::checked_file(base_spec, &path)? {
+                matches.push(path);
+            }
+        }
         if let Some(collision) = active_same_stem_collision(doc_path, &matches, active_formats) {
             return Err(collision);
         }
@@ -62,18 +104,25 @@ pub(super) fn resolve_doc_with_formats(
             }),
         }
     } else {
-        let mut candidates = vec![
-            base_spec.join(format!("{doc_path}.md")),
-            base_spec.join(format!("{doc_path}.xml")),
-        ];
+        let mut candidates = vec![format!("{last}.md"), format!("{last}.xml")];
         candidates.extend(
             active_formats
                 .iter()
-                .map(|format| base_spec.join(format!("{doc_path}.{format}"))),
+                .map(|format| format!("{last}.{format}")),
         );
         candidates.sort();
         candidates.dedup();
-        candidates.retain(|candidate| candidate.is_file());
+        let mut found = Vec::new();
+        for candidate in candidates {
+            portable::split(&candidate)?;
+            if let Some(entry) = portable::exact_entry(&entries, &candidate, &dir)? {
+                let path = entry.path();
+                if portable::checked_file(base_spec, &path)? {
+                    found.push(path);
+                }
+            }
+        }
+        let candidates = found;
         if candidates.len() > 1
             && candidates.iter().any(|candidate| {
                 candidate
@@ -96,6 +145,32 @@ pub(super) fn resolve_doc_with_formats(
             many => Err(active_collision(doc_path, many)),
         }
     }
+}
+
+fn not_found(base: &Path, doc_path: &str) -> ResolveError {
+    ResolveError::DocNotFound {
+        doc_path: doc_path.to_owned(),
+        base: base.display().to_string(),
+    }
+}
+
+fn active_extension(path: &Path, active_formats: &[String]) -> bool {
+    let Some(name) = path.file_name().and_then(|value| value.to_str()) else {
+        return false;
+    };
+    // Win32 can erase terminal dots/spaces on open. Compare their portable
+    // target extension only to refuse the alias; never open that spelling.
+    Path::new(name.trim_end_matches(['.', ' ']))
+        .extension()
+        .and_then(|value| value.to_str())
+        .is_some_and(|extension| {
+            let key = identity_key(extension);
+            key == "md"
+                || key == "xml"
+                || active_formats
+                    .iter()
+                    .any(|format| identity_key(format) == key)
+        })
 }
 
 /// The first same-stem `.md` + `.xml` pair among `files`, if any — the
@@ -222,7 +297,9 @@ pub(crate) const LEGACY_VIBEDEPS_ROOT: &str = "vibedeps";
 /// byte).
 pub(crate) fn specs_root_under(base: &Path) -> PathBuf {
     let new = base.join(NEW_SPECS_ROOT);
-    if new.is_dir() {
+    if fs::symlink_metadata(base.join("vibevm")).is_ok_and(|metadata| metadata.is_dir())
+        && fs::symlink_metadata(&new).is_ok_and(|metadata| metadata.is_dir())
+    {
         new
     } else {
         base.join(LEGACY_SPECS_ROOT)
@@ -234,7 +311,9 @@ pub(crate) fn specs_root_under(base: &Path) -> PathBuf {
 /// (same probe discipline as [`specs_root_under`]).
 pub(crate) fn vibedeps_root_under(base: &Path) -> PathBuf {
     let new = base.join(NEW_VIBEDEPS_ROOT);
-    if new.is_dir() {
+    if fs::symlink_metadata(base.join("vibevm")).is_ok_and(|metadata| metadata.is_dir())
+        && fs::symlink_metadata(&new).is_ok_and(|metadata| metadata.is_dir())
+    {
         new
     } else {
         base.join(LEGACY_VIBEDEPS_ROOT)

@@ -35773,6 +35773,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/portable.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_spec::resolver::portable",
+      "end_line": 4,
+      "fingerprint": "tok1:1b5bb2b3dc23bb42aefda776f5347e8a4cfbfc1ff1023b7c08a2442572fef217"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/resolver/resource.rs",
       "item_kind": "mod",
       "line": 3,
@@ -67040,6 +67049,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-spec/src/resolver/portable.rs",
+      "from_symbol": "vibe_spec::resolver::portable",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#PORTABLE-SOURCE-COMPONENTS",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-spec/src/resolver/resource.rs",
       "from_symbol": "vibe_spec::resolver::resource",
       "line": 3,
@@ -94880,7 +94897,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:87461c2c297367d134b5729298f6317197f2994ef18106a5786adcbe688e9664",
+      "content_hash": "sha256:950726c42d269a9ed4ba0c7ef41490a9f4c62d40e598e650372a785cdf97581b",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "PROP-070: Validated resource addresses and selected resolution",
@@ -94967,6 +94984,24 @@
       "heading": "Corpus cases classify accepted canonical Vibe and export spellings, unique abbreviated stems and explicit selected versions, plus typed refusals for percent encoding, empty segments, malformed/foreign versions, missing selection, wrong selected version, duplicate ID stems, two physical forms of one Vibe document, undotted host and supported-syntax-but-unavailable revision. No first-match directory order, suffix-based resource interpretation, lexical path normalization or unreadable-as-not-found claim is introduced by this address slice. Portable physical containment and source-read failure propagation belong to the later A.2/A.3 owners. @status:spec/plan",
       "line": 16,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#RESOURCE-REFUSAL-CORPUS"
+    },
+    {
+      "anchor": "physical-lookup",
+      "content_hash": "sha256:32cdd51f95f501cf9028d96aa202ac3c025441d67bafab9d4a245c3ce3d10019",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "3. Portable source lookup boundary",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#physical-lookup"
+    },
+    {
+      "anchor": "PORTABLE-SOURCE-COMPONENTS",
+      "content_hash": "sha256:88d69c26771b55f69962b2e5a89fa2ff88a2a637465ab71817d43c1ef47c3afc",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "Before traversing a selected directory for a document, each authored relative path component and active serialization suffix obeys the existing `vibe-safefs` portable component law. The resolver preserves exact logical spelling; it never normalizes a drive, UNC, alternate-data-stream, device, trailing-dot, control or dot-segment spelling into an apparently valid source. At every traversed child and final file, a different spelling with the same shared NFC/full-case-fold physical identity is a typed alias refusal, even on a host whose native filesystem would distinguish the two. A selected Vibe descriptor row uses that same relative component and identity law rather than a local lowercase/character blacklist. A no-follow preflight refuses symlinked children before any selected source path is returned. This is a portable read-side lookup rule, not an OS race-free captured read or a claim of native Windows/macOS qualification; physical byte capture and complete read-error propagation belong to later owners. @status:spec/plan",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#PORTABLE-SOURCE-COMPONENTS"
     },
     {
       "anchor": "root",

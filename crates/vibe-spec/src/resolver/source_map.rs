@@ -6,9 +6,10 @@
 //! filename suffix.
 
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::{Component, Path, PathBuf};
+use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::SourceInterpretation;
+use vibe_safefs::{path_identity_key, split_relative};
 
 use super::{ResolveError, ResolvedSourceFile, lookup};
 
@@ -69,7 +70,7 @@ impl ValidatedDescriptorMap {
             if !outputs.insert(row.output.clone()) {
                 return Err(invalid("two source rows claim one output path"));
             }
-            let folded = row.output.to_lowercase();
+            let folded = path_identity_key(&row.output);
             if folded_outputs
                 .insert(folded, row.output.clone())
                 .is_some_and(|prior| prior != row.output)
@@ -189,17 +190,5 @@ fn sha256(value: &str) -> bool {
 }
 
 fn relative(value: &str) -> bool {
-    if value.is_empty() || value.contains('\\') || value.contains('\0') || value.starts_with('/') {
-        return false;
-    }
-    let bytes = value.as_bytes();
-    if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
-        return false;
-    }
-    !value
-        .split('/')
-        .any(|part| part.is_empty() || matches!(part, "." | ".."))
-        && Path::new(value)
-            .components()
-            .all(|part| matches!(part, Component::Normal(_)))
+    split_relative(value).is_ok()
 }

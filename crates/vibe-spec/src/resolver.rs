@@ -182,6 +182,10 @@ pub enum ResolveError {
     DescriptorMapMissing { root: String },
     #[error("descriptor-owned source root `{root}` cannot use an undeclared frontend")]
     DescriptorFrontendUnsupported { root: String },
+    #[error("unsafe portable source path `{path}`: {reason}")]
+    UnsafeSourcePath { path: String, reason: String },
+    #[error("source path `{requested}` aliases on a portable filesystem with `{observed}`")]
+    PortableSourceAlias { requested: String, observed: String },
 }
 
 impl FileResolver {
@@ -502,6 +506,7 @@ impl FileResolver {
 /// answers "which `spec/` root does this authority mean", everything there
 /// answers "which file inside a root does this doc-path mean".
 mod lookup;
+mod portable;
 mod resource;
 pub use lookup::canonical_doc_path;
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
@@ -534,5 +539,7 @@ mod version_order;
 mod glob;
 pub use glob::is_pattern;
 
+#[cfg(test)]
+mod m_01_a_2_cases;
 #[cfg(test)]
 mod tests;
