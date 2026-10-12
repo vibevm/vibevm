@@ -19,6 +19,9 @@ use crate::vibedeps::{
 use super::{BoundSourceInputs, CaptureOwner, PreparedOwnerCapture, validate_snapshot};
 use crate::source_query::SourceQueryUnavailable;
 
+mod membership;
+pub use membership::{CapturedSourceFile, RecordedOutput, SourceMembershipIndex, SourceStrength};
+
 const MANIFEST_CAP: usize = 1024 * 1024;
 const LOCK_CAP: usize = 8 * 1024 * 1024;
 const RECORD_CAP: usize = 8 * 1024 * 1024;

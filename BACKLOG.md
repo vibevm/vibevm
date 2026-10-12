@@ -2503,3 +2503,13 @@ structure, and it goes when the file does.
 | @fact:B228-SEVERITY **severity** | P2 — conform verdict is red; no complete product conformance claim. Targeted C4 behavioral proof is separate. |
 | @fact:B228-DISPOSITION **disposition** | deferred — address old findings when their code or final conformance gate is required. Remove current candidate violations before accepting this increment; do not turn all existing crate debt into immediate C4 cleanup. |
 | @fact:B228-FILED **filed by** | First Agent C4 review, 2026-10-12. |
+
+## B-229 — bounded original-source proof supports only small Legacy0 captures {#b-229}
+
+| field | value |
+|---|---|
+| @fact:B229-WHAT **what** | Accepted M-01-C.2 independent original membership reuses the existing bounded Legacy0 replay. Strict original-source proof is unavailable for Tree1 or captures beyond 8 files, 2 MiB/file, 4 MiB total, depth4 and12 children/directory. Non-strict queries retain truthful observed/record-consistent strength. This does not imply those packages are corrupt. |
+| @fact:B229-EVIDENCE **evidence** | campaigns/next/evidence/M-01-C.2/accepted-2026-10-12.md and manifest.json; incumbent crates/vibe-registry/src/shippable/bounded.rs and the exact unsupported-recipe case in the accepted replay corpus. Mandatory verified wrapper seals actual original replay; mutable record agreement is never authentication. |
+| @fact:B229-SEVERITY **severity** | P2 — limitation of strict proof availability, not a blocker to current MVP development with explicit weaker strength. Native Windows/macOS and stronger hostile-ABA guarantees are also unperformed; no additional gate is imposed by this finding. |
+| @fact:B229-DISPOSITION **disposition** | deferred — extend bounded replay using the canonical named recipes/caps when a concrete product use requires stronger proof for a larger or Tree1 package. Preserve immutable captured bytes, independently selected pin, complete membership and resource bounds; do not fall back to payload-owned digests. Converter/overlay proof remains the existing M-01-C.3 task, not this backlog improvement. |
+| @fact:B229-FILED **filed by** | First Agent C2 acceptance, 2026-10-12. |

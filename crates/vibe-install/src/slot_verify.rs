@@ -19,11 +19,165 @@ use std::collections::HashMap;
 use std::path::Path;
 
 use vibe_core::manifest::SpecFormat;
-use vibe_core::{ContentHash, Group};
-use vibe_registry::{RecipeId, compute_content_hash, compute_content_hash_with};
+use vibe_core::{ContentHash, Group, PackageRef};
+use vibe_registry::{
+    BoundedContentFile, RecipeId, compute_content_hash, compute_content_hash_legacy0_bounded_exact,
+    compute_content_hash_with,
+};
 use vibe_workspace::install::{ResolvedDep, SlotCheck, SlotVerifier};
+use vibe_workspace::source_query::{
+    CapturedSourceFile, SourceMembershipIndex, SourceQueryUnavailable, SourceStrength,
+    WitnessedSourceWorld,
+};
 
 use crate::fetched::Fetched;
+
+/// Replay a complete, caller-captured ORIGINAL package tree under the
+/// incumbent bounded recipe, then join it to the independently selected hash.
+/// The caller obtains `package_pin` and `selected_hash` from its trusted
+/// selected world, never from the editable slot record. No provider or cache
+/// port exists here; unsupported recipes and missing capture refuse offline.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP"
+)]
+pub fn verify_original_source_capture(
+    root: &Path,
+    package_pin: PackageRef,
+    selected_hash: ContentHash,
+    captured: Vec<CapturedSourceFile>,
+) -> Result<VerifiedSourceMembership, SourceQueryUnavailable> {
+    if !selected_hash
+        .as_str()
+        .starts_with(RecipeId::Legacy0.label())
+    {
+        return Err(SourceQueryUnavailable::SourceProofUnavailable(
+            "unsupported source hash recipe",
+        ));
+    }
+    let mut rows = captured
+        .iter()
+        .map(|file| BoundedContentFile {
+            relative_path: file.relative_path().to_owned(),
+            bytes: file.snapshot().size,
+            sha256: format!("sha256:{}", file.snapshot().sha256),
+        })
+        .collect::<Vec<_>>();
+    rows.sort_by(|a, b| a.relative_path.cmp(&b.relative_path));
+    let replayed =
+        compute_content_hash_legacy0_bounded_exact(root, &package_pin, &rows).map_err(|_| {
+            SourceQueryUnavailable::SourceProofUnavailable("bounded original capture replay")
+        })?;
+    if replayed != selected_hash {
+        return Err(SourceQueryUnavailable::SourceHashMismatch);
+    }
+    let index = SourceMembershipIndex::from_captured(&package_pin, captured)?;
+    Ok(VerifiedSourceMembership {
+        package_pin,
+        selected_hash,
+        index,
+    })
+}
+
+/// Proof-capable original capture. Only canonical bounded replay above can
+/// construct this value; its fields and constructor are private to this owner.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP"
+)]
+pub struct VerifiedSourceMembership {
+    package_pin: PackageRef,
+    selected_hash: ContentHash,
+    index: SourceMembershipIndex,
+}
+
+impl VerifiedSourceMembership {
+    pub fn file_count(&self) -> usize {
+        self.index.file_count()
+    }
+    pub fn contains(&self, path: &str) -> bool {
+        self.index.contains(path)
+    }
+
+    /// Selected ORIGINAL membership, independent of the installed slot's
+    /// mutable record and without claiming transformed output derivation.
+    pub fn original_source_member(
+        &self,
+        world: &WitnessedSourceWorld,
+        group: &str,
+        name: &str,
+        path: &str,
+    ) -> Result<bool, SourceQueryUnavailable> {
+        let (pin, hash) = world.selected_source_pin(group, name)?;
+        if pin != self.package_pin || hash != self.selected_hash {
+            return Err(SourceQueryUnavailable::SourceProofUnavailable(
+                "selected original capture",
+            ));
+        }
+        Ok(self.index.contains(path))
+    }
+
+    fn promote_output(
+        &self,
+        world: &WitnessedSourceWorld,
+        group: &str,
+        name: &str,
+        output: &str,
+        strict: bool,
+        local: SourceStrength,
+    ) -> Result<SourceStrength, SourceQueryUnavailable> {
+        let (pin, hash) = world.selected_source_pin(group, name)?;
+        let recorded = world.recorded_output(group, name, output)?;
+        if pin == self.package_pin
+            && hash == self.selected_hash
+            && recorded.as_ref().is_some_and(|row| {
+                row.format == SpecFormat::Mixed
+                    && row.source_path == output
+                    && self.index.member_matches(row.source_path, row.snapshot)
+            })
+        {
+            return Ok(SourceStrength::SourceProven);
+        }
+        if strict {
+            Err(SourceQueryUnavailable::SourceProofUnavailable(
+                "original source membership or derivation",
+            ))
+        } else {
+            Ok(local)
+        }
+    }
+}
+
+/// The only public strength route that may return `SourceProven`. A raw
+/// workspace catalogue stays inert; missing proof refuses strict requests
+/// offline, with no provider/cache/rebuild port.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-STRENGTH-LAW")]
+pub fn source_strength(
+    world: &WitnessedSourceWorld,
+    owner: Option<(&str, &str)>,
+    output: &str,
+    proof: Option<&VerifiedSourceMembership>,
+    strict: bool,
+) -> Result<SourceStrength, SourceQueryUnavailable> {
+    let local = world.output_strength(owner, output)?;
+    let Some((group, name)) = owner else {
+        return if strict {
+            Err(SourceQueryUnavailable::SourceProofUnavailable(
+                "development source capture",
+            ))
+        } else {
+            Ok(local)
+        };
+    };
+    let Some(proof) = proof else {
+        return if strict {
+            Err(SourceQueryUnavailable::SourceProofUnavailable(
+                "original source capture",
+            ))
+        } else {
+            Ok(local)
+        };
+    };
+    proof.promote_output(world, group, name, output, strict, local)
+}
 
 /// The [`SlotVerifier`] for the apply phase: prefer the typed slot record and
 /// its exact payload list, falling back to historical hash recipes only when
@@ -293,3 +447,96 @@ fn option_hash(hash: &Option<String>) -> &str {
 fn option_content_hash(hash: &Option<ContentHash>) -> &str {
     hash.as_ref().map(ContentHash::as_str).unwrap_or("<none>")
 }
+
+#[cfg(test)]
+mod source_membership_cases {
+    use std::fs;
+
+    use tempfile::TempDir;
+    use vibe_safefs::Project;
+
+    use super::*;
+
+    fn fixture() -> (
+        TempDir,
+        vibe_core::PackageRef,
+        ContentHash,
+        Vec<CapturedSourceFile>,
+    ) {
+        let root = tempfile::tempdir().unwrap();
+        fs::create_dir(root.path().join("spec")).unwrap();
+        fs::write(
+            root.path().join("vibe.toml"),
+            "[package]\ngroup='org.demo'\nname='dep'\nkind='flow'\nversion='1.0.0'\n",
+        )
+        .unwrap();
+        fs::write(
+            root.path().join("spec/DOC.md"),
+            b"# Original\nSOURCE_MEMBER_C2\n",
+        )
+        .unwrap();
+        let pin = vibe_core::PackageRef::parse("flow:org.demo/dep@=1.0.0").unwrap();
+        // Selected expected value is pinned once from the pristine original,
+        // before any candidate slot/source mutation below.
+        let expected = ContentHash::parse(&compute_content_hash(root.path()).unwrap()).unwrap();
+        let project = Project::open(root.path()).unwrap();
+        let captured = ["spec/DOC.md", "vibe.toml"]
+            .into_iter()
+            .map(|relative| {
+                CapturedSourceFile::new(
+                    relative.to_owned(),
+                    project
+                        .read_file_snapshot_bounded(relative, 1024)
+                        .unwrap()
+                        .unwrap(),
+                )
+                .unwrap()
+            })
+            .collect();
+        (root, pin, expected, captured)
+    }
+
+    #[test]
+    fn verified_original_capture_seals_exact_members_only() {
+        let (root, pin, expected, captured) = fixture();
+        let cache = root.path().join("must-stay-absent-cache");
+        let index = verify_original_source_capture(root.path(), pin, expected, captured).unwrap();
+        assert_eq!(index.file_count(), 2);
+        assert!(index.contains("spec/DOC.md"));
+        assert!(!index.contains("spec/UNRECORDED.md"));
+        assert!(!cache.exists());
+    }
+
+    #[test]
+    fn changed_source_or_wrong_independent_pin_cannot_seal() {
+        let (root, pin, expected, captured) = fixture();
+        let wrong = ContentHash::parse(&format!("sha256:{}", "0".repeat(64))).unwrap();
+        assert!(matches!(
+            verify_original_source_capture(root.path(), pin.clone(), wrong, captured.clone()),
+            Err(SourceQueryUnavailable::SourceHashMismatch)
+        ));
+        fs::write(root.path().join("spec/DOC.md"), b"# Changed\n").unwrap();
+        assert!(matches!(
+            verify_original_source_capture(root.path(), pin, expected, captured),
+            Err(SourceQueryUnavailable::SourceProofUnavailable(
+                "bounded original capture replay"
+            ))
+        ));
+    }
+
+    #[test]
+    fn unsupported_recipe_refuses_offline() {
+        let (root, pin, _expected, captured) = fixture();
+        let tree1 = ContentHash::parse(&format!("sha256-tree/1:{}", "a".repeat(64))).unwrap();
+        assert!(matches!(
+            verify_original_source_capture(root.path(), pin, tree1, captured),
+            Err(SourceQueryUnavailable::SourceProofUnavailable(
+                "unsupported source hash recipe"
+            ))
+        ));
+    }
+}
+
+#[cfg(test)]
+#[path = "slot_verify/m_01_c_2_cases.rs"]
+mod m_01_c_2_cases;
