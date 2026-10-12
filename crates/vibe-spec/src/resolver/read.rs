@@ -1,14 +1,21 @@
-//! Bounded read consistency for internal source callers; not a retained-handle grant.
+//! One held SafeFS observation for internal source callers. The legacy
+//! filename lookup still belongs to the resolver; bytes and raw digest do not.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-070#INTERNAL-LOOKUP-FAILURES");
 
+#[cfg(test)]
 use std::fs;
+#[cfg(test)]
 use std::io;
 use std::path::Path;
+
+use vibe_safefs::{Project, StableFileSnapshot};
 
 use crate::SpecAddress;
 
 use super::{FileResolver, ResolveError, portable};
+
+const SOURCE_CAP: usize = 64 * 1024 * 1024;
 
 impl FileResolver {
     pub(crate) fn read_projected_source(
@@ -16,10 +23,23 @@ impl FileResolver {
         addr: &SpecAddress,
         path: &Path,
     ) -> Result<String, String> {
-        let bytes = self
-            .read_preflighted_source(addr, path)
+        self.read_observed_projected_source(addr, path)
+            .map(|(_, projected)| projected)
+    }
+
+    /// Project exactly the bytes whose raw digest and held-file identity are
+    /// retained in the returned snapshot. No second pathname read supplies
+    /// parser input or digest.
+    pub(crate) fn read_observed_projected_source(
+        &self,
+        addr: &SpecAddress,
+        path: &Path,
+    ) -> Result<(StableFileSnapshot, String), String> {
+        let observed = self
+            .read_observed_source(addr, path)
             .map_err(|error| error.to_string())?;
-        project_source(path, &bytes)
+        let projected = project_source(path, &observed.bytes)?;
+        Ok((observed, projected))
     }
 
     pub(crate) fn read_preflighted_source(
@@ -27,9 +47,42 @@ impl FileResolver {
         addr: &SpecAddress,
         path: &Path,
     ) -> Result<Vec<u8>, ResolveError> {
-        self.read_preflighted_with(addr, path, |path| fs::read(path))
+        self.read_observed_source(addr, path)
+            .map(|observation| observation.bytes)
     }
 
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-070#RETAINED-SOURCE-OBSERVATION"
+    )]
+    pub(crate) fn read_observed_source(
+        &self,
+        addr: &SpecAddress,
+        path: &Path,
+    ) -> Result<StableFileSnapshot, ResolveError> {
+        let base = self.spec_root(&addr.authority)?;
+        if !portable::checked_file(&base, path)? {
+            return Err(ResolveError::SourceUnstable {
+                path: path.display().to_string(),
+                reason: "selected source disappeared before reading".to_owned(),
+            });
+        }
+        let relative = path.strip_prefix(&base).map_err(|_| {
+            portable::unsafe_path(&path.display().to_string(), "outside selected root")
+        })?;
+        let relative = relative.to_str().ok_or_else(|| {
+            portable::unsafe_path(&path.display().to_string(), "non-UTF-8 source name")
+        })?;
+        let project = Project::open(&base).map_err(|error| observation_error(path, error))?;
+        project
+            .read_file_snapshot_bounded(relative, SOURCE_CAP)
+            .map_err(|error| observation_error(path, error))?
+            .ok_or_else(|| ResolveError::SourceUnstable {
+                path: path.display().to_string(),
+                reason: "selected source disappeared before held read".to_owned(),
+            })
+    }
+
+    #[cfg(test)]
     fn read_preflighted_with(
         &self,
         addr: &SpecAddress,
@@ -47,6 +100,13 @@ impl FileResolver {
     }
 }
 
+fn observation_error(path: &Path, error: impl std::fmt::Display) -> ResolveError {
+    ResolveError::SourceObservationUnavailable {
+        path: path.display().to_string(),
+        reason: error.to_string(),
+    }
+}
+
 pub(crate) fn project_source(file: &Path, bytes: &[u8]) -> Result<String, String> {
     let raw = std::str::from_utf8(bytes).map_err(|error| {
         format!(
@@ -59,6 +119,7 @@ pub(crate) fn project_source(file: &Path, bytes: &[u8]) -> Result<String, String
         .map_err(|error| error.to_string())
 }
 
+#[cfg(test)]
 fn read_stable_with(
     path: &Path,
     mut read: impl FnMut(&Path) -> io::Result<Vec<u8>>,
@@ -74,6 +135,7 @@ fn read_stable_with(
     Ok(first)
 }
 
+#[cfg(test)]
 fn read_error(path: &Path, error: io::Error) -> ResolveError {
     match error.kind() {
         io::ErrorKind::NotFound => ResolveError::SourceUnstable {
@@ -135,3 +197,7 @@ mod tests {
         ));
     }
 }
+
+#[cfg(test)]
+#[path = "m_01_c_1_cases.rs"]
+mod m_01_c_1_cases;

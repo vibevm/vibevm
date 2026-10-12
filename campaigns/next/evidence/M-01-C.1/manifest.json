@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "task": "M-01-C.1",
+  "base_commit": "f60dd007b8f0c019abe21e8bae39e52b69280867",
+  "raw_logs": [
+    {
+      "name": "CANDIDATE-REPORT.md",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/CANDIDATE-REPORT.md",
+      "raw_sha256": "2804bfb9965232f7b2c2c2c96aa2729a2beac34693ba405af274558521c7dcb3",
+      "repository_sha256": "2804bfb9965232f7b2c2c2c96aa2729a2beac34693ba405af274558521c7dcb3"
+    },
+    {
+      "name": "HELD-OBSERVATION-REVIEW.md",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/HELD-OBSERVATION-REVIEW.md",
+      "raw_sha256": "e65c1899e09da7f5af995357e67fc2d379c60a24f52a165438021fe87afeab53",
+      "repository_sha256": "e65c1899e09da7f5af995357e67fc2d379c60a24f52a165438021fe87afeab53"
+    },
+    {
+      "name": "full-fmt-post-same-byte.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/full-fmt-post-same-byte.log",
+      "raw_sha256": "24acc9dabcadbeeb2ce4bd2b6acd0cdabc70f59e492ed613b7da7a39c1a3eba1",
+      "repository_sha256": "826413dd064e03f49f951f2cc86d6e6962afbfcd99c83486b514cb11aea85fc0"
+    },
+    {
+      "name": "package-fmt-post-same-byte.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/package-fmt-post-same-byte.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "repository_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "name": "root-specmap-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/root-specmap-final.log",
+      "raw_sha256": "b98ffeff2403546c837555343282f10a153eab7ad2145f060fc7fa8200512215",
+      "repository_sha256": "b98ffeff2403546c837555343282f10a153eab7ad2145f060fc7fa8200512215"
+    },
+    {
+      "name": "safefs-c1-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/safefs-c1-final.log",
+      "raw_sha256": "afa57c2f3501286b4341b5b210ef84100bb39239107725e78455567f892dff3b",
+      "repository_sha256": "e685b5efce5e4d9a8e2509e8c2d6c62422eccf2f04ad5f6ddd39ecf4eec4677a"
+    },
+    {
+      "name": "safefs-same-byte.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/safefs-same-byte.log",
+      "raw_sha256": "bcc8c59ff0a80b7e8b64843b982557e252ea3eeb021057bb2dc23cd9af409c67",
+      "repository_sha256": "6a79c619717237268c11d083e33892473460c28cc8a84921a2c25a6c15b6e53c"
+    },
+    {
+      "name": "spec-a3-compiler.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/spec-a3-compiler.log",
+      "raw_sha256": "e99f6fe12a4babf07057b3be0faf74959266801d0904e267b917837ccb9414b4",
+      "repository_sha256": "193a296829880bd8627f03f14d3047b0c831957479efd1545dd6085cf98de1d8"
+    },
+    {
+      "name": "spec-a3-read.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/spec-a3-read.log",
+      "raw_sha256": "3ca8c684e4ae7dbc901365a2a4231bbc351b536cd75c18cc09c6f3ae6580a36e",
+      "repository_sha256": "0719b0dcddb1c769fb53088d6ea027d41898f3ca9e4b9865b3c9e3d28ffa2998"
+    },
+    {
+      "name": "spec-a3-symlink.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/spec-a3-symlink.log",
+      "raw_sha256": "d68dbdda9dea755850a72456944d8765c1ef1daefebbd77c46e01d65b06f6bbe",
+      "repository_sha256": "a190d10a0a4af0a0e014e2c445a7e8fe1eae5e50a333b270fed549d6d9241291"
+    },
+    {
+      "name": "spec-c1-same-byte.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/spec-c1-same-byte.log",
+      "raw_sha256": "1a35331c4e4e50df78d1d90efa0ca65e956264324971c63a78898cb1d7553ce5",
+      "repository_sha256": "06b5877b0eb1010983900be8dcf4d2e1ee28cce3e10d5cfd2e09fdf65a9f9b8f"
+    },
+    {
+      "name": "spec-embed-xml.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/spec-embed-xml.log",
+      "raw_sha256": "a7cc98d7a0093d3a039d8db61a3a6399327dc12d607be2a0880d2145c0e801a0",
+      "repository_sha256": "57c42d1141b1ab4f4120a2695d145d5e3f4755765d47f5ec3c7f24e34c08bffa"
+    },
+    {
+      "name": "spec-lib-check.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/spec-lib-check.log",
+      "raw_sha256": "cc61e1708025c27d7c8a1271b769f070b496ee19fbaa5a824130c82d4643d06f",
+      "repository_sha256": "cc61e1708025c27d7c8a1271b769f070b496ee19fbaa5a824130c82d4643d06f"
+    },
+    {
+      "name": "spec-same-byte-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-C1/spec-same-byte-final.log",
+      "raw_sha256": "11e06fe7cc6debae3ec8f1091e433cbe6bb826f7b6ad17db369709c91f8008d4",
+      "repository_sha256": "42e58b4a4d693cbf59ee829d8ede48932e6cbb4d182cd10454f552f7cef593b6"
+    }
+  ],
+  "accepted_source_sha256": {
+    "crates/vibe-safefs/src/file.rs": "2a89c0eb54511cb47df696d4514a0c167c561d843cedb9745d5a2b4750e6b3a2",
+    "crates/vibe-safefs/src/file/m_01_c_1_cases.rs": "20b48e395dd9c053dad4897c541646a76b64a6fdd21aa85a960bc32c57d451da",
+    "crates/vibe-spec/Cargo.toml": "36af3167625426b8e6399b219c44a9d8b660284a7c51cce5120dd65806d23368",
+    "crates/vibe-spec/src/resolver.rs": "70b9b9ff61995ad75a135e78e70cd61dd56f5b0b50810f8f87d36ffef9eb7845",
+    "crates/vibe-spec/src/resolver/read.rs": "953eb8eba10fd73e644bdd372dad05b7d37012993d45fc02f0d9766fe67a6c92",
+    "crates/vibe-spec/src/resolver/m_01_c_1_cases.rs": "01e20120cbb7e4f1b5d78588f8bf6e21ac36b20de9c6d209240742ea34e3bb0c",
+    "vibevm/vibespecs/common/PROP-070-resource-resolution.xml": "f798d6a0355e245c384173fef8d17a9e01151f920b9c167a072a8580a5d5ac09",
+    "specmap.json": "fd82be23625088ebe40ef776f415acfcf92d4d8f0fd220cc043c0ee929148b38"
+  },
+  "specmap": {
+    "exit_code": 0,
+    "unresolved_host_edges": 0,
+    "gated_orphans": 138,
+    "baseline_orphans": 138
+  }
+}

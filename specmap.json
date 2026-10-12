@@ -35784,10 +35784,19 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/resolver/read.rs",
       "item_kind": "mod",
-      "line": 3,
+      "line": 4,
       "symbol": "vibe_spec::resolver::read",
-      "end_line": 3,
+      "end_line": 4,
       "fingerprint": "tok1:2209d99680b4a51346a30554911b9a59502a6470a30a84080663b4f4683cff09"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/read.rs",
+      "item_kind": "fn",
+      "line": 54,
+      "symbol": "vibe_spec::resolver::read::FileResolver::read_observed_source",
+      "end_line": 83,
+      "fingerprint": "tok1:9f4b93015e2a8cccb3e842c3960e7d1a3a6c7b9efe87fce0b612ad7cb6233cf6"
     },
     {
       "crate_name": "vibe-spec",
@@ -67095,9 +67104,17 @@
     {
       "file": "crates/vibe-spec/src/resolver/read.rs",
       "from_symbol": "vibe_spec::resolver::read",
-      "line": 3,
+      "line": 4,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#INTERNAL-LOOKUP-FAILURES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/resolver/read.rs",
+      "from_symbol": "vibe_spec::resolver::read::FileResolver::read_observed_source",
+      "line": 54,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#RETAINED-SOURCE-OBSERVATION",
       "verb": "implements"
     },
     {
@@ -94965,7 +94982,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:e01bd768a39a7afe99d7104a912339c25a5883500deee8880dbb2a441f5b6536",
+      "content_hash": "sha256:bba90c3f08c337320476139d8d288b7d02a387c2145db51381a7a65fa3cc08b7",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "PROP-070: Validated resource addresses and selected resolution",
@@ -95073,7 +95090,7 @@
     },
     {
       "anchor": "caller-failures",
-      "content_hash": "sha256:76204b70d237d83f466caf1b0724bc235659e2681332faa5870a47d8c93e6449",
+      "content_hash": "sha256:50af312daecb9b6d036539570d22bb9687330043f63a65d31efec233275101ef",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "4. Internal lookup failure truth",
@@ -95082,10 +95099,10 @@
     },
     {
       "anchor": "INTERNAL-LOOKUP-FAILURES",
-      "content_hash": "sha256:521e5f7f90c02c6ce3ed6b48d4689810e621a7031eef229f18e1b2fc54ad4172",
+      "content_hash": "sha256:c3e9d67b90b88c54e78c4cb1df432bf4cb68251d890abed667636e6154760dce",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
-      "heading": "Compiler-facing section sources, recursive `#embed` reads and selected-provider prompt resolution preserve the incumbent selected-world authority and portable source preflight. An actually absent document is `not found`; an existing non-directory source location or failed directory/read operation is unreadable; duplicate physical document stems, competing pattern members and a referenced duplicate document anchor refuse as ambiguous instead of selecting the first or disappearing from a set. A matched pattern member missing its document alone is excluded from that set. If a selected source disappears after lookup or its bytes differ across the internal two-read observation, the caller reports instability and never publishes one of those observed versions as a stable result. These internal checks preserve valid Markdown/XML projection and prompt/embed content, but a two-read comparison is not a retained-handle capture or a guarantee against later namespace races. The public captured query owner remains separate. @status:spec/plan",
+      "heading": "Compiler-facing section sources, recursive `#embed` reads and selected-provider prompt resolution preserve the incumbent selected-world authority and portable source preflight. An actually absent document is `not found`; an existing non-directory source location or failed directory operation is unreadable; duplicate physical document stems, competing pattern members and a referenced duplicate document anchor refuse as ambiguous instead of selecting the first or disappearing from a set. A matched pattern member missing its document alone is excluded from that set. If a selected source disappears after lookup, the caller reports instability; if its subsequent held observation cannot be established, the caller reports unavailable and never publishes partial bytes as stable content. These internal checks preserve valid Markdown/XML projection and prompt/embed content. The portable lookup preflight alone is not a read grant; the production reader uses the separate retained observation law below, whose finite window does not exclude later namespace races. The public captured query owner remains separate. @status:spec/plan",
       "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#INTERNAL-LOOKUP-FAILURES"
     },
@@ -95115,6 +95132,24 @@
       "heading": "A prepared point query retains the exact selected resolution and the authored membership chain from the workspace root to its selected node. The preparation owner supplies bounded snapshots of the governing lock and those membership manifests; the query constructor does not fetch or rebuild them. Before captured bytes can be used, current no-follow observations must agree with the retained selected lock rows, selected-node membership, selected source manifests, descriptor identities and captured outputs. A changed selected lock or descriptor refuses as stale; missing or unreadable required evidence makes the selected world unavailable. Only the selected node's ancestor chain, retained dependency metadata required to establish its visibility, and effective visible source outputs are inspected: an unrelated broken workspace member or unselected slot cannot veto a proven point query. Observation is detection-bound, not an atomic filesystem transaction or a claim that source names cannot change after the final check; a query never combines prepared old-world bytes with a newly observed source. @status:spec/plan",
       "line": 29,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SELECTED-WORLD-CONTINUITY"
+    },
+    {
+      "anchor": "source-observation",
+      "content_hash": "sha256:e49f05833203bf9b3785c12c7ce58bf7c1a498e3427499ea8c74604c37939e08",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "6. One retained physical observation",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#source-observation"
+    },
+    {
+      "anchor": "RETAINED-SOURCE-OBSERVATION",
+      "content_hash": "sha256:13f60c0f8ce1562ab5a24240d9c16513ba85607d1b38e9bf01712e3c3f069d9a",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "A source read that returns bytes and a raw SHA-256 digest obtains both from one bounded, no-follow SafeFS observation under a held project root, parent and regular single-link file. The same observed buffer supplies any parsing or projection input; a separately reopened name cannot supply the digest or the parser's bytes. The read checks the held file across two passes and the final capability-relative name before reporting a stable observation. Absence before opening remains absent; an unreadable, shared-link or unstable observation never returns partial bytes as success. This is a finite pre/post stability window: mutation after the final check, including hostile ABA, is not excluded by this witness. A query read creates no lock, directory, copy-on-write output, cache fill or provider effect. Native platform qualification is separate from portable source-code behavior. @status:spec/plan",
+      "line": 33,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#RETAINED-SOURCE-OBSERVATION"
     },
     {
       "anchor": "root",
