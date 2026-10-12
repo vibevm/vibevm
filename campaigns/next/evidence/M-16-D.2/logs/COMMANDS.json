@@ -1,0 +1,197 @@
+[
+  {
+    "log": "positions-representative.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-spec --lib editor_positions::m_16_d_2_cases::unicode_crlf_roundtrip -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1005 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "capture-position-representative.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases::unicode_location_uses_actual_frozen_resource -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "orchestrator-family.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases --",
+    "cwd": "/tmp",
+    "exit": 101,
+    "result": "test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "orchestrator-fixed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases --",
+    "cwd": "/tmp",
+    "exit": 101,
+    "result": "test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "orchestrator-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases --",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "orchestrator-sealed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases --",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "orchestrator-bound-results.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases --",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "mcp-context.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-mcp --lib context::m_16_d_2_cases::context_positions_and_gap_use_same_client -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "spec-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-spec --lib editor_positions::m_16_d_2_cases --",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1004 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "buffer-compat.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases::buffer_versions_create_delete_move_and_close -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "mcp-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-mcp --lib context::m_16_d_2_cases::context_positions_and_gap_use_same_client -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "gap-promotion-before.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases::watch_gap_and_overlay_preserve_historical_capture_without_effects -- --exact",
+    "cwd": "/tmp",
+    "exit": 101,
+    "result": "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "orchestrator-gap-fixed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases --",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "mcp-gap-fixed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-mcp --lib context::m_16_d_2_cases::context_positions_and_gap_use_same_client -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "orchestrator-final-basis.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_2_cases --",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "mcp-final-basis.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-mcp --lib context::m_16_d_2_cases::context_positions_and_gap_use_same_client -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "mcp-sealed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-mcp --lib context::m_16_d_2_cases::context_positions_and_gap_use_same_client -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+  },
+  {
+    "log": "touched-format.log",
+    "argv": [
+      "rustfmt",
+      "+nightly",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/buffers.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/capture.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/invalidation.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/locations.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/mod.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/preview.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/views.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-spec/src/editor_positions.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-spec/src/lib.rs"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "touched-format-final.log",
+    "argv": [
+      "rustfmt",
+      "+nightly",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/buffers.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/capture.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/invalidation.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/locations.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/mod.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/preview.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/views.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-spec/src/editor_positions.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-spec/src/lib.rs"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "diff-check.log",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "diff-check-final.log",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "xml-parse.log",
+    "command": "Python ElementTree.parse PROP080; require unique DOCUMENT-EDITOR-POSITIONS and DOCUMENT-VIEW-INVALIDATION",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  }
+]

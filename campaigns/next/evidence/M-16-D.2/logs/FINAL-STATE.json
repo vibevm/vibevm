@@ -1,0 +1,10 @@
+{
+  "task": "M-16-D.2",
+  "state": "candidate-source-writing-stopped",
+  "base": "a49821e1ac1389b9535bf1aa95fd8e5d763a8b5b",
+  "product_files": 12,
+  "new_cases": 7,
+  "existing_representatives": 1,
+  "broker_cursor": "943",
+  "runtime_finish_called": false
+}

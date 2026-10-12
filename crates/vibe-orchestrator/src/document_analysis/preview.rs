@@ -10,6 +10,7 @@ use vibe_specdoc::captured::{
 pub struct AnalysisDiagnostic {
     pub resource: ResourceId,
     pub capture: String,
+    pub source_revision: Result<SourceRevision, LocationError>,
     pub code: &'static str,
     pub message: String,
     pub basis: vibe_specdoc::captured::PositionBasis,
@@ -18,10 +19,13 @@ pub struct AnalysisDiagnostic {
 pub struct DocumentPreview<'a> {
     pub resource: ResourceId,
     pub capture: &'a str,
+    pub source_revision: SourceRevision,
     pub inspection: CapturedInspection<'a>,
 }
 #[derive(Debug)]
 pub struct CapturedOutline<'a> {
+    pub source_revision: SourceRevision,
+    pub projection_digest: String,
     pub resource: ResourceId,
     pub capture: &'a str,
     pub basis: vibe_specdoc::captured::PositionBasis,
@@ -29,6 +33,8 @@ pub struct CapturedOutline<'a> {
 }
 #[derive(Debug)]
 pub struct CapturedSelection<'a> {
+    pub source_revision: SourceRevision,
+    pub projection_digest: String,
     pub resource: ResourceId,
     pub capture: &'a str,
     pub basis: vibe_specdoc::captured::PositionBasis,
@@ -55,6 +61,7 @@ impl AnalysisCapture {
         AnalysisDiagnostic {
             resource,
             capture: self.id.clone(),
+            source_revision: self.source_revision(resource),
             code,
             message: message.into(),
             basis: vibe_specdoc::captured::PositionBasis::OriginalBytes,
@@ -171,6 +178,9 @@ impl AnalysisCapture {
             return Ok(DocumentPreview {
                 resource: id,
                 capture: &self.id,
+                source_revision: self
+                    .source_revision(id)
+                    .expect("validated present resource"),
                 inspection: inspect_captured(raw, CapturedSyntax::Opaque),
             });
         }
@@ -178,6 +188,9 @@ impl AnalysisCapture {
         Ok(DocumentPreview {
             resource: id,
             capture: &self.id,
+            source_revision: self
+                .source_revision(id)
+                .expect("validated present resource"),
             inspection: inspect_captured(raw, syntax),
         })
     }
@@ -193,6 +206,8 @@ impl AnalysisCapture {
         let nodes = vibe_specdoc::selection::outline(&ir, vocabulary)
             .map_err(|e| self.diagnostic(id, "node-selection", e.to_string()))?;
         Ok(CapturedOutline {
+            source_revision: preview.source_revision,
+            projection_digest: super::digest(vibe_specdoc::to_markdown(&ir).as_bytes()),
             resource: id,
             capture: &self.id,
             basis: vibe_specdoc::captured::PositionBasis::MarkdownProjection(
@@ -215,9 +230,12 @@ impl AnalysisCapture {
                 "no selected Vibe view; raw remains available",
             ));
         };
+        let projection_digest = super::digest(vibe_specdoc::to_markdown(&ir).as_bytes());
         let node = vibe_specdoc::selection::select_node(&ir, path, children, vocabulary)
             .map_err(|e| self.diagnostic(id, "node-selection", e.to_string()))?;
         Ok(CapturedSelection {
+            source_revision: preview.source_revision,
+            projection_digest,
             resource: id,
             capture: &self.id,
             basis: vibe_specdoc::captured::PositionBasis::MarkdownProjection(

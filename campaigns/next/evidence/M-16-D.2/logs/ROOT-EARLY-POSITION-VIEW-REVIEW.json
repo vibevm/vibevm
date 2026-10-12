@@ -1,0 +1,30 @@
+{
+  "status": "early source review and representatives, not accepted",
+  "source_hashes": {
+    "crates/vibe-spec/src/editor_positions.rs": "8b999af56ac436315ec61836cec95257d66e514a767d9e419cdfa6493c8b1f6e",
+    "crates/vibe-orchestrator/src/document_analysis/locations.rs": "ffb9a0da44672192de2be5c63a974b600632ad783e4589533001e8da1f657507",
+    "crates/vibe-orchestrator/src/document_analysis/invalidation.rs": "c9f5b74c7cbb30a59694639a1e5a81abe17c68c35dc7eee52e0e7efb979aa776",
+    "crates/vibe-orchestrator/src/document_analysis/views.rs": "99d683cc24e473a2a653a9783cbe125edcc40247f181404189eb85cf25e8fca6"
+  },
+  "logs": {
+    "positions-representative.log": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1005 filtered out; finished in 0.00s"
+    ],
+    "capture-position-representative.log": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 575 filtered out; finished in 0.00s"
+    ]
+  },
+  "observed": [
+    "UTF8/16/32 conversion counts actual scalars/codeunits, rejects split UTF8/surrogate/newline and invalid UTF8.",
+    "Locations carry exact capture/resource/buffer version/source digest, projection recipe/digest and declared encoding.",
+    "original_offset validates revision/basis/full tuple and refuses nonexistent projection reverse map.",
+    "Pages carry same captured revision/filter/basis and reject foreign cursor; page size does not truncate payload total.",
+    "Watch hints advance local generation, gap is sticky; resnapshot uses existing freeze and checks generation before clearing.",
+    "Freshness labelled uninvalidated hint, historical or resnapshot-required; no claim that missing watch proves current disk."
+  ],
+  "pending": [
+    "Full captured view/filter/historical/gap cases",
+    "Actual context/MCP test",
+    "Diagnostic unavailable/basis contract and final source seal"
+  ]
+}

@@ -54,6 +54,7 @@ impl CapturedResource {
 #[derive(Debug)]
 pub struct AnalysisCapture {
     pub(super) id: String,
+    pub(super) generation: u64,
     pub(super) context: u64,
     pub(super) client: u64,
     pub(super) primary: ResourceId,
@@ -179,6 +180,7 @@ impl DocumentClient {
         );
         Ok(AnalysisCapture {
             id,
+            generation: state.generation,
             context: self.host.host,
             client: self.client,
             primary: self.host.primary,

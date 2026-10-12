@@ -14,11 +14,17 @@ mod buffers;
 mod capture;
 mod catalog;
 mod compile_plan;
+mod invalidation;
+mod locations;
 mod preview;
+mod views;
 pub use capture::{AnalysisCapture, CapturedResource, ResourceDisposition};
+pub use invalidation::*;
+pub use locations::*;
 pub use preview::{
     AnalysisDiagnostic, CapturedOutline, CapturedSelection, ConfigurationPreview, DocumentPreview,
 };
+pub use views::*;
 static HOSTS: AtomicU64 = AtomicU64::new(1);
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct ResourceId {
@@ -189,3 +195,6 @@ fn digest(bytes: &[u8]) -> String {
 }
 #[cfg(test)]
 mod m_16_d_1_cases;
+
+#[cfg(test)]
+mod m_16_d_2_cases;

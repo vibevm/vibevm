@@ -1,0 +1,40 @@
+{
+  "status": "source/test review before producer final seal",
+  "logs": {
+    "orchestrator-family.log": {
+      "sha256": "8ef3ef14d006e7100e4968babb3e30311246f3af60f02c1e42ae9c9124c7ae98",
+      "results": [
+        "test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+      ]
+    },
+    "orchestrator-fixed.log": {
+      "sha256": "6b385b2a6b8703bdfbe6022a295443cb7dc39f2c821aa8e97c05c268650ad0ae",
+      "results": [
+        "test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+      ]
+    },
+    "orchestrator-bound-results.log": {
+      "sha256": "caaceaa4aaf69ad84bc9f49f0f8e1ac0003f038267abb5dc29584387de329db1",
+      "results": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s"
+      ]
+    },
+    "mcp-context.log": {
+      "sha256": "0fa24fad2aaa9bbd5b63f3e408b13c62c30b6ab36964686f4edb0757418088bd",
+      "results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 205 filtered out; finished in 0.00s"
+      ]
+    }
+  },
+  "reviewed": [
+    "Actual raw/projection source revisions retain capture/resource/buffer digest and named basis; missing reverse map/nonUTF8 conversion explicitly unavailable.",
+    "Actual raw byte pages and outline pages reconstruct full retained payload and reject different filter/capture cursors.",
+    "Disk/lock/policy/target/overlay/gap notifications only change freshness/generation; old captures stable and no target/lock generated.",
+    "Same-client MCP binding exercise passes1/1."
+  ],
+  "limits": [
+    "Cooperative supplied watch hints, not an OS watcher/current-disk proof",
+    "Parser locations represent owner-provided line starts, not invented exact cause columns",
+    "External document transport and reverse XML source map unqualified"
+  ]
+}

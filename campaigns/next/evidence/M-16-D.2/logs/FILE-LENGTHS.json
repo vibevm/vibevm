@@ -1,0 +1,13 @@
+{
+  "crates/vibe-mcp/src/context.rs": 591,
+  "crates/vibe-orchestrator/src/document_analysis/buffers.rs": 162,
+  "crates/vibe-orchestrator/src/document_analysis/capture.rs": 191,
+  "crates/vibe-orchestrator/src/document_analysis/invalidation.rs": 96,
+  "crates/vibe-orchestrator/src/document_analysis/locations.rs": 210,
+  "crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs": 266,
+  "crates/vibe-orchestrator/src/document_analysis/mod.rs": 200,
+  "crates/vibe-orchestrator/src/document_analysis/preview.rs": 354,
+  "crates/vibe-orchestrator/src/document_analysis/views.rs": 152,
+  "crates/vibe-spec/src/editor_positions.rs": 166,
+  "crates/vibe-spec/src/lib.rs": 127
+}

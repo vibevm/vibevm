@@ -1,0 +1,14 @@
+{
+  "crates/vibe-mcp/src/context.rs": "22f6762b8afd14b4116a11ac413d49603c369acc2bc235058e389cae6a85b778",
+  "crates/vibe-orchestrator/src/document_analysis/buffers.rs": "d9bef3b3751d2d968110c52e05310a9df3f18a35be40b25d1fca6448d38bff76",
+  "crates/vibe-orchestrator/src/document_analysis/capture.rs": "450a652dde623023fb0897c8d3a624a72f4e56fd8da4d1cd763b1311302035ce",
+  "crates/vibe-orchestrator/src/document_analysis/invalidation.rs": "96237487ccb0cf0a666232fee8d0aca2780533edd98d842ae1b605f016149075",
+  "crates/vibe-orchestrator/src/document_analysis/locations.rs": "2a199e7b2223b9f82c0474888f6b99b263cecaa7850ba964b6563c14c42c40ca",
+  "crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs": "f1f6bdcdc40401a9bea265a6978f20aabc6c45fdfadabcacbaf2b04ecffbf81a",
+  "crates/vibe-orchestrator/src/document_analysis/mod.rs": "74cfeb566bc1f7bb3b172a39a491fad4abab9e2fccbb573fb00cbbdeeab6431e",
+  "crates/vibe-orchestrator/src/document_analysis/preview.rs": "d2973191c946ef5f91b8cbffa7198a89e8e9a744ec748d5d44af88e5fb236015",
+  "crates/vibe-orchestrator/src/document_analysis/views.rs": "99d683cc24e473a2a653a9783cbe125edcc40247f181404189eb85cf25e8fca6",
+  "crates/vibe-spec/src/editor_positions.rs": "8b999af56ac436315ec61836cec95257d66e514a767d9e419cdfa6493c8b1f6e",
+  "crates/vibe-spec/src/lib.rs": "7f8caa2a88194638432a52d00c86f555b8575640adfd06d25c620c500b775092",
+  "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml": "472b7e192f4189668085aee00d18daaa7b2749a9a2db62b718f502cbed154b22"
+}

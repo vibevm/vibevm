@@ -27180,12 +27180,39 @@
     },
     {
       "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/invalidation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::invalidation",
+      "end_line": 2,
+      "fingerprint": "tok1:cdf42b8d14e658dd260610000ae5e1484204f8cc03ee09a52131ae1c13153f1c"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/locations.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::locations",
+      "end_line": 2,
+      "fingerprint": "tok1:aed325445f6b4c67ce78513692d4b727fdd9abcceccd0d3bdfecdf49458ad424"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/document_analysis/preview.rs",
       "item_kind": "mod",
       "line": 2,
       "symbol": "vibe_orchestrator::document_analysis::preview",
       "end_line": 2,
       "fingerprint": "tok1:2c4e81b3ee1f761bccd02fafbabdeae383e17d8eb446350e626d54d15dec92b8"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/views.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::views",
+      "end_line": 2,
+      "fingerprint": "tok1:cdf42b8d14e658dd260610000ae5e1484204f8cc03ee09a52131ae1c13153f1c"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -35961,6 +35988,15 @@
       "symbol": "vibe_spec::compiler::worklist::tests::infallible_callback_yields_the_exact_historical_worklist",
       "end_line": 257,
       "fingerprint": "tok1:d621d0ef08b1f3453c8a26fc2ed14bb1c3fc227c27659759ed2905f05aa02d19"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/editor_positions.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::editor_positions",
+      "end_line": 2,
+      "fingerprint": "tok1:aed325445f6b4c67ce78513692d4b727fdd9abcceccd0d3bdfecdf49458ad424"
     },
     {
       "crate_name": "vibe-spec",
@@ -59710,11 +59746,35 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-orchestrator/src/document_analysis/invalidation.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::invalidation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-VIEW-INVALIDATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/document_analysis/locations.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::locations",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDITOR-POSITIONS",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-orchestrator/src/document_analysis/preview.rs",
       "from_symbol": "vibe_orchestrator::document_analysis::preview",
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-ANALYSIS-RAW-AND-PREVIEW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/document_analysis/views.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::views",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-VIEW-INVALIDATION",
       "verb": "implements"
     },
     {
@@ -67780,6 +67840,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/editor_positions.rs",
+      "from_symbol": "vibe_spec::editor_positions",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDITOR-POSITIONS",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-spec/src/embed/selection.rs",
@@ -100476,7 +100544,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:2ceae210dafe882060d34cbb063556a32251e1d84469079d23e48eb761565ba5",
+      "content_hash": "sha256:c9141733d715d4659f0b0e2062abd4d4623b67e7bcd6df8a736d4dc0f299b686",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Machine operations and observability",
@@ -101466,7 +101534,7 @@
     },
     {
       "anchor": "document-analysis",
-      "content_hash": "sha256:ac96c9f61aeff67be170784b3bdbc5c74371d6463353a4790b3bfd3702b02411",
+      "content_hash": "sha256:14e7dfda25b77ea38cd2060d58495d40b4aacc580ac524207f13799943af0a9c",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Immutable client-scoped document analysis",
@@ -101499,6 +101567,24 @@
       "heading": "Invalid/partial syntax and non-UTF8 or opaque input retain exact raw bytes and resource/capture identity. Optional structured views carry actual parser diagnostics and explicit original-byte or named projection basis; no projected line becomes an original XML position. Author-selected CommonMark/XML-data/opaque resources never mint Vibe facts. Configuration and hypothetical boot preview retain their captured inputs and missing-dependency/unsupported native-analysis reasons rather than silently performing preparation. D1 provides read analysis and client memory commands only: D2 owns editor position/invalidation and D3 owns saved-state barrier/admission; a capture or later save does not grant a write. @status:spec/plan",
       "line": 221,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-ANALYSIS-RAW-AND-PREVIEW"
+    },
+    {
+      "anchor": "DOCUMENT-EDITOR-POSITIONS",
+      "content_hash": "sha256:f8ee95b58f9dc8aa65665a2a216c906229b8e9b0c21ab66b4d00f93184e4adb1",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Editor positions are zero-based lines and negotiated UTF-8 bytes, UTF-16 units or Unicode scalar counts on exact retained UTF-8 text. Reject split scalar/surrogate/newline boundaries and out-of-range positions. CRLF is one line break; combining marks remain separate scalars. Every location binds resource, capture, buffer version, source digest and original-byte or named projection recipe/digest. Opaque/nonUTF8 input retains raw bytes and explicit unavailable character conversion. A projection without a retained reversible map cannot yield raw XML offsets; partial syntax preserves raw locations and projection-unavailable diagnostics. @status:spec/plan",
+      "line": 222,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDITOR-POSITIONS"
+    },
+    {
+      "anchor": "DOCUMENT-VIEW-INVALIDATION",
+      "content_hash": "sha256:b680d00911838c40bc4cf9c5352c25b35198c702bba07858379627df783318ce",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Child pages, text chunks and diagnostic views bind the exact frozen capture, source/projection revision and selected filter; foreign cursors refuse. Per-page limits never cap the full authorized structure. Disk/lock/policy/target/overlay hints invalidate affected view identities without parsing, native execution, installation or publication. A missing watch sequence or explicitly lost window expires freshness and requires an explicit fresh capture; old captures remain inspectable historical values. An uninvalidated hint is not proof of current live disk, nor does resnapshot atomically attest all files. This read-only notification owner adds no watcher daemon, write barrier or domain authority. @status:spec/plan",
+      "line": 223,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-VIEW-INVALIDATION"
     },
     {
       "anchor": "root",

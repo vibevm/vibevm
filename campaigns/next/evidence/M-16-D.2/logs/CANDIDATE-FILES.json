@@ -1,0 +1,14 @@
+[
+  "crates/vibe-mcp/src/context.rs",
+  "crates/vibe-orchestrator/src/document_analysis/buffers.rs",
+  "crates/vibe-orchestrator/src/document_analysis/capture.rs",
+  "crates/vibe-orchestrator/src/document_analysis/invalidation.rs",
+  "crates/vibe-orchestrator/src/document_analysis/locations.rs",
+  "crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs",
+  "crates/vibe-orchestrator/src/document_analysis/mod.rs",
+  "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+  "crates/vibe-orchestrator/src/document_analysis/views.rs",
+  "crates/vibe-spec/src/editor_positions.rs",
+  "crates/vibe-spec/src/lib.rs",
+  "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+]

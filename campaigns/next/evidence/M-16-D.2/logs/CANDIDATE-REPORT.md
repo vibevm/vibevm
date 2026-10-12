@@ -1,0 +1,33 @@
+# M-16-D.2 candidate — Root review pending
+
+Base a49821e1ac1389b9535bf1aa95fd8e5d763a8b5b.12 product files UNSTAGED (CANDIDATE-FILES.json); no Cargo/dependency/schema/format registration changes. Source writing stopped. Root owns specmap/acceptance/commit, no D3/B3 started. Broker retained, specification reassessment943 consumed/ACKed without a new boot or task restart.
+
+## Actual connected route
+
+Governing PROP080 anchors DOCUMENT-EDITOR-POSITIONS and DOCUMENT-VIEW-INVALIDATION precede implementation scopes. vibe_spec::editor_positions mechanically converts exact UTF8 byte offsets and zero-based line/character coordinates under negotiated UTF8/UTF16/UTF32; scalar/surrogate/CRLF split and out-of-range positions refuse. Combining marks remain independent scalars. No normalization/lossy decoding. Typed finite encoding negotiation refuses an empty intersection; this is library support, not changed external session protocol.
+
+Accepted DocumentClient/AnalysisCapture remain the sole buffer/capture owners. New CapturedText is derived only from their actual retained resources. SourceRevision binds minted resource, frozen capture, buffer version, declared byte encoding and source digest; LocationBasis independently names original bytes or canonical Markdown recipe/digest. Both basis and source revision must match for inverse editor conversion. XML canonical projection has no retained reversible map: original_offset explicitly returns ReverseMapUnavailable. Opaque/nonUTF8 retains bytes and typed unavailable character conversion; invalid partial XML retains raw text and refuses structured projection. Actual parser diagnostics preserve original source revision and supplied line-start basis; a supplied one-based line is not a fabricated token span/column. Positionless or unmappable locations remain typed unavailable. Existing DocumentPreview/AnalysisDiagnostic/outline/selection now carry source revisions; outline/selection also retain full projection digest.
+
+CapturedView uses actual shared outline/selection and retained raw/projected bytes. Opaque cloneable cursors bind capture/source/projection/filter identity; new capture or different filter refuses ForeignCursor. Child pages and byte chunks reconstruct the complete retained authorized result. Page limit1..65536 bounds a response only; no new total structure/boot cap. Existing parser/capture resource limits remain unchanged. Raw byte chunks can split UTF8 and are bytes, not falsely complete decoded text.
+
+Client generation advances on successful open/change/close and explicit disk/lock/policy/target/overlay hints. notify performs no file/provider/native/domain work and conservatively returns all admitted resource IDs because captured sources can participate in embeds/configuration. Sequence gaps/explicit lost windows remain sticky ResnapshotRequired. An explicit resnapshot uses only accepted bounded disk capture and promotes only its new returned capture generation; previous captures remain historical/inspectable. UninvalidatedHint means no received invalidation, never proof of current live disk or reliable watcher delivery. This API consumes trusted client-scoped hints; no OS watcher/daemon or cross-client broadcast transport is advertised. Concurrent hint/buffer change before resnapshot publication yields stale; finite per-file observation and post-check races retain D1 limitations.
+
+Actual MCP ServerContext document_client uses this same owner and negotiates an encoding for a retained location, reads its bound page and receives gap/resnapshot states. Public Rust composition only; external document operation transport remains M17. No install/native/publication/provider grant introduced; no saved-state barrier (D3) or change reader (B3) claim.
+
+## Performed evidence
+
+COMMANDS.json records exact argv/flags/cwd/exits; RESULTS.json binds raw log hashes and nonignored verdicts. Warm private c4-first-agent-target, absolute manifest, /tmp, nightly --locked --offline, RUSTUP_AUTO_INSTALL=0/CARGO_NET_OFFLINE=true throughout; one Cargo writer.
+
+- positions representative1/1 and connected frozen buffer representative1/1 early.
+- spec-final.log2/2: emoji/combining/CRLF/loneCR/trailing-line roundtrips and precise split/invalid/negotiation refusals.
+- orchestrator-final-basis.log4/4: actual version7 Unicode location; raw vs canonical projection mismatch/reverse unavailable, partial/nonUTF8/raw/parser revision; shared selection/outline revision agreement and complete pages/chunks/filter/new-capture refusal; real disk mutation retains old raw capture, gap/resnapshot/overlay and foreign-client refusals.
+- mcp-sealed.log1/1: actual context→client→capture, negotiated UTF16 location, page identity, gap/fresh capture, unchanged fixture manifest bytes and absent store/lock.
+- buffer-compat.log existing1/1: accepted open/change/close/create/delete/move semantics still pass with generation bookkeeping.
+
+7distinct new cases plus1existing representative; repeats are not additional cases. Final reexport-only negotiation addition is compiled/executed by mcp-sealed; orchestrator runtime bodies/tests are unchanged from final-basis. No aggregate claimed as a single invocation. Location assertions use retained bytes; no unexecuted native-platform/CLI/remote conformance claim. No-effect assertions cover fixture source bytes and absent target/store/lock; this task adds no universal syscall oracle (accepted E2 scope unchanged).
+
+## Failures and checks
+
+INCIDENTS.md and every raw log retained. First two family runs2/4 exit101 were my fixture mistakes: guessed glob, then omitted required role/loading. Actual manifest parser refused before projection/page obligations; fixed from incumbent SourceDescriptorWire without weakening grammar. gap-promotion-before.log0/1 exit101 is a genuine defect in the new invalidation owner: clearing gap promoted a capture frozen during the gap to UninvalidatedHint. Minimal generation advance fixed it; same case passes in subsequent4/4 families. Earlier passing epochs are preserved, not relabeled final proof. Initial oversized read outputs were truncated; bounded chunks/structural manifest inspection followed, no complete-read claim from truncated output.
+
+Touched edition2024/skip_children format0, XML/unique anchors0, diff0; all handwritten files below600 (maximum591). Fullfmt14inherited hunks/9files and deferred B227/B229-B234 remain unqualified; no broad suite or baseline repair. No registered ABI/generator changes, therefore no codegen/wire-diff oracle. SOURCE-SHA256.json and EVIDENCE-SHA256.json bind complete current source/producer artifacts; Root-owned artifacts excluded. Root final specmap remains pending.
