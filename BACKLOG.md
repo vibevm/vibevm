@@ -2523,3 +2523,13 @@ structure, and it goes when the file does.
 | @fact:B230-SEVERITY **severity** | P2 — global generator gate remains red; does not block current changed-owner proof or MVP development. |
 | @fact:B230-DISPOSITION **disposition** | deferred — reconcile the two historical trees with project topology when this complete gate is required. Preserve stopped Lean campaign evidence and owner state before deciding registration/retirement; do not resume Lean work or clean unrelated trees as part of C3. |
 | @fact:B230-FILED **filed by** | First Agent C3 acceptance, 2026-10-12. |
+
+## B-231 — semantic Doc read needs XML after one-way Markdown projection {#b-231}
+
+| field | value |
+|---|---|
+| @fact:B231-WHAT **what** | Classified documentation XML is materialized to Markdown for a Markdown consumer slot. PROP-045 explicitly makes this projection IR-divergent: example identities/references and other Doc-only nodes cannot be reconstructed by the generic Markdown parser. Semantic read_doc must refuse when no compatible captured XML pivot is available; raw captured projection remains readable. |
+| @fact:B231-EVIDENCE **evidence** | PROP-045 TARGET-MD and DOC-VOCAB-MD-ONE-WAY; md_out example/reference projection and md_in closed grammar. D2 native-MD borrowed-example case0/1, isolated native-XML Doc case1/1 with resolved MD bodies and preserved XML references, legacy borrowed case1/1. Research M01-D2/ASTRA-DOC-LOSS-CONSULTATION.json and ROOT-DOC-ONE-WAY-BOUNDARY-ANSWER.json. Final D2 refusal coverage remains pending when filed. |
+| @fact:B231-SEVERITY **severity** | P2 — explicit semantic capability limitation of the selected projection, not corruption or an MVP launch gate. Normal VibeSpec MD/XML behavior and captured XML Doc semantic reading remain supported. |
+| @fact:B231-DISPOSITION **disposition** | deferred — if concrete product use needs semantic documentation from Markdown-target slots, define an explicit bounded captured Doc pivot/retention contract and publication recipe before implementation. Preserve selected authority and actual slot coordinates; no guessed reconstruction, hidden original-file lookup or silent materialization exception. Current D2 must verify truthful typed refusal and raw access instead. |
+| @fact:B231-FILED **filed by** | First Agent D2 contract review, 2026-10-12. |
