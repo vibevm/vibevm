@@ -1,0 +1,1 @@
+Error: relative crates/vibe-specdoc/src/{captured.rs,lib.rs}, crates/vibe-spec/src/{captured_source.rs,lib.rs}, crates/vibe-orchestrator/src/document_analysis/*.rs and src/lib.rs do not exist from cwd/tmp. rustfmt exit1, no format effects.

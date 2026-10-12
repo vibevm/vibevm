@@ -1,0 +1,10 @@
+Diff in /fast/git/v/vibevm-next/crates/vibe-workspace/src/install/bootgen.rs:15:
+ use crate::extension_world::{
+     ExtensionWorldEpoch, LoweredOwnerRuntimes, OwnerRuntimeLowering, lower_owner_runtimes,
+ };
+-use crate::{Workspace, WorkspaceError, boot_artifacts, path_to_slash, vibedeps};
+ #[cfg(test)]
+ use crate::layout_paths;
++use crate::{Workspace, WorkspaceError, boot_artifacts, path_to_slash, vibedeps};
+
+ use super::{ResolvedDep, io_err};

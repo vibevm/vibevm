@@ -1,0 +1,14 @@
+{
+  "case": "document_analysis::m_16_d_1_cases::two_clients_preview_captured_manifest",
+  "log_sha256": "81e86dcb30fe955880f83b59ef044a0c122ca10b05b76fdc446e19c69ff9b535",
+  "test_source_sha256": "3954695fe87f14edac47d0cacacecbc1a55181c32366578b5cef89d2c3b3addf",
+  "nonignored_cases": 1,
+  "observed": "Actual host/client/open/freeze/configuration_preview calls: client A dirty features, B saved features, distinct clients/capture IDs, exact captured raw and unchanged disk manifest.",
+  "epoch_note": "Initial authorized offline lock synchronization run; final --locked route still owed",
+  "remaining": [
+    "full created/deleted/moved/version/invalid/raw/boot/no-effect family",
+    "pinned-address and move-collision review dispositions",
+    "actual MCP context binding",
+    "final source/evidence seal"
+  ]
+}

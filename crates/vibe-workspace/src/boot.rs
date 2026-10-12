@@ -45,6 +45,9 @@ use crate::WorkspaceError;
 /// compiles each compilation unit from its own edges. Lands alongside this
 /// module's per-node composition during the migration (PROP-038 §4).
 pub mod hybrid;
+pub use crate::install::bootgen::captured::{
+    authored_boot_from_inventory, resolve_snippet_condition, resolve_snippet_source_with,
+};
 
 /// The band a boot entry sorts into within the computed sequence
 /// (PROP-009 §2.5). Declaration order **is** the sort order — the

@@ -1,0 +1,94 @@
+{
+  "http": 200,
+  "verified_existing_paths": [
+    "crates/vibe-workspace/src/install/bootgen.rs",
+    "crates/vibe-workspace/src/install/bootgen/conditions.rs",
+    "crates/vibe-workspace/src/install/bootgen/snippet_source.rs",
+    "crates/vibe-workspace/src/boot.rs"
+  ],
+  "proposed_path": "crates/vibe-workspace/src/install/bootgen/captured.rs",
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.5ffd282b-bbee-4988-a7f1-c89a31a9494f",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.bfee74b0-bea2-498a-975a-57aa35675e3c",
+        "title": "D1 minimal incumbent pure boot extraction",
+        "introductionMarkdown": "Actual boot helpers mix enumeration/is_file with deterministic rules. To preserve them over captured inventory, extract those rules once and leave live callers delegating.",
+        "items": [
+          {
+            "questionItemId": "d1_boot_pure_write",
+            "header": "Pure boot seam",
+            "promptMarkdown": "Grant narrow WRITE crates/vibe-workspace/src/install/bootgen.rs, bootgen/conditions.rs, bootgen/snippet_source.rs, new bootgen/captured.rs and crates/vibe-workspace/src/boot.rs solely pure authored_boot_from_inventory/snippet-presence/condition kernels and required reexport. Live node_own_boot/resolve_snippet_source/active_snippet behavior delegates same rules; no install/publication change. Add exact tests only in new captured.rs.",
+            "contextMarkdown": "Incumbent node_own_boot filters generated names, assigns categories and rejects paired forms inside fs loop; active_snippet resolves Installed/Os; resolve_snippet_source probes literal then paired extension. Pure helpers take finite captured path set and installed identities, no reads. This avoids duplicate rules or empty own/inherited lists. All files<600. First two-client capture/config representative passed1/1; not whole D1.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant bounded extraction",
+                "description": "Reuse incumbent semantics from both filesystem and immutable capture owners.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "alternative",
+                "label": "Provide existing pure seam",
+                "description": "Root names equivalent current API without external write.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact alternative seam",
+              "multiline": true,
+              "maximumLength": 4000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Necessary cross-owner seam, no broad refactor or second boot engine."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T21:59:36.328Z",
+        "updatedAt": "2026-10-12T22:01:05.511Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.7d73435b-3785-4df5-9f1d-df92dc7a71d0",
+        "questionGroupId": "question-group.5ffd282b-bbee-4988-a7f1-c89a31a9494f",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "d1_boot_pure_write",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants narrow WRITE exactly four existing files plus PROPOSED bootgen/captured.rs: pure authored-inventory/category/pair-collision/order rules, literal/paired snippet presence, Installed/Os condition cells, and necessary reexports/registration only. Root inspected node_own_boot, resolve_snippet_source and resolve_condition: preserve their existing live behavior, including generated-file exclusions, pair refusal, literal precedence/missing-literal fallback and preserved session-time Os predicate. Live callers delegate shared pure rules; captured path takes only supplied inventory/installed identities, never fresh filesystem or inferred authority. New extraction tests belong new captured.rs. Bind actual connected old snippet-source representative or an adequate same-owner parity check before compile; no broad install/publication suite or unrelated behavior correction. No install/journal/publication mutation, additional package/version or boot redesign. Maintain full D1 authored/inherited/dependency preview obligations and record exact extraction source/limits."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T22:01:05.511Z",
+        "metadata": {}
+      }
+    }
+  }
+}

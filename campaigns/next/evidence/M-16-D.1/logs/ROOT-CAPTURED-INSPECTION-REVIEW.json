@@ -1,0 +1,16 @@
+{
+  "status": "WIP source review, no compile/test verdict",
+  "source": "crates/vibe-specdoc/src/captured.rs",
+  "sha256": "00badc996dd91d9d730c5bf2092402a18062305f8b579dcf45514412ed95d779",
+  "observations": [
+    "Raw byte borrow is retained independently of structured view success.",
+    "Vibe branches call existing detailed Markdown/XML frontends; plain CommonMark/XML-data use distinct existing readers and do not become Vibe IR.",
+    "Opaque bytes bypass UTF8 conversion; invalid structured UTF8 returns typed diagnostic without removing raw bytes.",
+    "Two declared cases exercise inert ordinary input, invalid XML/raw retention, opaque bytes and actual MD/XML frontend equivalence."
+  ],
+  "remaining": [
+    "Actual manifest descriptor classification into these branches",
+    "Captured compiler source provider and session freeze",
+    "Nonzero connected tests and honest location/capture result binding"
+  ]
+}

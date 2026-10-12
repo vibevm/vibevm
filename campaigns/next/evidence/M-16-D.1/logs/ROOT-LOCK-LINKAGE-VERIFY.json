@@ -1,0 +1,14 @@
+{
+  "lock_sha256": "e7b52a3ba391498f4c3c60247c16d03eb0435a8c5ff5b0d5cd8d8890c07d78b9",
+  "package_rows": 591,
+  "added_dependencies": [
+    "semver",
+    "sha2",
+    "vibe-specdoc"
+  ],
+  "changed_packages": [
+    "vibe-orchestrator"
+  ],
+  "package_version_source_checksum_rows_unchanged": true,
+  "build_test_status": "representative still compiling"
+}

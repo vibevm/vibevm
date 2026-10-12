@@ -1,0 +1,189 @@
+[
+  {
+    "log": "representative-lock-linkage.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases::two_clients_preview_captured_manifest -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "1/1,0ignored"
+  },
+  {
+    "log": "orchestrator-family.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 101,
+    "cases": "3/5,0ignored"
+  },
+  {
+    "log": "orchestrator-composed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "5/5,0ignored"
+  },
+  {
+    "log": "orchestrator-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "7/7,0ignored"
+  },
+  {
+    "log": "orchestrator-sealed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "8/8,0ignored"
+  },
+  {
+    "log": "captured-boot-valid-fixture.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases::captured_configuration_solver_and_boot_share_inputs -- --exact",
+    "cwd": "/tmp",
+    "exit": 101,
+    "cases": "0/1,0ignored"
+  },
+  {
+    "log": "captured-boot-plan-fixed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases::captured_configuration_solver_and_boot_share_inputs -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "1/1,0ignored"
+  },
+  {
+    "log": "configured-compile.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases::configured_builtin_and_native_preparation_are_not_ignored -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "1/1,0ignored"
+  },
+  {
+    "log": "inherited-boot.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases::member_preview_retains_inherited_foundation_and_authored_sources -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "1/1,0ignored"
+  },
+  {
+    "log": "inherited-compiler.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases::boot_cases::inherited_source_is_admitted_to_actual_member_compiler -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "1/1,0ignored"
+  },
+  {
+    "log": "boot-extraction.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-workspace --lib install::bootgen::captured::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 101,
+    "cases": "compile failed,no cases"
+  },
+  {
+    "log": "boot-extraction-fixed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-workspace --lib install::bootgen::captured::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "2/2,0ignored"
+  },
+  {
+    "log": "snippet-source-compat.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-workspace --lib install::bootgen::snippet_source::tests::snippet_source_resolves_logically_against_the_slot -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "1/1,0ignored"
+  },
+  {
+    "log": "specdoc-family.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-specdoc --lib captured::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "2/2,0ignored"
+  },
+  {
+    "log": "spec-family.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-spec --lib captured_source::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "2/2,0ignored"
+  },
+  {
+    "log": "spec-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-spec --lib captured_source::m_16_d_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "2/2,0ignored"
+  },
+  {
+    "log": "mcp-context.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-mcp --lib context::m_16_d_1_cases::trusted_context_keeps_two_document_clients_isolated -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "1/1,0ignored"
+  },
+  {
+    "log": "mcp-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-mcp --lib context::m_16_d_1_cases::trusted_context_keeps_two_document_clients_isolated -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "1/1,0ignored"
+  },
+  {
+    "log": "edge-metadata.log",
+    "output": "edge-metadata.json",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly metadata --manifest-path /fast/git/v/vibevm-next/Cargo.toml --offline --no-deps --format-version 1 --filter-platform x86_64-unknown-linux-gnu",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "metadata,no test verdict"
+  },
+  {
+    "log": "formatter-wrong-cwd.log",
+    "command": "rustfmt +nightly --edition 2024 --config skip_children=true crates/vibe-specdoc/src/captured.rs crates/vibe-specdoc/src/lib.rs crates/vibe-spec/src/captured_source.rs crates/vibe-spec/src/lib.rs crates/vibe-orchestrator/src/document_analysis/*.rs crates/vibe-orchestrator/src/lib.rs",
+    "cwd": "/tmp",
+    "exit": 1,
+    "cases": "missing paths,no source effects"
+  },
+  {
+    "log": "touched-fmt-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 rustfmt +nightly --edition 2024 --config skip_children=true --check /fast/git/v/vibevm-next/crates/vibe-mcp/src/context.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/boot_preview.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/buffers.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/capture.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/catalog.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/compile_plan.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/m_16_d_1_boot_cases.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/m_16_d_1_cases.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/mod.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/preview.rs /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/lib.rs /fast/git/v/vibevm-next/crates/vibe-spec/src/captured_source.rs /fast/git/v/vibevm-next/crates/vibe-spec/src/lib.rs /fast/git/v/vibevm-next/crates/vibe-specdoc/src/captured.rs /fast/git/v/vibevm-next/crates/vibe-specdoc/src/lib.rs /fast/git/v/vibevm-next/crates/vibe-workspace/src/boot.rs /fast/git/v/vibevm-next/crates/vibe-workspace/src/install.rs /fast/git/v/vibevm-next/crates/vibe-workspace/src/install/bootgen.rs /fast/git/v/vibevm-next/crates/vibe-workspace/src/install/bootgen/captured.rs /fast/git/v/vibevm-next/crates/vibe-workspace/src/install/bootgen/conditions.rs /fast/git/v/vibevm-next/crates/vibe-workspace/src/install/bootgen/snippet_source.rs",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "21handwritten owners"
+  },
+  {
+    "log": "touched-fmt.log",
+    "exit": 1,
+    "cases": "cfg(test) import order only; first script stopped before diff check",
+    "cwd": "/tmp"
+  },
+  {
+    "log": "diff-check.log",
+    "command": "git diff --check",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "cases": "diff"
+  },
+  {
+    "log": "revision-pin-before.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-spec --lib captured_source::m_16_d_1_cases::revision_pin_refuses_unpinned_capture -- --exact",
+    "cwd": "/tmp",
+    "exit": 101,
+    "cases": "0/1,0ignored"
+  },
+  {
+    "log": "revision-pin-after.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-spec --lib captured_source::m_16_d_1_cases --",
+    "cwd": "/tmp",
+    "exit": 0,
+    "cases": "3/3,0ignored"
+  },
+  {
+    "log": "revision-pin-format.log",
+    "command": "rustfmt +nightly --check --edition 2024 --config skip_children=true /fast/git/v/vibevm-next/crates/vibe-spec/src/captured_source.rs",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "revision-pin-diff.log",
+    "command": "git diff --check",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  }
+]

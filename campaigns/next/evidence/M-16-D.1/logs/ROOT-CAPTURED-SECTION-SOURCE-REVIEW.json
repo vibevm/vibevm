@@ -1,0 +1,16 @@
+{
+  "status": "WIP source inspection, not tested",
+  "source_sha256": "2e447526935e3213c1e6bae4eb2e409a08e7b807ee34da041e97c4e31b4c1ebf",
+  "observed": [
+    "Provider builds immutable parsed Vibe documents/refusals from supplied raw bytes; no FsSectionSource/fallback read.",
+    "Missing or inert ordinary document refuses before any compiler source text.",
+    "Anchor selection uses existing selection owner and canonical MD emitter; compiler tests call actual compile_static."
+  ],
+  "pending_review": [
+    "section_text drops request pinned_r without a spec-unit revision witness; exact negative required, explicit unsupported refusal sufficient."
+  ],
+  "notice": {
+    "id": "message.6fe11ece-785a-4bbd-a4e2-f43694e7039a",
+    "delivery": "queued; not assumed received"
+  }
+}

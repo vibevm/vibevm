@@ -1,0 +1,19 @@
+{
+  "status": "actual two cases verified; task not accepted",
+  "logs": {
+    "configured-compile.log": {
+      "sha256": "a135213ce6076e741284ce92a0611cff35b47c9354823234d43828e8d33868b7",
+      "passed": 1,
+      "ignored": 0
+    },
+    "inherited-boot.log": {
+      "sha256": "ca96acaac22889ca8ec2f5a053c4ecfb21a7af8336ddf0d67db27d00a4bb055b",
+      "passed": 1,
+      "ignored": 0
+    }
+  },
+  "source_sha256": "fbd653111a14bfbd54423d092551a25cd23747de52a330fd0cd8c2d24d3b43bc",
+  "configured_case": "Actual captured XML minify row changes emitted layout; changed native row yields compiled_boot=None/native-preparation-required and never-built path remains absent.",
+  "inherited_case": "Actual member/root captured inventory yields2own/foundation entries, excludes generatedSTATIC/root-only boot and retains unchanged disk inventory.",
+  "scope_limit": "Current inherited test asserts composed entries, not compiled output contents; original full inherited compiler-path review remains until output is verified."
+}

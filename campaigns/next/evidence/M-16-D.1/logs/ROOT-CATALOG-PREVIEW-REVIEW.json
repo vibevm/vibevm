@@ -1,0 +1,21 @@
+{
+  "status": "WIP semantic review; no test verdict",
+  "hashes": {
+    "crates/vibe-orchestrator/src/document_analysis/catalog.rs": "4dc11957a2dcff141da3811049d2281c25cf7c0daa7fd8c95b4e069024113cf7",
+    "crates/vibe-orchestrator/src/document_analysis/preview.rs": "a63b60596f1563e1223038c51586dededd7a62a3baabaa6b5b9fa301cf63a5ee"
+  },
+  "observed": [
+    "Catalog implements actual DepProvider/VersionEnumerator using held Manifest map only; no network/filesystem fetch.",
+    "Preview reads retained primary/captured manifests and calls descriptor selection, feature expansion, actual solver and existing effective-boot/builtin artifact compiler.",
+    "Invalid manifest/source returns capture/resource-tagged diagnostics; raw retained in capture."
+  ],
+  "acceptance_checks_pending": [
+    "Current WIP own_boot/inherited_foundation/fragments arrays are empty: final boot-preview evidence must establish captured authored boot contributions are represented or scope/completeness refusal is explicit; do not infer full boot fidelity from dependency-only example.",
+    "Confirm feature/conditional dependency material is applied by actual solver route or honestly diagnosed, not merely computed separately.",
+    "Actual two-client, creation/deletion/move, invalid raw and no-effect fixture executions."
+  ],
+  "previous_debts": [
+    "pinned request must not silently lose selector",
+    "two moves into one target need deciding refusal case"
+  ]
+}

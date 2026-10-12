@@ -1,0 +1,21 @@
+{
+  "status": "WIP extraction inspection, no parity test verdict",
+  "hashes": {
+    "crates/vibe-workspace/src/install/bootgen/captured.rs": "4e0a0999ea73a674586948da36210aa5d6cdec31616faeec5aa11f59b7894ec2",
+    "crates/vibe-workspace/src/install/bootgen.rs": "e6216022736123893cab4ac721f09bb7f6f592bb3fca2940621759b64fea3a15",
+    "crates/vibe-workspace/src/install/bootgen/conditions.rs": "0b9cf54fc66c474b045fe11003cac0ac5551d27d0a5f5d4d04f5511429548ab9",
+    "crates/vibe-workspace/src/install/bootgen/snippet_source.rs": "f9ce20db5ff1bab09f06cc51d4c1743478cf7250857d7a812fedac16312b9aa3",
+    "crates/vibe-workspace/src/boot.rs": "52a672b91d6466a79b0d4aaea4a819d639e9fc3cdb07283c04e51f007b9df3ef"
+  },
+  "observed": [
+    "Installed/Os condition mapping copied into shared pure cell; old caller delegates.",
+    "Snippet literal/paired/missing resolution has same branch ordering; old wrapper supplies only is_file predicate.",
+    "Own-boot discovery now supplies inventory to shared filter/category/collision/order helper; captured path can use it without disk.",
+    "Old live caller retains actual file enumeration and non-file exclusions."
+  ],
+  "verification_pending": [
+    "Actual owning pure tests and old snippet-source representative",
+    "Captured own/inherited/conditional boot integration using helper",
+    "Final extraction error/unsupported-path scope; do not claim universal filename behavior parity from ordinary UTF8 fixtures"
+  ]
+}

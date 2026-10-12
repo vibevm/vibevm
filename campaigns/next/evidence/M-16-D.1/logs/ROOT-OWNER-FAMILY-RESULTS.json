@@ -1,0 +1,36 @@
+{
+  "status": "partial final evidence, not accepted",
+  "logs": {
+    "specdoc-family.log": {
+      "sha256": "fd9472abe45fcf32415aa331effc44c3f1fa1ae1b122a87d96bc213cf19c6bb9",
+      "results": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s"
+      ]
+    },
+    "spec-final.log": {
+      "sha256": "8671f4c3c8b2085979668203215a4052461bda29a09d7f89d1a818871521f601",
+      "results": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1001 filtered out; finished in 0.00s"
+      ]
+    },
+    "mcp-context.log": {
+      "sha256": "94166a5e31a1dc69569af323b756c85c72f0592f47b6824c041ace319cc27ec2",
+      "results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 204 filtered out; finished in 0.00s"
+      ]
+    },
+    "snippet-source-compat.log": {
+      "sha256": "5ec38aed6e7c9cf720f99baf3bdb3ffcd856ff8259a14cb51d2405ef889dae4d",
+      "results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 688 filtered out; finished in 0.00s"
+      ]
+    },
+    "orchestrator-final.log": {
+      "sha256": "512752332c0e67b7f0272fa665e3bd500cc6e54644ee7fe3498273d603f3888e",
+      "results": [
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 564 filtered out; finished in 0.01s"
+      ]
+    }
+  },
+  "pending": "revision selector case and inherited compiled output scope before final seal"
+}

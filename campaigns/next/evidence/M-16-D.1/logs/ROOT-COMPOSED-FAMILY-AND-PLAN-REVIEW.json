@@ -1,0 +1,17 @@
+{
+  "orchestrator_family_sha256": "a9e5d10b5fd615d999d7aeb0296c08787ed7f9023507e9122c1155d1876b4e7a",
+  "passed": 5,
+  "ignored": 0,
+  "compile_plan_sha256": "f7e2a3c7e7da8a8a2b8e4a387b1df80940d68c684f0b1b269dc151ff310a5f93",
+  "boot_call_sha256": "0f1c6a6fc47d0da6068ba5ba041fb7431ea0550395d54812ac701d44c72fa795",
+  "observed": [
+    "Actual collect_extensions and lower_effective_compile_rows operate over retained manifest/lock data.",
+    "Enabled compile rows with non-builtin handler return native-preparation-required before artifact compilation.",
+    "Boot calls compiler_plans and attaches its result to actual compile_artifact plan."
+  ],
+  "pending": [
+    "Nonzero configured builtin/native preparation test",
+    "MCP context, spec/specdoc families and inherited/pin/move cases",
+    "Final epoch/seal/acceptance"
+  ]
+}

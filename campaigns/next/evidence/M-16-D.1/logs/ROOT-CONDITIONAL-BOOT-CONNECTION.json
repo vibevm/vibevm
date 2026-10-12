@@ -1,0 +1,9 @@
+{
+  "status": "WIP calls verified, no connected boot run",
+  "sha256": "be9ae18b5b450dcdcdf18bcb9e4142aeedb1b87e1780886218d663b8afb88aac",
+  "observed": "Dependency main/fragments now use actual resolve_snippet_source_with over captured path set and resolve_snippet_condition over captured selected installed identities.",
+  "remaining": [
+    "Connected full boot fixture, inherited source-map admission, current pin/move exact negatives",
+    "Old live snippet-source compatibility and full new case families"
+  ]
+}
