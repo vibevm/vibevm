@@ -1,0 +1,86 @@
+[
+  {
+    "log": "core-first-connected.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-core --lib manifest::change::m_02_b_1_cases::connected_epoch_one_parse -- --exact",
+    "exit": 0,
+    "nonignored_cases": 1
+  },
+  {
+    "log": "core-registry-corpus.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-core --lib manifest::change::m_02_b_1_cases::registered_authored_corpus_matches_shared_validator -- --exact",
+    "exit": 0,
+    "nonignored_cases": 1
+  },
+  {
+    "log": "core-raw-origin-final.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-core --lib manifest::change::m_02_b_1_cases::raw_origin_uri_cannot_normalize_into_selected_address -- --exact",
+    "exit": 0,
+    "nonignored_cases": 1
+  },
+  {
+    "log": "core-family.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-core --lib manifest::change::m_02_b_1_cases:: -- --nocapture",
+    "exit": 0,
+    "nonignored_cases": 6
+  },
+  {
+    "log": "core-final.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-core --lib manifest::change::m_02_b_1_cases:: -- --nocapture",
+    "exit": 0,
+    "nonignored_cases": 7
+  },
+  {
+    "log": "requirements-family.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib change::m_02_b_1_cases:: -- --nocapture",
+    "exit": 0,
+    "nonignored_cases": 3
+  },
+  {
+    "log": "requirements-final.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib change::m_02_b_1_cases:: -- --nocapture",
+    "exit": 0,
+    "nonignored_cases": 3
+  },
+  {
+    "log": "codegen-first.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p xtask -- codegen",
+    "exit": 0,
+    "nonignored_cases": null
+  },
+  {
+    "log": "codegen-deny.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p xtask -- codegen",
+    "exit": 0,
+    "nonignored_cases": null
+  },
+  {
+    "log": "check-codegen.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p xtask -- check-codegen",
+    "exit": 1,
+    "nonignored_cases": null
+  },
+  {
+    "log": "full-fmt.log",
+    "cwd": "/tmp",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly fmt --manifest-path /fast/git/v/vibevm-next/Cargo.toml --all -- --check",
+    "exit": 1,
+    "nonignored_cases": null
+  },
+  {
+    "log": "diff-check.log",
+    "cwd": "/fast/git/v/vibevm-next",
+    "command": "git diff --check",
+    "exit": 0,
+    "nonignored_cases": null
+  }
+]

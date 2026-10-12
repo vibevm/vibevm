@@ -1,0 +1,244 @@
+{
+  "schema": 1,
+  "task": "M-02-A.2",
+  "status": "accepted_by_first_agent",
+  "candidate_base": "31308f76d3216fa08dc9a268ed2e942371ba7171",
+  "accepted_at": "2026-10-12T20:30:30.151897+00:00",
+  "product_files": [
+    {
+      "path": "BACKLOG.md",
+      "sha256": "494a7c6b018063185f565872a1664089e37d3f603ce3dbba84f593c7d50dfa05",
+      "bytes": 492942,
+      "lines": 2565,
+      "owner": "root integration"
+    },
+    {
+      "path": "FIXED-ISSUES.md",
+      "sha256": "19c43454265ce8d4246757c3487473acc497332248fafe90675544a7db06601b",
+      "bytes": 122641,
+      "lines": 513,
+      "owner": "root integration"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/m_02_a_1_cases.rs",
+      "sha256": "4f9923d82a93a340200893f93f83d287ec30d7ed1daa95a771e655d5106ea7ba",
+      "bytes": 13599,
+      "lines": 360,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/m_02_a_2_cases.rs",
+      "sha256": "c9dcfac9524d9d46590334fb099f13704b02d698ab864b482625182c95db369e",
+      "bytes": 14554,
+      "lines": 424,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/mod.rs",
+      "sha256": "0cf076eb4423bb24bbcd87f113004fbb72ad0201dee9d9af09a8620a4fe29bd0",
+      "bytes": 210,
+      "lines": 4,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-requirements/tests/fixtures/change/evidence/known-artifacts.json",
+      "sha256": "87a2588aadf7d389077b94cefff3aeae3b26724e670678761cc18b1de9855cfd",
+      "bytes": 111,
+      "lines": 1,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-requirements/tests/fixtures/change/evidence/work-refs-only.json",
+      "sha256": "0de05a9b6eb2069addb255bdffd43cbc085d690224a82dd5a023941cfecb82d4",
+      "bytes": 90,
+      "lines": 1,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-requirements/tests/fixtures/change/personal/plan-after.toml",
+      "sha256": "1cae27ca5a2c42231233f7e71f41c14829cf8e1613764b82e31687fbe9f3031a",
+      "bytes": 337,
+      "lines": 12,
+      "owner": "product"
+    },
+    {
+      "path": "crates/vibe-requirements/tests/fixtures/change/personal/plan-before.toml",
+      "sha256": "87e88096966ef7b3e052ad1456d111a43582abb5a12fca9026b4efef274f491a",
+      "bytes": 242,
+      "lines": 8,
+      "owner": "product"
+    },
+    {
+      "path": "specmap.json",
+      "sha256": "e58cf47bf57decfe1eb817baedcc35438778d68c3ed55b6cf912e043c6cf8760",
+      "bytes": 9791005,
+      "lines": 166146,
+      "owner": "root integration"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "sha256": "7d2c88549fca3a5f8db03f8240c009a6e33b520df47c2fc239b1bc9483de2cfe",
+      "bytes": 4060,
+      "lines": 15,
+      "owner": "product"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/A1-MANIFEST-INVENTORY.json",
+      "raw_sha256": "115d07c4654bde70dc0326d238dffcc063f3f59ad70ad8082282a8f67e17cf56",
+      "sha256": "115d07c4654bde70dc0326d238dffcc063f3f59ad70ad8082282a8f67e17cf56",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/BOUND-PLAN.md",
+      "raw_sha256": "d0df47c9ba85e341ec204b68d7cb13a58a56787210c74cfbe1cf499c6db5b490",
+      "sha256": "d0df47c9ba85e341ec204b68d7cb13a58a56787210c74cfbe1cf499c6db5b490",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/CANDIDATE-REPORT.md",
+      "raw_sha256": "5b28dae37e3429518b810f6be9e387b69b539833e0f16d24d320210b957f9830",
+      "sha256": "5b28dae37e3429518b810f6be9e387b69b539833e0f16d24d320210b957f9830",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/COMMANDS.json",
+      "raw_sha256": "3289faa80414a14a806ea89011f5b14d14d7b649180500445d15921ed977652c",
+      "sha256": "3289faa80414a14a806ea89011f5b14d14d7b649180500445d15921ed977652c",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/EVIDENCE-SHA256.json",
+      "raw_sha256": "6acab2b88e50b3a601c8d956b8f54687aecffda167eec986904f7b48488f0b0a",
+      "sha256": "6acab2b88e50b3a601c8d956b8f54687aecffda167eec986904f7b48488f0b0a",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/HASH-VERIFY.log",
+      "raw_sha256": "f9a17c3dd432383d25f3dca670df5f17caefc82db5cacf23d191dea35045ed60",
+      "sha256": "f9a17c3dd432383d25f3dca670df5f17caefc82db5cacf23d191dea35045ed60",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/INCIDENTS.md",
+      "raw_sha256": "aa5291f627c5e4d05492076e170bebd77e705e416301b988b3d4ed26e0551505",
+      "sha256": "aa5291f627c5e4d05492076e170bebd77e705e416301b988b3d4ed26e0551505",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/PARSED-OBSERVATIONS.json",
+      "raw_sha256": "600e56a86dc2785280124aed066be9ccdee3dd66445673fc853ff386ab167a89",
+      "sha256": "600e56a86dc2785280124aed066be9ccdee3dd66445673fc853ff386ab167a89",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/ROOT-A2-FINAL-JOIN-CHECK.json",
+      "raw_sha256": "c1dd6c131a53b75b16bc00d4cd3c043a1c9c2b45d7705191b51f74a57871d04e",
+      "sha256": "c1dd6c131a53b75b16bc00d4cd3c043a1c9c2b45d7705191b51f74a57871d04e",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/ROOT-A2-SEMANTIC-CHECK.json",
+      "raw_sha256": "17e03b43c11b1d43615f1b73a9f3c509e1bed62ae0ccfd8a522f1d80e57459e8",
+      "sha256": "17e03b43c11b1d43615f1b73a9f3c509e1bed62ae0ccfd8a522f1d80e57459e8",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/ROOT-FINAL-SPECMAP.log",
+      "raw_sha256": "497eb9384e38179536741ab8cb46dafd74f364141486a85cb58e4660f44ba9b1",
+      "sha256": "497eb9384e38179536741ab8cb46dafd74f364141486a85cb58e4660f44ba9b1",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/ROOT-TERMINAL-OWNER-READ-GRANT.json",
+      "raw_sha256": "c991e149048d7ac98f2bb06b65b566c777b97cbd86b334d68f6fa323303252fa",
+      "sha256": "c991e149048d7ac98f2bb06b65b566c777b97cbd86b334d68f6fa323303252fa",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/ROOT-WORK-COVERAGE-BOUNDARY.json",
+      "raw_sha256": "ec3556190cb5ee87267142aff60de6075685161660b96ec5bf4499ee78e8a540",
+      "sha256": "ec3556190cb5ee87267142aff60de6075685161660b96ec5bf4499ee78e8a540",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/SHA256SUMS",
+      "raw_sha256": "31aa491dc1576a6f821b4c4746bfcb802c1388a1547a9097399e0e154b186434",
+      "sha256": "31aa491dc1576a6f821b4c4746bfcb802c1388a1547a9097399e0e154b186434",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/SOURCE-SHA256.json",
+      "raw_sha256": "2a98e19270a460526b14a911fe7ccd9f4c409c8aae6f8d7869c762cc7874efaf",
+      "sha256": "2a98e19270a460526b14a911fe7ccd9f4c409c8aae6f8d7869c762cc7874efaf",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/change-final.log",
+      "raw_sha256": "2ddac842ca53c9e911ee5f471d1a2388ee1b307dcfdb8fae724af77b5641780c",
+      "sha256": "edbd173ec22a7610397a161535de46181031db215d0f39310556795d3e1f49a4",
+      "representation": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/change-first.log",
+      "raw_sha256": "67603e3c274a959f709d2adae3d5cd968e2aaee33edc0f1d61cb82f40fdf7beb",
+      "sha256": "06ca9f7962395e4d1ab738bbf0642715fa89eab65877801349c7b983404242cb",
+      "representation": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/diff-check.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/full-fmt.log",
+      "raw_sha256": "e0815a42446aacc3696dbc681dcd3ef48599db79fbabbfedca83891489f72a66",
+      "sha256": "9f827d53bed3f257d17ff0630849b39fe62666929112ce36ec877610fb58b7ee",
+      "representation": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/representative-adoption-query.log",
+      "raw_sha256": "a490e4a6bdaacc7e750ca0a5f5f619a32adbf673eed2be57ebf0bd9db1fbede1",
+      "sha256": "6e98186c0d681eee7edfbc12a2b1d12d474ae7bcd2fda8ee803fd7d268fc0311",
+      "representation": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/terminal-representative.log",
+      "raw_sha256": "a553842b90edf92e887d260ed8036283f6a126ac8fc20d9f8dc53d43d27785d9",
+      "sha256": "504d4538bf22b953c572b89731a3c0b9ee54ad77d5eb735719102b3dbe4d5304",
+      "representation": "physical trailing whitespace/final empty lines"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/touched-fmt.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "representation": "exact bytes"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-A.2/logs/xml-parse.log",
+      "raw_sha256": "183beeb41215f461d56c2770c658d6fae04df6cb3440f4636c09b821f8dde949",
+      "sha256": "183beeb41215f461d56c2770c658d6fae04df6cb3440f4636c09b821f8dde949",
+      "representation": "exact bytes"
+    }
+  ],
+  "checks": {
+    "new_cases": 4,
+    "representatives": 2,
+    "shared_snapshot_pairs": 4,
+    "terminal_observations": 7,
+    "registry_delta_records": 1,
+    "source_hashes": 8,
+    "producer_evidence_hashes": 15,
+    "specmap_exit": 0,
+    "gated_orphans": 138,
+    "unresolved_host_edges": 0
+  },
+  "limits": [
+    "provider-supplied evidence not new artifact validator",
+    "untyped work coverage B234",
+    "read-only prototype no second cursor",
+    "13historical fmt findings"
+  ]
+}

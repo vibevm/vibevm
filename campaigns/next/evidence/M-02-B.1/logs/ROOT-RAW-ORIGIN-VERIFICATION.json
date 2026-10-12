@@ -1,0 +1,15 @@
+{
+  "log_sha256": "7db37ac9cadda7350aa4487ddcd0664d3bdf6800ccd4cdc7386956b5dba354bd",
+  "case": "manifest::change::m_02_b_1_cases::raw_origin_uri_cannot_normalize_into_selected_address",
+  "executed": 1,
+  "ignored": 0,
+  "inspected_mutations": [
+    "dot segment",
+    "parent segment",
+    "empty segment",
+    "percent encoding"
+  ],
+  "expected_kind": "Origin",
+  "expected_field": "origins.documents.address",
+  "disposition": "Original Root coverage concern resolved by actual shared parser regression; no claim that a pre-correction red run was executed."
+}

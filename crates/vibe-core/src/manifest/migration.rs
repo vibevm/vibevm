@@ -467,7 +467,7 @@ fn unprovable() -> MigrationRefusal {
 
 /// Reconstruct from original source coordinates, including ordered insertions.
 /// Unmentioned bytes are copied verbatim and never passed through a formatter.
-fn replay_edits(text: &str, edits: &[MigrationTokenEdit]) -> Checked<String> {
+pub(super) fn replay_edits(text: &str, edits: &[MigrationTokenEdit]) -> Checked<String> {
     let mut after = String::with_capacity(text.len());
     let mut cursor = 0;
     let mut prior_insertion = None;

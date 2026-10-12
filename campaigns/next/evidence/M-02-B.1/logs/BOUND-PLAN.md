@@ -1,0 +1,13 @@
+# B1 binding before implementation/compile
+
+Core owner proposed manifest/change/{mod.rs,validation.rs,migration.rs,m_02_b_1_cases.rs}, registration manifest/mod.rs. Requirements owner change/{read.rs,m_02_b_1_cases.rs}, production module export in lib.rs with old fixtures cfg(test). M13 exact replay visibility bridge only; no package profile changes. Authored TOML record follows existing format.manifest schema=none, registration in formats/REGISTRY.toml; normal generator-owned FormatId outputs only if needed.
+
+ID chg- +32lowercase hex, directory configured-root/changes/id, title/slug cosmetic. Actual ConsumerNode identity/selected-node context and validated injected root; layout current_specs_root default. Core shared validation handles origin pins/capture declarations, relative unique role paths, closure exclusion, unknown epochs and catalog duplicates. Pure pilot0->1 schema token proposal reuses M13 replay and preserves every other byte/metadata. Saved lookup uses bounded SafeFS reads under host node, no scaffold writes.
+
+TO CREATE core --lib manifest::change::m_02_b_1_cases: connected_epoch_one_parse (early exact representative), title_slug_rename_preserves_directory_and_address, unknown_epochs_and_duplicate_ids_refuse, escaping_and_closure_input_roles_refuse, migration_preserves_comments_and_user_values, migration_refuses_invalid_target_before_proposal. Requirements --lib change::m_02_b_1_cases: configured_nondefault_root_is_used_by_actual_lookup, actual_lookup_refuses_missing_role_document_without_writes. Exact cases bound from new registrations/readback before Cargo. No unrelated target discovery/full panel.
+
+Additional required connected saved-migration case bound before compile: requirements --lib change::m_02_b_1_cases::actual_saved_migration_preserves_bytes_without_publication. Expected requirements family3 nonignored, core family6. Capture declarations parse but do not authenticate originals; saved input bytes are bounded held observations. No scaffold/apply writes.
+
+Registry/corpus case bound before Cargo: core --lib manifest::change::m_02_b_1_cases::registered_authored_corpus_matches_shared_validator, expected1 exact case (family now7). Shared owner checks all registered valid/refused TOML corpus and explicit unknown_fields deny.
+
+Final Root review binding before Cargo: core --lib manifest::change::m_02_b_1_cases::raw_origin_uri_cannot_normalize_into_selected_address, expected1 exact. Shared original literal address control already passes connected case; raw dot/empty/percent paths must refuse Origin at origins.documents.address before normalization. Test-only addition; previous7/7 remains matching production evidence.

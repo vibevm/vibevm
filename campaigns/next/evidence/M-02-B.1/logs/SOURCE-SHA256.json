@@ -1,0 +1,21 @@
+{
+  "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs": "6a3f45f1bcca237688b61f36b50be507625c9e69e887b070b2dd9f57f5a4a7fe",
+  "crates/vibe-core/src/manifest/change/migration.rs": "6bf2bfdef4fa58e5a0fa61ef4c9c1cfdb9e03679637e448a24dcd743afd78f47",
+  "crates/vibe-core/src/manifest/change/mod.rs": "06db1a8ff56a73b5894389911c4287a82cda12026a7047b7426195de14234c2c",
+  "crates/vibe-core/src/manifest/change/validation.rs": "efe9c45a26ddde886b89b95323ded3029aa096ab328c0321fc148c2b90624f58",
+  "crates/vibe-core/src/manifest/migration.rs": "e6dece58eaf6870241e45dddd46495152a48db41084e19b18c9a94e5d8d7a059",
+  "crates/vibe-core/src/manifest/mod.rs": "9238bd87a94645f638e1d996e8d453cc010af5f3c904eb4086e159d2c3c26865",
+  "crates/vibe-requirements/src/change/m_02_b_1_cases.rs": "d9eba8d62feeaafb1d67e067b85eea1ca431f0889c7ab72f28e282e9d3c162ab",
+  "crates/vibe-requirements/src/change/mod.rs": "c947b38f737ef90681d3df9c9d320f64031a417fc07b8e25289d3d813d63f2a0",
+  "crates/vibe-requirements/src/change/read.rs": "07591f5c9a543cbcb4ae30f1f771a57bb13a33c6c7c0c5825cf0c49e9d93a0c8",
+  "crates/vibe-requirements/src/lib.rs": "7a90baa132de595ee47ff59c254e05f2e3960f5d8c87fa12a9e92a585218352c",
+  "crates/vibe-wire/src/generated/format_id/mod.rs": "dab176252693d2b3e9fa560f3949c4948abb741e037b8f0655839e8c911ac4bd",
+  "crates/vibe-wire/src/generated/format_id/properties.rs": "9f2972a2a0d2e4305787c05969237e823443baabc1e603f65925fa048bf2dd2f",
+  "formats/REGISTRY.toml": "3bfd28e18ac87384dc9b2923271c82bc26a69eca74ef2481326e8558fdccfd4a",
+  "formats/corpora/change-manifest/e1/semantic-gap/closure-input.toml": "d0b07e0173616d4d51d4b9a96ca6547a27cab6b766e7a3a1473b9ef865007de6",
+  "formats/corpora/change-manifest/e1/semantic-gap/escaping-role.toml": "9ae151679c6178078b59e3be68828c422c841b3c00ce2b6dbb2cea06153a7415",
+  "formats/corpora/change-manifest/e1/semantic-gap/unknown-epoch.toml": "e988a0a101e6365c3e058ec9f178f3d3d14794d8e987ff5305a1f62b837494b3",
+  "formats/corpora/change-manifest/e1/structural-invalid/unknown-field.toml": "45efc881a779a2447f764c85ecb12dad97b5d01c41ab3c358392e1548cded3dd",
+  "formats/corpora/change-manifest/e1/valid/representative.toml": "42fda3983897edd4d529b10b93c02a8c18d4ace8051ccd0e9a43cdfc52daac56",
+  "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml": "dbd5ef7378c0cd36eebb2fc1750743dbaa1b2a7b14a736f5d17d4bab761c9044"
+}

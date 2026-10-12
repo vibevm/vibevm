@@ -1,0 +1,131 @@
+{
+  "http": 200,
+  "result": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.77922115-dd1e-48eb-a723-99b87215fc01",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.2fa127d1-e4d5-4acf-9349-2bfa53733dd9",
+        "title": "B1 migration/layout defining seam",
+        "introductionMarkdown": "Same B1. Current M13 planner freezes package-only profiles; change document cannot reuse its checked_manifest field. Need actual token replay, not a parallel TOML rewrite.",
+        "items": [
+          {
+            "questionItemId": "b1_token_replay",
+            "header": "M13 replay",
+            "promptMarkdown": "Grant narrow WRITE crates/vibe-core/src/manifest/migration.rs solely to expose existing replay_edits as pub(super), with a parent wrapper in authorized manifest/mod.rs for change planner reuse?",
+            "contextMarkdown": "Existing MigrationTokenEdit/MigrationRefusal types already public. No profile/recipe/package behavior changes, no apply authority. Change migration will use exact existing checked token spans and then its shared validation owner.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant bounded exposure",
+                "description": "Reuse existing M13 pure replay primitive with no package migration changes.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "owner",
+                "label": "Name another existing seam",
+                "description": "Supply exact already-public compatible replay helper.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact correction",
+              "multiline": true,
+              "maximumLength": 4000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "A minimal visibility bridge reuses the proven exact-edit law without creating a rewrite framework."
+            }
+          },
+          {
+            "questionItemId": "b1_layout_read",
+            "header": "Layout context",
+            "promptMarkdown": "Grant exact READ crates/vibe-core/src/environment/mod.rs, environment/layout.rs, package_ref.rs and rel_path.rs; if no spec-root override exists, bind an explicit validated configured spec-root argument supplied by trusted host composition, with layout::current_specs_root default?",
+            "contextMarkdown": "Manifest subtree/layout.rs search exposes fixed current root only. Task requires non-default root but no new project settings writer. Need actual selected-node/path/package primitive definitions and correct known host-composition boundary.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant READ and explicit root",
+                "description": "Use actual primitives and caller-configured root without new settings framework.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "owner",
+                "label": "Name configured-root owner",
+                "description": "Provide exact existing override owner to use.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact owner/ruling",
+              "multiline": true,
+              "maximumLength": 4000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Parser-only context can honor a trusted non-default root without modifying global layout or real settings."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T20:36:51.426Z",
+        "updatedAt": "2026-10-12T20:38:53.884Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.94603c2f-ae89-4e5a-b4f8-31468faec7a7",
+        "questionGroupId": "question-group.77922115-dd1e-48eb-a723-99b87215fc01",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "b1_token_replay",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            },
+            {
+              "questionItemId": "b1_layout_read",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants narrowly scoped WRITE crates/vibe-core/src/manifest/migration.rs solely private fn replay_edits -> pub(super), plus pure parent wrapper in already-authorized manifest/mod.rs. Root inspected exact primitive: checks ordered/nonoverlap spans, original token equality, untouched text copying; preserve whole body and existing refusal/profile/package/apply behavior. Wrapper must return existing typed refusal and carry correct governing scope; no apply authority/framework. Grant exact READ crates/vibe-core/src/environment/mod.rs, environment/layout.rs, package_ref.rs, rel_path.rs (all verified). Prefer actual existing configured-root owner if those definitions expose it. If none exists, validated project-relative spec-root context supplied by trusted host composition is permitted with layout::current_specs_root default; manifest/URI cannot grant an arbitrary root or escape it. Prove non-default root actually used by shared parser/lookup validation, not a decorative argument. State parser-level injected configuration boundary, not implemented project-settings/CLI override. Do not modify global layout settings/current consumers, add a settings writer or silently drop configured-root requirement. Same B1, exact remaining write ceiling; all ID/roles/duplicate/path/closure/epoch checks before mutation and comment/value preserving actual replay remain required."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T20:38:53.884Z",
+        "metadata": {}
+      }
+    }
+  }
+}

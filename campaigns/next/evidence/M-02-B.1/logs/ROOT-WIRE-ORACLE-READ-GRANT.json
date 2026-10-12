@@ -1,0 +1,87 @@
+{
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.ffd59847-cffb-4dcd-9cd0-932d8e319e97",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.53c16922-ee85-41fd-a46b-5c184b358832",
+        "title": "B1 conditional corpus oracle owner",
+        "introductionMarkdown": "Same B1. Authored TOML change format follows existing manifest schema=none convention; new registered corpus and generated FormatId are concrete registry impact.",
+        "items": [
+          {
+            "questionItemId": "b1_wire_diff_read",
+            "header": "Oracle owner",
+            "promptMarkdown": "Grant exact READ xtask/src/wire_diff.rs to choose its supported narrow oracle/registration boundary for the new authored TOML corpus?",
+            "contextMarkdown": "Literal file confirmed via bounded rg --files. Current WRITE excludes handwritten xtask/wire adapters, so inspect actual builder before running global known-red B227 or guessing a new producer. Core corpus case already validates registered valid/refused subjects; codegen diff limited to two generated FormatId files. No write expansion requested yet.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant exact READ",
+                "description": "Bind actual conditional wire-diff impact to existing implementation.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "correct",
+                "label": "Name narrower oracle",
+                "description": "Supply exact existing adequate registration/corpus check.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact correction",
+              "multiline": true,
+              "maximumLength": 4000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "New registry/corpus impact needs an actual owner check, not optional baseline repair or invented dispatch."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T20:55:41.228Z",
+        "updatedAt": "2026-10-12T20:57:01.037Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.cbcaaccc-f987-4e0e-b688-ea20ebc0411a",
+        "questionGroupId": "question-group.ffd59847-cffb-4dcd-9cd0-932d8e319e97",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "b1_wire_diff_read",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants exact READ xtask/src/wire_diff.rs to inspect the existing conditional corpus oracle. Remain within B1; no handwritten adapter write expansion and no repair of unrelated global B227 baseline. Choose existing narrow verification supported by the actual implementation and report any concrete coverage gap."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T20:57:01.037Z",
+        "metadata": {}
+      }
+    }
+  }
+}

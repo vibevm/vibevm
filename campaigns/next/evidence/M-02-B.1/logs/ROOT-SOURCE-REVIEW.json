@@ -1,0 +1,25 @@
+{
+  "phase": "independent source review before producer ready",
+  "accepted": false,
+  "sources": {
+    "crates/vibe-core/src/manifest/change/mod.rs": "06db1a8ff56a73b5894389911c4287a82cda12026a7047b7426195de14234c2c",
+    "crates/vibe-core/src/manifest/change/migration.rs": "6bf2bfdef4fa58e5a0fa61ef4c9c1cfdb9e03679637e448a24dcd743afd78f47",
+    "crates/vibe-core/src/manifest/change/validation.rs": "efe9c45a26ddde886b89b95323ded3029aa096ab328c0321fc148c2b90624f58",
+    "crates/vibe-requirements/src/change/read.rs": "07591f5c9a543cbcb4ae30f1f771a57bb13a33c6c7c0c5825cf0c49e9d93a0c8",
+    "xtask/src/wire_diff.rs": "10661c529a9c91e208a55d0a191d026e1b68f37fcbe6f612c8b31674dc45cf70",
+    "formats/EPOCHS.toml": "d9dbf026f3a8628f141d04d073c340566864dc6e05975b774bfb8f4071e9ee44"
+  },
+  "observations": [
+    "ChangeContext validates trusted project-relative root and qualified manifest consumer; manifest cannot select root itself.",
+    "Immutable directory is context/root + changes + chg-32lowerhex; slug/title excluded from identity.",
+    "Shared core validates origins/captures, role paths and duplicate catalog IDs; requirements consumes it through bounded SafeFS snapshots.",
+    "Migration selects explicit edge/recipe, parses before and after, uses exact M13 token replay, and exposes no publication operation.",
+    "Saved input observation is per-file bounded, not a claimed atomic all-document snapshot; subsequent B3 owns overlay/writer coordination.",
+    "Existing wire-diff treats corpus without journal as authored golden and delegates its content oracle; new registered corpus parity case covers this. Epoch flags remain owner-controlled false/true."
+  ],
+  "remaining": [
+    "Producer final source/evidence manifest and readiness",
+    "Nonzero raw-origin regression result",
+    "Fresh Root specmap after source writing stops"
+  ]
+}

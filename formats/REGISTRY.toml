@@ -688,6 +688,16 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# Authored TOML; shared core parser, no public JSON exchange DTO.
+[format.change-manifest]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/change-manifest/e1"
+sunset = "none"
+
 [format.lockfile]
 epoch = 1
 schema = "none"
