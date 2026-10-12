@@ -1,0 +1,50 @@
+{
+  "source_sha256": "1ce402fc0a96442dbdd2c1a321f811424559af6165d0a92aed36914df532b109",
+  "tasks": [
+    {
+      "id": "M-16-C.1",
+      "title": "Reserve scoped submissions before effects",
+      "goal": "Establish durable pre-effect reservation and fixture-journal replay for the new machine submission path; real domain recovery and surface adapters follow in C.2/C.4.",
+      "steps": [
+        "Add host-issued context/target/principal-scoped submission namespaces with epoch/expiry and atomic idempotency-key/request/plan reservations under the existing lifecycle lease.",
+        "Build one orchestrator admission service over an owner journal port: reserve an owner-selected run ID, durably initialize that same journal identity, mark journal-ready, and only then invoke a fixture effect once. Reconcile reservation-present/journal-absent with the same ID; refuse uncertain or conflicting journal state.",
+        "Same key/payload attaches to the retained fixture outcome, different payload refuses; retain compact tombstones and reject retired namespaces. Existing/Retired never dispatch.",
+        "Keep current default-lifecycle prelude untouched in C.1: its fresh run allocation creates scratch before reservation and prerequisite install can precede state journaling. C.2/C.4 own safe real-domain and adapter integration."
+      ]
+    },
+    {
+      "id": "M-16-C.2",
+      "title": "Link short-lived operation owners to domain recovery",
+      "goal": "Retain inspectable truthful outcomes across API exit, EOF and execution-owner crashes; add missing pre-effect owner journals for direct build, package and remote publication before those domains are protected machine submissions.",
+      "steps": [
+        "Introduce operation handles that bind existing lifecycle/build/deploy/publication journals and retained terminal/partial results without duplicating their authority.",
+        "Advertise connection-loss policy; implement continue-to-completion or explicit safe-stop ownership and protected local attach/control for a still-running owner.",
+        "On owner crash recover from domain journals, preserving existing one-writer/one-parked limits and completed/pending/uncertain effects; do not synthesize success from EOF.",
+        "Adopt C.1 reservation/journal-ready fence for actual lifecycle, build, package, deploy and publication owners under the same domain run identity. Build/package artifact records and registry Published facts are post-effect evidence, not pre-effect operation journals; add missing owner journals and retained results before enabling their submits.",
+        "Advertise an operation as unavailable until its domain owner proves pre-effect identity, journal-ready, terminal/partial result retention and safe retry. Keep current one-writer/one-parked limits; no fixture or shape-only handler grants a real effect."
+      ]
+    },
+    {
+      "id": "M-16-C.3",
+      "title": "Multiplex progress, queries and cooperative controls",
+      "goal": "Keep machine sessions responsive during long operations with bounded replay and honest cancellation.",
+      "steps": [
+        "Separate request dispatch from long job execution and stream typed phase/state/progress/diagnostic events with per-stream sequence and context/target references.",
+        "Add flow control, bounded raw stdout/stderr and replay cursors; slow consumers receive explicit gaps/expired payload states without losing terminal result identity.",
+        "Implement cancellation-requested acknowledgement separately from reached safe stop; queries/control run while a job executes, and cancellation after committed effects returns partial/recovery outcomes."
+      ]
+    },
+    {
+      "id": "M-16-C.4",
+      "title": "Expose typed input and admission across all adapters",
+      "goal": "Remove machine-mode TTY/prose decisions and fixed startup defaults that hide per-operation capability.",
+      "steps": [
+        "Map domain NeedsSelection/input/approval requests to schemas bound to exact question, plan, scope and policy generation.",
+        "Carry explicit force/trace/deploy-profile and supported operation controls as validated requested options, preserving authority rather than silently choosing startup defaults.",
+        "Return structured phase and partial effects even when a handler exits without a final report; expose equivalent services through CLI, MCP and local API.",
+        "Route CLI, MCP and local API effectful submits through the C.1/C.2 reservation owner; retain equivalent idempotency and refusal semantics across surfaces."
+      ]
+    }
+  ],
+  "overlay_terms_found": []
+}
