@@ -195,3 +195,7 @@ Schema-1 pointers can still reattach read-only when original source bytes
 remain available; changed bytes refuse. Focused orchestrator 9/9, CLI 4/4
 and CLI check pass. This closes cold inspection for the exact-local slice,
 not the general C.4 domain route.
+
+## Effective acceptance — 2026-10-12
+
+First Agent accepted M-16-C.4 in [the current protected lifecycle scope](accepted-2026-10-12.md). Earlier frontier statements above are historical and are superseded by the accepted exact-local Install, profiled Deploy and partial/race/typed-decision evidence. An additional empty-world Install route is not a mandatory C4 clause. The independently effectful manifest migration surface retains its sole PROP-044/PROP-015 contract and is explicitly accounted for outside lifecycle C1/C2. B-227/B-228 remain deferred red gates, not passes.
