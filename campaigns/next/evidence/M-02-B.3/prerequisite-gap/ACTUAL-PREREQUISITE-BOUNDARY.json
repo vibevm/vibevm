@@ -1,0 +1,51 @@
+{
+  "path": "campaigns/next/tasks/M-16-D.json",
+  "sha256": "696b7c2683f7b1e6b27d66039b227174cb1e2afd9d441d4585b9f7299ef8d375",
+  "tasks": [
+    {
+      "id": "M-16-D.1",
+      "title": "Analyze immutable client-scoped document overlays",
+      "steps": [
+        "Implement versioned open/change/close buffers with resource ID, underlying disk capture, encoding, content digest and created/deleted/moved intent scoped to client/context.",
+        "Freeze overlay sets into immutable analysis captures and feed the existing classified parsers/resolver/solver/pure builtin compiler.",
+        "Expose invalid/partial syntax diagnostics and raw resources; native/effectful analysis remains an explicit preparation operation, not a read."
+      ],
+      "acceptance": [
+        "Queries for one analysis use exactly the same captured disk/overlay/world inputs.",
+        "No cross-client buffer leakage or implicit provider invocation occurs."
+      ]
+    },
+    {
+      "id": "M-16-D.2",
+      "title": "Convert positions and invalidate captured views honestly",
+      "steps": [
+        "Implement mechanical conversion between declared raw/projection offsets and negotiated editor encoding using exact document versions.",
+        "Tie child/page/chunk results and diagnostics to snapshot/filter IDs, preserving non-UTF8 bytes and unavailable mappings.",
+        "Translate disk/lock/policy/target/overlay changes into affected-ID invalidations; treat watchers as hints and missed windows as gap/expired requiring fresh capture."
+      ],
+      "acceptance": [
+        "Every diagnostic location identifies its exact source/projection revision and basis.",
+        "No total object/boot cap is introduced by paging."
+      ]
+    },
+    {
+      "id": "M-16-D.3",
+      "title": "Enforce saved-state edits with a cooperative barrier",
+      "steps": [
+        "Implement buffer-only proposed edits with expected buffer versions; applying them changes no disk/domain state.",
+        "For service-managed apply require saved recaptured disk inputs and acquire an EditBarrier for all affected registered clients/resources/versions; require acknowledgement and hold it through CAS/commit.",
+        "Reject dirty/new-version/refused/expired/disconnected participants before further writes; preserve exact partial recovery after a landed write and disclose only authorized conflict metadata."
+      ],
+      "acceptance": [
+        "Cleanliness guarantee is limited to registered participating buffers; disk CAS still guards other writers.",
+        "A dirty-buffer plan never becomes admitted solely because its content was later saved."
+      ]
+    }
+  ],
+  "root_answer": {
+    "questionGroupId": "question-group.9ba5c6ac-d1c7-42db-a27e-e3a9dcee07bc",
+    "revision": "2",
+    "optionId": "prerequisite",
+    "instruction": "Finish gap report and stop B3; Root dispatches existing unaccepted M16-D prerequisites through same Zap after graph correction. No D implementation under this packet."
+  }
+}

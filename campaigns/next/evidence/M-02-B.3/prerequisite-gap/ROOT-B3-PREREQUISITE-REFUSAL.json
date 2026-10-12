@@ -1,0 +1,39 @@
+{
+  "task": "M-02-B.3",
+  "eligible": false,
+  "missing": [
+    "M-16-D.1",
+    "M-16-D.2",
+    "M-16-D.3"
+  ],
+  "checked_parents": {
+    "M-02-A": [],
+    "M-01-E": [],
+    "M-01-D": [],
+    "M-01-C": [],
+    "M-01-B": [],
+    "M-01-A": [],
+    "M-13-D": [],
+    "M-13-C": [],
+    "M-13-B": [],
+    "M-13-A": [],
+    "M-16-A": [],
+    "M-06-A": [],
+    "M-16-C": [],
+    "M-16-B": [],
+    "M-14-A": [],
+    "M-14-C": [],
+    "M-14-B": [],
+    "M-16-D": [
+      "M-16-D.1",
+      "M-16-D.2",
+      "M-16-D.3"
+    ]
+  },
+  "extra_dependencies": [],
+  "accepted_gates": {
+    "NEXT-P0-GATE": "accepted",
+    "NEXT-PREVIEW-BASE.3": "accepted"
+  },
+  "seed_sha256": "c9ad10fc4766484eda45bba82f79664988b54d10c2a3e4470fe2e33675086fea"
+}

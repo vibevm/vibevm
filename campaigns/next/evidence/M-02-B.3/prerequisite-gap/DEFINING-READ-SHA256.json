@@ -1,0 +1,11 @@
+{
+  "campaigns/next/tasks/M-02-B.json": "351229082d51a6154663b16e72c901156c8c985c17e32810bdd1270dc98c96c7",
+  "campaigns/next/tasks/M-16-C.json": "1ce402fc0a96442dbdd2c1a321f811424559af6165d0a92aed36914df532b109",
+  "campaigns/next/evidence/M-16-C.4/accepted-2026-10-12.md": "1e71ef27e3cb302cea0889b9e7a414c3b6c044902eae981620bca7216c10c017",
+  "crates/vibe-mcp/src/context.rs": "143bb1b66fc071f0ce35cb391bc1c6eb0f6e615877e6bb6b312a2e2e58739526",
+  "crates/vibe-orchestrator/src/lib.rs": "94e2c42c52ed0c0b62081660aa0f5c0c163a1c2ffa0dda3217bd7f4fea7e6566",
+  "crates/vibe-requirements/src/change/read.rs": "07591f5c9a543cbcb4ae30f1f771a57bb13a33c6c7c0c5825cf0c49e9d93a0c8",
+  "crates/vibe-requirements/src/change/identity.rs": "c48c473c3ea32cc924a2d69a325279d99615036e73e7c7d15c581d9efdca3e2b",
+  "crates/vibe-specdoc/src/load.rs": "814e2be930dbecf36bce70ecbe48b8de9aeecbd02ba800c5ddc755537701c728",
+  "campaigns/next/tasks/M-16-D.json": "696b7c2683f7b1e6b27d66039b227174cb1e2afd9d441d4585b9f7299ef8d375"
+}

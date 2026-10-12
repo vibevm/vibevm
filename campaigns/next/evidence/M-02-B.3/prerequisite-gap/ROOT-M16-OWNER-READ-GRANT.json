@@ -1,0 +1,87 @@
+{
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.f7f4e313-63de-4212-9cf0-205d6f2b203b",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.6c08e9b1-c9b7-4701-a151-6343366d427a",
+        "title": "B3 existing M16 owner READ correction",
+        "introductionMarkdown": "Named context/orchestrator registrations do not expose an editor overlay boundary. Need exact accepted M16 owner routing, no new protocol.",
+        "items": [
+          {
+            "questionItemId": "b3_m16_owner_read",
+            "header": "M16 owner",
+            "promptMarkdown": "Grant READ campaigns/next/tasks/M-16-C.json and campaigns/next/evidence/M-16-C.4/accepted-2026-10-12.md to identify incumbent snapshot/writer coordination owners, or supply exact existing defining owner paths. No WRITE expansion requested.",
+            "contextMarkdown": "Bounded filename inventory found no editor/overlay/session owner in named host registrations; machine_view/snapshot.rs appears machine operation observation, not assumed editor semantics. I will continue named source/contract reading while awaiting correction.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant exact two READ paths",
+                "description": "Read accepted M16 routing to name minimal actual definitions.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "paths",
+                "label": "Supply defining paths",
+                "description": "Root supplies exact snapshot/coordination owners directly.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact alternative paths",
+              "multiline": true,
+              "maximumLength": 4000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Reuse accepted owner definitions; avoid inventing an overlay protocol."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T21:25:30.614Z",
+        "updatedAt": "2026-10-12T21:26:20.392Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.d65b3e55-22a7-41f9-afcd-1ca73409400d",
+        "questionGroupId": "question-group.f7f4e313-63de-4212-9cf0-205d6f2b203b",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "b3_m16_owner_read",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants exact READ campaigns/next/tasks/M-16-C.json and campaigns/next/evidence/M-16-C.4/accepted-2026-10-12.md; both verified present. Actual C4 contract is machine operation execution/observability, so accepted M16 must not be presumed editor overlay authority. Identify real accepted defining seams from those records; if the literal B3 reference is mismatched or essential capability absent, report exact gap for Root task-packet correction rather than inventing a duplicate coordination protocol or silently weakening two-client/stale/save-required obligations. No WRITE expansion."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T21:26:20.392Z",
+        "metadata": {}
+      }
+    }
+  }
+}
