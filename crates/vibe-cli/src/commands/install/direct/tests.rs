@@ -28,6 +28,7 @@ fn args(path: std::path::PathBuf) -> InstallArgs {
         no_default_features: false,
         all_features: false,
         exact: false,
+        strict_conversion: false,
         auth_required: false,
         solver: None,
         git: None,

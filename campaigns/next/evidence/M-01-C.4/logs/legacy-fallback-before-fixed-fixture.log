@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.27s
+     Running unittests src/lib.rs (<private-target>/debug/build/vibe-workspace/265de07f0764d636/out/vibe_workspace-265de07f0764d636)
+running 1 test
+test vibedeps::derived::m_01_c_4_cases::legacy_requested_markdown_failure_is_recorded_ordinary_other_path_is_copied ... FAILED
+thread 'vibedeps::derived::m_01_c_4_cases::legacy_requested_markdown_failure_is_recorded_ordinary_other_path_is_copied' (1397143) panicked at crates/vibe-workspace/src/vibedeps/derived/m_01_c_4_cases.rs:112:5:
+assertion failed: matches!(&failed.disposition,
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 658 filtered out; finished in 0.00s
+error: test failed, to rerun pass `-p vibe-workspace --lib`

@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "`.vibe-slot.toml` schema 1 — the source identity and complete materialiser-owned file footprint for one dependency slot (PROP-054 §14.3).",
+    "description": "`.vibe-slot.toml` schema 2 — source identity, complete materialiser-owned footprint and typed failed-conversion outcome for one dependency slot (PROP-054 §14.3, PROP-045 #FAILED-CONVERSION-OUTCOME). Schema 1 remains readable with its original meanings.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-SLOT-RECORD"
     },
@@ -69,12 +69,34 @@
           }
         },
         "disposition": {
-          "enum": ["converted", "copied"],
+          "enum": ["converted", "copied", "copied-unconverted"],
           "metadata": {
             "x-default": null,
             "x-vocabulary": "closed"
           }
+        },
+        "conversion_failure": {
+          "ref": "conversion_failure",
+          "metadata": {
+            "x-default": null,
+            "description": "Required only when disposition is copied-unconverted; contains every fatal parser issue from the same captured source bytes, while install emits one warning for the failed file."
+          }
         }
+      }
+    },
+    "conversion_failure": {
+      "properties": {
+        "issues": { "elements": { "ref": "conversion_issue" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "conversion_issue": {
+      "properties": {
+        "class": {
+          "enum": ["Vocabulary", "Malformed", "MissingAttr", "Stranded", "MidParagraph", "DuplicateStatus", "WrapperMismatch", "Unmarked", "MissingAnchor", "DuplicateId", "FenceBinding", "TerminalRequirements", "SwallowedAnchor", "PivotAdapter"],
+          "metadata": { "x-vocabulary": "closed", "description": "The progress-core IssueCode variant rendered by facts check, or PivotAdapter when markup parsed but the converter adapter refused." }
+        },
+        "line": { "type": "uint32" },
+        "message": { "type": "string" }
       }
     }
   }

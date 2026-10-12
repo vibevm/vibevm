@@ -22,7 +22,7 @@ use vibe_orchestrator::ports::{
 use crate::output;
 
 use super::events::CtxObserver;
-use super::{emit_closure_diff, lane_sizes, report};
+use super::{emit_closure_diff_with_conversions, lane_sizes, report};
 
 /// The CLI's install narration, over the two contexts it really owns.
 pub(crate) struct CliInstallObserver<'a> {
@@ -84,7 +84,18 @@ impl InstallObserver for CliInstallObserver<'_> {
                 new,
                 lanes_before,
                 lanes_after,
-            } => emit_closure_diff(self.ctx, "install", old, new, lanes_before, lanes_after),
+                conversions,
+                conversion_failures,
+            } => emit_closure_diff_with_conversions(
+                self.ctx,
+                "install",
+                old,
+                new,
+                lanes_before,
+                lanes_after,
+                *conversions,
+                conversion_failures,
+            ),
         }
     }
 

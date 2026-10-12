@@ -8,15 +8,24 @@ use std::path::{Component, Path};
 
 use sha2::{Digest, Sha256};
 use vibe_core::{ContentHash, manifest::SpecFormat};
+pub use vibe_wire::generated::slot_record::ConversionIssueClass as ConversionFailureClass;
 use vibe_wire::generated::slot_record::{
+    ConversionFailure as WireConversionFailure, ConversionIssue as WireConversionIssue,
     SlotFile as WireSlotFile, SlotFileDisposition as WireSlotFileDisposition,
     SlotRecord as WireSlotRecord, SlotRecordSpecFormat as WireSpecFormat,
+};
+
+mod validation;
+use validation::{
+    format_validation_error, invariant, validate_mixed_shape, validate_sha256,
+    validate_transformed_shape,
 };
 
 /// Name of the identity and footprint record at a materialised slot root.
 pub const SLOT_RECORD_FILENAME: &str = ".vibe-slot.toml";
 /// Current slot-record wire schema.
-pub const SLOT_RECORD_SCHEMA: u32 = 1;
+pub const SLOT_RECORD_SCHEMA: u32 = 2;
+const LEGACY_SLOT_RECORD_SCHEMA: u32 = 1;
 
 /// Identity and complete materialiser-owned footprint for one dependency slot.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -40,10 +49,25 @@ pub struct SlotFile {
 }
 
 /// Whether a transformed-slot row was converted or copied unchanged.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SlotFileDisposition {
     Converted,
     Copied,
+    CopiedUnconverted(ConversionFailure),
+}
+
+/// The structured parser issue for a selected Markdown source whose
+/// requested XML conversion failed. Its file path is `SlotFile.source`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ConversionFailure {
+    pub issues: Vec<ConversionIssue>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ConversionIssue {
+    pub class: ConversionFailureClass,
+    pub line: u32,
+    pub message: String,
 }
 
 /// Read and validate the slot record rooted at `slot`.
@@ -149,16 +173,42 @@ fn record_from_wire(wire: WireSlotRecord) -> Result<SlotRecord, ValidationError>
         files: wire
             .file
             .into_iter()
-            .map(|file| SlotFile {
-                path: file.path,
-                sha256: file.sha256,
-                source: file.source,
-                disposition: file.disposition.map(|disposition| match disposition {
-                    WireSlotFileDisposition::Converted => SlotFileDisposition::Converted,
-                    WireSlotFileDisposition::Copied => SlotFileDisposition::Copied,
-                }),
+            .map(|file| {
+                let disposition = match (file.disposition, file.conversion_failure) {
+                    (Some(WireSlotFileDisposition::Converted), None) => {
+                        Some(SlotFileDisposition::Converted)
+                    }
+                    (Some(WireSlotFileDisposition::Copied), None) => {
+                        Some(SlotFileDisposition::Copied)
+                    }
+                    (Some(WireSlotFileDisposition::CopiedUnconverted), Some(reason)) => {
+                        Some(SlotFileDisposition::CopiedUnconverted(ConversionFailure {
+                            issues: reason
+                                .issues
+                                .into_iter()
+                                .map(|issue| ConversionIssue {
+                                    class: issue.class,
+                                    line: issue.line,
+                                    message: issue.message,
+                                })
+                                .collect(),
+                        }))
+                    }
+                    (None, None) => None,
+                    _ => {
+                        return Err(ValidationError::Invariant(
+                            "conversion_failure must accompany only copied-unconverted".into(),
+                        ));
+                    }
+                };
+                Ok(SlotFile {
+                    path: file.path,
+                    sha256: file.sha256,
+                    source: file.source,
+                    disposition,
+                })
             })
-            .collect(),
+            .collect::<Result<Vec<_>, ValidationError>>()?,
     })
 }
 
@@ -170,9 +220,33 @@ fn record_to_wire(record: &SlotRecord) -> WireSlotRecord {
             .map(|file| WireSlotFile {
                 path: file.path.clone(),
                 sha256: file.sha256.clone(),
-                disposition: file.disposition.map(|disposition| match disposition {
-                    SlotFileDisposition::Converted => WireSlotFileDisposition::Converted,
-                    SlotFileDisposition::Copied => WireSlotFileDisposition::Copied,
+                disposition: file
+                    .disposition
+                    .as_ref()
+                    .map(|disposition| match disposition {
+                        SlotFileDisposition::Converted => WireSlotFileDisposition::Converted,
+                        SlotFileDisposition::Copied => WireSlotFileDisposition::Copied,
+                        SlotFileDisposition::CopiedUnconverted(_) => {
+                            WireSlotFileDisposition::CopiedUnconverted
+                        }
+                    }),
+                conversion_failure: file.disposition.as_ref().and_then(|disposition| {
+                    match disposition {
+                        SlotFileDisposition::CopiedUnconverted(reason) => {
+                            Some(WireConversionFailure {
+                                issues: reason
+                                    .issues
+                                    .iter()
+                                    .map(|issue| WireConversionIssue {
+                                        class: issue.class.clone(),
+                                        line: issue.line,
+                                        message: issue.message.clone(),
+                                    })
+                                    .collect(),
+                            })
+                        }
+                        _ => None,
+                    }
                 }),
                 source: file.source.clone(),
             })
@@ -322,8 +396,21 @@ enum ValidationError {
 }
 
 fn validate_record(record: &SlotRecord) -> Result<(), ValidationError> {
-    if record.schema != SLOT_RECORD_SCHEMA {
+    if !matches!(
+        record.schema,
+        LEGACY_SLOT_RECORD_SCHEMA | SLOT_RECORD_SCHEMA
+    ) {
         return Err(ValidationError::Schema(record.schema));
+    }
+    if record.schema == LEGACY_SLOT_RECORD_SCHEMA
+        && record.files.iter().any(|file| {
+            matches!(
+                file.disposition.as_ref(),
+                Some(SlotFileDisposition::CopiedUnconverted(_))
+            )
+        })
+    {
+        return invariant("schema 1 cannot carry copied-unconverted outcomes");
     }
     validate_optional_text("converter_recipe", record.converter_recipe.as_deref())?;
 
@@ -347,6 +434,27 @@ fn validate_file_rows(files: &[SlotFile]) -> Result<(), ValidationError> {
         validate_sha256(index, &file.sha256)?;
         if let Some(source) = file.source.as_deref() {
             validate_relative_path(&format!("file[{index}].source"), source)?;
+        }
+        if let Some(SlotFileDisposition::CopiedUnconverted(reason)) = &file.disposition {
+            if file.source.as_deref() != Some(file.path.as_str()) {
+                return invariant(format!(
+                    "file[{index}] copied-unconverted must retain its original source path"
+                ));
+            }
+            if reason.issues.is_empty() {
+                return invariant(format!(
+                    "file[{index}].conversion_failure.issues must be nonempty"
+                ));
+            }
+            for (issue_index, issue) in reason.issues.iter().enumerate() {
+                if issue.message.trim().is_empty()
+                    || issue.message.chars().any(|ch| ch == '\0' || ch == '\r')
+                {
+                    return invariant(format!(
+                        "file[{index}].conversion_failure.issues[{issue_index}].message is invalid"
+                    ));
+                }
+            }
         }
         if let Some(prior) = previous {
             if file.path == prior {
@@ -418,72 +526,6 @@ fn refuse_record_symlink(path: &Path) -> Result<(), String> {
             "slot record I/O failure at `{}`: cannot inspect: {error}",
             path.display()
         )),
-    }
-}
-
-fn validate_sha256(index: usize, value: &str) -> Result<(), ValidationError> {
-    let valid = value.len() == 64
-        && value
-            .bytes()
-            .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase());
-    if !valid {
-        return invariant(format!(
-            "file[{index}].sha256 must be exactly 64 lowercase hexadecimal digits"
-        ));
-    }
-    Ok(())
-}
-
-fn validate_mixed_shape(record: &SlotRecord) -> Result<(), ValidationError> {
-    if record.converter_recipe.is_some()
-        || record.derived_hash.is_some()
-        || record.overlay_hash.is_some()
-    {
-        return invariant(
-            "mixed records must omit converter_recipe, derived_hash, and overlay_hash",
-        );
-    }
-    for (index, file) in record.files.iter().enumerate() {
-        if file.source.is_some() || file.disposition.is_some() {
-            return invariant(format!(
-                "mixed file[{index}] must omit source and disposition"
-            ));
-        }
-    }
-    Ok(())
-}
-
-fn validate_transformed_shape(record: &SlotRecord) -> Result<(), ValidationError> {
-    if record.converter_recipe.is_none() {
-        return invariant("transformed records require converter_recipe");
-    }
-    if record.derived_hash.is_none() {
-        return invariant("transformed records require derived_hash");
-    }
-    for (index, file) in record.files.iter().enumerate() {
-        if file.source.is_none() || file.disposition.is_none() {
-            return invariant(format!(
-                "transformed file[{index}] requires both source and disposition"
-            ));
-        }
-    }
-    Ok(())
-}
-
-fn invariant(message: impl Into<String>) -> Result<(), ValidationError> {
-    Err(ValidationError::Invariant(message.into()))
-}
-
-fn format_validation_error(path: &Path, error: ValidationError) -> String {
-    match error {
-        ValidationError::Schema(actual) => format!(
-            "slot record schema failure at `{}`: schema {actual} is unsupported; expected {SLOT_RECORD_SCHEMA}",
-            path.display()
-        ),
-        ValidationError::Invariant(message) => format!(
-            "slot record invariant failure at `{}`: {message}",
-            path.display()
-        ),
     }
 }
 

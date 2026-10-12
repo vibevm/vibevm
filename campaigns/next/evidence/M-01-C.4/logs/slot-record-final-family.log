@@ -1,0 +1,6 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.35s
+     Running unittests src/lib.rs (<private-target>/debug/build/vibe-workspace/265de07f0764d636/out/vibe_workspace-265de07f0764d636)
+running 2 tests
+test vibedeps::slot_record::tests::m_01_c_4_schema_two_records_typed_failed_conversion_and_reads_legacy_one ... ok
+test vibedeps::slot_record::tests::m_01_c_4_malformed_failure_reason_and_disposition_refuse ... ok
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 656 filtered out; finished in 0.00s

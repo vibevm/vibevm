@@ -474,7 +474,7 @@ impl FormatId {
             FormatId::ScrapeTransactionJournal => 2,
             FormatId::ScrapeTransactionOwner => 3,
             FormatId::ScrapeVerificationHealthEvidence => 2,
-            FormatId::SlotRecord => 1,
+            FormatId::SlotRecord => 2,
         }
     }
 

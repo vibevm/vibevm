@@ -36,6 +36,7 @@ pub(super) fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         no_default_features: false,
         all_features: false,
         exact: args.exact,
+        strict_conversion: false,
         auth_required: args.auth_required,
         solver: None,
         git: None,

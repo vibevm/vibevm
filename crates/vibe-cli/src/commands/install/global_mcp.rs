@@ -117,6 +117,7 @@ pub(crate) fn update(
         no_default_features: false,
         all_features: false,
         exact: true,
+        strict_conversion: false,
         auth_required: args.auth_required,
         solver: None,
         prefer_embedded: false,

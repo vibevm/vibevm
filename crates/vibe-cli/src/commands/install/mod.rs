@@ -33,7 +33,7 @@ mod observer;
 mod report;
 mod resolver;
 
-pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
+pub(crate) use closure_diff::{emit_closure_diff, emit_closure_diff_with_conversions, lane_sizes};
 pub(crate) use confirm::CliConfirmGate;
 use confirm::UserProjectAction;
 pub(crate) use direct::run as run_direct;

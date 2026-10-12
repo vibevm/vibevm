@@ -104,3 +104,6 @@ pub mod behaviour;
 /// `generated/mod.rs` is itself synthesised by the xtask and lists the
 /// submodules in alphabetical order.
 pub mod generated;
+
+#[cfg(test)]
+mod m_01_c_4_cases;

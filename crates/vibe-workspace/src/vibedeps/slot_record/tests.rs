@@ -125,8 +125,118 @@ fn unknown_file_field_is_refused() {
 #[test]
 fn wrong_schema_is_refused_on_read_and_write() {
     let mut record = mixed(vec![]);
-    record.schema = 2;
-    assert_invalid_on_read_and_write(record, "schema 2 is unsupported; expected 1");
+    record.schema = 3;
+    assert_invalid_on_read_and_write(record, "schema 3 is unsupported; expected 1 or 2");
+}
+
+#[test]
+fn m_01_c_4_schema_two_records_typed_failed_conversion_and_reads_legacy_one() {
+    let slot = tempdir().unwrap();
+    let mut record = SlotRecord {
+        schema: SLOT_RECORD_SCHEMA,
+        source_hash: content_hash('1'),
+        spec_format: SpecFormat::Xml,
+        converter_recipe: Some("specdoc/4".into()),
+        derived_hash: Some(content_hash('2')),
+        overlay_hash: None,
+        files: vec![SlotFile {
+            path: "vibevm/vibespecs/DOC.md".into(),
+            sha256: hash('a'),
+            source: Some("vibevm/vibespecs/DOC.md".into()),
+            disposition: Some(SlotFileDisposition::CopiedUnconverted(ConversionFailure {
+                issues: vec![ConversionIssue {
+                    class: ConversionFailureClass::Stranded,
+                    line: 3,
+                    message: "status marker has no carrier".into(),
+                }],
+            })),
+        }],
+    };
+    write_slot_record(slot.path(), &record).unwrap();
+    let wire = fs::read_to_string(slot.path().join(SLOT_RECORD_FILENAME)).unwrap();
+    assert!(wire.contains("disposition = \"copied-unconverted\""));
+    assert!(wire.contains("class = \"Stranded\""));
+    assert_eq!(read_slot_record(slot.path()).unwrap(), record);
+
+    record.schema = LEGACY_SLOT_RECORD_SCHEMA;
+    assert_invalid_on_read_and_write(record, "schema 1 cannot carry copied-unconverted");
+    let mut old = mixed(vec![row("README.md")]);
+    old.schema = LEGACY_SLOT_RECORD_SCHEMA;
+    write_slot_record(slot.path(), &old).unwrap();
+    assert_eq!(read_slot_record(slot.path()).unwrap(), old);
+}
+
+#[test]
+fn m_01_c_4_malformed_failure_reason_and_disposition_refuse() {
+    let valid = || SlotRecord {
+        schema: SLOT_RECORD_SCHEMA,
+        source_hash: content_hash('1'),
+        spec_format: SpecFormat::Xml,
+        converter_recipe: Some("specdoc/4".into()),
+        derived_hash: Some(content_hash('2')),
+        overlay_hash: None,
+        files: vec![SlotFile {
+            path: "vibevm/vibespecs/DOC.md".into(),
+            sha256: hash('a'),
+            source: Some("vibevm/vibespecs/DOC.md".into()),
+            disposition: Some(SlotFileDisposition::CopiedUnconverted(ConversionFailure {
+                issues: vec![ConversionIssue {
+                    class: ConversionFailureClass::Stranded,
+                    line: 3,
+                    message: "no carrier".into(),
+                }],
+            })),
+        }],
+    };
+    let mut bad = valid();
+    if let Some(SlotFileDisposition::CopiedUnconverted(reason)) = bad.files[0].disposition.as_mut()
+    {
+        reason.issues[0].message.clear();
+    }
+    assert_invalid_on_read_and_write(bad, "conversion_failure.issues[0].message is invalid");
+    let mut bad = valid();
+    if let Some(SlotFileDisposition::CopiedUnconverted(reason)) = bad.files[0].disposition.as_mut()
+    {
+        reason.issues.clear();
+    }
+    assert_invalid_on_read_and_write(bad, "conversion_failure.issues must be nonempty");
+    let mut bad = valid();
+    bad.files[0].source = Some("other.md".into());
+    assert_invalid_on_read_and_write(bad, "must retain its original source path");
+    let mut bad = valid();
+    bad.spec_format = SpecFormat::Markdown;
+    assert_invalid_on_read_and_write(bad, "requires XML target");
+
+    let slot = tempdir().unwrap();
+    let mut invalid_class = toml::to_string_pretty(&record_to_wire(&valid())).unwrap();
+    invalid_class = invalid_class.replace("class = \"Stranded\"", "class = \"Invented\"");
+    fs::write(slot.path().join(SLOT_RECORD_FILENAME), invalid_class).unwrap();
+    let error = read_slot_record(slot.path()).unwrap_err();
+    assert!(error.contains("slot record parse failure"), "{error}");
+    let mut wire = record_to_wire(&valid());
+    wire.file[0].conversion_failure = None;
+    fs::write(
+        slot.path().join(SLOT_RECORD_FILENAME),
+        toml::to_string_pretty(&wire).unwrap(),
+    )
+    .unwrap();
+    let error = read_slot_record(slot.path()).unwrap_err();
+    assert!(
+        error.contains("conversion_failure must accompany only copied-unconverted"),
+        "{error}"
+    );
+    let mut wire = record_to_wire(&valid());
+    wire.file[0].disposition = Some(WireSlotFileDisposition::Copied);
+    fs::write(
+        slot.path().join(SLOT_RECORD_FILENAME),
+        toml::to_string_pretty(&wire).unwrap(),
+    )
+    .unwrap();
+    let error = read_slot_record(slot.path()).unwrap_err();
+    assert!(
+        error.contains("conversion_failure must accompany only copied-unconverted"),
+        "{error}"
+    );
 }
 
 #[test]

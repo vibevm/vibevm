@@ -1,0 +1,5 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.05s
+     Running tests/cli_spec_format.rs (<private-target>/debug/build/vibe-cli/7783d0dcf514bb15/out/cli_spec_format-7783d0dcf514bb15)
+running 1 test
+test c4_cases::default_cli_warns_once_and_check_reports_stored_issue_then_strict_fresh_refuses ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.41s

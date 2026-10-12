@@ -15,6 +15,7 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 use vibe_core::manifest::{LockedPackage, Lockfile};
+use vibe_workspace::install::{AppliedConversionCounts, AppliedConversionFailure};
 
 use crate::output;
 
@@ -54,6 +55,8 @@ pub struct ClosureDiff {
     pub lane_bytes: Vec<(String, Option<u64>, Option<u64>)>,
     /// The closure size after apply — the quiet line's `N packages`.
     pub packages_after: usize,
+    pub converted: usize,
+    pub copied_unconverted: usize,
 }
 
 impl ClosureDiff {
@@ -64,6 +67,8 @@ impl ClosureDiff {
             && self.removed.is_empty()
             && self.changed.is_empty()
             && self.lane_bytes.is_empty()
+            && self.converted == 0
+            && self.copied_unconverted == 0
     }
 }
 
@@ -128,7 +133,22 @@ pub fn closure_diff(
         changed,
         lane_bytes,
         packages_after: new.packages.len(),
+        converted: 0,
+        copied_unconverted: 0,
     }
+}
+
+pub fn closure_diff_with_conversions(
+    old: &Lockfile,
+    new: &Lockfile,
+    lanes_before: &[(String, Option<u64>)],
+    lanes_after: &[(String, Option<u64>)],
+    conversions: AppliedConversionCounts,
+) -> ClosureDiff {
+    let mut diff = closure_diff(old, new, lanes_before, lanes_after);
+    diff.converted = conversions.converted;
+    diff.copied_unconverted = conversions.copied_unconverted;
+    diff
 }
 
 /// Render the diff as human lines. An empty diff is the single quiet line
@@ -153,6 +173,12 @@ pub fn render(diff: &ClosureDiff) -> Vec<String> {
             size_text(*after)
         )
     }));
+    if diff.converted != 0 || diff.copied_unconverted != 0 {
+        lines.push(format!(
+            "applied slot conversions: {} converted, {} copied-unconverted",
+            diff.converted, diff.copied_unconverted
+        ));
+    }
     lines
 }
 
@@ -188,7 +214,29 @@ pub(crate) fn emit_closure_diff(
     lanes_before: &[(String, Option<u64>)],
     lanes_after: &[(String, Option<u64>)],
 ) {
-    let diff = closure_diff(old, new, lanes_before, lanes_after);
+    emit_closure_diff_with_conversions(
+        ctx,
+        command,
+        old,
+        new,
+        lanes_before,
+        lanes_after,
+        AppliedConversionCounts::default(),
+        &[],
+    );
+}
+
+pub(crate) fn emit_closure_diff_with_conversions(
+    ctx: &output::Context,
+    command: &str,
+    old: &Lockfile,
+    new: &Lockfile,
+    lanes_before: &[(String, Option<u64>)],
+    lanes_after: &[(String, Option<u64>)],
+    conversions: AppliedConversionCounts,
+    conversion_failures: &[AppliedConversionFailure],
+) {
+    let diff = closure_diff_with_conversions(old, new, lanes_before, lanes_after, conversions);
     if ctx.is_json() {
         let payload = if diff.is_empty() {
             serde_json::json!({
@@ -210,6 +258,15 @@ pub(crate) fn emit_closure_diff(
                 "removed": diff.removed,
                 "changed": diff.changed,
                 "lanes": lanes,
+                "converted": diff.converted,
+                "copied_unconverted": diff.copied_unconverted,
+                "conversion_issues": conversion_failures.iter().map(|failure| serde_json::json!({
+                    "path": format!("{}/{}", failure.slot, failure.source),
+                    "issues": failure.reason.issues.iter().map(|issue| serde_json::json!({
+                        "class": format!("{:?}", issue.class),
+                        "line": issue.line, "message": issue.message,
+                    })).collect::<Vec<_>>()
+                })).collect::<Vec<_>>(),
             })
         };
         // Supplementary, like the plan preview: held back until the
@@ -219,6 +276,17 @@ pub(crate) fn emit_closure_diff(
     }
     if ctx.is_quiet() {
         return;
+    }
+    for failure in conversion_failures {
+        if let Some(issue) = failure.reason.issues.first() {
+            ctx.step(&format!(
+                "warning: requested Vibe conversion failed at {}/{}:{} [{:?}] {}{}; original bytes copied",
+                failure.slot, failure.source, issue.line, issue.class, issue.message,
+                if failure.reason.issues.len() > 1 {
+                    format!(" (+{} more parser issue(s) in slot record)", failure.reason.issues.len() - 1)
+                } else { String::new() }
+            ));
+        }
     }
     let lines = render(&diff);
     if !diff.is_empty() {
@@ -422,5 +490,28 @@ mod tests {
             .find(|(lane, _)| *lane == watched_lanes()[0])
             .expect("the boot manifest is watched");
         assert_eq!(index.1, Some(7));
+    }
+
+    #[test]
+    fn m_01_c_4_applied_conversion_counts_render_once_even_without_lock_move() {
+        let lock = lockfile(vec![locked("org.demo", "dep", "1.0.0", None)]);
+        let lanes = lane_samples([None, None, None]);
+        let diff = closure_diff_with_conversions(
+            &lock,
+            &lock,
+            &lanes,
+            &lanes,
+            AppliedConversionCounts {
+                converted: 2,
+                copied_unconverted: 1,
+            },
+        );
+        assert!(!diff.is_empty());
+        assert_eq!(diff.converted, 2);
+        assert_eq!(diff.copied_unconverted, 1);
+        assert_eq!(
+            render(&diff),
+            ["applied slot conversions: 2 converted, 1 copied-unconverted"]
+        );
     }
 }

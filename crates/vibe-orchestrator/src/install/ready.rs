@@ -294,6 +294,8 @@ fn finish_ready(tail: ReadyTail<'_>, mut run: InstallRun) -> InstallRun {
             new: &new_lock,
             lanes_before: tail.lanes_before,
             lanes_after: &lanes_after,
+            conversions: &tail.applied.outcome.conversion_counts,
+            conversion_failures: &tail.applied.outcome.conversion_failures,
         });
     }
     run.packages_resolved = tail.packages_resolved;

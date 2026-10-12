@@ -127,8 +127,9 @@ pub use load::{
     is_spec_source, load_spec_text, load_spec_text_with, pair_collisions_in, project_spec_text,
     project_spec_text_with,
 };
-pub use md_in::from_markdown;
+pub use md_in::{MarkdownConversionFailure, from_markdown, from_markdown_detailed};
 pub use md_out::to_markdown;
+pub use progress_core::doc::IssueCode as MarkdownIssueCode;
 pub use xml_comment::{
     XmlCommentCodecError, decode_generated_xml_comment, decode_generated_xml_comment_payload,
     encode_generated_xml_comment,

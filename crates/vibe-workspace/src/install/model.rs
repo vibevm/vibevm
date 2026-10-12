@@ -9,10 +9,32 @@ use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{LockedEmbeddedSource, Manifest, SpecFormat};
+use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{ContentHash, Group, PackageKind};
 
+use super::slot_lifecycle::MaterialiseLifecycle;
 use crate::WorkspaceError;
 use crate::hooks::HookReport;
+
+/// Internal materialisation, integrity and hook-scheduling bookkeeping.
+#[derive(Debug)]
+pub(super) struct Materialised {
+    pub(super) materialised: Vec<String>,
+    pub(super) skipped: Vec<String>,
+    pub(super) integrity_warnings: Vec<String>,
+    pub(super) conversion_counts: AppliedConversionCounts,
+    pub(super) conversion_failures: Vec<AppliedConversionFailure>,
+    pub(super) post_install_deps: Vec<ResolvedDep>,
+    pub(super) hook_reports: Vec<HookReport>,
+}
+
+pub(super) struct MaterialiseOptions<'a> {
+    pub(super) slot_integrity: SlotIntegrity,
+    pub(super) spec_format: SpecFormat,
+    pub(super) slot_verifier: Option<&'a dyn SlotVerifier>,
+    pub(super) lifecycle: MaterialiseLifecycle<'a>,
+    pub(super) progress: vibe_core::progress::Progress,
+}
 
 /// A resolved, fetched dependency ready to materialise — the minimum the
 /// install orchestrator needs, decoupled from the registry's richer
@@ -62,6 +84,18 @@ pub struct ResolvedDep {
     /// is every copy/hardlink dependency and every fresh clone still awaiting
     /// placement.
     pub in_place_changed: Option<bool>,
+}
+
+impl ResolvedDep {
+    pub fn is_in_place(&self) -> bool {
+        super::placement::is_in_place(self)
+    }
+
+    /// The incumbent package materialization decision, shared with strict
+    /// preparation so preflight never silently changes copy/hardlink policy.
+    pub fn copy_mode(&self) -> crate::vibedeps::CopyMode {
+        super::placement::copy_mode_for(&self.manifest)
+    }
 }
 
 /// The verdict of a `slot_integrity = verify` spot-check on a present
@@ -130,6 +164,14 @@ pub enum SlotCheck {
 /// assert!(consult(&AlwaysDiverged));
 /// ```
 pub trait SlotVerifier {
+    /// A strict run may retain fully prepared transformed bytes/record from
+    /// its all-package preflight. Ordinary verifiers return `None`.
+    fn prepared_transformed_slot(
+        &self,
+        _dep: &ResolvedDep,
+    ) -> Option<&crate::vibedeps::PreparedTransformedSlot> {
+        None
+    }
     /// The verifier's fetched expected source identity. Materialisation reads
     /// [`ResolvedDep::source_hash`] directly; this lookup exists only inside
     /// verifier implementations that retain a fetched-set index.
@@ -222,6 +264,22 @@ impl PostInstallPlan {
 }
 
 /// What [`apply_resolution`] did — for the caller to report.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct AppliedConversionCounts {
+    pub converted: usize,
+    pub copied_unconverted: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AppliedConversionFailure {
+    /// Root-relative dependency slot that was actually reconciled.
+    pub slot: String,
+    /// Package-relative original source path, retained in the record.
+    pub source: String,
+    pub reason: crate::vibedeps::ConversionFailure,
+}
+
+/// What [`apply_resolution`] did — for the caller to report.
 #[derive(Debug)]
 pub struct InstallOutcome {
     /// Dependency-slot paths materialised this run — a new or version-bumped
@@ -240,6 +298,12 @@ pub struct InstallOutcome {
     /// re-materialised; these lines are the record of why. Empty under
     /// `trust-presence` and on a clean `verify` pass.
     pub integrity_warnings: Vec<String>,
+    /// Only slots reconciled by this apply contribute; skipped/unrelated
+    /// slots are not silently recounted from the workspace tree.
+    pub conversion_counts: AppliedConversionCounts,
+    /// One typed row per failed requested conversion in those applied slots.
+    /// Renderers emit one warning per row, preserving every parser issue.
+    pub conversion_failures: Vec<AppliedConversionFailure>,
     /// Dependency-slot paths pruned — present before, absent from this
     /// resolution (a version bump, or a dropped dependency).
     pub pruned: Vec<String>,

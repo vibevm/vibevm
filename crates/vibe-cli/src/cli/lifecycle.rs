@@ -104,6 +104,7 @@ impl LifecycleArgs {
             no_default_features: self.no_default_features,
             all_features: self.all_features,
             exact: false,
+            strict_conversion: false,
             auth_required: self.auth_required,
             solver: self.solver.clone(),
             prefer_embedded: self.prefer_embedded,

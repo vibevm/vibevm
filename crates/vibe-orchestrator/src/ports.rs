@@ -28,7 +28,7 @@ use vibe_core::manifest::{LockedPackage, Lockfile, Manifest};
 use vibe_lifecycle::RunMetadata;
 use vibe_lifecycle::process::StreamMode;
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
-use vibe_workspace::install::ResolvedDep;
+use vibe_workspace::install::{AppliedConversionCounts, AppliedConversionFailure, ResolvedDep};
 
 use crate::RitualPlan;
 
@@ -122,6 +122,9 @@ pub enum InstallNarration<'a> {
         lanes_before: &'a [(String, Option<u64>)],
         /// The same lanes sampled after it.
         lanes_after: &'a [(String, Option<u64>)],
+        /// Exact rows from slots reconciled by this apply, never a workspace scan.
+        conversions: &'a AppliedConversionCounts,
+        conversion_failures: &'a [AppliedConversionFailure],
     },
 }
 

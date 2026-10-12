@@ -1,0 +1,6 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.82s
+     Running tests/m_01_c_4_cases.rs (<private-target>/debug/build/vibe-install/50542dddc09efbb9/out/m_01_c_4_cases-50542dddc09efbb9)
+running 2 tests
+test default_failed_conversion_records_issue_and_applied_counts ... ok
+test strict_bad_second_package_preserves_manifest_lock_and_both_slots ... ok
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s

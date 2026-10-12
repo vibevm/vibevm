@@ -31,7 +31,7 @@ mod world_projection;
 
 pub use world_projection::provisional_world;
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
 use vibe_core::PackageRef;
 use vibe_core::manifest::Lockfile;
 use vibe_install::{InstallRequest, Plan};
@@ -373,6 +373,9 @@ pub fn execute_prepared(
     )?;
     match plan {
         Plan::Fresh => {
+            if args.strict_conversion {
+                refuse_fresh_failed_conversions(&workspace.root, &lockfile_snapshot, spec_format)?;
+            }
             // PROP-011 §2.2 — application is just a whole-tree boot
             // regeneration (cheap, self-healing — §2.4).
             observer.narrate(InstallNarration::FreshLock);
@@ -444,29 +447,85 @@ pub fn execute_prepared(
         // apply, the slot-failure carrier and the closure diff — so this
         // function stays the shape of the DECISION (empty / fresh / ready)
         // rather than of the largest branch.
-        Plan::Ready(planned) => ready::apply(
-            ready::ReadyApply {
-                project_root: &project_root,
-                workspace: &workspace,
-                resolver: resolver.as_ref(),
-                planned: *planned,
-                slot_integrity,
-                spec_format,
-                lockfile_path: &lockfile_path,
-                lockfile_snapshot: &lockfile_snapshot,
-                lanes_before: &lanes_before,
-                run_metadata: &run_metadata,
-                confirm_gate,
-                observer,
-                agent: &agent,
-                trace,
-            },
-            lifecycle_run,
-            after_durable_world
-                .take()
-                .context("internal: install durable-world callback already consumed")?,
-        ),
+        Plan::Ready(mut planned) => {
+            planned.set_strict_conversion(args.strict_conversion);
+            ready::apply(
+                ready::ReadyApply {
+                    project_root: &project_root,
+                    workspace: &workspace,
+                    resolver: resolver.as_ref(),
+                    planned: *planned,
+                    slot_integrity,
+                    spec_format,
+                    lockfile_path: &lockfile_path,
+                    lockfile_snapshot: &lockfile_snapshot,
+                    lanes_before: &lanes_before,
+                    run_metadata: &run_metadata,
+                    confirm_gate,
+                    observer,
+                    agent: &agent,
+                    trace,
+                },
+                lifecycle_run,
+                after_durable_world
+                    .take()
+                    .context("internal: install durable-world callback already consumed")?,
+            )
+        }
     }
+}
+
+/// The Fresh path has no fetched content to prepare. A retained schema-2
+/// failed conversion is decisive; older transformed records cannot prove
+/// whether an ordinary copied row masked a failure, so strict refuses them
+/// as unavailable before boot regeneration or any replacement lock write.
+fn refuse_fresh_failed_conversions(
+    root: &std::path::Path,
+    lock: &Lockfile,
+    format: vibe_core::manifest::SpecFormat,
+) -> Result<()> {
+    if !format.is_transformed() {
+        return Ok(());
+    }
+    for package in &lock.packages {
+        let slot = vibe_workspace::vibedeps::slot_abs_path(
+            root,
+            &package.group,
+            &package.name,
+            &package.version,
+        );
+        let record = vibe_workspace::vibedeps::read_slot_record(&slot).map_err(|reason| {
+            anyhow::anyhow!(
+                "strict conversion unavailable for {}/{}: {reason}",
+                package.group,
+                package.name
+            )
+        })?;
+        if record.schema != vibe_workspace::vibedeps::SLOT_RECORD_SCHEMA {
+            bail!(
+                "strict conversion unavailable for {}/{}: historical slot record cannot distinguish a failed conversion",
+                package.group,
+                package.name
+            );
+        }
+        for file in &record.files {
+            if let Some(vibe_workspace::vibedeps::SlotFileDisposition::CopiedUnconverted(reason)) =
+                &file.disposition
+            {
+                let issue = &reason.issues[0];
+                bail!(
+                    "strict conversion refused `{}` in {}/{} [{:?}] line {}: {}",
+                    file.source.as_deref().unwrap_or(&file.path),
+                    package.group,
+                    package.name,
+                    issue.class,
+                    issue.line,
+                    issue.message
+                );
+            }
+        }
+    }
+    Ok(())
 }
 
 #[cfg(test)]

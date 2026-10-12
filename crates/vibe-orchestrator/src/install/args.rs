@@ -43,6 +43,9 @@ pub struct InstallInputs {
     pub language: Option<String>,
     /// Whether resolved versions are pinned exactly.
     pub exact: bool,
+    /// Require every requested builtin conversion to prepare successfully
+    /// before the first install publication.
+    pub strict_conversion: bool,
 }
 
 /// The narrow execution policy the shared core reads.

@@ -1,0 +1,13 @@
+Diff in <checkout>/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs:571:
+Diff in <checkout>/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:3:
+Diff in <checkout>/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:10:
+Diff in <checkout>/crates/vibe-mcp/src/machine_session/incremental.rs:3:
+Diff in <checkout>/crates/vibe-mcp/src/machine_session/incremental.rs:83:
+Diff in <checkout>/crates/vibe-mcp/src/machine_session/incremental.rs:92:
+Diff in <checkout>/crates/vibe-mcp/src/machine_session/incremental.rs:234:
+Diff in <checkout>/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs:100:
+Diff in <checkout>/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs:2:
+Diff in <checkout>/crates/vibe-orchestrator/src/machine_submission.rs:48:
+Diff in <checkout>/crates/vibe-publish/src/package_git_payload/tests.rs:34:
+Diff in <checkout>/crates/vibe-publish/src/package_git_payload/tests.rs:184:
+Diff in <checkout>/crates/vibe-wire/src/generated/format_id/properties.rs:270:

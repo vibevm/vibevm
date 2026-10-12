@@ -28,7 +28,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
 
 use crate::doc::{Block, BlockNode, Fact, Section, SpecDoc, StatusEl, Title, Unit};
 use crate::{Error, Result};
-use progress_core::doc::{BlockKind, FactKind, ParsedDoc};
+use progress_core::doc::{BlockKind, FactKind, Issue, ParsedDoc, Severity};
 use progress_core::model::{Granularity, Marker, MarkerForm};
 use progress_core::parse::{
     blockquote_prefix_len, closes_fence, fence_run, is_delimiter_row, list_marker_len, row_cells,
@@ -41,24 +41,76 @@ use progress_core::parse::{
 /// issues, verbatim): the pivot refuses to represent a document whose
 /// spelling no consumer can trust.
 pub fn from_markdown(text: &str) -> Result<SpecDoc> {
+    from_markdown_detailed(text).map_err(MarkdownConversionFailure::legacy_error)
+}
+
+/// The same single progress-core parse used by `from_markdown`, retaining
+/// fatal IssueCode/line/message instead of flattening them into prose for a
+/// conversion outcome that must survive in the slot record.
+pub fn from_markdown_detailed(
+    text: &str,
+) -> std::result::Result<SpecDoc, MarkdownConversionFailure> {
     let parsed = progress_core::parse::parse_document("<specdoc>", text);
     if parsed.error_count() > 0 {
-        let errs: Vec<String> = parsed
+        let issues: Vec<Issue> = parsed
             .issues
             .iter()
-            .filter(|i| i.severity == progress_core::doc::Severity::Error)
-            .map(|i| format!("line {}: {}", i.line, i.message))
+            .filter(|i| i.severity == Severity::Error)
+            .cloned()
             .collect();
-        return Err(Error::at(
-            0,
-            format!(
-                "the source markup has {} error(s): {}",
-                errs.len(),
-                errs.join("; ")
-            ),
-        ));
+        return Err(MarkdownConversionFailure::Issues(issues));
     }
-    Adapter::new(text, &parsed).run()
+    Adapter::new(text, &parsed)
+        .run()
+        .map_err(MarkdownConversionFailure::PivotAdapter)
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum MarkdownConversionFailure {
+    Issues(Vec<Issue>),
+    PivotAdapter(Error),
+}
+
+#[cfg(test)]
+mod m_01_c_4_cases {
+    use super::*;
+
+    #[test]
+    fn stranded_status_keeps_facts_check_issue_code_line_and_message() {
+        let source = "# Rule {#root}\n\n@fact:GOOD Good. @status:impl/done\n\nPlain prose.\n\n@status:impl/done\n\nFollowing prose.\n";
+        let failure = from_markdown_detailed(source).unwrap_err();
+        let MarkdownConversionFailure::Issues(issues) = failure else {
+            panic!("expected markup issues")
+        };
+        assert_eq!(issues.len(), 1);
+        assert_eq!(issues[0].code, progress_core::doc::IssueCode::Stranded);
+        assert_eq!(issues[0].line, 7);
+        assert!(issues[0].message.starts_with("standalone marker"));
+        let legacy = from_markdown(source).unwrap_err();
+        assert!(legacy.message.contains(&issues[0].message));
+    }
+}
+
+impl MarkdownConversionFailure {
+    pub fn legacy_error(self) -> Error {
+        match self {
+            Self::Issues(issues) => {
+                let errs = issues
+                    .iter()
+                    .map(|issue| format!("line {}: {}", issue.line, issue.message))
+                    .collect::<Vec<_>>();
+                Error::at(
+                    0,
+                    format!(
+                        "the source markup has {} error(s): {}",
+                        errs.len(),
+                        errs.join("; ")
+                    ),
+                )
+            }
+            Self::PivotAdapter(error) => error,
+        }
+    }
 }
 
 struct Adapter<'a> {
