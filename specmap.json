@@ -36792,27 +36792,27 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 112,
+      "line": 113,
       "symbol": "vibe_workspace::Workspace",
-      "end_line": 154,
+      "end_line": 155,
       "fingerprint": "tok1:f11f238e760e70161733f73be4d7484718f476298a1076e53011eeaca8401432"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 206,
+      "line": 207,
       "symbol": "vibe_workspace::Workspace::node_rel_of",
-      "end_line": 273,
+      "end_line": 274,
       "fingerprint": "tok1:efaecb95c92dc621d4b1357b2bc18580ec05ca2704aadabf9c397e7bb1ea4969"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 68,
+      "line": 69,
       "symbol": "vibe_workspace::WorkspaceMember",
-      "end_line": 110,
+      "end_line": 111,
       "fingerprint": "tok1:27e14926d8b3eee3a5f1ae2f6642e5506608113ff9f991cfe2f8b553110acb4e"
     },
     {
@@ -37449,45 +37449,45 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "item_kind": "fn",
-      "line": 185,
+      "line": 195,
       "symbol": "vibe_workspace::extension_world::DurableExtensionWorld::from_lock",
-      "end_line": 238,
+      "end_line": 248,
       "fingerprint": "tok1:abb156f46a3e8c9165edab028e68c8c32fddbd7a9614dc28d672436259532842"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "item_kind": "fn",
-      "line": 258,
+      "line": 268,
       "symbol": "vibe_workspace::extension_world::DurableExtensionWorld::node_owner_view",
-      "end_line": 271,
+      "end_line": 281,
       "fingerprint": "tok1:b0ae0bd5d7eb6b61671fe69aa49bc35034e2d3a213a7cc4135d4785989928f41"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "item_kind": "fn",
-      "line": 273,
+      "line": 283,
       "symbol": "vibe_workspace::extension_world::DurableExtensionWorld::package_owner_view",
-      "end_line": 287,
+      "end_line": 297,
       "fingerprint": "tok1:9ed30c4fa212ec3a84df68d056c6459cb9743aecf00d885f7f0e3f335255db67"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "item_kind": "fn",
-      "line": 303,
+      "line": 313,
       "symbol": "vibe_workspace::extension_world::collect_owner_mechanisms",
-      "end_line": 316,
+      "end_line": 326,
       "fingerprint": "tok1:821b8ed30c6619db89f47ed9b698367d389a1173a68f74aacb91118c26f758ed"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "item_kind": "fn",
-      "line": 290,
+      "line": 300,
       "symbol": "vibe_workspace::extension_world::collect_owner_view",
-      "end_line": 301,
+      "end_line": 311,
       "fingerprint": "tok1:9a9a273b7fc93bb411cdc7e315a7cdcd2286dccac4de720e8aecd9ec90534194"
     },
     {
@@ -38947,6 +38947,24 @@
       "symbol": "vibe_workspace::publish::topo_order",
       "end_line": 276,
       "fingerprint": "tok1:85037d8e1fb8746099f96e7340d8afbb736a32ecf37c651ad8abef54d92ef63a"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/source_query/mod.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_workspace::source_query",
+      "end_line": 4,
+      "fingerprint": "tok1:066bf36c9e501a793b1cd4c4806e1a491717900382cc1252ffe34029fef4aa64"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/source_query/capture.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_workspace::source_query::capture",
+      "end_line": 4,
+      "fingerprint": "tok1:066bf36c9e501a793b1cd4c4806e1a491717900382cc1252ffe34029fef4aa64"
     },
     {
       "crate_name": "vibe-workspace",
@@ -68046,7 +68064,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace",
-      "line": 141,
+      "line": 142,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -68055,7 +68073,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace::node_rel_of",
-      "line": 262,
+      "line": 263,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "documents"
@@ -68063,7 +68081,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceMember",
-      "line": 91,
+      "line": 92,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -68669,7 +68687,7 @@
     {
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "from_symbol": "vibe_workspace::extension_world::DurableExtensionWorld::from_lock",
-      "line": 218,
+      "line": 228,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
       "verb": "implements"
@@ -68677,7 +68695,7 @@
     {
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "from_symbol": "vibe_workspace::extension_world::DurableExtensionWorld::node_owner_view",
-      "line": 262,
+      "line": 272,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
       "verb": "implements"
@@ -68685,7 +68703,7 @@
     {
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "from_symbol": "vibe_workspace::extension_world::DurableExtensionWorld::package_owner_view",
-      "line": 281,
+      "line": 291,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
       "verb": "implements"
@@ -68693,7 +68711,7 @@
     {
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "from_symbol": "vibe_workspace::extension_world::collect_owner_mechanisms",
-      "line": 311,
+      "line": 321,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
@@ -68701,7 +68719,7 @@
     {
       "file": "crates/vibe-workspace/src/extension_world.rs",
       "from_symbol": "vibe_workspace::extension_world::collect_owner_view",
-      "line": 295,
+      "line": 305,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
@@ -70098,6 +70116,22 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/source_query/mod.rs",
+      "from_symbol": "vibe_workspace::source_query",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#PREPARED-VISIBLE-SOURCE-AUTHORITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/source_query/capture.rs",
+      "from_symbol": "vibe_workspace::source_query::capture",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#PREPARED-VISIBLE-SOURCE-AUTHORITY",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-workspace/src/tools.rs",
@@ -94914,7 +94948,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:52a59751a07dd1cfc3b074f52aed872f27da0aba5e5285ec6ec73d5b0b5aa0e1",
+      "content_hash": "sha256:09a0e0fdf9376af59a792d79350fc2d415cfdd175b0a9a45afdd225f8ef3a91f",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "PROP-070: Validated resource addresses and selected resolution",
@@ -95037,6 +95071,24 @@
       "heading": "Compiler-facing section sources, recursive `#embed` reads and selected-provider prompt resolution preserve the incumbent selected-world authority and portable source preflight. An actually absent document is `not found`; an existing non-directory source location or failed directory/read operation is unreadable; duplicate physical document stems, competing pattern members and a referenced duplicate document anchor refuse as ambiguous instead of selecting the first or disappearing from a set. A matched pattern member missing its document alone is excluded from that set. If a selected source disappears after lookup or its bytes differ across the internal two-read observation, the caller reports instability and never publishes one of those observed versions as a stable result. These internal checks preserve valid Markdown/XML projection and prompt/embed content, but a two-read comparison is not a retained-handle capture or a guarantee against later namespace races. The public captured query owner remains separate. @status:spec/plan",
       "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#INTERNAL-LOOKUP-FAILURES"
+    },
+    {
+      "anchor": "prepared-world",
+      "content_hash": "sha256:6270999d80392f498622beb0a70ddba298f04fa4567b0f033dc2ddf76e73e4ca",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "5. Selected visible source authority",
+      "line": 27,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#prepared-world"
+    },
+    {
+      "anchor": "PREPARED-VISIBLE-SOURCE-AUTHORITY",
+      "content_hash": "sha256:e1129548e28eddcf66c241891744c9fb5d3e4b8b086bb1aaed3f0ece64536b51",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "A query receives one opaque prepared authority for the selected node, never free lock rows or an ambient dependency-directory scan. The constructor consumes the node's exact authored identity/root, the already ordered selected resolution, the owner visibility verdict and caller-supplied captured source bytes plus descriptor identities. The node is its own self authority; admitted dependencies come only from that node's effective visible closure at their selected versions and materialised roots. A hidden, unselected, newest-but-not-selected or wrong-owner package cannot become readable by the presence of a slot. Parsed declarations, a package content hash, a descriptor row and a portable physical preflight are distinct from captured bytes and never manufacture them. Missing prepared capture returns unavailable. Construction performs no provider fetch, hydration, cache fill or current-source read; the separate preparation owner must supply captures. This initial world binding does not by itself prove later membership continuity or a retained-handle query read, which belong to the following owners. @status:spec/plan",
+      "line": 28,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#PREPARED-VISIBLE-SOURCE-AUTHORITY"
     },
     {
       "anchor": "root",

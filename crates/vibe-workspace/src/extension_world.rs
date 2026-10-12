@@ -133,6 +133,16 @@ fn package<'epoch>(
         })
 }
 
+impl ExtensionWorldEpoch {
+    /// Exact ordered resolved edges already retained for one selected package.
+    pub fn package_edges(
+        &self,
+        owner: &DependencyProviderId,
+    ) -> Result<&[DependencyProviderId], ExtensionWorldError> {
+        Ok(&package(self, owner)?.edges)
+    }
+}
+
 fn owner_view(
     epoch: &ExtensionWorldEpoch,
     host: HostExtensionSource,

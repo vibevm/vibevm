@@ -45,6 +45,7 @@ pub mod materialization;
 pub mod migration_application;
 pub mod migration_planning;
 pub mod publish;
+pub mod source_query;
 pub mod tools;
 pub mod vibedeps;
 

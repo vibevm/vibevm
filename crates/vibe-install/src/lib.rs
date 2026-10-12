@@ -67,9 +67,182 @@ pub use record::{
     merge_root_dependencies, record_git_source,
 };
 pub use visibility_projection::{
-    FilteringDepProvider, Projection, ProjectionInput, metadata_manifest, project,
-    solve_with_visibility_mask,
+    FilteringDepProvider, Projection, ProjectionInput, metadata_manifest,
+    prepare_visible_source_authority, project, solve_with_visibility_mask,
 };
+
+/// Visibility-sealed source authority. Only the install composition function
+/// can construct it; workspace's raw capture binding is not a query grant.
+///
+/// A member's private transitive dependency remains unreadable even if the
+/// caller requests it and supplied real captured bytes. The positive request
+/// for the member's direct dependency uses those same prepared snapshots.
+///
+/// ```
+/// use std::collections::{BTreeMap, BTreeSet};
+/// use std::fs;
+/// use vibe_core::manifest::Manifest;
+/// use vibe_core::{ContentHash, Group, PackageKind, PackageRef};
+/// use vibe_install::{prepare_visible_source_authority, PreparedVisibleSourceAuthority};
+/// use vibe_resolver::{ResolvedGraph, ResolvedNode};
+/// use vibe_safefs::Project;
+/// use vibe_workspace::{Workspace, WorkspaceMember};
+/// use vibe_workspace::extension_world::ExtensionWorldEpoch;
+/// use vibe_workspace::install::ResolvedDep;
+/// use vibe_workspace::source_query::{PreparedOwnerCapture, SourceQueryUnavailable};
+/// let temp = tempfile::tempdir().unwrap();
+/// let member_text = "[package]\ngroup='org.demo'\nname='member'\nkind='flow'\nversion='1.0.0'\n[requires.packages]\n'org.demo/a'='=1.0.0'\n";
+/// let a_text = "[package]\ngroup='org.demo'\nname='a'\nkind='flow'\nversion='1.0.0'\n[requires.packages]\n'org.demo/b'={version='=1.0.0',access='private'}\n";
+/// let b_text = "[package]\ngroup='org.demo'\nname='b'\nkind='flow'\nversion='1.0.0'\n";
+/// let member_manifest = Manifest::parse_str(member_text).unwrap();
+/// let workspace = Workspace {
+///     root: temp.path().to_path_buf(),
+///     root_manifest: Manifest::parse_str("[project]\nname='root'\nversion='1.0.0'\n").unwrap(),
+///     members: vec![WorkspaceMember { rel_path: "member".into(), manifest: member_manifest,
+///         depth: 0, parent: None }],
+/// };
+/// let group = Group::parse("org.demo").unwrap();
+/// let version = semver::Version::parse("1.0.0").unwrap();
+/// let member_root = workspace.node_abs_path("member");
+/// let a_root = workspace.vibedeps_slot(&group, "a", &version);
+/// let b_root = workspace.vibedeps_slot(&group, "b", &version);
+/// let newer = workspace.vibedeps_slot(&group, "a", &semver::Version::parse("2.0.0").unwrap());
+/// let unselected = workspace.vibedeps_slot(&group, "stray", &version);
+/// fs::create_dir_all(&newer).unwrap();
+/// fs::create_dir_all(&unselected).unwrap();
+/// for (root, text) in [(&member_root, member_text), (&a_root, a_text), (&b_root, b_text)] {
+///     fs::create_dir_all(root.join("spec/common")).unwrap();
+///     fs::write(root.join("vibe.toml"), text).unwrap();
+///     fs::write(root.join("spec/common/DOC.md"), "# Doc {#root}\nCAPTURED_BODY\n").unwrap();
+/// }
+/// let hash = ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap();
+/// let dep = |name: &str, text: &str, requires: Vec<(Group, String)>| ResolvedDep {
+///     kind: PackageKind::Flow, group: group.clone(), name: name.into(), version: version.clone(),
+///     content_dir: workspace.vibedeps_slot(&group, name, &version), source_hash: Some(hash.clone()),
+///     embedded_sources: vec![], manifest: Manifest::parse_str(text).unwrap(), requires,
+///     admitted_by: None, via_override: None, source_mutable: false, in_place_changed: None,
+/// };
+/// let epoch = ExtensionWorldEpoch::from_resolution(temp.path(), &[
+///     dep("a", a_text, vec![(group.clone(), "b".into())]), dep("b", b_text, vec![]),
+/// ]).unwrap();
+/// let snapshot = |root: &std::path::Path, path: &str| Project::open(root).unwrap()
+///     .read_file_snapshot_bounded(path, 1024 * 1024).unwrap().unwrap();
+/// let outputs = |root: &std::path::Path| BTreeMap::from([
+///     ("spec/common/DOC.md".into(), snapshot(root, "spec/common/DOC.md"))]);
+/// let captures = vec![
+///     PreparedOwnerCapture::self_node(member_root.clone(), snapshot(&member_root, "vibe.toml"), outputs(&member_root), None),
+///     PreparedOwnerCapture::dependency("org.demo", "a", a_root.clone(), snapshot(&a_root, "vibe.toml"), outputs(&a_root), None),
+///     PreparedOwnerCapture::dependency("org.demo", "b", b_root.clone(), snapshot(&b_root, "vibe.toml"), outputs(&b_root), None),
+/// ];
+/// let graph = ResolvedGraph { packages: vec![
+///     ResolvedNode { group: group.clone(), name: "a".into(), version: version.clone(),
+///         dependencies: vec![PackageRef::parse("org.demo/b@=1.0.0").unwrap()], is_root: true },
+///     ResolvedNode { group: group.clone(), name: "b".into(), version,
+///         dependencies: vec![], is_root: false },
+/// ]};
+/// let private = BTreeSet::from(["org.demo/b".into()]);
+/// let refusal = prepare_visible_source_authority(&workspace, "member", &epoch, &graph,
+///     &private, captures.clone()).unwrap_err();
+/// assert!(matches!(refusal, SourceQueryUnavailable::Visibility(reason)
+///     if reason.contains("not visible")));
+/// let mut workspace_union = graph.clone();
+/// workspace_union.packages[1].is_root = true;
+/// let widened = prepare_visible_source_authority(&workspace, "member", &epoch,
+///     &workspace_union, &private, captures.clone()).unwrap_err();
+/// assert!(matches!(widened, SourceQueryUnavailable::Visibility(reason)
+///     if reason.contains("graph roots differ")));
+/// let mut wrong_edges = graph.clone();
+/// wrong_edges.packages[0].dependencies.clear();
+/// let edges = prepare_visible_source_authority(&workspace, "member", &epoch,
+///     &wrong_edges, &private, captures.clone()).unwrap_err();
+/// assert!(matches!(edges, SourceQueryUnavailable::Visibility(reason)
+///     if reason.contains("graph edges differ")));
+/// let mut wrong_version = graph.clone();
+/// wrong_version.packages[1].version = semver::Version::parse("2.0.0").unwrap();
+/// let version = prepare_visible_source_authority(&workspace, "member", &epoch,
+///     &wrong_version, &private, captures.clone()).unwrap_err();
+/// assert!(matches!(version, SourceQueryUnavailable::Visibility(reason)
+///     if reason.contains("graph version differs")));
+/// let direct = BTreeSet::from(["org.demo/a".into()]);
+/// let admitted: PreparedVisibleSourceAuthority = prepare_visible_source_authority(
+///     &workspace, "member", &epoch, &graph, &direct, captures).unwrap();
+/// let summary = format!("{admitted:?}");
+/// assert!(summary.contains("owner_count: 2") && summary.contains("visible_count: 1"));
+/// assert!(!summary.contains("CAPTURED_BODY"));
+/// ```
+pub struct PreparedVisibleSourceAuthority {
+    bound: vibe_workspace::source_query::BoundSourceInputs,
+    visibility: vibe_core::visibility::Analysis,
+}
+
+impl std::fmt::Debug for PreparedVisibleSourceAuthority {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter
+            .debug_struct("PreparedVisibleSourceAuthority")
+            .field("owner_count", &self.bound.owner_count())
+            .field("visible_count", &self.visibility.effective.len())
+            .finish_non_exhaustive()
+    }
+}
+
+/// A query projection may only use this member's exact retained resolution,
+/// including transitive membership and ordered selected edges.
+fn check_member_graph(
+    epoch: &vibe_workspace::extension_world::ExtensionWorldEpoch,
+    node_root: &std::path::Path,
+    node_manifest: &vibe_core::manifest::Manifest,
+    graph: &vibe_resolver::ResolvedGraph,
+) -> Result<(), vibe_workspace::source_query::SourceQueryUnavailable> {
+    use std::collections::BTreeSet;
+    use vibe_workspace::source_query::SourceQueryUnavailable;
+
+    let view = epoch.node_owner_view(node_root, node_manifest)?;
+    let expected = view
+        .installed
+        .iter()
+        .map(|row| row.provider.id.to_string())
+        .collect::<BTreeSet<_>>();
+    let actual = graph
+        .iter()
+        .map(|node| format!("{}/{}", node.group, node.name))
+        .collect::<BTreeSet<_>>();
+    if actual.len() != graph.packages.len() || expected != actual {
+        return Err(SourceQueryUnavailable::Visibility(
+            "resolved graph package set differs from selected member epoch".into(),
+        ));
+    }
+    for node in graph.iter() {
+        let id = format!("{}/{}", node.group, node.name);
+        let installed = view
+            .installed
+            .iter()
+            .find(|row| row.provider.id.to_string() == id)
+            .ok_or_else(|| {
+                SourceQueryUnavailable::Visibility(format!("graph package `{id}` is absent"))
+            })?;
+        if installed.provider.version != node.version.to_string() {
+            return Err(SourceQueryUnavailable::Visibility(format!(
+                "graph version differs from selected epoch for `{id}`"
+            )));
+        }
+        let expected_edges = epoch
+            .package_edges(&installed.provider.id)?
+            .iter()
+            .map(ToString::to_string)
+            .collect::<Vec<_>>();
+        let actual_edges = node
+            .dependencies
+            .iter()
+            .map(vibe_core::PackageRef::qualified_name)
+            .collect::<Vec<_>>();
+        if expected_edges != actual_edges {
+            return Err(SourceQueryUnavailable::Visibility(format!(
+                "graph edges differ from selected epoch for `{id}`"
+            )));
+        }
+    }
+    Ok(())
+}
 
 /// The package source an install runs against — the seam between the
 /// orchestrator and whatever registry topology the caller composed
