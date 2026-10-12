@@ -16,7 +16,8 @@ use crate::extension_world::{ExtensionWorldEpoch, ExtensionWorldError};
 mod capture;
 mod visibility;
 pub use capture::{
-    BoundSourceInputs, PreparedOwnerCapture, PreparedWorldWitness, WitnessedSourceWorld,
+    BoundSourceInputs, CapturedSourceFile, PreparedOwnerCapture, PreparedWorldWitness,
+    RecordedOutput, SourceMembershipIndex, SourceStrength, WitnessedSourceWorld,
     captured_manifest_closure,
 };
 
@@ -38,6 +39,10 @@ pub enum SourceQueryUnavailable {
     StaleWorld(&'static str),
     #[error("prepared source world is unavailable at {0}")]
     WorldUnavailable(&'static str),
+    #[error("original source proof is unavailable at {0}")]
+    SourceProofUnavailable(&'static str),
+    #[error("original source capture differs from the independently selected package hash")]
+    SourceHashMismatch,
 }
 
 /// Exact selected roots from one node's own world. This stays crate-private

@@ -19447,6 +19447,33 @@
     },
     {
       "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/slot_verify.rs",
+      "item_kind": "struct",
+      "line": 81,
+      "symbol": "vibe_install::slot_verify::VerifiedSourceMembership",
+      "end_line": 90,
+      "fingerprint": "tok1:181af81e62b72a80848b93c4a229b393ec1ecdafb0fa2e669923246be61389c8"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/slot_verify.rs",
+      "item_kind": "fn",
+      "line": 149,
+      "symbol": "vibe_install::slot_verify::source_strength",
+      "end_line": 180,
+      "fingerprint": "tok1:e68d15131eb3d38a169f91dda8a19c2455a4de4dda06c22dbf8f263a812ad9f5"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/slot_verify.rs",
+      "item_kind": "fn",
+      "line": 35,
+      "symbol": "vibe_install::slot_verify::verify_original_source_capture",
+      "end_line": 79,
+      "fingerprint": "tok1:4026d1a875b88ea69aea0f4a8e537190533d5e7fa1744bed7aefb665744f345b"
+    },
+    {
+      "crate_name": "vibe-install",
       "file": "crates/vibe-install/tests/visibility_resolution.rs",
       "item_kind": "mod",
       "line": 1,
@@ -38986,6 +39013,24 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/source_query/capture/continuity/membership.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_workspace::source_query::capture::continuity::membership",
+      "end_line": 3,
+      "fingerprint": "tok1:3bf9bfc20b3d4bd1fb08f013fd18f9045cdc50e2e7b47c799d15d78d87f8414c"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/source_query/capture/continuity/membership.rs",
+      "item_kind": "enum",
+      "line": 118,
+      "symbol": "vibe_workspace::source_query::capture::continuity::membership::SourceStrength",
+      "end_line": 127,
+      "fingerprint": "tok1:3c3ae26c75e5e6982e427cdc362a7bae799cd4f90b7ef673a63991c76142641c"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/tools.rs",
       "item_kind": "mod",
       "line": 16,
@@ -51992,6 +52037,30 @@
       "line": 6,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/slot_verify.rs",
+      "from_symbol": "vibe_install::slot_verify::VerifiedSourceMembership",
+      "line": 83,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/slot_verify.rs",
+      "from_symbol": "vibe_install::slot_verify::source_strength",
+      "line": 152,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-STRENGTH-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/slot_verify.rs",
+      "from_symbol": "vibe_install::slot_verify::verify_original_source_capture",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP",
       "verb": "implements"
     },
     {
@@ -70165,6 +70234,22 @@
       "line": 4,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SELECTED-WORLD-CONTINUITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/source_query/capture/continuity/membership.rs",
+      "from_symbol": "vibe_workspace::source_query::capture::continuity::membership",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/source_query/capture/continuity/membership.rs",
+      "from_symbol": "vibe_workspace::source_query::capture::continuity::membership::SourceStrength",
+      "line": 121,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-STRENGTH-LAW",
       "verb": "implements"
     },
     {
@@ -94982,7 +95067,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:bba90c3f08c337320476139d8d288b7d02a387c2145db51381a7a65fa3cc08b7",
+      "content_hash": "sha256:7319cb7da2037ce9ef742bb39c5a47b86b750ba162e3c39b5a083142c38e1682",
       "doc_path": "common/PROP-070",
       "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
       "heading": "PROP-070: Validated resource addresses and selected resolution",
@@ -95150,6 +95235,33 @@
       "heading": "A source read that returns bytes and a raw SHA-256 digest obtains both from one bounded, no-follow SafeFS observation under a held project root, parent and regular single-link file. The same observed buffer supplies any parsing or projection input; a separately reopened name cannot supply the digest or the parser's bytes. The read checks the held file across two passes and the final capability-relative name before reporting a stable observation. Absence before opening remains absent; an unreadable, shared-link or unstable observation never returns partial bytes as success. This is a finite pre/post stability window: mutation after the final check, including hostile ABA, is not excluded by this witness. A query read creates no lock, directory, copy-on-write output, cache fill or provider effect. Native platform qualification is separate from portable source-code behavior. @status:spec/plan",
       "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#RETAINED-SOURCE-OBSERVATION"
+    },
+    {
+      "anchor": "source-membership",
+      "content_hash": "sha256:3f498d07803c59c9c2dd3e3a7f82272280bc11d5d97d13162cb636f4daa4dfd7",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "7. Independent original-source membership",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#source-membership"
+    },
+    {
+      "anchor": "CAPTURED-SOURCE-MEMBERSHIP",
+      "content_hash": "sha256:d55a80fdc0bab8b18e76b89d17a3f035905b86324ca7ec43efc2ada42de9837b",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "A source-proven result requires a bounded complete capture of the original package tree, replayed with the existing named content-hash recipe and checked against the independently selected source hash and exact package pin in the current prepared world. Only after that comparison may an immutable path-to-captured-bytes index grant original-file membership. The supported bounded recipe-zero replay has explicit count, size and depth limits; an unsupported recipe or incomplete capture remains unavailable offline rather than falling back to a new local hash or fetching the package. A document absent from the verified original index cannot become source-proven because an installed slot contains it. @status:spec/plan",
+      "line": 37,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#CAPTURED-SOURCE-MEMBERSHIP"
+    },
+    {
+      "anchor": "SOURCE-STRENGTH-LAW",
+      "content_hash": "sha256:95cc4e298713696a3c4a141a3eb68969ea539359fc3b754e31811709332b2e26",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "An observed result states only that the held source bytes were read. Record-consistent states that selected slot-record rows, source mapping and materialized output bytes agree locally. Source-proven additionally establishes that the returned original source bytes are a member of the independently verified original capture under the selected package hash. Record-only, payload-only and coordinated record-plus-payload changes cannot promote local agreement to source proof. A development or in-place source without independent captured package proof remains observed. A transformed output can carry proof of its original source member but remains at most record-consistent as returned output until a separate converter/overlay derivation is proved; the source and output strengths are never conflated. Strict requests for absent required capture or unsupported recipe refuse without provider, cache or rebuild effects. @status:spec/plan",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-STRENGTH-LAW"
     },
     {
       "anchor": "root",
