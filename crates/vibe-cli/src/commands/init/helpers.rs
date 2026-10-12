@@ -169,9 +169,15 @@ pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Res
 
     let workspace = vibe_workspace::Workspace::load(path)
         .with_context(|| "loading the new project to generate its boot artifacts")?;
-    // Fresh init writes no `spec_format`; the effective target is therefore
-    // the compatibility-preserving mixed/Markdown lane.
-    vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, SpecFormat::Mixed)
+    // A fresh init has no `spec_format` and retains the mixed/Markdown lane.
+    // An existing project keeps its authored target dialect during package
+    // creation; the generated lane and instruction blocks must agree with it.
+    let spec_format = workspace
+        .root_manifest
+        .consumer_node()
+        .and_then(|node| node.spec_format)
+        .unwrap_or(SpecFormat::Mixed);
+    vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, spec_format)
         .with_context(|| "generating the boot artifacts")?;
 
     let mut outcomes = Vec::with_capacity(artifacts.len());
