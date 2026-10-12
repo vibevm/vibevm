@@ -1,0 +1,87 @@
+{
+  "http": 200,
+  "result": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.b4488888-cf54-478b-88dd-da4c2784a3af",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.dcd9607c-7e06-4e11-a0ce-98c212791ed1",
+        "title": "M01D2 canonical one-way Doc Markdown boundary",
+        "introductionMarkdown": "Same D2. Actual XML-pivot selected translation1/1 preserves borrowed bodies in MD page and references in XML page; legacy borrowed compatibility is being retained. Derived-MD example reconstruction0/1 is contrary to incumbent intentional grammar: md_out lines13-28 says Doc→MD one-way and md_in lines20-25 says no Example/Prompt parser, authoring XML only.",
+        "items": [
+          {
+            "questionItemId": "d2_doc_projection_boundary",
+            "header": "Existing boundary",
+            "promptMarkdown": "Confirm strict read_doc needs retained XML Doc pivot and must return typed unavailable for converted Doc Markdown lacking that pivot, or commission one exact incumbent XML-retention correction?",
+            "contextMarkdown": "Proposed default: remove false VibeDoc/MD structured dispatch in authorized source_query, add explicit one-way-projection unavailable with raw capture still accessible; keep full Doc behavior on captured XML (including Mixed/misleading suffix). Required MD/XML consumer-slot parity for VibeSpec already actual24/24, and Doc page output MD/XML from XML pivot1/1. B229 original capture availability remains deferred, no new fetch/retention framework. If task canon requires consumer-MD Doc to retain XML, name narrow transform/publication write boundary rather than guessing Doc IR from prose. Please also grant READ exact common/PROP-045-xml-spec-sources.xml to bind DOC-VOCAB-MD-ONE-WAY / PROJECTION-READ governing clauses before final report.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "xml_pivot",
+                "label": "Require captured XML pivot",
+                "description": "Existing canonical one-way boundary; typed strict unavailable when missing, explicit raw observation retained.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "retain_xml",
+                "label": "Exact XML retention seam",
+                "description": "Root specifies bounded incumbent owner/write correction if this is mandatory D2 publication behavior.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact ruling/scope",
+              "multiline": true,
+              "maximumLength": 6000
+            },
+            "recommendation": {
+              "optionIds": [
+                "xml_pivot"
+              ],
+              "explanationMarkdown": "Reuse existing intentional Doc projection law; no new parser or B229 framework."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T17:48:34.735Z",
+        "updatedAt": "2026-10-12T17:49:38.904Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.01bfbd66-b4ac-4f22-8309-f9ab3b69794a",
+        "questionGroupId": "question-group.b4488888-cf54-478b-88dd-da4c2784a3af",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "d2_doc_projection_boundary",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "xml_pivot"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation confirms existing canonical XML pivot boundary. Grant exact READ vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml. Root verified TARGET-MD and DOC-VOCAB-MD-ONE-WAY, plus independent Astra Medium consultation: Doc Markdown projection is intentionally IR-divergent; keeping XML in a Markdown slot would change materialization contract. Remove false Doc/Markdown semantic dispatch; return a registered typed explicit unavailable for strict semantic Doc read when no retained compatible XML pivot exists. Keep actual captured raw Markdown accessible via raw source query, no invented Doc facts, filesystem fallback or stronger authority. Preserve normal VibeSpec MD/XML parity and Doc XML-to-MD resolved examples/XML reference output. Replace incorrect native-Doc-MD body expectation with precise unavailable + unchanged fixture/raw-access assertions; retain original red logs. Record optional future captured Doc semantic retention in project backlog, not an MVP gate. This completes truthful query/refusal coverage rather than weakening an actually supported Doc reconstruction contract. Use existing source_query/read_doc/schema perimeters only; no materializer/parser WRITE granted. Finish affected legacy, generated contracts and final source/binary evidence."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T17:49:38.904Z",
+        "metadata": {}
+      }
+    }
+  }
+}

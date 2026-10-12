@@ -70,6 +70,7 @@ pub mod select;
 pub mod short_name;
 pub mod show;
 pub mod skill;
+pub mod spec;
 pub mod specmap;
 pub mod term;
 pub mod tools;

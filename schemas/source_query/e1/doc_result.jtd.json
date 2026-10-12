@@ -1,0 +1,272 @@
+{
+  "metadata": {
+    "description": "Explicit selected captured documentation page compatibility. Returned page and selected source metadata have distinct bases.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-QUERY-DOC-COMPATIBILITY",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::source_query::e1::doc_result"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "address": {
+      "type": "string"
+    },
+    "format": {
+      "enum": [
+        "md",
+        "xml"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "lang": {
+      "type": "string"
+    },
+    "source": {
+      "enum": [
+        "checkout",
+        "lock"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "page": {
+      "type": "string"
+    },
+    "page_bytes": {
+      "type": "uint32"
+    },
+    "page_recipe": {
+      "enum": [
+        "vibe-doc-agent-page/1"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "source_authority": {
+      "enum": [
+        "selected-captured"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "selection": {
+      "ref": "selection"
+    }
+  },
+  "definitions": {
+    "location": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "line_start": {
+          "type": "uint32"
+        },
+        "line_end": {
+          "type": "uint32"
+        },
+        "basis": {
+          "enum": [
+            "native-markdown",
+            "native-xml"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "observation": {
+      "properties": {
+        "resolution_hash": {
+          "type": "string"
+        },
+        "source_hash": {
+          "type": "string",
+          "nullable": true
+        },
+        "document_hash": {
+          "type": "string"
+        },
+        "semantic_hash": {
+          "type": "string",
+          "nullable": true
+        },
+        "descriptor_identity": {
+          "type": "string"
+        },
+        "manifest_hash": {
+          "type": "string"
+        },
+        "captured_bytes": {
+          "type": "uint32"
+        },
+        "encoding": {
+          "enum": [
+            "utf8"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "representation_recipe": {
+          "type": "string"
+        },
+        "strength": {
+          "enum": [
+            "observed",
+            "record-consistent",
+            "source-proven",
+            "derivation-proven"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "chunk": {
+      "properties": {
+        "offset": {
+          "type": "uint32"
+        },
+        "end": {
+          "type": "uint32"
+        },
+        "total": {
+          "type": "uint32"
+        },
+        "next_cursor": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "outline_node": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "document",
+            "section",
+            "fact",
+            "documentation-block"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "path": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "heading_chain": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "bytes_with_children": {
+          "type": "uint32"
+        },
+        "bytes_without_children": {
+          "type": "uint32"
+        },
+        "size_recipe": {
+          "type": "string"
+        }
+      }
+    },
+    "selection": {
+      "properties": {
+        "schema": {
+          "type": "uint32"
+        },
+        "address": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "read",
+            "outline",
+            "resolve"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "format": {
+          "enum": [
+            "md",
+            "xml"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "dictionary": {
+          "enum": [
+            "vibe-spec",
+            "vibe-doc"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "status": {
+          "type": "string",
+          "nullable": true
+        },
+        "heading_chain": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "selected_bytes": {
+          "type": "uint32"
+        },
+        "document_bytes": {
+          "type": "uint32"
+        },
+        "content": {
+          "type": "string"
+        },
+        "location": {
+          "ref": "location"
+        },
+        "observation": {
+          "ref": "observation"
+        },
+        "chunk": {
+          "ref": "chunk"
+        },
+        "outline": {
+          "elements": {
+            "ref": "outline_node"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "code": "unknown_anchor",
+  "message": "Unknown exact node",
+  "boundary": "",
+  "candidates": [
+    "root.solution"
+  ]
+}

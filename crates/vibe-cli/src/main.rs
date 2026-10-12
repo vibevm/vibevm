@@ -45,16 +45,17 @@ fn main() -> ExitCode {
             e.exit();
         }
     };
-
     if let Command::Machine(args) = &cli.command {
         return commands::machine_session::run(args, &cli);
+    }
+    if let Command::Spec(args) = &cli.command {
+        return commands::spec::run(args, cli.json);
     }
     if let Some(exit) = commands::refactor::machine_entry::run(&cli.command) {
         return exit;
     }
     promote_user_config_env();
     init_tracing();
-
     // VVM: derive the running version from the binary's own path, and warn
     // when the inherited $VIBEVM_HOME is stale (PROP-019 §2.5).
     let self_loc = commands::vvm::derive_self(std::env::current_exe().ok().as_deref());
@@ -141,6 +142,7 @@ fn main() -> ExitCode {
 
     let result = match cli.command {
         Command::Init(args) => commands::init::run(&ctx, args),
+        Command::Spec(_) => unreachable!("source query has early read-only dispatch"),
         Command::List(args) => commands::list::run(&ctx, args),
         Command::Extensions(args) => match args.command {
             // Bare `vibe extensions` keeps its exhaustive-registry report;

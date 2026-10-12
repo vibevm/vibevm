@@ -159,6 +159,8 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
+    /// Read a classified selected source or resolve its native location.
+    Spec(crate::commands::spec::SpecArgs),
     /// Scaffold a project or package root in the target directory.
     Init(InitArgs),
 

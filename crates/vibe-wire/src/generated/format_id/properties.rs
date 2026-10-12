@@ -158,6 +158,11 @@ impl FormatId {
         FormatId::ScrapeTransactionOwner,
         FormatId::ScrapeVerificationHealthEvidence,
         FormatId::SlotRecord,
+        FormatId::SourceDocRequest,
+        FormatId::SourceDocResult,
+        FormatId::SourceQueryError,
+        FormatId::SourceQueryRequest,
+        FormatId::SourceQueryResult,
     ];
 
     /// The registry id, verbatim (e.g. `cli-init-report`).
@@ -316,6 +321,11 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => "scrape-transaction-owner",
             FormatId::ScrapeVerificationHealthEvidence => "scrape-verification-health-evidence",
             FormatId::SlotRecord => "slot-record",
+            FormatId::SourceDocRequest => "source-doc-request",
+            FormatId::SourceDocResult => "source-doc-result",
+            FormatId::SourceQueryError => "source-query-error",
+            FormatId::SourceQueryRequest => "source-query-request",
+            FormatId::SourceQueryResult => "source-query-result",
         }
     }
 
@@ -475,6 +485,11 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => 3,
             FormatId::ScrapeVerificationHealthEvidence => 2,
             FormatId::SlotRecord => 2,
+            FormatId::SourceDocRequest => 1,
+            FormatId::SourceDocResult => 1,
+            FormatId::SourceQueryError => 1,
+            FormatId::SourceQueryRequest => 1,
+            FormatId::SourceQueryResult => 1,
         }
     }
 
@@ -634,6 +649,11 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => false,
             FormatId::ScrapeVerificationHealthEvidence => false,
             FormatId::SlotRecord => true,
+            FormatId::SourceDocRequest => true,
+            FormatId::SourceDocResult => true,
+            FormatId::SourceQueryError => true,
+            FormatId::SourceQueryRequest => true,
+            FormatId::SourceQueryResult => true,
         }
     }
 
@@ -793,6 +813,11 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => ForeignParsers::None,
             FormatId::ScrapeVerificationHealthEvidence => ForeignParsers::None,
             FormatId::SlotRecord => ForeignParsers::None,
+            FormatId::SourceDocRequest => ForeignParsers::None,
+            FormatId::SourceDocResult => ForeignParsers::None,
+            FormatId::SourceQueryError => ForeignParsers::None,
+            FormatId::SourceQueryRequest => ForeignParsers::None,
+            FormatId::SourceQueryResult => ForeignParsers::None,
         }
     }
 
@@ -952,6 +977,11 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => UnknownFields::Deny,
             FormatId::ScrapeVerificationHealthEvidence => UnknownFields::Deny,
             FormatId::SlotRecord => UnknownFields::Deny,
+            FormatId::SourceDocRequest => UnknownFields::Deny,
+            FormatId::SourceDocResult => UnknownFields::Deny,
+            FormatId::SourceQueryError => UnknownFields::Deny,
+            FormatId::SourceQueryRequest => UnknownFields::Deny,
+            FormatId::SourceQueryResult => UnknownFields::Deny,
         }
     }
 }

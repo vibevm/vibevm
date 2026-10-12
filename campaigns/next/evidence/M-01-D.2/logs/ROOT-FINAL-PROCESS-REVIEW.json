@@ -1,0 +1,11 @@
+{
+  "binary_sha256": "163679720175a1322a826b266394d12fada2cff385506ef760f445aeeea5663f",
+  "independent_raw_spec_pairs": 24,
+  "independent_raw_doc_responses": 8,
+  "doc_metadata_cli_pairs": 2,
+  "process_summaries_sha256": {
+    "final-spec-parity/process-parity-results.json": "86703e9a720b9a688de0bfbae7afd78422366a647b7ef20cb446552f46d5dd0b",
+    "final-doc-process/results.json": "cc8c1d4e45634b8e3adb269aafd79afa6268979b3b0813a03f876a598e5a6ac8"
+  },
+  "scope": "Parsed actual saved process responses, not a rerun or whole campaign acceptance; final source hash/report and Root specmap pending"
+}

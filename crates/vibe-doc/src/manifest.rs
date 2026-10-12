@@ -515,8 +515,13 @@ fn bridge(parsed: &toml::Value) -> Option<BridgeAuthorship> {
 pub fn relations(package_dir: &Path, key: &str) -> Result<Vec<(String, String)>> {
     let path = package_dir.join(crate::derived::manifest::MANIFEST);
     let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;
-    let parsed: toml::Value = toml::from_str(&text)
-        .map_err(|e| DocError::manifest(&path, format!("does not parse: {e}")))?;
+    relations_text(&path, &text, key)
+}
+
+/// The same relation kernel for already held selected manifest bytes.
+pub(crate) fn relations_text(path: &Path, text: &str, key: &str) -> Result<Vec<(String, String)>> {
+    let parsed: toml::Value = toml::from_str(text)
+        .map_err(|e| DocError::manifest(path, format!("does not parse: {e}")))?;
     Ok(relation(&parsed, key))
 }
 

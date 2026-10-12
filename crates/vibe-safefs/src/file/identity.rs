@@ -58,6 +58,13 @@ impl FileIdentity {
         format!("sha256:{:x}", hash.finalize())
     }
 
+    /// Same-host, finite observation correlation using the existing owner
+    /// token. This does not grant read authority or authenticate source bytes.
+    /// OS identity reuse/hostile ABA and cross-host comparison are unsupported.
+    pub fn observation_correlation_token(self) -> String {
+        self.root_correlation_token()
+    }
+
     pub(crate) const fn same_filesystem(self, other: Self) -> bool {
         self.volume == other.volume
     }

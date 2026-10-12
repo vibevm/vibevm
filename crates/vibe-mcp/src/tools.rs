@@ -48,6 +48,10 @@ pub use migration_plan::PlanManifestMigrationMcpTool;
 /// they are: this registry file sits at its size ceiling.
 pub mod read_doc;
 pub use read_doc::ReadDocMcpTool;
+pub mod read_spec;
+pub use read_spec::ReadSpecMcpTool;
+pub mod spec_resolve;
+pub use spec_resolve::SpecResolveMcpTool;
 
 /// The MCP tool seam (PROP-015 §2.2): a tool describes itself (name,
 /// human description, JSON-Schema input shape) and runs against parsed
@@ -109,6 +113,8 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(FixedDeployOperationMcpTool),
         Box::new(RequirementsQueryMcpTool),
         Box::new(ReadDocMcpTool),
+        Box::new(ReadSpecMcpTool),
+        Box::new(SpecResolveMcpTool),
         Box::new(PlanManifestMigrationMcpTool),
         Box::new(ManifestMigrationOperationMcpTool),
         Box::new(PlanManifestMigrationEnvelopeMcpTool),

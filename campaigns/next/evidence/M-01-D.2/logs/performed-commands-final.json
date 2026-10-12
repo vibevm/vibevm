@@ -1,0 +1,280 @@
+[
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-workspace",
+      "--lib",
+      "source_query::capture::continuity::service::m_01_d_2_cases",
+      "--",
+      "--nocapture"
+    ],
+    "exit": 0,
+    "passed": 12,
+    "ignored": 0,
+    "log": "final-workspace-service.log"
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-wire",
+      "--lib",
+      "behaviour::source_query::m_01_d_2_cases",
+      "--",
+      "--nocapture"
+    ],
+    "exit": 0,
+    "passed": 4,
+    "ignored": 0,
+    "log": "final-wire-contracts.log"
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-mcp",
+      "--lib",
+      "tools::read_doc::tests",
+      "--",
+      "--nocapture"
+    ],
+    "exit": 0,
+    "passed": 8,
+    "ignored": 0,
+    "log": "final-mcp-read-doc.log"
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-doc",
+      "--lib",
+      "agent::tests::an_adaptation_carries_the_example_body_it_borrows",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "passed": 1,
+    "ignored": 0,
+    "log": "doc-legacy-borrowed-compat.log"
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-doc",
+      "--doc",
+      "translations::borrowed::adapted"
+    ],
+    "exit": 0,
+    "passed": 1,
+    "ignored": 0,
+    "log": "final-moved-adapted-doctest.log"
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "command_progress::tests::top_level_policy_inventory_matches_clap",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "passed": 1,
+    "ignored": 0,
+    "log": "cli-spec-registration.log"
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "commands::spec::m_01_d_2_cases::raw_contract_request_cannot_silently_override_explicit_cli_format",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "passed": 1,
+    "ignored": 0,
+    "log": "cli-contract-format-conflict.log"
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "run",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "xtask",
+      "--",
+      "codegen"
+    ],
+    "exit": 0,
+    "passed": null,
+    "ignored": null,
+    "log": "codegen-final-reproducibility.log"
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "build",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe"
+    ],
+    "exit": 0,
+    "passed": null,
+    "ignored": null,
+    "log": "final-cli-build.log"
+  },
+  {
+    "cwd": "/tmp",
+    "argv": [
+      "python3",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-D2/process_parity_final.py"
+    ],
+    "exit": 0,
+    "passed": 24,
+    "log": "final-spec-process-parity.log"
+  },
+  {
+    "cwd": "/tmp",
+    "argv": [
+      "python3",
+      "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-D2/doc_process_final.py"
+    ],
+    "exit": 0,
+    "passed": 8,
+    "log": "final-doc-process-parity.log"
+  },
+  {
+    "cwd": "/tmp",
+    "argv": [
+      "cargo",
+      "+nightly",
+      "fmt",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "exit": 1,
+    "log": "final-full-format-check.log",
+    "retained_diff_entries": 13
+  },
+  {
+    "cwd": "/tmp",
+    "env": {
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "argv": [
+      "cargo",
+      "+nightly",
+      "check",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-workspace",
+      "--lib"
+    ],
+    "exit": 0,
+    "log": "document-scope-lib-check.log",
+    "purpose": "annotation-only marker compile"
+  }
+]

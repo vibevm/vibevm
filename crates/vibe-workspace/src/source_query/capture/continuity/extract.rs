@@ -302,6 +302,9 @@ fn structured_view(
         (Some(Kind::VibeSpec), Some("application/xml")) => {
             vibe_view(vibe_specdoc::from_xml(text), Vocabulary::Spec)
         }
+        (Some(Kind::VibeDoc), Some("text/markdown")) => StructuredView::Unavailable(
+            "documentation Markdown is a one-way projection; captured XML pivot required".into(),
+        ),
         (Some(Kind::VibeDoc), Some("application/xml")) => vibe_view(
             vibe_specdoc::from_xml_with(text, Vocabulary::Doc),
             Vocabulary::Doc,

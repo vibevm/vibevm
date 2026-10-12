@@ -1,0 +1,17 @@
+{
+  "metadata": { "description": "Closed selected-source query. Epoch must equal 1; paths and caller data grant no read or effects.", "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-070#GENERATED-SOURCE-QUERY-CONTRACT", "r": 1 }, "rustOptions": { "package": "vibe_wire::source_query::e1::request" } },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "address": { "type": "string" },
+    "mode": { "enum": ["read", "outline", "resolve"], "metadata": { "x-vocabulary": "closed" } },
+    "format": { "enum": ["md", "xml"], "metadata": { "x-vocabulary": "closed" } },
+    "children": { "type": "boolean" }
+  },
+  "optionalProperties": {
+    "expected_resolution_hash": { "type": "string", "metadata": { "x-default": null } },
+    "expected_source_hash": { "type": "string", "metadata": { "x-default": null } },
+    "expected_document_hash": { "type": "string", "metadata": { "x-default": null } },
+    "cursor": { "type": "string", "metadata": { "x-default": null } },
+    "chunk_bytes": { "type": "uint32", "metadata": { "x-default": null } }
+  }
+}

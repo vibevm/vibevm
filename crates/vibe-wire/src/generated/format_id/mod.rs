@@ -172,6 +172,11 @@ pub enum FormatId {
     ScrapeTransactionOwner,
     ScrapeVerificationHealthEvidence,
     SlotRecord,
+    SourceDocRequest,
+    SourceDocResult,
+    SourceQueryError,
+    SourceQueryRequest,
+    SourceQueryResult,
 }
 
 /// How many independent parsers read a format — the second policy axis

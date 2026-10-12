@@ -40,6 +40,8 @@ vibe-facts.workspace = true
 vibe-safefs.workspace = true
 vibe-spec.workspace = true
 vibe-wire.workspace = true
+# One native Markdown location owner shared with selected trace/query.
+specmap-core.workspace = true
 
 [target.'cfg(unix)'.dependencies]
 # O_NOFOLLOW and O_NONBLOCK are the platform constants std's safe

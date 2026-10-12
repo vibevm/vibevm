@@ -40,6 +40,7 @@ use vibe_core::{ContentHash, Group};
 use vibe_registry::{LocalRegistry, store};
 
 mod checkout;
+mod selected;
 use checkout::declared_checkout_citation;
 use vibe_spec::{Authority, FileResolver, SelectedPackage, SelfCoordinate, SpecAddress};
 
@@ -129,6 +130,7 @@ impl Located {
 /// down is what keeps a documentation build reproducible by inspection.
 #[derive(Debug, Clone, Default)]
 pub struct SpecSources {
+    selected: Option<std::sync::Arc<vibe_workspace::source_query::SourceQueryService>>,
     /// The checkout root, with the coordinate it answers to.
     checkout: Option<(SelfCoordinate, PathBuf)>,
     /// The in-tree package registry root.
@@ -162,6 +164,7 @@ impl SpecSources {
     ) -> SpecSources {
         let root: PathBuf = repo_root.into();
         SpecSources {
+            selected: None,
             checkout: Some((
                 SelfCoordinate::new(group.map(str::to_owned), name.to_owned()),
                 root.clone(),
@@ -202,6 +205,9 @@ impl SpecSources {
     /// Find the instance of `<group>/<name>` the chain offers, nearest
     /// source first.
     pub fn instance_of(&self, group: &str, name: &str) -> Option<Instance> {
+        if self.selected.is_some() {
+            return self.selected_instance(group, name);
+        }
         if let Some((coord, root)) = &self.checkout
             && coord.group.as_deref() == Some(group)
             && coord.name == name
@@ -240,6 +246,9 @@ impl SpecSources {
     /// truncation back to `PROP-042-example-thing.xml` — is
     /// [`vibe_spec::FileResolver`], which owns that law.
     pub fn locate(&self, address: &SpecAddress) -> Result<Located, String> {
+        if self.selected.is_some() {
+            return self.selected_locate(address);
+        }
         let (group, name) = match &address.authority {
             Authority::Package { group, name, .. } => (group.clone(), name.clone()),
             Authority::Host(h) => {
