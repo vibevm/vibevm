@@ -12555,18 +12555,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_init.rs",
       "item_kind": "fn",
-      "line": 487,
+      "line": 489,
       "symbol": "vibe_cli::tests::cli_init::vibe_check_accepts_a_valid_builtin_log_extension",
-      "end_line": 510,
+      "end_line": 512,
       "fingerprint": "tok1:ba33fecec7b25529830608bb9f4675dbee62b6f3d8a3b676fce78f5f9cf75715"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_init.rs",
       "item_kind": "fn",
-      "line": 512,
+      "line": 514,
       "symbol": "vibe_cli::tests::cli_init::vibe_check_rejects_and_names_an_unknown_nested_extension_field",
-      "end_line": 533,
+      "end_line": 535,
       "fingerprint": "tok1:3f9942f74422f432cc52e1769c984e44c5b86a8cdefc7d346951515df3b4ebe0"
     },
     {
@@ -32326,6 +32326,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/address/resource.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_spec::address::resource",
+      "end_line": 3,
+      "fingerprint": "tok1:7a7cc49a41a3f67ea8f239d6e42d4e6988700e8864a15d08d0d43ed35bea0076"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/absorb.rs",
       "item_kind": "mod",
       "line": 8,
@@ -35764,6 +35773,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/resource.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_spec::resolver::resource",
+      "end_line": 3,
+      "fingerprint": "tok1:8e03b377eeb4a2f35022152f46ba94c45fcc6a8c57405e1980cb8f9d133105e8"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/transforms/mod.rs",
       "item_kind": "mod",
       "line": 3,
@@ -38025,18 +38043,18 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 528,
+      "line": 403,
       "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "end_line": 555,
-      "fingerprint": "tok1:c4cfd7121ca24f83cf3f771831a928568312f037b26bc5860b4096d6b3fa50e1"
+      "end_line": 436,
+      "fingerprint": "tok1:16eddb58f5b9ea4fcbbd7b19f2ab9016def4913efef0794029d65e2bb75fb0c3"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 296,
+      "line": 304,
       "symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "end_line": 328,
+      "end_line": 336,
       "fingerprint": "tok1:59bcdc58df73e3c62002c8068aa146e54c8502dc4e80f014f5352991cb91c6c5"
     },
     {
@@ -45474,7 +45492,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_init.rs",
       "from_symbol": "vibe_cli::tests::cli_init::vibe_check_accepts_a_valid_builtin_log_extension",
-      "line": 488,
+      "line": 490,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
       "verb": "verifies"
@@ -45482,7 +45500,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_init.rs",
       "from_symbol": "vibe_cli::tests::cli_init::vibe_check_rejects_and_names_an_unknown_nested_extension_field",
-      "line": 513,
+      "line": 515,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
       "verb": "verifies"
@@ -63894,6 +63912,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-spec/src/address/resource.rs",
+      "from_symbol": "vibe_spec::address::resource",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#RESOURCE-SCHEME-LAW",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-spec/src/compiler/absorb.rs",
       "from_symbol": "vibe_spec::compiler::absorb",
       "line": 8,
@@ -67014,6 +67040,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-spec/src/resolver/resource.rs",
+      "from_symbol": "vibe_spec::resolver::resource",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SELECTED-RESOURCE-AUTHORITY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-spec/src/transforms/mod.rs",
       "from_symbol": "vibe_spec::transforms",
       "line": 3,
@@ -69175,7 +69209,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 533,
+      "line": 408,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "verb": "implements",
@@ -69184,7 +69218,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "line": 297,
+      "line": 305,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
@@ -94843,6 +94877,96 @@
       "heading": "Focused deterministic fixtures cover nesting and terminal outcomes, quiet/JSON compatibility, redirected output without ANSI, verbose redaction, progress before a delayed operation completes, finite download/materialization counts and source build output. Registry fixtures verify connection-pool reuse without changing source or freshness selection. Terminal rendering is checked against an in-memory terminal, including a narrow viewport. All probes use isolated project/settings/store roots and injected activation; no test updates the developer's real installation or durable shell environment. @status:impl/done",
       "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-060#TESTS"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:87461c2c297367d134b5729298f6317197f2994ef18106a5786adcbe688e9664",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "PROP-070: Validated resource addresses and selected resolution",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#root"
+    },
+    {
+      "anchor": "addresses",
+      "content_hash": "sha256:2136f7d2574d60bda795579bb431f26d474797b83757da159df7ab65805e20c0",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "1. Exact logical addresses",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#addresses"
+    },
+    {
+      "anchor": "RESOURCE-SCHEME-LAW",
+      "content_hash": "sha256:8bb462139db764af7aec29d7db7bc17aa4ba5b986b35173aad209a414fcafe09",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "The strict resource vocabulary has two disjoint schemes. A classified native Vibe document uses `spec://<group>/<name>[@<exact-version>]/<logical-doc-path>[#<anchor>[.<child>…]]`; a named ordinary CommonMark source export uses `resource://<group>/<name>[@<exact-version>]/<export-name>`. `group/name` is a validated qualified package coordinate, never an undotted host token or wildcard. An exact selected dependency has the selected version in its canonical spelling; the self coordinate is unversioned. No query, percent-encoded alternative spelling, empty authority/path/anchor component, dot traversal, backslash or control/whitespace spelling is admitted by this value grammar. Parsing never treats an authored string as a filesystem grant. @status:spec/plan",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#RESOURCE-SCHEME-LAW"
+    },
+    {
+      "anchor": "SELECTED-RESOURCE-AUTHORITY",
+      "content_hash": "sha256:be979e47648543890954ebfa1215d8c52b8e59c83b5d413b86c7136029984e06",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "A dependency address is constructed only against a finite selected `(group,name) → (version,root)` world. An omitted version means that selected version, not the semver-newest directory; an explicit exact version must equal the selected one. A package absent from the selected world, a malformed version, a wrong selected version and an invalid qualified coordinate have distinct refusals. The root's self coordinate names its authored Vibe tree and cannot carry an `@version`. A caller without selected-world evidence cannot publish a canonical dependency resource by scanning installed slots. A lock selection identifies the intended package but does not itself prove a readable file, safe physical containment or valid source bytes. @status:spec/plan",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SELECTED-RESOURCE-AUTHORITY"
+    },
+    {
+      "anchor": "VIBE-DOCUMENT-ADDRESS",
+      "content_hash": "sha256:ed53740320d3e0845d274992a1403873af2ce97920d3f8edaca498cbb9811a62",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "A strict `spec://` resource points only to a source classified as a Vibe document. Its logical path is relative to that source's selected specs root, extensionless and independent of Markdown/XML serialization (PROP-045 `ADDRESSING-UNCHANGED`). `PROP-NNN` and `FEAT-NNN` descriptive physical stems canonically cite their abbreviated ID only when the existing exact prefix lookup has one match; two matching slugs, a Markdown/XML pair or competing active forms refuse instead of taking the first directory entry. The optional dotted anchor is an ordered path of the current ASCII fact/heading ID segments; absence denotes the whole document. This address layer validates spelling and selected document identity; actual anchor existence, uniqueness, byte observation and caller-specific errors remain the owning read path, not a fabricated successful document. @status:spec/plan",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#VIBE-DOCUMENT-ADDRESS"
+    },
+    {
+      "anchor": "SOURCE-EXPORT-ADDRESS",
+      "content_hash": "sha256:5a39aadd9822827e01f10adabf603989b52cc37c5c19e5cc35d889694aa57396",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "A `resource://` path is exactly the package-unique `[[package.source_exports]].name` validated by PROP-072 `SOURCE-EXPORT-SELECTOR`, never a raw package-relative file path or Vibe anchor. Constructing it requires the selected package identity and the matching row in that package's parsed metadata at the selected version; a free-standing validated row cannot claim membership in another package. The declaration selects one file and a root-to-section heading-title path, but it grants no physical read, source interpretation or trust. Before content is returned, the source descriptor must select ordinary CommonMark with matching media and the caller must capture/recheck bytes and reject missing or ambiguous sibling headings. A `resource://` export cannot be converted to a `spec://` Vibe fact by suffix, marker text or successful parsing. @status:spec/plan",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#SOURCE-EXPORT-ADDRESS"
+    },
+    {
+      "anchor": "UNSUPPORTED-RESOURCE-REVISION",
+      "content_hash": "sha256:01ba053534625d3b13fef1753546c988ab3e40071634f3a519062cc2b68b845e",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "Legacy `SpecAddress` may parse `~rN`, but strict resource construction refuses every revision pin as `unsupported_revision` until a revision-aware captured source owner exists. It never drops the pin or serves the live document while claiming the requested revision. A malformed `~` spelling is a grammar refusal, distinct from a well-formed unsupported revision. @status:spec/plan",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#UNSUPPORTED-RESOURCE-REVISION"
+    },
+    {
+      "anchor": "compatibility",
+      "content_hash": "sha256:9233fe87b8be228819c71a07031bcef27247fa7471a85fc3b8ca0a0c45149385",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "2. Explicit legacy conversion and refusal corpus",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#compatibility"
+    },
+    {
+      "anchor": "LEGACY-RESOURCE-CONVERSION",
+      "content_hash": "sha256:57f89121b1dcdd38def2217b62f3e1df013c6aa468fdf9c2a9a4e5fc9c9a9007",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "The existing `SpecAddress` parser and legacy `FileResolver` remain for incumbent compiler/boot callers during migration; they are not a public resource fallback. A new strict value is made only by explicit conversion with the exact selected-world resolver. Qualified legacy `spec://` documents may convert when their version, logical path and unique resolved stem can be proved; an omitted dependency version is filled from selection. An undotted host authority, nonselected package, guessed newest-installed slot, unsupported revision, foreign physical serialization path or ambiguous abbreviated stem never silently converts. A legacy `@=version` spelling may convert only if it equals selection; canonical output omits the `=`. A source export is constructed from its separate validated row, never guessed from a legacy Vibe citation. @status:spec/plan",
+      "line": 15,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#LEGACY-RESOURCE-CONVERSION"
+    },
+    {
+      "anchor": "RESOURCE-REFUSAL-CORPUS",
+      "content_hash": "sha256:4ecfbc3e521bfcc0285470ceee87d4b7415712c549a44a6bbe5ea70ec4ce09ec",
+      "doc_path": "common/PROP-070",
+      "file": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "heading": "Corpus cases classify accepted canonical Vibe and export spellings, unique abbreviated stems and explicit selected versions, plus typed refusals for percent encoding, empty segments, malformed/foreign versions, missing selection, wrong selected version, duplicate ID stems, two physical forms of one Vibe document, undotted host and supported-syntax-but-unavailable revision. No first-match directory order, suffix-based resource interpretation, lexical path normalization or unreadable-as-not-found claim is introduced by this address slice. Portable physical containment and source-read failure propagation belong to the later A.2/A.3 owners. @status:spec/plan",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-070#RESOURCE-REFUSAL-CORPUS"
     },
     {
       "anchor": "root",
@@ -138847,7 +138971,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:05ac7adf3eea1a598d6f725ec1cfaf39c754310ad75c94c1d7267c4b44b577f4",
+      "content_hash": "sha256:b36b572f57f5f3c48bbb99c7561093ed471bb37a468f54dbe545028e680f8e7a",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "PROP-009: Loading model — computed boot composition and the effective spec",
@@ -138973,7 +139097,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:d702acbf120a4874b86d267b1919c7453801015f016bffb457acde4e0d475531",
+      "content_hash": "sha256:214ff03cf9a7dcb3538e76feb47434b08de40dba247cc416d868e4e9d4e09bf8",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2. Decisions",
@@ -139099,7 +139223,7 @@
     },
     {
       "anchor": "artifacts",
-      "content_hash": "sha256:f77df909936eb808fa83a3ec51cc32cd6dc36347cae98ff9719ba5f984a715ce",
+      "content_hash": "sha256:8b3d9a2a706ad898e4a92810e3dae4da8afd4a5ffad044f2ca797db777003860",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.3 Generated boot artifacts",
@@ -139108,12 +139232,21 @@
     },
     {
       "anchor": "ARTIFACTS-PAIR",
-      "content_hash": "sha256:42a5b2b4dc28b42dc182aaa8c5ba929de8aa3419520745f8dbdb23454de65ae1",
+      "content_hash": "sha256:cfdb05e263d18ec283b676236b322db939f1a520779d23df4807090b9da22141",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
-      "heading": "**Decision.** For every entry-point node, `vibe install` generates two artifacts under the node's `vibevm/vibespecs/boot/`: <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
+      "heading": "**Decision.** For every published entry-point node, `vibe install` generates two artifacts under the node's `vibevm/vibespecs/boot/`, subject to the selected package-source member rule below: <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
       "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR"
+    },
+    {
+      "anchor": "SELECTED-PACKAGE-SOURCE-MEMBER-PUBLICATION",
+      "content_hash": "sha256:52e34ad744d565796f2cada1eccd06b9339d5796ccbdd21fcfacc4701d71444a",
+      "doc_path": "modules/vibe-workspace/PROP-009",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+      "heading": "**Selected package-source member publication (M-06-G.3).** During consumer workspace installation and durable boot regeneration, a non-root authored `[package]` member whose typed `(kind, group, name)` matches a selected dependency is a source input, not an additional in-place generated node target. Do not write its node `STATIC`/`INDEX`, boot transaction files or agent instruction redirects, and do not validate an irrelevant member redirect as a consumer publication prerequisite. Its selected package content and any per-unit boot output remain under the existing consumer-owned `vibedeps/` slot; that unit is not claimed equivalent to the member's separate development entry point or to authored member boot outside the package snippet. The protection is deliberately independent of authored/selected version, source path and mutable-source hint so it survives a durable lock reread and version drift; typed identity is a conservative publication boundary, not proof that selected bytes originated in the member directory. The absolute root always publishes, including a standalone `[package]` root. Ordinary `[project]`/virtual members and non-selected package members keep their node publication. Native execution omits the protected node's publication and replay candidate before any continuation is created; owner-plan inventory and `Workspace::iter_nodes` remain complete. @status:spec/work",
+      "line": 49,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SELECTED-PACKAGE-SOURCE-MEMBER-PUBLICATION"
     },
     {
       "anchor": "ARTIFACT-STATIC-MD",
@@ -139121,7 +139254,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**`STATIC.md`** — the **anchor-qualified** concatenation, in priority order, of every `static`-typed (§2.4) contribution in the node's effective boot: each contribution's content is carried whole, with its label definitions (heading anchors, fact ids) and intra-contribution label links rewritten to the origin-qualified form `<origin-slug>--<original>` (PROP-035 §8's qualify phase, B-011 — owner-approved 2026-08-04), so the compiled file's label namespace is collision-free by construction. Read first. Generated only when the node has `static` contributions. @status:spec/work",
-      "line": 50,
+      "line": 51,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACT-STATIC-MD"
     },
     {
@@ -139130,7 +139263,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**The lane emits each package's text once (B-006, owner-approved 2026-08-04).** A static entry that would embed a compiled unit artifact (a dependency that statically links children, PROP-038 §2.1) is **de-substituted** when every boot-bearing member of its static zone (itself excluded) is already present as an individual static entry of the same lane: a package with its own boot snippet reverts to that snippet — its own text still enters, once; a snippetless aggregator leaves a **generated provenance stub** — one marker comment naming the origin and stating the zone is emitted member-by-member, never a `#use` directive (which would route a mandatory read back into the unit artifact carrying the very duplicate) and never a second copy of the text. An entry with **any** zone member not individually present keeps its unit-artifact substitution whole — the rule removes proven duplicates only and never drops coverage. The decision is a pure function of the lane's entry set and the unit zones — independent of how many consumers pull the package, through which mix of `static` / `static-transitive` / `static-hard` edges, and in what order: the closure walk already emits one entry per package identity, and the single-version invariant (PROP-038 §2.6) makes every copy of a member byte-identical, so covered-zone de-substitution can never lose text. **The stated residual:** under *partial* coverage a member both individually present and embedded in the kept unit artifact is carried twice — accepted deliberately, because the composition layer only chooses paths and never rewrites a unit artifact's content; deduplicating a widely-shared member *inside* unit artifacts is the hoisting plane's job (PROP-038 §2.4–2.5 — a hoisted member's text is replaced by a `#use` marker in every unit that shares it), and the undercounting hoist trigger is recorded at PROP-038's DRIFT-030 review stop, not here. @status:spec/work",
-      "line": 51,
+      "line": 52,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#STATIC-EMITS-ONCE-EACH"
     },
     {
@@ -139139,7 +139272,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**`STATIC.md` opens with the resolution preamble and the tombstone table** (PROP-035 §11, B-011): the label convention, alias semantics, the lookup rule, and every renamed short name with its qualified heirs — placed first because the first lines of the first file read are the one position an agent re-reads every session and after compaction (the owner's priority-placement addition, 2026-08-04). @status:spec/work",
-      "line": 52,
+      "line": 53,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#STATIC-OPENS-WITH-RESOLUTION-PREAMBLE"
     },
     {
@@ -139148,7 +139281,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**A generated `STATIC.md` is not a citation target** — authored text never cites `spec://…/boot/STATIC#…`; the lane is compiler output, and source-of-truth is the package source under `vibedeps/` (PROP-035 §11's lint, B-011 §6.1). @status:spec/work",
-      "line": 53,
+      "line": 54,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"
     },
     {
@@ -139157,7 +139290,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**`INDEX.md`** — a generated **TOML manifest** of the rest of the sequence: a `schema` version, a `static` pointer (the path of `STATIC.md`, when one exists), and an ordered list of `[[entry]]` tables. Each entry carries `path`, `kind` (`\"static\"` — a resolved file the agent reads directly; `\"dynamic\"` — an INCLUDE the agent resolves at boot, §2.4), and, for dynamic entries, `when` (the activation condition, §2.4). The manifest is flat and machine-precise — `vibe` performed the graph walk once at generation time; the agent parses one TOML document and reads the listed files, with no recursion, discovery, or cycle-detection. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 54,
+      "line": 55,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACT-INDEX-MD"
     },
     {
@@ -139166,7 +139299,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Both artifacts are generated, git-tracked, and marked \"generated — do not edit\". <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 69,
+      "line": 70,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-GENERATED"
     },
     {
@@ -139175,7 +139308,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**A generated boot artifact carries no token budget** (owner ruling, 2026-07-29). The size budgets of the `addressable-specs` flow govern **authored** documents, where a page over budget is a page nobody re-reads and the remedy is to split it. `STATIC.md` — the project-wide one and every per-node one — is compiler output: it is not read by a human, not edited, and not splittable, because its size is the sum of what the resolution graph says the session must have. Compiling a document *into* the lane is therefore a legitimate answer to a dangling pointer, and «the lane grew» is not an objection to it. What remains measurable, and is the honest cost, is the **session's** context, which the `dynamic` lane exists to keep off the critical path (§2.4). @status:impl/done",
-      "line": 70,
+      "line": 71,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-CARRY-NO-TOKEN-BUDGET"
     },
     {
@@ -139184,7 +139317,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Authored boot files (the user-owned snippets, the node's own authored boot) continue to live alongside as ordinary files; `INDEX.md` references them in computed order. @status:impl/done",
-      "line": 71,
+      "line": 72,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#AUTHORED-ALONGSIDE"
     },
     {
@@ -139193,7 +139326,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Session-start order:** the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect → `vibevm/vibespecs/boot/STATIC.xml` (if present) → `vibevm/vibespecs/boot/INDEX.md` and the entries it names, in order. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user,agent\"/>",
-      "line": 74,
+      "line": 75,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER"
     },
     {
@@ -139202,7 +139335,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Boot remains **pure file-reading** — the redirect never becomes \"run `vibe`\", preserving the zero-dependency cross-agent property of `VIBEVM-SPEC.md` §6.1. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"agent\"/>",
-      "line": 75,
+      "line": 76,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PURE-FILE-READING"
     },
     {
@@ -139211,7 +139344,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**The redirect is a managed block (PROP-012).** The `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect is not a whole generated file. [PROP-012](PROP-012-managed-redirect-block.xml) refines it: vibevm owns only a delimited `<vibevm>` block inside each shared instruction file and preserves every byte outside it — the file is a co-tenant surface, not vibevm's property. @status:impl/done",
-      "line": 77,
+      "line": 78,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REDIRECT-MANAGED-BLOCK"
     },
     {
@@ -139220,7 +139353,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.4 Inclusion types — `static`, `dynamic`",
-      "line": 79,
+      "line": 80,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#inclusion-types"
     },
     {
@@ -139229,7 +139362,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Decision.** Each dependency declares an **inclusion type**, set by the consumer in its `vibe.toml` on the `[requires.packages]` entry: @status:impl/done",
-      "line": 80,
+      "line": 81,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUSION-TYPES"
     },
     {
@@ -139238,7 +139371,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`link = \"dynamic\"` — **the default.** `vibe` resolves the contribution to a concrete path in `INDEX.md`; the agent reads it dynamically, on demand. An optional `when` condition gates the read: with a `when` it is a **conditional** INCLUDE (loaded only when the condition holds) — mechanically the subskill `lazy-pull` delivery mode; without one it is read unconditionally. The `when` draws on the subskill `[activation]` probe vocabulary (PROP-003 §2.5) — one probe grammar across both mechanisms. **v1 implements the `os:` probe end-to-end** — `when = \"os:windows\"` matches the session's operating system (`windows` / `macos` / `linux`); the remaining probes are reserved until PROP-003's activation engine is built. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user,author\"/>",
-      "line": 86,
+      "line": 87,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-DYNAMIC"
     },
     {
@@ -139247,7 +139380,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`link = \"static\"` — the contribution's boot text is compiled into `STATIC.md` ahead of time (whole, anchor-qualified — §2.3). Read first, one read, maximum attention weight. The **emergency priority lane** — for top-level skills and critical disciplines whose priority must be guaranteed by position, not by trusting agent-side resolution. Used sparingly; it duplicates the text on disk. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user,author\"/>",
-      "line": 87,
+      "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-STATIC"
     },
     {
@@ -139256,7 +139389,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The two types are the two ends of the static/dynamic-linking spectrum: `static` is compiled in ahead of time (the `STATIC.md` lane), `dynamic` is loaded by reference on demand (the `INDEX.md` lane), and the old third type is gone — a conditional load is just a `dynamic` entry carrying a `when`. @status:impl/done",
-      "line": 89,
+      "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINKING-SPECTRUM"
     },
     {
@@ -139265,7 +139398,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "A package MAY declare a suggested default inclusion type in its own `[boot_snippet]`; the consumer's declaration always wins. Absent both, the type is `dynamic`. @status:impl/done",
-      "line": 90,
+      "line": 91,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SUGGESTED-DEFAULT"
     },
     {
@@ -139274,7 +139407,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "A `[boot_snippet]` that declares a `when` condition (§2.6) stays a conditional `dynamic` entry, irrespective of `link`: a condition cannot be honoured by the ahead-of-time `static` lane, so a `when` forces the gated INDEX form. It is a correctness constraint, not a preference — OS-specific content must never reach a session on the wrong OS. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 91,
+      "line": 92,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#WHEN-FORCES-DYNAMIC"
     },
     {
@@ -139283,7 +139416,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.5 Ordering by category — the `NN-` prefix is retired",
-      "line": 93,
+      "line": 94,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ordering"
     },
     {
@@ -139292,7 +139425,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Decision.** `vibe` owns the order of entries in the generated artifacts. The author-chosen two-digit `NN-` prefix (`VIBEVM-SPEC.md` §6.2) is **retired** — it cannot survive a workspace's combined namespace, and §6.5 already admits it provisional. @status:impl/done",
-      "line": 94,
+      "line": 95,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#NN-RETIRED"
     },
     {
@@ -139301,7 +139434,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "A package declares a **category** for its boot snippet, not a number. The categories preserve the intent of the old range bands: `foundation`, `flow`, `stack`, `user-override`. @status:impl/done",
-      "line": 96,
+      "line": 97,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#CATEGORY-NOT-NUMBER"
     },
     {
@@ -139310,7 +139443,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Within the computed sequence the order is: `foundation` → the node's own → dependency boot (topologically — a dependency before its dependents) → `user-override`. `static` contributions are concatenated into `STATIC.md` in the same relative order. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 97,
+      "line": 98,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#CATEGORY-ORDER"
     },
     {
@@ -139319,7 +139452,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Prefix collisions — the failure mode of `VIBEVM-SPEC.md` §6.3 — become impossible by construction; `BootSnippetConflict` / `BootSnippetNumericConflict` (`vibe-install`) are removed. @status:impl/done",
-      "line": 98,
+      "line": 99,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#NO-PREFIX-COLLISIONS"
     },
     {
@@ -139328,7 +139461,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The user-owned files keep their reserved names (`00-core.xml`, `90-user.xml`) by convention; `vibe` places them at the foundation / override ends. @status:impl/done",
-      "line": 99,
+      "line": 100,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RESERVED-NAMES"
     },
     {
@@ -139337,7 +139470,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.6 Manifest schema changes",
-      "line": 102,
+      "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#schema"
     },
     {
@@ -139346,7 +139479,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Decision.** @status:impl/done",
-      "line": 103,
+      "line": 104,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#schema-decision-lead"
     },
     {
@@ -139355,7 +139488,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`[requires.packages]` inline-table entries accept an optional `link` field (§2.4): `\"static\" | \"dynamic\"`, default `dynamic`. Valid on registry-, path-, and git-source dependencies. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user,author\"/>",
-      "line": 105,
+      "line": 106,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-LINK-FIELD"
     },
     {
@@ -139364,7 +139497,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`[boot_snippet]` (package-role) drops the `filename` field (the `NN-` target name) and gains `category` (§2.5); `source` — the path to the boot file inside the package — is retained. It may carry an optional suggested `link` default, and an optional **`when`** activation condition — the declaration site for §2.3's dynamic-entry `when`, closing the gap Phase 4 flagged. For v1 the only `when` is an operating-system match, the wire string `\"os:<name>\"` with `<name>` one of `windows` / `macos` / `linux`; a snippet carrying a `when` is `dynamic` (§2.4). The package author owns this declaration: whether a boot snippet is OS-specific is the author's knowledge, not the consumer's. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 106,
+      "line": 107,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"
     },
     {
@@ -139373,7 +139506,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`[writes]` (package-role) is **removed** (§2.1, §2.7) — a package's materialised footprint is its verbatim tree under its `vibedeps/` slot; a per-file write list has nothing left to declare. @status:impl/done",
-      "line": 107,
+      "line": 108,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-WRITES-REMOVED"
     },
     {
@@ -139382,7 +139515,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "A minimal project-level `[boot]` table carries workspace-wide loading settings — for v1, only a default `link` override. Room to grow; nothing more is added now. @status:impl/done",
-      "line": 108,
+      "line": 109,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-TABLE"
     },
     {
@@ -139391,16 +139524,16 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "A `vibe.lock` schema bump may be required to record materialisation slots and inclusion types — assessed in Phase 1. @status:impl/done",
-      "line": 109,
+      "line": 110,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-LOCK-BUMP"
     },
     {
       "anchor": "install",
-      "content_hash": "sha256:a1eb4ab05d43ac6b8727c4036af7d75bb11c38eea0fd626dd3f98b89a485a40b",
+      "content_hash": "sha256:52fb059675b6e539f3b3cd9721b53e69a273a50dd4da345b8eb954e604fb20c5",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.7 Workspace-aware `vibe install` / `vibe build`",
-      "line": 112,
+      "line": 113,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install"
     },
     {
@@ -139409,16 +139542,16 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Decision.** `vibe install` and `vibe build` discover the workspace and operate on it as a whole — the piece PROP-007 §6 q3 deferred, now subsumed. @status:impl/done",
-      "line": 113,
+      "line": 114,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#WORKSPACE-AWARE"
     },
     {
       "anchor": "INSTALL-UNIFIED",
-      "content_hash": "sha256:8f6d1dba1db4b3851b2128cf9da9aca60ef7bd0548ef739e52a6713df8cb0bbb",
+      "content_hash": "sha256:c05a1148db6e83be26e8f138ea7d46b9f783f0f3877a150fc8039bff1b24ba6a",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
-      "heading": "Run anywhere inside a workspace, `vibe install` calls `Workspace::discover`, runs **one unified resolution** across every member's `[requires]`, materialises each resolved package once into `vibedeps/` (§2.1), and regenerates the boot artifacts (§2.3) for every entry-point node. One `vibe.lock` at the absolute root (PROP-007 §2.4). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 115,
+      "heading": "Run anywhere inside a workspace, `vibe install` calls `Workspace::discover`, runs **one unified resolution** across every member's `[requires]`, materialises each resolved package once into `vibedeps/` (§2.1), and regenerates the boot artifacts (§2.3) for published entry-point nodes under the selected package-source member rule. One `vibe.lock` at the absolute root (PROP-007 §2.4). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
+      "line": 116,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-UNIFIED"
     },
     {
@@ -139427,7 +139560,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The plan / confirm / apply contract holds, but the plan's unit is **the set of packages to materialise plus the boot artifacts to regenerate**, not a per-file write list — `[writes]` is retired (§2.6). @status:impl/done",
-      "line": 116,
+      "line": 117,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PLAN-UNIT"
     },
     {
@@ -139436,7 +139569,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`-p <member>` scopes resolution *reporting* to one member; the materialisation and the single root lockfile are always workspace-wide — unified resolution admits no per-member subset. @status:impl/done",
-      "line": 117,
+      "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCOPE-FLAG"
     },
     {
@@ -139445,7 +139578,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "A standalone single-package project is a degenerate workspace and follows the identical path (§2.9). @status:impl/done",
-      "line": 118,
+      "line": 119,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#DEGENERATE-PATH"
     },
     {
@@ -139454,7 +139587,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.8 The computed-view engine — boot and the effective spec",
-      "line": 121,
+      "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#engine"
     },
     {
@@ -139463,7 +139596,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Decision.** The boot artifacts (§2.3) and the **effective spec** (`VIBEVM-SPEC.md` §4.6 — the merged corpus consumed by `vibe build` and `vibe show effective`) are two projections of one **computed-view engine**: workspace walk (`Workspace::discover`) + unified resolution + two-tree layering (§2.1, §2.2). @status:impl/done",
-      "line": 122,
+      "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ENGINE-TWO-PROJECTIONS"
     },
     {
@@ -139472,7 +139605,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The **boot view** projects the boot-category content into the ordered `STATIC.md` / `INDEX.md` (§2.3). @status:impl/done",
-      "line": 124,
+      "line": 125,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIEW-BOOT"
     },
     {
@@ -139481,7 +139614,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The **effective-spec view** projects the full layered corpus — authored `spec/` plus materialised `vibedeps/` — into the effective spec. @status:spec/done",
-      "line": 125,
+      "line": 126,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#VIEW-EFFECTIVE-SPEC"
     },
     {
@@ -139490,7 +139623,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Both are deterministic and regenerated by `vibe install`. @status:impl/done",
-      "line": 126,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#BOTH-DETERMINISTIC"
     },
     {
@@ -139499,7 +139632,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The effective-spec view's detailed shape is **v1.5 scope** (it feeds `vibe build`). PROP-009 fixes only that it shares the engine, so it is not built as a later retrofit. @status:spec/done",
-      "line": 128,
+      "line": 129,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#V15-SCOPE"
     },
     {
@@ -139508,7 +139641,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.9 Uniform model — every project is a workspace",
-      "line": 130,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#uniform"
     },
     {
@@ -139517,7 +139650,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Decision.** The loading model is uniform: a single-package project is a degenerate (zero-member) workspace. `Workspace::discover` already degenerates cleanly (PROP-007 §2.3). @status:impl/done",
-      "line": 131,
+      "line": 132,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#UNIFORM-MODEL"
     },
     {
@@ -139526,7 +139659,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "There is one loading model, one set of artifacts, one code path. @status:impl/done",
-      "line": 132,
+      "line": 133,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ONE-CODE-PATH"
     },
     {
@@ -139535,7 +139668,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Every existing project migrates (§4). vibevm is pre-release; M1.17's no-legacy hard break is the precedent. @status:impl/done",
-      "line": 134,
+      "line": 135,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#EVERYONE-MIGRATES"
     },
     {
@@ -139544,7 +139677,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The vibevm repository, itself a vibevm project, migrates too — `vibevm/vibespecs/boot/00-core.xml` and `90-user.xml` stay user-owned authored boot; the generated `STATIC.md` / `INDEX.md` join them. @status:impl/done",
-      "line": 135,
+      "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SELF-MIGRATION"
     },
     {
@@ -139553,7 +139686,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.10 Regeneration — `vibe reinstall`",
-      "line": 138,
+      "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#regen"
     },
     {
@@ -139562,7 +139695,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Decision.** `vibe reinstall [<path>] [--force]` reinstalls and regenerates the materialised state. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 139,
+      "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL"
     },
     {
@@ -139571,7 +139704,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "It targets any node in the workspace. Reinstalling a node regenerates that node **and every ancestor up to the absolute root** — the matryoshka (§2.2) means an ancestor's aggregated artifacts depend on the node's. `vibe reinstall` run at the root regenerates the whole tree. @status:impl/done",
-      "line": 141,
+      "line": 142,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-ANCESTORS"
     },
     {
@@ -139580,7 +139713,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Without `--force` it recomputes the materialisation and the boot artifacts from the existing `vibe.lock` and the local cache — no fresh resolution. @status:impl/done",
-      "line": 142,
+      "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-NO-FORCE"
     },
     {
@@ -139589,7 +139722,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`--force` re-fetches the file content of the whole targeted subtree from the source repositories, overwriting the current `vibedeps/` files and bypassing the cache. The escape hatch for a corrupted, hand-edited, or wrongly-generated subtree. @status:impl/done",
-      "line": 143,
+      "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REINSTALL-FORCE"
     },
     {
@@ -139598,7 +139731,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "It exists for when the materialised state is believed stale or a previous generation pass was wrong. @status:impl/done",
-      "line": 145,
+      "line": 146,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#reinstall-purpose"
     },
     {
@@ -139607,7 +139740,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.11 Published-copy regeneration",
-      "line": 147,
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#publish"
     },
     {
@@ -139616,7 +139749,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Decision.** `vibe workspace publish` (PROP-007 §2.7) regenerates the boot artifacts of each staged copy for the **published shape** — where dependencies are registry-resolved and version-pinned, not path-sourced. @status:impl/done",
-      "line": 148,
+      "line": 149,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PUBLISH-REGEN"
     },
     {
@@ -139625,7 +139758,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "This consumes PROP-007 §2.5's dual-form `{ path, version }`: the local `vibedeps/` slots and path entries become registry references in the published copy's artifacts. Publishing the development tree's own path-resolved artifacts would dangle for an external consumer. @status:impl/done",
-      "line": 149,
+      "line": 150,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#publish-dangling-why"
     },
     {
@@ -139634,7 +139767,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "3. Command and crate surface",
-      "line": 152,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#surface"
     },
     {
@@ -139643,7 +139776,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`vibe install` / `vibe build` — workspace-aware (§2.7). @status:impl/done",
-      "line": 154,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SURF-INSTALL-BUILD"
     },
     {
@@ -139652,7 +139785,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`vibe reinstall` — regeneration (§2.10). @status:impl/done",
-      "line": 155,
+      "line": 156,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SURF-REINSTALL"
     },
     {
@@ -139661,7 +139794,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`vibe workspace publish` — gains published-shape artifact regeneration (§2.11). @status:impl/done",
-      "line": 156,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SURF-PUBLISH"
     },
     {
@@ -139670,7 +139803,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`vibe show effective` — **ships** in its simple concatenation form (every `vibevm/vibespecs/boot` file plus every installed package's `files_written`, joined with `spec://` provenance headers, per its own `--help`); the §2.8 engine-backed projection stays v1.5 scope. @status:impl/done",
-      "line": 157,
+      "line": 158,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SURF-SHOW-EFFECTIVE"
     },
     {
@@ -139679,7 +139812,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The computed-view engine lands either as a new crate (`vibe-boot` / `vibe-view`) or inside `vibe-workspace` (which already owns discovery and the `[workspace.versions]` finalize pass) — decided at implementation time. @status:impl/done",
-      "line": 158,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SURF-ENGINE-CRATE"
     },
     {
@@ -139688,7 +139821,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "4. Migration",
-      "line": 161,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#migration"
     },
     {
@@ -139697,7 +139830,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Every existing project migrates once (§2.9). On the first `vibe install` after the upgrade, `vibe` rewrites the project: dependency content moves out of the authored `spec/` into `vibedeps/`; `NN-` boot files become categorised authored boot or generated artifacts; `STATIC.md` / `INDEX.md` are generated; the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect is rewritten. @status:impl/done",
-      "line": 163,
+      "line": 164,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#MIGRATION-ONCE"
     },
     {
@@ -139706,7 +139839,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "There is no compatibility shim — a pre-PROP-009 layout is migrated, not supported in place. @status:impl/done",
-      "line": 164,
+      "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#NO-SHIM"
     },
     {
@@ -139715,7 +139848,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The vibevm repository is migrated as part of the milestone. @status:impl/done",
-      "line": 165,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#vibevm-migrated"
     },
     {
@@ -139724,7 +139857,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "5. Resolved questions",
-      "line": 168,
+      "line": 169,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#open"
     },
     {
@@ -139733,7 +139866,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "The eight questions opened in draft 1 were resolved in an owner session on 2026-05-21. @status:impl/done",
-      "line": 169,
+      "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#resolved-lead"
     },
     {
@@ -139742,7 +139875,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**`vibedeps/` directory** — the materialised-dependency tree (§2.1); slot layout `vibedeps/<group>.<name>/<version>/`. @status:impl/done",
-      "line": 171,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RES-VIBEDEPS"
     },
     {
@@ -139751,7 +139884,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**`vibe reinstall`** — the regeneration command (§2.10), replacing the working name `vibe boot`; it regenerates a node and every ancestor to the root, and `--force` re-fetches a subtree from source. @status:impl/done",
-      "line": 172,
+      "line": 173,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RES-REINSTALL"
     },
     {
@@ -139760,7 +139893,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**`INDEX.md` is a TOML manifest** — `schema` / `static` / `[[entry]]` (§2.3); machine-precise over an LLM-native list. @status:impl/done",
-      "line": 173,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RES-INDEX-TOML"
     },
     {
@@ -139769,7 +139902,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**`[writes]` is retired** (§2.6) — a package's footprint is its verbatim tree under its `vibedeps/` slot. @status:impl/done",
-      "line": 174,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RES-WRITES-RETIRED"
     },
     {
@@ -139778,7 +139911,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Dynamic conditions reuse the subskill `[activation]` vocabulary** verbatim (§2.4; PROP-003 §2.5) — one probe grammar, no parallel one. @status:impl/done",
-      "line": 175,
+      "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RES-ACTIVATION-VOCAB"
     },
     {
@@ -139787,7 +139920,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**A minimal `[boot]` table** (§2.6) — for v1 it carries only a workspace-wide default `link`. @status:impl/done",
-      "line": 176,
+      "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RES-BOOT-TABLE"
     },
     {
@@ -139796,7 +139929,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**The effective-spec view stays v1.5 scope** (§2.8) — PROP-009 fixes only that it shares the computed-view engine. @status:spec/done",
-      "line": 177,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RES-V15-VIEW"
     },
     {
@@ -139805,7 +139938,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Deferred:** @status:spec/done",
-      "line": 179,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#deferred-lead"
     },
     {
@@ -139814,7 +139947,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "`VIBEVM-SPEC.md` edits — **resolved 2026-05-22.** The owner granted the sanction for a full consistency pass (not only §6 / §4.2 / §4.6 / §13.1); it landed in Phase 7. @status:impl/done",
-      "line": 181,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#RES-SPEC-SANCTION"
     },
     {
@@ -139823,7 +139956,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "6. Rejected / deferred alternatives",
-      "line": 184,
+      "line": 185,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#rejected"
     },
     {
@@ -139832,7 +139965,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Bubble every dependency's boot into the root `vibevm/vibespecs/boot/`.** Rejected — it is the \"merge dependency specs into the authored spec\" the owner ruled out, and it makes one flat namespace for the whole workspace. @status:spec/done",
-      "line": 186,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REJ-BUBBLE-UP"
     },
     {
@@ -139841,7 +139974,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Boot by running `vibe` at session start.** Rejected — it would always be fresh, but it breaks the zero-dependency cross-agent property (`VIBEVM-SPEC.md` §6.1) and adds a process exec to every session. Boot stays pure file-reading (§2.3). @status:spec/done",
-      "line": 187,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REJ-RUN-VIBE"
     },
     {
@@ -139850,7 +139983,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Copy boot snippets physically leaf-to-root (the literal matryoshka).** Rejected in favour of computing each level directly from the resolution graph (§2.2) — physical copying drifts between levels. @status:spec/done",
-      "line": 188,
+      "line": 189,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REJ-PHYSICAL-COPY"
     },
     {
@@ -139859,7 +139992,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**A gitignored dependency cache.** Rejected — a committed `vibedeps/` keeps a fresh clone bootable and the corpus reviewable. @status:spec/done",
-      "line": 189,
+      "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#REJ-GITIGNORED-CACHE"
     },
     {
@@ -139868,7 +140001,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "7. Phase plan",
-      "line": 192,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#phases"
     },
     {
@@ -139877,7 +140010,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "Targets M1.18. PROP-008 (qualified naming) shifts to M1.19. **Phases 1–7 shipped 2026-05-22**; phase 8 is v1.5 scope. @status:impl/done",
-      "line": 193,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#phases-lead"
     },
     {
@@ -139886,7 +140019,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Schema** — the `link` field, `[boot_snippet]` `category`, retire the `NN-` filename and the `[writes]` section; `vibe.lock` bump if needed. `vibe-core`. @status:impl/done",
-      "line": 195,
+      "line": 196,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PHASE-1-SCHEMA"
     },
     {
@@ -139895,7 +140028,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Materialisation tree** — the `vibedeps/` layout, materialise packages verbatim; retire the mirror layout. @status:impl/done",
-      "line": 196,
+      "line": 197,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PHASE-2-MATERIALISATION"
     },
     {
@@ -139904,7 +140037,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Computed-view engine** — per-node effective boot computation from the unified resolution. @status:impl/done",
-      "line": 197,
+      "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PHASE-3-ENGINE"
     },
     {
@@ -139913,7 +140046,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Artifact generation** — `STATIC.md` / the TOML `INDEX.md`; the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect. @status:impl/done",
-      "line": 198,
+      "line": 199,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PHASE-4-ARTIFACTS"
     },
     {
@@ -139922,7 +140055,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Workspace-aware `vibe install` / `vibe build`** — discover, unified resolve, materialise, regenerate (§2.7). @status:impl/done",
-      "line": 199,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PHASE-5-WORKSPACE-AWARE"
     },
     {
@@ -139931,7 +140064,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**`vibe reinstall` regeneration** (§2.10) and **published-copy regeneration** in `vibe workspace publish` (§2.11). @status:impl/done",
-      "line": 200,
+      "line": 201,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PHASE-6-REINSTALL"
     },
     {
@@ -139940,7 +140073,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Migration + docs** — existing-project migration, the vibevm self-migration, `VIBEVM-SPEC.md` edits (under owner sanction — §5 item 8), `ROADMAP.md` / `CHANGELOG.md`, the `docs/` sweep. @status:impl/done",
-      "line": 201,
+      "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PHASE-7-MIGRATION"
     },
     {
@@ -139949,7 +140082,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**Effective-spec view** — shares the engine; the detailed shape is v1.5 scope (§2.8). @status:impl/plan",
-      "line": 202,
+      "line": 203,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#PHASE-8-EFFECTIVE-SPEC"
     },
     {
@@ -139958,7 +140091,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "8. Version history",
-      "line": 205,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#history"
     },
     {
@@ -139967,7 +140100,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**2026-05-21 — draft 1.** Requirements captured in an owner design session: the loading-model redesign answering PROP-007 §6 question 3, the static/dynamic-linking spine, the four-fork resolution. Rationale recorded in [`vibevm/vibespecs/design/loading-and-boot-model.xml`](../../design/loading-and-boot-model.xml). @status:spec/done",
-      "line": 207,
+      "line": 208,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#HISTORY-DRAFT-1"
     },
     {
@@ -139976,7 +140109,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**2026-05-21 — draft 2.** The eight §5 open questions resolved in a follow-up owner session: `vibedeps/`, `vibe reinstall`, the TOML `INDEX.md`, `[writes]` retired, dynamic conditions reusing the subskill `[activation]` vocabulary, a minimal `[boot]` table, the effective-spec view kept v1.5-scoped. The `VIBEVM-SPEC.md` sanction (§5 item 8) is the one item carried to Phase 7. Ready for M1.18 implementation. @status:spec/done",
-      "line": 208,
+      "line": 209,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#HISTORY-DRAFT-2"
     },
     {
@@ -139985,7 +140118,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**2026-05-22 — Phase 7 shipped.** The migration-and-docs phase landed in M1.18: the vibevm self-migration, the `VIBEVM-SPEC.md` consistency pass (owner sanction granted — §5 item 8), and [PROP-012](PROP-012-managed-redirect-block.xml), which refines §2.3's redirect into a managed `<vibevm>` block. Phases 1–7 are shipped; phase 8 (the effective-spec view) remains v1.5 scope. @status:spec/done",
-      "line": 209,
+      "line": 210,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#HISTORY-PHASE-7"
     },
     {
@@ -139994,7 +140127,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**2026-05-22 — the `when` declaration site.** §2.3's dynamic-entry `when` is pinned to `[boot_snippet].when` (§2.6), closing the contract gap Phase 4 flagged — §2.3 showed `when` but no field declared it. v1 scope is deliberately small: the only condition is an operating-system match (`when = \"os:<name>\"`), shipped end-to-end through the `vibe-core` schema, the computed-view engine, and the `INDEX.md` renderer. A `[boot_snippet]` carrying a `when` is `dynamic` irrespective of `link` (§2.4). The OS probe is also reserved as `if_os` in the subskill `[activation]` vocabulary (PROP-003 §2.5.2), so the two mechanisms share one grammar. The wider probe set follows when PROP-003's activation engine is built. @status:spec/done",
-      "line": 210,
+      "line": 211,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#HISTORY-WHEN-SITE"
     },
     {
@@ -140003,7 +140136,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**2026-08-04 — the static lane becomes anchor-qualified (B-011, owner-approved).** §2.3's `##ARTIFACT-STATIC-MD` changes from «verbatim concatenation» to «anchor-qualified concatenation» (labels rewritten under the contribution's origin slug — PROP-035 §8's new qualify phase), the lane opens with the resolution preamble + tombstone table, and a generated lane stops being a legal citation target. Motivation: 59 `duplicate-anchor` warnings over the compiled lane (`{#root}` ×26) and the strip-safety design; the full rationale and fork record: [`vibevm/vibespecs/design/deterministic-loading-aliasing.xml`](../../design/deterministic-loading-aliasing.xml). Landed the same day (five worker slices; the host lane regenerated 59 → 0), retiring the §2.3 annotated interim. @status:spec/work",
-      "line": 211,
+      "line": 212,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#HISTORY-B011-QUALIFIED"
     },
     {
@@ -140012,7 +140145,7 @@
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "**2026-08-04 — the lane emits once each (B-006, owner-approved: A1·B1·C1).** §2.3 gains `##STATIC-EMITS-ONCE-EACH`: a static entry embedding a compiled unit artifact is elided to a provenance stub when its whole static zone is already present member-by-member — the compose-time dedup that removes the aggregator double-emission (the git-practices family carried twice, 323 nested lines, 164 double-qualified labels) without touching the unit artifacts, hoisting, or coverage in a dynamic-member topology. Rationale, forks and the measured traps of the alternatives: [`vibevm/vibespecs/design/lane-composition-dedup.xml`](../../design/lane-composition-dedup.xml); the linker-side twin sentence: PROP-038 §2.1; the per-node-qualify rider: PROP-035 §8. @status:spec/work",
-      "line": 212,
+      "line": 213,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#HISTORY-B006-ONCE-EACH"
     },
     {
@@ -151992,7 +152125,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "line": 297,
+      "line": 305,
       "message": "edge `vibe_workspace::install::bootgen::verify_boot_graph` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {

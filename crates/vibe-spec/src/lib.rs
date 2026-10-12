@@ -40,7 +40,10 @@ mod resolver;
 mod transforms;
 mod use_graph;
 
-pub use address::{Authority, SpecAddress, SpecAddressError};
+pub use address::{
+    Authority, ResourceAddress, ResourceAddressError, ResourceAddressKind, SpecAddress,
+    SpecAddressError,
+};
 pub use compiler::builtin::{
     ArtifactCompileError, TransformCompileError, compile_artifact, compile_artifact_native,
     compile_artifact_native_managed, compile_artifact_native_managed_observed,

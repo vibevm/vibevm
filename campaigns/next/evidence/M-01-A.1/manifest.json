@@ -1,0 +1,258 @@
+{
+  "base_head": "20e952e33",
+  "normalization": "Repository text mirrors trim line-end whitespace and retain one final newline; external raw files remain unchanged.",
+  "raw_evidence": [
+    {
+      "name": "ADDRESS-COMPATIBILITY-REVIEW.md",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/ADDRESS-COMPATIBILITY-REVIEW.md",
+      "raw_sha256": "92ff4be66fa01fbbbea58100a5cf9c52c1d60d2e8795888ed1fcdb8f219cee71",
+      "repository_sha256": "92ff4be66fa01fbbbea58100a5cf9c52c1d60d2e8795888ed1fcdb8f219cee71"
+    },
+    {
+      "name": "CANDIDATE-REPORT.md",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/CANDIDATE-REPORT.md",
+      "raw_sha256": "f09c24fdeb4d2ae9d2e8097e3d2c976c87979a224c0f3ab896e37ac531d85416",
+      "repository_sha256": "f09c24fdeb4d2ae9d2e8097e3d2c976c87979a224c0f3ab896e37ac531d85416"
+    },
+    {
+      "name": "INVENTORY.md",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/INVENTORY.md",
+      "raw_sha256": "294057ca65e9754419a519642bbdb7fb58fb8953c469fa1a36facefe5a00cf49",
+      "repository_sha256": "294057ca65e9754419a519642bbdb7fb58fb8953c469fa1a36facefe5a00cf49"
+    },
+    {
+      "name": "address-family-after.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/address-family-after.log",
+      "raw_sha256": "24c24598c5c6b801c1e1fbc492bf27e68a7c0305703379deaefdbe955000a775",
+      "repository_sha256": "fd1fef157377436cd35f5e39f358b34fc496a02046dfe8061b30c7d24da6ac35"
+    },
+    {
+      "name": "anchor-before.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/anchor-before.log",
+      "raw_sha256": "a2988f7aa4b3994de81157bff09989f2703dec815e5a87a8c08496cca6402952",
+      "repository_sha256": "a2988f7aa4b3994de81157bff09989f2703dec815e5a87a8c08496cca6402952"
+    },
+    {
+      "name": "anchor-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/anchor-final.log",
+      "raw_sha256": "b23e8c7d1a42a9264c2b71034f9856008dc1faf378c2ef253d85496288f12291",
+      "repository_sha256": "d03e434d8c19363c4aae07f7f2646244434bb2a09f655c900cecbbcdc80160c4"
+    },
+    {
+      "name": "baseline-a_selected_world_enforces_the_exact_locked_version.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/baseline-a_selected_world_enforces_the_exact_locked_version.log",
+      "raw_sha256": "d6e40fa150eee0a08839f92d83b3f133cb5fdc6872289f863149eea925cd6e93"
+    },
+    {
+      "name": "baseline-an_id_stem_resolves_its_xml_slug_form.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/baseline-an_id_stem_resolves_its_xml_slug_form.log",
+      "raw_sha256": "55eff2e18e658d74a6a567b9f8b6f5ab16e96ced4a58b2589cd2efdc86a5ec14"
+    },
+    {
+      "name": "baseline-package_address_with_version.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/baseline-package_address_with_version.log",
+      "raw_sha256": "aba4571ec0b649f015157b720e46fae9600ec2d7b998c8ed2a1c9f4640c69a91"
+    },
+    {
+      "name": "baseline-rejects_empty_path_segment.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/baseline-rejects_empty_path_segment.log",
+      "raw_sha256": "cb272576e1e4e112fbd81b233141b668b0061c04c58140f037cbcff3ec9b14a8"
+    },
+    {
+      "name": "cargo-fmt.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/cargo-fmt.log",
+      "raw_sha256": "24acc9dabcadbeeb2ce4bd2b6acd0cdabc70f59e492ed613b7da7a39c1a3eba1"
+    },
+    {
+      "name": "export-package-bound.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/export-package-bound.log",
+      "raw_sha256": "011ca8896511b26e8936e5e6b14c625d603666df7be0f3a8d9be163a4759e765"
+    },
+    {
+      "name": "final-a_selected_world_enforces_the_exact_locked_version.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-a_selected_world_enforces_the_exact_locked_version.log",
+      "raw_sha256": "c115b29147d971ea351276c385381bac309f0bd0e6338995b3031316eeb80d3c"
+    },
+    {
+      "name": "final-descriptor_map_excludes_same_stem_raw_resources_without_changing_legacy_pairing.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-descriptor_map_excludes_same_stem_raw_resources_without_changing_legacy_pairing.log",
+      "raw_sha256": "d6f96000ca1361495599766ac6f6bf0683ad1ffaabf6e72f291df92fcf396e97"
+    },
+    {
+      "name": "final-duplicate_stem_and_two_forms_refuse_without_first_match.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-duplicate_stem_and_two_forms_refuse_without_first_match.log",
+      "raw_sha256": "0346dca3131d546341bfc528b0fcfaa19d5a6ede0cb2a32e52a4f0cbaef4a420"
+    },
+    {
+      "name": "final-legacy_conversion_is_explicit_and_selected.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-legacy_conversion_is_explicit_and_selected.log",
+      "raw_sha256": "349ff4b7ea00e633c39c8bb844b7eff18c9ccf04862a29d5c04376c9a0d60ef7"
+    },
+    {
+      "name": "final-named_export_uses_separate_scheme_and_selected_authority.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-named_export_uses_separate_scheme_and_selected_authority.log",
+      "raw_sha256": "59fbd648a4a3fb00357316527b8d747c0af833bf1000f8ec0c9a64ca6584d8f6"
+    },
+    {
+      "name": "final-refused_percent_empty_revision_and_wrong_version_are_distinct.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-refused_percent_empty_revision_and_wrong_version_are_distinct.log",
+      "raw_sha256": "45fc7d345b625a204257cb6691cd98beb8459eb8b6ef36eefe8ae72dd8ea6aab"
+    },
+    {
+      "name": "final-rejects_bad_revision.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-rejects_bad_revision.log",
+      "raw_sha256": "46f79a4cbfd8de13f863e68594b218b0b0963e24c072577f59cded2027502772"
+    },
+    {
+      "name": "final-selected_vibe_and_unique_abbreviated_stem_canonicalize.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-selected_vibe_and_unique_abbreviated_stem_canonicalize.log",
+      "raw_sha256": "1d844d97a3267a56cebf3e6a42c3d2c1c6cdc9e2e43c3db011d47762d2aa01f4"
+    },
+    {
+      "name": "final-self_coordinate_is_unversioned_and_strict_read_needs_vibe_classification.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final-self_coordinate_is_unversioned_and_strict_read_needs_vibe_classification.log",
+      "raw_sha256": "4e6552675e4e5c9a6989c97be792f651578ba7bb26134fe5095b903cdd2e6256"
+    },
+    {
+      "name": "final2-a_selected_world_enforces_the_exact_locked_version.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final2-a_selected_world_enforces_the_exact_locked_version.log",
+      "raw_sha256": "c115b29147d971ea351276c385381bac309f0bd0e6338995b3031316eeb80d3c"
+    },
+    {
+      "name": "final2-descriptor_map_excludes_same_stem_raw_resources_without_changing_legacy_pairing.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final2-descriptor_map_excludes_same_stem_raw_resources_without_changing_legacy_pairing.log",
+      "raw_sha256": "d6f96000ca1361495599766ac6f6bf0683ad1ffaabf6e72f291df92fcf396e97"
+    },
+    {
+      "name": "final2-duplicate_stem_and_two_forms_refuse_without_first_match.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final2-duplicate_stem_and_two_forms_refuse_without_first_match.log",
+      "raw_sha256": "cb1bec91aa5c79f7af58efa35b7f5ec1da86034d2890f6d2d66a95e4504508c7"
+    },
+    {
+      "name": "final2-legacy_conversion_is_explicit_and_selected.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final2-legacy_conversion_is_explicit_and_selected.log",
+      "raw_sha256": "e1d76903f60b3c1b92f4e420266d41797faba9beb7ff6953578324353d14d5e6"
+    },
+    {
+      "name": "final2-named_export_uses_separate_scheme_and_selected_authority.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final2-named_export_uses_separate_scheme_and_selected_authority.log",
+      "raw_sha256": "59fbd648a4a3fb00357316527b8d747c0af833bf1000f8ec0c9a64ca6584d8f6"
+    },
+    {
+      "name": "final2-refused_percent_empty_revision_and_wrong_version_are_distinct.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final2-refused_percent_empty_revision_and_wrong_version_are_distinct.log",
+      "raw_sha256": "f3a73b1799cd670a96faf8eedb2946774b9c8eb99101a1b451a26039162e1b02"
+    },
+    {
+      "name": "final2-selected_vibe_and_unique_abbreviated_stem_canonicalize.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final2-selected_vibe_and_unique_abbreviated_stem_canonicalize.log",
+      "raw_sha256": "56b818f6498644a17ee8cb0586e218e746de92f2b4a50153ccd5c7b3a67e0599"
+    },
+    {
+      "name": "final2-self_coordinate_is_unversioned_and_strict_read_needs_vibe_classification.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/final2-self_coordinate_is_unversioned_and_strict_read_needs_vibe_classification.log",
+      "raw_sha256": "4e6552675e4e5c9a6989c97be792f651578ba7bb26134fe5095b903cdd2e6256"
+    },
+    {
+      "name": "first-duplicate_stem_and_two_forms_refuse_without_first_match.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/first-duplicate_stem_and_two_forms_refuse_without_first_match.log",
+      "raw_sha256": "0e4ca45696d2ab08f1a86c63ce9643a19a0e156cc65b6ce8f65ae95fcfc1c13b"
+    },
+    {
+      "name": "first-legacy_conversion_is_explicit_and_selected.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/first-legacy_conversion_is_explicit_and_selected.log",
+      "raw_sha256": "390c63aa1cf6b08cf424bd3f9c5623860214abb81d647411d091aec18c2f030d"
+    },
+    {
+      "name": "first-named_export_uses_separate_scheme_and_selected_authority.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/first-named_export_uses_separate_scheme_and_selected_authority.log",
+      "raw_sha256": "261c6c067e8609a18776967127a50739bfa598d6cbf87f0a34f51ca85946c92e"
+    },
+    {
+      "name": "first-refused_percent_empty_revision_and_wrong_version_are_distinct.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/first-refused_percent_empty_revision_and_wrong_version_are_distinct.log",
+      "raw_sha256": "88e954508b09c3b20578ada2b263b7cb1a0592e9f1f5264d167da1324fc59931"
+    },
+    {
+      "name": "legacy-physical-stem.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/legacy-physical-stem.log",
+      "raw_sha256": "64ac3f418e232778884b5861d59299555f3a9834bf739f975ead381aa4ccfbcf"
+    },
+    {
+      "name": "package-fmt-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/package-fmt-final.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "repository_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "name": "package-fmt.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/package-fmt.log",
+      "raw_sha256": "a8693d16cc42aa3ebb99e8b8d1496131caea9c060e279fce78352ffc20b03fe7"
+    },
+    {
+      "name": "post-anchor-a_selected_world_enforces_the_exact_locked_version.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/post-anchor-a_selected_world_enforces_the_exact_locked_version.log",
+      "raw_sha256": "bfc5f00677ee1f83ceaaf984028786f03359b2ac3b3fc8a43f45cc51e21201ad",
+      "repository_sha256": "d793e10854a9d84e7995645754fa4bd980367f55a16fd0135dece08e0cc55413"
+    },
+    {
+      "name": "post-anchor-descriptor_map_excludes_same_stem_raw_resources_without_changing_legacy_pairing.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/post-anchor-descriptor_map_excludes_same_stem_raw_resources_without_changing_legacy_pairing.log",
+      "raw_sha256": "6f63bfbae0fc1f5268953404e1827b19916b099e19a0a40f50c668352238fe3e",
+      "repository_sha256": "e36a29b1c0580d7085c02958e34e10244e873cd87f01f4ef20e3c0c91d8a9643"
+    },
+    {
+      "name": "refusal-suffix-current.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/refusal-suffix-current.log",
+      "raw_sha256": "2b239e924e4f282bf5f99062359ba6e102e9c01ae9699d95424f93e6f6cbcd74"
+    },
+    {
+      "name": "root-specmap-final.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/root-specmap-final.log",
+      "raw_sha256": "6ee3da9c73a276873c74675222ddfb12075bd1e6e1f3093aaed6098962432a20"
+    },
+    {
+      "name": "selected-vibe-compile.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/selected-vibe-compile.log",
+      "raw_sha256": "ae66db0f08b529360b4bd91ad371aeeb9627639f8af7c853c6c8fb4bb71c9402"
+    },
+    {
+      "name": "selected-vibe-first.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/selected-vibe-first.log",
+      "raw_sha256": "04a3464784430e653639a090fba4bdc0e75ecf28c899aaa013f70eae69fba59b"
+    },
+    {
+      "name": "self-classification-current.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/self-classification-current.log",
+      "raw_sha256": "ca0b6bec965f0420d821a49a9276f16a92f5d21b8697919351e5f260016bfc2c"
+    },
+    {
+      "name": "touched-rustfmt.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/touched-rustfmt.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "xml-anchors.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M01-A1/xml-anchors.log",
+      "raw_sha256": "d3055e9d7933f3e25b1033d347e9d8300b18f18018345e7411ccd20d062ad09c",
+      "repository_sha256": "d3055e9d7933f3e25b1033d347e9d8300b18f18018345e7411ccd20d062ad09c"
+    }
+  ],
+  "accepted_source_sha256": {
+    "crates/vibe-spec/src/address.rs": "658c6e7e0ce2b3517ac61efbc4da0263e67a706071d3fe603b841eb3d8a2f813",
+    "crates/vibe-spec/src/address/resource.rs": "043256e54305d72aa2573f46c5d6321caf2e0165f62ea6635842c81079d08e22",
+    "crates/vibe-spec/src/address/m_01_a_1_cases.rs": "ec9b890f3cc967ebe0ff89e26054c8d1c73acb9efe32d7d5847f4adce4b8a96f",
+    "crates/vibe-spec/src/lib.rs": "e66ba9daf2ff86c37ecbd3e7cb5ec99741be2a8779439b760f6390c440432a37",
+    "crates/vibe-spec/src/resolver.rs": "c4eafeb1be796351358b42c8d02f0bb1e44d1d0fe960dbb14b32d2637bde962f",
+    "crates/vibe-spec/src/resolver/resource.rs": "95bd7332206742218c8d7ee96ac091bba7442fe5722227207dd642dcd40b70b0",
+    "crates/vibe-spec/src/resolver/source_map.rs": "e09a123277524753a84f45f0cb307d5faac47ac6dd72b8e409d10709ce6edfc6",
+    "vibevm/vibespecs/common/PROP-070-resource-resolution.xml": "d21a0f224e765b25c774736638d5acd2b0eda6bee781f3ddef5c022dba0297dc",
+    "specmap.json": "5c63bba0759e47c92adb740478dd56d02b5c6f756af038754277768514c4009c"
+  },
+  "specmap": {
+    "exit_code": 0,
+    "unresolved_host_edges": 0,
+    "gated_orphans": 138,
+    "baseline_orphans": 138
+  }
+}
