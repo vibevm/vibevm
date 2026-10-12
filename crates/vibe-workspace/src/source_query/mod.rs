@@ -15,7 +15,10 @@ use crate::extension_world::{ExtensionWorldEpoch, ExtensionWorldError};
 
 mod capture;
 mod visibility;
-pub use capture::{BoundSourceInputs, PreparedOwnerCapture, captured_manifest_closure};
+pub use capture::{
+    BoundSourceInputs, PreparedOwnerCapture, PreparedWorldWitness, WitnessedSourceWorld,
+    captured_manifest_closure,
+};
 
 #[derive(Debug, thiserror::Error)]
 pub enum SourceQueryUnavailable {
@@ -31,6 +34,10 @@ pub enum SourceQueryUnavailable {
     Visibility(String),
     #[error("selected workspace node `{0}` is absent")]
     UnknownNode(String),
+    #[error("prepared source world is stale at {0}")]
+    StaleWorld(&'static str),
+    #[error("prepared source world is unavailable at {0}")]
+    WorldUnavailable(&'static str),
 }
 
 /// Exact selected roots from one node's own world. This stays crate-private
