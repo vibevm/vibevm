@@ -9,8 +9,13 @@ use vibe_resolver::{
     DepProvider, DepProviderError, DepSolver, NaiveDepSolver, ResolvedGraph, ResolvoDepSolver,
     SolveError, VersionEnumerator,
 };
+use vibe_workspace::extension_world::ExtensionWorldEpoch;
+use vibe_workspace::source_query::{
+    BoundSourceInputs, PreparedOwnerCapture, SourceQueryUnavailable, captured_manifest_closure,
+};
 
 use crate::InstallSource;
+use crate::PreparedVisibleSourceAuthority;
 use crate::error::{Error, Result};
 use crate::record::exact_pinned_pkgref;
 
@@ -58,6 +63,125 @@ pub struct ProjectionInput<'a> {
 pub struct Projection {
     pub analysis: Analysis,
     pub blocked_edges: BTreeSet<(NodeId, NodeId)>,
+}
+
+/// Compose one member's source authority using only a prepared manifest
+/// closure. The graph's direct roots must be this node's choices, not a union
+/// of every workspace member's install roots. No InstallSource or provider is
+/// accepted here, and a missing captured manifest refuses before projection.
+///
+/// ```
+/// use std::collections::BTreeSet;
+/// use std::path::PathBuf;
+/// use vibe_core::manifest::Manifest;
+/// use vibe_install::prepare_visible_source_authority;
+/// use vibe_resolver::ResolvedGraph;
+/// use vibe_workspace::extension_world::ExtensionWorldEpoch;
+/// use vibe_workspace::source_query::SourceQueryUnavailable;
+/// use vibe_workspace::Workspace;
+/// let node = Manifest::parse_str("[project]\nname='demo'\nversion='1.0.0'\n").unwrap();
+/// let workspace = Workspace { root: PathBuf::from("/tmp/prepared-demo"), root_manifest: node, members: vec![] };
+/// let result = prepare_visible_source_authority(&workspace, ".", &ExtensionWorldEpoch::empty(), &ResolvedGraph::default(), &BTreeSet::new(), vec![]);
+/// assert!(result.is_err()); // no source capture was supplied
+/// let private_request = BTreeSet::from(["org.demo/private".into()]);
+/// let refused = prepare_visible_source_authority(&workspace, ".", &ExtensionWorldEpoch::empty(), &ResolvedGraph::default(), &private_request, vec![]);
+/// assert!(matches!(refused, Err(SourceQueryUnavailable::Visibility(_))));
+/// ```
+pub fn prepare_visible_source_authority(
+    workspace: &vibe_workspace::Workspace,
+    node_rel: &str,
+    epoch: &ExtensionWorldEpoch,
+    graph: &ResolvedGraph,
+    requested_visible: &BTreeSet<NodeId>,
+    captures: Vec<PreparedOwnerCapture>,
+) -> std::result::Result<PreparedVisibleSourceAuthority, SourceQueryUnavailable> {
+    let node_manifest = if node_rel == "." {
+        &workspace.root_manifest
+    } else {
+        &workspace
+            .member_by_rel_path(node_rel)
+            .ok_or_else(|| SourceQueryUnavailable::UnknownNode(node_rel.to_owned()))?
+            .manifest
+    };
+    let node_root = workspace.node_abs_path(node_rel);
+    let owner_node_id = epoch
+        .node_owner_view(&node_root, node_manifest)?
+        .host
+        .provider
+        .identity
+        .to_string();
+    crate::check_member_graph(epoch, &node_root, node_manifest, graph)?;
+    let graph_roots = graph
+        .roots()
+        .map(|node| node_id(&node.group, &node.name))
+        .collect::<BTreeSet<_>>();
+    let node_direct = node_manifest
+        .requires
+        .iter_pkgrefs()
+        .filter_map(|(group, name)| group.map(|group| node_id(group, name)))
+        .collect::<BTreeSet<_>>();
+    if graph_roots != node_direct {
+        return Err(SourceQueryUnavailable::Visibility(
+            "resolved graph roots differ from the selected node's own declarations".into(),
+        ));
+    }
+    let captured = captured_manifest_closure(epoch, &captures)?;
+    for node in graph.iter() {
+        let key = (node.group.as_str().to_owned(), node.name.clone());
+        let Some(manifest) = captured.get(&key) else {
+            return Err(SourceQueryUnavailable::MissingPreparedCapture(format!(
+                "{}/{} manifest",
+                node.group, node.name
+            )));
+        };
+        if manifest
+            .package
+            .as_ref()
+            .is_none_or(|package| package.version != node.version)
+        {
+            return Err(SourceQueryUnavailable::Visibility(format!(
+                "captured manifest version differs from selected {}/{}",
+                node.group, node.name
+            )));
+        }
+    }
+    let manifest_of = |pkgref: &PackageRef| {
+        let key = (
+            pkgref
+                .group
+                .as_ref()
+                .map(ToString::to_string)
+                .unwrap_or_default(),
+            pkgref.name.as_str().to_owned(),
+        );
+        captured.get(&key).cloned().ok_or_else(|| {
+            DepProviderError::Other(format!("missing prepared manifest for {pkgref}")).into()
+        })
+    };
+    let projection = project(&ProjectionInput {
+        root_manifest: node_manifest,
+        root_id: owner_node_id,
+        graph,
+        manifest_of: &manifest_of,
+    })
+    .map_err(|error| SourceQueryUnavailable::Visibility(error.to_string()))?;
+    let visible = projection
+        .analysis
+        .effective
+        .keys()
+        .cloned()
+        .collect::<BTreeSet<_>>();
+    if !requested_visible.is_subset(&visible) {
+        return Err(SourceQueryUnavailable::Visibility(
+            "requested source is not visible to the selected node".into(),
+        ));
+    }
+    let bound =
+        BoundSourceInputs::from_prepared_node(workspace, node_rel, epoch, &visible, captures)?;
+    Ok(PreparedVisibleSourceAuthority {
+        bound,
+        visibility: projection.analysis,
+    })
 }
 
 pub(crate) struct EffectiveResolution {
