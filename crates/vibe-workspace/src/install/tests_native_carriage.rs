@@ -104,7 +104,7 @@ fn unselected_member_and_package_unit_enter_the_carried_build_plan() {
         created_at: "2026-09-08T00:00:00Z".to_owned(),
     };
     let mut make_provider = |_policies| Ok(FakeProvider::new(Reply::Missing));
-    let (_, carriage) = regenerate_boot_from_traced_native(
+    let (nodes, carriage) = regenerate_boot_from_traced_native(
         &workspace,
         &resolution,
         world,
@@ -115,6 +115,21 @@ fn unselected_member_and_package_unit_enter_the_carried_build_plan() {
         &mut make_provider,
     )
     .expect("multi-member Collect regeneration");
+    assert_eq!(
+        nodes,
+        ["."],
+        "selected source member has no node publication"
+    );
+    assert!(!root.path().join("member/AGENTS.md").exists());
+    assert!(
+        !root
+            .path()
+            .join("member/vibevm/vibespecs/boot/INDEX.md")
+            .exists()
+    );
+    let root_lane = fs::read_to_string(root.path().join(crate::layout_paths::boot("STATIC.md")))
+        .expect("root still owns the selected dependency lane");
+    assert!(root_lane.contains("# member"), "{root_lane}");
     assert!(
         carriage
             .build_owners()

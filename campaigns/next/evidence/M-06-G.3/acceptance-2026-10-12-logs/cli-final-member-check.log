@@ -1,0 +1,5 @@
+exit=0
+stdout:
+vibe check: 0 errors, 0 warnings, 0 info
+
+stderr:

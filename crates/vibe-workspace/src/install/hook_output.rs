@@ -119,7 +119,7 @@ fn apply_with_materialise_lifecycle(
     trace: Option<&crate::compile_trace::TraceRun>,
 ) -> Result<InstallOutcome, WorkspaceError> {
     // A malformed instruction block aborts before any mutation.
-    validate_redirect_blocks(workspace)?;
+    validate_redirect_blocks(workspace, resolution)?;
 
     let Materialised {
         materialised,
@@ -238,7 +238,7 @@ where
     ) -> Result<P, WorkspaceError>,
     P: crate::extension_world::OwnerNativeCompileProvider,
 {
-    validate_redirect_blocks(workspace)?;
+    validate_redirect_blocks(workspace, resolution)?;
     let materialise = |lifecycle| {
         materialise_resolution_with_spec_format(
             &workspace.root,

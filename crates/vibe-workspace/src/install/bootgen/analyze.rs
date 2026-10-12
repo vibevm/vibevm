@@ -169,6 +169,7 @@ pub fn analyze_node_lane(
         &root,
         &node_manifest,
         &resolution,
+        &table,
         &with_static,
         spec_format,
     );
@@ -259,8 +260,14 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
             .filter(|boot| boot.category == Some(vibe_core::manifest::BootCategory::Foundation))
             .collect()
     };
-    let dependencies =
-        node_dependency_boot(&root, &node_manifest, resolution, &with_static, spec_format);
+    let dependencies = node_dependency_boot(
+        &root,
+        &node_manifest,
+        resolution,
+        &table,
+        &with_static,
+        spec_format,
+    );
     let mut effective = boot::compute_effective_boot(boot::NodeBootInputs {
         own_boot: &own,
         inherited_foundation: &inherited,
@@ -339,6 +346,7 @@ pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
         &root,
         &node_manifest,
         &resolution,
+        &table,
         &with_static,
         spec_format,
     );

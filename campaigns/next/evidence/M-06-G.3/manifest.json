@@ -1,0 +1,227 @@
+{
+  "base_head": "1b9db35d9",
+  "normalization": "Repository mirrors trim trailing whitespace at EOF and retain one final newline; raw logs remain unchanged.",
+  "evidence": [
+    {
+      "name": "CANDIDATE-REPORT.md",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/CANDIDATE-REPORT.md",
+      "raw_sha256": "e657ca206d25b440ef35ec8f9a8b64765070dc0b7872ed5717fc70fc1e13b7cc",
+      "repository_sha256": "e657ca206d25b440ef35ec8f9a8b64765070dc0b7872ed5717fc70fc1e13b7cc"
+    },
+    {
+      "name": "PRECEDENCE-REVIEW-RESPONSE.md",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/PRECEDENCE-REVIEW-RESPONSE.md",
+      "raw_sha256": "611f31ef32bad5dd23f0bf48e06913fbf2007b0d14db280e03437aab7b08fcb1",
+      "repository_sha256": "611f31ef32bad5dd23f0bf48e06913fbf2007b0d14db280e03437aab7b08fcb1"
+    },
+    {
+      "name": "PUBLICATION-CANDIDATE-REVIEW.md",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/PUBLICATION-CANDIDATE-REVIEW.md",
+      "raw_sha256": "7b626f5af6186a6c43f4ac5496202c0a3eaa9f23695e64af3ea105e9e0143280",
+      "repository_sha256": "7b626f5af6186a6c43f4ac5496202c0a3eaa9f23695e64af3ea105e9e0143280"
+    },
+    {
+      "name": "cli-final-after.json",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/cli-final-after.json",
+      "raw_sha256": "11a11a141dea400ed22c54df6ad7834fc251e4ccdef6289d06fb0ac89d3863de",
+      "repository_sha256": "11a11a141dea400ed22c54df6ad7834fc251e4ccdef6289d06fb0ac89d3863de"
+    },
+    {
+      "name": "cli-final-before.json",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/cli-final-before.json",
+      "raw_sha256": "11a11a141dea400ed22c54df6ad7834fc251e4ccdef6289d06fb0ac89d3863de",
+      "repository_sha256": "11a11a141dea400ed22c54df6ad7834fc251e4ccdef6289d06fb0ac89d3863de"
+    },
+    {
+      "name": "cli-final-binary-build.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/cli-final-binary-build.log",
+      "raw_sha256": "c5ffaa9635d7d99c94c371dc7a3329f03c8b7221adaf1c625bb03bf21ec04919",
+      "repository_sha256": "c5ffaa9635d7d99c94c371dc7a3329f03c8b7221adaf1c625bb03bf21ec04919"
+    },
+    {
+      "name": "cli-final-install.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/cli-final-install.log",
+      "raw_sha256": "ce8c6eb2f0c9a463d335e7dae5acdd377f129bb7bb93f2d1cefd84f825f62591",
+      "repository_sha256": "ce8c6eb2f0c9a463d335e7dae5acdd377f129bb7bb93f2d1cefd84f825f62591"
+    },
+    {
+      "name": "cli-final-member-check.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/cli-final-member-check.log",
+      "raw_sha256": "edaa205d36668d1f9888c88df7e4c3505d672dc215136596fdb904495581ea1d",
+      "repository_sha256": "edaa205d36668d1f9888c88df7e4c3505d672dc215136596fdb904495581ea1d"
+    },
+    {
+      "name": "cli-final-repeat-install.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/cli-final-repeat-install.log",
+      "raw_sha256": "649f0b0b685fcf2773cc585883c6de20c9885627846ac7a949f83847be1e3397",
+      "repository_sha256": "649f0b0b685fcf2773cc585883c6de20c9885627846ac7a949f83847be1e3397"
+    },
+    {
+      "name": "cli-final-root-check.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/cli-final-root-check.log",
+      "raw_sha256": "edaa205d36668d1f9888c88df7e4c3505d672dc215136596fdb904495581ea1d",
+      "repository_sha256": "edaa205d36668d1f9888c88df7e4c3505d672dc215136596fdb904495581ea1d"
+    },
+    {
+      "name": "compiled-lane-use-refusal.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/compiled-lane-use-refusal.log",
+      "raw_sha256": "b9fd6c2c1dfa6ddedf2cae9f88d2a36eb0173c125b3332152a62641efa061d98",
+      "repository_sha256": "40495bb283c5d29d427c170c7bf00749e235e5ab427f8b3363a83673255c88bd"
+    },
+    {
+      "name": "final2-consumer_install_keeps_source_workspace_member_bytes.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-consumer_install_keeps_source_workspace_member_bytes.log",
+      "raw_sha256": "3705ea556676e86fbe7b31d634f94206a01d3a1b08eb832604a6fdc7aea52276",
+      "repository_sha256": "aae061927b4b272df01a70c0dac0c6382f9a762187ecfa3886f3a1e6dd97575b"
+    },
+    {
+      "name": "final2-install_entry_returns_the_supplied_epoch_and_all_owner_build_plan.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-install_entry_returns_the_supplied_epoch_and_all_owner_build_plan.log",
+      "raw_sha256": "ae70abff974622f14bc74970b1bbb97ed9f07a05d1d6a5a1ccdaf8cc7c682d52",
+      "repository_sha256": "d4797c5db440ed85841aabc0901f65d3c92f358a09db61ec477261f375677451"
+    },
+    {
+      "name": "final2-materialise_copies_the_tree_verbatim.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-materialise_copies_the_tree_verbatim.log",
+      "raw_sha256": "17a6b1e19f232c338c786f66713b5fae5b7cbe7f2ae715828d613133994137eb",
+      "repository_sha256": "305eccb821778f99a7879532bf223e2ed9a11ae9d58bfc31d14785d71257123e"
+    },
+    {
+      "name": "final2-ordinary_project_member_keeps_foundation_and_dependency_entrypoint.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-ordinary_project_member_keeps_foundation_and_dependency_entrypoint.log",
+      "raw_sha256": "7c37a28573e595a98069d5e701d2bea738f8e48870c5f45384b08adc6f1bc7b0",
+      "repository_sha256": "954745675917635349e2f7fe1c9554a728f73ff056951c543b616d5f83871785"
+    },
+    {
+      "name": "final2-pending_forces_recompile_propagates_then_resolve_restores_exact_base.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-pending_forces_recompile_propagates_then_resolve_restores_exact_base.log",
+      "raw_sha256": "6ed5cb4474674c78c3828536447c9db6743c34f02bc57f9f7c7482455fa04e49",
+      "repository_sha256": "6fe75af4b18e09e77af2899fabe9572938d5fd5939239c27db4225c42e7a593d"
+    },
+    {
+      "name": "final2-standalone_package_root_still_publishes_dependency_boot.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-standalone_package_root_still_publishes_dependency_boot.log",
+      "raw_sha256": "78d2df46fce0ed23b40983d223914b927524df67be248603f27bf5ab6d964b00",
+      "repository_sha256": "9d4567b226be3bf011eff3621874da5a4271cd44196f6db1f71e1efc8cc69d29"
+    },
+    {
+      "name": "final2-the_analyzed_lane_is_byte_equal_to_the_written_one_with_hoisting_and_members.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-the_analyzed_lane_is_byte_equal_to_the_written_one_with_hoisting_and_members.log",
+      "raw_sha256": "c0d5992479147955df07b2d668e3cf72446bf8259c46f8a78004ef5d9e24060d",
+      "repository_sha256": "eae44bb1585db14b37c44eaa9b37687fe31907a703d9b02257e7f3c2730a2ae9"
+    },
+    {
+      "name": "final2-the_dynamic_static_case_follows_the_target_format.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-the_dynamic_static_case_follows_the_target_format.log",
+      "raw_sha256": "ede83a3684e6d39e74317ccc9bbc0febcd7fda747da5cd430310adb5f46e3634",
+      "repository_sha256": "da7a691a86d9b2a01dafebe02249909ab645c2668041ff7640ddc07605317d0b"
+    },
+    {
+      "name": "final2-unselected_member_and_package_unit_enter_the_carried_build_plan.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-unselected_member_and_package_unit_enter_the_carried_build_plan.log",
+      "raw_sha256": "76bd2a34fb566bcd74b3da359a2199fb36280fd1eca027d567b52b4e3475423b",
+      "repository_sha256": "01a6ffc728a4985f2eb9a61e8bfd18dbaa3f4e0b4cade404590ad90153280eab"
+    },
+    {
+      "name": "final2-unselected_package_member_keeps_its_entrypoint.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-unselected_package_member_keeps_its_entrypoint.log",
+      "raw_sha256": "dc7da20f057d11033cec9d8d3de0e4af908d58eba74e4843add54d14c75218d2",
+      "repository_sha256": "6df75071f552ab5e744530c52dc04fe3c20160e2068578e34b5c61bed1f03585"
+    },
+    {
+      "name": "final2-xml_and_markdown_nested_simple_multifragment_zones_exclude_generated_source_lanes.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-xml_and_markdown_nested_simple_multifragment_zones_exclude_generated_source_lanes.log",
+      "raw_sha256": "26c84eb5a0471d3acb545cc0f2792d1e703e0568a0df47fd889cef7503ac8454",
+      "repository_sha256": "ccb74466573e049718dffbf1a34536bd198f3d49fe23627306fa3de936f5692b"
+    },
+    {
+      "name": "final2-xml_derived_materialisation_excludes_generated_source_boot_files.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final2-xml_derived_materialisation_excludes_generated_source_boot_files.log",
+      "raw_sha256": "21b7c92951ed5d1fe025dc6abd7c4bbe80ee6dfe8c836b542f77552b50581982",
+      "repository_sha256": "c9109e0184b8055828f4e756a53af2d1f604b5e7d244587101fdb76a1efff815"
+    },
+    {
+      "name": "final3-install_entry_returns_the_supplied_epoch_and_all_owner_build_plan.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final3-install_entry_returns_the_supplied_epoch_and_all_owner_build_plan.log",
+      "raw_sha256": "1e156ef1acd1a24a4a0026d660ffdb6c3a0745d9c8614ec90b8621fcf14b99b7",
+      "repository_sha256": "68e287a9bf09d5d0e935c5d0bf55e1ec5716348fe93ca33f34ec4063e8a00287"
+    },
+    {
+      "name": "final3-pending_forces_recompile_propagates_then_resolve_restores_exact_base.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final3-pending_forces_recompile_propagates_then_resolve_restores_exact_base.log",
+      "raw_sha256": "b95c2a0c770f331862a95578027fe59c1377f9fdc8bdbaeff35e1865ce663f09",
+      "repository_sha256": "5bcbc5830c39449f6f0b92cf95565bf286359fc34c32ae48615983f33fa4a14f"
+    },
+    {
+      "name": "final3-the_analyzed_lane_is_byte_equal_to_the_written_one_with_hoisting_and_members.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final3-the_analyzed_lane_is_byte_equal_to_the_written_one_with_hoisting_and_members.log",
+      "raw_sha256": "29051265425f3ee84988cde5277c41aa02b0203c38674a621d90ff8a81bc12ff",
+      "repository_sha256": "4825fc366ac0fff90765919a0e32e57bcd639e1cdb0720c140fa80d71e4f86e6"
+    },
+    {
+      "name": "final3-the_dynamic_static_case_follows_the_target_format.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final3-the_dynamic_static_case_follows_the_target_format.log",
+      "raw_sha256": "ede83a3684e6d39e74317ccc9bbc0febcd7fda747da5cd430310adb5f46e3634",
+      "repository_sha256": "da7a691a86d9b2a01dafebe02249909ab645c2668041ff7640ddc07605317d0b"
+    },
+    {
+      "name": "final3-unselected_member_and_package_unit_enter_the_carried_build_plan.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/final3-unselected_member_and_package_unit_enter_the_carried_build_plan.log",
+      "raw_sha256": "512540f8e20de837976a4aab68ab67a67a680e100f7932567bb19e2878a30906",
+      "repository_sha256": "b7fdd1dc4e336a421f724ce1e6d83fc1a690f8848a1826fe3947d70bdb19cff4"
+    },
+    {
+      "name": "precedence-before-node_default_static_link_expands_nested_simple_unit_in_xml_and_markdown.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/precedence-before-node_default_static_link_expands_nested_simple_unit_in_xml_and_markdown.log",
+      "raw_sha256": "dd2013a7ef21809b3a7f902c02a9f5d8c7e6b5c93400e707efcd465ffe458aad",
+      "repository_sha256": "dd2013a7ef21809b3a7f902c02a9f5d8c7e6b5c93400e707efcd465ffe458aad"
+    },
+    {
+      "name": "precedence-before-suggested_static_link_expands_nested_simple_unit_in_xml_and_markdown.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/precedence-before-suggested_static_link_expands_nested_simple_unit_in_xml_and_markdown.log",
+      "raw_sha256": "9e00a9677474d1ff94c1859b8e001573abf6971e0a4b40794a48cb0451f700c7",
+      "repository_sha256": "9e00a9677474d1ff94c1859b8e001573abf6971e0a4b40794a48cb0451f700c7"
+    },
+    {
+      "name": "precedence-fixed-explicit_dynamic_link_overrides_static_suggestion_and_keeps_unit_cache.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/precedence-fixed-explicit_dynamic_link_overrides_static_suggestion_and_keeps_unit_cache.log",
+      "raw_sha256": "cbd33d07a3d40b2b479450896b93cf4e568dc804b4e6b24d6162c5105296477e",
+      "repository_sha256": "23987a59d62611f25799390c821b85facd1614efce26693cbb69bfe200d75d6a"
+    },
+    {
+      "name": "precedence-fixed-node_default_static_link_expands_nested_simple_unit_in_xml_and_markdown.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/precedence-fixed-node_default_static_link_expands_nested_simple_unit_in_xml_and_markdown.log",
+      "raw_sha256": "7843e600232767c9f1b807f57fb86e204597906f442a1345f1e83abad7d23f74",
+      "repository_sha256": "d2b191bcf9bf97aea966b85444d39b444ce65d012ef3ef6e54f80ee43bdffa01"
+    },
+    {
+      "name": "precedence-fixed-suggested_static_link_expands_nested_simple_unit_in_xml_and_markdown.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/precedence-fixed-suggested_static_link_expands_nested_simple_unit_in_xml_and_markdown.log",
+      "raw_sha256": "bdec9bc4957ec0e910736255fa804f9f9a9cbb407ea5480abb5678944b4bbc1c",
+      "repository_sha256": "451f448e7b9d620d31fb948cb8247c55738174085f3c9819b7b0014c5eebe972"
+    },
+    {
+      "name": "precedence-fixed-xml_and_markdown_nested_simple_multifragment_zones_exclude_generated_source_lanes.log",
+      "raw_path": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M06-G3/precedence-fixed-xml_and_markdown_nested_simple_multifragment_zones_exclude_generated_source_lanes.log",
+      "raw_sha256": "c4f04d340c2eabd62fdb485bbbaef1e1c848dca10b0585bf3b6e3a8b845147b3",
+      "repository_sha256": "3014e4eb0b2f26881093092e00287237edbd47c79cda0ac1ad75b3e3fa00e174"
+    }
+  ],
+  "accepted_source_sha256": {
+    "crates/vibe-workspace/src/install/bootgen.rs": "f05df9463152196032e45e6cf9b4cec6996fd99a15f62845b47b64e531eb3443",
+    "crates/vibe-workspace/src/install/bootgen/analyze.rs": "5e27b73ac48050053f0765f6f50f465ac3eb680a2e28f00f7b92508818d7ae5d",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs": "cd1079871e2d4e2184665136d2cb8c385eaf19fc1cb55abe64a330d850391c0a",
+    "crates/vibe-workspace/src/install/bootgen/node_dependency.rs": "44ea1ee31afef231d27f079ae8c3efdb247b3419cdf582a751aff43e9b3832bc",
+    "crates/vibe-workspace/src/install/bootgen/publication.rs": "a6c78a87ebcd6559764ce26e934409dee3cdc73d9b1330420d02d70cca461c16",
+    "crates/vibe-workspace/src/install/bootgen/transitive.rs": "0294524930f4c9c8ea63b71eff12caf78a54bd2a774a0658ec4154bea5d142b1",
+    "crates/vibe-workspace/src/install/hook_output.rs": "88d21786918f2c4062f171a56bf7e335369c0841089ff7d06df36bdc0bcd8718",
+    "crates/vibe-workspace/src/install/native.rs": "72f8f634e46606f2ca607bca5cc992bb56ae1da6300f90ed2347ff10556aed58",
+    "crates/vibe-workspace/src/install/tests_hybrid.rs": "df70217113f24d67c0882e68bee97e0e7088d1af3ed59d5549a4101c63741c14",
+    "crates/vibe-workspace/src/install/tests_hybrid/g3_cases.rs": "ca994eac457cb1c61fd35e070f1205a3730ec7b9929d6220c94dd7cc4ec35d6e",
+    "crates/vibe-workspace/src/install/tests_native_carriage.rs": "9169b2d4616dc88135f4dea441f1b208fd991541f3c1157b0f92faa9f9e6418b",
+    "crates/vibe-workspace/src/vibedeps/derived.rs": "eddbba71569c0451ee4d9048de01c1ad477c0cb086aed312258ac4513ef49897",
+    "crates/vibe-workspace/src/vibedeps/derived/g3_tests.rs": "11271e714fe58fc66784bbe71f8a90b446a939634da881153db5cf629c34f7aa",
+    "crates/vibe-workspace/src/vibedeps/slot_diff.rs": "fa79c7723608dc2bb37ef1cc953e5c4a59a120b3d9ef0892e6c3623111d6981b",
+    "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml": "5aaade33c4615bd691beee9e0e89c93bca2499d55078b6b3fc1cecbb30b5775b"
+  }
+}

@@ -1,0 +1,5 @@
+exit=0
+stdout:
+vibe install: 1 package materialised
+
+stderr:
