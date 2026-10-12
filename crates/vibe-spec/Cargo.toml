@@ -44,6 +44,7 @@ base64.workspace = true
 # `vibe-core` edge for typed-identity use; neither lower crate ever gains a
 # reverse edge back up.
 vibe-core.workspace = true
+vibe-safefs.workspace = true
 vibe-extension-registry.workspace = true
 # The R4.2 lossless effective-configuration walk (R4-TRANSFORM-PLAN-ABI §3):
 # ABI §5.3 gives `vibe-spec` the lowering, and a lossless lowering must read

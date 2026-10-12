@@ -5122,6 +5122,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
  "vibe-extension-registry",
+ "vibe-safefs",
  "vibe-specdoc",
  "vibe-wire",
 ]
