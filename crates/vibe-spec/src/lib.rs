@@ -18,6 +18,7 @@
 //! pipeline (§8) and link tables (§10) build on top of it next.
 
 mod address;
+mod captured_source;
 #[cfg_attr(
     not(test),
     expect(
@@ -26,6 +27,7 @@ mod address;
     )
 )]
 mod compiler;
+pub use captured_source::{CapturedSectionSource, CapturedSpecDocument};
 mod directives;
 mod doctree;
 mod embed;

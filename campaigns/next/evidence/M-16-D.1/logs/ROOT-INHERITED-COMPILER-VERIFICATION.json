@@ -1,0 +1,20 @@
+{
+  "status": "inherited compiler review resolved by actual fixture; task not accepted",
+  "logs": {
+    "inherited-compiler.log": {
+      "sha256": "b12d48a4fe0198be51a48e45880e84a26ca35a9c6020e650727aee7f8181decb",
+      "results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 571 filtered out; finished in 0.01s"
+      ]
+    },
+    "orchestrator-sealed.log": {
+      "sha256": "2c77da4a24c99c8eca0d8bb2f52903a646d5cae5b2959bcf5be7b0691f5567bb",
+      "results": [
+        "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 564 filtered out; finished in 0.01s"
+      ]
+    }
+  },
+  "test_source_sha256": "f85b1e5fc2f68ff67ca6353387f2a1c0b04fd6ec6561421737013d70e86542fb",
+  "inspected": "Actual member/ancestor captured declarations, preview.compiled_boot contains Inherited captured body., full fixture inventory unchanged.",
+  "remaining": "revision selector explicit negative/refusal, final source/evidence seal and Root specmap"
+}

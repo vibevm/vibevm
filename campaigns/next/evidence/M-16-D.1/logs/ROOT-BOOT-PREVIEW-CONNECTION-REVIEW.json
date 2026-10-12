@@ -1,0 +1,14 @@
+{
+  "status": "WIP source connection verified, no boot execution verdict",
+  "source_sha256": "5fedda5d239a24289f57f72c5ed5c2648ac8220dc68cee8e8be3f0789800699a",
+  "observed": [
+    "Own and ancestor Foundation inventory calls now invoke shared authored_boot_from_inventory.",
+    "Existing compute_effective_boot receives those lists; captured SectionSource and compile_artifact remain output route.",
+    "No filesystem reopen in this module; root path joins are labels for supplied inventory."
+  ],
+  "remaining": [
+    "Dependency snippet paired-presence/Installed/Os/fragments must use approved shared helpers; current rows still direct/empty fragments.",
+    "Ancestor foundation must reach compiler source map too: current source-map inclusion admits primary and solved packages only, so composed ancestor source could be filtered out. Verify actual child/ancestor captured fixture before any full inherited-preview claim.",
+    "Actual new/old helper and connected boot tests, prior pin/move concerns"
+  ]
+}

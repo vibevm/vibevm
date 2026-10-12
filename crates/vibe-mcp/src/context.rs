@@ -42,6 +42,8 @@ mod migration_tests;
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
 pub struct ServerContext {
+    document_analysis:
+        Option<std::sync::Arc<vibe_orchestrator::document_analysis::DocumentAnalysisHost>>,
     /// Project root — the directory containing `vibe.toml` and
     /// `vibe.lock`.
     pub project_root: PathBuf,
@@ -90,6 +92,40 @@ pub struct ServerContext {
 }
 
 impl ServerContext {
+    /// Explicit read-only document scope; no lifecycle/native authority.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-BUFFER-LAW")]
+    pub fn with_document_analysis(
+        mut self,
+        host: std::sync::Arc<vibe_orchestrator::document_analysis::DocumentAnalysisHost>,
+    ) -> Result<Self, vibe_orchestrator::document_analysis::DocumentAnalysisError> {
+        if host.root() != self.project_root.as_path() {
+            return Err(
+                vibe_orchestrator::document_analysis::DocumentAnalysisError::InvalidDeclaration,
+            );
+        }
+        self.document_analysis = Some(host);
+        Ok(self)
+    }
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-ANALYSIS-CAPTURE-LAW"
+    )]
+    pub fn document_client(
+        &self,
+    ) -> Result<
+        vibe_orchestrator::document_analysis::DocumentClient,
+        vibe_orchestrator::document_analysis::DocumentAnalysisError,
+    > {
+        let host = self
+            .document_analysis
+            .as_ref()
+            .ok_or(vibe_orchestrator::document_analysis::DocumentAnalysisError::Unavailable)?;
+        if host.root() != self.project_root.as_path() {
+            return Err(
+                vibe_orchestrator::document_analysis::DocumentAnalysisError::InvalidDeclaration,
+            );
+        }
+        host.client()
+    }
     /// Explicit trusted host grant. No namespace, policy or provider is initialized.
     pub fn with_fixed_lifecycle_host(
         self,
@@ -242,6 +278,7 @@ impl ServerContext {
             .map(|home| home.join("cache"))
             .unwrap_or_default();
         ServerContext {
+            document_analysis: None,
             project_root: project_root.into(),
             store_root,
             lifecycle_policy: InstallPolicy::default(),
@@ -264,6 +301,7 @@ impl ServerContext {
         store_root: impl Into<PathBuf>,
     ) -> Self {
         ServerContext {
+            document_analysis: None,
             project_root: project_root.into(),
             store_root: store_root.into(),
             lifecycle_policy: InstallPolicy::default(),
@@ -372,6 +410,7 @@ mod tests {
     fn context_carries_exactly_public_roots_and_private_lifecycle_authority() {
         fn destructure(context: ServerContext) {
             let ServerContext {
+                document_analysis,
                 project_root,
                 store_root,
                 lifecycle_policy,
@@ -385,6 +424,7 @@ mod tests {
                 fixed_deploy_bridge,
             } = context;
             let _ = (
+                document_analysis,
                 project_root,
                 store_root,
                 lifecycle_policy,
@@ -399,5 +439,86 @@ mod tests {
             );
         }
         let _ = destructure;
+    }
+}
+
+#[cfg(test)]
+mod m_16_d_1_cases {
+    use super::*;
+    use std::sync::Arc;
+    use vibe_orchestrator::document_analysis::{
+        AnalysisLimits, BufferIntent, ByteEncoding, DocumentAnalysisHost, ResourceDeclaration,
+        ResourceRole,
+    };
+    #[test]
+    fn trusted_context_keeps_two_document_clients_isolated() {
+        let root = tempfile::tempdir().unwrap();
+        let text = "[project]\ngroup='org.overlay'\nname='saved'\nversion='1.0.0'\n";
+        std::fs::write(root.path().join("vibe.toml"), text).unwrap();
+        let host = DocumentAnalysisHost::new(
+            root.path(),
+            "vibe.toml",
+            vec![ResourceDeclaration {
+                path: "vibe.toml".into(),
+                role: ResourceRole::Manifest,
+            }],
+            AnalysisLimits {
+                resource_bytes: 1024 * 1024,
+                capture_bytes: 8 * 1024 * 1024,
+                open_buffers: 4,
+            },
+        )
+        .unwrap();
+        let id = host.resource("vibe.toml").unwrap();
+        let context = ServerContext::with_store_root(root.path(), root.path().join("unused-store"))
+            .with_document_analysis(host.clone())
+            .unwrap();
+        let a = context.document_client().unwrap();
+        let b = context.document_client().unwrap();
+        let dirty = text.replace("name='saved'", "name='dirty'");
+        a.open(
+            1,
+            id,
+            1,
+            ByteEncoding::Utf8,
+            Arc::from(dirty.as_bytes()),
+            BufferIntent::Replace,
+        )
+        .unwrap();
+        assert_eq!(
+            a.freeze()
+                .unwrap()
+                .manifest(id)
+                .unwrap()
+                .consumer_node()
+                .unwrap()
+                .name,
+            "dirty"
+        );
+        assert_eq!(
+            b.freeze()
+                .unwrap()
+                .manifest(id)
+                .unwrap()
+                .consumer_node()
+                .unwrap()
+                .name,
+            "saved"
+        );
+        assert_eq!(
+            std::fs::read(root.path().join("vibe.toml")).unwrap(),
+            text.as_bytes()
+        );
+        let other = tempfile::tempdir().unwrap();
+        assert!(matches!(
+            ServerContext::with_store_root(other.path(), other.path().join("unused"))
+                .with_document_analysis(host),
+            Err(vibe_orchestrator::document_analysis::DocumentAnalysisError::InvalidDeclaration)
+        ));
+        assert!(matches!(
+            ServerContext::with_store_root(root.path(), root.path().join("unused"))
+                .document_client(),
+            Err(vibe_orchestrator::document_analysis::DocumentAnalysisError::Unavailable)
+        ));
     }
 }

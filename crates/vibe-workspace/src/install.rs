@@ -51,7 +51,7 @@ mod hooks_run;
 pub mod model;
 mod slot_lifecycle;
 
-mod bootgen;
+pub(crate) mod bootgen;
 /// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
 /// the once-each topology is exercisable at the unit level (no full install).
 pub use bootgen::desubstitute_covered_units;

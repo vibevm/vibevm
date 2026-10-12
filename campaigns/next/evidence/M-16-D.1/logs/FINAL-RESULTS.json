@@ -1,0 +1,30 @@
+{
+  "orchestrator-sealed.log": {
+    "sha256": "2c77da4a24c99c8eca0d8bb2f52903a646d5cae5b2959bcf5be7b0691f5567bb",
+    "result": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 564 filtered out; finished in 0.01s"
+  },
+  "specdoc-family.log": {
+    "sha256": "fd9472abe45fcf32415aa331effc44c3f1fa1ae1b122a87d96bc213cf19c6bb9",
+    "result": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s"
+  },
+  "spec-final.log": {
+    "sha256": "8671f4c3c8b2085979668203215a4052461bda29a09d7f89d1a818871521f601",
+    "result": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1001 filtered out; finished in 0.00s"
+  },
+  "mcp-final.log": {
+    "sha256": "41c4c91193901d28b17ff19fdec900781085c51594719c1f43a6f5fadb2b1d9a",
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 204 filtered out; finished in 0.00s"
+  },
+  "boot-extraction-fixed.log": {
+    "sha256": "3ad57f0e1fe92bdc2dfdbfde16463a4254d7bed0808af46ddb79dfe107f35c77",
+    "result": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 687 filtered out; finished in 0.00s"
+  },
+  "snippet-source-compat.log": {
+    "sha256": "5ec38aed6e7c9cf720f99baf3bdb3ffcd856ff8259a14cb51d2405ef889dae4d",
+    "result": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 688 filtered out; finished in 0.00s"
+  },
+  "revision-pin-after.log": {
+    "sha256": "d72aec397a89586ef8288148d341645f643648537fa4e060fd25e8e1fab92a4d",
+    "result": "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1001 filtered out; finished in 0.00s"
+  }
+}

@@ -19,22 +19,9 @@ pub(super) fn resolve_snippet_source(
     slot_rel: &str,
     source: &Path,
 ) -> String {
-    let source_rel = source.to_string_lossy().replace('\\', "/");
-    let literal = format!("{slot_rel}/{source_rel}");
-    if workspace_root.join(&literal).is_file() {
-        return literal;
-    }
-    let swapped = swap_spec_extension(Path::new(&source_rel));
-    if let Some(swapped) = swapped {
-        let alt = format!(
-            "{slot_rel}/{}",
-            swapped.to_string_lossy().replace('\\', "/")
-        );
-        if workspace_root.join(&alt).is_file() {
-            return alt;
-        }
-    }
-    literal
+    super::captured::resolve_snippet_source_with(slot_rel, source, |path| {
+        workspace_root.join(path).is_file()
+    })
 }
 
 /// The same path with its spec extension flipped `.md` ↔ `.xml` — `None`

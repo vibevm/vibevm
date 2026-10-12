@@ -15,7 +15,9 @@ use crate::boot::{self, AuthoredBoot, DependencyBoot, NodeBootInputs};
 use crate::extension_world::{
     ExtensionWorldEpoch, LoweredOwnerRuntimes, OwnerRuntimeLowering, lower_owner_runtimes,
 };
-use crate::{Workspace, WorkspaceError, boot_artifacts, layout_paths, path_to_slash, vibedeps};
+#[cfg(test)]
+use crate::layout_paths;
+use crate::{Workspace, WorkspaceError, boot_artifacts, path_to_slash, vibedeps};
 
 use super::{ResolvedDep, io_err};
 
@@ -45,6 +47,7 @@ pub use analyze::{
 
 mod materialised_read;
 pub(super) use materialised_read::read_durable_resolution;
+pub(crate) mod captured;
 mod conditions;
 mod node_dependency;
 mod publication;
@@ -345,59 +348,14 @@ pub(crate) fn node_own_boot(
         return Ok(Vec::new());
     }
     let mut files = Vec::new();
-    let mut spec_paths = Vec::new();
     for entry in fs::read_dir(&boot_dir).map_err(|e| io_err(&boot_dir, e))? {
         let entry = entry.map_err(|e| io_err(&boot_dir, e))?;
         let path = entry.path();
-        if !entry.file_type().map_err(|e| io_err(&path, e))?.is_file() {
-            continue;
+        if entry.file_type().map_err(|e| io_err(&path, e))?.is_file() {
+            files.push(path.strip_prefix(node_dir).unwrap_or(&path).to_path_buf());
         }
-        let name = entry.file_name().to_string_lossy().into_owned();
-        if !vibe_specdoc::is_spec_source(&path) {
-            continue;
-        }
-        // The generated artifacts are not authored boot.
-        if name == boot_artifacts::static_file(SpecFormat::Mixed)
-            || name == boot_artifacts::static_file(SpecFormat::Xml)
-            || name == boot_artifacts::INDEX_FILE
-        {
-            continue;
-        }
-        let category = match name.as_str() {
-            "00-core.md" => Some(BootCategory::Foundation),
-            "90-user.md" => Some(BootCategory::UserOverride),
-            _ => None,
-        };
-        let rel_path = if node_rel == "." {
-            layout_paths::boot(&name)
-        } else {
-            path_to_slash(
-                &Path::new(node_rel)
-                    .join(layout::current_boot_dir())
-                    .join(&name),
-            )
-        };
-        spec_paths.push(path.clone());
-        files.push(AuthoredBoot {
-            path: rel_path,
-            category,
-            origin: node_rel.to_string(),
-        });
     }
-    if let Some(collision) = vibe_specdoc::pair_collisions_in(&spec_paths).first() {
-        let rel = collision
-            .markdown
-            .strip_prefix(node_dir)
-            .unwrap_or(&collision.markdown)
-            .to_path_buf();
-        return Err(WorkspaceError::Io {
-            path: rel,
-            reason: collision.message(),
-        });
-    }
-    // Deterministic order — the engine keeps a band's collection order.
-    files.sort_by(|a, b| a.path.cmp(&b.path));
-    Ok(files)
+    captured::authored_boot_from_inventory(node_dir, node_rel, &files)
 }
 
 /// Validate every node's agent instruction files before any mutation

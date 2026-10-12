@@ -1,0 +1,23 @@
+{
+  "crates/vibe-mcp/src/context.rs": 524,
+  "crates/vibe-orchestrator/src/document_analysis/boot_preview.rs": 357,
+  "crates/vibe-orchestrator/src/document_analysis/buffers.rs": 147,
+  "crates/vibe-orchestrator/src/document_analysis/capture.rs": 189,
+  "crates/vibe-orchestrator/src/document_analysis/catalog.rs": 75,
+  "crates/vibe-orchestrator/src/document_analysis/compile_plan.rs": 124,
+  "crates/vibe-orchestrator/src/document_analysis/m_16_d_1_boot_cases.rs": 138,
+  "crates/vibe-orchestrator/src/document_analysis/m_16_d_1_cases.rs": 522,
+  "crates/vibe-orchestrator/src/document_analysis/mod.rs": 191,
+  "crates/vibe-orchestrator/src/document_analysis/preview.rs": 336,
+  "crates/vibe-orchestrator/src/lib.rs": 385,
+  "crates/vibe-spec/src/captured_source.rs": 201,
+  "crates/vibe-spec/src/lib.rs": 126,
+  "crates/vibe-specdoc/src/captured.rs": 143,
+  "crates/vibe-specdoc/src/lib.rs": 182,
+  "crates/vibe-workspace/src/boot.rs": 481,
+  "crates/vibe-workspace/src/install.rs": 382,
+  "crates/vibe-workspace/src/install/bootgen.rs": 442,
+  "crates/vibe-workspace/src/install/bootgen/captured.rs": 156,
+  "crates/vibe-workspace/src/install/bootgen/conditions.rs": 61,
+  "crates/vibe-workspace/src/install/bootgen/snippet_source.rs": 92
+}

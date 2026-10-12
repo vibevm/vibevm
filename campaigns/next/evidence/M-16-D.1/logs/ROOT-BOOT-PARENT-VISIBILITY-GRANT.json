@@ -1,0 +1,75 @@
+{
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.63e2d649-fddc-44f9-9334-9337e1648a18",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.e133c6cc-88a2-4611-a2b1-c5b283836609",
+        "title": "D1 pure boot parent registration",
+        "introductionMarkdown": "Actual scoped compile E0603: install::bootgen is private to install, so approved boot.rs reexport cannot reach new shared cells.",
+        "items": [
+          {
+            "questionItemId": "d1_boot_parent_visibility",
+            "header": "Parent visibility",
+            "promptMarkdown": "Grant exact READ/WRITE crates/vibe-workspace/src/install.rs solely mod bootgen -> pub(crate) mod bootgen, permitting approved public pure-cell reexport through boot.rs. No other declarations, install behavior or public install apply authority change.",
+            "contextMarkdown": "boot-extraction.log exit101 also has fixture PackageName construction error being corrected in approved new test module. Parent path/line confirmed via rg. Could instead add a narrow reexport in same file if Root prefers; no public bootgen module exposed.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant exact registration line",
+                "description": "Make required reexport compiled while retaining private implementation module.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": null,
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Necessary enclosing registration, no semantic expansion."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T22:09:15.680Z",
+        "updatedAt": "2026-10-12T22:09:54.801Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.36f36cdc-3869-4fdc-bf48-5523825c8e5b",
+        "questionGroupId": "question-group.63e2d649-fddc-44f9-9334-9337e1648a18",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "d1_boot_parent_visibility",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants exact READ/WRITE crates/vibe-workspace/src/install.rs solely mod bootgen -> pub(crate) mod bootgen to connect already approved public pure helper reexports. Existing line verified. No other install declaration/behavior/public apply authority. Correct PackageName fixture through existing validated constructor in already authorized test file; retain first exit101 log. Rerun the actual scoped helper family and old snippet-source representative with locked/offline flags; count no cases from compile failure."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T22:09:54.801Z",
+        "metadata": {}
+      }
+    }
+  }
+}

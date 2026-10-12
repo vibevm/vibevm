@@ -1,0 +1,16 @@
+{
+  "status": "bound plan reviewed, no implementation/test acceptance",
+  "plan_sha256": "4c5ad1171a06d606b264e3688870a87e59b3f99ac1f2f6c87bf66db7936be818",
+  "required_checks": [
+    "client/context/resource separation and buffer version-CAS",
+    "replace/create/delete/move/close behavior, raw invalid/nonUTF8 retained",
+    "frozen disk/catalog/overlay source ownership across real classification/solver/boot/compiler",
+    "no fallback to filesystem/fetch/effectful provider",
+    "declared inert CommonMark/XML-data must not mint facts",
+    "same capture and truthful projection/source basis for every result",
+    "host explicit resource refusal, no hidden truncated completeness",
+    "per-file observation limit explicit, not atomic/hostile-ABA proof",
+    "D1 read/memory only; D2/D3 remain distinct existing task obligations"
+  ],
+  "route": "orchestrator document_analysis -> shared specdoc captured dispatch / spec captured SectionSource -> existing pure compiler/solver -> trusted MCP context binding"
+}

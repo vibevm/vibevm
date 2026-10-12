@@ -1,0 +1,15 @@
+{
+  "status": "WIP MCP source review, no executed verdict",
+  "source_sha256": "7c1347da9690511cf3533657a803c2b52923cf280658968cf4b4ba2be42ffc42",
+  "observed": [
+    "Context carries optional explicitly bound DocumentAnalysisHost, absent by default.",
+    "Binding and client creation both check matching project-root path before returning independently minted clients.",
+    "No lifecycle/native grant initialized by document binding.",
+    "Actual test uses trusted ServerContext.with_store_root, two clients, dirty/saved manifests, exact unchanged disk, wrong-root and missing-host refusal."
+  ],
+  "limits": [
+    "Path equality composition boundary, no cross-platform root-alias qualification",
+    "Public Rust context seam only; complete external operation exposure remains later M17 task"
+  ],
+  "pending": "Nonzero context::m_16_d_1_cases exact execution and final source seal"
+}

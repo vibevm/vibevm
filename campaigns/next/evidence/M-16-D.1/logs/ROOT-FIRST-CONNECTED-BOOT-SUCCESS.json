@@ -1,0 +1,18 @@
+{
+  "log_sha256": "3f58cc45ea6855b864cd013b4b10792064d7a89ae6b38f5109f9eb2774f728f9",
+  "case": "document_analysis::m_16_d_1_cases::captured_configuration_solver_and_boot_share_inputs",
+  "nonignored": 1,
+  "inspected_assertions": [
+    "actual solver returns one selected dependency",
+    "effective boot contains3own/main/fragment entries",
+    "client A unsaved embedded rule compiled, client B saved rule compiled",
+    "no embed directive remains",
+    "compiled old capture still unsaved after disk poisoned",
+    "STATIC.md never written"
+  ],
+  "scope_limits": [
+    "single root fixture, not inherited member fixture",
+    "configured compiler lowering/native preparation and MCP binding still pending",
+    "pin/move review exact dispositions still pending"
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "http": 200,
+  "verified_paths": [
+    "crates/vibe-spec/src/compiler/builtin/driver.rs",
+    "crates/vibe-spec/src/compiler/ir/artifact.rs",
+    "crates/vibe-core/src/content_hash.rs",
+    "crates/vibe-resolver/src/lib.rs"
+  ],
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.1122c8e4-334a-4a16-a259-48417e21dbcd",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.7cc3b08c-c444-4411-b6c1-af892fc2f6bd",
+        "title": "D1 public kernel definitions and mechanical edges",
+        "introductionMarkdown": "Granted owners forward public compiler functions to smaller defining children. Need exact kernels; orchestrator must call existing pure compiler/pivot, not duplicate them.",
+        "items": [
+          {
+            "questionItemId": "d1_kernel_read",
+            "header": "Kernel READ",
+            "promptMarkdown": "Grant READ crates/vibe-spec/src/compiler/builtin/driver.rs and compiler/ir/artifact.rs; crates/vibe-core/src/content_hash.rs; crates/vibe-resolver/src/lib.rs. All filenames verified via existing imports/rg inventory. Driver/plan constructor and resolver public provider interfaces define the real pure captured-world route.",
+            "contextMarkdown": "No native invoker/provider instance will be supplied to analysis. Existing fields/schema remain unchanged. This read does not admit more source roots.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant exact READs",
+                "description": "Inspect actual kernels and avoid duplicate parser/solver/compiler.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": null,
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Imported defining owners needed for commissioned integration."
+            }
+          },
+          {
+            "questionItemId": "d1_existing_edges",
+            "header": "Lock linkage",
+            "promptMarkdown": "Grant mechanically required Cargo.lock linkage only for existing workspace vibe-spec and vibe-specdoc production edges in task-authorized vibe-orchestrator/Cargo.toml, plus sha2 only if content_hash owner has no existing public byte-hash seam. Preserve all versions/checksums/other rows; offline. These edges connect actual compiler/classifiers and capture digests.",
+            "contextMarkdown": "Current orchestrator has vibe-spec only dev and no specdoc/sha2 production edges. MCP already depends orchestrator; no cycle/new package/network. I will inspect content_hash first and avoid sha2 if an adequate existing owner API exists.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant necessary existing edges",
+                "description": "Only existing graph linkage for actual task kernels.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "alternative",
+                "label": "Name existing equivalent seam",
+                "description": "Root supplies a pure public route needing no added production edge.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": null,
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Actual compiler/pivot use requires existing graph edge; no convenience dependencies."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-12T21:36:26.846Z",
+        "updatedAt": "2026-10-12T21:37:39.804Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.aaf0c936-1f3b-4a0c-a708-443ad1d1b925",
+        "questionGroupId": "question-group.1122c8e4-334a-4a16-a259-48417e21dbcd",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "d1_kernel_read",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            },
+            {
+              "questionItemId": "d1_existing_edges",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "First Agent under Owner delegation grants four verified exact READ paths and required Cargo.lock linkage for existing workspace vibe-spec/vibe-specdoc production dependencies in authorized orchestrator Cargo.toml. ContentHash is spelling/identity wrapper, not a raw-byte hash API (Root inspected implementation); sha2 existing workspace edge is permitted if required for capture framing, with no new package/version/checksum or unrelated lock row. Offline only, inspect exact lock diff before handback. No native invoker/effectful provider instance for read analysis, no lifecycle/installation action. These mechanical edges connect real existing pure kernels, not permission for a new compiler or source-root expansion."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-12T21:37:39.804Z",
+        "metadata": {}
+      }
+    }
+  }
+}

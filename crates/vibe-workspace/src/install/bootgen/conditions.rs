@@ -57,11 +57,5 @@ fn resolve_condition(
     when: Option<&WhenCondition>,
     installed: &HashSet<(Group, String)>,
 ) -> Option<Option<WhenCondition>> {
-    match when {
-        None => Some(None),
-        Some(WhenCondition::Os(os)) => Some(Some(WhenCondition::Os(*os))),
-        Some(WhenCondition::Installed { group, name }) => installed
-            .contains(&(group.clone(), name.to_string()))
-            .then_some(None),
-    }
+    super::captured::resolve_snippet_condition(when, installed)
 }

@@ -1,0 +1,7 @@
+{
+  "status": "WIP unexecuted collision hypothesis",
+  "source_sha256": "e3c5913558f807c6600d833caf5b5c62631574697ab767b5e996dbb539dae505",
+  "observed": "freeze applies each Move destination in sequence, checks target disk/open-buffer but has no destination-ID uniqueness check; second source can overwrite first destination bytes.",
+  "required_deciding_case": "Two existing admitted source resources both moved by one client to same admitted absent target; freeze should InvalidIntent/refuse, no silent last-wins and no disk writes.",
+  "minimal_scope": "existing buffers/capture owner and one actual fixture case; no merge engine or transaction system"
+}
