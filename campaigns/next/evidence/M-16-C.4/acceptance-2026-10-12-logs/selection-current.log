@@ -561,4 +561,3 @@ running 1 test
 test tools::lifecycle_operation::native_tests::actual_selection_approval_submit_same_key_direct_owner_inspect_and_changed_intent ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 196 filtered out; finished in 0.10s
-

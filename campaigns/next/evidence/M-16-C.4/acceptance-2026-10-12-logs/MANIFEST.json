@@ -1,0 +1,22 @@
+{
+  "selection-current.log": {
+    "raw_sha256": "e89585cb1fb25fbe526e609967258a8a6c5cf8dc6a372369c41194ba3d52176e",
+    "repository_sha256": "6ff6b0b89e6da7b66542cdab48ebbf28506c3a4cf6493be3aa93753bf8ed0cf4",
+    "normalization": "trailing empty lines removed; final newline retained"
+  },
+  "combined-cli-mcp-current.log": {
+    "raw_sha256": "b782b82b10e2652d75b23cb7284538de5090b1255a07cdc85843a5351e5804df",
+    "repository_sha256": "a76608bace88792747babb4021749db534e7d9e46c1ec945e9f3a1fe1e5516b7",
+    "normalization": "trailing empty lines removed; final newline retained"
+  },
+  "free-prose-current.log": {
+    "raw_sha256": "87160e1c60f6bd81db8f02012261cabb13a61ec77014b36e9e5d43613f7cfeeb",
+    "repository_sha256": "2fb4b941f54951709659213552d708502c08eb36aacc690374ff4bbd4700da45",
+    "normalization": "trailing empty lines removed; final newline retained"
+  },
+  "install-approval-current.log": {
+    "raw_sha256": "51084124b10c085608364fc5ffc3e0c8f10aac0be6d0627938a083e79a6966a0",
+    "repository_sha256": "364126e94b671eb465bd7f8c16dd94802d4e9dbdcc58ad8691db7771166822db",
+    "normalization": "trailing empty lines removed; final newline retained"
+  }
+}
