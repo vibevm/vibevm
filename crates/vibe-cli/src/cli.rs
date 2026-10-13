@@ -159,6 +159,8 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
+    /// Prepare or explicitly create a local exact-origin change.
+    Change(crate::commands::change::ChangeArgs),
     /// Read a classified selected source or resolve its native location.
     Spec(crate::commands::spec::SpecArgs),
     /// Scaffold a project or package root in the target directory.

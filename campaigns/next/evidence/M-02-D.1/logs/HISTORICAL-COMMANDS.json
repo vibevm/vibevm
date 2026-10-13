@@ -1,0 +1,213 @@
+[
+  {
+    "name": "shared-fence-compatibility",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "document_analysis::edit::m_16_d_3_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ],
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ],
+      [
+        "ok",
+        "8",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "c22e6ae032422e51e2dc560b08372e6f1c05552db53e14928aab4b86a25f1e8b",
+    "source_epoch": "historical WIP; no claim final-source hash binding"
+  },
+  {
+    "name": "scaffold-first",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::scaffold::m_02_d_1_cases::exact_saved_scaffold_creates_prepared_local_roles",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "34a8ec6e13d4ce3a549b1dcbb0ba5544a66b14b0aeb4aa6061a6e3eb6e90e039",
+    "source_epoch": "historical WIP; no claim final-source hash binding"
+  },
+  {
+    "name": "scaffold-first-corrected",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::scaffold::m_02_d_1_cases::exact_saved_scaffold_creates_prepared_local_roles",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "4647c3c1990d47f4375c47af4f0c1127b0ec213593a4b22ae2359d520e31a3c2",
+    "source_epoch": "historical WIP; no claim final-source hash binding"
+  },
+  {
+    "name": "scaffold-family-first",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::scaffold::m_02_d_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "209a539f8db1a604f71e9367838f24959ebc376273b0299ebb0830810a3d203b",
+    "source_epoch": "historical WIP; no claim final-source hash binding"
+  },
+  {
+    "name": "scaffold-family-corrected",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::scaffold::m_02_d_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "3",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "b7e92cfe2cd50af262cb62cd66357f53e3719b4829a5eced19a3881ce2eb0b30",
+    "source_epoch": "historical WIP; no claim final-source hash binding"
+  },
+  {
+    "name": "stale-origin-diagnostic",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::scaffold::m_02_d_1_cases::occupied_dirty_stale_origin_and_versions_refuse_before_creation",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "13e9aee05fcee5c72e75b9df2a89a80fc62575de5ff69bfa7062d4fd1e354b5c",
+    "source_epoch": "historical WIP; no claim final-source hash binding"
+  }
+]

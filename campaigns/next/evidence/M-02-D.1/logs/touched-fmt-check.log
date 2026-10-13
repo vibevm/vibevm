@@ -1,0 +1,48 @@
+Diff in /fast/git/v/vibevm-next/crates/vibe-cli/src/commands/mod.rs:30:
+ pub mod application;
+ pub mod bin;
+ pub mod cache;
++pub mod change;
+ pub mod check;
+ pub mod clean;
+ /// The command-level compile-trace owner and the one command-exit join. Not
+Diff in /fast/git/v/vibevm-next/crates/vibe-cli/src/commands/mod.rs:71:
+ pub mod show;
+ pub mod skill;
+ pub mod spec;
+-pub mod change;
+ pub mod specmap;
+ pub mod term;
+ pub mod tools;
+Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/change/mod.rs:5:
+ use vibe_core::manifest::change::{ChangeContext, ChangeId, ChangeManifest};
+ use vibe_requirements::change::{ParsedCapturedChange, SavedChangeError, analyze_change_bytes};
+ mod prepare;
+-pub mod scaffold;
+ mod rebase;
++pub mod scaffold;
+ pub use prepare::{PreparedChangeEdit, prepare_change_edit};
+ pub use rebase::{ChangeRebaseError, PreparedOriginRebase, prepare_origin_rebase};
+ pub use rebase::{PreparedInitialOriginBinding, prepare_initial_change_origin_binding};
+Diff in /fast/git/v/vibevm-next/crates/vibe-requirements/src/change/mod.rs:2:
+ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR");
+ mod captured;
+ mod scaffold;
+-pub use scaffold::{ScaffoldOutput, ScaffoldError, prepare_scaffold};
++pub use scaffold::{ScaffoldError, ScaffoldOutput, prepare_scaffold};
+ mod identity;
+ mod selection;
+ pub use selection::ChangeFactSelectionError;
+Diff in /fast/git/v/vibevm-next/crates/vibe-safefs/src/lib.rs:42:
+     paths_overlap, split_relative,
+ };
+ pub use file::{
+-    ScaffoldDirectory, ScaffoldDirectoryError,
+-    ContentDigest, FileIdentity, GuardedPublishError, Presence, StableFileSnapshot,
+-    StableFileState, StreamCompletion, StreamOutcome, VerifiedStreamReader,
++    ContentDigest, FileIdentity, GuardedPublishError, Presence, ScaffoldDirectory,
++    ScaffoldDirectoryError, StableFileSnapshot, StableFileState, StreamCompletion, StreamOutcome,
++    VerifiedStreamReader,
+ };
+ #[cfg(any(test, feature = "inject-failures"))]
+ pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanup};

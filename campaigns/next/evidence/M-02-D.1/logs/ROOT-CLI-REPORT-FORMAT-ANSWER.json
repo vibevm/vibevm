@@ -1,0 +1,107 @@
+{
+  "request": {
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-d1-cli-report-format-20261013",
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "questionGroupId": "question-group.fd71dd73-64b0-4ff7-baf9-ae30fcf03b9d",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "d1_cli_report_format",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "generated"
+          }
+        }
+      ],
+      "noteMarkdown": "Owner delegate grants bounded generated CLI report, preserving actual global --json route. Exact WRITE proposed schemas/change_scaffold_cli_report/e1/report.jtd.json, formats/REGISTRY.toml solely report entry, formats/corpora/change-scaffold-cli-report/e1/ positive/refusal/partial/malformed corpus. Generator-only WRITE crates/vibe-wire/src/generated/change_scaffold_cli_report/ (actual mirrored e1/report subtree plus generated parent mod files), crates/vibe-wire/src/generated/mod.rs and existing generated/format_id/{mod.rs,properties.rs} solely registration. Root verified schema_module_dir in xtask/src/codegen/layout.rs; grant exact READ this file plus already-granted generator drivers and incumbent schema/reader examples needed for strict generation. No hand generated edits, generator/validator changes, new dependency or separate D2 query contract. One closed tagged prepared/completed/partial/refused report: exact prepared file bytes/IDs/origin/capture/filter and outcome created/uncertain/pending/durability/recovery facts, explicit refused diagnostics; existing generated serialization/reader validation before stdout. Preserve actual partial vs successful exit status. Required wire corpus decoding/unknown fields/epoch/refusal cases and CLI output compatibility within existing D1 families; no new campaign task or broad panel. Use incumbent named definitions/closed vocabulary/x-empty conventions, keep all full generated output sets and changes explicit. Root acceptance still pending; same D1 writer only."
+    }
+  },
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.fd71dd73-64b0-4ff7-baf9-ae30fcf03b9d",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.0bd0448c-042a-4c7a-a00a-2b41c8562f33",
+        "title": "D1 CLI report format",
+        "introductionMarkdown": "Same D1, source is WIP. PROP044 requires owner-visible registration before publishing a new own wire format. Native journal grant is separate.",
+        "items": [
+          {
+            "questionItemId": "d1_cli_report_format",
+            "header": "CLI report",
+            "promptMarkdown": "Current proposed CLI --json printer builds unregistered prepared/apply/error JSON; no CLI test/process verdict or publication yet (compile active). Choose bounded generated CLI-report scope or human-text-only route with explicit --json refusal until later D2. Recommended: exact WRITE proposed schemas/change_scaffold_cli_report/e1/report.jtd.json; formats/REGISTRY.toml + formats/corpora/change-scaffold-cli-report/e1/; generator-only corresponding generated report subtree and required generated parent/FormatId registration. One strict tagged prepared/completed/partial/refused operator report, complete created/uncertain/pending/diff/capture fields, no query/MCP/control/execution framework or new dependency. Implementation uses generated reader/validation before stdout; later D2 query schema remains separate. Alternative no new schema: keep actual human CLI prepare/apply, refuse --json before effects, never claim absent machine contract. Existing literal D1 positive/create/recovery tests stay required.",
+            "contextMarkdown": null,
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "generated",
+                "label": "Generated CLI report",
+                "description": "Register only exact new operator output.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "text",
+                "label": "Human output only",
+                "description": "Explicit JSON unavailable until D2.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact scope correction",
+              "multiline": true,
+              "maximumLength": 6000
+            },
+            "recommendation": {
+              "optionIds": [
+                "generated"
+              ],
+              "explanationMarkdown": "Preserves current global --json behavior with an owned strict shape instead of unregistered wire."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-13T03:26:39.652Z",
+        "updatedAt": "2026-10-13T03:27:46.897Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.b39e23dd-520e-4428-a7de-e79af6929d58",
+        "questionGroupId": "question-group.fd71dd73-64b0-4ff7-baf9-ae30fcf03b9d",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "d1_cli_report_format",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "generated"
+              }
+            }
+          ],
+          "noteMarkdown": "Owner delegate grants bounded generated CLI report, preserving actual global --json route. Exact WRITE proposed schemas/change_scaffold_cli_report/e1/report.jtd.json, formats/REGISTRY.toml solely report entry, formats/corpora/change-scaffold-cli-report/e1/ positive/refusal/partial/malformed corpus. Generator-only WRITE crates/vibe-wire/src/generated/change_scaffold_cli_report/ (actual mirrored e1/report subtree plus generated parent mod files), crates/vibe-wire/src/generated/mod.rs and existing generated/format_id/{mod.rs,properties.rs} solely registration. Root verified schema_module_dir in xtask/src/codegen/layout.rs; grant exact READ this file plus already-granted generator drivers and incumbent schema/reader examples needed for strict generation. No hand generated edits, generator/validator changes, new dependency or separate D2 query contract. One closed tagged prepared/completed/partial/refused report: exact prepared file bytes/IDs/origin/capture/filter and outcome created/uncertain/pending/durability/recovery facts, explicit refused diagnostics; existing generated serialization/reader validation before stdout. Preserve actual partial vs successful exit status. Required wire corpus decoding/unknown fields/epoch/refusal cases and CLI output compatibility within existing D1 families; no new campaign task or broad panel. Use incumbent named definitions/closed vocabulary/x-empty conventions, keep all full generated output sets and changes explicit. Root acceptance still pending; same D1 writer only."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-13T03:27:46.897Z",
+        "metadata": {}
+      }
+    }
+  }
+}

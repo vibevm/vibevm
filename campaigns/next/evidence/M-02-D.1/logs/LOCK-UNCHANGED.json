@@ -1,0 +1,5 @@
+{
+  "bytes_identical_to_HEAD": true,
+  "sha256": "dd8db74c80aeb5b4f599d543af816ee31ea458ef8c59c49bff1e820be0b0a158",
+  "orchestrator_thiserror_edge": "existing dependency already present through dev-dependencies; no lock change"
+}

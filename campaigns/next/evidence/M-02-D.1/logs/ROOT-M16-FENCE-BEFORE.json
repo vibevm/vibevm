@@ -1,0 +1,6 @@
+{
+  "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs": "38a806a470a90992f51ff397a309fb68ca008865466ef4d261432ac644151287",
+  "crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs": "5a7dde5526cb923b569cecf4ed54dad4d0a80b7e42900ee31027ebe5e5a99a6d",
+  "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs": "dbd09bd1052c0340cba610898fa6392672ac32f9a50192361f9f1efde5e61367",
+  "crates/vibe-orchestrator/src/document_analysis/edit/apply.rs": "c34a7dc266ff2ff23a51ffa1c224fe7e3e9bc1c3ba4a1f15bdcc7d32c4558e32"
+}

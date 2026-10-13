@@ -121,59 +121,11 @@ impl DocumentEditAuthority {
         if rows.is_empty() {
             return Err(EditError::InvalidPlan);
         };
-        let registry = self
-            .host
-            .participants
-            .lock()
-            .map_err(|_| EditError::Unavailable)?;
-        if registry.barrier.is_some() {
-            return Err(EditError::Busy);
-        };
-        let capturer = registry
-            .clients
-            .get(&capture.client)
-            .and_then(|w| w.upgrade())
-            .ok_or(EditError::Disconnected)?;
-        if !capturer.connected.load(Ordering::Acquire) {
-            return Err(EditError::Disconnected);
-        };
-        if capturer
-            .lock()
-            .map_err(|_| EditError::Unavailable)?
-            .generation
-            != capture.generation
-        {
-            return Err(EditError::Stale);
-        };
-        let mut participants = vec![];
-        for (id, weak) in &registry.clients {
-            let Some(client) = weak.upgrade() else {
-                continue;
-            };
-            if !client.connected.load(Ordering::Acquire) {
-                continue;
-            };
-            let state = client.lock().map_err(|_| EditError::Unavailable)?;
-            let mut versions = BTreeMap::new();
-            for (resource, file) in &rows {
-                let buffer = state.open.get(resource);
-                if buffer.is_some_and(|b| {
-                    b.bytes.as_ref() != file.before.bytes.as_slice()
-                        || b.intent != BufferIntent::Replace
-                }) {
-                    return Err(EditError::SaveRequired);
-                };
-                versions.insert(*resource, buffer.map(|b| b.version));
-            }
-            let generation = state.generation;
-            drop(state);
-            participants.push(Participant {
-                client_id: *id,
-                client,
-                versions,
-                generation,
-            });
-        }
+        let expected = rows
+            .iter()
+            .map(|(id, file)| (*id, Some(Arc::from(file.before.bytes.as_slice()))))
+            .collect();
+        let participants = super::fence::collect(self, capture, &expected)?;
         let mut plan = EditPlan {
             authority: self.clone(),
             id: String::new(),

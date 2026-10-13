@@ -29,6 +29,8 @@ pub enum FormatId {
     BootArtifactTransaction,
     CapabilityCoverage,
     ChangeManifest,
+    ChangeScaffoldCliReport,
+    ChangeScaffoldJournal,
     CliApplicationReport,
     CliExtensionsReport,
     CliInitReport,

@@ -31,6 +31,7 @@ vibe-install.workspace = true
 vibe-lifecycle.workspace = true
 vibe-registry.workspace = true
 toml.workspace = true
+thiserror.workspace = true
 vibe-resolver.workspace = true
 vibe-requirements.workspace = true
 vibe-safefs.workspace = true

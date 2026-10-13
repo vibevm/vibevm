@@ -1,0 +1,13 @@
+{
+  "crates/vibe-cli/src/commands/change/m_02_d_1_cases.rs": 231,
+  "crates/vibe-cli/src/commands/change/mod.rs": 144,
+  "crates/vibe-cli/src/commands/change/report.rs": 245,
+  "crates/vibe-orchestrator/src/change/scaffold.rs": 299,
+  "crates/vibe-orchestrator/src/change/scaffold/apply.rs": 310,
+  "crates/vibe-orchestrator/src/change/scaffold/journal.rs": 333,
+  "crates/vibe-orchestrator/src/change/scaffold/m_02_d_1_cases.rs": 468,
+  "crates/vibe-orchestrator/src/document_analysis/edit/fence.rs": 397,
+  "crates/vibe-requirements/src/change/m_02_d_1_cases.rs": 88,
+  "crates/vibe-requirements/src/change/scaffold.rs": 129,
+  "crates/vibe-safefs/src/file/scaffold_directory.rs": 63
+}

@@ -30,6 +30,7 @@ pub mod aiui;
 pub mod application;
 pub mod bin;
 pub mod cache;
+pub mod change;
 pub mod check;
 pub mod clean;
 /// The command-level compile-trace owner and the one command-exit join. Not

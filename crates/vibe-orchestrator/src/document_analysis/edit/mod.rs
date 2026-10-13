@@ -3,6 +3,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BA
 use super::*;
 mod apply;
 mod barrier;
+mod fence;
+pub use fence::{AbsentDocumentBarrier, AbsentDocumentPlan};
 mod journal;
 pub use apply::{EditOutcome, EditOutcomeState};
 mod plan;

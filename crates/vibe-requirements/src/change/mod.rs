@@ -1,6 +1,8 @@
 //! Read-only saved change parsing over the shared core authored owner.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR");
 mod captured;
+mod scaffold;
+pub use scaffold::{ScaffoldError, ScaffoldOutput, prepare_scaffold};
 mod identity;
 mod selection;
 pub use selection::ChangeFactSelectionError;
@@ -28,3 +30,5 @@ mod m_02_b_2_cases;
 mod m_02_b_3_cases;
 #[cfg(test)]
 mod m_02_c_1_cases;
+#[cfg(test)]
+mod m_02_d_1_cases;

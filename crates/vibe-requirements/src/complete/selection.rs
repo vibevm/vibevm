@@ -145,6 +145,10 @@ fn filter_id(source: &CapturedFactSet, kind: &str, expected: &BTreeSet<String>) 
     crate::digest::finish(framed)
 }
 impl<'a> FactSelection<'a> {
+    /// Borrow the same held inventory used by this selection; no mint or rebind.
+    pub fn inventory(&self) -> &RetainedSourceInventory {
+        &self.source.inventory
+    }
     pub fn capture_id(&self) -> &str {
         &self.source.id
     }

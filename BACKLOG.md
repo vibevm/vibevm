@@ -2593,3 +2593,13 @@ structure, and it goes when the file does.
 | @fact:B237-SEVERITY **severity** | P3 — scaling improvement; no observed current campaign blocker or new gate. |
 | @fact:B237-DISPOSITION **disposition** | deferred — retain ordered selected references once or expose indexed slices when a concrete large consumer needs it. Preserve immutable source/filter binding, exact gaps and missing-page detection; do not introduce a total object cap or new observation/parser/store. |
 | @fact:B237-FILED **filed by** | First Agent C2 source review, 2026-10-13. |
+
+## B-238 — scaffold partial recovery exposes state without resuming publication {#b-238}
+
+| field | value |
+|---|---|
+| @fact:B238-WHAT **what** | M02-D1 cold reconciliation reads retained journal and current identities, reports verified/uncertain/pending effects and refuses third states. It performs no cleanup or resumed publication. A stable root/destination reservation correctly prevents a fresh capture from reissuing a partial operation, including parent mkdir failure before destination creation. |
+| @fact:B238-EVIDENCE **evidence** | crates/vibe-orchestrator/src/change/scaffold/{apply,journal}.rs; campaigns/next/evidence/M-02-D.1/accepted-2026-10-13.md; measured partial-reissue red0/1 then same regression1/1 and full family5/5. |
+| @fact:B238-SEVERITY **severity** | P2 — bounded operational limitation, no additional current campaign gate. |
+| @fact:B238-DISPOSITION **disposition** | deferred — when a concrete caller requires unattended resumption of pending scaffold artifacts, compose explicit fresh saved-state authority/participant admission with the retained operation, exact identity/third-state checks and create-new publication. Do not delete uncertain residue, silently promote matching bytes, or use a new capture to mint a second invocation. First Agent fixes this if it actually blocks a later VibeVM step; no new persistence/security framework is commissioned. |
+| @fact:B238-FILED **filed by** | First Agent D1 acceptance review, 2026-10-13. |

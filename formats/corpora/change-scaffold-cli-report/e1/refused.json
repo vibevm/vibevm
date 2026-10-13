@@ -1,0 +1,7 @@
+{
+  "status": "refused",
+  "schema": 1,
+  "code": "occupied",
+  "message": "scaffold destination already exists",
+  "infrastructure_may_exist": false
+}

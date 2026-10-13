@@ -1,0 +1,11 @@
+{
+  "xml": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+  "sha256": "d1a3795decc48c8eddd18f9509b04c744cc6333c516876908f588527d436493f",
+  "anchors": [
+    "CHANGE-SCAFFOLD-PREPARATION",
+    "CHANGE-SCAFFOLD-NO-OVERWRITE",
+    "CHANGE-SCAFFOLD-RECOVERY"
+  ],
+  "parse_exit": 0,
+  "diff_check_exit": 0
+}

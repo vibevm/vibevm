@@ -28,6 +28,8 @@ use crate::publish::{PublishError, Published};
 
 mod bounded;
 mod create_new;
+mod scaffold_directory;
+pub use scaffold_directory::{ScaffoldDirectory, ScaffoldDirectoryError};
 mod guarded;
 pub use guarded::GuardedPublishError;
 pub(crate) mod identity;
