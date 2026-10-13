@@ -5,7 +5,7 @@
 //! the requested operation completed. This reader never allocates a run,
 //! repairs state, or dispatches a handler.
 
-use vibe_wire::generated::lifecycle_state::LifecycleState;
+use crate::state::current::LifecycleState;
 
 use super::{LifecycleStateError, LifecycleStateStore};
 use crate::LifecycleLease;

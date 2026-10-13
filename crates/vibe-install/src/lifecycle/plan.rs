@@ -1,5 +1,3 @@
-use std::path::Path;
-
 use specmark::spec;
 use vibe_core::PackageName;
 use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
@@ -34,6 +32,11 @@ pub struct SlotLifecyclePlan {
 }
 
 impl SlotLifecyclePlan {
+    /// Borrow the exact qualified executions selected by the incumbent planner.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CURRENT-SLOT-ADMISSION")]
+    pub fn executions(&self) -> impl Iterator<Item = &HandlerExecution> {
+        self.entries.iter().map(|entry| &entry.execution)
+    }
     pub(super) fn for_targets(
         &self,
         targets: &[vibe_workspace::install::SlotLifecycleTarget],
@@ -84,15 +87,51 @@ impl SlotLifecycleObserver for NoSlotLifecycleObserver {
     }
 }
 
+/// Retained target metadata for the existing pure slot planner. It conveys no
+/// installation or handler authority; callers retain the selected manifests.
+#[derive(Debug, Clone)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CURRENT-SLOT-ADMISSION")]
+pub struct CapturedSlotTarget {
+    pub provider: DependencyProviderId,
+    pub version: String,
+    pub kind: String,
+    pub hooks: vibe_core::manifest::HooksDecl,
+}
+
 pub(super) fn build_slot_plan(
     installed: &[DependencyExtensionSource],
     host: &HostExtensionSource,
     resolution: &[ResolvedDep],
 ) -> Result<SlotLifecyclePlan> {
+    let targets = resolution
+        .iter()
+        .map(|dep| {
+            Ok(CapturedSlotTarget {
+                provider: DependencyProviderId::new(
+                    dep.group.clone(),
+                    PackageName::parse(&dep.name)?,
+                ),
+                version: dep.version.to_string(),
+                kind: dep.kind.to_string(),
+                hooks: dep.manifest.hooks.clone(),
+            })
+        })
+        .collect::<Result<Vec<_>>>()?;
+    plan_captured_slot_targets(installed, host, &targets)
+}
+
+/// Same target selection, hook lowering and order as the live install plan;
+/// all inputs are supplied retained values and this function performs no I/O.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CURRENT-SLOT-ADMISSION")]
+pub fn plan_captured_slot_targets(
+    installed: &[DependencyExtensionSource],
+    host: &HostExtensionSource,
+    targets: &[CapturedSlotTarget],
+) -> Result<SlotLifecyclePlan> {
     let mut entries = Vec::new();
     for point in [SlotPoint::PreInstall, SlotPoint::PostInstall] {
-        for target_dep in resolution {
-            append_target_plan(&mut entries, installed, host, target_dep, point)?;
+        for target in targets {
+            append_target_plan(&mut entries, installed, host, target, point)?;
         }
     }
     Ok(SlotLifecyclePlan { entries })
@@ -102,13 +141,10 @@ fn append_target_plan(
     entries: &mut Vec<SlotLifecyclePlanEntry>,
     installed: &[DependencyExtensionSource],
     host: &HostExtensionSource,
-    target_dep: &ResolvedDep,
+    target_dep: &CapturedSlotTarget,
     point: SlotPoint,
 ) -> Result<()> {
-    let target_id = DependencyProviderId::new(
-        target_dep.group.clone(),
-        PackageName::parse(&target_dep.name)?,
-    );
+    let target_id = target_dep.provider.clone();
     let mut event_world = installed.to_vec();
     let target_source = event_world
         .iter_mut()
@@ -119,10 +155,11 @@ fn append_target_plan(
             ))
         })?;
     if let Some(base) = match point {
-        SlotPoint::PreInstall => target_dep.manifest.hooks.pre_install.clone(),
-        SlotPoint::PostInstall => target_dep.manifest.hooks.post_install.clone(),
+        SlotPoint::PreInstall => target_dep.hooks.pre_install.clone(),
+        SlotPoint::PostInstall => target_dep.hooks.post_install.clone(),
     } {
         target_source.declarations.push(ExtensionDecl {
+            effects: None,
             id: SyntheticHookIdentity::from(point).id().into(),
             point: ExtensionPoint::Slot(point),
             handler: ExtensionHandler::Script { base },
@@ -136,7 +173,13 @@ fn append_target_plan(
             machine_operation_schema: None,
         });
     }
-    let target = slot_target(target_dep, &target_source.provider.root);
+    let target = SlotTarget {
+        group: target_id.group().to_string(),
+        name: target_id.name().to_string(),
+        version: target_dep.version.clone(),
+        kind: target_dep.kind.clone(),
+        root: vibe_core::machine_json_path(&target_source.provider.root),
+    };
     let registry = collect_extensions(ExtensionWorld {
         installed: event_world,
         host: host.clone(),
@@ -161,16 +204,6 @@ fn append_target_plan(
         });
     }
     Ok(())
-}
-
-fn slot_target(dep: &ResolvedDep, root: &Path) -> SlotTarget {
-    SlotTarget {
-        group: dep.group.to_string(),
-        name: dep.name.clone(),
-        version: dep.version.to_string(),
-        kind: dep.kind.to_string(),
-        root: vibe_core::machine_json_path(root),
-    }
 }
 
 fn tier_name(tier: vibe_lifecycle::ContributionTier) -> &'static str {

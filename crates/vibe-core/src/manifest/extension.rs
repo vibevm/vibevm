@@ -16,6 +16,8 @@ use crate::lifecycle::{CompilePoint, ExtensionPoint};
 use crate::manifest::declarant_path::{declarant_path, declarant_path_error};
 
 mod control;
+mod effects;
+pub use effects::{DeclaredEffect, DeclaredEffects};
 mod machine_schema;
 mod pass;
 mod wire;
@@ -229,6 +231,7 @@ impl ExtensionWhen {
 /// use vibe_core::manifest::{ExtensionDecl, ExtensionHandler};
 ///
 /// let declaration = ExtensionDecl {
+///     effects: None,
 ///     id: "announce".into(),
 ///     point: "phase:build".parse::<ExtensionPoint>().unwrap(),
 ///     handler: ExtensionHandler::Builtin { name: "log".into() },
@@ -241,6 +244,7 @@ impl ExtensionWhen {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR")]
 pub struct ExtensionDecl {
+    pub effects: Option<DeclaredEffects>,
     pub id: String,
     pub point: ExtensionPoint,
     pub handler: ExtensionHandler,

@@ -30,9 +30,9 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#VERIFY-CURRENT-PREFIX");
 
+use crate::state::current::{ExecutionRecord, StateDigestWitness};
 use specmark::spec;
 use vibe_wire::behaviour::verification_evidence::{EVIDENCE_EPOCH, validate};
-use vibe_wire::generated::lifecycle_state::{ExecutionRecord, StateDigestWitness};
 use vibe_wire::generated::shared::{
     ArtifactWitness, DigestWitness, EvidenceRun, EvidenceStatus, InputMeasurement, Timestamp,
     VerificationEvidence,

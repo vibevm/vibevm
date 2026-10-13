@@ -1,0 +1,27 @@
+{
+  "crates/vibe-core/src/manifest/document/tests_extensions.rs": {
+    "baseline": 599,
+    "current": 600,
+    "owner_exception": "question-group.9b6b8dce rev2 inherited"
+  },
+  "crates/vibe-core/src/manifest/extension/tests.rs": {
+    "baseline": 600,
+    "current": 601,
+    "owner_exception": "question-group.9b6b8dce rev2 inherited"
+  },
+  "crates/vibe-lifecycle/src/state/tests/declaration.rs": {
+    "baseline": 599,
+    "current": 600,
+    "owner_exception": "question-group.9b6b8dce rev2 inherited"
+  },
+  "crates/vibe-orchestrator/src/dispatch/native_provider_e2e_tests.rs": {
+    "baseline": 600,
+    "current": 601,
+    "owner_exception": "question-group.9b6b8dce rev2 inherited"
+  },
+  "crates/vibe-orchestrator/src/machine_submission/tests.rs": {
+    "baseline": 610,
+    "current": 611,
+    "owner_exception": "question-group.9b6b8dce rev2 inherited"
+  }
+}

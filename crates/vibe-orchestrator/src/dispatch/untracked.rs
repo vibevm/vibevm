@@ -42,7 +42,15 @@ pub fn dispatch_plan_untracked(
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
     let native = native_backend(plan, &metadata, &native_candidates)?;
-    let runtime = runtime(observer, &package_binding, &native, agent.as_ref(), None);
+    // This entry is the explicitly requested clean epoch, not ordinary verify.
+    let runtime = runtime(
+        observer,
+        &package_binding,
+        &native,
+        agent.as_ref(),
+        None,
+        true,
+    );
     let mut active_phase: Option<String> = None;
     for execution in plan.executions.iter() {
         if active_phase.as_deref() != Some(execution.phase.as_str())

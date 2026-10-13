@@ -8,7 +8,7 @@
 use std::fs;
 use std::path::Path;
 
-use vibe_wire::generated::lifecycle_state::LifecycleState;
+use crate::state::current::LifecycleState;
 
 use super::{RUN_ID, lease};
 use crate::state::io::STATE_CAP;

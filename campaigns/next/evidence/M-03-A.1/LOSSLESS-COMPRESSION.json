@@ -1,0 +1,83 @@
+[
+  {
+    "raw": "cli-current-state-grammar.log",
+    "gzip": "cli-current-state-grammar.log.gz",
+    "raw_bytes": 140223,
+    "packed_bytes": 19007,
+    "raw_sha256": "86f912f7b5ae168759deb3b23e48b604f66918b34eefb06be9bda66f4d160f4b",
+    "packed_sha256": "8169fe3ae402c6369f04f32d137b819733c537404ac479cc6f30e51ecd911ee4",
+    "decoded_sha256": "86f912f7b5ae168759deb3b23e48b604f66918b34eefb06be9bda66f4d160f4b"
+  },
+  {
+    "raw": "cli-invocation-grammar.log",
+    "gzip": "cli-invocation-grammar.log.gz",
+    "raw_bytes": 139555,
+    "packed_bytes": 19270,
+    "raw_sha256": "137f1b9e99d0ca43331fe5af82e13485b6b1881c9f717751a721bf188d0be38c",
+    "packed_sha256": "c72f05a4b4ebc529adc311c6dbdccf2e4b9deafd0bfc03e187b60c7fa3c4351e",
+    "decoded_sha256": "137f1b9e99d0ca43331fe5af82e13485b6b1881c9f717751a721bf188d0be38c"
+  },
+  {
+    "raw": "cli-owned-current-fixture.log",
+    "gzip": "cli-owned-current-fixture.log.gz",
+    "raw_bytes": 138552,
+    "packed_bytes": 19069,
+    "raw_sha256": "a6216ca549b520cc339130d5d4d56545204024dfb76444197c85bf1b9c5a3453",
+    "packed_sha256": "239b903c83a75af3b96b9f7d1d8744ccdaa63ed727404e224d97190f9032c537",
+    "decoded_sha256": "a6216ca549b520cc339130d5d4d56545204024dfb76444197c85bf1b9c5a3453"
+  },
+  {
+    "raw": "codegen-e2-first.log",
+    "gzip": "codegen-e2-first.log.gz",
+    "raw_bytes": 282928,
+    "packed_bytes": 31566,
+    "raw_sha256": "69a1aad1119dfd5208c51489d44d32a72801d2dfebfb124ebe17ee54edc142cd",
+    "packed_sha256": "d26a3e4f7d3c78f1724d8c5f5c71dcdfae340728761636b26952a205d4aea68d",
+    "decoded_sha256": "69a1aad1119dfd5208c51489d44d32a72801d2dfebfb124ebe17ee54edc142cd"
+  },
+  {
+    "raw": "codegen-e2-restored.log",
+    "gzip": "codegen-e2-restored.log.gz",
+    "raw_bytes": 150867,
+    "packed_bytes": 13357,
+    "raw_sha256": "94f1f824deecdc67e3377684bd322b263b8237673d7bf8dd9d168860a549a20f",
+    "packed_sha256": "f3770ac77f9353d41c3ba3ebbf96aa9138ce2c702a6dc433e88e700c3313a912",
+    "decoded_sha256": "94f1f824deecdc67e3377684bd322b263b8237673d7bf8dd9d168860a549a20f"
+  },
+  {
+    "raw": "current-production-cli.log",
+    "gzip": "current-production-cli.log.gz",
+    "raw_bytes": 138214,
+    "packed_bytes": 18929,
+    "raw_sha256": "63d3c4a1c9f3758dd7e8eac26da02e19e0bb8d293f33b9f45d5a3935e4b34b4d",
+    "packed_sha256": "e272611b6527e79ad397d966beb5f59f001c0fdced944f47d374ea2ee58169bc",
+    "decoded_sha256": "63d3c4a1c9f3758dd7e8eac26da02e19e0bb8d293f33b9f45d5a3935e4b34b4d"
+  },
+  {
+    "raw": "deciding-production-cli.log",
+    "gzip": "deciding-production-cli.log.gz",
+    "raw_bytes": 137888,
+    "packed_bytes": 18807,
+    "raw_sha256": "3b3a12c4295d4d407e33b26fc1a618fd025b54e3a9b0ab05fc4a006e87b9d4f6",
+    "packed_sha256": "d5b771158b50458e8122bb86fb96b7b1f5cdd38b0e211b22034561ac458576a0",
+    "decoded_sha256": "3b3a12c4295d4d407e33b26fc1a618fd025b54e3a9b0ab05fc4a006e87b9d4f6"
+  },
+  {
+    "raw": "native-prefix-deciding-cli.log",
+    "gzip": "native-prefix-deciding-cli.log.gz",
+    "raw_bytes": 136375,
+    "packed_bytes": 18645,
+    "raw_sha256": "99f430265bc7867327d37b7b70ca22d2e268b9a1e39a33081e0a3bf5f50aceb2",
+    "packed_sha256": "9c62a3a2defe7c7dc5655e903d7f90a69d1d227bfeb848bd3091b93c28cb4080",
+    "decoded_sha256": "99f430265bc7867327d37b7b70ca22d2e268b9a1e39a33081e0a3bf5f50aceb2"
+  },
+  {
+    "raw": "normal-codegen-current.log",
+    "gzip": "normal-codegen-current.log.gz",
+    "raw_bytes": 283097,
+    "packed_bytes": 31584,
+    "raw_sha256": "13b52766dbefcc04010a4c33da1a61adb48313502318c6407a24124f34421970",
+    "packed_sha256": "ddf7f7278178c143dd4a85217cd2a2a84796e042ba22fc6ca79ae6aa07bbfaac",
+    "decoded_sha256": "13b52766dbefcc04010a4c33da1a61adb48313502318c6407a24124f34421970"
+  }
+]

@@ -90,6 +90,12 @@ pub(crate) fn prepare_owner_runtime_inputs(
                         )
                     })?;
                 Ok(LoadedDependency {
+                    slot_target: vibe_install::CapturedSlotTarget {
+                        provider: source.provider.id.clone(),
+                        version: source.provider.version.clone(),
+                        kind: source.provider.kind.to_string(),
+                        hooks: resolved.manifest.hooks.clone(),
+                    },
                     source: source.clone(),
                     skills: resolved.manifest.skills.clone(),
                     declared_sources: resolved.manifest.embedded_sources.clone(),
@@ -179,37 +185,12 @@ pub fn plan_default_prepared(
     workspace: &Workspace,
     phases: &[Phase],
 ) -> Result<RitualPlan> {
-    let loaded = load_registry_prepared(selected_project_root, workspace, WorldLoadMode::Default)?;
-    let native_candidates = vibe_lifecycle::native::enabled_native_candidates(&loaded.registry);
-    let executions = ExecutablePlan::from_points(
-        &loaded.registry,
-        phases.iter().map(|phase| {
-            (
-                phase.to_string(),
-                ExtensionPoint::Phase(PhasePoint::Default(*phase)),
-            )
-        }),
-        SelectorSubject::unscoped(),
-    );
-    Ok(RitualPlan {
-        executions,
-        notices: loaded
-            .registry
-            .notices()
-            .iter()
-            .map(ToString::to_string)
-            .collect(),
-        project: loaded.project,
-        world: loaded.world,
-        mechanisms: loaded.mechanisms,
-        mechanism_routes: loaded.mechanism_routes,
-        native_candidates,
-        workspace_root: loaded.workspace_root,
-        package_bindings: loaded.package_bindings,
-        package_desired_keys: loaded.package_desired_keys,
-        package_phase_planned: phases.contains(&Phase::Package),
-    })
+    let loaded = capture_default_prepared(selected_project_root, workspace)?;
+    plan_from_loaded(loaded, phases)
 }
+
+mod invocation;
+pub(crate) use invocation::{capture_default_prepared, plan_from_loaded};
 
 /// The compatibility wrapper: ONE ordinary discovery, then the prepared seam.
 ///
@@ -292,7 +273,8 @@ pub struct LoadedRegistry {
     pub mechanism_routes: vibe_core::manifest::MechanismRoutes,
     /// Selected-project facts for the handler envelope.
     pub project: EnvelopeProject,
-    world: EnvelopeWorld,
+    pub(crate) world: EnvelopeWorld,
+    pub(crate) slot_plan: vibe_install::SlotLifecyclePlan,
     /// The canonical workspace root which owns lifecycle state.
     pub workspace_root: PathBuf,
     /// The selected host's own identity.
@@ -405,6 +387,12 @@ fn load_registry_prepared(
     } else {
         (Vec::new(), BTreeMap::new(), BTreeSet::new())
     };
+    let slot_targets = loaded_dependencies
+        .iter()
+        .map(|dep| dep.slot_target.clone())
+        .collect::<Vec<_>>();
+    let slot_plan = vibe_install::plan_captured_slot_targets(&installed, &host, &slot_targets)
+        .context("planning the retained current slot prerequisite inventory")?;
     let effective_world = ExtensionWorld {
         installed,
         host,
@@ -424,6 +412,7 @@ fn load_registry_prepared(
         mechanism_routes,
         project,
         world,
+        slot_plan,
         workspace_root: workspace.root.clone(),
         host_identity,
         manifest_kind,
@@ -435,6 +424,7 @@ fn load_registry_prepared(
 
 #[derive(Debug, Clone)]
 pub(crate) struct LoadedDependency {
+    pub(crate) slot_target: vibe_install::CapturedSlotTarget,
     pub(crate) source: DependencyExtensionSource,
     pub(crate) skills: Vec<SkillDecl>,
     pub(crate) declared_sources: Vec<EmbeddedSourceDecl>,

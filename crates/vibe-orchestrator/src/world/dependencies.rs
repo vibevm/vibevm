@@ -139,6 +139,12 @@ pub(super) fn dependency_source(
     }
 
     Ok(LoadedDependency {
+        slot_target: vibe_install::CapturedSlotTarget {
+            provider: DependencyProviderId::new(package.group.clone(), package.name.clone()),
+            version: package.version.to_string(),
+            kind: package.kind.to_string(),
+            hooks: manifest.hooks.clone(),
+        },
         skills: manifest.skills,
         declared_sources: manifest.embedded_sources,
         embedded_sources: package.embedded_sources.clone(),

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "git",
+    "-C",
+    "/fast/git/v/vibevm-next",
+    "diff",
+    "--check"
+  ],
+  "cwd": "/tmp",
+  "exit": 0
+}

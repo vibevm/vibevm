@@ -1,10 +1,10 @@
 use std::fs;
 
-use vibe_core::manifest::ExtensionKey;
-use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle_state::{
+use crate::state::current::{
     ExecutionRecord, ExecutionRecordStatus, LifecycleState, StateArtifact,
 };
+use vibe_core::manifest::ExtensionKey;
+use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use super::*;
 use crate::{ExecutionSession, RunMetadata};
@@ -112,6 +112,7 @@ fn record_for(
     fingerprint: &str,
 ) -> ExecutionRecord {
     ExecutionRecord {
+        completion_basis: None,
         artifacts: vec![StateArtifact {
             id: "a".into(),
             kind: "text".into(),
@@ -127,7 +128,7 @@ fn record_for(
             .then(|| vec![crate::outbox_task_path(run_id, key).unwrap()])
             .unwrap_or_default(),
         scope: matches!(status, ExecutionRecordStatus::Delegated)
-            .then_some(vibe_wire::generated::lifecycle_state::ExecutionRecordScope::Phase),
+            .then_some(crate::state::current::ExecutionRecordScope::Phase),
         input_measurement: None,
     }
 }

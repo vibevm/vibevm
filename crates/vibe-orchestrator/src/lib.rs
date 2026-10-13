@@ -58,6 +58,7 @@ pub use callback::after_durable_world_stage;
 pub use command::{
     DefaultLifecyclePorts, DefaultLifecycleRequest, LeasedDefaultLifecycle,
     PreparedDefaultLifecycle, lease_default_lifecycle, prepare_default_lifecycle,
+    prepare_full_pass_lifecycle,
 };
 pub use dispatch::{DeployAuthority, dispatch_plan_untracked};
 pub use install::{

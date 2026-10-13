@@ -1,0 +1,25 @@
+{
+  "driver_exit": 0,
+  "cwd": "/tmp",
+  "command": [
+    "python3",
+    "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M03-A1/cli-smoke.py"
+  ],
+  "processes": 6,
+  "exits": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "binary_sha256": "dbae2643e9fdaeff0e1d7a6dc9b459cb98053c72f483383ba0a1d7ae88f3313e",
+  "source_comparisons": 4,
+  "source_equal": true,
+  "control_comparisons": 4,
+  "control_equal": true,
+  "startup_effect": "Each cold create writes owned hermetic home/.vibe/registry.toml; retained in complete initial/per-phase inventories. No whole-session zero-effects claim.",
+  "decoded_documents": 12,
+  "scope": "Linux owned local source/compiler/observer, ordinary/default cwd and relative workspace member; not universal syscall/native platform qualification"
+}

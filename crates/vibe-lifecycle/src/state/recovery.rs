@@ -24,8 +24,8 @@
 //!   or "healing" write is attempted, because writing over an unattributable
 //!   state is how a concurrent writer's park is silently destroyed.
 
+use crate::state::current::LifecycleState;
 use specmark::spec;
-use vibe_wire::generated::lifecycle_state::LifecycleState;
 
 use super::error::{LifecycleStateError, PostPublicationRecovery};
 use super::io::STATE_CAP;

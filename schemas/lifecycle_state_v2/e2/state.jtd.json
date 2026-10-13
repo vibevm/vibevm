@@ -1,0 +1,301 @@
+{
+  "metadata": {
+    "description": "Epoch-2 current lifecycle state. Legacy epoch-1 is decoded separately without classified completion basis.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPLETION-SUBJECT-BASIS",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lifecycle_state_v2::e2::state"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "run": {
+      "ref": "state_run"
+    },
+    "execution": {
+      "values": {
+        "ref": "execution_record"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "state_run": {
+      "properties": {
+        "requested": {
+          "type": "string"
+        },
+        "chain": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "started": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "run_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Durable identity of the run that wrote this state \u2014 32 lowercase hex. Every post-R7.3 begin carries it, for EVERY invocation and not only a delegated one; the old wording (\"present whenever any row is delegated\") described a narrower writer than the one that shipped and would have licensed a fresh run with no id at all. Absent only in pre-R7.3 files, and such a file is readable exactly where no ownership claim depends on the id \u2014 a delegated row, or an evidence measurement attributing itself to a run, needs it and refuses without it."
+          }
+        },
+        "selected": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Portable workspace-relative RelPath (\".\" or member rel) of the selected node that authored the run. Written by every post-A6 begin; required with any delegated row by the later semantic validator; absent only in legacy/pre-A6 state with no delegated row."
+          }
+        },
+        "slot_continuation": {
+          "ref": "slot_continuation",
+          "metadata": {
+            "x-default": null,
+            "description": "The unfinished slot-lifecycle continuation this run owes, recorded BEFORE the first pre-install callback and cleared when the slot run completes. Present only while a slot-scoped row is delegated; absent in every pre-R7.3 file and after completion."
+          }
+        },
+        "compile_trace": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "Whether this run compiles with the trace observer enabled \u2014 the STICKY activation bit (PROP-054 `##OBS-TRACE`, R3.4). Written with the effective value (current request OR, on adoption, this persisted bit), so a resume keeps tracing even when the original one-shot flag is absent and the manifest changed meanwhile. Absent in pre-R3.4 files and reads false."
+          }
+        }
+      }
+    },
+    "slot_continuation": {
+      "metadata": {
+        "description": "Exactly which payload-event slot targets this install selected, in the order the orchestrator will visit them. Persisted so a resume whose lock is already fresh can rebuild the SAME slot run instead of inferring one from directory enumeration or from parsing task filenames."
+      },
+      "properties": {
+        "targets": {
+          "elements": {
+            "ref": "slot_target_record"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The exact ordered payload-event target set \u2014 the same set the one-shot post-install plan consumes."
+          }
+        }
+      }
+    },
+    "slot_target_record": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "execution_record": {
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "fail",
+            "skip",
+            "fresh",
+            "delegated"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "duration_ms": {
+          "type": "uint32"
+        },
+        "artifacts": {
+          "elements": {
+            "ref": "state_artifact"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "optionalProperties": {
+        "tasks": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "Project-relative outbox task files this delegated row published. Absent/empty for every non-delegated status."
+          }
+        },
+        "scope": {
+          "enum": [
+            "phase",
+            "slot"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "x-default": null,
+            "description": "Which plan a delegated row belongs to, recorded by the engine rather than inferred by parsing the execution key or a task filename. `phase` rows are reconciled against the current phase plan, `slot` rows against the current slot plan. Absent for non-delegated rows and in pre-R7.3 files."
+          }
+        },
+        "input_measurement": {
+          "ref": "state_input_measurement",
+          "metadata": {
+            "x-default": null,
+            "description": "The declared-input measurement this execution produced (PROP-054 `##EVIDENCE-SCOPE-IS-DECLARED`, R7.5): the durable half of a later verification claim, checkpointed in the SAME state transaction as the record it sits in \u2014 no second `.vibe/evidence.*` file, no second crash window. Absent for every pre-R7.5 file, for an execution that declares no `inputs` (which is typed `unavailable` at verify, never a digest of the empty set), and for every row written before the measuring writer lands."
+          }
+        },
+        "completion_basis": {
+          "ref": "completion_basis",
+          "metadata": {
+            "x-default": null,
+            "description": "Original successful classified execution basis. Absent for all legacy history and unavailable basis; retained byte-for-byte on reuse, never reconstructed from current header."
+          }
+        }
+      }
+    },
+    "state_artifact": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "witness": {
+          "ref": "state_digest_witness",
+          "metadata": {
+            "x-default": null,
+            "description": "The content witness recorded when this artifact was produced or fresh-probed (PROP-054 `##EVIDENCE-ARTIFACT-WITNESS`). Absent for every pre-R7.5 row and for any output whose witness was refused \u2014 a non-regular, linked, aliased, escaping or moving path \u2014 and such an artifact is `unavailable` at verify rather than a silent pass."
+          }
+        },
+        "measured_run_id": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The run that produced `witness` \u2014 32 lowercase hex, the run header's own id at the moment of measurement. Recorded beside the witness so a resume under a new run id can still say WHICH run measured this artifact instead of inheriting the claim silently."
+          }
+        }
+      }
+    },
+    "state_input_measurement": {
+      "metadata": {
+        "description": "The durable declared-input measurement: the execution's identity, the declaration it was measured against, the patterns it declared, and ONE witness. This is the state twin of the shared `input_measurement` comparison row on the evidence wire \u2014 deliberately a separate shape, for two reasons that both bind. (1) SEMANTICS: state records a measurement, evidence records a comparison; a durable `status`/`observed` pair would be a verdict stored before there was anything to compare it with. (2) MECHANISM: `lifecycle-state` carries `foreign_parsers = \"none\"` in `formats/REGISTRY.toml`, so its generated structs are stamped `#[serde(deny_unknown_fields)]`, while the shared vocabulary home emits ONE permissive copy for every consumer \u2014 the codegen guard `guard_shared_strictness` refuses a strict schema that pulls a shared fragment, and it is right to: the bytes cannot be both. The two shapes are pinned member-for-member by `crates/vibe-wire/tests/verification_evidence_wire.rs`, so the duplication cannot drift into a disagreement."
+      },
+      "properties": {
+        "execution": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "declaration_fingerprint": {
+          "type": "string",
+          "metadata": {
+            "description": "`sha256:` followed by 64 lowercase hex over the execution's declaration \u2014 the sibling of the manifest digest below, never its alias (R7.5 architecture \u00a71.2)."
+          }
+        },
+        "patterns": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The declared project-relative glob patterns, verbatim and in declaration order. Explicit even when empty: an authored empty list is a complete empty declared scope, and it stays distinguishable from an ABSENT declaration, which never produces a measurement at all."
+          }
+        },
+        "measured_run_id": {
+          "type": "string",
+          "metadata": {
+            "description": "The run that took this measurement \u2014 32 lowercase hex. Required: a measurement that cannot name its run is not evidence, and every post-R7.3 begin carries a run id for every invocation."
+          }
+        },
+        "witness": {
+          "ref": "state_digest_witness",
+          "metadata": {
+            "description": "The canonical manifest witness over exactly the files those patterns selected."
+          }
+        }
+      }
+    },
+    "state_digest_witness": {
+      "metadata": {
+        "description": "One content witness in durable state \u2014 the strict-reader twin of the shared `digest_witness` fragment, separate for the same registry-strictness reason `state_input_measurement` records, and pinned equal to it member-for-member by the wire test."
+      },
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "metadata": {
+            "description": "The domain-separated algorithm name (`sha256:vibe-input-manifest-v1`, `sha256:file-v1`, `sha256:tree-v1`)."
+          }
+        },
+        "digest": {
+          "type": "string",
+          "metadata": {
+            "description": "`sha256:` followed by 64 lowercase hex over the algorithm's declared scope."
+          }
+        }
+      },
+      "optionalProperties": {
+        "files": {
+          "type": "uint32",
+          "metadata": {
+            "x-default": null,
+            "description": "How many regular files entered the manifest \u2014 present for the manifest form, absent for the artifact forms that count nothing."
+          }
+        },
+        "bytes": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "How many content bytes entered the manifest \u2014 a CANONICAL unsigned decimal string, exactly as the shared `digest_witness` fragment spells it. JTD has no `uint64` and a declared input set may exceed 4 GiB, so the count is never narrowed on either side of this wire. Present exactly where `files` is."
+          }
+        }
+      }
+    },
+    "completion_basis": {
+      "properties": {
+        "recipe": {
+          "enum": [
+            "vibe-completion-basis/1"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "digest": {
+          "type": "string"
+        },
+        "selected": {
+          "type": "string"
+        },
+        "run_id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -6,6 +6,77 @@ use specmark::spec;
 
 use crate::{DEFAULT_PHASES, Phase};
 
+/// Public invocation intent is separate from prerequisite ordering. This
+/// value is host-composed; it is not a source/effect authority by itself.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#INVOCATION-ROLE-LAW")]
+pub enum InvocationIntent {
+    Create,
+    FullPass,
+    Build,
+    Verify,
+    Cleanup,
+}
+impl InvocationIntent {
+    pub fn for_phase(phase: Phase) -> Self {
+        match phase {
+            Phase::Create => Self::Create,
+            Phase::Verify => Self::Verify,
+            Phase::Validate
+            | Phase::Install
+            | Phase::Generate
+            | Phase::Build
+            | Phase::Test
+            | Phase::Package
+            | Phase::Deploy => Self::Build,
+        }
+    }
+    /// Exact prototype spellings only; unknown requests remain unavailable.
+    pub fn from_requested(requested: &str) -> Option<Self> {
+        if requested == "full-pass" {
+            return Some(Self::FullPass);
+        }
+        if requested == "clean" {
+            return Some(Self::Cleanup);
+        }
+        requested
+            .strip_prefix("clean ")
+            .unwrap_or(requested)
+            .parse::<Phase>()
+            .ok()
+            .map(Self::for_phase)
+    }
+    pub const fn admits_product_source(self) -> bool {
+        matches!(self, Self::Create | Self::FullPass)
+    }
+    pub const fn admits_build_artifact(self) -> bool {
+        !matches!(self, Self::Verify)
+    }
+}
+
+/// Role-admitted order; the historical table remains available as history.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ADMITTED-INVOCATION-ORDER")]
+pub fn invocation_chain(through: Phase, intent: InvocationIntent) -> Vec<Phase> {
+    if intent == InvocationIntent::Create {
+        return vec![
+            Phase::Validate,
+            Phase::Install,
+            Phase::Generate,
+            Phase::Create,
+        ];
+    }
+    let mut phases = inclusive_chain(through).to_vec();
+    if phases.contains(&Phase::Build) || intent == InvocationIntent::FullPass {
+        phases.retain(|phase| *phase != Phase::Create);
+        let build = phases
+            .iter()
+            .position(|phase| *phase == Phase::Build)
+            .unwrap_or(phases.len());
+        phases.insert(build, Phase::Create);
+    }
+    phases
+}
+
 /// One executable step in a lifecycle request.
 ///
 /// `Clean` belongs to its own one-step lifecycle; `Default` identifies a phase
@@ -91,7 +162,7 @@ impl LifecycleRequest {
     /// Expand the request into execution order.
     ///
     /// Clean, when requested, is always the first and only clean-lifecycle
-    /// step. Default phases then follow in canonical inclusive order.
+    /// step. Default phases then follow in role-admitted invocation order.
     #[must_use]
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL")]
     pub fn steps(self) -> Vec<LifecycleStep> {
@@ -111,9 +182,8 @@ impl LifecycleRequest {
 }
 
 fn default_steps(through: Phase) -> impl Iterator<Item = LifecycleStep> {
-    inclusive_chain(through)
-        .iter()
-        .copied()
+    invocation_chain(through, InvocationIntent::for_phase(through))
+        .into_iter()
         .map(LifecycleStep::Default)
 }
 
@@ -134,9 +204,8 @@ mod tests {
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS")]
     fn default_request_maps_the_canonical_prefix_to_steps() {
         for phase in DEFAULT_PHASES {
-            let expected = inclusive_chain(phase)
-                .iter()
-                .copied()
+            let expected = invocation_chain(phase, InvocationIntent::for_phase(phase))
+                .into_iter()
                 .map(LifecycleStep::Default)
                 .collect::<Vec<_>>();
             assert_eq!(LifecycleRequest::Default(phase).steps(), expected);
@@ -178,12 +247,14 @@ mod tests {
         for phase in DEFAULT_PHASES {
             let steps = LifecycleRequest::Clean { then: Some(phase) }.steps();
             assert_eq!(steps.first(), Some(&LifecycleStep::Clean));
-            assert_eq!(steps.len(), inclusive_chain(phase).len() + 1);
+            assert_eq!(
+                steps.len(),
+                invocation_chain(phase, InvocationIntent::for_phase(phase)).len() + 1
+            );
             assert_eq!(
                 &steps[1..],
-                &inclusive_chain(phase)
-                    .iter()
-                    .copied()
+                &invocation_chain(phase, InvocationIntent::for_phase(phase))
+                    .into_iter()
                     .map(LifecycleStep::Default)
                     .collect::<Vec<_>>(),
             );

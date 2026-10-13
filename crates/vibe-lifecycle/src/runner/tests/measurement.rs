@@ -14,8 +14,8 @@
 
 use std::fs;
 
+use crate::state::current::ExecutionRecordStatus;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
 use super::{
     KEY, RUN_ID, lease, metadata, project_fixture, runtime, scratch, state, world_fixture,

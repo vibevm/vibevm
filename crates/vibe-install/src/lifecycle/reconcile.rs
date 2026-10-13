@@ -8,7 +8,7 @@ use vibe_lifecycle::{
     LifecycleRunError, LifecycleRunHandle, REMOVED_DECLARATION, REMOVED_SLOT_DECLARATION,
     UNKNOWN_PROVENANCE,
 };
-use vibe_wire::generated::lifecycle_state::ExecutionRecordScope;
+use vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecordScope;
 
 use super::{SlotLifecyclePlan, SlotLifecycleReport};
 use crate::error::{Error, Result};

@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW");
 
 use std::collections::BTreeMap;
 
+use crate::state::current::StateArtifact;
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use thiserror::Error;
@@ -16,7 +17,6 @@ use vibe_wire::generated::lifecycle::e1::context::{
     Artifact, Context, Execution, Io, Project, Run, RunAgentMode, World,
 };
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
-use vibe_wire::generated::lifecycle_state::StateArtifact;
 
 use crate::ExtensionRegistryRow;
 use crate::agent::PreparedAgent;

@@ -74,10 +74,7 @@ impl Fixture {
         ArtifactObserver::new(&root).observe("artifact", &format!("{root}/{relative}"))
     }
 
-    pub(super) fn witness(
-        &self,
-        relative: &str,
-    ) -> vibe_wire::generated::lifecycle_state::StateDigestWitness {
+    pub(super) fn witness(&self, relative: &str) -> crate::state::current::StateDigestWitness {
         match self.observe(relative) {
             WitnessOutcome::Measured(witness) => witness,
             WitnessOutcome::Refused(cause) => {

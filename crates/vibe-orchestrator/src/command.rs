@@ -30,7 +30,6 @@ use std::sync::Arc;
 use anyhow::{Result, ensure};
 use specmark::spec;
 use vibe_core::manifest::{Manifest, TargetOs};
-use vibe_lifecycle::inclusive_chain;
 use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunIdentity, RunMetadata};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::shared::Timestamp;
@@ -47,6 +46,9 @@ use crate::ports::{
 };
 use crate::prelude::{RunPrelude, run_prelude, run_prelude_with_identity};
 use crate::trace::{Clock, TracePreparation};
+
+mod invocation;
+pub use invocation::prepare_full_pass_lifecycle;
 
 #[cfg(test)]
 #[path = "command/tests.rs"]
@@ -268,32 +270,7 @@ pub fn prepare_default_lifecycle(
     leased: LeasedDefaultLifecycle,
     request: DefaultLifecycleRequest,
 ) -> Result<PreparedDefaultLifecycle> {
-    let LeasedDefaultLifecycle {
-        selected_root,
-        lease,
-    } = leased;
-    // The chain is DERIVED, never supplied: the canonical inclusive prefix
-    // through `requested`, both as phases (for dispatch) and as the string
-    // chain (for identity/state/reporting). A caller cannot forge either.
-    let phases: Vec<Phase> = inclusive_chain(request.requested).to_vec();
-    let chain: Vec<String> = phases.iter().map(Phase::to_string).collect();
-    // The ONE selected-manifest snapshot, at the root the lease already
-    // pinned — never at a raw `--path` again.
-    let selection = SelectedManifest::read(&selected_root).prepare();
-    // The effective trace request: the raw flag OR the snapshot's own
-    // `[compile] trace` vote — combined once, here.
-    let trace_request = selection.request(request.trace_flag);
-    // The ONE identity selection, against the same lease.
-    let prelude = run_prelude(
-        selection,
-        lease,
-        &request.requested.to_string(),
-        &chain,
-        request.agent_mode.clone(),
-        request.force,
-        trace_request,
-    )?;
-    Ok(assemble_prepared(request, phases, chain, prelude))
+    invocation::prepare(leased, request, None)
 }
 
 /// Prepare the ordinary derived chain with a caller's already witnessed
@@ -321,7 +298,10 @@ pub(crate) fn prepare_default_lifecycle_with_identity(
         selection.root() == selected_root.as_path(),
         "witnessed lifecycle selection does not name the leased selected root"
     );
-    let phases: Vec<Phase> = inclusive_chain(request.requested).to_vec();
+    let phases = vibe_lifecycle::invocation_chain(
+        request.requested,
+        vibe_lifecycle::InvocationIntent::for_phase(request.requested),
+    );
     let chain: Vec<String> = phases.iter().map(Phase::to_string).collect();
     let prelude = run_prelude_with_identity(selection, lease, identity)?;
     Ok(assemble_prepared(request, phases, chain, prelude))

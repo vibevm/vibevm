@@ -20,8 +20,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#EVIDENCE-ARTIFACT-WITNESS");
 
+use crate::state::current::StateArtifact;
 use specmark::spec;
-use vibe_wire::generated::lifecycle_state::StateArtifact;
 use vibe_wire::generated::shared::{ArtifactWitness, EvidenceStatus};
 
 use crate::artifacts::observe::{ArtifactObserver, WitnessOutcome, WitnessRefusal};

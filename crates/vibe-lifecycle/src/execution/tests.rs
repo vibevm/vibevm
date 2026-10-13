@@ -18,6 +18,7 @@ fn config(source: &str) -> ExtensionConfig {
 
 fn builtin(id: &str, name: &str, message: Option<&str>) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: id.to_string(),
         point: "phase:build".parse().unwrap(),
         handler: ExtensionHandler::Builtin {

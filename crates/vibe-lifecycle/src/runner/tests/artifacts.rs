@@ -16,8 +16,8 @@
 
 use std::fs;
 
+use crate::state::current::{ExecutionRecordStatus, StateArtifact};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, StateArtifact};
 
 use super::{
     KEY, RUN_ID, lease, metadata, project_fixture, runtime, scratch, state, world_fixture,
@@ -564,7 +564,7 @@ fn the_probe_accepts_an_added_witness_but_never_a_tampered_identity() {
         "the fixture rows really are witnessed, so the next assert means something",
     );
     assert!(
-        crate::agent::probe_outputs(root, &contract, &witnessed),
+        crate::agent::probe_outputs(root, &contract, &legacy_rows(&witnessed)),
         "evidence describes the output; it does not redefine which was promised",
     );
 
@@ -577,12 +577,18 @@ fn the_probe_accepts_an_added_witness_but_never_a_tampered_identity() {
         let mut tampered = witnessed.clone();
         mutate(&mut tampered[0]);
         assert!(
-            !crate::agent::probe_outputs(root, &contract, &tampered),
+            !crate::agent::probe_outputs(root, &contract, &legacy_rows(&tampered)),
             "a tampered identity is not the contract's row",
         );
     }
     assert!(
-        !crate::agent::probe_outputs(root, &contract, &witnessed[..1]),
+        !crate::agent::probe_outputs(root, &contract, &legacy_rows(&witnessed[..1])),
         "and a short row set is not the contract's set",
     );
+}
+
+fn legacy_rows(
+    rows: &[StateArtifact],
+) -> Vec<vibe_wire::generated::lifecycle_state::StateArtifact> {
+    serde_json::from_value(serde_json::to_value(rows).unwrap()).unwrap()
 }

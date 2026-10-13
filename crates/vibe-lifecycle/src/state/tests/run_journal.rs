@@ -3,7 +3,7 @@
 use std::fs;
 use std::sync::Arc;
 
-use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
+use crate::state::current::ExecutionRecordStatus;
 
 use super::{OTHER_RUN, RUN_ID, lease, record_for};
 use crate::state::{

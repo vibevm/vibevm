@@ -1,0 +1,89 @@
+{
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "create",
+    "build"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#produce",
+      "phase": "create",
+      "point": "phase:create",
+      "provider": "org.demo/consumer",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    },
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#compile",
+      "phase": "build",
+      "point": "phase:build",
+      "provider": "org.demo/consumer",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": [],
+  "requested": "build"
+}
+{
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "create",
+    "build"
+  ],
+  "command": "lifecycle",
+  "contributions": [
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#produce",
+      "phase": "create",
+      "point": "phase:create",
+      "provider": "org.demo/consumer",
+      "status": "fresh",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    },
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#compile",
+      "phase": "build",
+      "point": "phase:build",
+      "provider": "org.demo/consumer",
+      "status": "ok",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": [],
+  "ok": true,
+  "requested": "build",
+  "steps": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    },
+    {
+      "phase": "install",
+      "status": "fresh"
+    },
+    {
+      "phase": "generate",
+      "status": "no-op"
+    },
+    {
+      "phase": "create",
+      "status": "fresh"
+    },
+    {
+      "phase": "build",
+      "status": "ok"
+    }
+  ]
+}

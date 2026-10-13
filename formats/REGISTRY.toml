@@ -217,6 +217,14 @@ corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
 [format.lifecycle-state]
+epoch = 2
+schema = "schemas/lifecycle_state_v2/e2/state.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/lifecycle-state/e2"
+sunset = "none"
+
+[format.lifecycle-state-e1]
 epoch = 1
 schema = "schemas/lifecycle_state.jtd.json"
 recoverable = true

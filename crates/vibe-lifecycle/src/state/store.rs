@@ -14,10 +14,10 @@ use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use specmark::spec;
-use vibe_wire::generated::lifecycle_state::{
+use super::current::{
     ExecutionRecord, ExecutionRecordScope, ExecutionRecordStatus, LifecycleState, SlotContinuation,
 };
+use specmark::spec;
 
 use super::error::LifecycleStateError;
 use super::io::{self, PublicationFailure};
@@ -103,6 +103,7 @@ impl LifecycleStateStore {
         let continuation = prior
             .as_ref()
             .and_then(|state| state.run.slot_continuation.clone());
+        let prior_epoch = prior.as_ref().map_or(1, |state| state.schema);
         let mut execution = prior.map(|state| state.execution).unwrap_or_default();
         if !adopted {
             // Old success/freshness rows are preserved as always, but a fresh
@@ -121,7 +122,7 @@ impl LifecycleStateStore {
             staged_continuation: None,
             state: LifecycleState {
                 execution,
-                run: vibe_wire::generated::lifecycle_state::StateRun {
+                run: super::current::StateRun {
                     chain,
                     requested,
                     run_id: (!run_id.is_empty()).then_some(run_id),
@@ -141,7 +142,7 @@ impl LifecycleStateStore {
                     // files), `compile_trace = true` once a run traces.
                     compile_trace,
                 },
-                schema: 1,
+                schema: prior_epoch,
             },
         };
         store.commit(|_| {})?;
@@ -212,6 +213,11 @@ impl LifecycleStateStore {
     ) -> Result<(), LifecycleStateError> {
         self.refuse_if_poisoned()?;
         self.commit(move |state| {
+            // Only actual retained classified completion introduces current
+            // state fields; a read/header/refusal never upgrades old evidence.
+            if record.completion_basis.is_some() {
+                state.schema = 2;
+            }
             state.execution.insert(key, record);
         })
     }

@@ -74,6 +74,7 @@ pub struct LifecycleArgs {
     pub no_prefer_local: bool,
 
     /// Ignore reusable lifecycle fingerprints for this invocation.
+    /// This never authorizes new production during ordinary build/verify.
     #[arg(long)]
     pub force: bool,
 
@@ -219,4 +220,29 @@ pub enum AgentModeArg {
     Cli,
     /// Never construct a provider; park each agent row for the hosting agent.
     Agent,
+}
+
+#[cfg(test)]
+mod m_03_a_1_cases {
+    use crate::cli::{Cli, Command};
+    use clap::Parser;
+    use vibe_lifecycle::{InvocationIntent, Phase};
+
+    #[test]
+    fn parsed_scoped_and_force_build_verify_keep_nonproduction_intent() {
+        for (verb, phase) in [("build", Phase::Build), ("verify", Phase::Verify)] {
+            for path in [".", "member"] {
+                let cli = Cli::try_parse_from(["vibe", verb, "--path", path, "--force"]).unwrap();
+                let args = match cli.command {
+                    Command::Build(args) | Command::Verify(args) => args,
+                    _ => panic!("wrong parsed lifecycle command"),
+                };
+                assert_eq!(args.path, std::path::Path::new(path));
+                assert!(args.force);
+                assert!(!InvocationIntent::for_phase(phase).admits_product_source());
+            }
+        }
+        assert!(InvocationIntent::for_phase(Phase::Create).admits_product_source());
+        assert!(InvocationIntent::FullPass.admits_product_source());
+    }
 }

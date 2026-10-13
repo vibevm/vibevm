@@ -6,9 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME");
 
-use vibe_wire::generated::lifecycle_state::{
-    ExecutionRecordScope, ExecutionRecordStatus, LifecycleState,
-};
+use super::current::{ExecutionRecordScope, ExecutionRecordStatus, LifecycleState};
 
 use crate::process::is_valid_run_id;
 
@@ -22,6 +20,9 @@ use crate::process::is_valid_run_id;
 /// carries no task files. A pre-R7.3 file — no run id, no delegated row —
 /// satisfies all of this vacuously.
 pub(super) fn validate_state(state: &LifecycleState) -> Result<(), String> {
+    if !matches!(state.schema, 1 | 2) {
+        return Err("unsupported lifecycle state epoch".into());
+    }
     if let Some(run_id) = state.run.run_id.as_deref()
         && !is_valid_run_id(run_id)
     {
@@ -39,6 +40,29 @@ pub(super) fn validate_state(state: &LifecycleState) -> Result<(), String> {
     }
     let mut slot_debt = false;
     for (key, record) in &state.execution {
+        if let Some(basis) = &record.completion_basis {
+            if state.schema != 2 {
+                return Err(format!(
+                    "execution `{key}` carries current basis in legacy epoch"
+                ));
+            }
+            if !matches!(
+                record.status,
+                ExecutionRecordStatus::Ok | ExecutionRecordStatus::Fresh
+            ) || !is_valid_run_id(&basis.run_id)
+                || !valid_selected_spelling(&basis.selected)
+                || !basis.digest.strip_prefix("sha256:").is_some_and(|h| {
+                    h.len() == 64
+                        && h.bytes()
+                            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+                })
+                || record.input_measurement.is_none()
+            {
+                return Err(format!(
+                    "execution `{key}` has inconsistent original completion basis"
+                ));
+            }
+        }
         match record.status {
             ExecutionRecordStatus::Delegated => {
                 let Some(run_id) = state.run.run_id.as_deref().filter(|id| is_valid_run_id(id))

@@ -107,6 +107,7 @@ pub enum FormatId {
     LifecycleOutcomeMarker,
     LifecycleReply,
     LifecycleState,
+    LifecycleStateE1,
     LlmOpenaiCompatibleAgentResult,
     LlmOpenaiCompatibleChatRequest,
     LlmOpenaiCompatibleChatResponse,

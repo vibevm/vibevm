@@ -1,0 +1,166 @@
+{
+  "mode": "default",
+  "phase": "create",
+  "root": "/tmp/m03-a1-cli-g2mlcl12/project",
+  "cwd": "/tmp/m03-a1-cli-g2mlcl12/project",
+  "argv": [
+    "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+    "--json",
+    "--offline",
+    "--agent-mode",
+    "agent",
+    "--no-progress",
+    "create",
+    "--assume-yes"
+  ],
+  "exit": 0,
+  "binary_sha256": "60a2ffd5f565eabdafe56eadcd5321c17e432ae411124d73894a12b030ec8b04",
+  "stdout_sha256": "ea6cc3c23b608e6558064863de3246c0fb15f2b6b853ebcfe0abdafe4c3a5af1",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "before": {
+    "intent.txt": {
+      "kind": "file",
+      "bytes": 23,
+      "sha256": "6cace402ec3ccb01f29762d3c27a49ec844722fb7acc4183401e8ea08f35eabc"
+    },
+    "scripts": {
+      "kind": "directory"
+    },
+    "scripts/operation.sh": {
+      "kind": "file",
+      "bytes": 973,
+      "sha256": "46cdd1e3b767733eb21e69d5d6b1866f55b736f0061c60fdd4a340f76c1d7bce"
+    },
+    "vibe.toml": {
+      "kind": "file",
+      "bytes": 510,
+      "sha256": "24aa8045c91e7a537e7daf4515ccc78a02a70de5cbfb85d0ef69fb97869216bf"
+    }
+  },
+  "after": {
+    ".vibe": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/c07c578df0826de6841ebe456398af8b": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/c07c578df0826de6841ebe456398af8b/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/c07c578df0826de6841ebe456398af8b/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776/context.json-f9df22829a86710cf027e16387998230.tmp": {
+      "kind": "file",
+      "bytes": 828,
+      "sha256": "5987942391fc920e302f9be2eddf14462eb89b99825eb808eb53b3763e54f789"
+    },
+    ".vibe/lifecycle/c07c578df0826de6841ebe456398af8b/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776/reply.json-e7d7c33f4738942f3140fc2096fd5ecb.tmp": {
+      "kind": "file",
+      "bytes": 140,
+      "sha256": "7e05383928b9ac142b8368ff1636b7404ca162c1bc6840cfdce800fde3a40b73"
+    },
+    ".vibe/lifecycle.lock": {
+      "kind": "file",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".vibe/lifecycle.toml": {
+      "kind": "file",
+      "bytes": 1490,
+      "sha256": "3106f24a2cd4d317d69a69d948e49442176e9209afd406ff8249af038498ba36"
+    },
+    "AGENTS.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "CLAUDE.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "GEMINI.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "calls": {
+      "kind": "file",
+      "bytes": 8,
+      "sha256": "1e330e5891b8a9e0b043093492bea1c4a748d9e67fca56512e24638b8962fcd7"
+    },
+    "intent.txt": {
+      "kind": "file",
+      "bytes": 23,
+      "sha256": "6cace402ec3ccb01f29762d3c27a49ec844722fb7acc4183401e8ea08f35eabc"
+    },
+    "scripts": {
+      "kind": "directory"
+    },
+    "scripts/operation.sh": {
+      "kind": "file",
+      "bytes": 973,
+      "sha256": "46cdd1e3b767733eb21e69d5d6b1866f55b736f0061c60fdd4a340f76c1d7bce"
+    },
+    "src": {
+      "kind": "directory"
+    },
+    "src/product.rs": {
+      "kind": "file",
+      "bytes": 70,
+      "sha256": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583"
+    },
+    "vibe.toml": {
+      "kind": "file",
+      "bytes": 510,
+      "sha256": "24aa8045c91e7a537e7daf4515ccc78a02a70de5cbfb85d0ef69fb97869216bf"
+    },
+    "vibevm": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs/boot": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs/boot/.vibe-boot-artifacts.lock": {
+      "kind": "file",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vibevm/vibespecs/boot/INDEX.md": {
+      "kind": "file",
+      "bytes": 599,
+      "sha256": "7cd0a73818a40c89919c9a573cde15cebdaf0370ea296e011e7d725aeb5e79f5"
+    }
+  },
+  "source_before": null,
+  "source_after": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583",
+  "control_before": {
+    "home": {},
+    "config": {},
+    "cache": {},
+    "state": {},
+    "data": {},
+    "cargo": {}
+  },
+  "control_after": {
+    "home": {
+      ".vibe": {
+        "kind": "directory"
+      },
+      ".vibe/registry.toml": {
+        "kind": "file",
+        "bytes": 165,
+        "sha256": "70bb41309da328fbeb811ada34c2a19e44fda28b31138cd6ed2a64e98a1e8bb4"
+      }
+    },
+    "config": {},
+    "cache": {},
+    "state": {},
+    "data": {},
+    "cargo": {}
+  }
+}

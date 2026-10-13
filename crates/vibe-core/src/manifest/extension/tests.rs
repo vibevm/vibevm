@@ -7,6 +7,7 @@ use super::*;
 
 fn decl(point: &str, handler: ExtensionHandler) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: "demo".to_string(),
         point: point.parse().unwrap(),
         handler,

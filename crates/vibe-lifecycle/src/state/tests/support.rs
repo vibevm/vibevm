@@ -7,13 +7,11 @@
 use std::fs;
 use std::path::Path;
 
+use crate::state::current::{ExecutionRecordStatus, SlotContinuation, SlotTargetRecord};
 use vibe_core::manifest::{ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionsControl};
 use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 use vibe_wire::generated::lifecycle::e1::context::{
     Context, Execution, Io, Project, Run, RunAgentMode, World,
-};
-use vibe_wire::generated::lifecycle_state::{
-    ExecutionRecordStatus, SlotContinuation, SlotTargetRecord,
 };
 
 use super::{RUN_ID, lease, record_for};
@@ -100,6 +98,7 @@ pub(super) fn row(
     inputs: Option<Vec<String>>,
 ) -> crate::ExtensionRegistryRow {
     let declaration = ExtensionDecl {
+        effects: None,
         id: "announce".into(),
         point: "phase:build".parse().unwrap(),
         handler: ExtensionHandler::Builtin { name: "log".into() },
@@ -139,6 +138,7 @@ pub(super) fn dependency_row(
     content_hash: &str,
 ) -> crate::ExtensionRegistryRow {
     let declaration = ExtensionDecl {
+        effects: None,
         id: id.into(),
         point: "phase:build".parse().unwrap(),
         handler: ExtensionHandler::Builtin { name: "log".into() },

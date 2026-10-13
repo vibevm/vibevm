@@ -13,7 +13,7 @@
 use std::fs;
 use std::path::Path;
 
-use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
+use crate::state::current::{ExecutionRecordStatus, LifecycleState};
 
 use super::support::{KEY, OTHER, prior_store, targets, third_state_toml, vibe_names};
 use super::{RUN_ID, lease, record_for};

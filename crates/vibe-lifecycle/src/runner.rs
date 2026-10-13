@@ -1,16 +1,15 @@
 //! One canonical envelope/fingerprint/state/handler transition.
 
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::Path;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
+use crate::state::current::{
+    ExecutionRecord, ExecutionRecordStatus, StateArtifact, StateInputMeasurement,
+};
 use specmark::spec;
 use vibe_wire::generated::lifecycle::e1::context::{Context, Project, RunAgentMode, World};
 use vibe_wire::generated::lifecycle::e1::reply::ReplyStatus;
-use vibe_wire::generated::lifecycle_state::{
-    ExecutionRecord, ExecutionRecordStatus, StateArtifact, StateInputMeasurement,
-};
 
 use crate::agent::PreparedAgent;
 use crate::delegation::Delegation;
@@ -22,20 +21,19 @@ use crate::{
     RunMetadata, preparation_error_fingerprint_for_identity,
 };
 
+mod invocation;
 mod observations;
+mod timing;
+use timing::elapsed_ms;
 mod verify;
+pub use invocation::{InvocationRefusal, validate_invocation_prefix};
 
 /// A shared run is passed through install's slot callbacks and rebound after
 /// the durable-world barrier before normal phase dispatch.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub type LifecycleRunHandle = Arc<Mutex<LifecycleRun>>;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME")]
-pub enum ExecutionReuse {
-    FreshnessAware,
-    Always,
-}
+pub use invocation::ExecutionReuse;
 
 /// The two pre-dispatch state values the hosted branch either checkpoints on
 /// satisfaction or deliberately drops on park. One value keeps that private
@@ -45,6 +43,7 @@ pub enum ExecutionReuse {
 pub(super) struct PreparedRecordEvidence {
     fingerprint: String,
     input_measurement: Option<StateInputMeasurement>,
+    completion_digest: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -201,6 +200,7 @@ impl LifecycleRun {
         reuse: ExecutionReuse,
         runtime: &HandlerRuntime<'_>,
     ) -> Result<ExecutionTransition, LifecycleRunError> {
+        invocation::known_effects(execution)?;
         let started = Instant::now();
         let key = execution.key();
         let envelope = match self
@@ -233,6 +233,20 @@ impl LifecycleRun {
             }
         };
         if self.state.is_none() {
+            let intent = crate::InvocationIntent::from_requested(&envelope.run.requested)
+                .ok_or_else(|| invocation::InvocationRefusal::UnknownInvocation {
+                    requested: envelope.run.requested.clone(),
+                })?;
+            if !intent.admits_product_source()
+                && invocation::known_effects(execution)?
+                    .contains(vibe_core::manifest::DeclaredEffect::ProductSource)
+            {
+                return Err(invocation::InvocationRefusal::CreationRequired {
+                    key,
+                    reason: "untracked-production-cannot-reuse",
+                }
+                .into());
+            }
             return self.dispatch_untracked(execution, envelope, runtime, prepared.as_ref());
         }
         // ONE preparation: the fingerprint, its declaration sibling and the
@@ -256,53 +270,16 @@ impl LifecycleRun {
         // present only when the declared scope was actually measured, never
         // a partial digest and never a copy of a prior row's claim.
         let measurement = prepared_inputs.state_measurement(&key, phase, &self.run_id);
-        let fingerprint = prepared_inputs.fingerprint;
-        // A HOSTED agent row is freshness-aware whatever the caller asked for.
-        //
-        // `Always` exists so a slot contribution re-runs every time its slot is
-        // touched — correct for a script, and unbounded for a handoff: "run it
-        // again" would mean re-parking a row whose declared outputs this very
-        // engine already recorded, so a target carrying TWO ordered agent rows
-        // could never converge. Row A is satisfied, row B parks, and the next
-        // pass re-parks A, forever. The evidence accepted here is the engine's
-        // own reusable record for this exact execution at this exact
-        // fingerprint — never coincidental files, which the handoff branch
-        // below still refuses.
-        let hosted_agent = prepared.is_some() && envelope.run.agent_mode == RunAgentMode::Agent;
-        let prior = ((reuse == ExecutionReuse::FreshnessAware || hosted_agent) && !self.force)
-            .then(|| {
-                self.state
-                    .as_ref()
-                    .and_then(|state| state.reusable_record(&key, &fingerprint))
-                    .cloned()
-            })
-            .flatten();
-        let prior = prior.filter(|prior| {
-            // An agent row's outputs are the whole point of the execution, so
-            // "the inputs did not change" is only half the question: a deleted,
-            // emptied, relinked or contract-mismatched output is not fresh, it
-            // is missing work. The probe is credential-free and provider-free.
-            if let Some(prepared) = prepared.as_ref() {
-                // The COMPLETE recorded rows, not their ids: a tampered path
-                // or kind must not survive into the hydrated envelope, where a
-                // later contribution would treat it as real.
-                return crate::agent::probe_outputs(
-                    Path::new(&envelope.project.root),
-                    prepared.contract(),
-                    &prior.artifacts,
-                );
-            }
-            let vibe_core::manifest::ExtensionHandler::Builtin { name } =
-                &execution.row().declaration().handler
-            else {
-                return true;
-            };
-            !crate::BuiltinRegistry::is_package_binding(name, execution.row())
-                || runtime
-                    .package_binding
-                    .probe(&key, &prior.artifacts)
-                    .unwrap_or(false)
-        });
+        let fingerprint = prepared_inputs.fingerprint.clone();
+        let prior = self.reusable_completion(
+            execution,
+            phase,
+            reuse,
+            &envelope,
+            &prepared_inputs,
+            prepared.as_ref(),
+            runtime,
+        )?;
         if let Some(prior) = prior {
             // A fresh skip is NOT a producer. It re-observes the current
             // object into this invocation's transient map and checkpoints the
@@ -327,6 +304,7 @@ impl LifecycleRun {
                 .checkpoint(
                     key,
                     ExecutionRecord {
+                        completion_basis: prior.completion_basis.clone(),
                         artifacts: artifacts.clone(),
                         duration_ms: 0,
                         fingerprint,
@@ -371,6 +349,7 @@ impl LifecycleRun {
                 PreparedRecordEvidence {
                     fingerprint,
                     input_measurement: measurement,
+                    completion_digest: prepared_inputs.completion_digest.clone(),
                 },
                 started,
             );
@@ -382,11 +361,20 @@ impl LifecycleRun {
             .ok_or(LifecycleRunError::Unbound)?
             .dispatch_execution(execution, envelope.clone(), runtime, prepared.as_ref());
         match dispatched {
-            Ok(outcome) => {
-                self.checkpoint_success(key, phase, fingerprint, started, outcome, measurement)
-            }
+            Ok(outcome) => self.checkpoint_success(
+                key,
+                phase,
+                PreparedRecordEvidence {
+                    fingerprint,
+                    input_measurement: measurement,
+                    completion_digest: prepared_inputs.completion_digest,
+                },
+                started,
+                outcome,
+            ),
             Err(source) => {
                 let record = ExecutionRecord {
+                    completion_basis: None,
                     artifacts: Vec::new(),
                     duration_ms: elapsed_ms(started),
                     fingerprint,
@@ -425,11 +413,15 @@ impl LifecycleRun {
         &mut self,
         key: String,
         phase: &str,
-        fingerprint: String,
+        evidence: PreparedRecordEvidence,
         started: Instant,
         outcome: ContributionOutcome,
-        measurement: Option<StateInputMeasurement>,
     ) -> Result<ExecutionTransition, LifecycleRunError> {
+        let PreparedRecordEvidence {
+            fingerprint,
+            input_measurement: measurement,
+            completion_digest,
+        } = evidence;
         let status = match outcome.reply.status {
             ReplyStatus::Ok => ExecutionRecordStatus::Ok,
             ReplyStatus::Skip => ExecutionRecordStatus::Skip,
@@ -465,6 +457,19 @@ impl LifecycleRun {
             .checkpoint(
                 key,
                 ExecutionRecord {
+                    completion_basis: if status == ExecutionRecordStatus::Ok
+                        && measurement.is_some()
+                    {
+                        completion_digest.map(|digest| crate::state::current::CompletionBasis {
+                            recipe:
+                                crate::state::current::CompletionBasisRecipe::VibeCompletionBasis,
+                            digest,
+                            selected: self.session.as_ref().unwrap().metadata().selected.clone(),
+                            run_id: self.run_id.clone(),
+                        })
+                    } else {
+                        None
+                    },
                     artifacts: artifacts.clone(),
                     duration_ms: elapsed_ms(started),
                     fingerprint,
@@ -498,6 +503,7 @@ impl LifecycleRun {
     ) -> LifecycleRunError {
         let key = execution.key();
         let record = ExecutionRecord {
+            completion_basis: None,
             artifacts: Vec::new(),
             duration_ms: elapsed_ms(started),
             fingerprint: preparation_error_fingerprint_for_identity(&execution.key(), phase),
@@ -575,10 +581,6 @@ fn failed_transition(envelope: Context, source: DispatchError) -> LifecycleRunEr
         transition: Box::new(transition),
         source: Box::new(source),
     }
-}
-
-fn elapsed_ms(started: Instant) -> u32 {
-    u32::try_from(started.elapsed().as_millis()).unwrap_or(u32::MAX)
 }
 
 #[path = "runner/error.rs"]

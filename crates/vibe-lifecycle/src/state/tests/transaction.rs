@@ -12,7 +12,7 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
 
-use vibe_wire::generated::lifecycle_state::{
+use crate::state::current::{
     ExecutionRecord, ExecutionRecordScope, ExecutionRecordStatus, LifecycleState, SlotContinuation,
     SlotTargetRecord, StateArtifact,
 };
@@ -45,6 +45,7 @@ fn open(root: &Path) -> LifecycleStateStore {
 fn parked_row(status: ExecutionRecordStatus) -> ExecutionRecord {
     let delegated = status == ExecutionRecordStatus::Delegated;
     ExecutionRecord {
+        completion_basis: None,
         artifacts: vec![StateArtifact {
             id: "docs/slot.md".into(),
             kind: "file".into(),

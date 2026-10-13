@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/fast/git/v/.build/c4-first-agent-target/debug/xtask",
+    "codegen"
+  ],
+  "cwd": "/tmp",
+  "env": {
+    "CARGO_MANIFEST_DIR": "/fast/git/v/vibevm-next/xtask",
+    "RUSTUP_AUTO_INSTALL": "0",
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+  },
+  "exit": 0,
+  "generator_binary_sha256": "b92b65e19a133101a7d9f5d8ea633857efc0568cc872813b1e1efd64e3111453",
+  "log_sha256": "94f1f824deecdc67e3377684bd322b263b8237673d7bf8dd9d168860a549a20f",
+  "reuse_basis": "actual first successful generator, unchanged generator/JTD tool; current schema/registry read normally"
+}

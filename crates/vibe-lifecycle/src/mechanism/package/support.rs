@@ -110,6 +110,7 @@ pub(crate) fn empty_world() -> ExtensionWorld {
 /// something selects it.
 pub(crate) fn world_with_plugin() -> ExtensionWorld {
     let declaration = MechanismDecl {
+        effects: None,
         id: "skill-v2".into(),
         role: MechanismRole::Package,
         name: "static-skill".into(),

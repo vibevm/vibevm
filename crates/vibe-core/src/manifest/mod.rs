@@ -48,9 +48,9 @@ pub use deploy::{
 };
 pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 pub use extension::{
-    ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
-    ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
-    MachineOperationSchemaDecl,
+    DeclaredEffect, DeclaredEffects, ExtensionAppliesTo, ExtensionConfig, ExtensionDecl,
+    ExtensionHandler, ExtensionIrLevel, ExtensionKey, ExtensionPass, ExtensionPassKind,
+    ExtensionUse, ExtensionWhen, ExtensionsControl, MachineOperationSchemaDecl,
 };
 pub use lockfile::{
     CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedSubskill, Lockfile,

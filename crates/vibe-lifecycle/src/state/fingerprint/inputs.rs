@@ -21,11 +21,11 @@
 
 use std::path::Path;
 
+use crate::state::current::{StateDigestWitness, StateInputMeasurement};
 use glob::{MatchOptions, Pattern};
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use vibe_wire::generated::lifecycle::e1::context::{Context, SlotTarget};
-use vibe_wire::generated::lifecycle_state::{StateDigestWitness, StateInputMeasurement};
 use walkdir::WalkDir;
 
 use vibe_core::manifest::ExtensionKey;
@@ -53,6 +53,7 @@ const MANIFEST_SEED: &[u8] = b"sha256:vibe-input-manifest-v1\0epoch=1\0";
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct PreparedFingerprint {
     pub(crate) fingerprint: String,
+    pub(crate) completion_digest: Option<String>,
     /// The effective executable declaration's own identity
     /// (PROP-054 `##DECLARATION-FINGERPRINT`) — the sibling the durable
     /// measurement names, never an alias of `fingerprint`.
@@ -168,7 +169,19 @@ fn prepare_with_identity(
     prepared_agent: Option<&PreparedAgent>,
 ) -> Result<PreparedFingerprint, FingerprintError> {
     let inputs = prepare_declared_inputs(row, Path::new(&context.project.root))?;
-    let mut hash = FramedHash::new();
+    let mut hash = if let Some(effects) = &row.declaration().effects {
+        let mut hash =
+            FramedHash::seeded(b"vibe-lifecycle-fingerprint-effects\0epoch=2\0").with_completion();
+        hash.completion_field("completion.execution", execution_identity.as_bytes());
+        hash.completion_field("completion.selected_root", context.project.root.as_bytes());
+        hash.count("effects.count", effects.iter().len());
+        for effect in effects.iter() {
+            hash.field("effects.item", effect.as_str().as_bytes());
+        }
+        hash
+    } else {
+        FramedHash::new()
+    };
     hash.field("key", row.key().to_string().as_bytes());
     hash.field("phase", context.run.phase.as_bytes());
     hash.field("point", context.point.as_bytes());
@@ -211,8 +224,10 @@ fn prepare_with_identity(
         &context.execution.config,
         prepared_agent,
     )?;
+    let (fingerprint, completion_digest) = hash.finish_with_completion();
     Ok(PreparedFingerprint {
-        fingerprint: hash.finish(),
+        fingerprint,
+        completion_digest,
         declaration_fingerprint,
         input_manifest,
     })

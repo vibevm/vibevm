@@ -55,13 +55,23 @@ pub(super) fn declaration_fingerprint(
     delivered_config: &BTreeMap<String, Option<Value>>,
     prepared_agent: Option<&PreparedAgent>,
 ) -> Result<String, FingerprintError> {
-    let mut hash = FramedHash::declaration();
+    let mut hash = if let Some(effects) = &row.declaration().effects {
+        let mut hash = FramedHash::seeded(b"vibe-execution-declaration-effects-v2\0epoch=2\0");
+        hash.count("effects.count", effects.iter().len());
+        for effect in effects.iter() {
+            hash.field("effects.item", effect.as_str().as_bytes());
+        }
+        hash
+    } else {
+        FramedHash::declaration()
+    };
     hash.field("execution", execution_identity.as_bytes());
     hash.field("phase", phase.as_bytes());
     // The COMPLETE declaration, destructured without `..` so a new field is a
     // compile-time epoch decision. Every member is either bound below into
     // the digest or classified as excluded with the reason.
     let ExtensionDecl {
+        effects: _effects, // Bound before the incumbent schedule; absent stays v1.
         // Bound through `execution`: the provider-qualified key embeds the id.
         id: _id,
         point,

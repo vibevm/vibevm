@@ -212,6 +212,7 @@ fn reconcile_declaration(desired: &BTreeSet<String>) -> ExtensionDecl {
 
 fn internal_declaration(id: String, config: toml::Table) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id,
         point: ExtensionPoint::Phase(PhasePoint::Default(Phase::Package)),
         handler: ExtensionHandler::Builtin {

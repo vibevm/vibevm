@@ -1,0 +1,64 @@
+{
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "create"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#produce",
+      "phase": "create",
+      "point": "phase:create",
+      "provider": "org.demo/consumer",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": [],
+  "requested": "create"
+}
+{
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "create"
+  ],
+  "command": "lifecycle",
+  "contributions": [
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#produce",
+      "phase": "create",
+      "point": "phase:create",
+      "provider": "org.demo/consumer",
+      "status": "ok",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": [],
+  "ok": true,
+  "requested": "create",
+  "steps": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    },
+    {
+      "phase": "install",
+      "status": "fresh"
+    },
+    {
+      "phase": "generate",
+      "status": "no-op"
+    },
+    {
+      "phase": "create",
+      "status": "ok"
+    }
+  ]
+}

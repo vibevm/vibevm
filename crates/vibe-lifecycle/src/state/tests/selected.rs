@@ -6,7 +6,7 @@
 
 use std::fs;
 
-use vibe_wire::generated::lifecycle_state::{LifecycleState, StateRun};
+use crate::state::current::{LifecycleState, StateRun};
 
 use super::{RUN_ID, lease};
 use crate::LifecycleStateStore;

@@ -6,7 +6,7 @@
 
 use std::fs;
 
-use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
+use crate::state::current::ExecutionRecordStatus;
 
 use super::support::{KEY, OTHER, prior_store, vibe_names};
 use super::{RUN_ID, record_for};

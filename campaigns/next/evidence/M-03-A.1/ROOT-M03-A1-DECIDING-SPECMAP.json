@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "+nightly",
+    "run",
+    "--manifest-path",
+    "/fast/git/v/vibevm-next/Cargo.toml",
+    "--locked",
+    "--offline",
+    "-p",
+    "xtask",
+    "--bin",
+    "xtask",
+    "--",
+    "specmap"
+  ],
+  "cwd": "/tmp",
+  "env": {
+    "RUSTUP_AUTO_INSTALL": "0",
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+  },
+  "exit": 0,
+  "log_sha256": "c4fca73769cfc7f6552b18644ad85a0d6a327b03ae49341203677ded930f8022"
+}

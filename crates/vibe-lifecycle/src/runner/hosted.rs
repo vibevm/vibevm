@@ -11,11 +11,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE"
 
 use std::time::Instant;
 
+use crate::state::current::{ExecutionRecord, ExecutionRecordScope, ExecutionRecordStatus};
 use specmark::spec;
 use vibe_wire::generated::lifecycle::e1::context::Context;
-use vibe_wire::generated::lifecycle_state::{
-    ExecutionRecord, ExecutionRecordScope, ExecutionRecordStatus,
-};
 
 use crate::agent::PreparedAgent;
 use crate::delegation::Delegation;
@@ -50,6 +48,7 @@ impl LifecycleRun {
         let PreparedRecordEvidence {
             fingerprint,
             input_measurement: measurement,
+            completion_digest: _completion_digest,
         } = evidence;
         let key = execution.key();
         let root = std::path::PathBuf::from(&envelope.project.root);
@@ -63,7 +62,15 @@ impl LifecycleRun {
                         && prior.fingerprint == fingerprint
                 })
                 .filter(|prior| {
-                    crate::agent::probe_outputs(&root, prepared.contract(), &prior.artifacts)
+                    let legacy: Vec<vibe_wire::generated::lifecycle_state::StateArtifact> =
+                        match serde_json::to_value(&prior.artifacts)
+                            .ok()
+                            .and_then(|v| serde_json::from_value(v).ok())
+                        {
+                            Some(rows) => rows,
+                            None => return false,
+                        };
+                    crate::agent::probe_outputs(&root, prepared.contract(), &legacy)
                 });
             if let Some(prior) = satisfied {
                 // Owned BEFORE the store is touched: everything below borrows
@@ -101,6 +108,7 @@ impl LifecycleRun {
                     .checkpoint(
                         key.clone(),
                         ExecutionRecord {
+                            completion_basis: None,
                             artifacts: artifacts.clone(),
                             duration_ms: elapsed_ms(started),
                             fingerprint,
@@ -151,9 +159,15 @@ impl LifecycleRun {
         }
         // Park: publish the task document first — state must never point at a
         // task that was not durably published — then checkpoint the handoff.
-        let planned = prepared
-            .contract()
-            .planned_state_rows(&envelope.project.root);
+        let planned: Vec<crate::state::current::StateArtifact> = serde_json::from_value(
+            serde_json::to_value(
+                prepared
+                    .contract()
+                    .planned_state_rows(&envelope.project.root),
+            )
+            .unwrap(),
+        )
+        .expect("identical owned artifact members across explicit state codec boundary");
         let task =
             crate::delegation::publish_task(&root, &self.run_id, &key, phase, prepared, &envelope)
                 .map_err(|source| {
@@ -169,6 +183,7 @@ impl LifecycleRun {
             .checkpoint(
                 key,
                 ExecutionRecord {
+                    completion_basis: None,
                     artifacts: planned.clone(),
                     duration_ms: elapsed_ms(started),
                     fingerprint,

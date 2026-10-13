@@ -5,11 +5,11 @@
 
 use std::path::Path;
 
+use crate::state::current::LifecycleState;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 use vibe_safefs::PublishStage;
-use vibe_wire::generated::lifecycle_state::LifecycleState;
 
 use super::run_journal::{LifecycleRunJournalObservation, inspect_reserved_lifecycle_run};
 use super::submission::{
