@@ -1874,6 +1874,22 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/document_edit_journal.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "document_edit_journal",
+      "end_line": 90
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/document_edit_journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 39,
+      "symbol": "document_edit_journal::file",
+      "end_line": 88
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/preview/e1/documentation_capture.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -20503,6 +20519,15 @@
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/lease.rs",
+      "item_kind": "fn",
+      "line": 237,
+      "symbol": "vibe_lifecycle::lease::LifecycleLease::document_edit_project",
+      "end_line": 242,
+      "fingerprint": "tok1:d9ce0f51be70796de6de3f13984076686a4427326295f90f5d2fd0330cdf2160"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/lease.rs",
       "item_kind": "enum",
       "line": 43,
       "symbol": "vibe_lifecycle::lease::LifecycleLeaseError",
@@ -25751,28 +25776,37 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/context.rs",
       "item_kind": "struct",
-      "line": 33,
+      "line": 34,
       "symbol": "vibe_mcp::context::ServerContext",
-      "end_line": 92,
-      "fingerprint": "tok1:06651630386e72c5b5f18f6b3fe5807c8876bb2f327c421c3a9be369e0281bbc"
+      "end_line": 95,
+      "fingerprint": "tok1:5e984803422f280e9f58fad6e4224ac5a69b0bc128f83f810e83b552c3b50d30"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/context.rs",
       "item_kind": "fn",
-      "line": 109,
+      "line": 112,
       "symbol": "vibe_mcp::context::ServerContext::document_client",
-      "end_line": 128,
+      "end_line": 131,
       "fingerprint": "tok1:f3ac1a9c44c943a173c38a3128644c3e9587ad481028aa6cd1c5a19990fd5a86"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/context.rs",
       "item_kind": "fn",
-      "line": 95,
+      "line": 98,
       "symbol": "vibe_mcp::context::ServerContext::with_document_analysis",
-      "end_line": 108,
+      "end_line": 111,
       "fingerprint": "tok1:bd4857294f4a23ac0a663cf8c723f3510c4c635334c171df3b081c7e7a90a512"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/context/document_edit.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_mcp::context::document_edit",
+      "end_line": 2,
+      "fingerprint": "tok1:26091bc2b12eacaa36b05510a5fe38d81e28cfa68146a31d64c9944506d4fbb2"
     },
     {
       "crate_name": "vibe-mcp",
@@ -27177,6 +27211,60 @@
       "symbol": "vibe_orchestrator::document_analysis::compile_plan",
       "end_line": 2,
       "fingerprint": "tok1:cfcaf3f208172a9d831050845368e8fb3e9872e2bc982001792e84d12ee5870d"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::edit",
+      "end_line": 2,
+      "fingerprint": "tok1:26091bc2b12eacaa36b05510a5fe38d81e28cfa68146a31d64c9944506d4fbb2"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/apply.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::edit::apply",
+      "end_line": 2,
+      "fingerprint": "tok1:c9e77872c0b5941d500051f40812f3eab77d15baa285e57921e357f7a4d526f9"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::edit::barrier",
+      "end_line": 2,
+      "fingerprint": "tok1:26091bc2b12eacaa36b05510a5fe38d81e28cfa68146a31d64c9944506d4fbb2"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::edit::journal",
+      "end_line": 2,
+      "fingerprint": "tok1:c9e77872c0b5941d500051f40812f3eab77d15baa285e57921e357f7a4d526f9"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::edit::plan",
+      "end_line": 2,
+      "fingerprint": "tok1:26091bc2b12eacaa36b05510a5fe38d81e28cfa68146a31d64c9944506d4fbb2"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/proposal.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::document_analysis::edit::proposal",
+      "end_line": 2,
+      "fingerprint": "tok1:be2ba6ea5309695baa13af379241a4c16d588a3c1ca9ffe59cbdc3d7d7e99737"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -31520,9 +31608,9 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "enum",
-      "line": 49,
+      "line": 51,
       "symbol": "vibe_safefs::file::Presence",
-      "end_line": 61,
+      "end_line": 63,
       "fingerprint": "tok1:4b753670f3588e7bfc7942d6b920f6077b6ea195d6dd26607ff71d9c5c7b520d"
     },
     {
@@ -31560,6 +31648,15 @@
       "symbol": "vibe_safefs::file::create_new_tests",
       "end_line": 9,
       "fingerprint": "tok1:87f074e31716b89e42440c744846eb584bf3c6b4505fe24a745e3bb191c38650"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/guarded.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_safefs::file::guarded",
+      "end_line": 3,
+      "fingerprint": "tok1:26091bc2b12eacaa36b05510a5fe38d81e28cfa68146a31d64c9944506d4fbb2"
     },
     {
       "crate_name": "vibe-safefs",
@@ -53560,6 +53657,14 @@
     },
     {
       "file": "crates/vibe-lifecycle/src/lease.rs",
+      "from_symbol": "vibe_lifecycle::lease::LifecycleLease::document_edit_project",
+      "line": 239,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BARRIER-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/lease.rs",
       "from_symbol": "vibe_lifecycle::lease::LifecycleLeaseError",
       "line": 53,
       "provenance": "authored",
@@ -58383,7 +58488,7 @@
     {
       "file": "crates/vibe-mcp/src/context.rs",
       "from_symbol": "vibe_mcp::context::ServerContext",
-      "line": 43,
+      "line": 44,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server",
       "verb": "documents"
@@ -58391,7 +58496,7 @@
     {
       "file": "crates/vibe-mcp/src/context.rs",
       "from_symbol": "vibe_mcp::context::ServerContext::document_client",
-      "line": 109,
+      "line": 112,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-ANALYSIS-CAPTURE-LAW",
       "verb": "implements"
@@ -58399,9 +58504,17 @@
     {
       "file": "crates/vibe-mcp/src/context.rs",
       "from_symbol": "vibe_mcp::context::ServerContext::with_document_analysis",
-      "line": 96,
+      "line": 99,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-BUFFER-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/context/document_edit.rs",
+      "from_symbol": "vibe_mcp::context::document_edit",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BARRIER-LAW",
       "verb": "implements"
     },
     {
@@ -59743,6 +59856,54 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-ANALYSIS-CAPTURE-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::edit",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BARRIER-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/apply.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::edit::apply",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-RECOVERY-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::edit::barrier",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BARRIER-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::edit::journal",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-RECOVERY-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::edit::plan",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BARRIER-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/document_analysis/edit/proposal.rs",
+      "from_symbol": "vibe_orchestrator::document_analysis::edit::proposal",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-PROPOSAL-LAW",
       "verb": "implements"
     },
     {
@@ -63819,7 +63980,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Presence",
-      "line": 51,
+      "line": 53,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -63854,6 +64015,14 @@
       "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OWNED-FILE-PUBLICATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/guarded.rs",
+      "from_symbol": "vibe_safefs::file::guarded",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BARRIER-LAW",
       "verb": "implements"
     },
     {
@@ -100544,7 +100713,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c9141733d715d4659f0b0e2062abd4d4623b67e7bcd6df8a736d4dc0f299b686",
+      "content_hash": "sha256:f06f917510d4fc7b0133cb5a5c6af0e4da2a75125fac4fa15e47129978fb91c6",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Machine operations and observability",
@@ -101534,7 +101703,7 @@
     },
     {
       "anchor": "document-analysis",
-      "content_hash": "sha256:14e7dfda25b77ea38cd2060d58495d40b4aacc580ac524207f13799943af0a9c",
+      "content_hash": "sha256:0dd885eeba8a73d681db5f0705ccdd167992525f3e7fbe9d226c74013b506d06",
       "doc_path": "common/PROP-080",
       "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
       "heading": "Immutable client-scoped document analysis",
@@ -101585,6 +101754,33 @@
       "heading": "Child pages, text chunks and diagnostic views bind the exact frozen capture, source/projection revision and selected filter; foreign cursors refuse. Per-page limits never cap the full authorized structure. Disk/lock/policy/target/overlay hints invalidate affected view identities without parsing, native execution, installation or publication. A missing watch sequence or explicitly lost window expires freshness and requires an explicit fresh capture; old captures remain inspectable historical values. An uninvalidated hint is not proof of current live disk, nor does resnapshot atomically attest all files. This read-only notification owner adds no watcher daemon, write barrier or domain authority. @status:spec/plan",
       "line": 223,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-VIEW-INVALIDATION"
+    },
+    {
+      "anchor": "DOCUMENT-EDIT-PROPOSAL-LAW",
+      "content_hash": "sha256:294db4ada18ad30a1f34a5073bb81ebde1bd0e1a8f54cd3accb58c198ebe4914",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "A buffer proposal retains exact client/resource/capture, expected buffer version and bytes, and applies only to that client's memory. Acceptance performs buffer-version CAS, never saves or submits a domain mutation. Explicit editor save and fresh recapture/replanning are separate. A proposal or dirty capture is not an admitted disk edit, even if its identical content is later saved. @status:spec/plan",
+      "line": 224,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-PROPOSAL-LAW"
+    },
+    {
+      "anchor": "DOCUMENT-EDIT-BARRIER-LAW",
+      "content_hash": "sha256:e74639fecfc352d54ac7d56690e8fa39e0db67df4cf119d3739d366a109a5a5c",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "An explicit finite trusted document-edit grant is separate from the read host. A saved recaptured edit plan binds exact disk observations and affected registered client/resource/version participants. All participants must acknowledge a clean barrier; acknowledged affected buffers are fenced through expected-state publication. Dirty, changed, refused, expired or disconnected participants stop before further writes. The guarantee covers registered cooperating clients and existing filesystem lease/expected-state boundaries, never hostile-kernel atomic content CAS. Detect nonparticipant drift before the final expected-snapshot comparison, while stating the remaining comparison-to-rename race with unregistered writers; atomic publication is not atomic destination-content CAS. Conflict results disclose authorized metadata only, not another client's buffer bytes. @status:spec/plan",
+      "line": 225,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BARRIER-LAW"
+    },
+    {
+      "anchor": "DOCUMENT-EDIT-RECOVERY-LAW",
+      "content_hash": "sha256:f8f29c3bcf45b0be778be22b976509004f4a819885ffc8cc85f3f9bfbda08374",
+      "doc_path": "common/PROP-080",
+      "file": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "heading": "Retain exact before/desired intent and actual publication stage through incumbent capability-safe durable journal/publication owners before mutating authored documents. A landed write followed by failure is partial/recovery-owned, never fabricated rollback or complete success. Recovery checks actual prior/desired/third states and permits only explicitly owned remaining actions under a fresh clean participant barrier. Read-only context bindings remain read-only; document grants confer no installation, native/provider or unrelated mutation authority. @status:spec/plan",
+      "line": 226,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-RECOVERY-LAW"
     },
     {
       "anchor": "root",

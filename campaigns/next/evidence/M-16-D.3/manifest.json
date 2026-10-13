@@ -14,9 +14,9 @@
     },
     {
       "path": "FIXED-ISSUES.md",
-      "sha256": "a9833a4478093756dbe78ea03eee82e25bd123d551e76b59dd597de27b7c7592",
-      "bytes": 150890,
-      "lines": 613,
+      "sha256": "36a2816cabfba4ca9c885ca9d9dc79445ab7eb4975b82af74628ae9b9ca5acda",
+      "bytes": 151306,
+      "lines": 615,
       "owner": "root integration"
     },
     {
@@ -186,6 +186,13 @@
       "bytes": 1613,
       "lines": 90,
       "owner": "Zap candidate"
+    },
+    {
+      "path": "specmap.json",
+      "sha256": "4d6d58120c7c4d7fe93fb32fea652e92c70b873be3c8c85d01b899266bf1d8c8",
+      "bytes": 9830219,
+      "lines": 166885,
+      "owner": "root integration"
     },
     {
       "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
@@ -672,5 +679,6 @@
     "Cooperative registered clients; final comparison/rename race with unregistered writers B235.",
     "Per-file snapshots and truthful partial effects, not atomic multi-file publication.",
     "Public Rust MCP composition, no new external document transport."
-  ]
+  ],
+  "integration_note": "Implementation accepted in f39287bf1; subsequent Root integration retains tracked specmap.json omitted from initial staged list. No implementation/test scope change."
 }
