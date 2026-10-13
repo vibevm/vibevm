@@ -1,0 +1,6 @@
+{
+  "package_metadata_rows_unchanged": 591,
+  "only_changed_package_row": "vibe-orchestrator",
+  "only_added_dependency": "vibe-requirements",
+  "removed_dependencies": []
+}

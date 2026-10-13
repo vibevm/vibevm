@@ -1,0 +1,13 @@
+[
+  "Cargo.lock",
+  "crates/vibe-orchestrator/Cargo.toml",
+  "crates/vibe-orchestrator/src/change/m_02_b_3_cases.rs",
+  "crates/vibe-orchestrator/src/change/mod.rs",
+  "crates/vibe-orchestrator/src/change/prepare.rs",
+  "crates/vibe-orchestrator/src/lib.rs",
+  "crates/vibe-requirements/src/change/captured.rs",
+  "crates/vibe-requirements/src/change/identity.rs",
+  "crates/vibe-requirements/src/change/m_02_b_3_cases.rs",
+  "crates/vibe-requirements/src/change/mod.rs",
+  "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+]

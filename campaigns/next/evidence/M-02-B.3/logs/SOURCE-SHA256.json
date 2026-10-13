@@ -1,0 +1,13 @@
+{
+  "Cargo.lock": "dd8db74c80aeb5b4f599d543af816ee31ea458ef8c59c49bff1e820be0b0a158",
+  "crates/vibe-orchestrator/Cargo.toml": "db2da5dbf5aeab2f24c2626adf62e7b1cf07206c9ac0aff27fb4a9b27ef33c01",
+  "crates/vibe-orchestrator/src/change/m_02_b_3_cases.rs": "ea3447333db3178c6d23d9dc9df50e7a574d4cc6b68726431f20172efd7980b4",
+  "crates/vibe-orchestrator/src/change/mod.rs": "986ae8ca52fc21855012a998dfdacb87f97f148220b2d2192434cac302b395c2",
+  "crates/vibe-orchestrator/src/change/prepare.rs": "2ecd341b70d612cc7a326262bcb04be01c18ae81c0e74a6cbeaa6c4056839d4d",
+  "crates/vibe-orchestrator/src/lib.rs": "fbf432893333bed4ef152f081f3fdb51bf85190f25739d636bf113b8afd11131",
+  "crates/vibe-requirements/src/change/captured.rs": "7d123ecd926cd8eeb8c64f21d3560e02c8cd4eaf98b6c01875a70f3f62f3f64b",
+  "crates/vibe-requirements/src/change/identity.rs": "49eb2962c899828bf68a6012024c2c7f9cc1da46ced8195983c0d35062cb49b3",
+  "crates/vibe-requirements/src/change/m_02_b_3_cases.rs": "280ab7aa3b01969544704620cef2634cfe0683c361cecfdd9b5f564cfaf04805",
+  "crates/vibe-requirements/src/change/mod.rs": "dd83789f4ef18abf557cd08ef9dca29de7f1b4ae5e3019f7b4d2b8c369192dbb",
+  "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml": "4aec08eadd71710ca4ae38e667c67d1362947003b9e7d7adfc700b365d9bab07"
+}

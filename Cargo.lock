@@ -4939,6 +4939,7 @@ dependencies = [
  "vibe-native-loader-package-provider-fixture",
  "vibe-package-source",
  "vibe-registry",
+ "vibe-requirements",
  "vibe-resolver",
  "vibe-safefs",
  "vibe-spec",

@@ -1,0 +1,10 @@
+{
+  "crates/vibe-orchestrator/src/change/m_02_b_3_cases.rs": 338,
+  "crates/vibe-orchestrator/src/change/mod.rs": 180,
+  "crates/vibe-orchestrator/src/change/prepare.rs": 77,
+  "crates/vibe-orchestrator/src/lib.rs": 386,
+  "crates/vibe-requirements/src/change/captured.rs": 23,
+  "crates/vibe-requirements/src/change/identity.rs": 70,
+  "crates/vibe-requirements/src/change/m_02_b_3_cases.rs": 66,
+  "crates/vibe-requirements/src/change/mod.rs": 19
+}
