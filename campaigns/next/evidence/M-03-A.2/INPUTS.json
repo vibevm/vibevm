@@ -1,0 +1,18 @@
+{
+  "task": "M-03-A.2",
+  "head": "b597cb6225dfc4827bce84bc046dcd1d46084e92",
+  "accepted_product_base": "5acc1e517b050c41f54f410ecb47b8939913551a",
+  "files": {
+    "campaigns/next/tasks/M-03-A.json": "0c3fd7e88f0ab664378f8556e399a83a0f808b73e9d731261971a578159fc6c2",
+    "campaigns/next/verification-policy.json": "0a3339b333551d5975a2cb384693886bb1432dd7bea63020f3d3eaded1bb5089",
+    "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+    "campaigns/next/evidence/M-03-A.1/accepted-2026-10-13.md": "9380668ed62306b5ad79887eed8c7757e9ef51280b78ed2b2eca5cedd4f940a8",
+    "campaigns/next/evidence/M-16-A/authority-routing.md": "030f10185676e49341130fcf4c071448a3785b81fe3b308d15433ff3235e7238",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": "0e2cabda6a312902d71848059cd1d9664dae850a9387e718026c6ec8dcc7e886",
+    "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml": "5be0221f8ea226e07ab002150ba3331d12862656b4cd3ff0d92b4d938a3b6a6c",
+    "schemas/lifecycle_state_v2/e2/state.jtd.json": "436584e4ca448a486067abacd659508853b2288835229453a4f9e488b6e8b2e7",
+    "schemas/lifecycle_state.jtd.json": "48f09eaeebf2b677c59bf4972d8b8f0d47b24892eea1762cc30e04fdf2f8b543",
+    "vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.1.0/vibevm/vibespecs/flows/multi-user-planning/parallel-execution.xml": "7d6b27b99f0d02f4d119add8804c5254963b3e8c6451ceb99d216c8ab971f9ed",
+    "vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.1.0/vibevm/vibespecs/flows/multi-user-planning/verification-selection.xml": "3892280961f4cfd41a2f74ac3faf0b4f05db72f86620073be55c3acc8730dd90"
+  }
+}

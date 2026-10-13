@@ -1,0 +1,21 @@
+{
+  "task": "M-03-A.2",
+  "documentation_revision": 3,
+  "scope": "map/report/evidence seal only",
+  "owner": "PreparedInputs::manifest",
+  "durable_measurement": "PreparedFingerprint::state_measurement returnsNone for absent/refused, StateInputMeasurement contains measured witness only",
+  "previous_manifest_sha256": "f69b54ac8d19bf9248cad3e940cd5cddee776c54cb1376529ff94ec8330e27d2",
+  "previous_seal_sha256": "a552e32537d59d1e5315a6f94e20adee9f896c90d7dfc0dff4c6f67a383d6f5f",
+  "source13_unchanged": true,
+  "tests_or_specmap_rerun": false,
+  "changed_documentation": {
+    "CARRIER-MAP.md": {
+      "before_sha256": "722c71ca40ad6e506aa33355d701045d5959dc5ced3a27df200e1b2bbf260bf0",
+      "after_sha256": "724e879655ad3bcc8d2145a8a08be4a8c0403395cb6559d45acd46b6aed48c8a"
+    },
+    "REPORT.md": {
+      "before_sha256": "f0d832a905c25dffd2c5eda331aab8c5b24a3c90c937c03699f489421f918b22",
+      "after_sha256": "8e76ba6314d33a18b68b36634c9a92789b861f210e36e4828da0a7aa4b173b43"
+    }
+  }
+}

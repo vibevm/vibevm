@@ -1,0 +1,57 @@
+{
+  "Cargo.lock": {
+    "accepted_sha256": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+    "current_sha256": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+    "equal": true
+  },
+  "Cargo.toml": {
+    "accepted_sha256": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+    "current_sha256": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+    "equal": true
+  },
+  "crates/vibe-core/src/manifest/change/identity.rs": {
+    "accepted_sha256": "e1281d0aba44a815705a4188d589314f4d307249d650d2513f1ab1b4130a8efd",
+    "current_sha256": "e1281d0aba44a815705a4188d589314f4d307249d650d2513f1ab1b4130a8efd",
+    "equal": true
+  },
+  "crates/vibe-core/src/manifest/change/work.rs": {
+    "accepted_sha256": "40e43ed6751b5d4376774ec1145b029ec13e0920fc01bf7e66feda31da460dc0",
+    "current_sha256": "40e43ed6751b5d4376774ec1145b029ec13e0920fc01bf7e66feda31da460dc0",
+    "equal": true
+  },
+  "crates/vibe-lifecycle/src/runner/hosted.rs": {
+    "accepted_sha256": "bd6e76c68fa99438724b22a99a60d870cc605c5d894e7041255dd011fd08f0a7",
+    "current_sha256": "bd6e76c68fa99438724b22a99a60d870cc605c5d894e7041255dd011fd08f0a7",
+    "equal": true
+  },
+  "crates/vibe-lifecycle/src/runner/invocation.rs": {
+    "accepted_sha256": "d5e557c617dc7bd67f0e8f628e02d3e9cedd3d6cfdf0c68c1e27f79c06b72f8c",
+    "current_sha256": "d5e557c617dc7bd67f0e8f628e02d3e9cedd3d6cfdf0c68c1e27f79c06b72f8c",
+    "equal": true
+  },
+  "crates/vibe-lifecycle/src/state/fingerprint.rs": {
+    "accepted_sha256": "89afbf6ad4a1a227f80c926596b1eb252d463032bfe4f4382e045277e8bde9e0",
+    "current_sha256": "89afbf6ad4a1a227f80c926596b1eb252d463032bfe4f4382e045277e8bde9e0",
+    "equal": true
+  },
+  "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs": {
+    "accepted_sha256": "4518dffdad0cb01a3bd3e1f62961d73d6da0802207dd1a849601415427ea12ed",
+    "current_sha256": "4518dffdad0cb01a3bd3e1f62961d73d6da0802207dd1a849601415427ea12ed",
+    "equal": true
+  },
+  "crates/vibe-lifecycle/src/state/fingerprint/declaration.rs": {
+    "accepted_sha256": "9fedecda2c31d29b5e00604fa5559c81793346852ccfd49f8e2fb334a0f8ec4d",
+    "current_sha256": "9fedecda2c31d29b5e00604fa5559c81793346852ccfd49f8e2fb334a0f8ec4d",
+    "equal": true
+  },
+  "schemas/lifecycle_state.jtd.json": {
+    "accepted_sha256": "48f09eaeebf2b677c59bf4972d8b8f0d47b24892eea1762cc30e04fdf2f8b543",
+    "current_sha256": "48f09eaeebf2b677c59bf4972d8b8f0d47b24892eea1762cc30e04fdf2f8b543",
+    "equal": true
+  },
+  "schemas/lifecycle_state_v2/e2/state.jtd.json": {
+    "accepted_sha256": "436584e4ca448a486067abacd659508853b2288835229453a4f9e488b6e8b2e7",
+    "current_sha256": "436584e4ca448a486067abacd659508853b2288835229453a4f9e488b6e8b2e7",
+    "equal": true
+  }
+}

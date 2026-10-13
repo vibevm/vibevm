@@ -1,0 +1,35 @@
+{
+  "task": "M-03-A.2",
+  "scope": "bounded rereview of prior carrier-map P2 only",
+  "documentation_revision": 2,
+  "verdict": "Substantive pending-owner/recipe omission repaired; one small factual map correction remains",
+  "seals": {
+    "manifest_sha256": true,
+    "source_manifest_sha256": true,
+    "report_sha256": true,
+    "carrier_map_sha256": true
+  },
+  "source_count": 13,
+  "source_mismatches": [],
+  "producer_count": 65,
+  "producer_mismatches": [],
+  "verified": [
+    "Actual verification evidence seed and ordered framing match runner/verify/id.rs; observed_at and evidence_id excluded; invocation/run remain included.",
+    "Actual output file/tree witness domains/framing and state witness/run pairing match artifacts/observe.rs.",
+    "Reconciliation current-run metadata versus original durable measurements accurately distinguished.",
+    "Obsolete pending-read and TO DEFINE table entries replaced; runtime Work/request carriage remains explicitly unavailable."
+  ],
+  "remaining": [
+    {
+      "file": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M03-A2/CARRIER-MAP.md",
+      "row": "Prepared input measurement",
+      "issue": "Owner names nonexistent PreparedDeclaredInputs::manifest; actual type is PreparedInputs::manifest at state/fingerprint/inputs.rs:241,273. Row also says StateInputMeasurement binds typed refusal; PreparedFingerprint::state_measurement at lines99-115 first calls manifest.measured()? so refusal yields no StateInputMeasurement.",
+      "correction": "Use PreparedInputs::manifest. State that ManifestOutcome::Refused(InputRefusal) remains the prepared outcome and yields no durable input_measurement; measured StateInputMeasurement carries execution, phase, declaration fingerprint, patterns, measured_run_id and witness only.",
+      "severity": "small factual correction within original P2; no runtime change"
+    }
+  ],
+  "limits": [
+    "No source/test/build/API/network/Git mutation; no old tests rerun.",
+    "Root owns acceptance. Existing source13 unchanged and no new runtime Work implementation required."
+  ]
+}

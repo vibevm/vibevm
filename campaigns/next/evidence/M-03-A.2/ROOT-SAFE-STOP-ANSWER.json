@@ -1,0 +1,102 @@
+{
+  "request": {
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-m03-a2-original-safe-stop-20261013",
+    "questionGroupId": "question-group.6697f996-53fe-4c48-acc9-78654710f62a",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "a2_safe_stop_carriage",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "plan"
+          }
+        }
+      ],
+      "noteMarkdown": "Root/Owner delegate selects original A2 explicit plan safe-stop. Implement the real selected immutable two-operation composition and CLI preparation; preserve distinct identity carriers and old recipes. Prove connected park/explicit continuation/verification through actual prepare_full_pass_lifecycle and hosted runner with owned fake-agent outputs, not same-key parked-result replay. State new M16 full-pass carriage unavailable; no validate opcode relabel or fabricated authority. Failed verify has no production retry or Work successor. B240 remains historical absence, not reconstructed provenance. If actual connected positive requires a write outside existing perimeter, ask the exact indispensable owner before editing. READ grant: exact requirements/src/change/mod.rs and saved.rs if they exist; otherwise report exact defining path correction. Additional finite READ owners under repository: crates/vibe-lifecycle/src/delegation.rs, state/tasks.rs, state/fingerprint.rs, state/fingerprint/declaration.rs, state/fingerprint/stable.rs, state/submission.rs, state/run_journal.rs, state/outcome_marker.rs, state/outcome_store.rs; crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/sequential_runs.rs and lifecycle_adapter/live_owner/evidence.rs. Read defining delegation children only after naming exact imported paths. Support reports are persisted under E/M03-A2/root-support; these are inspected candidate findings, not acceptance or extra gates."
+    }
+  },
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.6697f996-53fe-4c48-acc9-78654710f62a",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.74277dd8-2d4f-410b-90de-41934d862073",
+        "title": "A2: fixed composition versus current machine carriage",
+        "introductionMarkdown": "Actual shared owners inspected before implementation. M16 neutral SubmissionJournal is real, but lifecycle adapter FIXED_OPERATION is rust:vibe-lifecycle:validate and admitted fixed profiles are not generic change full-pass. Hosted owner discards completion_digest at park/resume (B240).",
+        "items": [
+          {
+            "questionItemId": "a2_safe_stop_carriage",
+            "header": "A2 boundary",
+            "promptMarkdown": "Confirm A2 safe-stop: implement actual change-selected immutable composition/carrier plan and CLI preparation through current shared APIs; expose unavailable new machine execution carriage, while proving exact one-park→verify via actual prepare_full_pass_lifecycle/runner owned fake-agent fixture without claiming new M16 opcode admission?",
+            "contextMarkdown": "Plan must show production and current-source verification separately, stable production request/selected-work/resolution/declaration/target identities distinct from invocation/run/operation occurrences, old recipes unchanged. No new scheduler/store/work walk. Positive connected actual full-pass owner can accept hosted outputs and continue same request; ordinary later reuse lacking original basis stays B240 unavailable, not inferred. If positive needs fresh original hosted basis, ask exact lifecycle/state/schema seams after binding original attempt. Alternative is narrow concrete M16 profile/authority owner extension, outside current literal perimeter; I will not silently relabel validate grant as production. READ request: requirements/src/change/{mod.rs,saved.rs} only if actual saved defining paths differ then exact correction, lifecycle/delegation.rs and delegation/ actual task/identity publisher children for carrier map/outbox recipe; no WRITE.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "plan",
+                "label": "Explicit plan safe-stop",
+                "description": "Real composition+existing-owner positive, unavailable new machine carriage stated.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "extend",
+                "label": "Exact owner correction",
+                "description": "Name required minimal M16/hosted scope extension.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": null,
+            "recommendation": {
+              "optionIds": [
+                "plan"
+              ],
+              "explanationMarkdown": "Literal safe-stop permits reviewable composition before later execution carriage, without fake authority or future M03/M17 claim."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-13T11:12:53.335Z",
+        "updatedAt": "2026-10-13T11:23:49.603Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.87e735f5-fab8-4e54-bfb4-d9be02f300e2",
+        "questionGroupId": "question-group.6697f996-53fe-4c48-acc9-78654710f62a",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "a2_safe_stop_carriage",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "plan"
+              }
+            }
+          ],
+          "noteMarkdown": "Root/Owner delegate selects original A2 explicit plan safe-stop. Implement the real selected immutable two-operation composition and CLI preparation; preserve distinct identity carriers and old recipes. Prove connected park/explicit continuation/verification through actual prepare_full_pass_lifecycle and hosted runner with owned fake-agent outputs, not same-key parked-result replay. State new M16 full-pass carriage unavailable; no validate opcode relabel or fabricated authority. Failed verify has no production retry or Work successor. B240 remains historical absence, not reconstructed provenance. If actual connected positive requires a write outside existing perimeter, ask the exact indispensable owner before editing. READ grant: exact requirements/src/change/mod.rs and saved.rs if they exist; otherwise report exact defining path correction. Additional finite READ owners under repository: crates/vibe-lifecycle/src/delegation.rs, state/tasks.rs, state/fingerprint.rs, state/fingerprint/declaration.rs, state/fingerprint/stable.rs, state/submission.rs, state/run_journal.rs, state/outcome_marker.rs, state/outcome_store.rs; crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/sequential_runs.rs and lifecycle_adapter/live_owner/evidence.rs. Read defining delegation children only after naming exact imported paths. Support reports are persisted under E/M03-A2/root-support; these are inspected candidate findings, not acceptance or extra gates."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-13T11:23:49.603Z",
+        "metadata": {}
+      }
+    }
+  }
+}

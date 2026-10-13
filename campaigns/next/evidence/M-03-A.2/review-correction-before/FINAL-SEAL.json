@@ -1,0 +1,8 @@
+{
+  "manifest_sha256": "3686d7f8de9d09c657607cfb72bc7855c8e508b6c21798deed85bcd020355e61",
+  "source_manifest_sha256": "e538b061493eb392e08e4a319d47b73fbc7da78cce498920574406faf326d2dd",
+  "report_sha256": "fc634c827a7c9386a4e99dfd9753d9a3f40606b1cc632e0182ad7a3d89f8d384",
+  "source_count": 13,
+  "producer_count": 60,
+  "source_writing_stopped": true
+}

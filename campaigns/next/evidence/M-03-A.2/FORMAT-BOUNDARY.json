@@ -1,0 +1,37 @@
+{
+  "fullfmt_exit": 1,
+  "inherited_hunks": 14,
+  "inherited_files": 9,
+  "entries": [
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs:571:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:3:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:10:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs:188:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:3:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:83:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:92:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:234:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs:100:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs:2:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission.rs:48:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs:34:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs:184:",
+    "Diff in /fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs:289:"
+  ],
+  "candidate_files_in_hunks": [],
+  "touched_fmt_exit": 0,
+  "diff_check_exit": 0,
+  "rust_line_counts": {
+    "crates/vibe-cli/src/command_progress/tests.rs": 260,
+    "crates/vibe-cli/src/commands/change/apply.rs": 181,
+    "crates/vibe-cli/src/commands/change/mod.rs": 157,
+    "crates/vibe-core/src/manifest/change/full_pass.rs": 139,
+    "crates/vibe-core/src/manifest/change/m_03_a_2_cases.rs": 139,
+    "crates/vibe-core/src/manifest/change/mod.rs": 306,
+    "crates/vibe-orchestrator/src/change/full_pass.rs": 88,
+    "crates/vibe-orchestrator/src/change/full_pass_fixture.rs": 164,
+    "crates/vibe-orchestrator/src/change/m_03_a_2_cases.rs": 261,
+    "crates/vibe-orchestrator/src/change/mod.rs": 195,
+    "crates/vibe-orchestrator/src/change/query.rs": 239
+  }
+}

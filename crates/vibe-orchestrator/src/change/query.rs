@@ -168,6 +168,18 @@ impl CapturedChangeQuery {
             registry,
         })
     }
+    /// Read-only selected template from the same captured change inputs.
+    /// This is not an admitted machine operation or execution lease.
+    pub fn full_pass_plan(&self, work: &str) -> Result<super::ChangeFullPassPlan, anyhow::Error> {
+        self.revalidate()?;
+        let view = super::analyze_change(
+            &self.capture,
+            self.node,
+            self.spec_root.as_deref(),
+            &self.id,
+        );
+        Ok(super::plan_change_full_pass(&view, work)?)
+    }
     pub fn query(&self, request: &Request) -> Response {
         if let Err(error) = wire::validate_request(request) {
             return error;

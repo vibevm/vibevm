@@ -1,0 +1,31 @@
+{
+  "task": "M-03-A.2",
+  "correction": "original-carrier-map acceptance defect; documentation only",
+  "before_manifest_sha256": "3686d7f8de9d09c657607cfb72bc7855c8e508b6c21798deed85bcd020355e61",
+  "before_final_seal_sha256": "2beff0e5181d9d3858e97574e1c38a831263e7c745c866b0490dd6631f7b97fe",
+  "source13_unchanged": true,
+  "unchanged_original_producer_artifacts": 58,
+  "changed_documentation": {
+    "CARRIER-MAP.md": {
+      "before_sha256": "8c06a92ab3e34ddbd2f36a1b2690ec5cb523a4fa646277bfb3efe1d32b59d32e",
+      "after_sha256": "722c71ca40ad6e506aa33355d701045d5959dc5ced3a27df200e1b2bbf260bf0"
+    },
+    "REPORT.md": {
+      "before_sha256": "fc634c827a7c9386a4e99dfd9753d9a3f40606b1cc632e0182ad7a3d89f8d384",
+      "after_sha256": "f0d832a905c25dffd2c5eda331aab8c5b24a3c90c937c03699f489421f918b22"
+    }
+  },
+  "new_recipe_reads": [
+    "crates/vibe-lifecycle/src/runner/verify.rs",
+    "crates/vibe-lifecycle/src/runner/verify/id.rs",
+    "crates/vibe-lifecycle/src/artifacts/observe.rs"
+  ],
+  "root_reported_specmap": {
+    "exit": 0,
+    "unresolved_host_edges": 0,
+    "inherited_orphans": 138
+  },
+  "producer_reran_tests_or_specmap": false,
+  "source_stop_preserved": true,
+  "acceptance_claimed": false
+}
