@@ -1,0 +1,72 @@
+[
+  {
+    "path": "crates/vibe-facts/src/scan.rs",
+    "sha256": "b1cec1e59f04f423301b8e58b0398d1da0239728ec0633992454ed89fa21ac8f",
+    "lines": 572
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/mod.rs",
+    "sha256": "5d7420cf5ce873dcaa3c3619ccf5ea5c257880e6bacdedb9c9e3746d91df8259",
+    "lines": 30
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/selection.rs",
+    "sha256": "a95e719ed876414ba4fd28509f29ff202dbcd0e8ef3569550ddc6ab0878dfa05",
+    "lines": 66
+  },
+  {
+    "path": "crates/vibe-requirements/src/complete.rs",
+    "sha256": "775404833546bfd3bd8b0b2ed2932c8556d32a6d87be674041a1e0ea8975a9e9",
+    "lines": 266
+  },
+  {
+    "path": "crates/vibe-requirements/src/complete/m_02_c_2_cases.rs",
+    "sha256": "8b0a497e0012259d27db91fed867393ff212c639be5549beb3ffaf032904621a",
+    "lines": 529
+  },
+  {
+    "path": "crates/vibe-requirements/src/complete/selection.rs",
+    "sha256": "01f9a2bba7b74ba11f962467fc5bbfb3d4a42779cca33066a82c3559eff43109",
+    "lines": 275
+  },
+  {
+    "path": "crates/vibe-requirements/src/digest.rs",
+    "sha256": "fecfb68090ef4749fc8fb16e85fd23696e560748fbb8ac02ed36cd0255904e5b",
+    "lines": 418
+  },
+  {
+    "path": "crates/vibe-requirements/src/lib.rs",
+    "sha256": "77ad6a2afed4c396bd12c60ee99e15e429a910bedc6f853175d393a0e624085d",
+    "lines": 93
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/capture.rs",
+    "sha256": "d16ef66a6d264ba690ebc898f035fb9c9b9da8d5c64b3178ab35970fc99e4b2e",
+    "lines": 399
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/capture/continuity.rs",
+    "sha256": "dcd1c847a8526ff3a20ba4d64b62ea9fb0c1457352c97f9b3ac44638620620c9",
+    "lines": 537
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/capture/continuity/retained.rs",
+    "sha256": "29a489d194c5635389a1569378157ec4dd7b78ec5e2f3bc1e74929ebf1508da2",
+    "lines": 242
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+    "sha256": "abbbd741d1350930e08217afcb0d4933a19a43e26603db6ec152cfc1ac99c7b7",
+    "lines": 590
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/mod.rs",
+    "sha256": "ce819a07db55e62a8f0a94c93ec1b076b2b93e928bd0959c5b040831bc32a6a9",
+    "lines": 142
+  },
+  {
+    "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+    "sha256": "5a9712a565ca54da2d51b9835751d9e25dc78e7e498e7eed02bf904b705a7916",
+    "lines": 33
+  }
+]

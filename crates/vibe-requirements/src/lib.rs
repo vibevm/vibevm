@@ -90,3 +90,4 @@ mod tests_query_declared;
 mod tests_requirements;
 
 pub mod change;
+pub mod complete;

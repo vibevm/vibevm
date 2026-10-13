@@ -1,0 +1,41 @@
+{
+  "entries": 14,
+  "files": [
+    {
+      "path": "crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "crates/vibe-mcp/src/machine_session/incremental.rs",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_submission.rs",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "crates/vibe-publish/src/package_git_payload/tests.rs",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "unchanged_from_HEAD": true
+    }
+  ]
+}

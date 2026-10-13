@@ -1,0 +1,304 @@
+[
+  {
+    "label": "connected-first",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-requirements",
+      "--lib",
+      "complete::m_02_c_2_cases::connected_large_capture_exceeds_query_page_without_truncating_change_scope",
+      "--",
+      "--nocapture",
+      "--exact"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "seconds": 8.795341491699219,
+    "log_sha256": "20c38c71b25346bc336f930b4fdb5cf02c50996dc6d3c76376f32e866921efab"
+  },
+  {
+    "label": "requirements-family",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-requirements",
+      "--lib",
+      "complete::m_02_c_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "seconds": 4.306689977645874,
+    "log_sha256": "7d34ed08350c8efa8c6be21a59e5ffd33e81f70a4a6e821f26f7cb6d1dddbc63"
+  },
+  {
+    "label": "requirements-corrected",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-requirements",
+      "--lib",
+      "complete::m_02_c_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "seconds": 0.5225105285644531,
+    "log_sha256": "cd8e67dfa82466dc82a772acb3a54f5af6fa51ea79cc493a22aca36c31c30e29"
+  },
+  {
+    "label": "requirements-corrected-2",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-requirements",
+      "--lib",
+      "complete::m_02_c_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "seconds": 1.4022390842437744,
+    "log_sha256": "bb655091d199430e17df2d8799acd8c0b60932598070a319a9093811d05ec22b"
+  },
+  {
+    "label": "requirements-final",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-requirements",
+      "--lib",
+      "complete::m_02_c_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "seconds": 1.271284818649292,
+    "log_sha256": "17183d18851b5ea546c529a893c3e940f75d2b1474d8c638b17c937bfef2c7a3"
+  },
+  {
+    "label": "facts-final",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-facts",
+      "--lib",
+      "scan::m_02_c_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "seconds": 29.376507997512817,
+    "log_sha256": "64e61e55d9ba5a05dd8c75f4fc779432c6564a1c2554e655b7694388fe5f50ba"
+  },
+  {
+    "label": "requirements-sealed",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-requirements",
+      "--lib",
+      "complete::m_02_c_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "seconds": 1.105900526046753,
+    "log_sha256": "7c753e6ccb90319d0a76e462f3785dc5d1cf532b0918fafa6c3cc06a40f4c267"
+  },
+  {
+    "label": "scope-filter-before",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-requirements",
+      "--lib",
+      "complete::m_02_c_2_cases::exact_gaps_and_inert_resources_are_explicit",
+      "--",
+      "--nocapture",
+      "--exact"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "seconds": 1.0434751510620117,
+    "log_sha256": "cf54ce71e60cf435b0e4efde03ed51f44e4e764aae3b28ae5e9ab1e8640cd41e"
+  },
+  {
+    "label": "requirements-final-scope-fix",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-requirements",
+      "--lib",
+      "complete::m_02_c_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "seconds": 1.1380677223205566,
+    "log_sha256": "a215a1a9da57ed2fdbb5d2065ae08f61c53160a8fbb6e338b84b77f682743dbb"
+  },
+  {
+    "label": "touched-format",
+    "command": [
+      "/home/olegchir/.cargo/bin/rustfmt",
+      "+nightly",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "/fast/git/v/vibevm-next/crates/vibe-facts/src/scan.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/change/mod.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/change/selection.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/complete.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/complete/m_02_c_2_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/complete/selection.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/digest.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/lib.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-workspace/src/source_query/capture.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-workspace/src/source_query/capture/continuity.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-workspace/src/source_query/capture/continuity/retained.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-workspace/src/source_query/mod.rs"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/fast/git/v/vibevm-next",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "full-format",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "fmt",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "cwd": "/tmp",
+    "exit": 1,
+    "log_sha256": "8415189def11f5c619e0bbdd9b84fcb9a957148ca0c3fe4bd6b7b5422d31928d"
+  }
+]

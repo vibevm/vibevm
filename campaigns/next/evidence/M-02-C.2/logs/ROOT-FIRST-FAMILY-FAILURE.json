@@ -1,0 +1,12 @@
+{
+  "log": "requirements-family.log",
+  "log_sha256": "7d34ed08350c8efa8c6be21a59e5ffd33e81f70a4a6e821f26f7cb6d1dddbc63",
+  "passed": 3,
+  "failed": 1,
+  "ignored": 0,
+  "failed_case": "complete::m_02_c_2_cases::exact_gaps_and_inert_resources_are_explicit",
+  "failure_stage": "fixture.install before complete observation",
+  "error": "SpecMaterialization: declared exact source MISSING.md absent/not regular",
+  "interpretation": "Fixture failed incumbent materialization guard; intended exact-gap assertions not reached. No production completeness failure inferred.",
+  "next": "Same writer corrects connected missing/unavailable fixture using actual owner semantics; no guard weakening or synthetic completeness bag."
+}

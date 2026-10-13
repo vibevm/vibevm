@@ -2,6 +2,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR");
 mod captured;
 mod identity;
+mod selection;
+pub use selection::ChangeFactSelectionError;
 mod origin;
 pub use captured::{ParsedCapturedChange, analyze_change_bytes};
 pub use origin::{

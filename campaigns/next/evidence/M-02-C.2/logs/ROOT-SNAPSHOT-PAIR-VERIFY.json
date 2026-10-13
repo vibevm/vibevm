@@ -1,0 +1,22 @@
+{
+  "log_sha256": "7c753e6ccb90319d0a76e462f3785dc5d1cf532b0918fafa6c3cc06a40f4c267",
+  "pairs": 6,
+  "all_exact_byte_directory_inventories_equal": true,
+  "labels": [
+    "converted-original-gap",
+    "live-missing-no-recreation",
+    "large-complete-and-neutral-query",
+    "same-stem-change-binding",
+    "mixed-pages-new-membership",
+    "precise-gaps-inert-unclassified"
+  ],
+  "inventory_entries": [
+    17,
+    16,
+    17,
+    19,
+    19,
+    25
+  ],
+  "scope": "Only stated pure query/preparation intervals after intentional fixture setup; not all platform metadata."
+}

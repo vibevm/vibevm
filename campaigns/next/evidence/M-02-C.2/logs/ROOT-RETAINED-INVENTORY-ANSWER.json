@@ -1,0 +1,100 @@
+{
+  "request": {
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-c2-retained-inventory-owner-20261013",
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "questionGroupId": "question-group.5e588787-1dac-4718-b5a0-95e5ae81dd3c",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "c2_inventory_carrier",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "grant"
+          }
+        }
+      ],
+      "noteMarkdown": "Root Owner delegate grants exact same-owner WRITE workspace source_query/capture/continuity/retained.rs, continuity.rs, capture.rs, source_query/mod.rs required reexports and continuity/service.rs forwarding only for opaque RetainedSourceInventory from existing checked WitnessedSourceWorld. Preserve before/after continuity, selected visibility/pin/content, held manifest/output snapshots/provenance/dispositions and incumbent grade. No world rebuild, new discovery/store/parser/provider or current-query weakening. Retain ordinary/unclassified/XML-data as inert explicit states; missing descriptors/files/dir-census, unsupported conversions/original gaps and resource-bound refusal remain explicit and cannot yield false Complete. Requirements derives expected membership through actual descriptor owner and observes held bytes through existing facts observer; complete inventory is not caller/provider booleans or capture.output count alone. Capture/membership/filter identity fences pages/joins, mixed or changed sets refuse. C1 selected-origin APIs and memory-held/B236/authentication limits remain unchanged. Bind actual prepare_host→inventory→large-set complete observation early, with independently expected rows, spec-only facts and precise missing/unavailable/unclassified/out-of-scope/truncated/mixed cases; unchanged source/history/slot inventories. Current C2 only, no extra campaign task."
+    }
+  },
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.5e588787-1dac-4718-b5a0-95e5ae81dd3c",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.2d1c8589-0d3f-4be2-85df-97cad7ec7803",
+        "title": "C2 complete captured inventory owner",
+        "introductionMarkdown": "C1 RetainedOriginCapture retains full native documents but only explicitly requested Vibe addresses; it cannot carry ordinary/unclassified/XML-data bytes. Existing facts observe_declared_source already performs descriptor-first pure classification and derives exact-file missing/dir-census gaps. Current requirements query truncates after merging; it cannot certify complete selection.",
+        "items": [
+          {
+            "questionItemId": "c2_inventory_carrier",
+            "header": "M01 inventory",
+            "promptMarkdown": "Grant narrow WRITE workspace source_query/capture/continuity/retained.rs plus continuity.rs/capture.rs/source_query/mod.rs reexports and service.rs forwarding only for opaque finite RetainedSourceInventory minted from checked WitnessedSourceWorld before/after guards, holding exact pin/content, manifest and all already prepared selected output snapshots/provenance/dispositions (path-keyed, no new discovery/store/parser). Requirements derives descriptor expected inventory and feeds incumbent facts observer; ordinary/raw bytes stay inert, converted original gaps remain explicit. No weakening current-query/grade. This connects actual prepare_host→capture→complete source selection including non-Vibe states without caller/provider completeness booleans.",
+            "contextMarkdown": "Existing retained.rs remains C1 native origin carrier; extending same owner reuses M01 bytes. No native/provider/fetch/world rebuild during complete observation. Changed/mixed membership is a distinct capture and must refuse page/change joins.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant same-owner inventory",
+                "description": "Finite opaque retention over already selected captured rows; no competing capture manager.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact alternative",
+              "multiline": true,
+              "maximumLength": 6000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Needed actual captured classification/availability rather than synthetic supplied source bags."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-13T01:28:02.762Z",
+        "updatedAt": "2026-10-13T01:30:01.686Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.26b93078-1223-40f8-88f5-810803c281f2",
+        "questionGroupId": "question-group.5e588787-1dac-4718-b5a0-95e5ae81dd3c",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "c2_inventory_carrier",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "Root Owner delegate grants exact same-owner WRITE workspace source_query/capture/continuity/retained.rs, continuity.rs, capture.rs, source_query/mod.rs required reexports and continuity/service.rs forwarding only for opaque RetainedSourceInventory from existing checked WitnessedSourceWorld. Preserve before/after continuity, selected visibility/pin/content, held manifest/output snapshots/provenance/dispositions and incumbent grade. No world rebuild, new discovery/store/parser/provider or current-query weakening. Retain ordinary/unclassified/XML-data as inert explicit states; missing descriptors/files/dir-census, unsupported conversions/original gaps and resource-bound refusal remain explicit and cannot yield false Complete. Requirements derives expected membership through actual descriptor owner and observes held bytes through existing facts observer; complete inventory is not caller/provider booleans or capture.output count alone. Capture/membership/filter identity fences pages/joins, mixed or changed sets refuse. C1 selected-origin APIs and memory-held/B236/authentication limits remain unchanged. Bind actual prepare_host→inventory→large-set complete observation early, with independently expected rows, spec-only facts and precise missing/unavailable/unclassified/out-of-scope/truncated/mixed cases; unchanged source/history/slot inventories. Current C2 only, no extra campaign task."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-13T01:30:01.686Z",
+        "metadata": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+[
+  "crates/vibe-facts/src/scan.rs",
+  "crates/vibe-requirements/src/change/mod.rs",
+  "crates/vibe-requirements/src/change/selection.rs",
+  "crates/vibe-requirements/src/complete.rs",
+  "crates/vibe-requirements/src/complete/m_02_c_2_cases.rs",
+  "crates/vibe-requirements/src/complete/selection.rs",
+  "crates/vibe-requirements/src/digest.rs",
+  "crates/vibe-requirements/src/lib.rs",
+  "crates/vibe-workspace/src/source_query/capture.rs",
+  "crates/vibe-workspace/src/source_query/capture/continuity.rs",
+  "crates/vibe-workspace/src/source_query/capture/continuity/retained.rs",
+  "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+  "crates/vibe-workspace/src/source_query/mod.rs",
+  "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+]

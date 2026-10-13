@@ -54,6 +54,72 @@ impl RetainedOriginCapture {
     }
 }
 impl WitnessedSourceWorld {
+    /// Retain only this selected package's already prepared finite outputs.
+    /// Expected authored membership is not inferred from the output count.
+    pub fn retain_source_inventory(
+        &self,
+        group: &str,
+        name: &str,
+    ) -> Result<RetainedSourceInventory, SourceQueryUnavailable> {
+        let prepared = self.revalidate_current()?;
+        let (pin, content_hash) = self.selected_source_pin(group, name)?;
+        let capture = prepared
+            .captured
+            .get(&CaptureOwner::Dependency {
+                group: group.into(),
+                name: name.into(),
+            })
+            .ok_or(SourceQueryUnavailable::WorldUnavailable(
+                "retained inventory owner",
+            ))?;
+        if capture.outputs.len() > 4096 {
+            return Err(SourceQueryUnavailable::WorldUnavailable(
+                "retained inventory file bound",
+            ));
+        }
+        let mut documents = BTreeMap::new();
+        let mut remaining = 256 * 1024 * 1024usize;
+        for output in capture
+            .outputs
+            .keys()
+            .filter(|p| p.as_str() != Manifest::FILENAME)
+        {
+            let extracted = self
+                .extract_source(Some((group, name)), output)
+                .map_err(|_| {
+                    SourceQueryUnavailable::WorldUnavailable("retained inventory classification")
+                })?;
+            remaining = remaining.checked_sub(extracted.capture.bytes.len()).ok_or(
+                SourceQueryUnavailable::WorldUnavailable("retained inventory byte bound"),
+            )?;
+            let disposition = self
+                .recorded_output(group, name, output)?
+                .and_then(|r| r.disposition);
+            let source = extracted.provenance.source_path.clone();
+            if documents
+                .insert(
+                    source,
+                    RetainedOriginDocument {
+                        snapshot: Arc::new(extracted.capture.clone()),
+                        provenance: extracted.provenance,
+                        disposition,
+                    },
+                )
+                .is_some()
+            {
+                return Err(SourceQueryUnavailable::WorldUnavailable(
+                    "retained inventory source mapping",
+                ));
+            }
+        }
+        self.revalidate_current()?;
+        Ok(RetainedSourceInventory {
+            pin,
+            content_hash,
+            manifest: Arc::new(capture.manifest.clone()),
+            documents,
+        })
+    }
     /// Explicit finite retention, not a source store or new read/proof grant.
     /// After successful mint, historical getters never inspect current disk.
     pub fn retain_origin_capture(
@@ -149,5 +215,28 @@ impl WitnessedSourceWorld {
             documents,
             facts,
         })
+    }
+}
+
+/// Memory-held metadata and bytes, not a complete-census/authentication claim.
+#[derive(Debug, Clone)]
+pub struct RetainedSourceInventory {
+    pin: PackageRef,
+    content_hash: ContentHash,
+    manifest: Arc<StableFileSnapshot>,
+    documents: BTreeMap<String, RetainedOriginDocument>,
+}
+impl RetainedSourceInventory {
+    pub fn pin(&self) -> &PackageRef {
+        &self.pin
+    }
+    pub fn content_hash(&self) -> &ContentHash {
+        &self.content_hash
+    }
+    pub fn manifest(&self) -> &StableFileSnapshot {
+        &self.manifest
+    }
+    pub fn documents(&self) -> &BTreeMap<String, RetainedOriginDocument> {
+        &self.documents
     }
 }
