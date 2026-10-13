@@ -1,0 +1,18 @@
+{
+  "base": "dee18664537d722795afee6b5b4b0e724b383627",
+  "HEAD": "dee18664537d722795afee6b5b4b0e724b383627",
+  "source_writing_stopped": true,
+  "new_nonignored_cases": 12,
+  "families": {
+    "core": 2,
+    "requirements": 6,
+    "orchestrator": 4
+  },
+  "root_owned_disjoint_paths": [
+    "FIXED-ISSUES.md"
+  ],
+  "no_staging_commit": true,
+  "no_adapter_apply_hydration_native_provider_network": true,
+  "owned_temporary_fixture_materialization_and_explicit_save_setup": true,
+  "query_preparation_inventory_scope_unchanged": true
+}

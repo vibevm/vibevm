@@ -1,0 +1,18 @@
+{
+  "agent": "/root/c1_retention_seam_audit",
+  "model": "gpt-6-astra",
+  "effort": "medium",
+  "verdict": "Concrete hash-only case requires authored selected-content binding; earlier narrower verdict superseded.",
+  "minimal": [
+    "Optional selected_content_hash using incumbent ContentHash.",
+    "Whole-package acceptance requires matching binding.",
+    "Explicit initial binding avoids circular AcceptedOrigin prerequisite.",
+    "Distinct bound intent recipe, legacy all-unbound v1 hashes unchanged.",
+    "Authored TOML schema none: no JTD/generated DTO or epoch flags."
+  ],
+  "limits": [
+    "Older parser refuses new field.",
+    "Declaration does not authenticate or recover historical bytes."
+  ],
+  "no_edits_builds_tests": true
+}

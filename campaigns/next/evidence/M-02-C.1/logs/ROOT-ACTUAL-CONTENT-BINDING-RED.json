@@ -1,0 +1,10 @@
+{
+  "case": "change::m_02_c_1_cases::selected_content_identity_is_authored",
+  "passed": 0,
+  "failed": 1,
+  "ignored": 0,
+  "exit": 101,
+  "log_sha256": "4497fc6fa9c1c4f810568ec2ba85fc92989a4f39f9736e7265d3f0ca3ca818f0",
+  "failed_invariant": "Old and next authored origins equal despite different retained selected package ContentHash.",
+  "disposition": "Actual current requirement gap; minimal authored binding/new bound recipe granted. Existing six green cases belong to pre-binding source epoch and require affected rerun after patch."
+}

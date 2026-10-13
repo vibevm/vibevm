@@ -60,6 +60,15 @@ pub(super) fn validate(
     }
     let mut packages = BTreeSet::new();
     for origin in &wire.origins {
+        if let Some(hash) = &origin.selected_content_hash {
+            crate::ContentHash::parse(hash).map_err(|_| {
+                invalid(
+                    ChangeErrorKind::Origin,
+                    "origins.selected_content_hash",
+                    "invalid selected content hash",
+                )
+            })?;
+        }
         let pin = crate::PackageRef::parse(&origin.package).map_err(|_| {
             invalid(
                 ChangeErrorKind::Origin,

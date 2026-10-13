@@ -2573,3 +2573,13 @@ structure, and it goes when the file does.
 | @fact:B235-SEVERITY **severity** | P2 — accepted cooperative MVP trust limitation with a real accidental-writer scenario, not solely hostile-kernel protection. It is not a new campaign gate. No universal filesystem CAS guarantee may be claimed. |
 | @fact:B235-DISPOSITION **disposition** | deferred — integrate additional editor/writer participants when needed; investigate a portable stronger publication adapter only for a concrete consumer requiring exclusion of this interval. Current D3 must detect observed drift, fence registered clients, retain exact partial/uncertain effects and preserve third-state recovery. Do not introduce AppArmor, systemd or a kernel protection framework to close the MVP. |
 | @fact:B235-FILED **filed by** | First Agent D3 boundary clarification, 2026-10-13. |
+
+## B-236 — historical origin evidence is held in memory {#b-236}
+
+| field | value |
+|---|---|
+| @fact:B236-WHAT **what** | C1 historical carrier retains exact selected-world observation while its object survives; it is not a durable source store. Authored identity declarations do not retain the source bytes themselves. Losing the carrier produces MissingRetained; it cannot reconstruct historical bytes from a current/latest slot. C1 is correcting its separate hash-only authored-binding gap with an explicit optional package-content declaration and bound-intent recipe; that declaration still cannot recover lost historical evidence. |
+| @fact:B236-EVIDENCE **evidence** | PROP-071 CHANGE-AUTHORED-GRAMMAR and CHANGE-RETAINED-ORIGIN; workspace source_query/capture/continuity/retained.rs; requirements change/origin.rs; /fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-C1/ASTRA-AUTHORED-IDENTITY-FIDELITY.json. C1 final acceptance still pending when filed. |
+| @fact:B236-SEVERITY **severity** | P2 — explicit historical availability limitation, not an extra C1 or current campaign gate. Current contract permits missing retained evidence to remain unavailable and requires no silent newest-version fallback. |
+| @fact:B236-DISPOSITION **disposition** | deferred — if a concrete consumer needs origin byte recovery across process loss, connect a bounded durable retention owner and versioned identity contract. Preserve source grade and exact accepted pin/bytes; persistence cannot create authentication. Do not claim retained source bytes or authentication are stored in authored intent. The separate C1 selected-content binding correction is commissioned; no durable source store or security work is commissioned by this backlog. |
+| @fact:B236-FILED **filed by** | First Agent C1 fidelity review, 2026-10-13. |

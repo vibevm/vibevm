@@ -1,0 +1,20 @@
+{
+  "status": "connected_rebase_review_not_acceptance",
+  "case": "change::m_02_c_1_cases::saved_rebase_names_old_new_and_prepares_existing_barrier",
+  "passed": 1,
+  "ignored": 0,
+  "log_sha256": "1efd2a7c1e4073bc2d2059c0b5f942ee2a9634f0f27c0375ead6b4c2f616f31e",
+  "source_sha256": "2e9be7ad0fe43fa969d052d4c62145c1c7dda6f4d47e2fd3349f5e1102d55366",
+  "observed": [
+    "Exact old DELIVERY and new UPDATED selected fact inventories; explicit Removed/Added delta.",
+    "Proposal before equals saved authored text; intent changes.",
+    "Comments/CRLF/opaque metadata retained; checked origin equals selected new declaration.",
+    "Fresh saved admission returns incumbent barrier; acknowledge/drop only.",
+    "Fixture inventory and old carrier bytes unchanged."
+  ],
+  "pending": [
+    "Full selected origin identity storage fidelity audit.",
+    "Dirty/stale/missing-retained cases and core comment/span boundary cases.",
+    "Final source/evidence/specmap."
+  ]
+}

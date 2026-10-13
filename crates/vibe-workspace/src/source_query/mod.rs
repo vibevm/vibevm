@@ -19,9 +19,10 @@ pub use capture::{
     BoundSourceInputs, CanonicalNodeIdentity, CapturedSourceFile, CommonMarkExtraction,
     ExtractedSource, ExtractionError, ExtractionProvenance, MaterializedVibeMedia,
     PreparedDocInstance, PreparedDocument, PreparedOwnerCapture, PreparedWorldWitness,
-    RecordedOutput, RepresentationWitness, SelectedDescriptorWitness, SourceEncoding,
-    SourceMembershipIndex, SourceQueryResponse, SourceQueryService, SourceStrength, SpanBasis,
-    SpecExtraction, SpecOutline, StructuredView, WitnessedSourceWorld, canonical_node_of_output,
+    RecordedOutput, RepresentationWitness, RetainedOriginCapture, RetainedOriginDocument,
+    RetainedOriginFact, SelectedDescriptorWitness, SourceEncoding, SourceMembershipIndex,
+    SourceQueryResponse, SourceQueryService, SourceStrength, SpanBasis, SpecExtraction,
+    SpecOutline, StructuredView, WitnessedSourceWorld, canonical_node_of_output,
     captured_manifest_closure, native_xml_range_of_output,
 };
 

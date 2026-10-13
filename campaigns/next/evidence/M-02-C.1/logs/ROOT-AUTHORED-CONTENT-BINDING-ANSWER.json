@@ -1,0 +1,107 @@
+{
+  "request": {
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-c1-authored-content-binding-20261013",
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "questionGroupId": "question-group.cb630bd0-7c3f-4723-8440-1a62c5bf2f7c",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "c1_authored_content_binding",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "binding"
+          }
+        }
+      ],
+      "noteMarkdown": "Root selects exact authored binding: the concrete hash-only counterexample does not satisfy C1 step1/explicit-rebase binding. My prior leaf-only assessment is superseded; preserve original evidence. Astra re-audited and agrees.\nWRITE core manifest/change/mod.rs, validation.rs, identity.rs, rebase.rs; affected m_02_b_1_cases.rs/m_02_b_2_cases.rs constructors or compatibility assertions only if needed; proposed m_02_c_1_cases.rs and mod registration. Existing requirements/orchestrator change/ scopes remain. Additional WRITE formats/corpora/change-manifest/e1/ for bound/unbound/invalid-binding TOML corpus only. READ formats/REGISTRY.toml and PROP-044-change-native-formats.xml relevant compatibility/recipe clauses; exact necessary format validator owner may be read. Actual registry change-manifest has schema=none: no JTD/generated DTO exists; do not invent one or run unrelated codegen. No registry epoch/window flags, versions/checksums or work-recipe change.\nMinimal optional selected_content_hash: absence parseable legacy, present validated by incumbent ContentHash parser. Whole-package acceptance distinguishes unbound, mismatch and missing retained evidence and compares authored binding to actual retained carrier; never fill absence implicitly. Explicit rebase replaces/inserts selected hash through M13 token replay preserving comments/unrelated bytes. Provide INITIAL binding preparation for unbound legacy: verify old pin/manifest/cited bytes against actual retained capture then propose selected hash, without circular need for already whole-package AcceptedOrigin. Preparation only, B3/M16 controls future publication.\nAll-absent legacy v1 framing/digests EXACTLY unchanged. Any bound origin uses explicit distinct bound-intent recipe/domain retained in IntentIdentity and per-origin presence/hash frames; incremental binding does not claim unbound origins accepted. Work recipes unchanged. New parser accepts old syntax; older parser refuses unknown new field, report non-bidirectional compatibility. No forced migrations, parallel world, new store/security.\nRequired C1 regressions: exact legacy v1 vectors; ONLY uncited package content changes => drift, empty selected-fact delta, new authored binding and changed bound intent after explicit rebase; unbound/mismatch refusals and explicit initial binding/comment preservation; serialized binding with lost carrier remains unavailable. Hash is a selection declaration, not authentication or historical-byte recovery. Keep original C1 cases. No new campaign task."
+    }
+  },
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.cb630bd0-7c3f-4723-8440-1a62c5bf2f7c",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.d7b5ebc4-3561-4f23-af7a-d2a098759fc7",
+        "title": "C1 authored accepted package-content binding",
+        "introductionMarkdown": "Current core schema1 origins store exact pin+manifest/document SHA, but no selected package ContentHash. The retained carrier now preserves that independent selected identity. Source counterexample: selected package content changes outside those leaves; comparison reports drift, yet explicit rebase would produce identical authored origin tokens/intent because source ContentHash is not represented.",
+        "items": [
+          {
+            "questionItemId": "c1_authored_content_binding",
+            "header": "Content identity",
+            "promptMarkdown": "Choose exact owner correction for storing accepted selected content identity in authored intent: grant minimal additive optional binding in core change Wire/validation/identity and actual registered change-manifest schema/generated contract (name exact paths), with old unbound schema1 hashes/compatibility preserved and explicit unavailable content binding; or confirm deliberate leaf-only authored scope and that selected ContentHash remains separately held/report-only, without claiming full package-content binding in intent. No editable hash will authenticate originals.",
+            "contextMarkdown": "C1 step1 says store accepted identity in authored change intent; existing B1/B2 shape cannot persist selected whole-package ContentHash. An opaque metadata field cannot fix this because B2 excludes metadata from intent. Avoid silent recipe/schema meaning change or a second source store. Remaining actual saved/refusal tests can continue at current subject while Root decides.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "binding",
+                "label": "Add exact authored binding",
+                "description": "Root scopes minimal core/schema/recipe compatibility owner correction for C1.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              },
+              {
+                "optionId": "leaves",
+                "label": "Explicit leaf-only intent",
+                "description": "Keep current schema; source ContentHash is held/report-only and cannot be claimed as authored intent binding.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact scope correction",
+              "multiline": true,
+              "maximumLength": 6000
+            },
+            "recommendation": {
+              "optionIds": [
+                "binding"
+              ],
+              "explanationMarkdown": "Addresses the concrete declaration gap rather than hiding it with self-consistent fixtures."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-13T00:49:52.223Z",
+        "updatedAt": "2026-10-13T00:54:11.461Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.8f3138b9-e391-40ad-a59b-4be00ea4793c",
+        "questionGroupId": "question-group.cb630bd0-7c3f-4723-8440-1a62c5bf2f7c",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "c1_authored_content_binding",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "binding"
+              }
+            }
+          ],
+          "noteMarkdown": "Root selects exact authored binding: the concrete hash-only counterexample does not satisfy C1 step1/explicit-rebase binding. My prior leaf-only assessment is superseded; preserve original evidence. Astra re-audited and agrees.\nWRITE core manifest/change/mod.rs, validation.rs, identity.rs, rebase.rs; affected m_02_b_1_cases.rs/m_02_b_2_cases.rs constructors or compatibility assertions only if needed; proposed m_02_c_1_cases.rs and mod registration. Existing requirements/orchestrator change/ scopes remain. Additional WRITE formats/corpora/change-manifest/e1/ for bound/unbound/invalid-binding TOML corpus only. READ formats/REGISTRY.toml and PROP-044-change-native-formats.xml relevant compatibility/recipe clauses; exact necessary format validator owner may be read. Actual registry change-manifest has schema=none: no JTD/generated DTO exists; do not invent one or run unrelated codegen. No registry epoch/window flags, versions/checksums or work-recipe change.\nMinimal optional selected_content_hash: absence parseable legacy, present validated by incumbent ContentHash parser. Whole-package acceptance distinguishes unbound, mismatch and missing retained evidence and compares authored binding to actual retained carrier; never fill absence implicitly. Explicit rebase replaces/inserts selected hash through M13 token replay preserving comments/unrelated bytes. Provide INITIAL binding preparation for unbound legacy: verify old pin/manifest/cited bytes against actual retained capture then propose selected hash, without circular need for already whole-package AcceptedOrigin. Preparation only, B3/M16 controls future publication.\nAll-absent legacy v1 framing/digests EXACTLY unchanged. Any bound origin uses explicit distinct bound-intent recipe/domain retained in IntentIdentity and per-origin presence/hash frames; incremental binding does not claim unbound origins accepted. Work recipes unchanged. New parser accepts old syntax; older parser refuses unknown new field, report non-bidirectional compatibility. No forced migrations, parallel world, new store/security.\nRequired C1 regressions: exact legacy v1 vectors; ONLY uncited package content changes => drift, empty selected-fact delta, new authored binding and changed bound intent after explicit rebase; unbound/mismatch refusals and explicit initial binding/comment preservation; serialized binding with lost carrier remains unavailable. Hash is a selection declaration, not authentication or historical-byte recovery. Keep original C1 cases. No new campaign task."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-13T00:54:11.461Z",
+        "metadata": {}
+      }
+    }
+  }
+}

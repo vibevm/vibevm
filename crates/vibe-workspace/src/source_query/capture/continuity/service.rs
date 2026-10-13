@@ -50,6 +50,15 @@ pub struct SourceQueryService {
 }
 
 impl SourceQueryService {
+    /// Finite historical retention through the same checked selected world.
+    pub fn retain_origin_capture(
+        &self,
+        group: &str,
+        name: &str,
+        addresses: &[String],
+    ) -> Result<super::RetainedOriginCapture, SourceQueryUnavailable> {
+        self.world.retain_origin_capture(group, name, addresses)
+    }
     /// Consumes existing sealed authority, never creates it from descriptors.
     pub fn from_world(world: Arc<WitnessedSourceWorld>) -> Result<Self, QueryError> {
         let prepared = &world.prepared;

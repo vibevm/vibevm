@@ -1,0 +1,22 @@
+[
+  "BACKLOG.md",
+  "crates/vibe-core/src/manifest/change/identity.rs",
+  "crates/vibe-core/src/manifest/change/m_02_c_1_cases.rs",
+  "crates/vibe-core/src/manifest/change/mod.rs",
+  "crates/vibe-core/src/manifest/change/rebase.rs",
+  "crates/vibe-core/src/manifest/change/validation.rs",
+  "crates/vibe-orchestrator/src/change/m_02_c_1_cases.rs",
+  "crates/vibe-orchestrator/src/change/mod.rs",
+  "crates/vibe-orchestrator/src/change/rebase.rs",
+  "crates/vibe-requirements/src/change/m_02_c_1_cases.rs",
+  "crates/vibe-requirements/src/change/mod.rs",
+  "crates/vibe-requirements/src/change/origin.rs",
+  "crates/vibe-workspace/src/source_query/capture.rs",
+  "crates/vibe-workspace/src/source_query/capture/continuity.rs",
+  "crates/vibe-workspace/src/source_query/capture/continuity/retained.rs",
+  "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+  "crates/vibe-workspace/src/source_query/mod.rs",
+  "formats/corpora/change-manifest/e1/semantic-gap/invalid-content-binding.toml",
+  "formats/corpora/change-manifest/e1/valid/bound-origin.toml",
+  "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+]

@@ -1,0 +1,580 @@
+warning: unused field `description` in `workspace.package`
+  --> Cargo.toml:91:1
+   |
+91 | description = "The disciplined runtime for spec-driven vibecoding"
+   | ^^^^^^^^^^^
+   |
+   = note: `cargo::unused_workspace_package_fields` is set to `warn` by default
+help: consider removing the field `workspace.package.description`
+warning: unused field `keywords` in `workspace.package`
+  --> Cargo.toml:92:1
+   |
+92 | keywords = ["spec-driven", "ai", "cli", "package-manager"]
+   | ^^^^^^^^
+   |
+help: consider removing the field `workspace.package.keywords`
+warning: unused field `categories` in `workspace.package`
+  --> Cargo.toml:93:1
+   |
+93 | categories = ["command-line-utilities", "development-tools"]
+   | ^^^^^^^^^^
+   |
+help: consider removing the field `workspace.package.categories`
+warning: workspace (manifest) generated 3 warnings
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-test-support/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-test-support` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/progress-core/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `progress-core` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-package-source/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-package-source` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> xtask/Cargo.toml:11:1
+   |
+10 | repository.workspace = true
+   | ----------
+11 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `xtask` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-spec/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-spec` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-lifecycle/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-lifecycle` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-actions/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-actions` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-orchestrator/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-orchestrator` (manifest) generated 1 warning
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-cli/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-cli` (manifest) generated 2 warnings
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-safefs/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-safefs` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-facts/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-facts` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-mcp/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-mcp` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-registry/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-registry` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-check/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-check` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-install/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-install` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-trace/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-trace` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-publish/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-publish` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-core/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-core` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-ext/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-ext` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-specdoc/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-specdoc` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-workspace/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-workspace` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-extension-registry/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-extension-registry` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-native-loader/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-native-loader` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-requirements/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-requirements` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-wire/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-wire` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-resolver/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-resolver` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-agent-projection/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-agent-projection` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc-server/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc-server` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc-shell/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc-shell` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-graph/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-graph` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-scrape/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-scrape` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-llm/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-llm` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-index/Cargo.toml:10:12
+   |
+10 | homepage = "https://gitverse.ru/vibevm/vibevm"
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 | repository = "https://gitverse.ru/vibevm/vibevm"
+   |              -----------------------------------
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-index` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-settings/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-settings` (manifest) generated 1 warning
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:262:12
+    |
+262 |     pub fn during(_: &crate::Pinned, _: &str) {}
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+warning: fields `host`, `resolution_identity`, and `visible` are never read
+   --> crates/vibe-workspace/src/source_query/capture.rs:164:16
+    |
+163 | pub struct BoundSourceInputs {
+    |            ----------------- fields in this struct
+164 |     pub(super) host: HostExtensionSource,
+    |                ^^^^
+165 |     pub(super) node_root: PathBuf,
+166 |     pub(super) resolution_identity: OrderedResolutionIdentity,
+    |                ^^^^^^^^^^^^^^^^^^^
+167 |     pub(super) visible: BTreeSet<NodeId>,
+    |                ^^^^^^^
+    |
+    = note: `BoundSourceInputs` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `selected_root` is never used
+   --> crates/vibe-workspace/src/source_query/capture.rs:273:19
+    |
+172 | impl BoundSourceInputs {
+    | ---------------------- method in this implementation
+...
+273 |     pub(crate) fn selected_root(&self, group: &str, name: &str) -> Option<&Path> {
+    |                   ^^^^^^^^^^^^^
+
+warning: method `revalidate_with` is never used
+   --> crates/vibe-workspace/src/source_query/capture/continuity.rs:183:8
+    |
+ 80 | impl WitnessedSourceWorld {
+    | ------------------------- method in this implementation
+...
+183 |     fn revalidate_with(
+    |        ^^^^^^^^^^^^^^^
+
+warning: `vibe-workspace` (lib) generated 3 warnings
+warning: function `execute_host_admitted_bound_vibe_bin` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy.rs:107:15
+    |
+107 | pub(crate) fn execute_host_admitted_bound_vibe_bin(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `alias_warnings` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:389:19
+    |
+246 | impl AdmittedLocalDeployBinding {
+    | ------------------------------- method in this implementation
+...
+389 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: field `alias_note` is never read
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:510:5
+    |
+505 | struct NamedRootWitness {
+    |        ---------------- field in this struct
+...
+510 |     alias_note: Option<String>,
+    |     ^^^^^^^^^^
+
+warning: methods `user_home` and `alias_warnings` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:538:19
+    |
+528 | impl LockedLocalDeployBinding {
+    | ----------------------------- methods in this implementation
+...
+538 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+544 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: method `remove_resource` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:471:19
+    |
+316 | impl<'a> BoundVibeBinStore<'a> {
+    | ------------------------------ method in this implementation
+...
+471 |     pub(crate) fn remove_resource(&self, relative: &str) -> Result<bool, BoundVibeBinError> {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: fields `run_id`, `reservation_ref`, and `pre_effect_plan_sha256` are never read
+  --> crates/vibe-lifecycle/src/state/install_stage.rs:54:16
+   |
+53 | pub struct InstallEnteredStage {
+   |            ------------------- fields in this struct
+54 |     pub(crate) run_id: String,
+   |                ^^^^^^
+55 |     pub(crate) reservation_ref: String,
+   |                ^^^^^^^^^^^^^^^
+56 |     pub(crate) pre_effect_plan_sha256: String,
+   |                ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `InstallEnteredStage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `begin` is never used
+   --> crates/vibe-lifecycle/src/state/source_stage.rs:115:19
+    |
+ 73 | impl ScriptSourceStage {
+    | ---------------------- method in this implementation
+...
+115 |     pub(crate) fn begin<'a>(
+    |                   ^^^^^
+
+warning: `vibe-lifecycle` (lib) generated 7 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running unittests src/lib.rs (/fast/git/v/.build/c4-first-agent-target/debug/build/vibe-requirements/9bc85eeeb003ed10/out/vibe_requirements-9bc85eeeb003ed10)
+
+running 6 tests
+C1_SNAPSHOT_PAIR {"label":"initial-unbound-lost-retention","before":[["host",null],["host/vibe.lock",[91,109,101,116,97,93,10,103,101,110,101,114,97,116,101,100,95,98,121,32,61,32,34,102,105,120,116,117,114,101,34,10,103,101,110,101,114,97,116,101,100,95,97,116,32,61,32,34,102,105,120,116,117,114,101,34,10,115,99,104,101,109,97,95,118,101,114,115,105,111,110,32,61,32,55,10,10,91,91,112,97,99,107,97,103,101,93,93,10,107,105,110,100,32,61,32,34,102,108,111,119,34,10,110,97,109,101,32,61,32,34,100,101,112,34,10,103,114,111,117,112,32,61,32,34,111,114,103,46,100,101,109,111,34,10,118,101,114,115,105,111,110,32,61,32,34,49,46,48,46,48,34,10,115,111,117,114,99,101,95,117,114,108,32,61,32,34,102,105,120,116,117,114,101,34,10,99,111,110,116,101,110,116,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,102,105,108,101,115,95,119,114,105,116,116,101,110,32,61,32,91,93,10]],["host/vibe.toml",[91,112,114,111,106,101,99,116,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,99,111,110,115,117,109,101,114,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,114,101,113,117,105,114,101,115,46,112,97,99,107,97,103,101,115,93,10,39,102,108,111,119,58,111,114,103,46,100,101,109,111,47,100,101,112,39,61,39,61,49,46,48,46,48,39,10]],["host/vibevm",null],["host/vibevm/vibedeps",null],["host/vibevm/vibedeps/org.demo.dep",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml",[115,99,104,101,109,97,32,61,32,50,10,115,111,117,114,99,101,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,115,112,101,99,95,102,111,114,109,97,116,32,61,32,34,109,105,120,101,100,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,46,116,111,109,108,34,10,115,104,97,50,53,54,32,61,32,34,48,48,98,53,52,57,52,57,54,53,100,49,98,51,52,102,98,56,100,55,56,51,54,57,50,97,102,50,53,51,99,98,56,48,57,56,54,102,97,97,98,53,57,57,50,51,102,99,56,99,55,51,52,99,48,100,50,54,57,49,54,101,57,55,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,34,10,115,104,97,50,53,54,32,61,32,34,50,99,100,102,51,52,48,56,50,52,57,54,50,48,99,50,55,48,52,55,101,48,98,49,51,100,101,48,56,101,55,48,97,51,48,54,56,98,49,56,53,50,57,53,49,56,97,101,52,50,51,98,48,54,101,97,54,50,52,57,51,97,49,57,34,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]],["source",null],["source/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["source/vibevm",null],["source/vibevm/vibespecs",null],["source/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]]],"after":[["host",null],["host/vibe.lock",[91,109,101,116,97,93,10,103,101,110,101,114,97,116,101,100,95,98,121,32,61,32,34,102,105,120,116,117,114,101,34,10,103,101,110,101,114,97,116,101,100,95,97,116,32,61,32,34,102,105,120,116,117,114,101,34,10,115,99,104,101,109,97,95,118,101,114,115,105,111,110,32,61,32,55,10,10,91,91,112,97,99,107,97,103,101,93,93,10,107,105,110,100,32,61,32,34,102,108,111,119,34,10,110,97,109,101,32,61,32,34,100,101,112,34,10,103,114,111,117,112,32,61,32,34,111,114,103,46,100,101,109,111,34,10,118,101,114,115,105,111,110,32,61,32,34,49,46,48,46,48,34,10,115,111,117,114,99,101,95,117,114,108,32,61,32,34,102,105,120,116,117,114,101,34,10,99,111,110,116,101,110,116,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,102,105,108,101,115,95,119,114,105,116,116,101,110,32,61,32,91,93,10]],["host/vibe.toml",[91,112,114,111,106,101,99,116,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,99,111,110,115,117,109,101,114,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,114,101,113,117,105,114,101,115,46,112,97,99,107,97,103,101,115,93,10,39,102,108,111,119,58,111,114,103,46,100,101,109,111,47,100,101,112,39,61,39,61,49,46,48,46,48,39,10]],["host/vibevm",null],["host/vibevm/vibedeps",null],["host/vibevm/vibedeps/org.demo.dep",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml",[115,99,104,101,109,97,32,61,32,50,10,115,111,117,114,99,101,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,115,112,101,99,95,102,111,114,109,97,116,32,61,32,34,109,105,120,101,100,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,46,116,111,109,108,34,10,115,104,97,50,53,54,32,61,32,34,48,48,98,53,52,57,52,57,54,53,100,49,98,51,52,102,98,56,100,55,56,51,54,57,50,97,102,50,53,51,99,98,56,48,57,56,54,102,97,97,98,53,57,57,50,51,102,99,56,99,55,51,52,99,48,100,50,54,57,49,54,101,57,55,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,34,10,115,104,97,50,53,54,32,61,32,34,50,99,100,102,51,52,48,56,50,52,57,54,50,48,99,50,55,48,52,55,101,48,98,49,51,100,101,48,56,101,55,48,97,51,48,54,56,98,49,56,53,50,57,53,49,56,97,101,52,50,51,98,48,54,101,97,54,50,52,57,51,97,49,57,34,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]],["source",null],["source/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["source/vibevm",null],["source/vibevm/vibespecs",null],["source/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]]]}
+test change::m_02_c_1_cases::unbound_mismatch_initial_binding_and_lost_carrier_are_distinct ... ok
+C1_SNAPSHOT_PAIR {"label":"initial-retention","before":[["host",null],["host/vibe.lock",[91,109,101,116,97,93,10,103,101,110,101,114,97,116,101,100,95,98,121,32,61,32,34,102,105,120,116,117,114,101,34,10,103,101,110,101,114,97,116,101,100,95,97,116,32,61,32,34,102,105,120,116,117,114,101,34,10,115,99,104,101,109,97,95,118,101,114,115,105,111,110,32,61,32,55,10,10,91,91,112,97,99,107,97,103,101,93,93,10,107,105,110,100,32,61,32,34,102,108,111,119,34,10,110,97,109,101,32,61,32,34,100,101,112,34,10,103,114,111,117,112,32,61,32,34,111,114,103,46,100,101,109,111,34,10,118,101,114,115,105,111,110,32,61,32,34,49,46,48,46,48,34,10,115,111,117,114,99,101,95,117,114,108,32,61,32,34,102,105,120,116,117,114,101,34,10,99,111,110,116,101,110,116,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,102,105,108,101,115,95,119,114,105,116,116,101,110,32,61,32,91,93,10]],["host/vibe.toml",[91,112,114,111,106,101,99,116,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,99,111,110,115,117,109,101,114,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,114,101,113,117,105,114,101,115,46,112,97,99,107,97,103,101,115,93,10,39,102,108,111,119,58,111,114,103,46,100,101,109,111,47,100,101,112,39,61,39,61,49,46,48,46,48,39,10]],["host/vibevm",null],["host/vibevm/vibedeps",null],["host/vibevm/vibedeps/org.demo.dep",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml",[115,99,104,101,109,97,32,61,32,50,10,115,111,117,114,99,101,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,115,112,101,99,95,102,111,114,109,97,116,32,61,32,34,109,105,120,101,100,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,46,116,111,109,108,34,10,115,104,97,50,53,54,32,61,32,34,48,48,98,53,52,57,52,57,54,53,100,49,98,51,52,102,98,56,100,55,56,51,54,57,50,97,102,50,53,51,99,98,56,48,57,56,54,102,97,97,98,53,57,57,50,51,102,99,56,99,55,51,52,99,48,100,50,54,57,49,54,101,57,55,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,34,10,115,104,97,50,53,54,32,61,32,34,50,99,100,102,51,52,48,56,50,52,57,54,50,48,99,50,55,48,52,55,101,48,98,49,51,100,101,48,56,101,55,48,97,51,48,54,56,98,49,56,53,50,57,53,49,56,97,101,52,50,51,98,48,54,101,97,54,50,52,57,51,97,49,57,34,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]],["source",null],["source/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["source/vibevm",null],["source/vibevm/vibespecs",null],["source/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]]],"after":[["host",null],["host/vibe.lock",[91,109,101,116,97,93,10,103,101,110,101,114,97,116,101,100,95,98,121,32,61,32,34,102,105,120,116,117,114,101,34,10,103,101,110,101,114,97,116,101,100,95,97,116,32,61,32,34,102,105,120,116,117,114,101,34,10,115,99,104,101,109,97,95,118,101,114,115,105,111,110,32,61,32,55,10,10,91,91,112,97,99,107,97,103,101,93,93,10,107,105,110,100,32,61,32,34,102,108,111,119,34,10,110,97,109,101,32,61,32,34,100,101,112,34,10,103,114,111,117,112,32,61,32,34,111,114,103,46,100,101,109,111,34,10,118,101,114,115,105,111,110,32,61,32,34,49,46,48,46,48,34,10,115,111,117,114,99,101,95,117,114,108,32,61,32,34,102,105,120,116,117,114,101,34,10,99,111,110,116,101,110,116,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,102,105,108,101,115,95,119,114,105,116,116,101,110,32,61,32,91,93,10]],["host/vibe.toml",[91,112,114,111,106,101,99,116,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,99,111,110,115,117,109,101,114,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,114,101,113,117,105,114,101,115,46,112,97,99,107,97,103,101,115,93,10,39,102,108,111,119,58,111,114,103,46,100,101,109,111,47,100,101,112,39,61,39,61,49,46,48,46,48,39,10]],["host/vibevm",null],["host/vibevm/vibedeps",null],["host/vibevm/vibedeps/org.demo.dep",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml",[115,99,104,101,109,97,32,61,32,50,10,115,111,117,114,99,101,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,115,112,101,99,95,102,111,114,109,97,116,32,61,32,34,109,105,120,101,100,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,46,116,111,109,108,34,10,115,104,97,50,53,54,32,61,32,34,48,48,98,53,52,57,52,57,54,53,100,49,98,51,52,102,98,56,100,55,56,51,54,57,50,97,102,50,53,51,99,98,56,48,57,56,54,102,97,97,98,53,57,57,50,51,102,99,56,99,55,51,52,99,48,100,50,54,57,49,54,101,57,55,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,34,10,115,104,97,50,53,54,32,61,32,34,50,99,100,102,51,52,48,56,50,52,57,54,50,48,99,50,55,48,52,55,101,48,98,49,51,100,101,48,56,101,55,48,97,51,48,54,56,98,49,56,53,50,57,53,49,56,97,101,52,50,51,98,48,54,101,97,54,50,52,57,51,97,49,57,34,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]],["source",null],["source/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["source/vibevm",null],["source/vibevm/vibespecs",null],["source/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]]]}
+test change::m_02_c_1_cases::declaration_and_selected_fact_mismatches_refuse ... ok
+test change::m_02_c_1_cases::copied_media_and_transformed_original_gap_are_explicit ... ok
+test change::m_02_c_1_cases::selected_content_identity_is_authored ... ok
+test change::m_02_c_1_cases::missing_retained_origin_never_uses_newest ... ok
+C1_SNAPSHOT_PAIR {"label":"reinstall-retention","before":[["host",null],["host/vibe.lock",[91,109,101,116,97,93,10,103,101,110,101,114,97,116,101,100,95,98,121,32,61,32,34,102,105,120,116,117,114,101,34,10,103,101,110,101,114,97,116,101,100,95,97,116,32,61,32,34,102,105,120,116,117,114,101,34,10,115,99,104,101,109,97,95,118,101,114,115,105,111,110,32,61,32,55,10,10,91,91,112,97,99,107,97,103,101,93,93,10,107,105,110,100,32,61,32,34,102,108,111,119,34,10,110,97,109,101,32,61,32,34,100,101,112,34,10,103,114,111,117,112,32,61,32,34,111,114,103,46,100,101,109,111,34,10,118,101,114,115,105,111,110,32,61,32,34,49,46,48,46,48,34,10,115,111,117,114,99,101,95,117,114,108,32,61,32,34,102,105,120,116,117,114,101,34,10,99,111,110,116,101,110,116,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,102,105,108,101,115,95,119,114,105,116,116,101,110,32,61,32,91,93,10]],["host/vibe.toml",[91,112,114,111,106,101,99,116,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,99,111,110,115,117,109,101,114,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,114,101,113,117,105,114,101,115,46,112,97,99,107,97,103,101,115,93,10,39,102,108,111,119,58,111,114,103,46,100,101,109,111,47,100,101,112,39,61,39,61,49,46,48,46,48,39,10]],["host/vibevm",null],["host/vibevm/vibedeps",null],["host/vibevm/vibedeps/org.demo.dep",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml",[115,99,104,101,109,97,32,61,32,50,10,115,111,117,114,99,101,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,115,112,101,99,95,102,111,114,109,97,116,32,61,32,34,109,105,120,101,100,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,46,116,111,109,108,34,10,115,104,97,50,53,54,32,61,32,34,48,48,98,53,52,57,52,57,54,53,100,49,98,51,52,102,98,56,100,55,56,51,54,57,50,97,102,50,53,51,99,98,56,48,57,56,54,102,97,97,98,53,57,57,50,51,102,99,56,99,55,51,52,99,48,100,50,54,57,49,54,101,57,55,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,34,10,115,104,97,50,53,54,32,61,32,34,50,99,100,102,51,52,48,56,50,52,57,54,50,48,99,50,55,48,52,55,101,48,98,49,51,100,101,48,56,101,55,48,97,51,48,54,56,98,49,56,53,50,57,53,49,56,97,101,52,50,51,98,48,54,101,97,54,50,52,57,51,97,49,57,34,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]],["source",null],["source/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["source/vibevm",null],["source/vibevm/vibespecs",null],["source/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]]],"after":[["host",null],["host/vibe.lock",[91,109,101,116,97,93,10,103,101,110,101,114,97,116,101,100,95,98,121,32,61,32,34,102,105,120,116,117,114,101,34,10,103,101,110,101,114,97,116,101,100,95,97,116,32,61,32,34,102,105,120,116,117,114,101,34,10,115,99,104,101,109,97,95,118,101,114,115,105,111,110,32,61,32,55,10,10,91,91,112,97,99,107,97,103,101,93,93,10,107,105,110,100,32,61,32,34,102,108,111,119,34,10,110,97,109,101,32,61,32,34,100,101,112,34,10,103,114,111,117,112,32,61,32,34,111,114,103,46,100,101,109,111,34,10,118,101,114,115,105,111,110,32,61,32,34,49,46,48,46,48,34,10,115,111,117,114,99,101,95,117,114,108,32,61,32,34,102,105,120,116,117,114,101,34,10,99,111,110,116,101,110,116,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,102,105,108,101,115,95,119,114,105,116,116,101,110,32,61,32,91,93,10]],["host/vibe.toml",[91,112,114,111,106,101,99,116,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,99,111,110,115,117,109,101,114,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,114,101,113,117,105,114,101,115,46,112,97,99,107,97,103,101,115,93,10,39,102,108,111,119,58,111,114,103,46,100,101,109,111,47,100,101,112,39,61,39,61,49,46,48,46,48,39,10]],["host/vibevm",null],["host/vibevm/vibedeps",null],["host/vibevm/vibedeps/org.demo.dep",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml",[115,99,104,101,109,97,32,61,32,50,10,115,111,117,114,99,101,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,97,34,10,115,112,101,99,95,102,111,114,109,97,116,32,61,32,34,109,105,120,101,100,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,46,116,111,109,108,34,10,115,104,97,50,53,54,32,61,32,34,48,48,98,53,52,57,52,57,54,53,100,49,98,51,52,102,98,56,100,55,56,51,54,57,50,97,102,50,53,51,99,98,56,48,57,56,54,102,97,97,98,53,57,57,50,51,102,99,56,99,55,51,52,99,48,100,50,54,57,49,54,101,57,55,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,34,10,115,104,97,50,53,54,32,61,32,34,50,99,100,102,51,52,48,56,50,52,57,54,50,48,99,50,55,48,52,55,101,48,98,49,51,100,101,48,56,101,55,48,97,51,48,54,56,98,49,56,53,50,57,53,49,56,97,101,52,50,51,98,48,54,101,97,54,50,52,57,51,97,49,57,34,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]],["source",null],["source/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["source/vibevm",null],["source/vibevm/vibespecs",null],["source/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,79,114,105,103,105,110,97,108,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]]]}
+C1_SNAPSHOT_PAIR {"label":"drift-historical","before":[["host",null],["host/vibe.lock",[91,109,101,116,97,93,10,103,101,110,101,114,97,116,101,100,95,98,121,32,61,32,34,102,105,120,116,117,114,101,34,10,103,101,110,101,114,97,116,101,100,95,97,116,32,61,32,34,102,105,120,116,117,114,101,34,10,115,99,104,101,109,97,95,118,101,114,115,105,111,110,32,61,32,55,10,10,91,91,112,97,99,107,97,103,101,93,93,10,107,105,110,100,32,61,32,34,102,108,111,119,34,10,110,97,109,101,32,61,32,34,100,101,112,34,10,103,114,111,117,112,32,61,32,34,111,114,103,46,100,101,109,111,34,10,118,101,114,115,105,111,110,32,61,32,34,49,46,48,46,48,34,10,115,111,117,114,99,101,95,117,114,108,32,61,32,34,102,105,120,116,117,114,101,34,10,99,111,110,116,101,110,116,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,34,10,102,105,108,101,115,95,119,114,105,116,116,101,110,32,61,32,91,93,10]],["host/vibe.toml",[91,112,114,111,106,101,99,116,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,99,111,110,115,117,109,101,114,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,114,101,113,117,105,114,101,115,46,112,97,99,107,97,103,101,115,93,10,39,102,108,111,119,58,111,114,103,46,100,101,109,111,47,100,101,112,39,61,39,61,49,46,48,46,48,39,10]],["host/vibevm",null],["host/vibevm/vibedeps",null],["host/vibevm/vibedeps/org.demo.dep",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml",[115,99,104,101,109,97,32,61,32,50,10,115,111,117,114,99,101,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,34,10,115,112,101,99,95,102,111,114,109,97,116,32,61,32,34,109,105,120,101,100,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,46,116,111,109,108,34,10,115,104,97,50,53,54,32,61,32,34,48,48,98,53,52,57,52,57,54,53,100,49,98,51,52,102,98,56,100,55,56,51,54,57,50,97,102,50,53,51,99,98,56,48,57,56,54,102,97,97,98,53,57,57,50,51,102,99,56,99,55,51,52,99,48,100,50,54,57,49,54,101,57,55,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,34,10,115,104,97,50,53,54,32,61,32,34,52,49,48,54,56,97,102,49,52,51,49,56,54,100,100,56,52,54,48,56,51,54,102,99,55,52,57,55,48,57,50,51,55,50,99,97,50,48,101,98,100,99,98,52,98,99,56,49,53,101,54,56,48,54,50,56,52,98,100,97,55,49,52,102,34,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,67,104,97,110,103,101,100,32,115,97,109,101,45,118,101,114,115,105,111,110,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]],["source",null],["source/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["source/vibevm",null],["source/vibevm/vibespecs",null],["source/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,67,104,97,110,103,101,100,32,115,97,109,101,45,118,101,114,115,105,111,110,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]]],"after":[["host",null],["host/vibe.lock",[91,109,101,116,97,93,10,103,101,110,101,114,97,116,101,100,95,98,121,32,61,32,34,102,105,120,116,117,114,101,34,10,103,101,110,101,114,97,116,101,100,95,97,116,32,61,32,34,102,105,120,116,117,114,101,34,10,115,99,104,101,109,97,95,118,101,114,115,105,111,110,32,61,32,55,10,10,91,91,112,97,99,107,97,103,101,93,93,10,107,105,110,100,32,61,32,34,102,108,111,119,34,10,110,97,109,101,32,61,32,34,100,101,112,34,10,103,114,111,117,112,32,61,32,34,111,114,103,46,100,101,109,111,34,10,118,101,114,115,105,111,110,32,61,32,34,49,46,48,46,48,34,10,115,111,117,114,99,101,95,117,114,108,32,61,32,34,102,105,120,116,117,114,101,34,10,99,111,110,116,101,110,116,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,34,10,102,105,108,101,115,95,119,114,105,116,116,101,110,32,61,32,91,93,10]],["host/vibe.toml",[91,112,114,111,106,101,99,116,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,99,111,110,115,117,109,101,114,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,114,101,113,117,105,114,101,115,46,112,97,99,107,97,103,101,115,93,10,39,102,108,111,119,58,111,114,103,46,100,101,109,111,47,100,101,112,39,61,39,61,49,46,48,46,48,39,10]],["host/vibevm",null],["host/vibevm/vibedeps",null],["host/vibevm/vibedeps/org.demo.dep",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml",[115,99,104,101,109,97,32,61,32,50,10,115,111,117,114,99,101,95,104,97,115,104,32,61,32,34,115,104,97,50,53,54,58,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,98,34,10,115,112,101,99,95,102,111,114,109,97,116,32,61,32,34,109,105,120,101,100,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,46,116,111,109,108,34,10,115,104,97,50,53,54,32,61,32,34,48,48,98,53,52,57,52,57,54,53,100,49,98,51,52,102,98,56,100,55,56,51,54,57,50,97,102,50,53,51,99,98,56,48,57,56,54,102,97,97,98,53,57,57,50,51,102,99,56,99,55,51,52,99,48,100,50,54,57,49,54,101,57,55,34,10,10,91,91,102,105,108,101,93,93,10,112,97,116,104,32,61,32,34,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,34,10,115,104,97,50,53,54,32,61,32,34,52,49,48,54,56,97,102,49,52,51,49,56,54,100,100,56,52,54,48,56,51,54,102,99,55,52,57,55,48,57,50,51,55,50,99,97,50,48,101,98,100,99,98,52,98,99,56,49,53,101,54,56,48,54,50,56,52,98,100,97,55,49,52,102,34,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs",null],["host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,67,104,97,110,103,101,100,32,115,97,109,101,45,118,101,114,115,105,111,110,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]],["source",null],["source/vibe.toml",[91,112,97,99,107,97,103,101,93,10,103,114,111,117,112,61,39,111,114,103,46,100,101,109,111,39,10,110,97,109,101,61,39,100,101,112,39,10,107,105,110,100,61,39,102,108,111,119,39,10,118,101,114,115,105,111,110,61,39,49,46,48,46,48,39,10,91,91,112,97,99,107,97,103,101,46,115,111,117,114,99,101,115,93,93,10,102,105,108,101,61,39,118,105,98,101,118,109,47,118,105,98,101,115,112,101,99,115,47,68,79,67,46,109,100,39,10,109,101,100,105,97,61,39,116,101,120,116,47,109,97,114,107,100,111,119,110,39,10,105,110,116,101,114,112,114,101,116,97,116,105,111,110,61,39,118,105,98,101,45,115,112,101,99,39,10,114,111,108,101,61,39,115,112,101,99,39,10,108,111,97,100,105,110,103,61,39,101,120,112,108,105,99,105,116,39,10]],["source/vibevm",null],["source/vibevm/vibespecs",null],["source/vibevm/vibespecs/DOC.md",[35,32,79,114,105,103,105,110,32,123,35,114,111,111,116,125,10,10,64,102,97,99,116,58,68,69,76,73,86,69,82,89,32,67,104,97,110,103,101,100,32,115,97,109,101,45,118,101,114,115,105,111,110,32,100,101,108,105,118,101,114,121,46,32,64,115,116,97,116,117,115,58,105,109,112,108,47,100,111,110,101,10]]]}
+ORIGIN_REPORT old=OriginCaptureIdentity { package: "flow:org.demo/dep@=1.0.0", selected_content_hash: "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", manifest_sha256: "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97", facts: {"spec://org.demo/dep/DOC#DELIVERY": OriginFactIdentity { document_sha256: "sha256:2cdf3408249620c27047e0b13de08e70a3068b18529518ae423b06ea62493a19", canonical: CanonicalNodeIdentity { recipe: "sha256-specdoc-node/1", hash: "sha256:879aa9a754c6fcd2a42d7d69d19ee7553ff86c2c1a81f0530b2b4946068bebdd" }, source_path: "vibevm/vibespecs/DOC.md", output_path: "vibevm/vibespecs/DOC.md", materialized_media: Some("text/markdown"), recorded_converter_recipe: None, strength: RecordConsistent }} } current=OriginCaptureIdentity { package: "flow:org.demo/dep@=1.0.0", selected_content_hash: "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", manifest_sha256: "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97", facts: {"spec://org.demo/dep/DOC#DELIVERY": OriginFactIdentity { document_sha256: "sha256:41068af143186dd8460836fc7497092372ca20ebdcb4bc815e6806284bda714f", canonical: CanonicalNodeIdentity { recipe: "sha256-specdoc-node/1", hash: "sha256:55c9aefe79999ad982bd409c33c6c2d77367624ced08404b72df49a87a57dd53" }, source_path: "vibevm/vibespecs/DOC.md", output_path: "vibevm/vibespecs/DOC.md", materialized_media: Some("text/markdown"), recorded_converter_recipe: None, strength: RecordConsistent }} } affected=[OriginFactChange { address: "spec://org.demo/dep/DOC#DELIVERY", kind: Changed }]
+test change::m_02_c_1_cases::retained_origin_survives_reinstall ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 68 filtered out; finished in 0.10s

@@ -1,0 +1,26 @@
+{
+  "status": "reviewed_not_final_acceptance",
+  "distinct_new_cases": 12,
+  "core": 2,
+  "requirements": 6,
+  "orchestrator": 4,
+  "ignored": 0,
+  "logs": {
+    "core-final": "137ab5ae75c7869954733fd025229c4b3951369ad70fa83027fbc5d0431c6451",
+    "requirements-final": "3067450dde7b2cb37dde686a08f66c1fee1366e343d1e053ed6bac5cfa4c197d",
+    "orchestrator-final": "629efc2374a46ccccb999ac1c5935f007f1ad25dbe632a6f0b905826533488e0"
+  },
+  "reviewed": [
+    "Legacy fixed v1 vector exact; new bound vector matches independent corpus framing.",
+    "Presence/hash frames distinguish partial binding; work/contribution unchanged.",
+    "Precise native corpus invalid-binding/unknown field/epoch refusal.",
+    "Actual retention, no latest fallback, selection mismatches and grade/media boundary.",
+    "Unbound/mismatched/lost carrier explicit; initial binding proposal no circular AcceptedOrigin.",
+    "Hash-only rebase changes one selected-content token and bound intent with empty selected fact delta.",
+    "CRLF/comments/metadata and old carrier/slot inventories retained; saved/stale admission uses B3/M16, no apply."
+  ],
+  "pending": [
+    "Existing compatibility checks and final source/evidence seal.",
+    "Final scope/full specmap acceptance."
+  ]
+}

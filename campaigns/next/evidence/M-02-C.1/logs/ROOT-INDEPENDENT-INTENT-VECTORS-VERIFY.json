@@ -1,0 +1,19 @@
+{
+  "method": "Independently frame actual authored corpus and declared ab/c normative values from contract; no Rust helper invoked.",
+  "results": [
+    {
+      "fixture": "representative.toml",
+      "recipe": "sha256:vibe-change-intent-v1",
+      "digest": "sha256:5b9039445a19da392f03766344d84e49dc0cbc9836988972db3dfbefde155790",
+      "bytes": 884,
+      "exact_preimage_match": true
+    },
+    {
+      "fixture": "bound-origin.toml",
+      "recipe": "sha256:vibe-change-bound-intent-v1",
+      "digest": "sha256:51819f8406617674a5fee60afbe995a7e3cce43c81e719da8be6833ca393ab03",
+      "bytes": 1039,
+      "exact_preimage_match": true
+    }
+  ]
+}
