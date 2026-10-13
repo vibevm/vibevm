@@ -1,0 +1,24 @@
+{
+  "status": "reviewed_not_final_acceptance",
+  "distinct_new_cases": 8,
+  "requirements_cases": 6,
+  "facts_cases": 2,
+  "ignored": 0,
+  "logs": {
+    "requirements-final": "17183d18851b5ea546c529a893c3e940f75d2b1474d8c638b17c937bfef2c7a3",
+    "facts-final": "64e61e55d9ba5a05dd8c75f4fc779432c6564a1c2554e655b7694388fe5f50ba"
+  },
+  "assertions": [
+    "Existing facts declared observer produces exact320 independently expected Specification rows.",
+    "Missing expected source and undeclared annotation source are noncomplete, not empty complete.",
+    "Requirements actual M01 inventory\u2192observer\u2192page assembly\u2192change consumer preserves320 over public256 cap.",
+    "Truncated64 addresses, mixed filter/capture and duplicate rows refuse; changed membership321 cannot join historical320.",
+    "Exact missing/unavailable/unclassified/out-of-scope inert states remain explicit.",
+    "Current missing-file world refuses while old complete is historical; no rehydration.",
+    "Directory census/converted original remain explicit unavailable.",
+    "Change consumer ignores same-stem inert XML hash, retains missing selected fact gap, rejects unbound/content mismatch and observes unchanged inventory."
+  ],
+  "pending": [
+    "Final compatibility/source/evidence/scope seal and Root specmap."
+  ]
+}

@@ -2583,3 +2583,13 @@ structure, and it goes when the file does.
 | @fact:B236-SEVERITY **severity** | P2 — explicit historical availability limitation, not an extra C1 or current campaign gate. Current contract permits missing retained evidence to remain unavailable and requires no silent newest-version fallback. |
 | @fact:B236-DISPOSITION **disposition** | deferred — if a concrete consumer needs origin byte recovery across process loss, connect a bounded durable retention owner and versioned identity contract. Preserve source grade and exact accepted pin/bytes; persistence cannot create authentication. Do not claim retained source bytes or authentication are stored in authored intent. The separate C1 selected-content binding correction is commissioned; no durable source store or security work is commissioned by this backlog. |
 | @fact:B236-FILED **filed by** | First Agent C1 fidelity review, 2026-10-13. |
+
+## B-237 — internal fact pages rebuild the selected reference vector {#b-237}
+
+| field | value |
+|---|---|
+| @fact:B237-WHAT **what** | C2 FactSelection.page currently calls observed(), which filters all selected states into a fresh vector for each page. For N selected facts, a page costs O(N) reference traversal/allocation; enumerating all pages can approach O(N²/page-size). This is source-inspected cost, not a measured production slowdown. |
+| @fact:B237-EVIDENCE **evidence** | crates/vibe-requirements/src/complete/selection.rs observed/page; current C2 actual320fact/five64row case and6case family pass. Final C2 acceptance pending when filed. |
+| @fact:B237-SEVERITY **severity** | P3 — scaling improvement; no observed current campaign blocker or new gate. |
+| @fact:B237-DISPOSITION **disposition** | deferred — retain ordered selected references once or expose indexed slices when a concrete large consumer needs it. Preserve immutable source/filter binding, exact gaps and missing-page detection; do not introduce a total object cap or new observation/parser/store. |
+| @fact:B237-FILED **filed by** | First Agent C2 source review, 2026-10-13. |

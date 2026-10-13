@@ -35,7 +35,7 @@ pub(crate) const SCOPE_DOMAIN: &[u8] = b"vibe-requirements-scope-digest\0epoch=1
 pub(crate) const OBSERVATION_DOMAIN: &[u8] = b"vibe-requirements-observation-id\0epoch=2\0";
 
 /// One framed field: `be64(label_len) || label || be64(value_len) || value`.
-fn field(hasher: &mut Sha256, label: &[u8], value: &[u8]) {
+pub(crate) fn field(hasher: &mut Sha256, label: &[u8], value: &[u8]) {
     hasher.update((label.len() as u64).to_be_bytes());
     hasher.update(label);
     hasher.update((value.len() as u64).to_be_bytes());
@@ -45,7 +45,7 @@ fn field(hasher: &mut Sha256, label: &[u8], value: &[u8]) {
 /// A LABELED presence field — `field("<member>.present", "0|1")` — so
 /// an optional's bit is reconstructable from the recipe, not from a
 /// position.
-fn presence(hasher: &mut Sha256, member: &[u8], present: bool) {
+pub(crate) fn presence(hasher: &mut Sha256, member: &[u8], present: bool) {
     let mut label = member.to_vec();
     label.extend_from_slice(b".present");
     field(hasher, &label, if present { b"1" } else { b"0" });
@@ -54,17 +54,17 @@ fn presence(hasher: &mut Sha256, member: &[u8], present: bool) {
 /// A LABELED array count in canonical decimal UTF-8 — each array names
 /// its own count field (`document_count`, `source_count`, …), never a
 /// shared ambiguous byte.
-fn count(hasher: &mut Sha256, label: &[u8], n: usize) {
+pub(crate) fn count(hasher: &mut Sha256, label: &[u8], n: usize) {
     field(hasher, label, n.to_string().as_bytes());
 }
 
-fn seed(domain: &[u8]) -> Sha256 {
+pub(crate) fn seed(domain: &[u8]) -> Sha256 {
     let mut hasher = Sha256::new();
     hasher.update(domain);
     hasher
 }
 
-fn finish(hasher: Sha256) -> String {
+pub(crate) fn finish(hasher: Sha256) -> String {
     format!("sha256:{:x}", hasher.finalize())
 }
 

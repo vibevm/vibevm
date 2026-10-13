@@ -1,0 +1,24 @@
+{
+  "status": "family_review_not_acceptance",
+  "log": "requirements-corrected-2.log",
+  "log_sha256": "bb655091d199430e17df2d8799acd8c0b60932598070a319a9093811d05ec22b",
+  "passed": 5,
+  "ignored": 0,
+  "source_sha256": "d1e33a73ff2aefd1ed188b63083e7ce3e22667c95ae086777a0be6f2742df3bc",
+  "reviewed": [
+    "Large320 vs maximum public256; five64-row pages and change consumer remain complete.",
+    "First256 alone has exact64Truncated addresses; duplicate row/mixed filter/mixed capture refuse.",
+    "Changed source membership321 cannot mix with historical320; old complete explicitly historical.",
+    "Missing fact, invalid source/unavailable, unclassified and ordinary/XML-data OutOfScope states are exact and noncomplete.",
+    "Deleting actual installed leaf gives precise UnavailableWorld/selected descriptor-output map without recreating bytes; old capture historical.",
+    "Directory census gap and converted authored-original unavailability do not become Complete.",
+    "Owned byte/directory inventories unchanged in actual read intervals."
+  ],
+  "prior_failures": [
+    "Original3/4 invalid materialization fixture.",
+    "Intermediate E0599 nonexistent ErrorCode::Unavailable, no cases executed."
+  ],
+  "pending": [
+    "Affected facts observer checks, exact change binding mismatch checks, compatibility and final seal/specmap."
+  ]
+}

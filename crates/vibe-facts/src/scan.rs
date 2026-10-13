@@ -508,3 +508,65 @@ pub fn join_adoption(
     rows.sort_by(|a, b| a.address.cmp(&b.address));
     Ok(rows)
 }
+
+#[cfg(test)]
+mod m_02_c_2_cases {
+    use super::*;
+    fn package() -> vibe_core::manifest::PackageMeta {
+        toml::from_str("name='fixture'\ngroup='org.demo'\nkind='flow'\nversion='1.0.0'\n[[sources]]\nfile='spec/DOC.md'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='explicit'\n").unwrap()
+    }
+    #[test]
+    fn complete_reader_keeps_large_spec_only_set() {
+        let text = (0..320)
+            .map(|i| {
+                format!("@fact:F{i:03} Native {i}. @requires:specification @status:spec/done\n\n")
+            })
+            .collect::<String>();
+        let observed = observe_declared_source(
+            &package(),
+            &[CapturedDeclaredDocument {
+                path: "spec/DOC.md",
+                bytes: Some(text.as_bytes()),
+            }],
+        )
+        .unwrap();
+        assert!(observed.complete);
+        assert_eq!(observed.facts.len(), 320);
+        for (i, row) in observed.facts.iter().enumerate() {
+            assert_eq!(row.address, format!("spec://org.demo/fixture/DOC#F{i:03}"));
+            assert_eq!(
+                row.requirements
+                    .as_ref()
+                    .unwrap()
+                    .iter()
+                    .collect::<Vec<_>>(),
+                [progress_core::model::ArtifactKind::Specification]
+            );
+        }
+    }
+    #[test]
+    fn missing_and_unclassified_are_not_empty_complete_sources() {
+        let missing = observe_declared_source(&package(), &[]).unwrap();
+        assert!(!missing.complete);
+        assert!(matches!(
+            missing.documents[0].1,
+            DeclaredDocumentObservation::Unavailable { .. }
+        ));
+        let raw = b"@fact:FALSE Not declared. @status:impl/done\n";
+        let seen = observe_declared_source(
+            &package(),
+            &[CapturedDeclaredDocument {
+                path: "spec/OTHER.md",
+                bytes: Some(raw),
+            }],
+        )
+        .unwrap();
+        assert!(!seen.complete);
+        assert!(seen.facts.is_empty());
+        assert!(
+            seen.documents
+                .iter()
+                .any(|(_, o)| matches!(o, DeclaredDocumentObservation::Unclassified { .. }))
+        );
+    }
+}

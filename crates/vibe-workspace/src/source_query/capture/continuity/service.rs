@@ -50,6 +50,13 @@ pub struct SourceQueryService {
 }
 
 impl SourceQueryService {
+    pub fn retain_source_inventory(
+        &self,
+        group: &str,
+        name: &str,
+    ) -> Result<super::RetainedSourceInventory, SourceQueryUnavailable> {
+        self.world.retain_source_inventory(group, name)
+    }
     /// Finite historical retention through the same checked selected world.
     pub fn retain_origin_capture(
         &self,

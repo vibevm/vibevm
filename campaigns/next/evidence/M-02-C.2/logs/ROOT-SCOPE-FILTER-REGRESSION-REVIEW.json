@@ -1,0 +1,20 @@
+{
+  "before_log": "scope-filter-before.log",
+  "before_sha256": "cf54ce71e60cf435b0e4efde03ed51f44e4e764aae3b28ae5e9ab1e8640cd41e",
+  "before_cases": {
+    "passed": 0,
+    "failed": 1,
+    "ignored": 0,
+    "exit": 101
+  },
+  "failed_invariant": "Whole-source vs explicit-address scope with equal resolved rows had equal filter ID despite distinct gaps.",
+  "after_log": "requirements-final-scope-fix.log",
+  "after_sha256": "a215a1a9da57ed2fdbb5d2065ae08f61c53160a8fbb6e338b84b77f682743dbb",
+  "after_cases": {
+    "passed": 6,
+    "failed": 0,
+    "ignored": 0
+  },
+  "repair": "Explicit scope-kind framing; same existing regression case, no new unique-case count.",
+  "pending": "Final hash/scope/source seals; complete source epoch review."
+}

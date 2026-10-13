@@ -1,0 +1,24 @@
+{
+  "status": "connected_case_review_not_acceptance",
+  "case": "complete::m_02_c_2_cases::connected_large_capture_exceeds_query_page_without_truncating_change_scope",
+  "passed": 1,
+  "ignored": 0,
+  "log_sha256": "20c38c71b25346bc336f930b4fdb5cf02c50996dc6d3c76376f32e866921efab",
+  "source_sha256": "212e9cbfe4adb848f0cf082f81676aa8596f3a99a5496d8a8f2b63020488bf8b",
+  "existing_public_query_max": 256,
+  "complete_fact_count": 320,
+  "internal_page_size": 64,
+  "page_count": 5,
+  "assertions": [
+    "Independent expected F000..F319 exact address inventory.",
+    "Spec-only authored requirements remain Specification facts, same capture/reader.",
+    "All internal pages assemble exactly320 rows with Complete.",
+    "Existing neutral query remains256/truncated.",
+    "Actual shared ParsedCapturedChange.select_origin_facts selects320 complete rows from bound declared origin.",
+    "Owned fixture byte/directory inventory unchanged."
+  ],
+  "pending": [
+    "Missing/unavailable/unclassified/out-of-scope and incomplete/mixed/filter/membership regressions.",
+    "Affected facts observer cases, compatibility, final seals/specmap."
+  ]
+}

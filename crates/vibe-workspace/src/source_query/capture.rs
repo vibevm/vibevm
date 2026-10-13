@@ -23,10 +23,10 @@ pub use continuity::{
     CanonicalNodeIdentity, CapturedSourceFile, CommonMarkExtraction, ExtractedSource,
     ExtractionError, ExtractionProvenance, MaterializedVibeMedia, PreparedDocInstance,
     PreparedDocument, PreparedWorldWitness, RecordedOutput, RepresentationWitness,
-    RetainedOriginCapture, RetainedOriginDocument, RetainedOriginFact, SelectedDescriptorWitness,
-    SourceEncoding, SourceMembershipIndex, SourceQueryResponse, SourceQueryService, SourceStrength,
-    SpanBasis, SpecExtraction, SpecOutline, StructuredView, WitnessedSourceWorld,
-    canonical_node_of_output, native_xml_range_of_output,
+    RetainedOriginCapture, RetainedOriginDocument, RetainedOriginFact, RetainedSourceInventory,
+    SelectedDescriptorWitness, SourceEncoding, SourceMembershipIndex, SourceQueryResponse,
+    SourceQueryService, SourceStrength, SpanBasis, SpecExtraction, SpecOutline, StructuredView,
+    WitnessedSourceWorld, canonical_node_of_output, native_xml_range_of_output,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]

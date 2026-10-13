@@ -1,0 +1,13 @@
+{
+  "HEAD": "78963f02b2a91fff2afa6500efd8388950ba7de0",
+  "source_writing_stopped": true,
+  "source_files": 14,
+  "distinct_new_cases": 8,
+  "requirements": 6,
+  "facts": 2,
+  "no_stage_commit_next_atom": true,
+  "setup_mutations_separate_from_selection_intervals": true,
+  "root_owned_disjoint_paths": [
+    "FIXED-ISSUES.md"
+  ]
+}
