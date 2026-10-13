@@ -42,8 +42,9 @@ pub use component::{
     paths_overlap, split_relative,
 };
 pub use file::{
-    ContentDigest, FileIdentity, GuardedPublishError, Presence, StableFileSnapshot,
-    StableFileState, StreamCompletion, StreamOutcome, VerifiedStreamReader,
+    ContentDigest, FileIdentity, GuardedPublishError, Presence, ScaffoldDirectory,
+    ScaffoldDirectoryError, StableFileSnapshot, StableFileState, StreamCompletion, StreamOutcome,
+    VerifiedStreamReader,
 };
 #[cfg(any(test, feature = "inject-failures"))]
 pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanup};

@@ -1,0 +1,10 @@
+{
+  "before_count": 200,
+  "after_count": 200,
+  "added": [],
+  "removed": [],
+  "changed": [
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs"
+  ]
+}

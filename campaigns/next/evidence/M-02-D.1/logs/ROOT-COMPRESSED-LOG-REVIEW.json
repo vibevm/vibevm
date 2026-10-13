@@ -1,0 +1,87 @@
+[
+  {
+    "path": "cli-generated-report-final.log.gz",
+    "rawBytes": 144334,
+    "matchesOriginal": true
+  },
+  {
+    "path": "cli-post-replay-final.log.gz",
+    "rawBytes": 142566,
+    "matchesOriginal": true
+  },
+  {
+    "path": "cli-production-build.log.gz",
+    "rawBytes": 1115264,
+    "matchesOriginal": true
+  },
+  {
+    "path": "cli-production-sealed-build.log.gz",
+    "rawBytes": 1115012,
+    "matchesOriginal": true
+  },
+  {
+    "path": "cli-progress-change.log.gz",
+    "rawBytes": 133499,
+    "matchesOriginal": true
+  },
+  {
+    "path": "cli-progress-inventory.log.gz",
+    "rawBytes": 135026,
+    "matchesOriginal": true
+  },
+  {
+    "path": "cli-scaffold.log.gz",
+    "rawBytes": 140575,
+    "matchesOriginal": true
+  },
+  {
+    "path": "cli-sealed-final.log.gz",
+    "rawBytes": 144532,
+    "matchesOriginal": true
+  },
+  {
+    "path": "codegen-cli-report.log.gz",
+    "rawBytes": 279923,
+    "matchesOriginal": true
+  },
+  {
+    "path": "codegen-determinism.log.gz",
+    "rawBytes": 280074,
+    "matchesOriginal": true
+  },
+  {
+    "path": "codegen-exact-source-grades.log.gz",
+    "rawBytes": 279997,
+    "matchesOriginal": true
+  },
+  {
+    "path": "codegen.log.gz",
+    "rawBytes": 278913,
+    "matchesOriginal": true
+  },
+  {
+    "path": "complete-compatibility-final.log.gz",
+    "rawBytes": 918416,
+    "matchesOriginal": true
+  },
+  {
+    "path": "partial-reissue-fixed.log.gz",
+    "rawBytes": 272358,
+    "matchesOriginal": true
+  },
+  {
+    "path": "scaffold-family-final.log.gz",
+    "rawBytes": 321837,
+    "matchesOriginal": true
+  },
+  {
+    "path": "scaffold-post-replay-final.log.gz",
+    "rawBytes": 389072,
+    "matchesOriginal": true
+  },
+  {
+    "path": "scaffold-sealed-final.log.gz",
+    "rawBytes": 334455,
+    "matchesOriginal": true
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "metadata": {"description":"One local scaffold operator report; not change query or machine-operation authority.","spec":{"implements":"spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SCAFFOLD-PREPARATION","r":1}},
+  "discriminator":"status",
+  "mapping":{
+    "prepared":{"properties":{"schema":{"type":"uint32"},"prepared":{"ref":"prepared"}}},
+    "completed":{"properties":{"schema":{"type":"uint32"},"prepared":{"ref":"prepared"},"outcome":{"ref":"outcome"}}},
+    "partial":{"properties":{"schema":{"type":"uint32"},"prepared":{"ref":"prepared"},"outcome":{"ref":"outcome"}}},
+    "refused":{"properties":{"schema":{"type":"uint32"},"code":{"enum":["invalid","occupied","origin","save-required","stale","authority-refused","coordination","infrastructure","journal","third-state","output-invariant"],"metadata":{"x-vocabulary":"closed"}},"message":{"type":"string"},"infrastructure_may_exist":{"type":"boolean"}}}
+  },
+  "definitions":{
+    "source_strength":{"enum":["observed","record-consistent","source-proven"],"metadata":{"x-vocabulary":"closed"}},
+    "prepared":{"properties":{
+      "id":{"type":"string"},"directory":{"type":"string"},"capture":{"type":"string"},"filter":{"type":"string"},
+      "selected_addresses":{"elements":{"type":"string"},"metadata":{"x-empty":"emit"}},
+      "files":{"values":{"type":"string"},"metadata":{"x-empty":"emit"}},
+      "origins":{"elements":{"ref":"origin"},"metadata":{"x-empty":"emit"}},
+      "strength":{"type":"string"},
+      "source_strengths":{"values":{"ref":"source_strength"},"metadata":{"x-empty":"emit"}}
+    }},
+    "origin":{"properties":{"package":{"type":"string"},"selected_content_hash":{"type":"string"},"manifest_sha256":{"type":"string"},"documents":{"elements":{"ref":"origin_document"},"metadata":{"x-empty":"emit"}}}},
+    "origin_document":{"properties":{"address":{"type":"string"},"sha256":{"type":"string"}}},
+    "outcome":{"properties":{
+      "state":{"enum":["completed","partial"],"metadata":{"x-vocabulary":"closed"}},
+      "id":{"type":"string"},"journal":{"type":"string"},
+      "created_directories":{"elements":{"type":"string"},"metadata":{"x-empty":"emit"}},
+      "directory_uncertain":{"type":"boolean"},
+      "uncertain_directories":{"elements":{"type":"string"},"metadata":{"x-empty":"emit"}},
+      "verified":{"elements":{"type":"string"},"metadata":{"x-empty":"emit"}},
+      "uncertain":{"elements":{"type":"string"},"metadata":{"x-empty":"emit"}},
+      "pending":{"elements":{"type":"string"},"metadata":{"x-empty":"emit"}},
+      "reason":{"type":"string","nullable":true},"durability_reduced":{"type":"boolean"},"infrastructure_may_exist":{"type":"boolean"}
+    }}
+  }
+}

@@ -35,6 +35,25 @@ fn top_level_policy_inventory_matches_clap() {
 }
 
 #[test]
+fn change_prepare_and_explicit_apply_use_early_policy() {
+    for apply in [false, true] {
+        let mut args = vec![
+            "vibe",
+            "change",
+            "new",
+            "--from",
+            "flow:org.demo/dep@=1.0.0",
+            "--id",
+            "chg-0123456789abcdef0123456789abcdef",
+        ];
+        if apply {
+            args.push("--apply");
+        }
+        assert_eq!(parsed_policy(&args, true), CommandPolicy::SilentMetadata);
+    }
+}
+
+#[test]
 fn existing_roots_do_not_gain_duplicate_fallback_tasks() {
     for argv in [
         &["vibe", "install"][..],

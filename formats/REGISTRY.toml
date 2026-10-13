@@ -1671,3 +1671,22 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/document-edit-journal/e1"
 sunset = "none"
+
+# Native TOML create-new scaffold intent and partial observations, PROP-071.
+[format.change-scaffold-journal]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/change-scaffold-journal/e1"
+sunset = "none"
+
+[format.change-scaffold-cli-report]
+epoch = 1
+schema = "schemas/change_scaffold_cli_report/e1/report.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/change-scaffold-cli-report/e1"
+sunset = "none"

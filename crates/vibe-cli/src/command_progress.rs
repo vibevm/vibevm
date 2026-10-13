@@ -21,6 +21,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "bin",
     "build",
     "cache",
+    "change",
     "check",
     "clean",
     "command",
@@ -334,7 +335,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | ProgressSubcommand::Gate(_)
             | ProgressSubcommand::Seal(_) => FiniteFallback("Command progress"),
         },
-        Command::Version | Command::Spec(_) => SilentMetadata,
+        Command::Version | Command::Spec(_) | Command::Change(_) => SilentMetadata,
     }
 }
 

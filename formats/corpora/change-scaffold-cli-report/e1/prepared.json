@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "status": "prepared",
+  "prepared": {
+    "id": "chg-0123456789abcdef0123456789abcdef",
+    "directory": "docs/custom/changes/chg-0123456789abcdef0123456789abcdef",
+    "capture": "sha256:114645a4aa181769531715127118fa946ea5020819cb247f0eab8f42ebc52a5a",
+    "filter": "sha256:ab99536067edd8645b658d80a469bd0433e55ab20accecd5081031bdb4297ddc",
+    "selected_addresses": [
+      "spec://org.demo/dep/DOC#DELIVERY"
+    ],
+    "files": {
+      "acceptance.md": "# Acceptance\n\n@fact:LOCAL-ACCEPTANCE Supply local implementation and verification evidence. @status:spec\n",
+      "change.toml": "# Prepared local change; package facts remain references.\nschema = 1\n\n[change]\nid = \"chg-0123456789abcdef0123456789abcdef\"\nselected_node = \".\"\nslug = \"local\"\ntitle = \"Local change\"\n\n[[origins]]\npackage = \"flow:org.demo/dep@=1.0.0\"\nselected_content_hash = \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\nmanifest_sha256 = \"sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97\"\n\n[[origins.documents]]\naddress = \"spec://org.demo/dep/DOC#DELIVERY\"\nsha256 = \"sha256:2c74b9ffd7a32a4b8614fd51a41f55a7b7935d686dfe86b78863900f962f7b48\"\n\n[[documents]]\nrole = \"intent\"\npath = \"intent.md\"\nnormative = true\ninput = true\n\n[[documents]]\nrole = \"refinement\"\npath = \"refinement.md\"\nnormative = true\ninput = true\n\n[[documents]]\nrole = \"acceptance\"\npath = \"acceptance.md\"\nnormative = true\ninput = true\n",
+      "intent.md": "# Intent\n\n@fact:LOCAL-INTENT Implement the referenced origin in this project. @status:spec\n\nOrigin reference: @spec://org.demo/dep/DOC#DELIVERY\n",
+      "refinement.md": "# Refinement\n\n@fact:LOCAL-REFINEMENT Record project-specific implementation constraints here. @status:spec\n"
+    },
+    "strength": "observed/record-consistent; memory-held; not authentication",
+    "origins": [
+      {
+        "package": "flow:org.demo/dep@=1.0.0",
+        "selected_content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "manifest_sha256": "sha256:00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97",
+        "documents": [
+          {
+            "address": "spec://org.demo/dep/DOC#DELIVERY",
+            "sha256": "sha256:2c74b9ffd7a32a4b8614fd51a41f55a7b7935d686dfe86b78863900f962f7b48"
+          }
+        ]
+      }
+    ],
+    "source_strengths": {
+      "vibevm/vibespecs/DOC.md": "record-consistent"
+    }
+  }
+}

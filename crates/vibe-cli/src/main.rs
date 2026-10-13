@@ -51,6 +51,9 @@ fn main() -> ExitCode {
     if let Command::Spec(args) = &cli.command {
         return commands::spec::run(args, cli.json);
     }
+    if let Command::Change(args) = &cli.command {
+        return commands::change::run(args, cli.json);
+    }
     if let Some(exit) = commands::refactor::machine_entry::run(&cli.command) {
         return exit;
     }
@@ -143,6 +146,7 @@ fn main() -> ExitCode {
     let result = match cli.command {
         Command::Init(args) => commands::init::run(&ctx, args),
         Command::Spec(_) => unreachable!("source query has early read-only dispatch"),
+        Command::Change(_) => unreachable!("change has explicit early prepare/apply dispatch"),
         Command::List(args) => commands::list::run(&ctx, args),
         Command::Extensions(args) => match args.command {
             // Bare `vibe extensions` keeps its exhaustive-registry report;

@@ -1,0 +1,307 @@
+[
+  {
+    "path": "campaigns/next/evidence/M-02-B.3/manifest.json",
+    "sha256": "6e1d657dbad923ed3dc6cebe78a2c8c3d59f1ab92c6968e2aafab5969fe27b32",
+    "shape": {
+      "schema": "int",
+      "task": "str",
+      "status": "str",
+      "candidate_base": "str",
+      "accepted_at": "str",
+      "product_files": {
+        "count": 13,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"lines\": \"int\", \"owner\": \"str\", \"path\": \"str\", \"sha256\": \"str\"}"
+          ]
+        }
+      },
+      "evidence": {
+        "count": 31,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"normalization\": \"str\", \"path\": \"str\", \"raw_sha256\": \"str\", \"sha256\": \"str\", \"source\": \"str\"}"
+          ]
+        }
+      },
+      "checks": {
+        "source_hashes": "int",
+        "producer_evidence_hashes": "int",
+        "distinct_new_cases": "int",
+        "orchestrator_cases": "int",
+        "requirements_cases": "int",
+        "existing_representatives": "int",
+        "package_metadata_rows_unchanged": "int",
+        "specmap_exit": "int",
+        "gated_orphans": "int",
+        "unresolved_host_edges": "int",
+        "global_format_exit": "int",
+        "inherited_format_hunks": "int",
+        "inherited_format_files": "int"
+      },
+      "limits": {
+        "count": 3,
+        "items": [
+          "str",
+          "str",
+          "str"
+        ]
+      }
+    }
+  },
+  {
+    "path": "campaigns/next/evidence/M-02-C.1/manifest.json",
+    "sha256": "67d98569429721e61e6298c3062e27cbf0d73a855ccfafcdb4eee21328baa8d5",
+    "shape": {
+      "schema": "int",
+      "task": "str",
+      "status": "str",
+      "candidate_base": "str",
+      "accepted_at": "str",
+      "product_files": {
+        "count": 22,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"lines\": \"int\", \"owner\": \"str\", \"path\": \"str\", \"sha256\": \"str\"}"
+          ]
+        }
+      },
+      "evidence": {
+        "count": 49,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"normalization\": \"str\", \"path\": \"str\", \"raw_sha256\": \"str\", \"sha256\": \"str\", \"source\": \"str\"}"
+          ]
+        }
+      },
+      "checks": {
+        "candidate_hashes": "int",
+        "zap_source_corpus_files": "int",
+        "root_backlog_files": "int",
+        "producer_evidence_hashes": "int",
+        "distinct_new_cases": "int",
+        "core_cases": "int",
+        "requirements_cases": "int",
+        "orchestrator_cases": "int",
+        "original_binding_red_cases": "int",
+        "legacy_frame_bytes": "int",
+        "bound_frame_bytes": "int",
+        "specmap_exit": "int",
+        "gated_orphans": "int",
+        "unresolved_host_edges": "int",
+        "global_format_exit": "int",
+        "inherited_format_entries": "int",
+        "inherited_format_files": "int"
+      },
+      "limits": {
+        "count": 4,
+        "items": {
+          "all_item_shapes": [
+            "\"str\""
+          ]
+        }
+      }
+    }
+  },
+  {
+    "path": "campaigns/next/evidence/M-02-C.2/manifest.json",
+    "sha256": "14a5759c5e457dd304bdfe24d88a2f059a28ff80fc7e42be918204ba7856b6b6",
+    "shape": {
+      "schema": "int",
+      "task": "str",
+      "status": "str",
+      "candidate_base": "str",
+      "accepted_at": "str",
+      "product_files": {
+        "count": 17,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"lines\": \"int\", \"owner\": \"str\", \"path\": \"str\", \"sha256\": \"str\"}"
+          ]
+        }
+      },
+      "evidence": {
+        "count": 37,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"compression\": \"str\", \"decoded_sha256\": \"str\", \"normalization\": \"str\", \"path\": \"str\", \"raw_bytes\": \"int\", \"raw_sha256\": \"str\", \"sha256\": \"str\", \"source\": \"str\"}",
+            "{\"bytes\": \"int\", \"normalization\": \"str\", \"path\": \"str\", \"raw_sha256\": \"str\", \"sha256\": \"str\", \"source\": \"str\"}"
+          ]
+        }
+      },
+      "checks": {
+        "source_hashes": "int",
+        "producer_evidence_hashes": "int",
+        "distinct_new_cases": "int",
+        "requirements_cases": "int",
+        "facts_cases": "int",
+        "complete_facts": "int",
+        "public_max_rows": "int",
+        "internal_pages": "int",
+        "snapshot_pairs_equal": "int",
+        "scope_filter_before_failed_cases": "int",
+        "specmap_exit": "int",
+        "gated_orphans": "int",
+        "unresolved_host_edges": "int",
+        "global_format_exit": "int",
+        "inherited_format_entries": "int",
+        "inherited_format_files": "int"
+      },
+      "limits": {
+        "count": 3,
+        "items": [
+          "str",
+          "str",
+          "str"
+        ]
+      }
+    }
+  },
+  {
+    "path": "campaigns/next/evidence/M-16-D.1/manifest.json",
+    "sha256": "2fd754d0773a8cd00dd3414b7ef1f13bdc37cbba0a78231f41ed1d013366029f",
+    "shape": {
+      "schema": "int",
+      "task": "str",
+      "status": "str",
+      "candidate_base": "str",
+      "accepted_at": "str",
+      "product_files": {
+        "count": 26,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"lines\": \"int\", \"owner\": \"str\", \"path\": \"str\", \"sha256\": \"str\"}"
+          ]
+        }
+      },
+      "evidence": {
+        "count": 73,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"normalization\": \"str\", \"path\": \"str\", \"raw_sha256\": \"str\", \"sha256\": \"str\", \"source\": \"str\"}"
+          ]
+        }
+      },
+      "checks": {
+        "source_hashes": "int",
+        "producer_evidence_hashes": "int",
+        "distinct_new_cases": "int",
+        "orchestrator_cases": "int",
+        "specdoc_cases": "int",
+        "spec_cases": "int",
+        "workspace_cases": "int",
+        "mcp_cases": "int",
+        "existing_representatives": "int",
+        "specmap_exit": "int",
+        "gated_orphans": "int",
+        "unresolved_host_edges": "int"
+      },
+      "limits": {
+        "count": 6,
+        "items": {
+          "all_item_shapes": [
+            "\"str\""
+          ]
+        }
+      }
+    }
+  },
+  {
+    "path": "campaigns/next/evidence/M-16-D.2/manifest.json",
+    "sha256": "5a2398cbbab1bc880743163a897211a7aa27f24568871716b6927e23cb8a729b",
+    "shape": {
+      "schema": "int",
+      "task": "str",
+      "status": "str",
+      "candidate_base": "str",
+      "accepted_at": "str",
+      "product_files": {
+        "count": 14,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"lines\": \"int\", \"owner\": \"str\", \"path\": \"str\", \"sha256\": \"str\"}"
+          ]
+        }
+      },
+      "evidence": {
+        "count": 38,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"normalization\": \"str\", \"path\": \"str\", \"raw_sha256\": \"str\", \"sha256\": \"str\", \"source\": \"str\"}"
+          ]
+        }
+      },
+      "checks": {
+        "source_hashes": "int",
+        "producer_evidence_hashes": "int",
+        "distinct_new_cases": "int",
+        "spec_cases": "int",
+        "orchestrator_cases": "int",
+        "mcp_cases": "int",
+        "existing_representatives": "int",
+        "specmap_exit": "int",
+        "gated_orphans": "int",
+        "unresolved_host_edges": "int"
+      },
+      "limits": {
+        "count": 6,
+        "items": {
+          "all_item_shapes": [
+            "\"str\""
+          ]
+        }
+      }
+    }
+  },
+  {
+    "path": "campaigns/next/evidence/M-16-D.3/manifest.json",
+    "sha256": "3a1d062e3de9662b7b719b2535e6b40731e513af932fd75d6f166dd178657f49",
+    "shape": {
+      "schema": "int",
+      "task": "str",
+      "status": "str",
+      "candidate_base": "str",
+      "accepted_at": "str",
+      "product_files": {
+        "count": 28,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"lines\": \"int\", \"owner\": \"str\", \"path\": \"str\", \"sha256\": \"str\"}"
+          ]
+        }
+      },
+      "evidence": {
+        "count": 57,
+        "items": {
+          "all_item_shapes": [
+            "{\"bytes\": \"int\", \"normalization\": \"str\", \"path\": \"str\", \"raw_sha256\": \"str\", \"sha256\": \"str\", \"source\": \"str\"}"
+          ]
+        }
+      },
+      "checks": {
+        "source_hashes": "int",
+        "producer_evidence_hashes": "int",
+        "distinct_new_cases": "int",
+        "orchestrator_cases": "int",
+        "mcp_cases": "int",
+        "safefs_cases": "int",
+        "existing_representatives": "int",
+        "cold_child_executions": "int",
+        "generated_files_equal": "int",
+        "global_check_codegen_exit": "int",
+        "specmap_exit": "int",
+        "gated_orphans": "int",
+        "unresolved_host_edges": "int"
+      },
+      "limits": {
+        "count": 3,
+        "items": [
+          "str",
+          "str",
+          "str"
+        ]
+      },
+      "integration_note": "str"
+    }
+  }
+]

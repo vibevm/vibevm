@@ -215,19 +215,12 @@ impl EditBarrier {
         })
     }
     fn release(&self, invalidate: bool) {
-        for p in &self.plan.participants {
-            if let Ok(mut state) = p.client.lock() {
-                state.fences.retain(|_, id| *id != self.id);
-                if invalidate {
-                    let _ = state.advance();
-                }
-            }
-        }
-        if let Ok(mut registry) = self.plan.authority.host.participants.lock() {
-            if registry.barrier == Some(self.id) {
-                registry.barrier = None;
-            }
-        }
+        super::fence::release(
+            &self.plan.authority,
+            &self.plan.participants,
+            self.id,
+            invalidate,
+        )
     }
 }
 

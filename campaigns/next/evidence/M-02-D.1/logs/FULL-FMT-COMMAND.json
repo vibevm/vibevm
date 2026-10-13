@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "+nightly",
+    "fmt",
+    "--manifest-path",
+    "/fast/git/v/vibevm-next/Cargo.toml",
+    "--all",
+    "--",
+    "--check"
+  ],
+  "cwd": "/tmp",
+  "exit": 1
+}

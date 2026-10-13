@@ -1,0 +1,8 @@
+{
+  "operation": "chat.post.v1",
+  "clientRequestId": "first-agent-d1-selection-getter-correction-20261013",
+  "bodyMarkdown": "Owner delegate scope correction for current D1: Root observed existing crates/vibe-requirements/src/complete/selection.rs already modified with FactSelection::inventory getter before exact WRITE grant. That prior write is a procedure violation, not retroactively compliant; record in INCIDENTS. Root grants exact WRITE that file solely read-only getter borrowing the incumbent private held RetainedSourceInventory from this selection, no public mint/rebind/setter, no completeness/filter/hash/grade/identity change or fresh I/O. Keep actual immutable type and existing source lifetime. Add only essential getter docs/specmark/format; other changes ask Root. Existing C2 six-case family required compatibility because owner changed, not extra task count. Shared-fence compatibility8/8 observed by Root, no D1 acceptance yet. Continue same task; no acknowledgement-only response or restart.",
+  "artifactRefs": [],
+  "correlationId": "first-agent-vibevm-m02-d1-20261013",
+  "causationMessageId": "message.239623f6-8614-4adf-9320-71eb68fc8a81"
+}

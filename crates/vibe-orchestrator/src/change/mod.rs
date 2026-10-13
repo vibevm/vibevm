@@ -6,6 +6,7 @@ use vibe_core::manifest::change::{ChangeContext, ChangeId, ChangeManifest};
 use vibe_requirements::change::{ParsedCapturedChange, SavedChangeError, analyze_change_bytes};
 mod prepare;
 mod rebase;
+pub mod scaffold;
 pub use prepare::{PreparedChangeEdit, prepare_change_edit};
 pub use rebase::{ChangeRebaseError, PreparedOriginRebase, prepare_origin_rebase};
 pub use rebase::{PreparedInitialOriginBinding, prepare_initial_change_origin_binding};
