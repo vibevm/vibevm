@@ -1,0 +1,11 @@
+{
+  "task": "M-16-D.3",
+  "state": "candidate-source-writing-stopped",
+  "base": "bf19bd71649b36fbf0c5439a684cdaff9f86f9d7",
+  "source_files": 24,
+  "new_cases": 10,
+  "existing_representatives": 2,
+  "broker_cursor": "1010",
+  "runtime_finished": false,
+  "global_check_codegen_exit": 1
+}

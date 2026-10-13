@@ -1,0 +1,20 @@
+{
+  "status": "early_review_not_acceptance",
+  "test": "file::guarded::m_16_d_3_cases::expected_snapshot_refuses_drift_and_reports_landed_failure",
+  "observed_nonignored_passed": 1,
+  "log_sha256": "cac7bfdd419fcac4d6f00a308152ee41882ce1a83e8841ef035452bb625f8d40",
+  "sources": {
+    "crates/vibe-safefs/src/file/guarded.rs": "e9b8d093c91dfc41987ec9ea038a9f87a1816459f68a1465ed555a12c4e7ec80",
+    "crates/vibe-lifecycle/src/lease.rs": "722c3d1d1a025e76394e9a81fa57eea65d360ab0bafb97925d5c5c7a1f0e6bfc"
+  },
+  "review": [
+    "Guarded wrapper compares full bounded StableFileSnapshot before existing atomic publication.",
+    "Changed-content case asserts drift retained; injected post-publish failure asserts PossiblyPublished and actual landed bytes.",
+    "Lifecycle accessor only borrows held Project, grants no authority."
+  ],
+  "limits": [
+    "No final-check/rename exclusion.",
+    "No multi-client barrier or journal recovery evidence yet.",
+    "Source still being edited; not a final seal."
+  ]
+}

@@ -5,7 +5,7 @@ use std::{
     path::Path,
     sync::{
         Arc, Mutex,
-        atomic::{AtomicU64, Ordering},
+        atomic::{AtomicBool, AtomicU64, Ordering},
     },
 };
 use vibe_safefs::{Project, StableFileSnapshot};
@@ -14,6 +14,7 @@ mod buffers;
 mod capture;
 mod catalog;
 mod compile_plan;
+pub mod edit;
 mod invalidation;
 mod locations;
 mod preview;
@@ -72,6 +73,7 @@ pub enum DocumentAnalysisError {
     InvalidIntent,
     ResourceLimit,
     Unavailable,
+    BarrierHeld,
 }
 impl std::fmt::Display for DocumentAnalysisError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -87,6 +89,7 @@ pub struct DocumentAnalysisHost {
     declarations: BTreeMap<ResourceId, ResourceDeclaration>,
     limits: AnalysisLimits,
     clients: AtomicU64,
+    participants: Mutex<edit::ParticipantRegistry>,
 }
 impl DocumentAnalysisHost {
     /// Trusted host composition only. Requests can name only minted resources,
@@ -151,6 +154,7 @@ impl DocumentAnalysisHost {
             declarations: rows,
             limits,
             clients: AtomicU64::new(1),
+            participants: Mutex::new(edit::ParticipantRegistry::default()),
         }))
     }
     pub fn root(&self) -> &Path {
@@ -167,10 +171,22 @@ impl DocumentAnalysisHost {
             .clients
             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
             .map_err(|_| DocumentAnalysisError::Unavailable)?;
+        let mut registry = self
+            .participants
+            .lock()
+            .map_err(|_| DocumentAnalysisError::Unavailable)?;
+        if registry.barrier.is_some() {
+            return Err(DocumentAnalysisError::BarrierHeld);
+        };
+        let state = Arc::new(RegisteredClient {
+            buffers: Mutex::new(buffers::ClientBuffers::default()),
+            connected: AtomicBool::new(true),
+        });
+        registry.clients.insert(id, Arc::downgrade(&state));
         Ok(DocumentClient {
             host: self.clone(),
             client: id,
-            state: Mutex::new(buffers::ClientBuffers::default()),
+            state,
         })
     }
     fn disk(&self, id: ResourceId) -> Result<Option<StableFileSnapshot>, DocumentAnalysisError> {
@@ -187,7 +203,23 @@ impl DocumentAnalysisHost {
 pub struct DocumentClient {
     host: Arc<DocumentAnalysisHost>,
     client: u64,
-    state: Mutex<buffers::ClientBuffers>,
+    state: Arc<RegisteredClient>,
+}
+#[derive(Debug)]
+struct RegisteredClient {
+    buffers: Mutex<buffers::ClientBuffers>,
+    connected: AtomicBool,
+}
+impl RegisteredClient {
+    fn lock(&self) -> std::sync::LockResult<std::sync::MutexGuard<'_, buffers::ClientBuffers>> {
+        self.buffers.lock()
+    }
+}
+impl Drop for DocumentClient {
+    fn drop(&mut self) {
+        // Lock-free disconnect remains visible even while apply holds fences.
+        self.state.connected.store(false, Ordering::Release);
+    }
 }
 fn digest(bytes: &[u8]) -> String {
     use sha2::{Digest, Sha256};

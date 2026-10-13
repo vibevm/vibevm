@@ -1,0 +1,11 @@
+{
+  "changed_existing": [
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/mod.rs"
+  ],
+  "new_files": [
+    "crates/vibe-wire/src/generated/document_edit_journal/mod.rs"
+  ],
+  "all_other_generated_tracked_bytes_unchanged": true
+}

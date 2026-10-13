@@ -1,0 +1,17 @@
+{
+  "status": "generated_output_observed_not_task_acceptance",
+  "generated_sha256": "63b8453d2e845f66d1234d878843385ec55c959d061257ff2b063da63f39c2df",
+  "log_sha256": "b05459ad5b3df523cd75c49315c964a570b6f03334bfde9e344d6ff4ca5593d6",
+  "observed": [
+    "Named row definition and explicit emit collection policies.",
+    "Closed phase/state enums.",
+    "Root and row deny_unknown_fields.",
+    "after_identity/unix_mode use required_nullable deserializer.",
+    "Only new journal plus generated parent/FormatId registration are in current tracked generated diff."
+  ],
+  "pending": [
+    "Final command exit/seal evidence.",
+    "Nonzero strict decoding/corpus cases.",
+    "Actual clean barrier commit and partial recovery."
+  ]
+}

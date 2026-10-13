@@ -1,0 +1,26 @@
+{
+  "status": "connected_case_success_not_task_acceptance",
+  "case": "document_analysis::edit::m_16_d_3_cases::clean_acknowledged_saved_edit_commits",
+  "passed": 1,
+  "failed": 0,
+  "ignored": 0,
+  "log_sha256": "e01b069aedb7f5c764f12e9b6feb371922177168332fd0a60de39103f6067d66",
+  "source_sha256": {
+    "crates/vibe-orchestrator/src/document_analysis/edit/m_16_d_3_cases.rs": "e2cd9bb7740cc9a8a15e067f69d40fad49bafb2d0b0e9ee09dedff0784a4983c",
+    "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs": "77766a2815116b81c9f6a5212f7b8a6a986a69773995960fe652a15b20e2dde7",
+    "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs": "84cc81f2df50e99f28f05e37fccedf559a49c85aae2fba5a1a2d8864b23d3715"
+  },
+  "reviewed_assertions": [
+    "Missing acknowledgements refuse.",
+    "Two exact clean clients acknowledge.",
+    "Affected buffer change refuses BarrierHeld.",
+    "Actual one-file after bytes and untouched second file.",
+    "Durable journal completed with exact before/after retained.",
+    "Repeat apply refuses AlreadyApplied."
+  ],
+  "pending": [
+    "Remaining literal proposal/save/stale/dirty/refused/expired/disconnected/privacy/partial-recovery cases.",
+    "MCP grant composition test.",
+    "Strict corpus and final seals."
+  ]
+}

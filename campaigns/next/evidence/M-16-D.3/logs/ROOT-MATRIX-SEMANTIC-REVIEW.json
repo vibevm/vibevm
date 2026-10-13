@@ -1,0 +1,25 @@
+{
+  "status": "family_review_not_final_acceptance",
+  "log": "matrix-corpus-fixed.log",
+  "log_sha256": "62e65dfa8bd3c2cce7cadf46898e1230c55a92564ff625da9dc0bb21ad39d2b8",
+  "distinct_cases": 8,
+  "ignored": 0,
+  "cold_child_invocations": 2,
+  "children_counted_as_additional_distinct_cases": false,
+  "reviewed_assertions": [
+    "Proposal acceptance changes buffer only; repeated proposal version refuses; disk/infrastructure unchanged.",
+    "Old dirty capture remains SaveRequired after explicit save; fresh capture commits.",
+    "Peer changed version with unchanged disk refuses and error text lacks secret bytes.",
+    "Refused/expired/disconnected/new clients refuse and no authored disk write.",
+    "Disk drift and editor-preapplied desired bytes refuse.",
+    "Journal unknown fields/epoch and poisoned bytes/digest refuse.",
+    "Post-publish injected failure retains first uncertain and second pending; fresh child preserves third state, then fresh child completes approved before/after state.",
+    "Peer dropped after first landed file yields Disconnected partial, first verified/second pending, retained recovery journal and released registration."
+  ],
+  "remaining": [
+    "MCP explicit-grant public composition case.",
+    "Final source/evidence hashes and command exits.",
+    "Final scoped formatting/XML/generated determinism/specmap."
+  ],
+  "source_sha256": "ec408d5b4900c0413034a2e267d1b1d00a270c6e9bdae26ba5545cc2afb5ce0c"
+}

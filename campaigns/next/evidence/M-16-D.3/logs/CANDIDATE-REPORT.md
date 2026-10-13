@@ -1,0 +1,44 @@
+# M-16-D.3 candidate — Root review pending
+
+Base bf19bd71649b36fbf0c5439a684cdaff9f86f9d7.24 product files UNSTAGED (CANDIDATE-FILES.json); no dependency/version/checksum/lock change. Root-owned BACKLOG/FIXED-ISSUES/task JSON deltas excluded. Source writing stopped; no B3/requalification/next atom started. Broker/native thread retained. Root owns final specmap/acceptance/commit.
+
+## Actual owner/authority route
+
+PROP080 DOCUMENT-EDIT-PROPOSAL-LAW, DOCUMENT-EDIT-BARRIER-LAW, DOCUMENT-EDIT-RECOVERY-LAW precede implementation references. Root scope answers660ddcbb/3f5225d3 revision2 permit exact lifecycle lease Project borrower and one generated journal format. Root corrected literal D3 acceptance: cooperating-writer expected-snapshot guarded atomic publication, NOT destination-content atomic CAS. Remaining unregistered-writer final-comparison/rename race is explicit in PROP080 and Root-owned B235/task packet; no OS security/stronger adapter invented.
+
+Accepted document_analysis host/client/buffers remain the single editor owner. Client registration is weak and disconnect atomic; no duplicate overlay protocol. BufferProposal retains actual capture/client/resource, expected version/content and replacement; acceptance performs memory-only CAS. Reaccept/foreign/stale proposals refuse. It neither saves nor publishes. Explicit editor save and fresh capture/replanning remain separate; the retained dirty capture cannot become saved merely because matching bytes later reach disk.
+
+DocumentEditAuthority is a separately composed finite allowlist over actual minted host resources; read ServerContext defaults to no grant. MCP binding checks same root AND same read host, not a path or resource spelling treated as authority. Requests/JSON do not create this grant; no external document transport (M17), lifecycle run/native/provider/install rights advertised. Lease document_edit_project only borrows the existing held capability.
+
+Saved plan requires captured active bytes equal its actual disk observation, allowed roles and exact current capturer generation. It collects affected resource/version commitments for ALL live registered clients, rejecting dirty participants. Barrier requires exact participant set, acknowledgement, current versions, connection and bounded expiry. Acknowledged resource fences apply to source and Move target; proposal/open/change/close cannot overwrite fenced memory. New registration is blocked until release. Policy/hint generation changes invalidate admission. Lease is actual LifecycleLease; root physical correlation matches original read host. All expected file snapshots revalidate before intent/first edit and again through SafeFS immediately before each replacement.
+
+SafeFS file/guarded.rs performs bounded snapshot/identity/mode comparison then delegates existing atomic durable publication. It preserves no-follow/single-link laws and typed PossiblyPublished, file/directory durability; it adds no generic transaction/kernel primitive. All participating buffers stay fenced through final journal work; after landed effects their historical views invalidate and fences release. They are not silently reloaded or saved.
+
+Registered document-edit-journal e1 uses generated strict types only. It retains exact before/desired bytes, raw digests, before/after identity correlations, mode, original capture/root binding and pending/verified/uncertain publication states. One immutable length-framed root/capture/sorted-file intent ID excludes phase/after observations. Strict decode rejects unknown fields/epochs, poisoned images/intent and foreign scope; hashes are integrity/correlation, not source authentication. Create-new ownership plus incumbent guarded durable checkpoint/readback precedes document writes. Errors before data publication can still create lease/journal infrastructure; Err never claims global zero effects.
+
+After a landed write, expired/disconnected/stale participants or publication failure stop further authored writes. Public EditOutcome records exact verified/uncertain/pending IDs, reason and recovery reference; no fake rollback/atomic success. Cold prepare_recovery reads the actual journal under the same finite host grant, requires saved recapture/current participants, preserves third states and avoids republishing already observed desired bytes. Conflict errors/plan Debug expose authorized metadata, never another client dirty body. Journal before/desired bytes are owned authored file intent, not other clients buffer data.
+
+## Performed evidence
+
+COMMANDS.json gives exact commands/cwd/exits; RESULTS.json binds raw logs/all child verdicts. Absolute manifest, /tmp, nightly --locked --offline, warm c4-first-agent-target, RUSTUP_AUTO_INSTALL=0/CARGO_NET_OFFLINE=true, one Cargo writer.
+
+- clean-first0/1 exit101: new plan id had sha256: prefix versus strict64hex journal filename; repaired canonical minter/validator, clean-fixed1/1.
+- matrix-lease-actual8/8,0ignored: real clean acknowledgements/commit and fences; proposal-only acceptance/explicit save/fresh plan; late clean-buffer change with unchanged disk/privacy; refused/expired/disconnected/new participant; observed disk drift/editor double-apply and actual incumbent lease contention; strict generated decoder/registered corpus/poisoned images; real first and final write disconnect partial outcomes; post-publish PossiblyPublished plus cold third-state refusal and completion.
+- Cold recovery uses two freshly exec'd instances of the same current test binary under exact selector; each executes1/1 (third state and completion), hermetic HOME/XDG inputs, only owned root/id passed. These are executions of one existing family case, NOT two additional distinct cases. Parent compares actual bytes independently after children; no in-memory journal/capture reused.
+- mcp-final1/1: actual public context defaults read-only; finite explicit grant→same client/capture→acknowledged actual file edit; no package store/install/provider startup.
+- safefs-final1/1: actual snapshot drift refusal and existing after-publish hook retain landed bytes/PossiblyPublished.
+- existing buffer-compat1/1 and moved context-compat1/1 preserve D1/D2 registered routes.
+
+10distinct new cases (8orchestrator+1MCP+1SafeFS),2existing representatives; repeated runs/child executions not added. Last lease-classification change affects refusal mapping; final8/8 and MCP1/1 compile/run current source. No raw privilege/native Windows/macOS/OS-atomicity qualification.
+
+## Generation/checks/failures
+
+One schema and e1 registry/corpus added. Normal generator finally exit0,152schemas over3homes; only new document_edit_journal module and3required generated registration files change. No manual generated or vendor edits. Complete200generated file names/bytes are identical before/after one normal regeneration (GENERATOR-DETERMINISM.log and manifests). All other preexisting generated tracked bytes unchanged.
+
+check-codegen remains exit1: actual driver regenerates then runs git diff --exit-code against index, seeing expected UNSTAGED registration delta. This is not a clean global oracle or generator nondeterminism proof; retain rawlog for Root after integration. No staging workaround. Narrow owning strict-reader/corpus/epoch/tamper case exercises new format behavior; no global B227 wire-diff baseline repair or adapter rewrite.
+
+Scoped edition2024/skip_children format0, XML/3unique anchors0, diff0.16handwritten Rust owners all<600 (max535); existing long mechanically generated FormatId files are not hand-refactored. Fullfmt/deferred baseline debts remain unqualified/unmodified, no broad panel/mutations/stopped Lean/Aeneas/Zap/PodBay work.
+
+INCIDENTS.md preserves all actual failures: oversized/guessed source reads;3schema-generation failures (missing x-empty, nested anonymous collection policy, missing closed vocabulary); premature generated module reads; clean id mismatch red; matrix compile failure from wrong corpus parent depth; failed exact lease patch assertion before source writes followed by an unintended unchanged-source8/8 repeat. That repeat is NOT actual lease proof; matrix-lease-actual is. Last-write disconnect/Move target checks were source-directed corrections with current green scenarios, not a fabricated restored-production red. No test verdict counted from compile/generator failures.
+
+Limits: cooperative registered-client fences/finite snapshot comparisons; nonparticipant comparison-to-rename race and hostile ABA remain. Hints/paging/native/platform bounds accepted in D1/D2 unchanged. Policy hints cause stale rather than minting new effect policy. Historical buffers remain inspectable and require explicit editor reload/save as appropriate. Partial recovery uses exact owned intent and fresh saved admission, not journal bytes alone as a grant. Root-owned task/BACKLOG correction remains disjoint.

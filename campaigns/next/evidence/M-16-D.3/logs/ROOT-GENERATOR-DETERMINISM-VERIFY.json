@@ -1,0 +1,6 @@
+{
+  "file_count": 200,
+  "before_after_equal": true,
+  "current_disk_hashes_match": true,
+  "scope": "All200files named in generated manifests; global index-based check-codegen remains retained exit1 on expected candidate delta."
+}

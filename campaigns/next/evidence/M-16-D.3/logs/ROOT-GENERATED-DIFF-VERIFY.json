@@ -1,0 +1,11 @@
+{
+  "changed_existing": [
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/mod.rs"
+  ],
+  "expected_registration_only": true,
+  "all_other_tracked_generated_unchanged": true,
+  "check_codegen_exit": "1 with unstaged generated registration diff; not global green",
+  "log_sha256": "af670971dd8ad6bd207633452597dae284095defb7274c27004607f9947a582d"
+}

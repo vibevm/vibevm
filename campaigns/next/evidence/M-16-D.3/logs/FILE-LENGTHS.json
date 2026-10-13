@@ -1,0 +1,18 @@
+{
+  "crates/vibe-lifecycle/src/lease.rs": 262,
+  "crates/vibe-mcp/src/context.rs": 535,
+  "crates/vibe-mcp/src/context/document_edit.rs": 105,
+  "crates/vibe-mcp/src/context/m_16_d_2_cases.rs": 63,
+  "crates/vibe-orchestrator/src/document_analysis/buffers.rs": 180,
+  "crates/vibe-orchestrator/src/document_analysis/edit/apply.rs": 242,
+  "crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs": 185,
+  "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs": 241,
+  "crates/vibe-orchestrator/src/document_analysis/edit/m_16_d_3_cases.rs": 499,
+  "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs": 23,
+  "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs": 228,
+  "crates/vibe-orchestrator/src/document_analysis/edit/proposal.rs": 76,
+  "crates/vibe-orchestrator/src/document_analysis/mod.rs": 232,
+  "crates/vibe-safefs/src/file.rs": 232,
+  "crates/vibe-safefs/src/file/guarded.rs": 73,
+  "crates/vibe-safefs/src/lib.rs": 79
+}

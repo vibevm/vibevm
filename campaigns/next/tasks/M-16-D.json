@@ -185,7 +185,7 @@
         "TO CREATE: barrier acknowledgement/version/lease/disconnect and post-write failure tests."
       ],
       "acceptance": [
-        "Cleanliness guarantee is limited to registered participating buffers; disk CAS still guards other writers.",
+        "Cleanliness guarantee is limited to registered participating buffers. Existing expected-snapshot checks under the cooperative lifecycle lease refuse observed disk drift; atomic publication is not destination-content CAS and cannot exclude an unregistered writer changing the file after the final comparison and before replacement. Retain truthful partial/uncertain outcomes and third-state-preserving recovery.",
         "A dirty-buffer plan never becomes admitted solely because its content was later saved."
       ],
       "safe_stop": "Barriers are released or recovery-owned; disk is unchanged or exact partial edits are journaled.",
@@ -193,7 +193,8 @@
       "notes": [
         "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
         "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "2026-10-13 First Agent clarification under the owner-authorized userspace MVP: the inspected incumbent SafeFS/migration owners provide cooperating-writer guarded publication, not atomic content CAS. B-235 retains the ordinary unregistered-editor race and deferred stronger adapter. All registered-client barrier, saved recapture, stale-plan, privacy and post-write recovery obligations remain required; no new OS security gate is added."
       ]
     }
   ]

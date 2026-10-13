@@ -17,8 +17,23 @@ pub(super) struct ClientBuffers {
     pub generation: u64,
     pub watch_sequence: u64,
     pub watch_gap: bool,
+    pub fences: BTreeMap<ResourceId, u64>,
 }
 impl ClientBuffers {
+    pub fn check_fences(
+        &self,
+        resource: ResourceId,
+        intent: Option<&BufferIntent>,
+    ) -> Result<(), DocumentAnalysisError> {
+        if self.fences.contains_key(&resource)
+            || intent.is_some_and(
+                |i| matches!(i,BufferIntent::Move{target} if self.fences.contains_key(target)),
+            )
+        {
+            return Err(DocumentAnalysisError::BarrierHeld);
+        };
+        Ok(())
+    }
     pub fn advance(&mut self) -> Result<(), DocumentAnalysisError> {
         self.generation = self
             .generation
@@ -44,6 +59,7 @@ impl DocumentClient {
             .state
             .lock()
             .map_err(|_| DocumentAnalysisError::Unavailable)?;
+        state.check_fences(resource, Some(&intent))?;
         if state.open.contains_key(&resource) {
             return Err(DocumentAnalysisError::AlreadyOpen);
         }
@@ -88,6 +104,7 @@ impl DocumentClient {
             .state
             .lock()
             .map_err(|_| DocumentAnalysisError::Unavailable)?;
+        state.check_fences(resource, Some(&intent))?;
         let old = state
             .open
             .get(&resource)
@@ -127,6 +144,7 @@ impl DocumentClient {
             .state
             .lock()
             .map_err(|_| DocumentAnalysisError::Unavailable)?;
+        state.check_fences(resource, None)?;
         if state
             .open
             .get(&resource)

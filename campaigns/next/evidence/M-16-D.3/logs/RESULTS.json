@@ -1,0 +1,136 @@
+{
+  "safefs-guarded.log": {
+    "sha256": "cac7bfdd419fcac4d6f00a308152ee41882ce1a83e8841ef035452bb625f8d40",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.00s"
+    ]
+  },
+  "clean-first.log": {
+    "sha256": "e0cfe1cf63e8b203aaa2c90612ddacd3702e9d998319cd1c8c4a2d253be843b3",
+    "exit": 101,
+    "verdict": "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.00s"
+    ]
+  },
+  "clean-fixed.log": {
+    "sha256": "e01b069aedb7f5c764f12e9b6feb371922177168332fd0a60de39103f6067d66",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.00s"
+    ]
+  },
+  "matrix-first.log": {
+    "sha256": "336693e71472ae7422a077a97d14fcbb0d5388b1f53c6fb48da71752f709a66b",
+    "exit": 101,
+    "verdict": "compile failure; no tests executed",
+    "all_process_verdicts": []
+  },
+  "matrix-corpus-fixed.log": {
+    "sha256": "62e65dfa8bd3c2cce7cadf46898e1230c55a92564ff625da9dc0bb21ad39d2b8",
+    "exit": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s"
+    ]
+  },
+  "matrix-final-window.log": {
+    "sha256": "e48a8a6abee0da541133a241fb661247c4b7d2ffd87acfce0b12f1e0bd12cda0",
+    "exit": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s"
+    ]
+  },
+  "mcp-grant.log": {
+    "sha256": "933603e1e17d05c39062ddf2f991e15fa8a52dd31a0634e6d823c38602c62fc9",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s"
+    ]
+  },
+  "safefs-final.log": {
+    "sha256": "7398d1d2ac0f9baa0e44370d6557897eea4e2c949ffd10f414a854f49dba27f0",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.00s"
+    ]
+  },
+  "buffer-compat.log": {
+    "sha256": "43e696f0888343a8047762ca07ae14dbe0617692405410535542b872c7ee7d3c",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s"
+    ]
+  },
+  "context-compat.log": {
+    "sha256": "ae7d6beef1a831cf60352a20d7e8b3b8e5078d8bbd46ae07ce0ddd5cf89ecac1",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s"
+    ]
+  },
+  "matrix-lease-final.log": {
+    "sha256": "a54f04ea661f6b298ae3c313f95e7570805decfde4cbb721e31482ab1faa7d55",
+    "exit": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s"
+    ]
+  },
+  "matrix-lease-actual.log": {
+    "sha256": "8111a22946085d13b018245eae7e0b81d9b7e11228989ec1242b0e9724d7d103",
+    "exit": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.01s",
+      "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s"
+    ]
+  },
+  "mcp-final.log": {
+    "sha256": "3b2589f6673b560f5ba64733cd82fc3cb8932cfca22601ff7bcba8552c1a0c83",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s"
+    ]
+  },
+  "codegen.log": {
+    "sha256": "cb162973f7ec2b0720571b78d4d8338ff87d607d9930186e60d23fd9af10139b",
+    "exit": 1
+  },
+  "codegen-fixed.log": {
+    "sha256": "3c3fcf2e0c8b4520670ecede988acfabf7119eff64eb0f6809c2b9877f7af205",
+    "exit": 1
+  },
+  "codegen-defined-row.log": {
+    "sha256": "aa067c823779e41fb888e5506a5bd75a61bd21bfc6a3be1a2e310dc112cfb7f3",
+    "exit": 1
+  },
+  "codegen-closed-enums.log": {
+    "sha256": "b05459ad5b3df523cd75c49315c964a570b6f03334bfde9e344d6ff4ca5593d6",
+    "exit": 0
+  },
+  "check-codegen.log": {
+    "sha256": "af670971dd8ad6bd207633452597dae284095defb7274c27004607f9947a582d",
+    "exit": 1
+  },
+  "codegen-determinism.log": {
+    "sha256": "3f0c84ac08cb9b9dbf5ffa7415a03eb06f27cdf56fc78acdf58528e16ec38e87",
+    "exit": 0
+  }
+}

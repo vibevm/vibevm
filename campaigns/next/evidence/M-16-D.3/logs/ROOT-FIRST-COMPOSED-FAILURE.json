@@ -1,0 +1,10 @@
+{
+  "case": "document_analysis::edit::m_16_d_3_cases::clean_acknowledged_saved_edit_commits",
+  "passed": 0,
+  "failed": 1,
+  "ignored": 0,
+  "error": "barrier.apply returns InvalidJournal at test line104",
+  "log_sha256": "e0cfe1cf63e8b203aaa2c90612ddacd3702e9d998319cd1c8c4a2d253be843b3",
+  "observed_owner_mismatch": "EditPlan id uses document_analysis::digest (sha256: prefix), journal::path admits only64lowercase hex characters.",
+  "action": "Same Zap writer aligns owner-minted ID encoding with exact journal path validation; preserve red and rerun exact connected case. No validator weakening or new protocol."
+}
