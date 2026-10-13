@@ -40,6 +40,14 @@ location and recoverable job identity when available; integration owner and
 safe stop. State what the coordinator will integrate. Keep the packet bounded:
 workers load the named instructions, not the whole boot lane, personal context
 or campaign. Missing context is a packet defect.</PARALLEL-PACKET></p>
+    <p><PROJECT-OWNERSHIP-PACKET fact="true" status="spec/done">Each packet
+must name the target project and canonical ownership contract, and include an
+inline summary of the rule/data/side-effect owners and neighboring APIs used.
+Language and file placement alone do not establish ownership. Cross-project
+work declares separate write owners; workers report missing neighbor contracts
+instead of implementing duplicate local authorities. Apply the same owner block
+to follow-ups and resumed workers. Review checks project ownership as well as
+scope and functional evidence.</PROJECT-OWNERSHIP-PACKET></p>
     <p><OUTER-PERIMETER fact="true" status="spec/done">Narrow worker paths
 within the existing task's authorized outer perimeter. Broad task directories
 are not evidence of disjointness. Needed shared registration, manifest, schema

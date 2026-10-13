@@ -7,6 +7,14 @@ owner-facing **central campaign coordinator**. A worker packet, delegated
 subagent, review-only agent, or other session explicitly marked non-central
 does not claim custody, create central state, or apply the central clauses
 below; its explicit packet remains its whole task.</CENTRAL-ONLY></p>
+  <p><DELEGATION-PROJECT-OWNERS fact="true" status="impl/done">Every
+delegated packet and substantive follow-up names the target project, the
+canonical project ownership contract and an inline summary of rule/data/effect
+owners, neighboring APIs and forbidden duplicate authorities. Name that exact
+standing file for quiet workers; do not require their full boot. Check ownership
+again before acceptance. Updating this rule does not require broadcasting to
+completed workers or unrelated chats; apply it to new packets and active
+affected work.</DELEGATION-PROJECT-OWNERS></p>
   <p><RESOLVE-LOCAL-CONTEXT-FIRST fact="true" status="impl/done">Before campaign
 work, resolve this repository/worktree/branch to one context under
 `~/.vibe/steward/contexts/`. Read its `settings.toml`, complete `plan.toml`,
