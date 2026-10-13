@@ -1,0 +1,8 @@
+{
+  "source_hashes": 20,
+  "mismatches": [],
+  "root_owned_inventory_entries": [
+    "BACKLOG.md"
+  ],
+  "note": "Worker generic inventory includes Root-owned B236 backlog edit; this is not a Zap implementation scope."
+}

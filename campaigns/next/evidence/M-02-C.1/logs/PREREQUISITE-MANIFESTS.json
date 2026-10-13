@@ -1,0 +1,30 @@
+[
+  {
+    "path": "campaigns/next/evidence/M-02-B.3/manifest.json",
+    "sha256": "6e1d657dbad923ed3dc6cebe78a2c8c3d59f1ab92c6968e2aafab5969fe27b32",
+    "inventory": {
+      "product_files": 13,
+      "evidence": 31,
+      "limits": 3
+    }
+  },
+  {
+    "path": "campaigns/next/evidence/M-01-C.3/manifest.json",
+    "sha256": "c1bb45b4c8d9fad9bedafa298d475018e5cddacc139447757ed64d830959dc51",
+    "inventory": {
+      "raw_logs": 66,
+      "root_metadata_only_changes": 2,
+      "review_reports": 2
+    }
+  },
+  {
+    "path": "campaigns/next/evidence/M-01-E.2/manifest.json",
+    "sha256": "a3ed40547e1b353e2dfdc88bf415701bf0f79ab0a1c1362d20261f788ac48e00",
+    "inventory": {
+      "product_files": 12,
+      "evidence": 218,
+      "omitted_derived_binaries": 1,
+      "scope_limits": 6
+    }
+  }
+]

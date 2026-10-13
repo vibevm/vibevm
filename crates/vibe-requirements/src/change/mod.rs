@@ -2,7 +2,14 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR");
 mod captured;
 mod identity;
+mod origin;
 pub use captured::{ParsedCapturedChange, analyze_change_bytes};
+pub use origin::{
+    AcceptedOrigin, OriginCaptureIdentity, OriginChangeKind, OriginComparison, OriginFactChange,
+    OriginFactIdentity, OriginRebaseReview, OriginUnavailable, accept_origin, compare_origin,
+    review_origin_rebase,
+};
+pub use origin::{InitialOriginBinding, prepare_initial_origin_binding};
 #[cfg(test)]
 mod m_02_a_1_cases;
 #[cfg(test)]
@@ -17,3 +24,5 @@ mod m_02_b_2_cases;
 
 #[cfg(test)]
 mod m_02_b_3_cases;
+#[cfg(test)]
+mod m_02_c_1_cases;

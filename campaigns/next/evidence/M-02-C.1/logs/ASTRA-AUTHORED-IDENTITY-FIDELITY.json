@@ -1,0 +1,22 @@
+{
+  "agent": "/root/c1_retention_seam_audit",
+  "model": "gpt-6-astra",
+  "effort": "medium",
+  "status": "read_only_completed",
+  "verdict": "Sufficient current scoped contract; no schema field/store added as C1 blocker.",
+  "contract_basis": [
+    "PROP071 authored identity is exact pin + manifest/document byte declarations and citations.",
+    "Retained evidence/richer selected-world identity remain separate; no requirement to serialize whole capture or recover it after process loss."
+  ],
+  "observed": [
+    "accept_origin validates already-authored declaration against supplied actual retained carrier, no authored write.",
+    "compare_origin includes selected_content_hash in richer identity.",
+    "review_origin_rebase constructs next authored declaration; core prepares token changes; orchestrator saved admission performs no publication."
+  ],
+  "limits": [
+    "Memory-held carrier loss yields MissingRetained, never newest fallback.",
+    "Hash-only selected package identity drift can be reported while authored selected-document declaration/intent stays unchanged.",
+    "No cross-process capture recovery proof or full capture identity authored-persistence claim."
+  ],
+  "recommendation": "Keep exact claims, retain limitation in backlog; optional hash-only example is not a new mandatory gate."
+}

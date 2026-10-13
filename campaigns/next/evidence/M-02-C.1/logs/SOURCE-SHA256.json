@@ -1,0 +1,122 @@
+[
+  {
+    "path": "BACKLOG.md",
+    "sha256": "6412fd12cd04ee048ed0042cf8049d7d0b29be9fc94d2a24f5bc29686b13c5b0",
+    "bytes": 496668,
+    "lines": 2585
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/change/identity.rs",
+    "sha256": "e1281d0aba44a815705a4188d589314f4d307249d650d2513f1ab1b4130a8efd",
+    "bytes": 7197,
+    "lines": 204
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/change/m_02_c_1_cases.rs",
+    "sha256": "95f88307a4ef9c7541480047b9e48837b22db77ec578288df90b7fa71ff808fd",
+    "bytes": 3921,
+    "lines": 98
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/change/mod.rs",
+    "sha256": "c505089b0eb0ddf303dc0646665927b27b89fb0937dca38ff1a95d130c42eac2",
+    "bytes": 8436,
+    "lines": 298
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/change/rebase.rs",
+    "sha256": "4b3b248dd36a65abab59f26ae078143dece7ee6b127c27d005530226f4ae2e5d",
+    "bytes": 9646,
+    "lines": 292
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/change/validation.rs",
+    "sha256": "cde357e1c8218b2801196a9202a1d3a0abd8d3dc09e4002f01f389ff02fbf41f",
+    "bytes": 8657,
+    "lines": 237
+  },
+  {
+    "path": "crates/vibe-orchestrator/src/change/m_02_c_1_cases.rs",
+    "sha256": "d6ea653ea0db6c4d1dcb8edf41a15fa3f168e1ae09725caf61c32eb61d63f48c",
+    "bytes": 19501,
+    "lines": 513
+  },
+  {
+    "path": "crates/vibe-orchestrator/src/change/mod.rs",
+    "sha256": "1aaea00755abf23fe6e84f0f8328ad066ce5133f76f6027c3b7cde4db04bce61",
+    "bytes": 6953,
+    "lines": 185
+  },
+  {
+    "path": "crates/vibe-orchestrator/src/change/rebase.rs",
+    "sha256": "ec8d8040f3213ecaa60b72df7429d2f642f5d0cf94e80a8af81d6e46465d4790",
+    "bytes": 6761,
+    "lines": 201
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/m_02_c_1_cases.rs",
+    "sha256": "cb171a607eb2393a9e8f249ce5e6858b9cda51c904d62e62285120aae0948b8b",
+    "bytes": 14485,
+    "lines": 376
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/mod.rs",
+    "sha256": "d263d94d32840f7d53b51ee3ea210aad04f48e5ae89e1983c40b14d89ed5fc0b",
+    "bytes": 923,
+    "lines": 28
+  },
+  {
+    "path": "crates/vibe-requirements/src/change/origin.rs",
+    "sha256": "ec02e7c65e38a2f8b83c32603aa5e148845c138fd087bb8f2e61c41b85362d8b",
+    "bytes": 10078,
+    "lines": 294
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/capture.rs",
+    "sha256": "32472c226e65aa56eb95f810059faeec8719fca21d1ea284206b59b18c6aa0a3",
+    "bytes": 15467,
+    "lines": 399
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/capture/continuity.rs",
+    "sha256": "5bc34ddf944a65f21beb5f6b2be50148c8fa0cecc72645e94e15a0a9e7db7f14",
+    "bytes": 20246,
+    "lines": 535
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/capture/continuity/retained.rs",
+    "sha256": "b9349969d7c9a031a3a2c7a6936e4bd8f47b36e0d7f8d4a0cc9af0f5e6e1f562",
+    "bytes": 5824,
+    "lines": 153
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+    "sha256": "c90f1080eecfe52622c7441be5ea3d8feee3829296834fca13b1b77a12aba9e5",
+    "bytes": 23140,
+    "lines": 583
+  },
+  {
+    "path": "crates/vibe-workspace/src/source_query/mod.rs",
+    "sha256": "65801c073d75cc8d5ae979da09fcada665ba6361e58955775601ae8da5ba7d85",
+    "bytes": 5214,
+    "lines": 142
+  },
+  {
+    "path": "formats/corpora/change-manifest/e1/semantic-gap/invalid-content-binding.toml",
+    "sha256": "40071099ec042828061e7fee96a4ae6efe1cd0ec9852595671ef07ebb9e89019",
+    "bytes": 961,
+    "lines": 33
+  },
+  {
+    "path": "formats/corpora/change-manifest/e1/valid/bound-origin.toml",
+    "sha256": "4d39962133bc9172892e98de4619c092e2230e82f1e93992044cc54e23df1d12",
+    "bytes": 1014,
+    "lines": 33
+  },
+  {
+    "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+    "sha256": "5327362047e5b58831cb11c97f503e59fd560cb72bedf475cbd25079abd95164",
+    "bytes": 13952,
+    "lines": 31
+  }
+]

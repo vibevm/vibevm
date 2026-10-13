@@ -1,0 +1,100 @@
+{
+  "request": {
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-c1-retention-owners-20261013",
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "questionGroupId": "question-group.e201ee38-51cb-465c-b527-e0facdd0efca",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "c1_retained_seam",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "grant"
+          }
+        }
+      ],
+      "noteMarkdown": "Root Owner delegate grants READ crates/vibe-install/src/slot_verify.rs and slot_verify/derivation.rs. Conditional narrow WRITE is granted for crates/vibe-workspace/src/source_query/capture/continuity/retained.rs, continuity.rs and source_query/mod.rs registration because inspected current APIs revalidate disk and provide no public historical carrier. Astra preliminary audit independently confirms this gap. Mint opaque retention ONLY from the current checked WitnessedSourceWorld, with before/after continuity guards as incumbent extraction requires, exact selected PackageRef/ContentHash and retained snapshots/descriptor/media/provenance. Historical reads use held bytes without current selection or revalidation; preserve incumbent explicit strength, never promote SourceMembershipIndex/digests to authentication. No store/provider/new proof recipe, current-query guard weakening or version fallback. State clearly whether retention is memory-held versus durable; missing retention remains unavailable. Bound actual production mint→slot drift/reinstall→historical positive and unchanged slots/history cases."
+    }
+  },
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.e201ee38-51cb-465c-b527-e0facdd0efca",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.fac861d3-4b59-4f12-8b86-88c19919e767",
+        "title": "C1 retained historical M01 capture seam",
+        "introductionMarkdown": "Current WitnessedSourceWorld extraction and selected_source_pin always revalidate current disk. C1 must retain an accepted capture across slot reinstall without treating SourceMembershipIndex as authenticated proof.",
+        "items": [
+          {
+            "questionItemId": "c1_retained_seam",
+            "header": "M01 retention",
+            "promptMarkdown": "Grant narrow READ install/src/slot_verify.rs and slot_verify/derivation.rs for incumbent original/replay proof carrier; authorize a minimal historical retention carrier in workspace source_query/capture/continuity/retained.rs with registration in continuity.rs and source_query/mod.rs only if existing public retained APIs are absent? Carrier minted by current checked WitnessedSourceWorld, holds exact selected pin/content hash and retained snapshots/descriptor/media; historical reads do no revalidation/current selection and never promote beyond incumbent grade. No independent store, provider, authentication or new proof recipe.",
+            "contextMarkdown": "Existing selected_source_pin returns exact PackageRef+ContentHash; extract_source yields held snapshot/media/descriptor but checks current before/after. Historical accepted retention needs to preserve that observation. C1 requirements/orchestrator can retain the opaque carrier rather than constructing trusted rows.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant narrow seam",
+                "description": "Reuse M01 selected capture with explicit historical read-only identity and existing proof boundary.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Exact correction",
+              "multiline": true,
+              "maximumLength": 5000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Required historical positive must remain available after mutable slot drift, without weakening current-query continuity."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-13T00:32:31.650Z",
+        "updatedAt": "2026-10-13T00:35:12.401Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.4c6a8b76-cea1-426f-8dc5-2052c6fbfd9e",
+        "questionGroupId": "question-group.e201ee38-51cb-465c-b527-e0facdd0efca",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "c1_retained_seam",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "Root Owner delegate grants READ crates/vibe-install/src/slot_verify.rs and slot_verify/derivation.rs. Conditional narrow WRITE is granted for crates/vibe-workspace/src/source_query/capture/continuity/retained.rs, continuity.rs and source_query/mod.rs registration because inspected current APIs revalidate disk and provide no public historical carrier. Astra preliminary audit independently confirms this gap. Mint opaque retention ONLY from the current checked WitnessedSourceWorld, with before/after continuity guards as incumbent extraction requires, exact selected PackageRef/ContentHash and retained snapshots/descriptor/media/provenance. Historical reads use held bytes without current selection or revalidation; preserve incumbent explicit strength, never promote SourceMembershipIndex/digests to authentication. No store/provider/new proof recipe, current-query guard weakening or version fallback. State clearly whether retention is memory-held versus durable; missing retention remains unavailable. Bound actual production mint→slot drift/reinstall→historical positive and unchanged slots/history cases."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-13T00:35:12.401Z",
+        "metadata": {}
+      }
+    }
+  }
+}

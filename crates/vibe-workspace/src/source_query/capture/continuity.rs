@@ -21,6 +21,7 @@ use crate::source_query::SourceQueryUnavailable;
 
 mod extract;
 mod membership;
+mod retained;
 mod service;
 pub use extract::{
     CommonMarkExtraction, ExtractedSource, ExtractionError, ExtractionProvenance,
@@ -31,6 +32,7 @@ pub use membership::{
     CanonicalNodeIdentity, CapturedSourceFile, MaterializedVibeMedia, RecordedOutput,
     SourceMembershipIndex, SourceStrength, canonical_node_of_output, native_xml_range_of_output,
 };
+pub use retained::{RetainedOriginCapture, RetainedOriginDocument, RetainedOriginFact};
 pub use service::{PreparedDocInstance, PreparedDocument, SourceQueryResponse, SourceQueryService};
 
 const MANIFEST_CAP: usize = 1024 * 1024;

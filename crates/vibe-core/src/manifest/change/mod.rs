@@ -8,11 +8,13 @@ use std::{
 };
 mod identity;
 mod migration;
+mod rebase;
+pub use rebase::{ChangeOriginRebasePlan, plan_origin_rebase};
 mod validation;
 mod work;
 pub use identity::{
-    INTENT_RECIPE, IntentIdentity, NormativeInput, WORK_CONTRIBUTION_RECIPE, WORK_RECIPE,
-    WorkIdentity,
+    BOUND_INTENT_RECIPE, INTENT_RECIPE, IntentIdentity, NormativeInput, WORK_CONTRIBUTION_RECIPE,
+    WORK_RECIPE, WorkIdentity,
 };
 pub use migration::{
     CHANGE_IDENTITY, CHANGE_UPGRADE, ChangeMigrationPlan, ChangeMigrationSelection,
@@ -188,6 +190,8 @@ pub struct ChangeDocument {
 #[serde(deny_unknown_fields)]
 pub struct ChangeOrigin {
     pub package: String,
+    #[serde(default)]
+    pub selected_content_hash: Option<String>,
     pub manifest_sha256: String,
     pub documents: Vec<ChangeOriginDocument>,
 }
@@ -290,3 +294,5 @@ pub fn validate_change_catalog(changes: &[ChangeManifest]) -> Result<(), ChangeE
 mod m_02_b_1_cases;
 #[cfg(test)]
 mod m_02_b_2_cases;
+#[cfg(test)]
+mod m_02_c_1_cases;

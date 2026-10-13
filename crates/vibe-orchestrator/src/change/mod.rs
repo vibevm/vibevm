@@ -5,7 +5,10 @@ use std::path::{Path, PathBuf};
 use vibe_core::manifest::change::{ChangeContext, ChangeId, ChangeManifest};
 use vibe_requirements::change::{ParsedCapturedChange, SavedChangeError, analyze_change_bytes};
 mod prepare;
+mod rebase;
 pub use prepare::{PreparedChangeEdit, prepare_change_edit};
+pub use rebase::{ChangeRebaseError, PreparedOriginRebase, prepare_origin_rebase};
+pub use rebase::{PreparedInitialOriginBinding, prepare_initial_change_origin_binding};
 #[derive(Debug)]
 pub enum ChangeViewError {
     Context,
@@ -178,3 +181,5 @@ pub fn analyze_change<'a>(
 }
 #[cfg(test)]
 mod m_02_b_3_cases;
+#[cfg(test)]
+mod m_02_c_1_cases;

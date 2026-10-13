@@ -1,0 +1,100 @@
+{
+  "request": {
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-c1-rebase-owners-20261013",
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "questionGroupId": "question-group.95dc5ed1-c96a-4d68-b2f8-700e214d3245",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "c1_rebase_token_owner",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "grant"
+          }
+        }
+      ],
+      "noteMarkdown": "Root Owner delegate grants exact crates/vibe-core/src/manifest/change/rebase.rs and change/mod.rs registration/re-export only for pure selected-origin token proposal. READ manifest/mod.rs incumbent replay API granted. Reuse existing toml_edit/M13 replay_authored_tokens and validate both before/after with the shared ChangeManifest parser; schema1 remains, only selected origin pin/hash/document-array values change, other comments/user bytes preserved. No apply/epoch/serialization rewrite. Grant workspace source_query/capture/continuity/service.rs only forwarding facade from existing private world to the same checked historical-retention route, preserving all prepare_host/query/current guards. No caller-built trusted selected world or mutable declaration treated as retained capture. Tests must use actual prepare_host→retention and explicit old/new capture/fact-address diff plus saved-state preparation; no C2 complete-selection claim."
+    }
+  },
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.95dc5ed1-c96a-4d68-b2f8-700e214d3245",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.2caf209f-6886-4dc5-b0d6-86e7c2b34458",
+        "title": "C1 exact rebase token owner and connected M01 route",
+        "introductionMarkdown": "C1 can reuse B3 prepare_change_edit once the authored new origin text is validated; preserving comments requires incumbent M13 token replay rather than TOML reserialization.",
+        "items": [
+          {
+            "questionItemId": "c1_rebase_token_owner",
+            "header": "Pure rebase",
+            "promptMarkdown": "Grant narrow WRITE core/src/manifest/change/rebase.rs and change/mod.rs registration for a pure origin-token rebase proposal using existing toml_edit/M13 replay_authored_tokens, with before/after checked by same ChangeManifest parser. No apply or new epoch/schema. READ manifest/mod.rs defining replay API. Also grant workspace source_query/capture/continuity/service.rs only facade to forward historical retention from private world, making existing prepare_host→retention production route executable without caller-built selected world.",
+            "contextMarkdown": "Existing schema1 already stores exact origin pin, manifest/document hashes and fact citations. Rebase may replace those selected origin tokens/document-array values only; all other authored comments/user bytes preserved. Required origin hash/content witness remains retained carrier, not authority from declaration.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant exact owners",
+                "description": "Reuse shared parser and M13 pure edit law; expose production retained capture route.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": {
+              "allowed": true,
+              "label": "Correction",
+              "multiline": true,
+              "maximumLength": 5000
+            },
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Avoid duplicate parser or loss of user comments and enable connected production test."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-13T00:33:15.498Z",
+        "updatedAt": "2026-10-13T00:35:12.448Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.9e301e25-353f-4ce4-b4de-191c6f313893",
+        "questionGroupId": "question-group.95dc5ed1-c96a-4d68-b2f8-700e214d3245",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "c1_rebase_token_owner",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "Root Owner delegate grants exact crates/vibe-core/src/manifest/change/rebase.rs and change/mod.rs registration/re-export only for pure selected-origin token proposal. READ manifest/mod.rs incumbent replay API granted. Reuse existing toml_edit/M13 replay_authored_tokens and validate both before/after with the shared ChangeManifest parser; schema1 remains, only selected origin pin/hash/document-array values change, other comments/user bytes preserved. No apply/epoch/serialization rewrite. Grant workspace source_query/capture/continuity/service.rs only forwarding facade from existing private world to the same checked historical-retention route, preserving all prepare_host/query/current guards. No caller-built trusted selected world or mutable declaration treated as retained capture. Tests must use actual prepare_host→retention and explicit old/new capture/fact-address diff plus saved-state preparation; no C2 complete-selection claim."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-13T00:35:12.448Z",
+        "metadata": {}
+      }
+    }
+  }
+}

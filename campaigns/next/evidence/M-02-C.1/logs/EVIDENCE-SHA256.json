@@ -1,0 +1,152 @@
+[
+  {
+    "path": "BOUND-PLAN.md",
+    "sha256": "7ff6c83bb41411eb75d9f02a51bbc119007b4dd6de3ca3a86d32b5a12137bb1e",
+    "bytes": 3517
+  },
+  {
+    "path": "CANDIDATE-FILES.json",
+    "sha256": "0bdf42f7e66356c8a47e3483239c9d77773c2fc15ff05586966464ed4f4d7d87",
+    "bytes": 1143
+  },
+  {
+    "path": "CANDIDATE-REPORT.md",
+    "sha256": "0597ac329fd1ee3292b87bdac93f3070cca8e231a65c950550c2976b5d4a36ef",
+    "bytes": 7187
+  },
+  {
+    "path": "COMMANDS.json",
+    "sha256": "151780ad45c815e7d648788579a89ee501a7367464b1935764eba54f3701597b",
+    "bytes": 11097
+  },
+  {
+    "path": "CURRENT-SOURCE-SUBJECT.json",
+    "sha256": "b1750b57b5a1464bd045cbbe615e2d2952f54ef8be18908e862c5281a6f2c1b9",
+    "bytes": 2868
+  },
+  {
+    "path": "FINAL-STATE.json",
+    "sha256": "b7edfc41079848adafff66cd44aab647f474e656713943017cbe58b5cd879195",
+    "bytes": 537
+  },
+  {
+    "path": "FORMAT-BASELINE.json",
+    "sha256": "0c88191e75c886649d2fa7963722478a5f211bc52e40a32cdc08298c5c05d531",
+    "bytes": 1194
+  },
+  {
+    "path": "INCIDENTS.md",
+    "sha256": "9fa32064f76593528a93874bafc9b6bd10704bfb28baa5da5610db28d1f45968",
+    "bytes": 2934
+  },
+  {
+    "path": "INDEPENDENT-INTENT-VECTORS.json",
+    "sha256": "5554e1a06aee8109b1ce6db7b669899ba84a99740f000639cebfecdcb331742e",
+    "bytes": 4263
+  },
+  {
+    "path": "PREREQUISITE-MANIFESTS.json",
+    "sha256": "e557f1cce9a3871526abd5778e2394ceb4d17299b944002b1dc0c0498bc8028f",
+    "bytes": 802
+  },
+  {
+    "path": "RESULTS.json",
+    "sha256": "218a72eaa26eb6b9eb1057330380014d55da407af939ce7ed04750fa348a102f",
+    "bytes": 3178
+  },
+  {
+    "path": "SNAPSHOT-PAIR-VERIFICATION.json",
+    "sha256": "bbffff5f5e11fcb9b971527ab49f17f90e500df48bbfc8504aead6685becc1fd",
+    "bytes": 429
+  },
+  {
+    "path": "SOURCE-SHA256.json",
+    "sha256": "3c687257fe431907d8ece32f8c8dd951f1172ed747b88c4c9cd675597f3651d3",
+    "bytes": 3886
+  },
+  {
+    "path": "connected-first.log",
+    "sha256": "a7d2633bebda61488616c7e2fcde4fef54fb86c492138b463be44bff667f4d0d",
+    "bytes": 22978
+  },
+  {
+    "path": "content-binding-after.log",
+    "sha256": "0803dbc340dbd34df5b2d4bb851dc91ef0109c4cd0271ea1442899e4195cd820",
+    "bytes": 21522
+  },
+  {
+    "path": "content-binding-before.log",
+    "sha256": "4497fc6fa9c1c4f810568ec2ba85fc92989a4f39f9736e7265d3f0ca3ca818f0",
+    "bytes": 22652
+  },
+  {
+    "path": "core-final.log",
+    "sha256": "137ab5ae75c7869954733fd025229c4b3951369ad70fa83027fbc5d0431c6451",
+    "bytes": 15017
+  },
+  {
+    "path": "diff-check.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "full-format.log",
+    "sha256": "8415189def11f5c619e0bbdd9b84fcb9a957148ca0c3fe4bd6b7b5422d31928d",
+    "bytes": 7775
+  },
+  {
+    "path": "media-boundary.log",
+    "sha256": "435b24dc07203c19651c2b9b354ad681ad63a105c844e95e10488b5ffc019ab6",
+    "bytes": 20631
+  },
+  {
+    "path": "missing-retention.log",
+    "sha256": "30734bc128647cd7ccb359ef44bc9785bcec333e96eb7b9399cc891eb08a4f94",
+    "bytes": 20529
+  },
+  {
+    "path": "orchestrator-final.log",
+    "sha256": "629efc2374a46ccccb999ac1c5935f007f1ad25dbe632a6f0b905826533488e0",
+    "bytes": 27113
+  },
+  {
+    "path": "origin-refusals.log",
+    "sha256": "18749311b0dbd6e26073e20663f1a63dc05f7f047b1707055435b5b257023ff8",
+    "bytes": 20535
+  },
+  {
+    "path": "rebase-array-shapes.log",
+    "sha256": "a5802ef643c37aa73c42304fd11d2677e1c7616edc26efcdd59fe3dde659c701",
+    "bytes": 26838
+  },
+  {
+    "path": "rebase-first.log",
+    "sha256": "1efd2a7c1e4073bc2d2059c0b5f942ee2a9634f0f27c0375ead6b4c2f616f31e",
+    "bytes": 26127
+  },
+  {
+    "path": "requirements-final.log",
+    "sha256": "3067450dde7b2cb37dde686a08f66c1fee1366e343d1e053ed6bac5cfa4c197d",
+    "bytes": 63324
+  },
+  {
+    "path": "run-check.py",
+    "sha256": "5820c2a4a473b081c9dba694e546a7341a0195f0a2b3356f2881c03f3d744b0a",
+    "bytes": 1302
+  },
+  {
+    "path": "saved-refusals.log",
+    "sha256": "26f132b935d344d2cab5461b11bf94ef5d0170755743eb30a92bf1b4e4830815",
+    "bytes": 22487
+  },
+  {
+    "path": "touched-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "xml-parse.log",
+    "sha256": "ca2fc4107604a429b091b19babcbe94005008896ed83f75fce4614ef61ad12bd",
+    "bytes": 24
+  }
+]

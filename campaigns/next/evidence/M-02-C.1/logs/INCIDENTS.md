@@ -1,0 +1,14 @@
+# M-02-C.1 incidents
+
+- Initial combined source inspection exceeded the tool output budget. Truncated outputs were not treated as complete contract reads; relevant definitions were subsequently inspected in bounded chunks.
+- Initial guessed continuity/extraction.rs did not exist (sed exit2). Actual granted owner is continuity/extract.rs, identified from rg --files and read successfully. No source effect or test verdict.
+- A later guessed core manifest/change/wire.rs did not exist (cat exit1); Wire is defined in change/mod.rs, whose actual definition was read. No source effect or test verdict.
+- Combined boot/source output exceeded the default aggregate tool budget; full boot90 remains to be read in bounded halves. No full lane or unrelated context was loaded.
+- Boot90 was subsequently read completely in1-95/96-end bounded ranges. B3/C3/E2 manifests were parsed structurally for complete inventory, not treated as complete from a truncated cat.
+- Two apply_patch attempts failed exact-context verification after formatting. Readback confirmed no partial source effect; corrected patches were applied before dependent formatting/builds.
+- A guessed document_analysis/buffer.rs read failed (rg exit2); current buffer APIs were reused from actual B3 test/owner definitions, with no product effect. Earlier direct defining reads of spec/address.rs and core manifest/migration.rs were beyond the exact supplemental list; procedure error retained, no writes in those owners.
+- `content-binding-before.log`: actual connected requirements case0/1, exit101. Selected ContentHash changes while the authored manifest/document leaves remain equal; current schema1 lacks authored selected-content identity, so reviewed next ChangeOrigin equals old. Exact owner correction requested via question-group.cb630bd0-7c3f-4723-8440-1a62c5bf2f7c. Do not count this source epoch as green.
+- Root revision2 selected optional authored selected_content_hash and a distinct bound-intent domain, superseding any leaf-only scope. Same deciding case became1/1 in content-binding-after.log; final requirements6/6, core2/2 and orchestrator4/4 include this correction. Original red remains unchanged.
+- An attempted full PROP044 cat was truncated; only the granted relevant compatibility/recipe clauses were subsequently extracted from the actual XML. No whole-file read claim or generated DTO/codegen run. Registry change-manifest explicitly has schema=none.
+- Final requirements stdout tail included large raw snapshot lines and was truncated by the display budget. Full log remains intact; a structural JSON pass independently compared all4 saved byte/directory inventories equal. Test counts were read from actual summary, not inferred from a truncated tail.
+- Full-format exits1 on14 inherited entries/9files, all byte-identical to HEAD. Touched-format/diff/XML pass. No baseline cleanup, global green or native/hostile-writer qualification claimed.

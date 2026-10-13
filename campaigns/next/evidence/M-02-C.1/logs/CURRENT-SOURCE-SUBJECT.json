@@ -1,0 +1,81 @@
+{
+  "base": "dee18664537d722795afee6b5b4b0e724b383627",
+  "status": "unfinished-authored-content-binding",
+  "files": [
+    {
+      "path": "BACKLOG.md",
+      "sha256": "ec36225f26fac9142ea9242b484462e1ee31ab3bf43056a3403bc105ceaa2b8d",
+      "lines": 2585
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/mod.rs",
+      "sha256": "c080fd6c87e15c08e3d6dd2726b3d2c25cf6623f37272bc2d0dcbd7608c41321",
+      "lines": 294
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/rebase.rs",
+      "sha256": "3e915f337055fc30188313270215ee88d7c04381fd4b8f9da934112a3b9452b1",
+      "lines": 247
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/m_02_c_1_cases.rs",
+      "sha256": "44af30b4e0faf71f94a3d82a77ce303aa36071e185e3fcbc9dba26610eb2df5c",
+      "lines": 371
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/mod.rs",
+      "sha256": "a22b3ea3813ffe5c3aeaf6ac3d3b96963499c731ebf93cf0fd70a2528e9ab6b6",
+      "lines": 184
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/rebase.rs",
+      "sha256": "37f4a7a36b1d15b80b850079a068f90deb7490539cae7fed3d06ffc9d433c973",
+      "lines": 135
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/m_02_c_1_cases.rs",
+      "sha256": "f363bebbb00407188e7105eaa2edec68d9bf7b097b7029b0e4b0d2384bd70606",
+      "lines": 337
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/mod.rs",
+      "sha256": "5b8aec9c2cfe2e0247a7f5ccec88d5aaf742006f843f6fff1a4359d2be44e7e6",
+      "lines": 27
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/origin.rs",
+      "sha256": "a8a61337ffcda66e32a2907f15eeb1b3132ac3012172d1e8ee3cf09dea89ebae",
+      "lines": 245
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture.rs",
+      "sha256": "32472c226e65aa56eb95f810059faeec8719fca21d1ea284206b59b18c6aa0a3",
+      "lines": 399
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity.rs",
+      "sha256": "5bc34ddf944a65f21beb5f6b2be50148c8fa0cecc72645e94e15a0a9e7db7f14",
+      "lines": 535
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/retained.rs",
+      "sha256": "b9349969d7c9a031a3a2c7a6936e4bd8f47b36e0d7f8d4a0cc9af0f5e6e1f562",
+      "lines": 153
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+      "sha256": "c90f1080eecfe52622c7441be5ea3d8feee3829296834fca13b1b77a12aba9e5",
+      "lines": 583
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/mod.rs",
+      "sha256": "65801c073d75cc8d5ae979da09fcada665ba6361e58955775601ae8da5ba7d85",
+      "lines": 142
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "sha256": "a237f84d8317927d4dc71e5f0c897eb43d27fa4500e3fcfd96875ae70735020b",
+      "lines": 30
+    }
+  ]
+}

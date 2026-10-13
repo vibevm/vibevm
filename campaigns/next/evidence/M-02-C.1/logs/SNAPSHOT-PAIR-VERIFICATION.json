@@ -1,0 +1,25 @@
+{
+  "log": "requirements-final.log",
+  "pairs": [
+    {
+      "label": "initial-unbound-lost-retention",
+      "entries": 17,
+      "equal": true
+    },
+    {
+      "label": "initial-retention",
+      "entries": 17,
+      "equal": true
+    },
+    {
+      "label": "reinstall-retention",
+      "entries": 17,
+      "equal": true
+    },
+    {
+      "label": "drift-historical",
+      "entries": 17,
+      "equal": true
+    }
+  ]
+}

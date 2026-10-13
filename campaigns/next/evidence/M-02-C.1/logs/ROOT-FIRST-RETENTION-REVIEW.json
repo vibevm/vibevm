@@ -1,0 +1,25 @@
+{
+  "status": "connected_case_review_not_task_acceptance",
+  "case": "change::m_02_c_1_cases::retained_origin_survives_reinstall",
+  "passed": 1,
+  "ignored": 0,
+  "log_sha256": "a7d2633bebda61488616c7e2fcde4fef54fb86c492138b463be44bff667f4d0d",
+  "source_sha256": "41119147c50bf07d32a07fb88f0da5e5ef17d91ad3887764fe4004c598f94260",
+  "observed": [
+    "Actual materialise_with_spec_format Copy/Mixed slot and lock fixture, then SourceQueryService::prepare_host\u2192retain_origin_capture.",
+    "Expected declaration digest independently computed from authored fixture leaves.",
+    "Same-content reinstall reports Unchanged and old snapshot unchanged.",
+    "Same-version changed body/selected content reports OriginDrift with exact Changed fact address.",
+    "Retained old bytes remain exact and observation inventories unchanged.",
+    "Grade explicitly RecordConsistent, no source authentication."
+  ],
+  "limits": [
+    "Slot replacement/lock publication are explicit owned fixture setup, not read effects.",
+    "Historical carrier is memory-held; no cross-process persistence proof."
+  ],
+  "pending": [
+    "Missing old origin/no latest fallback and selected mismatches.",
+    "Core token rebase and saved-state orchestrator preparation.",
+    "Final seals/specmap."
+  ]
+}

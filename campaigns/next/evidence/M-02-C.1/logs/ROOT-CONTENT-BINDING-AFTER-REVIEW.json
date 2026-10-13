@@ -1,0 +1,20 @@
+{
+  "status": "counterexample_fixed_case_not_task_acceptance",
+  "case": "change::m_02_c_1_cases::selected_content_identity_is_authored",
+  "passed": 1,
+  "ignored": 0,
+  "log_sha256": "0803dbc340dbd34df5b2d4bb851dc91ef0109c4cd0271ea1442899e4195cd820",
+  "source_sha256": "cb171a607eb2393a9e8f249ce5e6858b9cda51c904d62e62285120aae0948b8b",
+  "assertions": [
+    "Uncited README changed and materialized same-version package content hash changes.",
+    "Manifest and selected document bytes unchanged; affected selected-fact list empty.",
+    "Next authored origin declaration differs from prior accepted declaration.",
+    "Observation inventories unchanged after explicit fixture setup."
+  ],
+  "pending": [
+    "Actual TOML proposal/bound intent change.",
+    "Explicit initial binding/unbound/mismatch/lost carrier cases.",
+    "Legacy v1 and bound independent vectors.",
+    "Final affected families/seal/specmap."
+  ]
+}

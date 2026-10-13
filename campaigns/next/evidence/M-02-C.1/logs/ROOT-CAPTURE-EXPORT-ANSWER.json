@@ -1,0 +1,95 @@
+{
+  "request": {
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-c1-capture-export-20261013",
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "questionGroupId": "question-group.6eddfdb4-e01e-409c-9f66-3f2988f9cb4c",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "c1_capture_export",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "grant"
+          }
+        }
+      ],
+      "noteMarkdown": "Root grants exactly the capture.rs forwarding re-export of RetainedOriginCapture/Document/Fact, no constructor/selection/runtime change. This scope was already authorized in queued message6f0a4dde (Astra supplement); ordinary chat notices do not reach the active turn promptly, so this addressed answer delivers it now. No duplicate action/test required. Astra completed audit M02-C1/ASTRA-SEAM-AUDIT.json: retain only checked-world bytes/provenance at existing Observed/RecordConsistent grade, memory-held availability distinct from durable persistence. Rebase selects exact old identity and token spans; preserve unrelated/unchanged-row comments and CRLF; do not silently reserialize whole origin arrays. Continue the registered production prepare_host→retention positive and original C1 matrix."
+    }
+  },
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.6eddfdb4-e01e-409c-9f66-3f2988f9cb4c",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.619ca255-e362-484c-9780-2929978477f3",
+        "title": "C1 enclosing retention export",
+        "introductionMarkdown": "Actual module chain is source_query/mod.rs → capture.rs → continuity.rs → retained.rs. The grant listed the latter owners but omitted capture.rs forwarding reexport.",
+        "items": [
+          {
+            "questionItemId": "c1_capture_export",
+            "header": "Registration",
+            "promptMarkdown": "Grant exact WRITE crates/vibe-workspace/src/source_query/capture.rs solely pub use continuity::{RetainedOriginCapture, RetainedOriginDocument, RetainedOriginFact}; no constructor/selection change. The actual connected requirements --lib case is registered and awaits this required export before Cargo.",
+            "contextMarkdown": null,
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant reexport",
+                "description": "Mechanical module registration only, no runtime behavior.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": null,
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Required facade reachability through actual module owner."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-13T00:39:08.801Z",
+        "updatedAt": "2026-10-13T00:41:04.314Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.4b3743f3-9286-43a2-92fe-22eef819ef9a",
+        "questionGroupId": "question-group.6eddfdb4-e01e-409c-9f66-3f2988f9cb4c",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "c1_capture_export",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "Root grants exactly the capture.rs forwarding re-export of RetainedOriginCapture/Document/Fact, no constructor/selection/runtime change. This scope was already authorized in queued message6f0a4dde (Astra supplement); ordinary chat notices do not reach the active turn promptly, so this addressed answer delivers it now. No duplicate action/test required. Astra completed audit M02-C1/ASTRA-SEAM-AUDIT.json: retain only checked-world bytes/provenance at existing Observed/RecordConsistent grade, memory-held availability distinct from durable persistence. Rebase selects exact old identity and token spans; preserve unrelated/unchanged-row comments and CRLF; do not silently reserialize whole origin arrays. Continue the registered production prepare_host→retention positive and original C1 matrix."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.5452a7d05672cf9e35b8de4b",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-13T00:41:04.314Z",
+        "metadata": {}
+      }
+    }
+  }
+}

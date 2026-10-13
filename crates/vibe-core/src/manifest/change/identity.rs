@@ -4,15 +4,17 @@ use super::{ChangeError, ChangeErrorKind, ChangeManifest, WorkGraph, WorkItem, i
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 pub const INTENT_RECIPE: &str = "sha256:vibe-change-intent-v1";
+pub const BOUND_INTENT_RECIPE: &str = "sha256:vibe-change-bound-intent-v1";
 pub const WORK_RECIPE: &str = "sha256:vibe-change-work-v1";
 pub const WORK_CONTRIBUTION_RECIPE: &str = "sha256:vibe-change-work-contribution-v1";
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntentIdentity {
+    recipe: &'static str,
     digest: String,
 }
 impl IntentIdentity {
     pub fn recipe(&self) -> &'static str {
-        INTENT_RECIPE
+        self.recipe
     }
     pub fn digest(&self) -> &str {
         &self.digest
@@ -98,7 +100,16 @@ impl ChangeManifest {
                 "exact normative observation set required",
             ));
         }
-        let mut hash = Framed::new(INTENT_RECIPE);
+        let bound = self
+            .origins()
+            .iter()
+            .any(|o| o.selected_content_hash.is_some());
+        let recipe = if bound {
+            BOUND_INTENT_RECIPE
+        } else {
+            INTENT_RECIPE
+        };
+        let mut hash = Framed::new(recipe);
         hash.scope(self);
         let mut origins: Vec<_> = self.origins().iter().collect();
         origins.sort_by(|a, b| a.package.cmp(&b.package));
@@ -106,6 +117,15 @@ impl ChangeManifest {
         for origin in origins {
             hash.field("origin-package", &origin.package);
             hash.field("origin-manifest", &origin.manifest_sha256);
+            if bound {
+                hash.field(
+                    "origin-content-present",
+                    [u8::from(origin.selected_content_hash.is_some())],
+                );
+                if let Some(content) = &origin.selected_content_hash {
+                    hash.field("origin-selected-content", content);
+                }
+            }
             let mut docs: Vec<_> = origin.documents.iter().collect();
             docs.sort_by(|a, b| a.address.cmp(&b.address));
             hash.count("origin-documents", docs.len());
@@ -127,6 +147,7 @@ impl ChangeManifest {
             hash.field("normative-bytes", observed[doc.path.as_str()]);
         }
         Ok(IntentIdentity {
+            recipe,
             digest: hash.finish(),
         })
     }

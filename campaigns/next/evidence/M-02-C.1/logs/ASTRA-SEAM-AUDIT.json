@@ -1,0 +1,23 @@
+{
+  "agent": "/root/c1_retention_seam_audit",
+  "model": "gpt-6-astra",
+  "effort": "medium",
+  "status": "read_only_completed",
+  "findings": [
+    "No existing public historical selected-capture carrier: old world APIs revalidate current disk.",
+    "Minimal opaque retention minted by checked existing world; retain pin/content and raw snapshots/provenance/descriptor/media; revalidate before returning.",
+    "Extraction currently Observed/RecordConsistent, not source authentication; retain grade.",
+    "Retention itself is in-memory, not cross-process persistence or atomic all-files guarantee.",
+    "Service facade forwards actual prepare_host private world.",
+    "Registration also needs source_query/capture.rs.",
+    "Pure core rebase should select exact old origin identity, replay checked token edits and parse result; whole-array replacement can lose internal comments."
+  ],
+  "deciding_tests": [
+    "Actual prepare_host retain, reinstall slot, old world refuses/current carrier holds unchanged bytes.",
+    "Same-version drift and missing exact old origin/no newest fallback.",
+    "Old/new captured identity and selected exact fact-address differences.",
+    "Wrong old selection refuses; user bytes outside authorized spans preserved, CRLF/metadata/unrelated origins/comments.",
+    "Descriptor/media and grade retained for converted/misleading-suffix input."
+  ],
+  "no_edits_builds_tests": true
+}
