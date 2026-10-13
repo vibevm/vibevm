@@ -91,6 +91,13 @@ report`. Recency alone grants no authority.</AUTHORITY-ORDER></p>
   is a deterministic projection, never a second plan.** It selects one stable
   campaign node and renders its mandates, accepted boundary, candidates,
   remaining route and exit proof. `plan.toml` always wins on divergence.</LAW-GOAL-IS-A-PROJECTION>
+      <LAW-PROJECT-OWNERSHIP fact="true" status="spec/done">**Delegation
+preserves project ownership.** Before every worker packet or follow-up, state
+the target project, its canonical responsibility boundary, neighboring APIs and
+forbidden duplicate authorities inline. Name the governing ownership file in
+quiet packets. A coordinator must not merge several projects into one implicit
+owner or mistake moving code into a chosen language for correct architectural
+placement. Apply the owner check again at acceptance.</LAW-PROJECT-OWNERSHIP>
       <LAW-EXECUTION-SCOPE fact="true" status="spec/done">**Current owner intent
   governs execution.** A stored goal, ready frontier or recovery checkpoint does
   not start a campaign when the owner requested planning, inspection or a stop.
