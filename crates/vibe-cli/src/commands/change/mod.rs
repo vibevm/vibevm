@@ -4,6 +4,7 @@ use clap::{Args, Subcommand};
 use std::{path::PathBuf, process::ExitCode};
 use vibe_core::manifest::change::{ChangeContext, ChangeId};
 use vibe_orchestrator::{change::scaffold::*, document_analysis::*};
+pub mod query;
 mod report;
 #[derive(Debug, Args)]
 pub struct ChangeArgs {
@@ -13,6 +14,9 @@ pub struct ChangeArgs {
 #[derive(Debug, Subcommand)]
 pub enum ChangeCommand {
     New(NewArgs),
+    Check(query::ReadArgs),
+    Show(query::ReadArgs),
+    Coverage(query::ReadArgs),
 }
 #[derive(Debug, Args)]
 pub struct NewArgs {
@@ -34,7 +38,12 @@ pub struct NewArgs {
     pub apply: bool,
 }
 pub fn run(args: &ChangeArgs, json_output: bool) -> ExitCode {
-    let ChangeCommand::New(args) = &args.command;
+    let args = match &args.command {
+        ChangeCommand::New(args) => args,
+        ChangeCommand::Check(args) => return query::run(args, "check", json_output),
+        ChangeCommand::Show(args) => return query::run(args, "show", json_output),
+        ChangeCommand::Coverage(args) => return query::run(args, "coverage", json_output),
+    };
     let output = match execute(args) {
         Ok(report) => report,
         Err(error) => report::refused(&error, args.apply),

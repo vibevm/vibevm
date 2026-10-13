@@ -1,0 +1,9 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0
+}

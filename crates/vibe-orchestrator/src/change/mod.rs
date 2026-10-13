@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 use vibe_core::manifest::change::{ChangeContext, ChangeId, ChangeManifest};
 use vibe_requirements::change::{ParsedCapturedChange, SavedChangeError, analyze_change_bytes};
 mod prepare;
+pub mod query;
 mod rebase;
 pub mod scaffold;
 pub use prepare::{PreparedChangeEdit, prepare_change_edit};

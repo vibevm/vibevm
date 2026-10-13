@@ -1,0 +1,704 @@
+{
+  "metadata": {
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE",
+      "r": 1
+    }
+  },
+  "discriminator": "status",
+  "mapping": {
+    "success": {
+      "properties": {
+        "schema": {
+          "type": "uint32"
+        },
+        "mode": {
+          "enum": [
+            "check",
+            "show",
+            "coverage"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "coordinate": {
+          "type": "string"
+        },
+        "selected_node": {
+          "type": "string"
+        },
+        "directory": {
+          "type": "string"
+        },
+        "intent_recipe": {
+          "type": "string"
+        },
+        "intent_hash": {
+          "type": "string"
+        },
+        "work_recipe": {
+          "type": "string"
+        },
+        "work_hash": {
+          "type": "string"
+        },
+        "capture": {
+          "type": "string"
+        },
+        "roles": {
+          "elements": {
+            "ref": "role"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "omitted_roles": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "origins": {
+          "elements": {
+            "ref": "origin"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "facts": {
+          "elements": {
+            "ref": "fact"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "work_items": {
+          "elements": {
+            "ref": "work_item"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "registry_witnesses": {
+          "elements": {
+            "ref": "witness"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "relation_sources": {
+          "elements": {
+            "ref": "relation_source"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "gaps": {
+          "elements": {
+            "ref": "gap"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "scope_complete": {
+          "type": "boolean"
+        },
+        "terminal": {
+          "enum": [
+            "not-evaluated"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "artifact_evidence": {
+          "enum": [
+            "not-observed"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "source_authentication": {
+          "enum": [
+            "not-established"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "refused": {
+      "properties": {
+        "schema": {
+          "type": "uint32"
+        },
+        "code": {
+          "enum": [
+            "invalid-request",
+            "unknown-epoch",
+            "invalid-id",
+            "unknown-role",
+            "missing-change",
+            "invalid-change",
+            "unavailable-context",
+            "stale-observation",
+            "internal-invariant"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "candidates": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "adoption_observation": {
+      "properties": {
+        "presence": {
+          "enum": [
+            "not-applicable",
+            "absent",
+            "indeterminate",
+            "recorded"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "How the consumer adoption overlay answers about this address: `not-applicable` for a host-authored fact (there is no consumer overlay to consult), `absent` when no registry row exists, `indeterminate` when a row exists carrying no status, `recorded` with the exact status when one is present. Closed, and four words on purpose — a boolean here would erase three different facts."
+          }
+        }
+      },
+      "optionalProperties": {
+        "status": {
+          "ref": "fact_status",
+          "metadata": {
+            "x-default": null,
+            "description": "The recorded adoption status. Present exactly for `recorded`."
+          }
+        }
+      }
+    },
+    "authoring_observation": {
+      "metadata": {
+        "x-wire-order": [
+          "presence",
+          "status",
+          "requires"
+        ],
+        "description": "The authored axis in epoch-2 frame order: presence, optional status, then the optional terminal-artifact contract."
+      },
+      "properties": {
+        "presence": {
+          "enum": [
+            "marked",
+            "unmarked"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Whether the authored document carries a status marker for this fact. An addressed fact with no marker still appears in the answer, as `unmarked` — silence is an observation, not an absence of one."
+          }
+        }
+      },
+      "optionalProperties": {
+        "status": {
+          "ref": "fact_status",
+          "metadata": {
+            "x-default": null,
+            "description": "The authored status. Present exactly for `marked`."
+          }
+        },
+        "requires": {
+          "elements": {
+            "ref": "required_artifact_kind"
+          },
+          "metadata": {
+            "x-default": null,
+            "x-empty": "preserve",
+            "description": "The optional authored terminal-artifact contract. Absent means unclassified; present is a non-empty set emitted in canonical vocabulary order with no duplicate. It is not a terminal or fulfilment verdict."
+          }
+        }
+      }
+    },
+    "fact_status": {
+      "metadata": {
+        "description": "One `(stage, state)` pair in the PROP-043 markup vocabulary — the same closed sets `progress-core` carries in code, restated here as the wire's own so a reader needs no Rust to know the domain."
+      },
+      "properties": {
+        "stage": {
+          "enum": [
+            "unknown",
+            "idea",
+            "spec",
+            "impl",
+            "test",
+            "doc",
+            "freeze"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Where the unit stands in its development cycle (PROP-043 §3.3). Closed: a value outside the set is a validation error, never a silent pass-through."
+          }
+        },
+        "state": {
+          "enum": [
+            "hold",
+            "plan",
+            "work",
+            "done",
+            "void"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Work state at the current stage (PROP-043 §3.4). Closed for the same reason `stage` is."
+          }
+        }
+      }
+    },
+    "relation_source": {
+      "metadata": {
+        "description": "One package's relation-provider result. Optional enrichment loss is TYPED, never silent and never a lifecycle failure: a missing config or carried map is `unavailable`, a carried map whose own content witnesses do not match is `stale`, and malformed present data is `invalid` — the base fact rows still return in every case (`##OPTIONAL-IR-FACT-EVIDENCE`)."
+      },
+      "properties": {
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "The `group/name` coordinate this state is about."
+          }
+        },
+        "state": {
+          "enum": [
+            "not-requested",
+            "current",
+            "carried",
+            "stale",
+            "unavailable",
+            "invalid"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "What the provider could say. Closed: an unknown spelling is a reader error, and every one of these six words carries a different instruction for an orchestrator deciding whether to trust an edge."
+          }
+        },
+        "provenance": {
+          "enum": [
+            "fresh-project-map",
+            "carried-package-map",
+            "none"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "WHERE the edges came from — a project map built fresh in memory, the carried `package.specmap.json` of an installed package, or nowhere at all. Closed, and decided by `state` rather than chosen freely."
+          }
+        }
+      },
+      "optionalProperties": {
+        "reason_code": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "A bounded, nonblank machine reason for a state that lost enrichment (`stale`, `unavailable`, `invalid`). Absent for `not-requested`, `current` and `carried` — nothing was lost, so there is nothing to explain."
+          }
+        }
+      }
+    },
+    "required_artifact_kind": {
+      "enum": [
+        "specification",
+        "implementation",
+        "verification",
+        "documentation",
+        "decision",
+        "research",
+        "plan",
+        "disposition",
+        "external"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The closed PROP-043 terminal-artifact vocabulary, in canonical order."
+      }
+    },
+    "requirement_relation": {
+      "metadata": {
+        "description": "One traceability edge touching this address, as the relation provider reported it. Edges carry coordinates, never bodies: a `file`/`line` pair is where to look, and this report does not ship what is there."
+      },
+      "properties": {
+        "verb": {
+          "enum": [
+            "implements",
+            "verifies",
+            "documents",
+            "deviates",
+            "informs"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "The traceability verb, in the specmap engine's own closed spelling. `verifies` is an EDGE, not a verdict: it says a symbol claims to verify this fact, never that verification passed — that answer lives on the lifecycle evidence root and the join is the orchestrator's."
+          }
+        },
+        "provenance": {
+          "enum": [
+            "authored",
+            "generated",
+            "proposed"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "How the edge came to exist, in the specmap engine's own closed spelling."
+          }
+        },
+        "symbol": {
+          "type": "string",
+          "metadata": {
+            "description": "The module-qualified code symbol the edge starts at."
+          }
+        },
+        "file": {
+          "type": "string",
+          "metadata": {
+            "description": "Forward-slashed repo-relative source path of that symbol."
+          }
+        },
+        "line": {
+          "type": "uint32",
+          "metadata": {
+            "description": "1-based source line of the symbol. At least 1 — line 0 names nothing."
+          }
+        }
+      }
+    },
+    "requirement_row": {
+      "metadata": {
+        "description": "One addressed fact, observed on up to three independent axes. The row carries NO prose, body, prompt, recommendation, ranking or next task — and no fourth axis synthesised from the first three."
+      },
+      "properties": {
+        "address": {
+          "type": "string",
+          "metadata": {
+            "description": "The full `spec://<group>/<package>/<path>#<fact>` address — always the whole thing, never a bare id (`##OPTIONAL-IR-FACT-EVIDENCE`)."
+          }
+        },
+        "source": {
+          "ref": "requirement_source",
+          "metadata": {
+            "description": "Where the authored document was read from. It must name an `available` entry of the root's `sources[]`, and the coordinate parsed out of this row's own `address` must equal its `package` — the row and the source result are one claim, checked from both ends."
+          }
+        },
+        "authoring": {
+          "ref": "authoring_observation",
+          "metadata": {
+            "description": "What the source document itself claims — the `vibe-specdoc` marker axis."
+          }
+        },
+        "adoption": {
+          "ref": "adoption_observation",
+          "metadata": {
+            "description": "What THIS project recorded about the fact — the consumer-owned `vibe-facts` overlay axis, kept separately present so «no record exists» stays distinguishable from «a record exists with no status»."
+          }
+        },
+        "relations": {
+          "elements": {
+            "ref": "requirement_relation"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The relation edges touching this address, sorted and unique. Explicit even when empty — and always empty when the query did not request relations, which the `relation_sources` states say out loud."
+          }
+        }
+      }
+    },
+    "requirement_source": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "host",
+            "package"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "Whether the document was read from this project's own spec roots or from a lock-selected materialised package slot. Closed: the two have different provenance and different adoption semantics."
+          }
+        },
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "The `group/name` coordinate the document belongs to — the host project's own coordinate for a `host` row, the installed package's for a `package` row. Present for both kinds: it is the coordinate half of the row's own address, restated so a reader need not parse the address to group by package."
+          }
+        }
+      }
+    },
+    "role": {
+      "properties": {
+        "role": {
+          "enum": [
+            "intent",
+            "refinement",
+            "acceptance",
+            "work",
+            "closure"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "path": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "bytes": {
+          "type": "uint32"
+        },
+        "buffer_version": {
+          "type": "string",
+          "nullable": true
+        },
+        "basis": {
+          "enum": [
+            "original-bytes"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "state": {
+          "enum": [
+            "native",
+            "unclassified",
+            "inert",
+            "invalid",
+            "unavailable",
+            "work"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "raw_hex": {
+          "type": "string",
+          "nullable": true
+        },
+        "raw_recipe": {
+          "enum": [
+            "hex/1"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "gap": {
+      "properties": {
+        "scope": {
+          "enum": [
+            "origin",
+            "local",
+            "observation"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "address": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "origin": {
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "declared_content": {
+          "type": "string",
+          "nullable": true
+        },
+        "observed_content": {
+          "type": "string",
+          "nullable": true
+        },
+        "capture": {
+          "type": "string",
+          "nullable": true
+        },
+        "state": {
+          "enum": [
+            "matched",
+            "drift",
+            "unbound",
+            "unavailable"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "selected_addresses": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "observed_addresses": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "source_strengths": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "fact": {
+      "properties": {
+        "scope": {
+          "enum": [
+            "origin",
+            "local"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "metadata": {
+          "ref": "requirement_row"
+        },
+        "document": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "capture": {
+          "type": "string"
+        },
+        "basis": {
+          "enum": [
+            "captured-original-bytes/1"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "numeric_position_unavailable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "work_item": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "predecessors": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "touches": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "needs": {
+          "elements": {
+            "ref": "need"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "need": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "specification",
+            "implementation",
+            "verification",
+            "documentation",
+            "decision",
+            "research",
+            "plan",
+            "disposition",
+            "external"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "target": {
+          "type": "string"
+        }
+      }
+    },
+    "witness": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "bytes": {
+          "type": "uint32"
+        }
+      }
+    }
+  }
+}

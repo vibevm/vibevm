@@ -6128,6 +6128,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/request.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "request",
+      "end_line": 45
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/source_query/e1/request.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -6229,6 +6237,134 @@
       "line": 147,
       "symbol": "requirements_report::source_result",
       "end_line": 189
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "response",
+      "end_line": 704
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 187,
+      "symbol": "response::adoption_observation",
+      "end_line": 211
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 212,
+      "symbol": "response::authoring_observation",
+      "end_line": 252
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 600,
+      "symbol": "response::fact",
+      "end_line": 635
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 253,
+      "symbol": "response::fact_status",
+      "end_line": 287
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 526,
+      "symbol": "response::gap",
+      "end_line": 545
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 667,
+      "symbol": "response::need",
+      "end_line": 689
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 546,
+      "symbol": "response::origin",
+      "end_line": 599
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 288,
+      "symbol": "response::relation_source",
+      "end_line": 334
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 335,
+      "symbol": "response::required_artifact_kind",
+      "end_line": 351
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 352,
+      "symbol": "response::requirement_relation",
+      "end_line": 400
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 401,
+      "symbol": "response::requirement_row",
+      "end_line": 440
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 441,
+      "symbol": "response::requirement_source",
+      "end_line": 460
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 461,
+      "symbol": "response::role",
+      "end_line": 525
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 690,
+      "symbol": "response::witness",
+      "end_line": 702
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 636,
+      "symbol": "response::work_item",
+      "end_line": 666
     },
     {
       "crate_name": "<schema>",
@@ -8872,6 +9008,15 @@
       "symbol": "vibe_cli::commands::change",
       "end_line": 2,
       "fingerprint": "tok1:c6953b151b083bc6b0b659ce9157c8f691a5f16db82c53b520f45d9ea1b85250"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/change/query.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::change::query",
+      "end_line": 2,
+      "fingerprint": "tok1:dd4261f3697db932aa2ea1a699611bf87c21c3fc34cea628a0ca9e9b7f06c2f0"
     },
     {
       "crate_name": "vibe-cli",
@@ -26400,55 +26545,64 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 488,
+      "line": 491,
       "symbol": "vibe_mcp::tools::AgenticExplainMcpTool",
-      "end_line": 500,
+      "end_line": 503,
       "fingerprint": "tok1:bb751a7ac693f9ebf04766449fa37569b5ef2770f50134a0d2254a810d6b39e3"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 348,
+      "line": 351,
       "symbol": "vibe_mcp::tools::MaterialiseSubskillMcpTool",
-      "end_line": 358,
+      "end_line": 361,
       "fingerprint": "tok1:7a65232d99728dda7430a8f91d406bd4b6db0c79bece520d3c6c61700a8c63d0"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "trait",
-      "line": 56,
+      "line": 58,
       "symbol": "vibe_mcp::tools::McpTool",
-      "end_line": 88,
+      "end_line": 90,
       "fingerprint": "tok1:3126b54d2d13db1241139b3163476a85cb072cdb66ba26152be564dac7d63ce8"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 128,
+      "line": 131,
       "symbol": "vibe_mcp::tools::QueryPackageMcpTool",
-      "end_line": 137,
+      "end_line": 140,
       "fingerprint": "tok1:ba43260b8c954a14d387560ebbc7e9997492fc0741b3ec22ac0cd174be0a0aa5"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 215,
+      "line": 218,
       "symbol": "vibe_mcp::tools::ReadSubskillMcpTool",
-      "end_line": 224,
+      "end_line": 227,
       "fingerprint": "tok1:fb755a2dc3313eba121e287265c26e3d4c3769203e53433e864657da436cd68a"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/change.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_mcp::tools::change",
+      "end_line": 2,
+      "fingerprint": "tok1:dd4261f3697db932aa2ea1a699611bf87c21c3fc34cea628a0ca9e9b7f06c2f0"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "fn",
-      "line": 90,
+      "line": 92,
       "symbol": "vibe_mcp::tools::default_tools",
-      "end_line": 122,
-      "fingerprint": "tok1:0750d3d2972d8b6c53e07a91a355c868274217e33f07d252103d10699ddd1454"
+      "end_line": 125,
+      "fingerprint": "tok1:63c51fb1f1897c8bd274e2f8f2c8ca3620f8b14b758e22e0cb0b2b36896dbc8a"
     },
     {
       "crate_name": "vibe-mcp",
@@ -27070,6 +27224,24 @@
       "symbol": "vibe_orchestrator::change::prepare",
       "end_line": 2,
       "fingerprint": "tok1:480e7918ffa233f5c52880b9376e5d35098e86b9b32a80354395b51c14756304"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/change/query.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::change::query",
+      "end_line": 2,
+      "fingerprint": "tok1:dd4261f3697db932aa2ea1a699611bf87c21c3fc34cea628a0ca9e9b7f06c2f0"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/change/query/result.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::change::query::result",
+      "end_line": 2,
+      "fingerprint": "tok1:aea0446e941fba23c599b57386680803c0912c56b1025524df48b097243eb98b"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -30733,6 +30905,15 @@
       "symbol": "vibe_requirements::change::identity",
       "end_line": 2,
       "fingerprint": "tok1:ffd2cf7db2c3024e04780cca085087e83f1aeec198ea87f3e34243708b2fbdb9"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/inspection.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::change::inspection",
+      "end_line": 2,
+      "fingerprint": "tok1:aea0446e941fba23c599b57386680803c0912c56b1025524df48b097243eb98b"
     },
     {
       "crate_name": "vibe-requirements",
@@ -37117,6 +37298,15 @@
     },
     {
       "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/src/behaviour/change_query.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_wire::behaviour::change_query",
+      "end_line": 2,
+      "fingerprint": "tok1:dd4261f3697db932aa2ea1a699611bf87c21c3fc34cea628a0ca9e9b7f06c2f0"
+    },
+    {
+      "crate_name": "vibe-wire",
       "file": "crates/vibe-wire/src/behaviour/deploy_records/binding.rs",
       "item_kind": "mod",
       "line": 3,
@@ -41896,11 +42086,27 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/change_query/e1/request.jtd.json",
+      "from_symbol": "request",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/requirements_report.jtd.json",
       "from_symbol": "requirements_report",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-REQUIREMENTS-WIRE",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/change_query/e1/response.jtd.json",
+      "from_symbol": "response",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE",
       "verb": "implements"
     },
     {
@@ -43067,6 +43273,14 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SCAFFOLD-PREPARATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/change/query.rs",
+      "from_symbol": "vibe_cli::commands::change::query",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE",
       "verb": "implements"
     },
     {
@@ -59287,7 +59501,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::AgenticExplainMcpTool",
-      "line": 499,
+      "line": 502,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#transports",
       "verb": "implements"
@@ -59295,7 +59509,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::MaterialiseSubskillMcpTool",
-      "line": 357,
+      "line": 360,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -59303,7 +59517,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::McpTool",
-      "line": 71,
+      "line": 73,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -59311,7 +59525,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::QueryPackageMcpTool",
-      "line": 136,
+      "line": 139,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -59319,15 +59533,23 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::ReadSubskillMcpTool",
-      "line": 223,
+      "line": 226,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-mcp/src/tools/change.rs",
+      "from_symbol": "vibe_mcp::tools::change",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::default_tools",
-      "line": 92,
+      "line": 94,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements",
@@ -59907,6 +60129,22 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-PREPARATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/change/query.rs",
+      "from_symbol": "vibe_orchestrator::change::query",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/change/query/result.rs",
+      "from_symbol": "vibe_orchestrator::change::query::result",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-OBSERVATION-AXES",
       "verb": "implements"
     },
     {
@@ -63285,6 +63523,14 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/inspection.rs",
+      "from_symbol": "vibe_requirements::change::inspection",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-OBSERVATION-AXES",
       "verb": "implements"
     },
     {
@@ -69139,6 +69385,14 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-080#COVERAGE-INVENTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/src/behaviour/change_query.rs",
+      "from_symbol": "vibe_wire::behaviour::change_query",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE",
       "verb": "implements"
     },
     {
@@ -99519,7 +99773,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c8282200addee6f026ea9bb1b212d4e4c10a7e4543a4629aefed48dff495dedb",
+      "content_hash": "sha256:0712cdd1daceac0fef118aaa0fb51da9bc2871c9cbbd2d0ecc63badbfee84cab",
       "doc_path": "common/PROP-071",
       "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
       "heading": "PROP-071: Change origin bindings and project-owned closure",
@@ -99645,7 +99899,7 @@
     },
     {
       "anchor": "identities",
-      "content_hash": "sha256:7c418a08b7acfb8615d377aa65a8611a640db84ddb10399802417c32c8c5ff84",
+      "content_hash": "sha256:e2d39d16bfc533dc13e8ca0930974627694c570905b125d5e0c9cfe9d056b60b",
       "doc_path": "common/PROP-071",
       "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
       "heading": "4. Independent authored intent and structural work",
@@ -99768,6 +100022,24 @@
       "heading": "Retain exact absent intent, desired bytes, created directory/file identity and verified/uncertain/pending stages in a narrowly registered scaffold journal before effects. The stable journal key is SHA256 over change-scaffold-directory-key/1 followed by be64-length-prefixed root correlation and immutable directory bytes; a fresh editor capture cannot allocate another journal for that reserved directory. A separate intent SHA256 uses change-scaffold-journal/1 and length-prefixed recipe/root/editor capture/source capture/node path/node digest/node identity/directory, node-mode presence and be32 value, then be64 file count and sorted length-prefixed file name/desired digest pairs. Publication observations are excluded. Existing retained reservation refuses new publication even when a partial parent creation left the final directory absent; reconciliation remains read-only and preserves pending/uncertain ownership. Landed directory/file plus failure is an exact partial/recovery-owned outcome, not rollback or atomic multi-file success. Retry inspects retained state, refuses unrelated/third states and never silently republishes completed artifacts or fabricates a new invocation. Standard user-space cooperative directory creation and final-check races remain explicit; unsupported native M13 directory primitives are not promoted to another platform qualification. No install, hydration, source/adoption update, execution or closure publication follows scaffolding. @status:spec/plan",
       "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SCAFFOLD-RECOVERY"
+    },
+    {
+      "anchor": "CHANGE-READ-SERVICE",
+      "content_hash": "sha256:0edf60ae229ee8ba73753a766a3abb0ebc7f70cab76ff0113b4aacfd805901b8",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "Check/show/coverage delegate one generated epoch-one read request/result/refusal route through the shared M16 application service and actual immutable document capture, shared change grammar/identity and retained M01/C2 selection. Trusted host owns node/root/configuration; request paths, capture strings or role labels grant neither reads outside that scope nor writes/native effects. Unknown fields/epochs, malformed IDs/role filters refuse before preparation. Show retains exact raw role bytes/basis; no lifecycle, install, migration, adoption or personal-state mutation occurs. @status:spec/plan",
+      "line": 35,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE"
+    },
+    {
+      "anchor": "CHANGE-READ-OBSERVATION-AXES",
+      "content_hash": "sha256:eeaaa545c73acd1643cd853f09ecf3dae69d3d4ddad77828138efdd77ac37160",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "Origin and local intent/document identities remain distinct. Actual descriptor-selected local native facts use the existing captured parser/traversal; missing classification is an explicit gap, never empty complete facts. Complete origin selection uses exact held pin/content/manifest/cited-byte membership; drift, unbound or missing retention remains unavailable/incomplete rather than newest fallback. Adoption and traceability observations retain their own captured witnesses/current-carried-unavailable policy and never substitute for implementation/verification artifact evidence. Structural work predecessors/needs/touches are declarations, not satisfaction, scheduling or completion. Metadata inspection does not certify closure or a terminal verdict. @status:spec/plan",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-OBSERVATION-AXES"
     },
     {
       "anchor": "root",

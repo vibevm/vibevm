@@ -1,0 +1,28 @@
+{
+  "binary": "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+  "binary_sha256": "f29c8f8b7867433cf16686e09c141a099670fed55188c7a37026effd31d0e4f0",
+  "argv": [
+    "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+    "--json",
+    "change",
+    "show",
+    "chg-0123456789abcdef0123456789abcdef"
+  ],
+  "cwd": "/tmp/.tmpSkuvvt/host",
+  "env": {
+    "PATH": "/usr/bin:/bin",
+    "LANG": "C.UTF-8",
+    "HOME": "/tmp/.tmpSkuvvt/hermetic/home",
+    "XDG_CONFIG_HOME": "/tmp/.tmpSkuvvt/hermetic/config",
+    "XDG_CACHE_HOME": "/tmp/.tmpSkuvvt/hermetic/cache",
+    "XDG_STATE_HOME": "/tmp/.tmpSkuvvt/hermetic/state",
+    "VIBE_SETTINGS": "/tmp/.tmpSkuvvt/hermetic/settings",
+    "VIBE_NO_DEFAULT_REGISTRY": "1",
+    "VIBE_REGISTRY_CACHE": "/tmp/.tmpSkuvvt/hermetic/cache",
+    "VIBE_NO_PROGRESS": "1",
+    "CI": "1"
+  },
+  "exit": 1,
+  "stdout": "{\"status\":\"refused\",\"candidates\":[],\"code\":\"missing-change\",\"message\":\"saved change unavailable at held selected node\",\"schema\":1}\n",
+  "stderr": ""
+}

@@ -1,0 +1,11 @@
+{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "owned-d2-conformance", "version": "1"}}}
+{"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "check", "id": "chg-0123456789abcdef0123456789abcdef"}}}
+{"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "show", "id": "chg-0123456789abcdef0123456789abcdef"}}}
+{"jsonrpc": "2.0", "id": 4, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "coverage", "id": "chg-0123456789abcdef0123456789abcdef"}}}
+{"jsonrpc": "2.0", "id": 5, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "check", "id": "chg-fedcba9876543210fedcba9876543210"}}}
+{"jsonrpc": "2.0", "id": 6, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "show", "id": "chg-fedcba9876543210fedcba9876543210"}}}
+{"jsonrpc": "2.0", "id": 7, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "coverage", "id": "chg-fedcba9876543210fedcba9876543210"}}}
+{"jsonrpc": "2.0", "id": 8, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 99, "mode": "check", "id": "chg-0123456789abcdef0123456789abcdef"}}}
+{"jsonrpc": "2.0", "id": 9, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "check", "id": "chg-0123456789abcdef0123456789abcdef", "root": "/elsewhere"}}}
+{"jsonrpc": "2.0", "id": 10, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "check", "id": "../escape"}}}
+{"jsonrpc": "2.0", "id": 11, "method": "tools/call", "params": {"name": "change_query", "arguments": {"schema": 1, "mode": "check", "id": "chg-0123456789abcdef0123456789abcdef", "roles": ["closure"]}}}

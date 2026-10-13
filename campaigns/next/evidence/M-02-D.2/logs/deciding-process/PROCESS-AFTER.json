@@ -1,0 +1,174 @@
+{
+  "empty-cache": {
+    "kind": "dir"
+  },
+  "hermetic": {
+    "kind": "dir"
+  },
+  "hermetic/cache": {
+    "kind": "dir"
+  },
+  "hermetic/config": {
+    "kind": "dir"
+  },
+  "hermetic/home": {
+    "kind": "dir"
+  },
+  "hermetic/settings": {
+    "kind": "dir"
+  },
+  "hermetic/state": {
+    "kind": "dir"
+  },
+  "host": {
+    "kind": "dir"
+  },
+  "host/.vibe": {
+    "kind": "dir"
+  },
+  "host/.vibe/change-scaffolds": {
+    "kind": "dir"
+  },
+  "host/.vibe/change-scaffolds/037c9a62d0e2211937b37d24694b59fca7063edc0226298020cb39c0a73c2ea4.toml": {
+    "kind": "file",
+    "bytes": 10213,
+    "sha256": "60210aaf486bd046d2eb6cd444f60d2141a2e2e0e67ad04fc9e6fa16026f7703"
+  },
+  "host/.vibe/change-scaffolds/511248d59779126094c9061c97136a647468b0f5dc72ba39e2b51d4744b72788.toml": {
+    "kind": "file",
+    "bytes": 7977,
+    "sha256": "8b73e77f6d072b75274c338a47f5d3c5f52e51919cfab1bda02a10ac1134ea02"
+  },
+  "host/.vibe/lifecycle.lock": {
+    "kind": "file",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "host/vibe.lock": {
+    "kind": "file",
+    "bytes": 284,
+    "sha256": "f27fb977fc9b7e32d4ae6d52ac3438e74e2e21d7d2e585d4c898eb36f93b6f98"
+  },
+  "host/vibe.toml": {
+    "kind": "file",
+    "bytes": 656,
+    "sha256": "c84b097b4cc8d71500e10001f185b0ab28435d9155eb506a2b7f38c9a958a6b4"
+  },
+  "host/vibevm": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibedeps": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibedeps/org.demo.dep": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibedeps/org.demo.dep/1.0.0": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibedeps/org.demo.dep/1.0.0/.vibe-slot.toml": {
+    "kind": "file",
+    "bytes": 345,
+    "sha256": "ed1ea2cd608107daa13ee6a89de5d62a3911d1a7bca615a5a2525b8896a74320"
+  },
+  "host/vibevm/vibedeps/org.demo.dep/1.0.0/vibe.toml": {
+    "kind": "file",
+    "bytes": 197,
+    "sha256": "00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97"
+  },
+  "host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibedeps/org.demo.dep/1.0.0/vibevm/vibespecs/DOC.md": {
+    "kind": "file",
+    "bytes": 55,
+    "sha256": "2c74b9ffd7a32a4b8614fd51a41f55a7b7935d686dfe86b78863900f962f7b48"
+  },
+  "host/vibevm/vibefacts": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibefacts/org.demo.dep.toml": {
+    "kind": "file",
+    "bytes": 131,
+    "sha256": "1da8a52c9062cdb7e7deda58b22eafa4a362f0f158df92a517f4314638b0dfa1"
+  },
+  "host/vibevm/vibespecs": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibespecs/changes": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef/acceptance.md": {
+    "kind": "file",
+    "bytes": 100,
+    "sha256": "25807d0e892629790c264a50e70cec99cbba214ebffa58fde7a1e98954084e36"
+  },
+  "host/vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef/change.toml": {
+    "kind": "file",
+    "bytes": 907,
+    "sha256": "155c29c2c39a9be1319d319b931fc5c7b82ddeb1319ed76240fd6b0dd037b5d2"
+  },
+  "host/vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef/intent.md": {
+    "kind": "file",
+    "bytes": 144,
+    "sha256": "acde4aa3ded0694ee6890426e7c81cec328f6851abf175b2ce4ee403fd13c29d"
+  },
+  "host/vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef/refinement.md": {
+    "kind": "file",
+    "bytes": 107,
+    "sha256": "97ff01977fbbd1b10d5acba28c44e4ef528f60756be131e5f004882392f7f30f"
+  },
+  "host/vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef/work.toml": {
+    "kind": "file",
+    "bytes": 156,
+    "sha256": "55f992e8645598bc446c048df4797cda0b94b8b9dfb9e9bfc533bf569087c5b8"
+  },
+  "host/vibevm/vibespecs/changes/chg-fedcba9876543210fedcba9876543210": {
+    "kind": "dir"
+  },
+  "host/vibevm/vibespecs/changes/chg-fedcba9876543210fedcba9876543210/acceptance.md": {
+    "kind": "file",
+    "bytes": 105,
+    "sha256": "9da77f0e37ec521978db219610ede1e0ea2b150a0dc258e1d5fe052b26259e92"
+  },
+  "host/vibevm/vibespecs/changes/chg-fedcba9876543210fedcba9876543210/change.toml": {
+    "kind": "file",
+    "bytes": 831,
+    "sha256": "c703fd0408058099534f464bed62494069388030310b381285b0bfe3f33f9660"
+  },
+  "host/vibevm/vibespecs/changes/chg-fedcba9876543210fedcba9876543210/intent.md": {
+    "kind": "file",
+    "bytes": 144,
+    "sha256": "acde4aa3ded0694ee6890426e7c81cec328f6851abf175b2ce4ee403fd13c29d"
+  },
+  "host/vibevm/vibespecs/changes/chg-fedcba9876543210fedcba9876543210/refinement.md": {
+    "kind": "file",
+    "bytes": 34,
+    "sha256": "d58910229b1f2250937e51d34470295738bccd5c660ff26960ba8aab552b1a13"
+  },
+  "source": {
+    "kind": "dir"
+  },
+  "source/vibe.toml": {
+    "kind": "file",
+    "bytes": 197,
+    "sha256": "00b5494965d1b34fb8d783692af253cb80986faab59923fc8c734c0d26916e97"
+  },
+  "source/vibevm": {
+    "kind": "dir"
+  },
+  "source/vibevm/vibespecs": {
+    "kind": "dir"
+  },
+  "source/vibevm/vibespecs/DOC.md": {
+    "kind": "file",
+    "bytes": 55,
+    "sha256": "2c74b9ffd7a32a4b8614fd51a41f55a7b7935d686dfe86b78863900f962f7b48"
+  }
+}

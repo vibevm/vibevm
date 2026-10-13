@@ -1,0 +1,14 @@
+{
+  "packages": 591,
+  "identities_unchanged": true,
+  "other_rows_unchanged": true,
+  "changes": [
+    {
+      "package": "vibe-orchestrator",
+      "added": [
+        "vibe-facts",
+        "vibe-trace"
+      ]
+    }
+  ]
+}

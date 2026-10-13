@@ -4931,6 +4931,7 @@ dependencies = [
  "vibe-agent-projection",
  "vibe-core",
  "vibe-extension-registry",
+ "vibe-facts",
  "vibe-install",
  "vibe-lifecycle",
  "vibe-native-loader-build-provider-fixture",
@@ -4945,6 +4946,7 @@ dependencies = [
  "vibe-spec",
  "vibe-specdoc",
  "vibe-test-support",
+ "vibe-trace",
  "vibe-wire",
  "vibe-workspace",
 ]

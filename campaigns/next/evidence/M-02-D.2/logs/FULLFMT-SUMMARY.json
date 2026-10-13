@@ -1,0 +1,15 @@
+{
+  "hunks": 14,
+  "files": 9,
+  "paths": [
+    "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs"
+  ]
+}

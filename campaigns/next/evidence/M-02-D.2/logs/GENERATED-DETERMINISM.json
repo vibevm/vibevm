@@ -1,0 +1,8 @@
+{
+  "sets_and_sha256_equal": true,
+  "files": 207,
+  "first": "GENERATED-AFTER.json",
+  "repeat": "GENERATED-REPEAT.json",
+  "actual_command": "codegen-determinism.log",
+  "check_codegen_limit": "Existing global check regenerates then git diff --exit-code, which rejects intended unstaged generated changes. Canonical regeneration plus complete sets/bytes compares exact emission here; no global clean claim."
+}

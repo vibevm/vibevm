@@ -6,7 +6,7 @@ use vibe_core::{
     ContentHash,
     manifest::{Lockfile, SpecFormat},
 };
-fn fixture() -> tempfile::TempDir {
+pub(super) fn fixture() -> tempfile::TempDir {
     let root = tempfile::tempdir().unwrap();
     let source = root.path().join("source");
     let host = root.path().join("host");
@@ -83,7 +83,9 @@ fn parsed_cli_prepare_apply_and_no_overwrite_match_artifacts() {
     let Command::Change(args) = parsed.command else {
         panic!("wrong command")
     };
-    let ChangeCommand::New(mut args) = args.command;
+    let ChangeCommand::New(mut args) = args.command else {
+        panic!("wrong change subcommand")
+    };
     let before = inventory(root.path());
     let preview = value(execute(&args).unwrap());
     assert_eq!(before, inventory(root.path()));

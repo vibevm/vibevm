@@ -1690,3 +1690,21 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/change-scaffold-cli-report/e1"
 sunset = "none"
+
+[format.change-query-request]
+epoch = 1
+schema = "schemas/change_query/e1/request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/change-query-request/e1"
+sunset = "none"
+
+[format.change-query-response]
+epoch = 1
+schema = "schemas/change_query/e1/response.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/change-query-response/e1"
+sunset = "none"
