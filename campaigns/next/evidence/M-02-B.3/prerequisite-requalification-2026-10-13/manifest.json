@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "status": "prerequisites_requalified_by_first_agent",
+  "tasks": [
+    "M-02-B.1",
+    "M-02-B.2"
+  ],
+  "head": "a36c6b55623a7decd59fb0dac3a3b65130c9da4b",
+  "source_hashes": 59,
+  "producer_evidence_hashes": 15,
+  "existing_cases": 20,
+  "new_cases": 0,
+  "source_edits": false,
+  "b3_accepted": false,
+  "evidence": [
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/BOUND-CHECKS.md",
+      "raw_sha256": "93766ab4316651e55611dc1462a5ac0e96aff558922eed4e1947a0850df8d82d",
+      "sha256": "93766ab4316651e55611dc1462a5ac0e96aff558922eed4e1947a0850df8d82d",
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/CANDIDATE-REPORT.md",
+      "raw_sha256": "7d2fbcf53c78aed7dc82f4319bb69defb3d03eeadfdce231e0b80f316039ef68",
+      "sha256": "7d2fbcf53c78aed7dc82f4319bb69defb3d03eeadfdce231e0b80f316039ef68",
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/COMMANDS.json",
+      "raw_sha256": "93af99f2c95a4e0885afc767d1cd6705aa0b38e8ff6f575a5bca406b00a6c0a6",
+      "sha256": "93af99f2c95a4e0885afc767d1cd6705aa0b38e8ff6f575a5bca406b00a6c0a6",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/EVIDENCE-SHA256.json",
+      "raw_sha256": "d7b08fe8683b3b2a059e2539a82568a3fa287fa6181678a76a42ff79c7956313",
+      "sha256": "d7b08fe8683b3b2a059e2539a82568a3fa287fa6181678a76a42ff79c7956313",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/FINAL-STATE.json",
+      "raw_sha256": "06a71f289eef9684ed57b1bfb97af46e715eb6416e95ff226b2dd7696887836b",
+      "sha256": "06a71f289eef9684ed57b1bfb97af46e715eb6416e95ff226b2dd7696887836b",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/HASH-VERIFY.log",
+      "raw_sha256": "cdea49dc0039d95ec1431ef88930872a72acb9a3ee4ebe3899a0495db2f8d955",
+      "sha256": "cdea49dc0039d95ec1431ef88930872a72acb9a3ee4ebe3899a0495db2f8d955",
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/INCIDENTS.md",
+      "raw_sha256": "792680f1bfc8c63c17a0a3e5279525c681ac6f6af4e8d44e5f23e4d60b6e32f7",
+      "sha256": "792680f1bfc8c63c17a0a3e5279525c681ac6f6af4e8d44e5f23e4d60b6e32f7",
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/INITIAL-STATE.json",
+      "raw_sha256": "53a4227641923b428a4070331c55a9c67757ae41fa1e9acc744e3ba91b42671b",
+      "sha256": "53a4227641923b428a4070331c55a9c67757ae41fa1e9acc744e3ba91b42671b",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/RESULTS.json",
+      "raw_sha256": "c7e0f7be737a4662b0933f66124cefeac9d818309cee1c6ab1416c587ecba731",
+      "sha256": "c7e0f7be737a4662b0933f66124cefeac9d818309cee1c6ab1416c587ecba731",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/ROOT-SEAL-VERIFY.json",
+      "raw_sha256": "db2ae724316c9042e4a32feb444dbb357b8d2540fbeb9c113fe9b2721bf06e34",
+      "sha256": "db2ae724316c9042e4a32feb444dbb357b8d2540fbeb9c113fe9b2721bf06e34",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/SHA256SUMS",
+      "raw_sha256": "41e22c33f017dba634dcd360dd007633a5f744b12e78abf6dc69e02fad9a4b9a",
+      "sha256": "41e22c33f017dba634dcd360dd007633a5f744b12e78abf6dc69e02fad9a4b9a",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/SOURCE-BEFORE.json",
+      "raw_sha256": "13db816f96e0c02a06d2c0da547cb313952845b313dabfe960ca239a58cc9b07",
+      "sha256": "13db816f96e0c02a06d2c0da547cb313952845b313dabfe960ca239a58cc9b07",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/SOURCE-SHA256.json",
+      "raw_sha256": "13db816f96e0c02a06d2c0da547cb313952845b313dabfe960ca239a58cc9b07",
+      "sha256": "13db816f96e0c02a06d2c0da547cb313952845b313dabfe960ca239a58cc9b07",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/SOURCE-TRANSITION.json",
+      "raw_sha256": "35743e85cd2a11dbd4fabb1f0dedec9f3dc361267f3070bc22b212734b85416f",
+      "sha256": "35743e85cd2a11dbd4fabb1f0dedec9f3dc361267f3070bc22b212734b85416f",
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/core-b1.log",
+      "raw_sha256": "aa61bf163a7715e20620213fa64c3fbdc97f481f4093e75920e7eb2d7a8a1347",
+      "sha256": "15f07c6944b71033c55cba04c38d7cd90582f6b26376350dab8ee744a4021508",
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/core-b2.log",
+      "raw_sha256": "9777cb1bd20538b226698e711c8e714d7276b0e276427b0b0896df166ed11ea4",
+      "sha256": "83e505d23e45fb64dcd35734de1dacbbb0530cf60fad2162bc4067b2a1eaeadf",
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/requirements-b1.log",
+      "raw_sha256": "a0e8f188ebf71be78479407fbc2945957274aa2f527ba63a347d0c8bc9edd85b",
+      "sha256": "d96d3a9da681d64ca256b731ac3c0820900a8caec5dbf1fecd5c73c902d04462",
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/prerequisite-requalification-2026-10-13/logs/requirements-b2.log",
+      "raw_sha256": "617dc58796e1a91d2e4f94a57151a7a51528dc4f4dd907d3761d3a112624c9b7",
+      "sha256": "da484683356d23f262b268de1df779472a62cdd9d7e258d2c26770d0e9cca030",
+      "normalization": "trailing whitespace and final empty lines only"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-core --lib manifest::change::m_02_b_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "core-b1.log",
+    "cases": 8,
+    "ignored": 0
+  },
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib change::m_02_b_1_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "requirements-b1.log",
+    "cases": 3,
+    "ignored": 0
+  },
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-core --lib manifest::change::m_02_b_2_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "core-b2.log",
+    "cases": 6,
+    "ignored": 0
+  },
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib change::m_02_b_2_cases:: -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "requirements-b2.log",
+    "cases": 3,
+    "ignored": 0
+  }
+]
