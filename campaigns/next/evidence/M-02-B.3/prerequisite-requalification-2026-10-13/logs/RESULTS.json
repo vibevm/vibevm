@@ -1,0 +1,58 @@
+{
+  "core-b1.log": {
+    "sha256": "aa61bf163a7715e20620213fa64c3fbdc97f481f4093e75920e7eb2d7a8a1347",
+    "exit": 0,
+    "cases": 8,
+    "ignored": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 602 filtered out; finished in 0.00s",
+    "names": [
+      "test manifest::change::m_02_b_1_cases::migration_refuses_invalid_target_before_proposal ... ok",
+      "test manifest::change::m_02_b_1_cases::connected_epoch_one_parse ... ok",
+      "test manifest::change::m_02_b_1_cases::unknown_epochs_and_duplicate_ids_refuse ... ok",
+      "test manifest::change::m_02_b_1_cases::title_slug_rename_preserves_directory_and_address ... ok",
+      "test manifest::change::m_02_b_1_cases::raw_origin_uri_cannot_normalize_into_selected_address ... ok",
+      "test manifest::change::m_02_b_1_cases::escaping_and_closure_input_roles_refuse ... ok",
+      "test manifest::change::m_02_b_1_cases::migration_preserves_comments_and_user_values ... ok",
+      "test manifest::change::m_02_b_1_cases::registered_authored_corpus_matches_shared_validator ... ok"
+    ]
+  },
+  "requirements-b1.log": {
+    "sha256": "a0e8f188ebf71be78479407fbc2945957274aa2f527ba63a347d0c8bc9edd85b",
+    "exit": 0,
+    "cases": 3,
+    "ignored": 0,
+    "verdict": "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 63 filtered out; finished in 0.00s",
+    "names": [
+      "test change::m_02_b_1_cases::actual_lookup_refuses_missing_role_document_without_writes ... ok",
+      "test change::m_02_b_1_cases::actual_saved_migration_preserves_bytes_without_publication ... ok",
+      "test change::m_02_b_1_cases::configured_nondefault_root_is_used_by_actual_lookup ... ok"
+    ]
+  },
+  "core-b2.log": {
+    "sha256": "9777cb1bd20538b226698e711c8e714d7276b0e276427b0b0896df166ed11ea4",
+    "exit": 0,
+    "cases": 6,
+    "ignored": 0,
+    "verdict": "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 604 filtered out; finished in 0.00s",
+    "names": [
+      "test manifest::change::m_02_b_2_cases::connected_structural_graph ... ok",
+      "test manifest::change::m_02_b_2_cases::framing_is_unambiguous_and_versioned ... ok",
+      "test manifest::change::m_02_b_2_cases::graph_refuses_cycle_duplicate_unknown_and_state ... ok",
+      "test manifest::change::m_02_b_2_cases::normative_edit_and_binding_change_invalidate_intent ... ok",
+      "test manifest::change::m_02_b_2_cases::canonical_graph_order_and_selected_contribution ... ok",
+      "test manifest::change::m_02_b_2_cases::framed_intent_ignores_cosmetics_work_and_closure ... ok"
+    ]
+  },
+  "requirements-b2.log": {
+    "sha256": "617dc58796e1a91d2e4f94a57151a7a51528dc4f4dd907d3761d3a112624c9b7",
+    "exit": 0,
+    "cases": 3,
+    "ignored": 0,
+    "verdict": "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 63 filtered out; finished in 0.00s",
+    "names": [
+      "test change::m_02_b_2_cases::missing_normative_observation_refuses ... ok",
+      "test change::m_02_b_2_cases::selected_work_excludes_unrelated_item_edits ... ok",
+      "test change::m_02_b_2_cases::actual_saved_lookup_separates_normative_work_and_closure ... ok"
+    ]
+  }
+}
