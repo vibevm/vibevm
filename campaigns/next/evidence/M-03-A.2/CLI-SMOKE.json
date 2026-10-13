@@ -1,0 +1,66 @@
+{
+  "binary": "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+  "binary_sha256": "1147a71ced584a5e7bdaa7a12cc8541a0d5463cdf6dbe9aad5280b565987fd44",
+  "cases": [
+    {
+      "name": "default-preparation",
+      "argv": [
+        "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+        "--json",
+        "change",
+        "apply",
+        "chg-0123456789abcdef0123456789abcdef",
+        "--work",
+        "work-a",
+        "--spec-root",
+        "docs"
+      ],
+      "cwd": "/tmp/vibe-a2-cli-2lw1zhbf/project",
+      "exit": 0,
+      "expected_exit": 0,
+      "inventory_equal": true,
+      "stdout_sha256": "0b2dbd6943dc8282f6a3370bebb0e849dc0aacd18802368af392ea2ac5d2e5e9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "missing-work",
+      "argv": [
+        "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+        "--json",
+        "change",
+        "apply",
+        "chg-0123456789abcdef0123456789abcdef",
+        "--work",
+        "work-missing",
+        "--spec-root",
+        "docs"
+      ],
+      "cwd": "/tmp/vibe-a2-cli-2lw1zhbf/project",
+      "exit": 1,
+      "expected_exit": 1,
+      "inventory_equal": true,
+      "stdout_sha256": "4fd4a8be8c0f66f2ea8e42d557ecf0aeb0fd17e33046674c0ad9e2d7373a15c9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "no-execution-flag",
+      "argv": [
+        "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+        "--json",
+        "change",
+        "apply",
+        "chg-0123456789abcdef0123456789abcdef",
+        "--work",
+        "work-a",
+        "--execute"
+      ],
+      "cwd": "/tmp/vibe-a2-cli-2lw1zhbf/project",
+      "exit": 2,
+      "expected_exit": 2,
+      "inventory_equal": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ecbdeac7cefb239a3d13ed63a47491c5530cef7595cfe9644585ce7e30684d13"
+    }
+  ],
+  "all_snapshots_equal": true
+}

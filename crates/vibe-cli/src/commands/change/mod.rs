@@ -4,6 +4,7 @@ use clap::{Args, Subcommand};
 use std::{path::PathBuf, process::ExitCode};
 use vibe_core::manifest::change::{ChangeContext, ChangeId};
 use vibe_orchestrator::{change::scaffold::*, document_analysis::*};
+mod apply;
 pub mod query;
 mod report;
 #[derive(Debug, Args)]
@@ -14,6 +15,8 @@ pub struct ChangeArgs {
 #[derive(Debug, Subcommand)]
 pub enum ChangeCommand {
     New(NewArgs),
+    /// Prepare the fixed full-pass plan; execution carriage is unavailable.
+    Apply(apply::ApplyArgs),
     Check(query::ReadArgs),
     Show(query::ReadArgs),
     Coverage(query::ReadArgs),
@@ -40,6 +43,7 @@ pub struct NewArgs {
 pub fn run(args: &ChangeArgs, json_output: bool) -> ExitCode {
     let args = match &args.command {
         ChangeCommand::New(args) => args,
+        ChangeCommand::Apply(args) => return apply::run(args, json_output),
         ChangeCommand::Check(args) => return query::run(args, "check", json_output),
         ChangeCommand::Show(args) => return query::run(args, "show", json_output),
         ChangeCommand::Coverage(args) => return query::run(args, "coverage", json_output),

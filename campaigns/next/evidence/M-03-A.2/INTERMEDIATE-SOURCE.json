@@ -1,0 +1,30 @@
+{
+  "status": "incomplete-no-source-stop-no-acceptance",
+  "head": "b597cb6225dfc4827bce84bc046dcd1d46084e92",
+  "source": {
+    "crates/vibe-core/src/manifest/change/mod.rs": "6dba85f185dd75ee337fc57ead5179d105d5d9faff9f5ca01a3685dace63c1c3",
+    "crates/vibe-core/src/manifest/change/full_pass.rs": "20b04b48e48e2781b2059782def882704144b3e7d2a55f421c9ef7266cf3aa43",
+    "crates/vibe-core/src/manifest/change/m_03_a_2_cases.rs": "edeee16e15a0ce37b6e5eaa54518fa5530907231ecc2f6b374014c54ec77f26f",
+    "crates/vibe-orchestrator/src/change/mod.rs": "fa6f7592c58e490254444577200e1d16d57a939e0e4d78e1ea8a5833e7370679",
+    "crates/vibe-orchestrator/src/change/full_pass.rs": "14c3d631b1d1bd3534cf41298fb986470dad052d83282ca4cec6adece79152d2",
+    "crates/vibe-orchestrator/src/change/m_03_a_2_cases.rs": "805023a1f043a453772749bcdc6298dcc210cfb08b7d93344059e6c982de6539",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": "59816ded8f3014734f6825f8331f0c2dab660569d9acc1140541e2fcc84e2c52",
+    "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml": "987c0b7199f5fe978eca54d5055bd36fdba9276450ebfeca4a766cb3a3080738"
+  },
+  "evidence": {
+    "INCIDENTS.md": "b98aab3e15b8fce149a1e42162a429f865e41ace8b8da5c52209f643da6a2662",
+    "CARRIER-MAP.md": "2d31ad676d177d7f6677e715e423c91d7967094224c298ec7051ef64b983c5a6",
+    "BINDING.md": "22432f32612e7f7881543b723ad4eb8c376139a1a08d73d8d53d0a8ebf066db0",
+    "core-first.log": "41846eac6219a2546275587348c419455c4a27ccfd13545f4bd846d1bc2438ae",
+    "core-first.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "capture-first.log": "df253fa3bf4d870f8d4abca8aea04875c2bc091e4c417a5fd64ee5fe69e05869",
+    "capture-first.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "COMMANDS-INITIAL.json": "9b04feda0fd686f40942abec54ab82679408872f1cea9d6664d0046ae36fe5a2"
+  },
+  "pending": [
+    "question-group.dc301541-d447-4e56-800e-f75a8c54c1e7 defining READ",
+    "question-group.65e97273-0d01-4ac5-981d-a58be7e1be38 CLI classification seam",
+    "connected hosted continuation and verification failure",
+    "CLI preparation and final checks/seal"
+  ]
+}

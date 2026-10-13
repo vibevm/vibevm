@@ -1,0 +1,84 @@
+{
+  "task": "M-03-A.2",
+  "role": "independent read-only review; candidate evidence, not acceptance",
+  "baseline": "b597cb6225dfc4827bce84bc046dcd1d46084e92",
+  "result": "one concrete original-deliverable defect; no additional implementation blocker observed under authorized plan safe-stop",
+  "hashes": {
+    "source_before": {
+      "count": 13,
+      "mismatches": []
+    },
+    "evidence_before": {
+      "count": 60,
+      "mismatches": []
+    },
+    "source_after": {
+      "count": 13,
+      "mismatches": []
+    },
+    "evidence_after": {
+      "count": 60,
+      "mismatches": []
+    },
+    "seal_links": 3,
+    "seal_links_match": true,
+    "gzip_decoded_match": 3,
+    "unchanged_incumbent_files_independently_compared": 11
+  },
+  "findings": [
+    {
+      "id": "A2-REVIEW-1",
+      "priority": "P2",
+      "file": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M03-A2/CARRIER-MAP.md",
+      "lines": [
+        10,
+        14,
+        16,
+        17,
+        19
+      ],
+      "title": "Complete the original owning-recipe carrier map",
+      "detail": "Source resolution still says exact defining seam pending; production request remains TO DEFINE; reservation says exact identity recipe read still needed; delegation publisher READ pending; evidence-id recipe pending. Final appendix describes behavior but does not identify these exact owners and recipes. Artifact row likewise omits physical witness owning recipe and wire/state twins. This fails original A2 acceptance that every state/wire/outbox/artifact/evidence input and owning recipe is identified, independently of permitted unfinished execution carriage.",
+      "correction": "Replace stale inventory rows with exact source paths/functions and recipe/frame schedules or a precise unavailable link. Include the implemented core/change/full_pass.rs producer recipe, lifecycle state/submission.rs raw request/plan SHA and reservation_ref_of frame, delegation.rs task identity recipe, artifact observer and input manifest witness recipes, and actual evidence-id owning function/schedule. Reconcile resolution source-owner mapping. Preserve honest no-carriage/B240 limits and reseal evidence; no new runtime gate or subsystem required."
+    }
+  ],
+  "qualified_observations": [
+    "SelectedFullPass and ChangeFullPassPlan are immutable reviewable templates from actual captured change grammar/intent/Work. Exactly two logical roles, no control loop, scheduler, store or backward edge.",
+    "CLI Apply uses actual saved/captured preparation, exposes unavailable:m16-change-full-pass plus null production_request and machine_operation_ids, and does not call lifecycle execution.",
+    "Producer request SHA uses explicit recipe/value frames and excludes invocation/requested/chain/run/time. Longhand test independently constructs frame bytes; its repeated invocation labels alone are not an integration test. Existing A1 distinct completion/freshness identities were preserved, not requalified by that loop.",
+    "Hosted fixture invokes real prepare_full_pass_lifecycle twice, inspects actual parked state/task, explicitly writes owned host source, retains same run/start/chain, compiles/runs one Rust test, compares exact source evidence, verifies original output measured_run_id and removes completed task. This proves incumbent owner continuation separately, not a new Work-bound runtime adapter.",
+    "Failure fixture sees original observer failure; compile/observe call sequence only, zero paid calls, no source change or task reissue. Work-b remains outside immutable selected plan; no runtime Work selector exists.",
+    "Hosted completion_basis=None is asserted and reported, not reconstructed from mutable header. Missing runtime request/Work/resolution carriers remain explicit unavailable.",
+    "All 11 Rust files are below 600 lines (largest 306). Exact touched fmt/diff receipts exit0; fullfmt exit1 with retained inherited 14 entries/9 files, not global green.",
+    "Scope correction grants exactly command_progress.rs/tests.rs; only its test was changed. Failed HTTP409 read answer is resolved by exact retry HTTP200 and retained answerVersion. Initial shorthand missing EXACT-RETRY filename was parent packet omission, corrected during review; not product defect."
+  ],
+  "evidence": {
+    "new_cases": 7,
+    "compatibility_cases": 1,
+    "test_runs": [
+      {
+        "log": "core-first.log",
+        "passed": 2
+      },
+      {
+        "log": "orchestrator-final.log",
+        "passed": 3
+      },
+      {
+        "log": "cli-first.log.gz",
+        "passed": 2
+      },
+      {
+        "log": "cli-policy.log.gz",
+        "passed": 1
+      }
+    ],
+    "initial_failure": "hosted-first.log exit101: 1 pass/2 failed, expected prompt resolutions2 vs actual3; retained",
+    "smoke": "3 processes exit0/1/2; independently matched stdout/stderr hashes and before/after serialized snapshots"
+  },
+  "limits": [
+    "No new test/build/provider/API/network execution performed. Retained logs are evidence, not fresh reruns.",
+    "Root owns XML dialect/compiled specmap gate, acceptance and commit.",
+    "Review does not assert completed M16/M17 carriage or pay accepted B240 historical-basis debt."
+  ]
+}

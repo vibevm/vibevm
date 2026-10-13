@@ -1,0 +1,58 @@
+[
+  {
+    "failed_verify": false,
+    "original_run": "b4ab4ad9029bb5ef34436553adb589c6",
+    "resumed_run": "b4ab4ad9029bb5ef34436553adb589c6",
+    "requested": "full-pass",
+    "chain": [
+      "validate",
+      "install",
+      "generate",
+      "create",
+      "build",
+      "test",
+      "verify"
+    ],
+    "selected_work": "work-a",
+    "intent": "sha256:2172e14f9c537680affac194e16425c4d6d004b3c2845416df3bcca34df05699",
+    "contribution": "sha256:bc24ceca892f3d5e5388078a585a1e5df15bccdb2f694f400c69239e83ea5652",
+    "task": ".vibe/agentic/outbox/b4ab4ad9029bb5ef34436553adb589c6/task-org.demo%2Fconsumer%23produce.md",
+    "task_sha256": "c0e77a0f94f062819861f1fb36e740eff927da39ce6351aba0ad133917cbd0c2",
+    "fingerprint": "sha256:9f19a9a5c9972260a9341ae80c6ce03065447e34f1cae7ace0224a0ae3040f10",
+    "artifact_run": "b4ab4ad9029bb5ef34436553adb589c6",
+    "hosted_basis": null,
+    "calls": "compile\nobserve\n",
+    "source_sha256": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583",
+    "prompt_resolutions": 3,
+    "paid_calls": 0,
+    "carriage": "unavailable:m16-change-full-pass"
+  },
+  {
+    "failed_verify": true,
+    "original_run": "d69ff0d89969cd40cbae9a627fbd2b99",
+    "resumed_run": "d69ff0d89969cd40cbae9a627fbd2b99",
+    "requested": "full-pass",
+    "chain": [
+      "validate",
+      "install",
+      "generate",
+      "create",
+      "build",
+      "test",
+      "verify"
+    ],
+    "selected_work": "work-a",
+    "intent": "sha256:2172e14f9c537680affac194e16425c4d6d004b3c2845416df3bcca34df05699",
+    "contribution": "sha256:bc24ceca892f3d5e5388078a585a1e5df15bccdb2f694f400c69239e83ea5652",
+    "task": ".vibe/agentic/outbox/d69ff0d89969cd40cbae9a627fbd2b99/task-org.demo%2Fconsumer%23produce.md",
+    "task_sha256": "70a1f7413e5d913a34f82976be9338ed48827bbb6ba42905b48245f85730715d",
+    "fingerprint": "sha256:ab09905bf1607f53c10be323f113c95f6ac3e6cecbca042fe9ab35bdd528a3c5",
+    "artifact_run": "d69ff0d89969cd40cbae9a627fbd2b99",
+    "hosted_basis": null,
+    "calls": "compile\nobserve\n",
+    "source_sha256": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583",
+    "prompt_resolutions": 3,
+    "paid_calls": 0,
+    "carriage": "unavailable:m16-change-full-pass"
+  }
+]

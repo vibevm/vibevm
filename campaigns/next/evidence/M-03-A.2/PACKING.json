@@ -1,0 +1,23 @@
+[
+  {
+    "raw": "cli-first.log",
+    "packed": "cli-first.log.gz",
+    "raw_sha256": "5593666ddd8ccdf93c4a58c759c904ad19fbfcda3bcad39d1182d672b5787eb6",
+    "packed_sha256": "438789d9e27bbf314ed24f97e9d4a011a649a3549571b0a968930867b53e1405",
+    "decoded_sha256": "5593666ddd8ccdf93c4a58c759c904ad19fbfcda3bcad39d1182d672b5787eb6"
+  },
+  {
+    "raw": "cli-policy.log",
+    "packed": "cli-policy.log.gz",
+    "raw_sha256": "e8543031553a53e6f26a8b2fe650f75caafb4a268eecbd5fbc813f13eee6f8e2",
+    "packed_sha256": "7ab022eceb23a48ca491d3e87f025752669ce4fad801cce125b8b9f732b54f1d",
+    "decoded_sha256": "e8543031553a53e6f26a8b2fe650f75caafb4a268eecbd5fbc813f13eee6f8e2"
+  },
+  {
+    "raw": "cli-build.log",
+    "packed": "cli-build.log.gz",
+    "raw_sha256": "e16717fd468ce2e2e14365d9e84c300a83bff88c61129464df303b2882ba7fbc",
+    "packed_sha256": "a810e16fb5158f793e22bc89b3817a1725aaef1db538b9608c54d23877d839dc",
+    "decoded_sha256": "e16717fd468ce2e2e14365d9e84c300a83bff88c61129464df303b2882ba7fbc"
+  }
+]

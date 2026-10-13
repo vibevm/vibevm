@@ -1,0 +1,16 @@
+{
+  "task": "M-03-A.2",
+  "source_stopped": true,
+  "producer_source_count": 13,
+  "producer_evidence_count": 60,
+  "root_oracle": {
+    "exit": 0,
+    "suspects": 0,
+    "unresolved_host_edges": 0,
+    "inherited_orphans": 138,
+    "candidate_hashes_unchanged": true
+  },
+  "acceptance": "pending original carrier-map completeness correction",
+  "review_message": "message.ce69f38f-00cf-487b-9045-95f0e7f63ff1",
+  "accepted_task_count_unchanged": 66
+}

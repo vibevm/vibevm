@@ -1,0 +1,1009 @@
+[
+  {
+    "path": "",
+    "keys": [
+      "definitions",
+      "metadata",
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/metadata",
+    "keys": [
+      "description",
+      "rustOptions",
+      "spec"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/metadata/spec",
+    "keys": [
+      "implements",
+      "r"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/metadata/rustOptions",
+    "keys": [
+      "package"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/properties",
+    "keys": [
+      "execution",
+      "run",
+      "schema"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/properties/schema",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "uint32"
+  },
+  {
+    "path": "/properties/run",
+    "keys": [
+      "ref"
+    ],
+    "enum": null,
+    "ref": "state_run",
+    "type": null
+  },
+  {
+    "path": "/properties/execution",
+    "keys": [
+      "metadata",
+      "values"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/properties/execution/values",
+    "keys": [
+      "ref"
+    ],
+    "enum": null,
+    "ref": "execution_record",
+    "type": null
+  },
+  {
+    "path": "/properties/execution/metadata",
+    "keys": [
+      "x-empty"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions",
+    "keys": [
+      "completion_basis",
+      "execution_record",
+      "slot_continuation",
+      "slot_target_record",
+      "state_artifact",
+      "state_digest_witness",
+      "state_input_measurement",
+      "state_run"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run",
+    "keys": [
+      "optionalProperties",
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/properties",
+    "keys": [
+      "chain",
+      "requested",
+      "started"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/properties/requested",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_run/properties/chain",
+    "keys": [
+      "elements",
+      "metadata"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/properties/chain/elements",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_run/properties/chain/metadata",
+    "keys": [
+      "x-empty"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/properties/started",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties",
+    "keys": [
+      "compile_trace",
+      "run_id",
+      "selected",
+      "slot_continuation"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties/run_id",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties/run_id/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties/selected",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties/selected/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties/slot_continuation",
+    "keys": [
+      "metadata",
+      "ref"
+    ],
+    "enum": null,
+    "ref": "slot_continuation",
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties/slot_continuation/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties/compile_trace",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "boolean"
+  },
+  {
+    "path": "/definitions/state_run/optionalProperties/compile_trace/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_continuation",
+    "keys": [
+      "metadata",
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_continuation/metadata",
+    "keys": [
+      "description"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_continuation/properties",
+    "keys": [
+      "targets"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_continuation/properties/targets",
+    "keys": [
+      "elements",
+      "metadata"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_continuation/properties/targets/elements",
+    "keys": [
+      "ref"
+    ],
+    "enum": null,
+    "ref": "slot_target_record",
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_continuation/properties/targets/metadata",
+    "keys": [
+      "description",
+      "x-empty"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_target_record",
+    "keys": [
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_target_record/properties",
+    "keys": [
+      "group",
+      "name",
+      "version"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/slot_target_record/properties/group",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/slot_target_record/properties/name",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/slot_target_record/properties/version",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/execution_record",
+    "keys": [
+      "optionalProperties",
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/properties",
+    "keys": [
+      "artifacts",
+      "duration_ms",
+      "fingerprint",
+      "phase",
+      "status"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/properties/phase",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/execution_record/properties/fingerprint",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/execution_record/properties/status",
+    "keys": [
+      "enum",
+      "metadata"
+    ],
+    "enum": [
+      "ok",
+      "fail",
+      "skip",
+      "fresh",
+      "delegated"
+    ],
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/properties/status/metadata",
+    "keys": [
+      "x-vocabulary"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/properties/duration_ms",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "uint32"
+  },
+  {
+    "path": "/definitions/execution_record/properties/artifacts",
+    "keys": [
+      "elements",
+      "metadata"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/properties/artifacts/elements",
+    "keys": [
+      "ref"
+    ],
+    "enum": null,
+    "ref": "state_artifact",
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/properties/artifacts/metadata",
+    "keys": [
+      "x-empty"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties",
+    "keys": [
+      "completion_basis",
+      "input_measurement",
+      "scope",
+      "tasks"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/tasks",
+    "keys": [
+      "elements",
+      "metadata"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/tasks/elements",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/tasks/metadata",
+    "keys": [
+      "description",
+      "x-empty"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/scope",
+    "keys": [
+      "enum",
+      "metadata"
+    ],
+    "enum": [
+      "phase",
+      "slot"
+    ],
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/scope/metadata",
+    "keys": [
+      "description",
+      "x-default",
+      "x-vocabulary"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/input_measurement",
+    "keys": [
+      "metadata",
+      "ref"
+    ],
+    "enum": null,
+    "ref": "state_input_measurement",
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/input_measurement/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/completion_basis",
+    "keys": [
+      "metadata",
+      "ref"
+    ],
+    "enum": null,
+    "ref": "completion_basis",
+    "type": null
+  },
+  {
+    "path": "/definitions/execution_record/optionalProperties/completion_basis/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_artifact",
+    "keys": [
+      "optionalProperties",
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_artifact/properties",
+    "keys": [
+      "id",
+      "kind",
+      "path"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_artifact/properties/id",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_artifact/properties/path",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_artifact/properties/kind",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_artifact/optionalProperties",
+    "keys": [
+      "measured_run_id",
+      "witness"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_artifact/optionalProperties/witness",
+    "keys": [
+      "metadata",
+      "ref"
+    ],
+    "enum": null,
+    "ref": "state_digest_witness",
+    "type": null
+  },
+  {
+    "path": "/definitions/state_artifact/optionalProperties/witness/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_artifact/optionalProperties/measured_run_id",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_artifact/optionalProperties/measured_run_id/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement",
+    "keys": [
+      "metadata",
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement/metadata",
+    "keys": [
+      "description"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties",
+    "keys": [
+      "declaration_fingerprint",
+      "execution",
+      "measured_run_id",
+      "patterns",
+      "phase",
+      "witness"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/execution",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/phase",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/declaration_fingerprint",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/declaration_fingerprint/metadata",
+    "keys": [
+      "description"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/patterns",
+    "keys": [
+      "elements",
+      "metadata"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/patterns/elements",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/patterns/metadata",
+    "keys": [
+      "description",
+      "x-empty"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/measured_run_id",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/measured_run_id/metadata",
+    "keys": [
+      "description"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/witness",
+    "keys": [
+      "metadata",
+      "ref"
+    ],
+    "enum": null,
+    "ref": "state_digest_witness",
+    "type": null
+  },
+  {
+    "path": "/definitions/state_input_measurement/properties/witness/metadata",
+    "keys": [
+      "description"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_digest_witness",
+    "keys": [
+      "metadata",
+      "optionalProperties",
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_digest_witness/metadata",
+    "keys": [
+      "description"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_digest_witness/properties",
+    "keys": [
+      "algorithm",
+      "digest"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_digest_witness/properties/algorithm",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_digest_witness/properties/algorithm/metadata",
+    "keys": [
+      "description"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_digest_witness/properties/digest",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_digest_witness/properties/digest/metadata",
+    "keys": [
+      "description"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_digest_witness/optionalProperties",
+    "keys": [
+      "bytes",
+      "files"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_digest_witness/optionalProperties/files",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "uint32"
+  },
+  {
+    "path": "/definitions/state_digest_witness/optionalProperties/files/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/state_digest_witness/optionalProperties/bytes",
+    "keys": [
+      "metadata",
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/state_digest_witness/optionalProperties/bytes/metadata",
+    "keys": [
+      "description",
+      "x-default"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/completion_basis",
+    "keys": [
+      "properties"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/completion_basis/properties",
+    "keys": [
+      "digest",
+      "recipe",
+      "run_id",
+      "selected"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/completion_basis/properties/recipe",
+    "keys": [
+      "enum",
+      "metadata"
+    ],
+    "enum": [
+      "vibe-completion-basis/1"
+    ],
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/completion_basis/properties/recipe/metadata",
+    "keys": [
+      "x-vocabulary"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": null
+  },
+  {
+    "path": "/definitions/completion_basis/properties/digest",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/completion_basis/properties/selected",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  },
+  {
+    "path": "/definitions/completion_basis/properties/run_id",
+    "keys": [
+      "type"
+    ],
+    "enum": null,
+    "ref": null,
+    "type": "string"
+  }
+]

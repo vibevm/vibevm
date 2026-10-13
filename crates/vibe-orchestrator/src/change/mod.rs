@@ -4,6 +4,8 @@ use crate::document_analysis::{AnalysisCapture, LocationBasis, ResourceId, Sourc
 use std::path::{Path, PathBuf};
 use vibe_core::manifest::change::{ChangeContext, ChangeId, ChangeManifest};
 use vibe_requirements::change::{ParsedCapturedChange, SavedChangeError, analyze_change_bytes};
+mod full_pass;
+pub use full_pass::{ChangeFullPassPlan, FullPassPreparationError, plan_change_full_pass};
 mod prepare;
 pub mod query;
 mod rebase;
@@ -185,3 +187,9 @@ pub fn analyze_change<'a>(
 mod m_02_b_3_cases;
 #[cfg(test)]
 mod m_02_c_1_cases;
+
+#[cfg(test)]
+mod m_03_a_2_cases;
+
+#[cfg(test)]
+mod full_pass_fixture;

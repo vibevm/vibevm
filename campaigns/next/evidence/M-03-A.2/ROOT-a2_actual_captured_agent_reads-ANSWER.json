@@ -1,0 +1,30 @@
+{
+  "request": {
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-a2_actual_captured_agent_reads-20261013",
+    "questionGroupId": "question-group.dc301541-d447-4e56-800e-f75a8c54c1e7",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "a2_actual_captured_agent_reads",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "grant"
+          }
+        }
+      ],
+      "noteMarkdown": "Root grants READ exactly crates/vibe-requirements/src/change/read.rs, captured.rs, identity.rs (all verified). Actual agent owner is crates/vibe-lifecycle/src/agent/mod.rs, not nonexistent agent.rs. READ its exact defining children agent/contract.rs, hosted.rs, prompt.rs, resolver.rs, result.rs and agent/tests/support.rs and hosted.rs for existing owned fake-agent composition semantics. No real provider calls, no copying private helper to assert unreachable behavior, no WRITE outside existing A2 perimeter. Carrier absence remains unavailable, not inferred."
+    }
+  },
+  "http": 409,
+  "response": {
+    "ok": false,
+    "error": {
+      "code": "storage_failure",
+      "message": "violates REQ spec://org.vibevm.zap/lens/PROP-005#server-ownership: chat dispatch settlement failed"
+    }
+  }
+}

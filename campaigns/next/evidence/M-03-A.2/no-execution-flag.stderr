@@ -1,0 +1,7 @@
+error: unexpected argument '--execute' found
+
+  tip: to pass '--execute' as a value, use '-- --execute'
+
+Usage: vibe change apply --work <WORK> <ID>
+
+For more information, try '--help'.

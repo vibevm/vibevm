@@ -1,0 +1,95 @@
+{
+  "request": {
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "operation": "question.answer.v1",
+    "clientRequestId": "first-agent-a2_actual_captured_agent_reads-20261013",
+    "questionGroupId": "question-group.dc301541-d447-4e56-800e-f75a8c54c1e7",
+    "expectedRevision": "1",
+    "submission": {
+      "answers": [
+        {
+          "questionItemId": "a2_actual_captured_agent_reads",
+          "answer": {
+            "kind": "single_choice",
+            "optionId": "grant"
+          }
+        }
+      ],
+      "noteMarkdown": "Root grants READ exactly crates/vibe-requirements/src/change/read.rs, captured.rs, identity.rs (all verified). Actual agent owner is crates/vibe-lifecycle/src/agent/mod.rs, not nonexistent agent.rs. READ its exact defining children agent/contract.rs, hosted.rs, prompt.rs, resolver.rs, result.rs and agent/tests/support.rs and hosted.rs for existing owned fake-agent composition semantics. No real provider calls, no copying private helper to assert unreachable behavior, no WRITE outside existing A2 perimeter. Carrier absence remains unavailable, not inferred."
+    }
+  },
+  "http": 200,
+  "response": {
+    "ok": true,
+    "value": {
+      "operation": "question.answer.v1",
+      "question": {
+        "questionGroupId": "question-group.dc301541-d447-4e56-800e-f75a8c54c1e7",
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "conversationId": "conversation.vibevm-next.next",
+        "originActorId": "act_634ac0957c2440cb99048d497fc2262f",
+        "messageId": "message.c86d4273-df16-4813-bb0d-2cf5fe68bba7",
+        "title": "A2 exact defining READ correction",
+        "introductionMarkdown": "Same A2 writer; plan safe-stop consumed. No production edits/builds yet.",
+        "items": [
+          {
+            "questionItemId": "a2_actual_captured_agent_reads",
+            "header": "Defining READ",
+            "promptMarkdown": "Grant READ requirements/src/change/{read.rs,captured.rs,identity.rs} replacing absent saved.rs, and lifecycle/src/agent.rs plus task-relevant defining children actually imported there for owned hosted fixture composition?",
+            "contextMarkdown": "Requirements mod.rs exports ParsedCapturedChange/SavedChange from captured/read/identity. Root test-design identifies agent/tests/support.rs and hosted tests; I need actual public backend/output-contract definitions to bind prepare_full_pass_lifecycle→park→explicit continuation, without copying private helpers or inventing carriage. Proposed read includes exact agent/tests/support.rs only for fixture semantics; no WRITE outside A2 perimeter, provider call or new basis.",
+            "artifactRefs": [],
+            "required": true,
+            "answerMode": "single_choice",
+            "options": [
+              {
+                "optionId": "grant",
+                "label": "Grant bounded READ",
+                "description": "Read actual captured types and agent defining imports/tests for the connected fixture only.",
+                "previewMarkdown": null,
+                "artifactRefs": []
+              }
+            ],
+            "customAnswer": null,
+            "recommendation": {
+              "optionIds": [
+                "grant"
+              ],
+              "explanationMarkdown": "Actual defining files resolve packet shorthand; production scope unchanged."
+            }
+          }
+        ],
+        "independentWorkAvailable": true,
+        "state": "answered",
+        "revision": "2",
+        "deadlineAt": null,
+        "createdAt": "2026-10-13T11:29:44.474Z",
+        "updatedAt": "2026-10-13T13:35:45.998Z"
+      },
+      "answerVersion": {
+        "answerVersionId": "answer-version.fd4d84ab-6980-4e57-9185-7d79479203e6",
+        "questionGroupId": "question-group.dc301541-d447-4e56-800e-f75a8c54c1e7",
+        "revision": "2",
+        "previousVersionId": null,
+        "submission": {
+          "answers": [
+            {
+              "questionItemId": "a2_actual_captured_agent_reads",
+              "answer": {
+                "kind": "single_choice",
+                "optionId": "grant"
+              }
+            }
+          ],
+          "noteMarkdown": "Root grants READ exactly crates/vibe-requirements/src/change/read.rs, captured.rs, identity.rs (all verified). Actual agent owner is crates/vibe-lifecycle/src/agent/mod.rs, not nonexistent agent.rs. READ its exact defining children agent/contract.rs, hosted.rs, prompt.rs, resolver.rs, result.rs and agent/tests/support.rs and hosted.rs for existing owned fake-agent composition semantics. No real provider calls, no copying private helper to assert unreachable behavior, no WRITE outside existing A2 perimeter. Carrier absence remains unavailable, not inferred."
+        },
+        "responderActorId": null,
+        "responderPrincipalId": "principal.wayfinder.client.zapquicklens.f36e245f513a5781075b1511",
+        "amendmentReasonMarkdown": null,
+        "createdAt": "2026-10-13T13:35:45.998Z",
+        "metadata": {}
+      }
+    }
+  }
+}

@@ -6,6 +6,11 @@ use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
 };
+mod full_pass;
+pub use full_pass::{
+    ChangeOperationRole, PRODUCTION_REQUEST_RECIPE, ProductionBindings, ProductionObservation,
+    ProductionRequestIdentity, SelectedFullPass,
+};
 mod identity;
 mod migration;
 mod rebase;
@@ -296,3 +301,6 @@ mod m_02_b_1_cases;
 mod m_02_b_2_cases;
 #[cfg(test)]
 mod m_02_c_1_cases;
+
+#[cfg(test)]
+mod m_03_a_2_cases;

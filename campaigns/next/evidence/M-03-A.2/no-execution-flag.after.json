@@ -1,0 +1,54 @@
+{
+  "cache": {
+    "kind": "directory"
+  },
+  "config": {
+    "kind": "directory"
+  },
+  "data": {
+    "kind": "directory"
+  },
+  "home": {
+    "kind": "directory"
+  },
+  "project": {
+    "kind": "directory"
+  },
+  "project/docs": {
+    "kind": "directory"
+  },
+  "project/docs/changes": {
+    "kind": "directory"
+  },
+  "project/docs/changes/chg-0123456789abcdef0123456789abcdef": {
+    "kind": "directory"
+  },
+  "project/docs/changes/chg-0123456789abcdef0123456789abcdef/acceptance.md": {
+    "kind": "file",
+    "size": 22,
+    "sha256": "99de0b2d0a26b8e8469544f74b49ed2807f38718d6522ac2cd5b80beb5da8444"
+  },
+  "project/docs/changes/chg-0123456789abcdef0123456789abcdef/change.toml": {
+    "kind": "file",
+    "size": 623,
+    "sha256": "43ec3baa8fcbef9cd9718fe078e8d7bdadcaa7ee6a9b21dcebcb8d1d0addff89"
+  },
+  "project/docs/changes/chg-0123456789abcdef0123456789abcdef/intent.md": {
+    "kind": "file",
+    "size": 23,
+    "sha256": "83db1b3c45f8ea7ba690fa887713df8b3bb8ca2e6e21cf11ce2380dc332cf7ed"
+  },
+  "project/docs/changes/chg-0123456789abcdef0123456789abcdef/work.toml": {
+    "kind": "file",
+    "size": 53,
+    "sha256": "de1ce8b8a6b60c5bc9d4833aee5e9b7c9a75e8770ed5d3b1b8e8b4b2f8869da6"
+  },
+  "project/vibe.toml": {
+    "kind": "file",
+    "size": 59,
+    "sha256": "3cc29fa3e4c29561a4809235c61be2436de191df68d8d84f3d53443824a7a82b"
+  },
+  "state": {
+    "kind": "directory"
+  }
+}

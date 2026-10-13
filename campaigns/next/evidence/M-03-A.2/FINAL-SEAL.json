@@ -1,0 +1,11 @@
+{
+  "manifest_sha256": "578010fdfbd80da3aeb87d5fa7a15fc724dfd5c6f85037a78819e4c63da4c429",
+  "source_manifest_sha256": "e538b061493eb392e08e4a319d47b73fbc7da78cce498920574406faf326d2dd",
+  "report_sha256": "8e76ba6314d33a18b68b36634c9a92789b861f210e36e4828da0a7aa4b173b43",
+  "carrier_map_sha256": "724e879655ad3bcc8d2145a8a08be4a8c0403395cb6559d45acd46b6aed48c8a",
+  "source_count": 13,
+  "producer_count": 70,
+  "source_writing_stopped": true,
+  "documentation_revision": 3,
+  "previous_final_seal_sha256": "a552e32537d59d1e5315a6f94e20adee9f896c90d7dfc0dff4c6f67a383d6f5f"
+}

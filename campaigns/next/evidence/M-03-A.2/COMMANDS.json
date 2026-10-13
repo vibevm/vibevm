@@ -1,0 +1,216 @@
+[
+  {
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "manifest::change::m_03_a_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "passed": 2,
+    "ignored": 0,
+    "log": "core-first.log"
+  },
+  {
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::m_03_a_2_cases::captured_selected_plan_is_saved_read_only_and_exposes_unavailable_carriage",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "passed": 1,
+    "ignored": 0,
+    "log": "capture-first.log"
+  },
+  {
+    "name": "orchestrator-final",
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::m_03_a_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    }
+  },
+  {
+    "name": "cli-policy",
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "command_progress::tests::change_prepare_and_explicit_apply_use_early_policy",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    }
+  },
+  {
+    "name": "cli-build",
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "build",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    }
+  },
+  {
+    "name": "fullfmt",
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "fmt",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "cwd": "/tmp",
+    "exit": 1,
+    "environment": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    }
+  },
+  {
+    "name": "hosted-first",
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::m_03_a_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "exit": 101,
+    "log": "hosted-first.log"
+  },
+  {
+    "name": "hosted-deciding",
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "change::m_03_a_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "hosted-deciding.log"
+  },
+  {
+    "name": "cli-first",
+    "argv": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "commands::change::apply::m_03_a_2_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "cli-first.log"
+  }
+]
