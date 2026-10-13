@@ -110,6 +110,31 @@ pub fn validate(report: &RequirementsReport) -> Result<(), RequirementsError> {
     truncation_gate(report)
 }
 
+/// The existing row laws without public-query paging/source enumeration.
+/// Complete captured consumers supply their own actual source membership;
+/// this validates metadata only and never certifies artifacts or completeness.
+pub fn validate_fact_metadata(row: &RequirementRow) -> Result<(), RequirementsError> {
+    row_text_gate(row)?;
+    if let Some(defect) = address_defect(&row.address) {
+        return Err(RequirementsError::AddressGrammar {
+            index: 0,
+            address: preview(&row.address),
+            defect,
+        });
+    }
+    let coordinate = address_coordinate(&row.address).unwrap_or_default();
+    if coordinate != row.source.package {
+        return Err(RequirementsError::CoordinateMismatch {
+            index: 0,
+            address: preview(coordinate),
+            package: preview(&row.source.package),
+        });
+    }
+    requirements_gate(0, row)?;
+    status_gate(0, row)?;
+    edges_gate(0, row)
+}
+
 /// `report-identity`: the epoch, the two digests a reader joins
 /// answers by, the optional lifecycle join key, and the node the
 /// answer is about.

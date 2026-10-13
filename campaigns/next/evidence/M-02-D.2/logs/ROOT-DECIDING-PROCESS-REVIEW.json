@@ -1,0 +1,8 @@
+{
+  "pairs": 10,
+  "equal": 10,
+  "snapshots": 16,
+  "equalSnapshots": 16,
+  "binaryHashMatches": true,
+  "binarySha256": "9f46f89d0275b29246dad6459b4c9bbe1289e898a7cf4afa3e048db4dd94c5fe"
+}

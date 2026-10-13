@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-READ-SERVICE",
+      "r": 1
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "mode": {
+      "enum": [
+        "check",
+        "show",
+        "coverage"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "id": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "roles": {
+      "elements": {
+        "enum": [
+          "intent",
+          "refinement",
+          "acceptance",
+          "work",
+          "closure"
+        ],
+        "metadata": {
+          "x-vocabulary": "closed"
+        }
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "baselineFiles": 203,
+  "finalFiles": 207,
+  "added": [
+    "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+    "crates/vibe-wire/src/generated/change_query/e1/request/mod.rs",
+    "crates/vibe-wire/src/generated/change_query/e1/response/mod.rs",
+    "crates/vibe-wire/src/generated/change_query/mod.rs"
+  ],
+  "removed": [],
+  "registrationChanges": [
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/mod.rs"
+  ],
+  "commentOnlyHeaders": 43,
+  "otherDifferences": []
+}

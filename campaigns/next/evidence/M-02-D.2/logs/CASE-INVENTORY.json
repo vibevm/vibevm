@@ -1,0 +1,35 @@
+{
+  "new_distinct": [
+    "behaviour::change_query::m_02_d_2_cases::actual_response_reader_preserves_incomplete_and_refuses_false_complete",
+    "behaviour::change_query::m_02_d_2_cases::generated_corpus_preserves_coverage_axes_and_closed_response_shape",
+    "behaviour::change_query::m_02_d_2_cases::request_is_closed_and_epoch_bound_before_context",
+    "change::m_02_d_2_cases::adoption_and_markers_remain_metadata_not_terminal_evidence",
+    "change::query::m_02_d_2_cases::actual_saved_capture_returns_useful_unclassified_local_intent",
+    "change::query::m_02_d_2_cases::captured_disk_and_adoption_drift_refuse_with_exact_old_basis_retained",
+    "change::query::m_02_d_2_cases::declared_role_filter_is_exact_and_unknown_role_has_candidates",
+    "commands::change::query::m_02_d_2_cases::actual_cli_mcp_service_refusal_payloads_match_before_preparation",
+    "commands::change::query::m_02_d_2_cases::actual_current_relations_are_traceability_not_artifact_validity",
+    "commands::change::query::m_02_d_2_cases::classified_local_work_adoption_and_missing_evidence_have_exact_pure_parity",
+    "commands::change::query::m_02_d_2_cases::complete_origin_scope_exceeds_public_query_cap_through_real_adapters",
+    "commands::change::query::m_02_d_2_cases::d1_default_changes_share_origin_with_distinct_intent_across_real_adapters",
+    "commands::change::query::m_02_d_2_cases::escaping_authored_role_refuses_shared_grammar_without_query_effects",
+    "commands::change::query::m_02_d_2_cases::unbound_drift_and_missing_origin_remain_incomplete_with_precise_gaps",
+    "commands::change::query::m_02_d_2_cases::unknown_fields_roles_and_invalid_identity_have_exact_refusal_parity",
+    "tools::change::m_02_d_2_cases::generated_request_refuses_extra_root_before_preparation"
+  ],
+  "new_count": 16,
+  "incumbent_distinct": [
+    "behaviour::requirements_report::tests_requirements::absent_requirements_are_unclassified_and_valid",
+    "behaviour::requirements_report::tests_requirements::empty_duplicate_and_unsorted_sets_have_typed_refusals",
+    "behaviour::requirements_report::tests_requirements::requirements_require_marked_non_void_authoring_status",
+    "behaviour::requirements_report::tests_requirements::singleton_multi_and_full_canonical_sets_are_valid",
+    "command_progress::tests::change_prepare_and_explicit_apply_use_early_policy",
+    "commands::change::m_02_d_1_cases::parsed_cli_prepare_apply_and_no_overwrite_match_artifacts"
+  ],
+  "incumbent_count": 6,
+  "setup_excluded": [
+    "commands::change::query::m_02_d_2_cases::save_owned_classified_fixture_for_production_processes"
+  ],
+  "setup_count": 1,
+  "repeats_not_counted": true
+}

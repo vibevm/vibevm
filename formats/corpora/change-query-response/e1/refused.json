@@ -1,0 +1,9 @@
+{
+  "status": "refused",
+  "schema": 1,
+  "code": "unknown-epoch",
+  "message": "supported change query epoch is 1",
+  "candidates": [
+    "1"
+  ]
+}

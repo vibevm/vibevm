@@ -50,6 +50,8 @@ pub mod read_doc;
 pub use read_doc::ReadDocMcpTool;
 pub mod read_spec;
 pub use read_spec::ReadSpecMcpTool;
+pub mod change;
+pub use change::ChangeQueryMcpTool;
 pub mod spec_resolve;
 pub use spec_resolve::SpecResolveMcpTool;
 
@@ -114,6 +116,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(RequirementsQueryMcpTool),
         Box::new(ReadDocMcpTool),
         Box::new(ReadSpecMcpTool),
+        Box::new(ChangeQueryMcpTool),
         Box::new(SpecResolveMcpTool),
         Box::new(PlanManifestMigrationMcpTool),
         Box::new(ManifestMigrationOperationMcpTool),

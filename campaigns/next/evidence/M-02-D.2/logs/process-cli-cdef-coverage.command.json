@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+    "--json",
+    "change",
+    "coverage",
+    "chg-0123456789abcdef0123456789abcdef"
+  ],
+  "cwd": "/tmp/.tmpSkuvvt/host",
+  "env": {
+    "PATH": "/usr/bin:/bin",
+    "LANG": "C.UTF-8",
+    "HOME": "/tmp/.tmpSkuvvt/hermetic/home",
+    "XDG_CONFIG_HOME": "/tmp/.tmpSkuvvt/hermetic/config",
+    "XDG_CACHE_HOME": "/tmp/.tmpSkuvvt/hermetic/cache",
+    "XDG_STATE_HOME": "/tmp/.tmpSkuvvt/hermetic/state",
+    "VIBE_SETTINGS": "/tmp/.tmpSkuvvt/hermetic/settings",
+    "VIBE_NO_DEFAULT_REGISTRY": "1",
+    "VIBE_REGISTRY_CACHE": "/tmp/.tmpSkuvvt/hermetic/cache",
+    "VIBE_NO_PROGRESS": "1",
+    "CI": "1",
+    "VIBE_OFFLINE": "true"
+  },
+  "exit": 0,
+  "binary_sha256": "b3bb01ddfc21be3f5c252731e36db54c9f3e61c8e86ddd2960498670a983d03f",
+  "stdout_sha256": "111c319eb71f4609a2806a33199f5a57cd25fe58be005c2eba287afddd4aef05",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

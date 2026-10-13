@@ -51,6 +51,20 @@ fn change_prepare_and_explicit_apply_use_early_policy() {
         }
         assert_eq!(parsed_policy(&args, true), CommandPolicy::SilentMetadata);
     }
+    for mode in ["check", "show", "coverage"] {
+        assert_eq!(
+            parsed_policy(
+                &[
+                    "vibe",
+                    "change",
+                    mode,
+                    "chg-0123456789abcdef0123456789abcdef"
+                ],
+                true
+            ),
+            CommandPolicy::SilentMetadata
+        );
+    }
 }
 
 #[test]

@@ -1,0 +1,136 @@
+{
+  "status": "success",
+  "artifact_evidence": "not-observed",
+  "capture": "document-capture/1:3:1:1",
+  "coordinate": "org.demo/consumer",
+  "directory": "vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef",
+  "facts": [
+    {
+      "basis": "captured-original-bytes/1",
+      "capture": "sha256:114645a4aa181769531715127118fa946ea5020819cb247f0eab8f42ebc52a5a",
+      "document": "vibevm/vibespecs/DOC.md",
+      "metadata": {
+        "address": "spec://org.demo/dep/DOC#DELIVERY",
+        "adoption": {
+          "presence": "absent"
+        },
+        "authoring": {
+          "presence": "marked",
+          "status": {
+            "stage": "spec",
+            "state": "work"
+          }
+        },
+        "relations": [],
+        "source": {
+          "kind": "package",
+          "package": "org.demo/dep"
+        }
+      },
+      "numeric_position_unavailable": true,
+      "scope": "origin",
+      "sha256": "sha256:2c74b9ffd7a32a4b8614fd51a41f55a7b7935d686dfe86b78863900f962f7b48"
+    }
+  ],
+  "gaps": [
+    {
+      "address": "spec://org.demo/consumer/changes/chg-0123456789abcdef0123456789abcdef/intent",
+      "code": "unclassified-local-facts",
+      "scope": "local"
+    },
+    {
+      "address": "spec://org.demo/consumer/changes/chg-0123456789abcdef0123456789abcdef/refinement",
+      "code": "unclassified-local-facts",
+      "scope": "local"
+    },
+    {
+      "address": "spec://org.demo/consumer/changes/chg-0123456789abcdef0123456789abcdef/acceptance",
+      "code": "unclassified-local-facts",
+      "scope": "local"
+    }
+  ],
+  "id": "chg-0123456789abcdef0123456789abcdef",
+  "intent_hash": "sha256:00bce70eaea39c0256ca5206ef3e56539b77410c3f7d033722b65897f06843d7",
+  "intent_recipe": "sha256:vibe-change-bound-intent-v1",
+  "mode": "show",
+  "omitted_roles": [],
+  "origins": [
+    {
+      "capture": "sha256:114645a4aa181769531715127118fa946ea5020819cb247f0eab8f42ebc52a5a",
+      "declared_content": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "observed_addresses": [
+        "spec://org.demo/dep/DOC#DELIVERY"
+      ],
+      "observed_content": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "package": "flow:org.demo/dep@=1.0.0",
+      "selected_addresses": [
+        "spec://org.demo/dep/DOC#DELIVERY"
+      ],
+      "source_strengths": {
+        "vibevm/vibespecs/DOC.md": "record-consistent"
+      },
+      "state": "matched"
+    }
+  ],
+  "registry_witnesses": [],
+  "relation_sources": [
+    {
+      "package": "org.demo/consumer",
+      "provenance": "none",
+      "state": "not-requested"
+    },
+    {
+      "package": "org.demo/dep",
+      "provenance": "none",
+      "state": "not-requested"
+    }
+  ],
+  "roles": [
+    {
+      "address": "spec://org.demo/consumer/changes/chg-0123456789abcdef0123456789abcdef/intent",
+      "basis": "original-bytes",
+      "buffer_version": null,
+      "bytes": 144,
+      "path": "vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef/intent.md",
+      "raw_hex": "2320496e74656e740a0a40666163743a4c4f43414c2d494e54454e5420496d706c656d656e7420746865207265666572656e636564206f726967696e20696e20746869732070726f6a6563742e20407374617475733a737065630a0a4f726967696e207265666572656e63653a2040737065633a2f2f6f72672e64656d6f2f6465702f444f432344454c49564552590a",
+      "raw_recipe": "hex/1",
+      "role": "intent",
+      "sha256": "sha256:acde4aa3ded0694ee6890426e7c81cec328f6851abf175b2ce4ee403fd13c29d",
+      "state": "unclassified"
+    },
+    {
+      "address": "spec://org.demo/consumer/changes/chg-0123456789abcdef0123456789abcdef/refinement",
+      "basis": "original-bytes",
+      "buffer_version": null,
+      "bytes": 107,
+      "path": "vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef/refinement.md",
+      "raw_hex": "2320526566696e656d656e740a0a40666163743a4c4f43414c2d524546494e454d454e54205265636f72642070726f6a6563742d737065636966696320696d706c656d656e746174696f6e20636f6e73747261696e747320686572652e20407374617475733a737065630a",
+      "raw_recipe": "hex/1",
+      "role": "refinement",
+      "sha256": "sha256:97ff01977fbbd1b10d5acba28c44e4ef528f60756be131e5f004882392f7f30f",
+      "state": "unclassified"
+    },
+    {
+      "address": "spec://org.demo/consumer/changes/chg-0123456789abcdef0123456789abcdef/acceptance",
+      "basis": "original-bytes",
+      "buffer_version": null,
+      "bytes": 105,
+      "path": "vibevm/vibespecs/changes/chg-0123456789abcdef0123456789abcdef/acceptance.md",
+      "raw_hex": "2320416363657074616e63650a0a40666163743a4c4f43414c2d414343455054414e434520537570706c79206c6f63616c20696d706c656d656e746174696f6e20616e6420766572696669636174696f6e2065766964656e63652e20407374617475733a737065630a",
+      "raw_recipe": "hex/1",
+      "role": "acceptance",
+      "sha256": "sha256:9da77f0e37ec521978db219610ede1e0ea2b150a0dc258e1d5fe052b26259e92",
+      "state": "unclassified"
+    }
+  ],
+  "schema": 1,
+  "scope_complete": false,
+  "selected_node": ".",
+  "slug": "local-0",
+  "source_authentication": "not-established",
+  "terminal": "not-evaluated",
+  "title": "Local 0",
+  "work_hash": "sha256:d5f4d7de42d25b9e8da89e6b5ffeeb556b27ea0f9ed6ad1ae383cc5fbe6dfc73",
+  "work_items": [],
+  "work_recipe": "sha256:vibe-change-work-v1"
+}
