@@ -26,7 +26,7 @@
 //! accumulated artifacts; `validate_shape` refuses a duplicate before any of
 //! this runs.
 
-use vibe_wire::generated::lifecycle_state::StateArtifact;
+use crate::state::current::StateArtifact;
 
 use crate::LifecycleRun;
 use crate::artifacts::observe::{ArtifactObserver, WitnessOutcome};

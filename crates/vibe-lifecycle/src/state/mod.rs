@@ -2,11 +2,17 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME");
 
+/// Current state DTO home is explicit; frozen epoch1 is decoded separately.
+pub(crate) mod current {
+    pub use vibe_wire::generated::lifecycle_state_v2::e2::state::*;
+    pub type LifecycleState = State;
+}
+
 mod error;
 mod fingerprint;
 mod identity;
 mod install_stage;
-mod io;
+pub(crate) mod io;
 mod outcome_marker;
 mod outcome_store;
 mod recovery;

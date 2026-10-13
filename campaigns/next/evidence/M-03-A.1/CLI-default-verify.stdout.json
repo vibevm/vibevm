@@ -1,0 +1,219 @@
+{
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "create",
+    "build",
+    "test",
+    "verify"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#produce",
+      "phase": "create",
+      "point": "phase:create",
+      "provider": "org.demo/consumer",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    },
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#compile",
+      "phase": "build",
+      "point": "phase:build",
+      "provider": "org.demo/consumer",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    },
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#observe",
+      "phase": "verify",
+      "point": "phase:verify",
+      "provider": "org.demo/consumer",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": [],
+  "requested": "verify"
+}
+{
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "create",
+    "build",
+    "test",
+    "verify"
+  ],
+  "command": "lifecycle",
+  "contributions": [
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#produce",
+      "phase": "create",
+      "point": "phase:create",
+      "provider": "org.demo/consumer",
+      "status": "fresh",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    },
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#compile",
+      "phase": "build",
+      "point": "phase:build",
+      "provider": "org.demo/consumer",
+      "status": "fresh",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    },
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#observe",
+      "phase": "verify",
+      "point": "phase:verify",
+      "provider": "org.demo/consumer",
+      "status": "ok",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": [],
+  "ok": true,
+  "requested": "verify",
+  "steps": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    },
+    {
+      "phase": "install",
+      "status": "fresh"
+    },
+    {
+      "phase": "generate",
+      "status": "no-op"
+    },
+    {
+      "phase": "create",
+      "status": "fresh"
+    },
+    {
+      "phase": "build",
+      "status": "fresh"
+    },
+    {
+      "phase": "test",
+      "status": "no-op"
+    },
+    {
+      "phase": "verify",
+      "status": "ok"
+    }
+  ],
+  "verification": {
+    "artifacts": [
+      {
+        "id": "source",
+        "kind": "file",
+        "path": "src/product.rs",
+        "status": "matched",
+        "measured": {
+          "algorithm": "sha256:file-v1",
+          "digest": "sha256:cf552ab49621dbb18d67963f5ab2d56f06b8838845ebe3832b3998e728d1e10e"
+        },
+        "measured_run_id": "06932786e9101f968e7c903a7f7c288a",
+        "observed": {
+          "algorithm": "sha256:file-v1",
+          "digest": "sha256:cf552ab49621dbb18d67963f5ab2d56f06b8838845ebe3832b3998e728d1e10e"
+        }
+      },
+      {
+        "id": "compiled",
+        "kind": "file",
+        "path": "target/check",
+        "status": "matched",
+        "measured": {
+          "algorithm": "sha256:file-v1",
+          "digest": "sha256:9603d976fd405fdc6aeef6e72ae97abe39afff20beaa9508378f77e3d76de397"
+        },
+        "measured_run_id": "3bda6726c1c2bbef49c15606eb629a7a",
+        "observed": {
+          "algorithm": "sha256:file-v1",
+          "digest": "sha256:9603d976fd405fdc6aeef6e72ae97abe39afff20beaa9508378f77e3d76de397"
+        }
+      }
+    ],
+    "evidence": 1,
+    "evidence_id": "sha256:782cac032761822e5d7ae81c77a963802c900dd4cabda1473fe69517d12d4823",
+    "inputs": [
+      {
+        "declaration_fingerprint": "sha256:c6737aa4d897e21627d618741f6a61a4c5ebee05b305ba65fadeae0f0ee7723d",
+        "execution": "org.demo/consumer#produce",
+        "patterns": [
+          "intent.txt"
+        ],
+        "phase": "create",
+        "status": "matched",
+        "measured": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:da2a801272e81f063770f3ff6b9e5278ceb728fc8243c5994f94b5ed5b2ab8f1",
+          "bytes": "23",
+          "files": 1
+        },
+        "measured_run_id": "ebe46951c6c5f5140d4d1bf996c5ab04",
+        "observed": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:da2a801272e81f063770f3ff6b9e5278ceb728fc8243c5994f94b5ed5b2ab8f1",
+          "bytes": "23",
+          "files": 1
+        }
+      },
+      {
+        "declaration_fingerprint": "sha256:eaf8db7deb259246d904e947c71174895910dd0f620ebf188729f756f981268a",
+        "execution": "org.demo/consumer#compile",
+        "patterns": [
+          "src/product.rs"
+        ],
+        "phase": "build",
+        "status": "matched",
+        "measured": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:38b2abae51c1040c107cebc5928e34ad6860c891dbcc100e0f5045312248d6c6",
+          "bytes": "70",
+          "files": 1
+        },
+        "measured_run_id": "ebe46951c6c5f5140d4d1bf996c5ab04",
+        "observed": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:38b2abae51c1040c107cebc5928e34ad6860c891dbcc100e0f5045312248d6c6",
+          "bytes": "70",
+          "files": 1
+        }
+      }
+    ],
+    "observed_at": "2026-10-13T10:03:06.172863040Z",
+    "run": {
+      "chain": [
+        "validate",
+        "install",
+        "generate",
+        "create",
+        "build",
+        "test",
+        "verify"
+      ],
+      "requested": "verify",
+      "run_id": "ebe46951c6c5f5140d4d1bf996c5ab04",
+      "selected": ".",
+      "started": "2026-10-13T10:03:06Z"
+    },
+    "status": "matched"
+  }
+}

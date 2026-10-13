@@ -10,7 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME
 
 use std::path::Path;
 
-use vibe_wire::generated::lifecycle_state::{
+use crate::state::current::{
     ExecutionRecord, ExecutionRecordScope, SlotContinuation, SlotTargetRecord,
 };
 

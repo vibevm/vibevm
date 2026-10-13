@@ -1,0 +1,232 @@
+{
+  "mode": "relative-member",
+  "phase": "create",
+  "root": "/tmp/m03-a1-cli-lan9fini/project/member",
+  "cwd": "/tmp/m03-a1-cli-lan9fini/project",
+  "argv": [
+    "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+    "--json",
+    "--offline",
+    "--agent-mode",
+    "agent",
+    "--no-progress",
+    "create",
+    "--path",
+    "member",
+    "--assume-yes"
+  ],
+  "exit": 0,
+  "binary_sha256": "2651a8a951f82c3e5bb1346eb43b6ce9ae39e6a66d950282c17a9687ff443059",
+  "stdout_sha256": "ea6cc3c23b608e6558064863de3246c0fb15f2b6b853ebcfe0abdafe4c3a5af1",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "before": {
+    "intent.txt": {
+      "kind": "file",
+      "bytes": 23,
+      "sha256": "6cace402ec3ccb01f29762d3c27a49ec844722fb7acc4183401e8ea08f35eabc"
+    },
+    "scripts": {
+      "kind": "directory"
+    },
+    "scripts/operation.sh": {
+      "kind": "file",
+      "bytes": 1044,
+      "sha256": "d5f34f3f02a0ae1f552524c922afb489224a961429b020c5664d6d7f4e62ab5f"
+    },
+    "vibe.toml": {
+      "kind": "file",
+      "bytes": 510,
+      "sha256": "24aa8045c91e7a537e7daf4515ccc78a02a70de5cbfb85d0ef69fb97869216bf"
+    }
+  },
+  "after": {
+    ".vibe": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/8ce7d68ac53f3e44ca599a73cf73e728": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/8ce7d68ac53f3e44ca599a73cf73e728/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/8ce7d68ac53f3e44ca599a73cf73e728/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776/context.json-bacc9bd5302c18dc2e86beb7b0f512b3.tmp": {
+      "kind": "file",
+      "bytes": 856,
+      "sha256": "7d68fd6a90cdd9cfb0c531847880cd110596e352245a508046b3dfe77fb0c075"
+    },
+    ".vibe/lifecycle/8ce7d68ac53f3e44ca599a73cf73e728/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776/reply.json-202801a1022dc193bd66a0bb0200e78c.tmp": {
+      "kind": "file",
+      "bytes": 147,
+      "sha256": "4218dc37cdde7ac8ac6a93e9726915d1038cd76e30b6c2fd1fe8ed03bf714a53"
+    },
+    "AGENTS.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "CLAUDE.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "GEMINI.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "calls": {
+      "kind": "file",
+      "bytes": 8,
+      "sha256": "1e330e5891b8a9e0b043093492bea1c4a748d9e67fca56512e24638b8962fcd7"
+    },
+    "intent.txt": {
+      "kind": "file",
+      "bytes": 23,
+      "sha256": "6cace402ec3ccb01f29762d3c27a49ec844722fb7acc4183401e8ea08f35eabc"
+    },
+    "scripts": {
+      "kind": "directory"
+    },
+    "scripts/operation.sh": {
+      "kind": "file",
+      "bytes": 1044,
+      "sha256": "d5f34f3f02a0ae1f552524c922afb489224a961429b020c5664d6d7f4e62ab5f"
+    },
+    "src": {
+      "kind": "directory"
+    },
+    "src/product.rs": {
+      "kind": "file",
+      "bytes": 70,
+      "sha256": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583"
+    },
+    "vibe.toml": {
+      "kind": "file",
+      "bytes": 510,
+      "sha256": "24aa8045c91e7a537e7daf4515ccc78a02a70de5cbfb85d0ef69fb97869216bf"
+    },
+    "vibevm": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs/boot": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs/boot/.vibe-boot-artifacts.lock": {
+      "kind": "file",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vibevm/vibespecs/boot/INDEX.md": {
+      "kind": "file",
+      "bytes": 599,
+      "sha256": "7cd0a73818a40c89919c9a573cde15cebdaf0370ea296e011e7d725aeb5e79f5"
+    }
+  },
+  "source_before": null,
+  "source_after": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583",
+  "control_before": {
+    "home": {},
+    "config": {},
+    "cache": {},
+    "state": {},
+    "data": {},
+    "cargo": {}
+  },
+  "initial_control": {
+    "home": {},
+    "config": {},
+    "cache": {},
+    "state": {},
+    "data": {},
+    "cargo": {}
+  },
+  "control_after": {
+    "home": {
+      ".vibe": {
+        "kind": "directory"
+      },
+      ".vibe/registry.toml": {
+        "kind": "file",
+        "bytes": 165,
+        "sha256": "70bb41309da328fbeb811ada34c2a19e44fda28b31138cd6ed2a64e98a1e8bb4"
+      }
+    },
+    "config": {},
+    "cache": {},
+    "state": {},
+    "data": {},
+    "cargo": {}
+  },
+  "decoded_documents": [
+    {
+      "chain": [
+        "validate",
+        "install",
+        "generate",
+        "create"
+      ],
+      "command": "lifecycle:plan",
+      "contributions": [
+        {
+          "handler": "script",
+          "key": "org.demo/consumer#produce",
+          "phase": "create",
+          "point": "phase:create",
+          "provider": "org.demo/consumer",
+          "tier": "host-declaration",
+          "version": "1.0.0"
+        }
+      ],
+      "notices": [],
+      "requested": "create"
+    },
+    {
+      "chain": [
+        "validate",
+        "install",
+        "generate",
+        "create"
+      ],
+      "command": "lifecycle",
+      "contributions": [
+        {
+          "handler": "script",
+          "key": "org.demo/consumer#produce",
+          "phase": "create",
+          "point": "phase:create",
+          "provider": "org.demo/consumer",
+          "status": "ok",
+          "tier": "host-declaration",
+          "version": "1.0.0"
+        }
+      ],
+      "notices": [],
+      "ok": true,
+      "requested": "create",
+      "steps": [
+        {
+          "phase": "validate",
+          "status": "ok"
+        },
+        {
+          "phase": "install",
+          "status": "fresh"
+        },
+        {
+          "phase": "generate",
+          "status": "no-op"
+        },
+        {
+          "phase": "create",
+          "status": "ok"
+        }
+      ]
+    }
+  ]
+}

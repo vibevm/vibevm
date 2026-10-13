@@ -1,0 +1,10 @@
+{
+  "task": "M-03-A.1",
+  "head": "c9e5eac5803fe00e80c2fae4fbe3e23509bcd455",
+  "source_manifest_sha256": "0c2dd2e9d2a07fee55aa7cc3aabfe06702807e522d7c5021d45c08d9ff302338",
+  "files": 162,
+  "source_writes_stopped": true,
+  "no_cargo_writer_active": true,
+  "correction": "two titled clause containers only; Root actual dialect/specmap pending",
+  "historical_stop": "PRE-DIALECT-SOURCE-STOP.json"
+}

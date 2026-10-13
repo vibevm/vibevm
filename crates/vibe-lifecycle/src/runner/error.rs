@@ -18,6 +18,8 @@ use super::FailedExecutionTransition;
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE")]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME")]
 pub enum LifecycleRunError {
+    #[error(transparent)]
+    Invocation(#[from] super::InvocationRefusal),
     #[error(
         "lifecycle envelope preparation failed for `{key}`: {source} \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW; \

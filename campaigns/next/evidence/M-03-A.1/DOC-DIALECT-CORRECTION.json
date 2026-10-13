@@ -1,0 +1,21 @@
+{
+  "scope": "layout/container only; Root owns actual dialect/specmap rerun",
+  "files": [
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "before_sha256": "be4f906058ba15dab39845f8589fc38491ac1a41beaf80370b4dd9299f51ee38",
+      "after_sha256": "0e2cabda6a312902d71848059cd1d9664dae850a9387e718026c6ec8dcc7e886",
+      "new_fact_blocks": 6,
+      "exact_original_clause_block_preserved": true,
+      "exact_old_content_preserved": true
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "before_sha256": "f0f8b94930b016a0f7cb12d62ff24f2d6212b4bd69550eeb305f001a1dd08edc",
+      "after_sha256": "5be0221f8ea226e07ab002150ba3331d12862656b4cd3ff0d92b4d938a3b6a6c",
+      "new_fact_blocks": 1,
+      "exact_original_clause_block_preserved": true,
+      "exact_old_content_preserved": true
+    }
+  ]
+}

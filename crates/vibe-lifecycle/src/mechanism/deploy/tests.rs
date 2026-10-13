@@ -154,6 +154,7 @@ fn the_reserved_deploy_row_keeps_the_identity_the_executor_matches() {
 fn a_routed_native_target_requires_its_prepared_binding() {
     let fixture = Fixture::new("helper-bytes");
     let declaration = MechanismDecl {
+        effects: None,
         id: "installer".into(),
         role: MechanismRole::Deploy,
         name: "vibe-bin".into(),

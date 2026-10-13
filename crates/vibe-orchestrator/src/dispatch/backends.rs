@@ -152,6 +152,7 @@ impl PackageBindingBackend for ProjectPackageBindingBackend<'_> {
 
 pub(super) struct WorkspaceBinaryBackend {
     pub(super) quiet: bool,
+    pub(super) allow_build: bool,
 }
 impl BinaryBackend for WorkspaceBinaryBackend {
     fn resolve_or_build(
@@ -191,6 +192,9 @@ impl BinaryBackend for WorkspaceBinaryBackend {
         };
         let binary = binary.map_err(|error| error.to_string())?;
         if !binary.artifact().exists() {
+            if !self.allow_build {
+                return Err("preparation-required: ordinary verification cannot build a missing handler executable".into());
+            }
             vibe_workspace::bins::build_binary_authorized_with_output(
                 &binary,
                 vibe_workspace::bins::BuildAuthorization::InstalledExtension { home },
@@ -203,5 +207,82 @@ impl BinaryBackend for WorkspaceBinaryBackend {
             .map_err(|error| error.to_string())?;
         }
         Ok(binary.artifact())
+    }
+}
+
+#[cfg(test)]
+mod m_03_a_1_cases {
+    use super::*;
+    use std::{collections::BTreeMap, fs, path::Path};
+    fn inventory(root: &Path) -> BTreeMap<String, Option<Vec<u8>>> {
+        fn visit(root: &Path, path: &Path, rows: &mut BTreeMap<String, Option<Vec<u8>>>) {
+            for entry in fs::read_dir(path).unwrap() {
+                let path = entry.unwrap().path();
+                let name = path
+                    .strip_prefix(root)
+                    .unwrap()
+                    .to_string_lossy()
+                    .into_owned();
+                if path.is_dir() {
+                    rows.insert(name, None);
+                    visit(root, &path, rows);
+                } else {
+                    rows.insert(name, Some(fs::read(path).unwrap()));
+                }
+            }
+        }
+        let mut rows = BTreeMap::new();
+        visit(root, root, &mut rows);
+        rows
+    }
+    #[test]
+    fn ordinary_verify_missing_tool_refuses_before_build_and_preserves_owned_tree() {
+        let root = tempfile::tempdir().unwrap();
+        fs::create_dir_all(root.path().join("crates/missing/src")).unwrap();
+        fs::write(root.path().join("vibe.toml"),"[package]\ngroup='org.demo'\nname='tool'\nkind='tool'\nversion='1.0.0'\n[[binary]]\nname='missing'\ncrate='crates/missing'\n[[extension]]\nid='observe'\npoint='phase:verify'\neffects=['evidence-observer']\ninputs=[]\nhandler={kind='binary',name='missing'}\n").unwrap();
+        fs::write(
+            root.path().join("crates/missing/Cargo.toml"),
+            "[package]\nname='missing'\nversion='0.1.0'\nedition='2024'\n",
+        )
+        .unwrap();
+        fs::write(
+            root.path().join("crates/missing/src/main.rs"),
+            "fn main(){}\n",
+        )
+        .unwrap();
+        fs::write(
+            root.path().join("crates/missing/build.rs"),
+            "fn main(){std::fs::write(\"BUILD-CALLED\",b\"forbidden\").unwrap();}\n",
+        )
+        .unwrap();
+        let loaded = crate::world::inspect(root.path()).unwrap();
+        let row = loaded
+            .registry
+            .rows()
+            .iter()
+            .find(|row| row.declaration().id == "observe")
+            .unwrap();
+        let lookup = vibe_workspace::bins::find_binary_in_authored_package_root(
+            root.path(),
+            &"org.demo".parse().unwrap(),
+            "tool",
+            "1.0.0",
+            "missing",
+        )
+        .unwrap();
+        assert!(!lookup.artifact().exists());
+        let before = inventory(root.path());
+        let backend = WorkspaceBinaryBackend {
+            quiet: true,
+            allow_build: false,
+        };
+        let error = backend.resolve_or_build(row, "missing").unwrap_err();
+        assert_eq!(
+            error,
+            "preparation-required: ordinary verification cannot build a missing handler executable"
+        );
+        assert_eq!(before, inventory(root.path()));
+        assert!(!root.path().join("crates/missing/BUILD-CALLED").exists());
+        assert!(!root.path().join("crates/missing/target").exists());
     }
 }

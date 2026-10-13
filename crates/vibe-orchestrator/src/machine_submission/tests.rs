@@ -5,7 +5,7 @@ use vibe_lifecycle::{
     LifecycleLease, LifecycleLeaseError, LifecycleStateStore, SubmissionNamespace,
     SubmissionReservations, SubmissionScope,
 };
-use vibe_wire::generated::lifecycle_state::{ExecutionRecord, ExecutionRecordStatus};
+use vibe_wire::generated::lifecycle_state_v2::e2::state::{ExecutionRecord, ExecutionRecordStatus};
 
 use super::*;
 
@@ -157,6 +157,7 @@ impl SubmissionJournal for FixtureJournal {
             .checkpoint(
                 EFFECT_KEY.into(),
                 ExecutionRecord {
+                    completion_basis: None,
                     artifacts: Vec::new(),
                     duration_ms: 0,
                     fingerprint: if self.fault == FixtureFault::AfterUncertainCheckpoint {

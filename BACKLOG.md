@@ -2603,3 +2603,23 @@ structure, and it goes when the file does.
 | @fact:B238-SEVERITY **severity** | P2 — bounded operational limitation, no additional current campaign gate. |
 | @fact:B238-DISPOSITION **disposition** | deferred — when a concrete caller requires unattended resumption of pending scaffold artifacts, compose explicit fresh saved-state authority/participant admission with the retained operation, exact identity/third-state checks and create-new publication. Do not delete uncertain residue, silently promote matching bytes, or use a new capture to mint a second invocation. First Agent fixes this if it actually blocks a later VibeVM step; no new persistence/security framework is commissioned. |
 | @fact:B238-FILED **filed by** | First Agent D1 acceptance review, 2026-10-13. |
+
+## B-239 — no-build artifact-target and exact compiler-selector observation remain bounded {#b-239}
+
+| field | value |
+|---|---|
+| @fact:B239-WHAT **what** | M03-A1 ordinary verify refuses artifact targets whose current no-build freshness cannot be established from incumbent Cargo/provider-at-production records. Precise compile path-selector reconstruction can also be unavailable where the current owner cannot bind the selected source subject. The script compiler/observer routes are qualified; these typed needs are not a universal verify success claim. |
+| @fact:B239-EVIDENCE **evidence** | M03-A1 phase/invocation.rs and current world/runner owners; canonical campaigns/next/evidence/M-03-A.1/accepted-2026-10-13.md; actual current-prefix and missing-tool cases, production CLI6processes. |
+| @fact:B239-SEVERITY **severity** | P2 — explicit capability boundary; no extra current campaign gate. |
+| @fact:B239-DISPOSITION **disposition** | deferred until a concrete required caller needs this target/selector path; reuse the incumbent exact record/material owner and establish genuine read-only current input/output/provider binding. Do not infer freshness from existence, silently rebuild under verify, add a second evaluator/store or commence a general freshness framework. First Agent fixes the smallest next-step blocker if encountered. |
+| @fact:B239-FILED **filed by** | First Agent M03-A1 acceptance, 2026-10-13. |
+
+## B-240 — hosted completion without original pre-input basis cannot be reused as new production proof {#b-240}
+
+| field | value |
+|---|---|
+| @fact:B240-WHAT **what** | Current hosted handoff satisfaction does not mint a new completion_basis when the original pre-production input/subject evidence was not retained. Such rows remain historical/unavailable for cross-invocation production reuse. Current script/native local success with an actual original basis is separately qualified; a latest run header or existing artifact cannot supply missing original proof. |
+| @fact:B240-EVIDENCE **evidence** | M03-A1 runner/hosted.rs and epoch2 completion owners; independent final review and canonical M03-A1 receipt. Source-inspected limitation, not a claimed executed hosted failure. |
+| @fact:B240-SEVERITY **severity** | P2 — explicit original-evidence limitation, no additional A1 gate. |
+| @fact:B240-DISPOSITION **disposition** | preserve until an actual hosted full-pass/park/resume carrier task requires it; bind the original preparation and exact attempt through existing owners, with forward-compatible explicit evidence. M03-A2/later carrier work must report this boundary rather than fabricate completion, rerun uncertain production or reconstruct original subject from mutable current metadata. |
+| @fact:B240-FILED **filed by** | First Agent M03-A1 acceptance review, 2026-10-13. |

@@ -30,6 +30,7 @@ fn world(root: &Path) -> ExtensionWorld {
                 content_hash: None,
             },
             declarations: vec![ExtensionDecl {
+                effects: None,
                 id: "extension".to_owned(),
                 point: "phase:build".parse().unwrap(),
                 handler: handler.clone(),
@@ -44,6 +45,7 @@ fn world(root: &Path) -> ExtensionWorld {
             }],
             controls: ExtensionsControl::default(),
             mechanisms: vec![MechanismDecl {
+                effects: None,
                 id: "provider".to_owned(),
                 role: MechanismRole::Deploy,
                 name: "foreign".to_owned(),

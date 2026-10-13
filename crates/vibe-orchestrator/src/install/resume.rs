@@ -13,7 +13,7 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use vibe_core::manifest::Lockfile;
 use vibe_lifecycle::{AgentBackend, LifecycleLease, RunMetadata};
-use vibe_wire::generated::lifecycle_state::ExecutionRecordScope;
+use vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecordScope;
 use vibe_workspace::Workspace;
 
 use crate::failure::{MeasuredFailure, Measurement};

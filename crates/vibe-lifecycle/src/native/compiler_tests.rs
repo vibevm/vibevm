@@ -37,6 +37,7 @@ fn declaration(
     config: Option<ExtensionConfig>,
 ) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: id.to_owned(),
         point: point.parse().unwrap(),
         handler,

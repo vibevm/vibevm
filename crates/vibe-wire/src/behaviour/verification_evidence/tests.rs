@@ -507,3 +507,51 @@ fn refusals_render_without_leaking_the_offending_value() {
     );
     assert!(rendered.contains("4096"), "the true length is reported");
 }
+
+#[test]
+fn m_03_a_1_full_pass_requires_the_exact_causal_chain_without_fake_phase() {
+    let mut evidence = base();
+    evidence.run.requested = "full-pass".into();
+    evidence.run.chain = [
+        "validate", "install", "generate", "create", "build", "test", "verify",
+    ]
+    .map(str::to_string)
+    .to_vec();
+    validate(&evidence).unwrap();
+    let valid = evidence.run.chain.clone();
+    for chain in [
+        vec![
+            "validate", "install", "generate", "build", "test", "create", "verify",
+        ],
+        vec![
+            "validate", "install", "generate", "create", "build", "verify",
+        ],
+        vec![
+            "validate",
+            "install",
+            "generate",
+            "create",
+            "build",
+            "test",
+            "verify",
+            "full-pass",
+        ],
+        vec![
+            "validate", "install", "generate", "create", "create", "build", "test", "verify",
+        ],
+    ] {
+        evidence.run.chain = chain.into_iter().map(str::to_string).collect();
+        assert!(matches!(
+            validate(&evidence),
+            Err(EvidenceError::RequestedOutsideChain { .. })
+        ));
+    }
+    evidence.run.chain = valid;
+    evidence.run.requested = "other-pass".into();
+    assert!(matches!(
+        validate(&evidence),
+        Err(EvidenceError::RequestedOutsideChain { .. })
+    ));
+    evidence.run.requested = "verify".into();
+    validate(&evidence).unwrap();
+}

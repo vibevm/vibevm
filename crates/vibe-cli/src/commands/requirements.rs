@@ -28,7 +28,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT");
 
 use anyhow::{Context as _, Result};
-use vibe_wire::generated::lifecycle_state::LifecycleState;
+use vibe_wire::generated::lifecycle_state_v2::e2::state::State as LifecycleState;
 use vibe_wire::generated::requirements_report::RequirementsReport;
 
 use crate::cli::RequirementsArgs;

@@ -43,101 +43,16 @@ use crate::values::{
 use crate::{dispatch, world};
 
 mod applicability;
+mod invocation;
 /// The prerequisite install's collector, and the law over its captured tree.
 mod prerequisite;
 mod resume;
 
 use resume::{Measured, absorb_resume_failure};
 
-/// The prepared inputs one phase run owns, plus whatever the clean epoch
-/// already contributed.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-pub struct PhaseRun<'a> {
-    /// The requested phase.
-    pub requested: Phase,
-    /// The default phases this run executes, in chain order.
-    pub phases: Vec<Phase>,
-    /// The complete requested chain, including a clean prefix.
-    pub chain: Vec<String>,
-    /// The invocation's durable identity and effective posture.
-    pub metadata: RunMetadata,
-    /// The surface-neutral install inputs of the prerequisite install.
-    pub install_args: InstallInputs,
-    /// The narrow execution policy of the prerequisite install.
-    pub policy: InstallPolicy,
-    /// The command's mutation lease, from the prelude epoch. The prerequisite
-    /// install and the phase dispatch both consume this one acquisition; the
-    /// command boundary holds the owner through the finalised report.
-    pub lease: Arc<LifecycleLease>,
-    /// The command's ONE selected-world provenance bundle, from the prelude
-    /// epoch (or the single post-clean reload): the canonical root, the manifest
-    /// snapshot taken at it, and the tree built from THAT snapshot. Proven at
-    /// the TOP of the executed region below — including on a validate-only
-    /// chain, where dropping it would let a stored parse error be replaced by
-    /// whatever a later workspace read happened to notice.
-    pub selection: PreparedSelection,
-    /// Step rows the clean epoch already produced.
-    pub steps: Vec<LifecycleStepReport>,
-    /// Contribution rows the clean epoch already produced.
-    pub contributions: Vec<LifecycleContributionReport>,
-    /// Notices the clean epoch already produced.
-    pub notices: Vec<String>,
-    /// The OUTER phase observation policy.
-    pub observer: &'a dyn RunObserver,
-    /// The CHILD install observation policy — never the same object.
-    pub install_observer: &'a dyn InstallObserver,
-    /// The surface's confirmation policy for the prerequisite install.
-    pub confirm_gate: &'a dyn ConfirmGate,
-    /// The surface's package-source composition root.
-    pub sources: &'a dyn PackageSourceFactory,
-    /// Where this run's registry environment is seeded and loaded — once.
-    pub environment: &'a dyn RegistryEnvironment,
-    /// The surface's own manifest mutation for the prerequisite install. A
-    /// phase verb admits no manifest-mutating flag, so it injects the named
-    /// no-op — stated in the call graph rather than assumed.
-    pub manifest_mutation: &'a dyn InstallManifestMutation,
-    /// The ONE agent backend every agent row of this run is served by.
-    pub agent: Arc<dyn AgentBackend>,
-    /// The surface's compile-trace recorder, borrowed.
-    pub trace: Option<&'a TraceRun>,
-    /// Host OS observed once by the outer lifecycle command.
-    pub target_os: TargetOs,
-    /// Everything the COMMAND LAYER resolved for this run's deploy half,
-    /// when it resolved any (§7.0.5: "Profile resolution happens ONCE, in
-    /// the command layer that owns flags, and travels as data"; §6.3.0.6:
-    /// "Home and executable authority are injected"). `None` is a run that
-    /// carries no deploy half — a chain that never reaches deploy, or a
-    /// project that declares no deploy section — and the deploy fence then
-    /// arms nothing at all.
-    pub deploy: Option<crate::DeployAuthority>,
-    /// The surface's injected instant for the verify comparison.
-    ///
-    /// This entry point owns the COMPLETE derived chain, so handing it down is
-    /// also the permission for the engine-owned verify boundary to fire at all
-    /// — the partial install callback deliberately withholds it. Nothing below
-    /// a surface reads a clock, so the instant a member records is the one the
-    /// command was given.
-    pub observed_at: Timestamp,
-}
+pub use invocation::PhaseRun;
 
-/// What one phase run produced.
-#[derive(Debug)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
-pub enum PhaseOutcome {
-    /// The chain ran to completion.
-    Completed(LifecycleValues),
-    /// The chain parked at a hosted agent row.
-    Parked(LifecycleValues),
-    /// The chain failed; the surface owns the report family and the exit code.
-    Failed {
-        /// The rows and phase this run had really measured.
-        measurement: Measurement,
-        /// The caller's error, unchanged.
-        original: anyhow::Error,
-        /// Whether the failing site emitted a machine document with tracing off.
-        emit_machine_failure: bool,
-    },
-}
+pub use invocation::PhaseOutcome;
 
 /// The one boundary. No `?` escapes it.
 ///
@@ -291,6 +206,22 @@ fn run(
         None => None,
     };
     let build_targets = lower_binaries(artifacts.as_ref(), &binaries)?;
+    let selected_build_targets = if phases.contains(&Phase::Build) {
+        build_targets.as_slice()
+    } else {
+        &[]
+    };
+    let admitted_current = invocation::prepare(
+        &project_root,
+        &manifest,
+        &workspace,
+        &phases,
+        &metadata,
+        &lease,
+        agent.as_ref(),
+        selected_build_targets,
+    )?;
+    let executes_install = phases.contains(&Phase::Install) && admitted_current.is_none();
     let prelude_workspace = workspace.clone();
     // Rebound into the bundle for the prerequisite install: the pair this run
     // just proved, never two fields the install could be handed separately.
@@ -324,6 +255,11 @@ fn run(
             }
             Phase::Install => {
                 observer.observe_phase_started(phase.as_str());
+                if !executes_install {
+                    install_status = Some(StepStatus::Fresh);
+                    observer.observe_phase_finished(phase.as_str(), StepStatus::Fresh.as_str());
+                    continue;
+                }
                 let selection = match install_inputs
                     .take()
                     .context("internal: the prepared install inputs were consumed twice")
@@ -426,15 +362,17 @@ fn run(
     // The tree the remaining phases plan against — proven, not guessed. A
     // skipped stage is an internal error here, never a silent fall back to the
     // pre-install world.
-    let planning_workspace =
-        collector.planning_workspace(&prelude_workspace, phases.contains(&Phase::Install))?;
-    let chain_installs = phases.contains(&Phase::Install);
-    let ritual = match collector.native(chain_installs)? {
-        Some(native) => {
-            let (epoch, sidecar) = native.parts();
-            world::plan_default_from_runtime(epoch, sidecar, &phases)?
-        }
-        None => world::plan_default_prepared(&project_root, planning_workspace, &phases)?,
+    let planning_workspace = collector.planning_workspace(&prelude_workspace, executes_install)?;
+    let chain_installs = executes_install;
+    let ritual = match admitted_current {
+        Some(ritual) => ritual,
+        None => match collector.native(chain_installs)? {
+            Some(native) => {
+                let (epoch, sidecar) = native.parts();
+                world::plan_default_from_runtime(epoch, sidecar, &phases)?
+            }
+            None => world::plan_default_prepared(&project_root, planning_workspace, &phases)?,
+        },
     };
     // Retain the opaque replay authority across the complete dispatch. R5.4-
     // FENCE will consume it at the build fence; INSTALL's responsibility is
@@ -451,7 +389,7 @@ fn run(
         None
     };
     let native_mechanisms = vibe_lifecycle::native::project_native_target_mechanisms(
-        &build_targets,
+        selected_build_targets,
         &package_targets,
         &deploy_targets,
         &ritual.mechanisms,
@@ -472,7 +410,7 @@ fn run(
     let created_at = observed_at.to_rfc3339();
     let targets = MechanismTargets {
         project_root: &project_root,
-        build: &build_targets,
+        build: selected_build_targets,
         package: &package_targets,
         deploy_targets: &deploy_targets,
         registry: &ritual.mechanisms,

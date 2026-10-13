@@ -1,0 +1,22 @@
+[
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `ExtensionDecl`",
+    "loc": "--> crates/vibe-install/src/lifecycle/plan.rs:125:41"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "loc": "--> crates/vibe-install/src/lifecycle/reconcile.rs:48:33"
+  },
+  {
+    "message": "error[E0277]: a value of type `Vec<vibe_wire::generated::lifecycle_state_v2::e2::state::SlotTargetRecord>` cannot be built from an iterator over elements of type `vibe_wire::generated::lifecycle_state::SlotTargetRecord`",
+    "loc": "--> crates/vibe-install/src/lifecycle.rs:118:14"
+  },
+  {
+    "message": "error[E0277]: a value of type `Vec<vibe_wire::generated::lifecycle_state_v2::e2::state::SlotTargetRecord>` cannot be built from an iterator over elements of type `vibe_wire::generated::lifecycle_state::SlotTargetRecord`",
+    "loc": "--> crates/vibe-install/src/lifecycle.rs:145:14"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "loc": "--> crates/vibe-install/src/lifecycle.rs:289:47"
+  }
+]

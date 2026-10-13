@@ -1,0 +1,209 @@
+[
+  {
+    "name": "core-effects-first",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "ce22bb870dc2d8e9e763fae30b50dbdcacefcd1f4a702e025f45d74427223d6a"
+  },
+  {
+    "name": "codegen-e2-separated",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "8ada8e46ac1c9013de83469ae4d2aa9df5fac75c898d2e0e36089080a5bc346f"
+  },
+  {
+    "name": "lifecycle-codec-first",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "2b9527a5d9f15bba82504216a8409c09d936aa3018cd5942c13d108273c3acd7"
+  },
+  {
+    "name": "lifecycle-codec-after-batch",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "de9f7ccfcf63540788c185fbe2d5e26939b60b16ee4b85cb2ffd8c37aa5a32e4"
+  },
+  {
+    "name": "lifecycle-codec-current-owner",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "0104af0bba92a9e89db571e3545a789ff62cbadb9c5706f5725345a39b6e6608"
+  },
+  {
+    "name": "lifecycle-codec-owned-boundaries",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "a3fd48c4db600b254396c9ac1d864eaba700b1f8e1a2066cb40c69ca2e13f44c"
+  },
+  {
+    "name": "connected-execution-first",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "f77a97c873697fbe8fe02c578f710ce38c45983a8b5523ef31ce2d325975c48c"
+  },
+  {
+    "name": "connected-execution-corrected",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "c988cd95f6b8a3037df452595c3cbdc7a8c141e03ee5c930300bf0627e945345"
+  },
+  {
+    "name": "public-prefix-first",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "df905802499f957c7b863447fdb00b6d023ea313628be5468dbbf712f738d21d"
+  },
+  {
+    "name": "public-prefix-after-install-types",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "a638f56176b95bd1f3ed613dcb10e9492a2fec9ede05962b7d61244daec61486"
+  },
+  {
+    "name": "public-prefix-current-install-types",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "94681490dec75546040f8c750f58bda1d9349d3f7ee083801fd65c9876594697"
+  },
+  {
+    "name": "lifecycle-codec-with-legacy",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "2",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "45007b7b77356dec64c97e35d011873e201b4ce55ddba1e1035f96329e6649ad"
+  },
+  {
+    "name": "public-prefix-current-owners",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "86c0fec01d33d1c7cbdc3a2c276759e7c37ad3da00a3fd0679b08bc4d24dc6a2"
+  },
+  {
+    "name": "public-prefix-compiled-fixtures",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "1",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "fbb235d03147b0f9350954b34a024158e8e4642ff1de31fa15f6af72535651a6"
+  },
+  {
+    "name": "cli-invocation-grammar",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "137f1b9e99d0ca43331fe5af82e13485b6b1881c9f717751a721bf188d0be38c"
+  },
+  {
+    "name": "explicit-shared-fullpass",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "1125a7aec217f8109a520baffca853f7ffbdfc24cf3b6c7a6f1e1eeeda33828b"
+  },
+  {
+    "name": "cli-current-state-grammar",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "86f912f7b5ae168759deb3b23e48b604f66918b34eefb06be9bda66f4d160f4b"
+  },
+  {
+    "name": "actual-retained-slot-prefix",
+    "exit": 101,
+    "counts": [],
+    "log_sha256": "78a8e018a82adc45f82b7bf761d7dff2d6925570a5f63f207de4a75558f5dfde"
+  },
+  {
+    "name": "qualified-current-slot-family",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "5",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "cc413431ec19c096bb1b307aa73dfd74ecf62dc69b0cd808123f9868447a2095"
+  },
+  {
+    "name": "current-prefix-invocation-matrix",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "5",
+        "2",
+        "0"
+      ]
+    ],
+    "log_sha256": "831eafd78f0d8c30c60067d2d9a1021e2c8780c3b6c4b1e89072b4d21437994d"
+  },
+  {
+    "name": "unselected-prefix-is-not-global-veto",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "9d37c14c483a3bcc0309411c9e4c19895e4dcb7f8914c6a415cc0bad27477a4f"
+  },
+  {
+    "name": "full-fmt-required",
+    "exit": 1,
+    "counts": [],
+    "log_sha256": "0f116bf4b5329cc893e3558e5d8792735fd19c9be329ff23f75a9da017bd723e"
+  },
+  {
+    "name": "implicit-native-builder-before-guard",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "34824833f71b9dc2ff2f94d951cc848097dccb900bd379b348d8408046cdf308"
+  },
+  {
+    "name": "authorable-implicit-builder-before-guard",
+    "exit": 101,
+    "counts": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "a7b5fe44f328fb6244dd38be15830d871ae7126a993acb0dad07b604551702be"
+  }
+]

@@ -5,8 +5,8 @@
 //! `LifecycleRun::begin` → `LifecycleStateStore::begin`, which replaces
 //! the whole run header on every invocation.
 
+use crate::state::current::ExecutionRecordStatus;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
 use super::{RUN_ID, execute_with, metadata, scratch, state};
 use crate::agent::tests::support::RecordingBackend;

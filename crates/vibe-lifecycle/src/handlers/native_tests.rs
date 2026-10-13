@@ -94,6 +94,7 @@ fn native_dispatch_converts_exact_context_and_reply_without_tasks() {
 fn compiler_native_is_refused_before_the_lifecycle_backend() {
     let dir = tempfile::tempdir().unwrap();
     let declaration = vibe_core::manifest::ExtensionDecl {
+        effects: None,
         id: "compile-native".into(),
         point: "compile:source".parse().unwrap(),
         handler: ExtensionHandler::Native {

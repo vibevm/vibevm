@@ -16,7 +16,9 @@ use vibe_lifecycle::{
     ExtensionProvider, ExtensionRegistryRow, HandlerExecution, HostIdentity, LifecycleRunError,
     LifecycleRunHandle, MechanismRegistry,
 };
-use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, SlotTargetRecord};
+use vibe_wire::generated::lifecycle_state_v2::e2::state::{
+    ExecutionRecordStatus, SlotTargetRecord,
+};
 use vibe_workspace::hooks::SystemProbe;
 use vibe_workspace::install::{
     ResolvedDep, SlotLifecycle, SlotLifecycleContext, SlotLifecycleTarget,
@@ -31,7 +33,8 @@ mod progress;
 mod reconcile;
 use envelope::{nonempty, slot_target};
 pub use plan::{
-    NoSlotLifecycleObserver, SlotLifecycleObserver, SlotLifecyclePlan, SlotLifecyclePlanEntry,
+    CapturedSlotTarget, NoSlotLifecycleObserver, SlotLifecycleObserver, SlotLifecyclePlan,
+    SlotLifecyclePlanEntry, plan_captured_slot_targets,
 };
 pub use progress::InstallProgress;
 

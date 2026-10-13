@@ -28,6 +28,7 @@ fn native_decl(
     mode: Option<&str>,
 ) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: id.to_owned(),
         point: "phase:build".parse().unwrap(),
         handler: ExtensionHandler::Native {
@@ -321,6 +322,7 @@ fn host_route_displacing_build_cargo_refuses_unlanded_transport() {
     let root = tempdir().unwrap();
     let mut owned = world(root.path(), Vec::new());
     owned.host.mechanisms.push(MechanismDecl {
+        effects: None,
         id: "cargo-alt".to_owned(),
         role: MechanismRole::Build,
         name: "cargo".to_owned(),

@@ -147,7 +147,15 @@ fn run_gate(evidence: &VerificationEvidence) -> Result<(), EvidenceError> {
             });
         }
     }
-    if !run.chain.contains(&run.requested) {
+    let full_pass = [
+        "validate", "install", "generate", "create", "build", "test", "verify",
+    ];
+    let admitted = if run.requested == "full-pass" {
+        run.chain.iter().map(String::as_str).eq(full_pass)
+    } else {
+        run.chain.contains(&run.requested)
+    };
+    if !admitted {
         return Err(EvidenceError::RequestedOutsideChain {
             requested: preview(&run.requested),
         });

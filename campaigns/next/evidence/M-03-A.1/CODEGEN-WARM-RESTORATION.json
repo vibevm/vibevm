@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/fast/git/v/.build/c4-first-agent-target/debug/xtask",
+    "codegen"
+  ],
+  "cwd": "/tmp",
+  "exit": 1,
+  "generator_binary_sha256": "b92b65e19a133101a7d9f5d8ea633857efc0568cc872813b1e1efd64e3111453",
+  "log_sha256": "f7b913d5e0568b40b3b606f4d88699677d7c55e03af81b6db4f74a4b0d8722a7",
+  "reuse_basis": "actual first successful codegen binary; generator source unchanged, JTD/registry inputs read at invocation; no hand generated edits"
+}

@@ -7,8 +7,8 @@
 use std::fs;
 use std::path::Path;
 
+use crate::state::current::{ExecutionRecordStatus, LifecycleState};
 use vibe_wire::generated::lifecycle::e1::context::{Project, RunAgentMode, World};
-use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
 
 use std::sync::Arc;
 

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "cwd": "/tmp",
+  "observed_error": "Not a git repository. Use --no-index to compare two paths outside a working tree",
+  "individual_exit": "not captured",
+  "composite_exec_exit": 0,
+  "not_acceptance_evidence": true
+}

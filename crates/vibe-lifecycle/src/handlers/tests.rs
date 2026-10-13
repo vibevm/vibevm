@@ -68,6 +68,7 @@ fn row_at(root: &Path, handler: ExtensionHandler, point: &str) -> crate::Extensi
                 content_hash: None,
             },
             declarations: vec![ExtensionDecl {
+                effects: None,
                 id: "handler".into(),
                 point: point.parse().unwrap(),
                 handler,

@@ -16,8 +16,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#VERIFY-CURRENT-PREFIX");
 
+use crate::state::current::StateInputMeasurement;
 use specmark::spec;
-use vibe_wire::generated::lifecycle_state::StateInputMeasurement;
 use vibe_wire::generated::shared::{EvidenceStatus, InputMeasurement};
 
 use crate::agent::AgentBackend;

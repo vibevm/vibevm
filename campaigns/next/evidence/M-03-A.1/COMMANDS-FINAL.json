@@ -1,0 +1,1640 @@
+[
+  {
+    "name": "core-effects-first",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "manifest::extension::effects::m_03_a_1_cases::actual_authored_effects_are_closed_canonical_and_never_default_safe",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "ce22bb870dc2d8e9e763fae30b50dbdcacefcd1f4a702e025f45d74427223d6a"
+  },
+  {
+    "name": "core-effects-corrected",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "manifest::extension::effects::m_03_a_1_cases::actual_authored_effects_are_closed_canonical_and_never_default_safe",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "f92c2b4312764231072c9cb6f5bd696fa743cc0cdc523983a2c7770624714735"
+  },
+  {
+    "name": "codegen-e2-first",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "run",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "xtask",
+      "--bin",
+      "xtask",
+      "--",
+      "codegen"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [],
+    "log_sha256": "69a1aad1119dfd5208c51489d44d32a72801d2dfebfb124ebe17ee54edc142cd"
+  },
+  {
+    "name": "codegen-e2-separated",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "run",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "xtask",
+      "--bin",
+      "xtask",
+      "--",
+      "codegen"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "8ada8e46ac1c9013de83469ae4d2aa9df5fac75c898d2e0e36089080a5bc346f"
+  },
+  {
+    "name": "lifecycle-codec-first",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "2b9527a5d9f15bba82504216a8409c09d936aa3018cd5942c13d108273c3acd7"
+  },
+  {
+    "name": "lifecycle-codec-after-batch",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "de9f7ccfcf63540788c185fbe2d5e26939b60b16ee4b85cb2ffd8c37aa5a32e4"
+  },
+  {
+    "name": "lifecycle-codec-current-owner",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "0104af0bba92a9e89db571e3545a789ff62cbadb9c5706f5725345a39b6e6608"
+  },
+  {
+    "name": "lifecycle-codec-owned-boundaries",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "a3fd48c4db600b254396c9ac1d864eaba700b1f8e1a2066cb40c69ca2e13f44c"
+  },
+  {
+    "name": "connected-execution-first",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_execution::completed_production_builds_then_verify_observes_without_producer_dispatch",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "f77a97c873697fbe8fe02c578f710ce38c45983a8b5523ef31ce2d325975c48c"
+  },
+  {
+    "name": "connected-execution-corrected",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_execution::completed_production_builds_then_verify_observes_without_producer_dispatch",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "c988cd95f6b8a3037df452595c3cbdc7a8c141e03ee5c930300bf0627e945345"
+  },
+  {
+    "name": "connected-execution-absolute-artifacts",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_execution::completed_production_builds_then_verify_observes_without_producer_dispatch",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "db7d0eba6f1da9fb46ef705f57a70bd837fcf4756b76ca36892890846eb0b962"
+  },
+  {
+    "name": "lifecycle-codec-deciding",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "cb08f8b23166dd486636b6d7d11de7419e37607025b563ea6c7132e3bce5f1e1"
+  },
+  {
+    "name": "public-prefix-first",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "df905802499f957c7b863447fdb00b6d023ea313628be5468dbbf712f738d21d"
+  },
+  {
+    "name": "legacy-execution-vector",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "state::tests::declaration::the_execution_fingerprint_still_matches_the_legacy_reference",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "0cd3c1d53ccd38869ddf944a6901e562302abab2af51ddc506257927ad2c639a"
+  },
+  {
+    "name": "connected-invocation-family",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_execution::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "3",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "7317f99a1a3d8d0f7b24e947bc265e2060b33a9f9ec1a2027effcd0dee575711"
+  },
+  {
+    "name": "public-prefix-after-install-types",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "a638f56176b95bd1f3ed613dcb10e9492a2fec9ede05962b7d61244daec61486"
+  },
+  {
+    "name": "public-prefix-current-install-types",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "94681490dec75546040f8c750f58bda1d9349d3f7ee083801fd65c9876594697"
+  },
+  {
+    "name": "lifecycle-codec-with-legacy",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "2",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "45007b7b77356dec64c97e35d011873e201b4ce55ddba1e1035f96329e6649ad"
+  },
+  {
+    "name": "lifecycle-codec-legacy-boundary",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "3",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "5027bd206c0c87b9be678d89ed34227f68d3f84b8bfaf296f518c82aa6172fa7"
+  },
+  {
+    "name": "public-prefix-current-owners",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "86c0fec01d33d1c7cbdc3a2c276759e7c37ad3da00a3fd0679b08bc4d24dc6a2"
+  },
+  {
+    "name": "public-prefix-compiled-fixtures",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "1",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "fbb235d03147b0f9350954b34a024158e8e4642ff1de31fa15f6af72535651a6"
+  },
+  {
+    "name": "public-prefix-strict-reply",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "62e1430941f44966abf696655bcab7fa24798fe8acb48db236124f3b545abe1d"
+  },
+  {
+    "name": "scoped-current-prefix",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::scoped_member_build_verify_reuse_only_its_completed_production",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "1b80ccadfbfb13e1084e8f1dae98c04451de677775ae6a8ec4054fbf445f040f"
+  },
+  {
+    "name": "cli-invocation-grammar",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "cli::lifecycle::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "137f1b9e99d0ca43331fe5af82e13485b6b1881c9f717751a721bf188d0be38c"
+  },
+  {
+    "name": "explicit-shared-fullpass",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::explicit_shared_full_pass_causally_produces_compiles_and_observes",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "1125a7aec217f8109a520baffca853f7ffbdfc24cf3b6c7a6f1e1eeeda33828b"
+  },
+  {
+    "name": "cli-current-state-grammar",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "cli::lifecycle::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "86f912f7b5ae168759deb3b23e48b604f66918b34eefb06be9bda66f4d160f4b"
+  },
+  {
+    "name": "explicit-shared-fullpass-carrier",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::explicit_shared_full_pass_causally_produces_compiles_and_observes",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "9adf65c572dd5ced2c78c763e0365c397a35b002269cf22300f9b6f8a8fd4d6c"
+  },
+  {
+    "name": "cli-owned-current-fixture",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "cli::lifecycle::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "a6216ca549b520cc339130d5d4d56545204024dfb76444197c85bf1b9c5a3453"
+  },
+  {
+    "name": "wire-fullpass-causal-chain",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-wire",
+      "--lib",
+      "behaviour::verification_evidence::tests::m_03_a_1_full_pass_requires_the_exact_causal_chain_without_fake_phase",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "3e54591dc9df09e19f99d21700907a0cbbaee7c6d457a3ae864545bed405246e"
+  },
+  {
+    "name": "actual-retained-slot-prefix",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [],
+    "log_sha256": "78a8e018a82adc45f82b7bf761d7dff2d6925570a5f63f207de4a75558f5dfde"
+  },
+  {
+    "name": "qualified-current-slot-family",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "5",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "cc413431ec19c096bb1b307aa73dfd74ecf62dc69b0cd808123f9868447a2095"
+  },
+  {
+    "name": "exact-legacy-slot-hook",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::captured_legacy_slot_hook_is_unknown_before_any_install_or_handler_effect",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "f4a8fa8e4089cc0b26d527966ff7306cae0a7c45c191823ce967752d85073c9e"
+  },
+  {
+    "name": "independent-current-frames",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_execution::effect_and_completion_frames_match_independent_longhand_and_keep_invocation_separate",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "c7b3de9c79c9c6305ca4f20e7942158258c71ed8b4119bf714ce2ca12a2e3c4d"
+  },
+  {
+    "name": "current-prefix-invocation-matrix",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "5",
+        "2",
+        "0"
+      ]
+    ],
+    "log_sha256": "831eafd78f0d8c30c60067d2d9a1021e2c8780c3b6c4b1e89072b4d21437994d"
+  },
+  {
+    "name": "typed-current-prefix-matrix",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "7",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "8e6df5fbd3a464fb4ec956a03472d945a1edd0c5c10a9cd5d1834172a2fb8423"
+  },
+  {
+    "name": "unselected-prefix-is-not-global-veto",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::unselected_phase_rows_and_build_target_do_not_veto_selected_validation",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "9d37c14c483a3bcc0309411c9e4c19895e4dcb7f8914c6a415cc0bad27477a4f"
+  },
+  {
+    "name": "final-current-codec",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "runner::invocation::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "4",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "eda036c88305ce9634e3a66c491824b01b57e01981a519274504a9e991a3eb34"
+  },
+  {
+    "name": "role-chain-compat",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "chain::tests::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "6",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "994c96b273f41693ee89aaabc0ef0f3c52feaab0e22e2aca5f97870edc248718"
+  },
+  {
+    "name": "legacy-declaration-vector",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "state::tests::declaration::the_declaration_framing_matches_an_independent_longhand_recompute",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "ce9f99cc21f841aaf0c3edff665caf60cc5a2d0ce9de447dbeaf8c1daa947954"
+  },
+  {
+    "name": "prepared-build-chain-compat",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::a_build_request_prepares_the_exact_chain",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "238e1933e06d3ec37a44552acaa3914b71f224a38586fcdabf16bf342b22ebea"
+  },
+  {
+    "name": "reserved-build-chain-compat",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::preselected_identity_keeps_id_and_allocates_no_scratch",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "b3160ba9abbfdf61f36428d58274435bc30bd740074e4a6de19865a1aa2e395e"
+  },
+  {
+    "name": "unselected-target-after-caller-fix",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::unselected_phase_rows_and_build_target_do_not_veto_selected_validation",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "a4516d12b8817592e33d1ab78e3ea08d3a418163d42c9a130d08b42d96dced71"
+  },
+  {
+    "name": "current-production-cli",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "build",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [],
+    "log_sha256": "63d3c4a1c9f3758dd7e8eac26da02e19e0bb8d293f33b9f45d5a3935e4b34b4d"
+  },
+  {
+    "name": "no-lazy-handler-tool",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "dispatch::backends::m_03_a_1_cases::ordinary_verify_missing_tool_refuses_before_build_and_preserves_owned_tree",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "d3d1573ad0a0024b953b1364891020d51375ee16bc0faeb10973a221beb927d1"
+  },
+  {
+    "name": "normal-codegen-current",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "run",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "xtask",
+      "--",
+      "codegen"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [],
+    "log_sha256": "13b52766dbefcc04010a4c33da1a61adb48313502318c6407a24124f34421970"
+  },
+  {
+    "name": "final-public-invocation-family",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "9",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "9b9176e7cf1af96ebed69f75f944180a93472197b678d276778ad34ba81b2880"
+  },
+  {
+    "name": "deciding-production-cli",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "build",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [],
+    "log_sha256": "3b3a12c4295d4d407e33b26fc1a618fd025b54e3a9b0ab05fc4a006e87b9d4f6"
+  },
+  {
+    "name": "full-fmt-required",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "fmt",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 1,
+    "test_summaries": [],
+    "log_sha256": "0f116bf4b5329cc893e3558e5d8792735fd19c9be329ff23f75a9da017bd723e"
+  },
+  {
+    "name": "implicit-native-builder-before-guard",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::implicit_native_compiler_route_with_unknown_effects_refuses_before_preparation",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "34824833f71b9dc2ff2f94d951cc848097dccb900bd379b348d8408046cdf308"
+  },
+  {
+    "name": "authorable-implicit-builder-before-guard",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::implicit_native_compiler_route_with_unknown_effects_refuses_before_preparation",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 101,
+    "test_summaries": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "log_sha256": "a7b5fe44f328fb6244dd38be15830d871ae7126a993acb0dad07b604551702be"
+  },
+  {
+    "name": "native-builder-classified-before-preparation",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "test",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "command::tests::m_03_a_1_cases::",
+      "--",
+      "--nocapture"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [
+      [
+        "ok",
+        "10",
+        "0",
+        "0"
+      ]
+    ],
+    "log_sha256": "9811eaef9a065549851b749ff167b23551127a51a1bdb394211911347b8f85fa"
+  },
+  {
+    "name": "native-prefix-deciding-cli",
+    "command": [
+      "/home/olegchir/.cargo/bin/cargo",
+      "+nightly",
+      "build",
+      "--manifest-path",
+      "/fast/git/v/vibevm-next/Cargo.toml",
+      "--locked",
+      "--offline",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe"
+    ],
+    "cwd": "/tmp",
+    "env": {
+      "RUSTUP_AUTO_INSTALL": "0",
+      "CARGO_NET_OFFLINE": "true",
+      "CARGO_TARGET_DIR": "/fast/git/v/.build/c4-first-agent-target"
+    },
+    "exit": 0,
+    "test_summaries": [],
+    "log_sha256": "99f430265bc7867327d37b7b70ca22d2e268b9a1e39a33081e0a3bf5f50aceb2"
+  }
+]

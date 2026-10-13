@@ -44,6 +44,7 @@ pub(super) const RESERVED_OWNER: &str = "org.vibevm/vibe";
 /// `protocol = 1`, because the provider protocol starts at 1 and nothing has
 /// revised it.
 struct BuiltinDescriptor {
+    effects: Option<&'static [vibe_core::manifest::DeclaredEffect]>,
     /// The reserved provider id — the `#…` half of this row's identity, and
     /// the `handler = { kind = "builtin", name = … }` spelling an executor
     /// dispatches on.
@@ -97,6 +98,7 @@ struct BuiltinDescriptor {
 // otherwise two providers of one key would have to share one schema identity.
 const BUILTINS: [BuiltinDescriptor; 16] = [
     BuiltinDescriptor {
+        effects: Some(&[vibe_core::manifest::DeclaredEffect::BuildArtifact]),
         id: "cargo",
         role: MechanismRole::Build,
         name: "cargo",
@@ -104,6 +106,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/build_cargo.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "static-skill",
         role: MechanismRole::Package,
         name: "static-skill",
@@ -111,6 +114,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/package_static_skill.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "agent-plugin",
         role: MechanismRole::Package,
         name: "agent-plugin",
@@ -118,6 +122,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/package_agent_plugin.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "vibe-bin",
         role: MechanismRole::Deploy,
         name: "vibe-bin",
@@ -125,6 +130,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/deploy_vibe_bin.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "windows-zip",
         role: MechanismRole::Package,
         name: "windows-zip",
@@ -134,6 +140,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
     // §6.3.0.2's three client-plugin PROJECTIONS. Package role, engine-fresh,
     // and the rows whose `id` deliberately differs from their `name`.
     BuiltinDescriptor {
+        effects: None,
         id: "claude-plugin-projection",
         role: MechanismRole::Package,
         name: "claude-plugin",
@@ -141,6 +148,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/package_claude_plugin_projection.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "codex-plugin-projection",
         role: MechanismRole::Package,
         name: "codex-plugin",
@@ -148,6 +156,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/package_codex_plugin_projection.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "opencode-plugin-projection",
         role: MechanismRole::Package,
         name: "opencode-plugin",
@@ -157,6 +166,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
     // §6.3.0.5's three standalone-skill destinations, then §6.3.0.7–8's three
     // plugin destinations. Deploy role, provider-fresh.
     BuiltinDescriptor {
+        effects: None,
         id: "claude-skill",
         role: MechanismRole::Deploy,
         name: "claude-skill",
@@ -164,6 +174,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/deploy_claude_skill.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "codex-skill",
         role: MechanismRole::Deploy,
         name: "codex-skill",
@@ -171,6 +182,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/deploy_codex_skill.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "opencode-skill",
         role: MechanismRole::Deploy,
         name: "opencode-skill",
@@ -178,6 +190,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/deploy_opencode_skill.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "claude-plugin",
         role: MechanismRole::Deploy,
         name: "claude-plugin",
@@ -185,6 +198,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/deploy_claude_plugin.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "codex-plugin",
         role: MechanismRole::Deploy,
         name: "codex-plugin",
@@ -192,6 +206,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/deploy_codex_plugin.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "opencode-plugin",
         role: MechanismRole::Deploy,
         name: "opencode-plugin",
@@ -200,6 +215,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
     },
     // §13.1's launcher-delivery pair, appended after every historical row.
     BuiltinDescriptor {
+        effects: None,
         id: "static-file",
         role: MechanismRole::Package,
         name: "static-file",
@@ -207,6 +223,7 @@ const BUILTINS: [BuiltinDescriptor; 16] = [
         config_schema: "schemas/mechanism/package_static_file.jtd.json",
     },
     BuiltinDescriptor {
+        effects: None,
         id: "vibe-opt-launcher",
         role: MechanismRole::Deploy,
         name: "vibe-opt-launcher",
@@ -267,6 +284,10 @@ pub fn builtin_mechanism_source() -> BuiltinMechanismSource {
         declarations: BUILTINS
             .iter()
             .map(|builtin| MechanismDecl {
+                effects: builtin.effects.map(|values| {
+                    vibe_core::manifest::DeclaredEffects::new(values.to_vec())
+                        .expect("closed engine effect descriptor")
+                }),
                 id: builtin.id.to_owned(),
                 role: builtin.role,
                 name: builtin.name.to_owned(),

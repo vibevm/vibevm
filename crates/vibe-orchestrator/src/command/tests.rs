@@ -93,7 +93,7 @@ fn preselected_identity_keeps_id_and_allocates_no_scratch() {
     assert_eq!(prepared.metadata().started, identity.started);
     assert_eq!(
         prepared.metadata().chain,
-        ["validate", "install", "generate", "build"]
+        ["validate", "install", "generate", "create", "build"]
     );
     assert_eq!(prepared.metadata().selected, ".");
     assert!(
@@ -257,19 +257,20 @@ fn a_build_request_prepares_the_exact_chain() {
         Phase::Validate,
         Phase::Install,
         Phase::Generate,
+        Phase::Create,
         Phase::Build,
     ];
     assert_eq!(prepared.phases, expected, "the derived phases");
     assert_eq!(
         prepared.chain,
-        ["validate", "install", "generate", "build"],
+        ["validate", "install", "generate", "create", "build"],
         "the derived string chain"
     );
     // Through the REQUIRED accessor: a surface pins the derived chain by
     // reading `metadata()`, never by supplying one.
     assert_eq!(
         prepared.metadata().chain,
-        ["validate", "install", "generate", "build"],
+        ["validate", "install", "generate", "create", "build"],
         "the metadata carries the SAME derived chain"
     );
     assert_eq!(prepared.metadata().requested, "build");
@@ -549,3 +550,6 @@ fn a_package_free_command_builds_zero_package_sources() {
         "the empty-world fast path returns BEFORE any package source is built",
     );
 }
+
+#[path = "m_03_a_1_cases.rs"]
+mod m_03_a_1_cases;

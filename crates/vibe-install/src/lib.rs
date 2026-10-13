@@ -59,8 +59,9 @@ pub use error::Error;
 pub use events::{NullObserver, PlanEvent, PlanObserver};
 pub use fetched::{Fetched, NodeInstallMeta};
 pub use lifecycle::{
-    InstallProgress, InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver,
-    SlotLifecyclePlan, SlotLifecyclePlanEntry, SlotLifecycleReport,
+    CapturedSlotTarget, InstallProgress, InstallSlotLifecycle, NoSlotLifecycleObserver,
+    SlotLifecycleObserver, SlotLifecyclePlan, SlotLifecyclePlanEntry, SlotLifecycleReport,
+    plan_captured_slot_targets,
 };
 pub use plan::{
     InstallRequest, Plan, PlannedInstall, plan, plan_prepared_with_spec_format,

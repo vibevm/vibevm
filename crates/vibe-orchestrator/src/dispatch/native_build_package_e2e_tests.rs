@@ -311,6 +311,7 @@ fn declaration(
     relative: PathBuf,
 ) -> MechanismDecl {
     MechanismDecl {
+        effects: None,
         id: id.to_owned(),
         role,
         name: name.to_owned(),

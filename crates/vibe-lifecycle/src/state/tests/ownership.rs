@@ -8,8 +8,8 @@
 
 use std::fs;
 
+use crate::state::current::{ExecutionRecordStatus, LifecycleState};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
 
 use super::adoption::{CHAIN, FRESH, KEY, STARTED, candidate_dirs, chain, parked_at, select_as};
 use super::{RUN_ID, lease, record_for};

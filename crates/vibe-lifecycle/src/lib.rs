@@ -112,7 +112,9 @@ pub use agent::{
     AgentBackend, AgentCompletion, AgentError, AgentRequest, AgentUsage, NoAgentBackend,
     PreparedAgent, PromptRequest,
 };
-pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
+pub use chain::{
+    InvocationIntent, LifecycleRequest, LifecycleStep, inclusive_chain, invocation_chain,
+};
 pub use delegation::{
     Delegation, DelegationError, OUTBOX_RELATIVE, TASK_CAP, outbox_task_path, task_filename,
 };
@@ -155,9 +157,9 @@ pub use registry::{
     collect_extensions, collect_extensions_with_presets, collect_mechanisms, lane_owner_host,
 };
 pub use runner::{
-    ExecutionReuse, ExecutionTransition, FailedExecutionTransition, LifecycleRun,
-    LifecycleRunError, LifecycleRunHandle, REMOVED_DECLARATION, REMOVED_SLOT_DECLARATION,
-    UNKNOWN_PROVENANCE,
+    ExecutionReuse, ExecutionTransition, FailedExecutionTransition, InvocationRefusal,
+    LifecycleRun, LifecycleRunError, LifecycleRunHandle, REMOVED_DECLARATION,
+    REMOVED_SLOT_DECLARATION, UNKNOWN_PROVENANCE, validate_invocation_prefix,
 };
 pub use state::{
     ExistingSubmissionInspection, FingerprintError, InstallEnteredStage, InstallStageError,

@@ -51,7 +51,7 @@ fn prepared(
 /// measures a clean tree, so a refusal here is a bug, not an outcome.
 fn measured(
     manifest: &crate::state::PreparedInputManifest,
-) -> &vibe_wire::generated::lifecycle_state::StateDigestWitness {
+) -> &crate::state::current::StateDigestWitness {
     manifest.measured().unwrap()
 }
 

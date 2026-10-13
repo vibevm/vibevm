@@ -8,9 +8,9 @@
 
 use std::path::Path;
 
+use crate::state::current::ExecutionRecordStatus;
 use specmark::spec;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
 use super::error::LifecycleStateError;
 use super::io;

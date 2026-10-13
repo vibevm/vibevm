@@ -1,0 +1,38 @@
+[
+  {
+    "message": "error[E0425]: cannot find value `prepared_inputs` in this scope",
+    "location": "--> crates/vibe-lifecycle/src/runner.rs:446:25"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "location": "--> crates/vibe-lifecycle/src/artifacts/observe_tests.rs:82:50"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "location": "--> crates/vibe-lifecycle/src/runner/hosted.rs:66:77"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "location": "--> crates/vibe-lifecycle/src/runner/hosted.rs:174:32"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "location": "--> crates/vibe-lifecycle/src/runner/hosted.rs:209:24"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "location": "--> crates/vibe-lifecycle/src/runner/tests/artifacts.rs:567:54"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "location": "--> crates/vibe-lifecycle/src/runner/tests/artifacts.rs:580:59"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "location": "--> crates/vibe-lifecycle/src/runner/tests/artifacts.rs:585:55"
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "location": "--> crates/vibe-lifecycle/src/state/tests/inputs.rs:55:5"
+  }
+]

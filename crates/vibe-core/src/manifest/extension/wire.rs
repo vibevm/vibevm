@@ -20,6 +20,8 @@ const POINT_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#POINT
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct ExtensionDeclWire {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    effects: Option<super::DeclaredEffects>,
     id: String,
     point: String,
     handler: ExtensionHandlerWire,
@@ -203,6 +205,7 @@ impl TryFrom<ExtensionDeclWire> for ExtensionDecl {
             )
         })?;
         let extension = Self {
+            effects: wire.effects,
             id: wire.id,
             point,
             handler: wire.handler.into(),
@@ -228,6 +231,7 @@ impl TryFrom<ExtensionDecl> for ExtensionDeclWire {
     fn try_from(extension: ExtensionDecl) -> Result<Self, Self::Error> {
         extension.validate()?;
         Ok(Self {
+            effects: extension.effects,
             id: extension.id,
             point: extension.point.to_string(),
             handler: extension.handler.into(),

@@ -1,0 +1,13 @@
+{
+  "task": "M-03-A.1",
+  "source_manifest": "e3a1178a26c4cad8589591355142c5a8756e891cb36fe2829f6ce631501d0a90",
+  "generation_exit": 0,
+  "actual_host_resolution_passed": false,
+  "head_unresolved": 0,
+  "candidate_unresolved": 1716,
+  "files": [
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+    "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+  ],
+  "cause": "New top-level p clauses follow section; actual XML dialect rejects documents despite generic XML parsing"
+}

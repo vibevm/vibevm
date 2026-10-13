@@ -1,6 +1,6 @@
 //! Fixed-owner transition only; generic reserved-run inspection stays strict.
 use super::*;
-use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
+use vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecordStatus;
 
 /// A different header can be replaced only after independent C1 correlation
 /// and the outcome owner's exact marker/report validation under the same lease.

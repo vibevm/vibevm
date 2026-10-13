@@ -1,0 +1,33 @@
+{
+  "request": {
+    "projectId": "project.vibevm-next",
+    "contextId": "context.vibevm-next.next",
+    "operation": "project.pause.v1",
+    "clientRequestId": "first-agent-m03-a1-capacity-pause-20261013-2",
+    "sessionId": "session.6957afec-5e87-4419-a303-df29a1e751d0",
+    "expectedRevision": "86",
+    "reasonMarkdown": "First Agent authorized recovery of exact same task/thread after authoritative Codex server_overloaded capacity failure. No task replay or source change; continue retained work."
+  },
+  "http": 200,
+  "result": {
+    "ok": true,
+    "value": {
+      "operation": "project.pause.v1",
+      "execution": {
+        "projectId": "project.vibevm-next",
+        "contextId": "context.vibevm-next.next",
+        "state": "paused",
+        "sessionId": "session.6957afec-5e87-4419-a303-df29a1e751d0",
+        "processEpoch": "profile.codex.local:1:c9f2f3a5-e13f-4ac5-902c-25221ab80443",
+        "pendingAction": null,
+        "lastAction": {
+          "action": "pause",
+          "clientRequestId": "first-agent-m03-a1-capacity-pause-20261013-2",
+          "observation": "settled"
+        },
+        "revision": "88",
+        "updatedAt": "2026-10-13T08:40:37.251Z"
+      }
+    }
+  }
+}

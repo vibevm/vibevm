@@ -1,0 +1,28 @@
+{
+  "task": "M-03-A.1",
+  "state": "UNSTAGED_CANDIDATE_SOURCE_STOPPED",
+  "accepted": false,
+  "source_manifest": "SOURCE-CANDIDATE.json",
+  "report": "CANDIDATE-REPORT.md",
+  "deciding_public_cases": "10/10",
+  "distinct_new_nonignored_cases": 22,
+  "cli_processes": 6,
+  "cli_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "binary_sha256": "dbae2643e9fdaeff0e1d7a6dc9b459cb98053c72f483383ba0a1d7ae88f3313e",
+  "root_owns": [
+    "specmap",
+    "review",
+    "acceptance",
+    "commit"
+  ],
+  "last_consumed_sequence": "1399",
+  "doc_layout_correction": "DOC-DIALECT-CORRECTION.json",
+  "root_actual_dialect_specmap": "pending Root rerun"
+}

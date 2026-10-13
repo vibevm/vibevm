@@ -1,0 +1,277 @@
+[
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/agent/tests/hosted.rs",
+    "line": 242
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/observations.rs",
+    "line": 60
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/observations.rs",
+    "line": 72
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/verify/artifacts.rs",
+    "line": 124
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/verify/artifacts.rs",
+    "line": 132
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/verify/inputs.rs",
+    "line": 62
+  },
+  {
+    "message": "error[E0277]: expected an `FnOnce(&vibe_wire::generated::lifecycle_state::StateDigestWitness)` closure, found `fn(&StateDigestWitness) -> DigestWitness {witness}`",
+    "path": "crates/vibe-lifecycle/src/runner/verify/inputs.rs",
+    "line": 130
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/verify/inputs.rs",
+    "line": 147
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 290
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 301
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 321
+  },
+  {
+    "message": "error[E0063]: missing field `completion_basis` in initializer of `vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecord`",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 327
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 345
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 371
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 384
+  },
+  {
+    "message": "error[E0063]: missing field `completion_basis` in initializer of `vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecord`",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 387
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 466
+  },
+  {
+    "message": "error[E0063]: missing field `completion_basis` in initializer of `vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecord`",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 465
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 484
+  },
+  {
+    "message": "error[E0063]: missing field `completion_basis` in initializer of `vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecord`",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 498
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 66
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 104
+  },
+  {
+    "message": "error[E0063]: missing field `completion_basis` in initializer of `vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecord`",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 103
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 146
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 172
+  },
+  {
+    "message": "error[E0063]: missing field `completion_basis` in initializer of `vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecord`",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 171
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 207
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/trace_sticky.rs",
+    "line": 35
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/trace_sticky.rs",
+    "line": 79
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/trace_sticky.rs",
+    "line": 93
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/selected_owner.rs",
+    "line": 70
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/measurement.rs",
+    "line": 183
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/measurement.rs",
+    "line": 210
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/artifacts.rs",
+    "line": 83
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/artifacts.rs",
+    "line": 162
+  },
+  {
+    "message": "error[E0277]: can't compare `vibe_wire::generated::lifecycle_state_v2::e2::state::StateArtifact` with `vibe_wire::generated::lifecycle_state::StateArtifact`",
+    "path": "crates/vibe-lifecycle/src/runner/tests/artifacts.rs",
+    "line": 181
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/artifacts.rs",
+    "line": 284
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/artifacts.rs",
+    "line": 436
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/artifacts.rs",
+    "line": 467
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests/artifacts.rs",
+    "line": 498
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests.rs",
+    "line": 210
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests.rs",
+    "line": 248
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests.rs",
+    "line": 278
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests.rs",
+    "line": 282
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests.rs",
+    "line": 321
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests.rs",
+    "line": 328
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests.rs",
+    "line": 370
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/tests.rs",
+    "line": 471
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/install_stage.rs",
+    "line": 116
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/store.rs",
+    "line": 136
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/store.rs",
+    "line": 124
+  },
+  {
+    "message": "error[E0063]: missing field `completion_basis` in initializer of `vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecord`",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 47
+  },
+  {
+    "message": "error[E0063]: missing field `completion_basis` in initializer of `vibe_wire::generated::lifecycle_state_v2::e2::state::ExecutionRecord`",
+    "path": "crates/vibe-lifecycle/src/state/tests.rs",
+    "line": 114
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests.rs",
+    "line": 474
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 341
+  }
+]

@@ -167,6 +167,7 @@ fn registry_with(
         )
     });
     let declaration = ExtensionDecl {
+        effects: None,
         id: "produce".into(),
         point: "phase:create".parse().unwrap(),
         handler: ExtensionHandler::Agent {

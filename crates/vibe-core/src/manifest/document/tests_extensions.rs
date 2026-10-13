@@ -579,6 +579,7 @@ ref = "org.demo/pkg#x"
 fn programmatic_declarations_revalidate_before_validation_and_serialization() {
     let mut manifest = Manifest::new_project("demo", "0.1.0");
     manifest.extensions.push(ExtensionDecl {
+        effects: None,
         id: "programmatic".into(),
         point: "phase:build".parse().unwrap(),
         handler: ExtensionHandler::Builtin { name: "log".into() },

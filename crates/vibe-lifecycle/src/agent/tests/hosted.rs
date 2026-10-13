@@ -9,9 +9,9 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
+use crate::state::current::{ExecutionRecordStatus, LifecycleState};
 use vibe_spec::SelectedPackage;
 use vibe_wire::generated::lifecycle::e1::context::{Project, RunAgentMode, World};
-use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
 
 use crate::agent::tests::support::{PROMPT, TWO_OUTPUTS, row_at};
 use crate::agent::{

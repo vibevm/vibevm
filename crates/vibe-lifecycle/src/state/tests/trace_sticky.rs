@@ -9,8 +9,8 @@
 use std::fs;
 use std::path::Path;
 
+use crate::state::current::ExecutionRecordStatus;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
 use super::{RUN_ID, lease, record_for};
 use crate::{LifecycleStateStore, SupersededTrace, select_run_identity};

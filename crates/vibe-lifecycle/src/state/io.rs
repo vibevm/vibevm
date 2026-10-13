@@ -12,15 +12,15 @@
 
 use std::path::{Path, PathBuf};
 
+use super::current::LifecycleState;
 use specmark::spec;
 use vibe_safefs::Project;
-use vibe_wire::generated::lifecycle_state::LifecycleState;
 
 use super::error::LifecycleStateError;
 use super::store::LifecycleStateStore;
 use super::validate::validate_state;
 
-const SCHEMA: u32 = 1;
+const SCHEMA: u32 = 2;
 
 /// The bounded-read ceiling for `.vibe/lifecycle.toml` (PROP-054
 /// `##PHASE-STATE-HOME`, R7.4 §2.2): 8 MiB. A lifecycle state is freshness
@@ -111,17 +111,50 @@ pub(crate) fn decode(bytes: &[u8], path: &Path) -> Result<LifecycleState, Lifecy
     let text = std::str::from_utf8(bytes).map_err(|_| LifecycleStateError::NotUtf8 {
         path: path.to_path_buf(),
     })?;
-    let state: LifecycleState =
+    let value: toml::Value =
         toml::from_str(text).map_err(|error| LifecycleStateError::Malformed {
             path: path.to_path_buf(),
             reason: error.to_string(),
         })?;
-    if state.schema != SCHEMA {
+    let epoch = value
+        .get("schema")
+        .and_then(toml::Value::as_integer)
+        .and_then(|n| u32::try_from(n).ok())
+        .ok_or_else(|| LifecycleStateError::Malformed {
+            path: path.into(),
+            reason: "state schema must be an unsigned epoch".into(),
+        })?;
+    let state: LifecycleState = if epoch == 1 {
+        // Strict frozen DTO FIRST: e1 cannot smuggle a current completion basis.
+        let legacy: vibe_wire::generated::lifecycle_state::LifecycleState = value
+            .try_into()
+            .map_err(|error: toml::de::Error| LifecycleStateError::Malformed {
+                path: path.into(),
+                reason: error.to_string(),
+            })?;
+        let value =
+            serde_json::to_value(legacy).map_err(|error| LifecycleStateError::Malformed {
+                path: path.into(),
+                reason: error.to_string(),
+            })?;
+        // Projection is memory-only and preserves the actual legacy epoch.
+        serde_json::from_value(value).map_err(|error| LifecycleStateError::Malformed {
+            path: path.into(),
+            reason: error.to_string(),
+        })?
+    } else if epoch == SCHEMA {
+        value
+            .try_into()
+            .map_err(|error: toml::de::Error| LifecycleStateError::Malformed {
+                path: path.into(),
+                reason: error.to_string(),
+            })?
+    } else {
         return Err(LifecycleStateError::Unsupported {
             path: path.to_path_buf(),
-            schema: state.schema,
+            schema: epoch,
         });
-    }
+    };
     validate_state(&state).map_err(|reason| LifecycleStateError::Invariant {
         path: path.to_path_buf(),
         reason,

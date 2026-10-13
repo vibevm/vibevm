@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 
 use clap::Parser;
 use specmark::verifies;
-use vibe_wire::generated::lifecycle_state::{LifecycleState, StateRun};
+use vibe_wire::generated::lifecycle_state_v2::e2::state::{State as LifecycleState, StateRun};
 
 use super::joined_run_id;
 use crate::cli::{Cli, Command};

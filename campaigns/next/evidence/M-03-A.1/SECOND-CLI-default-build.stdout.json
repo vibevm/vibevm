@@ -1,0 +1,75 @@
+{
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "create",
+    "build"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#produce",
+      "phase": "create",
+      "point": "phase:create",
+      "provider": "org.demo/consumer",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    },
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#compile",
+      "phase": "build",
+      "point": "phase:build",
+      "provider": "org.demo/consumer",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": [],
+  "requested": "build"
+}
+{
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "create",
+    "build"
+  ],
+  "command": "lifecycle",
+  "contributions": [
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#produce",
+      "phase": "create",
+      "point": "phase:create",
+      "provider": "org.demo/consumer",
+      "status": "fresh",
+      "tier": "host-declaration",
+      "version": "1.0.0"
+    },
+    {
+      "handler": "script",
+      "key": "org.demo/consumer#compile",
+      "phase": "build",
+      "point": "phase:build",
+      "provider": "org.demo/consumer",
+      "status": "fail",
+      "tier": "host-declaration",
+      "message": "extension `org.demo/consumer#compile` handler failed: extension `org.demo/consumer#compile` exited nonzero (Some(1)); reply is ignorederror: rustup could not choose a version of rustc to run, because one wasn't specified explicitly, and no default is configured.\nhelp: run 'rustup default stable' to download the latest stable release of Rust and set it as your default toolchain.\nTraceback (most recent call last):\n  File \"<stdin>\", line 7, in <module>\n  File \"/usr/lib/python3.14/subprocess.py\", line 578, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['rustc', '--edition=2024', '--test', '/tmp/m03-a1-cli-32xjs8xh/project/src/product.rs', '-o', '/tmp/m03-a1-cli-32xjs8xh/project/target/check']' returned non-zero exit status 1.\n (governed by spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE; fix: correct the handler and rerun the stopped lifecycle) (governed by spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE; fix: correct the named handler or its process/reply wire)",
+      "stderr": "error: rustup could not choose a version of rustc to run, because one wasn't specified explicitly, and no default is configured.\nhelp: run 'rustup default stable' to download the latest stable release of Rust and set it as your default toolchain.\nTraceback (most recent call last):\n  File \"<stdin>\", line 7, in <module>\n  File \"/usr/lib/python3.14/subprocess.py\", line 578, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['rustc', '--edition=2024', '--test', '/tmp/m03-a1-cli-32xjs8xh/project/src/product.rs', '-o', '/tmp/m03-a1-cli-32xjs8xh/project/target/check']' returned non-zero exit status 1.\n",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": [],
+  "ok": false,
+  "requested": "build",
+  "steps": [
+    {
+      "phase": "build",
+      "status": "fail"
+    }
+  ]
+}

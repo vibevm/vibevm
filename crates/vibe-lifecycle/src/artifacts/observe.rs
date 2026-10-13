@@ -32,10 +32,10 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-WITNESS-ALGORITHMS");
 
+use crate::state::current::{StateArtifact, StateDigestWitness};
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use vibe_safefs::{ContentDigest, EntryProof, Pinned, Project};
-use vibe_wire::generated::lifecycle_state::{StateArtifact, StateDigestWitness};
 
 /// The regular-file form: a domain-separated frame over the size and the raw
 /// inner digest of the exact bytes.
@@ -98,7 +98,7 @@ pub(crate) enum WitnessOutcome {
 
 impl WitnessOutcome {
     /// The witness, or `None` for every refusal — the exact pair a
-    /// [`StateArtifact`](vibe_wire::generated::lifecycle_state::StateArtifact)
+    /// [`StateArtifact`](crate::state::current::StateArtifact)
     /// carries alongside its `measured_run_id`.
     pub(crate) fn measured(self) -> Option<StateDigestWitness> {
         match self {

@@ -10,12 +10,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE"
 
 use std::path::{Path, PathBuf};
 
+use crate::state::current::{ExecutionRecordScope, ExecutionRecordStatus, StateRun};
 use specmark::spec;
 use thiserror::Error;
 use vibe_safefs::Project;
-use vibe_wire::generated::lifecycle_state::{
-    ExecutionRecordScope, ExecutionRecordStatus, StateRun,
-};
 use vibe_wire::generated::lifecycle_tasks::{
     LifecycleTasks, LifecycleTasksStatus, PendingTask, PendingTaskScope, TasksRun,
 };

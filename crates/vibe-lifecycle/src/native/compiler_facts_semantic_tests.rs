@@ -43,6 +43,7 @@ fn raw_witnesses_and_legacy_wire_match_pre_refactor_literals() {
 
 fn mechanism(id: &str) -> MechanismDecl {
     MechanismDecl {
+        effects: None,
         id: id.to_owned(),
         role: MechanismRole::Build,
         name: "semantic".to_owned(),

@@ -45,6 +45,7 @@ const ONE_MACHINE: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MAC
 /// };
 ///
 /// let declaration = MechanismDecl {
+///     effects: None,
 ///     id: "cargo-v2".into(),
 ///     role: MechanismRole::Build,
 ///     name: "cargo".into(),
@@ -74,6 +75,7 @@ const ONE_MACHINE: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MAC
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MechanismDecl {
+    pub effects: Option<super::DeclaredEffects>,
     pub id: String,
     pub role: MechanismRole,
     pub name: String,

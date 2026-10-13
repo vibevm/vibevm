@@ -33,6 +33,7 @@ pub(super) fn project() -> tempfile::TempDir {
 
 pub(super) fn base_decl(point: &str) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: "announce".into(),
         point: point.parse().unwrap(),
         handler: ExtensionHandler::Builtin { name: "log".into() },

@@ -1,0 +1,55 @@
+{
+  "schema": 2,
+  "run": {
+    "requested": "create",
+    "chain": [
+      "validate",
+      "install",
+      "create"
+    ],
+    "started": "2026-10-13T07:00:00Z",
+    "run_id": "00112233445566778899aabbccddeeff",
+    "selected": "."
+  },
+  "execution": {
+    "org.demo/consumer#produce": {
+      "phase": "create",
+      "fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "ok",
+      "duration_ms": 1,
+      "artifacts": [
+        {
+          "id": "product",
+          "kind": "file",
+          "path": "src/product.rs",
+          "witness": {
+            "algorithm": "sha256:file-v1",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "measured_run_id": "00112233445566778899aabbccddeeff"
+        }
+      ],
+      "input_measurement": {
+        "execution": "org.demo/consumer#produce",
+        "phase": "create",
+        "declaration_fingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "patterns": [
+          "intent.txt"
+        ],
+        "measured_run_id": "00112233445566778899aabbccddeeff",
+        "witness": {
+          "algorithm": "sha256:vibe-input-manifest-v1",
+          "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "files": 1,
+          "bytes": "12"
+        }
+      },
+      "completion_basis": {
+        "recipe": "vibe-completion-basis/1",
+        "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "selected": ".",
+        "run_id": "00112233445566778899aabbccddeeff"
+      }
+    }
+  }
+}

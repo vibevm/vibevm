@@ -1,0 +1,9 @@
+{
+  "task": "M-03-A.1",
+  "head": "c9e5eac5803fe00e80c2fae4fbe3e23509bcd455",
+  "source_manifest_sha256": "e3a1178a26c4cad8589591355142c5a8756e891cb36fe2829f6ce631501d0a90",
+  "files": 162,
+  "source_writes_stopped": true,
+  "no_cargo_writer_active": true,
+  "remaining": "current owned CLI process smoke/artifact finalization only; Root owns specmap/review"
+}

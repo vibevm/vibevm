@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/home/olegchir/.cargo/bin/rustfmt",
+    "--edition",
+    "2024",
+    "--config",
+    "skip_children=true",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/agent/tests/hosted.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/artifacts/observe_tests.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/lib.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/runner/tests.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/runner/tests/measurement.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/runner/tests/selected_owner.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/runner/tests/trace_sticky.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/runner/verify.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/runner/verify/artifacts.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/runner/verify/inputs.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/identity.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/install_stage.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/recovery.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/tasks.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/tests.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/tests/adoption.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/tests/ownership.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/tests/reservation_identity.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/tests/support.rs",
+    "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/state/tests/trace_sticky.rs"
+  ],
+  "exit": 0,
+  "files": 21
+}

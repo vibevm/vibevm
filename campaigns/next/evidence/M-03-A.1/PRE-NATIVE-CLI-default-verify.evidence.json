@@ -1,0 +1,556 @@
+{
+  "mode": "default",
+  "phase": "verify",
+  "root": "/tmp/m03-a1-cli-nh22_8vn/project",
+  "cwd": "/tmp/m03-a1-cli-nh22_8vn/project",
+  "argv": [
+    "/fast/git/v/.build/c4-first-agent-target/debug/vibe",
+    "--json",
+    "--offline",
+    "--agent-mode",
+    "agent",
+    "--no-progress",
+    "verify",
+    "--assume-yes",
+    "--force"
+  ],
+  "exit": 0,
+  "binary_sha256": "2651a8a951f82c3e5bb1346eb43b6ce9ae39e6a66d950282c17a9687ff443059",
+  "stdout_sha256": "12df3f19d02a9704ff5ecf6b54b5c1617e1a1720c6aa4597c371d33a4caca663",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "before": {
+    ".vibe": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/604bac45a0d933e12f4026c918823603": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/604bac45a0d933e12f4026c918823603/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/604bac45a0d933e12f4026c918823603/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776/context.json-bf5faa3f67364813b213a59880129cb0.tmp": {
+      "kind": "file",
+      "bytes": 828,
+      "sha256": "cfde87b18d3fc2dfc9d86d504af0b83816e9cc23c029b5998db627ecb3b3ed40"
+    },
+    ".vibe/lifecycle/604bac45a0d933e12f4026c918823603/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776/reply.json-5c9a578603896caf051c55e763152d20.tmp": {
+      "kind": "file",
+      "bytes": 140,
+      "sha256": "964eba954b87faec8a31778f6e5c66fa6b2ba9fc9373cadebf4237dfc66613e6"
+    },
+    ".vibe/lifecycle/83dc0237196985a90af50f77f94bb295": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/83dc0237196985a90af50f77f94bb295/48d03af771856a6ae28de003e3a0c80227a5c67df649abfde4e040f565dbb5ff": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/83dc0237196985a90af50f77f94bb295/48d03af771856a6ae28de003e3a0c80227a5c67df649abfde4e040f565dbb5ff/context.json-c5ec7df2e0445366ea95ae96aaeb0881.tmp": {
+      "kind": "file",
+      "bytes": 935,
+      "sha256": "70bc32bea4706760c00a1fb2e1b6ba1d6955b9e13d493345bcea7f61c2f6d7f0"
+    },
+    ".vibe/lifecycle/83dc0237196985a90af50f77f94bb295/48d03af771856a6ae28de003e3a0c80227a5c67df649abfde4e040f565dbb5ff/reply.json-c2f174c3481d67be8927c4765ecc0c6c.tmp": {
+      "kind": "file",
+      "bytes": 140,
+      "sha256": "84fd51297227cbd9eaee402f7d8f601bcf372501d1fd4907435480cca56b5628"
+    },
+    ".vibe/lifecycle.lock": {
+      "kind": "file",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".vibe/lifecycle.toml": {
+      "kind": "file",
+      "bytes": 2793,
+      "sha256": "e3de7207a88782d8087de5c1c67a5027d4aad538f895884bf5d85611f9f3733c"
+    },
+    "AGENTS.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "CLAUDE.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "GEMINI.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "calls": {
+      "kind": "file",
+      "bytes": 16,
+      "sha256": "b1d4f1ff6629c13c7aa711555a5de13ac67a870d519d420549e2299372cdabec"
+    },
+    "intent.txt": {
+      "kind": "file",
+      "bytes": 23,
+      "sha256": "6cace402ec3ccb01f29762d3c27a49ec844722fb7acc4183401e8ea08f35eabc"
+    },
+    "scripts": {
+      "kind": "directory"
+    },
+    "scripts/operation.sh": {
+      "kind": "file",
+      "bytes": 1044,
+      "sha256": "d5f34f3f02a0ae1f552524c922afb489224a961429b020c5664d6d7f4e62ab5f"
+    },
+    "src": {
+      "kind": "directory"
+    },
+    "src/product.rs": {
+      "kind": "file",
+      "bytes": 70,
+      "sha256": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583"
+    },
+    "target": {
+      "kind": "directory"
+    },
+    "target/check": {
+      "kind": "file",
+      "bytes": 7293344,
+      "sha256": "7a66128f4129c49cb0269f4b769fd719d3c00a6a27165ebe8f77c4b2d396a793"
+    },
+    "vibe.toml": {
+      "kind": "file",
+      "bytes": 510,
+      "sha256": "24aa8045c91e7a537e7daf4515ccc78a02a70de5cbfb85d0ef69fb97869216bf"
+    },
+    "vibevm": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs/boot": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs/boot/.vibe-boot-artifacts.lock": {
+      "kind": "file",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vibevm/vibespecs/boot/INDEX.md": {
+      "kind": "file",
+      "bytes": 599,
+      "sha256": "7cd0a73818a40c89919c9a573cde15cebdaf0370ea296e011e7d725aeb5e79f5"
+    }
+  },
+  "after": {
+    ".vibe": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/604bac45a0d933e12f4026c918823603": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/604bac45a0d933e12f4026c918823603/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/604bac45a0d933e12f4026c918823603/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776/context.json-bf5faa3f67364813b213a59880129cb0.tmp": {
+      "kind": "file",
+      "bytes": 828,
+      "sha256": "cfde87b18d3fc2dfc9d86d504af0b83816e9cc23c029b5998db627ecb3b3ed40"
+    },
+    ".vibe/lifecycle/604bac45a0d933e12f4026c918823603/a89572127fff813b15d70d80042cc1c69c6130f4a7a8d5d1eb67d598b6e00776/reply.json-5c9a578603896caf051c55e763152d20.tmp": {
+      "kind": "file",
+      "bytes": 140,
+      "sha256": "964eba954b87faec8a31778f6e5c66fa6b2ba9fc9373cadebf4237dfc66613e6"
+    },
+    ".vibe/lifecycle/83dc0237196985a90af50f77f94bb295": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/83dc0237196985a90af50f77f94bb295/48d03af771856a6ae28de003e3a0c80227a5c67df649abfde4e040f565dbb5ff": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/83dc0237196985a90af50f77f94bb295/48d03af771856a6ae28de003e3a0c80227a5c67df649abfde4e040f565dbb5ff/context.json-c5ec7df2e0445366ea95ae96aaeb0881.tmp": {
+      "kind": "file",
+      "bytes": 935,
+      "sha256": "70bc32bea4706760c00a1fb2e1b6ba1d6955b9e13d493345bcea7f61c2f6d7f0"
+    },
+    ".vibe/lifecycle/83dc0237196985a90af50f77f94bb295/48d03af771856a6ae28de003e3a0c80227a5c67df649abfde4e040f565dbb5ff/reply.json-c2f174c3481d67be8927c4765ecc0c6c.tmp": {
+      "kind": "file",
+      "bytes": 140,
+      "sha256": "84fd51297227cbd9eaee402f7d8f601bcf372501d1fd4907435480cca56b5628"
+    },
+    ".vibe/lifecycle/f9404bd9ce181bbe5a9572c985e3c5cf": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/f9404bd9ce181bbe5a9572c985e3c5cf/ee566c3c1fc51394e32be710f29c9fcec76cfcece5f7769570d713616d503909": {
+      "kind": "directory"
+    },
+    ".vibe/lifecycle/f9404bd9ce181bbe5a9572c985e3c5cf/ee566c3c1fc51394e32be710f29c9fcec76cfcece5f7769570d713616d503909/context.json-3ca5b91cb1da6daa46ebdeee32d5a58e.tmp": {
+      "kind": "file",
+      "bytes": 1057,
+      "sha256": "2c59c279a9132fff27e7de12f5cd1be73f051182a86815e4b01073c04bd00fc4"
+    },
+    ".vibe/lifecycle/f9404bd9ce181bbe5a9572c985e3c5cf/ee566c3c1fc51394e32be710f29c9fcec76cfcece5f7769570d713616d503909/reply.json-e92e3b25ee6ed0ab686b02bd6333256a.tmp": {
+      "kind": "file",
+      "bytes": 143,
+      "sha256": "631f06b25be299ed26cbadb931a79574f7685d95cbfae7d5feabd01a54a828dd"
+    },
+    ".vibe/lifecycle.lock": {
+      "kind": "file",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".vibe/lifecycle.toml": {
+      "kind": "file",
+      "bytes": 4114,
+      "sha256": "2e5032be8849014b0d563c5cfc54fc76839d83ef534c50c2e3afcc6ac57ac594"
+    },
+    "AGENTS.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "CLAUDE.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "GEMINI.md": {
+      "kind": "file",
+      "bytes": 829,
+      "sha256": "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
+    },
+    "calls": {
+      "kind": "file",
+      "bytes": 24,
+      "sha256": "c948dcc3dcde5d41e05731c47a54501b0b4730db317a67748b30e59961f3e42c"
+    },
+    "evidence": {
+      "kind": "directory"
+    },
+    "evidence/stdout": {
+      "kind": "file",
+      "bytes": 130,
+      "sha256": "a052da7fe7d4374fb2975999a8f64e0a928518503be48c4bc76bc52e204a4d82"
+    },
+    "intent.txt": {
+      "kind": "file",
+      "bytes": 23,
+      "sha256": "6cace402ec3ccb01f29762d3c27a49ec844722fb7acc4183401e8ea08f35eabc"
+    },
+    "scripts": {
+      "kind": "directory"
+    },
+    "scripts/operation.sh": {
+      "kind": "file",
+      "bytes": 1044,
+      "sha256": "d5f34f3f02a0ae1f552524c922afb489224a961429b020c5664d6d7f4e62ab5f"
+    },
+    "src": {
+      "kind": "directory"
+    },
+    "src/product.rs": {
+      "kind": "file",
+      "bytes": 70,
+      "sha256": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583"
+    },
+    "target": {
+      "kind": "directory"
+    },
+    "target/check": {
+      "kind": "file",
+      "bytes": 7293344,
+      "sha256": "7a66128f4129c49cb0269f4b769fd719d3c00a6a27165ebe8f77c4b2d396a793"
+    },
+    "vibe.toml": {
+      "kind": "file",
+      "bytes": 510,
+      "sha256": "24aa8045c91e7a537e7daf4515ccc78a02a70de5cbfb85d0ef69fb97869216bf"
+    },
+    "vibevm": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs/boot": {
+      "kind": "directory"
+    },
+    "vibevm/vibespecs/boot/.vibe-boot-artifacts.lock": {
+      "kind": "file",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vibevm/vibespecs/boot/INDEX.md": {
+      "kind": "file",
+      "bytes": 599,
+      "sha256": "7cd0a73818a40c89919c9a573cde15cebdaf0370ea296e011e7d725aeb5e79f5"
+    }
+  },
+  "source_before": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583",
+  "source_after": "4d4a4967424aa2fc41f325d71847799b6ab53fff3469d1edf941f652ffe86583",
+  "control_before": {
+    "home": {
+      ".vibe": {
+        "kind": "directory"
+      },
+      ".vibe/registry.toml": {
+        "kind": "file",
+        "bytes": 165,
+        "sha256": "70bb41309da328fbeb811ada34c2a19e44fda28b31138cd6ed2a64e98a1e8bb4"
+      }
+    },
+    "config": {},
+    "cache": {},
+    "state": {},
+    "data": {},
+    "cargo": {}
+  },
+  "initial_control": {
+    "home": {},
+    "config": {},
+    "cache": {},
+    "state": {},
+    "data": {},
+    "cargo": {}
+  },
+  "control_after": {
+    "home": {
+      ".vibe": {
+        "kind": "directory"
+      },
+      ".vibe/registry.toml": {
+        "kind": "file",
+        "bytes": 165,
+        "sha256": "70bb41309da328fbeb811ada34c2a19e44fda28b31138cd6ed2a64e98a1e8bb4"
+      }
+    },
+    "config": {},
+    "cache": {},
+    "state": {},
+    "data": {},
+    "cargo": {}
+  },
+  "decoded_documents": [
+    {
+      "chain": [
+        "validate",
+        "install",
+        "generate",
+        "create",
+        "build",
+        "test",
+        "verify"
+      ],
+      "command": "lifecycle:plan",
+      "contributions": [
+        {
+          "handler": "script",
+          "key": "org.demo/consumer#produce",
+          "phase": "create",
+          "point": "phase:create",
+          "provider": "org.demo/consumer",
+          "tier": "host-declaration",
+          "version": "1.0.0"
+        },
+        {
+          "handler": "script",
+          "key": "org.demo/consumer#compile",
+          "phase": "build",
+          "point": "phase:build",
+          "provider": "org.demo/consumer",
+          "tier": "host-declaration",
+          "version": "1.0.0"
+        },
+        {
+          "handler": "script",
+          "key": "org.demo/consumer#observe",
+          "phase": "verify",
+          "point": "phase:verify",
+          "provider": "org.demo/consumer",
+          "tier": "host-declaration",
+          "version": "1.0.0"
+        }
+      ],
+      "notices": [],
+      "requested": "verify"
+    },
+    {
+      "chain": [
+        "validate",
+        "install",
+        "generate",
+        "create",
+        "build",
+        "test",
+        "verify"
+      ],
+      "command": "lifecycle",
+      "contributions": [
+        {
+          "handler": "script",
+          "key": "org.demo/consumer#produce",
+          "phase": "create",
+          "point": "phase:create",
+          "provider": "org.demo/consumer",
+          "status": "fresh",
+          "tier": "host-declaration",
+          "version": "1.0.0"
+        },
+        {
+          "handler": "script",
+          "key": "org.demo/consumer#compile",
+          "phase": "build",
+          "point": "phase:build",
+          "provider": "org.demo/consumer",
+          "status": "fresh",
+          "tier": "host-declaration",
+          "version": "1.0.0"
+        },
+        {
+          "handler": "script",
+          "key": "org.demo/consumer#observe",
+          "phase": "verify",
+          "point": "phase:verify",
+          "provider": "org.demo/consumer",
+          "status": "ok",
+          "tier": "host-declaration",
+          "version": "1.0.0"
+        }
+      ],
+      "notices": [],
+      "ok": true,
+      "requested": "verify",
+      "steps": [
+        {
+          "phase": "validate",
+          "status": "ok"
+        },
+        {
+          "phase": "install",
+          "status": "fresh"
+        },
+        {
+          "phase": "generate",
+          "status": "no-op"
+        },
+        {
+          "phase": "create",
+          "status": "fresh"
+        },
+        {
+          "phase": "build",
+          "status": "fresh"
+        },
+        {
+          "phase": "test",
+          "status": "no-op"
+        },
+        {
+          "phase": "verify",
+          "status": "ok"
+        }
+      ],
+      "verification": {
+        "artifacts": [
+          {
+            "id": "source",
+            "kind": "file",
+            "path": "src/product.rs",
+            "status": "matched",
+            "measured": {
+              "algorithm": "sha256:file-v1",
+              "digest": "sha256:cf552ab49621dbb18d67963f5ab2d56f06b8838845ebe3832b3998e728d1e10e"
+            },
+            "measured_run_id": "604bac45a0d933e12f4026c918823603",
+            "observed": {
+              "algorithm": "sha256:file-v1",
+              "digest": "sha256:cf552ab49621dbb18d67963f5ab2d56f06b8838845ebe3832b3998e728d1e10e"
+            }
+          },
+          {
+            "id": "compiled",
+            "kind": "file",
+            "path": "target/check",
+            "status": "matched",
+            "measured": {
+              "algorithm": "sha256:file-v1",
+              "digest": "sha256:ae69ab9c66e6a384817fed5215686d3b7c2816b6ece0fa318de15b7e058067b0"
+            },
+            "measured_run_id": "83dc0237196985a90af50f77f94bb295",
+            "observed": {
+              "algorithm": "sha256:file-v1",
+              "digest": "sha256:ae69ab9c66e6a384817fed5215686d3b7c2816b6ece0fa318de15b7e058067b0"
+            }
+          }
+        ],
+        "evidence": 1,
+        "evidence_id": "sha256:1b88aab1af1055532cb76b91cf64e22d516b3b81cc3fc09782952dc6a14c2ef8",
+        "inputs": [
+          {
+            "declaration_fingerprint": "sha256:c6737aa4d897e21627d618741f6a61a4c5ebee05b305ba65fadeae0f0ee7723d",
+            "execution": "org.demo/consumer#produce",
+            "patterns": [
+              "intent.txt"
+            ],
+            "phase": "create",
+            "status": "matched",
+            "measured": {
+              "algorithm": "sha256:vibe-input-manifest-v1",
+              "digest": "sha256:da2a801272e81f063770f3ff6b9e5278ceb728fc8243c5994f94b5ed5b2ab8f1",
+              "bytes": "23",
+              "files": 1
+            },
+            "measured_run_id": "f9404bd9ce181bbe5a9572c985e3c5cf",
+            "observed": {
+              "algorithm": "sha256:vibe-input-manifest-v1",
+              "digest": "sha256:da2a801272e81f063770f3ff6b9e5278ceb728fc8243c5994f94b5ed5b2ab8f1",
+              "bytes": "23",
+              "files": 1
+            }
+          },
+          {
+            "declaration_fingerprint": "sha256:eaf8db7deb259246d904e947c71174895910dd0f620ebf188729f756f981268a",
+            "execution": "org.demo/consumer#compile",
+            "patterns": [
+              "src/product.rs"
+            ],
+            "phase": "build",
+            "status": "matched",
+            "measured": {
+              "algorithm": "sha256:vibe-input-manifest-v1",
+              "digest": "sha256:38b2abae51c1040c107cebc5928e34ad6860c891dbcc100e0f5045312248d6c6",
+              "bytes": "70",
+              "files": 1
+            },
+            "measured_run_id": "f9404bd9ce181bbe5a9572c985e3c5cf",
+            "observed": {
+              "algorithm": "sha256:vibe-input-manifest-v1",
+              "digest": "sha256:38b2abae51c1040c107cebc5928e34ad6860c891dbcc100e0f5045312248d6c6",
+              "bytes": "70",
+              "files": 1
+            }
+          }
+        ],
+        "observed_at": "2026-10-13T09:47:44.490931396Z",
+        "run": {
+          "chain": [
+            "validate",
+            "install",
+            "generate",
+            "create",
+            "build",
+            "test",
+            "verify"
+          ],
+          "requested": "verify",
+          "run_id": "f9404bd9ce181bbe5a9572c985e3c5cf",
+          "selected": ".",
+          "started": "2026-10-13T09:47:44Z"
+        },
+        "status": "matched"
+      }
+    }
+  ]
+}

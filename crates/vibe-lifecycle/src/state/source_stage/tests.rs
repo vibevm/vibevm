@@ -290,6 +290,7 @@ fn execution_for_handler(
                 content_hash: None,
             },
             declarations: vec![ExtensionDecl {
+                effects: None,
                 id: "script".into(),
                 point: "phase:generate".parse().unwrap(),
                 handler,

@@ -1,0 +1,512 @@
+[
+  {
+    "message": "error[E0603]: module `io` is private",
+    "path": "crates/vibe-lifecycle/src/runner/invocation.rs",
+    "line": 43
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/agent/tests/support.rs",
+    "line": 169
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/execution/tests.rs",
+    "line": 20
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/handlers/tests.rs",
+    "line": 70
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/handlers/native_tests.rs",
+    "line": 96
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `MechanismDecl`",
+    "path": "crates/vibe-lifecycle/src/mechanism/build/tests.rs",
+    "line": 51
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `MechanismDecl`",
+    "path": "crates/vibe-lifecycle/src/mechanism/build/native_tests.rs",
+    "line": 119
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `MechanismDecl`",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/tests.rs",
+    "line": 156
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `MechanismDecl`",
+    "path": "crates/vibe-lifecycle/src/mechanism/package/support.rs",
+    "line": 112
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/native/tests.rs",
+    "line": 30
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `MechanismDecl`",
+    "path": "crates/vibe-lifecycle/src/native/tests.rs",
+    "line": 323
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `MechanismDecl`",
+    "path": "crates/vibe-lifecycle/src/native/mechanism_tests.rs",
+    "line": 20
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/native/compiler_tests.rs",
+    "line": 39
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `MechanismDecl`",
+    "path": "crates/vibe-lifecycle/src/native/compiler_facts_semantic_tests.rs",
+    "line": 45
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/verify.rs",
+    "line": 136
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 290
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 301
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 321
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 328
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 327
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 345
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 350
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 401
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 465
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner.rs",
+    "line": 511
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 62
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 66
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 103
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "line": 171
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/owed.rs",
+    "line": 60
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/owed.rs",
+    "line": 67
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/runner/owed.rs",
+    "line": 103
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/identity.rs",
+    "line": 198
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/recovery.rs",
+    "line": 63
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/run_journal.rs",
+    "line": 57
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/run_journal.rs",
+    "line": 63
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/state/source_stage/tests.rs",
+    "line": 292
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/store.rs",
+    "line": 136
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/store.rs",
+    "line": 124
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/store.rs",
+    "line": 448
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tasks.rs",
+    "line": 205
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tasks.rs",
+    "line": 212
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tasks.rs",
+    "line": 259
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tasks.rs",
+    "line": 260
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tasks.rs",
+    "line": 298
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/adoption.rs",
+    "line": 47
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/adoption.rs",
+    "line": 190
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/adoption.rs",
+    "line": 250
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/adoption.rs",
+    "line": 256
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/adoption.rs",
+    "line": 313
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/adoption.rs",
+    "line": 424
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/state/tests/declaration.rs",
+    "line": 35
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/publication.rs",
+    "line": 31
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/publication.rs",
+    "line": 80
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 35
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 79
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 102
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 132
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 189
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 231
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 235
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 270
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 299
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/recovery.rs",
+    "line": 349
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/reservation_identity.rs",
+    "line": 77
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/run_journal.rs",
+    "line": 88
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/run_journal.rs",
+    "line": 104
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/safety.rs",
+    "line": 108
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/safety.rs",
+    "line": 131
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/safety.rs",
+    "line": 147
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/safety.rs",
+    "line": 156
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/safety.rs",
+    "line": 269
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/safety.rs",
+    "line": 287
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/safety.rs",
+    "line": 339
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/safety.rs",
+    "line": 349
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/selected.rs",
+    "line": 43
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/selected.rs",
+    "line": 60
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/selected.rs",
+    "line": 74
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/ownership.rs",
+    "line": 91
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/support.rs",
+    "line": 49
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/state/tests/support.rs",
+    "line": 102
+  },
+  {
+    "message": "error[E0063]: missing field `effects` in initializer of `vibe_core::manifest::ExtensionDecl`",
+    "path": "crates/vibe-lifecycle/src/state/tests/support.rs",
+    "line": 141
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 92
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 110
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 112
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 129
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 135
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 166
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 174
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 179
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 215
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 217
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 229
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 259
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 283
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 285
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 289
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/transaction.rs",
+    "line": 294
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/trace_sticky.rs",
+    "line": 43
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests/trace_sticky.rs",
+    "line": 259
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests.rs",
+    "line": 157
+  },
+  {
+    "message": "error[E0308]: mismatched types",
+    "path": "crates/vibe-lifecycle/src/state/tests.rs",
+    "line": 242
+  }
+]

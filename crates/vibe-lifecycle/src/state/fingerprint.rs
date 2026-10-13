@@ -298,7 +298,7 @@ fn machine_path(path: &Path) -> String {
 /// sequences cannot produce one byte stream, and a value cannot drift between
 /// identities that use different domains. It is not, and cannot be, a claim
 /// that SHA-256 itself admits no collision.
-pub(crate) struct FramedHash(Sha256);
+pub(crate) struct FramedHash(Sha256, Option<Sha256>);
 
 impl FramedHash {
     fn new() -> Self {
@@ -312,13 +312,30 @@ impl FramedHash {
     pub(crate) fn seeded(seed: &[u8]) -> Self {
         let mut hash = Sha256::new();
         hash.update(seed);
-        Self(hash)
+        Self(hash, None)
+    }
+    pub(crate) fn with_completion(mut self) -> Self {
+        let mut completion = Sha256::new();
+        completion.update(b"vibe-completion-basis\0epoch=1\0");
+        self.1 = Some(completion);
+        self
+    }
+    pub(crate) fn completion_field(&mut self, label: &str, bytes: &[u8]) {
+        if let Some(hash) = &mut self.1 {
+            hash.update((label.len() as u64).to_be_bytes());
+            hash.update(label.as_bytes());
+            hash.update((bytes.len() as u64).to_be_bytes());
+            hash.update(bytes);
+        }
     }
     pub(crate) fn field(&mut self, label: &str, bytes: &[u8]) {
         self.0.update((label.len() as u64).to_be_bytes());
         self.0.update(label.as_bytes());
         self.0.update((bytes.len() as u64).to_be_bytes());
         self.0.update(bytes);
+        if !matches!(label, "requested" | "chain") {
+            self.completion_field(label, bytes);
+        }
     }
     /// An ASCII `0|1` presence byte under `label` — the explicit
     /// optional-member frame the declaration recipe freezes, so an absent
@@ -350,6 +367,12 @@ impl FramedHash {
     }
     pub(crate) fn finish(self) -> String {
         format!("sha256:{:x}", self.0.finalize())
+    }
+    pub(crate) fn finish_with_completion(self) -> (String, Option<String>) {
+        (
+            format!("sha256:{:x}", self.0.finalize()),
+            self.1.map(|hash| format!("sha256:{:x}", hash.finalize())),
+        )
     }
 }
 
