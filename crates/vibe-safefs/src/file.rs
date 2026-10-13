@@ -28,6 +28,8 @@ use crate::publish::{PublishError, Published};
 
 mod bounded;
 mod create_new;
+mod guarded;
+pub use guarded::GuardedPublishError;
 pub(crate) mod identity;
 mod stable;
 mod stream;

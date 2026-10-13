@@ -1,0 +1,7 @@
+{
+  "status": "failed_generation_not_a_product_acceptance",
+  "observed_error": "properties.files collection lacks metadata.x-empty; generator refuses ambiguous empty collection policy.",
+  "log_sha256": "cb162973f7ec2b0720571b78d4d8338ff87d607d9930186e60d23fd9af10139b",
+  "action": "Same authorized Zap writer corrects schema collection metadata and reruns normal codegen; generated staging is not a completed output.",
+  "scope": "No generator weakening or unrelated wire edits."
+}

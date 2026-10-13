@@ -33,6 +33,7 @@ pub mod doc_site_state;
 pub mod doc_surface;
 pub mod doc_surface_diff;
 pub mod doc_todo;
+pub mod document_edit_journal;
 pub mod environment;
 pub mod extensions_analyze;
 pub mod extensions_report;

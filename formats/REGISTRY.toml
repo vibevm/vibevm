@@ -1661,3 +1661,13 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/source-doc-result/e1"
 sunset = "none"
+
+# Cooperative authored document edit recovery, PROP-080.
+[format.document-edit-journal]
+epoch = 1
+schema = "schemas/document_edit_journal.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/document-edit-journal/e1"
+sunset = "none"

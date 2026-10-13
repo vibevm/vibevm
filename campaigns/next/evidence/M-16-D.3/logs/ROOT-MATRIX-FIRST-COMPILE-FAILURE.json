@@ -1,0 +1,7 @@
+{
+  "status": "compile_failure_no_cases_executed",
+  "log_sha256": "336693e71472ae7422a077a97d14fcbb0d5388b1f53c6fb48da71752f709a66b",
+  "error": "include_bytes corpus path uses six parent components instead of five; actual compiler diagnostic names existing file.",
+  "case_count": 0,
+  "action": "Same writer corrects fixture corpus path and reruns original bound7case family. No production guard or test weakening."
+}

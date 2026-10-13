@@ -1,0 +1,7 @@
+{
+  "status": "failed_generation",
+  "observed_error": "Generated required after collection has no matching schema collection policy; inline object under files.elements not matched.",
+  "log_sha256": "3c3fcf2e0c8b4520670ecede988acfabf7119eff64eb0f6809c2b9877f7af205",
+  "next_safe_candidate": "Express file row as named JTD definition and files.elements.ref, retaining the same wire shape; use existing normal generator. Candidate only, not verified repair.",
+  "avoid": "No blanket generator-policy bypass or new unrelated toolchain."
+}

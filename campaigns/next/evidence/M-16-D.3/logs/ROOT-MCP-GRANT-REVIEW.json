@@ -1,0 +1,18 @@
+{
+  "status": "reviewed_case_not_final_acceptance",
+  "case": "context::document_edit::m_16_d_3_cases::explicit_context_grant_is_required_for_acknowledged_edit",
+  "passed": 1,
+  "ignored": 0,
+  "log_sha256": "933603e1e17d05c39062ddf2f991e15fa8a52dd31a0634e6d823c38602c62fc9",
+  "source_sha256": "a1a26221ef8886bab335296e329039a2d82dbfbeda048c5b24082a79df601cf6",
+  "observed": [
+    "Default read context refuses effect authority and leaves .vibe absent.",
+    "Explicit finite authority checks exact read-host identity and project root.",
+    "Two context clients acknowledge same saved plan; actual file changed and unused store untouched."
+  ],
+  "limits": [
+    "Public Rust ServerContext composition, not new external MCP tool or transport.",
+    "Cooperative filesystem guarantee remains explicit B-235."
+  ],
+  "distinct_d3_cases_observed": 10
+}

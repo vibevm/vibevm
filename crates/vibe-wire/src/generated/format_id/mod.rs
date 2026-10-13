@@ -64,6 +64,7 @@ pub enum FormatId {
     DocSurface,
     DocSurfaceDiff,
     DocTodo,
+    DocumentEditJournal,
     EnvironmentDefinition,
     EnvironmentExactLock,
     EnvironmentGenerationReceipt,

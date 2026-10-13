@@ -234,6 +234,13 @@ impl LifecycleLease {
         &self.project
     }
 
+    /// Borrow the existing held capability for a separately granted finite
+    /// document edit. This creates no grant, lease or lifecycle execution.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-EDIT-BARRIER-LAW")]
+    pub fn document_edit_project(&self) -> &Project {
+        &self.project
+    }
+
     /// Borrow the same pinned project for the publication owner's C.1
     /// operation journal. The publication owner confines its records under
     /// `.vibe/publication-operations`; this does not mint another lease or

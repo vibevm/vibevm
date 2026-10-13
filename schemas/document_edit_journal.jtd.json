@@ -1,0 +1,90 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "recipe": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "root_binding": {
+      "type": "string"
+    },
+    "capture": {
+      "type": "string"
+    },
+    "phase": {
+      "enum": [
+        "prepared",
+        "publishing",
+        "recovery",
+        "completed"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "files": {
+      "elements": {
+        "ref": "file"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "file": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "before": {
+          "elements": {
+            "type": "uint8"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "after": {
+          "elements": {
+            "type": "uint8"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "before_sha256": {
+          "type": "string"
+        },
+        "after_sha256": {
+          "type": "string"
+        },
+        "before_identity": {
+          "type": "string"
+        },
+        "after_identity": {
+          "type": "string",
+          "nullable": true
+        },
+        "unix_mode": {
+          "type": "uint32",
+          "nullable": true
+        },
+        "state": {
+          "enum": [
+            "pending",
+            "verified",
+            "uncertain"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    }
+  }
+}

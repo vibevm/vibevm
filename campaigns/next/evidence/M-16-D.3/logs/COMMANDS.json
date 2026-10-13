@@ -1,0 +1,260 @@
+[
+  {
+    "log": "safefs-guarded.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-safefs --lib file::guarded::m_16_d_3_cases::expected_snapshot_refuses_drift_and_reports_landed_failure -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "log": "clean-first.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::edit::m_16_d_3_cases::clean_acknowledged_saved_edit_commits -- --exact",
+    "cwd": "/tmp",
+    "exit": 101,
+    "verdict": "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "log": "clean-fixed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::edit::m_16_d_3_cases::clean_acknowledged_saved_edit_commits -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "log": "matrix-first.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::edit::m_16_d_3_cases -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 101,
+    "verdict": "compile failure; no tests executed",
+    "all_process_verdicts": []
+  },
+  {
+    "log": "matrix-corpus-fixed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::edit::m_16_d_3_cases -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s"
+    ]
+  },
+  {
+    "log": "matrix-final-window.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::edit::m_16_d_3_cases -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s"
+    ]
+  },
+  {
+    "log": "mcp-grant.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-mcp --lib context::document_edit::m_16_d_3_cases::explicit_context_grant_is_required_for_acknowledged_edit -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "log": "safefs-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-safefs --lib file::guarded::m_16_d_3_cases::expected_snapshot_refuses_drift_and_reports_landed_failure -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 176 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "log": "buffer-compat.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::m_16_d_1_cases::buffer_versions_create_delete_move_and_close -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "log": "context-compat.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-mcp --lib context::m_16_d_2_cases::context_positions_and_gap_use_same_client -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "log": "matrix-lease-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::edit::m_16_d_3_cases -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s"
+    ]
+  },
+  {
+    "log": "matrix-lease-actual.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-orchestrator --lib document_analysis::edit::m_16_d_3_cases -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.00s",
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 583 filtered out; finished in 0.01s",
+      "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 1.10s"
+    ]
+  },
+  {
+    "log": "mcp-final.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly test --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p vibe-mcp --lib context::document_edit::m_16_d_3_cases::explicit_context_grant_is_required_for_acknowledged_edit -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s",
+    "all_process_verdicts": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 206 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "log": "codegen.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p xtask -- codegen",
+    "cwd": "/tmp",
+    "exit": 1
+  },
+  {
+    "log": "codegen-fixed.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p xtask -- codegen",
+    "cwd": "/tmp",
+    "exit": 1
+  },
+  {
+    "log": "codegen-defined-row.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p xtask -- codegen",
+    "cwd": "/tmp",
+    "exit": 1
+  },
+  {
+    "log": "codegen-closed-enums.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p xtask -- codegen",
+    "cwd": "/tmp",
+    "exit": 0
+  },
+  {
+    "log": "check-codegen.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p xtask -- check-codegen",
+    "cwd": "/tmp",
+    "exit": 1
+  },
+  {
+    "log": "codegen-determinism.log",
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target cargo +nightly run --locked --offline --manifest-path /fast/git/v/vibevm-next/Cargo.toml -p xtask -- codegen",
+    "cwd": "/tmp",
+    "exit": 0
+  },
+  {
+    "log": "touched-format.log",
+    "argv": [
+      "rustfmt",
+      "+nightly",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/lease.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context/document_edit.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context/m_16_d_2_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/buffers.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/apply.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/m_16_d_3_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/plan.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/proposal.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/mod.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-safefs/src/file.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-safefs/src/file/guarded.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-safefs/src/lib.rs"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "touched-format-final.log",
+    "argv": [
+      "rustfmt",
+      "+nightly",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "/fast/git/v/vibevm-next/crates/vibe-lifecycle/src/lease.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context/document_edit.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context/m_16_d_2_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/buffers.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/apply.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/m_16_d_3_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/plan.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/proposal.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/mod.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-safefs/src/file.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-safefs/src/file/guarded.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-safefs/src/lib.rs"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "diff-check.log",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "diff-check-final.log",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  },
+  {
+    "log": "GENERATOR-DETERMINISM.log",
+    "command": "Python compare complete GENERATED-BEFORE.json/GENERATED-AFTER.json file sets and raw SHA256 after normal codegen; no git mutation",
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0
+  }
+]

@@ -2563,3 +2563,13 @@ structure, and it goes when the file does.
 | @fact:B234-SEVERITY **severity** | P2 — explicit observation capability limit; no current fixture/prototype or campaign blocker. |
 | @fact:B234-DISPOSITION **disposition** | deferred — when a concrete consumer needs typed work coverage, connect its actual semantic owner and provenance separately from implementation/verification evidence. Preserve absence versus unavailable, shared binding authority and personal-plan separation; do not add a second cursor/evaluator or promote merged refs/personal done to evidence. |
 | @fact:B234-FILED **filed by** | First Agent A2 acceptance, 2026-10-12. |
+
+## B-235 — cooperative document publication cannot exclude an unregistered editor race {#b-235}
+
+| field | value |
+|---|---|
+| @fact:B235-WHAT **what** | Existing SafeFS snapshot comparison followed by atomic replacement is not atomic destination-content CAS. An ordinary unregistered editor can write after the final comparison and before replacement; its intermediate content can be overwritten without detection. A post-write read cannot recover that intermediate value. Registered cooperating clients can be fenced through publication by the document edit barrier; the lifecycle lease excludes only writers using that lease. |
+| @fact:B235-EVIDENCE **evidence** | SafeFS file/project_methods.rs stages then replaces without an expected-destination argument; workspace migration_application/recovery.rs compares before calling that publisher. Read-only Astra M16-D3 owner audit and /fast/git/v/research/2026-10-12-vibevm-first-agent-start/M16-D3/ROOT-OWNER-SEAMS-ANSWER.json retain Root's explicit MVP interpretation. D3 implementation and acceptance are still pending when filed. |
+| @fact:B235-SEVERITY **severity** | P2 — accepted cooperative MVP trust limitation with a real accidental-writer scenario, not solely hostile-kernel protection. It is not a new campaign gate. No universal filesystem CAS guarantee may be claimed. |
+| @fact:B235-DISPOSITION **disposition** | deferred — integrate additional editor/writer participants when needed; investigate a portable stronger publication adapter only for a concrete consumer requiring exclusion of this interval. Current D3 must detect observed drift, fence registered clients, retain exact partial/uncertain effects and preserve third-state recovery. Do not introduce AppArmor, systemd or a kernel protection framework to close the MVP. |
+| @fact:B235-FILED **filed by** | First Agent D3 boundary clarification, 2026-10-13. |

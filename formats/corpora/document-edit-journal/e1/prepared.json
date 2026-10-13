@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "recipe": "document-edit-journal/1",
+  "id": "2dbe701614ade539fb5ed7de1a5e65017d7b3954ed442fd4108df5fd0ad76de9",
+  "root_binding": "fixture-root-correlation",
+  "capture": "document-capture/1:1:1:1",
+  "phase": "prepared",
+  "files": [
+    {
+      "path": "docs/a.md",
+      "before": [
+        97
+      ],
+      "after": [
+        98
+      ],
+      "before_sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+      "after_sha256": "3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d",
+      "before_identity": "fixture-before-observation",
+      "after_identity": null,
+      "unix_mode": null,
+      "state": "pending"
+    }
+  ]
+}
