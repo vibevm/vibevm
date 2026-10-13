@@ -1,0 +1,21 @@
+{
+  "status": "first_connected_case_review_not_acceptance",
+  "case": "change::m_02_b_3_cases::two_clients_dirty_refinements_are_isolated",
+  "passed": 1,
+  "ignored": 0,
+  "log_sha256": "49931a7f9606cfbb5b752af867812458cb032de6bade3d277f4e0affddacd445",
+  "source_sha256": "b42cab6410f5467dc9ae17fb22cd5e3f5439630c6a64228a2ebeb691ee4ee9c0",
+  "assertions": [
+    "Different raw refinement bytes per client.",
+    "Different intent but equal work identity through shared requirements/core owners.",
+    "Same immutable change ID; distinct capture IDs and exact buffer versions.",
+    "OriginalBytes location basis.",
+    "Fixture inventory unchanged and .vibe absent."
+  ],
+  "pending": [
+    "Partial/invalid raw history and truthful diagnostics.",
+    "Saved/stale/dirty preparation through existing M16 barrier.",
+    "Requirements pure adapter/extraction compatibility.",
+    "Final seals/specmap."
+  ]
+}

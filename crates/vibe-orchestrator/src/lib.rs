@@ -31,6 +31,7 @@ use vibe_core::manifest::MechanismRoutes;
 use vibe_lifecycle::{ExecutablePlan, ExtensionRegistryRow, MechanismRegistry, Phase};
 use vibe_wire::generated::lifecycle::e1::context::{Project, World};
 
+pub mod change;
 pub mod document_analysis;
 pub mod failure;
 pub mod machine_operation;

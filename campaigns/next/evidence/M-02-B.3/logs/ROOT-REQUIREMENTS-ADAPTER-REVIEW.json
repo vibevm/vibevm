@@ -1,0 +1,16 @@
+{
+  "status": "reviewed_not_acceptance",
+  "passed": 2,
+  "ignored": 0,
+  "log_sha256": "706540d2be2792e2427d3b4d80e75de48295488231f9ee44d321b3db0e2d2e6d",
+  "source_sha256": "280ab7aa3b01969544704620cef2634cfe0683c361cecfdd9b5f564cfaf04805",
+  "assertions": [
+    "Cosmetic rename preserves intent.",
+    "Normative bytes alter intent without changing work.",
+    "Missing declared observation refuses.",
+    "Duplicate retained role observation refuses."
+  ],
+  "shared_owner_review": "SavedChange delegates the extracted identity_from_observations; same core intent/WorkGraph semantics and selected declared inputs, no new filesystem reads.",
+  "distinct_new_cases_observed": 6,
+  "pending": "Existing SavedChange identity extraction compatibility and final source/evidence/specmap."
+}

@@ -1,0 +1,370 @@
+{
+  "schema": 1,
+  "task": "M-02-B.3",
+  "status": "accepted_by_first_agent",
+  "candidate_base": "1744df49c027c4c0a5f96b44b48d8163adad5de4",
+  "accepted_at": "2026-10-13T00:28:34.552780+00:00",
+  "product_files": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "dd8db74c80aeb5b4f599d543af816ee31ea458ef8c59c49bff1e820be0b0a158",
+      "bytes": 148239,
+      "lines": 6258,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "FIXED-ISSUES.md",
+      "sha256": "f9ab04f5339ec7f1cb078b1468704fd97eac77706f4c73929d5f89b0b56f457b",
+      "bytes": 152719,
+      "lines": 619,
+      "owner": "root integration"
+    },
+    {
+      "path": "crates/vibe-orchestrator/Cargo.toml",
+      "sha256": "db2da5dbf5aeab2f24c2626adf62e7b1cf07206c9ac0aff27fb4a9b27ef33c01",
+      "bytes": 2287,
+      "lines": 55,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/m_02_b_3_cases.rs",
+      "sha256": "ea3447333db3178c6d23d9dc9df50e7a574d4cc6b68726431f20172efd7980b4",
+      "bytes": 11054,
+      "lines": 338,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/mod.rs",
+      "sha256": "986ae8ca52fc21855012a998dfdacb87f97f148220b2d2192434cac302b395c2",
+      "bytes": 6739,
+      "lines": 180,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/prepare.rs",
+      "sha256": "2ecd341b70d612cc7a326262bcb04be01c18ae81c0e74a6cbeaa6c4056839d4d",
+      "bytes": 2982,
+      "lines": 77,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/lib.rs",
+      "sha256": "fbf432893333bed4ef152f081f3fdb51bf85190f25739d636bf113b8afd11131",
+      "bytes": 16696,
+      "lines": 386,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/captured.rs",
+      "sha256": "7d123ecd926cd8eeb8c64f21d3560e02c8cd4eaf98b6c01875a70f3f62f3f64b",
+      "bytes": 857,
+      "lines": 23,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/identity.rs",
+      "sha256": "49eb2962c899828bf68a6012024c2c7f9cc1da46ced8195983c0d35062cb49b3",
+      "bytes": 2657,
+      "lines": 70,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/m_02_b_3_cases.rs",
+      "sha256": "280ab7aa3b01969544704620cef2634cfe0683c361cecfdd9b5f564cfaf04805",
+      "bytes": 2856,
+      "lines": 66,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/mod.rs",
+      "sha256": "dd83789f4ef18abf557cd08ef9dca29de7f1b4ae5e3019f7b4d2b8c369192dbb",
+      "bytes": 568,
+      "lines": 19,
+      "owner": "Zap candidate"
+    },
+    {
+      "path": "specmap.json",
+      "sha256": "af6e5f866f28047fd56cf976ac885e0260a046b25b6ab56e66809bba85aa6bed",
+      "bytes": 9834269,
+      "lines": 166954,
+      "owner": "root integration"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "sha256": "4aec08eadd71710ca4ae38e667c67d1362947003b9e7d7adfc700b365d9bab07",
+      "bytes": 10828,
+      "lines": 28,
+      "owner": "Zap candidate"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/BOUND-PLAN.md",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/BOUND-PLAN.md",
+      "raw_sha256": "fd28bdb73f290ea468074001e0b36c98e308d71184a722c800e2a06d9e3d7a88",
+      "sha256": "fd28bdb73f290ea468074001e0b36c98e308d71184a722c800e2a06d9e3d7a88",
+      "bytes": 1846,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/CANDIDATE-FILES.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/CANDIDATE-FILES.json",
+      "raw_sha256": "47db9970206fdd317626d5db60d33f1753ec4d20e1aa3756b335af224f2751c6",
+      "sha256": "47db9970206fdd317626d5db60d33f1753ec4d20e1aa3756b335af224f2751c6",
+      "bytes": 543,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/CANDIDATE-REPORT.md",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/CANDIDATE-REPORT.md",
+      "raw_sha256": "32df0cc44e6207fd0deda370d5b4972079fd282f0fbf5b97d234f7a28030eea1",
+      "sha256": "32df0cc44e6207fd0deda370d5b4972079fd282f0fbf5b97d234f7a28030eea1",
+      "bytes": 6176,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/COMMANDS.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/COMMANDS.json",
+      "raw_sha256": "b2d4e0603c36ebd50f3f1ae9b39d01142dd4aeb83a96e4727314472875277ea7",
+      "sha256": "b2d4e0603c36ebd50f3f1ae9b39d01142dd4aeb83a96e4727314472875277ea7",
+      "bytes": 3452,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/EVIDENCE-SHA256.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/EVIDENCE-SHA256.json",
+      "raw_sha256": "e1fc5a6963252dbaa1a9f306f5a18695a8fd131838e9bf9f41f7ad34cde8329f",
+      "sha256": "e1fc5a6963252dbaa1a9f306f5a18695a8fd131838e9bf9f41f7ad34cde8329f",
+      "bytes": 1821,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/FILE-LENGTHS.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/FILE-LENGTHS.json",
+      "raw_sha256": "8db43e258596bd4da50a8a71e4057e4224dd6fb6353a8c8979cce1356642c9cc",
+      "sha256": "8db43e258596bd4da50a8a71e4057e4224dd6fb6353a8c8979cce1356642c9cc",
+      "bytes": 451,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/FINAL-STATE.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/FINAL-STATE.json",
+      "raw_sha256": "6b261f8bf33bbb4bdca791dd93394cb61c51438a080c1af56081ea0042981b1f",
+      "sha256": "6b261f8bf33bbb4bdca791dd93394cb61c51438a080c1af56081ea0042981b1f",
+      "bytes": 247,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/HASH-VERIFY.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/HASH-VERIFY.log",
+      "raw_sha256": "3aae6890d8b4ff679d8fc1ef5ed44210b715db3abdaa436a568484ac43711f5a",
+      "sha256": "3aae6890d8b4ff679d8fc1ef5ed44210b715db3abdaa436a568484ac43711f5a",
+      "bytes": 116,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/INCIDENTS.md",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/INCIDENTS.md",
+      "raw_sha256": "52a252c9fceb2e1f3e4f8b5a7cb9ea8cc8004e1a49b93a7c3d49698fda789c04",
+      "sha256": "52a252c9fceb2e1f3e4f8b5a7cb9ea8cc8004e1a49b93a7c3d49698fda789c04",
+      "bytes": 449,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/LOCK-LINKAGE.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/LOCK-LINKAGE.json",
+      "raw_sha256": "57a75bf50e75f14b288baac2b5dcd1448c2b873efaa429c947b899fef5de29c3",
+      "sha256": "57a75bf50e75f14b288baac2b5dcd1448c2b873efaa429c947b899fef5de29c3",
+      "bytes": 205,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/RESULTS.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/RESULTS.json",
+      "raw_sha256": "113baad727a21a936f439f39369a19079f4639f13df6a64221d4c301d1705dfd",
+      "sha256": "113baad727a21a936f439f39369a19079f4639f13df6a64221d4c301d1705dfd",
+      "bytes": 1392,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-FINAL-SEAL-VERIFY.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-FINAL-SEAL-VERIFY.json",
+      "raw_sha256": "e3eadb214e0dc51be25752b2e6c961d860b741e72f30884c1ec20ce4cbc5c203",
+      "sha256": "e3eadb214e0dc51be25752b2e6c961d860b741e72f30884c1ec20ce4cbc5c203",
+      "bytes": 143,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-FINAL-SPECMAP.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-FINAL-SPECMAP.log",
+      "raw_sha256": "e98dd70c603a14bb0841399b354f3540af4687d3d31b77517552b8f023f4e309",
+      "sha256": "e98dd70c603a14bb0841399b354f3540af4687d3d31b77517552b8f023f4e309",
+      "bytes": 163077,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-FIRST-CONNECTED-REVIEW.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-FIRST-CONNECTED-REVIEW.json",
+      "raw_sha256": "9be332f3374b9ed38e877ad10223fcd7a73218512040662710e1f067f231701e",
+      "sha256": "9be332f3374b9ed38e877ad10223fcd7a73218512040662710e1f067f231701e",
+      "bytes": 909,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-FORMAT-BASELINE-VERIFY.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-FORMAT-BASELINE-VERIFY.json",
+      "raw_sha256": "07ea91c844431e542138c64fc9d1df5f3232e1ecbe3e9332d8187fca2dca26de",
+      "sha256": "07ea91c844431e542138c64fc9d1df5f3232e1ecbe3e9332d8187fca2dca26de",
+      "bytes": 770,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-LOCK-BEFORE.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-LOCK-BEFORE.json",
+      "raw_sha256": "d267e213659e3d8bc27b064353c2bbde58c69d0d8e717e93a6f586d2661dd615",
+      "sha256": "d267e213659e3d8bc27b064353c2bbde58c69d0d8e717e93a6f586d2661dd615",
+      "bytes": 126463,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-LOCK-LINKAGE-VERIFY.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-LOCK-LINKAGE-VERIFY.json",
+      "raw_sha256": "10b19a357adfa1479d25019418fd33c5f6fbbe5f44144279b43455e4f8d9aa9a",
+      "sha256": "10b19a357adfa1479d25019418fd33c5f6fbbe5f44144279b43455e4f8d9aa9a",
+      "bytes": 174,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-ORCHESTRATOR-FAMILY-REVIEW.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-ORCHESTRATOR-FAMILY-REVIEW.json",
+      "raw_sha256": "d53ea25a6633291daad7d9176ec3bb06387ada564b55a74257ab424153486d03",
+      "sha256": "d53ea25a6633291daad7d9176ec3bb06387ada564b55a74257ab424153486d03",
+      "bytes": 1082,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-REQUIREMENTS-ADAPTER-REVIEW.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-REQUIREMENTS-ADAPTER-REVIEW.json",
+      "raw_sha256": "3742137a58d5c07c6f534255fcf64ae01bd6fedc802f5d709c9c16a48cacfdb7",
+      "sha256": "3742137a58d5c07c6f534255fcf64ae01bd6fedc802f5d709c9c16a48cacfdb7",
+      "bytes": 789,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/ROOT-REQUIREMENTS-LOCK-EDGE-ANSWER.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/ROOT-REQUIREMENTS-LOCK-EDGE-ANSWER.json",
+      "raw_sha256": "b9a3b1b93498766a0eafff50670f7e772b7d385e834b99ab477d524cd321e5ff",
+      "sha256": "b9a3b1b93498766a0eafff50670f7e772b7d385e834b99ab477d524cd321e5ff",
+      "bytes": 5821,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/SHA256SUMS",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/SHA256SUMS",
+      "raw_sha256": "d7c585e99a46e9219a0ffb69a7eb31ade093e399e815b0812d078254d6879e95",
+      "sha256": "d7c585e99a46e9219a0ffb69a7eb31ade093e399e815b0812d078254d6879e95",
+      "bytes": 1678,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/SOURCE-SHA256.json",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/SOURCE-SHA256.json",
+      "raw_sha256": "11670d99d5f7a1e82076aaef986dea203229369e76f591e02b4cdcf6b0c56507",
+      "sha256": "11670d99d5f7a1e82076aaef986dea203229369e76f591e02b4cdcf6b0c56507",
+      "bytes": 1291,
+      "normalization": "none"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/connected-first.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/connected-first.log",
+      "raw_sha256": "49931a7f9606cfbb5b752af867812458cb032de6bade3d277f4e0affddacd445",
+      "sha256": "53429aade57fc114c6431a074bd2962de69ac10e12c2c8c343e53274249a4cd4",
+      "bytes": 22771,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/diff-check.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/diff-check.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/full-format.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/full-format.log",
+      "raw_sha256": "8415189def11f5c619e0bbdd9b84fcb9a957148ca0c3fe4bd6b7b5422d31928d",
+      "sha256": "c7dc01f7d8a86b097455b60b8306344ce84ad649c688e71dccd25c3d5c7a0ffa",
+      "bytes": 7769,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/identity-compat.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/identity-compat.log",
+      "raw_sha256": "7d2172f65ee429f351c47fe90e601d6e9fc6a9c09b08324faf060a42928e84a9",
+      "sha256": "430d1b38dcde5ef64790ebaba97f3d8b8874650690a173f18b4e203f9cae0bd6",
+      "bytes": 20543,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/orchestrator-family.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/orchestrator-family.log",
+      "raw_sha256": "3f5bf454ddfabb598e88af8a5bfe12a5ce1cc40ab581715be5efeb68c0c79988",
+      "sha256": "5af2ba0cc4119369338f47dc78840cf3971c4a43e77407cf1ff58c925ad70187",
+      "bytes": 23047,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/orchestrator-final.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/orchestrator-final.log",
+      "raw_sha256": "1d551e7986663d9aaaea1b67244fb9a93076146b71d5a3063b0b17f50a5ea698",
+      "sha256": "0ead297f251562a0bb5c9c2c26758394fe9a5e348d8308bf2ab8027222da538a",
+      "bytes": 22865,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/requirements-family.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/requirements-family.log",
+      "raw_sha256": "706540d2be2792e2427d3b4d80e75de48295488231f9ee44d321b3db0e2d2e6d",
+      "sha256": "c8558f2cab2a1ee24fddb6c8e86374ca3f3926b69f7b0ef9f52e3c1f7213378f",
+      "bytes": 20735,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/touched-format.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/touched-format.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "normalization": "trailing whitespace and final empty lines only"
+    },
+    {
+      "path": "campaigns/next/evidence/M-02-B.3/logs/xml-parse.log",
+      "source": "/fast/git/v/research/2026-10-12-vibevm-first-agent-start/M02-B3-RESUMED/xml-parse.log",
+      "raw_sha256": "2cbec4833fef62d9810dfd727fb20572f9ac7e8d044a86acb2574cec672c8a7b",
+      "sha256": "2cbec4833fef62d9810dfd727fb20572f9ac7e8d044a86acb2574cec672c8a7b",
+      "bytes": 44,
+      "normalization": "trailing whitespace and final empty lines only"
+    }
+  ],
+  "checks": {
+    "source_hashes": 11,
+    "producer_evidence_hashes": 20,
+    "distinct_new_cases": 6,
+    "orchestrator_cases": 4,
+    "requirements_cases": 2,
+    "existing_representatives": 1,
+    "package_metadata_rows_unchanged": 591,
+    "specmap_exit": 0,
+    "gated_orphans": 138,
+    "unresolved_host_edges": 0,
+    "global_format_exit": 1,
+    "inherited_format_hunks": 14,
+    "inherited_format_files": 9
+  },
+  "limits": [
+    "Analysis/preparation only; no apply/execution/closure writes.",
+    "Exact numerical diagnostic cause offset unavailable.",
+    "Cooperative M16 and per-file capture limits unchanged."
+  ]
+}

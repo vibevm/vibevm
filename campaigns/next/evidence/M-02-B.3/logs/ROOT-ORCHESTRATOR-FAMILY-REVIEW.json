@@ -1,0 +1,23 @@
+{
+  "status": "family_review_not_acceptance",
+  "passed": 4,
+  "ignored": 0,
+  "log_sha256": "3f5bf454ddfabb598e88af8a5bfe12a5ce1cc40ab581715be5efeb68c0c79988",
+  "source_sha256": "b42cab6410f5467dc9ae17fb22cd5e3f5439630c6a64228a2ebeb691ee4ee9c0",
+  "observed": [
+    "Two-client raw/intent isolation and version/basis binding.",
+    "Partial syntax/nonUTF8 retain raw; historical capture analysis ignores poisoned live disk.",
+    "Saved prepare returns incumbent M16 barrier only; closure replacement refuses.",
+    "Changed buffer/disk subject refuses Stale at explicit fresh-capture admission.",
+    "Older dirty capture stays SaveRequired after save; fresh saved preparation succeeds.",
+    "Inventory/.vibe unchanged during analysis/preparation."
+  ],
+  "limits": [
+    "B3 prepares/adopts barrier; tests do not execute future authored edit or closure.",
+    "Numerical diagnostic position explicitly unavailable, revision/basis retained."
+  ],
+  "pending": [
+    "Requirements pure-adapter cases and extraction compatibility.",
+    "Final source/log seal and specmap."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "connected-first.log": {
+    "sha256": "49931a7f9606cfbb5b752af867812458cb032de6bade3d277f4e0affddacd445",
+    "exit": 0,
+    "cases": 1,
+    "ignored": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 587 filtered out; finished in 0.00s"
+  },
+  "orchestrator-family.log": {
+    "sha256": "3f5bf454ddfabb598e88af8a5bfe12a5ce1cc40ab581715be5efeb68c0c79988",
+    "exit": 0,
+    "cases": 4,
+    "ignored": 0,
+    "verdict": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 584 filtered out; finished in 0.01s"
+  },
+  "requirements-family.log": {
+    "sha256": "706540d2be2792e2427d3b4d80e75de48295488231f9ee44d321b3db0e2d2e6d",
+    "exit": 0,
+    "cases": 2,
+    "ignored": 0,
+    "verdict": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 66 filtered out; finished in 0.00s"
+  },
+  "identity-compat.log": {
+    "sha256": "7d2172f65ee429f351c47fe90e601d6e9fc6a9c09b08324faf060a42928e84a9",
+    "exit": 0,
+    "cases": 1,
+    "ignored": 0,
+    "verdict": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 67 filtered out; finished in 0.00s"
+  },
+  "orchestrator-final.log": {
+    "sha256": "1d551e7986663d9aaaea1b67244fb9a93076146b71d5a3063b0b17f50a5ea698",
+    "exit": 0,
+    "cases": 4,
+    "ignored": 0,
+    "verdict": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 584 filtered out; finished in 0.01s"
+  }
+}

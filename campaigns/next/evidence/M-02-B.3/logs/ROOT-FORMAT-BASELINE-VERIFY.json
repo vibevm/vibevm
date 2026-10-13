@@ -1,0 +1,17 @@
+{
+  "hunks": 14,
+  "files": 9,
+  "all_reported_files_unchanged_from_HEAD": true,
+  "new_changed_owner_format_failure": false,
+  "paths": [
+    "crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+    "crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+    "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+    "crates/vibe-mcp/src/machine_session/incremental.rs",
+    "crates/vibe-orchestrator/src/machine_submission.rs",
+    "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+    "crates/vibe-publish/src/package_git_payload/tests.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs"
+  ]
+}

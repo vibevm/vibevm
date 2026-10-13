@@ -1,0 +1,12 @@
+{
+  "packages": 591,
+  "changes": [
+    {
+      "package": "vibe-orchestrator",
+      "added": [
+        "vibe-requirements"
+      ]
+    }
+  ],
+  "all_versions_sources_checksums_other_edges_equal": true
+}

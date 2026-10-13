@@ -1,0 +1,10 @@
+{
+  "task": "M-02-B.3",
+  "base": "1744df49c027c4c0a5f96b44b48d8163adad5de4",
+  "state": "source-writing-stopped",
+  "new_cases": 6,
+  "existing_representatives": 1,
+  "broker_cursor": "1038",
+  "runtime_finished": false,
+  "global_fmt_exit": 1
+}

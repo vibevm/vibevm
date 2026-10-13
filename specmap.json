@@ -26937,27 +26937,27 @@
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "type",
-      "line": 183,
+      "line": 184,
       "symbol": "vibe_orchestrator::PlannedExecution",
-      "end_line": 191,
+      "end_line": 192,
       "fingerprint": "tok1:191483bf11bbac73eba16de80a62f8766695782c1f8fbdbb8ca093e1d1a5993e"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "struct",
-      "line": 77,
+      "line": 78,
       "symbol": "vibe_orchestrator::RitualPlan",
-      "end_line": 137,
+      "end_line": 138,
       "fingerprint": "tok1:7a71d71233c48c4118ab307f4e0d01bcb673d0960107bf611bbf6187a820a441"
     },
     {
       "crate_name": "vibe-orchestrator",
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "item_kind": "fn",
-      "line": 140,
+      "line": 141,
       "symbol": "vibe_orchestrator::RitualPlan::count_for",
-      "end_line": 147,
+      "end_line": 148,
       "fingerprint": "tok1:cd0162dc26bbc8e8eb4ba7ad66414381a472f6c79bf112ba60362fa407ec7e16"
     },
     {
@@ -26968,6 +26968,24 @@
       "symbol": "vibe_orchestrator::callback",
       "end_line": 7,
       "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/change/mod.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::change",
+      "end_line": 2,
+      "fingerprint": "tok1:8efa008dd54996caef8f70e747d5983b1d93e1ae99f74893f185c35a8ebbc692"
+    },
+    {
+      "crate_name": "vibe-orchestrator",
+      "file": "crates/vibe-orchestrator/src/change/prepare.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_orchestrator::change::prepare",
+      "end_line": 2,
+      "fingerprint": "tok1:480e7918ffa233f5c52880b9376e5d35098e86b9b32a80354395b51c14756304"
     },
     {
       "crate_name": "vibe-orchestrator",
@@ -30568,6 +30586,15 @@
       "symbol": "vibe_requirements::change",
       "end_line": 2,
       "fingerprint": "tok1:e9ded6c7d681e6f6a3167393a000645c26a5d91add7b1a360bb2819bdf6d0bc1"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/captured.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::change::captured",
+      "end_line": 2,
+      "fingerprint": "tok1:8efa008dd54996caef8f70e747d5983b1d93e1ae99f74893f185c35a8ebbc692"
     },
     {
       "crate_name": "vibe-requirements",
@@ -59613,7 +59640,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::PlannedExecution",
-      "line": 190,
+      "line": 191,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -59621,7 +59648,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::RitualPlan",
-      "line": 110,
+      "line": 111,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -59629,7 +59656,7 @@
     {
       "file": "crates/vibe-orchestrator/src/lib.rs",
       "from_symbol": "vibe_orchestrator::RitualPlan::count_for",
-      "line": 144,
+      "line": 145,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -59640,6 +59667,22 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/change/mod.rs",
+      "from_symbol": "vibe_orchestrator::change",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-CAPTURED-ANALYSIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-orchestrator/src/change/prepare.rs",
+      "from_symbol": "vibe_orchestrator::change::prepare",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-PREPARATION",
       "verb": "implements"
     },
     {
@@ -62962,6 +63005,14 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/captured.rs",
+      "from_symbol": "vibe_requirements::change::captured",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-CAPTURED-ANALYSIS",
       "verb": "implements"
     },
     {
@@ -99148,7 +99199,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:16612c304bb41a6ac4ab4dc4105aa4e4de16815294dcb20cfa62856a3552b096",
+      "content_hash": "sha256:6d88e0ca52caabd11bf7dd6d09d822e49c5ccc2bedc9e2f7b2531acbced65ec4",
       "doc_path": "common/PROP-071",
       "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
       "heading": "PROP-071: Change origin bindings and project-owned closure",
@@ -99274,7 +99325,7 @@
     },
     {
       "anchor": "identities",
-      "content_hash": "sha256:ee0c78f159bbf768b9a8f8023d760f23410535f456ed99ab0b762975b2fc1ce3",
+      "content_hash": "sha256:aa345170ad51e09abe0e006f84b33bfe4088c96981620cf38e5bc05fc66c75d7",
       "doc_path": "common/PROP-071",
       "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
       "heading": "4. Independent authored intent and structural work",
@@ -99307,6 +99358,24 @@
       "heading": "Work recipe sha256:vibe-change-work-v1 binds the same immutable consumer/change scope and sorts items by ID, predecessors and touches lexically, and needs by lexical kind/target; authored ordering does not change graph identity. Distinct selected-contribution recipe sha256:vibe-change-work-contribution-v1 frames sorted selected IDs and their complete predecessor closure, excluding unrelated items. These structural contributions may inform later execution requests but are not execution authority. Every recipe begins with its name plus NUL epoch=1 NUL and uses be64(label length), label bytes, be64(value length), value bytes, with collection counts and explicit item boundaries. Schema field values are be32 and collection count values are be64; text is UTF8, normative content is exact bytes. Intent and work domains are distinct; closure creation cannot rewrite the intent snapshot it names. @status:spec/plan",
       "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-WORK-IDENTITY-FRAMING"
+    },
+    {
+      "anchor": "CHANGE-CAPTURED-ANALYSIS",
+      "content_hash": "sha256:22480847ab29a0cb3f8c76a7abf4821ea4a11c1e8e4db4def14fce1630a67ff7",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "Change analysis consumes the actual immutable client-scoped M16 disk-plus-buffer capture. Derive node context from its retained node manifest and trusted configured relative spec root, then reuse the shared change parser/roles and exact-byte identity owner. Every input/diagnostic retains resource, capture, version, digest and original-byte basis; optional partial/invalid syntax preserves raw bytes and explicit missing position. Different clients' dirty refinements remain isolated. Analysis never reopens disk, saves, fetches, installs or writes lock/closure. A raw byte identity is not authenticated origin or effect authority. @status:spec/plan",
+      "line": 25,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-CAPTURED-ANALYSIS"
+    },
+    {
+      "anchor": "CHANGE-SAVED-PREPARATION",
+      "content_hash": "sha256:a31881ccbcb5962fb8012801c24774a65f9d1d0df967528eca94de3f4a61e9b3",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "A future authored edit is prepared only from saved recaptured node/change/input witnesses and a separately composed finite M16 document-edit grant. Derived closure is not a writable normative input. Revalidate exact buffer versions, disk observations and subject inputs against an explicit fresh capture, then reuse the existing M16 participant barrier; no new editor/writer protocol is created. Dirty inputs, changed affected state, foreign capture or old dirty plan after save refuse before writes. This change adapter performs analysis/preparation only: it does not acknowledge/apply a barrier, save, execute work or publish closure. Registered cooperative and final-comparison/rename limitations remain those of PROP080. @status:spec/plan",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-PREPARATION"
     },
     {
       "anchor": "root",

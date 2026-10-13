@@ -1,0 +1,80 @@
+[
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib change::m_02_b_3_cases::two_clients_dirty_refinements_are_isolated -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "connected-first.log",
+    "cases": 1,
+    "ignored": 0
+  },
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib change::m_02_b_3_cases -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "orchestrator-family.log",
+    "cases": 4,
+    "ignored": 0
+  },
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib change::m_02_b_3_cases -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "requirements-family.log",
+    "cases": 2,
+    "ignored": 0
+  },
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-requirements --lib change::m_02_b_2_cases::actual_saved_lookup_separates_normative_work_and_closure -- --exact",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "identity-compat.log",
+    "cases": 1,
+    "ignored": 0
+  },
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/fast/git/v/.build/c4-first-agent-target /home/olegchir/.cargo/bin/cargo +nightly test --manifest-path /fast/git/v/vibevm-next/Cargo.toml --locked --offline -p vibe-orchestrator --lib change::m_02_b_3_cases -- --nocapture",
+    "cwd": "/tmp",
+    "exit": 0,
+    "log": "orchestrator-final.log",
+    "cases": 4,
+    "ignored": 0
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "+nightly",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/change/m_02_b_3_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/change/mod.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/change/prepare.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/lib.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/change/captured.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/change/identity.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/change/m_02_b_3_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-requirements/src/change/mod.rs"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "log": "touched-format.log"
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "log": "diff-check.log"
+  },
+  {
+    "command": "RUSTUP_AUTO_INSTALL=0 CARGO_NET_OFFLINE=true /home/olegchir/.cargo/bin/cargo +nightly fmt --manifest-path /fast/git/v/vibevm-next/Cargo.toml --all -- --check",
+    "cwd": "/tmp",
+    "exit": 1,
+    "log": "full-format.log"
+  }
+]
