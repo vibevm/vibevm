@@ -559,3 +559,6 @@ pub use capabilities::*;
 #[cfg(test)]
 #[path = "package/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod m_05_a_2_cases;
