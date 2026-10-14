@@ -1,0 +1,17 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "discoveries": [
+    "Confirmed planner root constraint loss at the source solve boundary in bare and explicit modes.",
+    "Confirmed Fresh ignores a newly requested explicit feature with nonempty satisfied requirements.",
+    "Final integration run executed both intended cases: 2 passed, 0 failed."
+  ],
+  "unresolved": [
+    "cargo fmt --all -- --check exits 1 on existing files outside the allowed write perimeter; candidate file has no remaining formatting diff.",
+    "Exploratory caret held-root pinning expectation was not observed; cause remains unverified outside the allowed read perimeter. Final case characterizes preservation of an exact locked requirement."
+  ],
+  "proposed_follow_up": null
+}
