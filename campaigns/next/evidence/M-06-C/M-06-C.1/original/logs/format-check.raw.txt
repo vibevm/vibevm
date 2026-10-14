@@ -1,0 +1,10 @@
+Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/tools.rs:16:
+ 
+ use crate::{ServerContext, ToolDescriptor, ToolError};
+ 
+-pub mod output;
+ pub mod boot_debugger;
++pub mod output;
+ pub use boot_debugger::BootDebuggerMcpTool;
+ pub use output::ToolOutput;
+ 

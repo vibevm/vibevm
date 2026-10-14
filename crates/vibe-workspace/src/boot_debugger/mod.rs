@@ -7,6 +7,7 @@ use vibe_spec::{
 };
 pub mod dynamic_index;
 pub mod measurement;
+pub mod protocol;
 pub mod retained;
 mod static_summary;
 pub use static_summary::{StaticDecompileError, capture_static, decompile_static};

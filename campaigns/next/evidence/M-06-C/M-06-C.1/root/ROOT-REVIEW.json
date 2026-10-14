@@ -1,0 +1,445 @@
+{
+  "approved": true,
+  "summary": "Root accepts full reviewed M06C1 candidate for normal safe/review/evidence/stage/WorkAccepted: 14 distinct cases passed, both P2 findings and CLI policy owner repaired, source80/generated214 unchanged, separate staged check-codegen exit0.",
+  "scope": "Full structured boot debugger CLI/MCP/sharedroute, currentcapture/overlay comparepresence and emittedartifact span/sourceidentity joins, exactsnapshot/epoch/filter/cursor/replay/refusals and inspection-only cancellation.",
+  "limitations": [
+    "Fourteen distinct cases, repeated runs excluded.",
+    "Original unsatisfied candidate and producer check-codegen exit1 remain preserved; Root staged integration gate separately passed. Global wire-diff remains exit1 at unchanged index/e1 repomd projection.",
+    "Configured in-process CLI/MCP/shared route qualification; no spawned external transport/provider or hostile-writer/atomic-all-files proof.",
+    "Captured emitted artifact line positions are not authored source coordinates; unknown joins, tokenizer, billing and ambient tail remain unavailable.",
+    "Runtime candidate canonically collected/Succeeded; five verified process identities retired before store opening. Raw Git index bytes changed but staged paths/blobs remained identical."
+  ],
+  "observed_test_count": 14,
+  "observed_test_exit": 0,
+  "actual_environment": "Actual managed PodBay/Codex source producer; offline locked warm VibeVM target and private TMPDIR. Root corrected stable/nightly toolchain error; required integration gate uses actual directory nightly1.101. No broad test suite/Lean/UI deployment.",
+  "evidence_files": {
+    "/fast/zap-managed/2026-10-15-m06c1-correction/candidate-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/candidate-result.json",
+      "sha256": "a80fdb0e7af17824c966ce006c0e107f28d6a3bf9022f4a6bffd426544ab20a7"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/correction-report.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/correction-report.json",
+      "sha256": "de651621e12a048324fc7685f2ac4ff5075bd496b6bd31b9efd2654825093638"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/full-task.patch": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/full-task.patch",
+      "sha256": "6e55af3265303551e4fcb12655aff757004df0841c4e806024f0fc5a5666a8fb"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/ACCEPTANCE-FROZEN-SUBJECT.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/ACCEPTANCE-FROZEN-SUBJECT.json",
+      "sha256": "7699cbbe2cdcfae0b0885e747353fab14244a9abc345a3e9266059ad238dafc6"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/codegen.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/codegen.log",
+      "sha256": "202d161541170817ad8e64bd876c7fef1c42ca879fa3d22d24bea187479f19b3"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/route-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/route-1.log",
+      "sha256": "4669dc735014f511dffbeae7464e2c62427a7c971d52c9ff0f7804b5681119c8"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/cli-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-1.log",
+      "sha256": "bd100517300c2043e7fade483cb687dd6f531fdd44f863fa26c3ecb837508fe1"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/workspace.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/workspace.log",
+      "sha256": "5c80e55999f62b061a73575afe10207f4685b0e129fe1a54ad3a9a663f800e64"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/wire.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/wire.log",
+      "sha256": "bdd14ec654fa922191123a8840485365f2c1170bf7fc98b46fab674a39be3656"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/mcp.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/mcp.log",
+      "sha256": "4d8f7c7041514e61bb87c60477bb4397c10914deed42a27e851b761917193adc"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/route-final.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/route-final.log",
+      "sha256": "30c6864902f445b2b11f26633e5aaf39e0c0a510b4c55ddd3d2e44050ff5aaf2"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/cli-final.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-final.log",
+      "sha256": "69dfc6b7de96c64b6feb0f3abf7965d1cd49441c7cfee5c678aab5e41987cd48"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/cli-inventory.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-inventory.log",
+      "sha256": "27ead0b08e25eae31e2245176625a2910ebe799f15be49963b4598df672a0990"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/cli-policy.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-policy.log",
+      "sha256": "7c00a0ab61a9afc880e0c97b5d52468c9125feb9bedb011dd6ebfeda4894bea2"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/scoped-fmt.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/scoped-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/check-codegen.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/check-codegen.log",
+      "sha256": "2d6bc0f6fabc3c043d9df3b62ba99b4625802cd3e5570daf97119cd6719e6628"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/wire-diff.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/wire-diff.log",
+      "sha256": "5fecfb780ed017862d1c3c7d49d8782e4f84477787fd1301d3d49c6b247e0b89"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/diff-check.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/full-patch-reverse-check.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/full-patch-reverse-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/correction-patch-reverse-check.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/correction-patch-reverse-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/cli.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/cli.rs",
+      "sha256": "57fc2491b9be613276e617a7f014ec0acf7f5f57a4b63cdb1610bd8cce6a08ef"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/boot/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/boot/mod.rs",
+      "sha256": "d2d4d2a3d5d79e2daed8165e2191cf4e436ff9962d5c490bad013a31d6be9ee4"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/mod.rs",
+      "sha256": "67f1b1f6814c2c1190548e0a9bfdafa030197a8c4ddea53058356d6f2a81e9c8"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/main.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/main.rs",
+      "sha256": "ee4917ddf9c45710f7f97ed12dbff154f56ddaa138ab3776a9f4642e6712e89b"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-mcp/src/context.rs",
+      "sha256": "aefe118f76a3a4a212f8279705f8fc40cfe2dc94b836c744101da4ce97e52ed3"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-mcp/src/tools.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-mcp/src/tools.rs",
+      "sha256": "39202a37f4fac2d6eae6e7cdc4a9bf20c10044b65389ff98277db8621d3f2d08"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-mcp/src/tools/boot_debugger.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-mcp/src/tools/boot_debugger.rs",
+      "sha256": "a2dc90cbc3c15a3898bbe524632015b4ff540bc44f63b130b8b791c5c35ba6c2"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation.rs",
+      "sha256": "4acf92e0593ec2e40fec23ec3f0561799cdcb499cd8db0c85a6a017767ec958c"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
+      "sha256": "e59d55ad215cd24270039205e99bfc0e8a74c1e2bd97f0cbc322024b7bb8de07"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+      "sha256": "3734646075bbe2573cad8b266ed99580d14fce1251e08352e08ff66e6d0b29eb"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs",
+      "sha256": "695df59c9b73dbcffad76cbc78ed2b5fde5fb250ab922c9230cb891eb4dbaa70"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/application/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "sha256": "880cb9818e54982b784fb89f4ab3b668072e1c5c1782a6ae260b978e70980002"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/application/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/application/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/error/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/error/mod.rs",
+      "sha256": "c9797a0fa31cba154b8e5fb58b40f9ea191a8902cdb219e620195c9ae5eccee8"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "sha256": "9833108f0a8bec8467a7320962503d553dc4cbbaddd0fd41dab50747e5469056"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/progress/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/progress/mod.rs",
+      "sha256": "829d8914b1dd4630d83ac8475dbfd49bb520dcffd4719d47fc9b5194546ec41d"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/request/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/request/mod.rs",
+      "sha256": "de545373e575f785ee87fe86841702891ad79122e0e2d76219740e3bc28bb5d5"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs",
+      "sha256": "cb384dd676e545d3c383481ee830bcf8b821e86e534327c878e52afae358e8f9"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/capability/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "sha256": "df6fdb9479088aa810e79d159903182cbeb6d5cc3e7e44c30d86e5c34ad1141d"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/capability/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/capability/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/change_query/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "sha256": "d1863774b1b8c2ccb9bf67d7b7b429b023352d5d898a358027a286fba87fc22f"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/change_query/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/change_query/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "sha256": "242014748aec3334f328f8e00d1032b021dee9e6523b278cd35e4742f1d07744"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "sha256": "44895c49ec6ebcd95e163354c3a10a67f48f55ba6a798bcbc850c0ceb0768bb6"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/compiler_ir/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "sha256": "b4e6988af53753fdad41999fd58603aab23c6df463f3433c4c0b1ff3c74caf26"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/compiler_trace_index/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/distribution/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "sha256": "cc05cbede2c3e162378cfa1381ca4d4321a10c14ab5eb77951de666c128d15a5"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/distribution/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/distribution/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/environment/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "sha256": "fed81ed4325cd612673ec22cd048e0b9d344eb61b425727cae16242279b4acfe"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/environment/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/environment/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/mod.rs",
+      "sha256": "ea9d5f766fa5d5f19a9447fa0233ce2058604f72330c484ebe9c2ee7a019fa75"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs",
+      "sha256": "f82e037abeea9e6c4a721b35eb68a6f52196ef2d75b428824630d8ce0559c454"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/hello/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "sha256": "c0eedd829510db6a6b6b3c4626103a361cdab6f0ce96766fa1c3c261d423ae84"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/hello/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/hello/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "sha256": "c5f3f3229853b55f33c8a55ad14105cac65b76f90d4c29bc12f5cdfca80ab76b"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index_cli/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "sha256": "e8dff0c6147e5ad8ec2006d988168c62566f2f38853555fc45892220b11cf3be"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index_cli/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index_http/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "sha256": "6a0393ed24c445986bc96fe059c509515373893ab2f745229a4ee6b616374009"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index_http/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/index_http/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/journal/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "sha256": "409f964de6de66ef34aa1b1ebb09f3a6226f4f6b99a2c982140d969305842ba3"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/journal/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/journal/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/lifecycle/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "sha256": "e287a31d6599795172cfcd168ff05cd0056fb0c974b524f2d85ab2df9e550500"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/lifecycle/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "sha256": "d6c75f87beb9f6a01684f2f43bafb07fd20e4baa8a97c43586f13e8243175a31"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "sha256": "8c5a852a75447b0cfad797b68c17f1b5b30374b7bae19b847409ba8571822454"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/llm/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/llm/mod.rs",
+      "sha256": "7273241fd9fdd35c095163f4fa519274622a4404f7be094bc6f9545ad5b9c136"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "sha256": "15773ba6f8e791bc1ffab869bb454304ab215fefb3975179eaa194fc68b0f055"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/machine/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "sha256": "d4f70e0a8f2d38de935aaf547a9328cb196e32af167689bd324165fe271cea46"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/machine/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/machine/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/migration/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "sha256": "9a6e82c3214aac9e351248a323b0cc1c7aebf683aaba1aa5f3d7449df8cf2dbc"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/migration/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/migration/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/mod.rs",
+      "sha256": "1ac2f93bc7d90a754e0439a1ecad6a250e486a80cb40ada36f32cdc7d2a2fc2f"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/native/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "sha256": "ba51697f07a89813e6327bee80fa4559b2e7e332a60ba5b08ef090d0f6fb9edb"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/native/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/native/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/preview/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "sha256": "6a695b9966c3f5a5f1e98afb5de3bff8d62c0014a535cc899371017cdb05f44a"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/preview/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/preview/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/scrape/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "sha256": "dd192fdd5285ab90c29e5375213d63b4de006de1f76188fb152162292e54b7c3"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/scrape/e2/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "sha256": "45c0893ecbdac73b54e6da907e88505e66b2dee217f2448baed0eed4ca8bec96"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/scrape/e3/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "sha256": "85f645a8256b5c07b2ef474bbfe824e41af45a22ba68be4dcf6bf769f23ecb61"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/scrape/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/scrape/mod.rs",
+      "sha256": "425d76ba5da82f78d524b28065ec42a0bc373f682725de73f2a0309ea83dfe1d"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/source_query/e1/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "sha256": "8193fd07094ae1711dc9ea47b5e8010e30cbe0ccc2edcd1db3383e4e4f200901"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/source_query/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/source_query/mod.rs",
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/lib.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/lib.rs",
+      "sha256": "c55a139009271b14bd61fb7416811d71f24d53b98dcb8468894430c03bdf5b1f"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/m_06_c_1_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/m_06_c_1_cases.rs",
+      "sha256": "1d8f7f439dcdaac60af60b4318161e860cc1195b87c264b77b77a7851cf905ac"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "sha256": "4f22c1f189a3d7c74c1656b6c4b2994fdc1829296c7ca6483d0970aa64eff2f0"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/protocol.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/protocol.rs",
+      "sha256": "8be6acb0f76acdcfdcbdd3d34c6a778d794153b29380cbc01e04e8d809b7032f"
+    },
+    "/fast/git/v/vibevm-next/formats/REGISTRY.toml": {
+      "path": "/fast/git/v/vibevm-next/formats/REGISTRY.toml",
+      "sha256": "052a2c42246bdc3a7e27f61ed57a255e1c87aea269de9b37346a7ad6b19c1a2e"
+    },
+    "/fast/git/v/vibevm-next/schemas/boot_debugger/e1/error.jtd.json": {
+      "path": "/fast/git/v/vibevm-next/schemas/boot_debugger/e1/error.jtd.json",
+      "sha256": "5bc9c2d598a8e6bd5e45b7160ed93b70579fe34253434ee37301746473a3392a"
+    },
+    "/fast/git/v/vibevm-next/schemas/boot_debugger/e1/progress.jtd.json": {
+      "path": "/fast/git/v/vibevm-next/schemas/boot_debugger/e1/progress.jtd.json",
+      "sha256": "50ed7bf1ba8e7403c8ccfe9725519b60dc541c8facfa9e89049486f4050bd87d"
+    },
+    "/fast/git/v/vibevm-next/schemas/boot_debugger/e1/request.jtd.json": {
+      "path": "/fast/git/v/vibevm-next/schemas/boot_debugger/e1/request.jtd.json",
+      "sha256": "216b27dcfc76b6b52ee8027f9c6a3de8d33eeb198d34420cc25c5fcc1eb4b409"
+    },
+    "/fast/git/v/vibevm-next/schemas/boot_debugger/e1/result.jtd.json": {
+      "path": "/fast/git/v/vibevm-next/schemas/boot_debugger/e1/result.jtd.json",
+      "sha256": "504d2a3c40b48fe9413e6e1dfd870f18c046434e63ef8ec88657dec93f2f29cf"
+    },
+    "/fast/git/v/vibevm-next/vibevm/vibespecs/common/PROP-072-boot-observability.xml": {
+      "path": "/fast/git/v/vibevm-next/vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "9c7d43ed1e925b0ff6977c49b36ba07fbd204ca241a4e254e0fc22a672f59585"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/command_progress.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/command_progress.rs",
+      "sha256": "be22ec9e00ac9a6a5b708f4d52ade13449554dc1147dca03ccf7680f0d1de4bf"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/command_progress/tests.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/command_progress/tests.rs",
+      "sha256": "ec5489f221d86406254901402d8256c42457398f4508583f278ae8f2616aabde"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs",
+      "sha256": "d7bda4276f4b74c7ec5b4bde5382996aeb55dea4b56069dd6a85202fd7cbaebb"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-RETIREMENT.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-RETIREMENT.json",
+      "sha256": "6091e9af8fd74341de6c2fbc1dea41cedede89d8f5a4eaaa839f6711779ccb24"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-RESULT.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-RESULT.json",
+      "sha256": "f398c856fd10039d510d8585316c31c3cbabf77a9917a11b78b000a6d01b7821"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-INTEGRATION-INPUT.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-INTEGRATION-INPUT.json",
+      "sha256": "659e3a60f37890d492e7c990d43e315e712dabd4d69c2a0be0a6ada2894b9d07"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-FAILED-1.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-FAILED-1.json",
+      "sha256": "ac15d41d4d941f553269837503c24ff6e40f7a7a2d24ea9994ce8245ec76b562"
+    },
+    "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-FAILED-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-FAILED-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/git/v/research/2026-10-15-m06c1-final-review/REPORT.md": {
+      "path": "/fast/git/v/research/2026-10-15-m06c1-final-review/REPORT.md",
+      "sha256": "00d9a1aaf46050aeaf352ae76314160fca9d3188420f721149d76b1717debd69"
+    },
+    "/fast/git/v/research/2026-10-15-m06c1-final-review/REPORT.json": {
+      "path": "/fast/git/v/research/2026-10-15-m06c1-final-review/REPORT.json",
+      "sha256": "bdefd70e17466ca514a6acbe16018c7321457f3726a70c31945512641e20e11c"
+    }
+  }
+}

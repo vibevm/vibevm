@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/home/olegchir/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc",
+    "-Zthreads=8",
+    "--print",
+    "cfg"
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "error: the option `Z` is only accepted on the nightly compiler\n\nhelp: consider switching to a nightly toolchain: `rustup default nightly`\n\nnote: selecting a toolchain with `+toolchain` arguments require a rustup proxy; see <https://rust-lang.github.io/rustup/concepts/index.html>\n\nnote: for more information about Rust's stability policy, see <https://doc.rust-lang.org/book/appendix-07-nightly-rust.html#unstable-features>\n\nerror: 1 nightly option were parsed\n\n"
+}

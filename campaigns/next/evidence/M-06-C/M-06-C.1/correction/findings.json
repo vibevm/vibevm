@@ -1,0 +1,16 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Same-task review corrections implemented and verified; candidate remains unreviewed."
+  ],
+  "unresolved": [
+    "Global check-codegen remains an unstaged integration gate; Root owns staging after independent review.",
+    "Global wire-diff failure from unrelated index debt retained; no full-format green claim."
+  ],
+  "proposed_follow_up": null
+}

@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "run",
+    "--offline",
+    "--locked",
+    "--quiet",
+    "-p",
+    "xtask",
+    "--",
+    "check-codegen"
+  ],
+  "versions": {
+    "cargo": "cargo 1.101.0-nightly (f3865b2a4 2026-09-29)",
+    "rustc": "rustc 1.101.0-nightly (c36f14571 2026-10-01)"
+  },
+  "source_files": 80,
+  "generated_files": 214,
+  "busy": [],
+  "locks_idle": 1,
+  "first_failure_preserved": "ROOT-CODEGEN-FAILED-1.log/json",
+  "RUSTC": "unset; actualprojectnightly directoryoverride"
+}

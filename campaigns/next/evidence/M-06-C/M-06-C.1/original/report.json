@@ -1,0 +1,783 @@
+{
+  "status": "incomplete_unreviewed_candidate",
+  "acceptance_claimed": false,
+  "scope": "M-06-C.1 structured captured boot debugger protocol; no desktop UI, delegation, staging, commit, deployment or next-task dispatch",
+  "blocking_owner": {
+    "path": "crates/vibe-cli/src/command_progress.rs",
+    "line": 137,
+    "reason": "New Command::Boot makes the incumbent exhaustive command progress policy match fail with E0004. This file is absent from the literal write perimeter. No change was made to it.",
+    "minimum_correction": "Authorize the single typed Boot registration arm in command_progress::policy; the incumbent persistent machine/MCP sessions use PersistentProtocol. Do not infer permission from this report."
+  },
+  "implementation": [
+    "Additive PROP-072 DEBUGGER-PROTOCOL clause; all previous source bytes before the closing root remain an exact prefix. No normative retirement.",
+    "Four strict registered JTD roots: boot-debugger-request/result/error/progress, generated through the incumbent xtask/JTD owner. Request variants: capture, inspect, tree, explain, cost, compare, cancel, raw chunk and replay.",
+    "Pure workspace projection delegates to existing static/index/compiler snapshot readers and measurement; no workspace reverse dependency.",
+    "Upper host-bound route retains DocumentClient/AnalysisCapture and PageSession, validates exact context/epoch/filter/cursor, scopes resource identities to capture, keeps raw-byte basis, uses incumbent stream validation and explicit bounded replay gaps. Inspection cancellation never requests or claims build cancellation.",
+    "Configured MCP contexts retain one explicit matching-root Arc route. Two independent contexts inspect the same retained snapshot with identical output. Default-unconfigured MCP remains unavailable.",
+    "CLI source implements structured newline OperationEnvelope input/output and a host startup capture, but CLI binary test target does not compile until the separate policy owner registration is authorized.",
+    "Cost currently reports the selected captured artifact bytes/scalars with the incumbent recipe; tokens, provider billing and ambient tail remain explicitly unavailable. It does not assert full-boot or authored-source attribution. Current compare compares retained resource content digests. Hypothetical preview is not implemented.",
+    "Explicit library retain_capture can retain a host-owned immutable overlay capture; this additional composition seam has not received an independent overlay regression in this candidate."
+  ],
+  "check_environment": {
+    "cwd": "/fast/git/v/vibevm-next",
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "TMPDIR": "/fast/zap-managed/2026-10-15-m06c1/tmp",
+    "RUSTUP_AUTO_INSTALL": "0",
+    "cargo_flags": [
+      "--offline",
+      "--locked"
+    ],
+    "authorization": "Existing ROOT-TARGET-HANDOVER.json; no target copy/cleanup or additional permission request"
+  },
+  "selection_before_compile": {
+    "workspace": "--lib m_06_c_1_cases: 2 created cases; captured multiplicity, measurement gaps and invalid-source refusal",
+    "wire": "--lib m_06_c_1_cases: 2 created cases; strict request, required nullable fields, registry and result/error/progress carriers",
+    "mcp": "--lib m_06_c_1_cases: 1 created case; independent configured headless clients and matching-root/default availability",
+    "cli": "--bin vibe m_06_c_1_cases: 1 created case; actual structured positive input, canonical refusal and startup capture (not executed due compilation failure)",
+    "orchestrator": "--lib machine_operation::boot_debugger: 3 created cases; immutable snapshots/compare/cost/explain, context/epoch/filter/cursor/cancel, page/chunk reconstruction and generated progress/replay gap"
+  },
+  "cargo_checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "m_06_c_1_cases"
+      ],
+      "exit_code": 101,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/workspace-1.log",
+      "test_summaries": [],
+      "executed_nonzero_family": false,
+      "log_sha256": "0de1290e2ae460dae79807be38461b8ecf15ee45f54fead40dfe26621b7ee2cd"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::boot_debugger"
+      ],
+      "exit_code": 101,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/route-1.log",
+      "test_summaries": [],
+      "executed_nonzero_family": false,
+      "log_sha256": "610b34af6f0b60bf51cd0f7069f8d72283293a2d866ee59053dd3441fab66ba7"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::boot_debugger"
+      ],
+      "exit_code": 0,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/route-2.log",
+      "test_summaries": [
+        {
+          "status": "ok",
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "executed_nonzero_family": true,
+      "log_sha256": "4f8e272c893b1c26149dd26584dc99c6abe84e6e46a8cb361462e29bf46e5dee"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "m_06_c_1_cases"
+      ],
+      "exit_code": 0,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/mcp-1.log",
+      "test_summaries": [
+        {
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "executed_nonzero_family": true,
+      "log_sha256": "8cd8d8265efe951a8c635f379d4f507c7a32710d2c5be9249a6fa3f0e67c94be"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "m_06_c_1_cases"
+      ],
+      "exit_code": 101,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/cli-1.log",
+      "test_summaries": [],
+      "executed_nonzero_family": false,
+      "log_sha256": "f793818c20c9edea719d32215660cd6b076f2f28cc0267a8ab4cf922bfa25b60"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "m_06_c_1_cases"
+      ],
+      "exit_code": 0,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/workspace-2.log",
+      "test_summaries": [
+        {
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "executed_nonzero_family": true,
+      "log_sha256": "f5ee7b8cf2268b2ddb491b7fac30355c2f0723e89ffbbc38776f27a22e0fcc8b"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "m_06_c_1_cases"
+      ],
+      "exit_code": 0,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/wire-1.log",
+      "test_summaries": [
+        {
+          "status": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "executed_nonzero_family": true,
+      "log_sha256": "3c369d6f78d09abae2eddd3d4210374c7892f8f3144c731b3e47189327c69a48"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::boot_debugger"
+      ],
+      "exit_code": 0,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/route-3.log",
+      "test_summaries": [
+        {
+          "status": "ok",
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "executed_nonzero_family": true,
+      "log_sha256": "98577aa740ebe103a833488681c0e74878ca608396f7fe213ab91930fdaec462"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "m_06_c_1_cases"
+      ],
+      "exit_code": 0,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/mcp-2.log",
+      "test_summaries": [
+        {
+          "status": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "executed_nonzero_family": true,
+      "log_sha256": "5abf7e9fc7b5886945fb6c4bd3800754be8c08215945ec62f8a81fdee6197dca"
+    }
+  ],
+  "final_nonzero_counts": {
+    "workspace": 2,
+    "wire": 2,
+    "mcp": 1,
+    "orchestrator": 3,
+    "cli": 0,
+    "distinct_passing": 8,
+    "ignored": 0
+  },
+  "failed_oracles_retained": [
+    {
+      "log": "workspace-1.log",
+      "exit": 101,
+      "cause": "New test partially moved measurement.artifact; corrected to borrow."
+    },
+    {
+      "log": "route-1.log",
+      "exit": 101,
+      "cause": "New dispatch method private to child module; corrected to pub(super)."
+    },
+    {
+      "log": "cli-1.log",
+      "exit": 101,
+      "cause": "E0004 in out-of-perimeter command_progress.rs; unresolved and not edited."
+    },
+    {
+      "log": "format-check.log",
+      "exit": 1,
+      "cause": "New tools.rs module ordering; corrected, final scoped rustfmt exit 0."
+    },
+    {
+      "oracle": "first XML subtree comparison",
+      "exit": 1,
+      "cause": "Comparison included final sibling tail indentation; corrected oracle verifies exact original source prefix and all prior XML children, exit 0."
+    }
+  ],
+  "format_oracles": [
+    {
+      "command": [
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+        "check-codegen"
+      ],
+      "exit_code": 1,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/check-codegen.log"
+    },
+    {
+      "command": [
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+        "wire-diff"
+      ],
+      "exit_code": 1,
+      "log": "/fast/zap-managed/2026-10-15-m06c1/wire-diff.log"
+    }
+  ],
+  "format_oracle_notes": [
+    "Used the already existing private-target xtask executable with CARGO_MANIFEST_DIR pointing to repository xtask; did not claim a fresh cargo xtask compilation.",
+    "check-codegen exits 1 on the actual unstaged generated registration/header diff. This is not green and staging-dependent integration remains with Root.",
+    "wire-diff exits 1 on formats/corpora/index/e1/repomd.json versus journal. That corpus is unchanged by this patch; no unrelated corpus repair attempted.",
+    "The owning generator updates its schema-home header in existing generated module registrations. These are machine-produced registration changes, not manually regenerated carrier contents."
+  ],
+  "repeated_generation": {
+    "before_count": 214,
+    "after_count": 214,
+    "identical": true,
+    "changed": [],
+    "generator_binary_sha256": "e5b93952bd6c1c1dad3e973af41e0ca75f8c719efd66f55442b027fd86b95ea4"
+  },
+  "scoped_rustfmt": {
+    "command": [
+      "rustfmt",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "crates/vibe-cli/src/cli.rs",
+      "crates/vibe-cli/src/commands/mod.rs",
+      "crates/vibe-cli/src/main.rs",
+      "crates/vibe-mcp/src/context.rs",
+      "crates/vibe-mcp/src/tools.rs",
+      "crates/vibe-orchestrator/src/machine_operation.rs",
+      "crates/vibe-wire/src/lib.rs",
+      "crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "crates/vibe-cli/src/commands/boot/mod.rs",
+      "crates/vibe-mcp/src/tools/boot_debugger.rs",
+      "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
+      "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+      "crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs",
+      "crates/vibe-wire/src/m_06_c_1_cases.rs",
+      "crates/vibe-workspace/src/boot_debugger/protocol.rs"
+    ],
+    "exit_code": 0
+  },
+  "git_diff_check": {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0
+  },
+  "patch_reverse_apply_check": {
+    "command": [
+      "git",
+      "apply",
+      "--check",
+      "--reverse",
+      "/fast/zap-managed/2026-10-15-m06c1/candidate.patch"
+    ],
+    "exit_code": 0
+  },
+  "spec_preservation": {
+    "exit_code": 0,
+    "old_children": 7,
+    "new_children": 8,
+    "retired_clauses": [],
+    "old_source_before_closing_root_is_exact_prefix": true,
+    "previous_attempt": {
+      "exit_code": 1,
+      "reason": "XML serialization comparison included last sibling tail whitespace; no old clause changed"
+    }
+  },
+  "patch_manifest": {
+    "baseline": "3b1810fa74d8b318d9be4091e29e0bf0d2275601",
+    "files": [
+      {
+        "path": "crates/vibe-cli/src/cli.rs",
+        "sha256": "57fc2491b9be613276e617a7f014ec0acf7f5f57a4b63cdb1610bd8cce6a08ef",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/boot/mod.rs",
+        "sha256": "19679eba2c4ba1d30a79cd9ee2dc6cb0475185cb35fd08cef395c964307babcc",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/mod.rs",
+        "sha256": "67f1b1f6814c2c1190548e0a9bfdafa030197a8c4ddea53058356d6f2a81e9c8",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-cli/src/main.rs",
+        "sha256": "ee4917ddf9c45710f7f97ed12dbff154f56ddaa138ab3776a9f4642e6712e89b",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-mcp/src/context.rs",
+        "sha256": "aefe118f76a3a4a212f8279705f8fc40cfe2dc94b836c744101da4ce97e52ed3",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-mcp/src/tools.rs",
+        "sha256": "39202a37f4fac2d6eae6e7cdc4a9bf20c10044b65389ff98277db8621d3f2d08",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-mcp/src/tools/boot_debugger.rs",
+        "sha256": "d9f0579f165b1c2d1da9535f67789c2761a36097fcc72ff2e637568728a43b2f",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/machine_operation.rs",
+        "sha256": "4acf92e0593ec2e40fec23ec3f0561799cdcb499cd8db0c85a6a017767ec958c",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
+        "sha256": "1e304202393ef3ac2bf7389f898171c5ca9d75b3d96155445c1053a42b9c3955",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+        "sha256": "9b035158f9961031ae19bfe6fd636c33f1b62bc055ef9263c4e30b95ab0f9510",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs",
+        "sha256": "e2aa96878f546ce6ef7a9f29b1ec08be34f8ec1f4449ec5295de3b1ad878ea2a",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+        "sha256": "880cb9818e54982b784fb89f4ab3b668072e1c5c1782a6ae260b978e70980002",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/application/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/e1/error/mod.rs",
+        "sha256": "c9797a0fa31cba154b8e5fb58b40f9ea191a8902cdb219e620195c9ae5eccee8",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+        "sha256": "9833108f0a8bec8467a7320962503d553dc4cbbaddd0fd41dab50747e5469056",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/e1/progress/mod.rs",
+        "sha256": "829d8914b1dd4630d83ac8475dbfd49bb520dcffd4719d47fc9b5194546ec41d",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/e1/request/mod.rs",
+        "sha256": "de545373e575f785ee87fe86841702891ad79122e0e2d76219740e3bc28bb5d5",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs",
+        "sha256": "36ba3b6cc32ad58c48f0306b670987b7bb4a4bef1b378b1d3276a7e8dcda4f62",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+        "sha256": "df6fdb9479088aa810e79d159903182cbeb6d5cc3e7e44c30d86e5c34ad1141d",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+        "sha256": "d1863774b1b8c2ccb9bf67d7b7b429b023352d5d898a358027a286fba87fc22f",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+        "sha256": "242014748aec3334f328f8e00d1032b021dee9e6523b278cd35e4742f1d07744",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+        "sha256": "44895c49ec6ebcd95e163354c3a10a67f48f55ba6a798bcbc850c0ceb0768bb6",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+        "sha256": "b4e6988af53753fdad41999fd58603aab23c6df463f3433c4c0b1ff3c74caf26",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+        "sha256": "cc05cbede2c3e162378cfa1381ca4d4321a10c14ab5eb77951de666c128d15a5",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+        "sha256": "fed81ed4325cd612673ec22cd048e0b9d344eb61b425727cae16242279b4acfe",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "sha256": "ea9d5f766fa5d5f19a9447fa0233ce2058604f72330c484ebe9c2ee7a019fa75",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "sha256": "f82e037abeea9e6c4a721b35eb68a6f52196ef2d75b428824630d8ce0559c454",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+        "sha256": "c0eedd829510db6a6b6b3c4626103a361cdab6f0ce96766fa1c3c261d423ae84",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+        "sha256": "c5f3f3229853b55f33c8a55ad14105cac65b76f90d4c29bc12f5cdfca80ab76b",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+        "sha256": "e8dff0c6147e5ad8ec2006d988168c62566f2f38853555fc45892220b11cf3be",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+        "sha256": "6a0393ed24c445986bc96fe059c509515373893ab2f745229a4ee6b616374009",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+        "sha256": "409f964de6de66ef34aa1b1ebb09f3a6226f4f6b99a2c982140d969305842ba3",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+        "sha256": "e287a31d6599795172cfcd168ff05cd0056fb0c974b524f2d85ab2df9e550500",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+        "sha256": "d6c75f87beb9f6a01684f2f43bafb07fd20e4baa8a97c43586f13e8243175a31",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+        "sha256": "8c5a852a75447b0cfad797b68c17f1b5b30374b7bae19b847409ba8571822454",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+        "sha256": "7273241fd9fdd35c095163f4fa519274622a4404f7be094bc6f9545ad5b9c136",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+        "sha256": "15773ba6f8e791bc1ffab869bb454304ab215fefb3975179eaa194fc68b0f055",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "sha256": "d4f70e0a8f2d38de935aaf547a9328cb196e32af167689bd324165fe271cea46",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "sha256": "9a6e82c3214aac9e351248a323b0cc1c7aebf683aaba1aa5f3d7449df8cf2dbc",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/mod.rs",
+        "sha256": "1ac2f93bc7d90a754e0439a1ecad6a250e486a80cb40ada36f32cdc7d2a2fc2f",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+        "sha256": "ba51697f07a89813e6327bee80fa4559b2e7e332a60ba5b08ef090d0f6fb9edb",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/native/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "sha256": "6a695b9966c3f5a5f1e98afb5de3bff8d62c0014a535cc899371017cdb05f44a",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+        "sha256": "dd192fdd5285ab90c29e5375213d63b4de006de1f76188fb152162292e54b7c3",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+        "sha256": "45c0893ecbdac73b54e6da907e88505e66b2dee217f2448baed0eed4ca8bec96",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+        "sha256": "85f645a8256b5c07b2ef474bbfe824e41af45a22ba68be4dcf6bf769f23ecb61",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+        "sha256": "425d76ba5da82f78d524b28065ec42a0bc373f682725de73f2a0309ea83dfe1d",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+        "sha256": "8193fd07094ae1711dc9ea47b5e8010e30cbe0ccc2edcd1db3383e4e4f200901",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+        "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/lib.rs",
+        "sha256": "c55a139009271b14bd61fb7416811d71f24d53b98dcb8468894430c03bdf5b1f",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-wire/src/m_06_c_1_cases.rs",
+        "sha256": "faac926516939ad2b99494c2f8374637521958027188f50565b1594ea2ec2fbb",
+        "new": true
+      },
+      {
+        "path": "crates/vibe-workspace/src/boot_debugger/mod.rs",
+        "sha256": "4f22c1f189a3d7c74c1656b6c4b2994fdc1829296c7ca6483d0970aa64eff2f0",
+        "new": false
+      },
+      {
+        "path": "crates/vibe-workspace/src/boot_debugger/protocol.rs",
+        "sha256": "8be6acb0f76acdcfdcbdd3d34c6a778d794153b29380cbc01e04e8d809b7032f",
+        "new": true
+      },
+      {
+        "path": "formats/REGISTRY.toml",
+        "sha256": "052a2c42246bdc3a7e27f61ed57a255e1c87aea269de9b37346a7ad6b19c1a2e",
+        "new": false
+      },
+      {
+        "path": "schemas/boot_debugger/e1/error.jtd.json",
+        "sha256": "5bc9c2d598a8e6bd5e45b7160ed93b70579fe34253434ee37301746473a3392a",
+        "new": true
+      },
+      {
+        "path": "schemas/boot_debugger/e1/progress.jtd.json",
+        "sha256": "50ed7bf1ba8e7403c8ccfe9725519b60dc541c8facfa9e89049486f4050bd87d",
+        "new": true
+      },
+      {
+        "path": "schemas/boot_debugger/e1/request.jtd.json",
+        "sha256": "216b27dcfc76b6b52ee8027f9c6a3de8d33eeb198d34420cc25c5fcc1eb4b409",
+        "new": true
+      },
+      {
+        "path": "schemas/boot_debugger/e1/result.jtd.json",
+        "sha256": "61959d44a7fda3bb75ee1c2bd3f6b098a0be47bad99d587859927a3798acffd9",
+        "new": true
+      },
+      {
+        "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+        "sha256": "88fe1ab5519581d0b017f10de18693718ea9ce9c5ff5bb0d1cec3d23ba5f8429",
+        "new": false
+      }
+    ],
+    "outside_perimeter": [],
+    "staged_files": [],
+    "patch_bytes": 200270,
+    "patch_sha256": "ecef3e3bf0e32d38caa0553b0b8705ab86a9c7ded4fdcf5a53fe58e5f77ab598"
+  },
+  "effects": {
+    "effect_state": "completed",
+    "actual": [
+      "Workspace source/schema/generated-file writes within literal perimeter",
+      "Private warm cargo target compilation and test objects",
+      "Temporary local test fixture writes and tempfile cleanup",
+      "Local logs, patch, manifest and report writes; finish-candidate publishes actual artifact bytes"
+    ],
+    "task_complete": false,
+    "measured_inspection_effects": "Reads and retained in-memory captures only; no compiler invocation, provider, trace writer, retention, installation or model activation by the debugger route. Cargo compilation belongs to verification, not measured inspection.",
+    "deployment": "No active binary replacement or deployment performed; no newer S5 source inferred deployed.",
+    "untouched": "No Git staging/commit, command_progress.rs edit, external Aeneas pack changes or separate M03A2 work."
+  },
+  "criteria": [
+    {
+      "statement": "Structured input exists, not only --json output.",
+      "disposition": "unsatisfied",
+      "reason": "Source and MCP path exist, but required CLI executable conformance cannot run because of an out-of-scope registration owner."
+    },
+    {
+      "statement": "Progress/error/state envelopes agree with the shared operation model.",
+      "disposition": "unsatisfied",
+      "reason": "Generated shared envelopes and route/MCP checks pass; full requested cross-surface acceptance remains unverified because CLI does not compile. Do not promote lower-target proof into full-scope acceptance."
+    }
+  ],
+  "unresolved": [
+    "Minimal command_progress.rs owner correction is required before CLI compiles.",
+    "Required CLI nonzero test and full current literal task completion remain outstanding.",
+    "Global check-codegen and wire-diff remain red as recorded; root integration/acceptance has not occurred."
+  ]
+}

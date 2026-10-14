@@ -1,0 +1,889 @@
+{
+  "task": "M-06-C.1",
+  "status": "unreviewed_candidate_not_acceptance",
+  "metadata_head": "db2c80ede34e500f4ab1bd2a6451c801c944b7fa",
+  "campaign_accepted_count_unchanged": 77,
+  "summary": [
+    "Retained and completed the full prior task patch, without staging or commits.",
+    "Boot is PersistentProtocol and present in the actual Clap policy inventory; required startup arguments exercised.",
+    "Compare uses active captured presence: create added, delete removed, edit changed, move removed source plus added destination.",
+    "Generated result exposes captured emitted-artifact spans with explicit one-based inclusive basis, snapshot/resource/digest and retained source identity catalogue; missing spans/authored joins remain null. Existing compiler carrier is retained under compiler-ir format identity.",
+    "Same registered DocumentClient overlays freeze and retain through the public M16 owner; historical captures remain unchanged after client/disk edits.",
+    "Structured CLI stdin and two configured independent MCP contexts use the same route and match snapshot/result/compare/source/progress/error data; cancellation affects inspection only."
+  ],
+  "checks": [
+    {
+      "name": "codegen",
+      "command": [
+        "cargo",
+        "run",
+        "--offline",
+        "--locked",
+        "--quiet",
+        "-p",
+        "xtask",
+        "--",
+        "codegen"
+      ],
+      "exit": 0,
+      "seconds": 31.414294481277466,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/codegen.log",
+      "sha256": "202d161541170817ad8e64bd876c7fef1c42ca879fa3d22d24bea187479f19b3",
+      "test_results": [],
+      "passed_cases": []
+    },
+    {
+      "name": "route-1",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::boot_debugger"
+      ],
+      "exit": 0,
+      "seconds": 33.12707257270813,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/route-1.log",
+      "sha256": "4669dc735014f511dffbeae7464e2c62427a7c971d52c9ff0f7804b5681119c8",
+      "test_results": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 626 filtered out; finished in 0.03s"
+      ],
+      "passed_cases": [
+        "machine_operation::boot_debugger::tests::m_06_c_1_cases_same_client_overlay_presence_and_retained_basis",
+        "machine_operation::boot_debugger::tests::m_06_c_1_cases_scope_epoch_filters_cursors_and_cancellation_boundary",
+        "machine_operation::boot_debugger::tests::m_06_c_1_cases_independent_clients_and_immutable_capture_cost_compare",
+        "machine_operation::boot_debugger::tests::m_06_c_1_cases_complete_page_and_chunk_reassembly_and_explicit_replay_gap"
+      ]
+    },
+    {
+      "name": "cli-1",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "m_06_c_1_cases"
+      ],
+      "exit": 0,
+      "seconds": 36.9860737323761,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-1.log",
+      "sha256": "bd100517300c2043e7fade483cb687dd6f531fdd44f863fa26c3ecb837508fe1",
+      "test_results": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 937 filtered out; finished in 0.02s"
+      ],
+      "passed_cases": [
+        "commands::boot::m_06_c_1_cases::structured_input_emits_canonical_error_and_initial_capture",
+        "commands::boot::cross_surface::m_06_c_1_cases_structured_cli_mcp_shared_overlay_positions_progress_and_cancel"
+      ]
+    },
+    {
+      "name": "workspace",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "m_06_c_1_cases"
+      ],
+      "exit": 0,
+      "seconds": 20.020018577575684,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/workspace.log",
+      "sha256": "5c80e55999f62b061a73575afe10207f4685b0e129fe1a54ad3a9a663f800e64",
+      "test_results": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 733 filtered out; finished in 0.00s"
+      ],
+      "passed_cases": [
+        "boot_debugger::protocol::m_06_c_1_cases::invalid_captured_source_is_not_an_empty_success",
+        "boot_debugger::protocol::m_06_c_1_cases::captured_index_preserves_repetition_and_unavailable_attribution"
+      ]
+    },
+    {
+      "name": "wire",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "m_06_c_1_cases"
+      ],
+      "exit": 0,
+      "seconds": 16.189513683319092,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/wire.log",
+      "sha256": "bdd14ec654fa922191123a8840485365f2c1170bf7fc98b46fab674a39be3656",
+      "test_results": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 256 filtered out; finished in 0.00s"
+      ],
+      "passed_cases": [
+        "m_06_c_1_cases::strict_registered_request_and_required_nullable_carriers",
+        "m_06_c_1_cases::canonical_result_error_progress_reject_unknown_fields",
+        "m_06_c_1_cases::captured_emitted_positions_and_source_identity_are_strict_and_nullable"
+      ]
+    },
+    {
+      "name": "mcp",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "m_06_c_1_cases"
+      ],
+      "exit": 0,
+      "seconds": 5.761282920837402,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/mcp.log",
+      "sha256": "4d8f7c7041514e61bb87c60477bb4397c10914deed42a27e851b761917193adc",
+      "test_results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 208 filtered out; finished in 0.00s"
+      ],
+      "passed_cases": [
+        "tools::boot_debugger::m_06_c_1_cases::two_headless_clients_share_snapshot_and_matching_root_route"
+      ]
+    },
+    {
+      "name": "route-final",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::boot_debugger"
+      ],
+      "exit": 0,
+      "seconds": 4.073687791824341,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/route-final.log",
+      "sha256": "30c6864902f445b2b11f26633e5aaf39e0c0a510b4c55ddd3d2e44050ff5aaf2",
+      "test_results": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 626 filtered out; finished in 0.03s"
+      ],
+      "passed_cases": [
+        "machine_operation::boot_debugger::tests::m_06_c_1_cases_same_client_overlay_presence_and_retained_basis",
+        "machine_operation::boot_debugger::tests::m_06_c_1_cases_scope_epoch_filters_cursors_and_cancellation_boundary",
+        "machine_operation::boot_debugger::tests::m_06_c_1_cases_independent_clients_and_immutable_capture_cost_compare",
+        "machine_operation::boot_debugger::tests::m_06_c_1_cases_complete_page_and_chunk_reassembly_and_explicit_replay_gap"
+      ]
+    },
+    {
+      "name": "cli-final",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "m_06_c_1_cases"
+      ],
+      "exit": 0,
+      "seconds": 10.259064674377441,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-final.log",
+      "sha256": "69dfc6b7de96c64b6feb0f3abf7965d1cd49441c7cfee5c678aab5e41987cd48",
+      "test_results": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 937 filtered out; finished in 0.02s"
+      ],
+      "passed_cases": [
+        "commands::boot::m_06_c_1_cases::structured_input_emits_canonical_error_and_initial_capture",
+        "commands::boot::cross_surface::m_06_c_1_cases_structured_cli_mcp_shared_overlay_positions_progress_and_cancel"
+      ]
+    },
+    {
+      "name": "cli-inventory",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "command_progress::tests::top_level_policy_inventory_matches_clap",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "seconds": 5.5780322551727295,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-inventory.log",
+      "sha256": "27ead0b08e25eae31e2245176625a2910ebe799f15be49963b4598df672a0990",
+      "test_results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 938 filtered out; finished in 0.00s"
+      ],
+      "passed_cases": [
+        "command_progress::tests::top_level_policy_inventory_matches_clap"
+      ]
+    },
+    {
+      "name": "cli-policy",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "command_progress::tests::terminal_and_protocol_owners_get_no_generic_fallback",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "seconds": 5.736984491348267,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-policy.log",
+      "sha256": "7c00a0ab61a9afc880e0c97b5d52468c9125feb9bedb011dd6ebfeda4894bea2",
+      "test_results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 938 filtered out; finished in 0.02s"
+      ],
+      "passed_cases": [
+        "command_progress::tests::terminal_and_protocol_owners_get_no_generic_fallback"
+      ]
+    },
+    {
+      "name": "scoped-fmt",
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "crates/vibe-cli/src/commands/boot/mod.rs",
+        "crates/vibe-mcp/src/tools/boot_debugger.rs",
+        "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
+        "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+        "crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs",
+        "crates/vibe-wire/src/m_06_c_1_cases.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/command_progress/tests.rs",
+        "crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs"
+      ],
+      "exit": 0,
+      "seconds": 0.057453155517578125,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/scoped-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "passed_cases": []
+    },
+    {
+      "name": "check-codegen",
+      "command": [
+        "cargo",
+        "run",
+        "--offline",
+        "--locked",
+        "--quiet",
+        "-p",
+        "xtask",
+        "--",
+        "check-codegen"
+      ],
+      "exit": 1,
+      "seconds": 28.09338068962097,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/check-codegen.log",
+      "sha256": "2d6bc0f6fabc3c043d9df3b62ba99b4625802cd3e5570daf97119cd6719e6628",
+      "test_results": [],
+      "passed_cases": []
+    },
+    {
+      "name": "wire-diff",
+      "command": [
+        "cargo",
+        "run",
+        "--offline",
+        "--locked",
+        "--quiet",
+        "-p",
+        "xtask",
+        "--",
+        "wire-diff"
+      ],
+      "exit": 1,
+      "seconds": 13.350095748901367,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/wire-diff.log",
+      "sha256": "5fecfb780ed017862d1c3c7d49d8782e4f84477787fd1301d3d49c6b247e0b89",
+      "test_results": [],
+      "passed_cases": []
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "seconds": 0.02536797523498535,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "passed_cases": []
+    },
+    {
+      "name": "full-patch-reverse-check",
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "--reverse",
+        "/fast/zap-managed/2026-10-15-m06c1-correction/full-task.patch"
+      ],
+      "exit": 0,
+      "seconds": 0.008635520935058594,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/full-patch-reverse-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "passed_cases": []
+    },
+    {
+      "name": "correction-patch-reverse-check",
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "--reverse",
+        "/fast/zap-managed/2026-10-15-m06c1-correction/correction-only.patch"
+      ],
+      "exit": 0,
+      "seconds": 0.005002260208129883,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/correction-patch-reverse-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": [],
+      "passed_cases": []
+    }
+  ],
+  "distinct_passed_case_count": 14,
+  "distinct_passed_cases": [
+    "boot_debugger::protocol::m_06_c_1_cases::captured_index_preserves_repetition_and_unavailable_attribution",
+    "boot_debugger::protocol::m_06_c_1_cases::invalid_captured_source_is_not_an_empty_success",
+    "command_progress::tests::terminal_and_protocol_owners_get_no_generic_fallback",
+    "command_progress::tests::top_level_policy_inventory_matches_clap",
+    "commands::boot::cross_surface::m_06_c_1_cases_structured_cli_mcp_shared_overlay_positions_progress_and_cancel",
+    "commands::boot::m_06_c_1_cases::structured_input_emits_canonical_error_and_initial_capture",
+    "m_06_c_1_cases::canonical_result_error_progress_reject_unknown_fields",
+    "m_06_c_1_cases::captured_emitted_positions_and_source_identity_are_strict_and_nullable",
+    "m_06_c_1_cases::strict_registered_request_and_required_nullable_carriers",
+    "machine_operation::boot_debugger::tests::m_06_c_1_cases_complete_page_and_chunk_reassembly_and_explicit_replay_gap",
+    "machine_operation::boot_debugger::tests::m_06_c_1_cases_independent_clients_and_immutable_capture_cost_compare",
+    "machine_operation::boot_debugger::tests::m_06_c_1_cases_same_client_overlay_presence_and_retained_basis",
+    "machine_operation::boot_debugger::tests::m_06_c_1_cases_scope_epoch_filters_cursors_and_cancellation_boundary",
+    "tools::boot_debugger::m_06_c_1_cases::two_headless_clients_share_snapshot_and_matching_root_route"
+  ],
+  "selection": "/fast/zap-managed/2026-10-15-m06c1-correction/selected-checks.txt",
+  "environment": {
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "TMPDIR": "/fast/zap-managed/2026-10-15-m06c1-correction/tmp",
+    "RUSTUP_AUTO_INSTALL": "0",
+    "cargo": "offline locked",
+    "handover": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-TARGET-HANDOVER.json"
+  },
+  "review_findings": {
+    "M06C1-P2-001": "addressed with same-client create/edit/delete/move and two-adapter compare checks",
+    "M06C1-P2-002": "addressed with real nested emitted markers, explicit absent span and source joins through generated CLI/MCP/shared-route views"
+  },
+  "generated_conformance": {
+    "codegen_exit": 0,
+    "repeat_generated_tree_byte_identical": true,
+    "generated_rs_files": 214,
+    "gate": "check-codegen actual exit retained below; unstaged Git drift is not a green gate"
+  },
+  "historical_evidence": {
+    "prior_distinct_passed": 8,
+    "prior_cli_executed": 0,
+    "prior_cli_compile_failure": "E0004 missing Boot policy arm",
+    "prior_check_codegen_exit": 1,
+    "prior_wire_diff_exit": 1,
+    "prior_patch_sha256": "ecef3e3bf0e32d38caa0553b0b8705ab86a9c7ded4fdcf5a53fe58e5f77ab598",
+    "meaning": "Preserved historical partial evidence, not acceptance and not relabeled by these runs."
+  },
+  "preservation": {
+    "before_hashes_unchanged": true,
+    "PROP072_all_prior_tags_attributes_text_preserved": true,
+    "normative_retirements": [],
+    "no_git_stage_or_commit": true,
+    "no_delegation": true,
+    "no_private_DocumentAnalysis_PageSession_stream_owner_edits": true,
+    "original_reports_and_provenance_unchanged": true
+  },
+  "effects": {
+    "state": "completed",
+    "actual": [
+      "In-scope source/schema/generated/test changes",
+      "Local fixture creation, overlay mutation, disk drift and refusal fixtures executed by tests under supplied TMPDIR",
+      "Offline Cargo compilation/test outputs in exclusive supplied private target",
+      "Codegen generated trees through incumbent owner",
+      "Patch/report/log artifacts under correction directory"
+    ],
+    "inspection": "Reads and projections do not invoke compiler/build, tracewriter, provider, installation, retention or model activation. Test fixture setup and Cargo execution are local verification effects, not debugger effects.",
+    "acceptance": "Root alone"
+  },
+  "limitations": [
+    "Finite M16 capture is not atomic across all files, hostile-writer protection or source authentication.",
+    "Graph identity does not prove an authored host resource join; missing map stays null. Emitted lines are not authored XML coordinates.",
+    "Tokenizer/provider billing/ambient tail remain unavailable; no total boot quota.",
+    "Default unconfigured MCP remains unavailable; positive configured route is functional.",
+    "Global unstaged codegen and unrelated wire/index debt are reported with actual exit and not repaired."
+  ],
+  "incidents": [
+    "One exploratory read used cat on the finish-candidate ELF before reading finish-candidate.rs; output was truncated. No executable bytes were changed or invoked by that read.",
+    "An exploratory path lookup for boot_graph.rs/codegen.rs found those owners in compiler/boot_graph.rs and codegen/mod.rs; followed exact owners."
+  ],
+  "correction_paths": [
+    "crates/vibe-cli/src/commands/boot/mod.rs",
+    "crates/vibe-mcp/src/tools/boot_debugger.rs",
+    "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
+    "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+    "crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs",
+    "crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs",
+    "crates/vibe-wire/src/m_06_c_1_cases.rs",
+    "schemas/boot_debugger/e1/result.jtd.json",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+    "crates/vibe-cli/src/command_progress.rs",
+    "crates/vibe-cli/src/command_progress/tests.rs",
+    "crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs"
+  ],
+  "source_manifest": [
+    {
+      "path": "crates/vibe-cli/src/cli.rs",
+      "bytes": 21861,
+      "sha256": "57fc2491b9be613276e617a7f014ec0acf7f5f57a4b63cdb1610bd8cce6a08ef"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/mod.rs",
+      "bytes": 5751,
+      "sha256": "d2d4d2a3d5d79e2daed8165e2191cf4e436ff9962d5c490bad013a31d6be9ee4"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/mod.rs",
+      "bytes": 2259,
+      "sha256": "67f1b1f6814c2c1190548e0a9bfdafa030197a8c4ddea53058356d6f2a81e9c8"
+    },
+    {
+      "path": "crates/vibe-cli/src/main.rs",
+      "bytes": 27224,
+      "sha256": "ee4917ddf9c45710f7f97ed12dbff154f56ddaa138ab3776a9f4642e6712e89b"
+    },
+    {
+      "path": "crates/vibe-mcp/src/context.rs",
+      "bytes": 22251,
+      "sha256": "aefe118f76a3a4a212f8279705f8fc40cfe2dc94b836c744101da4ce97e52ed3"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "bytes": 25446,
+      "sha256": "39202a37f4fac2d6eae6e7cdc4a9bf20c10044b65389ff98277db8621d3f2d08"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/boot_debugger.rs",
+      "bytes": 7670,
+      "sha256": "a2dc90cbc3c15a3898bbe524632015b4ff540bc44f63b130b8b791c5c35ba6c2"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation.rs",
+      "bytes": 19350,
+      "sha256": "4acf92e0593ec2e40fec23ec3f0561799cdcb499cd8db0c85a6a017767ec958c"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
+      "bytes": 18846,
+      "sha256": "e59d55ad215cd24270039205e99bfc0e8a74c1e2bd97f0cbc322024b7bb8de07"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+      "bytes": 21057,
+      "sha256": "3734646075bbe2573cad8b266ed99580d14fce1251e08352e08ff66e6d0b29eb"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs",
+      "bytes": 16598,
+      "sha256": "695df59c9b73dbcffad76cbc78ed2b5fde5fb250ab922c9230cb891eb4dbaa70"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "bytes": 1051,
+      "sha256": "880cb9818e54982b784fb89f4ab3b668072e1c5c1782a6ae260b978e70980002"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/error/mod.rs",
+      "bytes": 1198,
+      "sha256": "c9797a0fa31cba154b8e5fb58b40f9ea191a8902cdb219e620195c9ae5eccee8"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "bytes": 997,
+      "sha256": "9833108f0a8bec8467a7320962503d553dc4cbbaddd0fd41dab50747e5469056"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/progress/mod.rs",
+      "bytes": 449,
+      "sha256": "829d8914b1dd4630d83ac8475dbfd49bb520dcffd4719d47fc9b5194546ec41d"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/request/mod.rs",
+      "bytes": 3058,
+      "sha256": "de545373e575f785ee87fe86841702891ad79122e0e2d76219740e3bc28bb5d5"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs",
+      "bytes": 7831,
+      "sha256": "cb384dd676e545d3c383481ee830bcf8b821e86e534327c878e52afae358e8f9"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "bytes": 949,
+      "sha256": "df6fdb9479088aa810e79d159903182cbeb6d5cc3e7e44c30d86e5c34ad1141d"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "bytes": 966,
+      "sha256": "d1863774b1b8c2ccb9bf67d7b7b429b023352d5d898a358027a286fba87fc22f"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "bytes": 947,
+      "sha256": "242014748aec3334f328f8e00d1032b021dee9e6523b278cd35e4742f1d07744"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "bytes": 943,
+      "sha256": "44895c49ec6ebcd95e163354c3a10a67f48f55ba6a798bcbc850c0ceb0768bb6"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "bytes": 946,
+      "sha256": "b4e6988af53753fdad41999fd58603aab23c6df463f3433c4c0b1ff3c74caf26"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "bytes": 972,
+      "sha256": "cc05cbede2c3e162378cfa1381ca4d4321a10c14ab5eb77951de666c128d15a5"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "bytes": 1109,
+      "sha256": "fed81ed4325cd612673ec22cd048e0b9d344eb61b425727cae16242279b4acfe"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "bytes": 6009,
+      "sha256": "ea9d5f766fa5d5f19a9447fa0233ce2058604f72330c484ebe9c2ee7a019fa75"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "bytes": 60634,
+      "sha256": "f82e037abeea9e6c4a721b35eb68a6f52196ef2d75b428824630d8ce0559c454"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "bytes": 946,
+      "sha256": "c0eedd829510db6a6b6b3c4626103a361cdab6f0ce96766fa1c3c261d423ae84"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "bytes": 1012,
+      "sha256": "c5f3f3229853b55f33c8a55ad14105cac65b76f90d4c29bc12f5cdfca80ab76b"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "bytes": 1094,
+      "sha256": "e8dff0c6147e5ad8ec2006d988168c62566f2f38853555fc45892220b11cf3be"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "bytes": 1231,
+      "sha256": "6a0393ed24c445986bc96fe059c509515373893ab2f745229a4ee6b616374009"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "bytes": 948,
+      "sha256": "409f964de6de66ef34aa1b1ebb09f3a6226f4f6b99a2c982140d969305842ba3"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "bytes": 963,
+      "sha256": "e287a31d6599795172cfcd168ff05cd0056fb0c974b524f2d85ab2df9e550500"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "bytes": 946,
+      "sha256": "d6c75f87beb9f6a01684f2f43bafb07fd20e4baa8a97c43586f13e8243175a31"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "bytes": 943,
+      "sha256": "8c5a852a75447b0cfad797b68c17f1b5b30374b7bae19b847409ba8571822454"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "bytes": 958,
+      "sha256": "7273241fd9fdd35c095163f4fa519274622a4404f7be094bc6f9545ad5b9c136"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "bytes": 998,
+      "sha256": "15773ba6f8e791bc1ffab869bb454304ab215fefb3975179eaa194fc68b0f055"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "bytes": 1671,
+      "sha256": "d4f70e0a8f2d38de935aaf547a9328cb196e32af167689bd324165fe271cea46"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "bytes": 1076,
+      "sha256": "9a6e82c3214aac9e351248a323b0cc1c7aebf683aaba1aa5f3d7449df8cf2dbc"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "bytes": 2867,
+      "sha256": "1ac2f93bc7d90a754e0439a1ecad6a250e486a80cb40ada36f32cdc7d2a2fc2f"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "bytes": 1218,
+      "sha256": "ba51697f07a89813e6327bee80fa4559b2e7e332a60ba5b08ef090d0f6fb9edb"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "bytes": 1127,
+      "sha256": "6a695b9966c3f5a5f1e98afb5de3bff8d62c0014a535cc899371017cdb05f44a"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "bytes": 984,
+      "sha256": "dd192fdd5285ab90c29e5375213d63b4de006de1f76188fb152162292e54b7c3"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "bytes": 1063,
+      "sha256": "45c0893ecbdac73b54e6da907e88505e66b2dee217f2448baed0eed4ca8bec96"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "bytes": 958,
+      "sha256": "85f645a8256b5c07b2ef474bbfe824e41af45a22ba68be4dcf6bf769f23ecb61"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "bytes": 967,
+      "sha256": "425d76ba5da82f78d524b28065ec42a0bc373f682725de73f2a0309ea83dfe1d"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "bytes": 1020,
+      "sha256": "8193fd07094ae1711dc9ea47b5e8010e30cbe0ccc2edcd1db3383e4e4f200901"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+      "bytes": 943,
+      "sha256": "fd5aaa0d7d7087a943f38e8129a8daea940544f003b1ad460a4138eb05f95e16"
+    },
+    {
+      "path": "crates/vibe-wire/src/lib.rs",
+      "bytes": 6066,
+      "sha256": "c55a139009271b14bd61fb7416811d71f24d53b98dcb8468894430c03bdf5b1f"
+    },
+    {
+      "path": "crates/vibe-wire/src/m_06_c_1_cases.rs",
+      "bytes": 3713,
+      "sha256": "1d8f7f439dcdaac60af60b4318161e860cc1195b87c264b77b77a7851cf905ac"
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "bytes": 5320,
+      "sha256": "4f22c1f189a3d7c74c1656b6c4b2994fdc1829296c7ca6483d0970aa64eff2f0"
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/protocol.rs",
+      "bytes": 2894,
+      "sha256": "8be6acb0f76acdcfdcbdd3d34c6a778d794153b29380cbc01e04e8d809b7032f"
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "bytes": 59468,
+      "sha256": "052a2c42246bdc3a7e27f61ed57a255e1c87aea269de9b37346a7ad6b19c1a2e"
+    },
+    {
+      "path": "schemas/boot_debugger/e1/error.jtd.json",
+      "bytes": 886,
+      "sha256": "5bc9c2d598a8e6bd5e45b7160ed93b70579fe34253434ee37301746473a3392a"
+    },
+    {
+      "path": "schemas/boot_debugger/e1/progress.jtd.json",
+      "bytes": 644,
+      "sha256": "50ed7bf1ba8e7403c8ccfe9725519b60dc541c8facfa9e89049486f4050bd87d"
+    },
+    {
+      "path": "schemas/boot_debugger/e1/request.jtd.json",
+      "bytes": 2919,
+      "sha256": "216b27dcfc76b6b52ee8027f9c6a3de8d33eeb198d34420cc25c5fcc1eb4b409"
+    },
+    {
+      "path": "schemas/boot_debugger/e1/result.jtd.json",
+      "bytes": 9020,
+      "sha256": "504d2a3c40b48fe9413e6e1dfd870f18c046434e63ef8ec88657dec93f2f29cf"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "bytes": 14513,
+      "sha256": "9c7d43ed1e925b0ff6977c49b36ba07fbd204ca241a4e254e0fc22a672f59585"
+    },
+    {
+      "path": "crates/vibe-cli/src/command_progress.rs",
+      "bytes": 17198,
+      "sha256": "be22ec9e00ac9a6a5b708f4d52ade13449554dc1147dca03ccf7680f0d1de4bf"
+    },
+    {
+      "path": "crates/vibe-cli/src/command_progress/tests.rs",
+      "bytes": 8806,
+      "sha256": "ec5489f221d86406254901402d8256c42457398f4508583f278ae8f2616aabde"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs",
+      "bytes": 10636,
+      "sha256": "d7bda4276f4b74c7ec5b4bde5382996aeb55dea4b56069dd6a85202fd7cbaebb"
+    }
+  ],
+  "patches": {
+    "full_task": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/full-task.patch",
+      "bytes": 234744,
+      "sha256": "6e55af3265303551e4fcb12655aff757004df0841c4e806024f0fc5a5666a8fb"
+    },
+    "correction_only": {
+      "path": "/fast/zap-managed/2026-10-15-m06c1-correction/correction-only.patch",
+      "sha256": "153261922ad7dd1b4a49ffd4255e3f2d2624e88c989a2221c5d6682f862492fc"
+    }
+  },
+  "failed_oracles": [
+    {
+      "name": "check-codegen",
+      "exit": 1,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/check-codegen.log"
+    },
+    {
+      "name": "wire-diff",
+      "exit": 1,
+      "log": "/fast/zap-managed/2026-10-15-m06c1-correction/wire-diff.log"
+    }
+  ]
+}

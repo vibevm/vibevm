@@ -1,0 +1,561 @@
+{
+  "task": "M-06-C.1",
+  "acceptance": "Root WorkAccepted253",
+  "distinct_cases": 14,
+  "overall_accepted": 78,
+  "files": [
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/candidate-result.json",
+      "original_name": "candidate-result.json",
+      "saved": "original/candidate.json",
+      "bytes": 2761,
+      "raw_sha256": "d94aa2316cac43efac88e9351cf13ed49c7828e30b9aa40f758d5651cbfc733e",
+      "saved_sha256": "d94aa2316cac43efac88e9351cf13ed49c7828e30b9aa40f758d5651cbfc733e",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/candidate-findings.json",
+      "original_name": "candidate-findings.json",
+      "saved": "original/findings.json",
+      "bytes": 1228,
+      "raw_sha256": "796612b2dab91d11abe0b1a37876ed4125c6d399c0020da6a2821d29bc17516b",
+      "saved_sha256": "796612b2dab91d11abe0b1a37876ed4125c6d399c0020da6a2821d29bc17516b",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/candidate-report.json",
+      "original_name": "candidate-report.json",
+      "saved": "original/report.json",
+      "bytes": 29591,
+      "raw_sha256": "a8abdd58f9e8b11d22e1036344df05d68fb2068d5e05dcf11076c1858ee449b5",
+      "saved_sha256": "a8abdd58f9e8b11d22e1036344df05d68fb2068d5e05dcf11076c1858ee449b5",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/candidate.patch",
+      "original_name": "candidate.patch",
+      "saved": "original/candidate.patch",
+      "bytes": 200270,
+      "raw_sha256": "ecef3e3bf0e32d38caa0553b0b8705ab86a9c7ded4fdcf5a53fe58e5f77ab598",
+      "saved_sha256": "ecef3e3bf0e32d38caa0553b0b8705ab86a9c7ded4fdcf5a53fe58e5f77ab598",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/patch-manifest.json",
+      "original_name": "patch-manifest.json",
+      "saved": "original/source-manifest.json",
+      "bytes": 14270,
+      "raw_sha256": "a2c762f0b8cad2688011e797812885fecbe35e859a609d6a0d0cf2dffbb02093",
+      "saved_sha256": "a2c762f0b8cad2688011e797812885fecbe35e859a609d6a0d0cf2dffbb02093",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/ROOT-RETIREMENT.json",
+      "original_name": "ROOT-RETIREMENT.json",
+      "saved": "original/retirement.json",
+      "bytes": 2695,
+      "raw_sha256": "dd9c18544cc55e88732584fec90a1d40e9a3022500ee1dc238caa567800ce682",
+      "saved_sha256": "dd9c18544cc55e88732584fec90a1d40e9a3022500ee1dc238caa567800ce682",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/workspace-1.log",
+      "original_name": "workspace-1.log",
+      "saved": "original/logs/workspace-1.raw.txt",
+      "bytes": 18103,
+      "raw_sha256": "0de1290e2ae460dae79807be38461b8ecf15ee45f54fead40dfe26621b7ee2cd",
+      "saved_sha256": "0de1290e2ae460dae79807be38461b8ecf15ee45f54fead40dfe26621b7ee2cd",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/route-1.log",
+      "original_name": "route-1.log",
+      "saved": "original/logs/route-1.raw.txt",
+      "bytes": 28242,
+      "raw_sha256": "610b34af6f0b60bf51cd0f7069f8d72283293a2d866ee59053dd3441fab66ba7",
+      "saved_sha256": "610b34af6f0b60bf51cd0f7069f8d72283293a2d866ee59053dd3441fab66ba7",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/route-2.log",
+      "original_name": "route-2.log",
+      "saved": "original/logs/route-2.raw.txt",
+      "bytes": 27071,
+      "raw_sha256": "4f8e272c893b1c26149dd26584dc99c6abe84e6e46a8cb361462e29bf46e5dee",
+      "saved_sha256": "4f8e272c893b1c26149dd26584dc99c6abe84e6e46a8cb361462e29bf46e5dee",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/mcp-1.log",
+      "original_name": "mcp-1.log",
+      "saved": "original/logs/mcp-1.raw.txt",
+      "bytes": 26932,
+      "raw_sha256": "8cd8d8265efe951a8c635f379d4f507c7a32710d2c5be9249a6fa3f0e67c94be",
+      "saved_sha256": "8cd8d8265efe951a8c635f379d4f507c7a32710d2c5be9249a6fa3f0e67c94be",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/cli-1.log",
+      "original_name": "cli-1.log",
+      "saved": "original/logs/cli-1.raw.txt",
+      "bytes": 139813,
+      "raw_sha256": "f793818c20c9edea719d32215660cd6b076f2f28cc0267a8ab4cf922bfa25b60",
+      "saved_sha256": "f793818c20c9edea719d32215660cd6b076f2f28cc0267a8ab4cf922bfa25b60",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/workspace-2.log",
+      "original_name": "workspace-2.log",
+      "saved": "original/logs/workspace-2.raw.txt",
+      "bytes": 17039,
+      "raw_sha256": "f5ee7b8cf2268b2ddb491b7fac30355c2f0723e89ffbbc38776f27a22e0fcc8b",
+      "saved_sha256": "f5ee7b8cf2268b2ddb491b7fac30355c2f0723e89ffbbc38776f27a22e0fcc8b",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/wire-1.log",
+      "original_name": "wire-1.log",
+      "saved": "original/logs/wire-1.raw.txt",
+      "bytes": 14916,
+      "raw_sha256": "3c369d6f78d09abae2eddd3d4210374c7892f8f3144c731b3e47189327c69a48",
+      "saved_sha256": "3c369d6f78d09abae2eddd3d4210374c7892f8f3144c731b3e47189327c69a48",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/route-3.log",
+      "original_name": "route-3.log",
+      "saved": "original/logs/route-3.raw.txt",
+      "bytes": 27070,
+      "raw_sha256": "98577aa740ebe103a833488681c0e74878ca608396f7fe213ab91930fdaec462",
+      "saved_sha256": "98577aa740ebe103a833488681c0e74878ca608396f7fe213ab91930fdaec462",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/mcp-2.log",
+      "original_name": "mcp-2.log",
+      "saved": "original/logs/mcp-2.raw.txt",
+      "bytes": 26750,
+      "raw_sha256": "5abf7e9fc7b5886945fb6c4bd3800754be8c08215945ec62f8a81fdee6197dca",
+      "saved_sha256": "5abf7e9fc7b5886945fb6c4bd3800754be8c08215945ec62f8a81fdee6197dca",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/format-check.log",
+      "original_name": "format-check.log",
+      "saved": "original/logs/format-check.raw.txt",
+      "bytes": 259,
+      "raw_sha256": "c91815f41073bc3e3446d6fcd8a3ea05716e3310701efb913f6451f31d69bfca",
+      "saved_sha256": "c91815f41073bc3e3446d6fcd8a3ea05716e3310701efb913f6451f31d69bfca",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/check-codegen.log",
+      "original_name": "check-codegen.log",
+      "saved": "original/logs/check-codegen.raw.txt",
+      "bytes": 253904,
+      "raw_sha256": "5990705958002940b5dcbe5d11ca4d429b157dd2a64b43c908bbd0237d457a0a",
+      "saved_sha256": "5990705958002940b5dcbe5d11ca4d429b157dd2a64b43c908bbd0237d457a0a",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1/wire-diff.log",
+      "original_name": "wire-diff.log",
+      "saved": "original/logs/wire-diff.raw.txt",
+      "bytes": 561,
+      "raw_sha256": "6ee2571d39b81851be33b05e1e63dec6b23d26ff0b3b59f2dd809aadc482eb90",
+      "saved_sha256": "6ee2571d39b81851be33b05e1e63dec6b23d26ff0b3b59f2dd809aadc482eb90",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/candidate-result.json",
+      "original_name": "candidate-result.json",
+      "saved": "correction/candidate.json",
+      "bytes": 2162,
+      "raw_sha256": "a80fdb0e7af17824c966ce006c0e107f28d6a3bf9022f4a6bffd426544ab20a7",
+      "saved_sha256": "a80fdb0e7af17824c966ce006c0e107f28d6a3bf9022f4a6bffd426544ab20a7",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/findings.json",
+      "original_name": "findings.json",
+      "saved": "correction/findings.json",
+      "bytes": 493,
+      "raw_sha256": "1ad3aa0a6e41604e9377b0ec7ea8156618415a3bcce8251aa96c491362c0c4f9",
+      "saved_sha256": "1ad3aa0a6e41604e9377b0ec7ea8156618415a3bcce8251aa96c491362c0c4f9",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/correction-report.json",
+      "original_name": "correction-report.json",
+      "saved": "correction/report.json",
+      "bytes": 33916,
+      "raw_sha256": "de651621e12a048324fc7685f2ac4ff5075bd496b6bd31b9efd2654825093638",
+      "saved_sha256": "de651621e12a048324fc7685f2ac4ff5075bd496b6bd31b9efd2654825093638",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/full-task.patch",
+      "original_name": "full-task.patch",
+      "saved": "correction/full-task.patch",
+      "bytes": 234744,
+      "raw_sha256": "6e55af3265303551e4fcb12655aff757004df0841c4e806024f0fc5a5666a8fb",
+      "saved_sha256": "6e55af3265303551e4fcb12655aff757004df0841c4e806024f0fc5a5666a8fb",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/correction-only.patch",
+      "original_name": "correction-only.patch",
+      "saved": "correction/correction-only.patch",
+      "bytes": 43329,
+      "raw_sha256": "153261922ad7dd1b4a49ffd4255e3f2d2624e88c989a2221c5d6682f862492fc",
+      "saved_sha256": "153261922ad7dd1b4a49ffd4255e3f2d2624e88c989a2221c5d6682f862492fc",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/codegen.log",
+      "original_name": "codegen.log",
+      "saved": "correction/logs/codegen.raw.txt",
+      "bytes": 283135,
+      "raw_sha256": "202d161541170817ad8e64bd876c7fef1c42ca879fa3d22d24bea187479f19b3",
+      "saved_sha256": "202d161541170817ad8e64bd876c7fef1c42ca879fa3d22d24bea187479f19b3",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/route-1.log",
+      "original_name": "route-1.log",
+      "saved": "correction/logs/route-1.raw.txt",
+      "bytes": 29139,
+      "raw_sha256": "4669dc735014f511dffbeae7464e2c62427a7c971d52c9ff0f7804b5681119c8",
+      "saved_sha256": "4669dc735014f511dffbeae7464e2c62427a7c971d52c9ff0f7804b5681119c8",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-1.log",
+      "original_name": "cli-1.log",
+      "saved": "correction/logs/cli-1.raw.txt",
+      "bytes": 139389,
+      "raw_sha256": "bd100517300c2043e7fade483cb687dd6f531fdd44f863fa26c3ecb837508fe1",
+      "saved_sha256": "bd100517300c2043e7fade483cb687dd6f531fdd44f863fa26c3ecb837508fe1",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/workspace.log",
+      "original_name": "workspace.log",
+      "saved": "correction/logs/workspace.raw.txt",
+      "bytes": 17421,
+      "raw_sha256": "5c80e55999f62b061a73575afe10207f4685b0e129fe1a54ad3a9a663f800e64",
+      "saved_sha256": "5c80e55999f62b061a73575afe10207f4685b0e129fe1a54ad3a9a663f800e64",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/wire.log",
+      "original_name": "wire.log",
+      "saved": "correction/logs/wire.raw.txt",
+      "bytes": 15015,
+      "raw_sha256": "bdd14ec654fa922191123a8840485365f2c1170bf7fc98b46fab674a39be3656",
+      "saved_sha256": "bdd14ec654fa922191123a8840485365f2c1170bf7fc98b46fab674a39be3656",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/mcp.log",
+      "original_name": "mcp.log",
+      "saved": "correction/logs/mcp.raw.txt",
+      "bytes": 26931,
+      "raw_sha256": "4d8f7c7041514e61bb87c60477bb4397c10914deed42a27e851b761917193adc",
+      "saved_sha256": "4d8f7c7041514e61bb87c60477bb4397c10914deed42a27e851b761917193adc",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/route-final.log",
+      "original_name": "route-final.log",
+      "saved": "correction/logs/route-final.raw.txt",
+      "bytes": 27092,
+      "raw_sha256": "30c6864902f445b2b11f26633e5aaf39e0c0a510b4c55ddd3d2e44050ff5aaf2",
+      "saved_sha256": "30c6864902f445b2b11f26633e5aaf39e0c0a510b4c55ddd3d2e44050ff5aaf2",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-final.log",
+      "original_name": "cli-final.log",
+      "saved": "correction/logs/cli-final.raw.txt",
+      "bytes": 137423,
+      "raw_sha256": "69dfc6b7de96c64b6feb0f3abf7965d1cd49441c7cfee5c678aab5e41987cd48",
+      "saved_sha256": "69dfc6b7de96c64b6feb0f3abf7965d1cd49441c7cfee5c678aab5e41987cd48",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-inventory.log",
+      "original_name": "cli-inventory.log",
+      "saved": "correction/logs/cli-inventory.raw.txt",
+      "bytes": 137020,
+      "raw_sha256": "27ead0b08e25eae31e2245176625a2910ebe799f15be49963b4598df672a0990",
+      "saved_sha256": "27ead0b08e25eae31e2245176625a2910ebe799f15be49963b4598df672a0990",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/cli-policy.log",
+      "original_name": "cli-policy.log",
+      "saved": "correction/logs/cli-policy.raw.txt",
+      "bytes": 137033,
+      "raw_sha256": "7c00a0ab61a9afc880e0c97b5d52468c9125feb9bedb011dd6ebfeda4894bea2",
+      "saved_sha256": "7c00a0ab61a9afc880e0c97b5d52468c9125feb9bedb011dd6ebfeda4894bea2",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/scoped-fmt.log",
+      "original_name": "scoped-fmt.log",
+      "saved": "correction/logs/scoped-fmt.raw.txt",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/check-codegen.log",
+      "original_name": "check-codegen.log",
+      "saved": "correction/logs/check-codegen.raw.txt",
+      "bytes": 382875,
+      "raw_sha256": "2d6bc0f6fabc3c043d9df3b62ba99b4625802cd3e5570daf97119cd6719e6628",
+      "saved_sha256": "2d6bc0f6fabc3c043d9df3b62ba99b4625802cd3e5570daf97119cd6719e6628",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/wire-diff.log",
+      "original_name": "wire-diff.log",
+      "saved": "correction/logs/wire-diff.raw.txt",
+      "bytes": 129324,
+      "raw_sha256": "5fecfb780ed017862d1c3c7d49d8782e4f84477787fd1301d3d49c6b247e0b89",
+      "saved_sha256": "5fecfb780ed017862d1c3c7d49d8782e4f84477787fd1301d3d49c6b247e0b89",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/diff-check.log",
+      "original_name": "diff-check.log",
+      "saved": "correction/logs/diff-check.raw.txt",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/full-patch-reverse-check.log",
+      "original_name": "full-patch-reverse-check.log",
+      "saved": "correction/logs/full-patch-reverse-check.raw.txt",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/correction-patch-reverse-check.log",
+      "original_name": "correction-patch-reverse-check.log",
+      "saved": "correction/logs/correction-patch-reverse-check.raw.txt",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/git/v/research/2026-10-15-m06c1-partial-review/REPORT.md",
+      "original_name": "REPORT.md",
+      "saved": "partial-review/REPORT.md",
+      "bytes": 5508,
+      "raw_sha256": "52933bf2ba926190e5161cc65a4ba1b415b6b7a6d798a91c8ee1b67d13ab1aac",
+      "saved_sha256": "52933bf2ba926190e5161cc65a4ba1b415b6b7a6d798a91c8ee1b67d13ab1aac",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/git/v/research/2026-10-15-m06c1-partial-review/REPORT.json",
+      "original_name": "REPORT.json",
+      "saved": "partial-review/REPORT.json",
+      "bytes": 15074,
+      "raw_sha256": "c136faf11b837b3a74e1ce49e4b4407cadaacffb7d5af0a59191f4c6f0264822",
+      "saved_sha256": "c136faf11b837b3a74e1ce49e4b4407cadaacffb7d5af0a59191f4c6f0264822",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/git/v/research/2026-10-15-m06c1-final-review/REPORT.md",
+      "original_name": "REPORT.md",
+      "saved": "final-review/REPORT.md",
+      "bytes": 5054,
+      "raw_sha256": "00d9a1aaf46050aeaf352ae76314160fca9d3188420f721149d76b1717debd69",
+      "saved_sha256": "00d9a1aaf46050aeaf352ae76314160fca9d3188420f721149d76b1717debd69",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/git/v/research/2026-10-15-m06c1-final-review/REPORT.json",
+      "original_name": "REPORT.json",
+      "saved": "final-review/REPORT.json",
+      "bytes": 38006,
+      "raw_sha256": "bdefd70e17466ca514a6acbe16018c7321457f3726a70c31945512641e20e11c",
+      "saved_sha256": "bdefd70e17466ca514a6acbe16018c7321457f3726a70c31945512641e20e11c",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-RETIREMENT.json",
+      "original_name": "ROOT-RETIREMENT.json",
+      "saved": "root/ROOT-RETIREMENT.json",
+      "bytes": 2733,
+      "raw_sha256": "6091e9af8fd74341de6c2fbc1dea41cedede89d8f5a4eaaa839f6711779ccb24",
+      "saved_sha256": "6091e9af8fd74341de6c2fbc1dea41cedede89d8f5a4eaaa839f6711779ccb24",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-REVIEW.json",
+      "original_name": "ROOT-REVIEW.json",
+      "saved": "root/ROOT-REVIEW.json",
+      "bytes": 29290,
+      "raw_sha256": "4f7cb6ba0aa9dd16615045b0ba82c2cc2cdcd7ab65323737ab5a3073d4109a06",
+      "saved_sha256": "4f7cb6ba0aa9dd16615045b0ba82c2cc2cdcd7ab65323737ab5a3073d4109a06",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-INTEGRATION-INPUT.json",
+      "original_name": "ROOT-INTEGRATION-INPUT.json",
+      "saved": "root/ROOT-INTEGRATION-INPUT.json",
+      "bytes": 39177,
+      "raw_sha256": "659e3a60f37890d492e7c990d43e315e712dabd4d69c2a0be0a6ada2894b9d07",
+      "saved_sha256": "659e3a60f37890d492e7c990d43e315e712dabd4d69c2a0be0a6ada2894b9d07",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-FAILED-1.json",
+      "original_name": "ROOT-CODEGEN-FAILED-1.json",
+      "saved": "root/ROOT-CODEGEN-FAILED-1.json",
+      "bytes": 425,
+      "raw_sha256": "ac15d41d4d941f553269837503c24ff6e40f7a7a2d24ea9994ce8245ec76b562",
+      "saved_sha256": "ac15d41d4d941f553269837503c24ff6e40f7a7a2d24ea9994ce8245ec76b562",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-COMPILER-PROBE.json",
+      "original_name": "ROOT-COMPILER-PROBE.json",
+      "saved": "root/ROOT-COMPILER-PROBE.json",
+      "bytes": 667,
+      "raw_sha256": "f66d0ec773000a56000a395539c5ac62c5f7dacb5f54f61380634bc7fdd468a1",
+      "saved_sha256": "f66d0ec773000a56000a395539c5ac62c5f7dacb5f54f61380634bc7fdd468a1",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-RETRY-PREFLIGHT.json",
+      "original_name": "ROOT-CODEGEN-RETRY-PREFLIGHT.json",
+      "saved": "root/ROOT-CODEGEN-RETRY-PREFLIGHT.json",
+      "bytes": 520,
+      "raw_sha256": "f5f0c0db09da5374ceebd110afec2a146cc8a2dc68276a61d01ad3604eae049e",
+      "saved_sha256": "f5f0c0db09da5374ceebd110afec2a146cc8a2dc68276a61d01ad3604eae049e",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-RESULT.json",
+      "original_name": "ROOT-CODEGEN-RESULT.json",
+      "saved": "root/ROOT-CODEGEN-RESULT.json",
+      "bytes": 79135,
+      "raw_sha256": "f398c856fd10039d510d8585316c31c3cbabf77a9917a11b78b000a6d01b7821",
+      "saved_sha256": "f398c856fd10039d510d8585316c31c3cbabf77a9917a11b78b000a6d01b7821",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-INDEX-CHECK.json",
+      "original_name": "ROOT-CODEGEN-INDEX-CHECK.json",
+      "saved": "root/ROOT-CODEGEN-INDEX-CHECK.json",
+      "bytes": 131,
+      "raw_sha256": "d63eab00f1b64b21691a8ae98b1e75babae3ecdf1022106c5341eaa9958b8265",
+      "saved_sha256": "d63eab00f1b64b21691a8ae98b1e75babae3ecdf1022106c5341eaa9958b8265",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-DIAGNOSIS.md",
+      "original_name": "ROOT-CODEGEN-DIAGNOSIS.md",
+      "saved": "root/ROOT-CODEGEN-DIAGNOSIS.md",
+      "bytes": 2642,
+      "raw_sha256": "69cfb6985d99fefe2230d19054c1cd51a6a0732b304d43ae51b6dd08cd84a9d0",
+      "saved_sha256": "69cfb6985d99fefe2230d19054c1cd51a6a0732b304d43ae51b6dd08cd84a9d0",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-FAILED-1.log",
+      "original_name": "ROOT-CODEGEN-FAILED-1.log",
+      "saved": "root/ROOT-CODEGEN-FAILED-1.raw.txt",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-CODEGEN-RETRY-1.log",
+      "original_name": "ROOT-CODEGEN-RETRY-1.log",
+      "saved": "root/ROOT-CODEGEN-RETRY-1.raw.txt",
+      "bytes": 283167,
+      "raw_sha256": "7cf837155328d8e7ea7db0ade80e6dd6760464cd4590cce223f26ef47346e1bd",
+      "saved_sha256": "7cf837155328d8e7ea7db0ade80e6dd6760464cd4590cce223f26ef47346e1bd",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-SAFE.log",
+      "original_name": "ROOT-SAFE.log",
+      "saved": "root/ROOT-SAFE.raw.txt",
+      "bytes": 7052,
+      "raw_sha256": "a14f18d31a98eb8b27734e661d60bbe6c75f38400249c427c543091adec017c2",
+      "saved_sha256": "a14f18d31a98eb8b27734e661d60bbe6c75f38400249c427c543091adec017c2",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-OPEN-REVIEW.log",
+      "original_name": "ROOT-OPEN-REVIEW.log",
+      "saved": "root/ROOT-OPEN-REVIEW.raw.txt",
+      "bytes": 661,
+      "raw_sha256": "1492163f0a5162b3f5bfc8e50465fb70aff61fc0fe0afefe70d32d52ea7c1fd3",
+      "saved_sha256": "1492163f0a5162b3f5bfc8e50465fb70aff61fc0fe0afefe70d32d52ea7c1fd3",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-EVIDENCE.log",
+      "original_name": "ROOT-EVIDENCE.log",
+      "saved": "root/ROOT-EVIDENCE.raw.txt",
+      "bytes": 3417,
+      "raw_sha256": "627f31e1d52e93be30400b956d185517db46d7882e9b58309b5d1dd660bc07a9",
+      "saved_sha256": "627f31e1d52e93be30400b956d185517db46d7882e9b58309b5d1dd660bc07a9",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-STAGE.log",
+      "original_name": "ROOT-STAGE.log",
+      "saved": "root/ROOT-STAGE.raw.txt",
+      "bytes": 646,
+      "raw_sha256": "f4cbbd476d56217b5ff3381691ae4084c2c882af9b7182ca1f80f49b86508f57",
+      "saved_sha256": "f4cbbd476d56217b5ff3381691ae4084c2c882af9b7182ca1f80f49b86508f57",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-WORK.log",
+      "original_name": "ROOT-WORK.log",
+      "saved": "root/ROOT-WORK.raw.txt",
+      "bytes": 643,
+      "raw_sha256": "189f9c842589ee25b110f2ffa411cc2e18ca564206dcfea5b37b571fb36f3a67",
+      "saved_sha256": "189f9c842589ee25b110f2ffa411cc2e18ca564206dcfea5b37b571fb36f3a67",
+      "normalization": "none"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-15-m06c1-correction/ROOT-FINAL-INSPECT.log",
+      "original_name": "ROOT-FINAL-INSPECT.log",
+      "saved": "root/ROOT-FINAL-INSPECT.raw.txt",
+      "bytes": 156,
+      "raw_sha256": "4367f911981547d4fab40f9cb0ae623926a939065215b74abff444e26efa8251",
+      "saved_sha256": "4367f911981547d4fab40f9cb0ae623926a939065215b74abff444e26efa8251",
+      "normalization": "none"
+    }
+  ],
+  "generated_metadata": [
+    {
+      "saved": "accepted-2026-10-15.md",
+      "sha256": "df2b4ad3030648773e18ee7b01e0df3dd521b16f65eb9e19b0d5330142bbaf3b",
+      "bytes": 4012
+    },
+    {
+      "saved": "FILES.txt",
+      "sha256": "272b8356d2756b2b56dc4b24aa4846a3bee42fde6e99f3ff9238df77fafea08b",
+      "bytes": 1883
+    }
+  ],
+  "manifest_self_hash": "external private ARCHIVE-RECEIPT.json"
+}

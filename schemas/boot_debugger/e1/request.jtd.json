@@ -1,0 +1,135 @@
+{
+  "metadata": {
+    "description": "Immutable boot debugger protocol; no build or write authority.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-072#DEBUGGER-PROTOCOL",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::boot_debugger::e1::request"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "command": {
+      "ref": "command"
+    }
+  },
+  "definitions": {
+    "command": {
+      "discriminator": "action",
+      "mapping": {
+        "capture": {
+          "properties": {}
+        },
+        "inspect": {
+          "properties": {
+            "snapshot_id": {
+              "type": "string"
+            }
+          }
+        },
+        "tree": {
+          "properties": {
+            "snapshot_id": {
+              "type": "string"
+            },
+            "filter": {
+              "type": "string"
+            },
+            "inspection_id": {
+              "type": "string",
+              "nullable": true
+            },
+            "cursor": {
+              "type": "string",
+              "nullable": true
+            },
+            "limit": {
+              "type": "uint32"
+            }
+          }
+        },
+        "explain": {
+          "properties": {
+            "snapshot_id": {
+              "type": "string"
+            },
+            "contribution": {
+              "type": "uint32"
+            },
+            "occurrence": {
+              "type": "uint32"
+            }
+          }
+        },
+        "cost": {
+          "properties": {
+            "snapshot_id": {
+              "type": "string"
+            }
+          }
+        },
+        "compare": {
+          "properties": {
+            "snapshot_id": {
+              "type": "string"
+            },
+            "other_snapshot_id": {
+              "type": "string"
+            }
+          }
+        },
+        "chunk": {
+          "properties": {
+            "snapshot_id": {
+              "type": "string"
+            },
+            "resource_id": {
+              "type": "string"
+            },
+            "filter": {
+              "enum": [
+                "raw"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "offset": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "uint32"
+            }
+          }
+        },
+        "cancel": {
+          "properties": {
+            "inspection_id": {
+              "type": "string"
+            }
+          }
+        },
+        "replay": {
+          "properties": {
+            "inspection_id": {
+              "type": "string"
+            },
+            "after_sequence": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "uint32"
+            }
+          }
+        }
+      }
+    }
+  }
+}

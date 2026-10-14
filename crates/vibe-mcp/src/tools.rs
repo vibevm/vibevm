@@ -16,7 +16,9 @@ use vibe_core::{Group, PackageRef, machine_json_path};
 
 use crate::{ServerContext, ToolDescriptor, ToolError};
 
+pub mod boot_debugger;
 pub mod output;
+pub use boot_debugger::BootDebuggerMcpTool;
 pub use output::ToolOutput;
 
 pub mod lifecycle_operation;
@@ -97,6 +99,7 @@ pub trait McpTool {
 )]
 pub fn default_tools() -> Vec<Box<dyn McpTool>> {
     vec![
+        Box::new(BootDebuggerMcpTool),
         Box::new(QueryPackageMcpTool),
         Box::new(ReadSubskillMcpTool),
         Box::new(MaterialiseSubskillMcpTool),

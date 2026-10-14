@@ -1,0 +1,118 @@
+{
+  "observed_utc": "2026-10-14T22:26:03.420615+00:00",
+  "reason": "Root First Agent retires collected unsatisfied M06C1 before same-task correction; no acceptance",
+  "native": {
+    "accounting_pending": false,
+    "collected": true,
+    "failed": false,
+    "more_stored_output": true,
+    "operation": "managed.157cdb75f6320ed0cc03245a53ad6af21167392e7fbd189a457053a879f8b4a9",
+    "process_stopped": false,
+    "retry_at_ns": 0,
+    "source_sequence": 1777,
+    "state": "candidate_collected",
+    "target": {
+      "dispatch_id": "dispatch.runtime.packet.vibevm-m06c1",
+      "job_id": "job.runtime.packet.vibevm-m06c1",
+      "kind": "job"
+    },
+    "unknown_tail": false
+  },
+  "jobs": [
+    {
+      "acceptance": "unreviewed",
+      "candidate_id": "candidate.vibevm-m06c1",
+      "effect": "completed",
+      "execution": "succeeded",
+      "job_id": "job.runtime.packet.vibevm-m06c1",
+      "revision": 373,
+      "safe": "unknown"
+    }
+  ],
+  "processes": [
+    {
+      "pid": 3515743,
+      "state": "S",
+      "ppid": 3515246,
+      "start_ticks": 34282110,
+      "uid": 1000,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host"
+    },
+    {
+      "pid": 3515246,
+      "state": "S",
+      "ppid": 3515237,
+      "start_ticks": 34281214,
+      "uid": 1000,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex"
+    },
+    {
+      "pid": 3515237,
+      "state": "S",
+      "ppid": 3515104,
+      "start_ticks": 34281152,
+      "uid": 1000,
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod"
+    },
+    {
+      "pid": 3515104,
+      "state": "S",
+      "ppid": 3515100,
+      "start_ticks": 34280593,
+      "uid": 1000,
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay"
+    },
+    {
+      "pid": 3515100,
+      "state": "S",
+      "ppid": 3515039,
+      "start_ticks": 34280571,
+      "uid": 1000,
+      "exe": "/fast/git/v/.workers/zap-s5-api-target/debug/zap"
+    }
+  ],
+  "signals": [
+    {
+      "pid": 3515743,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3515246,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3515237,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3515104,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3515100,
+      "signal": "SIGTERM"
+    }
+  ],
+  "after": [
+    {
+      "pid": 3515743,
+      "exists": false
+    },
+    {
+      "pid": 3515246,
+      "exists": false
+    },
+    {
+      "pid": 3515237,
+      "exists": false
+    },
+    {
+      "pid": 3515104,
+      "exists": false
+    },
+    {
+      "pid": 3515100,
+      "exists": false
+    }
+  ]
+}

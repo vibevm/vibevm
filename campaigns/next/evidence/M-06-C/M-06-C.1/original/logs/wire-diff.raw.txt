@@ -1,0 +1,2 @@
+rebuild: differs `repomd.json`
+Error: rebuild --check: 1 drift item(s) against the journal under `/fast/git/v/vibevm-next/formats/corpora/index/e1`. A catalog that differs from its journal's projection carries a fact the journal does not describe — a derived artifact holding truth (violates spec://org.vibevm.core/vibevm/common/PROP-044#truth; fix: regenerate the catalog FROM the journal — every vibe-index mutation reprojects it wholesale — and never edit the journal to match the catalog — that would launder the secret truth into the truth layer.)
