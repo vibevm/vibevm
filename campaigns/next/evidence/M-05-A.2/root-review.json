@@ -1,0 +1,13 @@
+{
+  "approved": true,
+  "summary": "Root independently reviewed source diff, twelve scoped characterizations and actual caller/backend matrix. Accept bounded M05A2 characterization, not solver corrections.",
+  "scope": "Six M05A2 paths: two cfg(test) registrations, twelve characterizations, capability matrix, read roster correction only.",
+  "limitations": [
+    "Eight resolver tests executed in retry2; four unchanged core tests reused from earlier actual successful run.",
+    "Conditional-loop and weak-forwarding end-to-end behavior unverified; known parsing/validation/naive-SAT defects pinned, not fixed.",
+    "Unrelated global formatting failures remain; scoped formatting and whitespace pass."
+  ],
+  "observed_test_count": 8,
+  "observed_test_exit": 0,
+  "actual_environment": "Linux userspace Rust Zap d89acc6 / PodBay 2feb8fa managed Codex Astra Medium; private warm target, offline locked."
+}

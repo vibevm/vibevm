@@ -1,0 +1,17 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "discoveries": [
+    "Eight retained resolver cases executed and passed; four core cases reused with unchanged owner/test hashes.",
+    "Qualified forwarding split, all-features validation and naive/SAT name-only disjunction defects are runtime-confirmed; production code remains unchanged.",
+    "All nine Local/Multi/Embedded by naive/SAT/resolvo constructor routes source-audited; default resolvo, invalid solver rejected, no backend-switch fallback."
+  ],
+  "unresolved": [
+    "End-to-end weak forwarding and conditional retention remain unverified: plan.rs delegates to crates/vibe-install/src/plan/fetch.rs outside the literal read roster. Masked helper internals also outside roster; forwarding boundary documented.",
+    "Historical workspace cargo fmt check failed outside the perimeter; scoped formatting passes. Candidate requires owner review, not acceptance."
+  ],
+  "proposed_follow_up": null
+}

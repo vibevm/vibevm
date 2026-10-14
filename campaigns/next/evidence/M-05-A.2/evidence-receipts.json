@@ -1,0 +1,82 @@
+[
+  {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m05a2.retry2",
+          "campaign_id": "campaign.vibevm-m05a2.retry2",
+          "base_id": "base.vibevm-m05a2.retry2",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m05a2.evidence.verification.m05a2",
+        "event_id": "event:root-review.m05a2.evidence.verification.m05a2",
+        "transaction_id": "tx:root-review.m05a2.evidence.verification.m05a2",
+        "revision": 175,
+        "event_digest": "c37b2e852a1071c58c4d77d2102a442c9f6193ed40ce9356617e68de72522c68",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          49,
+          55,
+          53,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  },
+  {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m05a2.retry2",
+          "campaign_id": "campaign.vibevm-m05a2.retry2",
+          "base_id": "base.vibevm-m05a2.retry2",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m05a2.evidence.verification.m05a2.core",
+        "event_id": "event:root-review.m05a2.evidence.verification.m05a2.core",
+        "transaction_id": "tx:root-review.m05a2.evidence.verification.m05a2.core",
+        "revision": 176,
+        "event_digest": "0ebbc26dbe02815e6f3facd4044d43e8b6032f8961a77901c831a2ffb20fb074",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          49,
+          55,
+          54,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  }
+]

@@ -521,3 +521,6 @@ fn node_from_chosen(group: Group, name: String, entry: Chosen, is_root: bool) ->
         is_root: is_root || entry.is_root,
     }
 }
+
+#[cfg(test)]
+mod m_05_a_2_cases;
