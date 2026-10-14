@@ -1,0 +1,7 @@
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Retry policy</title>
+  <policy title="Policy">
+    <p><RETRY fact="true" status="spec/work">Retry at most once in the local profile.</RETRY></p>
+    <fence lang="sh">printf DO_NOT_EXECUTE</fence>
+  </policy>
+</spec>

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- preserve spelling -->
+<catalog note="a&amp;b">
+  <timeout>90</timeout>
+  <script>printf DO_NOT_EXECUTE</script>
+</catalog>

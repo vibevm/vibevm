@@ -1,0 +1,436 @@
+{
+  "schema": "m10a1-design-fixtures/1",
+  "status": "design-only; not a production derivative manifest",
+  "cases": [
+    {
+      "id": "commonmark",
+      "anchor": "FAMILY-COMMONMARK",
+      "scenario": "Replace Usage prose; preserve fenced code and Reference bytes.",
+      "base": {
+        "coordinate": "org.example.upstream/commonmark@1.0.0",
+        "capture_root": "commonmark/base",
+        "inventory_sha256": "0b8a914db322cca69e092d99bfd1c62a5e35791e0d11a17d5918c3bacb5c8a8f",
+        "inventory_recipe": "sha256 of UTF-8 compact sorted-key JSON file rows; fixture-only, not a production package hash",
+        "immutable": true,
+        "sealed": true,
+        "files": [
+          {
+            "path": "guide.md",
+            "sha256": "5dd8c9c24eb8fd40f8e62dcf93c25f066afa22a0a3c58e5f59943780f428a822",
+            "bytes": 107
+          }
+        ]
+      },
+      "local": {
+        "coordinate": "org.example.local/commonmark@0.1.0",
+        "owner": "local-author",
+        "authored_root": "commonmark/local",
+        "files": [
+          {
+            "path": "guide.md",
+            "sha256": "a9cf877ec07b327eaef4b2e108a5ded3bd5ecaf12adcad1871c77171fb78a7ec",
+            "bytes": 115
+          }
+        ]
+      },
+      "source_interpretation": "commonmark",
+      "media": "text/markdown",
+      "compatibility": {
+        "target": "org.example.upstream/commonmark@1.0.0",
+        "base_inventory_sha256": "0b8a914db322cca69e092d99bfd1c62a5e35791e0d11a17d5918c3bacb5c8a8f",
+        "claim": "scenario-specific replacement, not upstream identity or a grant",
+        "selector": {
+          "export": "usage.v1",
+          "headings": [
+            "Guide",
+            "Usage"
+          ]
+        }
+      },
+      "activation": {
+        "state": "not-requested",
+        "consumer": "explicit downstream context selection or owned projection",
+        "inherits_upstream_grants": false,
+        "executes_code": false
+      },
+      "demand_evidence": null,
+      "expected": {
+        "root": "commonmark/expected",
+        "files": [
+          {
+            "path": "guide.md",
+            "sha256": "a9cf877ec07b327eaef4b2e108a5ded3bd5ecaf12adcad1871c77171fb78a7ec",
+            "bytes": 115
+          }
+        ],
+        "eligible_for_separate_derivative": true,
+        "base_unchanged": true,
+        "local_survives_output_deletion": true
+      },
+      "existing_mechanism": "vibe-specdoc::commonmark::CommonMarkDoc::resolve_export",
+      "missing_behavior_and_owner": "vibe-workspace: bind a local replacement to base capture and selected export; export spans alone do not implement replacement.",
+      "later_executable_requirements": [
+        "Create a separately owned derivative with sealed=true and absent demand evidence; repeat with sealed=false and verify the same eligibility.",
+        "Compare exact output inventory and bytes against expected; base capture remains unchanged.",
+        "Reject stale base compatibility without rewriting either identity; report explicit incompatibility.",
+        "Delete disposable output and reconstruct from retained base plus local authored input.",
+        "Inspect/diff without hydration, execution or activation; activation requires its existing downstream contract."
+      ]
+    },
+    {
+      "id": "xml-data",
+      "anchor": "FAMILY-XML-DATA",
+      "scenario": "Replace timeout while preserving BOM, comment, entity spelling and script text.",
+      "base": {
+        "coordinate": "org.example.upstream/xml-data@1.0.0",
+        "capture_root": "xml-data/base",
+        "inventory_sha256": "46f4b67645b7e0e2c585158db7ccc812d026b86ec6fb49cbbe7ae9cce97277f0",
+        "inventory_recipe": "sha256 of UTF-8 compact sorted-key JSON file rows; fixture-only, not a production package hash",
+        "immutable": true,
+        "sealed": true,
+        "files": [
+          {
+            "path": "catalog.xml",
+            "sha256": "9e46300839362646627c82dbeb30d5667f2681681660311abf27fd5e5c0f9447",
+            "bytes": 170
+          }
+        ]
+      },
+      "local": {
+        "coordinate": "org.example.local/xml-data@0.1.0",
+        "owner": "local-author",
+        "authored_root": "xml-data/local",
+        "files": [
+          {
+            "path": "catalog.xml",
+            "sha256": "d0cd7a5cb0147322dbeb74f090ab19e9905d127e335e60aa3202eacc610b9ef5",
+            "bytes": 170
+          }
+        ]
+      },
+      "source_interpretation": "xml-data",
+      "media": "application/xml",
+      "compatibility": {
+        "target": "org.example.upstream/xml-data@1.0.0",
+        "base_inventory_sha256": "46f4b67645b7e0e2c585158db7ccc812d026b86ec6fb49cbbe7ae9cce97277f0",
+        "claim": "scenario-specific replacement, not upstream identity or a grant",
+        "selector": {
+          "path": "catalog.xml"
+        }
+      },
+      "activation": {
+        "state": "not-requested",
+        "consumer": "explicit downstream context selection or owned projection",
+        "inherits_upstream_grants": false,
+        "executes_code": false
+      },
+      "demand_evidence": null,
+      "expected": {
+        "root": "xml-data/expected",
+        "files": [
+          {
+            "path": "catalog.xml",
+            "sha256": "d0cd7a5cb0147322dbeb74f090ab19e9905d127e335e60aa3202eacc610b9ef5",
+            "bytes": 170
+          }
+        ],
+        "eligible_for_separate_derivative": true,
+        "base_unchanged": true,
+        "local_survives_output_deletion": true
+      },
+      "existing_mechanism": "vibe-specdoc::xml_data::inspect_xml_data",
+      "missing_behavior_and_owner": "vibe-workspace: whole-byte local replacement with provenance; vibe-specdoc inspection is not an XML editing engine.",
+      "later_executable_requirements": [
+        "Create a separately owned derivative with sealed=true and absent demand evidence; repeat with sealed=false and verify the same eligibility.",
+        "Compare exact output inventory and bytes against expected; base capture remains unchanged.",
+        "Reject stale base compatibility without rewriting either identity; report explicit incompatibility.",
+        "Delete disposable output and reconstruct from retained base plus local authored input.",
+        "Inspect/diff without hydration, execution or activation; activation requires its existing downstream contract."
+      ]
+    },
+    {
+      "id": "vibe-spec",
+      "anchor": "FAMILY-VIBE-SPEC",
+      "scenario": "Replace RETRY body in separately owned POLICY; keep upstream fact identity distinct.",
+      "base": {
+        "coordinate": "org.example.upstream/vibe-spec@1.0.0",
+        "capture_root": "vibe-spec/base",
+        "inventory_sha256": "8215fbb942fdccec0e14e6be6d3f02092d0996c4e28412edf42b0f153b4b86e9",
+        "inventory_recipe": "sha256 of UTF-8 compact sorted-key JSON file rows; fixture-only, not a production package hash",
+        "immutable": true,
+        "sealed": true,
+        "files": [
+          {
+            "path": "vibevm/vibespecs/common/POLICY.xml",
+            "sha256": "6d29d4d1db185aebe9efe51a224c4217f8388ba31946aeeeee29d3eda968c09e",
+            "bytes": 262
+          }
+        ]
+      },
+      "local": {
+        "coordinate": "org.example.local/vibe-spec@0.1.0",
+        "owner": "local-author",
+        "authored_root": "vibe-spec/local",
+        "files": [
+          {
+            "path": "vibevm/vibespecs/common/POLICY.xml",
+            "sha256": "db140f78592811351be7d285978a14c9cb40295e08c5f199bd2da1c907b73491",
+            "bytes": 276
+          }
+        ]
+      },
+      "source_interpretation": "vibe-spec",
+      "media": "application/xml",
+      "compatibility": {
+        "target": "org.example.upstream/vibe-spec@1.0.0",
+        "base_inventory_sha256": "8215fbb942fdccec0e14e6be6d3f02092d0996c4e28412edf42b0f153b4b86e9",
+        "claim": "scenario-specific replacement, not upstream identity or a grant",
+        "selector": {
+          "path": "vibevm/vibespecs/common/POLICY.xml"
+        }
+      },
+      "activation": {
+        "state": "not-requested",
+        "consumer": "explicit downstream context selection or owned projection",
+        "inherits_upstream_grants": false,
+        "executes_code": false
+      },
+      "demand_evidence": null,
+      "expected": {
+        "root": "vibe-spec/expected",
+        "files": [
+          {
+            "path": "vibevm/vibespecs/common/POLICY.xml",
+            "sha256": "db140f78592811351be7d285978a14c9cb40295e08c5f199bd2da1c907b73491",
+            "bytes": 276
+          }
+        ],
+        "eligible_for_separate_derivative": true,
+        "base_unchanged": true,
+        "local_survives_output_deletion": true
+      },
+      "existing_mechanism": "vibe-workspace::vibedeps::replay_declared_captured; vibe-specdoc::from_xml; vibe-spec::canonical_doc_path",
+      "missing_behavior_and_owner": "vibe-workspace: authored content replacement and compatibility binding; vibe-spec: route selected local document without upstream address impersonation. Status overlays do not replace bodies.",
+      "later_executable_requirements": [
+        "Create a separately owned derivative with sealed=true and absent demand evidence; repeat with sealed=false and verify the same eligibility.",
+        "Compare exact output inventory and bytes against expected; base capture remains unchanged.",
+        "Reject stale base compatibility without rewriting either identity; report explicit incompatibility.",
+        "Delete disposable output and reconstruct from retained base plus local authored input.",
+        "Inspect/diff without hydration, execution or activation; activation requires its existing downstream contract."
+      ]
+    },
+    {
+      "id": "opaque-file",
+      "anchor": "FAMILY-OPAQUE-FILE",
+      "scenario": "Replace a non-UTF-8 binary containing NUL and code-like bytes.",
+      "base": {
+        "coordinate": "org.example.upstream/opaque-file@1.0.0",
+        "capture_root": "opaque-file/base",
+        "inventory_sha256": "e956c7e46f501171b6992bef38f99d2e4b9157dc4a499b4bba494f16a54c72ee",
+        "inventory_recipe": "sha256 of UTF-8 compact sorted-key JSON file rows; fixture-only, not a production package hash",
+        "immutable": true,
+        "sealed": true,
+        "files": [
+          {
+            "path": "payload.bin",
+            "sha256": "7c5fdba2920d78126db9de7cf4319894513e99bf9521e78a34f1816ff205350c",
+            "bytes": 31
+          }
+        ]
+      },
+      "local": {
+        "coordinate": "org.example.local/opaque-file@0.1.0",
+        "owner": "local-author",
+        "authored_root": "opaque-file/local",
+        "files": [
+          {
+            "path": "payload.bin",
+            "sha256": "c9b3281c8233059d8dc5bc20712f85ec68332d0dcbae8b89a36267211c8c5341",
+            "bytes": 32
+          }
+        ]
+      },
+      "source_interpretation": "opaque",
+      "media": "application/octet-stream",
+      "compatibility": {
+        "target": "org.example.upstream/opaque-file@1.0.0",
+        "base_inventory_sha256": "e956c7e46f501171b6992bef38f99d2e4b9157dc4a499b4bba494f16a54c72ee",
+        "claim": "scenario-specific replacement, not upstream identity or a grant",
+        "selector": {
+          "path": "payload.bin"
+        }
+      },
+      "activation": {
+        "state": "not-requested",
+        "consumer": "explicit downstream context selection or owned projection",
+        "inherits_upstream_grants": false,
+        "executes_code": false
+      },
+      "demand_evidence": null,
+      "expected": {
+        "root": "opaque-file/expected",
+        "files": [
+          {
+            "path": "payload.bin",
+            "sha256": "c9b3281c8233059d8dc5bc20712f85ec68332d0dcbae8b89a36267211c8c5341",
+            "bytes": 32
+          }
+        ],
+        "eligible_for_separate_derivative": true,
+        "base_unchanged": true,
+        "local_survives_output_deletion": true
+      },
+      "existing_mechanism": "vibe-specdoc::xml_data::preserve_opaque; vibe-workspace::vibedeps descriptor Raw materialisation",
+      "missing_behavior_and_owner": "vibe-workspace: local binary replacement lifecycle and byte identity, independent of text parsers.",
+      "later_executable_requirements": [
+        "Create a separately owned derivative with sealed=true and absent demand evidence; repeat with sealed=false and verify the same eligibility.",
+        "Compare exact output inventory and bytes against expected; base capture remains unchanged.",
+        "Reject stale base compatibility without rewriting either identity; report explicit incompatibility.",
+        "Delete disposable output and reconstruct from retained base plus local authored input.",
+        "Inspect/diff without hydration, execution or activation; activation requires its existing downstream contract."
+      ]
+    },
+    {
+      "id": "nested-tree",
+      "anchor": "FAMILY-NESTED-TREE",
+      "scenario": "Replace binary and adapter; remove obsolete owned path, add local path, retain nested code and neighbor.",
+      "base": {
+        "coordinate": "org.example.upstream/nested-tree@1.0.0",
+        "capture_root": "nested-tree/base",
+        "inventory_sha256": "689c232550e60950c15188430c9d425d902f4e17205fc4ae0b832d974e2e15b5",
+        "inventory_recipe": "sha256 of UTF-8 compact sorted-key JSON file rows; fixture-only, not a production package hash",
+        "immutable": true,
+        "sealed": true,
+        "files": [
+          {
+            "path": "SKILL.md",
+            "sha256": "e3679b0dc10c82bf265b7e441c3c46ebb87b79b764c6596f26a6c790f8717a14",
+            "bytes": 23
+          },
+          {
+            "path": "assets/icons/palette.bin",
+            "sha256": "74b38bc2b07f79de9057aa0b322961051d64ebeed29014692d5e62eb50426eaa",
+            "bytes": 6
+          },
+          {
+            "path": "docs/keep.txt",
+            "sha256": "042a4e578c6fbc27bc9867bd674472143ab2dd3f9fe519ba1216950ba9b22024",
+            "bytes": 18
+          },
+          {
+            "path": "docs/obsolete.txt",
+            "sha256": "be4b5c680f2f1bdefe6ad46f306b3ef132a3da42328bd1ceb41cbd198be6302f",
+            "bytes": 15
+          },
+          {
+            "path": "scripts/helper.sh",
+            "sha256": "ae3ca39f3b969be3d0efc24d14bf2dddfefd7b9ab45fd79e90e78130bd795a7d",
+            "bytes": 32
+          }
+        ]
+      },
+      "local": {
+        "coordinate": "org.example.local/nested-tree@0.1.0",
+        "owner": "local-author",
+        "authored_root": "nested-tree/local",
+        "files": [
+          {
+            "path": "SKILL.md",
+            "sha256": "6ebfe97f69720defefd7bb3f3bfc8523adc734a2bebafa5ec98520b0dce18ae4",
+            "bytes": 46
+          },
+          {
+            "path": "assets/icons/palette.bin",
+            "sha256": "c9e4cc91261196169b8fa5a2ea78279f4d5f7b17b79a482c6d705fe33024f616",
+            "bytes": 7
+          },
+          {
+            "path": "docs/keep.txt",
+            "sha256": "042a4e578c6fbc27bc9867bd674472143ab2dd3f9fe519ba1216950ba9b22024",
+            "bytes": 18
+          },
+          {
+            "path": "docs/local.txt",
+            "sha256": "bfd6f1f2ad38b6217cab90fcd0947f621baba37e9d18d3ad490f747d15e29fe7",
+            "bytes": 17
+          },
+          {
+            "path": "scripts/helper.sh",
+            "sha256": "ae3ca39f3b969be3d0efc24d14bf2dddfefd7b9ab45fd79e90e78130bd795a7d",
+            "bytes": 32
+          }
+        ]
+      },
+      "source_interpretation": "opaque",
+      "media": "application/octet-stream",
+      "compatibility": {
+        "target": "org.example.upstream/nested-tree@1.0.0",
+        "base_inventory_sha256": "689c232550e60950c15188430c9d425d902f4e17205fc4ae0b832d974e2e15b5",
+        "claim": "scenario-specific replacement, not upstream identity or a grant",
+        "selector": {
+          "tree": "."
+        }
+      },
+      "activation": {
+        "state": "not-requested",
+        "consumer": "explicit downstream context selection or owned projection",
+        "inherits_upstream_grants": false,
+        "executes_code": false
+      },
+      "demand_evidence": null,
+      "expected": {
+        "root": "nested-tree/expected",
+        "files": [
+          {
+            "path": "SKILL.md",
+            "sha256": "6ebfe97f69720defefd7bb3f3bfc8523adc734a2bebafa5ec98520b0dce18ae4",
+            "bytes": 46
+          },
+          {
+            "path": "assets/icons/palette.bin",
+            "sha256": "c9e4cc91261196169b8fa5a2ea78279f4d5f7b17b79a482c6d705fe33024f616",
+            "bytes": 7
+          },
+          {
+            "path": "docs/keep.txt",
+            "sha256": "042a4e578c6fbc27bc9867bd674472143ab2dd3f9fe519ba1216950ba9b22024",
+            "bytes": 18
+          },
+          {
+            "path": "docs/local.txt",
+            "sha256": "bfd6f1f2ad38b6217cab90fcd0947f621baba37e9d18d3ad490f747d15e29fe7",
+            "bytes": 17
+          },
+          {
+            "path": "scripts/helper.sh",
+            "sha256": "ae3ca39f3b969be3d0efc24d14bf2dddfefd7b9ab45fd79e90e78130bd795a7d",
+            "bytes": 32
+          }
+        ],
+        "eligible_for_separate_derivative": true,
+        "base_unchanged": true,
+        "local_survives_output_deletion": true
+      },
+      "existing_mechanism": "vibe-agent-projection::pkgskill::install_package_skill_selecting; hydrate_declared_skill resource composition",
+      "missing_behavior_and_owner": "vibe-workspace: general local tree ownership and explicit replacement/deletion; vibe-agent-projection: consume selected derivative with existing receipts. Resource collisions currently refuse, not override.",
+      "later_executable_requirements": [
+        "Create a separately owned derivative with sealed=true and absent demand evidence; repeat with sealed=false and verify the same eligibility.",
+        "Compare exact output inventory and bytes against expected; base capture remains unchanged.",
+        "Reject stale base compatibility without rewriting either identity; report explicit incompatibility.",
+        "Delete disposable output and reconstruct from retained base plus local authored input.",
+        "Inspect/diff without hydration, execution or activation; activation requires its existing downstream contract."
+      ]
+    }
+  ],
+  "negative_requirements": [
+    "Text-only success cannot close opaque-file or nested-tree coverage.",
+    "Neither sealed nor missing demand evidence is a new derivative permission gate.",
+    "Never overwrite upstream capture or borrow its grants.",
+    "Reject ambiguous exports, unsafe paths, output collisions and unowned target replacement through existing owners; do not invent priority rules."
+  ],
+  "tree_neighbor": {
+    "path": "FOREIGN.txt",
+    "bytes": "Unowned neighbor remains.\n",
+    "expected_after_update_and_uninstall": "unchanged"
+  }
+}
