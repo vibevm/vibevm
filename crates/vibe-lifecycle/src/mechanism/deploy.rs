@@ -842,3 +842,6 @@ mod bound_effect_tests;
 #[cfg(test)]
 #[path = "deploy/bridge_tests.rs"]
 mod bridge_tests;
+
+#[cfg(test)]
+mod m_08_a_1_cases;

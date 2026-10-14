@@ -1,0 +1,279 @@
+{
+  "status": "unreviewed source characterization",
+  "basis": "accepted31bc69fb4 plus unaccepted M06B1 WIP; not a clean snapshot",
+  "fixtures": [
+    "skill-v1.md",
+    "skill-v2.md",
+    "foreign.json",
+    "foreign-after-remove.json"
+  ],
+  "rows": [
+    {
+      "surface": "standalone",
+      "clients": [
+        "claude",
+        "codex",
+        "opencode",
+        "qwen-code"
+      ],
+      "scope": "project",
+      "shape": "file -> demo/<source basename> (not renamed); tree -> selected relative files",
+      "operations": [
+        "install",
+        "unchanged",
+        "update",
+        "remove"
+      ],
+      "receipt_owner": "<skills-root>/.demo.vibe-skill-receipt.toml",
+      "case": "m_08_a_1_cases::standalone_project_file_and_tree_install_update_remove_exact_bytes",
+      "limits": null
+    },
+    {
+      "surface": "standalone",
+      "clients": [
+        "claude",
+        "codex",
+        "opencode",
+        "qwen-code"
+      ],
+      "scope": "user",
+      "shape": "pure injected home paths",
+      "operations": [
+        "path resolution"
+      ],
+      "receipt_owner": "standalone receipt family; mutation unexecuted",
+      "case": "m_08_a_1_cases::injected_paths_and_mcp_flags_are_separate_from_skill_support",
+      "limits": "Ambient standalone user mutation API has no injected home seam. No user mutation executed."
+    },
+    {
+      "surface": "MCP path data",
+      "clients": [
+        "claude",
+        "codex",
+        "opencode",
+        "qwen-code",
+        "cursor",
+        "claude-desktop"
+      ],
+      "scope": "user/project",
+      "shape": "JSON or Codex TOML path; no writer in this crate",
+      "operations": [
+        "path resolution",
+        "reject Both"
+      ],
+      "receipt_owner": "MCP writers outside this task",
+      "case": "m_08_a_1_cases::injected_paths_and_mcp_flags_are_separate_from_skill_support",
+      "limits": "Source differs from packet user-only Codex MCP premise: current config_path_with_dirs and coarse flag support project .codex/config.toml. This does not establish runtime client support. MCP install/update/remove writers are outside named task owner."
+    },
+    {
+      "surface": "automatic binding",
+      "clients": [
+        "claude",
+        "codex",
+        "opencode",
+        "qwen-code"
+      ],
+      "scope": "project",
+      "shape": "file and tree selected snapshots",
+      "operations": [
+        "install",
+        "update",
+        "vanish/remove"
+      ],
+      "receipt_owner": ".vibe/package-skills.toml; .vibe/package-skills.lock",
+      "case": "m_08_a_1_cases::automatic_file_and_tree_bindings_install_update_vanish_with_own_receipt",
+      "limits": null
+    },
+    {
+      "surface": "receipt boundary",
+      "clients": [
+        "claude",
+        "codex",
+        "opencode",
+        "qwen-code"
+      ],
+      "scope": "project",
+      "shape": "equal bytes in both receipt directions",
+      "operations": [
+        "refuse adoption"
+      ],
+      "receipt_owner": "standalone versus automatic",
+      "case": "m_08_a_1_cases::equal_bytes_do_not_transfer_between_standalone_and_automatic_receipts",
+      "limits": null
+    },
+    {
+      "surface": "unsupported projection",
+      "clients": [
+        "cursor",
+        "claude-desktop",
+        "codex"
+      ],
+      "scope": "project",
+      "shape": "unsupported clients, empty source tree, directory at SKILL.md",
+      "operations": [
+        "skip standalone unsupported client",
+        "refuse explicit binding",
+        "refuse shape"
+      ],
+      "receipt_owner": "no new owner",
+      "case": "m_08_a_1_cases::unsupported_clients_empty_trees_and_foreign_directory_shapes_are_explicit",
+      "limits": null
+    },
+    {
+      "surface": "lifecycle skill",
+      "clients": [
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "scope": "user",
+      "shape": "single file",
+      "operations": [
+        "install",
+        "update",
+        "remove"
+      ],
+      "receipt_owner": "deployment state receipt.json by target/provider",
+      "case": "mechanism::deploy::m_08_a_1_cases::lifecycle_skill_file_install_update_remove_preserves_bytes_and_receipt_owner",
+      "limits": null
+    },
+    {
+      "surface": "lifecycle skill",
+      "clients": [
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "scope": "user",
+      "shape": "directory artifact; equal-byte foreign file; outside-root resource",
+      "operations": [
+        "refuse shape",
+        "refuse adoption",
+        "refuse remove"
+      ],
+      "receipt_owner": "standalone versus deploy",
+      "case": "mechanism::deploy::m_08_a_1_cases::lifecycle_refuses_equal_byte_standalone_occupants_and_directory_artifacts",
+      "limits": null
+    },
+    {
+      "surface": "lifecycle plugin",
+      "clients": [
+        "opencode"
+      ],
+      "scope": "user",
+      "shape": "skills tree and logical #mcp/demo config member; physical document lock",
+      "operations": [
+        "install",
+        "unchanged",
+        "remove"
+      ],
+      "receipt_owner": "deployment receipt owns members, not full JSON document",
+      "case": "mechanism::deploy::plugin::m_08_a_1_cases::opencode_logical_members_physical_lock_exact_bytes_and_scoped_remove",
+      "limits": "Direct admitted projection seam excludes version process. Artifact replacement requires undeploy/deploy at provider boundary."
+    },
+    {
+      "surface": "lifecycle plugin",
+      "clients": [
+        "opencode"
+      ],
+      "scope": "user",
+      "shape": "equal-byte skill/config occupant, malformed config, foreign resource",
+      "operations": [
+        "refuse adoption",
+        "refuse shape",
+        "refuse remove"
+      ],
+      "receipt_owner": "no new receipt owner",
+      "case": "mechanism::deploy::plugin::m_08_a_1_cases::opencode_equal_byte_foreign_members_and_unsupported_resources_refuse",
+      "limits": null
+    },
+    {
+      "surface": "lifecycle plugin",
+      "clients": [
+        "claude",
+        "codex"
+      ],
+      "scope": "user",
+      "shape": "logical plugin coordinate; private client-state lock",
+      "operations": [
+        "inert marketplace/install/remove argv",
+        "refuse artifact update"
+      ],
+      "receipt_owner": "deployment receipt with plugin:<client>:<coordinate>",
+      "case": "mechanism::deploy::plugin::m_08_a_1_cases::cli_plugin_wire_is_inert_user_scope_install_remove_and_update_refusal",
+      "limits": "Capturing in-memory ProcessRunner only; no discovery, version command, process or actual plugin install. Not end-to-end CLI commissioning."
+    },
+    {
+      "surface": "lifecycle plugin",
+      "clients": [
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "scope": "user",
+      "shape": "file artifact and unsupported directory resource",
+      "operations": [
+        "refuse shape"
+      ],
+      "receipt_owner": "no owner",
+      "case": "mechanism::deploy::plugin::m_08_a_1_cases::plugin_admission_rejects_file_and_unsupported_tree_shapes",
+      "limits": null
+    }
+  ],
+  "bound_cases": [
+    "m_08_a_1_cases::injected_paths_and_mcp_flags_are_separate_from_skill_support",
+    "m_08_a_1_cases::standalone_project_file_and_tree_install_update_remove_exact_bytes",
+    "m_08_a_1_cases::automatic_file_and_tree_bindings_install_update_vanish_with_own_receipt",
+    "m_08_a_1_cases::equal_bytes_do_not_transfer_between_standalone_and_automatic_receipts",
+    "m_08_a_1_cases::unsupported_clients_empty_trees_and_foreign_directory_shapes_are_explicit",
+    "mechanism::deploy::m_08_a_1_cases::lifecycle_skill_file_install_update_remove_preserves_bytes_and_receipt_owner",
+    "mechanism::deploy::m_08_a_1_cases::lifecycle_refuses_equal_byte_standalone_occupants_and_directory_artifacts",
+    "mechanism::deploy::plugin::m_08_a_1_cases::opencode_logical_members_physical_lock_exact_bytes_and_scoped_remove",
+    "mechanism::deploy::plugin::m_08_a_1_cases::opencode_equal_byte_foreign_members_and_unsupported_resources_refuse",
+    "mechanism::deploy::plugin::m_08_a_1_cases::cli_plugin_wire_is_inert_user_scope_install_remove_and_update_refusal",
+    "mechanism::deploy::plugin::m_08_a_1_cases::plugin_admission_rejects_file_and_unsupported_tree_shapes"
+  ],
+  "paths": {
+    "claude": {
+      "project_skill": ".claude/skills/<name>/<source basename or tree relative>",
+      "user_skill": ".claude/skills/<name>/SKILL.md",
+      "user_mcp": ".claude.json",
+      "project_mcp": ".mcp.json"
+    },
+    "codex": {
+      "project_skill": ".agents/skills/<name>/<source basename or tree relative>",
+      "user_skill": ".agents/skills/<name>/SKILL.md",
+      "user_mcp": ".codex/config.toml",
+      "project_mcp": ".codex/config.toml"
+    },
+    "opencode": {
+      "project_skill": ".opencode/skills/<name>/<source basename or tree relative>",
+      "user_skill": ".config/opencode/skills/<name>/SKILL.md",
+      "user_mcp": ".config/opencode/opencode.json",
+      "project_mcp": "opencode.json"
+    },
+    "qwen-code": {
+      "project_skill": ".qwen/skills/<name>/<source basename or tree relative>",
+      "user_skill": ".qwen/skills/<name>/SKILL.md",
+      "user_mcp": ".qwen/settings.json",
+      "project_mcp": ".qwen/settings.json"
+    },
+    "cursor": {
+      "project_skill": null,
+      "user_skill": null,
+      "user_mcp": ".cursor/mcp.json",
+      "project_mcp": ".cursor/mcp.json"
+    },
+    "claude-desktop": {
+      "project_skill": null,
+      "user_skill": null,
+      "user_mcp": "<injected config>/Claude/claude_desktop_config.json",
+      "project_mcp": null
+    }
+  },
+  "boundaries": [
+    "Lifecycle skill and plugin catalogs contain Claude, Codex and OpenCode only; no Qwen lifecycle row is inferred from standalone support.",
+    "No runtime client/version support or future adapter design is claimed.",
+    "All byte fixtures are inert. No real executable is present at the captured ProcessRunner path."
+  ]
+}

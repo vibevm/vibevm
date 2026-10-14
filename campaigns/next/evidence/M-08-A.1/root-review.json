@@ -1,0 +1,14 @@
+{
+  "approved": true,
+  "summary": "Independent Root review accepts scoped legacy projection/deploy characterization: matrix rows bind real executable cases, temporary roots preserve unrelated data, source behavior distinguished from runtime client support.",
+  "scope": "Test modules/registration, inert adapter fixtures and two PROP054 characterization anchors only; no production client behavior or M03 carrier change.",
+  "limitations": [
+    "Standalone user mutation lacks injected-home seam; only pure user paths tested. MCP writer/runtime client support not qualified.",
+    "Current pure Codex project MCP path differs from packet user-only premise; source behavior documented without changing it.",
+    "Global formatting fails outside scope; scoped formatting and whitespace pass.",
+    "Manual recovery of completed native final1303/turn1307 required by old1MiB eventbound; no full transcript import or automatic collection claim."
+  ],
+  "observed_test_count": 11,
+  "observed_test_exit": 0,
+  "actual_environment": "Managed Codex AstraMedium through RustZapd89/PodBay2feb, private M08target, offline locked projection5/lifecycle6 cases. Newer Zapb867/f53 built for next M10 task."
+}

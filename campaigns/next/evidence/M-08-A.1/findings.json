@@ -1,0 +1,19 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "discoveries": [
+    "Codex project skills are .agents/skills. Contrary to packet user-only MCP premise, current coarse MCP flag and pure config_path_with_dirs expose project .codex/config.toml; this source fact is characterized, not changed or claimed as runtime support.",
+    "Standalone and automatic single-file projections preserve the source basename. Lifecycle skill deploy instead requires a skill/file artifact and writes SKILL.md.",
+    "Standalone user mutation lacks an injected-home seam; only pure user path outputs are exercised. Project mutations use temporary fixtures.",
+    "Lifecycle plugin artifact updates require undeploy then deploy, including OpenCode. Logical MCP member ownership differs from the physical document lock.",
+    "MCP config writers are outside this named owner; path data is characterized without claiming their install/update/remove execution."
+  ],
+  "unresolved": [
+    "Requested global cargo fmt check exits 1 on unrelated files; no out-of-scope cleanup performed.",
+    "Codex user-only MCP premise differs from current source; source behavior preserved and explicitly recorded."
+  ],
+  "proposed_follow_up": null
+}
