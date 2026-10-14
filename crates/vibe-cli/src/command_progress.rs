@@ -19,6 +19,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "agentic",
     "aiui",
     "bin",
+    "boot",
     "build",
     "cache",
     "change",
@@ -190,6 +191,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             AiuiSubcommand::PtyStart(_) => FiniteFallback("Command aiui pty-start"),
             AiuiSubcommand::Scrollbar(_) => FiniteFallback("Command aiui scrollbar"),
         },
+        Command::Boot(_) => PersistentProtocol,
         Command::Term(_) | Command::Frame(_) => TerminalPassthrough,
         Command::Skill(args) => match &args.command {
             SkillSubcommand::List(_) => FastMetadata,

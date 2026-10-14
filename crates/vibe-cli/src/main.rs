@@ -285,6 +285,7 @@ fn main() -> ExitCode {
         Command::Show(args) => commands::show::run(&ctx, args, cli.offline),
         Command::Prefs(args) => commands::prefs::run(&ctx, args),
         Command::Tree(args) => commands::tree::run(&ctx, args),
+        Command::Boot(args) => commands::boot::run(args),
         Command::Registry(args) => commands::registry::run(&ctx, args),
         Command::Cache(args) => commands::cache::run(&ctx, args, cli.offline),
         Command::Workspace(args) => commands::workspace::run(&ctx, args),

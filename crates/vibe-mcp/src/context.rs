@@ -43,6 +43,9 @@ mod migration_tests;
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
 pub struct ServerContext {
+    boot_debugger: Option<
+        std::sync::Arc<vibe_orchestrator::machine_operation::boot_debugger::BootDebuggerRoute>,
+    >,
     document_edit_authority:
         Option<std::sync::Arc<vibe_orchestrator::document_analysis::edit::DocumentEditAuthority>>,
     document_analysis:
@@ -95,6 +98,23 @@ pub struct ServerContext {
 }
 
 impl ServerContext {
+    pub fn with_boot_debugger_route(
+        mut self,
+        route: std::sync::Arc<
+            vibe_orchestrator::machine_operation::boot_debugger::BootDebuggerRoute,
+        >,
+    ) -> Result<Self, vibe_wire::generated::boot_debugger::e1::error::Error> {
+        route.compare_context_root(&self.project_root)?;
+        self.boot_debugger = Some(route);
+        Ok(self)
+    }
+    pub fn boot_debugger_route(
+        &self,
+    ) -> Option<
+        &std::sync::Arc<vibe_orchestrator::machine_operation::boot_debugger::BootDebuggerRoute>,
+    > {
+        self.boot_debugger.as_ref()
+    }
     /// Explicit read-only document scope; no lifecycle/native authority.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-BUFFER-LAW")]
     pub fn with_document_analysis(
@@ -282,6 +302,7 @@ impl ServerContext {
             .unwrap_or_default();
         ServerContext {
             document_analysis: None,
+            boot_debugger: None,
             document_edit_authority: None,
             project_root: project_root.into(),
             store_root,
@@ -306,6 +327,7 @@ impl ServerContext {
     ) -> Self {
         ServerContext {
             document_analysis: None,
+            boot_debugger: None,
             document_edit_authority: None,
             project_root: project_root.into(),
             store_root: store_root.into(),
@@ -415,6 +437,7 @@ mod tests {
     fn context_carries_exactly_public_roots_and_private_lifecycle_authority() {
         fn destructure(context: ServerContext) {
             let ServerContext {
+                boot_debugger,
                 document_analysis,
                 document_edit_authority,
                 project_root,
@@ -430,6 +453,7 @@ mod tests {
                 fixed_deploy_bridge,
             } = context;
             let _ = (
+                boot_debugger,
                 document_analysis,
                 document_edit_authority,
                 project_root,

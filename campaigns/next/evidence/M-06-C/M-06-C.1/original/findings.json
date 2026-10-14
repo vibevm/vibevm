@@ -1,0 +1,19 @@
+{
+  "dispositions": [
+    "unsatisfied",
+    "unsatisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "The CLI command policy exhaustive match at crates/vibe-cli/src/command_progress.rs:137 is an essential registration owner absent from the literal write perimeter. Actual CLI check fails E0004; the file was not changed.",
+    "Eight distinct scoped tests pass: workspace 2, wire 2, orchestrator 3, MCP 1. CLI selected test did not execute because compilation failed.",
+    "All prior PROP-072 clauses and source prefix were preserved; no normative retirement."
+  ],
+  "unresolved": [
+    "Full M06C1 is incomplete: authorize the minimal Boot arm in command_progress::policy before completing CLI conformance. No permission was inferred and no out-of-perimeter file was edited.",
+    "check-codegen exits 1 on unstaged generated registration changes despite identical repeated generation; wire-diff exits 1 on the unchanged index corpus repomd.json. Both remain red.",
+    "This is an unreviewed candidate, not acceptance. Cross-surface acceptance is unproven and the additional host retain_capture overlay seam lacks a dedicated new regression."
+  ],
+  "proposed_follow_up": null
+}

@@ -159,6 +159,8 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
+    /// Exchange structured boot debugger requests on stdin/stdout.
+    Boot(crate::commands::boot::BootArgs),
     /// Prepare or explicitly create a local exact-origin change.
     Change(crate::commands::change::ChangeArgs),
     /// Read a classified selected source or resolve its native location.

@@ -1,0 +1,411 @@
+{
+  "metadata": {
+    "description": "Immutable boot debugger protocol; no build or write authority.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-072#DEBUGGER-PROTOCOL",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::boot_debugger::e1::result"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "result_id": {
+      "type": "string"
+    },
+    "body": {
+      "ref": "body"
+    }
+  },
+  "definitions": {
+    "count": {
+      "properties": {
+        "exact": {
+          "type": "string",
+          "nullable": true
+        },
+        "unavailable": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "resource": {
+      "properties": {
+        "resource_id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string",
+          "nullable": true
+        },
+        "buffer_version": {
+          "type": "string",
+          "nullable": true
+        },
+        "basis": {
+          "enum": [
+            "original_bytes"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "bytes": {
+          "ref": "count"
+        }
+      }
+    },
+    "node": {
+      "properties": {
+        "contribution": {
+          "type": "uint32"
+        },
+        "occurrence": {
+          "type": "uint32"
+        },
+        "source": {
+          "type": "uint32"
+        },
+        "path": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "requested": {
+          "type": "string",
+          "nullable": true
+        },
+        "parent": {
+          "type": "uint32",
+          "nullable": true
+        },
+        "root": {
+          "type": "boolean"
+        },
+        "artifact_lines": {
+          "ref": "artifact_lines",
+          "nullable": true
+        }
+      }
+    },
+    "body": {
+      "discriminator": "kind",
+      "mapping": {
+        "capture": {
+          "properties": {
+            "capture_id": {
+              "type": "string"
+            },
+            "resources": {
+              "elements": {
+                "ref": "resource"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            }
+          }
+        },
+        "inspect": {
+          "properties": {
+            "capture_id": {
+              "type": "string"
+            },
+            "resources": {
+              "elements": {
+                "ref": "resource"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "nodes": {
+              "elements": {
+                "ref": "node"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "gaps": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "sources": {
+              "elements": {
+                "ref": "source"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "compiler_carrier_format_id": {
+              "type": "string",
+              "nullable": true
+            },
+            "compiler_carrier_json": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "tree": {
+          "properties": {
+            "inspection_id": {
+              "type": "string"
+            },
+            "page_format_id": {
+              "type": "string"
+            },
+            "page_json": {
+              "type": "string"
+            }
+          }
+        },
+        "explain": {
+          "properties": {
+            "chain": {
+              "elements": {
+                "type": "uint32"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "unavailable": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "cost": {
+          "properties": {
+            "recipe": {
+              "type": "string"
+            },
+            "raw_bytes": {
+              "ref": "count"
+            },
+            "scalars": {
+              "ref": "count"
+            },
+            "tokens": {
+              "ref": "count"
+            },
+            "provider_billing": {
+              "ref": "count"
+            },
+            "ambient_tail": {
+              "ref": "count"
+            }
+          }
+        },
+        "compare": {
+          "properties": {
+            "other_snapshot_id": {
+              "type": "string"
+            },
+            "added": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "removed": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "changed": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            }
+          }
+        },
+        "chunk": {
+          "properties": {
+            "resource_id": {
+              "type": "string"
+            },
+            "digest": {
+              "type": "string"
+            },
+            "basis": {
+              "enum": [
+                "original_bytes"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "offset": {
+              "type": "string"
+            },
+            "total": {
+              "type": "string"
+            },
+            "hex_bytes": {
+              "type": "string"
+            },
+            "next_offset": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        },
+        "cancel": {
+          "properties": {
+            "inspection_id": {
+              "type": "string"
+            },
+            "scope": {
+              "enum": [
+                "inspection_only"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "build_cancelled": {
+              "enum": [
+                "not_requested"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "status": {
+              "enum": [
+                "reached_safe_stop",
+                "already_terminal"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            }
+          }
+        },
+        "replay": {
+          "properties": {
+            "inspection_id": {
+              "type": "string"
+            },
+            "stream_format_id": {
+              "type": "string"
+            },
+            "stream_json": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "artifact_lines": {
+      "properties": {
+        "basis": {
+          "enum": [
+            "captured_emitted_artifact_one_based_inclusive_lines"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "snapshot_id": {
+          "type": "string"
+        },
+        "resource_id": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        },
+        "start_line": {
+          "type": "string"
+        },
+        "end_line": {
+          "type": "string"
+        }
+      }
+    },
+    "source_identity": {
+      "discriminator": "kind",
+      "mapping": {
+        "spec": {
+          "properties": {
+            "address": {
+              "type": "string"
+            }
+          }
+        },
+        "captured_node": {
+          "properties": {
+            "index": {
+              "type": "string"
+            }
+          }
+        },
+        "static_entry": {
+          "properties": {
+            "origin": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "properties": {
+        "source": {
+          "type": "uint32"
+        },
+        "identity": {
+          "ref": "source_identity"
+        },
+        "snapshot_id": {
+          "type": "string"
+        },
+        "artifact_resource_id": {
+          "type": "string"
+        },
+        "artifact_digest": {
+          "type": "string"
+        },
+        "authored_resource_id": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    }
+  }
+}

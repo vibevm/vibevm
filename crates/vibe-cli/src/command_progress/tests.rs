@@ -105,7 +105,35 @@ fn existing_roots_do_not_gain_duplicate_fallback_tasks() {
 
 #[test]
 fn terminal_and_protocol_owners_get_no_generic_fallback() {
+    for attached in [true, false] {
+        assert_eq!(
+            parsed_policy(
+                &[
+                    "vibe",
+                    "boot",
+                    "--root",
+                    "/fixture",
+                    "--artifact",
+                    "STATIC.md",
+                    "--kind",
+                    "static"
+                ],
+                attached
+            ),
+            CommandPolicy::PersistentProtocol
+        );
+    }
     for argv in [
+        &[
+            "vibe",
+            "boot",
+            "--root",
+            "/fixture",
+            "--artifact",
+            "STATIC.md",
+            "--kind",
+            "static",
+        ][..],
         &["vibe", "mcp", "serve"][..],
         &["vibe", "doc", "serve"][..],
         &["vibe", "prefs", "ui"][..],

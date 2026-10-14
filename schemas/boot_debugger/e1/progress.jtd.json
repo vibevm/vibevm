@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "description": "Immutable boot debugger protocol; no build or write authority.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-072#DEBUGGER-PROTOCOL",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::boot_debugger::e1::progress"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "snapshot_id": {
+      "type": "string"
+    },
+    "inspection_id": {
+      "type": "string"
+    },
+    "stream_format_id": {
+      "type": "string"
+    },
+    "stream_json": {
+      "type": "string"
+    }
+  }
+}

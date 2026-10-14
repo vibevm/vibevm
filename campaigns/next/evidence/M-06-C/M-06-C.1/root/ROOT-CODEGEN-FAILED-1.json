@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/home/olegchir/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+    "run",
+    "--offline",
+    "--locked",
+    "--quiet",
+    "-p",
+    "xtask",
+    "--",
+    "check-codegen"
+  ],
+  "exit": 1,
+  "elapsed_seconds": 0.75,
+  "log_bytes": 0,
+  "source": "Root observed firstgate, preserved verbatim",
+  "RUSTC": "/home/olegchir/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc"
+}

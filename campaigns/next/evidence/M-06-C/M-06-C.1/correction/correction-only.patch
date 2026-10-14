@@ -1,0 +1,1149 @@
+diff --git a/crates/vibe-cli/src/commands/boot/mod.rs b/crates/vibe-cli/src/commands/boot/mod.rs
+--- a/crates/vibe-cli/src/commands/boot/mod.rs
++++ b/crates/vibe-cli/src/commands/boot/mod.rs
+@@ -161,3 +161,7 @@
+         assert!(!root.path().join(".vibe").exists());
+     }
+ }
++
++#[cfg(test)]
++#[path = "m_06_c_1_cases.rs"]
++mod cross_surface;
+diff --git a/crates/vibe-mcp/src/tools/boot_debugger.rs b/crates/vibe-mcp/src/tools/boot_debugger.rs
+--- a/crates/vibe-mcp/src/tools/boot_debugger.rs
++++ b/crates/vibe-mcp/src/tools/boot_debugger.rs
+@@ -50,10 +50,16 @@
+         let host = DocumentAnalysisHost::new(
+             root.path(),
+             "vibe.toml",
+-            vec![ResourceDeclaration {
+-                path: "vibe.toml".into(),
+-                role: ResourceRole::Manifest,
+-            }],
++            vec![
++                ResourceDeclaration {
++                    path: "vibe.toml".into(),
++                    role: ResourceRole::Manifest,
++                },
++                ResourceDeclaration {
++                    path: "STATIC.md".into(),
++                    role: ResourceRole::Opaque,
++                },
++            ],
+             AnalysisLimits {
+                 resource_bytes: 1024,
+                 capture_bytes: 4096,
+@@ -61,12 +67,13 @@
+             },
+         )
+         .unwrap();
+-        let artifact = host.resource("vibe.toml").unwrap();
++        let artifact = host.resource("STATIC.md").unwrap();
++        let client = host.client().unwrap();
+         let route = Arc::new(
+             BootDebuggerRoute::new(
+                 host,
+                 artifact,
+-                vibe_workspace::boot_debugger::protocol::CapturedKind::Index,
++                vibe_workspace::boot_debugger::protocol::CapturedKind::Static,
+             )
+             .unwrap(),
+         );
+@@ -76,24 +83,94 @@
+         let b = ServerContext::with_store_root(root.path(), root.path().join("unused"))
+             .with_boot_debugger_route(route.clone())
+             .unwrap();
+-        let capture = route
+-            .request(Request {
+-                schema: 1,
+-                context_id: route.context_id().into(),
+-                command: Command::Capture(Box::new(CommandCapture {})),
+-            })
++        let before = route.retain_capture(client.freeze().unwrap()).unwrap();
++        let text = "<!-- vibe:static org.test/pkg — source.md -->\n<!-- embed: spec://org.test/pkg/part -->\noverlay\n<!-- /embed: spec://org.test/pkg/part -->\n";
++        client
++            .open(
++                1,
++                artifact,
++                1,
++                ByteEncoding::Utf8,
++                Arc::from(text.as_bytes()),
++                BufferIntent::Create,
++            )
+             .unwrap();
++        let capture = client.freeze().unwrap();
++        let id = capture.id().to_owned();
++        route.retain_capture(capture).unwrap();
+         let query = serde_json::to_value(input(&Request {
+             schema: 1,
+             context_id: route.context_id().into(),
+             command: Command::Inspect(Box::new(CommandInspect {
+-                snapshot_id: capture.snapshot_id.unwrap(),
++                snapshot_id: id.clone(),
+             })),
+         }))
+         .unwrap();
+         let x = BootDebuggerMcpTool.run(&query, &a).unwrap();
+         let y = BootDebuggerMcpTool.run(&query, &b).unwrap();
+         assert_eq!(x.structured(), y.structured());
++        use vibe_wire::generated::{
++            boot_debugger::e1::result as r, machine::e1::operation_envelope as env,
++        };
++        let envelope: env::OperationEnvelope =
++            serde_json::from_value(x.structured().clone()).unwrap();
++        let env::Body::Result(body) = envelope.body else {
++            panic!()
++        };
++        let result: r::Result =
++            serde_json::from_str(body.payload_json.as_deref().unwrap()).unwrap();
++        let r::Body::Inspect(view) = result.body else {
++            panic!()
++        };
++        assert!(view.nodes[0].artifact_lines.is_none());
++        let span = view.nodes[1].artifact_lines.as_ref().unwrap();
++        assert_eq!((&*span.start_line, &*span.end_line), ("2", "4"));
++        assert_eq!(span.snapshot_id, id);
++        assert_eq!(
++            view.sources[view.nodes[1].source as usize].artifact_resource_id,
++            span.resource_id
++        );
++        let compare = serde_json::to_value(input(&Request {
++            schema: 1,
++            context_id: route.context_id().into(),
++            command: Command::Compare(Box::new(CommandCompare {
++                snapshot_id: before,
++                other_snapshot_id: id,
++            })),
++        }))
++        .unwrap();
++        let ca = BootDebuggerMcpTool.run(&compare, &a).unwrap();
++        let cb = BootDebuggerMcpTool.run(&compare, &b).unwrap();
++        assert_eq!(ca.structured(), cb.structured());
++        let envelope: env::OperationEnvelope =
++            serde_json::from_value(ca.structured().clone()).unwrap();
++        let env::Body::Result(body) = envelope.body else {
++            panic!()
++        };
++        let result: r::Result =
++            serde_json::from_str(body.payload_json.as_deref().unwrap()).unwrap();
++        let r::Body::Compare(diff) = result.body else {
++            panic!()
++        };
++        assert_eq!(diff.added, ["STATIC.md"]);
++        assert!(diff.changed.is_empty() && diff.removed.is_empty());
++        client
++            .change(
++                1,
++                artifact,
++                1,
++                2,
++                ByteEncoding::Utf8,
++                Arc::from(&b"later overlay"[..]),
++                BufferIntent::Create,
++            )
++            .unwrap();
++        std::fs::write(root.path().join("STATIC.md"), "later disk").unwrap();
++        assert_eq!(
++            x.structured(),
++            BootDebuggerMcpTool.run(&query, &a).unwrap().structured()
++        );
++
+         assert!(
+             ServerContext::with_store_root(root.path().join("foreign"), root.path())
+                 .with_boot_debugger_route(route)
+diff --git a/crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs b/crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs
+--- a/crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs
++++ b/crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs
+@@ -78,6 +78,7 @@
+     projection: Option<Projection>,
+     resources: Vec<r::Resource>,
+     nodes: Vec<r::Node>,
++    sources: Vec<r::Source>,
+     gaps: Vec<String>,
+ }
+ struct Inspection {
+@@ -208,11 +209,58 @@
+             }
+         };
+         let mut nodes = vec![];
++        let mut sources = vec![];
++        let artifact = capture
++            .resources()
++            .enumerate()
++            .find(|(_, (id, _))| *id == self.artifact)
++            .map(|(i, (_, resource))| {
++                (
++                    format!("{}:resource-{i}", capture.id()),
++                    resource.content_digest(),
++                )
++            });
+         if let Some(p) = &projection {
+             gaps.extend(p.graph.gaps.clone());
++            let (artifact_id, artifact_digest) = artifact.as_ref().expect("admitted artifact");
++            let artifact_digest = artifact_digest.as_ref().expect("projected bytes");
++            for (index, source) in p.graph.sources.iter().enumerate() {
++                let identity = match &source.identity {
++                    vibe_spec::SourceIdentity::Spec(address) => {
++                        r::SourceIdentity::Spec(Box::new(r::SourceIdentitySpec {
++                            address: address.clone(),
++                        }))
++                    }
++                    vibe_spec::SourceIdentity::CapturedNode(index) => {
++                        r::SourceIdentity::CapturedNode(Box::new(r::SourceIdentityCapturedNode {
++                            index: index.to_string(),
++                        }))
++                    }
++                    vibe_spec::SourceIdentity::StaticEntry { origin, path } => {
++                        r::SourceIdentity::StaticEntry(Box::new(r::SourceIdentityStaticEntry {
++                            origin: origin.clone(),
++                            path: path.clone(),
++                        }))
++                    }
++                };
++                sources.push(r::Source {
++                    source: index as u32,
++                    identity,
++                    snapshot_id: capture.id().into(),
++                    artifact_resource_id: artifact_id.clone(),
++                    artifact_digest: artifact_digest.clone(),
++                    // A graph identity is not an authenticated join to a host path.
++                    authored_resource_id: None,
++                });
++            }
+             for (c, row) in p.graph.contributions.iter().enumerate() {
+                 for (i, node) in row.occurrences.iter().enumerate() {
+                     nodes.push(r::Node {
++                        artifact_lines: node.artifact_lines.map(|(start, end)| r::ArtifactLines {
++                            basis: r::ArtifactLinesBasis::CapturedEmittedArtifactOneBasedInclusiveLines,
++                            snapshot_id: capture.id().into(), resource_id: artifact_id.clone(),
++                            digest: artifact_digest.clone(), start_line: start.to_string(), end_line: end.to_string(),
++                        }),
+                         contribution: c as u32,
+                         occurrence: i as u32,
+                         source: node.source as u32,
+@@ -233,6 +281,7 @@
+             projection,
+             resources,
+             nodes,
++            sources,
+             gaps,
+         }
+     }
+diff --git a/crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs b/crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs
+--- a/crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs
++++ b/crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs
+@@ -130,6 +130,18 @@
+                 capture_id: id.clone(),
+                 resources: snapshot.resources.clone(),
+                 nodes: snapshot.nodes.clone(),
++                sources: snapshot.sources.clone(),
++                compiler_carrier_format_id: snapshot
++                    .projection
++                    .as_ref()
++                    .and_then(|p| p.graph.carrier.as_ref())
++                    .map(|_| "compiler-ir".into()),
++                compiler_carrier_json: snapshot
++                    .projection
++                    .as_ref()
++                    .and_then(|p| p.graph.carrier.as_ref())
++                    .map(json)
++                    .transpose()?,
+                 gaps: snapshot.gaps.clone(),
+             })),
+             Command::Explain(c) => {
+@@ -185,15 +197,17 @@
+                         "comparison snapshot not retained in this context",
+                     )
+                 })?;
++                // A successful M16 freeze retains bytes or proved absence; read
++                // failures refuse freeze, so no unknown state becomes absence.
+                 let a: BTreeMap<_, _> = snapshot
+                     .resources
+                     .iter()
+-                    .map(|r| (&r.path, &r.digest))
++                    .filter_map(|r| r.digest.as_ref().map(|digest| (&r.path, digest)))
+                     .collect();
+                 let b: BTreeMap<_, _> = other
+                     .resources
+                     .iter()
+-                    .map(|r| (&r.path, &r.digest))
++                    .filter_map(|r| r.digest.as_ref().map(|digest| (&r.path, digest)))
+                     .collect();
+                 r::Body::Compare(Box::new(r::BodyCompare {
+                     other_snapshot_id: c.other_snapshot_id,
+diff --git a/crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs b/crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs
+--- a/crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs
++++ b/crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs
+@@ -146,6 +146,22 @@
+     assert_eq!(
+         ask(
+             &route,
++            q::Command::Chunk(Box::new(q::CommandChunk {
++                snapshot_id: foreign.clone(),
++                resource_id: format!("{id}:resource-1"),
++                filter: q::CommandChunkFilter::Raw,
++                offset: "0".into(),
++                limit: 13,
++            }))
++        )
++        .unwrap_err()
++        .code,
++        e::ErrorCode::UnknownResource
++    );
++
++    assert_eq!(
++        ask(
++            &route,
+             tree(&foreign, Some(inspection.clone()), Some(cursor.clone()), "")
+         )
+         .unwrap_err()
+@@ -297,3 +313,211 @@
+     }
+     assert_eq!(joined, original.as_bytes());
+ }
++
++#[test]
++fn m_06_c_1_cases_same_client_overlay_presence_and_retained_basis() {
++    use crate::document_analysis::{BufferIntent, ByteEncoding};
++    let root = tempfile::tempdir().unwrap();
++    std::fs::write(root.path().join("vibe.toml"), "[project]\n").unwrap();
++    std::fs::write(root.path().join("STATIC.md"), "old disk").unwrap();
++    let host = DocumentAnalysisHost::new(
++        root.path(),
++        "vibe.toml",
++        ["vibe.toml", "STATIC.md", "created.md", "moved.md"]
++            .into_iter()
++            .enumerate()
++            .map(|(i, path)| ResourceDeclaration {
++                path: path.into(),
++                role: if i == 0 {
++                    ResourceRole::Manifest
++                } else {
++                    ResourceRole::Opaque
++                },
++            })
++            .collect(),
++        AnalysisLimits {
++            resource_bytes: 4096,
++            capture_bytes: 16384,
++            open_buffers: 4,
++        },
++    )
++    .unwrap();
++    let artifact = host.resource("STATIC.md").unwrap();
++    let created = host.resource("created.md").unwrap();
++    let moved = host.resource("moved.md").unwrap();
++    let client = host.client().unwrap();
++    let route = BootDebuggerRoute::new(host, artifact, CapturedKind::Static).unwrap();
++    let freeze = || {
++        let c = client.freeze().unwrap();
++        let id = c.id().to_owned();
++        assert_eq!(format!("boot-context:{}", c.context()), route.context_id());
++        assert_eq!(route.retain_capture(c).unwrap(), id);
++        id
++    };
++    let before = freeze();
++    client
++        .open(
++            1,
++            created,
++            1,
++            ByteEncoding::Utf8,
++            Arc::from(&b"created"[..]),
++            BufferIntent::Create,
++        )
++        .unwrap();
++    let added = freeze();
++    let compare = |a: &str, b: &str| {
++        let answer = ask(
++            &route,
++            q::Command::Compare(Box::new(q::CommandCompare {
++                snapshot_id: a.into(),
++                other_snapshot_id: b.into(),
++            })),
++        )
++        .unwrap();
++        let r::Body::Compare(diff) = answer.body else {
++            panic!()
++        };
++        diff
++    };
++    let d = compare(&before, &added);
++    assert_eq!(d.added, ["created.md"]);
++    assert!(d.changed.is_empty() && d.removed.is_empty());
++    let text = "<!-- vibe:static org.test/pkg — input.md -->\n<!-- embed: spec://org.test/pkg/outer -->\n<!-- embed: spec://org.test/pkg/inner -->\nretained overlay\n<!-- /embed: spec://org.test/pkg/inner -->\n<!-- /embed: spec://org.test/pkg/outer -->\n";
++    client
++        .open(
++            1,
++            artifact,
++            1,
++            ByteEncoding::Utf8,
++            Arc::from(text.as_bytes()),
++            BufferIntent::Replace,
++        )
++        .unwrap();
++    let edited = freeze();
++    let d = compare(&added, &edited);
++    assert_eq!(d.changed, ["STATIC.md"]);
++    assert!(d.added.is_empty() && d.removed.is_empty());
++    let inspect = || {
++        ask(
++            &route,
++            q::Command::Inspect(Box::new(q::CommandInspect {
++                snapshot_id: edited.clone(),
++            })),
++        )
++        .unwrap()
++    };
++    let stable = inspect();
++    let r::Body::Inspect(view) = &stable.body else {
++        panic!()
++    };
++    assert_eq!(view.capture_id, edited);
++    assert_eq!(view.resources[1].buffer_version.as_deref(), Some("1"));
++    assert_eq!(view.resources[1].basis, r::ResourceBasis::OriginalBytes);
++    assert!(view.nodes[0].artifact_lines.is_none());
++    assert_eq!(view.sources[0].source, 0);
++    assert_eq!(
++        view.sources[0].artifact_resource_id,
++        view.resources[1].resource_id
++    );
++    for node in &view.nodes {
++        let source = &view.sources[node.source as usize];
++        assert_eq!(source.snapshot_id, edited);
++        assert!(source.authored_resource_id.is_none());
++        if let Some(lines) = &node.artifact_lines {
++            assert_eq!(lines.snapshot_id, edited);
++            assert_eq!(lines.resource_id, view.resources[1].resource_id);
++            assert_eq!(Some(&lines.digest), view.resources[1].digest.as_ref());
++            assert_eq!(
++                lines.basis,
++                r::ArtifactLinesBasis::CapturedEmittedArtifactOneBasedInclusiveLines
++            );
++            let r::SourceIdentity::Spec(identity) = &source.identity else {
++                panic!()
++            };
++            assert_eq!(Some(&identity.address), node.requested.as_ref());
++            if identity.address.ends_with("/inner") {
++                assert_eq!((&*lines.start_line, &*lines.end_line), ("3", "5"));
++                assert_eq!(node.parent, Some(2));
++            } else {
++                assert_eq!((&*lines.start_line, &*lines.end_line), ("2", "6"));
++            }
++        }
++    }
++    client
++        .change(
++            1,
++            artifact,
++            1,
++            2,
++            ByteEncoding::Utf8,
++            Arc::from(&b"later overlay"[..]),
++            BufferIntent::Replace,
++        )
++        .unwrap();
++    std::fs::write(root.path().join("STATIC.md"), "later disk").unwrap();
++    assert_eq!(stable, inspect());
++    let chunk = ask(
++        &route,
++        q::Command::Chunk(Box::new(q::CommandChunk {
++            snapshot_id: edited.clone(),
++            resource_id: view.resources[1].resource_id.clone(),
++            filter: q::CommandChunkFilter::Raw,
++            offset: "0".into(),
++            limit: 2048,
++        })),
++    )
++    .unwrap();
++    let r::Body::Chunk(chunk) = chunk.body else {
++        panic!()
++    };
++    assert_eq!(
++        chunk.hex_bytes,
++        text.as_bytes()
++            .iter()
++            .map(|b| format!("{b:02x}"))
++            .collect::<String>()
++    );
++    client
++        .change(
++            1,
++            artifact,
++            2,
++            3,
++            ByteEncoding::Utf8,
++            Arc::from(&b""[..]),
++            BufferIntent::Delete,
++        )
++        .unwrap();
++    let deleted = freeze();
++    let d = compare(&edited, &deleted);
++    assert_eq!(d.removed, ["STATIC.md"]);
++    assert!(d.changed.is_empty() && d.added.is_empty());
++    client
++        .change(
++            1,
++            artifact,
++            3,
++            4,
++            ByteEncoding::Utf8,
++            Arc::from(text.as_bytes()),
++            BufferIntent::Move { target: moved },
++        )
++        .unwrap();
++    let relocated = freeze();
++    let d = compare(&edited, &relocated);
++    assert_eq!(d.removed, ["STATIC.md"]);
++    assert_eq!(d.added, ["moved.md"]);
++    assert!(d.changed.is_empty());
++    assert_eq!(stable, inspect());
++    assert!(!root.path().join("created.md").exists());
++    assert!(!root.path().join("moved.md").exists());
++    assert_eq!(
++        std::fs::read_to_string(root.path().join("STATIC.md")).unwrap(),
++        "later disk"
++    );
++    // Read failure is not an absent resource and cannot publish a new snapshot.
++    std::fs::create_dir(root.path().join("created.md")).unwrap();
++    assert!(client.freeze().is_err());
++    assert_eq!(stable, inspect());
++}
+diff --git a/crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs b/crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs
+--- a/crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs
++++ b/crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs
+@@ -16,6 +16,28 @@
+ 
+     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+     pub snapshot_id: Option<String>,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++pub enum ArtifactLinesBasis {
++    #[serde(rename = "captured_emitted_artifact_one_based_inclusive_lines")]
++    CapturedEmittedArtifactOneBasedInclusiveLines,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++#[serde(deny_unknown_fields)]
++pub struct ArtifactLines {
++    pub basis: ArtifactLinesBasis,
++
++    pub digest: String,
++
++    pub end_line: String,
++
++    pub resource_id: String,
++
++    pub snapshot_id: String,
++
++    pub start_line: String,
+ }
+ 
+ #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+@@ -157,11 +179,19 @@
+ pub struct BodyInspect {
+     pub capture_id: String,
+ 
++    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
++    pub compiler_carrier_format_id: Option<String>,
++
++    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
++    pub compiler_carrier_json: Option<String>,
++
+     pub gaps: Vec<String>,
+ 
+     pub nodes: Vec<Node>,
+ 
+     pub resources: Vec<Resource>,
++
++    pub sources: Vec<Source>,
+ }
+ 
+ #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+@@ -197,6 +227,9 @@
+ #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(deny_unknown_fields)]
+ pub struct Node {
++    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
++    pub artifact_lines: Option<ArtifactLines>,
++
+     pub contribution: u32,
+ 
+     pub occurrence: u32,
+@@ -239,3 +272,53 @@
+ 
+     pub resource_id: String,
+ }
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++#[serde(deny_unknown_fields)]
++pub struct Source {
++    pub artifact_digest: String,
++
++    pub artifact_resource_id: String,
++
++    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
++    pub authored_resource_id: Option<String>,
++
++    pub identity: SourceIdentity,
++
++    pub snapshot_id: String,
++
++    pub source: u32,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++#[serde(tag = "kind")]
++pub enum SourceIdentity {
++    #[serde(rename = "captured_node")]
++    CapturedNode(Box<SourceIdentityCapturedNode>),
++
++    #[serde(rename = "spec")]
++    Spec(Box<SourceIdentitySpec>),
++
++    #[serde(rename = "static_entry")]
++    StaticEntry(Box<SourceIdentityStaticEntry>),
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++#[serde(deny_unknown_fields)]
++pub struct SourceIdentityCapturedNode {
++    pub index: String,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++#[serde(deny_unknown_fields)]
++pub struct SourceIdentitySpec {
++    pub address: String,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++#[serde(deny_unknown_fields)]
++pub struct SourceIdentityStaticEntry {
++    pub origin: String,
++
++    pub path: String,
++}
+diff --git a/crates/vibe-wire/src/m_06_c_1_cases.rs b/crates/vibe-wire/src/m_06_c_1_cases.rs
+--- a/crates/vibe-wire/src/m_06_c_1_cases.rs
++++ b/crates/vibe-wire/src/m_06_c_1_cases.rs
+@@ -48,3 +48,23 @@
+     value["foreign"] = true.into();
+     assert!(serde_json::from_value::<progress::Progress>(value).is_err());
+ }
++
++#[test]
++fn captured_emitted_positions_and_source_identity_are_strict_and_nullable() {
++    let node = serde_json::json!({"contribution":0,"occurrence":0,"source":1,"path":"a.md","origin":"pkg","requested":null,"parent":null,"root":true,"artifact_lines":null});
++    let parsed: result::Node = serde_json::from_value(node.clone()).unwrap();
++    assert!(parsed.artifact_lines.is_none());
++    let mut missing = node.clone();
++    missing.as_object_mut().unwrap().remove("artifact_lines");
++    assert!(serde_json::from_value::<result::Node>(missing).is_err());
++    let span = serde_json::json!({"basis":"captured_emitted_artifact_one_based_inclusive_lines","snapshot_id":"s","resource_id":"s:resource-1","digest":"sha256:captured","start_line":"2","end_line":"5"});
++    let mut positioned = node;
++    positioned["artifact_lines"] = span;
++    let parsed: result::Node = serde_json::from_value(positioned.clone()).unwrap();
++    assert_eq!(serde_json::to_value(parsed).unwrap(), positioned);
++    positioned["artifact_lines"]["basis"] = "authored_xml_lines".into();
++    assert!(serde_json::from_value::<result::Node>(positioned).is_err());
++    let source = serde_json::json!({"source":1,"identity":{"kind":"spec","address":"spec://org.test/pkg/doc"},"snapshot_id":"s","artifact_resource_id":"s:resource-1","artifact_digest":"sha256:captured","authored_resource_id":null});
++    let parsed: result::Source = serde_json::from_value(source.clone()).unwrap();
++    assert_eq!(serde_json::to_value(parsed).unwrap(), source);
++}
+diff --git a/schemas/boot_debugger/e1/result.jtd.json b/schemas/boot_debugger/e1/result.jtd.json
+--- a/schemas/boot_debugger/e1/result.jtd.json
++++ b/schemas/boot_debugger/e1/result.jtd.json
+@@ -96,6 +96,10 @@
+         },
+         "root": {
+           "type": "boolean"
++        },
++        "artifact_lines": {
++          "ref": "artifact_lines",
++          "nullable": true
+         }
+       }
+     },
+@@ -145,6 +149,22 @@
+               "metadata": {
+                 "x-empty": "emit"
+               }
++            },
++            "sources": {
++              "elements": {
++                "ref": "source"
++              },
++              "metadata": {
++                "x-empty": "emit"
++              }
++            },
++            "compiler_carrier_format_id": {
++              "type": "string",
++              "nullable": true
++            },
++            "compiler_carrier_json": {
++              "type": "string",
++              "nullable": true
+             }
+           }
+         },
+@@ -307,6 +327,85 @@
+           }
+         }
+       }
++    },
++    "artifact_lines": {
++      "properties": {
++        "basis": {
++          "enum": [
++            "captured_emitted_artifact_one_based_inclusive_lines"
++          ],
++          "metadata": {
++            "x-vocabulary": "closed"
++          }
++        },
++        "snapshot_id": {
++          "type": "string"
++        },
++        "resource_id": {
++          "type": "string"
++        },
++        "digest": {
++          "type": "string"
++        },
++        "start_line": {
++          "type": "string"
++        },
++        "end_line": {
++          "type": "string"
++        }
++      }
++    },
++    "source_identity": {
++      "discriminator": "kind",
++      "mapping": {
++        "spec": {
++          "properties": {
++            "address": {
++              "type": "string"
++            }
++          }
++        },
++        "captured_node": {
++          "properties": {
++            "index": {
++              "type": "string"
++            }
++          }
++        },
++        "static_entry": {
++          "properties": {
++            "origin": {
++              "type": "string"
++            },
++            "path": {
++              "type": "string"
++            }
++          }
++        }
++      }
++    },
++    "source": {
++      "properties": {
++        "source": {
++          "type": "uint32"
++        },
++        "identity": {
++          "ref": "source_identity"
++        },
++        "snapshot_id": {
++          "type": "string"
++        },
++        "artifact_resource_id": {
++          "type": "string"
++        },
++        "artifact_digest": {
++          "type": "string"
++        },
++        "authored_resource_id": {
++          "type": "string",
++          "nullable": true
++        }
++      }
+     }
+   }
+ }
+diff --git a/vibevm/vibespecs/common/PROP-072-boot-observability.xml b/vibevm/vibespecs/common/PROP-072-boot-observability.xml
+--- a/vibevm/vibespecs/common/PROP-072-boot-observability.xml
++++ b/vibevm/vibespecs/common/PROP-072-boot-observability.xml
+@@ -29,5 +29,6 @@
+   </measurement>
+   <debugger title="6. Structured captured inspection">
+     <p><DEBUGGER-PROTOCOL fact="true" status="spec/proposed">The shared debugger route registers strict epoch-bound inspect, tree, explain, cost, compare, capture and inspection-only cancel requests and result/error/progress carriers. CLI structured input and MCP delegate to one host-bound route retaining immutable M16 captures, original-byte position basis and snapshot/result identities. Page sessions retain exact context, capture and filter; stale, replayed or foreign cursors refuse. Stream replay uses the incumbent event model and reports gaps explicitly. Cancelling inspection never requests or claims build cancellation. Captured costs retain the incumbent measurement recipe, unavailable tokenizer/billing/ambient-tail facts and no boot admission quota. Reads never invoke compilation, providers, retention, installation or model activation. Host-granted capture and overlay authority remain separate from transport values. Finite captures are not atomic all-files observations, source authentication or hostile-writer proofs.</DEBUGGER-PROTOCOL></p>
++    <p><DEBUGGER-CAPTURED-JOINS fact="true" status="spec/proposed">Snapshot comparison uses active captured resource presence, not the declaration inventory. A successful finite capture proves bytes or absence; unavailable reads refuse capture rather than becoming absence. Creation and deletion are added and removed; changed requires bytes on both sides. Graph source indices resolve through their retained identity catalogue and are not host resource indices. Available emitted-artifact spans retain one-based inclusive line meaning and exact snapshot, artifact resource and digest. Absent spans and unproved authored-resource joins remain explicit null values; emitted lines never become authored XML coordinates. The registered compiler carrier remains available with its original format identity when captured, preserving source trees and positions without reconstruction.</DEBUGGER-CAPTURED-JOINS></p>
+   </debugger>
+ </spec>
+diff --git a/crates/vibe-cli/src/command_progress.rs b/crates/vibe-cli/src/command_progress.rs
+--- a/crates/vibe-cli/src/command_progress.rs
++++ b/crates/vibe-cli/src/command_progress.rs
+@@ -19,6 +19,7 @@
+     "agentic",
+     "aiui",
+     "bin",
++    "boot",
+     "build",
+     "cache",
+     "change",
+@@ -190,6 +191,7 @@
+             AiuiSubcommand::PtyStart(_) => FiniteFallback("Command aiui pty-start"),
+             AiuiSubcommand::Scrollbar(_) => FiniteFallback("Command aiui scrollbar"),
+         },
++        Command::Boot(_) => PersistentProtocol,
+         Command::Term(_) | Command::Frame(_) => TerminalPassthrough,
+         Command::Skill(args) => match &args.command {
+             SkillSubcommand::List(_) => FastMetadata,
+diff --git a/crates/vibe-cli/src/command_progress/tests.rs b/crates/vibe-cli/src/command_progress/tests.rs
+--- a/crates/vibe-cli/src/command_progress/tests.rs
++++ b/crates/vibe-cli/src/command_progress/tests.rs
+@@ -105,7 +105,35 @@
+ 
+ #[test]
+ fn terminal_and_protocol_owners_get_no_generic_fallback() {
+-    for argv in [
++    for attached in [true, false] {
++        assert_eq!(
++            parsed_policy(
++                &[
++                    "vibe",
++                    "boot",
++                    "--root",
++                    "/fixture",
++                    "--artifact",
++                    "STATIC.md",
++                    "--kind",
++                    "static"
++                ],
++                attached
++            ),
++            CommandPolicy::PersistentProtocol
++        );
++    }
++    for argv in [
++        &[
++            "vibe",
++            "boot",
++            "--root",
++            "/fixture",
++            "--artifact",
++            "STATIC.md",
++            "--kind",
++            "static",
++        ][..],
+         &["vibe", "mcp", "serve"][..],
+         &["vibe", "doc", "serve"][..],
+         &["vibe", "prefs", "ui"][..],
+diff --git a/crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs b/crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs
+new file mode 100644
+--- /dev/null
++++ b/crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs
+@@ -0,0 +1,298 @@
++use super::*;
++use vibe_mcp::{ServerContext, ToolError};
++use vibe_orchestrator::document_analysis::{BufferIntent, ByteEncoding};
++use vibe_wire::generated::{
++    boot_debugger::e1::{error as e, progress as p, request as q, result as r},
++    machine::e1::operation_envelope as env,
++};
++
++fn cli(route: &BootDebuggerRoute, request: &q::Request) -> env::OperationEnvelope {
++    let mut bytes = serde_json::to_vec(&boot_debugger::input(request)).unwrap();
++    bytes.push(b'\n');
++    let mut output = vec![];
++    serve(route, std::io::Cursor::new(bytes), &mut output).unwrap();
++    let lines = output
++        .split(|b| *b == b'\n')
++        .filter(|b| !b.is_empty())
++        .collect::<Vec<_>>();
++    assert_eq!(lines.len(), 2);
++    serde_json::from_slice(lines[1]).unwrap()
++}
++fn mcp(ctx: &ServerContext, request: &q::Request) -> env::OperationEnvelope {
++    let tools = vibe_mcp::default_tools();
++    let tool = tools
++        .iter()
++        .find(|t| t.descriptor().name == "boot_debugger")
++        .expect("registered MCP tool");
++    let args = serde_json::to_value(boot_debugger::input(request)).unwrap();
++    let value = match tool.run(&args, ctx) {
++        Ok(output) => output.structured().clone(),
++        Err(ToolError::StructuredPreflight { report, .. }) => report,
++        Err(error) => panic!("{error:?}"),
++    };
++    serde_json::from_value(value).unwrap()
++}
++fn result(envelope: env::OperationEnvelope) -> r::Result {
++    let env::Body::Result(body) = envelope.body else {
++        panic!("result envelope")
++    };
++    assert_eq!(body.effect_state, env::BodyResultEffectState::NoEffects);
++    assert_eq!(body.format_id.as_deref(), Some("boot-debugger-result"));
++    serde_json::from_str(body.payload_json.as_deref().unwrap()).unwrap()
++}
++
++#[test]
++fn m_06_c_1_cases_structured_cli_mcp_shared_overlay_positions_progress_and_cancel() {
++    let root = tempfile::tempdir().unwrap();
++    std::fs::write(root.path().join("vibe.toml"), "[project]\n").unwrap();
++    std::fs::write(root.path().join("STATIC.md"), "disk").unwrap();
++    let host = DocumentAnalysisHost::new(
++        root.path(),
++        "vibe.toml",
++        ["vibe.toml", "STATIC.md", "new.md", "moved.md"]
++            .into_iter()
++            .enumerate()
++            .map(|(i, path)| ResourceDeclaration {
++                path: path.into(),
++                role: if i == 0 {
++                    ResourceRole::Manifest
++                } else {
++                    ResourceRole::Opaque
++                },
++            })
++            .collect(),
++        AnalysisLimits {
++            resource_bytes: 4096,
++            capture_bytes: 16384,
++            open_buffers: 4,
++        },
++    )
++    .unwrap();
++    let artifact = host.resource("STATIC.md").unwrap();
++    let new = host.resource("new.md").unwrap();
++    let moved = host.resource("moved.md").unwrap();
++    let client = host.client().unwrap();
++    let route = Arc::new(BootDebuggerRoute::new(host, artifact, CapturedKind::Static).unwrap());
++    let contexts = [
++        ServerContext::with_store_root(root.path(), root.path().join("unused"))
++            .with_boot_debugger_route(route.clone())
++            .unwrap(),
++        ServerContext::with_store_root(root.path(), root.path().join("unused"))
++            .with_boot_debugger_route(route.clone())
++            .unwrap(),
++    ];
++    let request = |command| q::Request {
++        schema: 1,
++        context_id: route.context_id().into(),
++        command,
++    };
++    let same = |command| {
++        let req = request(command);
++        let c = cli(&route, &req);
++        assert_eq!(
++            c,
++            route.exchange(&serde_json::to_vec(&boot_debugger::input(&req)).unwrap())
++        );
++        for ctx in &contexts {
++            assert_eq!(c, mcp(ctx, &req));
++        }
++        c
++    };
++    let before = route.retain_capture(client.freeze().unwrap()).unwrap();
++    let text = "<!-- vibe:static org.test/pkg — authored.md -->\n<!-- embed: spec://org.test/pkg/outer -->\n<!-- embed: spec://org.test/pkg/inner -->\noverlay\n<!-- /embed: spec://org.test/pkg/inner -->\n<!-- /embed: spec://org.test/pkg/outer -->\n";
++    client
++        .open(
++            1,
++            artifact,
++            1,
++            ByteEncoding::Utf8,
++            Arc::from(text.as_bytes()),
++            BufferIntent::Replace,
++        )
++        .unwrap();
++    client
++        .open(
++            1,
++            new,
++            1,
++            ByteEncoding::Utf8,
++            Arc::from(&b"new"[..]),
++            BufferIntent::Create,
++        )
++        .unwrap();
++    let frozen = client.freeze().unwrap();
++    let id = frozen.id().to_owned();
++    let digest = frozen.resource(artifact).unwrap().content_digest().unwrap();
++    assert_eq!(
++        format!("boot-context:{}", frozen.context()),
++        route.context_id()
++    );
++    route.retain_capture(frozen).unwrap();
++    let inspect = || {
++        same(q::Command::Inspect(Box::new(q::CommandInspect {
++            snapshot_id: id.clone(),
++        })))
++    };
++    let stable = inspect();
++    let view = result(stable.clone());
++    let r::Body::Inspect(view) = view.body else {
++        panic!()
++    };
++    assert_eq!(view.capture_id, id);
++    assert_eq!(view.resources[1].digest.as_ref(), Some(&digest));
++    assert_eq!(view.resources[1].buffer_version.as_deref(), Some("1"));
++    assert!(view.nodes[0].artifact_lines.is_none());
++    assert!(view.compiler_carrier_json.is_none());
++    let inner = view
++        .nodes
++        .iter()
++        .find(|n| n.requested.as_deref() == Some("spec://org.test/pkg/inner"))
++        .unwrap();
++    let lines = inner.artifact_lines.as_ref().unwrap();
++    assert_eq!((&*lines.start_line, &*lines.end_line), ("3", "5"));
++    assert_eq!(lines.digest, digest);
++    assert_eq!(lines.snapshot_id, id);
++    assert_eq!(lines.resource_id, view.resources[1].resource_id);
++    let source = &view.sources[inner.source as usize];
++    assert_eq!(source.artifact_resource_id, lines.resource_id);
++    assert!(source.authored_resource_id.is_none());
++    assert!(
++        matches!(&source.identity,r::SourceIdentity::Spec(s) if s.address=="spec://org.test/pkg/inner")
++    );
++    let compare = |a: &str, b: &str| {
++        let result = result(same(q::Command::Compare(Box::new(q::CommandCompare {
++            snapshot_id: a.into(),
++            other_snapshot_id: b.into(),
++        }))));
++        let r::Body::Compare(v) = result.body else {
++            panic!()
++        };
++        v
++    };
++    let diff = compare(&before, &id);
++    assert_eq!(diff.added, ["new.md"]);
++    assert_eq!(diff.changed, ["STATIC.md"]);
++    assert!(diff.removed.is_empty());
++    let cost = result(same(q::Command::Cost(Box::new(q::CommandCost {
++        snapshot_id: id.clone(),
++    }))));
++    let r::Body::Cost(cost) = cost.body else {
++        panic!()
++    };
++    assert_eq!(cost.raw_bytes.exact, Some(text.len().to_string()));
++    assert!(cost.tokens.unavailable.is_some());
++    let explain = result(same(q::Command::Explain(Box::new(q::CommandExplain {
++        snapshot_id: id.clone(),
++        contribution: inner.contribution,
++        occurrence: inner.occurrence,
++    }))));
++    let r::Body::Explain(explain) = explain.body else {
++        panic!()
++    };
++    assert_eq!(explain.chain, [0, 2, 1]);
++    client
++        .change(
++            1,
++            artifact,
++            1,
++            2,
++            ByteEncoding::Utf8,
++            Arc::from(&b""[..]),
++            BufferIntent::Delete,
++        )
++        .unwrap();
++    let deleted = route.retain_capture(client.freeze().unwrap()).unwrap();
++    let diff = compare(&id, &deleted);
++    assert_eq!(diff.removed, ["STATIC.md"]);
++    assert!(diff.added.is_empty() && diff.changed.is_empty());
++    client
++        .change(
++            1,
++            artifact,
++            2,
++            3,
++            ByteEncoding::Utf8,
++            Arc::from(text.as_bytes()),
++            BufferIntent::Move { target: moved },
++        )
++        .unwrap();
++    let relocated = route.retain_capture(client.freeze().unwrap()).unwrap();
++    let diff = compare(&id, &relocated);
++    assert_eq!(diff.removed, ["STATIC.md"]);
++    assert_eq!(diff.added, ["moved.md"]);
++    assert!(diff.changed.is_empty());
++    std::fs::write(root.path().join("STATIC.md"), "later disk").unwrap();
++    assert_eq!(stable, inspect());
++    let chunk = result(same(q::Command::Chunk(Box::new(q::CommandChunk {
++        snapshot_id: id.clone(),
++        resource_id: view.resources[1].resource_id.clone(),
++        filter: q::CommandChunkFilter::Raw,
++        offset: "0".into(),
++        limit: 2048,
++    }))));
++    let r::Body::Chunk(chunk) = chunk.body else {
++        panic!()
++    };
++    assert_eq!(
++        chunk.hex_bytes,
++        text.as_bytes()
++            .iter()
++            .map(|b| format!("{b:02x}"))
++            .collect::<String>()
++    );
++    let tree = result(cli(
++        &route,
++        &request(q::Command::Tree(Box::new(q::CommandTree {
++            snapshot_id: id.clone(),
++            inspection_id: None,
++            cursor: None,
++            filter: "".into(),
++            limit: 1,
++        }))),
++    ));
++    let r::Body::Tree(tree) = tree.body else {
++        panic!()
++    };
++    let progress = same(q::Command::Replay(Box::new(q::CommandReplay {
++        inspection_id: tree.inspection_id.clone(),
++        after_sequence: "0".into(),
++        limit: 64,
++    })));
++    let env::Body::Event(event) = progress.body else {
++        panic!()
++    };
++    let progress: p::Progress =
++        serde_json::from_str(event.payload_json.as_deref().unwrap()).unwrap();
++    route.validate_progress(&progress).unwrap();
++    assert_eq!(progress.snapshot_id, id);
++    let cancelled = result(cli(
++        &route,
++        &request(q::Command::Cancel(Box::new(q::CommandCancel {
++            inspection_id: tree.inspection_id.clone(),
++        }))),
++    ));
++    let r::Body::Cancel(cancelled) = cancelled.body else {
++        panic!()
++    };
++    assert_eq!(cancelled.scope, r::BodyCancelScope::InspectionOnly);
++    assert_eq!(
++        cancelled.build_cancelled,
++        r::BodyCancelBuildCancelled::NotRequested
++    );
++    let refused = same(q::Command::Tree(Box::new(q::CommandTree {
++        snapshot_id: id.clone(),
++        inspection_id: Some(tree.inspection_id),
++        cursor: None,
++        filter: "".into(),
++        limit: 1,
++    })));
++    let env::Body::Error(error) = refused.body else {
++        panic!()
++    };
++    let error: e::Error = serde_json::from_str(error.payload_json.as_deref().unwrap()).unwrap();
++    assert_eq!(error.code, e::ErrorCode::Cancelled);
++    assert_eq!(stable, inspect());
++    assert!(!root.path().join(".vibe").exists());
++    assert!(!root.path().join("new.md").exists());
++    assert!(!root.path().join("moved.md").exists());
++}

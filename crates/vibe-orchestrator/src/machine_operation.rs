@@ -323,6 +323,7 @@ impl MachineOperationService {
     }
 }
 
+pub mod boot_debugger;
 mod coverage;
 mod discovery;
 pub mod exact_local_install;

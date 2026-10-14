@@ -1738,6 +1738,42 @@ corpus = "formats/corpora/derivatives/e1"
 sunset = "none"
 
 # Explicit derivative rebase intent; authored writes retain M16 ownership.
+
+[format.boot-debugger-request]
+epoch = 1
+schema = "schemas/boot_debugger/e1/request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.boot-debugger-result]
+epoch = 1
+schema = "schemas/boot_debugger/e1/result.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.boot-debugger-error]
+epoch = 1
+schema = "schemas/boot_debugger/e1/error.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.boot-debugger-progress]
+epoch = 1
+schema = "schemas/boot_debugger/e1/progress.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
 [format.derivative-rebase-journal]
 epoch = 1
 schema = "schemas/derivative_rebase_journal.jtd.json"

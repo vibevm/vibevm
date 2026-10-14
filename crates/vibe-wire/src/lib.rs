@@ -107,3 +107,6 @@ pub mod generated;
 
 #[cfg(test)]
 mod m_01_c_4_cases;
+
+#[cfg(test)]
+mod m_06_c_1_cases;
