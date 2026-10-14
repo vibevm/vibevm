@@ -245,3 +245,8 @@ pub use inspection::{DerivativeInspection, FileInspection, InventoryDifference};
 
 #[cfg(test)]
 mod m_10_c_1_cases;
+
+mod rebase;
+pub use rebase::{RebaseDisposition, RebaseHandoff, RebaseReview};
+#[cfg(test)]
+mod m_10_c_2_cases;

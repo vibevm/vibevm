@@ -23,3 +23,11 @@ pub(super) struct ParticipantRegistry {
 
 #[cfg(test)]
 mod m_16_d_3_cases;
+
+mod derivative;
+mod derivative_journal;
+pub use derivative::{
+    DerivativeEffect, DerivativeOutcome, DerivativeRebaseBarrier, DerivativeRebasePlan,
+};
+#[cfg(test)]
+mod m_10_c_2_cases;

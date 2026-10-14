@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "recipe": "derivative-rebase-journal/1",
+  "id": "shape-only",
+  "edit_intent": "{}",
+  "previous_result": "{}",
+  "desired_result": "{}",
+  "result_root": "fixture",
+  "result_name": "result.json",
+  "prior": null
+}

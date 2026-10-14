@@ -1736,3 +1736,13 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/derivatives/e1"
 sunset = "none"
+
+# Explicit derivative rebase intent; authored writes retain M16 ownership.
+[format.derivative-rebase-journal]
+epoch = 1
+schema = "schemas/derivative_rebase_journal.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/derivative-rebase-journal/e1"
+sunset = "none"

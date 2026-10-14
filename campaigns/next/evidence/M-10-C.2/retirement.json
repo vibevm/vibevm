@@ -1,0 +1,36 @@
+{
+  "original_processes": {
+    "3246837": {
+      "exe": "/fast/git/v/.workers/zap-s8-human-target/debug/zap",
+      "uid": 1000,
+      "ppid": "3246774",
+      "start_ticks": "33542024"
+    },
+    "3246841": {
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay",
+      "uid": 1000,
+      "ppid": "3246837",
+      "start_ticks": "33542045"
+    },
+    "3246981": {
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod",
+      "uid": 1000,
+      "ppid": "3246841",
+      "start_ticks": "33542589"
+    },
+    "3246988": {
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "uid": 1000,
+      "ppid": "3246981",
+      "start_ticks": "33542653"
+    },
+    "3248623": {
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+      "uid": 1000,
+      "ppid": "3246988",
+      "start_ticks": "33549112"
+    }
+  },
+  "remaining": [],
+  "reason": "exact completed collected Reported/Completed task; SIGTERM only"
+}

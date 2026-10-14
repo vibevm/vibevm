@@ -1,0 +1,236 @@
+{
+  "scope": "M10C2 explicit cooperating-client rebase/apply/recovery, separate local publication effects; global wire-diff and baselinefmt failures retained",
+  "files": [
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2/candidate-result.json",
+      "saved": "original-empty-candidate.json",
+      "raw_sha256": "584bf8cb63663212e2869e97696b428436ff30826936495bd5283d19684ecc0d",
+      "saved_sha256": "584bf8cb63663212e2869e97696b428436ff30826936495bd5283d19684ecc0d",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2/worker-findings.json",
+      "saved": "original-empty-findings.json",
+      "raw_sha256": "b31334fd6a7b95b5ee76169016f684e36b3e43256d06c5ee99f13c9f0fea351f",
+      "saved_sha256": "b31334fd6a7b95b5ee76169016f684e36b3e43256d06c5ee99f13c9f0fea351f",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2/worker-report.txt",
+      "saved": "original-empty-report.txt",
+      "raw_sha256": "204b424c2175a9c60279d89835a16265611bd3a4fe57676f3761d882b557bf07",
+      "saved_sha256": "204b424c2175a9c60279d89835a16265611bd3a4fe57676f3761d882b557bf07",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/candidate-result.json",
+      "saved": "accepted-subject-candidate.json",
+      "raw_sha256": "9975270a566ecace7cf05cf0d8e469502a3a5569fc4d21f01d39a38ef813db4e",
+      "saved_sha256": "9975270a566ecace7cf05cf0d8e469502a3a5569fc4d21f01d39a38ef813db4e",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/findings.json",
+      "saved": "correction-findings.json",
+      "raw_sha256": "9c8908b9527d5dfd26112bbcf3139d82ddb1573f0e9ec94cb61d80e62fc47d03",
+      "saved_sha256": "9c8908b9527d5dfd26112bbcf3139d82ddb1573f0e9ec94cb61d80e62fc47d03",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/implementation-report.md",
+      "saved": "correction-report.md",
+      "raw_sha256": "9fee2978c9dfff5b0fbb2d1c4aa2a44dadcedb52fd38f8b09d17c8e8bb373bc6",
+      "saved_sha256": "9fee2978c9dfff5b0fbb2d1c4aa2a44dadcedb52fd38f8b09d17c8e8bb373bc6",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/candidate.patch",
+      "saved": "candidate.patch",
+      "raw_sha256": "14917b02aaf6c4228e57f98244aa5c98cb73414009464b0dbde2babce9eea176",
+      "saved_sha256": "14917b02aaf6c4228e57f98244aa5c98cb73414009464b0dbde2babce9eea176",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/INDEPENDENT-REVIEW.md",
+      "saved": "independent-review.md",
+      "raw_sha256": "0783adc7f5fa82d7e70b2f3037a70dda6f5e0bf48dfccaea9466fe7af5b3df0d",
+      "saved_sha256": "0783adc7f5fa82d7e70b2f3037a70dda6f5e0bf48dfccaea9466fe7af5b3df0d",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/INDEPENDENT-REVIEW.json",
+      "saved": "independent-review.json",
+      "raw_sha256": "4b409c98936c7cce7834e8f6de80906a8150dab7889ad287e601aa227be11ffe",
+      "saved_sha256": "4b409c98936c7cce7834e8f6de80906a8150dab7889ad287e601aa227be11ffe",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/workspace-reviewed.log",
+      "saved": "workspace-test.txt",
+      "raw_sha256": "dbc2427f59e9670b17372c60094526f2ac6df1b65ec2c0ef213d968b49b5e235",
+      "saved_sha256": "dbc2427f59e9670b17372c60094526f2ac6df1b65ec2c0ef213d968b49b5e235",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/orchestrator-final-confirmed.log",
+      "saved": "orchestrator-test.txt",
+      "raw_sha256": "145b3383a66a83094d88b74227ea4c06e7d12ee8e4082eae198dbbc5d02a6ee9",
+      "saved_sha256": "145b3383a66a83094d88b74227ea4c06e7d12ee8e4082eae198dbbc5d02a6ee9",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/m16-regression.log",
+      "saved": "m16-test.txt",
+      "raw_sha256": "79fc0e4a6e8c696360bfa4e8e89f25d949cfeddb4055b443f98c1f20543993e9",
+      "saved_sha256": "79fc0e4a6e8c696360bfa4e8e89f25d949cfeddb4055b443f98c1f20543993e9",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/wire-carrier.log",
+      "saved": "wire-test.txt",
+      "raw_sha256": "07efc2a1ccf526d9c0d8a140222048c8336094a607b02f0fadd30b19f3d10a0f",
+      "saved_sha256": "07efc2a1ccf526d9c0d8a140222048c8336094a607b02f0fadd30b19f3d10a0f",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/orchestrator-final-effects.log",
+      "saved": "orchestrator-fault-failed.txt",
+      "raw_sha256": "1304d949af3ed83d8be441de8c533072d434d5de721f54b1ff0e0394b8e35bd1",
+      "saved_sha256": "1304d949af3ed83d8be441de8c533072d434d5de721f54b1ff0e0394b8e35bd1",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/check-codegen.log",
+      "saved": "producer-check-codegen-failed.txt",
+      "raw_sha256": "478d5e1efdd9d7137f3f94b24ffd9ae69c807d39fb46e78533e9132ba3604267",
+      "saved_sha256": "478d5e1efdd9d7137f3f94b24ffd9ae69c807d39fb46e78533e9132ba3604267",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/wire-diff.log",
+      "saved": "wire-diff-failed.txt",
+      "raw_sha256": "ac9c67f8be616e3a7ee43bb2600a1faf41acd091a2a4bc9611dc491441a9e1fd",
+      "saved_sha256": "ac9c67f8be616e3a7ee43bb2600a1faf41acd091a2a4bc9611dc491441a9e1fd",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/codegen.log",
+      "saved": "producer-codegen.txt",
+      "raw_sha256": "da0494e06f98c6607826e0d0d875fe41b409c80ffedd12a4fcfb8f95635cba44",
+      "saved_sha256": "da0494e06f98c6607826e0d0d875fe41b409c80ffedd12a4fcfb8f95635cba44",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/codegen-reproducibility.json",
+      "saved": "producer-codegen-reproducibility.json",
+      "raw_sha256": "e5c8916e661acde31affa92502ea356865c257befa18cd32dac6b96726ab43c2",
+      "saved_sha256": "e5c8916e661acde31affa92502ea356865c257befa18cd32dac6b96726ab43c2",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/baseline-generated-format.log",
+      "saved": "baseline-generated-format-failed.txt",
+      "raw_sha256": "c957afc62dda4b5791dde4417b5bd31734178dd3a2253848c78f965dbaa63c65",
+      "saved_sha256": "c957afc62dda4b5791dde4417b5bd31734178dd3a2253848c78f965dbaa63c65",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/authored-format.log",
+      "saved": "authored-format.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/final-diff-check.log",
+      "saved": "diff-check.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-CODEGEN-POSTSTAGE.log",
+      "saved": "root-codegen-poststage.txt",
+      "raw_sha256": "59336ab9137ccf5e014dd493c6f24085fd91e16c87a68459419519aa16b5749f",
+      "saved_sha256": "59336ab9137ccf5e014dd493c6f24085fd91e16c87a68459419519aa16b5749f",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-CODEGEN-BEFORE.json",
+      "saved": "root-codegen-before.json",
+      "raw_sha256": "25a41933350dcebf0926183345cd04813d5c1bba13bb8cfc166ccd95b7f9b73b",
+      "saved_sha256": "25a41933350dcebf0926183345cd04813d5c1bba13bb8cfc166ccd95b7f9b73b",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-CODEGEN-RESULT.json",
+      "saved": "root-codegen-result.json",
+      "raw_sha256": "1fa4dd8bf8a31a7773136e21db91c8ff279658e1d3652019dc229dfc558ce068",
+      "saved_sha256": "1fa4dd8bf8a31a7773136e21db91c8ff279658e1d3652019dc229dfc558ce068",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-REVIEW.json",
+      "saved": "root-verification.json",
+      "raw_sha256": "5497e732eaa11d5f405f9ea557c3a7235cbb426dcc85928e639851df7cc25869",
+      "saved_sha256": "5497e732eaa11d5f405f9ea557c3a7235cbb426dcc85928e639851df7cc25869",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/ACCEPTANCE-FROZEN-SUBJECT.json",
+      "saved": "frozen-subject.json",
+      "raw_sha256": "1bdc2406311ec22afb53056d0924e9c3c5ce9abdc8f6b3c638a9c7e8c8d90572",
+      "saved_sha256": "1bdc2406311ec22afb53056d0924e9c3c5ce9abdc8f6b3c638a9c7e8c8d90572",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-RETIREMENT.json",
+      "saved": "retirement.json",
+      "raw_sha256": "133ae0c0e527283059b01ca4cbecbfa2ec0106e2a62c93d5c128bcbf9d704ec7",
+      "saved_sha256": "133ae0c0e527283059b01ca4cbecbfa2ec0106e2a62c93d5c128bcbf9d704ec7",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/root-safe.log",
+      "saved": "safe-receipts.jsonl",
+      "raw_sha256": "2d0e798cf970f9c00ad0b3e684d800fad88649b695f54917ae0a7776b2fada2c",
+      "saved_sha256": "2d0e798cf970f9c00ad0b3e684d800fad88649b695f54917ae0a7776b2fada2c",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/root-open-review.log",
+      "saved": "open-review-receipts.jsonl",
+      "raw_sha256": "0debb2fdf961bba290740b9c76a358216e8436a3990825352614869c72dd9418",
+      "saved_sha256": "0debb2fdf961bba290740b9c76a358216e8436a3990825352614869c72dd9418",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/root-evidence.log",
+      "saved": "evidence-receipts.jsonl",
+      "raw_sha256": "8980b51f6c71bca6318ab4c0771fef0a5b213b5fb7fbc01a022a1efe74f0626e",
+      "saved_sha256": "8980b51f6c71bca6318ab4c0771fef0a5b213b5fb7fbc01a022a1efe74f0626e",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/root-stage.log",
+      "saved": "stage-receipts.jsonl",
+      "raw_sha256": "a2dc0c0196f42832b39387634d206fa53d73340c71717c5ff9e3e84a04defb27",
+      "saved_sha256": "a2dc0c0196f42832b39387634d206fa53d73340c71717c5ff9e3e84a04defb27",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/root-work.log",
+      "saved": "work-receipts.jsonl",
+      "raw_sha256": "17d43cce68c1e881a4a069e6fd0f28804c80b1ce30f4975c1c494cea386de17c",
+      "saved_sha256": "17d43cce68c1e881a4a069e6fd0f28804c80b1ce30f4975c1c494cea386de17c",
+      "normalization": "none; exact bytes"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10c2-correction/root-final-state.log",
+      "saved": "final-state.txt",
+      "raw_sha256": "4fbc8443bfe14180620ac159040e8adf29d3a4da42684ff9a201dc65b12986b3",
+      "saved_sha256": "4fbc8443bfe14180620ac159040e8adf29d3a4da42684ff9a201dc65b12986b3",
+      "normalization": "none; exact bytes"
+    }
+  ]
+}

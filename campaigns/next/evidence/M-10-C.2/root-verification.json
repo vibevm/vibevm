@@ -1,0 +1,175 @@
+{
+  "approved": true,
+  "summary": "Root accepts bounded independently reviewed full M10C2 explicit rebase/apply/recovery at fixture safe-stop,27 distinct final tests; post-stage owning check-codegen passed with208 generated hashes unchanged. Global wire-diff/index-corpus and inherited generated formatting limits retained.",
+  "scope": "Full M10C2 same-version drift, explicit no-merge selection, incumbent M16 cooperating-client authored barrier, separate completed/pending/unknown result publication, cold recover/replay and preserved prior chain.",
+  "limitations": [
+    "27 distinct cases=workspace6+orchestrator12+incumbentM16 8+wire1. Repeated parent/child/reruns not added.",
+    "Check-codegen exit1 on uncommitted generated diff; generator208files byte-identical is separate bounded evidence, no global green verdict. Only Root may stage/commit if it elects to run that gate; helper never does.",
+    "Wire-diff exit1 at unchanged index/repomd corpus; global epoch verdict NOT reached.",
+    "Generated fmt inherited match-arm baseline fails; authoredfmt/diff pass. Orchestrator fault-fixture11/12 failed then exact-path correction12pass retained.",
+    "Prior original EMPTY unsatisfied/not_started with four unrun functional families preserved, not acceptance evidence.",
+    "Cooperating registered-client scope, not hostile-writer content-CAS or live activation; result publication occurs after authored fence release and has separate effect state.",
+    "Independent review ongoing; Root must approve only after reviewing source and oracle limitations."
+  ],
+  "observed_test_count": 27,
+  "observed_test_exit": 0,
+  "actual_environment": "RUSTUP_AUTO_INSTALL=0 offline locked; private M10B1-correction cargo-target and M10C2-correction TMPDIR; actual final6/12 plus conditionalM16 8 and wire1, global failures separately retained.",
+  "evidence_files": {
+    "/fast/zap-managed/2026-10-14-m10c2-correction/implementation-report.md": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/implementation-report.md",
+      "sha256": "9fee2978c9dfff5b0fbb2d1c4aa2a44dadcedb52fd38f8b09d17c8e8bb373bc6"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/candidate-result.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/candidate-result.json",
+      "sha256": "9975270a566ecace7cf05cf0d8e469502a3a5569fc4d21f01d39a38ef813db4e"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/candidate.patch": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/candidate.patch",
+      "sha256": "14917b02aaf6c4228e57f98244aa5c98cb73414009464b0dbde2babce9eea176"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/findings.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/findings.json",
+      "sha256": "9c8908b9527d5dfd26112bbcf3139d82ddb1573f0e9ec94cb61d80e62fc47d03"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/ACCEPTANCE-FROZEN-SUBJECT.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/ACCEPTANCE-FROZEN-SUBJECT.json",
+      "sha256": "1bdc2406311ec22afb53056d0924e9c3c5ce9abdc8f6b3c638a9c7e8c8d90572"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/workspace-reviewed.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/workspace-reviewed.log",
+      "sha256": "dbc2427f59e9670b17372c60094526f2ac6df1b65ec2c0ef213d968b49b5e235"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/orchestrator-final-confirmed.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/orchestrator-final-confirmed.log",
+      "sha256": "145b3383a66a83094d88b74227ea4c06e7d12ee8e4082eae198dbbc5d02a6ee9"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/m16-regression.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/m16-regression.log",
+      "sha256": "79fc0e4a6e8c696360bfa4e8e89f25d949cfeddb4055b443f98c1f20543993e9"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/wire-carrier.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/wire-carrier.log",
+      "sha256": "07efc2a1ccf526d9c0d8a140222048c8336094a607b02f0fadd30b19f3d10a0f"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/orchestrator-final-effects.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/orchestrator-final-effects.log",
+      "sha256": "1304d949af3ed83d8be441de8c533072d434d5de721f54b1ff0e0394b8e35bd1"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/check-codegen.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/check-codegen.log",
+      "sha256": "478d5e1efdd9d7137f3f94b24ffd9ae69c807d39fb46e78533e9132ba3604267"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/wire-diff.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/wire-diff.log",
+      "sha256": "ac9c67f8be616e3a7ee43bb2600a1faf41acd091a2a4bc9611dc491441a9e1fd"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/codegen.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/codegen.log",
+      "sha256": "da0494e06f98c6607826e0d0d875fe41b409c80ffedd12a4fcfb8f95635cba44"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/codegen-reproducibility.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/codegen-reproducibility.json",
+      "sha256": "e5c8916e661acde31affa92502ea356865c257befa18cd32dac6b96726ab43c2"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/baseline-generated-format.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/baseline-generated-format.log",
+      "sha256": "c957afc62dda4b5791dde4417b5bd31734178dd3a2253848c78f965dbaa63c65"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/authored-format.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/authored-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/final-diff-check.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/final-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs",
+      "sha256": "b54a04462cc0509b3ac1cfecfcb980810b229baa8ca2558d6f03db3a40b68442"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs",
+      "sha256": "88f28459e512433b27fa8883cbae4421fb6b0f5d98154db71e3dddd46de9ce9e"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/journal.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+      "sha256": "114cb210529d15ffa87d0343bbe0d87e2c5bf56f1be3c8d0ad490c52cd0abc6b"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs",
+      "sha256": "a5cc36cbc62743ab64b01ff97652d3252a3b800502d4c49d90cf2593ec677a7c"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+      "sha256": "123761bde85a2fb2163671c5e1307438ebebf6721549504de5d0e4c62d6393f1"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/behaviour/derivative.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/behaviour/derivative.rs",
+      "sha256": "eaf82b2ddca054074df734d33302426e793248767b5dd516885c47bdaca44a70"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/derivative_rebase_journal/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/derivative_rebase_journal/mod.rs",
+      "sha256": "5bbff5f337d874ec736d2baa56e243fbbbb28ca4f2a304e3fc278397edb4a0eb"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/mod.rs",
+      "sha256": "38dfdbcb503b3060e9ac30c6b3e719c5cc5741c0ca8dd7e572f3d642ac0259c6"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs",
+      "sha256": "18d5e5957664e02b8815ba15cef26aeabe73a25ae22d8284a26dd22481aacdf0"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/mod.rs",
+      "sha256": "441c98fa432cd31faec40f35f5a6bc4e126de41f03a26bf960bf010e36c41ad9"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives.rs",
+      "sha256": "a110c0500e69f6519dab9c6b808c05dc32dffb23a6a783cb4e9157bc6cd14402"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/m_10_c_2_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/m_10_c_2_cases.rs",
+      "sha256": "6845ed73771cda5438fa9516680579b896496b88e1a2387c5dbf453295dd5269"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/rebase.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/rebase.rs",
+      "sha256": "81ed53b053cab62acdf0e3e07bee384f7b283db3001eda8ecf9f430aa94f98d5"
+    },
+    "/fast/git/v/vibevm-next/formats/REGISTRY.toml": {
+      "path": "/fast/git/v/vibevm-next/formats/REGISTRY.toml",
+      "sha256": "d2a530b81975dc58ae1110affc3a7c17ca1e02e032e4cd51746b59d361c230b6"
+    },
+    "/fast/git/v/vibevm-next/formats/breaks/005.md": {
+      "path": "/fast/git/v/vibevm-next/formats/breaks/005.md",
+      "sha256": "d1c1104a98230cf42c540dd60a42d561337465aa6bab3fac9aef1c904cddc92b"
+    },
+    "/fast/git/v/vibevm-next/formats/corpora/derivative-rebase-journal/e1/shape.json": {
+      "path": "/fast/git/v/vibevm-next/formats/corpora/derivative-rebase-journal/e1/shape.json",
+      "sha256": "ee78c3ea8a96a9e6701f362f9798bcb818bff0183782538788e620fd653617d0"
+    },
+    "/fast/git/v/vibevm-next/schemas/derivative_rebase_journal.jtd.json": {
+      "path": "/fast/git/v/vibevm-next/schemas/derivative_rebase_journal.jtd.json",
+      "sha256": "26debc8e62d929452619b666c28ba63e676ed6b4d37407461889285509e27330"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/INDEPENDENT-REVIEW.md": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/INDEPENDENT-REVIEW.md",
+      "sha256": "0783adc7f5fa82d7e70b2f3037a70dda6f5e0bf48dfccaea9466fe7af5b3df0d"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/INDEPENDENT-REVIEW.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/INDEPENDENT-REVIEW.json",
+      "sha256": "4b409c98936c7cce7834e8f6de80906a8150dab7889ad287e601aa227be11ffe"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-RETIREMENT.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-RETIREMENT.json",
+      "sha256": "133ae0c0e527283059b01ca4cbecbfa2ec0106e2a62c93d5c128bcbf9d704ec7"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-CODEGEN-RESULT.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-CODEGEN-RESULT.json",
+      "sha256": "1fa4dd8bf8a31a7773136e21db91c8ff279658e1d3652019dc229dfc558ce068"
+    },
+    "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-CODEGEN-POSTSTAGE.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c2-correction/ROOT-CODEGEN-POSTSTAGE.log",
+      "sha256": "59336ab9137ccf5e014dd493c6f24085fd91e16c87a68459419519aa16b5749f"
+    }
+  }
+}

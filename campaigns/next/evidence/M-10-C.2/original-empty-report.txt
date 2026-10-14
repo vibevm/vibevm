@@ -1,0 +1,25 @@
+M-10-C.2 unreviewed blocked candidate
+Baseline: 76b60b2a36329d285d4a7030daf1e96ac2a29473, verified HEAD; clean working tree before and after investigation. Empty patch is the actual scoped diff; no new source files, staging or commits.
+
+Implementation did not start. Neither acceptance criterion nor the requested safe-stop is established. No authored apply, fixture publication, recovery, activation, network, deployment, provider or model effect was performed. effect_state=not_started describes the requested derivative effects; report/artifact files are written as explicitly requested.
+
+Boundary evidence:
+- crates/vibe-orchestrator/Cargo.toml already depends on vibe-workspace.
+- document_analysis/edit/plan.rs owns DocumentEditAuthority, EditPlan and registered participants; fields are pub(super).
+- document_analysis/edit/barrier.rs delegates to private fence.rs and its registered client registry.
+- document_analysis/edit/apply.rs owns apply under LifecycleLease with expected snapshots and journal checkpoints.
+- document_analysis/edit/journal.rs owns retained before/after intent and prepare_recovery.
+- No existing DocumentEditAuthority/EditBarrier/ExpectedBuffers adapter was found in workspace, core manifest, safefs or wire by rg.
+Workspace cannot depend back on orchestrator. Implementing a replacement participant/barrier engine or using SafeFS compare-and-rename alone would violate the packet. A concrete orchestrator integration adapter and integration tests require corrected write scope; the packet explicitly makes orchestrator read-only. No such changes were made. This report does not claim that pure rebase planning is impossible in workspace; full requested integration is blocked within this perimeter.
+
+Actual verification attempts:
+1. rg -n 'm_10_c_2_cases' crates/vibe-workspace/src crates/vibe-core/src/manifest crates/vibe-safefs/src crates/vibe-wire: exit 1, no matching cases. Required four nonzero families cannot be bound from current source. No cargo test command was dispatched, no tests compiled or executed. Nonzero case counts: workspace=0, core=0, safefs=0, wire=0 (not run, not passes).
+2. RUSTUP_AUTO_INSTALL=0 TMPDIR=/fast/zap-managed/2026-10-14-m10c2/tmp CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target cargo fmt --all -- --check: exit 1. Existing unrelated formatting debt in CLI fixed deploy tests, core manifest/change/m_02_b_1_cases.rs, MCP incremental framing, orchestrator stream/machine submission, publish payload tests and generated wire format_id/properties.rs. No formatting was applied.
+3. git diff --check: exit 0; empty diff.
+4. git status --short: exit 0; empty output.
+5. git rev-parse HEAD: exit 0, baseline above.
+6. Read attempts: initial cat of document_analysis/edit.rs exited 1 (directory module, not a file); corrected read of edit/mod.rs and plan/apply/journal/fence/barrier files succeeded.
+
+No compilation target was opened or changed. check-codegen and wire-diff are not triggered: no schema, generated registration, wire behavior, format, corpus or epoch diff. No fullsuite/Lean/crossplatform checks attempted. No evidence IDs fabricated. checks_attempted=true means actual formatting/diff verification attempts, NOT execution of the four captured cargo checks. The finish-candidate helper projects required check references and the contractual safe boundary; those references are NOT passing evidence, and the safe boundary remains unachieved as stated here and in unresolved findings.
+
+All literal positive/negative cases remain unproven: explicit compatible rebase and prior chain; exact replay idempotence; missing old capture; ambiguous patch; dirty buffer; concurrent edit; stale same-version capture; before/after-publication interruption; unknown third-state recovery refusal. Five derivative families and future obligations remain unchanged.

@@ -1,0 +1,1675 @@
+diff --git a/crates/vibe-orchestrator/src/document_analysis/edit/journal.rs b/crates/vibe-orchestrator/src/document_analysis/edit/journal.rs
+index 33875e936..dfc1223df 100644
+--- a/crates/vibe-orchestrator/src/document_analysis/edit/journal.rs
++++ b/crates/vibe-orchestrator/src/document_analysis/edit/journal.rs
+@@ -199,6 +199,13 @@ impl DocumentEditAuthority {
+         id: &str,
+     ) -> Result<EditPlan, EditError> {
+         let journal = load(self, id)?.ok_or(EditError::RecoveryRequired)?;
++        self.prepare_recovery_record(capture, journal)
++    }
++    pub(super) fn prepare_recovery_record(
++        self: &Arc<Self>,
++        capture: &AnalysisCapture,
++        journal: Journal,
++    ) -> Result<EditPlan, EditError> {
+         let mut replacements = vec![];
+         for row in &journal.files {
+             let resource = *self
+diff --git a/crates/vibe-orchestrator/src/document_analysis/edit/mod.rs b/crates/vibe-orchestrator/src/document_analysis/edit/mod.rs
+index f12ab9cf2..6c75c641b 100644
+--- a/crates/vibe-orchestrator/src/document_analysis/edit/mod.rs
++++ b/crates/vibe-orchestrator/src/document_analysis/edit/mod.rs
+@@ -23,3 +23,11 @@ pub(super) struct ParticipantRegistry {
+ 
+ #[cfg(test)]
+ mod m_16_d_3_cases;
++
++mod derivative;
++mod derivative_journal;
++pub use derivative::{
++    DerivativeEffect, DerivativeOutcome, DerivativeRebaseBarrier, DerivativeRebasePlan,
++};
++#[cfg(test)]
++mod m_10_c_2_cases;
+diff --git a/crates/vibe-wire/src/behaviour/derivative.rs b/crates/vibe-wire/src/behaviour/derivative.rs
+index 491b0a1a4..79b453259 100644
+--- a/crates/vibe-wire/src/behaviour/derivative.rs
++++ b/crates/vibe-wire/src/behaviour/derivative.rs
+@@ -125,3 +125,27 @@ mod m_10_b_1_cases {
+         assert!(result.checked_binding().is_err());
+     }
+ }
++
++#[cfg(test)]
++mod m_10_c_2_cases {
++    use crate::generated::derivative_rebase_journal::DerivativeRebaseJournal;
++    #[test]
++    fn registered_rebase_carrier_roundtrip_and_required_nullable_prior() {
++        let raw =
++            include_str!("../../../../formats/corpora/derivative-rebase-journal/e1/shape.json");
++        let record: DerivativeRebaseJournal = serde_json::from_str(raw).unwrap();
++        assert_eq!(
++            serde_json::from_slice::<DerivativeRebaseJournal>(
++                &serde_json::to_vec(&record).unwrap()
++            )
++            .unwrap(),
++            record
++        );
++        let mut missing: serde_json::Value = serde_json::from_str(raw).unwrap();
++        missing.as_object_mut().unwrap().remove("prior");
++        assert!(serde_json::from_value::<DerivativeRebaseJournal>(missing).is_err());
++        let mut unknown: serde_json::Value = serde_json::from_str(raw).unwrap();
++        unknown["authority"] = "implicit".into();
++        assert!(serde_json::from_value::<DerivativeRebaseJournal>(unknown).is_err());
++    }
++}
+diff --git a/crates/vibe-wire/src/generated/format_id/mod.rs b/crates/vibe-wire/src/generated/format_id/mod.rs
+index d7e486743..792546670 100644
+--- a/crates/vibe-wire/src/generated/format_id/mod.rs
++++ b/crates/vibe-wire/src/generated/format_id/mod.rs
+@@ -56,6 +56,7 @@ pub enum FormatId {
+     DeployLockResources,
+     DeployReceipt,
+     DerivativeBinding,
++    DerivativeRebaseJournal,
+     DerivativeResult,
+     DistributionAggregateManifest,
+     DistributionBundleManifest,
+diff --git a/crates/vibe-wire/src/generated/format_id/properties.rs b/crates/vibe-wire/src/generated/format_id/properties.rs
+index 8f1baabd8..24defa5df 100644
+--- a/crates/vibe-wire/src/generated/format_id/properties.rs
++++ b/crates/vibe-wire/src/generated/format_id/properties.rs
+@@ -42,6 +42,7 @@ impl FormatId {
+         FormatId::DeployLockResources,
+         FormatId::DeployReceipt,
+         FormatId::DerivativeBinding,
++        FormatId::DerivativeRebaseJournal,
+         FormatId::DerivativeResult,
+         FormatId::DistributionAggregateManifest,
+         FormatId::DistributionBundleManifest,
+@@ -214,6 +215,7 @@ impl FormatId {
+             FormatId::DeployLockResources => "deploy-lock-resources",
+             FormatId::DeployReceipt => "deploy-receipt",
+             FormatId::DerivativeBinding => "derivative-binding",
++            FormatId::DerivativeRebaseJournal => "derivative-rebase-journal",
+             FormatId::DerivativeResult => "derivative-result",
+             FormatId::DistributionAggregateManifest => "distribution-aggregate-manifest",
+             FormatId::DistributionBundleManifest => "distribution-bundle-manifest",
+@@ -387,6 +389,7 @@ impl FormatId {
+             FormatId::DeployLockResources => 1,
+             FormatId::DeployReceipt => 1,
+             FormatId::DerivativeBinding => 1,
++            FormatId::DerivativeRebaseJournal => 1,
+             FormatId::DerivativeResult => 1,
+             FormatId::DistributionAggregateManifest => 1,
+             FormatId::DistributionBundleManifest => 1,
+@@ -560,6 +563,7 @@ impl FormatId {
+             FormatId::DeployLockResources => false,
+             FormatId::DeployReceipt => false,
+             FormatId::DerivativeBinding => false,
++            FormatId::DerivativeRebaseJournal => false,
+             FormatId::DerivativeResult => true,
+             FormatId::DistributionAggregateManifest => false,
+             FormatId::DistributionBundleManifest => false,
+@@ -733,6 +737,7 @@ impl FormatId {
+             FormatId::DeployLockResources => ForeignParsers::None,
+             FormatId::DeployReceipt => ForeignParsers::None,
+             FormatId::DerivativeBinding => ForeignParsers::None,
++            FormatId::DerivativeRebaseJournal => ForeignParsers::None,
+             FormatId::DerivativeResult => ForeignParsers::None,
+             FormatId::DistributionAggregateManifest => ForeignParsers::Many,
+             FormatId::DistributionBundleManifest => ForeignParsers::Many,
+@@ -906,6 +911,7 @@ impl FormatId {
+             FormatId::DeployLockResources => UnknownFields::Deny,
+             FormatId::DeployReceipt => UnknownFields::Deny,
+             FormatId::DerivativeBinding => UnknownFields::Deny,
++            FormatId::DerivativeRebaseJournal => UnknownFields::Deny,
+             FormatId::DerivativeResult => UnknownFields::Deny,
+             FormatId::DistributionAggregateManifest => UnknownFields::Deny,
+             FormatId::DistributionBundleManifest => UnknownFields::Deny,
+diff --git a/crates/vibe-wire/src/generated/mod.rs b/crates/vibe-wire/src/generated/mod.rs
+index 593159e5c..bc5ecac9c 100644
+--- a/crates/vibe-wire/src/generated/mod.rs
++++ b/crates/vibe-wire/src/generated/mod.rs
+@@ -24,6 +24,7 @@ pub mod deploy_inverse;
+ pub mod deploy_lock_resources;
+ pub mod deploy_receipt;
+ pub mod derivative_binding;
++pub mod derivative_rebase_journal;
+ pub mod derivative_result;
+ pub mod distribution;
+ pub mod distribution_smoke_report;
+diff --git a/crates/vibe-workspace/src/derivatives.rs b/crates/vibe-workspace/src/derivatives.rs
+index c3aa8a58e..ff9a8c405 100644
+--- a/crates/vibe-workspace/src/derivatives.rs
++++ b/crates/vibe-workspace/src/derivatives.rs
+@@ -245,3 +245,8 @@ pub use inspection::{DerivativeInspection, FileInspection, InventoryDifference};
+ 
+ #[cfg(test)]
+ mod m_10_c_1_cases;
++
++mod rebase;
++pub use rebase::{RebaseDisposition, RebaseHandoff, RebaseReview};
++#[cfg(test)]
++mod m_10_c_2_cases;
+diff --git a/formats/REGISTRY.toml b/formats/REGISTRY.toml
+index db8d62968..920a26db7 100644
+--- a/formats/REGISTRY.toml
++++ b/formats/REGISTRY.toml
+@@ -1736,3 +1736,13 @@ foreign_parsers = "none"
+ unknown_fields = "deny"
+ corpus = "formats/corpora/derivatives/e1"
+ sunset = "none"
++
++# Explicit derivative rebase intent; authored writes retain M16 ownership.
++[format.derivative-rebase-journal]
++epoch = 1
++schema = "schemas/derivative_rebase_journal.jtd.json"
++recoverable = false
++foreign_parsers = "none"
++unknown_fields = "deny"
++corpus = "formats/corpora/derivative-rebase-journal/e1"
++sunset = "none"
+diff --git a/crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs b/crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs
+new file mode 100644
+index 000000000..71fc83687
+--- /dev/null
++++ b/crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs
+@@ -0,0 +1,372 @@
++//! Upper composition of pure rebase selection with registered M16 editing.
++//! Result publication is a separate create-new effect after fences are released.
++use super::derivative_journal as dj;
++use super::*;
++use std::time::Duration;
++use vibe_wire::generated::derivative_rebase_journal::DerivativeRebaseJournal as Record;
++use vibe_workspace::derivatives::{RebaseHandoff, capture_retained};
++
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum DerivativeEffect {
++    Completed,
++    Pending,
++    Unknown,
++}
++#[derive(Debug)]
++pub struct DerivativeOutcome {
++    pub transaction: String,
++    pub authored: DerivativeEffect,
++    pub result: DerivativeEffect,
++    pub edit: Option<EditOutcome>,
++    pub reason: Option<EditError>,
++    pub durability_reduced: bool,
++}
++#[derive(Debug)]
++pub struct DerivativeRebasePlan {
++    edit: EditPlan,
++    record: Record,
++}
++#[derive(Debug)]
++pub struct DerivativeRebaseBarrier {
++    edit: EditBarrier,
++    record: Record,
++}
++fn selected_output(
++    authority: &DocumentEditAuthority,
++    output: &Project,
++) -> Result<String, EditError> {
++    if Project::open(output.root_path())
++        .and_then(|p| p.root_identity())
++        .map_err(|_| EditError::Unavailable)?
++        != output.root_identity().map_err(|_| EditError::Unavailable)?
++    {
++        return Err(EditError::Stale);
++    }
++    // Existing capability owner proves physical as well as lexical disjointness.
++    vibe_safefs::ExternalStore::open_existing_disjoint(output.root_path(), &authority.host.project)
++        .map_err(|_| EditError::AuthorityRefused)?
++        .ok_or(EditError::AuthorityRefused)?;
++    output
++        .root_correlation_token()
++        .map_err(|_| EditError::Unavailable)
++}
++fn recapture(
++    r: &Record,
++    base: &Project,
++    local: &Project,
++    output: &Project,
++) -> Result<(), EditError> {
++    if output
++        .root_correlation_token()
++        .map_err(|_| EditError::Unavailable)?
++        != r.result_root
++    {
++        return Err(EditError::AuthorityRefused);
++    }
++    for source in [base, local] {
++        vibe_safefs::ExternalStore::open_existing_disjoint(output.root_path(), source)
++            .map_err(|_| EditError::AuthorityRefused)?
++            .ok_or(EditError::AuthorityRefused)?;
++    }
++    let binding = dj::result(&r.desired_result)?
++        .checked_binding()
++        .map_err(|_| EditError::JournalIntegrity)?;
++    capture_retained(base, binding.base()).map_err(|_| EditError::Stale)?;
++    capture_retained(local, binding.local()).map_err(|_| EditError::Stale)?;
++    Ok(())
++}
++impl DocumentEditAuthority {
++    /// Read the retained before/desired results and prior transaction link.
++    /// These are observed provenance, not a grant or a production capture proof.
++    pub fn inspect_derivative_rebase_intent(&self, id: &str) -> Result<Record, EditError> {
++        let record = dj::load(self, id)?;
++        dj::chain(self, &record)?;
++        Ok(record)
++    }
++
++    /// Output is explicitly selected, disjoint and initially absent. This does
++    /// not widen authored resource eligibility to infrastructure directories.
++    pub fn prepare_derivative_rebase(
++        self: &Arc<Self>,
++        capture: &AnalysisCapture,
++        resource: ResourceId,
++        handoff: RebaseHandoff,
++        output: &Project,
++        name: &str,
++        prior: Option<&str>,
++    ) -> Result<DerivativeRebasePlan, EditError> {
++        vibe_safefs::ensure_safe_component(name).map_err(|_| EditError::AuthorityRefused)?;
++        let result_root = selected_output(self, output)?;
++        if output
++            .read_file_bounded(name, dj::CAP)
++            .map_err(|_| EditError::AuthorityRefused)?
++            .is_some()
++        {
++            return Err(EditError::ThirdState);
++        }
++        let saved = capture
++            .resource(resource)
++            .and_then(|r| r.disk_observation())
++            .ok_or(EditError::SaveRequired)?;
++        if saved.bytes != handoff.previous().record().binding_toml.as_bytes() {
++            return Err(EditError::Stale);
++        }
++        let edit = self.prepare(
++            capture,
++            vec![DocumentReplacement {
++                resource,
++                bytes: Arc::from(handoff.selected().record().binding_toml.as_bytes()),
++            }],
++        )?;
++        let mut record = Record {
++            schema: 1,
++            recipe: "derivative-rebase-journal/1".into(),
++            id: String::new(),
++            edit_intent: serde_json::to_string(&journal::from_plan(&edit)?)
++                .map_err(|_| EditError::InvalidJournal)?,
++            previous_result: serde_json::to_string(handoff.previous().record())
++                .map_err(|_| EditError::InvalidJournal)?,
++            desired_result: serde_json::to_string(handoff.selected().record())
++                .map_err(|_| EditError::InvalidJournal)?,
++            result_root,
++            result_name: name.into(),
++            prior: prior.map(str::to_owned),
++        };
++        record.id = dj::identity(&record)?;
++        dj::validate(self, &record)?;
++        dj::chain(self, &record)?;
++        Ok(DerivativeRebasePlan { edit, record })
++    }
++    /// Cold recovery loads registered intent, then recaptures saved state and
++    /// uses the same before/desired/third-state rules and participant owner.
++    pub fn recover_derivative_rebase(
++        self: &Arc<Self>,
++        capture: &AnalysisCapture,
++        id: &str,
++        base: &Project,
++        local: &Project,
++        output: &Project,
++    ) -> Result<DerivativeRebasePlan, EditError> {
++        let record = dj::load(self, id)?;
++        dj::chain(self, &record)?;
++        selected_output(self, output)?;
++        recapture(&record, base, local, output)?;
++        if result_state(&record, output)? == DerivativeEffect::Unknown {
++            return Err(EditError::ThirdState);
++        }
++        let intent = dj::validate(self, &record)?;
++        let actual = journal::load(self, &intent.id)?.unwrap_or(intent);
++        let edit = self.prepare_recovery_record(capture, actual)?;
++        Ok(DerivativeRebasePlan { edit, record })
++    }
++    pub fn inspect_derivative_rebase(
++        &self,
++        id: &str,
++        output: &Project,
++    ) -> Result<DerivativeOutcome, EditError> {
++        let record = dj::load(self, id)?;
++        dj::chain(self, &record)?;
++        if selected_output(self, output)? != record.result_root {
++            return Err(EditError::AuthorityRefused);
++        }
++        let intent = dj::validate(self, &record)?;
++        let actual = journal::load(self, &intent.id)?;
++        let row = &intent.files[0];
++        let saved = self
++            .host
++            .project
++            .read_file_snapshot_bounded(&row.path, self.host.limits.resource_bytes)
++            .map_err(|_| EditError::Unavailable)?;
++        let authored = match saved {
++            Some(s)
++                if s.unix_mode == row.unix_mode
++                    && s.bytes == row.before
++                    && s.identity.observation_correlation_token() == row.before_identity =>
++            {
++                DerivativeEffect::Pending
++            }
++            Some(s)
++                if s.unix_mode == row.unix_mode
++                    && s.bytes == row.after
++                    && actual.as_ref().is_some_and(|j| {
++                        j.files[0]
++                            .after_identity
++                            .as_ref()
++                            .is_none_or(|id| id == &s.identity.observation_correlation_token())
++                    }) =>
++            {
++                DerivativeEffect::Completed
++            }
++            _ => DerivativeEffect::Unknown,
++        };
++        let result = result_state(&record, output)?;
++        let reason = (authored == DerivativeEffect::Unknown || result == DerivativeEffect::Unknown)
++            .then_some(EditError::ThirdState);
++        Ok(DerivativeOutcome {
++            transaction: id.into(),
++            authored,
++            result,
++            edit: None,
++            reason,
++            durability_reduced: true,
++        })
++    }
++}
++fn result_state(record: &Record, output: &Project) -> Result<DerivativeEffect, EditError> {
++    match output
++        .read_file_bounded(&record.result_name, dj::CAP)
++        .map_err(|_| EditError::ThirdState)?
++    {
++        None => Ok(DerivativeEffect::Pending),
++        Some(b) if b == record.desired_result.as_bytes() => Ok(DerivativeEffect::Completed),
++        Some(_) => Ok(DerivativeEffect::Unknown),
++    }
++}
++impl DerivativeRebasePlan {
++    pub fn id(&self) -> &str {
++        &self.record.id
++    }
++    pub fn barrier(self, ttl: Duration) -> Result<DerivativeRebaseBarrier, EditError> {
++        Ok(DerivativeRebaseBarrier {
++            edit: self.edit.barrier(ttl)?,
++            record: self.record,
++        })
++    }
++}
++impl DerivativeRebaseBarrier {
++    pub fn edit_barrier(&self) -> &EditBarrier {
++        &self.edit
++    }
++    pub fn id(&self) -> &str {
++        &self.record.id
++    }
++    /// Errors may leave journal infrastructure; only the returned per-effect
++    /// observations describe payload completion. No nested lifecycle lease.
++    pub fn apply(
++        &self,
++        base: &Project,
++        local: &Project,
++        output: &Project,
++    ) -> Result<DerivativeOutcome, EditError> {
++        self.edit.ready()?;
++        selected_output(&self.edit.plan.authority, output)?;
++        recapture(&self.record, base, local, output)?;
++        if result_state(&self.record, output)? == DerivativeEffect::Unknown {
++            return Err(EditError::ThirdState);
++        }
++        let journal_reduced = dj::retain(&self.edit.plan.authority, &self.record)?;
++        let edit = self.edit.apply()?;
++        let authored = if edit.state == EditOutcomeState::Completed {
++            DerivativeEffect::Completed
++        } else if edit.uncertain.is_empty() && edit.verified.is_empty() {
++            DerivativeEffect::Pending
++        } else {
++            DerivativeEffect::Unknown
++        };
++        let mut outcome = DerivativeOutcome {
++            transaction: self.record.id.clone(),
++            authored,
++            result: result_state(&self.record, output).unwrap_or(DerivativeEffect::Unknown),
++            reason: edit.reason.clone(),
++            durability_reduced: edit.durability_reduced || journal_reduced,
++            edit: Some(edit),
++        };
++        if authored != DerivativeEffect::Completed {
++            return Ok(outcome);
++        }
++        // The barrier and lifecycle lease have ended. This separate effect is
++        // immutable create-new, never an overwrite of a third-state occupant.
++        if let Err(e) = recapture(&self.record, base, local, output) {
++            outcome.reason = Some(e);
++            return Ok(outcome);
++        }
++        let current = self
++            .edit
++            .plan
++            .authority
++            .inspect_derivative_rebase(&self.record.id, output);
++        if !matches!(current,Ok(ref observed) if observed.authored==DerivativeEffect::Completed) {
++            outcome.authored = DerivativeEffect::Unknown;
++            outcome.reason = Some(EditError::ThirdState);
++            return Ok(outcome);
++        }
++        match result_state(&self.record, output) {
++            Ok(DerivativeEffect::Completed) => outcome.result = DerivativeEffect::Completed,
++            Ok(DerivativeEffect::Pending) => {
++                let dir = match output.root_dir() {
++                    Ok(dir) => dir,
++                    Err(_) => {
++                        outcome.result = DerivativeEffect::Unknown;
++                        outcome.reason = Some(EditError::Unavailable);
++                        return Ok(outcome);
++                    }
++                };
++                match output.publish_new_in(
++                    &dir,
++                    &self.record.result_name,
++                    self.record.desired_result.as_bytes(),
++                ) {
++                    Ok(()) => {
++                        let durability = dir.sync_directory();
++                        outcome.durability_reduced |=
++                            durability != vibe_safefs::DirectoryDurability::Synced;
++                        if matches!(durability, vibe_safefs::DirectoryDurability::Failed(_)) {
++                            outcome.result = DerivativeEffect::Unknown;
++                            outcome.reason = Some(EditError::RecoveryRequired);
++                            return Ok(outcome);
++                        }
++                        outcome.result =
++                            result_state(&self.record, output).unwrap_or(DerivativeEffect::Unknown);
++                    }
++                    Err(e) => {
++                        outcome.result = if e.stage == vibe_safefs::PublishStage::PossiblyPublished
++                        {
++                            DerivativeEffect::Unknown
++                        } else {
++                            DerivativeEffect::Pending
++                        };
++                        outcome.reason = Some(EditError::RecoveryRequired);
++                    }
++                }
++            }
++            _ => {
++                outcome.result = DerivativeEffect::Unknown;
++                outcome.reason = Some(EditError::ThirdState);
++            }
++        }
++        if outcome.result == DerivativeEffect::Completed {
++            // Confirm durability of an exact replay without replacing its inode.
++            let confirmed = (|| {
++                let store = vibe_safefs::ExternalStore::open_existing_disjoint(
++                    output.root_path(),
++                    &self.edit.plan.authority.host.project,
++                )
++                .map_err(|_| EditError::Unavailable)?
++                .ok_or(EditError::Unavailable)?;
++                let saved = output
++                    .read_file_snapshot_bounded(&self.record.result_name, dj::CAP)
++                    .map_err(|_| EditError::Unavailable)?
++                    .ok_or(EditError::ThirdState)?;
++                if saved.bytes != self.record.desired_result.as_bytes() {
++                    return Err(EditError::ThirdState);
++                }
++                store
++                    .sync_stable_file_bounded(&self.record.result_name, dj::CAP, &saved)
++                    .map_err(|_| EditError::RecoveryRequired)
++            })();
++            match confirmed {
++                Ok(vibe_safefs::DirectoryDurability::Failed(_)) | Err(_) => {
++                    outcome.result = DerivativeEffect::Unknown;
++                    outcome.reason = Some(EditError::RecoveryRequired);
++                }
++                Ok(d) => {
++                    outcome.durability_reduced |= d != vibe_safefs::DirectoryDurability::Synced
++                }
++            }
++        }
++        if outcome.result == DerivativeEffect::Unknown && outcome.reason.is_none() {
++            outcome.reason = Some(EditError::RecoveryRequired)
++        }
++        Ok(outcome)
++    }
++}
+diff --git a/crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs b/crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs
+new file mode 100644
+index 000000000..a4ab95181
+--- /dev/null
++++ b/crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs
+@@ -0,0 +1,141 @@
++//! Registered immutable derivative intent, linked to the incumbent edit journal.
++use super::*;
++use vibe_wire::generated::{
++    derivative_rebase_journal::DerivativeRebaseJournal as Record,
++    derivative_result::DerivativeResult,
++};
++pub(super) const CAP: usize = 8 * 1024 * 1024;
++pub(super) fn path(id: &str) -> Result<String, EditError> {
++    journal::path(id)?;
++    Ok(format!(".vibe/derivative-rebases/{id}.json"))
++}
++pub(super) fn identity(record: &Record) -> Result<String, EditError> {
++    let mut copy = record.clone();
++    copy.id.clear();
++    let mut bytes = b"derivative-rebase-journal/1\0".to_vec();
++    bytes.extend(serde_json::to_vec(&copy).map_err(|_| EditError::InvalidJournal)?);
++    Ok(journal::raw_hash(&bytes))
++}
++pub(super) fn result(raw: &str) -> Result<DerivativeResult, EditError> {
++    let r: DerivativeResult = serde_json::from_str(raw).map_err(|_| EditError::JournalShape)?;
++    r.checked_binding()
++        .map_err(|_| EditError::JournalIntegrity)?;
++    Ok(r)
++}
++pub(super) fn validate(
++    authority: &DocumentEditAuthority,
++    r: &Record,
++) -> Result<journal::Journal, EditError> {
++    if r.schema != 1 || r.recipe != "derivative-rebase-journal/1" {
++        return Err(EditError::JournalEpoch);
++    }
++    if identity(r)? != r.id {
++        return Err(EditError::JournalIntegrity);
++    }
++    vibe_safefs::ensure_safe_component(&r.result_name).map_err(|_| EditError::AuthorityRefused)?;
++    let old = result(&r.previous_result)?;
++    let new = result(&r.desired_result)?;
++    let old_binding = old
++        .checked_binding()
++        .map_err(|_| EditError::JournalIntegrity)?;
++    let new_binding = new
++        .checked_binding()
++        .map_err(|_| EditError::JournalIntegrity)?;
++    if old_binding.base().owner.group != new_binding.base().owner.group
++        || old_binding.base().owner.name != new_binding.base().owner.name
++        || old_binding.base().owner.kind != new_binding.base().owner.kind
++        || old_binding.base().descriptor != new_binding.base().descriptor
++        || old_binding.local().owner != new_binding.local().owner
++        || old_binding.local().resource != new_binding.local().resource
++        || old_binding.base().resource != new_binding.base().resource
++    {
++        return Err(EditError::JournalIntegrity);
++    }
++    let intent = journal::decode(authority, r.edit_intent.as_bytes())?;
++    if intent.files.len() != 1
++        || intent.files[0].before != old.binding_toml.as_bytes()
++        || intent.files[0].after != new.binding_toml.as_bytes()
++        || intent.phase != journal::Phase::Prepared
++    {
++        return Err(EditError::JournalIntegrity);
++    }
++    Ok(intent)
++}
++pub(super) fn load(authority: &DocumentEditAuthority, id: &str) -> Result<Record, EditError> {
++    let raw = authority
++        .host
++        .project
++        .read_file_bounded(&path(id)?, CAP)
++        .map_err(|_| EditError::InvalidJournal)?
++        .ok_or(EditError::RecoveryRequired)?;
++    let r: Record = serde_json::from_slice(&raw).map_err(|_| EditError::JournalShape)?;
++    if r.id != id {
++        return Err(EditError::JournalIntegrity);
++    }
++    validate(authority, &r)?;
++    Ok(r)
++}
++pub(super) fn chain(authority: &DocumentEditAuthority, r: &Record) -> Result<(), EditError> {
++    let mut seen = std::collections::BTreeSet::new();
++    let mut current = r.clone();
++    for _ in 0..128 {
++        let Some(id) = current.prior.as_deref() else {
++            return Ok(());
++        };
++        if !seen.insert(id.to_owned()) {
++            return Err(EditError::JournalIntegrity);
++        }
++        let previous = load(authority, id)?;
++        if previous.desired_result != current.previous_result {
++            return Err(EditError::JournalIntegrity);
++        }
++        current = previous;
++    }
++    Err(EditError::JournalIntegrity)
++}
++pub(super) fn retain(authority: &DocumentEditAuthority, r: &Record) -> Result<bool, EditError> {
++    validate(authority, r)?;
++    chain(authority, r)?;
++    let raw = serde_json::to_vec(r).map_err(|_| EditError::InvalidJournal)?;
++    if raw.len() > CAP {
++        return Err(EditError::InvalidJournal);
++    }
++    let p = &authority.host.project;
++    if let Some(found) = p
++        .read_file_bounded(&path(&r.id)?, CAP)
++        .map_err(|_| EditError::RecoveryRequired)?
++    {
++        if found != raw {
++            return Err(EditError::ThirdState);
++        }
++    } else {
++        let dir = p
++            .dir(&[".vibe", "derivative-rebases"], true)
++            .map_err(|_| EditError::RecoveryRequired)?;
++        p.publish_new_in(&dir, &format!("{}.json", r.id), &raw)
++            .map_err(|_| EditError::RecoveryRequired)?;
++    }
++    let mut reduced = false;
++    for components in [
++        &[".vibe", "derivative-rebases"][..],
++        &[".vibe"][..],
++        &[][..],
++    ] {
++        let dir = p
++            .dir(components, false)
++            .map_err(|_| EditError::RecoveryRequired)?;
++        let durability = dir.sync_directory();
++        if matches!(durability, vibe_safefs::DirectoryDurability::Failed(_)) {
++            return Err(EditError::RecoveryRequired);
++        }
++        reduced |= durability != vibe_safefs::DirectoryDurability::Synced;
++    }
++    if p.read_file_bounded(&path(&r.id)?, CAP)
++        .map_err(|_| EditError::RecoveryRequired)?
++        .as_deref()
++        != Some(raw.as_slice())
++    {
++        return Err(EditError::RecoveryRequired);
++    }
++    Ok(reduced)
++}
+diff --git a/crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs b/crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs
+new file mode 100644
+index 000000000..759b660e7
+--- /dev/null
++++ b/crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs
+@@ -0,0 +1,649 @@
++use super::*;
++use std::time::Duration;
++use vibe_workspace::derivatives::{RebaseHandoff, RebaseReview, capture_retained};
++include!(concat!(
++    env!("CARGO_MANIFEST_DIR"),
++    "/../../fixtures/next/derivatives/service_fixture.rs"
++));
++
++fn host_at(
++    root: &Path,
++) -> (
++    Arc<DocumentAnalysisHost>,
++    Arc<DocumentEditAuthority>,
++    ResourceId,
++) {
++    let host = DocumentAnalysisHost::new(
++        root,
++        "vibe.toml",
++        vec![
++            ResourceDeclaration {
++                path: "vibe.toml".into(),
++                role: ResourceRole::Manifest,
++            },
++            ResourceDeclaration {
++                path: "authored.toml".into(),
++                role: ResourceRole::Opaque,
++            },
++        ],
++        AnalysisLimits {
++            resource_bytes: 1 << 20,
++            capture_bytes: 4 << 20,
++            open_buffers: 8,
++        },
++    )
++    .unwrap();
++    let id = host.resource("authored.toml").unwrap();
++    let authority = DocumentEditAuthority::new(host.clone(), vec![id]).unwrap();
++    (host, authority, id)
++}
++struct Scenario {
++    f: Fixture,
++    host: Arc<DocumentAnalysisHost>,
++    authority: Arc<DocumentEditAuthority>,
++    id: ResourceId,
++    handoff: Option<RebaseHandoff>,
++}
++impl Scenario {
++    fn new(family: &str) -> Self {
++        let f = Fixture::new(family);
++        let old = capture_retained(&f.base, f.binding.base()).unwrap();
++        let local = capture_retained(&f.local, f.binding.local()).unwrap();
++        let mut next = f.binding.base().clone();
++        next.files[0].bytes.extend_from_slice(b"\n");
++        f.base
++            .write_atomic(&next.files[0].path, &next.files[0].bytes)
++            .unwrap();
++        let new = capture_retained(&f.base, &next).unwrap();
++        let binding = DerivationBinding::new(
++            next.clone(),
++            f.binding.local().clone(),
++            next.observation_id().unwrap(),
++            DerivationRecipe::ReplaceSelectedInventory,
++        )
++        .unwrap();
++        let text = toml::to_string(&binding).unwrap();
++        let handoff = RebaseReview::compare(&f.text, Some(&old), &new, &local)
++            .unwrap()
++            .value
++            .select(&[&text], &new, &local)
++            .unwrap()
++            .value;
++        let root = f._home.path().join("authored");
++        fs::create_dir(&root).unwrap();
++        fs::write(
++            root.join("vibe.toml"),
++            "[project]\nname='demo'\nversion='1.0.0'\n",
++        )
++        .unwrap();
++        fs::write(root.join("authored.toml"), &f.text).unwrap();
++        let (host, authority, id) = host_at(&root);
++        Self {
++            f,
++            host,
++            authority,
++            id,
++            handoff: Some(handoff),
++        }
++    }
++    fn plan(&mut self, client: &DocumentClient) -> Result<DerivativeRebasePlan, EditError> {
++        self.authority.prepare_derivative_rebase(
++            &client.freeze().unwrap(),
++            self.id,
++            self.handoff.take().unwrap(),
++            &self.f.output,
++            "result.json",
++            None,
++        )
++    }
++}
++fn apply_family(family: &str) {
++    let mut s = Scenario::new(family);
++    let client = s.host.client().unwrap();
++    let peer = s.host.client().unwrap();
++    let plan = s.plan(&client).unwrap();
++    let id = plan.id().to_owned();
++    let barrier = plan.barrier(Duration::from_secs(10)).unwrap();
++    client
++        .acknowledge_edit(barrier.edit_barrier(), true)
++        .unwrap();
++    peer.acknowledge_edit(barrier.edit_barrier(), true).unwrap();
++    let result = barrier.apply(&s.f.base, &s.f.local, &s.f.output).unwrap();
++    assert_eq!(result.authored, DerivativeEffect::Completed);
++    assert_eq!(result.result, DerivativeEffect::Completed);
++    let record = derivative_journal::load(&s.authority, &id).unwrap();
++    let previous = derivative_journal::result(&record.previous_result).unwrap();
++    assert_eq!(previous.binding_toml, s.f.text);
++    let desired = derivative_journal::result(&record.desired_result).unwrap();
++    assert_eq!(
++        desired.checked_binding().unwrap().local().files,
++        s.f.expected
++    );
++    assert_ne!(previous.provenance_identity, desired.provenance_identity);
++    let before =
++        s.f.output
++            .read_file_snapshot_bounded("result.json", 1 << 20)
++            .unwrap();
++    drop(barrier);
++    let recovery = s
++        .authority
++        .recover_derivative_rebase(
++            &client.freeze().unwrap(),
++            &id,
++            &s.f.base,
++            &s.f.local,
++            &s.f.output,
++        )
++        .unwrap()
++        .barrier(Duration::from_secs(10))
++        .unwrap();
++    client
++        .acknowledge_edit(recovery.edit_barrier(), true)
++        .unwrap();
++    peer.acknowledge_edit(recovery.edit_barrier(), true)
++        .unwrap();
++    let replay = recovery.apply(&s.f.base, &s.f.local, &s.f.output).unwrap();
++    assert_eq!(replay.result, DerivativeEffect::Completed);
++    assert_eq!(
++        before,
++        s.f.output
++            .read_file_snapshot_bounded("result.json", 1 << 20)
++            .unwrap()
++    );
++    assert!(!s.f._home.path().join("DO_NOT_EXECUTE").exists());
++}
++#[test]
++fn commonmark_guarded_rebase_replay() {
++    apply_family("commonmark")
++}
++#[test]
++fn xml_data_guarded_rebase_replay() {
++    apply_family("xml-data")
++}
++#[test]
++fn vibe_spec_guarded_rebase_replay() {
++    apply_family("vibe-spec")
++}
++#[test]
++fn opaque_guarded_rebase_replay() {
++    apply_family("opaque-file")
++}
++#[test]
++fn tree_guarded_rebase_replay() {
++    apply_family("nested-tree")
++}
++#[test]
++fn dirty_concurrent_refused_expired_disconnected_and_stale_base() {
++    for mode in [
++        "dirty",
++        "concurrent",
++        "refused",
++        "expired",
++        "disconnected",
++        "disk",
++        "base",
++    ] {
++        let mut s = Scenario::new("opaque-file");
++        let client = s.host.client().unwrap();
++        let mut peer = Some(s.host.client().unwrap());
++        if mode == "dirty" {
++            peer.as_ref()
++                .unwrap()
++                .open(
++                    1,
++                    s.id,
++                    1,
++                    ByteEncoding::Utf8,
++                    Arc::from(b"dirty".as_slice()),
++                    BufferIntent::Replace,
++                )
++                .unwrap();
++            assert_eq!(s.plan(&client).unwrap_err(), EditError::SaveRequired);
++            continue;
++        }
++        let plan = s.plan(&client).unwrap();
++        if mode == "concurrent" {
++            peer.as_ref()
++                .unwrap()
++                .open(
++                    1,
++                    s.id,
++                    1,
++                    ByteEncoding::Utf8,
++                    Arc::from(b"dirty".as_slice()),
++                    BufferIntent::Replace,
++                )
++                .unwrap();
++            assert_eq!(
++                plan.barrier(Duration::from_secs(10)).unwrap_err(),
++                EditError::Stale
++            );
++            continue;
++        }
++        let ttl = if mode == "expired" {
++            Duration::ZERO
++        } else {
++            Duration::from_secs(10)
++        };
++        let barrier = plan.barrier(ttl).unwrap();
++        if mode != "expired" {
++            client
++                .acknowledge_edit(barrier.edit_barrier(), true)
++                .unwrap();
++        }
++        let expected = match mode {
++            "refused" => {
++                assert_eq!(
++                    peer.as_ref()
++                        .unwrap()
++                        .acknowledge_edit(barrier.edit_barrier(), false),
++                    Err(EditError::Refused)
++                );
++                EditError::Refused
++            }
++            "expired" => EditError::Expired,
++            _ => {
++                peer.as_ref()
++                    .unwrap()
++                    .acknowledge_edit(barrier.edit_barrier(), true)
++                    .unwrap();
++                match mode {
++                    "disconnected" => {
++                        drop(peer.take());
++                        EditError::Disconnected
++                    }
++                    "disk" => {
++                        fs::write(s.host.root().join("authored.toml"), b"third").unwrap();
++                        EditError::Stale
++                    }
++                    _ => {
++                        s.f.base
++                            .write_atomic(&s.f.binding.base().files[0].path, b"drift")
++                            .unwrap();
++                        EditError::Stale
++                    }
++                }
++            }
++        };
++        assert_eq!(
++            barrier
++                .apply(&s.f.base, &s.f.local, &s.f.output)
++                .unwrap_err(),
++            expected
++        );
++        assert!(!s.f.output.root_path().join("result.json").exists());
++        if mode != "disk" {
++            assert_eq!(
++                fs::read_to_string(s.host.root().join("authored.toml")).unwrap(),
++                s.f.text
++            )
++        }
++    }
++}
++#[test]
++fn publication_faults_preserve_before_and_truthful_effects() {
++    for (target, after) in [
++        ("authored.toml", false),
++        ("authored.toml", true),
++        ("result.json", false),
++        ("result.json", true),
++    ] {
++        let mut s = Scenario::new("nested-tree");
++        let client = s.host.client().unwrap();
++        let plan = s.plan(&client).unwrap();
++        let id = plan.id().to_owned();
++        let barrier = plan.barrier(Duration::from_secs(10)).unwrap();
++        client
++            .acknowledge_edit(barrier.edit_barrier(), true)
++            .unwrap();
++        if after {
++            vibe_safefs::fail_after_publish(Some(target))
++        } else {
++            vibe_safefs::fail_before_publish(Some(target))
++        }
++        let result = barrier.apply(&s.f.base, &s.f.local, &s.f.output);
++        vibe_safefs::fail_after_publish(None);
++        vibe_safefs::fail_before_publish(None);
++        let result = result.unwrap();
++        assert_eq!(
++            result.authored,
++            if target == "result.json" {
++                DerivativeEffect::Completed
++            } else if after {
++                DerivativeEffect::Unknown
++            } else {
++                DerivativeEffect::Pending
++            }
++        );
++        assert_eq!(
++            result.result,
++            if target == "result.json" && after {
++                DerivativeEffect::Unknown
++            } else {
++                DerivativeEffect::Pending
++            }
++        );
++        let retained = derivative_journal::load(&s.authority, &id).unwrap();
++        assert_eq!(
++            derivative_journal::result(&retained.previous_result)
++                .unwrap()
++                .binding_toml,
++            s.f.text
++        );
++        capture_retained(&s.f.local, s.f.binding.local()).unwrap();
++        drop(barrier);
++        let recovered = s
++            .authority
++            .recover_derivative_rebase(
++                &client.freeze().unwrap(),
++                &id,
++                &s.f.base,
++                &s.f.local,
++                &s.f.output,
++            )
++            .unwrap()
++            .barrier(Duration::from_secs(10))
++            .unwrap();
++        client
++            .acknowledge_edit(recovered.edit_barrier(), true)
++            .unwrap();
++        assert_eq!(
++            recovered
++                .apply(&s.f.base, &s.f.local, &s.f.output)
++                .unwrap()
++                .result,
++            DerivativeEffect::Completed
++        );
++    }
++}
++#[test]
++fn cold_recovery_and_unknown_third_state() {
++    if let Some(home) = std::env::var_os("VIBE_M10C2_HOME") {
++        let home = std::path::PathBuf::from(home);
++        let (_host, authority, _) = host_at(&home.join("authored"));
++        let client = authority.host.client().unwrap();
++        let id = std::env::var("VIBE_M10C2_ID").unwrap();
++        let base = Project::open(&home.join("base")).unwrap();
++        let local = Project::open(&home.join("local")).unwrap();
++        let output = Project::open(&home.join("output")).unwrap();
++        let plan = authority.recover_derivative_rebase(
++            &client.freeze().unwrap(),
++            &id,
++            &base,
++            &local,
++            &output,
++        );
++        if std::env::var("VIBE_M10C2_MODE").unwrap() == "third" {
++            assert_eq!(plan.unwrap_err(), EditError::ThirdState);
++            return;
++        }
++        let barrier = plan.unwrap().barrier(Duration::from_secs(10)).unwrap();
++        client
++            .acknowledge_edit(barrier.edit_barrier(), true)
++            .unwrap();
++        assert_eq!(
++            barrier.apply(&base, &local, &output).unwrap().result,
++            DerivativeEffect::Completed
++        );
++        return;
++    }
++    let mut s = Scenario::new("opaque-file");
++    let client = s.host.client().unwrap();
++    let plan = s.plan(&client).unwrap();
++    let id = plan.id().to_owned();
++    let barrier = plan.barrier(Duration::from_secs(10)).unwrap();
++    client
++        .acknowledge_edit(barrier.edit_barrier(), true)
++        .unwrap();
++    vibe_safefs::fail_after_publish(Some("authored.toml"));
++    let result = barrier.apply(&s.f.base, &s.f.local, &s.f.output);
++    vibe_safefs::fail_after_publish(None);
++    assert_eq!(result.unwrap().authored, DerivativeEffect::Unknown);
++    drop(barrier);
++    drop(client);
++    drop(s.authority);
++    drop(s.host);
++    let run = |mode: &str| {
++        let output = std::process::Command::new(std::env::current_exe().unwrap())
++            .args([
++                "--exact",
++                "document_analysis::edit::m_10_c_2_cases::cold_recovery_and_unknown_third_state",
++                "--nocapture",
++            ])
++            .env("VIBE_M10C2_HOME", s.f._home.path())
++            .env("VIBE_M10C2_ID", &id)
++            .env("VIBE_M10C2_MODE", mode)
++            .output()
++            .unwrap();
++        println!(
++            "cold {mode}: {}\n{}\n{}",
++            output.status,
++            String::from_utf8_lossy(&output.stdout),
++            String::from_utf8_lossy(&output.stderr)
++        );
++        assert!(output.status.success());
++    };
++    let target = s.f._home.path().join("authored/authored.toml");
++    let desired = fs::read(&target).unwrap();
++    fs::write(&target, b"third").unwrap();
++    run("third");
++    assert_eq!(fs::read(&target).unwrap(), b"third");
++    fs::write(&target, desired).unwrap();
++    run("complete");
++    run("complete");
++}
++#[test]
++fn registered_carrier_roundtrip_and_unknown_fields_refuse() {
++    use vibe_wire::generated::derivative_rebase_journal::DerivativeRebaseJournal;
++    let raw = include_str!(concat!(
++        env!("CARGO_MANIFEST_DIR"),
++        "/../../formats/corpora/derivative-rebase-journal/e1/shape.json"
++    ));
++    let value: DerivativeRebaseJournal = serde_json::from_str(raw).unwrap();
++    assert_eq!(
++        serde_json::from_slice::<DerivativeRebaseJournal>(&serde_json::to_vec(&value).unwrap())
++            .unwrap(),
++        value
++    );
++    let mut unknown: serde_json::Value = serde_json::from_str(raw).unwrap();
++    unknown["foreign"] = true.into();
++    assert!(serde_json::from_value::<DerivativeRebaseJournal>(unknown).is_err());
++}
++
++#[test]
++fn interrupted_before_edit_journal_and_foreign_result_refuse() {
++    let mut s = Scenario::new("opaque-file");
++    let client = s.host.client().unwrap();
++    let plan = s.plan(&client).unwrap();
++    let id = plan.id().to_owned();
++    let barrier = plan.barrier(Duration::from_secs(10)).unwrap();
++    client
++        .acknowledge_edit(barrier.edit_barrier(), true)
++        .unwrap();
++    let edit_name = format!("{}.json", barrier.edit_barrier().plan.id);
++    vibe_safefs::fail_before_publish(Some(&edit_name));
++    let failed = barrier.apply(&s.f.base, &s.f.local, &s.f.output);
++    vibe_safefs::fail_before_publish(None);
++    assert_eq!(failed.unwrap_err(), EditError::RecoveryRequired);
++    assert_eq!(
++        fs::read_to_string(s.host.root().join("authored.toml")).unwrap(),
++        s.f.text
++    );
++    assert_eq!(
++        s.authority
++            .inspect_derivative_rebase(&id, &s.f.output)
++            .unwrap()
++            .authored,
++        DerivativeEffect::Pending
++    );
++    drop(barrier);
++    s.f.output.write_atomic("result.json", b"FOREIGN").unwrap();
++    assert_eq!(
++        s.authority
++            .recover_derivative_rebase(
++                &client.freeze().unwrap(),
++                &id,
++                &s.f.base,
++                &s.f.local,
++                &s.f.output
++            )
++            .unwrap_err(),
++        EditError::ThirdState
++    );
++    assert_eq!(
++        s.f.output
++            .read_file_bounded("result.json", 64)
++            .unwrap()
++            .unwrap(),
++        b"FOREIGN"
++    );
++    // Explicit fixture removal of foreign test data, never recovery cleanup.
++    s.f.output.remove_file("result.json").unwrap();
++    let recovery = s
++        .authority
++        .recover_derivative_rebase(
++            &client.freeze().unwrap(),
++            &id,
++            &s.f.base,
++            &s.f.local,
++            &s.f.output,
++        )
++        .unwrap()
++        .barrier(Duration::from_secs(10))
++        .unwrap();
++    client
++        .acknowledge_edit(recovery.edit_barrier(), true)
++        .unwrap();
++    assert_eq!(
++        recovery
++            .apply(&s.f.base, &s.f.local, &s.f.output)
++            .unwrap()
++            .result,
++        DerivativeEffect::Completed
++    );
++}
++#[test]
++fn repeated_rebase_retains_complete_prior_chain() {
++    let mut s = Scenario::new("xml-data");
++    let client = s.host.client().unwrap();
++    let plan = s.plan(&client).unwrap();
++    let first_id = plan.id().to_owned();
++    let barrier = plan.barrier(Duration::from_secs(10)).unwrap();
++    client
++        .acknowledge_edit(barrier.edit_barrier(), true)
++        .unwrap();
++    assert_eq!(
++        barrier
++            .apply(&s.f.base, &s.f.local, &s.f.output)
++            .unwrap()
++            .result,
++        DerivativeEffect::Completed
++    );
++    drop(barrier);
++    let first = derivative_journal::load(&s.authority, &first_id).unwrap();
++    let prior = derivative_journal::result(&first.desired_result).unwrap();
++    let binding = prior.checked_binding().unwrap();
++    let old = capture_retained(&s.f.base, binding.base()).unwrap();
++    let local = capture_retained(&s.f.local, binding.local()).unwrap();
++    let mut next = binding.base().clone();
++    next.files[0].bytes.extend_from_slice(b"\n");
++    s.f.base
++        .write_atomic(&next.files[0].path, &next.files[0].bytes)
++        .unwrap();
++    let new = capture_retained(&s.f.base, &next).unwrap();
++    let next_binding = DerivationBinding::new(
++        next.clone(),
++        binding.local().clone(),
++        next.observation_id().unwrap(),
++        DerivationRecipe::ReplaceSelectedInventory,
++    )
++    .unwrap();
++    let text = toml::to_string(&next_binding).unwrap();
++    let handoff = RebaseReview::compare(&prior.binding_toml, Some(&old), &new, &local)
++        .unwrap()
++        .value
++        .select(&[&text], &new, &local)
++        .unwrap()
++        .value;
++    let plan = s
++        .authority
++        .prepare_derivative_rebase(
++            &client.freeze().unwrap(),
++            s.id,
++            handoff,
++            &s.f.output,
++            "second.json",
++            Some(&first_id),
++        )
++        .unwrap();
++    let second_id = plan.id().to_owned();
++    let barrier = plan.barrier(Duration::from_secs(10)).unwrap();
++    client
++        .acknowledge_edit(barrier.edit_barrier(), true)
++        .unwrap();
++    assert_eq!(
++        barrier
++            .apply(&s.f.base, &s.f.local, &s.f.output)
++            .unwrap()
++            .result,
++        DerivativeEffect::Completed
++    );
++    let second = s
++        .authority
++        .inspect_derivative_rebase_intent(&second_id)
++        .unwrap();
++    assert_eq!(second.prior, Some(first_id.clone()));
++    assert_eq!(second.previous_result, first.desired_result);
++    assert_eq!(
++        derivative_journal::load(&s.authority, &first_id).unwrap(),
++        first
++    );
++}
++
++#[test]
++fn failed_replay_keeps_already_completed_result_visible() {
++    let mut s = Scenario::new("opaque-file");
++    let client = s.host.client().unwrap();
++    let plan = s.plan(&client).unwrap();
++    let id = plan.id().to_owned();
++    let barrier = plan.barrier(Duration::from_secs(10)).unwrap();
++    client
++        .acknowledge_edit(barrier.edit_barrier(), true)
++        .unwrap();
++    assert_eq!(
++        barrier
++            .apply(&s.f.base, &s.f.local, &s.f.output)
++            .unwrap()
++            .result,
++        DerivativeEffect::Completed
++    );
++    drop(barrier);
++    let recovery = s
++        .authority
++        .recover_derivative_rebase(
++            &client.freeze().unwrap(),
++            &id,
++            &s.f.base,
++            &s.f.local,
++            &s.f.output,
++        )
++        .unwrap()
++        .barrier(Duration::from_secs(10))
++        .unwrap();
++    client
++        .acknowledge_edit(recovery.edit_barrier(), true)
++        .unwrap();
++    let edit_name = format!("{}.json", recovery.edit_barrier().plan.id);
++    // Fail the next edit-journal checkpoint after the initial recovery checkpoint.
++    vibe_safefs::arm_before_publish_verify(Some(Box::new(move |_, name| {
++        assert_eq!(name, edit_name);
++        vibe_safefs::fail_before_publish(Some(&format!(".vibe/document-edits/{edit_name}")));
++    })));
++    let outcome = recovery.apply(&s.f.base, &s.f.local, &s.f.output);
++    vibe_safefs::arm_before_publish_verify(None);
++    vibe_safefs::fail_before_publish(None);
++    let outcome = outcome.unwrap();
++    assert!(outcome.reason.is_some());
++    assert_eq!(outcome.result, DerivativeEffect::Completed);
++    assert_ne!(outcome.authored, DerivativeEffect::Completed);
++}
+diff --git a/crates/vibe-wire/src/generated/derivative_rebase_journal/mod.rs b/crates/vibe-wire/src/generated/derivative_rebase_journal/mod.rs
+new file mode 100644
+index 000000000..8291d9562
+--- /dev/null
++++ b/crates/vibe-wire/src/generated/derivative_rebase_journal/mod.rs
+@@ -0,0 +1,26 @@
++// Code generated by jtd-codegen for Rust v0.2.1
++
++use serde::{Deserialize, Serialize};
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++#[serde(deny_unknown_fields)]
++pub struct DerivativeRebaseJournal {
++    pub desired_result: String,
++
++    pub edit_intent: String,
++
++    pub id: String,
++
++    pub previous_result: String,
++
++    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
++    pub prior: Option<String>,
++
++    pub recipe: String,
++
++    pub result_name: String,
++
++    pub result_root: String,
++
++    pub schema: u32,
++}
+diff --git a/crates/vibe-workspace/src/derivatives/m_10_c_2_cases.rs b/crates/vibe-workspace/src/derivatives/m_10_c_2_cases.rs
+new file mode 100644
+index 000000000..725177fae
+--- /dev/null
++++ b/crates/vibe-workspace/src/derivatives/m_10_c_2_cases.rs
+@@ -0,0 +1,106 @@
++use super::*;
++include!(concat!(
++    env!("CARGO_MANIFEST_DIR"),
++    "/../../fixtures/next/derivatives/service_fixture.rs"
++));
++
++fn exercise(family: &str) {
++    let f = Fixture::new(family);
++    let old = capture_retained(&f.base, f.binding.base()).unwrap();
++    let local = capture_retained(&f.local, f.binding.local()).unwrap();
++    let mut retained = f.binding.base().clone();
++    retained.files[0].bytes.extend_from_slice(b"\n");
++    f.base
++        .write_atomic(&retained.files[0].path, &retained.files[0].bytes)
++        .unwrap();
++    let new = capture_retained(&f.base, &retained).unwrap();
++    assert!(prepare_binding(&f.text, Some(&new)).is_err());
++    assert!(RebaseReview::compare(&f.text, None, &new, &local).is_err());
++    let compare = || {
++        RebaseReview::compare(&f.text, Some(&old), &new, &local)
++            .unwrap()
++            .value
++    };
++    let review = compare();
++    assert_eq!(review.disposition, RebaseDisposition::RebaseRequired);
++    assert_eq!(review.upstream_changes.len(), 1);
++    assert!(!review.local_changes.is_empty());
++    assert_eq!(review.old_base(), f.binding.base());
++    let next = DerivationBinding::new(
++        retained.clone(),
++        f.binding.local().clone(),
++        retained.observation_id().unwrap(),
++        DerivationRecipe::ReplaceSelectedInventory,
++    )
++    .unwrap();
++    let text = toml::to_string(&next).unwrap();
++    assert!(compare().select(&[&text, &text], &new, &local).is_err());
++    assert!(compare().select(&[&text], &old, &local).is_err());
++    let selected = review.select(&[&text], &new, &local).unwrap();
++    assert_eq!(selected.effects, Effects::NoExternalEffects);
++    assert_eq!(selected.value.previous().record().binding_toml, f.text);
++    assert_ne!(
++        selected.value.previous().record().provenance_identity,
++        selected.value.selected().record().provenance_identity
++    );
++    assert_eq!(
++        selected.value.selected().binding().local().files,
++        f.expected
++    );
++    assert_eq!(selected.value.selected().record().binding_toml, text);
++}
++#[test]
++fn commonmark_explicit_rebase() {
++    exercise("commonmark")
++}
++#[test]
++fn xml_data_explicit_rebase() {
++    exercise("xml-data")
++}
++#[test]
++fn vibe_spec_explicit_rebase() {
++    exercise("vibe-spec")
++}
++#[test]
++fn opaque_explicit_rebase() {
++    exercise("opaque-file")
++}
++#[test]
++fn nested_tree_explicit_rebase() {
++    exercise("nested-tree")
++}
++
++#[test]
++fn new_version_and_explicitly_saved_local_revision_are_reviewable() {
++    let f = Fixture::new("opaque-file");
++    let old = capture_retained(&f.base, f.binding.base()).unwrap();
++    let mut base = f.binding.base().clone();
++    base.owner = vibe_core::PackageRef::parse("flow:org.example/upstream@=2.0.0").unwrap();
++    let new = capture_retained(&f.base, &base).unwrap();
++    let mut authored = f.binding.local().clone();
++    authored.files[0].bytes.extend_from_slice(b"revision");
++    f.local
++        .write_atomic(&authored.files[0].path, &authored.files[0].bytes)
++        .unwrap();
++    let local = capture_retained(&f.local, &authored).unwrap();
++    let review = RebaseReview::compare(&f.text, Some(&old), &new, &local)
++        .unwrap()
++        .value;
++    let selected = DerivationBinding::new(
++        base.clone(),
++        authored,
++        base.observation_id().unwrap(),
++        DerivationRecipe::ReplaceSelectedInventory,
++    )
++    .unwrap();
++    let text = toml::to_string(&selected).unwrap();
++    assert_eq!(
++        review
++            .select(&[&text], &new, &local)
++            .unwrap()
++            .value
++            .selected()
++            .binding(),
++        &selected
++    );
++}
+diff --git a/crates/vibe-workspace/src/derivatives/rebase.rs b/crates/vibe-workspace/src/derivatives/rebase.rs
+new file mode 100644
+index 000000000..cc812c5b4
+--- /dev/null
++++ b/crates/vibe-workspace/src/derivatives/rebase.rs
+@@ -0,0 +1,110 @@
++//! Explicit three-way review and selection. No merge and no writer.
++use super::*;
++use vibe_core::manifest::derivation::{BindingError, RetainedSource};
++
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum RebaseDisposition {
++    UnchangedBase,
++    RebaseRequired,
++}
++
++#[derive(Debug)]
++pub struct RebaseReview {
++    pub disposition: RebaseDisposition,
++    previous: BoundDerivative,
++    selected_base: SourceInput,
++    saved_local: SourceInput,
++    pub upstream_changes: Vec<Change>,
++    pub local_changes: Vec<Change>,
++}
++#[derive(Debug)]
++pub struct RebaseHandoff {
++    previous: BoundDerivative,
++    selected: BoundDerivative,
++}
++impl RebaseHandoff {
++    pub fn previous(&self) -> &BoundDerivative {
++        &self.previous
++    }
++    pub fn selected(&self) -> &BoundDerivative {
++        &self.selected
++    }
++}
++impl RebaseReview {
++    /// Old capture must be independently retained; a version spelling alone
++    /// cannot authorize movement onto different bytes of that same version.
++    pub fn compare(
++        previous: &str,
++        old: Option<&SourceInput>,
++        new: &SourceInput,
++        local: &SourceInput,
++    ) -> Result<Outcome<Self>, BindingError> {
++        let previous = prepare_binding(previous, old)?.value;
++        let old = old.ok_or(BindingError("old capture absent"))?;
++        let b = previous.binding();
++        if new.coordinate().group != old.coordinate().group
++            || new.coordinate().name != old.coordinate().name
++            || new.coordinate().kind != old.coordinate().kind
++            || new.descriptor() != old.descriptor()
++            || local.coordinate() != &b.local().owner
++            || local.descriptor() != &b.local().descriptor
++        {
++            return Err(BindingError("rebase selection or saved local mismatch"));
++        }
++        let changes = |base: &SourceInput, source: &SourceInput| {
++            DerivativeService::diff(&DerivedOutput { base, source }).value
++        };
++        let upstream_changes = changes(old, new);
++        let local_changes = changes(old, local);
++        let disposition = if old.same_basis(new) {
++            RebaseDisposition::UnchangedBase
++        } else {
++            RebaseDisposition::RebaseRequired
++        };
++        Ok(passive(Self {
++            disposition,
++            previous,
++            selected_base: new.clone(),
++            saved_local: local.clone(),
++            upstream_changes,
++            local_changes,
++        }))
++    }
++    pub fn old_base(&self) -> &RetainedSource {
++        self.previous.binding().base()
++    }
++    pub fn new_base(&self) -> &SourceInput {
++        &self.selected_base
++    }
++    pub fn saved_local(&self) -> &SourceInput {
++        &self.saved_local
++    }
++    /// Caller supplies a complete explicitly authored selection. Partial patches
++    /// and duplicate candidate selections have no implicit winning order.
++    pub fn select(
++        self,
++        candidates: &[&str],
++        current_base: &SourceInput,
++        revised_local: &SourceInput,
++    ) -> Result<Outcome<RebaseHandoff>, BindingError> {
++        if candidates.len() != 1 || !self.selected_base.same_basis(current_base) {
++            return Err(BindingError("ambiguous selection or changed reviewed base"));
++        }
++        let selected = prepare_binding(candidates[0], Some(current_base))?.value;
++        let old = self.previous.binding();
++        let new = selected.binding();
++        if new.base().resource != old.base().resource
++            || new.local().owner != old.local().owner
++            || new.local().resource != old.local().resource
++            || revised_local.retained_source(&new.local().resource) != *new.local()
++        {
++            return Err(BindingError(
++                "explicit replacement ownership or saved bytes mismatch",
++            ));
++        }
++        Ok(passive(RebaseHandoff {
++            previous: self.previous,
++            selected,
++        }))
++    }
++}
+diff --git a/formats/breaks/005.md b/formats/breaks/005.md
+new file mode 100644
+index 000000000..e2bf7f12d
+--- /dev/null
++++ b/formats/breaks/005.md
+@@ -0,0 +1 @@
++New local epoch-one derivative rebase journal. No existing format changes or inferred upgrade. Callers retain old authored bindings and existing edit journals. Recovery requires the explicitly selected original root and destination, fresh saved capture and the incumbent barrier. Shape corpus is decode-only, not semantic transaction proof.
+diff --git a/formats/corpora/derivative-rebase-journal/e1/shape.json b/formats/corpora/derivative-rebase-journal/e1/shape.json
+new file mode 100644
+index 000000000..1b24f71c8
+--- /dev/null
++++ b/formats/corpora/derivative-rebase-journal/e1/shape.json
+@@ -0,0 +1,11 @@
++{
++  "schema": 1,
++  "recipe": "derivative-rebase-journal/1",
++  "id": "shape-only",
++  "edit_intent": "{}",
++  "previous_result": "{}",
++  "desired_result": "{}",
++  "result_root": "fixture",
++  "result_name": "result.json",
++  "prior": null
++}
+diff --git a/schemas/derivative_rebase_journal.jtd.json b/schemas/derivative_rebase_journal.jtd.json
+new file mode 100644
+index 000000000..c04a579ea
+--- /dev/null
++++ b/schemas/derivative_rebase_journal.jtd.json
+@@ -0,0 +1,32 @@
++{
++  "properties": {
++    "recipe": {
++      "type": "string"
++    },
++    "id": {
++      "type": "string"
++    },
++    "edit_intent": {
++      "type": "string"
++    },
++    "previous_result": {
++      "type": "string"
++    },
++    "desired_result": {
++      "type": "string"
++    },
++    "result_root": {
++      "type": "string"
++    },
++    "result_name": {
++      "type": "string"
++    },
++    "schema": {
++      "type": "uint32"
++    },
++    "prior": {
++      "type": "string",
++      "nullable": true
++    }
++  }
++}

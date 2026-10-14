@@ -1,0 +1,116 @@
+{
+  "verdict": "bounded_no_observed_P1_P2_task_blocker",
+  "root_acceptance_pending": true,
+  "count_before_acceptance": 75,
+  "task": "M-10-C.2",
+  "baseline": "2fb4443d4b27224dd36bd5eba9c85a02f8afb593",
+  "source_hashes": {
+    "crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs": "b54a04462cc0509b3ac1cfecfcb980810b229baa8ca2558d6f03db3a40b68442",
+    "crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs": "88f28459e512433b27fa8883cbae4421fb6b0f5d98154db71e3dddd46de9ce9e",
+    "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs": "114cb210529d15ffa87d0343bbe0d87e2c5bf56f1be3c8d0ad490c52cd0abc6b",
+    "crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs": "a5cc36cbc62743ab64b01ff97652d3252a3b800502d4c49d90cf2593ec677a7c",
+    "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs": "123761bde85a2fb2163671c5e1307438ebebf6721549504de5d0e4c62d6393f1",
+    "crates/vibe-wire/src/behaviour/derivative.rs": "eaf82b2ddca054074df734d33302426e793248767b5dd516885c47bdaca44a70",
+    "crates/vibe-wire/src/generated/derivative_rebase_journal/mod.rs": "5bbff5f337d874ec736d2baa56e243fbbbb28ca4f2a304e3fc278397edb4a0eb",
+    "crates/vibe-wire/src/generated/format_id/mod.rs": "38dfdbcb503b3060e9ac30c6b3e719c5cc5741c0ca8dd7e572f3d642ac0259c6",
+    "crates/vibe-wire/src/generated/format_id/properties.rs": "18d5e5957664e02b8815ba15cef26aeabe73a25ae22d8284a26dd22481aacdf0",
+    "crates/vibe-wire/src/generated/mod.rs": "441c98fa432cd31faec40f35f5a6bc4e126de41f03a26bf960bf010e36c41ad9",
+    "crates/vibe-workspace/src/derivatives.rs": "a110c0500e69f6519dab9c6b808c05dc32dffb23a6a783cb4e9157bc6cd14402",
+    "crates/vibe-workspace/src/derivatives/m_10_c_2_cases.rs": "6845ed73771cda5438fa9516680579b896496b88e1a2387c5dbf453295dd5269",
+    "crates/vibe-workspace/src/derivatives/rebase.rs": "81ed53b053cab62acdf0e3e07bee384f7b283db3001eda8ecf9f430aa94f98d5",
+    "formats/REGISTRY.toml": "d2a530b81975dc58ae1110affc3a7c17ca1e02e032e4cd51746b59d361c230b6",
+    "formats/breaks/005.md": "d1c1104a98230cf42c540dd60a42d561337465aa6bab3fac9aef1c904cddc92b",
+    "formats/corpora/derivative-rebase-journal/e1/shape.json": "ee78c3ea8a96a9e6701f362f9798bcb818bff0183782538788e620fd653617d0",
+    "schemas/derivative_rebase_journal.jtd.json": "26debc8e62d929452619b666c28ba63e676ed6b4d37407461889285509e27330"
+  },
+  "all17_hashes_before_after_match": true,
+  "all17_full_patch_outputs_match_current_bytes": true,
+  "artifacts": {
+    "implementation-report.md": {
+      "bytes": 14479,
+      "sha256": "9fee2978c9dfff5b0fbb2d1c4aa2a44dadcedb52fd38f8b09d17c8e8bb373bc6"
+    },
+    "candidate.patch": {
+      "bytes": 62493,
+      "sha256": "14917b02aaf6c4228e57f98244aa5c98cb73414009464b0dbde2babce9eea176"
+    }
+  },
+  "artifact_lengths_and_digests_match_candidate": true,
+  "logs": {
+    "workspace-reviewed.log": {
+      "bytes": 17259,
+      "sha256": "dbc2427f59e9670b17372c60094526f2ac6df1b65ec2c0ef213d968b49b5e235"
+    },
+    "orchestrator-final-confirmed.log": {
+      "bytes": 28475,
+      "sha256": "145b3383a66a83094d88b74227ea4c06e7d12ee8e4082eae198dbbc5d02a6ee9"
+    },
+    "m16-regression.log": {
+      "bytes": 27838,
+      "sha256": "79fc0e4a6e8c696360bfa4e8e89f25d949cfeddb4055b443f98c1f20543993e9"
+    },
+    "wire-carrier.log": {
+      "bytes": 14863,
+      "sha256": "07efc2a1ccf526d9c0d8a140222048c8336094a607b02f0fadd30b19f3d10a0f"
+    },
+    "orchestrator-final-effects.log": {
+      "bytes": 29083,
+      "sha256": "1304d949af3ed83d8be441de8c533072d434d5de721f54b1ff0e0394b8e35bd1"
+    },
+    "check-codegen.log": {
+      "bytes": 286412,
+      "sha256": "478d5e1efdd9d7137f3f94b24ffd9ae69c807d39fb46e78533e9132ba3604267"
+    },
+    "wire-diff.log": {
+      "bytes": 129326,
+      "sha256": "ac9c67f8be616e3a7ee43bb2600a1faf41acd091a2a4bc9611dc491441a9e1fd"
+    },
+    "scoped-format.log": {
+      "bytes": 782,
+      "sha256": "9ce3d79763623e55a8f10b19dda25b4a529b71234dcd11ec1825522ca663768b"
+    },
+    "baseline-generated-format.log": {
+      "bytes": 782,
+      "sha256": "c957afc62dda4b5791dde4417b5bd31734178dd3a2253848c78f965dbaa63c65"
+    },
+    "authored-format.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "codegen-reproducibility.json": {
+      "bytes": 86,
+      "sha256": "e5c8916e661acde31affa92502ea356865c257befa18cd32dac6b96726ab43c2"
+    }
+  },
+  "final_distinct_tests": 27,
+  "final_counts": {
+    "workspace": 6,
+    "orchestrator": 12,
+    "incumbent_M16": 8,
+    "new_wire": 1
+  },
+  "findings": [],
+  "test_rerun": false,
+  "codegen_build_model_process_actions": false,
+  "source_writes": false,
+  "normative_specs_unchanged": true,
+  "incumbent_eligibility_barrier_lease_apply_unchanged": true,
+  "existing_journal_change": "Private extraction of existing prepare_recovery body; new fallback from retained immutable derivative intent if M16journal never landed",
+  "semantic_checks": [
+    "Exact old/new/local review,same-version bytes,newversion,explicit single full selection,no merge",
+    "Current saved author/source recapture and existing participant acknowledgment/generation/snapshot/TTL/lease checks",
+    "Immutable registered intent joins actual M16 intent,previous/desired strict results,prior transaction and destination root/name",
+    "Result publication separate after editfencesrelease,create-new only; completed/pending/unknown and durability retained",
+    "Exact replay preserves result snapshot; cold recovery uses same test executable,third authored/result states preserved",
+    "Allfivefamilies actual guarded apply/replay; no activation or Observed proof promotion",
+    "New JTD/carrier/registry/FormatId/corpus additive; requirednullable prior,unknownfields denial; no oldDTOchanges"
+  ],
+  "qualification_limits": [
+    "Cooperative userspace comparison+rename,not hostile contentCAS or fullplatform proof",
+    "Global check-codegen exit1 retained; byteidentical208 output claim is producer summary,currentcount208 independentlyconfirmed; summary has no per-file before/after map so no independent recreation of regeneration comparison",
+    "Global wire-diff exit1 before new-format verdict at unchangedrepomd; strictnewcarrier and actual semanticjournal tests provide bounded evidence only",
+    "Generatedformat inheritedfailure reproduced in retainedbaseline that exactly equalsHEAD; authoredfmt0",
+    "Orchestrator649line test module disclosed; no new productionowner exceeds372lines",
+    "PriorEMPTYcandidate remains unsatisfied/notstarted,unrun4families not evidence; no replay/transfer ceremony"
+  ]
+}
