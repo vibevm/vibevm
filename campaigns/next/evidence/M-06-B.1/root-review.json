@@ -1,0 +1,14 @@
+{
+  "approved": true,
+  "summary": "Root accepts literal bounded M06B1 contract: full traversal reconstructs all actually captured compiler, static, dynamic-index and retained-run children; exact recorded provenance becomes structured. Producer Unsatisfied remains unchanged and is interpreted as a stricter demand for provenance never captured, which the task safe-stop explicitly permits as honest mapping gaps.",
+  "scope": "Existing captured graph and inclusion provenance; additive shared projection and retained inspection without compiler IR replacement.",
+  "limitations": [
+    "Exact parent occurrence/edge and authored directive spans absent from old captures are NOT reconstructed or invented; capture-time enrichment remains open.",
+    "Original producer Unsatisfied remains durable; independent reviewer accepts captured-data traversal, not universal ancestry reconstruction.",
+    "First Agent recovered exact final native candidate1479 and completed turn1483 through existing trusted API because event57 exceeded old Zap1MiB limit. Managed cursor56 remains; full transcript prefix was NOT imported.",
+    "Global formatter fails on unrelated existing files; scoped format and whitespace passed."
+  ],
+  "observed_test_count": 9,
+  "observed_test_exit": 0,
+  "actual_environment": "Rust Zap d89acc6 via userspace PodBay2feb8fa, managed Codex AstraMedium. Final offline locked selected groups workspace4/spec3/CLI2, same private warm M06target."
+}

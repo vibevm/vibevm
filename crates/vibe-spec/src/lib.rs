@@ -125,3 +125,8 @@ pub use resolver::{
 };
 pub use transforms::{XmlMinifyError, minify_emitted_xml};
 pub use use_graph::{UseGraphError, source_fold_order, topo_order_from};
+
+pub use compiler::boot_graph::{
+    BootGraph, GraphContribution, GraphEdge, GraphOccurrence, GraphSource, InclusionParent,
+    ReferenceState, SourceIdentity, inspect_boot_snapshot,
+};

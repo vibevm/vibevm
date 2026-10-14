@@ -30,3 +30,5 @@ pub(crate) mod worklist;
 
 #[cfg(test)]
 mod artifact_tests;
+
+pub(crate) mod boot_graph;

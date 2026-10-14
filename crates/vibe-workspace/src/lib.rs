@@ -371,3 +371,5 @@ mod tests;
 #[cfg(test)]
 #[path = "lib/selected_manifest_tests.rs"]
 mod selected_manifest_tests;
+
+pub mod boot_debugger;

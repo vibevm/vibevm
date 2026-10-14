@@ -34,6 +34,7 @@ fn native() -> ExtensionHandler {
 
 fn staged(id: &str, point: &str) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: id.to_owned(),
         point: point.parse::<ExtensionPoint>().unwrap(),
         handler: native(),
@@ -78,6 +79,7 @@ fn backend(artifact: &str) -> ExtensionPass {
 
 fn pass(id: &str, declaration: Option<ExtensionPass>) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: id.to_owned(),
         point: "compile:pass".parse().unwrap(),
         handler: ExtensionHandler::Builtin {

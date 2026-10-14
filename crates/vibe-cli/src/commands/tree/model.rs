@@ -214,24 +214,7 @@ pub struct StaticLane {
     pub contributions: Vec<StaticContribution>,
 }
 
-/// One `<!-- vibe:static … -->` region of `STATIC.md`.
-#[derive(Debug, Serialize)]
-pub struct StaticContribution {
-    pub order: u64,
-    pub origin: String,
-    pub source_path: String,
-    pub bytes: u64,
-    pub lines: u64,
-    pub embeds: Vec<EmbedSpan>,
-}
-
-/// A nested `<!-- embed: … -->` span attributed inside a static region.
-#[derive(Debug, Serialize)]
-pub struct EmbedSpan {
-    pub address: String,
-    pub start_line: u64,
-    pub end_line: u64,
-}
+pub use vibe_workspace::boot_debugger::StaticContribution;
 
 /// `boot.index_md` — the `INDEX.md` dynamic lane.
 #[derive(Debug, Serialize)]

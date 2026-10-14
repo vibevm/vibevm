@@ -21,6 +21,7 @@ use crate::{FileResolver, FsSectionSource, SectionSource, SelfCoordinate, SpecAd
 
 fn frontend() -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: "txt".to_owned(),
         point: "compile:pass".parse::<ExtensionPoint>().unwrap(),
         handler: ExtensionHandler::Native {
