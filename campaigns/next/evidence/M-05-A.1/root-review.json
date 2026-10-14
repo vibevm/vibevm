@@ -1,0 +1,13 @@
+{
+  "approved": true,
+  "summary": "Independent Root review: M-05-A.1 characterizes actual consumer constraint loss and changed-feature Fresh behavior without changing solver, production or lock semantics. Both intended integration cases passed in the retained final run.",
+  "scope": "crates/vibe-install/tests/m_05_a_1_cases.rs and three characterization anchors in vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml; M-05-A.1 only.",
+  "limitations": [
+    "Global cargo fmt --all -- --check fails on pre-existing files outside the task perimeter; candidate file formatting and git diff --check passed. This review accepts the scoped characterization, not a globally formatted workspace.",
+    "Exact held requirement preservation is characterized. Exploratory caret pin/fallback behavior remains unverified and is not claimed.",
+    "No solver outcome/version-selection repair, live installation, full suite or new package-source behavior is qualified."
+  ],
+  "observed_test_count": 2,
+  "observed_test_exit": 0,
+  "actual_environment": "Linux userspace Rust Zap through PodBay ProcessV3; managed Codex 0.159.3 with gpt-6-astra medium, native child delegation disabled; offline locked Cargo integration target in private /tmp/vibevm-managed-live/cargo-target."
+}

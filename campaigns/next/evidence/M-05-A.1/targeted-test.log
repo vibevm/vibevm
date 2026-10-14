@@ -1,0 +1,9 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.74s
+     Running tests/m_05_a_1_cases.rs (/tmp/vibevm-managed-live/cargo-target/debug/build/vibe-install/082347a6bbcc67b1/out/m_05_a_1_cases-082347a6bbcc67b1)
+
+running 2 tests
+test root_union ... ok
+test fresh_requested_features ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
