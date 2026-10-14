@@ -2683,3 +2683,13 @@ structure, and it goes when the file does.
 | @fact:B246-SEVERITY **severity** | P2 — no additional current campaign gate. |
 | @fact:B246-DISPOSITION **disposition** | deferred unless it concretely blocks the next VibeVM step. Validate predecessor trace against the retained C1-bound capsule/report instead of assuming false; add one traced-completion to fresh-key case and retain damaged/nonterminal predecessor refusal. No lifecycle rewrite. |
 | @fact:B246-FILED **filed by** | First Agent semantic audit, 2026-10-14. |
+
+## B-247 — optional-shapes vocabulary inventory assertion predates current vocabulary {#b-247}
+
+| field | value |
+|---|---|
+| @fact:B247-WHAT **what** | Existing the_real_vocabulary_home_walks_to_its_sites expects53 promoted sites while the current unchanged formats/vocabularies.json supplies56. The M10B1 optional-nullable branch is not entered for this home, so the mismatch predates that change. The selected module recorded29pass/1fail; no all-green claim. |
+| @fact:B247-EVIDENCE **evidence** | campaigns/next/evidence/M-10-B.1/optional-shapes-failed.log and preexisting-count.json; formats/vocabularies.json is byte-identical to HEAD, zero optional members carry nullable. New three focused nullable cases pass separately. |
+| @fact:B247-SEVERITY **severity** | P3 — stale test inventory assertion; no new campaign admission gate. |
+| @fact:B247-DISPOSITION **disposition** | deferred until the owning vocabulary or site-inventory test is touched. Reconcile the actual added sites and update a meaningful named inventory expectation; do not blindly weaken the check, skip failures or count the inherited module as passed. |
+| @fact:B247-FILED **filed by** | First Agent M10B1 acceptance, 2026-10-14. |
