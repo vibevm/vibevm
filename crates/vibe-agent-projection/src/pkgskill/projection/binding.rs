@@ -124,7 +124,10 @@ fn lower_skills(
     Ok(bindings)
 }
 
-fn lower_one_binding(project_root: &Path, skill: DeclaredSkill) -> Result<ProjectSkillBinding> {
+pub(in crate::pkgskill) fn lower_one_binding(
+    project_root: &Path,
+    skill: DeclaredSkill,
+) -> Result<ProjectSkillBinding> {
     receipt::ensure_no_follow_walk(&skill.source_root, &skill.source, true).with_context(|| {
         format!(
             "unsafe source for package skill `{}` from `{}`",

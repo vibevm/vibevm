@@ -29,6 +29,7 @@ use documentation::{documentation_skills, lower_manifest_skills};
 
 #[path = "projection/binding.rs"]
 mod binding;
+pub(super) use binding::lower_one_binding;
 pub use binding::{
     PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
     ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget,

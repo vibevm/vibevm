@@ -536,6 +536,7 @@ mod selection;
 pub use lookup::canonical_doc_path;
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
 pub(crate) use read::project_source;
+pub use read::{VibeSourceInspection, inspect_vibe_source};
 
 #[derive(Debug)]
 pub(crate) struct ResolvedSourceFile {
@@ -574,3 +575,6 @@ mod tests;
 
 #[cfg(test)]
 mod m_01_e_1_cases;
+
+#[cfg(test)]
+mod m_10_c_1_cases;

@@ -1,0 +1,1161 @@
+diff --git a/crates/vibe-agent-projection/src/pkgskill/derivative.rs b/crates/vibe-agent-projection/src/pkgskill/derivative.rs
+index 386f8a63d..0c924af20 100644
+--- a/crates/vibe-agent-projection/src/pkgskill/derivative.rs
++++ b/crates/vibe-agent-projection/src/pkgskill/derivative.rs
+@@ -6,6 +6,58 @@ use vibe_core::manifest::SourceSelector;
+ use vibe_workspace::derivatives::BoundDerivative;
+ use vibe_workspace::derivatives::compatibility::Compatibility;
+ 
++/// Prepare an inert handoff from the complete checked local result. This calls
++/// the existing receipt planner directly, without hydration. Reconciliation is
++/// still a separate, explicitly invoked consumer operation.
++pub fn prepare_materialized_binding(
++    result: &vibe_workspace::derivatives::MaterializedDerivative,
++    project_root: &std::path::Path,
++    declaration: vibe_core::manifest::SkillDecl,
++) -> anyhow::Result<ProjectSkillBinding> {
++    result.verify_tree()?;
++    let local = result.result().binding().local();
++    if declaration.source.is_some()
++        || !declaration.resources.is_empty()
++        || !declaration.include.is_empty()
++        || declaration.path != std::path::Path::new(local.descriptor.selector().path())
++    {
++        anyhow::bail!("derivative skill must select the complete local result without hydration");
++    }
++    let root = result.tree().root_path().to_path_buf();
++    let provider = DeclaredSkillProvider::Authored {
++        group: local
++            .owner
++            .group
++            .clone()
++            .ok_or_else(|| anyhow::anyhow!("missing group"))?,
++        name: local.owner.name.clone(),
++        version: local
++            .owner
++            .version
++            .to_string()
++            .trim_start_matches('=')
++            .to_owned(),
++        kind: local
++            .owner
++            .kind
++            .ok_or_else(|| anyhow::anyhow!("missing kind"))?,
++        root: root.clone(),
++        embedded_sources: vec![],
++    };
++    let skill = super::DeclaredSkill {
++        source: root.join(&declaration.path),
++        source_root: root,
++        origin: provider.identity(),
++        provider,
++        decl: declaration,
++    };
++    let binding = super::projection::lower_one_binding(project_root, skill)?;
++    match inspect_binding(result.result(), &binding) {
++        Compatibility::Compatible => Ok(binding),
++        other => anyhow::bail!("derivative projection interface: {other:?}"),
++    }
++}
++
+ pub fn inspect_binding(result: &BoundDerivative, binding: &ProjectSkillBinding) -> Compatibility {
+     let local = result.binding().local();
+     let (group, name, version, kind) = match &binding.skill.provider {
+@@ -68,3 +120,6 @@ pub fn inspect_binding(result: &BoundDerivative, binding: &ProjectSkillBinding)
+ 
+ #[cfg(test)]
+ mod m_10_b_2_cases;
++
++#[cfg(test)]
++mod m_10_c_1_cases;
+diff --git a/crates/vibe-agent-projection/src/pkgskill/projection.rs b/crates/vibe-agent-projection/src/pkgskill/projection.rs
+index 3d71c0924..00a9e28e3 100644
+--- a/crates/vibe-agent-projection/src/pkgskill/projection.rs
++++ b/crates/vibe-agent-projection/src/pkgskill/projection.rs
+@@ -29,6 +29,7 @@ use documentation::{documentation_skills, lower_manifest_skills};
+ 
+ #[path = "projection/binding.rs"]
+ mod binding;
++pub(super) use binding::lower_one_binding;
+ pub use binding::{
+     PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
+     ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget,
+diff --git a/crates/vibe-agent-projection/src/pkgskill/projection/binding.rs b/crates/vibe-agent-projection/src/pkgskill/projection/binding.rs
+index be3950705..f1607c41d 100644
+--- a/crates/vibe-agent-projection/src/pkgskill/projection/binding.rs
++++ b/crates/vibe-agent-projection/src/pkgskill/projection/binding.rs
+@@ -124,7 +124,10 @@ fn lower_skills(
+     Ok(bindings)
+ }
+ 
+-fn lower_one_binding(project_root: &Path, skill: DeclaredSkill) -> Result<ProjectSkillBinding> {
++pub(in crate::pkgskill) fn lower_one_binding(
++    project_root: &Path,
++    skill: DeclaredSkill,
++) -> Result<ProjectSkillBinding> {
+     receipt::ensure_no_follow_walk(&skill.source_root, &skill.source, true).with_context(|| {
+         format!(
+             "unsafe source for package skill `{}` from `{}`",
+diff --git a/crates/vibe-spec/src/lib.rs b/crates/vibe-spec/src/lib.rs
+index e37aeadba..46b311741 100644
+--- a/crates/vibe-spec/src/lib.rs
++++ b/crates/vibe-spec/src/lib.rs
+@@ -121,7 +121,8 @@ pub use pipeline::{CompileError, compile_static, compile_static_qualified};
+ pub use qualify::{RenameEntry, origin_slug, qualify_contribution};
+ pub use resolver::{
+     DescriptorOutputRow, FileResolver, ResolveError, SelectedPackage, SelfCoordinate,
+-    ValidatedDescriptorMap, canonical_doc_path, is_pattern,
++    ValidatedDescriptorMap, VibeSourceInspection, canonical_doc_path, inspect_vibe_source,
++    is_pattern,
+ };
+ pub use transforms::{XmlMinifyError, minify_emitted_xml};
+ pub use use_graph::{UseGraphError, source_fold_order, topo_order_from};
+diff --git a/crates/vibe-spec/src/resolver.rs b/crates/vibe-spec/src/resolver.rs
+index bb80b17cb..7950c6433 100644
+--- a/crates/vibe-spec/src/resolver.rs
++++ b/crates/vibe-spec/src/resolver.rs
+@@ -536,6 +536,7 @@ mod selection;
+ pub use lookup::canonical_doc_path;
+ pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
+ pub(crate) use read::project_source;
++pub use read::{VibeSourceInspection, inspect_vibe_source};
+ 
+ #[derive(Debug)]
+ pub(crate) struct ResolvedSourceFile {
+@@ -574,3 +575,6 @@ mod tests;
+ 
+ #[cfg(test)]
+ mod m_01_e_1_cases;
++
++#[cfg(test)]
++mod m_10_c_1_cases;
+diff --git a/crates/vibe-spec/src/resolver/read.rs b/crates/vibe-spec/src/resolver/read.rs
+index edffb10f9..b0897edee 100644
+--- a/crates/vibe-spec/src/resolver/read.rs
++++ b/crates/vibe-spec/src/resolver/read.rs
+@@ -17,6 +17,26 @@ use super::{FileResolver, ResolveError, portable};
+ 
+ const SOURCE_CAP: usize = 64 * 1024 * 1024;
+ 
++/// Inspection of a declared Vibe source retains raw bytes independently from
++/// the canonical Markdown projection. Parser failure never discards the raw
++/// capture. Ordinary XML and opaque data must not call this Vibe-only seam.
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct VibeSourceInspection {
++    pub raw_sha256: String,
++    pub projection: Result<(String, String), String>,
++}
++
++pub fn inspect_vibe_source(path: &Path, bytes: &[u8]) -> VibeSourceInspection {
++    use sha2::{Digest, Sha256};
++    VibeSourceInspection {
++        raw_sha256: format!("sha256:{:x}", Sha256::digest(bytes)),
++        projection: project_source(path, bytes).map(|text| {
++            let digest = format!("sha256:{:x}", Sha256::digest(text.as_bytes()));
++            (text, digest)
++        }),
++    }
++}
++
+ impl FileResolver {
+     pub(crate) fn read_projected_source(
+         &self,
+diff --git a/crates/vibe-workspace/src/derivatives.rs b/crates/vibe-workspace/src/derivatives.rs
+index 32e7ea20f..c3aa8a58e 100644
+--- a/crates/vibe-workspace/src/derivatives.rs
++++ b/crates/vibe-workspace/src/derivatives.rs
+@@ -237,3 +237,11 @@ mod binding;
+ pub use binding::{BoundDerivative, prepare_binding};
+ 
+ pub mod compatibility;
++
++mod materialize;
++pub use materialize::{LocalDerivativeError, MaterializedDerivative, capture_retained};
++mod inspection;
++pub use inspection::{DerivativeInspection, FileInspection, InventoryDifference};
++
++#[cfg(test)]
++mod m_10_c_1_cases;
+diff --git a/fixtures/next/derivatives/README.md b/fixtures/next/derivatives/README.md
+index 73321f286..f11d6f637 100644
+--- a/fixtures/next/derivatives/README.md
++++ b/fixtures/next/derivatives/README.md
+@@ -27,3 +27,28 @@ precondition, and output borrows those independent inputs. Semantic export edits
+ production capture-proof promotion, all-five-family feature completion, durable
+ publication and consumer integration remain later work. The design validator's
+ `future_service_cases_executed: 0` describes that Python validator alone.
++
++M-10-C.1 adds actual local publication through
++`vibe_workspace::derivatives::MaterializedDerivative`. Its `derive` validates
++retained base/local captures against current no-follow bytes and complete selected
++membership, exclusively creates a disjoint result directory, stages all files
++under `tree/`, and publishes the existing strict `result.json` record last using
++SafeFS create-new publication. The reader requires that record and revalidates
++the full output inventory. This is cooperative local publication, not a sealed
++filesystem transaction or production source proof. An interrupted directory is
++reported as residue and is never adopted; rebase/apply recovery remains M10C2.
++
++The authored binding TOML and local files live independently from that disposable
++directory. Deleting it permits recreation with the same result identity. Show
++retains both complete raw inventories and exact SHA-256 digests; Vibe inspection
++adds a separately labelled canonical Markdown projection and digest or diagnostic.
++Diff carries both sides of every addition/removal/replacement, including binary
++data. Ordinary XML and scripts are copied without conversion or execution.
++
++`service_fixture.rs` mounts every manifest resource on disk for the selected
++`--lib m_10_c_1_cases` families in vibe-workspace and vibe-agent-projection.
++The vibe-spec family verifies independent upstream/local addresses and projection
++bases. These Rust tests are distinct from the design-only Python validator.
++Projection preparation consumes the complete materialized result without
++hydration; tests invoke receipt reconciliation separately to check ownership and
++unowned-neighbor preservation. Derivation itself never installs or activates.
+diff --git a/crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs b/crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs
+new file mode 100644
+index 000000000..6289bbe43
+--- /dev/null
++++ b/crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs
+@@ -0,0 +1,72 @@
++use super::*;
++use vibe_workspace::derivatives::MaterializedDerivative;
++include!(concat!(
++    env!("CARGO_MANIFEST_DIR"),
++    "/../../fixtures/next/derivatives/service_fixture.rs"
++));
++
++fn declaration() -> vibe_core::manifest::SkillDecl {
++    vibe_core::manifest::SkillDecl {
++        name: "local-skill".into(),
++        path: "payload".into(),
++        source: None,
++        description: None,
++        agents: vec!["claude".into()],
++        include: vec![],
++        resources: vec![],
++    }
++}
++
++#[test]
++fn complete_real_tree_handoff_is_inert_and_receipts_preserve_unowned_neighbor() {
++    let f = Fixture::new("nested-tree");
++    let result =
++        MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.output, "result").unwrap();
++    assert_eq!(result.result().binding(), &f.binding);
++    let consumer = tempfile::tempdir().unwrap();
++    let binding = prepare_materialized_binding(&result, consumer.path(), declaration()).unwrap();
++    assert_eq!(
++        binding.selected_files.as_ref().unwrap().len(),
++        f.expected.len()
++    );
++    assert!(!consumer.path().join(".claude").exists());
++    for file in &f.expected {
++        assert_eq!(
++            binding.selected_files.as_ref().unwrap()[file.path.strip_prefix("payload/").unwrap()],
++            file.bytes
++        );
++    }
++    // Explicit consumer operation, distinct from passive derive/inspection.
++    super::super::reconcile_project_skill_binding(consumer.path(), &binding).unwrap();
++    let target = &binding.targets[0].path;
++    fs::write(target.join("FOREIGN.txt"), b"unowned neighbor").unwrap();
++    super::super::reconcile_project_skill_binding(consumer.path(), &binding).unwrap();
++    super::super::reconcile_vanished_project_skill_bindings(consumer.path(), &Default::default())
++        .unwrap();
++    assert_eq!(
++        fs::read(target.join("FOREIGN.txt")).unwrap(),
++        b"unowned neighbor"
++    );
++    assert!(!target.join("SKILL.md").exists());
++    assert_eq!(
++        fs::read(result.tree().root_path().join("payload/scripts/helper.sh")).unwrap(),
++        b"#!/bin/sh\nprintf DO_NOT_EXECUTE\n"
++    );
++}
++
++#[test]
++fn changed_result_and_hydration_requests_refuse_without_activation() {
++    let f = Fixture::new("nested-tree");
++    let result =
++        MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.output, "result").unwrap();
++    let consumer = tempfile::tempdir().unwrap();
++    let mut decl = declaration();
++    decl.source = Some("must-not-fetch".into());
++    assert!(prepare_materialized_binding(&result, consumer.path(), decl).is_err());
++    result
++        .tree()
++        .write_atomic("payload/assets/icons/palette.bin", b"changed")
++        .unwrap();
++    assert!(prepare_materialized_binding(&result, consumer.path(), declaration()).is_err());
++    assert_eq!(fs::read_dir(consumer.path()).unwrap().count(), 0);
++}
+diff --git a/crates/vibe-spec/src/resolver/m_10_c_1_cases.rs b/crates/vibe-spec/src/resolver/m_10_c_1_cases.rs
+new file mode 100644
+index 000000000..7c5671804
+--- /dev/null
++++ b/crates/vibe-spec/src/resolver/m_10_c_1_cases.rs
+@@ -0,0 +1,71 @@
++use super::*;
++use crate::SpecAddress;
++use std::fs;
++
++fn fixture(side: &str) -> PathBuf {
++    Path::new(env!("CARGO_MANIFEST_DIR"))
++        .parent()
++        .unwrap()
++        .parent()
++        .unwrap()
++        .join("fixtures/next/derivatives/vibe-spec")
++        .join(side)
++}
++
++#[test]
++fn local_and_upstream_addresses_keep_independent_raw_and_projection_bases() {
++    let resolver = FileResolver::with_selected_world(
++        fixture("local"),
++        fixture("base"),
++        BTreeMap::from([(
++            ("org.example".into(), "upstream".into()),
++            SelectedPackage::new("1.0.0", fixture("base")),
++        )]),
++        SelfCoordinate::new(Some("org.example".into()), "local".into()),
++    );
++    let mut hashes = Vec::new();
++    for (owner, phrase) in [
++        ("local", "Retry at most once"),
++        ("upstream@1.0.0", "Retry at most three"),
++    ] {
++        let address =
++            SpecAddress::parse(&format!("spec://org.example/{owner}/common/POLICY#RETRY")).unwrap();
++        let path = resolver.resolve_file(&address).unwrap();
++        let raw = resolver.read_observed_source(&address, &path).unwrap();
++        let inspected = inspect_vibe_source(&path, &raw.bytes);
++        assert_eq!(inspected.raw_sha256, format!("sha256:{}", raw.sha256));
++        let (projected, digest) = inspected.projection.unwrap();
++        assert!(projected.contains(phrase));
++        assert!(projected.contains("DO_NOT_EXECUTE"));
++        assert_ne!(digest, inspected.raw_sha256);
++        let markdown = inspect_vibe_source(Path::new("POLICY.md"), projected.as_bytes());
++        assert_eq!(markdown.projection.unwrap().0, projected);
++        hashes.push(inspected.raw_sha256);
++    }
++    assert_ne!(hashes[0], hashes[1]);
++}
++
++#[test]
++fn simultaneous_representations_refuse_and_bad_projection_retains_raw_digest() {
++    let root = tempfile::tempdir().unwrap();
++    fs::create_dir_all(root.path().join("spec/common")).unwrap();
++    let xml = fs::read(fixture("local").join("vibevm/vibespecs/common/POLICY.xml")).unwrap();
++    let md = inspect_vibe_source(Path::new("POLICY.xml"), &xml)
++        .projection
++        .unwrap()
++        .0;
++    fs::write(root.path().join("spec/common/POLICY.xml"), xml).unwrap();
++    fs::write(root.path().join("spec/common/POLICY.md"), md).unwrap();
++    let resolver = FileResolver::new(
++        root.path(),
++        SelfCoordinate::new(Some("org.example".into()), "local".into()),
++    );
++    let address = SpecAddress::parse("spec://org.example/local/common/POLICY").unwrap();
++    assert!(matches!(
++        resolver.resolve_file(&address),
++        Err(ResolveError::PairCollision { .. })
++    ));
++    let failed = inspect_vibe_source(Path::new("POLICY.xml"), b"\xff\0");
++    assert!(failed.projection.is_err());
++    assert!(failed.raw_sha256.starts_with("sha256:"));
++}
+diff --git a/crates/vibe-workspace/src/derivatives/inspection.rs b/crates/vibe-workspace/src/derivatives/inspection.rs
+new file mode 100644
+index 000000000..f934f4c66
+--- /dev/null
++++ b/crates/vibe-workspace/src/derivatives/inspection.rs
+@@ -0,0 +1,98 @@
++//! Complete raw inventories and optional, explicitly labelled Vibe projections.
++use super::{BoundDerivative, LocalDerivativeError, MaterializedDerivative, Outcome, passive};
++use std::collections::BTreeSet;
++use vibe_core::manifest::{SourceInterpretation, derivation::RetainedSource};
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct FileInspection {
++    pub path: String,
++    /// Exact raw source bytes, including opaque binary data and notices.
++    pub raw: Vec<u8>,
++    pub raw_sha256: String,
++    /// None for data. Err retains diagnostics without losing the raw source.
++    /// The tuple is canonical Markdown text and its own SHA-256 basis.
++    pub vibe_projection: Option<Result<(String, String), String>>,
++}
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct DerivativeInspection {
++    pub base_identity: String,
++    pub local_identity: String,
++    pub provenance_identity: String,
++    pub result_identity: String,
++    pub inventory_identity: String,
++    pub base: Vec<FileInspection>,
++    pub local: Vec<FileInspection>,
++}
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct InventoryDifference {
++    pub path: String,
++    /// None means addition; the retained raw/projection bases are reviewable.
++    pub before: Option<FileInspection>,
++    /// None means removal. Unchanged paths appear in show, not diff.
++    pub after: Option<FileInspection>,
++}
++fn inventory(source: &RetainedSource) -> Vec<FileInspection> {
++    let mut rows: Vec<_> = source
++        .files
++        .iter()
++        .map(|file| FileInspection {
++            path: file.path.clone(),
++            raw: file.bytes.clone(),
++            raw_sha256: format!("sha256:{}", crate::vibedeps::sha256_bytes(&file.bytes)),
++            vibe_projection: (source.descriptor.interpretation() == SourceInterpretation::VibeSpec)
++                .then(|| {
++                    vibe_spec::inspect_vibe_source(std::path::Path::new(&file.path), &file.bytes)
++                        .projection
++                }),
++        })
++        .collect();
++    rows.sort_by(|a, b| a.path.cmp(&b.path));
++    rows
++}
++impl BoundDerivative {
++    pub fn show(&self) -> Outcome<DerivativeInspection> {
++        passive(DerivativeInspection {
++            base_identity: self.record().base_identity.clone(),
++            local_identity: self.record().local_identity.clone(),
++            provenance_identity: self.record().provenance_identity.clone(),
++            result_identity: self.record().result_identity.clone(),
++            inventory_identity: self.record().inventory_identity.clone(),
++            base: inventory(self.binding().base()),
++            local: inventory(self.binding().local()),
++        })
++    }
++    pub fn diff(&self) -> Outcome<Vec<InventoryDifference>> {
++        let shown = self.show().value;
++        let paths: BTreeSet<_> = shown
++            .base
++            .iter()
++            .chain(&shown.local)
++            .map(|f| f.path.clone())
++            .collect();
++        passive(
++            paths
++                .into_iter()
++                .filter_map(|path| {
++                    let before = shown.base.iter().find(|f| f.path == path).cloned();
++                    let after = shown.local.iter().find(|f| f.path == path).cloned();
++                    (before != after).then_some(InventoryDifference {
++                        path,
++                        before,
++                        after,
++                    })
++                })
++                .collect(),
++        )
++    }
++}
++impl MaterializedDerivative {
++    /// Inspection never silently describes a stale or incomplete output tree.
++    pub fn show(&self) -> Result<Outcome<DerivativeInspection>, LocalDerivativeError> {
++        self.verify_tree()?;
++        Ok(self.result().show())
++    }
++    pub fn diff(&self) -> Result<Outcome<Vec<InventoryDifference>>, LocalDerivativeError> {
++        self.verify_tree()?;
++        Ok(self.result().diff())
++    }
++}
+diff --git a/crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs b/crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs
+new file mode 100644
+index 000000000..4ad7e38da
+--- /dev/null
++++ b/crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs
+@@ -0,0 +1,280 @@
++use super::*;
++include!(concat!(
++    env!("CARGO_MANIFEST_DIR"),
++    "/../../fixtures/next/derivatives/service_fixture.rs"
++));
++
++fn lifecycle(family: &str) {
++    for sealed in [false, true] {
++        let fixture = Fixture::new(family);
++        for file in &fixture.binding.base().files {
++            let path = fixture.base.root_path().join(&file.path);
++            let mut mode = fs::metadata(&path).unwrap().permissions();
++            mode.set_readonly(sealed);
++            fs::set_permissions(path, mode).unwrap();
++        }
++        let create = || {
++            MaterializedDerivative::derive(
++                &fixture.text,
++                &fixture.base,
++                &fixture.local,
++                &fixture.output,
++                "result",
++            )
++            .unwrap()
++        };
++        let result = create();
++        let shown = result.show().unwrap();
++        assert_eq!(shown.effects, Effects::NoExternalEffects);
++        assert_eq!(shown.value.local.len(), fixture.expected.len());
++        for file in &fixture.expected {
++            assert_eq!(
++                fs::read(result.tree().root_path().join(&file.path)).unwrap(),
++                file.bytes
++            );
++            let row = shown
++                .value
++                .local
++                .iter()
++                .find(|r| r.path == file.path)
++                .unwrap();
++            assert_eq!(row.raw, file.bytes);
++            assert_eq!(
++                row.raw_sha256,
++                format!("sha256:{}", crate::vibedeps::sha256_bytes(&file.bytes))
++            );
++            assert_eq!(row.vibe_projection.is_some(), family == "vibe-spec");
++            if let Some(projection) = &row.vibe_projection {
++                assert!(
++                    projection
++                        .as_ref()
++                        .unwrap()
++                        .0
++                        .contains("Retry at most once")
++                );
++            }
++        }
++        let diff = result.diff().unwrap();
++        assert_eq!(diff.effects, Effects::NoExternalEffects);
++        assert_eq!(
++            diff.value.len(),
++            if family == "nested-tree" { 4 } else { 1 }
++        );
++        if family == "nested-tree" {
++            assert!(
++                diff.value
++                    .iter()
++                    .any(|d| d.path == "payload/docs/obsolete.txt" && d.after.is_none())
++            );
++            assert!(
++                diff.value
++                    .iter()
++                    .any(|d| d.path == "payload/docs/local.txt" && d.before.is_none())
++            );
++        }
++        let identity = shown.value.result_identity;
++        assert_eq!(result.result().record().binding_toml, fixture.text);
++        drop(result);
++        fs::remove_dir_all(fixture.output.root_path().join("result")).unwrap();
++        let retained = fs::read_to_string(fixture._home.path().join("authored.toml")).unwrap();
++        assert_eq!(retained, fixture.text);
++        let recreated = MaterializedDerivative::derive(
++            &retained,
++            &Project::open(fixture.base.root_path()).unwrap(),
++            &Project::open(fixture.local.root_path()).unwrap(),
++            &fixture.output,
++            "result",
++        )
++        .unwrap();
++        assert_eq!(recreated.result().record().result_identity, identity);
++        assert_eq!(
++            capture_retained(&fixture.base, fixture.binding.base())
++                .unwrap()
++                .retained_source("payload"),
++            *fixture.binding.base()
++        );
++        assert_eq!(
++            capture_retained(&fixture.local, fixture.binding.local())
++                .unwrap()
++                .retained_source("payload"),
++            *fixture.binding.local()
++        );
++        assert!(!fixture._home.path().join("DO_NOT_EXECUTE").exists());
++    }
++}
++#[test]
++fn commonmark_real_result_recreated() {
++    lifecycle("commonmark");
++}
++#[test]
++fn xml_data_real_result_recreated() {
++    lifecycle("xml-data");
++}
++#[test]
++fn vibe_spec_real_result_recreated() {
++    lifecycle("vibe-spec");
++}
++#[test]
++fn opaque_file_real_result_recreated() {
++    lifecycle("opaque-file");
++}
++#[test]
++fn nested_tree_real_result_recreated() {
++    lifecycle("nested-tree");
++}
++
++#[test]
++fn changed_base_local_missing_and_extra_resources_refuse_before_staging() {
++    for change in 0..6 {
++        let f = Fixture::new("nested-tree");
++        match change {
++            0 => {
++                f.base.write_atomic("payload/SKILL.md", b"changed").unwrap();
++            }
++            1 => {
++                f.local
++                    .write_atomic("payload/SKILL.md", b"changed")
++                    .unwrap();
++            }
++            2 => {
++                f.local.remove_file("payload/docs/keep.txt").unwrap();
++            }
++            3 => {
++                f.local
++                    .write_atomic("payload/docs/extra.txt", b"extra")
++                    .unwrap();
++            }
++            4 => {
++                f.base.remove_file("payload/docs/keep.txt").unwrap();
++            }
++            _ => {
++                f.base
++                    .write_atomic("payload/docs/extra.txt", b"extra")
++                    .unwrap();
++            }
++        }
++        let error = MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.output, "result")
++            .unwrap_err();
++        assert!(error.residue.is_none());
++        assert_eq!(fs::read_dir(f.output.root_path()).unwrap().count(), 0);
++    }
++}
++#[test]
++fn traversal_duplicate_case_and_file_directory_collisions_refuse() {
++    let f = Fixture::new("nested-tree");
++    for bad_path in [
++        "../escape",
++        "payload/../escape",
++        "payload/SKILL.md",
++        "payload/skill.md",
++        "payload/docs",
++        "payload/.vibe-stage-evil",
++    ] {
++        let mut value = serde_json::to_value(&f.binding).unwrap();
++        value["local"]["files"]
++            .as_array_mut()
++            .unwrap()
++            .push(serde_json::json!({"path":bad_path,"bytes":[0]}));
++        // TOML owner parsing rejects malformed inventories before output creation.
++        let bad = toml::to_string(&value).unwrap();
++        assert!(
++            MaterializedDerivative::derive(&bad, &f.base, &f.local, &f.output, "result").is_err(),
++            "{bad_path}"
++        );
++    }
++    assert_eq!(fs::read_dir(f.output.root_path()).unwrap().count(), 0);
++}
++#[test]
++fn occupied_destination_and_overlapping_source_are_never_adopted() {
++    let f = Fixture::new("nested-tree");
++    fs::create_dir(f.output.root_path().join("result")).unwrap();
++    fs::write(f.output.root_path().join("result/FOREIGN.txt"), b"neighbor").unwrap();
++    assert!(
++        MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.output, "result").is_err()
++    );
++    assert_eq!(
++        fs::read(f.output.root_path().join("result/FOREIGN.txt")).unwrap(),
++        b"neighbor"
++    );
++    assert!(
++        MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.local, "result").is_err()
++    );
++}
++#[test]
++fn reader_refuses_unpublished_changed_and_extra_output() {
++    for change in 0..4 {
++        let f = Fixture::new("opaque-file");
++        let result =
++            MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.output, "result")
++                .unwrap();
++        let entry = f.output.subproject(&["result"]).unwrap();
++        match change {
++            0 => {
++                entry.remove_file("result.json").unwrap();
++            }
++            1 => {
++                result
++                    .tree()
++                    .write_atomic("payload.bin", b"changed")
++                    .unwrap();
++            }
++            2 => {
++                result.tree().write_atomic("EXTRA", b"extra").unwrap();
++            }
++            _ => {
++                result.tree().remove_file("payload.bin").unwrap();
++            }
++        }
++        assert!(MaterializedDerivative::read(&entry, &f.base, &f.local, 1 << 20).is_err());
++    }
++}
++
++#[cfg(unix)]
++#[test]
++fn links_never_supply_source_bytes() {
++    let f = Fixture::new("opaque-file");
++    let path = f.local.root_path().join("payload.bin");
++    fs::remove_file(&path).unwrap();
++    std::os::unix::fs::symlink(f.base.root_path().join("payload.bin"), &path).unwrap();
++    assert!(
++        MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.output, "result").is_err()
++    );
++    assert_eq!(fs::read_dir(f.output.root_path()).unwrap().count(), 0);
++}
++
++#[test]
++fn commit_record_failure_reports_unpublished_residue() {
++    let f = Fixture::new("nested-tree");
++    vibe_safefs::fail_before_publish(Some("result.json"));
++    let failure = MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.output, "result");
++    vibe_safefs::fail_before_publish(None);
++    let failure = failure.unwrap_err();
++    assert_eq!(failure.residue, Some(f.output.root_path().join("result")));
++    assert!(!failure.record_may_be_published);
++    let entry = f.output.subproject(&["result"]).unwrap();
++    assert!(MaterializedDerivative::read(&entry, &f.base, &f.local, 1 << 20).is_err());
++    assert!(!entry.root_path().join("result.json").exists());
++    capture_retained(&f.local, f.binding.local()).unwrap();
++}
++
++#[test]
++fn commonmark_named_export_is_bound_to_actual_result_and_keeps_siblings() {
++    let f = Fixture::new("commonmark");
++    let result =
++        MaterializedDerivative::derive(&f.text, &f.base, &f.local, &f.output, "result").unwrap();
++    let view = result.show().unwrap().value;
++    let mut hashes = Vec::new();
++    for file in [&view.base[0], &view.local[0]] {
++        let raw = std::str::from_utf8(&file.raw).unwrap();
++        let doc = vibe_specdoc::commonmark::CommonMarkDoc::parse(raw);
++        let selected = doc
++            .resolve_export("usage.v1", &["Guide".into(), "Usage".into()])
++            .unwrap();
++        assert!(raw[selected.span.clone()].contains("DO_NOT_EXECUTE"));
++        assert!(!raw[selected.span].contains("Keep this section."));
++        assert!(raw.ends_with("## Reference\nKeep this section.\n"));
++        assert!(doc.resolve_export("missing", &["Absent".into()]).is_err());
++        hashes.push(selected.source_sha256);
++    }
++    assert_ne!(hashes[0], hashes[1]);
++}
+diff --git a/crates/vibe-workspace/src/derivatives/materialize.rs b/crates/vibe-workspace/src/derivatives/materialize.rs
+new file mode 100644
+index 000000000..6515023f5
+--- /dev/null
++++ b/crates/vibe-workspace/src/derivatives/materialize.rs
+@@ -0,0 +1,278 @@
++//! Local byte-copy publication. A result.json commit record makes a completely
++//! staged tree readable; no downstream activation or capture-proof promotion.
++use super::{BoundDerivative, SourceInput, prepare_binding};
++use crate::source_query::CapturedSourceFile;
++use std::{collections::BTreeSet, path::PathBuf};
++use vibe_core::manifest::{SourceSelector, derivation::RetainedSource};
++use vibe_safefs::{ChildKind, Project};
++
++#[derive(Debug, thiserror::Error)]
++#[error(
++    "local derivative: {reason}; residue={residue:?}; record_may_be_published={record_may_be_published}"
++)]
++pub struct LocalDerivativeError {
++    pub reason: String,
++    pub residue: Option<PathBuf>,
++    pub record_may_be_published: bool,
++}
++fn error(reason: impl std::fmt::Display) -> LocalDerivativeError {
++    LocalDerivativeError {
++        reason: reason.to_string(),
++        residue: None,
++        record_may_be_published: false,
++    }
++}
++
++/// Recapture the entire selected inventory with the incumbent bounded no-follow
++/// reader. The retained observation is a comparison basis, never proof authority.
++pub fn capture_retained(
++    project: &Project,
++    retained: &RetainedSource,
++) -> Result<SourceInput, LocalDerivativeError> {
++    check_root(project)?;
++    retained.validate().map_err(error)?;
++    vibe_safefs::judge_selection(retained.files.iter().map(|f| f.path.as_str())).map_err(error)?;
++    check_membership(project, retained)?;
++    let mut files = Vec::new();
++    for file in &retained.files {
++        let snapshot = project
++            .read_file_snapshot_bounded(&file.path, file.bytes.len())
++            .map_err(error)?
++            .ok_or_else(|| error(format!("missing resource {}", file.path)))?;
++        if snapshot.bytes != file.bytes {
++            return Err(error(format!("changed bytes {}", file.path)));
++        }
++        files.push(CapturedSourceFile::new(file.path.clone(), snapshot).map_err(error)?);
++    }
++    check_membership(project, retained)?;
++    check_root(project)?;
++    SourceInput::new(retained.owner.clone(), retained.descriptor.clone(), files).map_err(error)
++}
++
++fn check_root(project: &Project) -> Result<(), LocalDerivativeError> {
++    let current = Project::open(project.root_path()).map_err(error)?;
++    if current.root_identity().map_err(error)? != project.root_identity().map_err(error)? {
++        return Err(error(
++            "source root name no longer identifies the held directory",
++        ));
++    }
++    Ok(())
++}
++
++fn check_membership(
++    project: &Project,
++    retained: &RetainedSource,
++) -> Result<(), LocalDerivativeError> {
++    let SourceSelector::Directory(root) = retained.descriptor.selector() else {
++        return Ok(());
++    };
++    let mut pending = vec![root.clone()];
++    while let Some(path) = pending.pop() {
++        let directory = project
++            .dir(&path.split('/').collect::<Vec<_>>(), false)
++            .map_err(error)?;
++        let prefix = format!("{path}/");
++        let expected: BTreeSet<_> = retained
++            .files
++            .iter()
++            .filter_map(|f| f.path.strip_prefix(&prefix))
++            .map(|p| p.split('/').next().unwrap().to_owned())
++            .collect();
++        let actual = project
++            .child_names_bounded(&directory, expected.len())
++            .map_err(error)?;
++        vibe_safefs::judge_selection(actual.iter().map(String::as_str)).map_err(error)?;
++        if actual.into_iter().collect::<BTreeSet<_>>() != expected {
++            return Err(error(format!("changed membership {path}")));
++        }
++        for name in expected {
++            let child = format!("{path}/{name}");
++            let is_file = retained.files.iter().any(|f| f.path == child);
++            match (
++                is_file,
++                project
++                    .child_kind_nofollow(&directory, &name)
++                    .map_err(error)?,
++            ) {
++                (true, Some(ChildKind::RegularFile)) => {}
++                (false, Some(ChildKind::Directory)) => pending.push(child),
++                _ => return Err(error(format!("changed resource kind {child}"))),
++            }
++        }
++    }
++    Ok(())
++}
++
++/// A checked, independently owned local result. Its retained sources remain
++/// observed; installation/admission is a separate consumer operation.
++#[derive(Debug)]
++pub struct MaterializedDerivative {
++    result: BoundDerivative,
++    tree: Project,
++}
++impl MaterializedDerivative {
++    pub fn result(&self) -> &BoundDerivative {
++        &self.result
++    }
++    pub fn tree(&self) -> &Project {
++        &self.tree
++    }
++
++    /// Publish only into an absent direct child of a disjoint output parent.
++    /// The authored TOML is supplied from independent retained storage. Both
++    /// current source roots are checked before staging and before the commit
++    /// record. Interrupted stages are reported, never adopted or cleaned here.
++    pub fn derive(
++        text: &str,
++        base: &Project,
++        local: &Project,
++        parent: &Project,
++        name: &str,
++    ) -> Result<Self, LocalDerivativeError> {
++        vibe_safefs::ensure_safe_component(name).map_err(error)?;
++        let binding =
++            vibe_core::manifest::derivation::DerivationBinding::parse(text).map_err(error)?;
++        let destination = parent.root_path().join(name);
++        let absent = Project::pin_absent_path(&destination).map_err(error)?;
++        for source in [base, local] {
++            if vibe_safefs::paths_overlap(source.root_path(), &destination)
++                || absent.descends_from(source).map_err(error)?
++            {
++                return Err(error("output overlaps retained source"));
++            }
++        }
++        let observed = capture_retained(base, binding.base())?;
++        capture_retained(local, binding.local())?;
++        let result = prepare_binding(text, Some(&observed)).map_err(error)?.value;
++        let encoded = serde_json::to_vec(result.record()).map_err(error)?;
++        check_root(parent)?;
++        let holder = parent.root_dir().map_err(error)?;
++        if parent
++            .child_names(&holder)
++            .map_err(error)?
++            .iter()
++            .any(|existing| vibe_safefs::identity_key(existing) == vibe_safefs::identity_key(name))
++        {
++            return Err(error(
++                "result destination already exists or has a case alias",
++            ));
++        }
++        let stage = holder.create_child_exclusive(name).map_err(|e| {
++            let mut failure = error(&e);
++            if e.created() {
++                failure.residue = Some(destination.clone());
++            }
++            failure
++        })?;
++        let staged = (|| {
++            let entry = parent.subproject(&[name]).map_err(error)?;
++            if entry.root_identity().map_err(error)? != stage.identity().map_err(error)? {
++                return Err(error("staging root changed"));
++            }
++            let tree = entry.ensure_subproject(&["tree"]).map_err(error)?;
++            for file in &result.binding().local().files {
++                let (parents, name) = vibe_safefs::split_relative(&file.path).map_err(error)?;
++                let directory = tree
++                    .dir(
++                        &parents.iter().map(String::as_str).collect::<Vec<_>>(),
++                        true,
++                    )
++                    .map_err(error)?;
++                tree.publish_new_in(&directory, &name, &file.bytes)
++                    .map_err(error)?;
++            }
++            validate_tree(&tree, result.binding().local())?;
++            capture_retained(base, result.binding().base())?;
++            capture_retained(local, result.binding().local())?;
++            parent
++                .subproject(&[name])
++                .and_then(|p| p.root_identity())
++                .map_err(error)?
++                .eq(&stage.identity().map_err(error)?)
++                .then_some(())
++                .ok_or_else(|| error("staging root replaced"))?;
++            entry
++                .publish_new_in(&entry.root_dir().map_err(error)?, "result.json", &encoded)
++                .map_err(|e| {
++                    let mut failure = error(&e);
++                    failure.record_may_be_published =
++                        e.stage == vibe_safefs::PublishStage::PossiblyPublished;
++                    failure
++                })?;
++            Self::read(&entry, base, local, encoded.len()).map_err(|mut e| {
++                e.record_may_be_published = true;
++                e
++            })
++        })();
++        staged.map_err(|mut e| {
++            e.residue = Some(destination);
++            e
++        })
++    }
++
++    /// Require the existing strict record and every actual output member.
++    /// The bound authored source and current base are checked independently.
++    pub fn read(
++        entry: &Project,
++        base: &Project,
++        local: &Project,
++        record_cap: usize,
++    ) -> Result<Self, LocalDerivativeError> {
++        check_root(entry)?;
++        let bytes = entry
++            .read_file_snapshot_bounded("result.json", record_cap)
++            .map_err(error)?
++            .ok_or_else(|| error("unpublished stage: result record absent"))?;
++        let record: vibe_wire::generated::derivative_result::DerivativeResult =
++            serde_json::from_slice(&bytes.bytes).map_err(error)?;
++        let binding = record.checked_binding().map_err(error)?;
++        let current = capture_retained(base, binding.base())?;
++        capture_retained(local, binding.local())?;
++        let result = BoundDerivative::read(record, Some(&current)).map_err(error)?;
++        let tree = entry.subproject(&["tree"]).map_err(error)?;
++        validate_tree(&tree, result.binding().local())?;
++        Ok(Self { result, tree })
++    }
++
++    pub fn verify_tree(&self) -> Result<(), LocalDerivativeError> {
++        validate_tree(&self.tree, self.result.binding().local())
++    }
++}
++
++fn validate_tree(tree: &Project, retained: &RetainedSource) -> Result<(), LocalDerivativeError> {
++    // Validate all output ancestors too: no extra file outside the selector can
++    // hide in a published tree. Empty unexpected directories also refuse.
++    let mut pending = vec![String::new()];
++    while let Some(path) = pending.pop() {
++        let directory = if path.is_empty() {
++            tree.root_dir()
++        } else {
++            tree.dir(&path.split('/').collect::<Vec<_>>(), false)
++        }
++        .map_err(error)?;
++        let prefix = if path.is_empty() {
++            String::new()
++        } else {
++            format!("{path}/")
++        };
++        let expected: BTreeSet<_> = retained
++            .files
++            .iter()
++            .filter_map(|f| f.path.strip_prefix(&prefix))
++            .map(|p| p.split('/').next().unwrap().to_owned())
++            .collect();
++        let actual = tree
++            .child_names_bounded(&directory, expected.len())
++            .map_err(error)?;
++        if actual.into_iter().collect::<BTreeSet<_>>() != expected {
++            return Err(error("output membership changed"));
++        }
++        for name in expected {
++            let child = format!("{prefix}{name}");
++            if !retained.files.iter().any(|f| f.path == child) {
++                pending.push(child);
++            }
++        }
++    }
++    capture_retained(tree, retained).map(|_| ())
++}
+diff --git a/fixtures/next/derivatives/service_fixture.rs b/fixtures/next/derivatives/service_fixture.rs
+new file mode 100644
+index 000000000..20e331af7
+--- /dev/null
++++ b/fixtures/next/derivatives/service_fixture.rs
+@@ -0,0 +1,115 @@
++// Shared by the three narrowly selected service test modules. All authored
++// inputs are real files copied from the manifest's exact resource membership.
++use std::{fs, path::Path};
++use vibe_core::manifest::derivation::{
++    DerivationBinding, DerivationRecipe, RetainedFile, RetainedSource,
++};
++use vibe_safefs::Project;
++
++struct Fixture {
++    _home: tempfile::TempDir,
++    base: Project,
++    local: Project,
++    output: Project,
++    binding: DerivationBinding,
++    text: String,
++    expected: Vec<RetainedFile>,
++}
++impl Fixture {
++    fn new(family: &str) -> Self {
++        let fixtures =
++            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/next/derivatives");
++        let manifest: serde_json::Value =
++            serde_json::from_slice(&fs::read(fixtures.join("manifest.json")).unwrap()).unwrap();
++        let case = manifest["cases"]
++            .as_array()
++            .unwrap()
++            .iter()
++            .find(|c| c["id"] == family)
++            .unwrap();
++        let home = tempfile::tempdir().unwrap();
++        let relative = |path: &str| {
++            if family == "nested-tree" {
++                format!("payload/{path}")
++            } else {
++                path.to_owned()
++            }
++        };
++        let mut descriptor = serde_json::json!({"media":case["media"], "interpretation":case["source_interpretation"], "role":if family == "vibe-spec" {"spec"} else {"resource"}, "loading":"explicit"});
++        if family == "nested-tree" {
++            descriptor["directory"] = "payload".into();
++        } else {
++            descriptor["file"] = case["base"]["files"][0]["path"].clone();
++        }
++        let descriptor: vibe_core::manifest::SourceDescriptor =
++            serde_json::from_value(descriptor).unwrap();
++        let source = |side: &str, root_key: &str, owner: &str| {
++            let root = home.path().join(side);
++            fs::create_dir(&root).unwrap();
++            let mut files = Vec::new();
++            for row in case[side]["files"].as_array().unwrap() {
++                let path = row["path"].as_str().unwrap();
++                let bytes = fs::read(
++                    fixtures
++                        .join(case[side][root_key].as_str().unwrap())
++                        .join(path),
++                )
++                .unwrap();
++                let path = relative(path);
++                fs::create_dir_all(root.join(&path).parent().unwrap()).unwrap();
++                fs::write(root.join(&path), &bytes).unwrap();
++                files.push(RetainedFile { path, bytes });
++            }
++            let retained = RetainedSource {
++                owner: vibe_core::PackageRef::parse(&format!("flow:org.example/{owner}@=1.0.0"))
++                    .unwrap(),
++                resource: "payload".into(),
++                descriptor: descriptor.clone(),
++                files,
++            };
++            (Project::open(&root).unwrap(), retained)
++        };
++        let (base, original) = source("base", "capture_root", "upstream");
++        let (local, authored) = source("local", "authored_root", "local");
++        let expected = case["expected"]["files"]
++            .as_array()
++            .unwrap()
++            .iter()
++            .map(|row| {
++                let path = row["path"].as_str().unwrap();
++                RetainedFile {
++                    path: relative(path),
++                    bytes: fs::read(
++                        fixtures
++                            .join(case["expected"]["root"].as_str().unwrap())
++                            .join(path),
++                    )
++                    .unwrap(),
++                }
++            })
++            .collect();
++        let binding = DerivationBinding::new(
++            original.clone(),
++            authored,
++            original.observation_id().unwrap(),
++            DerivationRecipe::ReplaceSelectedInventory,
++        )
++        .unwrap();
++        let text = format!(
++            "# Independently retained local author\n{}",
++            toml::to_string(&binding).unwrap()
++        );
++        fs::write(home.path().join("authored.toml"), &text).unwrap();
++        fs::create_dir(home.path().join("output")).unwrap();
++        let output = Project::open(&home.path().join("output")).unwrap();
++        Self {
++            _home: home,
++            base,
++            local,
++            output,
++            binding,
++            text,
++            expected,
++        }
++    }
++}

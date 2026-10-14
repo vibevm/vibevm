@@ -121,7 +121,8 @@ pub use pipeline::{CompileError, compile_static, compile_static_qualified};
 pub use qualify::{RenameEntry, origin_slug, qualify_contribution};
 pub use resolver::{
     DescriptorOutputRow, FileResolver, ResolveError, SelectedPackage, SelfCoordinate,
-    ValidatedDescriptorMap, canonical_doc_path, is_pattern,
+    ValidatedDescriptorMap, VibeSourceInspection, canonical_doc_path, inspect_vibe_source,
+    is_pattern,
 };
 pub use transforms::{XmlMinifyError, minify_emitted_xml};
 pub use use_graph::{UseGraphError, source_fold_order, topo_order_from};

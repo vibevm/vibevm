@@ -1,0 +1,358 @@
+{
+  "status": "unreviewed candidate; not acceptance",
+  "task": "M-10-C.1 \u2014 Implement inert derive, show and diff across files and trees",
+  "baseline": "e23da80deda98466aef48ef9ec43be5783613b5f",
+  "ownership": "VibeVM packages/workspace/context; Zap orchestration/plans/concurrency/acceptance; PodBay physical process I/O. No delegation or acceptance/dispatch performed.",
+  "implementation": [
+    "Existing derivatives owner extended with MaterializedDerivative::derive/read/show/diff and capture_retained. All five fixture families are copied through the owning service into real, independent filesystem result trees.",
+    "Strict retained binding owner, current base and local captured bytes, complete selected memberships, portable paths, duplicate/case collisions, no-follow/single-link reads and disjoint destination are checked before staging. Current sources and full output are checked again before commit record publication.",
+    "SafeFS exclusive directory and create-new file publication stage the complete tree, then publish the existing strict result record. Read requires the record and exact output inventory. No existing destination is adopted. Failure reports residue and possible publication truthfully.",
+    "Authored TOML and local files remain outside disposable output. Every family recreates a real output after deletion using reread authored TOML and reopened current source roots, with identical result identity.",
+    "Show exposes complete base/local raw bytes, SHA-256 digests and base/local/provenance/result/inventory identities. Vibe-spec projection uses the incumbent parser and has its own digest/diagnostic; diff exposes both sides of every addition/removal/replacement. XML BOM/comments/entity spelling, binary bytes, notices and inert scripts remain exact.",
+    "Agent projection prepares a complete result handoff through existing planner/compatibility owners without hydration. Explicit receipt reconciliation is tested separately for unowned-neighbor preservation. Resolver tests keep upstream/local addresses separate and reject paired representations."
+  ],
+  "positive_negative_mapping": {
+    "all_five_real_results_and_recreation": "workspace commonmark_real_result_recreated, xml_data_real_result_recreated, vibe_spec_real_result_recreated, opaque_file_real_result_recreated, nested_tree_real_result_recreated; each runs sealed false/true without demand input",
+    "invalid_inputs_before_publication": "workspace changed_base_local_missing_and_extra_resources_refuse_before_staging; traversal_duplicate_case_and_file_directory_collisions_refuse; links_never_supply_source_bytes; occupied_destination_and_overlapping_source_are_never_adopted",
+    "inert_inspection_and_complete_diff": "workspace five lifecycle tests and commonmark_named_export_is_bound_to_actual_result_and_keeps_siblings; projection changed_result_and_hydration_requests_refuse_without_activation; no production process/network/provider/install/model callback exists in passive entrypoints",
+    "publication_failure_and_reader": "workspace commit_record_failure_reports_unpublished_residue; reader_refuses_unpublished_changed_and_extra_output",
+    "consumer_and_resolver": "two projection tests and two spec tests in m_10_c_1_cases"
+  },
+  "selected_before_compilation": "Initially 10 workspace + 2 projection + 2 spec --lib m_10_c_1_cases; workspace extended to 12 before its second compilation. No broad test suite, Lean or cross-platform run.",
+  "environment": {
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "TMPDIR": "/fast/zap-managed/2026-10-14-m10c1/tmp",
+    "RUSTUP_AUTO_INSTALL": "0",
+    "cargo": "offline locked",
+    "handover": "ROOT-TARGET-HANDOVER.json authorized reuse; no copies, cleanup or cold target"
+  },
+  "check_attempts": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 1,
+      "exit_code": 0,
+      "nonzero_selected_count": 10,
+      "summaries": [
+        "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 707 filtered out; finished in 0.44s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/workspace-check-1.log",
+      "log_sha256": "c36081ca669d6fd98eb64a363e30d2c518edd4656561dfdfb89e19be752b607e"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 2,
+      "exit_code": 0,
+      "nonzero_selected_count": 12,
+      "summaries": [
+        "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 707 filtered out; finished in 0.34s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/workspace-check-2.log",
+      "log_sha256": "d76665b09f67e5053b9dc338359d4b4676ce9cc616d7c61c96297662ae03d69f"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 3,
+      "exit_code": 0,
+      "nonzero_selected_count": 12,
+      "summaries": [
+        "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 707 filtered out; finished in 0.32s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/workspace-check-3.log",
+      "log_sha256": "4113942ebdf82152e1e88931328c5c8888ba4d924eee17e224c3a51c5715b1b8"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 4,
+      "exit_code": 0,
+      "nonzero_selected_count": 12,
+      "summaries": [
+        "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 707 filtered out; finished in 0.32s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/workspace-check-4.log",
+      "log_sha256": "5ac1d9a1cf445f25d57aa415a56c18fa70aa0e969094062abf340377e1388ee2"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 1,
+      "exit_code": 0,
+      "nonzero_selected_count": 2,
+      "summaries": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 83 filtered out; finished in 0.27s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/projection-check-1.log",
+      "log_sha256": "16e261d17d5a1989dc30d2380404352348f3f5e24f6353bd0dea1c830756bd0e"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 2,
+      "exit_code": 0,
+      "nonzero_selected_count": 2,
+      "summaries": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 83 filtered out; finished in 0.25s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/projection-check-2.log",
+      "log_sha256": "fdec7f2838bd6bf902beff0fb8bd26571430b1b94d3164f246c33580aefe5a19"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 3,
+      "exit_code": 0,
+      "nonzero_selected_count": 2,
+      "summaries": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 83 filtered out; finished in 0.24s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/projection-check-3.log",
+      "log_sha256": "0dc25817936db7363baf5ffc85445ac406dd76e63533a9da2964313805011b9a"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-spec",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 1,
+      "exit_code": 101,
+      "nonzero_selected_count": 2,
+      "summaries": [
+        "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1009 filtered out; finished in 0.00s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/spec-check-1.log",
+      "log_sha256": "81dcc726f60fbc97e728dddccbccc36159eb0588f4906d845274ff373aa6ca4b"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-spec",
+        "--lib",
+        "m_10_c_1_cases"
+      ],
+      "attempt": 2,
+      "exit_code": 0,
+      "nonzero_selected_count": 2,
+      "summaries": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1009 filtered out; finished in 0.00s"
+      ],
+      "log": "/fast/zap-managed/2026-10-14-m10c1/spec-check-2.log",
+      "log_sha256": "c11cf2bfd6680277e5d5e57950bb471cb22c8538dbb6bac4038347724c756c3d"
+    }
+  ],
+  "final_counts": {
+    "vibe-workspace": 12,
+    "vibe-agent-projection": 2,
+    "vibe-spec": 2
+  },
+  "scoped_checks": [
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-agent-projection/src/pkgskill/derivative.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs",
+        "crates/vibe-spec/src/resolver/read.rs",
+        "crates/vibe-workspace/src/derivatives.rs",
+        "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs",
+        "crates/vibe-spec/src/resolver/m_10_c_1_cases.rs",
+        "crates/vibe-workspace/src/derivatives/inspection.rs",
+        "crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs",
+        "crates/vibe-workspace/src/derivatives/materialize.rs",
+        "fixtures/next/derivatives/service_fixture.rs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs"
+      ],
+      "exit_code": 1,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "crates/vibe-spec/src/resolver/m_10_c_1_cases.rs"
+      ],
+      "exit_code": 1,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "crates/vibe-workspace/src/derivatives/inspection.rs"
+      ],
+      "exit_code": 1,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs"
+      ],
+      "exit_code": 1,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "crates/vibe-workspace/src/derivatives/materialize.rs"
+      ],
+      "exit_code": 1,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "/dev/null",
+        "fixtures/next/derivatives/service_fixture.rs"
+      ],
+      "exit_code": 1,
+      "output": ""
+    }
+  ],
+  "format_scope": "Per explicit scoped-format instruction, rustfmt --check was bound to all 13 changed/new Rust files with skip_children=true; cargo fmt --all was not run. Unrelated formatting debt was not changed. git diff --check exit 0; no-index new-file checks exit 1 means differences from /dev/null, with empty diagnostics (no whitespace errors).",
+  "rerun_reasons": [
+    "Spec attempt 1: 1 passed / 1 failed, exit 101 because test fixture path used dot components; fixed fixture path construction without changing SafeFS; attempt 2 passed 2/2.",
+    "Workspace attempt 2 added commit-record failure and named-export coverage and tightened create-new writes/root checking; attempt 3 checked final physical overlap/case alias/stable record read and provenance inspection changes; attempt 4 changed recreation test to reread the independently stored binding and reopen source roots.",
+    "Projection attempts 2 and 3 checked the affected workspace publication changes; all passed 2/2."
+  ],
+  "boundaries_and_limitations": [
+    "Capture strength remains Observed. No synthetic production proof, compiler provenance or inherited grant is minted; slot_verify remains proof owner.",
+    "Publication is cooperative local staging with a create-new result-record commit boundary, not an atomic sealed directory transaction or crash-recovery claim. Noncooperating concurrent mutation is detected at bounded observations; M10C2 recovery is not implemented here.",
+    "Activation, install/deploy and model/process/network effects are separate. The projection test explicitly invokes existing receipt reconciliation only after passive preparation assertions.",
+    "PROP074 and standing normative clauses are unchanged; campaign gate applicability stays with Root. No acceptance, next-task dispatch or Git/index mutation occurred.",
+    "Pre-existing compiler warnings (including SafeFS platform dead code and spec read.rs unused test import) remain; no unrelated cleanup."
+  ],
+  "files": [
+    "crates/vibe-agent-projection/src/pkgskill/derivative.rs",
+    "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+    "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+    "crates/vibe-spec/src/lib.rs",
+    "crates/vibe-spec/src/resolver.rs",
+    "crates/vibe-spec/src/resolver/read.rs",
+    "crates/vibe-workspace/src/derivatives.rs",
+    "fixtures/next/derivatives/README.md",
+    "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs",
+    "crates/vibe-spec/src/resolver/m_10_c_1_cases.rs",
+    "crates/vibe-workspace/src/derivatives/inspection.rs",
+    "crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs",
+    "crates/vibe-workspace/src/derivatives/materialize.rs",
+    "fixtures/next/derivatives/service_fixture.rs"
+  ],
+  "patch": {
+    "path": "/fast/zap-managed/2026-10-14-m10c1/m10c1.patch",
+    "bytes": 47356,
+    "sha256": "cbca13778acf4d0a464a7bf403a1c8f41a23691155ed80cd4064fc31763e193b",
+    "includes_untracked_without_staging": true
+  },
+  "safe_stop": "General derivation/read/diff work locally; activation remains separate."
+}

@@ -1,0 +1,87 @@
+{
+  "source_files": [
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/derivative.rs",
+      "sha256": "0b93b50cfbbaa15cda9339e504eeea89b16a2efb4aaff9787f89d387a07c7e85",
+      "bytes": 4661
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "sha256": "cd7ced04ba01fda7b3360d85008984ee151035680d6052de4272e4e9e38b65e7",
+      "bytes": 19520
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "sha256": "61a1917c91d99282de915545308c4408820a6d43ef22a7873d6dc4d0003f06d7",
+      "bytes": 10627
+    },
+    {
+      "path": "crates/vibe-spec/src/lib.rs",
+      "sha256": "f1067f298ff8731afc30c59499714bf4eb7a9b0f9c40e2df8908874778aad47b",
+      "bytes": 6197
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver.rs",
+      "sha256": "7adffc99f6d7a791981951d5fc74d49d216a253bc902e370aed6db193d084a21",
+      "bytes": 25384
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/read.rs",
+      "sha256": "243d74dba9e5f76828740f4170e07c579c1b0bbeeae3e6eb7cb4a46d4a9dbe27",
+      "bytes": 7584
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives.rs",
+      "sha256": "2c0b22cb85a06a370678d53bb884bc269c1ba2800672ed5d683c193ce4fa1cf0",
+      "bytes": 8046
+    },
+    {
+      "path": "fixtures/next/derivatives/README.md",
+      "sha256": "75b0232650706eb8700f6c0d7bff6d72f6fedc4df352411aa7184da92081995b",
+      "bytes": 4574
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs",
+      "sha256": "1e850a7c7b0365212950013300d614c4121eed0dcea40e732ff83d3ca6320083",
+      "bytes": 2815
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/m_10_c_1_cases.rs",
+      "sha256": "d10854d20dd65ddf08233f9958cc087a6c83a74937f9827e5585efe8c7b5815b",
+      "bytes": 2793
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives/inspection.rs",
+      "sha256": "3885cf20d8636e018b547a2d388b8be718fc5e061614d75a97567a0282400b2a",
+      "bytes": 3868
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs",
+      "sha256": "02662d3789bf143ac71bf9c7f6e1cf22df401e0ba54829f6323954ba6bceb858",
+      "bytes": 10106
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives/materialize.rs",
+      "sha256": "cf5ca834a6903e7027a229937e7dfdffbd12babb4642231bc05ee97329557f26",
+      "bytes": 11191
+    },
+    {
+      "path": "fixtures/next/derivatives/service_fixture.rs",
+      "sha256": "9f1e95753e80a2161dc039e539d8c205b3aa50f742f2c8e90fb6ed77749301eb",
+      "bytes": 4389
+    }
+  ],
+  "candidate_sha256": "6b812a9c03374888bdaea6e19c3056f31ac8e0d02f509563671a5ad9092891ac",
+  "report_sha256": "f726251f035863f51d689498d79674eebc8e2c73a800a3285eb334bb92c5ca6c",
+  "patch_sha256": "cbca13778acf4d0a464a7bf403a1c8f41a23691155ed80cd4064fc31763e193b",
+  "public_observed": {
+    "job_revision": 329,
+    "execution": "succeeded",
+    "effect": "completed",
+    "acceptance": "unreviewed",
+    "safe": "unknown",
+    "collected": true,
+    "source_sequence": 1560,
+    "unknown_tail": false
+  }
+}

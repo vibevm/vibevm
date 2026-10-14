@@ -17,6 +17,26 @@ use super::{FileResolver, ResolveError, portable};
 
 const SOURCE_CAP: usize = 64 * 1024 * 1024;
 
+/// Inspection of a declared Vibe source retains raw bytes independently from
+/// the canonical Markdown projection. Parser failure never discards the raw
+/// capture. Ordinary XML and opaque data must not call this Vibe-only seam.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct VibeSourceInspection {
+    pub raw_sha256: String,
+    pub projection: Result<(String, String), String>,
+}
+
+pub fn inspect_vibe_source(path: &Path, bytes: &[u8]) -> VibeSourceInspection {
+    use sha2::{Digest, Sha256};
+    VibeSourceInspection {
+        raw_sha256: format!("sha256:{:x}", Sha256::digest(bytes)),
+        projection: project_source(path, bytes).map(|text| {
+            let digest = format!("sha256:{:x}", Sha256::digest(text.as_bytes()));
+            (text, digest)
+        }),
+    }
+}
+
 impl FileResolver {
     pub(crate) fn read_projected_source(
         &self,

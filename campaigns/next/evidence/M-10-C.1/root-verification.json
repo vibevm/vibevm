@@ -1,0 +1,136 @@
+{
+  "approved": true,
+  "summary": "Root accepts independently reviewed full M10C1 inert five-family materialization/read/show/diff safe-stop; sixteen distinct final cases passed, exact14 source hashes match; activation and M10C2 recovery remain separate.",
+  "scope": "Full M10C1 local general derive/show/diff safe-stop; explicit activation and M10C2 authored apply/rebase recovery remain separate.",
+  "limitations": [
+    "16 distinct final cases: workspace12/projection2/spec2; repeated runs and initial workspace10 are not added.",
+    "Initial spec attempt exit101 with1pass/1fail retained; final spec2 passed.",
+    "Bounded local fixture results do not establish live activation/deployment or general cross-platform safety.",
+    "Independent bounded review completed with no P1/P2 task blocker; exact completed original five-process stack retired by Root."
+  ],
+  "observed_test_count": 16,
+  "observed_test_exit": 0,
+  "actual_environment": "RUSTUP_AUTO_INSTALL=0 offline locked; private /fast/zap-managed/2026-10-14-m10b1-correction/cargo-target and M10C1 TMPDIR; final workspace12 projection2 spec2.",
+  "evidence_files": {
+    "/fast/zap-managed/2026-10-14-m10c1/m10c1-report.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/m10c1-report.json",
+      "sha256": "f726251f035863f51d689498d79674eebc8e2c73a800a3285eb334bb92c5ca6c"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/candidate-result.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/candidate-result.json",
+      "sha256": "6b812a9c03374888bdaea6e19c3056f31ac8e0d02f509563671a5ad9092891ac"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/m10c1.patch": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/m10c1.patch",
+      "sha256": "cbca13778acf4d0a464a7bf403a1c8f41a23691155ed80cd4064fc31763e193b"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/ACCEPTANCE-FROZEN-SUBJECT.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/ACCEPTANCE-FROZEN-SUBJECT.json",
+      "sha256": "a63874fe1f4038338b8d576b7f50e1929bea6f7bafccc0d8b43a837dd4c2c9f9"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/workspace-check-1.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/workspace-check-1.log",
+      "sha256": "c36081ca669d6fd98eb64a363e30d2c518edd4656561dfdfb89e19be752b607e"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/workspace-check-2.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/workspace-check-2.log",
+      "sha256": "d76665b09f67e5053b9dc338359d4b4676ce9cc616d7c61c96297662ae03d69f"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/workspace-check-3.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/workspace-check-3.log",
+      "sha256": "4113942ebdf82152e1e88931328c5c8888ba4d924eee17e224c3a51c5715b1b8"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/workspace-check-4.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/workspace-check-4.log",
+      "sha256": "5ac1d9a1cf445f25d57aa415a56c18fa70aa0e969094062abf340377e1388ee2"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/projection-check-1.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/projection-check-1.log",
+      "sha256": "16e261d17d5a1989dc30d2380404352348f3f5e24f6353bd0dea1c830756bd0e"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/projection-check-2.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/projection-check-2.log",
+      "sha256": "fdec7f2838bd6bf902beff0fb8bd26571430b1b94d3164f246c33580aefe5a19"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/projection-check-3.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/projection-check-3.log",
+      "sha256": "0dc25817936db7363baf5ffc85445ac406dd76e63533a9da2964313805011b9a"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/spec-check-1.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/spec-check-1.log",
+      "sha256": "81dcc726f60fbc97e728dddccbccc36159eb0588f4906d845274ff373aa6ca4b"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/spec-check-2.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/spec-check-2.log",
+      "sha256": "c11cf2bfd6680277e5d5e57950bb471cb22c8538dbb6bac4038347724c756c3d"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/derivative.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/derivative.rs",
+      "sha256": "0b93b50cfbbaa15cda9339e504eeea89b16a2efb4aaff9787f89d387a07c7e85"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/projection.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "sha256": "cd7ced04ba01fda7b3360d85008984ee151035680d6052de4272e4e9e38b65e7"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "sha256": "61a1917c91d99282de915545308c4408820a6d43ef22a7873d6dc4d0003f06d7"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-spec/src/lib.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-spec/src/lib.rs",
+      "sha256": "f1067f298ff8731afc30c59499714bf4eb7a9b0f9c40e2df8908874778aad47b"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-spec/src/resolver.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-spec/src/resolver.rs",
+      "sha256": "7adffc99f6d7a791981951d5fc74d49d216a253bc902e370aed6db193d084a21"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-spec/src/resolver/read.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-spec/src/resolver/read.rs",
+      "sha256": "243d74dba9e5f76828740f4170e07c579c1b0bbeeae3e6eb7cb4a46d4a9dbe27"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives.rs",
+      "sha256": "2c0b22cb85a06a370678d53bb884bc269c1ba2800672ed5d683c193ce4fa1cf0"
+    },
+    "/fast/git/v/vibevm-next/fixtures/next/derivatives/README.md": {
+      "path": "/fast/git/v/vibevm-next/fixtures/next/derivatives/README.md",
+      "sha256": "75b0232650706eb8700f6c0d7bff6d72f6fedc4df352411aa7184da92081995b"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs",
+      "sha256": "1e850a7c7b0365212950013300d614c4121eed0dcea40e732ff83d3ca6320083"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-spec/src/resolver/m_10_c_1_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-spec/src/resolver/m_10_c_1_cases.rs",
+      "sha256": "d10854d20dd65ddf08233f9958cc087a6c83a74937f9827e5585efe8c7b5815b"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/inspection.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/inspection.rs",
+      "sha256": "3885cf20d8636e018b547a2d388b8be718fc5e061614d75a97567a0282400b2a"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs",
+      "sha256": "02662d3789bf143ac71bf9c7f6e1cf22df401e0ba54829f6323954ba6bceb858"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/materialize.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/derivatives/materialize.rs",
+      "sha256": "cf5ca834a6903e7027a229937e7dfdffbd12babb4642231bc05ee97329557f26"
+    },
+    "/fast/git/v/vibevm-next/fixtures/next/derivatives/service_fixture.rs": {
+      "path": "/fast/git/v/vibevm-next/fixtures/next/derivatives/service_fixture.rs",
+      "sha256": "9f1e95753e80a2161dc039e539d8c205b3aa50f742f2c8e90fb6ed77749301eb"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/INDEPENDENT-REVIEW.md": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/INDEPENDENT-REVIEW.md",
+      "sha256": "909d241a93a739f7d4b8a9f991f1c7b95ee273c3a88c209cf91091c4af66d00b"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/INDEPENDENT-REVIEW.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/INDEPENDENT-REVIEW.json",
+      "sha256": "44ff0764f1895ff1b1104e28e19189a5f59994a11222a4bae928204a787c9ef3"
+    },
+    "/fast/zap-managed/2026-10-14-m10c1/ROOT-RETIREMENT.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10c1/ROOT-RETIREMENT.json",
+      "sha256": "13b74d1bd4292fc3617a53ff11738fbf8cd8cca1cc65406962902e2654122711"
+    }
+  }
+}

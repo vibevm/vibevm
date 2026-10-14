@@ -6,6 +6,58 @@ use vibe_core::manifest::SourceSelector;
 use vibe_workspace::derivatives::BoundDerivative;
 use vibe_workspace::derivatives::compatibility::Compatibility;
 
+/// Prepare an inert handoff from the complete checked local result. This calls
+/// the existing receipt planner directly, without hydration. Reconciliation is
+/// still a separate, explicitly invoked consumer operation.
+pub fn prepare_materialized_binding(
+    result: &vibe_workspace::derivatives::MaterializedDerivative,
+    project_root: &std::path::Path,
+    declaration: vibe_core::manifest::SkillDecl,
+) -> anyhow::Result<ProjectSkillBinding> {
+    result.verify_tree()?;
+    let local = result.result().binding().local();
+    if declaration.source.is_some()
+        || !declaration.resources.is_empty()
+        || !declaration.include.is_empty()
+        || declaration.path != std::path::Path::new(local.descriptor.selector().path())
+    {
+        anyhow::bail!("derivative skill must select the complete local result without hydration");
+    }
+    let root = result.tree().root_path().to_path_buf();
+    let provider = DeclaredSkillProvider::Authored {
+        group: local
+            .owner
+            .group
+            .clone()
+            .ok_or_else(|| anyhow::anyhow!("missing group"))?,
+        name: local.owner.name.clone(),
+        version: local
+            .owner
+            .version
+            .to_string()
+            .trim_start_matches('=')
+            .to_owned(),
+        kind: local
+            .owner
+            .kind
+            .ok_or_else(|| anyhow::anyhow!("missing kind"))?,
+        root: root.clone(),
+        embedded_sources: vec![],
+    };
+    let skill = super::DeclaredSkill {
+        source: root.join(&declaration.path),
+        source_root: root,
+        origin: provider.identity(),
+        provider,
+        decl: declaration,
+    };
+    let binding = super::projection::lower_one_binding(project_root, skill)?;
+    match inspect_binding(result.result(), &binding) {
+        Compatibility::Compatible => Ok(binding),
+        other => anyhow::bail!("derivative projection interface: {other:?}"),
+    }
+}
+
 pub fn inspect_binding(result: &BoundDerivative, binding: &ProjectSkillBinding) -> Compatibility {
     let local = result.binding().local();
     let (group, name, version, kind) = match &binding.skill.provider {
@@ -68,3 +120,6 @@ pub fn inspect_binding(result: &BoundDerivative, binding: &ProjectSkillBinding) 
 
 #[cfg(test)]
 mod m_10_b_2_cases;
+
+#[cfg(test)]
+mod m_10_c_1_cases;
