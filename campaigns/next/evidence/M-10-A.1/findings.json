@@ -1,0 +1,17 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "discoveries": [
+    "Skill resource composition refuses collisions and can hydrate; it is not a passive derivative API.",
+    "Adoption overlays change status, not authored fact bodies.",
+    "Standalone validation requires both rlib and separate rmeta build artifacts."
+  ],
+  "unresolved": [
+    "cargo fmt --all -- --check exits 1 at the same 14 pre-existing locations across 9 out-of-perimeter files; left unchanged.",
+    "General derivative behavior remains unimplemented by design; later executable requirements are specified, not claimed passed."
+  ],
+  "proposed_follow_up": null
+}

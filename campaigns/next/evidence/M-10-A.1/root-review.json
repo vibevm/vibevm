@@ -1,0 +1,13 @@
+{
+  "approved": true,
+  "summary": "Independent Root review accepts M-10-A.1 definition: five concrete derivative families, actual existing owner mechanisms, explicit missing behavior and executable requirements. No general derivative service implementation is claimed.",
+  "scope": "New PROP-074-local-derivatives.xml and fixtures/next/derivatives only; definition and fixture contract, not production derive/apply/rebase.",
+  "limitations": [
+    "Three exact existing mechanism tests passed, one case each. Five-family fixture validation and pure parser seams are distinct evidence, not five new service tests.",
+    "General derive/show/diff/rebase/apply, sealed eligibility end-to-end, stale-base refusal and cache reconstruction remain later implementation requirements.",
+    "Global formatting failures pre-exist outside this task; scoped fixture/XML/JSON checks and diff whitespace checks passed."
+  ],
+  "observed_test_count": 3,
+  "observed_test_exit": 0,
+  "actual_environment": "Linux userspace Rust Zap d89acc6 through PodBay 2feb8fa, managed Codex gpt-6-astra medium; three offline locked exact Rust cases in private M10 target, plus inert fixture validation."
+}

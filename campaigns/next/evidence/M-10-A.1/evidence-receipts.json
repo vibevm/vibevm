@@ -1,0 +1,122 @@
+[
+  {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m10a1.live",
+          "campaign_id": "campaign.vibevm-m10a1.live",
+          "base_id": "base.vibevm-m10a1.live",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m10a1.evidence.verification.m10a1",
+        "event_id": "event:root-review.m10a1.evidence.verification.m10a1",
+        "transaction_id": "tx:root-review.m10a1.evidence.verification.m10a1",
+        "revision": 272,
+        "event_digest": "5113e93f29a00e9589db2eec0b81cfc8af363a8103cf786dcc2119186e98b5b9",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          50,
+          55,
+          50,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  },
+  {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m10a1.live",
+          "campaign_id": "campaign.vibevm-m10a1.live",
+          "base_id": "base.vibevm-m10a1.live",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m10a1.evidence.verification.m10a1.commonmark",
+        "event_id": "event:root-review.m10a1.evidence.verification.m10a1.commonmark",
+        "transaction_id": "tx:root-review.m10a1.evidence.verification.m10a1.commonmark",
+        "revision": 273,
+        "event_digest": "df7ed2175a94f16fa9ff648bc569a3a333485916150c265b96e789a0d767b0dd",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          50,
+          55,
+          51,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  },
+  {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m10a1.live",
+          "campaign_id": "campaign.vibevm-m10a1.live",
+          "base_id": "base.vibevm-m10a1.live",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m10a1.evidence.verification.m10a1.xml-data",
+        "event_id": "event:root-review.m10a1.evidence.verification.m10a1.xml-data",
+        "transaction_id": "tx:root-review.m10a1.evidence.verification.m10a1.xml-data",
+        "revision": 274,
+        "event_digest": "3b3dde773b7eb5b76819ee489a55b4a3f0b10511dceb0aa45421372521cc2b69",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          50,
+          55,
+          52,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  }
+]
