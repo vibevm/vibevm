@@ -1,0 +1,57 @@
+{
+  "verdict": "bounded_no_observed_task_blocking_defect",
+  "root_acceptance_required": true,
+  "task": "M-10-C.1",
+  "baseline": "e23da80deda98466aef48ef9ec43be5783613b5f",
+  "source_hashes": {
+    "crates/vibe-agent-projection/src/pkgskill/derivative.rs": "0b93b50cfbbaa15cda9339e504eeea89b16a2efb4aaff9787f89d387a07c7e85",
+    "crates/vibe-agent-projection/src/pkgskill/projection.rs": "cd7ced04ba01fda7b3360d85008984ee151035680d6052de4272e4e9e38b65e7",
+    "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": "61a1917c91d99282de915545308c4408820a6d43ef22a7873d6dc4d0003f06d7",
+    "crates/vibe-spec/src/lib.rs": "f1067f298ff8731afc30c59499714bf4eb7a9b0f9c40e2df8908874778aad47b",
+    "crates/vibe-spec/src/resolver.rs": "7adffc99f6d7a791981951d5fc74d49d216a253bc902e370aed6db193d084a21",
+    "crates/vibe-spec/src/resolver/read.rs": "243d74dba9e5f76828740f4170e07c579c1b0bbeeae3e6eb7cb4a46d4a9dbe27",
+    "crates/vibe-workspace/src/derivatives.rs": "2c0b22cb85a06a370678d53bb884bc269c1ba2800672ed5d683c193ce4fa1cf0",
+    "fixtures/next/derivatives/README.md": "75b0232650706eb8700f6c0d7bff6d72f6fedc4df352411aa7184da92081995b",
+    "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_c_1_cases.rs": "1e850a7c7b0365212950013300d614c4121eed0dcea40e732ff83d3ca6320083",
+    "crates/vibe-spec/src/resolver/m_10_c_1_cases.rs": "d10854d20dd65ddf08233f9958cc087a6c83a74937f9827e5585efe8c7b5815b",
+    "crates/vibe-workspace/src/derivatives/inspection.rs": "3885cf20d8636e018b547a2d388b8be718fc5e061614d75a97567a0282400b2a",
+    "crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs": "02662d3789bf143ac71bf9c7f6e1cf22df401e0ba54829f6323954ba6bceb858",
+    "crates/vibe-workspace/src/derivatives/materialize.rs": "cf5ca834a6903e7027a229937e7dfdffbd12babb4642231bc05ee97329557f26",
+    "fixtures/next/derivatives/service_fixture.rs": "9f1e95753e80a2161dc039e539d8c205b3aa50f742f2c8e90fb6ed77749301eb"
+  },
+  "all14_before_after_match": true,
+  "all14_patch_outputs_reconstructed_in_memory_match": true,
+  "report_digest": "f726251f035863f51d689498d79674eebc8e2c73a800a3285eb334bb92c5ca6c",
+  "patch_digest": "cbca13778acf4d0a464a7bf403a1c8f41a23691155ed80cd4064fc31763e193b",
+  "candidate_artifact_lengths_match": true,
+  "all9_attempt_log_digests_match": true,
+  "final_distinct_tests": 16,
+  "final_families": {
+    "workspace": 12,
+    "projection": 2,
+    "spec": 2
+  },
+  "findings": [],
+  "tests_rerun": false,
+  "builds_models_services_process_actions": false,
+  "source_edits": false,
+  "semantic_review": [
+    "Five families create real independently owned filesystem result through same materializer, not just expected arrays",
+    "Current base/local exact selected membership and bytes checked before stage and before result record; retained format validation rejects traversal/case/file-dir aliases",
+    "Existing SafeFS no-follow single-link bounded reads,exclusive directory and create-new file publication reused",
+    "Independent authored TOML/files reread after output deletion and same identity recreated for all5families",
+    "Complete raw inventories,digests,base/local/provenance/result identities and add/remove diff preserved; Vibe projection separate digest/diagnostic",
+    "Projection handoff verifies tree and exact result inventory, forbids source/resources/include hydration inputs, lower_one_binding only; actual receipt operation stays separate",
+    "No implicit activation,trusted proof promotion,process/network/install API or fixture payload execution",
+    "PROP074 and PROJECT-BOUNDARIES unchanged; other named source modifications limited to required exports/visibility and pure inspector"
+  ],
+  "evidence_limits": [
+    "16distinct cases, not repeated attempt or sealed/unsealed counts",
+    "Spec initial1passed/1failed exit101 caused dot-component fixture path; fixture now uses parent joins,SafeFS law unchanged; final2pass",
+    "Cooperative local staging/result.json record boundary, not atomic sealed tree or crash-recovery qualification",
+    "General rebase/apply recovery remains M10C2; no live activation/crossplatform/hostile-writer guarantee",
+    "Source strengthObserved; package/slot production proof remains existing owner",
+    "Only Unix symlink source refusal directly exercised by new link case; hardlink refusal follows unchanged bounded-reader owner",
+    "No broad suite or full external-publication qualification"
+  ]
+}

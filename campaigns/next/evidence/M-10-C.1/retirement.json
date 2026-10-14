@@ -1,0 +1,36 @@
+{
+  "original_processes": {
+    "3130720": {
+      "exe": "/fast/git/v/.workers/zap-managed-pump-target/debug/zap",
+      "start_ticks": "33147382",
+      "ppid": "3130661",
+      "uid": 1000
+    },
+    "3130723": {
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay",
+      "start_ticks": "33147403",
+      "ppid": "3130720",
+      "uid": 1000
+    },
+    "3131002": {
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod",
+      "start_ticks": "33147939",
+      "ppid": "3130723",
+      "uid": 1000
+    },
+    "3131009": {
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "start_ticks": "33148001",
+      "ppid": "3131002",
+      "uid": 1000
+    },
+    "3132669": {
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+      "start_ticks": "33154646",
+      "ppid": "3131009",
+      "uid": 1000
+    }
+  },
+  "remaining": [],
+  "method": "exact UID/executable/startticks/parent checks; SIGTERM after collected terminal candidate"
+}

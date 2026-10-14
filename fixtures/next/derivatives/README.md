@@ -27,3 +27,28 @@ precondition, and output borrows those independent inputs. Semantic export edits
 production capture-proof promotion, all-five-family feature completion, durable
 publication and consumer integration remain later work. The design validator's
 `future_service_cases_executed: 0` describes that Python validator alone.
+
+M-10-C.1 adds actual local publication through
+`vibe_workspace::derivatives::MaterializedDerivative`. Its `derive` validates
+retained base/local captures against current no-follow bytes and complete selected
+membership, exclusively creates a disjoint result directory, stages all files
+under `tree/`, and publishes the existing strict `result.json` record last using
+SafeFS create-new publication. The reader requires that record and revalidates
+the full output inventory. This is cooperative local publication, not a sealed
+filesystem transaction or production source proof. An interrupted directory is
+reported as residue and is never adopted; rebase/apply recovery remains M10C2.
+
+The authored binding TOML and local files live independently from that disposable
+directory. Deleting it permits recreation with the same result identity. Show
+retains both complete raw inventories and exact SHA-256 digests; Vibe inspection
+adds a separately labelled canonical Markdown projection and digest or diagnostic.
+Diff carries both sides of every addition/removal/replacement, including binary
+data. Ordinary XML and scripts are copied without conversion or execution.
+
+`service_fixture.rs` mounts every manifest resource on disk for the selected
+`--lib m_10_c_1_cases` families in vibe-workspace and vibe-agent-projection.
+The vibe-spec family verifies independent upstream/local addresses and projection
+bases. These Rust tests are distinct from the design-only Python validator.
+Projection preparation consumes the complete materialized result without
+hydration; tests invoke receipt reconciliation separately to check ownership and
+unowned-neighbor preservation. Derivation itself never installs or activates.

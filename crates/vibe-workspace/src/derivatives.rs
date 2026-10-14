@@ -237,3 +237,11 @@ mod binding;
 pub use binding::{BoundDerivative, prepare_binding};
 
 pub mod compatibility;
+
+mod materialize;
+pub use materialize::{LocalDerivativeError, MaterializedDerivative, capture_retained};
+mod inspection;
+pub use inspection::{DerivativeInspection, FileInspection, InventoryDifference};
+
+#[cfg(test)]
+mod m_10_c_1_cases;
