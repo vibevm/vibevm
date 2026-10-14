@@ -1,0 +1,66 @@
+{
+  "verdict": "P2_closed_bounded_no_remaining_observed_issue",
+  "finding": "M10B2-P2-001",
+  "root_acceptance_required": true,
+  "source_hashes": {
+    "crates/vibe-workspace/src/derivatives.rs": "df5a1a1ff841990f44936507a51a6c209e2bae190d020b011891f5cc2b63fc9a",
+    "crates/vibe-agent-projection/src/pkgskill.rs": "8c27f6b551669276cabf8378c4544c3f87c9cbcdd4fc40d675da3f121da20136",
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs": "67879a2ca3c31854a081b42e9be459e03544f900a14c6f2a9e57df1a1d05ccb2",
+    "vibevm/vibespecs/common/PROP-074-local-derivatives.xml": "06e9b72826584cfc5284ebe84438d9cd0310726f8bc9f0ee814927c22e4f787c",
+    "crates/vibe-workspace/src/derivatives/compatibility.rs": "0cdd315c34532fd82be409e485442da451447361fc57081405e9fed714e5a879",
+    "crates/vibe-workspace/src/derivatives/compatibility/m_10_b_2_cases.rs": "45c04d929585ab08c2e64dd260575081e6d3782fe73f08619779ab4b38fa85fc",
+    "crates/vibe-agent-projection/src/pkgskill/derivative.rs": "373ca54d980be0820798ba05bbf17c97dbbec40f457752ebce5cb69d735a5745",
+    "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_b_2_cases.rs": "c0d842006bb113aa030659a4b90b546f99d83370d346041cddd82e370681516e",
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs": "bd29eef5d225558ac08e2121447ecf78b0fc2411132a7cd9693327e48e15dbc3",
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative/m_10_b_2_cases.rs": "60cd450d990e3c9003cfa9e697e82eb8e797cf5e5acb1f4677af1d78e69f4255"
+  },
+  "hashes_match_before_after": true,
+  "only_two_correction_files_changed": [
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative/m_10_b_2_cases.rs"
+  ],
+  "artifact_digests_verified": {
+    "M10B2-correction-report.json": {
+      "bytes": 252188,
+      "sha256": "8b401c14a77e6fbae40769ff4f99829b84dfa6e6c32b6939588c9fe5957de67b"
+    },
+    "M10B2-full.patch": {
+      "bytes": 50033,
+      "sha256": "b2c12aa1652feecf11992333fd84053afb22c7b3fb9b140a867d5ef0e6f9d770"
+    },
+    "M10B2-correction.patch": {
+      "bytes": 5089,
+      "sha256": "c547376d5e000572a455e912a2fca03861a5423aeaf8d5a1110eb3ee91410eb3"
+    }
+  },
+  "final_lifecycle_evidence": {
+    "exit": 0,
+    "passed": 5,
+    "failed": 0,
+    "log": "/fast/zap-managed/2026-10-14-m10b2-correction/lifecycle-correction-test-3.log"
+  },
+  "reused_unchanged_evidence": {
+    "workspace": 3,
+    "projection": 2,
+    "log_hashes_verified": true
+  },
+  "spec_unchanged": true,
+  "new_findings": [],
+  "tests_rerun": false,
+  "source_writes": false,
+  "semantic_fix": "Clone approved MechanismRegistryRow; re-resolve current target pin/routes/registry at decide; compare pin/provider/full declaration and builtin handler before acquire_destination. Resolver failures retain unavailable/disabled cause.",
+  "assertions_reviewed": [
+    "Same descriptor and roots with unavailable route refuses",
+    "Disabled provider refuses",
+    "Installed native override refuses",
+    "Created and Compatible remain independent from refusal",
+    "Retained/local bytes unchanged,deploy state absent,settings directory empty before-lock proof",
+    "Prior own-grant positive and four original lifecycle cases remain passing"
+  ],
+  "limits": [
+    "Fixture decision stop only; no deployment/provider/native launch qualification",
+    "No new full five-family semantic or crossplatform qualification",
+    "Earlier compile101 and intermediate format1 retained; final5pass is deciding result",
+    "Acceptance uses normal Root workflow; no special transfer proof or broad rerun required"
+  ]
+}
