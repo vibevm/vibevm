@@ -79,7 +79,10 @@
         "crates/vibe-agent-projection/src/agents/home_paths.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
-        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "crates/vibe-agent-projection/src/agents/ambient_paths.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client.rs",
+        "crates/vibe-lifecycle/src/process/mod.rs"
       ],
       "write_paths": [
         "fixtures/next/adapters/",
@@ -106,7 +109,7 @@
         "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
         "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
-        "cargo fmt --all -- --check",
+        "SCOPED FORMAT: check only Rust files changed by this atom using the effective project toolchain/edition; no Rust delta means not applicable. Preserve inherited unrelated formatter debt.",
         "git diff --check"
       ],
       "acceptance": [
@@ -117,7 +120,8 @@
       "commit_subject": "docs(adapters): define exact four-client commissioning contracts",
       "notes": [
         "Read-only official-document/probe work at execution time must use explicit preparation. This task never installs into the real home.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "A2 is a contracts/documentation atom: bind official source provenance and explicitly prepared bounded version-only probes; preserve observed, source-characterized, proposed and unexecuted distinctions. Adding separate A2 metadata does not require re-running A1 Rust cases unless their actual consumed fixtures change. No implementation or installation into real client homes is authorized; source version ranges are not observed executable versions."
       ]
     }
   ]
