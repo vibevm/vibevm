@@ -2623,3 +2623,63 @@ structure, and it goes when the file does.
 | @fact:B240-SEVERITY **severity** | P2 — explicit original-evidence limitation, no additional A1 gate. |
 | @fact:B240-DISPOSITION **disposition** | preserve until an actual hosted full-pass/park/resume carrier task requires it; bind the original preparation and exact attempt through existing owners, with forward-compatible explicit evidence. M03-A2/later carrier work must report this boundary rather than fabricate completion, rerun uncertain production or reconstruct original subject from mutable current metadata. |
 | @fact:B240-FILED **filed by** | First Agent M03-A1 acceptance review, 2026-10-13. |
+
+## B-241 — Change roles can alias their own manifest {#b-241}
+
+| field | value |
+|---|---|
+| @fact:B241-WHAT **what** | The shared Change validator accepts a normative intent role at change.toml. Saved identity then includes cosmetic manifest fields, contrary to PROP071 CHANGE-INDEPENDENT-IDENTITIES; captured-query preparation separately refuses the duplicate resource. |
+| @fact:B241-EVIDENCE **evidence** | crates/vibe-core/src/manifest/change/validation.rs:197; identity.rs normative framing; crates/vibe-requirements/src/change/read.rs; CHANGE-SEMANTIC.md; read-only semantic reports under /fast/git/v/research/2026-10-14-spec-commit-audit. Source/test assertions inspected; no fresh reproduction executed. |
+| @fact:B241-SEVERITY **severity** | P2 — no added campaign admission gate. |
+| @fact:B241-DISPOSITION **disposition** | deferred unless this concretely blocks the next VibeVM step. Reserve CHANGE_MANIFEST at the shared role validator and state the rule; one focused alias refusal/identity case. Supporting manifest-as-content instead requires an explicit consistent contract exception. |
+| @fact:B241-FILED **filed by** | First Agent semantic audit, 2026-10-14. |
+
+## B-242 — Native Deploy allowed-set contract differs from CLI {#b-242}
+
+| field | value |
+|---|---|
+| @fact:B242-WHAT **what** | Public FixedDeployHost::with_allowed_profiles permits post-issue expansion without the total eight-additional-profile bound or durable allowed-set binding required by PROP080 MACHINE-PROFILED-DEPLOY-DECISION. CLI enforces these. This is a trusted native embedding discrepancy, not an observed wire privilege exploit. |
+| @fact:B242-EVIDENCE **evidence** | crates/vibe-orchestrator/src/machine_operation/fixed_deploy.rs:291; deploy_grant/tests/profiled.rs; EARLY-API-B-SEMANTIC.md; read-only semantic reports under /fast/git/v/research/2026-10-14-spec-commit-audit. Source/test assertions inspected; no fresh reproduction executed. |
+| @fact:B242-SEVERITY **severity** | P2 — no added campaign admission gate. |
+| @fact:B242-DISPOSITION **disposition** | deferred unless this concretely blocks the next VibeVM step. Enforce total cardinality at the owner seam and bind the allowed set before issue, or explicitly specify and validate a native-caller obligation. Preserve justified versioned request and legacy intent bytes. |
+| @fact:B242-FILED **filed by** | First Agent semantic audit, 2026-10-14. |
+
+## B-243 — MCP registration rollback can erase detected operator edits {#b-243}
+
+| field | value |
+|---|---|
+| @fact:B243-WHAT **what** | register_with_dirs snapshots every destination, then restores every snapshot after register_one refuses an externally changed entry. The untouched destination that caused refusal is restored too, erasing the edit registration correctly detected. |
+| @fact:B243-EVIDENCE **evidence** | crates/vibe-cli/src/commands/mcp/package_registration/register.rs:229-250; register_one ownership check; EARLY-A-CROSSCUTTING.md; read-only semantic reports under /fast/git/v/research/2026-10-14-spec-commit-audit. Source/test assertions inspected; no fresh reproduction executed. |
+| @fact:B243-SEVERITY **severity** | P2 — no added campaign admission gate. |
+| @fact:B243-DISPOSITION **disposition** | deferred unless this concretely blocks the next VibeVM step. Rollback only actual owned writes with expected post-write comparison; preserve drifted and untouched destinations. Pin one deterministic intervening-edit/refusal case; no new transaction framework. |
+| @fact:B243-FILED **filed by** | First Agent semantic audit, 2026-10-14. |
+
+## B-244 — Adaptive task atoms bypass the planning-only checker hold {#b-244}
+
+| field | value |
+|---|---|
+| @fact:B244-WHAT **what** | campaign.py allows local task-RN atoms but its blocked planning-only hold checks original task keys and NEXT-P0 names only. An active/candidate RN atom can pass this structural hold while NEXT-EXECUTION-AUTHORITY remains blocked. This checker launches nothing; no actual unauthorized dispatch is claimed. |
+| @fact:B244-EVIDENCE **evidence** | campaigns/next/tasks/campaign.py:423-427; commit78faa8bdf; EARLY-A-CROSSCUTTING.md; read-only semantic reports under /fast/git/v/research/2026-10-14-spec-commit-audit. Source/test assertions inspected; no fresh reproduction executed. |
+| @fact:B244-SEVERITY **severity** | P2 — no added campaign admission gate. |
+| @fact:B244-DISPOSITION **disposition** | deferred unless this concretely blocks the next VibeVM step. Include admitted adaptive descendants in the same hold and pin one contrasting local atom case. Do not invent new execution authority. |
+| @fact:B244-FILED **filed by** | First Agent semantic audit, 2026-10-14. |
+
+## B-245 — Clarify bounded stop and pre-owner refusal observations {#b-245}
+
+| field | value |
+|---|---|
+| @fact:B245-WHAT **what** | Permanent law should state the existing ReachedSafeStop boundary: direct provider/callback host work complete, not proof all descendants terminated. Cargo Busy response intentionally says no effects for the refused pre-owner attempt; clarify that it does not establish the historical keyed operation had no effects. Neither is a confirmed implementation failure. |
+| @fact:B245-EVIDENCE **evidence** | EARLY-A-LIFECYCLE.md EA-N1; EARLY-A-ROUTES.md AR-N1; PROP080; fixed_cargo/dispatch.rs owner_error_parts; read-only semantic reports under /fast/git/v/research/2026-10-14-spec-commit-audit. Source/test assertions inspected; no fresh reproduction executed. |
+| @fact:B245-SEVERITY **severity** | P3 — no added campaign admission gate. |
+| @fact:B245-DISPOSITION **disposition** | deferred unless this concretely blocks the next VibeVM step. Promote existing API meaning into permanent prose. Keep Uncertain effects where currently required; no process-tree cancellation project or automatic Busy behavior rewrite. |
+| @fact:B245-FILED **filed by** | First Agent semantic audit, 2026-10-14. |
+
+## B-246 — traced terminal Validate predecessor blocks a fresh key {#b-246}
+
+| field | value |
+|---|---|
+| @fact:B246-WHAT **what** | The terminal predecessor validator still requires compile_trace=false. Later fixed-trace support intentionally persists an approved true bit, so a validated traced completion blocks a subsequent fresh key solely on that bit. PROP080 MACHINE-SEQUENTIAL-FRESH-KEY-DECISION has no trace exclusion. This is a later feature interaction, not a defect in the original untraced-only change. |
+| @fact:B246-EVIDENCE **evidence** | crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/sequential_runs.rs:57; MACHINE-FIXED-TRACE-DECISION; EARLY-A-VALIDATE-1 semantic report. Root independently inspected the condition and both clauses. No fresh reproduction executed. |
+| @fact:B246-SEVERITY **severity** | P2 — no additional current campaign gate. |
+| @fact:B246-DISPOSITION **disposition** | deferred unless it concretely blocks the next VibeVM step. Validate predecessor trace against the retained C1-bound capsule/report instead of assuming false; add one traced-completion to fresh-key case and retain damaged/nonterminal predecessor refusal. No lifecycle rewrite. |
+| @fact:B246-FILED **filed by** | First Agent semantic audit, 2026-10-14. |
