@@ -23,7 +23,9 @@
         "crates/vibe-mcp/src/lib.rs",
         "crates/vibe-wire/Cargo.toml",
         "crates/vibe-wire/src/lib.rs",
-        "crates/vibe-orchestrator/src/machine_operation.rs"
+        "crates/vibe-orchestrator/src/machine_operation.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/command_progress/tests.rs"
       ],
       "write_paths": [
         "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
@@ -48,7 +50,9 @@
         "crates/vibe-mcp/src/context.rs",
         "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
         "crates/vibe-orchestrator/src/machine_operation/boot_debugger/tests.rs",
-        "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs"
+        "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/command_progress/tests.rs"
       ],
       "steps": [
         "Register inspect/tree/explain/cost/compare/capture/cancel models on M-16 context/overlay/event contracts.",
@@ -75,7 +79,8 @@
         "git diff --check",
         "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
         "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
-        "SELECT/RUN UPPER OWNER: bind a meaningful nonzero vibe-orchestrator --lib machine_operation::boot_debugger affected family for the actual shared route, two clients and existing snapshot/page/stream/cancel semantics before compiling; preserve the four lower adapter/carrier checks as affected."
+        "SELECT/RUN UPPER OWNER: bind a meaningful nonzero vibe-orchestrator --lib machine_operation::boot_debugger affected family for the actual shared route, two clients and existing snapshot/page/stream/cancel semantics before compiling; preserve the four lower adapter/carrier checks as affected.",
+        "SELECT/RUN CLI REGISTRATION: exact command_progress::tests::top_level_policy_inventory_matches_clap and command_progress::tests::terminal_and_protocol_owners_get_no_generic_fallback in vibe-cli --bin vibe; include the structured Boot form and preserve incumbent command classifications."
       ],
       "acceptance": [
         "Structured input exists, not only --json output.",
@@ -90,7 +95,8 @@
         "PROPOSED boot_debugger MCP/CLI modules; reuse M-16 envelopes instead of creating a competing transport.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
         "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
-        "The named upper orchestrator debugger route composes existing host-supplied DocumentClient/AnalysisCapture, PageSession and stream validators with pure workspace graph/measurement. MCP context retains an explicitly matching-root route across calls; do not duplicate CLI/MCP snapshot maps, reverse dependency direction, mint new authority or weaken existing context/epoch/filter/replay validation. Default unconfigured availability is not a placeholder for the configured positive path."
+        "The named upper orchestrator debugger route composes existing host-supplied DocumentClient/AnalysisCapture, PageSession and stream validators with pure workspace graph/measurement. MCP context retains an explicitly matching-root route across calls; do not duplicate CLI/MCP snapshot maps, reverse dependency direction, mint new authority or weaken existing context/epoch/filter/replay validation. Default unconfigured availability is not a placeholder for the configured positive path.",
+        "CLI command registration also owns command_progress::policy and its explicit top-level inventory. The structured stdin Boot protocol is PersistentProtocol without generic activity; preserve other command policies. An interactive Boot mode, if later introduced, requires its own typed classification rather than inheriting the protocol mode. The first M06C1 candidate remains unsatisfied due to the omitted registration owner; this correction does not accept that candidate."
       ]
     },
     {
