@@ -1,0 +1,124 @@
+{
+  "verdict": "bounded_no_observed_P1_P2_full_task_blocker",
+  "root_acceptance_pending": true,
+  "count_before_acceptance": 76,
+  "baseline": "6ef2b27b2b7ef09c5a4679fa4e35bcdc9115b472",
+  "worker_freeze": "runtime.stdout managed_results_collected observed before final hashes",
+  "source_hashes": {
+    "crates/vibe-cli/resources/package-tree.schema.v1.json": "86220b617c3ee112f42b30c9a60cd4ebb03ad43e1bbb0eb036c3045b2b38e984",
+    "crates/vibe-cli/src/commands/install/closure_diff.rs": "ccd8ddbe010f1352f5c113f7af91dde739d4b64efd47b53af1cbeaff22613821",
+    "crates/vibe-cli/src/commands/install/observer.rs": "e6a81439d727e7d7e824c378a3ac4d8ce315b7c6b35970efd6bdb43124fcc961",
+    "crates/vibe-cli/src/commands/tree/build.rs": "d35d4479035cddef57f07e85ce0331711bd386af2a0a983d5f123ab79dc9f685",
+    "crates/vibe-cli/src/commands/tree/build/tests.rs": "9f00b2a038a1a56e075e441039552a479331b45850fca8a637b4bb8edd9cc1ae",
+    "crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs": "ca708a52ba371b38d561098e05975e6aea6c11f927fb2c429a49fe71f3d27092",
+    "crates/vibe-cli/src/commands/tree/mod.rs": "b8f1b271ede3fcbb873354938217883213d997930dd2f1e10fa2dc31f451bb80",
+    "crates/vibe-cli/src/commands/tree/model.rs": "c1345823d464110115d9366c7e83c4e97e9b98c03734383bcdb3d98fb4c6e555",
+    "crates/vibe-cli/src/commands/tree/plain.rs": "573807dc789d90f96c9c0a21454228ac1e2ac64c0847c2268588bf6c9ca2a6b8",
+    "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs": "2a158670c45fa7eb3e1912bdc2db9a1660de712701972e0cdd35528aa383cae3",
+    "crates/vibe-cli/src/commands/tree/tui/dispatch.rs": "52e54a40b8d3707160909e0ab1920d09723bd1a5ac3798556599fe3071dc5280",
+    "crates/vibe-cli/src/commands/tree/tui/flatten.rs": "fca8babe509cb9869a5dfd97e66fbd25fcce380a5084aa6a6c730b15c179a660",
+    "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs": "881f7e57d9c76f4444da65b16bcb3f4e0046296e332e474450350150477247e1",
+    "crates/vibe-cli/src/commands/tree/tui/modes.rs": "e4cd139f0d10900ca1299ef37ae28d73855858786f76feaf570645b2c1ebc045",
+    "crates/vibe-cli/src/commands/tree/tui/search/mod.rs": "2b959af1ba3c82a5409dae72c9b2613cf9bd49a974895fdd9e75d37056327bea",
+    "crates/vibe-cli/src/commands/tree/tui/state.rs": "5164e3bfd745efea4e252ed57d79941b6a212eea87bdaab3747f34075df53a13",
+    "crates/vibe-cli/src/commands/update/scoped.rs": "c6d27565bb2d724554d32ae67802080b3417064f2ac5a080a615be0a74e4bc68",
+    "crates/vibe-cli/src/commands/update/scoped/apply.rs": "16e358c4af3ced49f4cee6cfd17033d4f36a486c213f35695c9f1370a59f2a52",
+    "crates/vibe-orchestrator/src/install/mod.rs": "602d0b88f5dc78d7c4b407ce975f7278206bf4b7867ae1c0a38d583e4e7ecfbc",
+    "crates/vibe-orchestrator/src/install/ready.rs": "5def5cbc6f539f41acba4ad20fefc3c7f4815bc47676ef3af318162a8548036b",
+    "crates/vibe-orchestrator/src/ports.rs": "28e90773ca7293f32e089ea3e3f90974b3135938125d2e635778db96cd8a16d2",
+    "crates/vibe-workspace/src/boot_debugger/measurement.rs": "9c4713fb1fbc7467e96672c2a34f13bbd8ba37cf6421f680918ae9c1cf741d21",
+    "crates/vibe-workspace/src/boot_debugger/measurement/carrier.rs": "2bab134c2d040cdb99b16af4b2d17361380a5a637be5d002e56148976e6faf2b",
+    "crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs": "4893e58dd66e9f96f659c20da216f644d452cac66c58b535239a681d37420bb5",
+    "crates/vibe-workspace/src/boot_debugger/mod.rs": "8f5afec893a70ce44b35b81f96b2f7b7b81423c4696339fa85aab3c5ecfb031d",
+    "crates/vibe-workspace/src/boot_debugger/static_summary.rs": "d8b3d1bcbb9c5eb31ae1f42752af6ab431930411677a791d4285413ec98813aa",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml": "3e6c343a74134c40f6cc9ee5e76767047ce0092b789909ca34790f6f63d43a12"
+  },
+  "two_final_frozen_hash_observations_equal": true,
+  "full_patch27outputs_reconstructed_match_current_source": true,
+  "artifacts": {
+    "report": {
+      "bytes": 11722,
+      "sha256": "f19459bdb20207cc4eef960026acc06a53178cc9a35dc19668f990ee3782b800"
+    },
+    "patch": {
+      "bytes": 78677,
+      "sha256": "349454ef0c9b3f29e827a68bcbf59d3aa19346ad919cdd62a57d72c4d164ca6d"
+    }
+  },
+  "candidate_artifacts_match": true,
+  "final_tests": {
+    "workspace": 8,
+    "CLI": 2,
+    "distinct": 10
+  },
+  "logs": {
+    "workspace-verified.log": {
+      "bytes": 17773,
+      "sha256": "d5b0ce06800073918d016d20c79299b2a9b9f543f2b0d9d09240cef8baae8617"
+    },
+    "cli-verified.log": {
+      "bytes": 138248,
+      "sha256": "52cc4da3e7f16ad5e9263a543ac4b7b3341b1c725e887b913c363b7bf8f50783"
+    },
+    "rustfmt-check.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "diff-verified.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "workspace-test-final3.log": {
+      "bytes": 18505,
+      "sha256": "d0d6355bf95bec6f2d2fdde84012ad2e96edfc9f070f7d597c40bf89e596b47b"
+    },
+    "workspace-test-final4.log": {
+      "bytes": 18470,
+      "sha256": "47374036f07f956940e7c35968e92eda95864db76bebe2ac92dc700ac6c34657"
+    },
+    "workspace-test-final5.log": {
+      "bytes": 18720,
+      "sha256": "267f37efda07b22ddb6de74c9080cd9f59397fc92c1de117f49e7fb43248a24a"
+    },
+    "cli-test.log": {
+      "bytes": 149433,
+      "sha256": "0639cd9f941984676060739dfe815702583e1bf23fa2f561c436bf931cc14266"
+    },
+    "cli-test-final.log": {
+      "bytes": 139007,
+      "sha256": "65fdfdba0a36bae2d7023258ba23be387690f180220a171879071ab806f75d0d"
+    },
+    "cli-test-final2.log": {
+      "bytes": 139024,
+      "sha256": "b508c2358cc1fc75e2c6c622d13883b8c10cf9e8f58e5b592cfaa5ad757db1c7"
+    }
+  },
+  "findings": [],
+  "tests_builds_models_process_actions": false,
+  "source_writes": false,
+  "old_PROP072_normative_tags_attributes_text_preserved": true,
+  "schema_previous_shape_preserved_except_optional_measurement_property_and_new_defs": true,
+  "compatibility": [
+    "Existing scalarlane_sizes calls/order retained",
+    "Default observer measurement returnsNone; encoded null meansdeclaredunavailable",
+    "TUI/plain changes only testfixture measurementsNone; production UI unchanged",
+    "Install ReadyApply/ReadyTail and ClosureDiff retain capturedBEFORE, takeAFTER afterapply; update carries its ownpreapply capture",
+    "Measurementdoesnot compile/hydrate/provider/install/network/quota"
+  ],
+  "qualified_semantics": [
+    "UTF8 scalar stream carries partialscalars across chunks; invalidUTF8 keeps rawbytes/hash",
+    "Uniquepayload keyedbySHA+length separatefromcontribution multiplicity and measuredsource reads",
+    "Staticdirect excludesonlyrecordednested marker spans; authoredancestry not inferred; unknownmappings stayunavailable",
+    "DynamicINDEX entry order/multiplicity/conditions retained; emitted/runtimeinclusion unknown becauseconditionsunevaluated",
+    "Retainedcarrier run/scope/sequence/invocation/snapshot preserved; emittedcompiler provenance separatefromplainpayloadSHA",
+    "Tokens/tokenizer/versionNone+unavailable; ambienttail,billing,RootTag unavailable explicitly"
+  ],
+  "limits": [
+    "CLI2 tests exercise realtree model+closed schema+sharedclosurepair helper; fullinstall/updatecommands notnewlyexecuted,carriercallpaths reviewed source-level",
+    "64MiB chunkstream and16.8MBactualrepeatedgraph exercised; not promiseconstantmemorywholetextparser oratomicfilesystemcapture",
+    "Retained base64 parser reviewed; one actualcompilertrace family exercises retainedmeasurement,notallwirepermutationseparately",
+    "Currentrawsource samples explicitlynotasserted compilerinputs thatproducedcommittedartifacts",
+    "PreviousEMPTYattemptnotfunctionalproof; repeatattempts notadditionaltests",
+    "No hypotheticalwhat-if or advancedtokenizer/fullproviderbilling/otherplatformqualification demanded"
+  ]
+}

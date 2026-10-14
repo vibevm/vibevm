@@ -1,0 +1,118 @@
+[
+  {
+    "name": "rustfmt",
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "crates/vibe-cli/src/commands/install/closure_diff.rs",
+      "crates/vibe-cli/src/commands/install/observer.rs",
+      "crates/vibe-cli/src/commands/tree/build.rs",
+      "crates/vibe-cli/src/commands/tree/build/tests.rs",
+      "crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs",
+      "crates/vibe-cli/src/commands/tree/mod.rs",
+      "crates/vibe-cli/src/commands/tree/model.rs",
+      "crates/vibe-cli/src/commands/tree/plain.rs",
+      "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "crates/vibe-cli/src/commands/tree/tui/dispatch.rs",
+      "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
+      "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "crates/vibe-cli/src/commands/tree/tui/modes.rs",
+      "crates/vibe-cli/src/commands/tree/tui/search/mod.rs",
+      "crates/vibe-cli/src/commands/tree/tui/state.rs",
+      "crates/vibe-cli/src/commands/update/scoped.rs",
+      "crates/vibe-cli/src/commands/update/scoped/apply.rs",
+      "crates/vibe-orchestrator/src/install/mod.rs",
+      "crates/vibe-orchestrator/src/install/ready.rs",
+      "crates/vibe-orchestrator/src/ports.rs",
+      "crates/vibe-workspace/src/boot_debugger/measurement.rs",
+      "crates/vibe-workspace/src/boot_debugger/measurement/carrier.rs",
+      "crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs",
+      "crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "crates/vibe-workspace/src/boot_debugger/static_summary.rs"
+    ],
+    "exit": 0,
+    "log": "/fast/zap-managed/2026-10-15-m06b2-correction/rustfmt.log"
+  },
+  {
+    "name": "rustfmt-check",
+    "argv": [
+      "rustfmt",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "crates/vibe-cli/src/commands/install/closure_diff.rs",
+      "crates/vibe-cli/src/commands/install/observer.rs",
+      "crates/vibe-cli/src/commands/tree/build.rs",
+      "crates/vibe-cli/src/commands/tree/build/tests.rs",
+      "crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs",
+      "crates/vibe-cli/src/commands/tree/mod.rs",
+      "crates/vibe-cli/src/commands/tree/model.rs",
+      "crates/vibe-cli/src/commands/tree/plain.rs",
+      "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "crates/vibe-cli/src/commands/tree/tui/dispatch.rs",
+      "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
+      "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "crates/vibe-cli/src/commands/tree/tui/modes.rs",
+      "crates/vibe-cli/src/commands/tree/tui/search/mod.rs",
+      "crates/vibe-cli/src/commands/tree/tui/state.rs",
+      "crates/vibe-cli/src/commands/update/scoped.rs",
+      "crates/vibe-cli/src/commands/update/scoped/apply.rs",
+      "crates/vibe-orchestrator/src/install/mod.rs",
+      "crates/vibe-orchestrator/src/install/ready.rs",
+      "crates/vibe-orchestrator/src/ports.rs",
+      "crates/vibe-workspace/src/boot_debugger/measurement.rs",
+      "crates/vibe-workspace/src/boot_debugger/measurement/carrier.rs",
+      "crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs",
+      "crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "crates/vibe-workspace/src/boot_debugger/static_summary.rs"
+    ],
+    "exit": 0,
+    "log": "/fast/zap-managed/2026-10-15-m06b2-correction/rustfmt-check.log"
+  },
+  {
+    "name": "workspace-verified",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-workspace",
+      "--lib",
+      "m_06_b_2_cases"
+    ],
+    "exit": 0,
+    "log": "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-verified.log"
+  },
+  {
+    "name": "cli-verified",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "m_06_b_2_cases"
+    ],
+    "exit": 0,
+    "log": "/fast/zap-managed/2026-10-15-m06b2-correction/cli-verified.log"
+  },
+  {
+    "name": "diff-verified",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "log": "/fast/zap-managed/2026-10-15-m06b2-correction/diff-verified.log"
+  }
+]

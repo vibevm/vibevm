@@ -299,6 +299,7 @@ mod tests {
             roots: vec!["g/alpha".to_string(), "g/beta".to_string()],
             packages: vec![pkg("g/alpha"), pkg("g/beta")],
             boot: Boot {
+                measurements: None,
                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
                 static_md: None,
                 index_md: IndexLane {

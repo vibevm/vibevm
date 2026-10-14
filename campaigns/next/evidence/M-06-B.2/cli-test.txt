@@ -1,0 +1,4281 @@
+warning: unused field `description` in `workspace.package`
+  --> Cargo.toml:91:1
+   |
+91 | description = "The disciplined runtime for spec-driven vibecoding"
+   | ^^^^^^^^^^^
+   |
+   = note: `cargo::unused_workspace_package_fields` is set to `warn` by default
+help: consider removing the field `workspace.package.description`
+warning: unused field `keywords` in `workspace.package`
+  --> Cargo.toml:92:1
+   |
+92 | keywords = ["spec-driven", "ai", "cli", "package-manager"]
+   | ^^^^^^^^
+   |
+help: consider removing the field `workspace.package.keywords`
+warning: unused field `categories` in `workspace.package`
+  --> Cargo.toml:93:1
+   |
+93 | categories = ["command-line-utilities", "development-tools"]
+   | ^^^^^^^^^^
+   |
+help: consider removing the field `workspace.package.categories`
+warning: workspace (manifest) generated 3 warnings
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-test-support/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-test-support` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/progress-core/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `progress-core` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-package-source/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-package-source` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> xtask/Cargo.toml:11:1
+   |
+10 | repository.workspace = true
+   | ----------
+11 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `xtask` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-spec/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-spec` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-lifecycle/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-lifecycle` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-actions/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-actions` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-orchestrator/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-orchestrator` (manifest) generated 1 warning
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-cli/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-cli` (manifest) generated 2 warnings
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-safefs/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-safefs` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-facts/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-facts` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-mcp/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-mcp` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-registry/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-registry` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-check/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-check` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-install/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-install` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-trace/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-trace` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-publish/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-publish` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-core/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-core` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-ext/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-ext` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-specdoc/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-specdoc` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-workspace/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-workspace` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-extension-registry/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-extension-registry` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-native-loader/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-native-loader` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-requirements/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-requirements` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-wire/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-wire` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-resolver/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-resolver` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-agent-projection/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-agent-projection` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc-server/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc-server` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc-shell/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc-shell` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-graph/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-graph` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-scrape/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-scrape` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-llm/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-llm` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-index/Cargo.toml:10:12
+   |
+10 | homepage = "https://gitverse.ru/vibevm/vibevm"
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 | repository = "https://gitverse.ru/vibevm/vibevm"
+   |              -----------------------------------
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-index` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-settings/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-settings` (manifest) generated 1 warning
+   Compiling serde v1.0.228
+   Compiling smallvec v1.15.1
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.2.0
+   Compiling winnow v1.0.1
+   Compiling rustix v1.1.4
+   Compiling linux-raw-sys v0.12.1
+   Compiling num-traits v0.2.19
+   Compiling futures-sink v0.3.32
+   Compiling pure-rust-locales v0.8.2
+   Compiling futures-io v0.3.32
+   Compiling mio v1.2.0
+   Compiling either v1.16.0
+   Compiling serde_core v1.0.228
+   Compiling regex-automata v0.4.14
+   Compiling crossbeam-utils v0.8.21
+   Compiling getrandom v0.3.4
+   Compiling unicode-segmentation v1.13.3
+   Compiling rustversion v1.0.22
+   Compiling parking_lot_core v0.9.12
+   Compiling scopeguard v1.2.0
+   Compiling ident_case v1.0.1
+   Compiling strum_macros v0.28.0
+   Compiling static_assertions v1.1.0
+   Compiling signal-hook v0.3.18
+   Compiling instability v0.3.12
+   Compiling critical-section v1.2.0
+   Compiling indoc v2.0.7
+   Compiling litrs v1.0.0
+   Compiling ahash v0.8.12
+   Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling enumflags2_derive v0.7.12
+   Compiling syn v3.0.4
+   Compiling futures-channel v0.3.32
+   Compiling icu_normalizer v2.2.0
+   Compiling darling_core v0.23.0
+   Compiling hashbrown v0.17.0
+   Compiling hashbrown v0.16.1
+   Compiling itertools v0.14.0
+   Compiling lock_api v0.4.14
+   Compiling time-core v0.1.9
+   Compiling tree-sitter-language v0.1.8
+   Compiling deranged v0.5.8
+   Compiling num-conv v0.2.2
+   Compiling num_threads v0.1.7
+   Compiling powerfmt v0.2.0
+   Compiling line-clipping v0.3.7
+   Compiling endi v1.1.1
+   Compiling futures-util v0.3.32
+   Compiling convert_case v0.10.0
+   Compiling pkg-config v0.3.33
+   Compiling byteorder v1.5.0
+   Compiling document-features v0.2.12
+   Compiling rand_core v0.9.5
+   Compiling ppv-lite86 v0.2.21
+   Compiling castaway v0.2.4
+   Compiling parking_lot v0.12.5
+   Compiling signal-hook-mio v0.2.5
+   Compiling libloading v0.8.9
+   Compiling simd-adler32 v0.3.9
+   Compiling bytes v1.11.1
+   Compiling serde_urlencoded v0.7.1
+   Compiling idna_adapter v1.2.1
+   Compiling concurrent-queue v2.5.0
+   Compiling wayland-backend v0.3.17
+   Compiling adler2 v2.0.1
+   Compiling enumflags2 v0.7.12
+   Compiling derive_more-impl v2.1.1
+   Compiling indexmap v2.14.0
+   Compiling toml_parser v1.1.2+spec-1.1.0
+   Compiling compact_str v0.9.1
+   Compiling kasuari v0.4.12
+   Compiling lru v0.18.1
+   Compiling fxhash v0.2.1
+   Compiling num-integer v0.1.46
+   Compiling dlib v0.5.3
+   Compiling zcheapstr v1.1.0
+   Compiling wayland-sys v0.31.11
+   Compiling downcast-rs v1.2.1
+   Compiling wayland-client v0.31.15
+   Compiling rand_chacha v0.9.0
+   Compiling strum v0.28.0
+   Compiling scoped-tls v1.0.1
+   Compiling ref-cast v1.0.25
+   Compiling rat-cursor v2.0.0
+   Compiling idna v1.1.0
+   Compiling miniz_oxide v0.8.9
+   Compiling time v0.3.53
+   Compiling event-listener v5.4.1
+   Compiling crossbeam-epoch v0.9.20
+   Compiling derive_more v2.1.1
+   Compiling tokio v1.52.1
+   Compiling http v1.4.0
+   Compiling unicode-truncate v2.0.1
+   Compiling ref-cast-impl v1.0.25
+   Compiling serde_json v1.0.151
+   Compiling wayland-scanner v0.31.11
+   Compiling darling_macro v0.23.0
+   Compiling str_indices v0.4.4
+   Compiling data-encoding v2.11.0
+   Compiling toml v0.9.12+spec-1.1.0
+   Compiling toml_edit v0.25.13+spec-1.1.0
+   Compiling crossbeam-deque v0.8.7
+   Compiling num-bigint v0.4.8
+   Compiling num-iter v0.1.46
+   Compiling toml_edit v0.23.10+spec-1.0.0
+   Compiling petgraph v0.8.3
+   Compiling chrono v0.4.44
+   Compiling fdeflate v0.3.7
+   Compiling num-complex v0.4.6
+   Compiling rand v0.9.4
+   Compiling darling v0.23.0
+   Compiling event-listener-strategy v0.5.4
+   Compiling ratatui-core v0.1.2
+   Compiling url v2.5.8
+   Compiling flate2 v1.1.9
+   Compiling regex v1.12.3
+   Compiling float-cmp v0.10.0
+   Compiling unicode-display-width v0.3.0
+   Compiling ropey v1.6.1
+   Compiling http-body v1.0.1
+   Compiling futures-lite v2.6.1
+   Compiling async-recursion v1.1.1
+   Compiling futures-executor v0.3.32
+   Compiling zvariant_utils v4.2.0
+   Compiling async-broadcast v0.7.2
+   Compiling serde_repr v0.1.20
+   Compiling async-trait v0.1.89
+   Compiling tree-sitter-go v0.25.0
+   Compiling uuid v1.25.0
+   Compiling tree-sitter-typescript v0.23.2
+   Compiling vibe-doc-shell v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-doc-shell)
+   Compiling tree-sitter v0.27.0
+   Compiling ordered-stream v0.2.0
+   Compiling borrow-or-share v0.2.4
+   Compiling arrayvec v0.7.8
+   Compiling hex v0.4.3
+   Compiling normalize-line-endings v0.3.0
+   Compiling proc-macro-crate v3.5.0
+   Compiling unicode-general-category v1.1.0
+   Compiling pxfm v0.1.30
+   Compiling utf-8 v0.7.6
+   Compiling bit-vec v0.8.0
+   Compiling portable-atomic v1.13.1
+   Compiling png v0.18.1
+   Compiling vibe-core v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-core)
+   Compiling core-ai-native-specmap v1.1.0 (/fast/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap)
+   Compiling http-body-util v0.1.3
+   Compiling core-ai-native-specmap v0.1.0 (/fast/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/lean-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-specmap)
+   Compiling num-rational v0.4.2
+   Compiling chromiumoxide_types v0.9.1
+   Compiling bstr v1.12.1
+   Compiling format_num_pattern v0.9.5
+   Compiling futures v0.3.32
+   Compiling progress-core v1.1.0 (/fast/git/v/vibevm-next/crates/progress-core)
+   Compiling crossbeam-queue v0.3.13
+   Compiling crossbeam-channel v0.5.16
+   Compiling fluent-uri v0.4.1
+   Compiling console v0.16.6
+   Compiling regex-cursor v0.1.5
+   Compiling ratatui-widgets v0.3.2
+   Compiling rat-reloc v2.0.2
+   Compiling predicates v3.1.4
+   Compiling vsimd v0.8.0
+   Compiling vte v0.15.0
+   Compiling streaming-iterator v0.1.9
+   Compiling iset v0.3.3
+   Compiling resolvo v0.11.0
+   Compiling tungstenite v0.28.0
+   Compiling bit-set v0.8.0
+   Compiling micromap v0.3.0
+   Compiling axum-core v0.5.6
+   Compiling outref v0.5.2
+   Compiling chromiumoxide_pdl v0.9.1
+   Compiling byteorder-lite v0.1.0
+   Compiling num v0.4.3
+   Compiling zvariant_derive v5.15.0
+   Compiling fs-set-times v0.20.3
+   Compiling rustix-linux-procfs v0.1.1
+   Compiling tempfile v3.27.0
+   Compiling crossterm v0.29.0
+   Compiling gethostname v1.1.0
+   Compiling rustc-hash v2.1.2
+   Compiling rfd v0.15.4
+   Compiling vibe-specdoc v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-specdoc)
+   Compiling bytemuck v1.25.1
+   Compiling dyn-clone v1.0.20
+   Compiling zvariant v5.15.0
+   Compiling raw-window-handle v0.6.2
+   Compiling x11rb-protocol v0.13.2
+   Compiling fancy-regex v0.18.0
+   Compiling uuid-simd v0.8.0
+   Compiling fraction v0.15.4
+   Compiling assert_cmd v2.2.0
+   Compiling crossbeam v0.8.4
+   Compiling referencing v0.47.0
+   Compiling vt100 v0.16.2
+   Compiling hyper v1.9.0
+   Compiling tower v0.5.3
+   Compiling tokio-rustls v0.26.4
+   Compiling cap-primitives v4.0.3
+   Compiling lean-ai-native-check v0.1.0 (/fast/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/lean-ai-native-lang/v0.1.0/crates/lean-ai-native-check)
+   Compiling async-tungstenite v0.32.1
+   Compiling moxcms v0.8.1
+   Compiling matchers v0.2.0
+   Compiling email_address v0.2.9
+   Compiling which v8.0.5
+   Compiling jsonschema-regex v0.47.0
+   Compiling ratatui-crossterm v0.1.2
+   Compiling futures-timer v3.0.4
+   Compiling urlencoding v2.1.3
+   Compiling chromiumoxide_cdp v0.9.1
+   Compiling pollster v0.4.0
+   Compiling shell-words v1.1.1
+   Compiling vibe-cli v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-cli)
+   Compiling map_range_int v1.1.0
+   Compiling bytecount v0.6.9
+   Compiling num-cmp v0.1.0
+   Compiling dunce v1.0.5
+   Compiling unit-prefix v0.5.2
+   Compiling vibe-settings v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-settings)
+   Compiling zip v4.6.1
+   Compiling vibe-actions v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-actions)
+   Compiling rust-ai-native-env-audit v1.1.0 (/fast/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/rust-ai-native-env-audit)
+   Compiling tower-http v0.6.8
+   Compiling tracing-subscriber v0.3.23
+   Compiling hyper-util v0.1.20
+   Compiling cap-std v4.0.3
+   Compiling rat-event v2.1.0
+   Compiling dialoguer v0.12.0
+   Compiling zbus_names v4.3.4
+   Compiling jsonschema v0.47.0
+   Compiling indicatif v0.18.6
+   Compiling vibe-wire v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-wire)
+   Compiling vibe-extension-registry v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-extension-registry)
+   Compiling vibe-graph v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-graph)
+   Compiling cap-fs-ext v4.0.3
+   Compiling rat-focus v2.1.1
+   Compiling rat-scrolled v2.0.2
+   Compiling vibe-safefs v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-safefs)
+   Compiling zbus_macros v5.19.0
+   Compiling x11rb v0.13.2
+   Compiling rat-popup v3.0.2
+   Compiling rat-text v3.1.0
+   Compiling rat-ftable v2.2.0
+   Compiling rat-salsa v4.0.3
+   Compiling wayland-protocols v0.32.13
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+   Compiling rat-menu v3.1.1
+   Compiling hyper-rustls v0.27.9
+   Compiling reqwest v0.13.4
+   Compiling axum v0.8.9
+   Compiling reqwest v0.12.28
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling image v0.25.10
+   Compiling rat-widget v3.2.1
+   Compiling zbus v5.19.0
+   Compiling arboard v3.6.1
+   Compiling ashpd v0.11.1
+   Compiling vibe-spec v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-spec)
+   Compiling vibe-registry v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-registry)
+   Compiling vibe-native-loader v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-native-loader)
+   Compiling vibe-ext v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-ext)
+   Compiling vibe-llm v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-llm)
+   Compiling vibe-scrape v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-scrape)
+   Compiling vibe-resolver v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-resolver)
+warning: unused variable: `error`
+   --> crates/vibe-scrape/src/transaction/store/inherent_methods.rs:348:25
+    |
+  1 | macro_rules! system_transaction_store_inherent_methods {
+...
+348 |                     Err(error)
+    |                         ^^^^^
+    |
+   ::: crates/vibe-scrape/src/transaction/store.rs:159:5
+    |
+159 |     system_transaction_store_inherent_methods!();
+    |     -------------------------------------------- in this macro invocation
+    |
+help: `error` is captured in macro and introduced a unused variable
+   --> crates/vibe-scrape/src/transaction/store/inherent_methods.rs:348:25
+    |
+348 |                     Err(error)
+    |                         ^^^^^
+    |
+   ::: crates/vibe-scrape/src/transaction/store.rs:159:5
+    |
+159 |     system_transaction_store_inherent_methods!();
+    |     -------------------------------------------- in this macro invocation
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling vibe-facts v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-facts)
+   Compiling vibe-native-loader-json-backend-fixture v1.0.0 (/fast/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-json-backend)
+   Compiling vibe-native-loader-compiler-fixture v1.0.0 (/fast/git/v/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-compiler-plugin)
+   Compiling vibe-workspace v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-workspace)
+warning: fields `host`, `resolution_identity`, and `visible` are never read
+   --> crates/vibe-workspace/src/source_query/capture.rs:164:16
+    |
+163 | pub struct BoundSourceInputs {
+    |            ----------------- fields in this struct
+164 |     pub(super) host: HostExtensionSource,
+    |                ^^^^
+165 |     pub(super) node_root: PathBuf,
+166 |     pub(super) resolution_identity: OrderedResolutionIdentity,
+    |                ^^^^^^^^^^^^^^^^^^^
+167 |     pub(super) visible: BTreeSet<NodeId>,
+    |                ^^^^^^^
+    |
+    = note: `BoundSourceInputs` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `selected_root` is never used
+   --> crates/vibe-workspace/src/source_query/capture.rs:273:19
+    |
+172 | impl BoundSourceInputs {
+    | ---------------------- method in this implementation
+...
+273 |     pub(crate) fn selected_root(&self, group: &str, name: &str) -> Option<&Path> {
+    |                   ^^^^^^^^^^^^^
+
+warning: method `revalidate_with` is never used
+   --> crates/vibe-workspace/src/source_query/capture/continuity.rs:185:8
+    |
+ 82 | impl WitnessedSourceWorld {
+    | ------------------------- method in this implementation
+...
+185 |     fn revalidate_with(
+    |        ^^^^^^^^^^^^^^^
+
+   Compiling vibe-agent-projection v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-agent-projection)
+   Compiling vibe-doc v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-doc)
+   Compiling vibe-requirements v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-requirements)
+   Compiling vibe-lifecycle v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-lifecycle)
+warning: `vibe-scrape` (lib) generated 1 warning
+   Compiling vibe-trace v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-trace)
+   Compiling vibe-check v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-check)
+   Compiling vibe-doc-server v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-doc-server)
+warning: `vibe-workspace` (lib) generated 3 warnings
+warning: method `begin` is never used
+   --> crates/vibe-lifecycle/src/state/source_stage.rs:115:19
+    |
+ 73 | impl ScriptSourceStage {
+    | ---------------------- method in this implementation
+...
+115 |     pub(crate) fn begin<'a>(
+    |                   ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `execute_host_admitted_bound_vibe_bin` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy.rs:108:15
+    |
+108 | pub(crate) fn execute_host_admitted_bound_vibe_bin(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `alias_warnings` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:389:19
+    |
+246 | impl AdmittedLocalDeployBinding {
+    | ------------------------------- method in this implementation
+...
+389 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: field `alias_note` is never read
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:510:5
+    |
+505 | struct NamedRootWitness {
+    |        ---------------- field in this struct
+...
+510 |     alias_note: Option<String>,
+    |     ^^^^^^^^^^
+
+warning: methods `user_home` and `alias_warnings` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:538:19
+    |
+528 | impl LockedLocalDeployBinding {
+    | ----------------------------- methods in this implementation
+...
+538 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+544 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: fields `compatibility` and `activation` are never read
+  --> crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs:35:9
+   |
+34 | pub(crate) struct DerivativeDecision {
+   |                   ------------------ fields in this struct
+35 |     pub compatibility: CompatibilityReport,
+   |         ^^^^^^^^^^^^^
+36 |     pub activation: ActivationState,
+   |         ^^^^^^^^^^
+   |
+   = note: `DerivativeDecision` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `remove_resource` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:471:19
+    |
+316 | impl<'a> BoundVibeBinStore<'a> {
+    | ------------------------------ method in this implementation
+...
+471 |     pub(crate) fn remove_resource(&self, relative: &str) -> Result<bool, BoundVibeBinError> {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: fields `run_id`, `reservation_ref`, and `pre_effect_plan_sha256` are never read
+  --> crates/vibe-lifecycle/src/state/install_stage.rs:54:16
+   |
+53 | pub struct InstallEnteredStage {
+   |            ------------------- fields in this struct
+54 |     pub(crate) run_id: String,
+   |                ^^^^^^
+55 |     pub(crate) reservation_ref: String,
+   |                ^^^^^^^^^^^^^^^
+56 |     pub(crate) pre_effect_plan_sha256: String,
+   |                ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `InstallEnteredStage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+   Compiling vibe-install v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-install)
+   Compiling vibe-publish v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-publish)
+   Compiling vibe-test-support v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-test-support)
+   Compiling vibe-orchestrator v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-orchestrator)
+warning: unused import: `LatestReleaseReadError`
+  --> crates/vibe-publish/src/github_release.rs:28:57
+   |
+28 | pub(crate) use bounded_read::{LatestReleaseObservation, LatestReleaseReadError};
+   |                                                         ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `self`
+  --> crates/vibe-publish/src/package_git_approval.rs:14:36
+   |
+14 | use crate::package_git_operation::{self, journal};
+   |                                    ^^^^
+
+warning: unused import: `self`
+  --> crates/vibe-publish/src/package_git_approval.rs:18:32
+   |
+18 | use crate::package_git_ready::{self, ReadyInspection, ReadyLimits};
+   |                                ^^^^
+
+warning: unused import: `serde_json::json`
+ --> crates/vibe-publish/src/package_git_operation.rs:4:5
+  |
+4 | use serde_json::json;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `sha`
+  --> crates/vibe-publish/src/package_git_parent.rs:11:81
+   |
+11 | use crate::package_git_operation::journal::{self, ParentPending, ParentReceipt, sha};
+   |                                                                                 ^^^
+
+warning: unused imports: `PackageGitPlan`, `StagedCommit`, and `TagRef`
+  --> crates/vibe-publish/src/package_git_parent.rs:13:31
+   |
+13 | use crate::package_git_plan::{PackageGitPlan, StagedCommit, TagRef};
+   |                               ^^^^^^^^^^^^^^  ^^^^^^^^^^^^  ^^^^^^
+
+warning: unused import: `Held`
+  --> crates/vibe-publish/src/package_git_parent.rs:24:14
+   |
+24 |     Closure, Held, exact_private_refs, held, no_external_object_sources, pending, receipt,
+   |              ^^^^
+
+warning: unused imports: `Digest` and `Sha256`
+ --> crates/vibe-publish/src/package_git_payload.rs:5:12
+  |
+5 | use sha2::{Digest, Sha256};
+  |            ^^^^^^  ^^^^^^
+
+warning: unused import: `GitPerson`
+  --> crates/vibe-publish/src/package_git_plan.rs:12:42
+   |
+12 | pub(crate) use objects::{CommitMetadata, GitPerson, TagMetadata};
+   |                                          ^^^^^^^^^
+
+warning: unused import: `SubmoduleInspection`
+  --> crates/vibe-publish/src/package_git_provenance_populated.rs:14:36
+   |
+14 | use crate::package_git_submodule::{SubmoduleInspection, SubmoduleLimits};
+   |                                    ^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+ --> crates/vibe-publish/src/package_git_repo_create.rs:6:13
+  |
+6 | use serde::{Deserialize, Serialize};
+  |             ^^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `self`
+  --> crates/vibe-publish/src/package_git_result.rs:15:5
+   |
+15 |     self, ReadyInspection, ReadyLimits,
+   |     ^^^^
+
+warning: unused import: `Write`
+ --> crates/vibe-publish/src/package_git_submodule.rs:4:21
+  |
+4 | use std::io::{Read, Write};
+  |                     ^^^^^
+
+warning: unused import: `std::io::Read`
+ --> crates/vibe-publish/src/package_git_submodule_store/import.rs:3:5
+  |
+3 | use std::io::Read;
+  |     ^^^^^^^^^^^^^
+
+warning: unused imports: `PublicationPartition` and `PublicationRemoteTarget`
+  --> crates/vibe-publish/src/publication_full_plan/mod.rs:13:29
+   |
+13 |     PublicationObservedTag, PublicationPartition, PublicationRemoteTarget,
+   |                             ^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `cold::inspect_full_plan_cold`
+  --> crates/vibe-publish/src/publication_full_plan/mod.rs:36:16
+   |
+36 | pub(crate) use cold::inspect_full_plan_cold;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `open_vault_asset_stream`
+  --> crates/vibe-publish/src/publication_payload/vault.rs:65:43
+   |
+65 | pub(crate) use stream::{VaultAssetStream, open_vault_asset_stream};
+   |                                           ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `vibe_wire::generated::lifecycle_report::LifecycleContributionReport`
+  --> crates/vibe-orchestrator/src/dispatch/mod.rs:13:5
+   |
+13 | use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `specmark::spec`
+  --> crates/vibe-orchestrator/src/phase.rs:15:5
+   |
+15 | use specmark::spec;
+   |     ^^^^^^^^^^^^^^
+
+warning: unused import: `std::sync::Arc`
+  --> crates/vibe-orchestrator/src/phase.rs:17:5
+   |
+17 | use std::sync::Arc;
+   |     ^^^^^^^^^^^^^^
+
+warning: unused import: `vibe_core::manifest::TargetOs`
+  --> crates/vibe-orchestrator/src/phase.rs:20:5
+   |
+20 | use vibe_core::manifest::TargetOs;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `AgentBackend`, `LifecycleLease`, and `RunMetadata`
+  --> crates/vibe-orchestrator/src/phase.rs:21:22
+   |
+21 | use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunMetadata};
+   |                      ^^^^^^^^^^^^  ^^^^^^^^^^^^^^         ^^^^^^^^^^^
+
+warning: unused imports: `LifecycleContributionReport` and `LifecycleStepReport`
+  --> crates/vibe-orchestrator/src/phase.rs:23:5
+   |
+23 |     LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^                       ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `vibe_wire::generated::shared::Timestamp`
+  --> crates/vibe-orchestrator/src/phase.rs:25:5
+   |
+25 | use vibe_wire::generated::shared::Timestamp;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `vibe_workspace::compile_trace::TraceRun`
+  --> crates/vibe-orchestrator/src/phase.rs:26:5
+   |
+26 | use vibe_workspace::compile_trace::TraceRun;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `InstallInputs` and `InstallPolicy`
+  --> crates/vibe-orchestrator/src/phase.rs:31:43
+   |
+31 |     InstallDisposition, InstallExecution, InstallInputs, InstallPolicy, PreparedSelection,
+   |                                           ^^^^^^^^^^^^^  ^^^^^^^^^^^^^
+
+warning: unused imports: `ConfirmGate`, `InstallManifestMutation`, `InstallObserver`, `PackageSourceFactory`, and `RegistryEnvironment`
+  --> crates/vibe-orchestrator/src/phase.rs:37:5
+   |
+37 |     ConfirmGate, InstallManifestMutation, InstallObserver, PackageSourceFactory,
+   |     ^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+38 |     RegistryEnvironment, RunObserver,
+   |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `bail`
+ --> crates/vibe-orchestrator/src/phase/invocation.rs:6:31
+  |
+6 | use anyhow::{Context, Result, bail};
+  |                               ^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> crates/vibe-orchestrator/src/machine_view/page_session.rs:167:14
+    |
+167 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+167 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+167 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> crates/vibe-orchestrator/src/document_analysis/mod.rs:112:14
+    |
+112 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+112 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+112 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> crates/vibe-orchestrator/src/document_analysis/mod.rs:172:14
+    |
+172 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+172 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+172 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+    |
+
+warning: unused import: `RunObserver`
+  --> crates/vibe-orchestrator/src/phase.rs:38:26
+   |
+38 |     RegistryEnvironment, RunObserver,
+   |                          ^^^^^^^^^^^
+
+warning: variable does not need to be mutable
+   --> crates/vibe-publish/src/github_release/bounded_read.rs:268:13
+    |
+268 |         let mut response = request
+    |             ----^^^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `vibe-lifecycle` (lib) generated 8 warnings
+warning: function `supports` is never used
+  --> crates/vibe-publish/src/publication_full_plan/transition.rs:39:15
+   |
+39 | pub(super) fn supports(partition: &PublicationPartition) -> bool {
+   |               ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `APPROVAL_DIR` is never used
+  --> crates/vibe-publish/src/package_git_approval.rs:21:7
+   |
+21 | const APPROVAL_DIR: &str = "package-git-e2";
+   |       ^^^^^^^^^^^^
+
+warning: function `open_vault_asset_stream` is never used
+  --> crates/vibe-publish/src/publication_payload/vault/stream.rs:20:15
+   |
+20 | pub(crate) fn open_vault_asset_stream(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_full_plan_cold_proved` is never used
+  --> crates/vibe-publish/src/publication_full_plan/cold.rs:91:15
+   |
+91 | pub(super) fn inspect_full_plan_cold_proved(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `PreparedJournal` is never used
+  --> crates/vibe-publish/src/publication_full_plan/prepare.rs:20:17
+   |
+20 | pub(super) enum PreparedJournal {
+   |                 ^^^^^^^^^^^^^^^
+
+warning: constant `FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_approval.rs:22:7
+   |
+22 | const FORMAT: &str = "vibevm.package-git.mode-a-approval/e1";
+   |       ^^^^^^
+
+warning: function `publish_input` is never used
+   --> crates/vibe-publish/src/publication_full_plan/journal.rs:183:15
+    |
+183 | pub(super) fn publish_input(
+    |               ^^^^^^^^^^^^^
+
+warning: struct `TrustedLocalPublication` is never constructed
+  --> crates/vibe-publish/src/publication_full_plan/prepare.rs:32:19
+   |
+32 | pub(crate) struct TrustedLocalPublication<'a> {
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `ApprovalSource` is never used
+  --> crates/vibe-publish/src/publication_full_plan/prepare.rs:39:6
+   |
+39 | enum ApprovalSource {
+   |      ^^^^^^^^^^^^^^
+
+warning: method `open` is never used
+  --> crates/vibe-publish/src/publication_full_plan/prepare.rs:46:8
+   |
+45 | impl ApprovalSource {
+   | ------------------- method in this implementation
+46 |     fn open(
+   |        ^^^^
+
+warning: constant `MARKER_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_approval.rs:23:7
+   |
+23 | const MARKER_FORMAT: &str = "vibevm.package-git.approval-redemption/e1";
+   |       ^^^^^^^^^^^^^
+
+warning: constant `CAP` is never used
+  --> crates/vibe-publish/src/package_git_approval.rs:24:7
+   |
+24 | const CAP: usize = 16 * 1024;
+   |       ^^^
+
+warning: enum `ApprovalError` is never used
+  --> crates/vibe-publish/src/package_git_approval.rs:27:17
+   |
+27 | pub(crate) enum ApprovalError {
+   |                 ^^^^^^^^^^^^^
+
+warning: associated function `from_host_capture` is never used
+  --> crates/vibe-publish/src/publication_full_plan/prepare.rs:60:19
+   |
+57 | impl<'a> TrustedLocalPublication<'a> {
+   | ------------------------------------ associated function in this implementation
+...
+60 |     pub(crate) fn from_host_capture(
+   |                   ^^^^^^^^^^^^^^^^^
+
+warning: enum `SessionOpen` is never used
+  --> crates/vibe-publish/src/publication_full_plan/session.rs:25:17
+   |
+25 | pub(super) enum SessionOpen<'a> {
+   |                 ^^^^^^^^^^^
+
+warning: struct `EffectSet` is never constructed
+  --> crates/vibe-publish/src/package_git_approval.rs:36:8
+   |
+36 | struct EffectSet {
+   |        ^^^^^^^^^
+
+warning: function `prepare_local_full_plan` is never used
+  --> crates/vibe-publish/src/publication_full_plan/prepare.rs:76:15
+   |
+76 | pub(crate) fn prepare_local_full_plan(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `ReadyLane` is never used
+   --> crates/vibe-publish/src/publication_full_plan/prepare.rs:150:6
+    |
+150 | enum ReadyLane<'a> {
+    |      ^^^^^^^^^
+
+warning: function `prepare_journal_inner` is never used
+   --> crates/vibe-publish/src/publication_full_plan/prepare.rs:187:4
+    |
+187 | fn prepare_journal_inner(
+    |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ApprovalRecord` is never constructed
+  --> crates/vibe-publish/src/package_git_approval.rs:43:8
+   |
+43 | struct ApprovalRecord {
+   |        ^^^^^^^^^^^^^^
+
+warning: associated function `open` is never used
+  --> crates/vibe-publish/src/publication_full_plan/session.rs:53:19
+   |
+51 | impl<'a> ReadyRun<'a> {
+   | --------------------- associated function in this implementation
+52 |     #[allow(clippy::too_many_arguments)]
+53 |     pub(super) fn open(
+   |                   ^^^^
+
+warning: struct `Redemption` is never constructed
+  --> crates/vibe-publish/src/package_git_approval.rs:67:8
+   |
+67 | struct Redemption {
+   |        ^^^^^^^^^^
+
+warning: function `drive_one_fixed` is never used
+  --> crates/vibe-publish/src/publication_full_plan/calls/driver.rs:50:15
+   |
+50 | pub(super) fn drive_one_fixed(
+   |               ^^^^^^^^^^^^^^^
+
+warning: struct `ApprovalHome` is never constructed
+  --> crates/vibe-publish/src/package_git_approval.rs:90:19
+   |
+90 | pub(crate) struct ApprovalHome {
+   |                   ^^^^^^^^^^^^
+
+warning: struct `VerifiedApproval` is never constructed
+  --> crates/vibe-publish/src/package_git_approval.rs:95:19
+   |
+95 | pub(crate) struct VerifiedApproval {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: method `authority_id` is never used
+   --> crates/vibe-publish/src/package_git_approval.rs:102:19
+    |
+101 | impl VerifiedApproval {
+    | --------------------- method in this implementation
+102 |     pub(crate) fn authority_id(&self) -> &str {
+    |                   ^^^^^^^^^^^^
+
+warning: struct `RedemptionReceipt` is never constructed
+   --> crates/vibe-publish/src/package_git_approval.rs:108:19
+    |
+108 | pub(crate) struct RedemptionReceipt {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: enum `FirstPairInspection` is never used
+   --> crates/vibe-publish/src/publication_full_plan/calls/assets.rs:216:17
+    |
+216 | pub(super) enum FirstPairInspection {
+    |                 ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ColdExpectation` is never constructed
+   --> crates/vibe-publish/src/package_git_approval.rs:116:19
+    |
+116 | pub(crate) struct ColdExpectation<'a> {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: struct `ReadyBinding` is never constructed
+   --> crates/vibe-publish/src/package_git_approval.rs:123:8
+    |
+123 | struct ReadyBinding {
+    |        ^^^^^^^^^^^^
+
+warning: function `inspect_first_pair` is never used
+   --> crates/vibe-publish/src/publication_full_plan/calls/assets.rs:374:15
+    |
+374 | pub(super) fn inspect_first_pair(
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `sha` is never used
+   --> crates/vibe-publish/src/package_git_approval.rs:129:4
+    |
+129 | fn sha(bytes: &[u8]) -> String {
+    |    ^^^
+
+warning: function `valid_human` is never used
+   --> crates/vibe-publish/src/package_git_approval.rs:133:4
+    |
+133 | fn valid_human(value: &str) -> bool {
+    |    ^^^^^^^^^^^
+
+warning: function `valid_sha` is never used
+   --> crates/vibe-publish/src/package_git_approval.rs:140:4
+    |
+140 | fn valid_sha(value: &str) -> bool {
+    |    ^^^^^^^^^
+
+warning: function `canonical` is never used
+   --> crates/vibe-publish/src/package_git_approval.rs:149:4
+    |
+149 | fn canonical<T: Serialize + for<'de> Deserialize<'de>>(bytes: &[u8]) -> Result<T, ApprovalError> {
+    |    ^^^^^^^^^
+
+warning: function `host_now` is never used
+   --> crates/vibe-publish/src/package_git_approval.rs:158:4
+    |
+158 | fn host_now() -> Result<u64, ApprovalError> {
+    |    ^^^^^^^^
+
+warning: function `approval_name` is never used
+   --> crates/vibe-publish/src/package_git_approval.rs:165:4
+    |
+165 | fn approval_name(digest: &str) -> Result<String, ApprovalError> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `effects` is never used
+   --> crates/vibe-publish/src/package_git_approval.rs:174:4
+    |
+174 | fn effects(plan: &PackageGitPlan) -> Result<EffectSet, ApprovalError> {
+    |    ^^^^^^^
+
+warning: multiple associated items are never used
+   --> crates/vibe-publish/src/package_git_approval.rs:205:19
+    |
+204 | impl ApprovalHome {
+    | ----------------- associated items in this implementation
+205 |     pub(crate) fn open_from_settings() -> Result<Self, ApprovalError> {
+    |                   ^^^^^^^^^^^^^^^^^^
+...
+218 |     fn open_selected(path: &Path) -> Result<Self, ApprovalError> {
+    |        ^^^^^^^^^^^^^
+...
+224 |     fn checked_settings_root(&self) -> Result<String, ApprovalError> {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+...
+240 |     pub(crate) fn load_mode_a(
+    |                   ^^^^^^^^^^^
+...
+265 |     fn load_at(
+    |        ^^^^^^^
+...
+293 |     pub(crate) fn redeem(
+    |                   ^^^^^^
+...
+321 |     fn redeem_at(
+    |        ^^^^^^^^^
+
+warning: function `inspect_assets` is never used
+  --> crates/vibe-publish/src/publication_full_plan/calls/asset_history.rs:50:15
+   |
+50 | pub(super) fn inspect_assets(
+   |               ^^^^^^^^^^^^^^
+
+warning: function `drive_one_fixed` is never used
+   --> crates/vibe-publish/src/publication_full_plan/calls/asset_driver.rs:116:15
+    |
+116 | pub(super) fn drive_one_fixed(
+    |               ^^^^^^^^^^^^^^^
+
+warning: methods `inspect_redemption_cold_profile`, `inspect_redemption_with_ready`, `inspect_redemption_cold`, and `inspect_redemption_populated_cold` are never used
+   --> crates/vibe-publish/src/package_git_approval/cold.rs:9:19
+    |
+  7 | impl ApprovalHome {
+    | ----------------- methods in this implementation
+  8 |     #[allow(clippy::too_many_arguments)]
+  9 |     pub(super) fn inspect_redemption_cold_profile(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 42 |     pub(super) fn inspect_redemption_with_ready(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+112 |     pub(crate) fn inspect_redemption_cold(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^
+...
+140 |     pub(crate) fn inspect_redemption_populated_cold(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `check_ready_identity` is never used
+   --> crates/vibe-publish/src/package_git_approval/cold.rs:170:4
+    |
+170 | fn check_ready_identity(
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: variant `Retired` is never constructed
+  --> crates/vibe-publish/src/publication_full_plan/mod.rs:92:5
+   |
+63 | pub(crate) enum Inspection {
+   |                 ---------- variant in this enum
+...
+92 |     Retired {
+   |     ^^^^^^^
+   |
+   = note: `Inspection` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: constant `PENDING` is never used
+  --> crates/vibe-publish/src/package_git_approval/link.rs:11:7
+   |
+11 | const PENDING: &str = "approval-link-pending";
+   |       ^^^^^^^
+
+warning: constant `LANDED` is never used
+  --> crates/vibe-publish/src/package_git_approval/link.rs:12:7
+   |
+12 | const LANDED: &str = "approval-link";
+   |       ^^^^^^
+
+warning: enum `LinkInspection` is never used
+  --> crates/vibe-publish/src/package_git_approval/link.rs:15:17
+   |
+15 | pub(crate) enum LinkInspection {
+   |                 ^^^^^^^^^^^^^^
+
+warning: function `recovery` is never used
+  --> crates/vibe-publish/src/package_git_approval/link.rs:30:4
+   |
+30 | fn recovery(run: Option<&str>, reason: impl Into<String>) -> LinkInspection {
+   |    ^^^^^^^^
+
+warning: function `marker_candidate` is never used
+  --> crates/vibe-publish/src/package_git_approval/link.rs:39:15
+   |
+39 | pub(super) fn marker_candidate(
+   |               ^^^^^^^^^^^^^^^^
+
+warning: function `exact_pending` is never used
+  --> crates/vibe-publish/src/package_git_approval/link.rs:72:4
+   |
+72 | fn exact_pending(
+   |    ^^^^^^^^^^^^^
+
+warning: fields `authority_mode`, `authority_ref`, `publish`, and `allow_replace_published` are never read
+   --> crates/vibe-publish/src/publication_full_plan/mod.rs:133:5
+    |
+129 | struct Selected {
+    |        -------- fields in this struct
+...
+133 |     authority_mode: Option<String>,
+    |     ^^^^^^^^^^^^^^
+134 |     authority_ref: Option<String>,
+    |     ^^^^^^^^^^^^^
+135 |     publish: bool,
+    |     ^^^^^^^
+136 |     allow_replace_published: bool,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `initial_matches` is never used
+   --> crates/vibe-publish/src/publication_full_plan/mod.rs:235:4
+    |
+235 | fn initial_matches(observed: &RemoteObservation, plan: &PublicationEffectPlan) -> bool {
+    |    ^^^^^^^^^^^^^^^
+
+warning: methods `link_mode_a`, `link_inner`, `link_inner_profile`, `inspect_link_cold`, and `inspect_link_cold_profile` are never used
+   --> crates/vibe-publish/src/package_git_approval/link.rs:105:19
+    |
+103 | impl ApprovalHome {
+    | ----------------- methods in this implementation
+104 |     #[allow(clippy::too_many_arguments)]
+105 |     pub(crate) fn link_mode_a(
+    |                   ^^^^^^^^^^^
+...
+134 |     pub(super) fn link_inner(
+    |                   ^^^^^^^^^^
+...
+168 |     pub(super) fn link_inner_profile(
+    |                   ^^^^^^^^^^^^^^^^^^
+...
+344 |     pub(crate) fn inspect_link_cold(
+    |                   ^^^^^^^^^^^^^^^^^
+...
+372 |     pub(super) fn inspect_link_cold_profile(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `load_at_profile`, `load_mode_a_populated`, `link_mode_a_populated`, and `inspect_link_populated_cold` are never used
+   --> crates/vibe-publish/src/package_git_approval/profile.rs:9:19
+    |
+  7 | impl ApprovalHome {
+    | ----------------- methods in this implementation
+  8 |     #[allow(clippy::too_many_arguments)]
+  9 |     pub(super) fn load_at_profile(
+    |                   ^^^^^^^^^^^^^^^
+...
+ 75 |     pub(crate) fn load_mode_a_populated(
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+102 |     pub(crate) fn link_mode_a_populated(
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+133 |     pub(crate) fn inspect_link_populated_cold(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `redeem_at_profile` and `redeem_populated` are never used
+   --> crates/vibe-publish/src/package_git_approval/redeem.rs:9:19
+    |
+  7 | impl ApprovalHome {
+    | ----------------- methods in this implementation
+  8 |     #[allow(clippy::too_many_arguments)]
+  9 |     pub(super) fn redeem_at_profile(
+    |                   ^^^^^^^^^^^^^^^^^
+...
+121 |     pub(crate) fn redeem_populated(
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: methods `ready` and `ready_profile` are never used
+  --> crates/vibe-publish/src/package_git_approval/ready.rs:7:19
+   |
+ 5 | impl ApprovalHome {
+   | ----------------- methods in this implementation
+ 6 |     #[allow(clippy::too_many_arguments)]
+ 7 |     pub(super) fn ready(
+   |                   ^^^^^
+...
+33 |     pub(super) fn ready_profile(
+   |                   ^^^^^^^^^^^^^
+
+warning: struct `CensusLimits` is never constructed
+  --> crates/vibe-publish/src/package_git_gitlink.rs:14:19
+   |
+14 | pub(crate) struct CensusLimits {
+   |                   ^^^^^^^^^^^^
+
+warning: struct `GitlinkCandidate` is never constructed
+  --> crates/vibe-publish/src/package_git_gitlink.rs:22:19
+   |
+22 | pub(crate) struct GitlinkCandidate {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: enum `GitIndexCensus` is never used
+  --> crates/vibe-publish/src/package_git_gitlink.rs:29:17
+   |
+29 | pub(crate) enum GitIndexCensus {
+   |                 ^^^^^^^^^^^^^^
+
+warning: constant `FORMAT` is never used
+  --> crates/vibe-publish/src/publication_approval.rs:27:7
+   |
+27 | const FORMAT: &str = "vibevm.publication.mode-a-approval/e1";
+   |       ^^^^^^
+
+warning: function `trusted_git` is never used
+  --> crates/vibe-publish/src/package_git_gitlink.rs:50:4
+   |
+50 | fn trusted_git(binary: &Path) -> bool {
+   |    ^^^^^^^^^^^
+
+warning: function `command` is never used
+  --> crates/vibe-publish/src/package_git_gitlink.rs:56:4
+   |
+56 | fn command(binary: &Path, cwd: &Path, args: &[&str]) -> Command {
+   |    ^^^^^^^
+
+warning: struct `ApprovalRecord` is never constructed
+  --> crates/vibe-publish/src/publication_approval.rs:41:8
+   |
+41 | struct ApprovalRecord {
+   |        ^^^^^^^^^^^^^^
+
+warning: function `output` is never used
+  --> crates/vibe-publish/src/package_git_gitlink.rs:90:4
+   |
+90 | fn output(binary: &Path, cwd: &Path, args: &[&str], cap: usize) -> Result<Option<Vec<u8>>> {
+   |    ^^^^^^
+
+warning: function `same_root` is never used
+   --> crates/vibe-publish/src/package_git_gitlink.rs:115:4
+    |
+115 | fn same_root(project: &Project, expected: &str) -> Result<()> {
+    |    ^^^^^^^^^
+
+warning: function `has_git_metadata_in_ancestors` is never used
+   --> crates/vibe-publish/src/package_git_gitlink.rs:125:4
+    |
+125 | fn has_git_metadata_in_ancestors(source: &Project) -> Result<bool> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `oid` is never used
+   --> crates/vibe-publish/src/package_git_gitlink.rs:136:4
+    |
+136 | fn oid(value: &str) -> bool {
+    |    ^^^
+
+warning: function `canonical_top` is never used
+   --> crates/vibe-publish/src/package_git_gitlink.rs:143:4
+    |
+143 | fn canonical_top(source: &Project, raw: &[u8]) -> Result<(Project, String)> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `parse_index` is never used
+   --> crates/vibe-publish/src/package_git_gitlink.rs:187:4
+    |
+187 | fn parse_index(bytes: &[u8], prefix: &str, limits: CensusLimits) -> Result<Vec<(String, String)>> {
+    |    ^^^^^^^^^^^
+
+warning: struct `VerifiedApproval` is never constructed
+  --> crates/vibe-publish/src/publication_approval.rs:77:19
+   |
+77 | pub(crate) struct VerifiedApproval {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: function `checkout` is never used
+   --> crates/vibe-publish/src/package_git_gitlink.rs:241:4
+    |
+241 | fn checkout(
+    |    ^^^^^^^^
+
+warning: function `census` is never used
+   --> crates/vibe-publish/src/package_git_gitlink.rs:282:15
+    |
+282 | pub(crate) fn census(source: &Project, binary: &Path, limits: CensusLimits) -> GitIndexCensus {
+    |               ^^^^^^
+
+warning: struct `LocalGit` is never constructed
+  --> crates/vibe-publish/src/package_git_tree/git.rs:14:19
+   |
+14 | pub(crate) struct LocalGit<'a> {
+   |                   ^^^^^^^^
+
+warning: methods `authority_id`, `plan_sha256`, and `record_sha256` are never used
+  --> crates/vibe-publish/src/publication_approval.rs:93:19
+   |
+92 | impl VerifiedApproval {
+   | --------------------- methods in this implementation
+93 |     pub(crate) fn authority_id(&self) -> &str {
+   |                   ^^^^^^^^^^^^
+...
+96 |     pub(crate) fn plan_sha256(&self) -> &str {
+   |                   ^^^^^^^^^^^
+...
+99 |     pub(crate) fn record_sha256(&self) -> &str {
+   |                   ^^^^^^^^^^^^^
+
+warning: function `host_now` is never used
+   --> crates/vibe-publish/src/publication_approval.rs:127:4
+    |
+127 | fn host_now() -> Result<u64, ApprovalError> {
+    |    ^^^^^^^^
+
+warning: constant `SEAL` is never used
+  --> crates/vibe-publish/src/package_git_noop.rs:23:7
+   |
+23 | const SEAL: &str = "noeffect-ready";
+   |       ^^^^
+
+warning: function `proved_link_receipt` is never used
+ --> crates/vibe-publish/src/package_git_submodule_store/proof.rs:6:15
+  |
+6 | pub(crate) fn proved_link_receipt(
+  |               ^^^^^^^^^^^^^^^^^^^
+
+warning: enum `TreeInspection` is never used
+  --> crates/vibe-publish/src/package_git_tree.rs:16:17
+   |
+16 | pub(crate) enum TreeInspection {
+   |                 ^^^^^^^^^^^^^^
+
+warning: methods `load_mode_a`, `load_at`, `redeem`, and `redeem_inner` are never used
+   --> crates/vibe-publish/src/publication_approval.rs:197:19
+    |
+173 | impl ApprovalHome {
+    | ----------------- methods in this implementation
+...
+197 |     pub(crate) fn load_mode_a(
+    |                   ^^^^^^^^^^^
+...
+209 |     fn load_at(
+    |        ^^^^^^^
+...
+292 |     pub(crate) fn redeem(
+    |                   ^^^^^^
+...
+320 |     fn redeem_inner(
+    |        ^^^^^^^^^^^^
+
+warning: constant `FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_noop.rs:24:7
+   |
+24 | const FORMAT: &str = "vibevm.package-git-noeffect-ready/e1";
+   |       ^^^^^^
+
+warning: enum `NoEffectInspection` is never used
+  --> crates/vibe-publish/src/package_git_noop.rs:27:17
+   |
+27 | pub(crate) enum NoEffectInspection {
+   |                 ^^^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> crates/vibe-publish/src/package_git_tree/git.rs:24:19
+    |
+ 20 | impl<'a> LocalGit<'a> {
+    | --------------------- associated items in this implementation
+...
+ 24 |     pub(crate) fn probe_sha256(binary: &Path) -> Result<bool> {
+    |                   ^^^^^^^^^^^^
+...
+ 59 |     pub(crate) fn new(binary: &'a Path, objects: &'a Project, oid_len: usize) -> Result<Self> {
+    |                   ^^^
+...
+ 74 |     pub(crate) fn command(&self, args: &[&str], initialized: bool) -> Result<Command> {
+    |                   ^^^^^^^
+...
+120 |     fn finish(&self, mut child: std::process::Child, output_cap: usize) -> Result<Vec<u8>> {
+    |        ^^^^^^
+...
+151 |     pub(crate) fn output(&self, args: &[&str], input: &[u8], cap: usize) -> Result<Vec<u8>> {
+    |                   ^^^^^^
+...
+168 |     pub(crate) fn oid(&self, output: &[u8]) -> Result<String> {
+    |                   ^^^
+...
+185 |     pub(crate) fn object_present(&self, oid: &str) -> Result<bool> {
+    |                   ^^^^^^^^^^^^^^
+...
+202 |     pub(crate) fn write_control_object(&self, kind: &str, bytes: &[u8]) -> Result<String> {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+212 |     pub(crate) fn write_raw_object_streamed(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+283 |     pub(crate) fn verify_control_object(
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+309 |     pub(crate) fn init(&self) -> Result<()> {
+    |                   ^^^^
+...
+331 |     pub(super) fn hash_file(
+    |                   ^^^^^^^^^
+...
+385 |     pub(super) fn make_tree(&self, files: &[TreeFile]) -> Result<String> {
+    |                   ^^^^^^^^^
+...
+393 |     pub(super) fn verify(
+    |                   ^^^^^^
+...
+446 |     fn verify_blob(&self, file: &TreeFile, max_file_bytes: u64) -> Result<()> {
+    |        ^^^^^^^^^^^
+
+warning: function `no_proof` is never used
+  --> crates/vibe-publish/src/package_git_tree.rs:34:4
+   |
+34 | fn no_proof(status: PendingInspection) -> TreeInspection {
+   |    ^^^^^^^^
+
+warning: struct `Node` is never constructed
+   --> crates/vibe-publish/src/package_git_tree/git.rs:500:8
+    |
+500 | struct Node {
+    |        ^^^^
+
+warning: function `recovery` is never used
+  --> crates/vibe-publish/src/package_git_noop.rs:48:4
+   |
+48 | fn recovery(run: Option<&str>, reason: impl Into<String>) -> NoEffectInspection {
+   |    ^^^^^^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_noop.rs:54:4
+   |
+54 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> NoEffectInspection {
+   |    ^^^^^^^^^^^
+
+warning: methods `insert` and `write` are never used
+   --> crates/vibe-publish/src/package_git_tree/git.rs:505:8
+    |
+504 | impl Node {
+    | --------- methods in this implementation
+505 |     fn insert(&mut self, file: &TreeFile) -> Result<()> {
+    |        ^^^^^^
+...
+523 |     fn write(&self, git: &LocalGit<'_>) -> Result<String> {
+    |        ^^^^^
+
+warning: constant `PATH_DOMAIN` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:12:7
+   |
+12 | const PATH_DOMAIN: &[u8] = b"vibevm/package-git-link-path/e1\0";
+   |       ^^^^^^^^^^^
+
+warning: function `trusted_git` is never used
+  --> crates/vibe-publish/src/package_git_tree.rs:61:4
+   |
+61 | fn trusted_git(binary: &Path) -> bool {
+   |    ^^^^^^^^^^^
+
+warning: struct `NoEffectSeal` is never constructed
+  --> crates/vibe-publish/src/package_git_noop.rs:63:8
+   |
+63 | struct NoEffectSeal {
+   |        ^^^^^^^^^^^^
+
+warning: function `path_sha` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:14:15
+   |
+14 | pub(super) fn path_sha(path: &str) -> String {
+   |               ^^^^^^^^
+
+warning: function `suffixes` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:21:15
+   |
+21 | pub(super) fn suffixes(path_hash: &str) -> (String, String) {
+   |               ^^^^^^^^
+
+warning: function `exact_bytes` is never used
+  --> crates/vibe-publish/src/package_git_noop.rs:92:4
+   |
+92 | fn exact_bytes(
+   |    ^^^^^^^^^^^
+
+warning: function `no_effect_shape` is never used
+   --> crates/vibe-publish/src/package_git_noop.rs:102:4
+    |
+102 | fn no_effect_shape<'a>(
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `stage_tree_pending` is never used
+  --> crates/vibe-publish/src/package_git_tree.rs:69:15
+   |
+69 | pub(crate) fn stage_tree_pending(
+   |               ^^^^^^^^^^^^^^^^^^
+
+warning: struct `ImportSummary` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule_store/import.rs:12:19
+   |
+12 | pub(super) struct ImportSummary {
+   |                   ^^^^^^^^^^^^^
+
+warning: function `local_proof` is never used
+   --> crates/vibe-publish/src/package_git_noop.rs:147:4
+    |
+147 | fn local_proof(
+    |    ^^^^^^^^^^^
+
+warning: function `receipt` is never used
+   --> crates/vibe-publish/src/package_git_tree.rs:186:4
+    |
+186 | fn receipt(
+    |    ^^^^^^^
+
+warning: function `inspect_tree_cold` is never used
+   --> crates/vibe-publish/src/package_git_tree.rs:208:15
+    |
+208 | pub(crate) fn inspect_tree_cold(
+    |               ^^^^^^^^^^^^^^^^^
+
+warning: struct `Transfer` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule_store/import.rs:17:8
+   |
+17 | struct Transfer<'a, 'b, 'h> {
+   |        ^^^^^^^^
+
+warning: function `metadata` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:27:4
+   |
+27 | fn metadata(rows: &[MetadataBlob]) -> Vec<GitlinkMetadataRow> {
+   |    ^^^^^^^^
+
+warning: function `inspect_tree_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_tree.rs:227:15
+    |
+227 | pub(crate) fn inspect_tree_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_tree_inner` is never used
+   --> crates/vibe-publish/src/package_git_tree.rs:238:4
+    |
+238 | fn inspect_tree_inner(
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `pending_row` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:38:15
+   |
+38 | pub(super) fn pending_row(
+   |               ^^^^^^^^^^^
+
+warning: function `expected_seal` is never used
+   --> crates/vibe-publish/src/package_git_noop.rs:284:4
+    |
+284 | fn expected_seal(
+    |    ^^^^^^^^^^^^^
+
+warning: methods `object_size`, `pump`, and `tree` are never used
+  --> crates/vibe-publish/src/package_git_submodule_store/import.rs:27:8
+   |
+26 | impl Transfer<'_, '_, '_> {
+   | ------------------------- methods in this implementation
+27 |     fn object_size(&self, oid: &str, cap: u64) -> Result<u64> {
+   |        ^^^^^^^^^^^
+...
+44 |     fn pump(&mut self, kind: &str, oid: &str, cap: u64) -> Result<()> {
+   |        ^^^^
+...
+84 |     fn tree(&mut self, oid: &str, depth: usize) -> Result<()> {
+   |        ^^^^
+
+warning: function `matches_raw` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:96:15
+   |
+96 | pub(super) fn matches_raw(row: &GitlinkPending, raw: &RawComparison) -> bool {
+   |               ^^^^^^^^^^^
+
+warning: function `inspect_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_noop.rs:362:15
+    |
+362 | pub(crate) fn inspect_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `seal_ready` is never used
+   --> crates/vibe-publish/src/package_git_noop.rs:443:15
+    |
+443 | pub(crate) fn seal_ready(
+    |               ^^^^^^^^^^
+
+warning: function `seal_inner` is never used
+   --> crates/vibe-publish/src/package_git_noop.rs:467:4
+    |
+467 | fn seal_inner(
+    |    ^^^^^^^^^^
+
+warning: function `selected_commit` is never used
+   --> crates/vibe-publish/src/package_git_submodule_store/import.rs:109:15
+    |
+109 | pub(super) fn selected_commit(
+    |               ^^^^^^^^^^^^^^^
+
+warning: function `selected_commit_with_hook` is never used
+   --> crates/vibe-publish/src/package_git_submodule_store/import.rs:119:15
+    |
+119 | pub(super) fn selected_commit_with_hook(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `ready_duplicate_matches` is never used
+ --> crates/vibe-publish/src/package_git_noop/duplicate.rs:7:15
+  |
+7 | pub(crate) fn ready_duplicate_matches(
+  |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `LinkStoreInspection` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store.rs:21:17
+   |
+21 | pub(crate) enum LinkStoreInspection {
+   |                 ^^^^^^^^^^^^^^^^^^^
+
+warning: function `landed_row` is never used
+   --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:107:15
+    |
+107 | pub(super) fn landed_row(
+    |               ^^^^^^^^^^
+
+warning: constant `TREE_DOMAIN` is never used
+  --> crates/vibe-publish/src/package_git_submodule/tree.rs:13:7
+   |
+13 | const TREE_DOMAIN: &[u8] = b"vibevm/package-git-populated-submodule/e1\0";
+   |       ^^^^^^^^^^^
+
+warning: function `normalized_path` is never used
+  --> crates/vibe-publish/src/package_git_submodule/tree.rs:15:15
+   |
+15 | pub(super) fn normalized_path(path: &str, max_path: usize) -> Result<Vec<&str>> {
+   |               ^^^^^^^^^^^^^^^
+
+warning: struct `Entry` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule/tree.rs:30:19
+   |
+30 | pub(crate) struct Entry {
+   |                   ^^^^^
+
+warning: constant `RESULT` is never used
+ --> crates/vibe-publish/src/package_git_noop/result.rs:8:7
+  |
+8 | const RESULT: &str = "noeffect-result";
+  |       ^^^^^^
+
+warning: constant `RESULT_FORMAT` is never used
+ --> crates/vibe-publish/src/package_git_noop/result.rs:9:7
+  |
+9 | const RESULT_FORMAT: &str = "vibevm.package-git-noeffect-result/e1";
+  |       ^^^^^^^^^^^^^
+
+warning: struct `RawWitness` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule/git.rs:13:19
+   |
+13 | pub(crate) struct RawWitness {
+   |                   ^^^^^^^^^^
+
+warning: struct `ProvedLinkReceipt` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule_store.rs:40:19
+   |
+40 | pub(crate) struct ProvedLinkReceipt {
+   |                   ^^^^^^^^^^^^^^^^^
+
+warning: enum `NoEffectResultInspection` is never used
+  --> crates/vibe-publish/src/package_git_noop/result.rs:12:17
+   |
+12 | pub(crate) enum NoEffectResultInspection {
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `raw_oid_hex` is never used
+  --> crates/vibe-publish/src/package_git_submodule/tree.rs:36:4
+   |
+36 | fn raw_oid_hex(raw: &[u8]) -> String {
+   |    ^^^^^^^^^^^
+
+warning: function `read_byte` is never used
+  --> crates/vibe-publish/src/package_git_submodule/tree.rs:44:4
+   |
+44 | fn read_byte(reader: &mut dyn Read) -> Result<Option<u8>> {
+   |    ^^^^^^^^^
+
+warning: function `result_recovery` is never used
+  --> crates/vibe-publish/src/package_git_noop/result.rs:29:4
+   |
+29 | fn result_recovery(run: Option<&str>, reason: impl Into<String>) -> NoEffectResultInspection {
+   |    ^^^^^^^^^^^^^^^
+
+warning: function `result_unavailable` is never used
+  --> crates/vibe-publish/src/package_git_noop/result.rs:35:4
+   |
+35 | fn result_unavailable(run: Option<&str>, reason: impl Into<String>) -> NoEffectResultInspection {
+   |    ^^^^^^^^^^^^^^^^^^
+
+warning: struct `NoEffectResult` is never constructed
+  --> crates/vibe-publish/src/package_git_noop/result.rs:44:8
+   |
+44 | struct NoEffectResult {
+   |        ^^^^^^^^^^^^^^
+
+warning: function `uncertain` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store.rs:47:4
+   |
+47 | fn uncertain(run: Option<&str>, reason: impl Into<String>) -> LinkStoreInspection {
+   |    ^^^^^^^^^
+
+warning: struct `HashedRead` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule/git.rs:18:8
+   |
+18 | struct HashedRead<'a> {
+   |        ^^^^^^^^^^
+
+warning: function `retained` is never used
+  --> crates/vibe-publish/src/package_git_noop/result.rs:69:4
+   |
+69 | fn retained(
+   |    ^^^^^^^^
+
+warning: function `expected_result` is never used
+   --> crates/vibe-publish/src/package_git_noop/result.rs:167:4
+    |
+167 | fn expected_result(
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `inspect_result_cold` is never used
+   --> crates/vibe-publish/src/package_git_noop/result.rs:199:15
+    |
+199 | pub(crate) fn inspect_result_cold(
+    |               ^^^^^^^^^^^^^^^^^^^
+
+warning: function `observe_and_seal_result` is never used
+   --> crates/vibe-publish/src/package_git_noop/result.rs:247:15
+    |
+247 | pub(crate) fn observe_and_seal_result(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `parse_entries` is never used
+  --> crates/vibe-publish/src/package_git_submodule/tree.rs:53:15
+   |
+53 | pub(crate) fn parse_entries(
+   |               ^^^^^^^^^^^^^
+
+warning: function `frame` is never used
+   --> crates/vibe-publish/src/package_git_submodule/tree.rs:114:4
+    |
+114 | fn frame(hash: &mut Sha256, tag: &[u8], bytes: &[u8]) {
+    |    ^^^^^
+
+warning: function `observe_inner` is never used
+   --> crates/vibe-publish/src/package_git_noop/result.rs:272:4
+    |
+272 | fn observe_inner(
+    |    ^^^^^^^^^^^^^
+
+warning: method `with_raw_object` is never used
+  --> crates/vibe-publish/src/package_git_submodule/git.rs:57:19
+   |
+54 | impl LocalGit<'_> {
+   | ----------------- method in this implementation
+...
+57 |     pub(crate) fn with_raw_object<T>(
+   |                   ^^^^^^^^^^^^^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store.rs:54:4
+   |
+54 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> LinkStoreInspection {
+   |    ^^^^^^^^^^^
+
+warning: function `trusted_binary` is never used
+   --> crates/vibe-publish/src/package_git_submodule/git.rs:150:15
+    |
+150 | pub(super) fn trusted_binary(binary: &Path) -> bool {
+    |               ^^^^^^^^^^^^^^
+
+warning: enum `ObjectProvenance` is never used
+  --> crates/vibe-publish/src/package_git_objects.rs:21:17
+   |
+21 | pub(crate) enum ObjectProvenance {
+   |                 ^^^^^^^^^^^^^^^^
+
+warning: struct `VaultRows` is never constructed
+   --> crates/vibe-publish/src/package_git_submodule/tree.rs:121:19
+    |
+121 | pub(super) struct VaultRows {
+    |                   ^^^^^^^^^
+
+warning: function `selected_vault_rows` is never used
+   --> crates/vibe-publish/src/package_git_submodule/tree.rs:126:15
+    |
+126 | pub(super) fn selected_vault_rows(
+    |               ^^^^^^^^^^^^^^^^^^^
+
+warning: function `prior` is never used
+  --> crates/vibe-publish/src/package_git_submodule_store.rs:61:4
+   |
+61 | fn prior(
+   |    ^^^^^
+
+warning: enum `ObjectInspection` is never used
+  --> crates/vibe-publish/src/package_git_objects.rs:33:17
+   |
+33 | pub(crate) enum ObjectInspection {
+   |                 ^^^^^^^^^^^^^^^^
+
+warning: function `stage_one_pending` is never used
+   --> crates/vibe-publish/src/package_git_submodule_store.rs:117:15
+    |
+117 | pub(crate) fn stage_one_pending(
+    |               ^^^^^^^^^^^^^^^^^
+
+warning: struct `TreeComparison` is never constructed
+   --> crates/vibe-publish/src/package_git_submodule/tree.rs:161:19
+    |
+161 | pub(super) struct TreeComparison {
+    |                   ^^^^^^^^^^^^^^
+
+warning: function `stage_inner` is never used
+   --> crates/vibe-publish/src/package_git_submodule_store.rs:142:4
+    |
+142 | fn stage_inner(
+    |    ^^^^^^^^^^^
+
+warning: function `inspect_one_cold` is never used
+   --> crates/vibe-publish/src/package_git_submodule_store.rs:332:15
+    |
+332 | pub(crate) fn inspect_one_cold(
+    |               ^^^^^^^^^^^^^^^^
+
+warning: function `uncertain` is never used
+  --> crates/vibe-publish/src/package_git_objects.rs:51:4
+   |
+51 | fn uncertain(run: Option<&str>, reason: impl Into<String>) -> ObjectInspection {
+   |    ^^^^^^^^^
+
+warning: struct `Walk` is never constructed
+   --> crates/vibe-publish/src/package_git_submodule/tree.rs:169:8
+    |
+169 | struct Walk<'a> {
+    |        ^^^^
+
+warning: function `stage_parentless_objects_pending` is never used
+  --> crates/vibe-publish/src/package_git_objects.rs:60:15
+   |
+60 | pub(crate) fn stage_parentless_objects_pending(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `stage_parentless_populated_objects_pending` is never used
+  --> crates/vibe-publish/src/package_git_objects.rs:86:15
+   |
+86 | pub(crate) fn stage_parentless_populated_objects_pending(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `stage_existing_main_objects_pending` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:111:15
+    |
+111 | pub(crate) fn stage_existing_main_objects_pending(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `stage_inner` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:136:4
+    |
+136 | fn stage_inner(
+    |    ^^^^^^^^^^^
+
+warning: function `inspect_objects_cold` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:309:15
+    |
+309 | pub(crate) fn inspect_objects_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_objects_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:334:15
+    |
+334 | pub(crate) fn inspect_objects_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_parentless_populated_objects_cold` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:359:15
+    |
+359 | pub(crate) fn inspect_parentless_populated_objects_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `add_bytes` and `tree` are never used
+   --> crates/vibe-publish/src/package_git_submodule/tree.rs:181:8
+    |
+180 | impl Walk<'_> {
+    | ------------- methods in this implementation
+181 |     fn add_bytes(&mut self, bytes: u64) -> Result<()> {
+    |        ^^^^^^^^^
+...
+192 |     fn tree(&mut self, oid: &str, parent: &str, depth: usize) -> Result<()> {
+    |        ^^^^
+
+warning: function `inspect_parentless_populated_objects_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:385:15
+    |
+385 | pub(crate) fn inspect_parentless_populated_objects_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_existing_main_objects_cold` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:411:15
+    |
+411 | pub(crate) fn inspect_existing_main_objects_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_existing_main_objects_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:437:15
+    |
+437 | pub(crate) fn inspect_existing_main_objects_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_inner` is never used
+   --> crates/vibe-publish/src/package_git_objects.rs:463:4
+    |
+463 | fn inspect_inner(
+    |    ^^^^^^^^^^^^^
+
+warning: function `compare` is never used
+   --> crates/vibe-publish/src/package_git_submodule/tree.rs:285:15
+    |
+285 | pub(super) fn compare(
+    |               ^^^^^^^
+
+warning: struct `Held` is never constructed
+  --> crates/vibe-publish/src/package_git_objects/proof.rs:19:19
+   |
+19 | pub(super) struct Held {
+   |                   ^^^^
+
+warning: function `held` is never used
+  --> crates/vibe-publish/src/package_git_objects/proof.rs:31:15
+   |
+31 | pub(super) fn held(
+   |               ^^^^
+
+warning: function `expected` is never used
+   --> crates/vibe-publish/src/package_git_objects/proof.rs:334:15
+    |
+334 | pub(super) fn expected(held: &Held) -> anyhow::Result<ObjectReceipt> {
+    |               ^^^^^^^^
+
+warning: struct `PendingProof` is never constructed
+  --> crates/vibe-publish/src/package_git_operation.rs:28:19
+   |
+28 | pub(crate) struct PendingProof {
+   |                   ^^^^^^^^^^^^
+
+warning: enum `PendingInspection` is never used
+  --> crates/vibe-publish/src/package_git_operation.rs:38:17
+   |
+38 | pub(crate) enum PendingInspection {
+   |                 ^^^^^^^^^^^^^^^^^
+
+warning: enum `OperationError` is never used
+  --> crates/vibe-publish/src/package_git_operation.rs:71:17
+   |
+71 | pub(crate) enum OperationError {
+   |                 ^^^^^^^^^^^^^^
+
+warning: struct `SubmoduleLimits` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule.rs:22:19
+   |
+22 | pub(crate) struct SubmoduleLimits {
+   |                   ^^^^^^^^^^^^^^^
+
+warning: function `refused` is never used
+  --> crates/vibe-publish/src/package_git_operation.rs:79:4
+   |
+79 | fn refused(error: impl std::fmt::Display) -> OperationError {
+   |    ^^^^^^^
+
+warning: struct `MetadataBlob` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule.rs:41:19
+   |
+41 | pub(crate) struct MetadataBlob {
+   |                   ^^^^^^^^^^^^
+
+warning: function `target` is never used
+  --> crates/vibe-publish/src/package_git_operation.rs:82:4
+   |
+82 | fn target(plan: &PackageGitPlan) -> String {
+   |    ^^^^^^
+
+warning: function `prepare_pending` is never used
+  --> crates/vibe-publish/src/package_git_operation.rs:97:15
+   |
+97 | pub(crate) fn prepare_pending(
+   |               ^^^^^^^^^^^^^^^
+
+warning: function `prepare_pending_inner` is never used
+   --> crates/vibe-publish/src/package_git_operation.rs:110:4
+    |
+110 | fn prepare_pending_inner(
+    |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_pending_cold` is never used
+   --> crates/vibe-publish/src/package_git_operation.rs:312:15
+    |
+312 | pub(crate) fn inspect_pending_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_operation.rs:329:15
+    |
+329 | pub(crate) fn inspect_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_local_cold` is never used
+   --> crates/vibe-publish/src/package_git_operation.rs:348:4
+    |
+348 | fn inspect_local_cold(
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: struct `RawComparison` is never constructed
+  --> crates/vibe-publish/src/package_git_submodule.rs:49:19
+   |
+49 | pub(crate) struct RawComparison {
+   |                   ^^^^^^^^^^^^^
+
+warning: enum `RawInspection` is never used
+  --> crates/vibe-publish/src/package_git_submodule.rs:62:17
+   |
+62 | pub(crate) enum RawInspection {
+   |                 ^^^^^^^^^^^^^
+
+warning: constant `HOME` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:12:7
+   |
+12 | const HOME: [&str; 2] = [".vibe", "package-git-operations"];
+   |       ^^^^
+
+warning: constant `RECORD_CAP` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:13:7
+   |
+13 | const RECORD_CAP: usize = 1024 * 1024; // C.1-scale control record, not a payload-size cap.
+   |       ^^^^^^^^^^
+
+warning: constant `INTENT_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:14:18
+   |
+14 | pub(super) const INTENT_FORMAT: &str = "vibevm.package-git-intent/e1";
+   |                  ^^^^^^^^^^^^^
+
+warning: constant `STAGE_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:15:18
+   |
+15 | pub(super) const STAGE_FORMAT: &str = "vibevm.package-git-stage/e1";
+   |                  ^^^^^^^^^^^^
+
+warning: constant `REQUEST_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:16:18
+   |
+16 | pub(super) const REQUEST_FORMAT: &str = "vibevm.package-git-request/e1";
+   |                  ^^^^^^^^^^^^^^
+
+warning: constant `TREE_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:17:18
+   |
+17 | pub(crate) const TREE_FORMAT: &str = "vibevm.package-git-tree/e1";
+   |                  ^^^^^^^^^^^
+
+warning: constant `PROVENANCE_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:18:18
+   |
+18 | pub(crate) const PROVENANCE_FORMAT: &str = "vibevm.package-git-no-gitlinks/e1";
+   |                  ^^^^^^^^^^^^^^^^^
+
+warning: constant `PROVENANCE_PENDING_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:19:18
+   |
+19 | pub(crate) const PROVENANCE_PENDING_FORMAT: &str = "vibevm.package-git-no-gitlinks-pending/e1";
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `OBJECT_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:20:18
+   |
+20 | pub(crate) const OBJECT_FORMAT: &str = "vibevm.package-git-control-objects/e3";
+   |                  ^^^^^^^^^^^^^
+
+warning: constant `PARENT_PENDING_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:21:18
+   |
+21 | pub(crate) const PARENT_PENDING_FORMAT: &str = "vibevm.package-git-parent-pending/e1";
+   |                  ^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `PARENT_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:22:18
+   |
+22 | pub(crate) const PARENT_FORMAT: &str = "vibevm.package-git-parent/e1";
+   |                  ^^^^^^^^^^^^^
+
+warning: constant `GITLINK_PENDING_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:23:18
+   |
+23 | pub(crate) const GITLINK_PENDING_FORMAT: &str = "vibevm.package-git-link-pending/e1";
+   |                  ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `RESULT` is never used
+  --> crates/vibe-publish/src/package_git_result.rs:20:7
+   |
+20 | const RESULT: &str = "result";
+   |       ^^^^^^
+
+warning: enum `StoreKind` is never used
+  --> crates/vibe-publish/src/package_git_submodule.rs:69:6
+   |
+69 | enum StoreKind<'a> {
+   |      ^^^^^^^^^
+
+warning: constant `GITLINK_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:24:18
+   |
+24 | pub(crate) const GITLINK_FORMAT: &str = "vibevm.package-git-link/e1";
+   |                  ^^^^^^^^^^^^^^
+
+warning: constant `FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_result.rs:21:7
+   |
+21 | const FORMAT: &str = "vibevm.package-git-result/e2";
+   |       ^^^^^^
+
+warning: enum `ResultInspection` is never used
+  --> crates/vibe-publish/src/package_git_result.rs:24:17
+   |
+24 | pub(crate) enum ResultInspection {
+   |                 ^^^^^^^^^^^^^^^^
+
+warning: constant `POPULATED_PENDING_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:25:18
+   |
+25 | pub(crate) const POPULATED_PENDING_FORMAT: &str = "vibevm.package-git-populated-pending/e1";
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `RemoteSnapshot` is never constructed
+ --> crates/vibe-publish/src/package_git_repo_create/driver.rs:7:19
+  |
+7 | pub(crate) struct RemoteSnapshot {
+  |                   ^^^^^^^^^^^^^^
+
+warning: enum `SubmoduleInspection` is never used
+  --> crates/vibe-publish/src/package_git_submodule.rs:75:17
+   |
+75 | pub(crate) enum SubmoduleInspection {
+   |                 ^^^^^^^^^^^^^^^^^^^
+
+warning: function `recovery` is never used
+  --> crates/vibe-publish/src/package_git_result.rs:49:4
+   |
+49 | fn recovery(run: Option<&str>, reason: impl Into<String>) -> ResultInspection {
+   |    ^^^^^^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_result.rs:55:4
+   |
+55 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> ResultInspection {
+   |    ^^^^^^^^^^^
+
+warning: struct `ResultRow` is never constructed
+  --> crates/vibe-publish/src/package_git_result.rs:64:8
+   |
+64 | struct ResultRow {
+   |        ^^^^^^^^^
+
+warning: function `limits_valid` is never used
+  --> crates/vibe-publish/src/package_git_submodule.rs:96:4
+   |
+96 | fn limits_valid(limits: SubmoduleLimits) -> bool {
+   |    ^^^^^^^^^^^^
+
+warning: constant `POPULATED_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:26:18
+   |
+26 | pub(crate) const POPULATED_FORMAT: &str = "vibevm.package-git-populated/e1";
+   |                  ^^^^^^^^^^^^^^^^
+
+warning: constant `READY_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:27:18
+   |
+27 | pub(crate) const READY_FORMAT: &str = "vibevm.package-git-ready-seal/e2";
+   |                  ^^^^^^^^^^^^
+
+warning: constant `APPROVAL_LINK_PENDING_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:28:18
+   |
+28 | pub(crate) const APPROVAL_LINK_PENDING_FORMAT: &str = "vibevm.package-git-approval-link-pending/e1";
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `APPROVAL_LINK_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:29:18
+   |
+29 | pub(crate) const APPROVAL_LINK_FORMAT: &str = "vibevm.package-git-approval-link/e1";
+   |                  ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `REPO_CREATE_PENDING_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:30:18
+   |
+30 | pub(crate) const REPO_CREATE_PENDING_FORMAT: &str = "vibevm.package-git-repo-create-pending/e1";
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `REPO_CREATE_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:31:18
+   |
+31 | pub(crate) const REPO_CREATE_FORMAT: &str = "vibevm.package-git-repo-create/e1";
+   |                  ^^^^^^^^^^^^^^^^^^
+
+warning: constant `ATOMIC_PUSH_PENDING_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:32:18
+   |
+32 | pub(crate) const ATOMIC_PUSH_PENDING_FORMAT: &str = "vibevm.package-git-atomic-push-pending/e1";
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `CreatePortError` is never used
+  --> crates/vibe-publish/src/package_git_repo_create/driver.rs:15:17
+   |
+15 | pub(crate) enum CreatePortError {
+   |                 ^^^^^^^^^^^^^^^
+
+warning: function `root_unchanged` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:113:4
+    |
+113 | fn root_unchanged(project: &Project, token: &str) -> Result<()> {
+    |    ^^^^^^^^^^^^^^
+
+warning: constant `PENDING` is never used
+  --> crates/vibe-publish/src/package_git_repo_create.rs:23:7
+   |
+23 | const PENDING: &str = "repo-create-pending";
+   |       ^^^^^^^
+
+warning: constant `ATOMIC_PUSH_FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:33:18
+   |
+33 | pub(crate) const ATOMIC_PUSH_FORMAT: &str = "vibevm.package-git-atomic-push/e2";
+   |                  ^^^^^^^^^^^^^^^^^^
+
+warning: struct `Request` is never constructed
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:37:19
+   |
+37 | pub(super) struct Request {
+   |                   ^^^^^^^
+
+warning: constant `LANDED` is never used
+  --> crates/vibe-publish/src/package_git_repo_create.rs:24:7
+   |
+24 | const LANDED: &str = "repo-create";
+   |       ^^^^^^
+
+warning: enum `CreateInspection` is never used
+  --> crates/vibe-publish/src/package_git_repo_create.rs:27:17
+   |
+27 | pub(crate) enum CreateInspection {
+   |                 ^^^^^^^^^^^^^^^^
+
+warning: struct `Intent` is never constructed
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:50:19
+   |
+50 | pub(super) struct Intent {
+   |                   ^^^^^^
+
+warning: function `complete_chain` is never used
+  --> crates/vibe-publish/src/package_git_result.rs:89:4
+   |
+89 | fn complete_chain(
+   |    ^^^^^^^^^^^^^^
+
+warning: function `recovery` is never used
+  --> crates/vibe-publish/src/package_git_repo_create.rs:46:4
+   |
+46 | fn recovery(run: Option<&str>, reason: impl Into<String>) -> CreateInspection {
+   |    ^^^^^^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_repo_create.rs:52:4
+   |
+52 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> CreateInspection {
+   |    ^^^^^^^^^^^
+
+warning: function `empty_refs` is never used
+  --> crates/vibe-publish/src/package_git_repo_create.rs:58:4
+   |
+58 | fn empty_refs() -> RefSnapshot {
+   |    ^^^^^^^^^^
+
+warning: struct `Proved` is never constructed
+  --> crates/vibe-publish/src/package_git_repo_create.rs:66:8
+   |
+66 | struct Proved {
+   |        ^^^^^^
+
+warning: function `proved` is never used
+  --> crates/vibe-publish/src/package_git_repo_create.rs:76:4
+   |
+76 | fn proved(
+   |    ^^^^^^
+
+warning: function `proved_profile` is never used
+   --> crates/vibe-publish/src/package_git_repo_create.rs:105:4
+    |
+105 | fn proved_profile(
+    |    ^^^^^^^^^^^^^^
+
+warning: trait `CreatePort` is never used
+  --> crates/vibe-publish/src/package_git_repo_create/driver.rs:19:18
+   |
+19 | pub(crate) trait CreatePort {
+   |                  ^^^^^^^^^^
+
+warning: struct `StageReceipt` is never constructed
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:71:19
+   |
+71 | pub(super) struct StageReceipt {
+   |                   ^^^^^^^^^^^^
+
+warning: function `git_probe` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:121:4
+    |
+121 | fn git_probe(binary: &Path, checkout: &Project, args: &[&str], cap: usize) -> Result<Vec<u8>> {
+    |    ^^^^^^^^^
+
+warning: function `expected_pending` is never used
+   --> crates/vibe-publish/src/package_git_repo_create.rs:209:4
+    |
+209 | fn expected_pending(
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `create_shape` is never used
+   --> crates/vibe-publish/src/package_git_repo_create.rs:236:4
+    |
+236 | fn create_shape(proof: &Proved) -> Result<(&HostedRepository, &CreationOptions), CreateInspection> {
+    |    ^^^^^^^^^^^^
+
+warning: function `inspect_cold` is never used
+   --> crates/vibe-publish/src/package_git_repo_create.rs:261:15
+    |
+261 | pub(crate) fn inspect_cold(
+    |               ^^^^^^^^^^^^
+
+warning: function `inspect_cold_profile` is never used
+   --> crates/vibe-publish/src/package_git_repo_create.rs:290:15
+    |
+290 | pub(crate) fn inspect_cold_profile(
+    |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `checkout_project` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:177:4
+    |
+177 | fn checkout_project(package: &Project, path: &str, max_path: usize) -> Result<Project> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: struct `TreeReceipt` is never constructed
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:84:19
+   |
+84 | pub(crate) struct TreeReceipt {
+   |                   ^^^^^^^^^^^
+
+warning: enum `ReadyProfile` is never used
+  --> crates/vibe-publish/src/package_git_ready/profile.rs:12:17
+   |
+12 | pub(crate) enum ReadyProfile<'a> {
+   |                 ^^^^^^^^^^^^
+
+warning: function `gitdir_project` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:181:4
+    |
+181 | fn gitdir_project(
+    |    ^^^^^^^^^^^^^^
+
+warning: function `inspect_cold` is never used
+   --> crates/vibe-publish/src/package_git_result.rs:299:15
+    |
+299 | pub(crate) fn inspect_cold(
+    |               ^^^^^^^^^^^^
+
+warning: function `inspect_cold_profile` is never used
+   --> crates/vibe-publish/src/package_git_result.rs:328:15
+    |
+328 | pub(crate) fn inspect_cold_profile(
+    |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `no_external_sources` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:243:4
+    |
+243 | fn no_external_sources(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `IndexWitness` is never constructed
+   --> crates/vibe-publish/src/package_git_submodule.rs:294:8
+    |
+294 | struct IndexWitness {
+    |        ^^^^^^^^^^^^
+
+warning: function `indexed_candidate` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:301:4
+    |
+301 | fn indexed_candidate(
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: struct `VerifiedReady` is never constructed
+  --> crates/vibe-publish/src/package_git_ready/profile.rs:23:19
+   |
+23 | pub(crate) struct VerifiedReady {
+   |                   ^^^^^^^^^^^^^
+
+warning: function `inspect_profile_cold` is never used
+  --> crates/vibe-publish/src/package_git_ready/profile.rs:30:15
+   |
+30 | pub(crate) fn inspect_profile_cold(
+   |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `TreeFile` is never constructed
+  --> crates/vibe-publish/src/package_git_operation/journal.rs:99:19
+   |
+99 | pub(crate) struct TreeFile {
+   |                   ^^^^^^^^
+
+warning: function `seal_result` is never used
+   --> crates/vibe-publish/src/package_git_result.rs:398:15
+    |
+398 | pub(crate) fn seal_result(
+    |               ^^^^^^^^^^^
+
+warning: function `seal_result_profile` is never used
+   --> crates/vibe-publish/src/package_git_result.rs:427:15
+    |
+427 | pub(crate) fn seal_result_profile(
+    |               ^^^^^^^^^^^^^^^^^^^
+
+warning: function `seal_inner_profile` is never used
+   --> crates/vibe-publish/src/package_git_result.rs:485:4
+    |
+485 | fn seal_inner_profile(
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: enum `PopulatedInspection` is never used
+ --> crates/vibe-publish/src/package_git_ready/populated.rs:9:17
+  |
+9 | pub(crate) enum PopulatedInspection {
+  |                 ^^^^^^^^^^^^^^^^^^^
+
+warning: function `checked_manifest` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:325:4
+    |
+325 | fn checked_manifest(
+    |    ^^^^^^^^^^^^^^^^
+
+warning: struct `CreateRun` is never constructed
+  --> crates/vibe-publish/src/package_git_repo_create/driver.rs:36:19
+   |
+36 | pub(crate) struct CreateRun<'a> {
+   |                   ^^^^^^^^^
+
+warning: enum `NoGitlinksEvidence` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:109:17
+    |
+109 | pub(crate) enum NoGitlinksEvidence {
+    |                 ^^^^^^^^^^^^^^^^^^
+
+warning: function `recovery` is never used
+  --> crates/vibe-publish/src/package_git_ready/populated.rs:30:4
+   |
+30 | fn recovery(run: Option<&str>, reason: impl Into<String>) -> PopulatedInspection {
+   |    ^^^^^^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_ready/populated.rs:36:4
+   |
+36 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> PopulatedInspection {
+   |    ^^^^^^^^^^^
+
+warning: function `exact` is never used
+  --> crates/vibe-publish/src/package_git_ready/populated.rs:42:4
+   |
+42 | fn exact(lease: &LifecycleLease, run: &str, suffix: &str) -> Result<Vec<u8>, PopulatedInspection> {
+   |    ^^^^^
+
+warning: function `local_proof` is never used
+  --> crates/vibe-publish/src/package_git_ready/populated.rs:49:4
+   |
+49 | fn local_proof(
+   |    ^^^^^^^^^^^
+
+warning: function `expected_seal` is never used
+   --> crates/vibe-publish/src/package_git_ready/populated.rs:158:4
+    |
+158 | fn expected_seal(
+    |    ^^^^^^^^^^^^^
+
+warning: constant `SEAL` is never used
+  --> crates/vibe-publish/src/package_git_ready.rs:20:7
+   |
+20 | const SEAL: &str = "ready";
+   |       ^^^^
+
+warning: function `drive` is never used
+  --> crates/vibe-publish/src/package_git_repo_create/driver.rs:48:15
+   |
+48 | pub(crate) fn drive(input: &CreateRun<'_>, port: &mut impl CreatePort) -> CreateInspection {
+   |               ^^^^^
+
+warning: function `checked_source` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:344:4
+    |
+344 | fn checked_source(package: &Project, manifest: &CompleteManifest) -> Result<()> {
+    |    ^^^^^^^^^^^^^^
+
+warning: function `inspect_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_ready/populated.rs:256:15
+    |
+256 | pub(crate) fn inspect_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `seal_parentless_ready` is never used
+   --> crates/vibe-publish/src/package_git_ready/populated.rs:340:15
+    |
+340 | pub(crate) fn seal_parentless_ready(
+    |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `seal_inner` is never used
+   --> crates/vibe-publish/src/package_git_ready/populated.rs:364:4
+    |
+364 | fn seal_inner(
+    |    ^^^^^^^^^^
+
+warning: struct `Snapshot` is never constructed
+ --> crates/vibe-publish/src/package_git_push/driver.rs:6:19
+  |
+6 | pub(crate) struct Snapshot {
+  |                   ^^^^^^^^
+
+warning: enum `ReadyInspection` is never used
+  --> crates/vibe-publish/src/package_git_ready.rs:25:17
+   |
+25 | pub(crate) enum ReadyInspection {
+   |                 ^^^^^^^^^^^^^^^
+
+warning: function `commit_tree` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:355:4
+    |
+355 | fn commit_tree(
+    |    ^^^^^^^^^^^
+
+warning: struct `ProvenanceReceipt` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:120:19
+    |
+120 | pub(crate) struct ProvenanceReceipt {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: struct `PushRequest` is never constructed
+  --> crates/vibe-publish/src/package_git_push/driver.rs:11:19
+   |
+11 | pub(crate) struct PushRequest<'a> {
+   |                   ^^^^^^^^^^^
+
+warning: function `recovery` is never used
+  --> crates/vibe-publish/src/package_git_ready.rs:46:4
+   |
+46 | fn recovery(run: Option<&str>, reason: impl Into<String>) -> ReadyInspection {
+   |    ^^^^^^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_ready.rs:52:4
+   |
+52 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> ReadyInspection {
+   |    ^^^^^^^^^^^
+
+warning: struct `ReadyLimits` is never constructed
+  --> crates/vibe-publish/src/package_git_ready.rs:60:19
+   |
+60 | pub(crate) struct ReadyLimits {
+   |                   ^^^^^^^^^^^
+
+warning: function `exact_bytes` is never used
+  --> crates/vibe-publish/src/package_git_ready.rs:65:4
+   |
+65 | fn exact_bytes(
+   |    ^^^^^^^^^^^
+
+warning: function `local_proof` is never used
+  --> crates/vibe-publish/src/package_git_ready.rs:75:4
+   |
+75 | fn local_proof(
+   |    ^^^^^^^^^^^
+
+warning: function `expected_seal` is never used
+   --> crates/vibe-publish/src/package_git_ready.rs:297:4
+    |
+297 | fn expected_seal(
+    |    ^^^^^^^^^^^^^
+
+warning: enum `PushPortError` is never used
+  --> crates/vibe-publish/src/package_git_push/driver.rs:23:17
+   |
+23 | pub(crate) enum PushPortError {
+   |                 ^^^^^^^^^^^^^
+
+warning: function `raw_compare` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:391:4
+    |
+391 | fn raw_compare(
+    |    ^^^^^^^^^^^
+
+warning: function `inspect_ready_seal_cold` is never used
+   --> crates/vibe-publish/src/package_git_ready.rs:405:15
+    |
+405 | pub(crate) fn inspect_ready_seal_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: trait `AtomicPushPort` is never used
+  --> crates/vibe-publish/src/package_git_push/driver.rs:27:18
+   |
+27 | pub(crate) trait AtomicPushPort {
+   |                  ^^^^^^^^^^^^^^
+
+warning: struct `PushRun` is never constructed
+  --> crates/vibe-publish/src/package_git_push/driver.rs:42:19
+   |
+42 | pub(crate) struct PushRun<'a> {
+   |                   ^^^^^^^
+
+warning: struct `ObjectReceipt` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:136:19
+    |
+136 | pub(crate) struct ObjectReceipt {
+    |                   ^^^^^^^^^^^^^
+
+warning: function `compare_retained_byte_store` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:436:15
+    |
+436 | pub(crate) fn compare_retained_byte_store(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `seal_local_ready` is never used
+   --> crates/vibe-publish/src/package_git_ready.rs:480:15
+    |
+480 | pub(crate) fn seal_local_ready(
+    |               ^^^^^^^^^^^^^^^^
+
+warning: function `seal_inner` is never used
+   --> crates/vibe-publish/src/package_git_ready.rs:503:4
+    |
+503 | fn seal_inner(
+    |    ^^^^^^^^^^
+
+warning: struct `ParentPending` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:160:19
+    |
+160 | pub(crate) struct ParentPending {
+    |                   ^^^^^^^^^^^^^
+
+warning: function `compare_one` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:467:15
+    |
+467 | pub(crate) fn compare_one(
+    |               ^^^^^^^^^^^
+
+warning: constant `PENDING` is never used
+  --> crates/vibe-publish/src/package_git_push.rs:28:7
+   |
+28 | const PENDING: &str = "atomic-push-pending";
+   |       ^^^^^^^
+
+warning: function `compare_inner` is never used
+   --> crates/vibe-publish/src/package_git_submodule.rs:488:4
+    |
+488 | fn compare_inner(
+    |    ^^^^^^^^^^^^^
+
+warning: function `drive` is never used
+  --> crates/vibe-publish/src/package_git_push/driver.rs:54:15
+   |
+54 | pub(crate) fn drive(input: &PushRun<'_>, port: &mut impl AtomicPushPort) -> PushInspection {
+   |               ^^^^^
+
+warning: constant `LANDED` is never used
+  --> crates/vibe-publish/src/package_git_push.rs:29:7
+   |
+29 | const LANDED: &str = "atomic-push";
+   |       ^^^^^^
+
+warning: struct `ParentReceipt` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:177:19
+    |
+177 | pub(crate) struct ParentReceipt {
+    |                   ^^^^^^^^^^^^^
+
+warning: struct `PushReceipt` is never constructed
+  --> crates/vibe-publish/src/package_git_push.rs:32:19
+   |
+32 | pub(crate) struct PushReceipt {
+   |                   ^^^^^^^^^^^
+
+warning: function `object_root_matches` is never used
+   --> crates/vibe-publish/src/package_git_push/driver.rs:234:4
+    |
+234 | fn object_root_matches(lease: &LifecycleLease, proof: &Proved, objects: &Project) -> bool {
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `GitlinkMetadataRow` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:200:19
+    |
+200 | pub(crate) struct GitlinkMetadataRow {
+    |                   ^^^^^^^^^^^^^^^^^^
+
+warning: function `exact_updates` is never used
+  --> crates/vibe-publish/src/package_git_push.rs:37:4
+   |
+37 | fn exact_updates(plan: &PackageGitPlan, receipt: PushReceipt) -> bool {
+   |    ^^^^^^^^^^^^^
+
+warning: enum `PushInspection` is never used
+  --> crates/vibe-publish/src/package_git_push.rs:62:17
+   |
+62 | pub(crate) enum PushInspection {
+   |                 ^^^^^^^^^^^^^^
+
+warning: constant `DOMAIN` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated/digest.rs:10:7
+   |
+10 | const DOMAIN: &[u8] = b"vibevm/package-git-populated-provenance/e1\0";
+   |       ^^^^^^
+
+warning: function `inspect_complete_cold` is never used
+ --> crates/vibe-publish/src/package_git_provenance_populated/cold.rs:4:15
+  |
+4 | pub(crate) fn inspect_complete_cold(
+  |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `GitlinkPending` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:209:19
+    |
+209 | pub(crate) struct GitlinkPending {
+    |                   ^^^^^^^^^^^^^^
+
+warning: function `recovery` is never used
+  --> crates/vibe-publish/src/package_git_push.rs:84:4
+   |
+84 | fn recovery(run: Option<&str>, reason: impl Into<String>) -> PushInspection {
+   |    ^^^^^^^^
+
+warning: function `digest` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated/digest.rs:12:4
+   |
+12 | fn digest(value: &str) -> bool {
+   |    ^^^^^^
+
+warning: function `oid` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated/digest.rs:20:4
+   |
+20 | fn oid(value: &str, len: usize) -> bool {
+   |    ^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_push.rs:90:4
+   |
+90 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> PushInspection {
+   |    ^^^^^^^^^^^
+
+warning: struct `Proved` is never constructed
+  --> crates/vibe-publish/src/package_git_push.rs:98:8
+   |
+98 | struct Proved {
+   |        ^^^^^^
+
+warning: struct `GitlinkLanded` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:237:19
+    |
+237 | pub(crate) struct GitlinkLanded {
+    |                   ^^^^^^^^^^^^^
+
+warning: function `normalized` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated/digest.rs:26:4
+   |
+26 | fn normalized(path: &str) -> bool {
+   |    ^^^^^^^^^^
+
+warning: function `frame` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated/digest.rs:35:4
+   |
+35 | fn frame(hash: &mut Sha256, label: &[u8], value: &[u8]) {
+   |    ^^^^^
+
+warning: constant `PENDING` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated.rs:22:7
+   |
+22 | const PENDING: &str = "gitlink-aggregate-pending";
+   |       ^^^^^^^
+
+warning: method `run` is never used
+   --> crates/vibe-publish/src/package_git_push.rs:109:8
+    |
+108 | impl Proved {
+    | ----------- method in this implementation
+109 |     fn run(&self) -> &str {
+    |        ^^^
+
+warning: constant `LANDED` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated.rs:23:7
+   |
+23 | const LANDED: &str = "gitlink-aggregate";
+   |       ^^^^^^
+
+warning: struct `PopulatedIndexLink` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:254:19
+    |
+254 | pub(crate) struct PopulatedIndexLink {
+    |                   ^^^^^^^^^^^^^^^^^^
+
+warning: function `proved` is never used
+   --> crates/vibe-publish/src/package_git_push.rs:115:4
+    |
+115 | fn proved(
+    |    ^^^^^^
+
+warning: function `proved_profile` is never used
+   --> crates/vibe-publish/src/package_git_push.rs:144:4
+    |
+144 | fn proved_profile(
+    |    ^^^^^^^^^^^^^^
+
+warning: function `expected_pending` is never used
+   --> crates/vibe-publish/src/package_git_push.rs:343:4
+    |
+343 | fn expected_pending(proof: &Proved) -> AtomicPushPending {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: struct `ApprovedGitdir` is never constructed
+  --> crates/vibe-publish/src/package_git_provenance_populated.rs:25:19
+   |
+25 | pub(crate) struct ApprovedGitdir<'a> {
+   |                   ^^^^^^^^^^^^^^
+
+warning: struct `PopulatedLinkReceipt` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:262:19
+    |
+262 | pub(crate) struct PopulatedLinkReceipt {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `semantic_digest` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated/digest.rs:42:15
+   |
+42 | pub(crate) fn semantic_digest(
+   |               ^^^^^^^^^^^^^^^
+
+warning: enum `AggregateInspection` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated.rs:31:17
+   |
+31 | pub(crate) enum AggregateInspection {
+   |                 ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `PopulatedPending` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:270:19
+    |
+270 | pub(crate) struct PopulatedPending {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: function `proof_from_pending` is never used
+   --> crates/vibe-publish/src/package_git_provenance_populated/digest.rs:176:15
+    |
+176 | pub(super) fn proof_from_pending(row: &GitlinkPending) -> SubmoduleInspection {
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `uncertain` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated.rs:49:4
+   |
+49 | fn uncertain(run: Option<&str>, reason: impl Into<String>) -> AggregateInspection {
+   |    ^^^^^^^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated.rs:55:4
+   |
+55 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> AggregateInspection {
+   |    ^^^^^^^^^^^
+
+warning: function `inspect_cold` is never used
+   --> crates/vibe-publish/src/package_git_push.rs:371:15
+    |
+371 | pub(crate) fn inspect_cold(
+    |               ^^^^^^^^^^^^
+
+warning: function `index_links` is never used
+   --> crates/vibe-publish/src/package_git_provenance_populated/digest.rs:204:15
+    |
+204 | pub(super) fn index_links(rows: &[PopulatedIndexLink]) -> Vec<GitlinkCandidate> {
+    |               ^^^^^^^^^^^
+
+warning: function `prior` is never used
+  --> crates/vibe-publish/src/package_git_provenance_populated.rs:62:4
+   |
+62 | fn prior(
+   |    ^^^^^
+
+warning: struct `PopulatedLanded` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:289:19
+    |
+289 | pub(crate) struct PopulatedLanded {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: function `inspect_cold_profile` is never used
+   --> crates/vibe-publish/src/package_git_push.rs:400:15
+    |
+400 | pub(crate) fn inspect_cold_profile(
+    |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `index_row` is never used
+   --> crates/vibe-publish/src/package_git_provenance_populated.rs:111:4
+    |
+111 | fn index_row(
+    |    ^^^^^^^^^
+
+warning: struct `Collected` is never constructed
+   --> crates/vibe-publish/src/package_git_provenance_populated.rs:141:8
+    |
+141 | struct Collected {
+    |        ^^^^^^^^^
+
+warning: constant `DIGEST_DOMAIN` is never used
+  --> crates/vibe-publish/src/package_git_provenance.rs:17:7
+   |
+17 | const DIGEST_DOMAIN: &[u8] = b"vibevm/package-git-no-gitlinks/e1\0";
+   |       ^^^^^^^^^^^^^
+
+warning: enum `ProvenanceInspection` is never used
+  --> crates/vibe-publish/src/package_git_provenance.rs:20:17
+   |
+20 | pub(crate) enum ProvenanceInspection {
+   |                 ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ApprovalLinkPending` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:298:19
+    |
+298 | pub(crate) struct ApprovalLinkPending {
+    |                   ^^^^^^^^^^^^^^^^^^^
+
+warning: function `collect` is never used
+   --> crates/vibe-publish/src/package_git_provenance_populated.rs:147:4
+    |
+147 | fn collect(
+    |    ^^^^^^^
+
+warning: function `pending_row` is never used
+   --> crates/vibe-publish/src/package_git_provenance_populated.rs:238:4
+    |
+238 | fn pending_row(
+    |    ^^^^^^^^^^^
+
+warning: function `landed_row` is never used
+   --> crates/vibe-publish/src/package_git_provenance_populated.rs:262:4
+    |
+262 | fn landed_row(row: &PopulatedPending, bytes: &[u8]) -> PopulatedLanded {
+    |    ^^^^^^^^^^
+
+warning: function `uncertain` is never used
+  --> crates/vibe-publish/src/package_git_provenance.rs:42:4
+   |
+42 | fn uncertain(run_id: Option<&str>, reason: impl Into<String>) -> ProvenanceInspection {
+   |    ^^^^^^^^^
+
+warning: function `retain_complete_pending` is never used
+   --> crates/vibe-publish/src/package_git_provenance_populated.rs:271:15
+    |
+271 | pub(crate) fn retain_complete_pending(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ApprovalLinkLanded` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:322:19
+    |
+322 | pub(crate) struct ApprovalLinkLanded {
+    |                   ^^^^^^^^^^^^^^^^^^
+
+warning: function `retain_inner` is never used
+   --> crates/vibe-publish/src/package_git_provenance_populated.rs:294:4
+    |
+294 | fn retain_inner(
+    |    ^^^^^^^^^^^^
+
+warning: function `evidence` is never used
+  --> crates/vibe-publish/src/package_git_provenance.rs:49:4
+   |
+49 | fn evidence(
+   |    ^^^^^^^^
+
+warning: function `digest` is never used
+  --> crates/vibe-publish/src/package_git_provenance.rs:79:15
+   |
+79 | pub(crate) fn digest(evidence: &NoGitlinksEvidence) -> anyhow::Result<String> {
+   |               ^^^^^^
+
+warning: struct `GitPerson` is never constructed
+  --> crates/vibe-publish/src/package_git_plan/objects.rs:10:19
+   |
+10 | pub(crate) struct GitPerson {
+   |                   ^^^^^^^^^
+
+warning: function `tree_status` is never used
+  --> crates/vibe-publish/src/package_git_provenance.rs:88:4
+   |
+88 | fn tree_status(
+   |    ^^^^^^^^^^^
+
+warning: struct `RepoCreatePending` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:332:19
+    |
+332 | pub(crate) struct RepoCreatePending {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: function `held_proof` is never used
+   --> crates/vibe-publish/src/package_git_provenance.rs:141:4
+    |
+141 | fn held_proof(
+    |    ^^^^^^^^^^
+
+warning: struct `CommitMetadata` is never constructed
+  --> crates/vibe-publish/src/package_git_plan/objects.rs:19:19
+   |
+19 | pub(crate) struct CommitMetadata {
+   |                   ^^^^^^^^^^^^^^
+
+warning: function `expected` is never used
+   --> crates/vibe-publish/src/package_git_provenance.rs:158:4
+    |
+158 | fn expected(
+    |    ^^^^^^^^
+
+warning: function `tree_receipt` is never used
+   --> crates/vibe-publish/src/package_git_provenance.rs:188:4
+    |
+188 | fn tree_receipt(lease: &LifecycleLease, run_id: &str) -> anyhow::Result<(Vec<u8>, TreeReceipt)> {
+    |    ^^^^^^^^^^^^
+
+warning: struct `RepoCreateLanded` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:355:19
+    |
+355 | pub(crate) struct RepoCreateLanded {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: constant `DOMAIN` is never used
+ --> crates/vibe-publish/src/package_git_plan.rs:7:7
+  |
+7 | const DOMAIN: &[u8] = b"vibevm/package-git-publication-plan/e2\0";
+  |       ^^^^^^
+
+warning: constant `EPOCH` is never used
+ --> crates/vibe-publish/src/package_git_plan.rs:8:7
+  |
+8 | const EPOCH: u32 = 2;
+  |       ^^^^^
+
+warning: struct `PackageCoordinate` is never constructed
+  --> crates/vibe-publish/src/package_git_plan.rs:16:19
+   |
+16 | pub(crate) struct PackageCoordinate {
+   |                   ^^^^^^^^^^^^^^^^^
+
+warning: function `scan` is never used
+  --> crates/vibe-publish/src/package_git_payload/walk.rs:10:15
+   |
+10 | pub(super) fn scan(project: &Project, limits: &PayloadLimits, skip_git: bool) -> Result<Census> {
+   |               ^^^^
+
+warning: struct `TagMetadata` is never constructed
+  --> crates/vibe-publish/src/package_git_plan/objects.rs:28:19
+   |
+28 | pub(crate) struct TagMetadata {
+   |                   ^^^^^^^^^^^
+
+warning: struct `AtomicPushPending` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:366:19
+    |
+366 | pub(crate) struct AtomicPushPending {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: function `retain_no_gitlinks_pending` is never used
+   --> crates/vibe-publish/src/package_git_provenance.rs:200:15
+    |
+200 | pub(crate) fn retain_no_gitlinks_pending(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `retain_inner` is never used
+   --> crates/vibe-publish/src/package_git_provenance.rs:221:4
+    |
+221 | fn retain_inner(
+    |    ^^^^^^^^^^^^
+
+warning: function `inspect_no_gitlinks_cold` is never used
+   --> crates/vibe-publish/src/package_git_provenance.rs:347:15
+    |
+347 | pub(crate) fn inspect_no_gitlinks_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_no_gitlinks_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_provenance.rs:368:15
+    |
+368 | pub(crate) fn inspect_no_gitlinks_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `AtomicPushLanded` is never constructed
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:393:19
+    |
+393 | pub(crate) struct AtomicPushLanded {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: struct `HostedRepository` is never constructed
+  --> crates/vibe-publish/src/package_git_plan.rs:27:19
+   |
+27 | pub(crate) struct HostedRepository {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: function `frame` is never used
+  --> crates/vibe-publish/src/package_git_payload/walk.rs:43:4
+   |
+43 | fn frame(hash: &mut Sha256, tag: &[u8], value: &[u8]) {
+   |    ^^^^^
+
+warning: struct `Scan` is never constructed
+  --> crates/vibe-publish/src/package_git_payload/walk.rs:50:8
+   |
+50 | struct Scan<'a> {
+   |        ^^^^
+
+warning: method `directory` is never used
+  --> crates/vibe-publish/src/package_git_payload/walk.rs:61:8
+   |
+60 | impl Scan<'_> {
+   | ------------- method in this implementation
+61 |     fn directory(&mut self, parent: &str) -> Result<()> {
+   |        ^^^^^^^^^
+
+warning: struct `CreationOptions` is never constructed
+  --> crates/vibe-publish/src/package_git_plan.rs:35:19
+   |
+35 | pub(crate) struct CreationOptions {
+   |                   ^^^^^^^^^^^^^^^
+
+warning: constant `FORMAT` is never used
+  --> crates/vibe-publish/src/package_git_payload.rs:10:7
+   |
+10 | const FORMAT: &str = "vibevm.package-git-payload/e1";
+   |       ^^^^^^
+
+warning: function `inspect_inner` is never used
+   --> crates/vibe-publish/src/package_git_provenance.rs:389:4
+    |
+389 | fn inspect_inner(
+    |    ^^^^^^^^^^^^^
+
+warning: methods `validate` and `line` are never used
+  --> crates/vibe-publish/src/package_git_plan/objects.rs:35:8
+   |
+34 | impl GitPerson {
+   | -------------- methods in this implementation
+35 |     fn validate(&self) -> Result<(), PlanError> {
+   |        ^^^^^^^^
+...
+58 |     fn line(&self) -> String {
+   |        ^^^^
+
+warning: constant `TREE_DOMAIN` is never used
+  --> crates/vibe-publish/src/package_git_payload.rs:11:7
+   |
+11 | const TREE_DOMAIN: &[u8] = b"vibevm.package-git-payload-tree/e1\0";
+   |       ^^^^^^^^^^^
+
+warning: enum `RefUpdateKind` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:405:17
+    |
+405 | pub(crate) enum RefUpdateKind {
+    |                 ^^^^^^^^^^^^^
+
+warning: function `valid_message` is never used
+  --> crates/vibe-publish/src/package_git_plan/objects.rs:73:4
+   |
+73 | fn valid_message(message: &str) -> bool {
+   |    ^^^^^^^^^^^^^
+
+warning: enum `GitObjectHasher` is never used
+  --> crates/vibe-publish/src/package_git_plan/objects.rs:82:17
+   |
+82 | pub(crate) enum GitObjectHasher {
+   |                 ^^^^^^^^^^^^^^^
+
+warning: constant `COMPLETE` is never used
+  --> crates/vibe-publish/src/package_git_payload.rs:12:7
+   |
+12 | const COMPLETE: &str = "complete.json";
+   |       ^^^^^^^^
+
+warning: constant `PAYLOAD` is never used
+  --> crates/vibe-publish/src/package_git_payload.rs:13:7
+   |
+13 | const PAYLOAD: &str = "payload";
+   |       ^^^^^^^
+
+warning: enum `RepositoryTarget` is never used
+  --> crates/vibe-publish/src/package_git_plan.rs:44:17
+   |
+44 | pub(crate) enum RepositoryTarget {
+   |                 ^^^^^^^^^^^^^^^^
+
+warning: function `sha` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:411:15
+    |
+411 | pub(crate) fn sha(bytes: &[u8]) -> String {
+    |               ^^^
+
+warning: struct `PayloadLimits` is never constructed
+  --> crates/vibe-publish/src/package_git_payload.rs:17:19
+   |
+17 | pub(crate) struct PayloadLimits {
+   |                   ^^^^^^^^^^^^^
+
+warning: enum `RepositoryIdentity` is never used
+  --> crates/vibe-publish/src/package_git_plan.rs:56:17
+   |
+56 | pub(crate) enum RepositoryIdentity {
+   |                 ^^^^^^^^^^^^^^^^^^
+
+warning: constant `IDENTITY_DOMAIN` is never used
+  --> crates/vibe-publish/src/package_git_parent_source.rs:17:7
+   |
+17 | const IDENTITY_DOMAIN: &[u8] = b"vibevm/package-git-local-bare-identity/e1\0";
+   |       ^^^^^^^^^^^^^^^
+
+warning: function `ready_duplicate_matches` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:418:15
+    |
+418 | pub(crate) fn ready_duplicate_matches(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `new`, `update`, and `finish` are never used
+   --> crates/vibe-publish/src/package_git_plan/objects.rs:88:19
+    |
+ 87 | impl GitObjectHasher {
+    | -------------------- associated items in this implementation
+ 88 |     pub(crate) fn new(kind: &str, size: u64, len: usize) -> Result<Self, PlanError> {
+    |                   ^^^
+...
+107 |     pub(crate) fn update(&mut self, bytes: &[u8]) {
+    |                   ^^^^^^
+...
+113 |     pub(crate) fn finish(self) -> String {
+    |                   ^^^^^^
+
+warning: struct `SourceLimits` is never constructed
+  --> crates/vibe-publish/src/package_git_parent_source.rs:20:19
+   |
+20 | pub(crate) struct SourceLimits {
+   |                   ^^^^^^^^^^^^
+
+warning: function `name` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:453:4
+    |
+453 | fn name(run_id: &str, suffix: &str) -> anyhow::Result<String> {
+    |    ^^^^
+
+warning: function `object_oid` is never used
+   --> crates/vibe-publish/src/package_git_plan/objects.rs:121:4
+    |
+121 | fn object_oid(kind: &str, bytes: &[u8], len: usize) -> Result<String, PlanError> {
+    |    ^^^^^^^^^^
+
+warning: enum `ParentSourceObservation` is never used
+  --> crates/vibe-publish/src/package_git_parent_source.rs:27:17
+   |
+27 | pub(crate) enum ParentSourceObservation {
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `RepositoryObservation` is never used
+  --> crates/vibe-publish/src/package_git_plan.rs:68:17
+   |
+68 | pub(crate) enum RepositoryObservation {
+   |                 ^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ReadObjectDigest` is never constructed
+  --> crates/vibe-publish/src/package_git_parent/git.rs:11:19
+   |
+11 | pub(crate) struct ReadObjectDigest {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: function `valid_oid` is never used
+  --> crates/vibe-publish/src/package_git_parent_source.rs:37:4
+   |
+37 | fn valid_oid(value: &str, len: usize) -> bool {
+   |    ^^^^^^^^^
+
+warning: function `root_unchanged` is never used
+  --> crates/vibe-publish/src/package_git_parent_source.rs:44:4
+   |
+44 | fn root_unchanged(project: &Project, expected: &str) -> Result<()> {
+   |    ^^^^^^^^^^^^^^
+
+warning: enum `RawRef` is never used
+  --> crates/vibe-publish/src/package_git_plan.rs:75:17
+   |
+75 | pub(crate) enum RawRef {
+   |                 ^^^^^^
+
+warning: function `read_bytes` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:460:15
+    |
+460 | pub(crate) fn read_bytes(
+    |               ^^^^^^^^^^
+
+warning: function `local_bare_identity_digest` is never used
+  --> crates/vibe-publish/src/package_git_parent_source.rs:56:15
+   |
+56 | pub(crate) fn local_bare_identity_digest(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `trusted_binary` is never used
+  --> crates/vibe-publish/src/package_git_parent_source.rs:82:4
+   |
+82 | fn trusted_binary(binary: &Path) -> bool {
+   |    ^^^^^^^^^^^^^^
+
+warning: function `command` is never used
+  --> crates/vibe-publish/src/package_git_parent_source.rs:88:4
+   |
+88 | fn command(binary: &Path, cwd: &Path, args: &[&str]) -> Command {
+   |    ^^^^^^^
+
+warning: method `validate` is never used
+  --> crates/vibe-publish/src/package_git_payload.rs:28:8
+   |
+27 | impl PayloadLimits {
+   | ------------------ method in this implementation
+28 |     fn validate(self) -> anyhow::Result<()> {
+   |        ^^^^^^^^
+
+warning: struct `FileRow` is never constructed
+  --> crates/vibe-publish/src/package_git_payload.rs:46:19
+   |
+46 | pub(crate) struct FileRow {
+   |                   ^^^^^^^
+
+warning: function `output` is never used
+   --> crates/vibe-publish/src/package_git_parent_source.rs:121:4
+    |
+121 | fn output(binary: &Path, cwd: &Path, args: &[&str], cap: usize) -> Result<Vec<u8>> {
+    |    ^^^^^^
+
+warning: function `parse_refs` is never used
+   --> crates/vibe-publish/src/package_git_parent_source.rs:148:4
+    |
+148 | fn parse_refs(bytes: &[u8], plan: &PackageGitPlan) -> Result<RefSnapshot> {
+    |    ^^^^^^^^^^
+
+warning: function `observe_epoch` is never used
+   --> crates/vibe-publish/src/package_git_parent_source.rs:201:4
+    |
+201 | fn observe_epoch(
+    |    ^^^^^^^^^^^^^
+
+warning: function `observe_local_bare` is never used
+   --> crates/vibe-publish/src/package_git_parent_source.rs:308:15
+    |
+308 | pub(crate) fn observe_local_bare(
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `read` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:472:15
+    |
+472 | pub(crate) fn read<T: for<'de> Deserialize<'de>>(
+    |               ^^^^
+
+warning: function `publish` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:482:15
+    |
+482 | pub(crate) fn publish<T: Serialize>(
+    |               ^^^^^^^
+
+warning: function `vault` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:504:15
+    |
+504 | pub(super) fn vault(
+    |               ^^^^^
+
+warning: function `objects` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:524:15
+    |
+524 | pub(crate) fn objects(
+    |               ^^^^^^^
+
+warning: function `observe_inner` is never used
+   --> crates/vibe-publish/src/package_git_parent_source.rs:317:4
+    |
+317 | fn observe_inner(
+    |    ^^^^^^^^^^^^^
+
+warning: methods `private_refs`, `fetch_local_bare`, `reachable_oids`, `object_digest_streamed`, and `commit_tree_oid` are never used
+   --> crates/vibe-publish/src/package_git_parent/git.rs:19:19
+    |
+ 18 | impl LocalGit<'_> {
+    | ----------------- methods in this implementation
+ 19 |     pub(crate) fn private_refs(&self, prefix: &str, cap: usize) -> Result<Vec<(String, String)>> {
+    |                   ^^^^^^^^^^^^
+...
+ 46 |     pub(crate) fn fetch_local_bare(
+    |                   ^^^^^^^^^^^^^^^^
+...
+ 79 |     pub(crate) fn reachable_oids(
+    |                   ^^^^^^^^^^^^^^
+...
+120 |     pub(crate) fn object_digest_streamed(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+...
+202 |     pub(crate) fn commit_tree_oid(&self, oid: &str, cap: usize) -> Result<String> {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: struct `Census` is never constructed
+  --> crates/vibe-publish/src/package_git_payload.rs:54:8
+   |
+54 | struct Census {
+   |        ^^^^^^
+
+warning: methods `commit_bytes_unchecked`, `tag_bytes_unchecked`, `validate_object_bytes`, `canonical_commit_bytes`, `canonical_tag_bytes`, and `derive_staged_object_ids` are never used
+   --> crates/vibe-publish/src/package_git_plan/objects.rs:128:8
+    |
+127 | impl PackageGitPlan {
+    | ------------------- methods in this implementation
+128 |     fn commit_bytes_unchecked(&self) -> Result<Option<Vec<u8>>, PlanError> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+158 |     fn tag_bytes_unchecked(&self) -> Result<Option<Vec<u8>>, PlanError> {
+    |        ^^^^^^^^^^^^^^^^^^^
+...
+187 |     pub(super) fn validate_object_bytes(&self) -> Result<(), PlanError> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+213 |     pub(crate) fn canonical_commit_bytes(&self) -> Result<Option<Vec<u8>>, PlanError> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+...
+218 |     pub(crate) fn canonical_tag_bytes(&self) -> Result<Option<Vec<u8>>, PlanError> {
+    |                   ^^^^^^^^^^^^^^^^^^^
+...
+224 |     pub(crate) fn derive_staged_object_ids(&mut self) -> Result<(), PlanError> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `gitlink_store` is never used
+   --> crates/vibe-publish/src/package_git_operation/journal.rs:544:15
+    |
+544 | pub(crate) fn gitlink_store(
+    |               ^^^^^^^^^^^^^
+
+warning: function `observed_source` is never used
+ --> crates/vibe-publish/src/package_git_parent/source.rs:8:15
+  |
+8 | pub(super) fn observed_source(
+  |               ^^^^^^^^^^^^^^^
+
+warning: enum `TagRef` is never used
+  --> crates/vibe-publish/src/package_git_plan.rs:82:17
+   |
+82 | pub(crate) enum TagRef {
+   |                 ^^^^^^
+
+warning: function `main_oid` is never used
+ --> crates/vibe-publish/src/package_git_parent/identity.rs:4:15
+  |
+4 | pub(super) fn main_oid(plan: &PackageGitPlan) -> Option<&str> {
+  |               ^^^^^^^^
+
+warning: function `tag_oid` is never used
+  --> crates/vibe-publish/src/package_git_parent/identity.rs:10:15
+   |
+10 | pub(super) fn tag_oid(plan: &PackageGitPlan) -> Option<&str> {
+   |               ^^^^^^^
+
+warning: function `target_identity` is never used
+  --> crates/vibe-publish/src/package_git_parent/identity.rs:16:15
+   |
+16 | pub(super) fn target_identity(plan: &PackageGitPlan) -> Option<&str> {
+   |               ^^^^^^^^^^^^^^^
+
+warning: struct `SourcePayloadIdentity` is never constructed
+  --> crates/vibe-publish/src/package_git_payload.rs:62:19
+   |
+62 | pub(crate) struct SourcePayloadIdentity {
+   |                   ^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `Held` is never constructed
+  --> crates/vibe-publish/src/package_git_parent/closure.rs:19:19
+   |
+19 | pub(super) struct Held {
+   |                   ^^^^
+
+warning: struct `RefSnapshot` is never constructed
+  --> crates/vibe-publish/src/package_git_plan.rs:92:19
+   |
+92 | pub(crate) struct RefSnapshot {
+   |                   ^^^^^^^^^^^
+
+warning: enum `ReadyProvenance` is never used
+ --> crates/vibe-publish/src/package_git_operation/journal/ready.rs:8:17
+  |
+8 | pub(crate) enum ReadyProvenance {
+  |                 ^^^^^^^^^^^^^^^
+
+warning: function `held` is never used
+  --> crates/vibe-publish/src/package_git_parent/closure.rs:28:15
+   |
+28 | pub(super) fn held(
+   |               ^^^^
+
+warning: struct `ReadySeal` is never constructed
+  --> crates/vibe-publish/src/package_git_operation/journal/ready.rs:22:19
+   |
+22 | pub(crate) struct ReadySeal {
+   |                   ^^^^^^^^^
+
+warning: function `pending` is never used
+   --> crates/vibe-publish/src/package_git_parent/closure.rs:138:15
+    |
+138 | pub(super) fn pending(
+    |               ^^^^^^^
+
+warning: function `receipt` is never used
+   --> crates/vibe-publish/src/package_git_parent/closure.rs:159:15
+    |
+159 | pub(super) fn receipt(
+    |               ^^^^^^^
+
+warning: function `recheck_prior` is never used
+   --> crates/vibe-publish/src/package_git_parent/closure.rs:187:15
+    |
+187 | pub(super) fn recheck_prior(
+    |               ^^^^^^^^^^^^^
+
+warning: function `capture_source_identity` is never used
+  --> crates/vibe-publish/src/package_git_payload.rs:70:15
+   |
+70 | pub(crate) fn capture_source_identity(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `ProvenanceStatus` is never used
+  --> crates/vibe-publish/src/package_git_payload.rs:94:17
+   |
+94 | pub(crate) enum ProvenanceStatus {
+   |                 ^^^^^^^^^^^^^^^^
+
+warning: function `pending_proof_cold` is never used
+ --> crates/vibe-publish/src/package_git_operation/proof.rs:9:15
+  |
+9 | pub(crate) fn pending_proof_cold(
+  |               ^^^^^^^^^^^^^^^^^^
+
+warning: enum `StagedCommit` is never used
+  --> crates/vibe-publish/src/package_git_plan.rs:99:17
+   |
+99 | pub(crate) enum StagedCommit {
+   |                 ^^^^^^^^^^^^
+
+warning: struct `CompleteManifest` is never constructed
+   --> crates/vibe-publish/src/package_git_payload.rs:100:19
+    |
+100 | pub(crate) struct CompleteManifest {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: function `no_external_object_sources` is never used
+   --> crates/vibe-publish/src/package_git_parent/closure.rs:229:15
+    |
+229 | pub(super) fn no_external_object_sources(objects: &Project, limits: ParentLimits) -> Result<()> {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `exact_private_refs` is never used
+   --> crates/vibe-publish/src/package_git_parent/closure.rs:259:15
+    |
+259 | pub(super) fn exact_private_refs(
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `ready_proof_cold` is never used
+  --> crates/vibe-publish/src/package_git_operation/proof.rs:27:15
+   |
+27 | pub(crate) fn ready_proof_cold(
+   |               ^^^^^^^^^^^^^^^^
+
+warning: function `proof_cold_inner` is never used
+  --> crates/vibe-publish/src/package_git_operation/proof.rs:65:4
+   |
+65 | fn proof_cold_inner(
+   |    ^^^^^^^^^^^^^^^^
+
+warning: enum `LocalPayloadInspection` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:113:17
+    |
+113 | pub(crate) enum LocalPayloadInspection {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `Closure` is never constructed
+   --> crates/vibe-publish/src/package_git_parent/closure.rs:296:19
+    |
+296 | pub(super) struct Closure {
+    |                   ^^^^^^^
+
+warning: constant `CLOSURE_DOMAIN` is never used
+  --> crates/vibe-publish/src/package_git_parent.rs:28:7
+   |
+28 | const CLOSURE_DOMAIN: &[u8] = b"vibevm/package-git-parent-closure/e1\0";
+   |       ^^^^^^^^^^^^^^
+
+warning: struct `ParentLimits` is never constructed
+  --> crates/vibe-publish/src/package_git_parent.rs:31:19
+   |
+31 | pub(crate) struct ParentLimits {
+   |                   ^^^^^^^^^^^^
+
+warning: function `frame` is never used
+   --> crates/vibe-publish/src/package_git_parent/closure.rs:303:4
+    |
+303 | fn frame(hash: &mut Sha256, tag: &[u8], data: &[u8]) {
+    |    ^^^^^
+
+warning: method `oid` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:111:8
+    |
+110 | impl StagedCommit {
+    | ----------------- method in this implementation
+111 |     fn oid(&self) -> &str {
+    |        ^^^
+
+warning: struct `StagedObjects` is never constructed
+   --> crates/vibe-publish/src/package_git_plan.rs:120:19
+    |
+120 | pub(crate) struct StagedObjects {
+    |                   ^^^^^^^^^^^^^
+
+warning: enum `ParentInspection` is never used
+  --> crates/vibe-publish/src/package_git_parent.rs:45:17
+   |
+45 | pub(crate) enum ParentInspection {
+   |                 ^^^^^^^^^^^^^^^^
+
+warning: function `verify` is never used
+   --> crates/vibe-publish/src/package_git_parent/closure.rs:310:15
+    |
+310 | pub(super) fn verify(
+    |               ^^^^^^
+
+warning: function `inspect_local_payload` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:123:15
+    |
+123 | pub(crate) fn inspect_local_payload(
+    |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `uncertain` is never used
+  --> crates/vibe-publish/src/package_git_parent.rs:64:4
+   |
+64 | fn uncertain(run: Option<&str>, reason: impl Into<String>) -> ParentInspection {
+   |    ^^^^^^^^^
+
+warning: function `unavailable` is never used
+  --> crates/vibe-publish/src/package_git_parent.rs:71:4
+   |
+71 | fn unavailable(run: Option<&str>, reason: impl Into<String>) -> ParentInspection {
+   |    ^^^^^^^^^^^
+
+warning: enum `PayloadStageError` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:187:17
+    |
+187 | pub(crate) enum PayloadStageError {
+    |                 ^^^^^^^^^^^^^^^^^
+
+warning: struct `PackageGitPlan` is never constructed
+   --> crates/vibe-publish/src/package_git_plan.rs:135:19
+    |
+135 | pub(crate) struct PackageGitPlan {
+    |                   ^^^^^^^^^^^^^^
+
+warning: function `before` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:198:4
+    |
+198 | fn before(error: impl std::fmt::Display) -> PayloadStageError {
+    |    ^^^^^^
+
+warning: function `partial` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:201:4
+    |
+201 | fn partial(staged_files: usize, error: impl std::fmt::Display) -> PayloadStageError {
+    |    ^^^^^^^
+
+warning: function `stage_local_parent_pending` is never used
+  --> crates/vibe-publish/src/package_git_parent.rs:78:15
+   |
+78 | pub(crate) fn stage_local_parent_pending(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `possibly` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:207:4
+    |
+207 | fn possibly(staged_files: usize, error: impl std::fmt::Display) -> PayloadStageError {
+    |    ^^^^^^^^
+
+warning: function `stage_inner` is never used
+   --> crates/vibe-publish/src/package_git_parent.rs:101:4
+    |
+101 | fn stage_inner(
+    |    ^^^^^^^^^^^
+
+warning: function `copy_error` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:214:4
+    |
+214 | fn copy_error(staged_files: usize, error: PublishError) -> PayloadStageError {
+    |    ^^^^^^^^^^
+
+warning: function `inspect_parent_cold` is never used
+   --> crates/vibe-publish/src/package_git_parent.rs:287:15
+    |
+287 | pub(crate) fn inspect_parent_cold(
+    |               ^^^^^^^^^^^^^^^^^^^
+
+warning: function `inspect_parent_ready_cold` is never used
+   --> crates/vibe-publish/src/package_git_parent.rs:310:15
+    |
+310 | pub(crate) fn inspect_parent_ready_cold(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `stage_local_payload` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:229:15
+    |
+229 | pub(crate) fn stage_local_payload(
+    |               ^^^^^^^^^^^^^^^^^^^
+
+warning: function `stage_inner` is never used
+   --> crates/vibe-publish/src/package_git_payload.rs:237:4
+    |
+237 | fn stage_inner(
+    |    ^^^^^^^^^^^
+
+warning: enum `PlanError` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:153:17
+    |
+153 | pub(crate) enum PlanError {
+    |                 ^^^^^^^^^
+
+warning: function `inspect_parent_inner` is never used
+   --> crates/vibe-publish/src/package_git_parent.rs:333:4
+    |
+333 | fn inspect_parent_inner(
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `invalid` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:158:4
+    |
+158 | fn invalid(reason: &'static str) -> PlanError {
+    |    ^^^^^^^
+
+warning: function `oid` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:161:4
+    |
+161 | fn oid(value: &str, len: usize) -> bool {
+    |    ^^^
+
+warning: function `digest` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:167:4
+    |
+167 | fn digest(value: &str) -> bool {
+    |    ^^^^^^
+
+warning: function `text` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:172:4
+    |
+172 | fn text(value: &str, cap: usize) -> bool {
+    |    ^^^^
+
+warning: function `source_token` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:178:4
+    |
+178 | fn source_token(value: &str) -> bool {
+    |    ^^^^^^^^^^^^
+
+warning: function `repo_token` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:187:4
+    |
+187 | fn repo_token(value: &str) -> bool {
+    |    ^^^^^^^^^^
+
+warning: function `host` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:197:4
+    |
+197 | fn host(value: &str) -> bool {
+    |    ^^^^
+
+warning: function `raw_oid` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:211:4
+    |
+211 | fn raw_oid(value: &RawRef) -> Option<&str> {
+    |    ^^^^^^^
+
+warning: function `tag_raw` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:217:4
+    |
+217 | fn tag_raw(value: &TagRef) -> Option<&str> {
+    |    ^^^^^^^
+
+warning: methods `validate`, `digest`, and `desired_refs` are never used
+   --> crates/vibe-publish/src/package_git_plan.rs:225:19
+    |
+224 | impl PackageGitPlan {
+    | ------------------- methods in this implementation
+225 |     pub(crate) fn validate(&self) -> Result<(), PlanError> {
+    |                   ^^^^^^^^
+...
+371 |     pub(crate) fn digest(&self) -> Result<String, PlanError> {
+    |                   ^^^^^^
+...
+381 |     pub(crate) fn desired_refs(&self) -> Option<RefSnapshot> {
+    |                   ^^^^^^^^^^^^
+
+warning: struct `RepoReady` is never constructed
+   --> crates/vibe-publish/src/package_git_plan.rs:395:19
+    |
+395 | pub(crate) struct RepoReady {
+    |                   ^^^^^^^^^
+
+warning: method `identity` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:399:19
+    |
+398 | impl RepoReady {
+    | -------------- method in this implementation
+399 |     pub(crate) fn identity(&self) -> &RepositoryIdentity {
+    |                   ^^^^^^^^
+
+warning: enum `CreateDecision` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:405:17
+    |
+405 | pub(crate) enum CreateDecision {
+    |                 ^^^^^^^^^^^^^^
+
+warning: function `identity_matches_target` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:413:4
+    |
+413 | fn identity_matches_target(target: &RepositoryTarget, identity: &RepositoryIdentity) -> bool {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `classify_create` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:437:15
+    |
+437 | pub(crate) fn classify_create(
+    |               ^^^^^^^^^^^^^^^
+
+warning: enum `PushCallback` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:524:17
+    |
+524 | pub(crate) enum PushCallback {
+    |                 ^^^^^^^^^^^^
+
+warning: enum `PushDecision` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:530:17
+    |
+530 | pub(crate) enum PushDecision {
+    |                 ^^^^^^^^^^^^
+
+warning: function `classify_push` is never used
+   --> crates/vibe-publish/src/package_git_plan.rs:538:15
+    |
+538 | pub(crate) fn classify_push(
+    |               ^^^^^^^^^^^^^
+
+warning: type `PlannedAssetCall` is more private than the item `AssetInspection::Next::call`
+  --> crates/vibe-publish/src/publication_full_plan/calls/asset_history.rs:24:9
+   |
+24 |         call: PlannedAssetCall,
+   |         ^^^^^^^^^^^^^^^^^^^^^^ field `AssetInspection::Next::call` is reachable at visibility `pub(in crate::publication_full_plan)`
+   |
+note: but type `PlannedAssetCall` is only usable at visibility `pub(in crate::publication_full_plan::calls)`
+  --> crates/vibe-publish/src/publication_full_plan/calls/assets.rs:33:1
+   |
+33 | pub(super) struct PlannedAssetCall {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: `#[warn(private_interfaces)]` on by default
+
+warning: type `calls::CallObservation` is more private than the item `AssetInspection::Next::before`
+   --> crates/vibe-publish/src/publication_full_plan/calls/asset_history.rs:27:9
+    |
+ 27 |         before: CallObservation,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^ field `AssetInspection::Next::before` is reachable at visibility `pub(in crate::publication_full_plan)`
+    |
+note: but type `calls::CallObservation` is only usable at visibility `pub(self)`
+   --> crates/vibe-publish/src/publication_full_plan/calls.rs:232:1
+    |
+232 | struct CallObservation {
+    | ^^^^^^^^^^^^^^^^^^^^^^
+
+   Compiling chromiumoxide v0.9.1
+warning: `vibe-publish` (lib) generated 496 warnings (run `cargo fix --lib -p vibe-publish` to apply 18 suggestions)
+   Compiling vibe-package-source v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-package-source)
+   Compiling vibe-mcp v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-mcp)
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> crates/vibe-mcp/src/machine_session/state.rs:128:10
+    |
+128 |         .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+    |          ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+128 -         .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+128 +         .try_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+    |
+
+warning: `vibe-orchestrator` (lib) generated 15 warnings (run `cargo fix --lib -p vibe-orchestrator` to apply 14 suggestions)
+warning: `vibe-mcp` (lib) generated 1 warning (run `cargo fix --lib -p vibe-mcp` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 02s
+     Running unittests src/main.rs (/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/build/vibe-cli/c974a364d4f47df5/out/vibe-c974a364d4f47df5)
+
+running 2 tests
+test commands::install::closure_diff::m_06_b_2_cases::default_transport_none_is_unavailable_and_never_zero ... ok
+test commands::install::closure_diff::m_06_b_2_cases::tree_and_closure_transport_share_exact_static_dynamic_capture ... FAILED
+
+failures:
+
+---- commands::install::closure_diff::m_06_b_2_cases::tree_and_closure_transport_share_exact_static_dynamic_capture stdout ----
+
+thread 'commands::install::closure_diff::m_06_b_2_cases::tree_and_closure_transport_share_exact_static_dynamic_capture' (3429476) panicked at crates/vibe-cli/src/commands/install/../tree/m_06_b_2_cases.rs:17:69:
+called `Result::unwrap()` on an `Err` value: reading /fast/zap-managed/2026-10-15-m06b2-correction/tmp/.tmpIcJvG9/vibe.toml
+
+Caused by:
+    0: failed to parse `/fast/zap-managed/2026-10-15-m06b2-correction/tmp/.tmpIcJvG9/vibe.toml`: missing field `version`
+       in `project` at line 1, column 1 (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; fix: add the missing field to vibe.toml)
+    1: missing field `version`
+       in `project` at line 1, column 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    commands::install::closure_diff::m_06_b_2_cases::tree_and_closure_transport_share_exact_static_dynamic_capture
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 935 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p vibe-cli --bin vibe`

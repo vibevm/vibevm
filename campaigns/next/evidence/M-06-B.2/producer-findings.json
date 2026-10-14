@@ -1,0 +1,16 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Final scoped checks: workspace --lib m_06_b_2_cases 8/8 and CLI --bin vibe m_06_b_2_cases 2/2 passed; prior failures retained in report.",
+    "All prior PROP-072 normative clauses preserved; no out-of-perimeter edits.",
+    "Logical source sharing does not prove identical transformed payload bytes; compiler domain-separated digests are preserved separately from measurement SHA-256.",
+    "Tokenizer, runtime reads, ambient tail, provider billing and unproved attribution remain explicitly unavailable."
+  ],
+  "unresolved": [],
+  "proposed_follow_up": null
+}

@@ -71,6 +71,7 @@ pub(super) struct ScopedApply<'a> {
     pub(super) lockfile: &'a mut Lockfile,
     pub(super) old_lock: &'a Lockfile,
     pub(super) lanes_before: &'a [(String, Option<u64>)],
+    pub(super) measurements_before: &'a vibe_workspace::boot_debugger::measurement::Report,
     /// The command's ONE agent backend.
     pub(super) agent: &'a std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
 }
@@ -94,6 +95,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         lockfile,
         old_lock,
         lanes_before,
+        measurements_before,
         agent,
     } = inputs;
 
@@ -233,6 +235,8 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         lockfile,
         lanes_before,
         &lane_sizes(&workspace.root),
+        Some(measurements_before),
+        Some(&vibe_workspace::boot_debugger::measurement::capture_workspace(&workspace.root)),
     );
 
     if let Some(plan) = subtree.take_post_install_plan() {

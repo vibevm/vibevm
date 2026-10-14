@@ -152,6 +152,30 @@ fn collect_markers(text: &str) -> std::result::Result<Vec<Marker>, StaticDecompi
     Ok(markers)
 }
 
+/// Exact emitted body ranges from the same marker parser as the graph.
+/// Unlike legacy summary sizes, preserves CRLF and a missing final newline.
+pub(super) fn body_ranges(text: &str) -> Result<Vec<std::ops::Range<usize>>, StaticDecompileError> {
+    let markers = collect_markers(text)?;
+    let mut starts = vec![0];
+    starts.extend(text.match_indices('\n').map(|(i, _)| i + 1));
+    Ok(markers
+        .iter()
+        .enumerate()
+        .map(|(i, marker)| {
+            let start = starts
+                .get(marker.end_line + 1)
+                .copied()
+                .unwrap_or(text.len());
+            let end = markers
+                .get(i + 1)
+                .and_then(|next| starts.get(next.start_line))
+                .copied()
+                .unwrap_or(text.len());
+            start..end
+        })
+        .collect())
+}
+
 /// Decompile static-lane text into its ordered contributions (PROP-036 §2.8).
 ///
 /// Each marker opens a region running to the next marker or EOF; the region

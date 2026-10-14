@@ -213,6 +213,8 @@ pub(crate) fn emit_closure_diff(
     new: &Lockfile,
     lanes_before: &[(String, Option<u64>)],
     lanes_after: &[(String, Option<u64>)],
+    measurements_before: Option<&vibe_workspace::boot_debugger::measurement::Report>,
+    measurements_after: Option<&vibe_workspace::boot_debugger::measurement::Report>,
 ) {
     emit_closure_diff_with_conversions(
         ctx,
@@ -223,6 +225,8 @@ pub(crate) fn emit_closure_diff(
         lanes_after,
         AppliedConversionCounts::default(),
         &[],
+        measurements_before,
+        measurements_after,
     );
 }
 
@@ -235,10 +239,12 @@ pub(crate) fn emit_closure_diff_with_conversions(
     lanes_after: &[(String, Option<u64>)],
     conversions: AppliedConversionCounts,
     conversion_failures: &[AppliedConversionFailure],
+    measurements_before: Option<&vibe_workspace::boot_debugger::measurement::Report>,
+    measurements_after: Option<&vibe_workspace::boot_debugger::measurement::Report>,
 ) {
     let diff = closure_diff_with_conversions(old, new, lanes_before, lanes_after, conversions);
     if ctx.is_json() {
-        let payload = if diff.is_empty() {
+        let mut payload = if diff.is_empty() {
             serde_json::json!({
                 "command": format!("{command}:closure-diff"),
                 "unchanged": true,
@@ -269,6 +275,7 @@ pub(crate) fn emit_closure_diff_with_conversions(
                 })).collect::<Vec<_>>(),
             })
         };
+        payload["measurements"] = measurement_pair(measurements_before, measurements_after);
         // Supplementary, like the plan preview: held back until the
         // outcome is known so a parked run emits its handoff alone.
         let _ = ctx.defer_json_plan(&payload);
@@ -286,6 +293,41 @@ pub(crate) fn emit_closure_diff_with_conversions(
                     format!(" (+{} more parser issue(s) in slot record)", failure.reason.issues.len() - 1)
                 } else { String::new() }
             ));
+        }
+    }
+    for (phase, report) in [
+        ("before", measurements_before),
+        ("after", measurements_after),
+    ] {
+        match report {
+            None => ctx.step(&format!("boot measurement {phase}: declared-unavailable")),
+            Some(report) => {
+                ctx.step(&format!(
+                    "boot measurement {phase}: {} ({})",
+                    report.capture_id, report.recipe
+                ));
+                for lane in &report.lanes {
+                    ctx.step(&format!(
+                        "  lane {}: {}",
+                        lane.name,
+                        serde_json::to_string(&lane.totals).expect("measurement totals")
+                    ));
+                    for snippet in &lane.snippets {
+                        ctx.step(&format!(
+                            "  snippet {} {}: {}",
+                            lane.name,
+                            snippet.contribution,
+                            serde_json::to_string(snippet).expect("measurement snippet")
+                        ));
+                    }
+                }
+                for (package, totals) in &report.packages {
+                    ctx.step(&format!(
+                        "  package {package}: {}",
+                        serde_json::to_string(totals).expect("measurement totals")
+                    ));
+                }
+            }
         }
     }
     let lines = render(&diff);
@@ -327,7 +369,12 @@ mod tests {
     /// CURRENT_SCHEMA_VERSION via Lockfile::empty — the lock_header()
     /// discipline of the visibility fixtures, minus the TOML round-trip
     /// these unit tests do not need.
-    fn locked(group: &str, name: &str, version: &str, admitted_by: Option<&str>) -> LockedPackage {
+    pub(super) fn locked(
+        group: &str,
+        name: &str,
+        version: &str,
+        admitted_by: Option<&str>,
+    ) -> LockedPackage {
         LockedPackage {
             kind: vibe_core::PackageKind::Flow,
             name: vibe_core::PackageName::from_validated(name.to_string()),
@@ -515,3 +562,15 @@ mod tests {
         );
     }
 }
+
+/// The exact captured reports are transported verbatim, including unavailable fields.
+pub(crate) fn measurement_pair(
+    before: Option<&vibe_workspace::boot_debugger::measurement::Report>,
+    after: Option<&vibe_workspace::boot_debugger::measurement::Report>,
+) -> serde_json::Value {
+    serde_json::json!({"before": before, "after": after, "none_means": "declared-unavailable"})
+}
+
+#[cfg(test)]
+#[path = "../tree/m_06_b_2_cases.rs"]
+mod m_06_b_2_cases;

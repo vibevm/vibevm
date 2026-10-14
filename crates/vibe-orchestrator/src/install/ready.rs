@@ -39,6 +39,7 @@ pub(super) struct ReadyApply<'a> {
     pub(super) lockfile_path: &'a Path,
     pub(super) lockfile_snapshot: &'a Lockfile,
     pub(super) lanes_before: &'a [(String, Option<u64>)],
+    pub(super) measurements_before: Option<&'a vibe_workspace::boot_debugger::measurement::Report>,
     pub(super) run_metadata: &'a vibe_lifecycle::RunMetadata,
     pub(super) confirm_gate: &'a dyn ConfirmGate,
     pub(super) observer: &'a dyn InstallObserver,
@@ -61,6 +62,7 @@ pub(super) fn apply(
         lockfile_path,
         lockfile_snapshot,
         lanes_before,
+        measurements_before,
         run_metadata,
         confirm_gate,
         observer,
@@ -195,6 +197,7 @@ pub(super) fn apply(
         lockfile_path,
         lockfile_snapshot,
         lanes_before,
+        measurements_before,
         lane_root: &workspace.root,
         applied: &applied,
         packages_resolved,
@@ -267,6 +270,7 @@ struct ReadyTail<'a> {
     lockfile_path: &'a Path,
     lockfile_snapshot: &'a Lockfile,
     lanes_before: &'a [(String, Option<u64>)],
+    measurements_before: Option<&'a vibe_workspace::boot_debugger::measurement::Report>,
     lane_root: &'a Path,
     applied: &'a vibe_install::ApplyReport,
     packages_resolved: usize,
@@ -289,11 +293,14 @@ fn finish_ready(tail: ReadyTail<'_>, mut run: InstallRun) -> InstallRun {
     // skips the diff rather than failing the completed install.
     if let Ok(new_lock) = Lockfile::read(tail.lockfile_path) {
         let lanes_after = tail.observer.lane_sizes(tail.lane_root);
+        let measurements_after = tail.observer.boot_measurements(tail.lane_root);
         tail.observer.narrate(InstallNarration::ClosureDiff {
             old: tail.lockfile_snapshot,
             new: &new_lock,
             lanes_before: tail.lanes_before,
             lanes_after: &lanes_after,
+            measurements_before: tail.measurements_before,
+            measurements_after: measurements_after.as_ref(),
             conversions: &tail.applied.outcome.conversion_counts,
             conversion_failures: &tail.applied.outcome.conversion_failures,
         });

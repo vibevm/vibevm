@@ -1,0 +1,1725 @@
+diff --git a/crates/vibe-cli/resources/package-tree.schema.v1.json b/crates/vibe-cli/resources/package-tree.schema.v1.json
+index b99f3acea..1eaeb8d7d 100644
+--- a/crates/vibe-cli/resources/package-tree.schema.v1.json
++++ b/crates/vibe-cli/resources/package-tree.schema.v1.json
+@@ -33,13 +33,22 @@
+       "additionalProperties": false,
+       "properties": {
+         "static_md": { "anyOf": [{ "$ref": "#/$defs/staticLane" }, { "type": "null" }] },
+-        "index_md": { "$ref": "#/$defs/indexLane" }
++        "index_md": { "$ref": "#/$defs/indexLane" },
++        "measurements": { "$ref": "#/$defs/bootMeasurements" }
+       }
+     },
+     "in_place_specs": { "type": "array", "items": { "$ref": "#/$defs/inPlaceSpec" } },
+     "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+   },
+   "$defs": {
++    "measurementCount": {"oneOf": [{"type": "object", "additionalProperties": false, "required": ["status", "value"], "properties": {"status": {"const": "exact"}, "value": {"type": "integer", "minimum": 0}}}, {"type": "object", "additionalProperties": false, "required": ["status", "value", "recipe"], "properties": {"status": {"const": "estimated"}, "value": {"type": "integer", "minimum": 0}, "recipe": {"type": "string"}}}, {"type": "object", "additionalProperties": false, "required": ["status", "reason"], "properties": {"status": {"const": "unavailable"}, "reason": {"type": "string"}}}]},
++    "measurementPayload": {"type": "object", "additionalProperties": false, "required": ["sha256", "bytes", "scalars"], "properties": {"sha256": {"type": "string"}, "bytes": {"type": "integer", "minimum": 0}, "scalars": {"$ref": "#/$defs/measurementCount"}}},
++    "measurementTotals": {"type": "object", "additionalProperties": false, "required": ["direct_bytes", "inclusive_bytes", "unique_raw_bytes", "repeated_raw_bytes", "runtime_reads", "recorded_occurrences", "unique_emitted_bytes", "repeated_emitted_bytes"], "properties": {"direct_bytes": {"$ref": "#/$defs/measurementCount"}, "inclusive_bytes": {"$ref": "#/$defs/measurementCount"}, "unique_raw_bytes": {"$ref": "#/$defs/measurementCount"}, "repeated_raw_bytes": {"$ref": "#/$defs/measurementCount"}, "runtime_reads": {"$ref": "#/$defs/measurementCount"}, "recorded_occurrences": {"type": "integer", "minimum": 0}, "unique_emitted_bytes": {"$ref": "#/$defs/measurementCount"}, "repeated_emitted_bytes": {"$ref": "#/$defs/measurementCount"}}},
++    "measurementOccurrence": {"type": "object", "additionalProperties": false, "required": ["source", "requested", "parent", "root", "emitted"], "properties": {"source": {"type": "integer", "minimum": 0}, "requested": {"anyOf": [{"type": "string"}, {"type": "null"}]}, "parent": {"anyOf": [{"type": "integer", "minimum": 0}, {"type": "null"}]}, "root": {"type": "boolean"}, "emitted": {"anyOf": [{"$ref": "#/$defs/measurementPayload"}, {"type": "null"}]}}},
++    "measurementSnippet": {"type": "object", "additionalProperties": false, "required": ["contribution", "source", "origin", "path", "kind", "condition", "package", "raw", "emitted", "direct_bytes", "inclusive_bytes", "occurrences"], "properties": {"contribution": {"type": "integer", "minimum": 0}, "source": {"anyOf": [{"type": "integer", "minimum": 0}, {"type": "null"}]}, "origin": {"type": "string"}, "path": {"type": "string"}, "kind": {"type": "string"}, "condition": {"anyOf": [{"type": "string"}, {"type": "null"}]}, "package": {"anyOf": [{"type": "string"}, {"type": "null"}]}, "raw": {"anyOf": [{"$ref": "#/$defs/measurementPayload"}, {"type": "null"}]}, "emitted": {"anyOf": [{"$ref": "#/$defs/measurementPayload"}, {"type": "null"}]}, "direct_bytes": {"$ref": "#/$defs/measurementCount"}, "inclusive_bytes": {"$ref": "#/$defs/measurementCount"}, "occurrences": {"type": "array", "items": {"$ref": "#/$defs/measurementOccurrence"}}}},
++    "measurementLane": {"type": "object", "additionalProperties": false, "required": ["name", "artifact", "snippets", "totals", "gaps", "sources"], "properties": {"name": {"type": "string"}, "artifact": {"anyOf": [{"$ref": "#/$defs/measurementPayload"}, {"type": "null"}]}, "snippets": {"type": "array", "items": {"$ref": "#/$defs/measurementSnippet"}}, "totals": {"$ref": "#/$defs/measurementTotals"}, "gaps": {"type": "array", "items": {"type": "string"}}, "sources": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["index", "identity", "raw"], "properties": {"index": {"type": "integer", "minimum": 0}, "identity": {"type": "string"}, "raw": {"anyOf": [{"$ref": "#/$defs/measurementPayload"}, {"type": "null"}]}}}}}},
++    "bootMeasurements": {"type": "object", "additionalProperties": false, "required": ["capture_id", "recipe", "basis", "lanes", "packages", "tokens", "ambient_tail", "provider_billing", "scope_data_observability", "inspected_source_reads"], "properties": {"capture_id": {"type": "string"}, "recipe": {"type": "string"}, "basis": {"type": "string"}, "lanes": {"type": "array", "items": {"$ref": "#/$defs/measurementLane"}}, "packages": {"type": "object", "additionalProperties": {"$ref": "#/$defs/measurementTotals"}}, "tokens": {"type": "object", "additionalProperties": false, "required": ["tokenizer", "version", "recipe", "count"], "properties": {"tokenizer": {"anyOf": [{"type": "string"}, {"type": "null"}]}, "version": {"anyOf": [{"type": "string"}, {"type": "null"}]}, "recipe": {"type": "string"}, "count": {"$ref": "#/$defs/measurementCount"}}}, "ambient_tail": {"$ref": "#/$defs/measurementCount"}, "provider_billing": {"$ref": "#/$defs/measurementCount"}, "scope_data_observability": {"$ref": "#/$defs/measurementCount"}, "inspected_source_reads": {"type": "object", "additionalProperties": {"$ref": "#/$defs/measurementCount"}}}},
++
+     "packageId": { "type": "string", "pattern": "^[^/]+/[^/@]+$", "description": "\"group/name\"" },
+     "package": {
+       "type": "object",
+diff --git a/crates/vibe-cli/src/commands/install/closure_diff.rs b/crates/vibe-cli/src/commands/install/closure_diff.rs
+index 8e3cca237..685e5fa1d 100644
+--- a/crates/vibe-cli/src/commands/install/closure_diff.rs
++++ b/crates/vibe-cli/src/commands/install/closure_diff.rs
+@@ -213,6 +213,8 @@ pub(crate) fn emit_closure_diff(
+     new: &Lockfile,
+     lanes_before: &[(String, Option<u64>)],
+     lanes_after: &[(String, Option<u64>)],
++    measurements_before: Option<&vibe_workspace::boot_debugger::measurement::Report>,
++    measurements_after: Option<&vibe_workspace::boot_debugger::measurement::Report>,
+ ) {
+     emit_closure_diff_with_conversions(
+         ctx,
+@@ -223,6 +225,8 @@ pub(crate) fn emit_closure_diff(
+         lanes_after,
+         AppliedConversionCounts::default(),
+         &[],
++        measurements_before,
++        measurements_after,
+     );
+ }
+ 
+@@ -235,10 +239,12 @@ pub(crate) fn emit_closure_diff_with_conversions(
+     lanes_after: &[(String, Option<u64>)],
+     conversions: AppliedConversionCounts,
+     conversion_failures: &[AppliedConversionFailure],
++    measurements_before: Option<&vibe_workspace::boot_debugger::measurement::Report>,
++    measurements_after: Option<&vibe_workspace::boot_debugger::measurement::Report>,
+ ) {
+     let diff = closure_diff_with_conversions(old, new, lanes_before, lanes_after, conversions);
+     if ctx.is_json() {
+-        let payload = if diff.is_empty() {
++        let mut payload = if diff.is_empty() {
+             serde_json::json!({
+                 "command": format!("{command}:closure-diff"),
+                 "unchanged": true,
+@@ -269,6 +275,7 @@ pub(crate) fn emit_closure_diff_with_conversions(
+                 })).collect::<Vec<_>>(),
+             })
+         };
++        payload["measurements"] = measurement_pair(measurements_before, measurements_after);
+         // Supplementary, like the plan preview: held back until the
+         // outcome is known so a parked run emits its handoff alone.
+         let _ = ctx.defer_json_plan(&payload);
+@@ -288,6 +295,41 @@ pub(crate) fn emit_closure_diff_with_conversions(
+             ));
+         }
+     }
++    for (phase, report) in [
++        ("before", measurements_before),
++        ("after", measurements_after),
++    ] {
++        match report {
++            None => ctx.step(&format!("boot measurement {phase}: declared-unavailable")),
++            Some(report) => {
++                ctx.step(&format!(
++                    "boot measurement {phase}: {} ({})",
++                    report.capture_id, report.recipe
++                ));
++                for lane in &report.lanes {
++                    ctx.step(&format!(
++                        "  lane {}: {}",
++                        lane.name,
++                        serde_json::to_string(&lane.totals).expect("measurement totals")
++                    ));
++                    for snippet in &lane.snippets {
++                        ctx.step(&format!(
++                            "  snippet {} {}: {}",
++                            lane.name,
++                            snippet.contribution,
++                            serde_json::to_string(snippet).expect("measurement snippet")
++                        ));
++                    }
++                }
++                for (package, totals) in &report.packages {
++                    ctx.step(&format!(
++                        "  package {package}: {}",
++                        serde_json::to_string(totals).expect("measurement totals")
++                    ));
++                }
++            }
++        }
++    }
+     let lines = render(&diff);
+     if !diff.is_empty() {
+         ctx.heading("closure diff:");
+@@ -327,7 +369,12 @@ mod tests {
+     /// CURRENT_SCHEMA_VERSION via Lockfile::empty — the lock_header()
+     /// discipline of the visibility fixtures, minus the TOML round-trip
+     /// these unit tests do not need.
+-    fn locked(group: &str, name: &str, version: &str, admitted_by: Option<&str>) -> LockedPackage {
++    pub(super) fn locked(
++        group: &str,
++        name: &str,
++        version: &str,
++        admitted_by: Option<&str>,
++    ) -> LockedPackage {
+         LockedPackage {
+             kind: vibe_core::PackageKind::Flow,
+             name: vibe_core::PackageName::from_validated(name.to_string()),
+@@ -515,3 +562,15 @@ mod tests {
+         );
+     }
+ }
++
++/// The exact captured reports are transported verbatim, including unavailable fields.
++pub(crate) fn measurement_pair(
++    before: Option<&vibe_workspace::boot_debugger::measurement::Report>,
++    after: Option<&vibe_workspace::boot_debugger::measurement::Report>,
++) -> serde_json::Value {
++    serde_json::json!({"before": before, "after": after, "none_means": "declared-unavailable"})
++}
++
++#[cfg(test)]
++#[path = "../tree/m_06_b_2_cases.rs"]
++mod m_06_b_2_cases;
+diff --git a/crates/vibe-cli/src/commands/install/observer.rs b/crates/vibe-cli/src/commands/install/observer.rs
+index 59de7cacb..4ce812186 100644
+--- a/crates/vibe-cli/src/commands/install/observer.rs
++++ b/crates/vibe-cli/src/commands/install/observer.rs
+@@ -84,6 +84,8 @@ impl InstallObserver for CliInstallObserver<'_> {
+                 new,
+                 lanes_before,
+                 lanes_after,
++                measurements_before,
++                measurements_after,
+                 conversions,
+                 conversion_failures,
+             } => emit_closure_diff_with_conversions(
+@@ -95,10 +97,19 @@ impl InstallObserver for CliInstallObserver<'_> {
+                 lanes_after,
+                 *conversions,
+                 conversion_failures,
++                measurements_before,
++                measurements_after,
+             ),
+         }
+     }
+ 
++    fn boot_measurements(
++        &self,
++        root: &Path,
++    ) -> Option<vibe_workspace::boot_debugger::measurement::Report> {
++        Some(vibe_workspace::boot_debugger::measurement::capture_workspace(root))
++    }
++
+     fn lane_sizes(&self, root: &Path) -> Vec<(String, Option<u64>)> {
+         lane_sizes(root)
+     }
+diff --git a/crates/vibe-cli/src/commands/tree/build.rs b/crates/vibe-cli/src/commands/tree/build.rs
+index d0377059b..4edf814fe 100644
+--- a/crates/vibe-cli/src/commands/tree/build.rs
++++ b/crates/vibe-cli/src/commands/tree/build.rs
+@@ -176,7 +176,14 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
+     boot_file_set.extend(index.entries.iter().map(|e| e.path.clone()));
+     let boot_files: Vec<String> = boot_file_set.into_iter().collect();
+ 
++    let mut measurements = vibe_workspace::boot_debugger::measurement::capture_texts(
++        root,
++        static_text.as_deref(),
++        index_text.as_deref(),
++    );
++    measurements.bind_packages(&lockfile);
+     let boot = Boot {
++        measurements: Some(measurements),
+         static_lane_name,
+         static_md: static_text
+             .as_deref()
+diff --git a/crates/vibe-cli/src/commands/tree/build/tests.rs b/crates/vibe-cli/src/commands/tree/build/tests.rs
+index e5d5ead3f..0cffed012 100644
+--- a/crates/vibe-cli/src/commands/tree/build/tests.rs
++++ b/crates/vibe-cli/src/commands/tree/build/tests.rs
+@@ -328,6 +328,7 @@ fn plain_render_carries_the_provenance_suffix() {
+         roots: vec!["org.x/api".to_string()],
+         packages: vec![chained, plain_root_edge],
+         boot: Boot {
++            measurements: None,
+             static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+             static_md: None,
+             index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/tree/mod.rs b/crates/vibe-cli/src/commands/tree/mod.rs
+index e55653045..ae8e9edd7 100644
+--- a/crates/vibe-cli/src/commands/tree/mod.rs
++++ b/crates/vibe-cli/src/commands/tree/mod.rs
+@@ -13,7 +13,7 @@
+ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#command");
+ 
+ mod artifacts;
+-mod build;
++pub(crate) mod build;
+ mod diagnostics;
+ mod host;
+ mod model;
+diff --git a/crates/vibe-cli/src/commands/tree/model.rs b/crates/vibe-cli/src/commands/tree/model.rs
+index aa31e2f06..66e9c7c2f 100644
+--- a/crates/vibe-cli/src/commands/tree/model.rs
++++ b/crates/vibe-cli/src/commands/tree/model.rs
+@@ -189,6 +189,8 @@ impl Condition {
+ /// `boot` — the two committed boot lanes and their sizes.
+ #[derive(Debug, Serialize)]
+ pub struct Boot {
++    #[serde(skip_serializing_if = "Option::is_none")]
++    pub measurements: Option<vibe_workspace::boot_debugger::measurement::Report>,
+     /// The generated static lane's own file name for THIS project:
+     /// `STATIC.xml` under an XML spec target, `STATIC.md` otherwise
+     /// (PROP-045 ##STATIC-FOLLOWS-THE-TARGET). It lives on `boot` rather
+diff --git a/crates/vibe-cli/src/commands/tree/plain.rs b/crates/vibe-cli/src/commands/tree/plain.rs
+index 6c8b7b79e..2e86e341b 100644
+--- a/crates/vibe-cli/src/commands/tree/plain.rs
++++ b/crates/vibe-cli/src/commands/tree/plain.rs
+@@ -267,6 +267,7 @@ mod tests {
+             roots: roots.iter().map(|s| s.to_string()).collect(),
+             packages,
+             boot: Boot {
++                measurements: None,
+                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+                 static_md: None,
+                 index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/tree/tui/copy/mod.rs b/crates/vibe-cli/src/commands/tree/tui/copy/mod.rs
+index 39636e74b..a0a595a7b 100644
+--- a/crates/vibe-cli/src/commands/tree/tui/copy/mod.rs
++++ b/crates/vibe-cli/src/commands/tree/tui/copy/mod.rs
+@@ -324,6 +324,7 @@ mod tests {
+             roots: roots.iter().map(|s| s.to_string()).collect(),
+             packages,
+             boot: Boot {
++                measurements: None,
+                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+                 static_md: None,
+                 index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/tree/tui/dispatch.rs b/crates/vibe-cli/src/commands/tree/tui/dispatch.rs
+index 1b589cac3..91eaf642f 100644
+--- a/crates/vibe-cli/src/commands/tree/tui/dispatch.rs
++++ b/crates/vibe-cli/src/commands/tree/tui/dispatch.rs
+@@ -109,6 +109,7 @@ mod tests {
+             roots: vec!["g/alpha".to_string()],
+             packages: vec![pkg("g/alpha")],
+             boot: Boot {
++                measurements: None,
+                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+                 static_md: None,
+                 index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/tree/tui/flatten.rs b/crates/vibe-cli/src/commands/tree/tui/flatten.rs
+index f0438ce64..e3a98988f 100644
+--- a/crates/vibe-cli/src/commands/tree/tui/flatten.rs
++++ b/crates/vibe-cli/src/commands/tree/tui/flatten.rs
+@@ -286,6 +286,7 @@ mod tests {
+             roots: roots.iter().map(|s| s.to_string()).collect(),
+             packages,
+             boot: Boot {
++                measurements: None,
+                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+                 static_md: None,
+                 index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/tree/tui/menu/mod.rs b/crates/vibe-cli/src/commands/tree/tui/menu/mod.rs
+index 1e1ae413f..ea9ddee92 100644
+--- a/crates/vibe-cli/src/commands/tree/tui/menu/mod.rs
++++ b/crates/vibe-cli/src/commands/tree/tui/menu/mod.rs
+@@ -381,6 +381,7 @@ pub(super) mod test_support {
+             roots: vec!["g/a".to_string()],
+             packages: vec![pkg],
+             boot: Boot {
++                measurements: None,
+                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+                 static_md: None,
+                 index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/tree/tui/modes.rs b/crates/vibe-cli/src/commands/tree/tui/modes.rs
+index d8e44560a..b298b2172 100644
+--- a/crates/vibe-cli/src/commands/tree/tui/modes.rs
++++ b/crates/vibe-cli/src/commands/tree/tui/modes.rs
+@@ -215,6 +215,7 @@ mod tests {
+             roots: roots.iter().map(|s| s.to_string()).collect(),
+             packages,
+             boot: Boot {
++                measurements: None,
+                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+                 static_md: None,
+                 index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/tree/tui/search/mod.rs b/crates/vibe-cli/src/commands/tree/tui/search/mod.rs
+index 372b8468e..37d4eecbf 100644
+--- a/crates/vibe-cli/src/commands/tree/tui/search/mod.rs
++++ b/crates/vibe-cli/src/commands/tree/tui/search/mod.rs
+@@ -299,6 +299,7 @@ mod tests {
+             roots: vec!["g/alpha".to_string(), "g/beta".to_string()],
+             packages: vec![pkg("g/alpha"), pkg("g/beta")],
+             boot: Boot {
++                measurements: None,
+                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+                 static_md: None,
+                 index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/tree/tui/state.rs b/crates/vibe-cli/src/commands/tree/tui/state.rs
+index 33244b7a3..ebf44a8c0 100644
+--- a/crates/vibe-cli/src/commands/tree/tui/state.rs
++++ b/crates/vibe-cli/src/commands/tree/tui/state.rs
+@@ -449,6 +449,7 @@ mod tests {
+             roots: roots.iter().map(|s| s.to_string()).collect(),
+             packages,
+             boot: Boot {
++                measurements: None,
+                 static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
+                 static_md: None,
+                 index_md: IndexLane {
+diff --git a/crates/vibe-cli/src/commands/update/scoped.rs b/crates/vibe-cli/src/commands/update/scoped.rs
+index 8a8724d1d..5a778ee09 100644
+--- a/crates/vibe-cli/src/commands/update/scoped.rs
++++ b/crates/vibe-cli/src/commands/update/scoped.rs
+@@ -153,6 +153,8 @@ fn run(
+     // the post-write state once the apply is durable.
+     let old_lock = lockfile.clone();
+     let lanes_before = lane_sizes(&workspace.root);
++    let measurements_before =
++        vibe_workspace::boot_debugger::measurement::capture_workspace(&workspace.root);
+     let spec_format = resolve_spec_format(&manifest, user_config.install.spec_format);
+ 
+     // PROP-010 §2.5 — the offline posture reaches `vibe update` through the
+@@ -347,6 +349,7 @@ fn run(
+             lockfile: &mut lockfile,
+             old_lock: &old_lock,
+             lanes_before: &lanes_before,
++            measurements_before: &measurements_before,
+             agent: &agent,
+         },
+     );
+diff --git a/crates/vibe-cli/src/commands/update/scoped/apply.rs b/crates/vibe-cli/src/commands/update/scoped/apply.rs
+index 2598857c7..282751282 100644
+--- a/crates/vibe-cli/src/commands/update/scoped/apply.rs
++++ b/crates/vibe-cli/src/commands/update/scoped/apply.rs
+@@ -71,6 +71,7 @@ pub(super) struct ScopedApply<'a> {
+     pub(super) lockfile: &'a mut Lockfile,
+     pub(super) old_lock: &'a Lockfile,
+     pub(super) lanes_before: &'a [(String, Option<u64>)],
++    pub(super) measurements_before: &'a vibe_workspace::boot_debugger::measurement::Report,
+     /// The command's ONE agent backend.
+     pub(super) agent: &'a std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
+ }
+@@ -94,6 +95,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
+         lockfile,
+         old_lock,
+         lanes_before,
++        measurements_before,
+         agent,
+     } = inputs;
+ 
+@@ -233,6 +235,8 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
+         lockfile,
+         lanes_before,
+         &lane_sizes(&workspace.root),
++        Some(measurements_before),
++        Some(&vibe_workspace::boot_debugger::measurement::capture_workspace(&workspace.root)),
+     );
+ 
+     if let Some(plan) = subtree.take_post_install_plan() {
+diff --git a/crates/vibe-orchestrator/src/install/mod.rs b/crates/vibe-orchestrator/src/install/mod.rs
+index 099479d8b..eb6c5fb91 100644
+--- a/crates/vibe-orchestrator/src/install/mod.rs
++++ b/crates/vibe-orchestrator/src/install/mod.rs
+@@ -320,6 +320,7 @@ pub fn execute_prepared(
+     // snapshot, taken beside the lock snapshot so one read point feeds
+     // the whole diff. Sampled again after a successful apply below.
+     let lanes_before = observer.lane_sizes(&workspace.root);
++    let measurements_before = observer.boot_measurements(&workspace.root);
+     // The source is built from the ONE environment snapshot, and only here: a
+     // chain that never reaches this point never pays for the composition.
+     let resolver = sources.build(PackageSourceBuild {
+@@ -460,6 +461,7 @@ pub fn execute_prepared(
+                     lockfile_path: &lockfile_path,
+                     lockfile_snapshot: &lockfile_snapshot,
+                     lanes_before: &lanes_before,
++                    measurements_before: measurements_before.as_ref(),
+                     run_metadata: &run_metadata,
+                     confirm_gate,
+                     observer,
+diff --git a/crates/vibe-orchestrator/src/install/ready.rs b/crates/vibe-orchestrator/src/install/ready.rs
+index 155767947..0f9816c2f 100644
+--- a/crates/vibe-orchestrator/src/install/ready.rs
++++ b/crates/vibe-orchestrator/src/install/ready.rs
+@@ -39,6 +39,7 @@ pub(super) struct ReadyApply<'a> {
+     pub(super) lockfile_path: &'a Path,
+     pub(super) lockfile_snapshot: &'a Lockfile,
+     pub(super) lanes_before: &'a [(String, Option<u64>)],
++    pub(super) measurements_before: Option<&'a vibe_workspace::boot_debugger::measurement::Report>,
+     pub(super) run_metadata: &'a vibe_lifecycle::RunMetadata,
+     pub(super) confirm_gate: &'a dyn ConfirmGate,
+     pub(super) observer: &'a dyn InstallObserver,
+@@ -61,6 +62,7 @@ pub(super) fn apply(
+         lockfile_path,
+         lockfile_snapshot,
+         lanes_before,
++        measurements_before,
+         run_metadata,
+         confirm_gate,
+         observer,
+@@ -195,6 +197,7 @@ pub(super) fn apply(
+         lockfile_path,
+         lockfile_snapshot,
+         lanes_before,
++        measurements_before,
+         lane_root: &workspace.root,
+         applied: &applied,
+         packages_resolved,
+@@ -267,6 +270,7 @@ struct ReadyTail<'a> {
+     lockfile_path: &'a Path,
+     lockfile_snapshot: &'a Lockfile,
+     lanes_before: &'a [(String, Option<u64>)],
++    measurements_before: Option<&'a vibe_workspace::boot_debugger::measurement::Report>,
+     lane_root: &'a Path,
+     applied: &'a vibe_install::ApplyReport,
+     packages_resolved: usize,
+@@ -289,11 +293,14 @@ fn finish_ready(tail: ReadyTail<'_>, mut run: InstallRun) -> InstallRun {
+     // skips the diff rather than failing the completed install.
+     if let Ok(new_lock) = Lockfile::read(tail.lockfile_path) {
+         let lanes_after = tail.observer.lane_sizes(tail.lane_root);
++        let measurements_after = tail.observer.boot_measurements(tail.lane_root);
+         tail.observer.narrate(InstallNarration::ClosureDiff {
+             old: tail.lockfile_snapshot,
+             new: &new_lock,
+             lanes_before: tail.lanes_before,
+             lanes_after: &lanes_after,
++            measurements_before: tail.measurements_before,
++            measurements_after: measurements_after.as_ref(),
+             conversions: &tail.applied.outcome.conversion_counts,
+             conversion_failures: &tail.applied.outcome.conversion_failures,
+         });
+diff --git a/crates/vibe-orchestrator/src/ports.rs b/crates/vibe-orchestrator/src/ports.rs
+index 88ded918d..25c470929 100644
+--- a/crates/vibe-orchestrator/src/ports.rs
++++ b/crates/vibe-orchestrator/src/ports.rs
+@@ -122,6 +122,9 @@ pub enum InstallNarration<'a> {
+         lanes_before: &'a [(String, Option<u64>)],
+         /// The same lanes sampled after it.
+         lanes_after: &'a [(String, Option<u64>)],
++        /// Captured reports from the respective read points; absent means unavailable.
++        measurements_before: Option<&'a vibe_workspace::boot_debugger::measurement::Report>,
++        measurements_after: Option<&'a vibe_workspace::boot_debugger::measurement::Report>,
+         /// Exact rows from slots reconciled by this apply, never a workspace scan.
+         conversions: &'a AppliedConversionCounts,
+         conversion_failures: &'a [AppliedConversionFailure],
+@@ -154,6 +157,14 @@ pub trait InstallObserver: Send + Sync {
+     /// Sample the watched boot lanes under `root` for the closure diff.
+     fn lane_sizes(&self, root: &Path) -> Vec<(String, Option<u64>)>;
+ 
++    /// Optional captured measurement dimension; None is unavailable, never zero.
++    fn boot_measurements(
++        &self,
++        _root: &Path,
++    ) -> Option<vibe_workspace::boot_debugger::measurement::Report> {
++        None
++    }
++
+     /// The typed plan events of the install planner.
+     fn plan_events(&self) -> &dyn vibe_install::PlanObserver;
+ 
+diff --git a/crates/vibe-workspace/src/boot_debugger/mod.rs b/crates/vibe-workspace/src/boot_debugger/mod.rs
+index 2f9f25767..684ab0b2c 100644
+--- a/crates/vibe-workspace/src/boot_debugger/mod.rs
++++ b/crates/vibe-workspace/src/boot_debugger/mod.rs
+@@ -6,6 +6,7 @@ use vibe_spec::{
+     BootGraph, GraphContribution, GraphOccurrence, InclusionParent, ReferenceState, SourceIdentity,
+ };
+ pub mod dynamic_index;
++pub mod measurement;
+ pub mod retained;
+ mod static_summary;
+ pub use static_summary::{StaticDecompileError, capture_static, decompile_static};
+diff --git a/crates/vibe-workspace/src/boot_debugger/static_summary.rs b/crates/vibe-workspace/src/boot_debugger/static_summary.rs
+index 647727e0e..0559f1c9d 100644
+--- a/crates/vibe-workspace/src/boot_debugger/static_summary.rs
++++ b/crates/vibe-workspace/src/boot_debugger/static_summary.rs
+@@ -152,6 +152,30 @@ fn collect_markers(text: &str) -> std::result::Result<Vec<Marker>, StaticDecompi
+     Ok(markers)
+ }
+ 
++/// Exact emitted body ranges from the same marker parser as the graph.
++/// Unlike legacy summary sizes, preserves CRLF and a missing final newline.
++pub(super) fn body_ranges(text: &str) -> Result<Vec<std::ops::Range<usize>>, StaticDecompileError> {
++    let markers = collect_markers(text)?;
++    let mut starts = vec![0];
++    starts.extend(text.match_indices('\n').map(|(i, _)| i + 1));
++    Ok(markers
++        .iter()
++        .enumerate()
++        .map(|(i, marker)| {
++            let start = starts
++                .get(marker.end_line + 1)
++                .copied()
++                .unwrap_or(text.len());
++            let end = markers
++                .get(i + 1)
++                .and_then(|next| starts.get(next.start_line))
++                .copied()
++                .unwrap_or(text.len());
++            start..end
++        })
++        .collect())
++}
++
+ /// Decompile static-lane text into its ordered contributions (PROP-036 §2.8).
+ ///
+ /// Each marker opens a region running to the next marker or EOF; the region
+diff --git a/vibevm/vibespecs/common/PROP-072-boot-observability.xml b/vibevm/vibespecs/common/PROP-072-boot-observability.xml
+index 914687551..18ab4987c 100644
+--- a/vibevm/vibespecs/common/PROP-072-boot-observability.xml
++++ b/vibevm/vibespecs/common/PROP-072-boot-observability.xml
+@@ -24,4 +24,7 @@
+     <p><KNOWLEDGE fact="true" status="spec/proposed">Unknown means not checked. Unresolved requires a checked negative result. A retained snapshot that was never recorded is unavailable; one named but absent is missing, with eviction claimed only from evidence. Unreadable or invalid data is an explicit refusal.</KNOWLEDGE></p>
+     <p><READ-ONLY fact="true" status="spec/proposed">Retained reads never open a trace writer, invoke a provider, run retention or silently compile replacement data. Existing compiler wire validation and trace index validation remain authoritative. Zap owns planning and acceptance; PodBay owns physical process execution.</READ-ONLY></p>
+   </contract>
++  <measurement title="5. Qualified captured measurements">
++    <p><CAPTURED-MEASUREMENT fact="true" status="spec/proposed">Measurements retain capture identity, source byte witnesses and a revisioned recipe. Raw and emitted bytes, Unicode scalar counts, unique payload and ordered repeated occurrences are separate quantities from the same captured graph. Direct and inclusive attribution require recorded mappings; missing mappings remain unavailable, never zero or proportional allocation. INDEX declarations and unevaluated conditions do not prove runtime reads. Token counts name tokenizer identity, version and recipe with exact, estimated or unavailable status; no ratio is exact tokenization. Unobserved ambient context remains unknown separately. Inspection is read-only and does not compile, hydrate, install, call a provider or claim provider billing. Chunked traversal imposes no total boot-size or token admission threshold. Tree JSON and install/update closure diff carry the same typed calculation; before captures precede apply and are never reconstructed afterwards. Existing scalar observer samples and default unavailable observation behavior remain compatible.</CAPTURED-MEASUREMENT></p>
++  </measurement>
+ </spec>
+diff --git a/crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs b/crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs
+new file mode 100644
+index 000000000..02f0b10dc
+--- /dev/null
++++ b/crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs
+@@ -0,0 +1,103 @@
++use vibe_workspace::boot_debugger::measurement::{Count, capture_workspace};
++
++#[test]
++fn tree_and_closure_transport_share_exact_static_dynamic_capture() {
++    let tmp = tempfile::tempdir().unwrap();
++    std::fs::write(
++        tmp.path().join("vibe.toml"),
++        "[project]\nname='fixture'\nversion='1.0.0'\n",
++    )
++    .unwrap();
++    let dir = tmp.path().join(vibe_core::layout::current_boot_dir());
++    std::fs::create_dir_all(&dir).unwrap();
++    std::fs::write(tmp.path().join("a.md"), "雪").unwrap();
++    std::fs::write(
++        dir.join("STATIC.md"),
++        "<!-- vibe:static org.demo/a — a.md -->\n雪\n<!-- vibe:static org.demo/a — a.md -->\n雪",
++    )
++    .unwrap();
++    let mut lock = vibe_core::manifest::Lockfile::empty("fixture", "2026-10-15T00:00:00Z");
++    let mut package = super::tests::locked("org.demo", "a", "1.0.0", None);
++    package.content_hash =
++        vibe_core::ContentHash::parse(&format!("sha256:{}", "1".repeat(64))).unwrap();
++    let source = tempfile::tempdir().unwrap();
++    std::fs::write(source.path().join("boot.md"), "雪").unwrap();
++    std::fs::write(
++        source.path().join("vibe.toml"),
++        "[package]\nname='a'\ngroup='org.demo'\nkind='flow'\nversion='1.0.0'\nformat='simple'\n",
++    )
++    .unwrap();
++    // Fixture preparation uses the existing materializer to retain the slot
++    // witness required by tree's pre-existing source classification. The
++    // subsequent measurement operation itself only reads.
++    vibe_workspace::vibedeps::materialise_with_spec_format(
++        tmp.path(),
++        &package.group,
++        "a",
++        &package.version,
++        source.path(),
++        vibe_workspace::vibedeps::CopyMode::Copy,
++        vibe_core::manifest::SpecFormat::Mixed,
++        &package.content_hash,
++    )
++    .unwrap();
++    lock.packages.push(package);
++    lock.write(tmp.path().join("vibe.lock")).unwrap();
++    let dynamic_path = vibe_core::layout::current_vibedeps_root().join("org.demo.a/1.0.0/boot.md");
++    let dynamic_path = vibe_core::machine_json_path(&dynamic_path);
++    std::fs::write(tmp.path().join(vibe_core::layout::current_boot_index()), format!("[[entry]]\npath='{dynamic_path}'\nkind='dynamic'\n[[entry]]\npath='{dynamic_path}'\nkind='dynamic'\nwhen='os:unknown'\n")).unwrap();
++    let before = capture_workspace(tmp.path());
++    let tree = crate::commands::tree::build::build_tree(tmp.path()).unwrap();
++    let encoded = serde_json::to_value(&tree).unwrap();
++    let pair = super::measurement_pair(Some(&before), tree.boot.measurements.as_ref());
++    assert_eq!(pair["before"], encoded["boot"]["measurements"]);
++    assert_eq!(pair["after"], encoded["boot"]["measurements"]);
++    assert_eq!(before.lanes[1].totals.repeated_raw_bytes, Count::exact(6));
++    assert!(matches!(
++        before.packages["org.demo/a"].inclusive_bytes,
++        Count::Unavailable { .. }
++    ));
++    assert_eq!(
++        before.packages["org.demo/a"].repeated_raw_bytes,
++        Count::exact(12)
++    );
++    assert_eq!(before.lanes[0].totals.inclusive_bytes, Count::exact(7));
++    assert_eq!(
++        before.lanes[1].snippets[0].package.as_deref(),
++        Some("org.demo/a")
++    );
++    let schema: serde_json::Value = serde_json::from_str(include_str!(
++        "../../../resources/package-tree.schema.v1.json"
++    ))
++    .unwrap();
++    let validator = jsonschema::validator_for(&schema).unwrap();
++    assert!(
++        validator.is_valid(&encoded),
++        "{:?}",
++        validator.iter_errors(&encoded).collect::<Vec<_>>()
++    );
++    std::fs::write(tmp.path().join("a.md"), "changed").unwrap();
++    let after = capture_workspace(tmp.path());
++    let pair = super::measurement_pair(Some(&before), Some(&after));
++    assert_ne!(pair["before"]["capture_id"], pair["after"]["capture_id"]);
++    assert_eq!(pair["before"]["lanes"][1]["snippets"][0]["raw"]["bytes"], 3);
++}
++
++#[test]
++fn default_transport_none_is_unavailable_and_never_zero() {
++    let pair = super::measurement_pair(None, None);
++    assert!(pair["before"].is_null());
++    assert!(pair["after"].is_null());
++    assert_eq!(pair["none_means"], "declared-unavailable");
++    let tmp = tempfile::tempdir().unwrap();
++    std::fs::write(
++        tmp.path().join("vibe.toml"),
++        "[project]\nname='empty'\nversion='1.0.0'\n",
++    )
++    .unwrap();
++    let tree = crate::commands::tree::build::build_tree(tmp.path()).unwrap();
++    assert_eq!(
++        tree.boot.measurements.as_ref().unwrap(),
++        &capture_workspace(tmp.path())
++    );
++}
+diff --git a/crates/vibe-workspace/src/boot_debugger/measurement.rs b/crates/vibe-workspace/src/boot_debugger/measurement.rs
+new file mode 100644
+index 000000000..919f2f4b3
+--- /dev/null
++++ b/crates/vibe-workspace/src/boot_debugger/measurement.rs
+@@ -0,0 +1,557 @@
++//! Read-only measurements of captured graphs. No compiler or provider calls.
++specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#CAPTURED-MEASUREMENT");
++use serde::Serialize;
++use sha2::{Digest, Sha256};
++use std::{
++    collections::BTreeMap,
++    io::{self, Read},
++    path::{Component, Path},
++};
++use vibe_spec::BootGraph;
++
++pub const RECIPE: &str = "captured-utf8-sha256/v1; bytes verbatim; scalars Unicode; no tokenizer";
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++#[serde(tag = "status", rename_all = "snake_case")]
++pub enum Count {
++    Exact { value: u64 },
++    Estimated { value: u64, recipe: String },
++    Unavailable { reason: String },
++}
++impl Count {
++    pub fn exact(value: u64) -> Self {
++        Self::Exact { value }
++    }
++    pub fn unavailable(reason: &str) -> Self {
++        Self::Unavailable {
++            reason: reason.into(),
++        }
++    }
++    fn sum<'a>(values: impl Iterator<Item = &'a Count>) -> Self {
++        let mut sum = 0u64;
++        for value in values {
++            match value {
++                Self::Exact { value } => match sum.checked_add(*value) {
++                    Some(n) => sum = n,
++                    None => return Self::unavailable("u64 arithmetic overflow"),
++                },
++                _ => return Self::unavailable("one or more captured mappings unavailable"),
++            }
++        }
++        Self::exact(sum)
++    }
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct Payload {
++    pub sha256: String,
++    pub bytes: u64,
++    pub scalars: Count,
++}
++
++/// Bounded working memory, including UTF-8 split across arbitrary read chunks.
++/// Invalid UTF-8 keeps exact bytes/hash and explicitly unavailable scalars.
++pub fn measure_reader(mut reader: impl Read) -> io::Result<Payload> {
++    let mut hash = Sha256::new();
++    let mut bytes = 0u64;
++    let mut scalars = 0u64;
++    let mut valid = true;
++    let mut pending = Vec::with_capacity(8196);
++    let mut buffer = [0u8; 8192];
++    loop {
++        let n = match reader.read(&mut buffer) {
++            Err(e) if e.kind() == io::ErrorKind::Interrupted => continue,
++            result => result?,
++        };
++        if n == 0 {
++            break;
++        }
++        bytes = bytes
++            .checked_add(n as u64)
++            .ok_or_else(|| io::Error::other("byte counter overflow"))?;
++        hash.update(&buffer[..n]);
++        if valid {
++            pending.extend_from_slice(&buffer[..n]);
++            match std::str::from_utf8(&pending) {
++                Ok(text) => {
++                    scalars += text.chars().count() as u64;
++                    pending.clear();
++                }
++                Err(e) => {
++                    scalars += std::str::from_utf8(&pending[..e.valid_up_to()])
++                        .expect("validated prefix")
++                        .chars()
++                        .count() as u64;
++                    if e.error_len().is_some() {
++                        valid = false;
++                        pending.clear();
++                    } else {
++                        pending.drain(..e.valid_up_to());
++                    }
++                }
++            }
++        }
++    }
++    Ok(Payload {
++        sha256: format!("{:x}", hash.finalize()),
++        bytes,
++        scalars: if valid && pending.is_empty() {
++            Count::exact(scalars)
++        } else {
++            Count::unavailable("invalid UTF-8")
++        },
++    })
++}
++fn text_payload(text: &str) -> Payload {
++    measure_reader(text.as_bytes()).expect("in-memory read")
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct TokenMeasurement {
++    pub tokenizer: Option<String>,
++    pub version: Option<String>,
++    pub recipe: String,
++    pub count: Count,
++}
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct Snippet {
++    pub contribution: usize,
++    pub source: Option<usize>,
++    pub origin: String,
++    pub path: String,
++    pub kind: String,
++    pub condition: Option<String>,
++    pub package: Option<String>,
++    pub raw: Option<Payload>,
++    pub emitted: Option<Payload>,
++    pub direct_bytes: Count,
++    pub inclusive_bytes: Count,
++    pub occurrences: Vec<Occurrence>,
++}
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct Occurrence {
++    pub source: usize,
++    pub requested: Option<String>,
++    pub parent: Option<usize>,
++    pub root: bool,
++    pub emitted: Option<Payload>,
++}
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct Totals {
++    pub direct_bytes: Count,
++    pub inclusive_bytes: Count,
++    pub unique_raw_bytes: Count,
++    pub repeated_raw_bytes: Count,
++    pub unique_emitted_bytes: Count,
++    pub repeated_emitted_bytes: Count,
++    pub recorded_occurrences: u64,
++    pub runtime_reads: Count,
++}
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct SourceMeasurement {
++    pub index: usize,
++    pub identity: String,
++    pub raw: Option<Payload>,
++}
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct Lane {
++    pub name: String,
++    pub artifact: Option<Payload>,
++    pub snippets: Vec<Snippet>,
++    pub sources: Vec<SourceMeasurement>,
++    pub totals: Totals,
++    pub gaps: Vec<String>,
++}
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct Report {
++    pub capture_id: String,
++    pub recipe: String,
++    pub basis: String,
++    pub lanes: Vec<Lane>,
++    pub packages: BTreeMap<String, Totals>,
++    pub tokens: TokenMeasurement,
++    pub ambient_tail: Count,
++    pub provider_billing: Count,
++    pub scope_data_observability: Count,
++    pub inspected_source_reads: BTreeMap<String, Count>,
++}
++
++fn totals<'a>(rows: impl Iterator<Item = &'a Snippet>) -> Totals {
++    let rows: Vec<_> = rows.collect();
++    let mut unique = BTreeMap::new();
++    let mut repeated = Vec::new();
++    for row in &rows {
++        if let Some(p) = &row.raw {
++            unique.insert((&p.sha256, p.bytes), p.bytes);
++            repeated.push(Count::exact(p.bytes));
++        } else {
++            repeated.push(Count::unavailable("raw source not captured"));
++        }
++    }
++    let mut unique_emitted = BTreeMap::new();
++    for row in &rows {
++        if let Some(p) = &row.emitted {
++            unique_emitted.insert((&p.sha256, p.bytes), p.bytes);
++        }
++    }
++    Totals {
++        unique_emitted_bytes: if rows.iter().all(|r| r.emitted.is_some()) {
++            Count::sum(
++                unique_emitted
++                    .values()
++                    .map(|n| Count::exact(*n))
++                    .collect::<Vec<_>>()
++                    .iter(),
++            )
++        } else {
++            Count::unavailable("emitted ranges unavailable")
++        },
++        repeated_emitted_bytes: Count::sum(rows.iter().map(|r| &r.inclusive_bytes)),
++        direct_bytes: Count::sum(rows.iter().map(|r| &r.direct_bytes)),
++        inclusive_bytes: Count::sum(rows.iter().map(|r| &r.inclusive_bytes)),
++        unique_raw_bytes: if rows.iter().all(|r| r.raw.is_some()) {
++            Count::sum(
++                unique
++                    .values()
++                    .map(|n| Count::exact(*n))
++                    .collect::<Vec<_>>()
++                    .iter(),
++            )
++        } else {
++            Count::unavailable("raw source not captured")
++        },
++        repeated_raw_bytes: Count::sum(repeated.iter()),
++        recorded_occurrences: rows.iter().map(|r| r.occurrences.len() as u64).sum(),
++        runtime_reads: Count::unavailable(
++            "declarations/emitted occurrences are not a runtime read trace",
++        ),
++    }
++}
++
++/// Measure only payload mappings supplied by this capture. Empty mappings do
++/// not erase graph children. Positions/ancestry are never inferred from edges.
++pub fn measure_graph(
++    name: &str,
++    graph: &BootGraph,
++    raw: &BTreeMap<usize, Payload>,
++    emitted: &BTreeMap<usize, Payload>,
++) -> Lane {
++    let snippets: Vec<_> = graph
++        .contributions
++        .iter()
++        .enumerate()
++        .map(|(i, row)| {
++            let payload = emitted.get(&i).cloned();
++            let inclusive = payload
++                .as_ref()
++                .map(|p| Count::exact(p.bytes))
++                .unwrap_or_else(|| Count::unavailable("no captured emitted range"));
++            Snippet {
++                contribution: i,
++                source: row.seed,
++                origin: row.origin.clone(),
++                path: row.path.clone(),
++                kind: row.kind.clone(),
++                condition: None,
++                package: None,
++                raw: row.seed.and_then(|s| raw.get(&s).cloned()),
++                emitted: payload,
++                direct_bytes: Count::unavailable("no captured direct-byte mapping"),
++                inclusive_bytes: inclusive,
++                occurrences: row
++                    .occurrences
++                    .iter()
++                    .map(|o| Occurrence {
++                        source: o.source,
++                        requested: o.requested.clone(),
++                        parent: match o.parent {
++                            vibe_spec::InclusionParent::Occurrence(p) => Some(p),
++                            _ => None,
++                        },
++                        root: o.parent == vibe_spec::InclusionParent::Root,
++                        emitted: None,
++                    })
++                    .collect(),
++            }
++        })
++        .collect();
++    Lane {
++        name: name.into(),
++        sources: graph
++            .sources
++            .iter()
++            .enumerate()
++            .map(|(index, source)| SourceMeasurement {
++                index,
++                identity: format!("{:?}", source.identity),
++                raw: raw.get(&index).cloned(),
++            })
++            .collect(),
++        artifact: None,
++        totals: totals(snippets.iter()),
++        snippets,
++        gaps: graph.gaps.clone(),
++    }
++}
++
++fn raw_file(root: &Path, path: &str) -> Result<Payload, String> {
++    if Path::new(path)
++        .components()
++        .any(|c| !matches!(c, Component::Normal(_)))
++    {
++        return Err("source path is not project-relative".into());
++    }
++    let canonical_root = root.canonicalize().map_err(|e| e.to_string())?;
++    let canonical = root.join(path).canonicalize().map_err(|e| e.to_string())?;
++    if !canonical.starts_with(&canonical_root) {
++        return Err("source resolves outside project".into());
++    }
++    let file = std::fs::File::open(canonical).map_err(|e| e.to_string())?;
++    if !file.metadata().map_err(|e| e.to_string())?.is_file() {
++        return Err("source is not a regular file".into());
++    }
++    measure_reader(file).map_err(|e| e.to_string())
++}
++
++/// A single captured pair of committed artifacts; tree supplies its already
++/// read texts here. Source files are read once per distinct path in this call.
++/// No condition is evaluated and no runtime inclusion/billing is asserted.
++pub fn capture_texts(root: &Path, static_text: Option<&str>, index_text: Option<&str>) -> Report {
++    let mut lanes = Vec::new();
++    let mut cache: BTreeMap<String, Result<Payload, String>> = BTreeMap::new();
++    for (name, text) in [("static", static_text), ("index", index_text)] {
++        let mut lane = Lane {
++            name: name.into(),
++            artifact: text.map(text_payload),
++            snippets: Vec::new(),
++            sources: Vec::new(),
++            totals: totals(std::iter::empty()),
++            gaps: Vec::new(),
++        };
++        if let Some(text) = text {
++            let captured = if name == "static" {
++                super::capture_static(name.into(), text)
++                    .map(|c| (c.graph, Vec::new()))
++                    .map_err(|e| e.to_string())
++            } else {
++                super::dynamic_index::capture_index(name.into(), text)
++                    .map(|c| {
++                        (
++                            c.graph,
++                            c.index.entries.into_iter().map(|e| e.when).collect(),
++                        )
++                    })
++                    .map_err(|e| e.to_string())
++            };
++            match captured {
++                Err(e) => lane.gaps.push(e),
++                Ok((graph, conditions)) => {
++                    let mut raw = BTreeMap::new();
++                    let mut errors = Vec::new();
++                    for row in &graph.contributions {
++                        if let Some(source) = row.seed {
++                            match cache
++                                .entry(row.path.clone())
++                                .or_insert_with(|| raw_file(root, &row.path))
++                            {
++                                Ok(p) => {
++                                    raw.insert(source, p.clone());
++                                }
++                                Err(e) => errors.push(format!("{}: {e}", row.path)),
++                            }
++                        }
++                    }
++                    let emitted = if name == "static" {
++                        super::static_summary::body_ranges(text)
++                            .unwrap_or_default()
++                            .into_iter()
++                            .enumerate()
++                            .map(|(i, r)| (i, text_payload(&text[r])))
++                            .collect()
++                    } else {
++                        BTreeMap::new()
++                    };
++                    let artifact = lane.artifact;
++                    lane = measure_graph(name, &graph, &raw, &emitted);
++                    lane.artifact = artifact;
++                    lane.gaps.extend(errors);
++                    for (i, row) in lane.snippets.iter_mut().enumerate() {
++                        row.condition = conditions.get(i).cloned().flatten();
++                        if name == "static" {
++                            if let Some(root) = row.occurrences.first_mut() {
++                                root.emitted = row.emitted.clone();
++                            }
++                            for (occurrence, captured) in row
++                                .occurrences
++                                .iter_mut()
++                                .zip(&graph.contributions[i].occurrences)
++                                .skip(1)
++                            {
++                                if let Some((start, end)) = captured.artifact_lines {
++                                    let mut offset = 0usize;
++                                    let mut begin = None;
++                                    let mut finish = None;
++                                    for (line, segment) in text.split_inclusive('\n').enumerate() {
++                                        if line as u64 + 1 == start {
++                                            begin = Some(offset);
++                                        }
++                                        offset += segment.len();
++                                        if line as u64 + 1 == end {
++                                            finish = Some(offset);
++                                            break;
++                                        }
++                                    }
++                                    if let Some((a, b)) = begin.zip(finish) {
++                                        occurrence.emitted = Some(text_payload(&text[a..b]));
++                                    }
++                                }
++                            }
++                        }
++                    }
++                    // Direct means emitted bytes outside recorded nested spans,
++                    // not authored-source ancestry or transitive dependency cost.
++                    if name == "static" {
++                        for (row, captured) in lane.snippets.iter_mut().zip(&graph.contributions) {
++                            let complete = captured
++                                .occurrences
++                                .iter()
++                                .enumerate()
++                                .all(|(i, _)| super::why_included(captured, i).is_some())
++                                && row.occurrences.iter().all(|o| o.emitted.is_some());
++                            if complete {
++                                let children: Vec<_> = row
++                                    .occurrences
++                                    .iter()
++                                    .filter(|o| o.parent == Some(0))
++                                    .filter_map(|o| o.emitted.as_ref())
++                                    .collect();
++                                let child_bytes: u64 = children.iter().map(|p| p.bytes).sum();
++                                if let Some(value) = row
++                                    .emitted
++                                    .as_ref()
++                                    .and_then(|p| p.bytes.checked_sub(child_bytes))
++                                {
++                                    row.direct_bytes = Count::exact(value);
++                                }
++                            }
++                        }
++                    }
++                    lane.totals = totals(lane.snippets.iter());
++                }
++            }
++        } else {
++            lane.gaps.push("artifact unavailable".into());
++        }
++        if text.is_none() || (!lane.gaps.is_empty() && lane.snippets.is_empty()) {
++            lane.totals.direct_bytes = Count::unavailable("artifact unavailable or invalid");
++            lane.totals.inclusive_bytes = Count::unavailable("artifact unavailable or invalid");
++            lane.totals.unique_raw_bytes = Count::unavailable("artifact unavailable or invalid");
++            lane.totals.repeated_raw_bytes = Count::unavailable("artifact unavailable or invalid");
++            lane.totals.unique_emitted_bytes =
++                Count::unavailable("artifact unavailable or invalid");
++            lane.totals.repeated_emitted_bytes =
++                Count::unavailable("artifact unavailable or invalid");
++        }
++        lanes.push(lane);
++    }
++    let mut report = Report { capture_id: String::new(), recipe: RECIPE.into(), basis: "committed marker regions: inclusive includes nested spans, direct excludes recorded children; raw repeated counts contribution appearances, not runtime reads; current raw sources are not asserted to have produced artifacts".into(), lanes, packages: BTreeMap::new(),
++        tokens: TokenMeasurement { tokenizer: None, version: None, recipe: "unavailable: no tokenizer selected or executed".into(), count: Count::unavailable("no tokenizer selected or executed") },
++        ambient_tail: Count::unavailable("unknown: ambient session tail not observed"), provider_billing: Count::unavailable("provider billing not observed"), scope_data_observability: Count::unavailable("RootTag/ScopeDataObservability not captured"), inspected_source_reads: cache.iter().map(|(path, result)| (path.clone(), if result.is_ok() { Count::exact(1) } else { Count::unavailable("read failed; see lane gaps") })).collect() };
++    report.refresh_identity();
++    report
++}
++impl Report {
++    fn refresh_identity(&mut self) {
++        self.capture_id.clear();
++        self.capture_id = format!(
++            "sha256:{:x}",
++            Sha256::digest(serde_json::to_vec(&self).expect("serializable report"))
++        );
++    }
++    /// Lock records prove package coordinates and slot paths; never derive
++    /// inclusive dependency attribution from lock graph proportions.
++    pub fn bind_packages(&mut self, lock: &vibe_core::manifest::Lockfile) {
++        for lane in &mut self.lanes {
++            for row in &mut lane.snippets {
++                for p in &lock.packages {
++                    let id = format!("{}/{}", p.group, p.name);
++                    let slot = vibe_core::layout::current_vibedeps_root()
++                        .join(format!("{}.{}", p.group, p.name))
++                        .join(p.version.to_string());
++                    if (lane.name == "static" && row.origin == id)
++                        || (lane.name == "index" && Path::new(&row.path).starts_with(&slot))
++                    {
++                        row.package = Some(id);
++                        break;
++                    }
++                }
++            }
++        }
++        self.packages.clear();
++        for p in &lock.packages {
++            let id = format!("{}/{}", p.group, p.name);
++            let rows: Vec<_> = self
++                .lanes
++                .iter()
++                .flat_map(|l| &l.snippets)
++                .filter(|r| r.package.as_ref() == Some(&id))
++                .collect();
++            if !rows.is_empty() {
++                self.packages.insert(id, totals(rows.into_iter()));
++            }
++        }
++        self.refresh_identity();
++    }
++}
++
++pub fn capture_workspace(root: &Path) -> Report {
++    let static_path = crate::boot_artifacts::resolve_static_path(root);
++    let static_read = match &static_path {
++        Ok(Some(path)) => std::fs::read_to_string(path)
++            .map(Some)
++            .map_err(|e| e.to_string()),
++        Ok(None) => Ok(None),
++        Err(e) => Err(e.to_string()),
++    };
++    let index_read = std::fs::read_to_string(root.join(vibe_core::layout::current_boot_index()));
++    let mut report = capture_texts(
++        root,
++        static_read.as_ref().ok().and_then(|s| s.as_deref()),
++        index_read.as_deref().ok(),
++    );
++    if let Err(e) = static_read {
++        report.lanes[0]
++            .gaps
++            .push(format!("static read refused: {e}"));
++    }
++    if let Err(e) = index_read {
++        if e.kind() != io::ErrorKind::NotFound {
++            report.lanes[1]
++                .gaps
++                .push(format!("index read {:?}: {e}", e.kind()));
++        }
++    }
++    let lock_path = root.join("vibe.lock");
++    let lock = match std::fs::metadata(&lock_path) {
++        Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(vibe_core::manifest::Lockfile::empty(
++            "measurement",
++            "unrecorded",
++        )),
++        _ => vibe_core::manifest::Lockfile::read(&lock_path),
++    };
++    match lock {
++        Ok(lock) => report.bind_packages(&lock),
++        Err(e) => report
++            .lanes
++            .iter_mut()
++            .for_each(|lane| lane.gaps.push(format!("package mapping unavailable: {e}"))),
++    }
++    report.refresh_identity();
++    report
++}
++
++#[cfg(test)]
++mod m_06_b_2_cases;
++
++mod carrier;
++pub use carrier::{CarrierReport, LinkedOccurrence, measure_retained};
+diff --git a/crates/vibe-workspace/src/boot_debugger/measurement/carrier.rs b/crates/vibe-workspace/src/boot_debugger/measurement/carrier.rs
+new file mode 100644
+index 000000000..d68809b7c
+--- /dev/null
++++ b/crates/vibe-workspace/src/boot_debugger/measurement/carrier.rs
+@@ -0,0 +1,216 @@
++//! Measurements of the existing typed carrier; no backend replay.
++use super::*;
++use vibe_wire::generated::compiler_ir::e1::ir as wire;
++
++#[derive(Debug, Clone, Serialize)]
++pub struct LinkedOccurrence {
++    pub contribution: usize,
++    pub occurrence: u32,
++    pub body: Payload,
++}
++#[derive(Debug, Clone, Serialize)]
++pub struct CarrierReport {
++    pub capture_id: String,
++    pub snapshot: Payload,
++    pub recipe: String,
++    pub graph: Lane,
++    /// Linked body bytes exclude backend framing. They are NOT emitted bytes.
++    pub linked_occurrences: Vec<LinkedOccurrence>,
++    pub unique_linked_body_bytes: Count,
++    pub repeated_linked_body_bytes: Count,
++    pub emitted_artifact: Option<Payload>,
++    pub emission_provenance: Option<wire::EmissionProvenance>,
++    pub tokens: TokenMeasurement,
++    pub ambient_tail: Count,
++    pub gaps: Vec<String>,
++}
++
++/// The exact retained event identity and bytes stay attached to the calculation.
++/// This function cannot acquire a writer, call a provider or compile anything.
++pub fn measure_retained(capture: &super::super::retained::RetainedGraph) -> CarrierReport {
++    let graph = &capture.graph;
++    let mut raw = BTreeMap::new();
++    let mut linked_occurrences = Vec::new();
++    let mut emitted_artifact = None;
++    let mut emission_provenance = None;
++    let mut gaps = graph.gaps.clone();
++    let mut source = |doc: &wire::SourceDoc| {
++        let identity = match &doc.address {
++            wire::DocumentAddress::Spec(a) => {
++                vibe_spec::SourceIdentity::Spec(a.address.raw.clone())
++            }
++            wire::DocumentAddress::StaticEntry(a) => vibe_spec::SourceIdentity::StaticEntry {
++                origin: a.origin.clone(),
++                path: a.path.clone(),
++            },
++        };
++        if let Some(index) = graph.sources.iter().position(|s| s.identity == identity) {
++            raw.insert(index, text_payload(&doc.text));
++        }
++    };
++    match graph.carrier.as_ref() {
++        Some(wire::Ir::SourceDocument(ir)) => source(&ir.doc),
++        Some(wire::Ir::DocumentDocument(ir)) => source(&ir.doc.source),
++        Some(wire::Ir::DocumentsArtifact(ir)) => for doc in &ir.documents { source(&doc.source); },
++        Some(wire::Ir::LaneArtifact(ir)) => {
++            for (contribution, row) in ir.lane.contributions.iter().enumerate() {
++                let chunks = match row {
++                    wire::LaneContribution::Normal(row) => &row.chunks[..],
++                    wire::LaneContribution::Simple(row) => &row.chunks[..],
++                    _ => &[],
++                };
++                for chunk in chunks {
++                    if let wire::LaneChunk::Node(node) = chunk {
++                        let (occurrence, body) = match &node.node {
++                            wire::LaneNode::Normal(node) => (node.occurrence, &node.body),
++                            wire::LaneNode::Simple(node) => (node.occurrence, &node.body),
++                        };
++                        linked_occurrences.push(LinkedOccurrence { contribution, occurrence, body: text_payload(body) });
++                    }
++                }
++            }
++            gaps.push("Linked bodies are measured verbatim; backend framing and final emitted attribution are unavailable in a lane carrier.".into());
++        }
++        Some(wire::Ir::EmittedArtifact(ir)) => {
++            // The strict captured reader already verifies the compiler's
++            // domain-separated digest. Preserve it; plain payload SHA-256 is
++            // a different measurement identity, never a replacement witness.
++            emission_provenance = Some(ir.emitted.provenance.clone());
++            match measure_reader(Base64Bytes::new(&ir.emitted.bytes_b64)) {
++                Ok(payload) => emitted_artifact = Some(payload),
++                Err(e) => gaps.push(format!("captured emitted bytes unreadable: {e}")),
++            }
++        }
++        Some(wire::Ir::ClosureArtifact(_)) => gaps.push("Closure trees retain lines but not exact raw newline bytes; raw metrics unavailable rather than reconstructed.".into()),
++        None => gaps.push("compiler carrier unavailable".into()),
++    }
++    let mut unique = BTreeMap::new();
++    let values: Vec<_> = linked_occurrences
++        .iter()
++        .map(|o| {
++            unique.insert((&o.body.sha256, o.body.bytes), o.body.bytes);
++            Count::exact(o.body.bytes)
++        })
++        .collect();
++    let linked_available = matches!(graph.carrier, Some(wire::Ir::LaneArtifact(_)));
++    CarrierReport {
++        capture_id: format!(
++            "{}/{}/{}/{}/{}",
++            capture.index.run_id,
++            capture.scope,
++            capture.sequence,
++            capture.invocation,
++            capture.snapshot
++        ),
++        snapshot: measure_reader(capture.bytes.as_slice()).expect("in-memory snapshot"),
++        recipe: RECIPE.into(),
++        graph: measure_graph(&capture.scope, graph, &raw, &BTreeMap::new()),
++        unique_linked_body_bytes: if linked_available {
++            Count::sum(
++                unique
++                    .values()
++                    .map(|n| Count::exact(*n))
++                    .collect::<Vec<_>>()
++                    .iter(),
++            )
++        } else {
++            Count::unavailable("not a linked lane capture")
++        },
++        repeated_linked_body_bytes: if linked_available {
++            Count::sum(values.iter())
++        } else {
++            Count::unavailable("not a linked lane capture")
++        },
++        linked_occurrences,
++        emitted_artifact,
++        emission_provenance,
++        tokens: TokenMeasurement {
++            tokenizer: None,
++            version: None,
++            recipe: "unavailable: no tokenizer selected or executed".into(),
++            count: Count::unavailable("no tokenizer selected or executed"),
++        },
++        ambient_tail: Count::unavailable("unknown: not captured"),
++        gaps,
++    }
++}
++
++/// Streaming adapter for the canonical padded base64 already owned/validated
++/// by the compiler carrier. This decodes bytes only, never compiler semantics.
++struct Base64Bytes<'a> {
++    input: &'a [u8],
++    output: [u8; 3],
++    at: usize,
++    len: usize,
++}
++impl<'a> Base64Bytes<'a> {
++    fn new(input: &'a str) -> Self {
++        Self {
++            input: input.as_bytes(),
++            output: [0; 3],
++            at: 0,
++            len: 0,
++        }
++    }
++}
++impl Read for Base64Bytes<'_> {
++    fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
++        let invalid = || io::Error::new(io::ErrorKind::InvalidData, "noncanonical base64");
++        let sextet = |b| match b {
++            b'A'..=b'Z' => Some(b - b'A'),
++            b'a'..=b'z' => Some(b - b'a' + 26),
++            b'0'..=b'9' => Some(b - b'0' + 52),
++            b'+' => Some(62),
++            b'/' => Some(63),
++            _ => None,
++        };
++        let mut written = 0;
++        while written < out.len() {
++            if self.at == self.len {
++                if self.input.is_empty() {
++                    break;
++                }
++                if self.input.len() < 4 {
++                    return Err(invalid());
++                }
++                let q = &self.input[..4];
++                let a = sextet(q[0]).ok_or_else(invalid)?;
++                let b = sextet(q[1]).ok_or_else(invalid)?;
++                let c = if q[2] == b'=' {
++                    0
++                } else {
++                    sextet(q[2]).ok_or_else(invalid)?
++                };
++                let d = if q[3] == b'=' {
++                    0
++                } else {
++                    sextet(q[3]).ok_or_else(invalid)?
++                };
++                self.len = if q[2] == b'=' {
++                    if q[3] != b'=' || b & 15 != 0 {
++                        return Err(invalid());
++                    }
++                    1
++                } else if q[3] == b'=' {
++                    if c & 3 != 0 {
++                        return Err(invalid());
++                    }
++                    2
++                } else {
++                    3
++                };
++                if self.len < 3 && self.input.len() != 4 {
++                    return Err(invalid());
++                }
++                self.output = [(a << 2) | (b >> 4), (b << 4) | (c >> 2), (c << 6) | d];
++                self.input = &self.input[4..];
++                self.at = 0;
++            }
++            let n = (self.len - self.at).min(out.len() - written);
++            out[written..written + n].copy_from_slice(&self.output[self.at..self.at + n]);
++            self.at += n;
++            written += n;
++        }
++        Ok(written)
++    }
++}
+diff --git a/crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs b/crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs
+new file mode 100644
+index 000000000..7e19de4b6
+--- /dev/null
++++ b/crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs
+@@ -0,0 +1,286 @@
++use super::*;
++
++#[test]
++fn streamed_large_utf8_is_exact_and_chunk_independent_without_quota() {
++    struct Corpus {
++        left: usize,
++        position: usize,
++        chunk: usize,
++    }
++    impl Read for Corpus {
++        fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
++            let n = out.len().min(self.left).min(self.chunk);
++            let word = "雪🙂a".as_bytes();
++            for b in &mut out[..n] {
++                *b = word[self.position % word.len()];
++                self.position += 1;
++            }
++            self.left -= n;
++            Ok(n)
++        }
++    }
++    let size = 64 * 1024 * 1024;
++    let a = measure_reader(Corpus {
++        left: size,
++        position: 0,
++        chunk: 8191,
++    })
++    .unwrap();
++    let b = measure_reader(Corpus {
++        left: size,
++        position: 0,
++        chunk: 127,
++    })
++    .unwrap();
++    assert_eq!(a, b);
++    assert_eq!(a.bytes, size as u64);
++    assert_eq!(a.scalars, Count::exact(size as u64 / 8 * 3));
++}
++
++#[test]
++fn repeated_sources_exact_crlf_and_unavailable_token_recipe() {
++    let tmp = tempfile::tempdir().unwrap();
++    std::fs::write(tmp.path().join("a.md"), "雪\r\n").unwrap();
++    let text = "<!-- vibe:static org.demo/a — a.md -->\r\n雪\r\n<!-- vibe:static org.demo/a — a.md -->\r\n雪";
++    let report = capture_texts(tmp.path(), Some(text), None);
++    assert_eq!(report, capture_texts(tmp.path(), Some(text), None));
++    let lane = &report.lanes[0];
++    assert_eq!(lane.snippets.len(), 2);
++    assert_eq!(lane.snippets[0].emitted.as_ref().unwrap().bytes, 5);
++    assert_eq!(lane.snippets[1].emitted.as_ref().unwrap().bytes, 3);
++    assert_eq!(lane.totals.unique_raw_bytes, Count::exact(5));
++    assert_eq!(lane.totals.repeated_raw_bytes, Count::exact(10));
++    assert_eq!(lane.totals.inclusive_bytes, Count::exact(8));
++    assert_eq!(lane.totals.recorded_occurrences, 2);
++    assert!(matches!(report.tokens.count, Count::Unavailable { .. }));
++    assert!(report.tokens.tokenizer.is_none());
++    assert!(matches!(report.ambient_tail, Count::Unavailable { .. }));
++}
++
++#[test]
++fn mapping_gaps_preserve_all_children_without_proportions() {
++    let mut graph = BootGraph::default();
++    let source = graph.source(
++        vibe_spec::SourceIdentity::Spec("spec://org.demo/a/x#root".into()),
++        None,
++    );
++    graph.contributions.push(vibe_spec::GraphContribution {
++        origin: "org.demo/a".into(),
++        path: "a".into(),
++        kind: "normal".into(),
++        seed: Some(source),
++        occurrences: (0..10000)
++            .map(|_| vibe_spec::GraphOccurrence {
++                source,
++                requested: None,
++                state: vibe_spec::ReferenceState::Unknown,
++                parent: vibe_spec::InclusionParent::Unknown,
++                artifact_lines: None,
++            })
++            .collect(),
++    });
++    let report = measure_graph("captured", &graph, &BTreeMap::new(), &BTreeMap::new());
++    assert_eq!(report.snippets[0].occurrences.len(), 10000);
++    assert!(matches!(
++        report.totals.inclusive_bytes,
++        Count::Unavailable { .. }
++    ));
++    assert!(matches!(
++        report.totals.direct_bytes,
++        Count::Unavailable { .. }
++    ));
++    assert!(
++        report.snippets[0]
++            .occurrences
++            .iter()
++            .all(|o| o.parent.is_none() && !o.root && o.emitted.is_none())
++    );
++}
++
++#[test]
++fn dynamic_declarations_repeat_without_claiming_runtime_reads() {
++    let tmp = tempfile::tempdir().unwrap();
++    std::fs::write(tmp.path().join("a"), "🙂").unwrap();
++    let text = "[[entry]]\npath='a'\nkind='dynamic'\nwhen='os:unknown'\n[[entry]]\npath='a'\nkind='dynamic'\n";
++    let report = capture_texts(tmp.path(), None, Some(text));
++    let lane = &report.lanes[1];
++    assert_eq!(lane.snippets.len(), 2);
++    assert_eq!(lane.snippets[0].condition.as_deref(), Some("os:unknown"));
++    assert_eq!(lane.totals.unique_raw_bytes, Count::exact(4));
++    assert_eq!(lane.totals.repeated_raw_bytes, Count::exact(8));
++    assert!(matches!(
++        lane.totals.runtime_reads,
++        Count::Unavailable { .. }
++    ));
++    assert!(lane.snippets.iter().all(|s| s.emitted.is_none()));
++    assert!(!tmp.path().join(".vibe").exists());
++}
++
++#[test]
++fn invalid_utf8_does_not_invent_scalars_or_empty_payload() {
++    let p = measure_reader(&b"a\xff"[..]).unwrap();
++    assert_eq!(p.bytes, 2);
++    assert!(matches!(p.scalars, Count::Unavailable { .. }));
++}
++
++#[test]
++fn nested_recorded_ranges_prove_direct_bytes_without_guessing_missing_maps() {
++    let tmp = tempfile::tempdir().unwrap();
++    let nested = "<!-- embed: child -->\r\n雪\r\n<!-- /embed: child -->\r\n";
++    let text = format!("<!-- vibe:static host — missing.md -->\r\nparent\r\n{nested}tail");
++    let report = capture_texts(tmp.path(), Some(&text), None);
++    let row = &report.lanes[0].snippets[0];
++    assert_eq!(
++        row.direct_bytes,
++        Count::exact("parent\r\ntail".len() as u64)
++    );
++    assert_eq!(
++        row.occurrences[1].emitted.as_ref().unwrap().bytes,
++        nested.len() as u64
++    );
++    assert!(row.raw.is_none());
++    assert!(matches!(
++        report.lanes[0].totals.unique_raw_bytes,
++        Count::Unavailable { .. }
++    ));
++    assert!(matches!(
++        report.lanes[1].totals.unique_raw_bytes,
++        Count::Unavailable { .. }
++    ));
++}
++
++#[test]
++fn large_captured_graph_keeps_repeated_emitted_payload_and_one_source_read() {
++    let tmp = tempfile::tempdir().unwrap();
++    let body = "雪abc\n".repeat(300_000);
++    std::fs::write(tmp.path().join("large.md"), &body).unwrap();
++    let mut text = String::new();
++    for _ in 0..8 {
++        text.push_str("<!-- vibe:static host — large.md -->\n");
++        text.push_str(&body);
++    }
++    let report = capture_texts(tmp.path(), Some(&text), None);
++    let lane = &report.lanes[0];
++    assert_eq!(lane.snippets.len(), 8);
++    assert_eq!(lane.sources.len(), 1);
++    assert_eq!(
++        lane.totals.unique_emitted_bytes,
++        Count::exact(body.len() as u64)
++    );
++    assert_eq!(
++        lane.totals.repeated_emitted_bytes,
++        Count::exact(body.len() as u64 * 8)
++    );
++    assert_eq!(lane.totals.direct_bytes, lane.totals.repeated_emitted_bytes);
++    assert_eq!(report.inspected_source_reads["large.md"], Count::exact(1));
++    assert!(matches!(
++        lane.totals.runtime_reads,
++        Count::Unavailable { .. }
++    ));
++}
++
++#[test]
++fn retained_carrier_measures_bytes_without_replaying_provider_or_emitter() {
++    use crate::compile_trace::{ScopeDescriptor, TraceRun};
++    use std::sync::atomic::{AtomicUsize, Ordering};
++    use vibe_spec::{ArtifactInput, ArtifactPlan, ArtifactTarget, SectionSource, SpecAddress};
++    use vibe_wire::generated::compiler_trace_index::e1::index::{
++        ArtifactTarget as WireTarget, ScopeKind, Timestamp,
++    };
++    struct World(AtomicUsize);
++    impl SectionSource for World {
++        fn section_text(&self, _: &SpecAddress) -> Result<String, String> {
++            self.0.fetch_add(1, Ordering::SeqCst);
++            Ok("# Root {#root}\n雪🙂\n".into())
++        }
++    }
++    let dir = tempfile::tempdir().unwrap();
++    let id = "0123456789abcdef0123456789abcdef";
++    // Fixture preparation only. Measurement below receives no world or writer.
++    let run = TraceRun::open(dir.path(), id, Timestamp::from_timestamp(1000, 0).unwrap()).unwrap();
++    let scope = run
++        .declare_scope(&ScopeDescriptor {
++            id: "node:.:static-md".into(),
++            kind: ScopeKind::Node,
++            label: ".".into(),
++            artifact: "static-md".into(),
++            target: WireTarget::StaticMd,
++        })
++        .unwrap();
++    let input = || {
++        ArtifactInput::normal(
++            "org.demo/alpha",
++            "boot/a.md",
++            SpecAddress::parse("spec://org.demo/alpha/boot/a#root").unwrap(),
++        )
++        .unwrap()
++    };
++    let plan = ArtifactPlan::static_lane(
++        ArtifactTarget::StaticMarkdown,
++        "boot/STATIC.md",
++        "spec",
++        vec![input(), input()],
++    )
++    .unwrap();
++    let world = World(AtomicUsize::new(0));
++    vibe_spec::compile_artifact_traced(plan, &world, &scope).unwrap();
++    let before = std::fs::read(run.run_dir().join("index.json")).unwrap();
++    let calls = world.0.load(Ordering::SeqCst);
++    let captured = crate::boot_debugger::retained::read_run(dir.path(), id).unwrap();
++    let mut emitted = 0;
++    let mut linked = 0;
++    let mut raw = 0;
++    for capture in captured.snapshots {
++        let capture = capture.unwrap();
++        let report = measure_retained(&capture);
++        assert!(report.capture_id.contains(&capture.snapshot));
++        assert_eq!(report.snapshot.bytes, capture.bytes.len() as u64);
++        if matches!(
++            capture.graph.carrier,
++            Some(vibe_wire::generated::compiler_ir::e1::ir::Ir::EmittedArtifact(_))
++        ) {
++            assert!(report.emitted_artifact.is_some(), "{:?}", report.gaps);
++        }
++        if let Some(payload) = report.emitted_artifact {
++            assert!(payload.bytes > 0);
++            assert!(matches!(payload.scalars, Count::Exact { .. }));
++            emitted += 1;
++        }
++        if !report.linked_occurrences.is_empty() {
++            assert_eq!(report.linked_occurrences.len(), 2);
++            let Count::Exact { value: unique } = report.unique_linked_body_bytes else {
++                panic!("exact unique bodies")
++            };
++            let Count::Exact { value: repeated } = report.repeated_linked_body_bytes else {
++                panic!("exact repeated bodies")
++            };
++            // Compiler transforms may change the two bodies of one source.
++            // Logical source sharing never proves byte-payload equality.
++            assert!(repeated >= unique && unique > 0);
++            assert_eq!(
++                repeated,
++                report
++                    .linked_occurrences
++                    .iter()
++                    .map(|o| o.body.bytes)
++                    .sum::<u64>()
++            );
++            linked += 1;
++        }
++        raw += report
++            .graph
++            .sources
++            .iter()
++            .filter(|s| s.raw.is_some())
++            .count();
++    }
++    assert!(
++        emitted > 0 && linked > 0 && raw > 0,
++        "emitted={emitted} linked={linked} raw={raw}"
++    );
++    assert_eq!(world.0.load(Ordering::SeqCst), calls);
++    assert_eq!(
++        std::fs::read(run.run_dir().join("index.json")).unwrap(),
++        before
++    );
++}
