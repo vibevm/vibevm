@@ -1,0 +1,22 @@
+[
+  {
+    "name": "file-with-null-directory",
+    "selectors": { "file": "payload.bin", "directory": null },
+    "valid": true
+  },
+  {
+    "name": "both-absent",
+    "selectors": {},
+    "valid": false
+  },
+  {
+    "name": "both-null",
+    "selectors": { "file": null, "directory": null },
+    "valid": false
+  },
+  {
+    "name": "both-nonnull",
+    "selectors": { "file": "payload.bin", "directory": "payload" },
+    "valid": false
+  }
+]

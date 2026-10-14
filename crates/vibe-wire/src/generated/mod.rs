@@ -23,6 +23,8 @@ pub mod deploy_intent;
 pub mod deploy_inverse;
 pub mod deploy_lock_resources;
 pub mod deploy_receipt;
+pub mod derivative_binding;
+pub mod derivative_result;
 pub mod distribution;
 pub mod distribution_smoke_report;
 pub mod doc_chapters;

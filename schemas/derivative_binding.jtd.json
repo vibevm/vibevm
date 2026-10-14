@@ -1,0 +1,126 @@
+{
+  "metadata": {
+    "description": "Passive retained derivative data; observed identities are not production capture proofs. Semantic validation is mandatory before use.",
+    "rustOptions": {
+      "package": "vibe_wire::derivative_binding"
+    },
+    "x-rust-type": "DerivativeBinding"
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "base_capture": {
+      "type": "string"
+    },
+    "base": {
+      "ref": "source"
+    },
+    "local": {
+      "ref": "source"
+    },
+    "recipe": {
+      "enum": [
+        "replace-selected-inventory/1"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  },
+  "definitions": {
+    "source": {
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "descriptor": {
+          "ref": "descriptor"
+        },
+        "files": {
+          "elements": {
+            "ref": "file"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "descriptor": {
+      "metadata": {
+        "description": "Null selectors mean absent. Semantic validation requires exactly one non-null file or directory selector."
+      },
+      "properties": {
+        "media": {
+          "type": "string"
+        },
+        "interpretation": {
+          "enum": [
+            "vibe-spec",
+            "vibe-doc",
+            "commonmark",
+            "xml-data",
+            "opaque"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "role": {
+          "enum": [
+            "spec",
+            "documentation",
+            "resource"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "loading": {
+          "enum": [
+            "scan",
+            "explicit"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "optionalProperties": {
+        "file": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "directory": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "file": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "bytes": {
+          "elements": {
+            "type": "uint8"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  }
+}

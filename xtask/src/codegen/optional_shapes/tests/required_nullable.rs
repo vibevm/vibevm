@@ -13,6 +13,62 @@
 
 use super::*;
 
+#[test]
+fn optional_nullable_strings_reuse_the_option_emission() -> Result<()> {
+    for (src, name, form, definitions) in [
+        (
+            OPTIONAL_STRING,
+            "superseded_by",
+            json!({"type": "string"}),
+            json!({}),
+        ),
+        (
+            ALIAS_SCALAR,
+            "latest_stable",
+            json!({"ref": "version"}),
+            json!({"version": {"type": "string"}}),
+        ),
+    ] {
+        let mut member = form;
+        member["metadata"] = json!({"x-default": null});
+        let mut doc = json!({"optionalProperties": {name: member}, "definitions": definitions});
+        let expected = apply(src, "selector/mod.rs", doc.clone())?;
+        doc["optionalProperties"][name]["nullable"] = json!(true);
+        assert_eq!(apply(src, "selector/mod.rs", doc.clone())?, expected);
+        assert!(expected.contains("#[serde(default, skip_serializing_if = \"Option::is_none\")]"));
+        assert!(!expected.contains("Box<"));
+        let without_skip = src.replace(
+            "    #[serde(skip_serializing_if = \"Option::is_none\")]\n",
+            "",
+        );
+        assert!(apply(&without_skip, "selector/mod.rs", doc).is_err());
+    }
+    Ok(())
+}
+
+#[test]
+fn optional_nullable_string_absent_and_null_normalize_alike() -> Result<()> {
+    #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
+    struct Selector {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        file: Option<String>,
+    }
+    let absent: Selector = serde_json::from_str("{}")?;
+    let null: Selector = serde_json::from_str(r#"{"file":null}"#)?;
+    assert_eq!(absent, null);
+    assert_eq!(serde_json::to_string(&null)?, "{}");
+    let selected: Selector = serde_json::from_str(r#"{"file":"payload.bin"}"#)?;
+    assert_eq!(selected.file.as_deref(), Some("payload.bin"));
+    assert_eq!(
+        serde_json::to_string(&selected)?,
+        r#"{"file":"payload.bin"}"#
+    );
+    for invalid in [json!(false), json!(1), json!([]), json!({})] {
+        assert!(serde_json::from_value::<Selector>(json!({"file": invalid})).is_err());
+    }
+    Ok(())
+}
+
 /// The tree's own third row: a REQUIRED `nullable: true` member arrives
 /// as `Option<Box<…>>` with no skip attribute. The pass lifts the `Box`
 /// and adds the shared deserializer: `None` still serialises as `null`,

@@ -1,0 +1,114 @@
+{
+  "approved": true,
+  "summary": "Root independently accepts M10B1 authored binding, strict carrier and navigable provenance at the declared passive safe stop. Actual codegen succeeded; current wire5 and new nullable3 passed; unchanged original core6/workspace5 evidence is reused. Original producer unsatisfied verdict and old full-module29/30 failure are preserved.",
+  "scope": "M10B1 authored binding/strict carrier/provenance, optional nullable STRING with explicit null default; safe stop is pure validation before external effects.",
+  "limitations": [
+    "Original producer did not execute Cargo due stale Root authorization note; original report/dispositions remain unchanged.",
+    "Full optional_shapes module failed29/30 (expected53 actual56); not an ObservedPass. Root separate preexisting-count analysis retained.",
+    "Only focused optional_nullable3 are newly passing generator cases; wire5 supersedes earlier wire4 for counting.",
+    "Core6 plus workspace5 reused unchanged prior evidence; total19 distinct bounded cases, no all-suite or five-family lifecycle claim.",
+    "EvidenceObservation names original immutable candidate Patch as tested subject. Independent Root report is separately retained in SafeBoundary VerificationResult artifacts; producer report does not contain Root test results.",
+    "Evidence observes the original immutable Patch subject; independent Root report is a separate VerificationResult artifact, not a producer report or a rewritten candidate."
+  ],
+  "observed_test_count": 19,
+  "observed_test_exit": 0,
+  "actual_environment": "RUSTUP_AUTO_INSTALL=0; offline locked; private /fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; Root observed codegen0/wire5/focused optional_nullable3; full optional_shapes failure retained separately.",
+  "checks": [
+    {
+      "verification_id": "verification.m10b1",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "m_10_b_1_cases"
+      ],
+      "result": "ObservedPass",
+      "count": 5
+    },
+    {
+      "verification_id": "verification.m10b1.codegen",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "xtask",
+        "--bin",
+        "xtask",
+        "codegen::optional_shapes::tests"
+      ],
+      "captured_result": "ObservedFail",
+      "captured_passed": 29,
+      "captured_failed": 1,
+      "observed_alternate_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "xtask",
+        "--bin",
+        "xtask",
+        "optional_nullable_"
+      ],
+      "alternate_result": "ObservedPass",
+      "alternate_count": 3,
+      "scope": "Only the three added optional nullable cases; full-module pass is not claimed."
+    }
+  ],
+  "evidence_files": {
+    "root-codegen.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-codegen.log",
+      "sha256": "84628ad610205aa458597dff6bc22f6b039ea10c2a087454e3648cf55aa15f9a"
+    },
+    "root-wire.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-wire.log",
+      "sha256": "d083c9a87fca1f9121c77339b2e117880d7125c967236fb6ff409ad22378f4c6"
+    },
+    "root-new-nullable-cases.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-new-nullable-cases.log",
+      "sha256": "55285d8e776dc6d687bd598074973244a58e1f0edebb8fe46c6f505e1128e9da"
+    },
+    "root-optional-shapes.log": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-optional-shapes.log",
+      "sha256": "5f45ba51be4151d9e606c9a4fbd012ee77bd10631d8e17c6053e1ca8b0262a86"
+    },
+    "PREEXISTING-VOCABULARY-COUNT.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/PREEXISTING-VOCABULARY-COUNT.json",
+      "sha256": "28b64e88ef5ab7bae42ed20a4fafca2b214f84ba7706b37478e6ef3a2f0dcd81"
+    },
+    "FINAL-REVIEW.md": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/FINAL-REVIEW.md",
+      "sha256": "b862edfddeaf37c4d64d4579979151faaa4d593ca8922355f228cc41aa980290"
+    },
+    "FINAL-REVIEW.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/FINAL-REVIEW.json",
+      "sha256": "af28bbcbd24dc796be27e9dcb8a4b84d0c9c85ae5147ec36f521ad1e3e88101e"
+    },
+    "candidate-result.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/candidate-result.json",
+      "sha256": "2219bb3337ddd80b18673f5e63534cb8489c2b7c767ca9cab9017698850dbfb6"
+    },
+    "report.txt": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/report.txt",
+      "sha256": "501ba807423bce3ba6c0deaa2a7c7b431b7323478d1ba5588c3668d32f80a075"
+    },
+    "findings.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/findings.json",
+      "sha256": "5b8c463b34eff931e7b50c3ab582d01bd2b82e61c4d88bcaae75073350d6b48a"
+    },
+    "recovery-result.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/recovery-result.json",
+      "sha256": "bf8aa8bed868337f6cf7e5d8a4fa5f12a7f799b4018a61d55053912a1490ff0d"
+    },
+    "retirement-result.json": {
+      "path": "/fast/zap-managed/2026-10-14-m10b1-codegen/retirement-result.json",
+      "sha256": "5ba653c2fc3ec6d3ea8f7ed4ee80fe8857f9188e51c4250383c6ac03fd1979b8"
+    }
+  }
+}

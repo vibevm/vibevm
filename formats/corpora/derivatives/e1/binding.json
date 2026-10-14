@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "base_capture": "sha256:49f0b338a6659d544a7cebafee413a4f231bccb77ede240d88a779f5193aba4b",
+  "base": {
+    "owner": "flow:org.example/upstream@=1.0.0",
+    "resource": "payload",
+    "descriptor": {
+      "file": "payload.bin",
+      "media": "application/octet-stream",
+      "interpretation": "opaque",
+      "role": "resource",
+      "loading": "explicit"
+    },
+    "files": [
+      {
+        "path": "payload.bin",
+        "bytes": [
+          0,
+          255,
+          13,
+          10
+        ]
+      }
+    ]
+  },
+  "local": {
+    "owner": "flow:org.example/local@=1.0.0",
+    "resource": "payload",
+    "descriptor": {
+      "file": "payload.bin",
+      "media": "application/octet-stream",
+      "interpretation": "opaque",
+      "role": "resource",
+      "loading": "explicit"
+    },
+    "files": [
+      {
+        "path": "payload.bin",
+        "bytes": [
+          0,
+          255,
+          13,
+          10
+        ]
+      }
+    ]
+  },
+  "recipe": "replace-selected-inventory/1"
+}

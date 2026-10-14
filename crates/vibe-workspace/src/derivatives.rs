@@ -232,3 +232,6 @@ impl DerivativeService {
 
 #[cfg(test)]
 mod m_10_a_2_cases;
+
+mod binding;
+pub use binding::{BoundDerivative, prepare_binding};

@@ -1,0 +1,131 @@
+{
+  "verdict": "source_clear_pending_root_targeted_verification",
+  "blocking_source_findings": [],
+  "R1": "schema null semantics and existing OptionValue normalization now agree",
+  "files": [
+    {
+      "path": "crates/vibe-core/src/manifest/derivation.rs",
+      "sha256": "2402ab384106c5e892540c1db0ca8f437c5c23bca484fe69d1a3c3b09ea8804d"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/derivation/m_10_b_1_cases.rs",
+      "sha256": "9c271f023f7d3bda4a23165d284a060c046cef1e96afdeb4cebc998b66ec450c"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "ac93b8daaadcd2be395990eedba32b1fcf2f8c4924311a3b4afda72db1df4328"
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/derivative.rs",
+      "sha256": "e774166dc8f3976f1d466ce616e8a0e39a0a53ddfdeca4ac37e178c33a2bb93a"
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/mod.rs",
+      "sha256": "b33c54de227de2997822e68ad10a1737ce77e61716944748748684c4b0d3a288"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/derivative_binding/mod.rs",
+      "sha256": "8b69c50f66ae60aede99953df7bc3d676f91ff466c3f4c74dcfeea6139931362"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/derivative_result/mod.rs",
+      "sha256": "d4afe930b8f1d8587e6e19f8c205846bb0672a6d5679606caa0804b71b678eeb"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "sha256": "48943fef2eb7a0dd30e567d6b8bb3e57b24952294450b43c9c4a1256afe8f518"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "sha256": "467c84c6db8c3cf7209aaf20553421fcfe5939f4e50de023bb7ae8cbaf889a08"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "sha256": "28d8f7aaebb0a131f12faabe4963434816433a55324771fae1224f11f385bebb"
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives.rs",
+      "sha256": "135509809eb4526321262ab382da878ce7c4562ca2c6d49fed64c24aa4b4ba64"
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives/binding.rs",
+      "sha256": "73d1d325b8df2f9fc6b6098516d8344cf88e4ae8b1f39426053af1f309621596"
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives/binding/m_10_b_1_cases.rs",
+      "sha256": "42e27e260c133bb74e06b6d7d4749abdad9ae6a75fa99e2881f4e422d9ea3281"
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "sha256": "eca7ae0a19431a2779b8c7b299b11ac18f10af0e0b3af152154cf45dd4a781a8"
+    },
+    {
+      "path": "formats/corpora/derivatives/e1/binding.json",
+      "sha256": "b5f235b0490588ae5876c2b7851052ee04c7ae2beb92d12918e32b49d9a4d5cd"
+    },
+    {
+      "path": "formats/corpora/derivatives/e1/binding.toml",
+      "sha256": "a48829f40a9857c721b254f07eb466ac5f25ae1a8a09ba26c33b979002a7c6ed"
+    },
+    {
+      "path": "formats/corpora/derivatives/e1/result.json",
+      "sha256": "874138c55f1101a994c93e01d8e85005ef570d0213ce49e6abd5241ed1dec927"
+    },
+    {
+      "path": "formats/corpora/derivatives/e1/selector-cases.json",
+      "sha256": "60f88164737150f6f94554150f3bcb390dd287e8125a1129afff2f20f4cc8955"
+    },
+    {
+      "path": "schemas/derivative_binding.jtd.json",
+      "sha256": "338b65a455f1a87ffbf4113225b107632043071d12278e34e788515fcb1e2f01"
+    },
+    {
+      "path": "schemas/derivative_result.jtd.json",
+      "sha256": "bd40853ef448fa9eb137840bcd290f9416ffc421fd32c1aa619290382b1a2d96"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-074-local-derivatives.xml",
+      "sha256": "d94096ab78d9f4c778dd1c1adb2f99818a5b5fbdd94a699c95f5f9d503c0b0ac"
+    },
+    {
+      "path": "xtask/src/codegen/optional_shapes.rs",
+      "sha256": "54685536ce718c61df8a662d4a2afa3b599349d5938d2b3537ea93a38b932de1"
+    },
+    {
+      "path": "xtask/src/codegen/optional_shapes/tests/refusals.rs",
+      "sha256": "5c543e783e169437a3c64ac47831a2935e24eb46f0399495e83d6895eb8e767e"
+    },
+    {
+      "path": "xtask/src/codegen/optional_shapes/tests/required_nullable.rs",
+      "sha256": "e6d226abb2931112b63c4885d7b33a9863dfc23341a9186e2b13e340a0399dda"
+    },
+    {
+      "path": "xtask/src/codegen/optional_shapes/tests/stitch.rs",
+      "sha256": "d10a18f3a3b4a2e74e0b5b2864986ec98c94ae67887b8080fee080a3cf2215ca"
+    }
+  ],
+  "unchanged_original_core_workspace_spec": [
+    "crates/vibe-core/src/manifest/derivation.rs",
+    "crates/vibe-core/src/manifest/derivation/m_10_b_1_cases.rs",
+    "crates/vibe-core/src/manifest/mod.rs",
+    "crates/vibe-workspace/src/derivatives.rs",
+    "crates/vibe-workspace/src/derivatives/binding.rs",
+    "crates/vibe-workspace/src/derivatives/binding/m_10_b_1_cases.rs",
+    "vibevm/vibespecs/common/PROP-074-local-derivatives.xml"
+  ],
+  "producer_patch_sha256": "8bff3224610d64dd1a2932e93d3effda719357e5c78c1c7340f037858f09c958",
+  "correction_patch_sha256": "fa7d4e02f2aaa59f73f4e824373fc0ef32eecfff9f75096be4f49460d76a0acf",
+  "test_evidence": {
+    "core": "prior 6 pass; source hashes unchanged",
+    "workspace": "prior 5 pass; source hashes unchanged",
+    "wire": "root-wire.log observed 5 passed 0 failed 0 ignored",
+    "optional_shapes": "root result pending at review capture",
+    "codegen": "root-codegen.log ends at generation output; root exit status not yet observed"
+  },
+  "reviewer_runs": false,
+  "required_before_acceptance": [
+    "Root codegen exit 0 confirmation",
+    "Root selected optional_shapes nonzero pass and unchanged required-nullable cases",
+    "Root final generated diff/perimeter inspection"
+  ]
+}

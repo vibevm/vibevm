@@ -28,6 +28,10 @@
 //! type's job, while normalising an empty object is projector work, not
 //! a skip predicate's.
 //!
+//! An optional nullable STRING with explicit `x-default: null` uses the
+//! same Option decision: absent and null both mean no value and serialize
+//! as an omitted key. Other optional-nullable shapes remain unsupported.
+//!
 //! A third row the tree itself contributed (measured, absent from the
 //! phase inventory): a REQUIRED member with `nullable: true` also arrives
 //! as `Option<Box<…>>` and carries NO skip attribute. The rule covers it
@@ -306,6 +310,23 @@ fn site_decision(
     schema: &Path,
 ) -> Result<Option<(ShapeClass, Decision)>> {
     let form = resolve_form(site.node, definitions, &site.path, schema)?;
+    if site.required == Required::Optional && site.node.contains_key("nullable") {
+        if site.node.get("nullable") == Some(&Value::Bool(true))
+            && form.get("type").and_then(Value::as_str) == Some("string")
+            && site.node.get("metadata").and_then(|m| m.get("x-default")) == Some(&Value::Null)
+        {
+            return Ok(Some((ShapeClass::Scalar, Decision::OptionValue)));
+        }
+        bail!(
+            "schema {}: the optional field `{}` also carries `nullable` — \
+             a member that may be absent AND null is supported only for a \
+             string with `nullable: true` and explicit `metadata.\"x-default\": null`.\n\
+             Fix: use that string policy, or remove the unsupported optional-nullable \
+             shape, then run `cargo xtask codegen`.",
+            schema.display(),
+            site.path
+        );
+    }
     if form.contains_key("elements") || form.contains_key("values") {
         if site.required == Required::Required
             && site.node.get("nullable") == Some(&Value::Bool(true))
@@ -319,19 +340,6 @@ fn site_decision(
     if site.required == Required::Required {
         // The walk sent this member here only because it is nullable.
         return Ok(Some((class, Decision::RequiredNullable)));
-    }
-    if site.node.contains_key("nullable") {
-        bail!(
-            "schema {}: the optional field `{}` also carries `nullable` — \
-             the pass has no rule for a member that may be absent AND null at \
-             once (no site of today's tree does), and guessing the emission \
-             would write a shape nothing pins.\n\
-             Fix: drop `nullable` from this member, or teach \
-             `optional_shapes.rs` the combination, then run `cargo xtask \
-             codegen`.",
-            schema.display(),
-            site.path
-        );
     }
     let decision = match class {
         // A structure reads no annotation: the Option is the point, the

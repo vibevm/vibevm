@@ -1716,3 +1716,23 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/change-query-response/e1"
 sunset = "none"
+
+# M-10-B.1: retained authored data and disposable result are distinct.
+[format.derivative-binding]
+epoch = 1
+schema = "schemas/derivative_binding.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/derivatives/e1"
+sunset = "none"
+
+# M-10-B.1: retained authored data and disposable result are distinct.
+[format.derivative-result]
+epoch = 1
+schema = "schemas/derivative_result.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/derivatives/e1"
+sunset = "none"

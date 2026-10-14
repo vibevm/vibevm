@@ -1,0 +1,138 @@
+{
+  "scope": "M10B1 passive binding/provenance; original producer unsatisfied retained; independent Root verification supplied acceptance",
+  "files": [
+    {
+      "source": "/tmp/vibevm-managed-m10b1/report.txt",
+      "saved": "original-producer.md",
+      "raw_sha256": "a0e260cae2d9634764f7d5856d2e3c6483e10a5e318b11415055d434e0563a40",
+      "saved_sha256": "a0e260cae2d9634764f7d5856d2e3c6483e10a5e318b11415055d434e0563a40",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/tmp/vibevm-managed-m10b1/candidate-result.json",
+      "saved": "original-candidate.json",
+      "raw_sha256": "d739f3fa8a7ba8d1898b3a0a2513f7d6af4e70dab66131cf22dde9b4c6dd48ea",
+      "saved_sha256": "87843786925dfe97574692f31f7b101e4baa8bef28b77771138a76b0d2e49669",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/tmp/vibevm-managed-m10b1/core-test-2.log",
+      "saved": "core-test.log",
+      "raw_sha256": "d60ed97588564b3e360dc752a5bc0ac6b1380044247d311349aad4297f17c053",
+      "saved_sha256": "6b09da3b47c48bdca2991db6700285b18d45d554f9acf8dc740658d83e732bfb",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/tmp/vibevm-managed-m10b1/workspace-test-2.log",
+      "saved": "workspace-test.log",
+      "raw_sha256": "b259ce66b533fc5eb5d7513c95055ac10b9bf2bc3370ccd7b701c01f9858c381",
+      "saved_sha256": "9274ab4692eb387feba88f14fb29ec969fe30a90dcd7ff79318590d97e365194",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/report.txt",
+      "saved": "codegen-producer.md",
+      "raw_sha256": "501ba807423bce3ba6c0deaa2a7c7b431b7323478d1ba5588c3668d32f80a075",
+      "saved_sha256": "501ba807423bce3ba6c0deaa2a7c7b431b7323478d1ba5588c3668d32f80a075",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/candidate-result.json",
+      "saved": "accepted-subject-candidate.json",
+      "raw_sha256": "2219bb3337ddd80b18673f5e63534cb8489c2b7c767ca9cab9017698850dbfb6",
+      "saved_sha256": "50874d0a61218d9bd5de98ba65a323c3fe0b06f9ff26b0ace20c98c44ffc273b",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/FINAL-REVIEW.md",
+      "saved": "independent-review.md",
+      "raw_sha256": "b862edfddeaf37c4d64d4579979151faaa4d593ca8922355f228cc41aa980290",
+      "saved_sha256": "b862edfddeaf37c4d64d4579979151faaa4d593ca8922355f228cc41aa980290",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/FINAL-REVIEW.json",
+      "saved": "independent-review.json",
+      "raw_sha256": "af28bbcbd24dc796be27e9dcb8a4b84d0c9c85ae5147ec36f521ad1e3e88101e",
+      "saved_sha256": "af28bbcbd24dc796be27e9dcb8a4b84d0c9c85ae5147ec36f521ad1e3e88101e",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/ROOT-VERIFICATION-APPROVED.json",
+      "saved": "root-verification.json",
+      "raw_sha256": "d57eecdb2e76864979f6d15fb0542495b1bd4275bdbb35717a8e0d8158c2716d",
+      "saved_sha256": "d57eecdb2e76864979f6d15fb0542495b1bd4275bdbb35717a8e0d8158c2716d",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/PREEXISTING-VOCABULARY-COUNT.json",
+      "saved": "preexisting-count.json",
+      "raw_sha256": "28b64e88ef5ab7bae42ed20a4fafca2b214f84ba7706b37478e6ef3a2f0dcd81",
+      "saved_sha256": "28b64e88ef5ab7bae42ed20a4fafca2b214f84ba7706b37478e6ef3a2f0dcd81",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/GENERATION-COLLECTOR-DIAGNOSIS.md",
+      "saved": "collector-diagnosis.md",
+      "raw_sha256": "a0f7e5cf32f60377002df4ef3dcf2bba5c76fe99949736d31e7646e0d076dcec",
+      "saved_sha256": "a0f7e5cf32f60377002df4ef3dcf2bba5c76fe99949736d31e7646e0d076dcec",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-codegen.log",
+      "saved": "codegen.log",
+      "raw_sha256": "84628ad610205aa458597dff6bc22f6b039ea10c2a087454e3648cf55aa15f9a",
+      "saved_sha256": "84628ad610205aa458597dff6bc22f6b039ea10c2a087454e3648cf55aa15f9a",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-wire.log",
+      "saved": "wire-test.log",
+      "raw_sha256": "d083c9a87fca1f9121c77339b2e117880d7125c967236fb6ff409ad22378f4c6",
+      "saved_sha256": "c3b50734bc64f93628b86ab31a5fbe5eb582738c6b79a4d4ff7499fec7d0e173",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-optional-shapes.log",
+      "saved": "optional-shapes-failed.log",
+      "raw_sha256": "5f45ba51be4151d9e606c9a4fbd012ee77bd10631d8e17c6053e1ca8b0262a86",
+      "saved_sha256": "5f45ba51be4151d9e606c9a4fbd012ee77bd10631d8e17c6053e1ca8b0262a86",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-new-nullable-cases.log",
+      "saved": "nullable-test.log",
+      "raw_sha256": "55285d8e776dc6d687bd598074973244a58e1f0edebb8fe46c6f505e1128e9da",
+      "saved_sha256": "2be685c5d7f51c16056856a22850603ab577866a51dfd6d5b491f5c62cc8dfff",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-accept-open-review.log",
+      "saved": "open-review-receipts.jsonl",
+      "raw_sha256": "14e1691b167a3300e31b917fa27f842fc0aebbfcc5a2ba7082e7c9507d4e8d23",
+      "saved_sha256": "14e1691b167a3300e31b917fa27f842fc0aebbfcc5a2ba7082e7c9507d4e8d23",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-accept-evidence.log",
+      "saved": "evidence-receipts.jsonl",
+      "raw_sha256": "7d1245db4e815c3cc2fcfefca154f00d6803e5cadbd7f54d6ead3a0351735656",
+      "saved_sha256": "7d1245db4e815c3cc2fcfefca154f00d6803e5cadbd7f54d6ead3a0351735656",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-accept-stage.log",
+      "saved": "stage-receipts.jsonl",
+      "raw_sha256": "3712a9f4a55f8ca9ca06b560824110573519678bbd17812b271ea39f690ded81",
+      "saved_sha256": "3712a9f4a55f8ca9ca06b560824110573519678bbd17812b271ea39f690ded81",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b1-codegen/root-accept-work.log",
+      "saved": "work-receipts.jsonl",
+      "raw_sha256": "66946b145564c6fee5b98a2fa6ebcf47ac01f0196b53a5608d00290fa32f523c",
+      "saved_sha256": "66946b145564c6fee5b98a2fa6ebcf47ac01f0196b53a5608d00290fa32f523c",
+      "normalization": "only trailing LF normalized"
+    }
+  ]
+}

@@ -12,6 +12,43 @@
 
 use super::*;
 
+#[test]
+fn optional_nullable_support_is_limited_to_explicit_null_defaulted_strings() {
+    for form in [
+        json!({"type": "boolean"}),
+        json!({"type": "uint32"}),
+        json!({"type": "timestamp"}),
+        json!({"enum": ["one"]}),
+        json!({"properties": {}}),
+        json!({"elements": {"type": "string"}}),
+        json!({"values": {"type": "string"}}),
+        json!({"discriminator": "kind", "mapping": {"one": {"properties": {}}}}),
+    ] {
+        let mut member = form;
+        member["nullable"] = json!(true);
+        member["metadata"] = json!({"x-default": null});
+        let err = shapes(json!({"optionalProperties": {"selector": member}}))
+            .expect_err("other optional-nullable shapes remain unsupported");
+        assert!(
+            err.to_string().contains("optionalProperties.selector"),
+            "{err}"
+        );
+    }
+    for metadata in [
+        json!({}),
+        json!({"x-default": false}),
+        json!({"x-default": true}),
+        json!({"x-default": "path"}),
+        json!({"x-default": 0}),
+    ] {
+        let err = shapes(json!({"optionalProperties": {"selector": {
+            "type": "string", "nullable": true, "metadata": metadata
+        }}}))
+        .expect_err("only an explicit null default normalizes null and absence");
+        assert!(err.to_string().contains("x-default"), "{err}");
+    }
+}
+
 /// A4.1's red: an optional scalar without `x-default` is a generation
 /// error, not a default — the policy is not derivable from the Rust.
 #[test]
