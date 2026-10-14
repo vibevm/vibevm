@@ -176,7 +176,14 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
     boot_file_set.extend(index.entries.iter().map(|e| e.path.clone()));
     let boot_files: Vec<String> = boot_file_set.into_iter().collect();
 
+    let mut measurements = vibe_workspace::boot_debugger::measurement::capture_texts(
+        root,
+        static_text.as_deref(),
+        index_text.as_deref(),
+    );
+    measurements.bind_packages(&lockfile);
     let boot = Boot {
+        measurements: Some(measurements),
         static_lane_name,
         static_md: static_text
             .as_deref()

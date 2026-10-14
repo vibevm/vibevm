@@ -328,6 +328,7 @@ fn plain_render_carries_the_provenance_suffix() {
         roots: vec!["org.x/api".to_string()],
         packages: vec![chained, plain_root_edge],
         boot: Boot {
+            measurements: None,
             static_lane_name: vibe_core::layout::STATIC_MD.to_string(),
             static_md: None,
             index_md: IndexLane {

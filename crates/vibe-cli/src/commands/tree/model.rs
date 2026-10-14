@@ -189,6 +189,8 @@ impl Condition {
 /// `boot` — the two committed boot lanes and their sizes.
 #[derive(Debug, Serialize)]
 pub struct Boot {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub measurements: Option<vibe_workspace::boot_debugger::measurement::Report>,
     /// The generated static lane's own file name for THIS project:
     /// `STATIC.xml` under an XML spec target, `STATIC.md` otherwise
     /// (PROP-045 ##STATIC-FOLLOWS-THE-TARGET). It lives on `boot` rather

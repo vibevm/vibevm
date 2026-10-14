@@ -320,6 +320,7 @@ pub fn execute_prepared(
     // snapshot, taken beside the lock snapshot so one read point feeds
     // the whole diff. Sampled again after a successful apply below.
     let lanes_before = observer.lane_sizes(&workspace.root);
+    let measurements_before = observer.boot_measurements(&workspace.root);
     // The source is built from the ONE environment snapshot, and only here: a
     // chain that never reaches this point never pays for the composition.
     let resolver = sources.build(PackageSourceBuild {
@@ -460,6 +461,7 @@ pub fn execute_prepared(
                     lockfile_path: &lockfile_path,
                     lockfile_snapshot: &lockfile_snapshot,
                     lanes_before: &lanes_before,
+                    measurements_before: measurements_before.as_ref(),
                     run_metadata: &run_metadata,
                     confirm_gate,
                     observer,

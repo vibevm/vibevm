@@ -122,6 +122,9 @@ pub enum InstallNarration<'a> {
         lanes_before: &'a [(String, Option<u64>)],
         /// The same lanes sampled after it.
         lanes_after: &'a [(String, Option<u64>)],
+        /// Captured reports from the respective read points; absent means unavailable.
+        measurements_before: Option<&'a vibe_workspace::boot_debugger::measurement::Report>,
+        measurements_after: Option<&'a vibe_workspace::boot_debugger::measurement::Report>,
         /// Exact rows from slots reconciled by this apply, never a workspace scan.
         conversions: &'a AppliedConversionCounts,
         conversion_failures: &'a [AppliedConversionFailure],
@@ -153,6 +156,14 @@ pub trait InstallObserver: Send + Sync {
 
     /// Sample the watched boot lanes under `root` for the closure diff.
     fn lane_sizes(&self, root: &Path) -> Vec<(String, Option<u64>)>;
+
+    /// Optional captured measurement dimension; None is unavailable, never zero.
+    fn boot_measurements(
+        &self,
+        _root: &Path,
+    ) -> Option<vibe_workspace::boot_debugger::measurement::Report> {
+        None
+    }
 
     /// The typed plan events of the install planner.
     fn plan_events(&self) -> &dyn vibe_install::PlanObserver;

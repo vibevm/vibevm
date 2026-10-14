@@ -84,6 +84,8 @@ impl InstallObserver for CliInstallObserver<'_> {
                 new,
                 lanes_before,
                 lanes_after,
+                measurements_before,
+                measurements_after,
                 conversions,
                 conversion_failures,
             } => emit_closure_diff_with_conversions(
@@ -95,8 +97,17 @@ impl InstallObserver for CliInstallObserver<'_> {
                 lanes_after,
                 *conversions,
                 conversion_failures,
+                measurements_before,
+                measurements_after,
             ),
         }
+    }
+
+    fn boot_measurements(
+        &self,
+        root: &Path,
+    ) -> Option<vibe_workspace::boot_debugger::measurement::Report> {
+        Some(vibe_workspace::boot_debugger::measurement::capture_workspace(root))
     }
 
     fn lane_sizes(&self, root: &Path) -> Vec<(String, Option<u64>)> {

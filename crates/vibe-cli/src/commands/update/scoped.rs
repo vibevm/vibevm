@@ -153,6 +153,8 @@ fn run(
     // the post-write state once the apply is durable.
     let old_lock = lockfile.clone();
     let lanes_before = lane_sizes(&workspace.root);
+    let measurements_before =
+        vibe_workspace::boot_debugger::measurement::capture_workspace(&workspace.root);
     let spec_format = resolve_spec_format(&manifest, user_config.install.spec_format);
 
     // PROP-010 §2.5 — the offline posture reaches `vibe update` through the
@@ -347,6 +349,7 @@ fn run(
             lockfile: &mut lockfile,
             old_lock: &old_lock,
             lanes_before: &lanes_before,
+            measurements_before: &measurements_before,
             agent: &agent,
         },
     );

@@ -6,6 +6,7 @@ use vibe_spec::{
     BootGraph, GraphContribution, GraphOccurrence, InclusionParent, ReferenceState, SourceIdentity,
 };
 pub mod dynamic_index;
+pub mod measurement;
 pub mod retained;
 mod static_summary;
 pub use static_summary::{StaticDecompileError, capture_static, decompile_static};

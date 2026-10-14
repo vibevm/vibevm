@@ -1,0 +1,214 @@
+{
+  "approved": true,
+  "summary": "Root accepts independently reviewed full M06B2 captured measurement/no-quota safe-stop;27 source hashes match,10 distinct final cases passed; qualified unknowns and original failures preserved.",
+  "scope": "Full M06B2 raw/emitted/scalar/unique-versus-occurrence diagnostics, static/dynamic snippet/package/lane totals in tree/closure diff, qualified recipe/unknown status and large streamed data without quotas.",
+  "limitations": [
+    "10 distinct final cases=workspace8+CLI2. Earlier reruns and original empty attempt are not included.",
+    "Initial CLI project/version/materialization fixtures failed; retained occurrence-equality assumption and invalid plainSHA versus domain-separated compiler digest comparison failed then corrected; all original logs retained.",
+    "No tokenizer selected: identity/version None and tokens unavailable; no billing/ambienttail inference or hidden total boot cap.",
+    "Actual runtime reads, absent mappings and final emitted contribution attribution remain explicitly unavailable; no guessed exact ancestry.",
+    "TUI fixture constructors preserve old compatibility; no UI behavior qualification. Independent full-scope review completed without P1/P2 task blockers.",
+    "ReportedCompleted reflects actual fixture/build/report writes; measurement operation itself read-only. PriorEMPTY artifact-onlyCompleted with nofunctionaltests remains unsatisfied."
+  ],
+  "observed_test_count": 10,
+  "observed_test_exit": 0,
+  "actual_environment": "Offline locked RUSTUP_AUTO_INSTALL=0, private M10B1-correction cargo-target and M06B2-correction TMPDIR; exact finalworkspace8 CLIbinvibe2.",
+  "evidence_files": {
+    "/fast/zap-managed/2026-10-15-m06b2-correction/candidate-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/candidate-result.json",
+      "sha256": "044abff1e16957296dab33d824edbd4b0ccf7412b610c74aa60cc00ae1c846dd"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/m06b2-report.txt": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/m06b2-report.txt",
+      "sha256": "f19459bdb20207cc4eef960026acc06a53178cc9a35dc19668f990ee3782b800"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/m06b2.patch": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/m06b2.patch",
+      "sha256": "349454ef0c9b3f29e827a68bcbf59d3aa19346ad919cdd62a57d72c4d164ca6d"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/m06b2-findings.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/m06b2-findings.json",
+      "sha256": "89bda3ec08936c057e69142d3082186ae3992608e154e62dc46faa74d80d2bd6"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/ACCEPTANCE-FROZEN-SUBJECT.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/ACCEPTANCE-FROZEN-SUBJECT.json",
+      "sha256": "f6852baef88df9a16398a200afbc249536ec0f367ceb9eee96433094f9a09ad5"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-verified.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-verified.log",
+      "sha256": "d5b0ce06800073918d016d20c79299b2a9b9f543f2b0d9d09240cef8baae8617"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-verified.exit": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-verified.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/cli-verified.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/cli-verified.log",
+      "sha256": "52cc4da3e7f16ad5e9263a543ac4b7b3341b1c725e887b913c363b7bf8f50783"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/cli-verified.exit": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/cli-verified.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-test-final3.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-test-final3.log",
+      "sha256": "d0d6355bf95bec6f2d2fdde84012ad2e96edfc9f070f7d597c40bf89e596b47b"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-test-final4.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-test-final4.log",
+      "sha256": "47374036f07f956940e7c35968e92eda95864db76bebe2ac92dc700ac6c34657"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-test-final5.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/workspace-test-final5.log",
+      "sha256": "267f37efda07b22ddb6de74c9080cd9f59397fc92c1de117f49e7fb43248a24a"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/cli-test.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/cli-test.log",
+      "sha256": "0639cd9f941984676060739dfe815702583e1bf23fa2f561c436bf931cc14266"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/cli-test-final.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/cli-test-final.log",
+      "sha256": "65fdfdba0a36bae2d7023258ba23be387690f180220a171879071ab806f75d0d"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/cli-test-final2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/cli-test-final2.log",
+      "sha256": "b508c2358cc1fc75e2c6c622d13883b8c10cf9e8f58e5b592cfaa5ad757db1c7"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/verified-commands.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/verified-commands.json",
+      "sha256": "e6109a0742ec6e663a3e579319465a536e5b5cc31b22a63d414a41830534e797"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/scope-review.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/scope-review.json",
+      "sha256": "cb9f226bc7cf0d2542e47d1ad8d9294c8fde5c0ac6b004d5ecd3e77fda0b74d9"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/diff-verified.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/diff-verified.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/rustfmt-check.log": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/rustfmt-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/resources/package-tree.schema.v1.json": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/resources/package-tree.schema.v1.json",
+      "sha256": "86220b617c3ee112f42b30c9a60cd4ebb03ad43e1bbb0eb036c3045b2b38e984"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/install/closure_diff.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/install/closure_diff.rs",
+      "sha256": "ccd8ddbe010f1352f5c113f7af91dde739d4b64efd47b53af1cbeaff22613821"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/install/observer.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/install/observer.rs",
+      "sha256": "e6a81439d727e7d7e824c378a3ac4d8ce315b7c6b35970efd6bdb43124fcc961"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/build.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/build.rs",
+      "sha256": "d35d4479035cddef57f07e85ce0331711bd386af2a0a983d5f123ab79dc9f685"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/build/tests.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/build/tests.rs",
+      "sha256": "9f00b2a038a1a56e075e441039552a479331b45850fca8a637b4bb8edd9cc1ae"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs",
+      "sha256": "ca708a52ba371b38d561098e05975e6aea6c11f927fb2c429a49fe71f3d27092"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/mod.rs",
+      "sha256": "b8f1b271ede3fcbb873354938217883213d997930dd2f1e10fa2dc31f451bb80"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/model.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/model.rs",
+      "sha256": "c1345823d464110115d9366c7e83c4e97e9b98c03734383bcdb3d98fb4c6e555"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/plain.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/plain.rs",
+      "sha256": "573807dc789d90f96c9c0a21454228ac1e2ac64c0847c2268588bf6c9ca2a6b8"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/copy/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "sha256": "2a158670c45fa7eb3e1912bdc2db9a1660de712701972e0cdd35528aa383cae3"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/dispatch.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/dispatch.rs",
+      "sha256": "52e54a40b8d3707160909e0ab1920d09723bd1a5ac3798556599fe3071dc5280"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/flatten.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/flatten.rs",
+      "sha256": "fca8babe509cb9869a5dfd97e66fbd25fcce380a5084aa6a6c730b15c179a660"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/menu/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "sha256": "881f7e57d9c76f4444da65b16bcb3f4e0046296e332e474450350150477247e1"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/modes.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/modes.rs",
+      "sha256": "e4cd139f0d10900ca1299ef37ae28d73855858786f76feaf570645b2c1ebc045"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/search/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/search/mod.rs",
+      "sha256": "2b959af1ba3c82a5409dae72c9b2613cf9bd49a974895fdd9e75d37056327bea"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/state.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/tree/tui/state.rs",
+      "sha256": "5164e3bfd745efea4e252ed57d79941b6a212eea87bdaab3747f34075df53a13"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/update/scoped.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/update/scoped.rs",
+      "sha256": "c6d27565bb2d724554d32ae67802080b3417064f2ac5a080a615be0a74e4bc68"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/update/scoped/apply.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/src/commands/update/scoped/apply.rs",
+      "sha256": "16e358c4af3ced49f4cee6cfd17033d4f36a486c213f35695c9f1370a59f2a52"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/install/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/install/mod.rs",
+      "sha256": "602d0b88f5dc78d7c4b407ce975f7278206bf4b7867ae1c0a38d583e4e7ecfbc"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/install/ready.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/install/ready.rs",
+      "sha256": "5def5cbc6f539f41acba4ad20fefc3c7f4815bc47676ef3af318162a8548036b"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/ports.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/ports.rs",
+      "sha256": "28e90773ca7293f32e089ea3e3f90974b3135938125d2e635778db96cd8a16d2"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/measurement.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/measurement.rs",
+      "sha256": "9c4713fb1fbc7467e96672c2a34f13bbd8ba37cf6421f680918ae9c1cf741d21"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/measurement/carrier.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/measurement/carrier.rs",
+      "sha256": "2bab134c2d040cdb99b16af4b2d17361380a5a637be5d002e56148976e6faf2b"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs",
+      "sha256": "4893e58dd66e9f96f659c20da216f644d452cac66c58b535239a681d37420bb5"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/mod.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "sha256": "8f5afec893a70ce44b35b81f96b2f7b7b81423c4696339fa85aab3c5ecfb031d"
+    },
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/static_summary.rs": {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/static_summary.rs",
+      "sha256": "d8b3d1bcbb9c5eb31ae1f42752af6ab431930411677a791d4285413ec98813aa"
+    },
+    "/fast/git/v/vibevm-next/vibevm/vibespecs/common/PROP-072-boot-observability.xml": {
+      "path": "/fast/git/v/vibevm-next/vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "3e6c343a74134c40f6cc9ee5e76767047ce0092b789909ca34790f6f63d43a12"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/INDEPENDENT-REVIEW.md": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/INDEPENDENT-REVIEW.md",
+      "sha256": "b57d74e298ad2691ac5ceeb891856d9e44af0a0a2eb51417fc51f61f98493550"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/INDEPENDENT-REVIEW.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/INDEPENDENT-REVIEW.json",
+      "sha256": "f0f148f006f24110883ef51ae6b602014b01487f65ae6a6f8ce94dafaf771ca1"
+    },
+    "/fast/zap-managed/2026-10-15-m06b2-correction/ROOT-RETIREMENT.json": {
+      "path": "/fast/zap-managed/2026-10-15-m06b2-correction/ROOT-RETIREMENT.json",
+      "sha256": "f9618cba945cb2d82e0db43cd88ea005a4cf7b5d45a3f0d2a42fc7b45aae0cda"
+    }
+  }
+}

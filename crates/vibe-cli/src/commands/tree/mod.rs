@@ -13,7 +13,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#command");
 
 mod artifacts;
-mod build;
+pub(crate) mod build;
 mod diagnostics;
 mod host;
 mod model;

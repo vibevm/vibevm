@@ -1,0 +1,36 @@
+{
+  "original_processes": {
+    "3390178": {
+      "exe": "/fast/git/v/.workers/zap-s5-api-target/debug/zap",
+      "uid": 1000,
+      "ppid": "3390116",
+      "start_ticks": "34006565"
+    },
+    "3390180": {
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay",
+      "uid": 1000,
+      "ppid": "3390178",
+      "start_ticks": "34006588"
+    },
+    "3390317": {
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod",
+      "uid": 1000,
+      "ppid": "3390180",
+      "start_ticks": "34007136"
+    },
+    "3390337": {
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "uid": 1000,
+      "ppid": "3390317",
+      "start_ticks": "34007199"
+    },
+    "3390801": {
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+      "uid": 1000,
+      "ppid": "3390337",
+      "start_ticks": "34008038"
+    }
+  },
+  "remaining": [],
+  "reason": "canonical completed collected task; exact SIGTERM tree only"
+}
