@@ -1,0 +1,201 @@
+{
+  "task": "M-08-A.1",
+  "status": "unreviewed candidate; independent Root review/acceptance required",
+  "workspace": "/fast/git/v/vibevm-next",
+  "source_basis": "accepted31bc69fb4 plus unaccepted M06B1 WIP. No clean snapshot claim. M06B1 is neither included nor counted as accepted. Baseline69 and separate M03A2 safe-stop are source evidence only.",
+  "owner": "VibeVM legacy projection/deploy characterization; Zap retains task concurrency/review/acceptance; PodBay retains physical process/resources/lifecycle/I/O.",
+  "files": [
+    "crates/vibe-agent-projection/src/lib.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin.rs",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+    "crates/vibe-agent-projection/src/m_08_a_1_cases.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_a_1_cases.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs",
+    "fixtures/next/adapters/foreign-after-remove.json",
+    "fixtures/next/adapters/foreign.json",
+    "fixtures/next/adapters/matrix.json",
+    "fixtures/next/adapters/skill-v1.md",
+    "fixtures/next/adapters/skill-v2.md"
+  ],
+  "patch_sha256": "268803be29ca4627abe18048005f8154b86177cb5c9ee166967f018b4a9fa4ca",
+  "changes": "Test-only modules and registration, inert byte fixtures, executable per-surface matrix, and two non-fact characterization anchors in existing PROP054. No fixed client data structure, production behavior, manifest, dependency, toolchain, or M03 contract changed.",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "m_08_a_1_cases"
+      ],
+      "exit": 101
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "m_08_a_1_cases"
+      ],
+      "exit": 101
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "m_08_a_1_cases"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "m_08_a_1_cases"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "m_08_a_1_cases"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 1
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin.rs",
+        "crates/vibe-agent-projection/src/m_08_a_1_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_a_1_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/vibevm-managed-m08a1/check-focused.py"
+      ],
+      "exit": 0
+    }
+  ],
+  "test_attempts": [
+    {
+      "log": "projection-test.log",
+      "exit": 101,
+      "selected": 5,
+      "passed": 2,
+      "failed": 3,
+      "reason": "Initial expectations incorrectly assumed a bare source file was renamed to SKILL.md. Actual legacy behavior preserves its basename; corrected expectations and matrix."
+    },
+    {
+      "log": "projection-test-second.log",
+      "exit": 101,
+      "selected": 5,
+      "passed": 4,
+      "failed": 1,
+      "reason": "Fixture receipt parser used toml::Value::parse instead of toml::from_str for a document; corrected test helper."
+    },
+    {
+      "log": "projection-test-final.log",
+      "exit": 0,
+      "selected": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    {
+      "log": "lifecycle-test.log",
+      "exit": 0,
+      "selected": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "log": "lifecycle-test-final.log",
+      "exit": 0,
+      "selected": 6,
+      "passed": 6,
+      "failed": 0,
+      "reason": "Rechecked added exact config-removal golden and all-client plugin update refusal."
+    }
+  ],
+  "environment": "Both requested --offline --locked --lib m_08_a_1_cases groups used private initially cold CARGO_TARGET_DIR=/tmp/vibevm-managed-m08a1/cargo-target. No physical cache copies, shared M06 targets, compilation for discovery, full suite, or cross-platform run.",
+  "scoped_format": "rustfmt --edition 2024 applied only six changed Rust paths; final rustfmt --check --config skip_children=true exit 0.",
+  "global_format": {
+    "exit": 1,
+    "unrelated_files": [
+      "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs"
+    ],
+    "log": "globalfmt.log",
+    "action": "Reported only; no out-of-scope formatting edits."
+  },
+  "focused_check": "python3 /tmp/vibevm-managed-m08a1/check-focused.py: exit 0; 12 matrix rows, 11 bound/executed cases, 2 unique XML anchors, 4 inert byte fixtures. JSON and XML parsed; selected stdout names match complete bound inventory.",
+  "conditional_oracles": "Whole-project check and exhaustive facts check not triggered: no production composition/adoption/extraction/closure logic changed. Added prose anchors have no fact/adoption declarations; existing contracts unchanged. Focused matrix/source/fixture/XML checks performed instead.",
+  "discoveries": [
+    "Codex project skills are .agents/skills. Contrary to packet user-only MCP premise, current coarse MCP flag and pure config_path_with_dirs expose project .codex/config.toml; this source fact is characterized, not changed or claimed as runtime support.",
+    "Standalone and automatic single-file projections preserve the source basename. Lifecycle skill deploy instead requires a skill/file artifact and writes SKILL.md.",
+    "Standalone user mutation lacks an injected-home seam; only pure user path outputs are exercised. Project mutations use temporary fixtures.",
+    "Lifecycle plugin artifact updates require undeploy then deploy, including OpenCode. Logical MCP member ownership differs from the physical document lock.",
+    "MCP config writers are outside this named owner; path data is characterized without claiming their install/update/remove execution."
+  ],
+  "safety": "No child delegation, staging/commit/Git mutation, client discovery/version commands, real/native client launches, npm/plugin installs, credential reads, live configuration writes or provider/network calls. Capture ProcessRunner records inert argv only. Temporary homes and missing/nonexistent executable paths are injected. No next task or self-acceptance.",
+  "limitations": "Standalone user mutations and actual CLI commissioning intentionally unexecuted. Globalfmt remains failing outside scope. Tests ran in the supplied mixed WIP workspace; the patch excludes unrelated WIP."
+}

@@ -1,0 +1,84 @@
+[
+  {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m08a1.live",
+          "campaign_id": "campaign.vibevm-m08a1.live",
+          "base_id": "base.vibevm-m08a1.live",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m08a1.evidence.verification.m08a1",
+        "event_id": "event:root-review.m08a1.evidence.verification.m08a1",
+        "transaction_id": "tx:root-review.m08a1.evidence.verification.m08a1",
+        "revision": 2026,
+        "event_digest": "f966471cf47258c8b81447c27acd1326394e37a824f2d511c14d1c65c67f85ce",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          50,
+          48,
+          50,
+          54,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  },
+  {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m08a1.live",
+          "campaign_id": "campaign.vibevm-m08a1.live",
+          "base_id": "base.vibevm-m08a1.live",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m08a1.evidence.verification.m08a1.lifecycle",
+        "event_id": "event:root-review.m08a1.evidence.verification.m08a1.lifecycle",
+        "transaction_id": "tx:root-review.m08a1.evidence.verification.m08a1.lifecycle",
+        "revision": 2027,
+        "event_digest": "33db613e96ffcb4bec16543bcc97058535a4180265a2cae9427ad8111db57f93",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          50,
+          48,
+          50,
+          55,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  }
+]

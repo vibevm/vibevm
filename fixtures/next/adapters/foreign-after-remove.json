@@ -1,0 +1,12 @@
+{
+  "mcp": {
+    "foreign": {
+      "command": [
+        "never-executed"
+      ],
+      "enabled": false,
+      "type": "local"
+    }
+  },
+  "theme": "dark"
+}

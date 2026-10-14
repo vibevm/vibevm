@@ -595,3 +595,7 @@ mod lifecycle_tests;
 #[cfg(test)]
 #[path = "plugin/correction_tests.rs"]
 mod correction_tests;
+
+#[cfg(test)]
+#[path = "plugin/m_08_a_1_cases.rs"]
+mod m_08_a_1_cases;
