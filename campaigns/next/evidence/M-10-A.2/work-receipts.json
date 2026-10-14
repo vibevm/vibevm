@@ -1,0 +1,42 @@
+[
+  {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m10a2.live",
+          "campaign_id": "campaign.vibevm-m10a2.live",
+          "base_id": "base.vibevm-m10a2.live",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m10a2.work",
+        "event_id": "event:root-review.m10a2.work",
+        "transaction_id": "tx:root-review.m10a2.work",
+        "revision": 312,
+        "event_digest": "2dc014fb9b294a4ecdbd09c825f5cca5e6490b1b2ca5bcfbacbf289b69a285cd",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          51,
+          49,
+          50,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  }
+]

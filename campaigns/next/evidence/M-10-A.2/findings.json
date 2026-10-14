@@ -1,0 +1,16 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "discoveries": [
+    "Six new workspace cases and the one exact existing projection case pass; fixture validation preserves all five families.",
+    "The common apply boundary is an inert handoff; existing projection preparation can hydrate and is deliberately not called."
+  ],
+  "unresolved": [
+    "Global cargo fmt --all -- --check exits 1 on out-of-scope formatting differences, retained in report.",
+    "Durable authored storage is a caller precondition. Production capture-proof promotion, publication, semantic family features and downstream consumer integration remain outside this common-service harness."
+  ],
+  "proposed_follow_up": null
+}

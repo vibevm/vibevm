@@ -1,0 +1,13 @@
+{
+  "approved": true,
+  "summary": "Root accepts M10A2 common passive DerivativeService boundary/harness. Five operations have explicit immutable input/output/no-external-effect boundaries, existing captured/source descriptors reused, no resolver/compiler or parallel truth store introduced.",
+  "scope": "Five task paths: workspace service/test registration, governing PROP074 anchor and inert fixture documentation.",
+  "limitations": [
+    "Durable authored storage is caller precondition; harness is not production capture-proof promotion, publication or downstream derive/apply integration.",
+    "Rebase requires explicit revised authored inputs; no automatic merge. Apply produces an inert handoff, not installation/activation.",
+    "Six new workspace cases and one unchanged projection case passed; unrelated global formatter failures remain."
+  ],
+  "observed_test_count": 7,
+  "observed_test_exit": 0,
+  "actual_environment": "Updated RustZapf53/b867 and PodBay2feb actualmanagedCodexAstraMedium; normalautomaticcollector succeeded; offline locked private transferred idleM06target."
+}
