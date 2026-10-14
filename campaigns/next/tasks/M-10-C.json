@@ -85,7 +85,17 @@
         "crates/vibe-core/src/lib.rs",
         "crates/vibe-core/src/manifest/mod.rs",
         "crates/vibe-safefs/Cargo.toml",
-        "crates/vibe-safefs/src/lib.rs"
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/apply.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/fence.rs",
+        "crates/vibe-orchestrator/src/document_analysis/mod.rs",
+        "crates/vibe-orchestrator/src/document_analysis/capture.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
       ],
       "write_paths": [
         "crates/vibe-workspace/src/",
@@ -101,7 +111,16 @@
         "crates/vibe-core/src/lib.rs",
         "crates/vibe-core/src/manifest/mod.rs",
         "crates/vibe-safefs/Cargo.toml",
-        "crates/vibe-safefs/src/lib.rs"
+        "crates/vibe-safefs/src/lib.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/apply.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/fence.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs",
+        "crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs"
       ],
       "steps": [
         "Compare old base/new base/local content and return rebase-required with reviewable changes; do not auto-merge.",
@@ -119,16 +138,13 @@
       "checks": [
         "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
         "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
-        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
-        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
-        "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
-        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
-        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
-        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: bind the new vibe-orchestrator --lib document_analysis::edit::m_10_c_2_cases family to registered M16 derivative adapter/apply/recovery obligations before compiling; verify nonzero selected cases.",
+        "RUN BOUND CHECKS: cargo test --offline --locked -p vibe-orchestrator --lib document_analysis::edit::m_10_c_2_cases -- --nocapture; select affected incumbent m_16_d_3_cases when existing M16 internals change.",
         "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
         "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
-        "cargo fmt --all -- --check",
-        "git diff --check"
+        "git diff --check",
+        "CONDITIONAL OWNER CHECKS: vibe-core only for actual binding-model changes; vibe-safefs only for affected guarded publication behavior; vibe-wire/codegen only for actual persisted format/registration changes. Bind meaningful existing or new nonzero cases before compiling, never require empty invented families solely from write allowance.",
+        "SCOPED FORMAT: check only changed Rust files; preserve inherited unrelated whole-workspace formatting debt."
       ],
       "acceptance": [
         "Same-version base drift cannot silently change applicability.",
@@ -138,7 +154,10 @@
       "commit_subject": "feat(derivatives): apply explicit rebases with retained recovery",
       "notes": [
         "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "The named orchestrator edit owner paths are writable only for an upper derivative adapter and bounded reuse of the incumbent registered barrier/lease/expected-snapshot publication/recovery. Workspace stays pure; no reverse dependency, new barrier/grant, or widened target eligibility.",
+        "DocumentEditAuthority forbids .vibe/.zap-state/lockfile targets. EditBarrier::apply owns its lifecycle lease and releases fences at exit; do not nest the lease or claim post-release fencing. Journal result publication as an explicit separate effect with retained lineage and completed/pending/unknown outcomes.",
+        "The initial actual M10C2 attempt stopped unsatisfied/not_started with an empty patch because the packet made the required M16 owner read-only. Its four Cargo families were not run; format/diff attempts are not functional evidence. Repeat this same logical task using the corrected owner perimeter."
       ]
     }
   ]
