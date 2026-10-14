@@ -125,3 +125,27 @@ mod m_10_b_1_cases {
         assert!(result.checked_binding().is_err());
     }
 }
+
+#[cfg(test)]
+mod m_10_c_2_cases {
+    use crate::generated::derivative_rebase_journal::DerivativeRebaseJournal;
+    #[test]
+    fn registered_rebase_carrier_roundtrip_and_required_nullable_prior() {
+        let raw =
+            include_str!("../../../../formats/corpora/derivative-rebase-journal/e1/shape.json");
+        let record: DerivativeRebaseJournal = serde_json::from_str(raw).unwrap();
+        assert_eq!(
+            serde_json::from_slice::<DerivativeRebaseJournal>(
+                &serde_json::to_vec(&record).unwrap()
+            )
+            .unwrap(),
+            record
+        );
+        let mut missing: serde_json::Value = serde_json::from_str(raw).unwrap();
+        missing.as_object_mut().unwrap().remove("prior");
+        assert!(serde_json::from_value::<DerivativeRebaseJournal>(missing).is_err());
+        let mut unknown: serde_json::Value = serde_json::from_str(raw).unwrap();
+        unknown["authority"] = "implicit".into();
+        assert!(serde_json::from_value::<DerivativeRebaseJournal>(unknown).is_err());
+    }
+}

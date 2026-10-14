@@ -199,6 +199,13 @@ impl DocumentEditAuthority {
         id: &str,
     ) -> Result<EditPlan, EditError> {
         let journal = load(self, id)?.ok_or(EditError::RecoveryRequired)?;
+        self.prepare_recovery_record(capture, journal)
+    }
+    pub(super) fn prepare_recovery_record(
+        self: &Arc<Self>,
+        capture: &AnalysisCapture,
+        journal: Journal,
+    ) -> Result<EditPlan, EditError> {
         let mut replacements = vec![];
         for row in &journal.files {
             let resource = *self

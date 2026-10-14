@@ -1,0 +1,11 @@
+Diff in /fast/zap-managed/2026-10-14-m10c2-correction/baseline-generated-properties.rs:293:
+             FormatId::MachineOperationDescriptor => "machine-operation-descriptor",
+             FormatId::MachineOperationEnvelope => "machine-operation-envelope",
+             FormatId::MachineOperationStreamMessage => "machine-operation-stream-message",
+-            FormatId::MachineProfiledDeployActionRequest => "machine-profiled-deploy-action-request",
++            FormatId::MachineProfiledDeployActionRequest => {
++                "machine-profiled-deploy-action-request"
++            }
+             FormatId::MachineSessionFrame => "machine-session-frame",
+             FormatId::MachineSourceLocation => "machine-source-location",
+             FormatId::Manifest => "manifest",

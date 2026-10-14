@@ -1,0 +1,32 @@
+{
+  "properties": {
+    "recipe": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "edit_intent": {
+      "type": "string"
+    },
+    "previous_result": {
+      "type": "string"
+    },
+    "desired_result": {
+      "type": "string"
+    },
+    "result_root": {
+      "type": "string"
+    },
+    "result_name": {
+      "type": "string"
+    },
+    "schema": {
+      "type": "uint32"
+    },
+    "prior": {
+      "type": "string",
+      "nullable": true
+    }
+  }
+}

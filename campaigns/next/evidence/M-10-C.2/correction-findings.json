@@ -1,0 +1,18 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Added registered epoch-one derivative-rebase-journal through incumbent codegen; full local five-family adapter/recovery tests executed.",
+    "The prior EMPTY attempt remains unsatisfied/not_started; its four Cargo families were not run and Count75 remains unchanged."
+  ],
+  "unresolved": [
+    "Global wire-diff exits 1 before the new-format epoch verdict because unchanged index/e1/repomd.json differs from its journal projection.",
+    "check-codegen exits 1 on uncommitted generated additions; owning regeneration was byte-identical across 208 generated Rust files. No staging or commit performed.",
+    "Scoped format across generated files exits 1 on an inherited generated match arm also failing at HEAD; authored changed Rust format and diff check pass."
+  ],
+  "proposed_follow_up": null
+}

@@ -1,0 +1,103 @@
+{
+  "source_files": [
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs",
+      "sha256": "b54a04462cc0509b3ac1cfecfcb980810b229baa8ca2558d6f03db3a40b68442",
+      "bytes": 14757
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs",
+      "sha256": "88f28459e512433b27fa8883cbae4421fb6b0f5d98154db71e3dddd46de9ce9e",
+      "bytes": 5360
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+      "sha256": "114cb210529d15ffa87d0343bbe0d87e2c5bf56f1be3c8d0ad490c52cd0abc6b",
+      "bytes": 9120
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs",
+      "sha256": "a5cc36cbc62743ab64b01ff97652d3252a3b800502d4c49d90cf2593ec677a7c",
+      "bytes": 21534
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+      "sha256": "123761bde85a2fb2163671c5e1307438ebebf6721549504de5d0e4c62d6393f1",
+      "bytes": 985
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/derivative.rs",
+      "sha256": "eaf82b2ddca054074df734d33302426e793248767b5dd516885c47bdaca44a70",
+      "bytes": 7006
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/derivative_rebase_journal/mod.rs",
+      "sha256": "5bbff5f337d874ec736d2baa56e243fbbbb28ca4f2a304e3fc278397edb4a0eb",
+      "bytes": 560
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "sha256": "38dfdbcb503b3060e9ac30c6b3e719c5cc5741c0ca8dd7e572f3d642ac0259c6",
+      "bytes": 5911
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "sha256": "18d5e5957664e02b8815ba15cef26aeabe73a25ae22d8284a26dd22481aacdf0",
+      "bytes": 59280
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "sha256": "441c98fa432cd31faec40f35f5a6bc4e126de41f03a26bf960bf010e36c41ad9",
+      "bytes": 2814
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives.rs",
+      "sha256": "a110c0500e69f6519dab9c6b808c05dc32dffb23a6a783cb4e9157bc6cd14402",
+      "bytes": 8158
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives/m_10_c_2_cases.rs",
+      "sha256": "6845ed73771cda5438fa9516680579b896496b88e1a2387c5dbf453295dd5269",
+      "bytes": 3596
+    },
+    {
+      "path": "crates/vibe-workspace/src/derivatives/rebase.rs",
+      "sha256": "81ed53b053cab62acdf0e3e07bee384f7b283db3001eda8ecf9f430aa94f98d5",
+      "bytes": 3885
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "sha256": "d2a530b81975dc58ae1110affc3a7c17ca1e02e032e4cd51746b59d361c230b6",
+      "bytes": 58688
+    },
+    {
+      "path": "formats/breaks/005.md",
+      "sha256": "d1c1104a98230cf42c540dd60a42d561337465aa6bab3fac9aef1c904cddc92b",
+      "bytes": 341
+    },
+    {
+      "path": "formats/corpora/derivative-rebase-journal/e1/shape.json",
+      "sha256": "ee78c3ea8a96a9e6701f362f9798bcb818bff0183782538788e620fd653617d0",
+      "bytes": 236
+    },
+    {
+      "path": "schemas/derivative_rebase_journal.jtd.json",
+      "sha256": "26debc8e62d929452619b666c28ba63e676ed6b4d37407461889285509e27330",
+      "bytes": 490
+    }
+  ],
+  "candidate_sha256": "9975270a566ecace7cf05cf0d8e469502a3a5569fc4d21f01d39a38ef813db4e",
+  "patch_sha256": "14917b02aaf6c4228e57f98244aa5c98cb73414009464b0dbde2babce9eea176",
+  "report_sha256": "9fee2978c9dfff5b0fbb2d1c4aa2a44dadcedb52fd38f8b09d17c8e8bb373bc6",
+  "public_http200": {
+    "job_revision": 410,
+    "candidate": "candidate.vibevm-m10c2-correction",
+    "execution": "succeeded",
+    "effect": "completed",
+    "safe": "unknown",
+    "acceptance": "unreviewed",
+    "collected": true,
+    "source_sequence": 1565,
+    "unknown_tail": false
+  }
+}
