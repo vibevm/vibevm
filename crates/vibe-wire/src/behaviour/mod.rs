@@ -49,3 +49,5 @@ pub(crate) mod scalars;
 pub mod source_query;
 pub mod verification_evidence;
 pub mod vocabularies;
+
+mod derivative;

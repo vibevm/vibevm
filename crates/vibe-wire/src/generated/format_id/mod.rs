@@ -55,6 +55,8 @@ pub enum FormatId {
     DeployInverse,
     DeployLockResources,
     DeployReceipt,
+    DerivativeBinding,
+    DerivativeResult,
     DistributionAggregateManifest,
     DistributionBundleManifest,
     DistributionSmokeReport,

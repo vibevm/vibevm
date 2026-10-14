@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "binding_toml": "# Retained author comment; binary bytes remain inert.\nschema = 1\nbase_capture = \"sha256:49f0b338a6659d544a7cebafee413a4f231bccb77ede240d88a779f5193aba4b\"\nrecipe = \"replace-selected-inventory/1\"\n\n[base]\nowner = \"flow:org.example/upstream@=1.0.0\"\nresource = \"payload\"\n\n[base.descriptor]\nfile = \"payload.bin\"\nmedia = \"application/octet-stream\"\ninterpretation = \"opaque\"\nrole = \"resource\"\nloading = \"explicit\"\n\n[[base.files]]\npath = \"payload.bin\"\nbytes = [0, 255, 13, 10]\n\n[local]\nowner = \"flow:org.example/local@=1.0.0\"\nresource = \"payload\"\n\n[local.descriptor]\nfile = \"payload.bin\"\nmedia = \"application/octet-stream\"\ninterpretation = \"opaque\"\nrole = \"resource\"\nloading = \"explicit\"\n\n[[local.files]]\npath = \"payload.bin\"\nbytes = [0, 255, 13, 10]\n",
+  "base_identity": "sha256:49f0b338a6659d544a7cebafee413a4f231bccb77ede240d88a779f5193aba4b",
+  "local_identity": "sha256:ca5dba62da46aad40f0186e3642aaf8048d1e26fd3c2295d3787921c6c887297",
+  "provenance_identity": "sha256:ef6952b4ab21177560aa4759789ed8024db6dd675426f6ba3925ceaabfd61bfb",
+  "result_identity": "sha256:478441518890799c58e90d7e3f495c1645d35f208fb3b4785b8f0731cc418906",
+  "inventory_identity": "sha256:30add3de954d4cabf585c0826252093e08e3feacba109b532bfdff3226695580",
+  "strength": "observed"
+}

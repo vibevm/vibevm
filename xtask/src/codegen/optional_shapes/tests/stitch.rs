@@ -127,8 +127,7 @@ fn an_optional_vocabulary_without_a_default_policy_refuses() -> Result<()> {
     Ok(())
 }
 
-/// An optional member that is also `nullable` refuses — no rule may be
-/// absent AND null at once, and no site of today's tree carries it.
+/// Optional nullable strings still require an explicit null default policy.
 #[test]
 fn an_optional_member_with_nullable_refuses() -> Result<()> {
     let doc = json!({
@@ -136,9 +135,9 @@ fn an_optional_member_with_nullable_refuses() -> Result<()> {
             "label": { "type": "string", "nullable": true }
         }
     });
-    let err = shapes(doc).expect_err("absent-and-null is not a rule");
+    let err = shapes(doc).expect_err("the null normalization policy must be explicit");
     assert!(
-        err.to_string().contains("may be absent AND null at once"),
+        err.to_string().contains("metadata.\"x-default\": null"),
         "names the combination: {err}"
     );
     Ok(())

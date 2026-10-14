@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "description": "Passive retained derivative data; observed identities are not production capture proofs. Semantic validation is mandatory before use.",
+    "rustOptions": {
+      "package": "vibe_wire::derivative_result"
+    },
+    "x-rust-type": "DerivativeResult"
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "binding_toml": {
+      "type": "string"
+    },
+    "base_identity": {
+      "type": "string"
+    },
+    "local_identity": {
+      "type": "string"
+    },
+    "provenance_identity": {
+      "type": "string"
+    },
+    "result_identity": {
+      "type": "string"
+    },
+    "inventory_identity": {
+      "type": "string"
+    },
+    "strength": {
+      "enum": [
+        "observed"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  }
+}

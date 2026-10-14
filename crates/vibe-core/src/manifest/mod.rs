@@ -17,6 +17,7 @@ mod consumer;
 mod declarant_path;
 mod decor;
 mod deploy;
+pub mod derivation;
 mod document;
 mod extension;
 pub mod i18n;
