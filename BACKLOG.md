@@ -2659,7 +2659,7 @@ structure, and it goes when the file does.
 | field | value |
 |---|---|
 | @fact:B244-WHAT **what** | campaign.py allows local task-RN atoms but its blocked planning-only hold checks original task keys and NEXT-P0 names only. An active/candidate RN atom can pass this structural hold while NEXT-EXECUTION-AUTHORITY remains blocked. This checker launches nothing; no actual unauthorized dispatch is claimed. |
-| @fact:B244-EVIDENCE **evidence** | campaigns/next/tasks/campaign.py:423-427; commit78faa8bdf; EARLY-A-CROSSCUTTING.md; read-only semantic reports under /fast/git/v/research/2026-10-14-spec-commit-audit. Source/test assertions inspected; no fresh reproduction executed. |
+| @fact:B244-EVIDENCE **evidence** | campaigns/next/campaign.py:423-427; commit78faa8bdf; EARLY-A-CROSSCUTTING.md; read-only semantic reports under /fast/git/v/research/2026-10-14-spec-commit-audit. Source/test assertions inspected; no fresh reproduction executed. |
 | @fact:B244-SEVERITY **severity** | P2 — no added campaign admission gate. |
 | @fact:B244-DISPOSITION **disposition** | deferred unless this concretely blocks the next VibeVM step. Include admitted adaptive descendants in the same hold and pin one contrasting local atom case. Do not invent new execution authority. |
 | @fact:B244-FILED **filed by** | First Agent semantic audit, 2026-10-14. |
