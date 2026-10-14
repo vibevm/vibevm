@@ -87,6 +87,7 @@ impl Declared {
 
     fn decl(self) -> ExtensionDecl {
         ExtensionDecl {
+            effects: None,
             id: self.id.to_owned(),
             point: self
                 .point

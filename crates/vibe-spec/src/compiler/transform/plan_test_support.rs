@@ -74,6 +74,7 @@ pub(super) fn host_with(
 /// One `compile:source` builtin declaration carrying a selector shape.
 fn selector_declaration(id: &str, shape: SelectorShape) -> ExtensionDecl {
     let mut declaration = ExtensionDecl {
+        effects: None,
         id: id.to_owned(),
         point: "compile:source"
             .parse()

@@ -1,0 +1,20 @@
+{
+  "dispositions": [
+    "unsatisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "discoveries": [
+    "Added lane occurrence traversal, emitted contribution-witness projection, and shared ordered dynamic-index projection; BootGraph.carrier exposes the complete existing typed compiler IR including nested link/absorption/pending-resolution evidence without a replacement schema.",
+    "Whole-run retained traversal captures one validated index and reads every recorded event, preserving independent Missing/Unavailable/Unreadable outcomes and untouched sibling snapshots without acquiring a writer or calling providers.",
+    "Nine explicitly authorized test fixture initializers now set effects: None. Final filtered checks passed: vibe-workspace 4, vibe-spec 3, vibe-cli 2, all exit 0.",
+    "Original successful workspace/CLI evidence was retained as history; affected checks were rerun. Admission baseline 68 remains history; Root-confirmed 69 includes M05A2 receipt 31bc69fb4, not a replayed acceptance event."
+  ],
+  "unresolved": [
+    "Exact compiler occurrence why chains remain unavailable: ClosureOccurrence has node/requested_address but no parent occurrence or edge reference; ClosureEdge lacks the authored directive span. Narrow capture-time gap: retain parent occurrence/edge identity and directive source position through the existing occurrence carriers. Dependency paths cannot disambiguate repeated inclusion.",
+    "LaneNode lacks parent occurrence/edge and authored source span. EmissionContributionWitness retains chunk_digest but no occurrence list or lane chunks; emitted digests cannot reconstruct missing ancestry. Existing typed evidence and raw snapshot bytes are exposed; cross-snapshot joins are not fabricated.",
+    "INDEX.md entry.path/kind/when has no condition result, checked file availability, source position or provider inclusion chain. These remain Unknown, not Unresolved. Static pointer and every ordered entry remain accessible.",
+    "Global cargo fmt --all -- --check exited 1 on pre-existing out-of-scope files. Scoped formatting of all 21 candidate Rust files and git diff --check both passed; unrelated formatting was left unchanged."
+  ],
+  "proposed_follow_up": null
+}

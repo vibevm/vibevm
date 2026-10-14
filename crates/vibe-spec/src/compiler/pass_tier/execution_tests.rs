@@ -104,6 +104,7 @@ fn frontend_for(format: &str) -> ExtensionPass {
 
 fn declaration(id: &str, pass: ExtensionPass) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: id.to_owned(),
         point: "compile:pass".parse::<ExtensionPoint>().unwrap(),
         handler: ExtensionHandler::Native {

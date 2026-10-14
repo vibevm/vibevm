@@ -43,6 +43,7 @@ fn pass(kind: ExtensionPassKind, artifact: Option<&str>) -> ExtensionPass {
 
 fn declaration(id: &str, point: CompilePoint, pass: Option<ExtensionPass>) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: id.to_owned(),
         point: ExtensionPoint::Compile(point),
         handler: ExtensionHandler::Native {
