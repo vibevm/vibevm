@@ -1,0 +1,152 @@
+{
+  "scope": "M10B2 full literal task at fixture admission safe-stop; current provider revalidation correction; distinct10 cases",
+  "files": [
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2/M10B2-report.json",
+      "saved": "original-producer.json",
+      "raw_sha256": "1d80ed0595bef6755f3711e5dfd3df355e545708e32f41758210fd60fa2d1d11",
+      "saved_sha256": "1d80ed0595bef6755f3711e5dfd3df355e545708e32f41758210fd60fa2d1d11",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2/candidate-result.json",
+      "saved": "original-candidate.json",
+      "raw_sha256": "b34e7a520fdb40f861f65fec5545f6801ca462f151484a1a046123243ce80012",
+      "saved_sha256": "874d4f69c9656b3eb9d50def8733ecf0c7f59d5291443685307c10d96d701057",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2/INDEPENDENT-REVIEW.md",
+      "saved": "original-p2-review.md",
+      "raw_sha256": "e98684a5df5af2317f6893ba39e839795383748ba759c5b44e6f8c17c7e5396b",
+      "saved_sha256": "e98684a5df5af2317f6893ba39e839795383748ba759c5b44e6f8c17c7e5396b",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2/INDEPENDENT-REVIEW.json",
+      "saved": "original-p2-review.json",
+      "raw_sha256": "f512b410fc5e452b0392308989e796e27d3e942e1b7d9ee938a92a74cad86390",
+      "saved_sha256": "f512b410fc5e452b0392308989e796e27d3e942e1b7d9ee938a92a74cad86390",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2/workspace-test-3.log",
+      "saved": "workspace-test.log",
+      "raw_sha256": "a0a7011e4432df4f3b499aca234cfbb96c786196cd9339da36395f7bf49b7cd7",
+      "saved_sha256": "4ac8ac13fce548ee6b095829cf3baab01772d3646c452678a277b98421604b9c",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2/projection-test-2.log",
+      "saved": "projection-test.log",
+      "raw_sha256": "416af08442e389a52127d32e9592b9f46c014f18425637a318bed104c4487f5d",
+      "saved_sha256": "9f534403264bccd064059e03b21ea1d6dc5cbea673acb47d4262865187e9b945",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2/lifecycle-test-3.log",
+      "saved": "original-lifecycle-test.log",
+      "raw_sha256": "7db08baa9c311e47f35abbf808c6f2731958d7733e4df9c043cf819b347c21a1",
+      "saved_sha256": "efd973d5c570f8a079f64e5217ea12afec10a8ba92f81f3f2e72250fb23ad39a",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/M10B2-correction-report.json",
+      "saved": "correction-producer.json",
+      "raw_sha256": "8b401c14a77e6fbae40769ff4f99829b84dfa6e6c32b6939588c9fe5957de67b",
+      "saved_sha256": "8b401c14a77e6fbae40769ff4f99829b84dfa6e6c32b6939588c9fe5957de67b",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/candidate-result.json",
+      "saved": "accepted-subject-candidate.json",
+      "raw_sha256": "808c9031d04383076779e314571a178b194aff3e723fd9e4c207ce25b89a95a2",
+      "saved_sha256": "6c1f7b2968075c639bb1f2909ca7acfc3bd37c2c9452d6fe2f5a7341e3108690",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/lifecycle-correction-test.log",
+      "saved": "correction-compile-failed-1.log",
+      "raw_sha256": "a61660b469f373a380c5607aba32270f81addd5ff45bb2ce9c5750901c45b586",
+      "saved_sha256": "a61660b469f373a380c5607aba32270f81addd5ff45bb2ce9c5750901c45b586",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/lifecycle-correction-test-2.log",
+      "saved": "correction-compile-failed-2.log",
+      "raw_sha256": "5b4ca91b5bec10a14f0b361abcef17e005bc4e639202d805648671343f88a000",
+      "saved_sha256": "5b4ca91b5bec10a14f0b361abcef17e005bc4e639202d805648671343f88a000",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/lifecycle-correction-test-3.log",
+      "saved": "lifecycle-test.log",
+      "raw_sha256": "d80e61d582be2e4e0ee36bc0146f7ea3feac7f17f9eecf7cb32384f75c51160f",
+      "saved_sha256": "efc422438e3bdfc1e93fbd2760559f4f5d94b1528d4b18b3a8a23581e5f3121b",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/FINAL-REVIEW.md",
+      "saved": "final-review.md",
+      "raw_sha256": "155226697b84ea8d2772faa2906b5b07decf61ad348d30f2c0d6a19a3c5feec9",
+      "saved_sha256": "155226697b84ea8d2772faa2906b5b07decf61ad348d30f2c0d6a19a3c5feec9",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/FINAL-REVIEW.json",
+      "saved": "final-review.json",
+      "raw_sha256": "1445f5eeb49c0fef6d60fe00944aea58a38f9736b9723c305d71c7e7474fa3cf",
+      "saved_sha256": "1445f5eeb49c0fef6d60fe00944aea58a38f9736b9723c305d71c7e7474fa3cf",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/ROOT-REVIEW.json",
+      "saved": "root-verification.json",
+      "raw_sha256": "a75ead487d49fcb6e34f6504d71a8e8f4c9fffe9f751af932ff0a1868430ea74",
+      "saved_sha256": "a75ead487d49fcb6e34f6504d71a8e8f4c9fffe9f751af932ff0a1868430ea74",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/root-safe.log",
+      "saved": "safe-receipts.jsonl",
+      "raw_sha256": "1da919d6a15728d843c0f4e2d78763c727dea01f7ed47cf968007093654262e3",
+      "saved_sha256": "1da919d6a15728d843c0f4e2d78763c727dea01f7ed47cf968007093654262e3",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/root-open-review.log",
+      "saved": "open-review-receipts.jsonl",
+      "raw_sha256": "e76874d8e265824d1ba6604c72877b5721ae889ff319261a5acd36f28c626494",
+      "saved_sha256": "e76874d8e265824d1ba6604c72877b5721ae889ff319261a5acd36f28c626494",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/root-evidence.log",
+      "saved": "evidence-receipts.jsonl",
+      "raw_sha256": "7ab109104003555a4386b50ad370a288389a6a134e035cbda57c32da3487dea6",
+      "saved_sha256": "7ab109104003555a4386b50ad370a288389a6a134e035cbda57c32da3487dea6",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/root-stage.log",
+      "saved": "stage-receipts.jsonl",
+      "raw_sha256": "5b028c340802d5c1add689da837e40ab2582e5a79bbbe50ac4a3b86943614b21",
+      "saved_sha256": "5b028c340802d5c1add689da837e40ab2582e5a79bbbe50ac4a3b86943614b21",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/root-work.log",
+      "saved": "work-receipts.jsonl",
+      "raw_sha256": "6ced2b1a7cccdca5196b8c0166e6f7cb621b57452153afc232703fb3f0221d12",
+      "saved_sha256": "6ced2b1a7cccdca5196b8c0166e6f7cb621b57452153afc232703fb3f0221d12",
+      "normalization": "only trailing LF normalized"
+    },
+    {
+      "source": "/fast/zap-managed/2026-10-14-m10b2-correction/root-final-state.log",
+      "saved": "final-state.log",
+      "raw_sha256": "4673d6ca64104f3134d3a55419e2be13300c38ccdfcfbf71a121de18c009fd4e",
+      "saved_sha256": "4673d6ca64104f3134d3a55419e2be13300c38ccdfcfbf71a121de18c009fd4e",
+      "normalization": "only trailing LF normalized"
+    }
+  ]
+}

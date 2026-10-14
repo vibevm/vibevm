@@ -30,6 +30,8 @@ mod projection;
 #[path = "pkgskill/receipt.rs"]
 mod receipt;
 
+pub mod derivative;
+
 pub use exact_path::EscapedOsPath;
 pub use projection::{
     DeclaredSkill, DeclaredSkillFilter, DeclaredSkillProjection, DeclaredSkillProvider,

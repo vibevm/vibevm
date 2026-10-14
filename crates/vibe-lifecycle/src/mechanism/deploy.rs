@@ -14,6 +14,7 @@ use vibe_wire::generated::shared::EnvironmentOperationBinding;
 pub(crate) mod artifact;
 pub(crate) mod binding;
 pub(crate) mod bridge;
+pub(crate) mod derivative;
 pub(crate) mod error;
 pub(crate) mod inverse;
 mod inverse_resume;

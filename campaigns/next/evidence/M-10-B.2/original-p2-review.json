@@ -1,0 +1,61 @@
+{
+  "verdict": "changes_requested",
+  "head": "8b096070cd348c51cdf8b3bcb2c494895d40f9fd",
+  "findings": [
+    {
+      "id": "M10B2-P2-001",
+      "severity": "P2",
+      "title": "Recheck effective provider selection when consuming derivative admission",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs",
+      "line": 130,
+      "end_line": 138,
+      "requirement": "M10B2 exact result/descriptor and incumbent M08/M14 admission; PROP074 says native/plugin/skill effects receive no inferred grant from builtin decision.",
+      "scenario": "Bind grant using the fixture target provider=None and default builtin deploy:vibe-bin. Copy DeployExecution with same descriptor, roots, principal,generation and result but replace routes with deploy:vibe-bin -> an uninstalled provider or registry selecting a native provider. decide only checks target IDs/struct equality and root host preflight; it never calls resolve_mechanism again, so returns AdmittedAtFixtureStop although current provider is unsupported or outside admitted builtin lane.",
+      "source_evidence": [
+        "derivative.rs:80-89 resolves and restricts only during bind",
+        "derivative.rs:94-98 retains no resolved provider or registry/route basis",
+        "derivative.rs:130-153 omits current mechanism validation",
+        "binding.rs:417-457 preflight only checks binding,generation,principal,roots,state_home",
+        "vibe-extension-registry/src/mechanism/resolve.rs:270-281 target pin then host route then default; changed route can change or refuse same descriptor"
+      ],
+      "smallest_remedy": "Use existing resolve_mechanism again at decision admission, retaining/comparing the approved provider identity as needed; refuse missing,disabled,replaced or non-builtin resolution before destination lock. Add one narrow same-target changed-route negative case. No provider launch or new engine required.",
+      "evidence_strength": "Deterministic source flow; not executed. Existing4 lifecycle cases mutate target descriptor/roots/grant/artifact, not routes/registry."
+    }
+  ],
+  "source_hashes": {
+    "crates/vibe-workspace/src/derivatives.rs": "df5a1a1ff841990f44936507a51a6c209e2bae190d020b011891f5cc2b63fc9a",
+    "crates/vibe-agent-projection/src/pkgskill.rs": "8c27f6b551669276cabf8378c4544c3f87c9cbcdd4fc40d675da3f121da20136",
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs": "67879a2ca3c31854a081b42e9be459e03544f900a14c6f2a9e57df1a1d05ccb2",
+    "vibevm/vibespecs/common/PROP-074-local-derivatives.xml": "06e9b72826584cfc5284ebe84438d9cd0310726f8bc9f0ee814927c22e4f787c",
+    "crates/vibe-workspace/src/derivatives/compatibility.rs": "0cdd315c34532fd82be409e485442da451447361fc57081405e9fed714e5a879",
+    "crates/vibe-workspace/src/derivatives/compatibility/m_10_b_2_cases.rs": "45c04d929585ab08c2e64dd260575081e6d3782fe73f08619779ab4b38fa85fc",
+    "crates/vibe-agent-projection/src/pkgskill/derivative.rs": "373ca54d980be0820798ba05bbf17c97dbbec40f457752ebce5cb69d735a5745",
+    "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_b_2_cases.rs": "c0d842006bb113aa030659a4b90b546f99d83370d346041cddd82e370681516e",
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs": "3002c206c4d087b1c17036397c8b1d1aa181267f76c567a7fcb494150b1f70d0",
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative/m_10_b_2_cases.rs": "85d9efb52e31ab4501df9763458efb6986fcf8034720b35dd9941a80146b2707"
+  },
+  "source_hashes_unchanged_before_after": true,
+  "patch_matches_all10_current_sources": true,
+  "report_digest": "1d80ed0595bef6755f3711e5dfd3df355e545708e32f41758210fd60fa2d1d11",
+  "patch_digest": "a899ef727c01afff3c418cf9e92dab33aa329fd071c8a8b7d0fd55cd2ba5ad43",
+  "candidate_lengths_match": true,
+  "spec_old_sections_unchanged": true,
+  "new_spec_section": "COMPATIBILITY-AND-ADMISSION",
+  "historical_final_tests": {
+    "workspace": 3,
+    "projection": 2,
+    "lifecycle": 4
+  },
+  "tests_run": false,
+  "product_writes": false,
+  "scope": "Full literal M10B2 task, full PROP074/PROJECT-BOUNDARIES, all6 new implementation/test files, all4 registration/spec diffs, direct existing artifact+host+resolution+binder owners",
+  "perimeter": "10 files all within literal scope;BACKLOG excluded;no manifests/wire/schema changes",
+  "line_budget": "New owners95/70/168 lines; tests212/144/265. Existing registration owners960/848 lines pre-exist and only gain glue.",
+  "limits": [
+    "Fixture decisions only; no production activation,provider launch or external installation required/qualified",
+    "Five families get byte-inventory checks, not semantic XML/Vibe/native ABI compatibility",
+    "Package-skill uses actual lower_project_skill_bindings and incumbent receipt refusal",
+    "Positive lifecycle uses existing build_record/write_record fixture and real bound artifact/root owner, not new boolean proof",
+    "No separate source-SHA final manifest was supplied; SHA-bound patch was reconstructed in memory against HEAD and every output byte matched current10files, then those source hashes rechecked"
+  ]
+}
