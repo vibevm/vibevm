@@ -65,7 +65,7 @@
         "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
         "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
-        "cargo fmt --all -- --check",
+        "SCOPED FORMAT: check changed Rust files only; preserve inherited unrelated formatting debt.",
         "git diff --check",
         "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
         "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
@@ -78,7 +78,7 @@
       "commit_subject": "feat(api): expose boot debugger protocol",
       "notes": [
         "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
-        "Permanent destination: vibevm/vibespecs/common/PROP-072-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "Permanent existing owner: vibevm/vibespecs/common/PROP-072-boot-observability.xml. Read full prior source, capture, graph and measurement contracts before additive debugger-protocol amendments. Never Create or replace this owner as an empty proposed file; preserve old clauses and disclose any genuine normative retirement.",
         "TO CREATE: m_06_c_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "PROPOSED boot_debugger MCP/CLI modules; reuse M-16 envelopes instead of creating a competing transport.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
