@@ -16,6 +16,7 @@ pub(crate) mod binding;
 pub(crate) mod bridge;
 pub(crate) mod derivative;
 pub(crate) mod error;
+pub mod generic;
 pub(crate) mod inverse;
 mod inverse_resume;
 pub(crate) mod ledger;

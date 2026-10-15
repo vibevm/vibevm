@@ -240,6 +240,42 @@ impl DeployState {
         })
     }
 
+    /// Identity observation for a pure generic plan, never grant authority.
+    pub(crate) fn generic_root_identity(&self) -> Result<String, DeployError> {
+        self.project
+            .root_correlation_token()
+            .map_err(|error| DeployError::StateHome {
+                path: rendered(&self.root),
+                reason: error.to_string(),
+            })
+    }
+
+    /// Read-only generic preparation through the retained settings capability.
+    pub(crate) fn observe_bound(settings: &Project) -> Result<Option<Self>, DeployError> {
+        let components = bound_state_components();
+        if settings
+            .dir_if_present(&components)
+            .map_err(|error| DeployError::StateHome {
+                path: rendered(settings.root_path()),
+                reason: error.to_string(),
+            })?
+            .is_none()
+        {
+            return Ok(None);
+        }
+        let project = settings
+            .subproject(&components)
+            .map_err(|error| DeployError::StateHome {
+                path: rendered(settings.root_path()),
+                reason: error.to_string(),
+            })?;
+        Ok(Some(Self {
+            root: settings.root_path().join(DEPLOY_STATE_DIR),
+            project,
+            bound: true,
+        }))
+    }
+
     /// Open/create the deployment state below an already-admitted settings
     /// capability. No ambient pathname is reopened; the returned Project
     /// retains the actual child directory even if its display name moves.

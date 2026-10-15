@@ -162,3 +162,52 @@ fn refuse_foreign_ownership_rows(
     }
     Ok(())
 }
+
+/// Generic logical keys are structured literal segments, not path strings.
+/// Reuse the incumbent receipt census while keeping filesystem alias rules
+/// confined to the physical document. Legacy ownership is conservative: a
+/// legacy member in that document requires explicit cross-family adoption.
+pub(crate) fn refuse_generic_foreign(
+    receipts: &[(String, DeployReceipt)],
+    own_id: &str,
+    host: &super::generic::GenericHost,
+    resources: &[super::generic::GenericResource],
+) -> Result<(), String> {
+    type Structured = (String, String, Vec<String>);
+    for (owner, receipt) in receipts {
+        if owner == own_id || receipt.status == ReceiptStatus::RolledBack {
+            continue;
+        }
+        for mine in resources {
+            let encoded = mine.owned(host);
+            let (root, path, key): Structured =
+                serde_json::from_str(encoded.strip_prefix("generic:").unwrap())
+                    .map_err(|e| e.to_string())?;
+            let absolute = std::path::Path::new(&root).join(&path);
+            for foreign in &receipt.resources {
+                let conflicts = if let Some(encoded) = foreign.resource.strip_prefix("generic:") {
+                    let (other_root, other_path, other_key): Structured =
+                        serde_json::from_str(encoded).map_err(|e| e.to_string())?;
+                    let other = std::path::Path::new(&other_root).join(other_path);
+                    let same = vibe_safefs::path_identity_key(&absolute.to_string_lossy())
+                        == vibe_safefs::path_identity_key(&other.to_string_lossy());
+                    vibe_safefs::paths_overlap(&absolute, &other)
+                        && (!same || key.starts_with(&other_key) || other_key.starts_with(&key))
+                } else {
+                    let physical = mine.lock(host);
+                    let a = vibe_safefs::path_identity_key(&physical);
+                    let b = vibe_safefs::path_identity_key(&foreign.resource);
+                    b.starts_with(&(a.clone() + "#"))
+                        || vibe_safefs::paths_overlap(
+                            std::path::Path::new(&a),
+                            std::path::Path::new(&b),
+                        )
+                };
+                if conflicts {
+                    return Err(format!("resource conflicts with deployment {owner}"));
+                }
+            }
+        }
+    }
+    Ok(())
+}
