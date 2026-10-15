@@ -1,0 +1,47 @@
+{
+  "group": "V2",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "features::configuration::m_05_b_2_cases::generated_request_needs_selection_without_effects",
+      "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+      "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator",
+      "features::configuration::m_05_b_2_cases::separate_environment_domains_keep_different_choices",
+      "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+      "features::configuration::m_05_b_2_cases::dormant_intent_survives_until_positive_guard_is_active",
+      "features::configuration::m_05_b_2_cases::cardinality_all_features_and_implicit_closure_refuse",
+      "features::configuration::m_05_b_2_cases::owner_target_roles_and_configuration_are_identity"
+    ],
+    "expected": 8,
+    "path": "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs",
+    "sha256": "f809d3513df5e042ecdf81b238ece0f39c4324db1deee3d0cf6eae78a1e98ad6"
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::configuration::m_05_b_2_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "8",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m05b2/V2-1.log",
+      "seconds": 21.201137455005664,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

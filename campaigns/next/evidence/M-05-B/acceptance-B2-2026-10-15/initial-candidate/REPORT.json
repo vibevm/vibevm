@@ -1,0 +1,875 @@
+{
+  "task": "M-05-B.2 constrained groups and consumer resolution domains",
+  "status": "unreviewed_candidate",
+  "acceptance_owner": "Root",
+  "implementation": [
+    "Core constrained wrapper defines four cardinalities, positive local member/group guards, guard DAG validation, explicit defaults, Omitted/Explicit and Additive/Exact intent.",
+    "Owner edges compose accepted DefinitionId/optional LockId/TargetInstanceId, LockTargetRole and DependencyRole with explicit resolution domain, instance/configuration and package identity. Native version text is retained without SemVer conversion.",
+    "Generated epoch-1 request/result and wire-owned semantic admission feed public pure features::configuration::resolve_consumer_configuration. Source definitions are supplied explicitly; selected features feed the existing B1 evaluator.",
+    "Separate domains resolve independently, shared instance requests union, exact conflicts retain both consumer edges, dormant group/member intent is retained until guards activate. Defaults require explicit UseDeclaredDefaults policy. NeedsSelection yields no expansion or writes.",
+    "Existing authored TOML features/requires grammar and B1 APIs remain unchanged. Permanent PROP003 additions preserve all prior lines."
+  ],
+  "criterion_dispositions": [
+    {
+      "statement": "Generated requests retain owner edge/domain/target and choice provenance.",
+      "disposition": "satisfied",
+      "evidence": [
+        "V2-result.json",
+        "V3-result.json",
+        "schemas/consumer_configuration/e1/request.jtd.json",
+        "schemas/consumer_configuration/e1/result.jtd.json"
+      ]
+    },
+    {
+      "statement": "Defaults are explicit consumer policy inputs, never solver preferences.",
+      "disposition": "satisfied",
+      "evidence": [
+        "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+        "V2-result.json"
+      ]
+    }
+  ],
+  "checks": {
+    "V1": {
+      "group": "V1",
+      "executed": true,
+      "case_binding": {
+        "names": [
+          "manifest::package::features::constraints::m_05_b_2_cases::four_cardinalities",
+          "manifest::package::features::constraints::m_05_b_2_cases::guards_refuse_foreign_expressions_unknown_and_cycles",
+          "manifest::package::features::constraints::m_05_b_2_cases::positive_guard_order_preserves_feature_cycles",
+          "manifest::package::features::constraints::m_05_b_2_cases::definitions_and_explicit_empty_are_distinct"
+        ],
+        "expected": 4,
+        "path": "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs",
+        "sha256": "c3117f5009a278f67873e1071c4164e5085396be33d819e9dc2fbc5ca0e2e0b0"
+      },
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::constraints::m_05_b_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "4",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V1-1.log",
+          "seconds": 4.096694128995296,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V2": {
+      "group": "V2",
+      "executed": true,
+      "case_binding": {
+        "names": [
+          "features::configuration::m_05_b_2_cases::generated_request_needs_selection_without_effects",
+          "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+          "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator",
+          "features::configuration::m_05_b_2_cases::separate_environment_domains_keep_different_choices",
+          "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+          "features::configuration::m_05_b_2_cases::dormant_intent_survives_until_positive_guard_is_active",
+          "features::configuration::m_05_b_2_cases::cardinality_all_features_and_implicit_closure_refuse",
+          "features::configuration::m_05_b_2_cases::owner_target_roles_and_configuration_are_identity",
+          "features::configuration::m_05_b_2_cases::dormant_member_exact_intent_and_group_guards"
+        ],
+        "expected": 9,
+        "path": "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs",
+        "sha256": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e"
+      },
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::configuration::m_05_b_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "9",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V2-1.log",
+          "seconds": 1.3132951129809953,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V3": {
+      "group": "V3",
+      "executed": true,
+      "case_binding": {
+        "names": [
+          "behaviour::consumer_configuration::m_05_b_2_cases::strict_request_corpus_and_opaque_identity",
+          "behaviour::consumer_configuration::m_05_b_2_cases::omission_empty_and_null_are_not_conflated",
+          "behaviour::consumer_configuration::m_05_b_2_cases::result_corpus_and_invalid_provenance_refuse"
+        ],
+        "expected": 3,
+        "path": "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs",
+        "sha256": "91ee7ee407d84c5b6d1398ed4eb7c08b37d254bea20e3301876e4ff545868ea9"
+      },
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-wire",
+            "--lib",
+            "behaviour::consumer_configuration::m_05_b_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "3",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V3-1.log",
+          "seconds": 19.708333956019487,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V4": {
+      "group": "V4",
+      "executed": true,
+      "case_binding": null,
+      "conditional_selection": {
+        "run": [
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::m_05_b_1_cases::unavailable_export_catalogue_is_not_known_empty",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::m_05_b_1_cases::new_wire_grammar_remains_unpublished",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::m_05_b_1_cases::typed_and_legacy_expansion_are_identical",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::m_05_b_1_cases::weak_forwarding_is_order_independent_and_survives_merge",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::m_05_b_1_cases::validation_checks_definitions_without_selecting_alternatives",
+            "--",
+            "--exact"
+          ]
+        ],
+        "reused": []
+      },
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::m_05_b_1_cases::new_wire_grammar_remains_unpublished",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V4-1.log",
+          "seconds": 0.1567878890200518,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::m_05_b_1_cases::unavailable_export_catalogue_is_not_known_empty",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V4-2.log",
+          "seconds": 0.15655852702911943,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::m_05_b_1_cases::typed_and_legacy_expansion_are_identical",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V4-3.log",
+          "seconds": 0.19913422397803515,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::m_05_b_1_cases::validation_checks_definitions_without_selecting_alternatives",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V4-4.log",
+          "seconds": 0.20517425099387765,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::m_05_b_1_cases::weak_forwarding_is_order_independent_and_survives_merge",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V4-5.log",
+          "seconds": 0.19800583901815116,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V5": {
+      "group": "V5",
+      "executed": true,
+      "case_binding": null,
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "codegen"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V5-1.log",
+          "seconds": 32.33931117900647,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "check-codegen"
+          ],
+          "exit": 1,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V5-2.log",
+          "seconds": 17.84430172102293,
+          "passed": false,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "wire-diff"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V5-3.log",
+          "seconds": 13.24442696099868,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": false
+    },
+    "V6": {
+      "group": "V6",
+      "executed": true,
+      "case_binding": null,
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-core/src/manifest/package.rs",
+            "crates/vibe-core/src/manifest/mod.rs",
+            "crates/vibe-core/src/manifest/package/features.rs",
+            "crates/vibe-core/src/manifest/package/features/constraints.rs",
+            "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs",
+            "crates/vibe-resolver/src/features.rs",
+            "crates/vibe-resolver/src/features/configuration.rs",
+            "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs",
+            "crates/vibe-wire/src/behaviour/mod.rs",
+            "crates/vibe-wire/src/behaviour/consumer_configuration.rs",
+            "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V6-1.log",
+          "seconds": 0.04797521699219942,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m05b2/V6-2.log",
+          "seconds": 0.03215327498037368,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V7": {
+      "group": "V7",
+      "executed": true,
+      "xml_parsed": true,
+      "prior_spec_lines_preserved": true,
+      "old_schema_drift": [],
+      "required_registration_changes": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs"
+      ],
+      "unqualified_generated_drift": [],
+      "passed": true,
+      "root_approved_exact_header_changes": [
+        "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+        "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+        "crates/vibe-wire/src/generated/application/e1/mod.rs",
+        "crates/vibe-wire/src/generated/application/mod.rs",
+        "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+        "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+        "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+        "crates/vibe-wire/src/generated/capability/mod.rs",
+        "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+        "crates/vibe-wire/src/generated/change_query/mod.rs",
+        "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+        "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+        "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+        "crates/vibe-wire/src/generated/client_capability/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+        "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+        "crates/vibe-wire/src/generated/distribution/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+        "crates/vibe-wire/src/generated/environment/mod.rs",
+        "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+        "crates/vibe-wire/src/generated/hello/mod.rs",
+        "crates/vibe-wire/src/generated/index/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index/mod.rs",
+        "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index_cli/mod.rs",
+        "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index_http/mod.rs",
+        "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+        "crates/vibe-wire/src/generated/journal/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+        "crates/vibe-wire/src/generated/llm/mod.rs",
+        "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+        "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+        "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "crates/vibe-wire/src/generated/machine/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/mod.rs",
+        "crates/vibe-wire/src/generated/native/e1/mod.rs",
+        "crates/vibe-wire/src/generated/native/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/mod.rs",
+        "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+        "crates/vibe-wire/src/generated/source_query/mod.rs"
+      ],
+      "root_disposition_id": "m05b2-generated-header-drift-1"
+    }
+  },
+  "case_bindings": {
+    "V1": {
+      "names": [
+        "manifest::package::features::constraints::m_05_b_2_cases::four_cardinalities",
+        "manifest::package::features::constraints::m_05_b_2_cases::guards_refuse_foreign_expressions_unknown_and_cycles",
+        "manifest::package::features::constraints::m_05_b_2_cases::positive_guard_order_preserves_feature_cycles",
+        "manifest::package::features::constraints::m_05_b_2_cases::definitions_and_explicit_empty_are_distinct"
+      ],
+      "expected": 4,
+      "path": "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs",
+      "sha256": "c3117f5009a278f67873e1071c4164e5085396be33d819e9dc2fbc5ca0e2e0b0"
+    },
+    "V2": {
+      "names": [
+        "features::configuration::m_05_b_2_cases::generated_request_needs_selection_without_effects",
+        "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+        "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator",
+        "features::configuration::m_05_b_2_cases::separate_environment_domains_keep_different_choices",
+        "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+        "features::configuration::m_05_b_2_cases::dormant_intent_survives_until_positive_guard_is_active",
+        "features::configuration::m_05_b_2_cases::cardinality_all_features_and_implicit_closure_refuse",
+        "features::configuration::m_05_b_2_cases::owner_target_roles_and_configuration_are_identity",
+        "features::configuration::m_05_b_2_cases::dormant_member_exact_intent_and_group_guards"
+      ],
+      "expected": 9,
+      "path": "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs",
+      "sha256": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e"
+    },
+    "V3": {
+      "names": [
+        "behaviour::consumer_configuration::m_05_b_2_cases::strict_request_corpus_and_opaque_identity",
+        "behaviour::consumer_configuration::m_05_b_2_cases::omission_empty_and_null_are_not_conflated",
+        "behaviour::consumer_configuration::m_05_b_2_cases::result_corpus_and_invalid_provenance_refuse"
+      ],
+      "expected": 3,
+      "path": "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs",
+      "sha256": "91ee7ee407d84c5b6d1398ed4eb7c08b37d254bea20e3301876e4ff545868ea9"
+    }
+  },
+  "fresh_test_counts": {
+    "core_new": 4,
+    "resolver_new": 9,
+    "wire_new": 3,
+    "affected_exact_B1_regressions": 5,
+    "failed": 0,
+    "ignored": 0
+  },
+  "corpus": {
+    "request_valid": 3,
+    "request_invalid": 2,
+    "result_valid": 3,
+    "proof": "V3 strict generated decode/semantic admission/roundtrip; no full suite"
+  },
+  "generator": {
+    "codegen_exit": 0,
+    "check_codegen_exit": 1,
+    "wire_diff_exit": 0,
+    "check_codegen_disposition": "FAILED, preserved. Incumbent xtask/src/codegen/mod.rs:451-459 invokes git diff --exit-code on generated outputs against the index. New unstaged outputs/registrations and Root-approved header edits remain different. No pass substitution or index mutation. Root postintegration gate is outstanding.",
+    "generated_idempotence": "Final V5 codegen and check-codegen both report empty source_drift with new generated files in SOURCE-SUBJECTS.json.",
+    "protected_headers": {
+      "question": "ROOT-QUESTION.json",
+      "answer": "ROOT-ANSWER.json",
+      "matching_id": "m05b2-generated-header-drift-1",
+      "count": 53,
+      "scope": "exact single header substitution adding schemas/consumer_configuration/e1/, before/after hashes and byte comparison enforced; no old non-comment body or old schema changes"
+    },
+    "initial_failures": "V5-attempt1 and V5-attempt2 retain missing x-empty metadata failures. V5-attempt3 retains first successful generation and preintegration check-codegen failure. V7-before-root-disposition.json retains original protected-header failure."
+  },
+  "effects": {
+    "state": "completed",
+    "local": [
+      "scoped source/schema/corpus edits",
+      "incumbent generated output publication",
+      "warm-target scoped test/codegen artifacts",
+      "private logs and candidate artifacts"
+    ],
+    "resolver_discovery": "pure borrowed source/request inputs; no filesystem/process/world lookup or write API; NeedsSelection expansions are None",
+    "installation_or_target_effects": false
+  },
+  "runtime_binding": {
+    "path": "/fast/zap-managed/2026-10-15-m05b2/actual-runtime-binding.json",
+    "sha256": "aa997393c6ca47daef5db580ad4ac14474c0c1a3ae14894b68f5100a73856c1c",
+    "supplied_by": "Root after actual runtime claim; unchanged by worker"
+  },
+  "target": {
+    "writers": [],
+    "target": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "tmp_mode": "0o700",
+    "initial_observation": "Initial ps tool output before first V5 also showed no cargo/rustc writer; sccache daemon only. This file records the fresh final-group observation, not a backdated initial capture."
+  },
+  "source_paths": {
+    "tracked_changed": [
+      "Cargo.lock",
+      "crates/vibe-core/src/manifest/mod.rs",
+      "crates/vibe-core/src/manifest/package.rs",
+      "crates/vibe-core/src/manifest/package/features.rs",
+      "crates/vibe-resolver/Cargo.toml",
+      "crates/vibe-resolver/src/features.rs",
+      "crates/vibe-wire/src/behaviour/mod.rs",
+      "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+      "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+      "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "crates/vibe-wire/src/generated/application/mod.rs",
+      "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "crates/vibe-wire/src/generated/capability/mod.rs",
+      "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "crates/vibe-wire/src/generated/change_query/mod.rs",
+      "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+      "crates/vibe-wire/src/generated/client_capability/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "crates/vibe-wire/src/generated/environment/mod.rs",
+      "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "crates/vibe-wire/src/generated/hello/mod.rs",
+      "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index/mod.rs",
+      "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "crates/vibe-wire/src/generated/journal/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "crates/vibe-wire/src/generated/llm/mod.rs",
+      "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "crates/vibe-wire/src/generated/machine/mod.rs",
+      "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "crates/vibe-wire/src/generated/migration/mod.rs",
+      "crates/vibe-wire/src/generated/mod.rs",
+      "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "crates/vibe-wire/src/generated/native/mod.rs",
+      "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "crates/vibe-wire/src/generated/preview/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "crates/vibe-wire/src/generated/source_query/mod.rs",
+      "formats/REGISTRY.toml",
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+    ],
+    "new_files": [
+      "crates/vibe-core/src/manifest/package/features/constraints.rs",
+      "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs",
+      "crates/vibe-resolver/src/features/configuration.rs",
+      "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs",
+      "crates/vibe-wire/src/behaviour/consumer_configuration.rs",
+      "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs",
+      "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+      "crates/vibe-wire/src/generated/consumer_configuration/e1/request/mod.rs",
+      "crates/vibe-wire/src/generated/consumer_configuration/e1/result/mod.rs",
+      "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+      "formats/corpora/consumer-configuration-request/e1/invalid/foreign-guard.json",
+      "formats/corpora/consumer-configuration-request/e1/invalid/unknown-epoch.json",
+      "formats/corpora/consumer-configuration-request/e1/valid/dormant-native-version.json",
+      "formats/corpora/consumer-configuration-request/e1/valid/explicit-empty.json",
+      "formats/corpora/consumer-configuration-request/e1/valid/omitted.json",
+      "formats/corpora/consumer-configuration-result/e1/valid/exact-conflict.json",
+      "formats/corpora/consumer-configuration-result/e1/valid/needs-selection.json",
+      "formats/corpora/consumer-configuration-result/e1/valid/resolved-provenance.json",
+      "schemas/consumer_configuration/e1/request.jtd.json",
+      "schemas/consumer_configuration/e1/result.jtd.json"
+    ],
+    "unexpected": []
+  },
+  "source_hashes": {
+    "Cargo.lock": "49eb7c96c6039ece7e6d208d122988720e26f9f1b4e438c9d30b950db044253b",
+    "crates/vibe-core/src/manifest/mod.rs": "0292e9abce71bc270eef1952236b6734882151ffdba29d98d43145728e3000a4",
+    "crates/vibe-core/src/manifest/package.rs": "522d08ce433bedb7c3bd0efc536b235079e9d585a6af4e7a280a6a18d0dd26bc",
+    "crates/vibe-core/src/manifest/package/features.rs": "4253ce61d52b6acacdf7cbf944879443ea9e1286c2d27aa8e8c353e10310bbbe",
+    "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+    "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+    "crates/vibe-wire/src/behaviour/mod.rs": "c334a495359f7eb9cf2a56749cfd6ebf50b5f8c11a29fc143b3d441dd8a7f925",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs": "46bca5a2b3f09255155e6d4ede2b20167891310d8406f61c313374f50c0b8c81",
+    "crates/vibe-wire/src/generated/adapter_plan/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/application/e1/mod.rs": "1ab54de71b260a80a125d267a7cb46f0d3cdc888cf0999e0ef8425839b90a912",
+    "crates/vibe-wire/src/generated/application/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs": "8cd0297528bbc667c6f67f58afa8999fa43bf300a8c4adf4ab98ff7a9c484e81",
+    "crates/vibe-wire/src/generated/boot_debugger/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/capability/e1/mod.rs": "314bef03cbe94d09aa82d50c9c90ccb1a0e5e68c3d64553359bda8155aced595",
+    "crates/vibe-wire/src/generated/capability/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/change_query/e1/mod.rs": "a7f52cff7ef139d244f35007b5ad19a7f19b1841b785fa4338f3c034983e40a6",
+    "crates/vibe-wire/src/generated/change_query/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs": "7efd8ec72360a4c2c3ee311299262d496b646276e615fa435a77fc1d7ecffbc9",
+    "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/client_capability/e1/mod.rs": "46bca5a2b3f09255155e6d4ede2b20167891310d8406f61c313374f50c0b8c81",
+    "crates/vibe-wire/src/generated/client_capability/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs": "8d212478bd7bf24bed7d9d31cb02591ca31ec3b4091dadd4fd5f0afa5734bbe9",
+    "crates/vibe-wire/src/generated/compiler_ir/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs": "3e449e4f5d10ab11b14283c97227c8abca55ccde0c28f47a7add72fa79a4cfe0",
+    "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/distribution/e1/mod.rs": "da34bacb734f4fc98c346e7cdba29d6f15bf4fb9657bc0772f0aee489f0d3103",
+    "crates/vibe-wire/src/generated/distribution/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/environment/e1/mod.rs": "fef42eff6b0fe429520ac3c98e0ec9348d41ee61850d23daa79a18f5eea7f172",
+    "crates/vibe-wire/src/generated/environment/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/format_id/mod.rs": "fec2846064891e96b736313f798b8509ec923714c4b8eea6f8fd5ca13681d454",
+    "crates/vibe-wire/src/generated/format_id/properties.rs": "5ca4d070e72b12d61d86cdd6e3650cda8bdc88e081279b37cb59fda965145f6c",
+    "crates/vibe-wire/src/generated/hello/e1/mod.rs": "d1f2f34b05a8ca0c951fea2888c9a539663547a0e21cb04f426c0e46fd6aa0b8",
+    "crates/vibe-wire/src/generated/hello/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/index/e1/mod.rs": "28ae3e9cf40344b0832bb530ed7e635b931ad2a1e938a692f16ee8823c70fa44",
+    "crates/vibe-wire/src/generated/index/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/index_cli/e1/mod.rs": "ae204d5bb20259862d00c6b1894dee92f72d86cc69d1a219977143dcba3b7944",
+    "crates/vibe-wire/src/generated/index_cli/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/index_http/e1/mod.rs": "fbd72a91c61adaeb91a8a7825262117c4da2cfea267e9f47f4c696cafbf1c9b9",
+    "crates/vibe-wire/src/generated/index_http/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/journal/e1/mod.rs": "5df9a732252b7ed9304554cbabec66d71b7c6e9ccd0ad06d62dc75173d298efd",
+    "crates/vibe-wire/src/generated/journal/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs": "9ade3e451626b2ba31200bb2a27fe1ce548b6b6a4bf52411631daca0daa331e4",
+    "crates/vibe-wire/src/generated/lifecycle/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs": "d19e6be24a8f270f60bfb49b42a1aa63827e87e5cd2bfcda5a9c5c984c493e7f",
+    "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs": "14c01647a1cb33deb2d154ffe20e506fc87e407fd22f9af7b3890d31c7879c88",
+    "crates/vibe-wire/src/generated/llm/mod.rs": "05faac6745c8c0e0a671382468ff08230ccadd890d6c95a4951922a452feb842",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs": "3681a0df87d57bfbe423f22fd5c68f36a9b6cb4e493ca3a9d129ae5eabe52aae",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/machine/e1/mod.rs": "0d44c8baf5738e65360769c20b785dcf5e6ae3280dfee0607015f6917b756b01",
+    "crates/vibe-wire/src/generated/machine/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/migration/e1/mod.rs": "b5ed910262aefe371e1da96258dc6960d38825767269df796f1d0592e274f211",
+    "crates/vibe-wire/src/generated/migration/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/mod.rs": "130948ed6840ad906f1a1293a5f761603bbe174b52e0bd24b5a864ae2d9efcb7",
+    "crates/vibe-wire/src/generated/native/e1/mod.rs": "3723af1006209dc45b97cd1f9a94cec8e37ada8d3ae28541f37eef30e09f3ca6",
+    "crates/vibe-wire/src/generated/native/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/preview/e1/mod.rs": "ec0f17ddaca8ba1833864192268e0f9ad2cd2c50a58015f1c1e6f7366f548441",
+    "crates/vibe-wire/src/generated/preview/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "crates/vibe-wire/src/generated/scrape/e1/mod.rs": "422e65ca56c1bd4e4bf4a2597045e9d97d6727ed4b3764fecd115fba8c91fc21",
+    "crates/vibe-wire/src/generated/scrape/e2/mod.rs": "d17b1cef96e3cb66731a2417998ffbcb260c27fbb1c029593ac5a4a27ba7eae9",
+    "crates/vibe-wire/src/generated/scrape/e3/mod.rs": "7769e5f0aca4c559e5f8cb1b701f84a3d5cb7498c3d73db030371fb08e180ded",
+    "crates/vibe-wire/src/generated/scrape/mod.rs": "331abe2a0bec65d81c9101ec2879c5b6b935fb54db2e0306c7cf51e68e23bfb8",
+    "crates/vibe-wire/src/generated/source_query/e1/mod.rs": "fbe360e5bd99cc624fae8d3a1f3d938d37a9af65edbc9e7a1a2c3a21f6a5234b",
+    "crates/vibe-wire/src/generated/source_query/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "formats/REGISTRY.toml": "4e2bb66e38a5cf0cd6f0482d1f368c7c3f0261ee51a83873faa845199464096a",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "ca73ea03bb279d491848bd02f176dc9f800481364e3f4ca251fdd0d0ab06df1f",
+    "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+    "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs": "c3117f5009a278f67873e1071c4164e5085396be33d819e9dc2fbc5ca0e2e0b0",
+    "crates/vibe-resolver/src/features/configuration.rs": "3ab92163a1d81220e5e8803622d785791d3c7247f76c9d22cb0d597c163da6c5",
+    "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+    "crates/vibe-wire/src/behaviour/consumer_configuration.rs": "4e9d294a4416255f89c136a58ac3f764f4ee0f174a225e4c53563da9a6ba910f",
+    "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs": "91ee7ee407d84c5b6d1398ed4eb7c08b37d254bea20e3301876e4ff545868ea9",
+    "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs": "5ccd0fe42b3e02eb65f9cfa00bb6f8487a911cd2b18c3a1edb631a8b5c99143f",
+    "crates/vibe-wire/src/generated/consumer_configuration/e1/request/mod.rs": "ec7872a6994489a2d062fe3ea9c7b7f5888b363db90e287cd5d2f8e4b7337ad0",
+    "crates/vibe-wire/src/generated/consumer_configuration/e1/result/mod.rs": "115c16215193d7693efbe8e08e122fe6d115f94075d8f241dbde1911fcbacb45",
+    "crates/vibe-wire/src/generated/consumer_configuration/mod.rs": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+    "formats/corpora/consumer-configuration-request/e1/invalid/foreign-guard.json": "a8d941016756733a489634797bab5f26244698080521a6c30f4fcc0a2e93d992",
+    "formats/corpora/consumer-configuration-request/e1/invalid/unknown-epoch.json": "67360be7000f6ca0036ff81edfe8d2cdbabc8167431b1c044d9b3b8873d0db83",
+    "formats/corpora/consumer-configuration-request/e1/valid/dormant-native-version.json": "8775e6d6d2aea3429d66675bf21de24622e5df6936889a98afa79d6bf8525cb2",
+    "formats/corpora/consumer-configuration-request/e1/valid/explicit-empty.json": "a8c552f97515ae99182f4d253b3253e81ba983d142a823907e14334795085cf7",
+    "formats/corpora/consumer-configuration-request/e1/valid/omitted.json": "b3bea81f2b079e1c8c870e95ea017dc9c56e2adfbc45a70bd3720c7966d2287c",
+    "formats/corpora/consumer-configuration-result/e1/valid/exact-conflict.json": "2df7e443697436fe4beac0101a8957dd317af21a5d9ca92b9ed6ca4d51cac0c2",
+    "formats/corpora/consumer-configuration-result/e1/valid/needs-selection.json": "fe136bfcb72751e90039e85e39a99f21b951e5eca204ba82ee286808289bebb3",
+    "formats/corpora/consumer-configuration-result/e1/valid/resolved-provenance.json": "b494b592df9bd648631058ff9dd6e75e88eda36d5d4912938c187bf007abef1f",
+    "schemas/consumer_configuration/e1/request.jtd.json": "513ad7136c012e83823e0231ab2bb0ef4356f90b38eeaf9cae40d0122afb1b60",
+    "schemas/consumer_configuration/e1/result.jtd.json": "e841a1b1886265113fc14c41bde6c76543f3383ad09464a5fb13e5a4ab707894"
+  },
+  "patch": {
+    "path": "/fast/zap-managed/2026-10-15-m05b2/candidate.patch",
+    "bytes": 212844,
+    "sha256": "b60a5e30f67a6f31eaa56cf38e8f303a7b84064af72f4ed9f208466af460e02a"
+  },
+  "evidence_files": {
+    "V5-1-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V5-2.log": "d6d155b1c684a44eb673b5e0532bc47b7e8af0eb20a033ea9e149930d650d6f5",
+    "V5-3.log": "78a85808346a611332852b03960041a3d7a78994d3e60a1f7b21b5ddace6f4c3",
+    "V4-SELECTION.json": "e955d9f3a9aee7e380e3e6a7b3bf955d0a3f2903a610d7df260a241bdf37b840",
+    "V4-2.log": "726813d8039c252bae5e0b3a6a8238643ab662c70d076ac956f0b876585946b4",
+    "V5-1.log": "0d9d2e3e5f8d3a4a238d7dccd3e3adb277a713a835b902a7ea1b6665d5dfdf49",
+    "V5-2-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V5-result.json": "210a7cbae7e715ca00a363098b98c23729b76ca68cf6fa384ed4de4f970f1180",
+    "V7-result.json": "5ad4026c65a93ac05ca8b7ee2bd103cc4972d1b583be472a5cde3345c1d05bfe",
+    "V1-1-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V5-2-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V5-3-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V6-PATHS.json": "43bb3f9d61d9ef5dbc822c1f688c77b919ec507d87baa12814c4a179f1a7acd4",
+    "V4-wrapper.log": "0b60337cb2196fdc5878204b71b0acf3aa9ab123a50d8d4e85f7300ede8d0a25",
+    "V5-3-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-1-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V5-1-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V1-1.log": "3c2564485cea72897bf5244ef97a15600cb3fe051ce444a7ff9394843b02d1cf",
+    "V1-1-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V1-result.json": "50c454ad1367dc0bc4401c8f86448a58941afe6f2cb1a08d8a28c426f99928f2",
+    "V2-1-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V2-1.log": "190978d4d245626607ab814603c331c2f0f61ca27eb4dab47180ed381935391a",
+    "V2-1-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V2-result.json": "70949c87dc2968721c3d793e813f1632e491389f4a1e7ece8e4ad32473da7a82",
+    "V7-before-root-disposition.json": "f00567b167e05f8627fc2516311a963d628396646f46a2ea22e7c3d22daf6f03",
+    "V3-1-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V3-1.log": "bbaea815873d49abd16c027c66ceb9d0556930ae526f572bc31f890e1ce487fa",
+    "V3-1-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V3-result.json": "12ae79a487a6661c99b375647c6e6d62fa897c4c5452564909222021bc182c08",
+    "V1-wrapper.log": "1445d61b94f65ad55bd2c1bf4e2a069dcad53a1bd7fb00910468049340d5a104",
+    "V3-wrapper.log": "292e4f987cf645521fd6a60cdd1561ffd00078b6d7d73d2aa8d66c13deecb732",
+    "V4-1.log": "2b5d04f5b5a2c967a6559c90c7a800272ac1dd8a836fc90c29fd9fdac33ac1a5",
+    "V4-1-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-2-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-2-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-3-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-3.log": "ea8b68837ab236073db0def1fee45df3e098c1e3ed931e4d050809dbf54e0bb1",
+    "V4-3-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-4-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-4.log": "9aed196dc28972b25bc0845d26704451164b213c5ee6e1739de86576b3c76f58",
+    "V4-4-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-5-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-5.log": "3371f4e8e9680cdcabe62a51f447e784093e89e1b62242077a0c3a6243065ab5",
+    "V4-5-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V4-result.json": "aa78b2fc12932417936422f2387bc895bd3c8e1a1199f083ae25dfc4444fbb2b",
+    "V6-wrapper.log": "e90a518edbf7cbdfe3bce6e9f975b006d0602a6c7e49a083182df2f21da90ebc",
+    "V6-1-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V6-1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "V6-1-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V6-2-subjects-before.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V6-2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "V6-2-subjects-after.json": "93fb7cceafdce9429344694181e1407e55ef4f09fb035ccba89aae687e7bdb9f",
+    "V6-result.json": "dacd38b5636e312b2b3053079d30e1fc27326acdb607f655463678d10487afa0",
+    "V7-wrapper.log": "36f78c70a71f2ae41218c66438c43a81e8033272d8d79bbfb4521da3836d52a7"
+  },
+  "unresolved": [
+    "Preintegration check-codegen remains exit 1; Root owns index-aware postintegration verification and acceptance."
+  ],
+  "limitations": [
+    "No claim of B3 authored migration, cross-package installation delivery, lock persistence, or acceptance."
+  ],
+  "git_mutations": false,
+  "recursive_workers": false
+}

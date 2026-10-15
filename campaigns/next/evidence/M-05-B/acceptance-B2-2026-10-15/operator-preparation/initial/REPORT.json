@@ -1,0 +1,62 @@
+{
+  "status": "prepared_pending_Root_stop_source_commit_codegen_gate_and_approval",
+  "compile_exits": [
+    0,
+    0
+  ],
+  "pure_file_hash_validation": "passed; no store open or control submit",
+  "fresh_cases": 22,
+  "counts": [
+    4,
+    9,
+    4,
+    5,
+    0,
+    0,
+    0
+  ],
+  "new_cases": 1,
+  "repeated_existing_cases": 21,
+  "red": {
+    "exit": 101,
+    "failed": 1,
+    "not_success_count": true
+  },
+  "methods": 7,
+  "criteria": 2,
+  "EvidenceObservation_artifact": "c5489f08b66b448f84b011f44f0d79a13d06b5fb566bf39b3161e83c06ec9fe3",
+  "V5": "current executed=false/pass=null; reused prior generation0/1/0 failed. Root actual check-codegen0 on unchanged455subjects required. No fresh generation pass substituted.",
+  "pending_inputs": [
+    "ROOT-QUIESCENCE.json normal_exact_stop_delivery=delivered/all_absent=true after original five absent",
+    "ROOT-SOURCE-INTEGRATION.json task=M-05-B.2/integrated=true/review_clear=true/source_commit=actual current40hex; actual file SHA in proposal.main_integration",
+    "ROOT-CODEGEN-GATE.json actual exit0/source_staged=true/command/log/full455 source_before and source_after matching final-source-hashes.json; gate/log SHAs in V5 integrated_gate",
+    "Root fills two exact criterion judgments satisfied+rationale, V5 observed_pass ONLY with actual gate, binds new review/retirement/integration/gate bytes into evidence_files and approves immutable ROOT-REVIEW.json"
+  ],
+  "stop_command": "python3 /fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/stop-once.py --root-execute-once",
+  "ordered_acceptance_commands": [
+    "/fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/safe-candidate-local 1373456 1373460 1373649 1373657 1375912",
+    "/fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/accept-candidate-local open-review /fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/accept-candidate-local evidence /fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/accept-candidate-local stage /fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/accept-candidate-local work /fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/ROOT-REVIEW.json"
+  ],
+  "hashes": {
+    "stop-once.py": "9dbcb5014d21c6d407fad2318adea840102d01eae35e54e80527e582553e153d",
+    "INSPECT-TARGET.json": "4247e7c32d320be1552913db6715b51858424a3a3764eb80eec5c90ac1be6aeb",
+    "STOP-REQUEST.json": "e35033e0146e9a7f868e485574c529501ee1382b3647a1d8f7df2affe659f6de",
+    "STOP-RESPONSE.json": "b98d26f525bc8766c0ca48c8fdb925dc99d239b48353a9bfd16f93f76162260d",
+    "ROOT-STOP-INSPECT.json": "2dbef9d5fa192ca0f8701a1413ddc0658c0c6148006fc5b7f5c5f028e85c301d",
+    "final-source-hashes.json": "14f5673ab2d2cfc3ea5434b42b9555e1dfb1d535eb3d51fe54d252f8177cec6a",
+    "ROOT-REVIEW-PROPOSAL.json": "31a02a5d418657abe8642afc19e86f3172086de3c659b26d44f040418444377f",
+    "acceptance-validation.rs": "ab041a5f794b03a1b51e7ce87805ba8aaa2f1800dce2e513e1ed2cad4299593c",
+    "safe-candidate-local.rs": "2bff08110456bf9d0f31995378e2b7eb17af0cd1fbc17bcfb11aa4200b36be78",
+    "safe-candidate-local-build-args.json": "0c9c3c9b775bca3518c4ebdc645532ebe1405dd37498e7caae9ef30c67b24232",
+    "safe-candidate-local-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "safe-candidate-local": "bec1498c17f4dc4e2f46bdd3655bce27db9c37b7fe894a849f67e1e312086ade",
+    "accept-candidate-local.rs": "3f48325bb7e010e7a78ac841c2de60bbfe8519607321c9d753be0d055e2e1460",
+    "accept-candidate-local-build-args.json": "c8df2b2c0ec7b4f57ce4a75dd9eda33256fffcdc40a811ac24dc8d866474239a",
+    "accept-candidate-local-build.log": "d5707b8cb362529fa1cc0baa57afb7296f47c5cdc53100c135661e32c9b4b92e",
+    "accept-candidate-local": "fbacd70348c764afec8f5a9b1b024788572908e193441ec8025231812bdb3fbf"
+  },
+  "no_mutations": true
+}

@@ -1,0 +1,43 @@
+{
+  "group": "V1",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "manifest::package::features::constraints::m_05_b_2_cases::four_cardinalities",
+      "manifest::package::features::constraints::m_05_b_2_cases::guards_refuse_foreign_expressions_unknown_and_cycles",
+      "manifest::package::features::constraints::m_05_b_2_cases::positive_guard_order_preserves_feature_cycles",
+      "manifest::package::features::constraints::m_05_b_2_cases::definitions_and_explicit_empty_are_distinct"
+    ],
+    "expected": 4,
+    "path": "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs",
+    "sha256": "c3117f5009a278f67873e1071c4164e5085396be33d819e9dc2fbc5ca0e2e0b0"
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::package::features::constraints::m_05_b_2_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "4",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m05b2-correction/V1-1.log",
+      "seconds": 0.18528640002477914,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,11 @@
+{
+  "group": "V7",
+  "executed": true,
+  "xml_parsed": true,
+  "prior_spec_lines_preserved": true,
+  "old_schema_drift": [],
+  "required_registration_changes": [],
+  "unqualified_generated_drift": [],
+  "passed": true,
+  "baseline_already_contains_prior_approved_headers": true
+}

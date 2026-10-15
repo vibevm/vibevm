@@ -1,0 +1,40 @@
+{
+  "V1": {
+    "names": [
+      "manifest::package::features::constraints::m_05_b_2_cases::four_cardinalities",
+      "manifest::package::features::constraints::m_05_b_2_cases::guards_refuse_foreign_expressions_unknown_and_cycles",
+      "manifest::package::features::constraints::m_05_b_2_cases::positive_guard_order_preserves_feature_cycles",
+      "manifest::package::features::constraints::m_05_b_2_cases::definitions_and_explicit_empty_are_distinct"
+    ],
+    "expected": 4,
+    "path": "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs",
+    "sha256": "c3117f5009a278f67873e1071c4164e5085396be33d819e9dc2fbc5ca0e2e0b0"
+  },
+  "V2": {
+    "names": [
+      "features::configuration::m_05_b_2_cases::generated_request_needs_selection_without_effects",
+      "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+      "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator",
+      "features::configuration::m_05_b_2_cases::separate_environment_domains_keep_different_choices",
+      "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+      "features::configuration::m_05_b_2_cases::dormant_intent_survives_until_positive_guard_is_active",
+      "features::configuration::m_05_b_2_cases::cardinality_all_features_and_implicit_closure_refuse",
+      "features::configuration::m_05_b_2_cases::owner_target_roles_and_configuration_are_identity",
+      "features::configuration::m_05_b_2_cases::dormant_member_exact_intent_and_group_guards"
+    ],
+    "expected": 9,
+    "path": "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs",
+    "sha256": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e"
+  },
+  "V3": {
+    "names": [
+      "behaviour::consumer_configuration::m_05_b_2_cases::result_shared_instance_rejects_inconsistent_configuration_or_package",
+      "behaviour::consumer_configuration::m_05_b_2_cases::strict_request_corpus_and_opaque_identity",
+      "behaviour::consumer_configuration::m_05_b_2_cases::omission_empty_and_null_are_not_conflated",
+      "behaviour::consumer_configuration::m_05_b_2_cases::result_corpus_and_invalid_provenance_refuse"
+    ],
+    "expected": 4,
+    "path": "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs",
+    "sha256": "ce40720e3b70dd8efea5eacfc6e94a5a7deeec8122775607cd53e696c293c217"
+  }
+}

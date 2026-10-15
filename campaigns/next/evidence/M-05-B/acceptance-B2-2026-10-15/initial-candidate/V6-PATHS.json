@@ -1,0 +1,13 @@
+[
+  "crates/vibe-core/src/manifest/package.rs",
+  "crates/vibe-core/src/manifest/mod.rs",
+  "crates/vibe-core/src/manifest/package/features.rs",
+  "crates/vibe-core/src/manifest/package/features/constraints.rs",
+  "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs",
+  "crates/vibe-resolver/src/features.rs",
+  "crates/vibe-resolver/src/features/configuration.rs",
+  "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs",
+  "crates/vibe-wire/src/behaviour/mod.rs",
+  "crates/vibe-wire/src/behaviour/consumer_configuration.rs",
+  "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs"
+]

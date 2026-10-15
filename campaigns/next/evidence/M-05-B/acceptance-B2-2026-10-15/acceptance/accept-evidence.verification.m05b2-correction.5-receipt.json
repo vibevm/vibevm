@@ -1,0 +1,40 @@
+{
+  "kind": "command",
+  "value": {
+    "status": "committed",
+    "receipt": {
+      "store": {
+        "store_id": "store.vibevm-m05b2-correction.live",
+        "campaign_id": "campaign.vibevm-m05b2-correction.live",
+        "base_id": "base.vibevm-m05b2-correction.live",
+        "store_epoch": "zap/2",
+        "codec_epoch": 2,
+        "reducer_epoch": 1
+      },
+      "command_id": "root-review.m05b2-correction.evidence.verification.m05b2-correction.5",
+      "event_id": "event:root-review.m05b2-correction.evidence.verification.m05b2-correction.5",
+      "transaction_id": "tx:root-review.m05b2-correction.evidence.verification.m05b2-correction.5",
+      "revision": 242,
+      "event_digest": "d024e717b533a806b8cc9df308da6a7d7dfa0990edb64be7d61616065808ca3a",
+      "output": [
+        123,
+        34,
+        114,
+        101,
+        118,
+        105,
+        115,
+        105,
+        111,
+        110,
+        34,
+        58,
+        50,
+        52,
+        50,
+        125
+      ],
+      "disposition": "committed"
+    }
+  }
+}

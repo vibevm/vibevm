@@ -1,0 +1,42 @@
+{
+  "group": "V3",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "behaviour::consumer_configuration::m_05_b_2_cases::strict_request_corpus_and_opaque_identity",
+      "behaviour::consumer_configuration::m_05_b_2_cases::omission_empty_and_null_are_not_conflated",
+      "behaviour::consumer_configuration::m_05_b_2_cases::result_corpus_and_invalid_provenance_refuse"
+    ],
+    "expected": 3,
+    "path": "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs",
+    "sha256": "63aadaacf0b1f4d0eb6fbf570b4edafe579ed1bc8d474be4544fd262f99f4394"
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::consumer_configuration::m_05_b_2_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m05b2/V3-1.log",
+      "seconds": 23.188906503026374,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

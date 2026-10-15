@@ -1,0 +1,39 @@
+const APPROVAL_TOKEN:&str="Root approves FULL M05B2 corrected candidate seven proofs after source integration and actual codegen gate";
+fn require_main(review:&serde_json::Value)->Result<()> {
+ let e=&review["main_integration"];let j=checked_json(e["path"].as_str().ok_or("Root source integration path")?,e["sha256"].as_str().ok_or("Root source integration SHA pending")?)?;
+ if j["task"]!="M-05-B.2"||j["integrated"]!=true||j["review_clear"]!=true||j["source_commit"].as_str().is_none_or(|s|s.len()!=40){return Err("actual source commit and clear review required".into())}
+ let head=std::process::Command::new("git").args(["rev-parse","HEAD"]).current_dir("/fast/git/v/vibevm-next").output()?;if !head.status.success()||String::from_utf8(head.stdout)?.trim()!=j["source_commit"].as_str().unwrap(){return Err("current source commit differs".into())}Ok(())
+}
+fn require_criterion_decisions(review:&serde_json::Value,candidate:&CandidateResult)->Result<()> {
+ let rows=review["criterion_assessments"].as_array().ok_or("Root criterion judgments missing")?;if rows.len()!=2||candidate.criteria.len()!=2{return Err("both original criteria required".into())}
+ let claims:RuntimeJobClaimRecord=serde_json::from_slice(&std::fs::read("/fast/zap-managed/2026-10-15-m05b2-correction/ready-capture.json")?)?;
+ for (c,t) in candidate.criteria.iter().zip(&claims.candidate_result.template.required_criteria){let r=rows.iter().find(|r|r["requirement"].as_str()==Some(c.requirement.as_str())).ok_or("criterion missing")?;if r["statement"].as_str()!=Some(t.statement.as_str())||r["producer_disposition"]!=serde_json::to_value(c.disposition)?||r["review_disposition"]!="satisfied"||r["rationale"].as_str().is_none_or(|s|s.trim().is_empty()){return Err("Root exact criterion judgment required".into())}}Ok(())
+}
+fn require_retirement(root:&std::path::Path)->Result<()> {
+ let j:serde_json::Value=serde_json::from_slice(&std::fs::read(root.join("acceptance-preparation/ROOT-QUIESCENCE.json"))?)?;
+ if j["all_absent"]!=true||j["normal_exact_stop_delivery"]!="delivered"{return Err("actual normal stop and retired five required".into())}
+ for pid in [1373456u64,1373460,1373649,1373657,1375912]{if std::path::Path::new(&format!("/proc/{pid}")).exists(){return Err("original PID exists".into())}}
+ Ok(())
+}
+fn checked_json(path:&str,expected:&str)->Result<serde_json::Value>{let bytes=std::fs::read(path)?;if PayloadDigest::hash(&bytes).to_string()!=expected{return Err(format!("evidence changed: {path}").into())}Ok(serde_json::from_slice(&bytes)?)}
+fn require_observations(review:&serde_json::Value,claim:&RuntimeJobClaimRecord)->Result<()> {
+ let root=std::path::Path::new("/fast/zap-managed/2026-10-15-m05b2-correction");let repo=std::path::Path::new("/fast/git/v/vibevm-next");
+ let sources:serde_json::Value=serde_json::from_slice(&std::fs::read(root.join("acceptance-preparation/final-source-hashes.json"))?)?;for(p,s)in sources.as_object().ok_or("sources")?{if PayloadDigest::hash(&std::fs::read(repo.join(p))?).to_string()!=s.as_str().ok_or("source digest")?{return Err("final consumed source drift".into())}}
+ let rows=review["observations"].as_array().ok_or("observations")?;if rows.len()!=7||claim.work.checks.len()!=7{return Err("seven original methods required".into())}
+ for (i,plan) in claim.work.checks.iter().enumerate(){let row=&rows[i];let argv:Vec<_>=std::iter::once(plan.program.as_str()).chain(plan.arguments.iter().map(|s|s.as_str())).collect();if row["verification_id"].as_str()!=Some(plan.verification_id.as_str())||row["captured_argv"]!=serde_json::to_value(argv)?||row["selected_for_acceptance"]!=true||row["observed_result"]!="observed_pass"{return Err("actual current selected method observation required; Root gate may be pending".into())}
+ let mut result=checked_json(row["result_path"].as_str().ok_or("result")?,row["result_sha256"].as_str().ok_or("result SHA")?)?;
+ if i==4{if result["executed"]!=false||result["fresh_cases"]!=0||result["prior_passed"]!=false||!result["passed"].is_null(){return Err("generation reuse must not claim current execution/pass".into())}
+ for(p,s)in result["reuse"]["source_hashes"].as_object().ok_or("reuse source hashes")?{if PayloadDigest::hash(&std::fs::read(repo.join(p))?).to_string()!=s.as_str().ok_or("reuse SHA")?{return Err("reused generation subject changed".into())}}
+ for f in result["reuse"]["prior_logs"].as_array().ok_or("prior logs")?{if PayloadDigest::hash(&std::fs::read(f["path"].as_str().ok_or("prior log")?)?).to_string()!=f["sha256"].as_str().ok_or("prior SHA")?{return Err("prior generation log changed".into())}}
+ result=checked_json(result["reuse"]["prior_result_path"].as_str().ok_or("prior result")?,result["reuse"]["prior_result_sha256"].as_str().ok_or("prior result SHA")?)?;
+ }
+ if i==6{if result["passed"]!=true||result["xml_parsed"]!=true||result["prior_spec_lines_preserved"]!=true||result["old_schema_drift"]!=serde_json::json!([])||result["unqualified_generated_drift"]!=serde_json::json!([])||result["baseline_already_contains_prior_approved_headers"]!=true{return Err("V7 actual preservation proof missing".into())}continue}
+ let cmds=result["commands"].as_array().ok_or("commands")?;let held=row["commands"].as_array().ok_or("held commands")?;if cmds.len()!=held.len(){return Err("command count differs".into())}let mut count=0u64;
+ for (c,h) in cmds.iter().zip(held){if c["argv"]!=h["argv"]||c["exit"]!=h["exit"]||c["log"]!=h["log"]||PayloadDigest::hash(&std::fs::read(h["log"].as_str().ok_or("log")?)?).to_string()!=h["log_sha256"].as_str().ok_or("logSHA")?{return Err("raw command evidence mismatch".into())}if i!=4&&(c["exit"]!=0||c["passed"]!=true){return Err("command failed".into())}for n in c["counts"].as_array().ok_or("counts")?{if n[1]!="0"||n[2]!="0"{return Err("failed or ignored cases".into())}count+=n[0].as_str().ok_or("count")?.parse::<u64>()?;}}
+ if count!=[4,9,4,5,0,0,0][i]{return Err("case denominator differs".into())}
+ if i==4{if result["passed"]!=false||cmds.len()!=3||cmds[0]["exit"]!=0||cmds[1]["exit"]!=1||cmds[2]["exit"]!=0||row["producer_failed_check_retained"]!=true{return Err("native V5 failed0/1/0 history required".into())}
+ let g=&row["integrated_gate"];let actual=checked_json(g["path"].as_str().ok_or("gate path")?,g["sha256"].as_str().ok_or("gate hash pending")?)?;
+ if actual["exit"]!=0||actual["source_staged"]!=true||actual["source_before"]!=sources||actual["source_after"]!=sources||actual["command"]!=g["command"]||row["actual_argv"]!=actual["command"]||actual["log"]!=g["log"]||PayloadDigest::hash(&std::fs::read(g["log"].as_str().ok_or("gate log")?)?).to_string()!=g["log_sha256"].as_str().ok_or("gate logSHA")?{return Err("Root actual integrated gate0 with exact unchanged source closure required".into())}
+ }else if result["passed"]!=true||row["actual_argv"]!=row["captured_argv"]{return Err("actual fresh method differs".into())}
+ }Ok(())
+}

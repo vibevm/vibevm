@@ -1,0 +1,29 @@
+{
+  "task": "FULL M-05-B.2 correction rereview",
+  "status": "bounded_clear_conditional_on_root_integrated_codegen_gate",
+  "acceptance": false,
+  "utc": "2026-10-15T17:16:26.397055+00:00",
+  "source_subjects": 455,
+  "source_drift": [],
+  "findings": [],
+  "closed_findings": [
+    {
+      "id": "B2-F1",
+      "status": "closed",
+      "source": "crates/vibe-wire/src/behaviour/consumer_configuration.rs:98",
+      "meaning": "Shared admit_request now compares domain+instance independently of selections and rejects configuration/package disagreement with both edge indices. admit_result/decode_result and the public resolver all call this boundary; no second engine or definition solving in codec. Existing resolver check remains.",
+      "runtime_evidence": "Producer B2-F1-red.log proves the original code accepted conflicting same-key configurations (exit101, 0 passed/1 failed). Current wire family passes4, including new loop over configuration and package disagreement and positive different-domain case before each rejection. Reviewer did not run tests."
+    }
+  ],
+  "full_contract": "Only two files differ from the prior full-task455 snapshot: wire admission and its regression. All core cardinalities/positive guard DAG/default policy, owner-qualified M14 identity/roles/optional lock, dormant/empty/omitted intent, opaque native versions, exact/additive conflicts with consumer provenance, independent domains, B1 evaluator composition, pure NeedsSelection, canonical spec and legacy behavior remain intact. No narrowing of the original3steps/1positive/2negative/2criteria/safe stop found.",
+  "evidence": {
+    "current_successful_nonignored": 22,
+    "breakdown": "core4 + resolver9 + wire4 + affected B1 exact5 =22 fresh executions: repeated21 existing functions plus1 new. Historical original21 are not added again. Separate pre-fix red remains failed.",
+    "source_currency": "Every final V1-V4/V6 after-subject map inspected matches all455 current subjects; before/after reviewer hashes stable.",
+    "generation": "No fresh generation execution. V5 executed=false explicitly reuses hash-bound original codegen0/check-codegen1/wire-diff0. Wrapper success verifies reuse only; historical preintegration check-codegen remains FAILED.",
+    "preservation": "V7 strict current-baseline check passes: no generated drift, schema drift or prior-spec loss. The prior53 approved header comments are already baseline and remain byte-identical in this correction.",
+    "runtime_binding": "Read Root-supplied actual-runtime-binding.json and candidate IDs for correction; no binding modification or acceptance action."
+  },
+  "remaining": "Root one postintegration index-aware check-codegen, final stability and semantic acceptance. No new broad tests or optional feature work requested.",
+  "actions": "Read-only named source/evidence/hash review. Wrote only four authorized review artifacts. No product edits, tests/builds, Git mutation, process/HTTP/store/plan/boot/steward/model actions."
+}

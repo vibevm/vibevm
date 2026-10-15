@@ -1,0 +1,12 @@
+{
+  "revision": 232,
+  "native": {
+    "state": "process_stopped",
+    "source_sequence": 1113,
+    "collected": true,
+    "failed": false,
+    "unknown_tail": false,
+    "process_stopped": true,
+    "accounting_pending": false
+  }
+}

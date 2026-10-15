@@ -1,0 +1,324 @@
+{
+  "id": "m05b2-generated-header-drift-1",
+  "question": "Incumbent codegen changes protected old module headers to enumerate the new schema home. Request exact disposition for the attached paths/hashes; no hand edits or xtask changes proposed. May these generator-produced header-only changes be retained? V7 currently truthfully fails; check-codegen also fails preintegration index comparison. Continuing independent implementation/tests.",
+  "changes": [
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+      "before_sha256": "aa2faebc037552b8022433f7140ce94129f38737edd08ea4a8d937af3d1e7316",
+      "after_sha256": "46bca5a2b3f09255155e6d4ede2b20167891310d8406f61c313374f50c0b8c81",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "before_sha256": "d635bf2c417b2dacf6a599ffd7c227b6fdfc676249976e288461bfa559bb7945",
+      "after_sha256": "1ab54de71b260a80a125d267a7cb46f0d3cdc888cf0999e0ef8425839b90a912",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "before_sha256": "5309f01dc9b2607d2463572df2ca7115f832d07cd2100a833ea2ddc0ad7ec792",
+      "after_sha256": "8cd0297528bbc667c6f67f58afa8999fa43bf300a8c4adf4ab98ff7a9c484e81",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "before_sha256": "2701fd51c9220eede01a7dea0e2ec91bfba56cd46da91749a92463e0b5abfdb1",
+      "after_sha256": "314bef03cbe94d09aa82d50c9c90ccb1a0e5e68c3d64553359bda8155aced595",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "before_sha256": "145cda9fd5963904995fc1aaa1423631caf80a3d9369a02a9c353bda50263a8d",
+      "after_sha256": "a7f52cff7ef139d244f35007b5ad19a7f19b1841b785fa4338f3c034983e40a6",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "before_sha256": "cbe892061e9956fd20c63ac7f10c70332ea6b7cae0d7950b5cf5b2b58da32686",
+      "after_sha256": "7efd8ec72360a4c2c3ee311299262d496b646276e615fa435a77fc1d7ecffbc9",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+      "before_sha256": "aa2faebc037552b8022433f7140ce94129f38737edd08ea4a8d937af3d1e7316",
+      "after_sha256": "46bca5a2b3f09255155e6d4ede2b20167891310d8406f61c313374f50c0b8c81",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_capability/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "before_sha256": "1ee6ae63decd36db4c8bbb4af9e5cbaea59963fe0298c9e023de2705f84f2b35",
+      "after_sha256": "8d212478bd7bf24bed7d9d31cb02591ca31ec3b4091dadd4fd5f0afa5734bbe9",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "before_sha256": "f4f235c9e93069ac0f20cff9d3a22bab93093fcbaede9f79a3e523ce6e987f91",
+      "after_sha256": "3e449e4f5d10ab11b14283c97227c8abca55ccde0c28f47a7add72fa79a4cfe0",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "before_sha256": "28250d3336ecc7f483c2e0b5f07dd73a529f9fc7a3737fd43002aa7875f66dda",
+      "after_sha256": "da34bacb734f4fc98c346e7cdba29d6f15bf4fb9657bc0772f0aee489f0d3103",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "before_sha256": "9d3fc66e9765e800813aae93abfb02d4d9f1428cace27d7cb554408d30c25a48",
+      "after_sha256": "fef42eff6b0fe429520ac3c98e0ec9348d41ee61850d23daa79a18f5eea7f172",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "before_sha256": "b8ad1ef35f3220fe6c03973e953ffc2d040d81871d28a33027ce9f7afa3a91a8",
+      "after_sha256": "d1f2f34b05a8ca0c951fea2888c9a539663547a0e21cb04f426c0e46fd6aa0b8",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "before_sha256": "94c41cee71aa3740edfbf3341aa1cde1c4697deb9f1001dea408298bbc7a2186",
+      "after_sha256": "28ae3e9cf40344b0832bb530ed7e635b931ad2a1e938a692f16ee8823c70fa44",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "before_sha256": "bf4d4b5c9a2563ce97c6e390f3b5ae8668be2372987a87eba8a2de00963b1ca3",
+      "after_sha256": "ae204d5bb20259862d00c6b1894dee92f72d86cc69d1a219977143dcba3b7944",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "before_sha256": "c02d9c2980d67534bda89b850fb15746d6ad796fe7df4da00825e3056ad6ca6c",
+      "after_sha256": "fbd72a91c61adaeb91a8a7825262117c4da2cfea267e9f47f4c696cafbf1c9b9",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "before_sha256": "0d809b73036100365ac013b040998e10fdf80994c1ee6ae4cc40f3f02c5afae1",
+      "after_sha256": "5df9a732252b7ed9304554cbabec66d71b7c6e9ccd0ad06d62dc75173d298efd",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "before_sha256": "2160f6ba4724c5bb6cfb4cbf3f134c5b31d1aefa31d9b03638f40546d7520c8b",
+      "after_sha256": "9ade3e451626b2ba31200bb2a27fe1ce548b6b6a4bf52411631daca0daa331e4",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "before_sha256": "60114ae930db0253b20ab782458832fc09b5c9e8c376cc4ca8f4a90ee4826084",
+      "after_sha256": "d19e6be24a8f270f60bfb49b42a1aa63827e87e5cd2bfcda5a9c5c984c493e7f",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "before_sha256": "e194fe6d07e5ef7dd176a712c7f6bea418023140a4a3dfc9fc822945e2fcae78",
+      "after_sha256": "14c01647a1cb33deb2d154ffe20e506fc87e407fd22f9af7b3890d31c7879c88",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "before_sha256": "858b3b2b87dca1ff997e2e9129448da4b9c0216982ed7fec988946f338dbae5e",
+      "after_sha256": "05faac6745c8c0e0a671382468ff08230ccadd890d6c95a4951922a452feb842",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "before_sha256": "ebf97ecfcdadc884de07e145c2726d2b3c15db879412ac235912f9a756ea78e2",
+      "after_sha256": "3681a0df87d57bfbe423f22fd5c68f36a9b6cb4e493ca3a9d129ae5eabe52aae",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "before_sha256": "745d89cce7b2c2424715b1ed03fd2d01f3a7b9d9236ca0749fe2ae8d5c0bc2b6",
+      "after_sha256": "0d44c8baf5738e65360769c20b785dcf5e6ae3280dfee0607015f6917b756b01",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "before_sha256": "e2998065f677ae5d5edc4d79f8e101f4d7b7e985ad3810b03e0563e6aa8a4d4d",
+      "after_sha256": "b5ed910262aefe371e1da96258dc6960d38825767269df796f1d0592e274f211",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "before_sha256": "3c930129827d3849f66ab9b1de8bf447ae5b87cbd438d3e2dee166a7a537d84e",
+      "after_sha256": "3723af1006209dc45b97cd1f9a94cec8e37ada8d3ae28541f37eef30e09f3ca6",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "before_sha256": "8f28551c1699c4ca8c765323c783c3cb3d03133a8e688c018d8b166af6708524",
+      "after_sha256": "ec0f17ddaca8ba1833864192268e0f9ad2cd2c50a58015f1c1e6f7366f548441",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "before_sha256": "cab05faaa410a4aa17bdec2662350400c19b77b34f54c07d1b26300836fcb8ce",
+      "after_sha256": "422e65ca56c1bd4e4bf4a2597045e9d97d6727ed4b3764fecd115fba8c91fc21",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "before_sha256": "24098105c11ba15de9096eea31f17f33c42f2a23e5fac579ab409bc288f40cc8",
+      "after_sha256": "d17b1cef96e3cb66731a2417998ffbcb260c27fbb1c029593ac5a4a27ba7eae9",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "before_sha256": "10879499fc932d0deae34a6d4471b22754b6fbf4719482daadb051a5b5d519c6",
+      "after_sha256": "7769e5f0aca4c559e5f8cb1b701f84a3d5cb7498c3d73db030371fb08e180ded",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "before_sha256": "5ba80299282aca3edb37ff43b59fcf83d6c86b7d36926ed4771b905b16bd82ac",
+      "after_sha256": "331abe2a0bec65d81c9101ec2879c5b6b935fb54db2e0306c7cf51e68e23bfb8",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "before_sha256": "d949a55e0ea3c4316f6ffc7217b20041873e7439c4db1d8383c08494ca99cd1b",
+      "after_sha256": "fbe360e5bd99cc624fae8d3a1f3d938d37a9af65edbc9e7a1a2c3a21f6a5234b",
+      "only_new_schema_home_in_header": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+      "before_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+      "after_sha256": "9cd5335142c6d3bf35b4ae43c7f189276443e3c780f1c834c26fa37643c749cc",
+      "only_new_schema_home_in_header": true
+    }
+  ]
+}
