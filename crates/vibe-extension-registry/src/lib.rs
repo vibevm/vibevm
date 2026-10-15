@@ -62,3 +62,5 @@ pub use view::RegistryState;
 mod fence_tests;
 #[cfg(test)]
 mod tests;
+
+pub mod client_requests;

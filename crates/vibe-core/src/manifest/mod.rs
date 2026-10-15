@@ -58,7 +58,8 @@ pub use lockfile::{
     LockfileMeta, SourceKind, VirtualCapabilityRecord,
 };
 pub use mechanism::{
-    HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
+    ClientBinding, ClientOperation, ClientRequest, ClientScope, ClientShape, HOST_OWNER,
+    MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
     MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
     ProviderPin, ProviderPinParseError, is_portable_token,
 };

@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "context_id": "context",
+  "target_id": "target",
+  "action": "read"
+}

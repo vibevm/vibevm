@@ -120,7 +120,15 @@ pub fn collect_mechanisms(world: &ExtensionWorld) -> Result<MechanismRegistry, C
 
     apply_mechanism_disables(world, &by_pin, &mut rows)?;
 
-    Ok(MechanismRegistry { rows, by_pin })
+    let registry = MechanismRegistry { rows, by_pin };
+    crate::client_requests::client_requests(&registry).map_err(|reason| {
+        CollectionError::InvalidMechanism {
+            owner: "selected-world".into(),
+            id: "client-request".into(),
+            reason,
+        }
+    })?;
+    Ok(registry)
 }
 
 /// Collect one collected (never engine-minted) source's declarations, under

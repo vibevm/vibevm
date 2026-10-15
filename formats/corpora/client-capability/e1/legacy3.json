@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "context_id": "context",
+  "target_id": "target",
+  "capture_id": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "root": "/fixture",
+  "principal": "not-admitted",
+  "capabilities": {
+    "com.anthropic/claude": {
+      "provider": "org.example/clients#client",
+      "descriptor_digest": "sha256:8bb754e83bf3d00eb497008f3920c927b9d104dbca307c1b20efd79bcf719c45",
+      "manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "version": ">=1.0.0",
+      "source_strength": "observed",
+      "disabled": false,
+      "authorization": "not-granted",
+      "implementation": "not-evaluated",
+      "availability": "not-probed",
+      "bindings": [
+        {
+          "scope": "project",
+          "shape": "json-member",
+          "destination": ".claude/settings.json",
+          "key": [
+            "mcpServers",
+            "new.key"
+          ],
+          "operations": [
+            "reconcile-json-member"
+          ]
+        }
+      ]
+    },
+    "com.openai/codex": {
+      "provider": "org.example/clients#client",
+      "descriptor_digest": "sha256:6a6b724296e7cc6a7d5592717b85df39bf8f4d14367bba4463dfe4035e66b777",
+      "manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "version": ">=1.0.0",
+      "source_strength": "observed",
+      "disabled": false,
+      "authorization": "not-granted",
+      "implementation": "not-evaluated",
+      "availability": "not-probed",
+      "bindings": [
+        {
+          "scope": "project",
+          "shape": "toml-member",
+          "destination": ".codex/config.toml",
+          "key": [
+            "mcpServers",
+            "new.key"
+          ],
+          "operations": [
+            "reconcile-toml-member"
+          ]
+        }
+      ]
+    },
+    "ai.opencode/opencode": {
+      "provider": "org.example/clients#client",
+      "descriptor_digest": "sha256:50383a946ccbab776796e7b6a37cd8256a4ba9961b8d4d3e0eb6a1d2d2e64fa2",
+      "manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "version": ">=1.0.0",
+      "source_strength": "observed",
+      "disabled": false,
+      "authorization": "not-granted",
+      "implementation": "not-evaluated",
+      "availability": "not-probed",
+      "bindings": [
+        {
+          "scope": "project",
+          "shape": "json-member",
+          "destination": ".config/opencode/opencode.json",
+          "key": [
+            "mcpServers",
+            "new.key"
+          ],
+          "operations": [
+            "reconcile-json-member"
+          ]
+        }
+      ]
+    }
+  }
+}

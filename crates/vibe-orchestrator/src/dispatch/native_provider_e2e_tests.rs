@@ -60,6 +60,7 @@ impl Fixture {
         std::fs::write(provider_root.join("schema.jtd.json"), "{}").unwrap();
 
         let mechanism = MechanismDecl {
+            client_request: None,
             effects: None,
             id: "fixture-vibe-bin".to_owned(),
             role: MechanismRole::Deploy,

@@ -52,3 +52,5 @@ pub mod verification_evidence;
 pub mod vocabularies;
 
 mod derivative;
+
+pub mod client_capability;

@@ -1,7 +1,6 @@
 //! Host-owned prepared adapter queries. Wire requests carry correlation only.
-use crate::document_analysis::{
-    AnalysisCapture, AnalysisLimits, DocumentAnalysisHost, ResourceDeclaration, ResourceRole,
-};
+mod captured_host;
+pub mod client_capabilities;
 use sha2::{Digest, Sha256};
 use std::{
     path::{Path, PathBuf},
@@ -85,10 +84,8 @@ pub struct AdapterDeployPreparation<'a> {
 }
 
 pub struct AdapterPlanHost {
-    host: Arc<DocumentAnalysisHost>,
-    capture: AnalysisCapture,
+    captured: captured_host::CapturedHost,
     target: AdapterTarget,
-    context: String,
     target_id: String,
 }
 pub struct PreparedAdapterSession {
@@ -114,27 +111,12 @@ impl AdapterPlanHost {
                 "user scope requires a host-bound absolute home"
             );
         }
-        let host = DocumentAnalysisHost::new(
-            root,
-            "vibe.toml",
-            vec![ResourceDeclaration {
-                path: "vibe.toml".into(),
-                role: ResourceRole::Manifest,
-            }],
-            AnalysisLimits {
-                resource_bytes: 1024 * 1024,
-                capture_bytes: 1024 * 1024,
-                open_buffers: 1,
-            },
-        )?;
-        let capture = host.client()?.freeze()?;
-        let context = format!("adapter-context:{}", capture.context());
+        let captured = captured_host::CapturedHost::new(root)?;
+        let context = &captured.context;
         let target_id = hash(format!("{context}:{target:?}").as_bytes());
         Ok(Self {
-            host,
-            capture,
+            captured,
             target,
-            context,
             target_id,
         })
     }
@@ -179,7 +161,7 @@ impl AdapterPlanHost {
             let manifest = vibe_core::manifest::Manifest::parse_str(
                 &capture
                     .source
-                    .captured_manifest_at(self.host.root())
+                    .captured_manifest_at(self.captured.host.root())
                     .map_err(|error| anyhow::anyhow!("{error:?}"))?,
             )?;
             let deploy = manifest
@@ -201,7 +183,7 @@ impl AdapterPlanHost {
             detail: error.to_string(),
         })?;
         let execution = vibe_lifecycle::DeployExecution {
-            project_root: self.host.root(),
+            project_root: self.captured.host.root(),
             targets: inputs.targets,
             selection: inputs.selection,
             registry: &capture.world.mechanisms,
@@ -239,17 +221,9 @@ impl AdapterPlanHost {
         offline: bool,
     ) -> Result<PreparedAdapterSession, AdapterPreparationFailure> {
         let prepare = || -> anyhow::Result<PreparedAdapterSession> {
-            let source = SourceQueryService::prepare_host(self.host.root())
-                .map_err(|e| anyhow::anyhow!("{e:?}"))?;
-            let manifest = source
-                .captured_manifest_at(self.host.root())
-                .map_err(|e| anyhow::anyhow!("{e:?}"))?;
-            let resource = self.host.resource("vibe.toml").expect("host declaration");
-            anyhow::ensure!(
-                self.capture.resource(resource).and_then(|r| r.raw()) == Some(manifest.as_bytes()),
-                "host manifest changed before preparation"
-            );
-            let mut loaded = crate::world::prepare_adapter_sources(self.host.root(), offline)?;
+            let source = self.captured.prepare()?;
+            let mut loaded =
+                crate::world::prepare_adapter_sources(self.captured.host.root(), offline)?;
             let skills = loaded
                 .adapter_sources
                 .take()
@@ -272,20 +246,14 @@ impl AdapterPlanHost {
                         ..
                     } => (group, name, root, version, false),
                 };
-                let selected = source
-                    .selected_doc_instance(group.as_str(), name.as_str())
-                    .ok_or_else(|| {
-                        anyhow::anyhow!("skill provider is outside selected source world")
-                    })?;
-                anyhow::ensure!(
-                    selected.root == *root
-                        && (expected_self || selected.version == *version)
-                        && selected.is_self == expected_self,
-                    "selected provider mismatch"
-                );
-                source
-                    .captured_manifest_at(root)
-                    .map_err(|e| anyhow::anyhow!("{e:?}"))?;
+                captured_host::selected_manifest(
+                    &source,
+                    group.as_str(),
+                    name.as_str(),
+                    root,
+                    version,
+                    expected_self,
+                )?;
             }
             source.revalidate().map_err(|e| anyhow::anyhow!("{e:?}"))?;
             let basis: Vec<_> = bindings
@@ -293,12 +261,12 @@ impl AdapterPlanHost {
                 .map(|b| (b.identity(), b.source_snapshot.clone()))
                 .collect();
             let id = hash(&serde_json::to_vec(&(
-                &self.context,
+                &self.captured.context,
                 &self.target_id,
                 basis,
             ))?);
             Ok(PreparedAdapterSession {
-                context: self.context.clone(),
+                context: self.captured.context.clone(),
                 target_id: self.target_id.clone(),
                 id,
                 source,
@@ -317,7 +285,7 @@ impl AdapterPlanRoute {
     pub fn new(host: AdapterPlanHost, prepared: Option<PreparedAdapterSession>) -> Answer<Self> {
         if prepared
             .as_ref()
-            .is_some_and(|p| p.context != host.context || p.target_id != host.target_id)
+            .is_some_and(|p| p.context != host.captured.context || p.target_id != host.target_id)
         {
             return Err(fault(
                 e::ErrorCode::WrongContext,
@@ -328,10 +296,10 @@ impl AdapterPlanRoute {
         Ok(Self { host, prepared })
     }
     pub fn root(&self) -> &Path {
-        self.host.host.root()
+        self.host.captured.host.root()
     }
     pub fn context_id(&self) -> &str {
-        &self.host.context
+        &self.host.captured.context
     }
     pub fn target_id(&self) -> &str {
         &self.host.target_id

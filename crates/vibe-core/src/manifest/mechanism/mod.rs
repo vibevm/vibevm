@@ -12,6 +12,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE");
 
+mod client_request;
+pub use client_request::{ClientBinding, ClientOperation, ClientRequest, ClientScope, ClientShape};
 mod identity;
 mod wire;
 
@@ -45,6 +47,7 @@ const ONE_MACHINE: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MAC
 /// };
 ///
 /// let declaration = MechanismDecl {
+///     client_request: None,
 ///     effects: None,
 ///     id: "cargo-v2".into(),
 ///     role: MechanismRole::Build,
@@ -75,6 +78,7 @@ const ONE_MACHINE: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MAC
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MechanismDecl {
+    pub client_request: Option<ClientRequest>,
     pub effects: Option<super::DeclaredEffects>,
     pub id: String,
     pub role: MechanismRole,
@@ -88,6 +92,9 @@ pub struct MechanismDecl {
 impl MechanismDecl {
     /// Revalidate a declaration constructed through Rust rather than TOML.
     pub fn validate(&self) -> Result<(), String> {
+        if let Some(request) = &self.client_request {
+            request.validate()?;
+        }
         if !is_portable_token(&self.id) {
             return Err(format!(
                 "[[mechanism]] field `id` value `{}` is not a portable token (nonempty lowercase alphanumerics, `-`, `.`) ({ONE_MACHINE})",

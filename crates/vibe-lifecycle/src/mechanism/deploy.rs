@@ -869,3 +869,5 @@ pub use prepared_query::{
     PreparedDeployQuery, PreparedDeployRow, prepare_deploy_query,
     prepare_deploy_query_with_client_state_owner,
 };
+
+pub mod client_capabilities;

@@ -18,6 +18,7 @@ fn declaration(
     prebuilt: Option<BTreeMap<String, PathBuf>>,
 ) -> MechanismDecl {
     MechanismDecl {
+        client_request: None,
         effects: None,
         id: format!("{name}-provider"),
         role,

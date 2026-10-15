@@ -311,6 +311,7 @@ fn declaration(
     relative: PathBuf,
 ) -> MechanismDecl {
     MechanismDecl {
+        client_request: None,
         effects: None,
         id: id.to_owned(),
         role,

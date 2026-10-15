@@ -125,6 +125,8 @@ pub(super) fn mechanism(id: &str, key: &str) -> MechanismDecl {
         .parse::<MechanismKey>()
         .unwrap_or_else(|error| panic!("valid test mechanism key: {error}"));
     MechanismDecl {
+        client_request: None,
+        effects: None,
         id: id.into(),
         role: key.role(),
         name: key.name().to_owned(),
@@ -164,6 +166,7 @@ pub(super) fn world(
 
 pub(super) fn declaration(id: &str, point: &str) -> ExtensionDecl {
     ExtensionDecl {
+        effects: None,
         id: id.into(),
         point: point
             .parse::<ExtensionPoint>()

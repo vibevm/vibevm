@@ -1809,3 +1809,30 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/adapter-plan/e1"
 sunset = "none"
+
+[format.client-capability-request]
+epoch = 1
+schema = "schemas/client_capability/e1/request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/client-capability/e1"
+sunset = "none"
+
+[format.client-capability-result]
+epoch = 1
+schema = "schemas/client_capability/e1/result.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/client-capability/e1"
+sunset = "none"
+
+[format.client-capability-error]
+epoch = 1
+schema = "schemas/client_capability/e1/error.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/client-capability/e1"
+sunset = "none"

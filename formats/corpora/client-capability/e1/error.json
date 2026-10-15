@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "context_id": "context",
+  "target_id": "target",
+  "code": "invalid-descriptor",
+  "message": "duplicate client binding"
+}

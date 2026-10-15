@@ -199,6 +199,7 @@ pub enum MechanismResolutionError {
 /// # use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 /// # use std::path::PathBuf;
 /// # let plugin = MechanismDecl {
+/// #     client_request: None,
 /// #     id: "cargo-v2".into(),
 /// #     role: MechanismRole::Build,
 /// #     name: "cargo".into(),

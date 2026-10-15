@@ -45,6 +45,7 @@ fn world(root: &Path) -> ExtensionWorld {
             }],
             controls: ExtensionsControl::default(),
             mechanisms: vec![MechanismDecl {
+                client_request: None,
                 effects: None,
                 id: "provider".to_owned(),
                 role: MechanismRole::Deploy,

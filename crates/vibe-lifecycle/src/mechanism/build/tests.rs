@@ -49,6 +49,7 @@ fn host_source(mechanisms: Vec<MechanismDecl>) -> HostExtensionSource {
 /// provider — installed, collected, and inert until something selects it.
 fn world_with_plugin() -> ExtensionWorld {
     let declaration = MechanismDecl {
+        client_request: None,
         effects: None,
         id: "cargo-v2".into(),
         role: MechanismRole::Build,
