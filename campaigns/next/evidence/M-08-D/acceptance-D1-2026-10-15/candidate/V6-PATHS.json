@@ -1,0 +1,17 @@
+[
+  "crates/vibe-agent-projection/src/lib.rs",
+  "crates/vibe-agent-projection/src/client_commands.rs",
+  "crates/vibe-agent-projection/src/client_commands/m_08_d_1_cases.rs",
+  "crates/vibe-lifecycle/src/lib.rs",
+  "crates/vibe-lifecycle/src/mechanism.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy/client_commands/m_08_d_1_cases.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy/executable_observation.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy/plugin/prepared.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client.rs",
+  "crates/vibe-wire/src/behaviour/mod.rs",
+  "crates/vibe-wire/src/behaviour/client_command.rs",
+  "crates/vibe-wire/src/behaviour/client_command/m_08_d_1_cases.rs"
+]

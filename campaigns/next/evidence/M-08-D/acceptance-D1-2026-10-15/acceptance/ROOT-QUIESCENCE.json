@@ -1,0 +1,48 @@
+{
+  "utc": "2026-10-15T18:36:06.421201+00:00",
+  "normal_exact_stop_delivery": "delivered",
+  "all_absent": true,
+  "processes": [
+    {
+      "pid": 1457259,
+      "ppid": 1457197,
+      "birth": 41503340,
+      "state": "S",
+      "exe": "/fast/zap-managed/2026-10-15-m08d1/pins/zap",
+      "absent": true
+    },
+    {
+      "pid": 1457262,
+      "ppid": 1457259,
+      "birth": 41503362,
+      "state": "S",
+      "exe": "/fast/zap-managed/2026-10-15-m08d1/pins/podbay",
+      "absent": true
+    },
+    {
+      "pid": 1457374,
+      "ppid": 1457262,
+      "birth": 41503905,
+      "state": "S",
+      "exe": "/fast/zap-managed/2026-10-15-m08d1/pins/podbay-pod",
+      "absent": true
+    },
+    {
+      "pid": 1457380,
+      "ppid": 1457374,
+      "birth": 41503966,
+      "state": "S",
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "absent": true
+    },
+    {
+      "pid": 1458274,
+      "ppid": 1457380,
+      "birth": 41506954,
+      "state": "S",
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+      "absent": true
+    }
+  ],
+  "service_signal": "SIGTERM via pidfd after exact birth/exe check and child absence"
+}

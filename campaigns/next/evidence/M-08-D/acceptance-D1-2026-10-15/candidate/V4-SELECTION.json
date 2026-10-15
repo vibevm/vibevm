@@ -1,0 +1,53 @@
+{
+  "run": [
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::plugin::m_08_a_1_cases::cli_plugin_wire_is_inert_user_scope_install_remove_and_update_refusal",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::m_08_b_1_cases::missing_client_capture_refuses_without_process_and_prepared_query_is_pure",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::m_08_b_1_cases::correction::equal_byte_launcher_retarget_refuses_for_parent_and_leaf",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::m_08_b_1_cases::correction::executable_mode_content_and_object_drift_refuse",
+      "--",
+      "--exact"
+    ]
+  ],
+  "reused": []
+}

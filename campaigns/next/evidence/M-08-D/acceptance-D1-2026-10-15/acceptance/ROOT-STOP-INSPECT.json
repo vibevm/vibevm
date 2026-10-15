@@ -1,0 +1,10 @@
+{
+  "state": "process_stopped",
+  "source_sequence": 1620,
+  "collected": true,
+  "failed": false,
+  "unknown_tail": false,
+  "accounting_pending": false,
+  "process_stopped": true,
+  "retry_at_ns": 0
+}

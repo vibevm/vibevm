@@ -1,0 +1,59 @@
+{
+  "status": "prepared_only_pending_Root_review_stop_source_commit_gate_approval",
+  "compile_exits": [
+    0,
+    0
+  ],
+  "pure_file_validation": "passed, no store open",
+  "fresh_cases": 16,
+  "counts": [
+    4,
+    6,
+    2,
+    4,
+    0,
+    0,
+    0
+  ],
+  "methods": 7,
+  "criteria": 2,
+  "source_subjects": 464,
+  "producer_report_artifact": "8261029ef72ce497fcca44efb9c525b6bb3745e56a30f6246104228a57e35c00",
+  "approval": false,
+  "stop_command": "python3 /fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/stop-once.py --root-execute-once",
+  "ordered_acceptance_commands": [
+    "/fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/safe-candidate-local 1457259 1457262 1457374 1457380 1458274",
+    "/fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/accept-candidate-local open-review /fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/accept-candidate-local evidence /fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/accept-candidate-local stage /fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/accept-candidate-local work /fast/zap-managed/2026-10-15-m08d1/acceptance-preparation/ROOT-REVIEW.json"
+  ],
+  "remaining_inputs": [
+    "Root actual normal-stop Delivered then exact5 absence metadata at acceptance-preparation/ROOT-QUIESCENCE.json: normal_exact_stop_delivery delivered, all_absent true",
+    "Actual independent review clear and two original criterion rationales",
+    "ROOT-SOURCE-INTEGRATION.json task M-08-D.1 integrated true/review_clear true/source_commit actual current40hex; bind file SHA in proposal.main_integration",
+    "ROOT-CODEGEN-GATE.json actual exit0/source_staged=true/command/log and unchanged full464 source_before/source_after maps; bind file/log SHAs in V5 row; only then V5 observed_result observed_pass",
+    "Bind final review/retirement/integration/gate evidence_files; approve ROOT-REVIEW.json with exact token and keep bytes immutable after Safe"
+  ],
+  "V5": "Native0/1/0 failed remains history; actual Root gate is separate method observation, producer Report remains provenance artifact",
+  "source_snapshot_note": "V5 snapshot predates final renderer-test correction; latest REPORT/V1/V6 agree with current464 map. Historical V5 bytes retained.",
+  "hashes": {
+    "stop-once.py": "c4a0f35873fc0d8fbcb126548e80a85010ae7ab33285286c013e9f600fad7721",
+    "INSPECT-TARGET.json": "6c4cdfbc788875207efd319c67ac0c816d873c90dfde5cbfae088c2505774517",
+    "prepare.py": "aa33bdf9d7d6d4971e34fe2e3d1f708ca53b02725d5d96d2103655fc69fd65a0",
+    "final-source-hashes.json": "9064d3e7a35a8467e8323ffae659c971930925eab4a244e3f7429e486063542f",
+    "ROOT-REVIEW-PROPOSAL.json": "50985f31f67b1e977a430b4d9e0ee419d0a8309583a2c04c7d35a548138d35ba",
+    "acceptance-validation.rs": "184ce6a52b9e941c98d34adb028a5244d7d234178817fad86bcedfc4c56d6df2",
+    "safe-candidate-local.rs": "a1c16a1c190d89afe0c5e119cd3aaab8151f8e1bb256dbda4b3e58cf698c1187",
+    "safe-candidate-local-build-args.json": "b6323a51268916b193ab10ae46bcdc192e681651d3084addca93378f86d0e807",
+    "safe-candidate-local-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "safe-candidate-local": "d946e6c6b22f6345a8db44f3351f8874c24308db233b6a06cbe5c3179f5bcaea",
+    "accept-candidate-local.rs": "c16273992d4a010a39c0bc9486ab81873637d405f2f48be6f7d013b1a21d419b",
+    "accept-candidate-local-build-args.json": "e68edd8f3d5984945d8d37ec49cd97eb1c1869185d93b9a9ebe3ed7b4cba6180",
+    "accept-candidate-local-build.log": "f3546ef2ea085a35ae7c1a1f8b88dffb820e5eeadbc886deb964e7d9bbbb77a9",
+    "STOP-REQUEST.json": "dda51ff4dbe9256b2afebacfc33151a6173a5ca8689294f549b353581aad589b",
+    "STOP-RESPONSE.json": "238469d0a8f5a5d6cfead7793c6cbf05f808b15f422e4052dd4fd5beb7ad1a7a",
+    "accept-candidate-local": "b30f35b827d1b04dccc2b4ffe5dc0c7de0fc453fffd894835d61be41751c2584"
+  },
+  "no_mutation_executed": true
+}

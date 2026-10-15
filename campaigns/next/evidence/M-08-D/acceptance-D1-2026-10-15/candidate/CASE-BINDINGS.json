@@ -1,0 +1,29 @@
+{
+  "V1": {
+    "names": [
+      "client_commands::m_08_d_1_cases::fixed_recipes_are_deterministic",
+      "client_commands::m_08_d_1_cases::literal_values_and_option_refusal",
+      "client_commands::m_08_d_1_cases::unsupported_contracts_refuse",
+      "client_commands::m_08_d_1_cases::native_paths_are_lossless"
+    ],
+    "expected": 4
+  },
+  "V2": {
+    "names": [
+      "mechanism::deploy::client_commands::m_08_d_1_cases::exact_approval_runs_only_inspected_spec_and_query_is_pure",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::stale_control_version_environment_cwd_roots_and_revocation_refuse",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::wrong_grants_and_unknown_contracts_refuse_before_operation",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::executable_and_root_replacement_refuse",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::quoted_path_is_data_and_nonutf8_wire_refuses",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::real_generic_file_approval_confers_no_process_authority"
+    ],
+    "expected": 6
+  },
+  "V3": {
+    "names": [
+      "behaviour::client_command::m_08_d_1_cases::strict_corpus_and_roundtrip",
+      "behaviour::client_command::m_08_d_1_cases::inert_grammars_reject_shell_native_and_unknown_epochs"
+    ],
+    "expected": 2
+  }
+}

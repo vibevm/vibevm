@@ -1,0 +1,17 @@
+# Full M-08-D.1 — accepted 2026-10-15
+
+Actual canonical WorkAccepted431, Work Accepted/revision5, verified independently by retained inspect.stderr. inspect.stdout separately reports RuntimeJob execution Succeeded and acceptance Unreviewed: this is not JobAccepted. Source0a3769398ad981fc5f8f2e0e0f4f2c8664e90a24 includes86 changed files;464 historical source subjects verified against exact Git blob bytes. ROOT-ACCEPTANCE's87/222 is the historical acceptance boundary, not a current counter edit.
+
+Full original three steps/two positive/two negative cases/two criteria/safe stop remain. Shared pure native renderer defines fixed client operations; trusted preparation binds admitted launcher/version/context/actual environment/cwd/roots and exposes active argv/process effects. Private exact process approval remains distinct from generic file grant. Unknown/native/shell/arbitrary argv and stale authorization refuse. Qualification uses injected ProcessRunner fixtures only. No real client operation, independent production PodBay-adapter rollout, D2/D3 integration, full suite or platform certification claimed.
+
+Sixteen current cases: renderer4+lifecycle6+wire2+affected legacy4. Initial quoted-root V2 had5passed/1failed; final6 pass after the recorded source correction. Initial renderer/schema/generation failures remain byte-exact history. V5 remains actual codegen0/check-codegen1/wire-diff0. Root separately ran one staged index-aware check-codegen0 in6.4853s with all464 before/after hashes unchanged. Native failure is not relabeled green.
+
+Final V1/V6 and producer report bind the final renderer-test source. V2/V3/V4/V5 subject maps predate that one test-only correction; consumed production/lifecycle/wire bytes remain stable and final V1 reran the changed test. Independent full review is bounded clear.55 protected generated files differ only by the approved exact global-header insertion; old non-comment bodies and old schema bytes remain protected. No new global gate implied.
+
+Root attests Safe419/420/421; raw OpenReview422, seven Evidence423–429, Stage430 and Work431 receipts are retained. Approved review SHA562d133eadde80a20ed840cb496289992fc63bf3f9a9041c19734e98cfed2ee6 remains immutable. EvidenceObservation references producer REPORT artifact8261029ef72ce497fcca44efb9c525b6bb3745e56a30f6246104228a57e35c00; Root review is separately retained Safe evidence, never substituted as producer provenance.
+
+Standalone Safe stdout/independent Safe-record export was not present in named files. No raw receipt is invented. Root's explicit Safe-revision attestation and the labelled bounded canonical-job reference projection preserve available evidence; that projection is not an independent Safe export. Acceptance receipt plus independent final Work inspection are retained raw.
+
+Normal stop HTTP200/process_stopped known-tail and all-five absence are Root lifecycle facts. Only sanitized ROOT-STOP-INSPECT metadata is archived; ALLrawNative responses including STOP-RESPONSE and byteencoded stored_prefix are excluded, along with model/reasoning text, configs/credentials/RootContext, DBs and binaries.
+
+MANIFEST maps unchanged raw bytes, content duplicates share one copy, helpers use .rs.raw.txt. SOURCE-COMMIT-MAP binds historical accepted commit, not later checkout state. VibeVM owns packages/context, Zap plans/acceptance, PodBay physical execution. This archive submits nothing, changes no source implementation/count/plan/Git state and creates no new acceptance. Root reviews/stages/commits.

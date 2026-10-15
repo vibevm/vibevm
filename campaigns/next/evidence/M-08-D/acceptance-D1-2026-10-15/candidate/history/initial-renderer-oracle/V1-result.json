@@ -1,0 +1,41 @@
+{
+  "group": "V1",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "client_commands::m_08_d_1_cases::fixed_recipes_are_deterministic",
+      "client_commands::m_08_d_1_cases::literal_values_and_option_refusal",
+      "client_commands::m_08_d_1_cases::unsupported_contracts_refuse",
+      "client_commands::m_08_d_1_cases::native_paths_are_lossless"
+    ],
+    "expected": 4
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "client_commands::m_08_d_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "4",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08d1/V1-1.log",
+      "seconds": 26.071900158014614,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

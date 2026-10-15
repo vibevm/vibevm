@@ -1,0 +1,48 @@
+{
+  "group": "V5",
+  "executed": true,
+  "case_binding": null,
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "xtask",
+        "codegen"
+      ],
+      "exit": 1,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m08d1/V5-1.log",
+      "seconds": 2.210262371983845,
+      "passed": false,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "xtask",
+        "check-codegen"
+      ],
+      "exit": 1,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m08d1/V5-2.log",
+      "seconds": 2.2280220040120184,
+      "passed": false,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "xtask",
+        "wire-diff"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m08d1/V5-3.log",
+      "seconds": 1.6014100729953498,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": false
+}

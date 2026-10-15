@@ -1,0 +1,39 @@
+{
+  "group": "V3",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "behaviour::client_command::m_08_d_1_cases::strict_corpus_and_roundtrip",
+      "behaviour::client_command::m_08_d_1_cases::inert_grammars_reject_shell_native_and_unknown_epochs"
+    ],
+    "expected": 2
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::client_command::m_08_d_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "2",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08d1/V3-1.log",
+      "seconds": 17.080605205032043,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

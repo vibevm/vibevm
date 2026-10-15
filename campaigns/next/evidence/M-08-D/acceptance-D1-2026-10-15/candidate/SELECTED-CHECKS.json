@@ -1,0 +1,132 @@
+[
+  {
+    "id": "V1",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "client_commands::m_08_d_1_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V2",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::client_commands::m_08_d_1_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V3",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::client_command::m_08_d_1_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V4",
+    "commands": [],
+    "existing_conditional_commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::plugin::m_08_a_1_cases::cli_plugin_wire_is_inert_user_scope_install_remove_and_update_refusal",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::m_08_b_1_cases::missing_client_capture_refuses_without_process_and_prepared_query_is_pure",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::m_08_b_1_cases::correction::equal_byte_launcher_retarget_refuses_for_parent_and_leaf",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::m_08_b_1_cases::correction::executable_mode_content_and_object_drift_refuse",
+        "--",
+        "--exact"
+      ]
+    ]
+  },
+  {
+    "id": "V5",
+    "commands": [
+      [
+        "cargo",
+        "xtask",
+        "codegen"
+      ],
+      [
+        "cargo",
+        "xtask",
+        "check-codegen"
+      ],
+      [
+        "cargo",
+        "xtask",
+        "wire-diff"
+      ]
+    ]
+  },
+  {
+    "id": "V6",
+    "commands": "scoped authored Rust exact paths plus whitespace"
+  },
+  {
+    "id": "V7",
+    "commands": "PROP054 XML/additive oldclauses and exact protected generated semantic/header preservation"
+  }
+]
