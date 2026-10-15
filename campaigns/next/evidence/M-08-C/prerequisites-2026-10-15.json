@@ -1,0 +1,115 @@
+{
+  "scope": "Retained historical accepted prerequisite task boundaries for M08C1, not new acceptance/replay or aggregate release-gate clearance",
+  "prior_snapshot_sha256": "c9ad10fc4766484eda45bba82f79664988b54d10c2a3e4470fe2e33675086fea",
+  "prior_revision": 466,
+  "source_head": "51c7472e3e435dfe4c0bf601c5f99c61447e05be",
+  "rows": [
+    {
+      "task_id": "M-14-C.1",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:e68c64679:opt-in-bound-carrier-separate-key-refusal-5-bound+1-legacy+24-wire+codegen+consumer-check;no-bound-effect"
+      ],
+      "source_commits_in_current_history": [
+        "e68c64679d717d338c5627823a0ce88a86e710a2"
+      ]
+    },
+    {
+      "task_id": "M-14-C.2",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:2ac42d74f:physical-root-lock+stale-trusted-generation+named-bin-store-recheck;18-safefs+8-binding+9-bound-state+7-bound-store-pass;Linux-only;first-effect-C3"
+      ],
+      "source_commits_in_current_history": [
+        "2ac42d74fa3840186c241fcf0f114da14b795fc4"
+      ]
+    },
+    {
+      "task_id": "M-14-C.3",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:4520d8596:internal-host-admitted-first-bound-builtin-two-disposable-homes-real-output-bound-receipts;3-effect+12-transaction+5-provider+2-pinned-receipts-pass;consumer-check0;no-native-MacWin-proof"
+      ],
+      "source_commits_in_current_history": [
+        "4520d8596572ce2b4284a267a628dce46573a750"
+      ]
+    },
+    {
+      "task_id": "M-16-C.1",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:5e086010c:fixture-journal-fence-14-focused-cases-exit0;real-domain-C2-adapters-C4",
+        "accepted:d20f1d75c:durable-leased-fixture-reservation+same-run-journal-ready-before-effect;unique-domain-run-ID;12-lifecycle+9-orchestrator-focused-pass;uncertain-publication/retry/tombstone-proof;real-domains-and-adapters-C2-C4"
+      ],
+      "source_commits_in_current_history": [
+        "5e086010cd25b89477ef826c6a241a05692bbc73",
+        "d20f1d75ce24837902f75fa8374df6a5a318214d"
+      ]
+    },
+    {
+      "task_id": "M-16-C.2",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:git:a659b23c2:central-C2-full-contract-review-all-four-domain-children-accepted+private-fixed-script-live-owner-ebedc76f9-and-PROP080-lifetime-b6004684c;actual-SystemProcessRunner-production-start/client-process-exit-detach1/1+real-owning-host-SIGKILL-after-effect-C1Ready-before-marker1/1-same-run-cold-RecoveryRequired-no-redispatch-count1-provider-explicitly-finished-no-orphan;prior-owned-family11/11+real-legacy-script1/1+actual-build/package/deploy-cold-results-reviewed+typed-Busy/process-death-sourceproof;bounded-profile-only/other-adapters-unavailable/no-public1.1-or-advertised-testIPC;next-C3-event-streams-and-cooperative-control"
+      ],
+      "source_commits_in_current_history": []
+    },
+    {
+      "task_id": "M-16-C.2.1",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:git:4db9f5089+58356a317:fixed-crate-private-script/agent-lifecycle-owner-ready-before-effect+retained-report-marker/attach;root-adapter46/46+source-stage15/15+plan10/10;general-domains/public-adapters/native-MacWin-open"
+      ],
+      "source_commits_in_current_history": []
+    },
+    {
+      "task_id": "M-16-C.2.2",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:git:a0968167f:central-C2.2-review;6c690a5a4+055638147+251cc19d2+7b8d2a48f;fixed-package10/10+fixed-build6/6+real-Cargo4-spawns+linked-output2/2;duplicate-no-reapply+partial-uncertain;other-target-shapes-and-MacWin-native-open"
+      ],
+      "source_commits_in_current_history": []
+    },
+    {
+      "task_id": "M-16-C.2.3",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:git:5329520e7:central-C2.3-review;16e1a3bc3+7bec62ca4;protected-bound-vibe-bin-bridge-before-destination-effect+verified-receipt/result+pending/copy-refusal;fixed-internal-only+MacWin-native-open"
+      ],
+      "source_commits_in_current_history": []
+    },
+    {
+      "task_id": "M-16-C.2.4",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:git:d3eee83b3:central-C2.4-contract-review+production-create/push-owner-b347fa04e/05d60fbe0+all19-streamed-upload/rename-and-independent-empty-cleanup+separate-Publish-finalize-and-retained-terminal+ModeA/C1/vault/exact-metadata/latest/root-custody;parent-focused-runtime-finalize11/11-retain21/21-facade2/2-create6/6-and-populated1/1-push11/11-Direct1/1-populated1/1+production-compile0;compositional-domain-cold-attach-and-Busy/process-death-proof-source-reviewed;unsupported-live-finalize/other-adapters-and-public1.1-hold-preserved;M16C2-parent-still-open-connection-loss-policy-and-local-live-owner-attach/control"
+      ],
+      "source_commits_in_current_history": []
+    },
+    {
+      "task_id": "M-16-C.3",
+      "retained_state": "accepted",
+      "accepted_evidence_refs": [
+        "accepted:git:d917ac007+68d869aed:FULL-C3-stepaudit-productiontypedscopedhistory/phase/progress/raw/diagnostic+boundedresponsiveauth-host-TCPquery/replay/control+defaultUnsupportedUnavailable+EXPLICITopted-deferred-after-domain-callback/natural-native-exit-completeddrains-before-normalpublication+RequestedUncertain-vs-retainedUncertainpartialmarker/actualreport+readbackcreateNewstopreceipt/no-rollback+freshnewIDlateAlreadyTerminal-vs-originalreceiptReached;parent-correction11/11-control12/12-facade7/7-realSystemclientExit/hostDeath1/1each-productioncheck0;REDlate0/1ConflictingRequest-fixed-provenoriginalcaseamong11green;compactnativeproof/smallmarkerhashidentity-no-largeRecord-lockclones;TCPsameproductionowner-sourcefamily8/9-with-one-oraclefailure-unreadclientDrop-producedConnectionReset-corrected-to-explicit-orderlyWritehalfclose-affectednewcase1/1green-old8alreadygreen;actualsamepartialrun/counter1/report/raworiginoffsets/replayterminalref/newlateAlreadyTerminal/readonlydetach/newconnectionoriginalreceipt;allrequiredboundedqueries/cancel/posteffects/coldretain/disconnect/gap/flow-obligationscovered-by-coupled-native-sourceoracles;noCLIsubmitpromotion(C4next)/noPublic1.1publishing/nativeWinMacUNRUN-explicitportable-source-evidenceonly;originalfacadeinitialflakeunreproduced-causeUNRESOLVED-monitor-notclaimedfixed"
+      ],
+      "source_commits_in_current_history": []
+    },
+    {
+      "task_id": "M-16-C.4",
+      "retained_state": "accepted",
+      "receipt": "campaigns/next/evidence/M-16-C.4/accepted-2026-10-12.md",
+      "sha256": "1e71ef27e3cb302cea0889b9e7a414c3b6c044902eae981620bca7216c10c017",
+      "introduction_commit": "39c7d990402147c40ec6e2f4283b7d0d6a94cd1f"
+    }
+  ],
+  "m08b2": {
+    "state": "Accepted",
+    "revision": 323,
+    "receipt": "campaigns/next/evidence/M-08-B/acceptance-B2-2026-10-15/acceptance/accept-work-receipt.json",
+    "receipt_sha256": "1cbdacfe43aa65ed2b0595ea00f9787065fd49af23cbe6174fb29c51b869577e",
+    "source_commit_pending": false,
+    "source_commit": "51c7472e3e435dfe4c0bf601c5f99c61447e05be"
+  },
+  "open_global_debt": "M14 aggregate gate/current-selected limitations remain; platform/release-impact/global-wire not cleared by this record",
+  "record_kind": "Root prerequisite binding: retained accepted boundaries, no new historical acceptance or release-gate claim"
+}
