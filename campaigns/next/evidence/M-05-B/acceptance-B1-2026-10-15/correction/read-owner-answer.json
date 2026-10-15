@@ -1,0 +1,31 @@
+{
+  "question_id": "m05b1-correction-frozen-read-owners",
+  "decision": "approved exact read-only isolated supporting API/test owners; original write perimeter unchanged",
+  "repository_root": "/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next",
+  "read_paths": [
+    "crates/vibe-core/src/manifest/document.rs",
+    "crates/vibe-orchestrator/src/document_analysis/mod.rs",
+    "crates/vibe-orchestrator/src/document_analysis/m_16_d_1_cases.rs",
+    "crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs",
+    "crates/vibe-install/src/lib.rs",
+    "crates/vibe-install/src/plan.rs"
+  ],
+  "read_sha256": {
+    "crates/vibe-core/src/manifest/document.rs": "1721fe18a09f670f81284f5bec4a4de8c0af3b4ab817c40fdb43f4e95fe350bb",
+    "crates/vibe-orchestrator/src/document_analysis/mod.rs": "8fce72af081a6ad8c91c297a50134a3f7334f1ca31bd9e80a375ffd8da562ff7",
+    "crates/vibe-orchestrator/src/document_analysis/m_16_d_1_cases.rs": "fbd653111a14bfbd54423d092551a25cd23747de52a330fd0cd8c2d24d3b43bc",
+    "crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs": "f1f6bdcdc40401a9bea265a6978f20aabc6c45fdfadabcacbaf2b04ecffbf81a",
+    "crates/vibe-install/src/lib.rs": "19753d6876832afdba9d9ce23844a3513c9e4cb1e8caf500638d37834cc0aa84",
+    "crates/vibe-install/src/plan.rs": "387836bf028d94f3e17c229c974292075acda2351031d12e7546ad5555f18778"
+  },
+  "write_paths_added": [],
+  "locator_correction": "crates/vibe-install/src/source.rs does not exist; InstallSource trait is actually in src/lib.rs (Root verified line312), grant that exact owner instead. First Root hash check failed before writing an answer; no source mutation.",
+  "constraints": [
+    "Read exactly these supporting sources to construct real caller tests; no broader boot/spec scan.",
+    "No source writes in these added paths. Existing four correction owners and original B1 owners remain the only implementation perimeter.",
+    "New regression tests must exercise actual admitted full-manifest boundary, not alternate callback engine."
+  ],
+  "operator_permission_only": true,
+  "canonical_acceptance": false,
+  "utc": "2026-10-15T14:41:23.889683+00:00"
+}

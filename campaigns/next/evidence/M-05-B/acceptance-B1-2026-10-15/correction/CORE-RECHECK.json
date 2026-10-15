@@ -1,0 +1,17 @@
+{
+  "rerun": true,
+  "names": [
+    "manifest::package::features::m_05_b_1_cases::stable_ids_ignore_order_version_and_aliases",
+    "manifest::package::features::m_05_b_1_cases::all_source_kinds_preserve_explicit_metadata_once",
+    "manifest::package::features::m_05_b_1_cases::legacy_and_typed_effect_sets_are_identical",
+    "manifest::package::features::m_05_b_1_cases::typed_config_and_exports_require_declarations",
+    "manifest::package::features::m_05_b_1_cases::undeclared_targets_and_private_dormant_refs_refuse",
+    "manifest::package::features::m_05_b_1_cases::malformed_qualified_refs_and_paths_refuse",
+    "manifest::package::features::m_05_b_1_cases::aliases_are_local_and_cannot_shadow_ids",
+    "manifest::package::features::m_05_b_1_cases::duplicate_declarations_and_dangling_metadata_refuse",
+    "manifest::package::features::m_05_b_1_cases::new_wire_grammar_remains_unpublished",
+    "manifest::package::features::m_05_b_1_cases::unavailable_export_catalogue_is_not_known_empty"
+  ],
+  "source_sha256": "2a5d900e76d3f5ccf41d8310fc939cbe18b259162c8973628ccd929cb166f529",
+  "reason": "Core export-context distinction changed; fresh proof required"
+}

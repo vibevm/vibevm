@@ -1,0 +1,266 @@
+{
+  "group": "V2",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "m_05_a_2_cases::qualified_forwarding_first_slash_defect",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.24884295463562012,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-1.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "m_05_a_2_cases::exclusive_at_most_one_and_all_features_validation_defect",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.2559807300567627,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-2.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::package::features::tests::features_table_roundtrips",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.20503687858581543,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-3.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::package::tests::requires_visibility_metadata_roundtrips_exactly",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.20996618270874023,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-4.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::package::tests::requires_visibility_metadata_supports_every_source_kind",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.20988059043884277,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-5.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::parses_feature_value_variants",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.2564671039581299,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-6.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::parse_rejects_empty",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.2591969966888428,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-7.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::transitive_expansion",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.2620120048522949,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-8.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::weak_dep_feature_does_not_pull_dep",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.2555966377258301,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-9.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::cycles_terminate",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 1,
+      "passed": true,
+      "seconds": 0.2548484802246094,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-10.log"
+    }
+  ],
+  "passed": true
+}

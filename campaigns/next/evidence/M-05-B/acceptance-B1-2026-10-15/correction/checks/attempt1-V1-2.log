@@ -1,0 +1,19 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/lib.rs (target/debug/deps/vibe_core-97287182ea772770)
+
+running 9 tests
+test manifest::package::features::m_05_b_1_cases::malformed_qualified_refs_and_paths_refuse ... ok
+test manifest::package::features::m_05_b_1_cases::new_wire_grammar_remains_unpublished ... ok
+test manifest::package::features::m_05_b_1_cases::duplicate_declarations_and_dangling_metadata_refuse ... ok
+test manifest::package::features::m_05_b_1_cases::stable_ids_ignore_order_version_and_aliases ... ok
+test manifest::package::features::m_05_b_1_cases::all_source_kinds_preserve_explicit_metadata_once ... ok
+test manifest::package::features::m_05_b_1_cases::typed_config_and_exports_require_declarations ... ok
+test manifest::package::features::m_05_b_1_cases::legacy_and_typed_effect_sets_are_identical ... ok
+test manifest::package::features::m_05_b_1_cases::aliases_are_local_and_cannot_shadow_ids ... ok
+test manifest::package::features::m_05_b_1_cases::undeclared_targets_and_private_dormant_refs_refuse ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 627 filtered out; finished in 0.00s
+

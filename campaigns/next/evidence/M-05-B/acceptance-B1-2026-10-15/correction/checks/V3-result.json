@@ -1,0 +1,30 @@
+{
+  "group": "V3",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--lib",
+        "plan::fetch::m_05_b_1_correction_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "7",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 7,
+      "passed": true,
+      "seconds": 1.5387945175170898,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V3-1.log"
+    }
+  ],
+  "passed": true
+}

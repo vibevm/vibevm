@@ -1,0 +1,772 @@
+{
+  "approved": true,
+  "approval_token": "Root approves FULL M05B1 corrected algebra with five actual proofs after main integration",
+  "summary": "Root accepts full corrected M05B1 source after independent review and actual main integration; 43 fresh producer cases plus 7 consumer and 1 C3 regression passed.",
+  "scope": "Both original M05B1 criteria at bounded source/expansion level; new grammar unpublished; no B2/B3 or cross-package delivery claim",
+  "limitations": [
+    "43 fresh cases; no historical reuse, full suite, platform or installed delivery claim",
+    "Independent review is retained separately by Safe verification; EvidenceObservation references exact producer report",
+    "Main integrated at 24adacb4cc9f8f68ab80af877500619108d4b8cc; only targeted consumer/regression checks, no broad suite."
+  ],
+  "observations": [
+    {
+      "group": "V1",
+      "verification_id": "verification.m05b1-correction",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V1"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V1"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-result.json",
+      "result_sha256": "497f76926efa55431d011768d8d1146e739971173734dd6cfc4ab1ecb6f00043",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::m_05_b_1_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "12",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 12,
+          "passed": true,
+          "seconds": 12.660973072052002,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-1.log",
+          "log_sha256": "244e44cf46b0c7e40a2550da50d42a13614c0c9d79ab6030a51f8b30e69aa8b8"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::m_05_b_1_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "10",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 10,
+          "passed": true,
+          "seconds": 5.061540365219116,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-2.log",
+          "log_sha256": "7abe652c8acad45b3d0d44bad336fe52e3f1a63e0fac472ce33db56bc9234732"
+        }
+      ],
+      "fresh_case_count": 22,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "features::m_05_b_1_cases",
+        "manifest::package::features::m_05_b_1_cases"
+      ]
+    },
+    {
+      "group": "V2",
+      "verification_id": "verification.m05b1-correction.1",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V2"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V2"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-result.json",
+      "result_sha256": "08977fa2043fbd31c490dbde26dfc259904fbf095a697cd8beb8269de6bb96f7",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "m_05_a_2_cases::qualified_forwarding_first_slash_defect",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.2776451110839844,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-1.log",
+          "log_sha256": "1b2a0b4eeadf1c2fc67b70ffb72a60c38a9f450e5bee1262ecc80cad85496a5e"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "m_05_a_2_cases::exclusive_at_most_one_and_all_features_validation_defect",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.25080323219299316,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-2.log",
+          "log_sha256": "458d009216b4e91e4be4f488c95fa093d01f00458383e3e5b7c574d5796acee2"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::tests::features_table_roundtrips",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.2023911476135254,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-3.log",
+          "log_sha256": "53d6166114b9886cfe04a4bd93dca406897b0670618deb42f1f210e5cd86b712"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::tests::requires_visibility_metadata_roundtrips_exactly",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.20678019523620605,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-4.log",
+          "log_sha256": "e760edff9472a2db890c86bba058cf321a8f75e426bf5ca7d505fff3fcc3607e"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::tests::requires_visibility_metadata_supports_every_source_kind",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.21249055862426758,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-5.log",
+          "log_sha256": "ec20b74317c15a7ac33129d814d10262ee8527f9e9f0ec880bebeb8fab988f2c"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::parses_feature_value_variants",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.2546210289001465,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-6.log",
+          "log_sha256": "9fdadca445ae57a7a4e34c91bb930eaa1c9760fb9cdff5cc2150c6a2db00b013"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::parse_rejects_empty",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.2519392967224121,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-7.log",
+          "log_sha256": "725887366cea8cfb4d87293fd7c822bcd00b4addedea25861598ad236a1b9466"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::transitive_expansion",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.25815367698669434,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-8.log",
+          "log_sha256": "1a4e6225dcc464e6f2704edea373ab832920693272b707953411efd015e60390"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::weak_dep_feature_does_not_pull_dep",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.25585174560546875,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-9.log",
+          "log_sha256": "2f9a5702b105db7becc5d8d8b62afa0fa9d7bce11b0df2cbff8e819931f765aa"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::cycles_terminate",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.24938559532165527,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-10.log",
+          "log_sha256": "1b4d384c76f3831b452e86f34677eacdbcc6e9ea86e270adcda7bb7e5af08661"
+        }
+      ],
+      "fresh_case_count": 10,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "m_05_a_2_cases::qualified_forwarding_first_slash_defect",
+        "m_05_a_2_cases::exclusive_at_most_one_and_all_features_validation_defect",
+        "manifest::package::features::tests::features_table_roundtrips",
+        "manifest::package::tests::requires_visibility_metadata_roundtrips_exactly",
+        "manifest::package::tests::requires_visibility_metadata_supports_every_source_kind",
+        "features::tests::parses_feature_value_variants",
+        "features::tests::parse_rejects_empty",
+        "features::tests::transitive_expansion",
+        "features::tests::weak_dep_feature_does_not_pull_dep",
+        "features::tests::cycles_terminate"
+      ]
+    },
+    {
+      "group": "V3",
+      "verification_id": "verification.m05b1-correction.2",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V3"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V3"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m05b1-correction/V3-result.json",
+      "result_sha256": "a47e392a3a11fde7acbf130767c33d9f54a16e73500069e5a50befca98642abf",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::fetch::m_05_b_1_correction_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "7",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 7,
+          "passed": true,
+          "seconds": 1.5387945175170898,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V3-1.log",
+          "log_sha256": "e39f898e8d41410090e18383653f822fc105e124f19e468da3c97fc63af85cc1"
+        }
+      ],
+      "fresh_case_count": 7,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "plan::fetch::m_05_b_1_correction_cases"
+      ]
+    },
+    {
+      "group": "V4",
+      "verification_id": "verification.m05b1-correction.3",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V4"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V4"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m05b1-correction/V4-result.json",
+      "result_sha256": "d458ac899477f8e7e50f5e05a4b89ead7ae51d73f01983e0427bf34d98ffd2fe",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "document_analysis::preview::m_05_b_1_correction_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "4",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 4,
+          "passed": true,
+          "seconds": 17.746788501739502,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V4-1.log",
+          "log_sha256": "9aed5f84199d53c7f9a0d228263b6cc94898348b3c794135febf37f44d76cdbb"
+        }
+      ],
+      "fresh_case_count": 4,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "document_analysis::preview::m_05_b_1_correction_cases"
+      ]
+    },
+    {
+      "group": "V5",
+      "verification_id": "verification.m05b1-correction.4",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V5"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m05b1-correction/verify-group.py",
+        "V5"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-result.json",
+      "result_sha256": "2bb255486dcf1913dfc2b7dd67556a96bc47f9dd44371de2745e5bf48bd14018",
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-core/src/manifest/mod.rs",
+            "crates/vibe-core/src/manifest/package.rs",
+            "crates/vibe-core/src/manifest/package/features.rs",
+            "crates/vibe-core/src/manifest/package/features/effects.rs",
+            "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs",
+            "crates/vibe-install/src/plan/fetch.rs",
+            "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+            "crates/vibe-resolver/src/features.rs",
+            "crates/vibe-resolver/src/features/m_05_b_1_cases.rs",
+            "crates/vibe-resolver/src/m_05_a_2_cases.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "expected": null,
+          "passed": true,
+          "seconds": 0.07010960578918457,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-1.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "expected": null,
+          "passed": true,
+          "seconds": 0.014281511306762695,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-2.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "fresh_case_count": 0,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs",
+        "--check"
+      ]
+    }
+  ],
+  "supplementary_subjects": {
+    "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+    "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+    "crates/vibe-core/Cargo.toml": "865a190c64d41bdf380198f68086ec497d28c40f2f592b0d003217dd3c754eab",
+    "crates/vibe-core/src/lib.rs": "7841582b794288cea92c12911b99a3a6de67fd1ff41b255732a6803960ffc9f5",
+    "crates/vibe-core/src/manifest/mod.rs": "e23791dabfb77520b4beb9888c844791e80ec9b35120bdd3bdc6af40f40ffcf6",
+    "crates/vibe-core/src/manifest/package.rs": "a38307e78acc0c2ecdf9c4386ffda8d886b9cdcc8c9bc83851a747200629cf26",
+    "crates/vibe-core/src/manifest/package/capabilities.rs": "5f2ca4b9b1a611afede1d088aa94451fdbff774604e0af84646ed52ea1f6a77b",
+    "crates/vibe-core/src/manifest/package/deps.rs": "f0b835483d49caa734f7c49567d5c8e7829769197dccf97a7a67af995e564fec",
+    "crates/vibe-core/src/manifest/package/features.rs": "e3f95b53247c50db19bec74771943015ed1c53469d23c4b32070ba69f9cd4078",
+    "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+    "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs": "2a5d900e76d3f5ccf41d8310fc939cbe18b259162c8973628ccd929cb166f529",
+    "crates/vibe-core/src/manifest/package/tests.rs": "35b363355f5ee7cae70e3e06e59b223134f2fea84a84069c78faf11c37eae388",
+    "crates/vibe-core/src/manifest/package/wire.rs": "d77051d93323016b8150f15707367ae795b55153bb311f071d46a03863f80387",
+    "crates/vibe-core/src/manifest/package/wire/requires.rs": "9bc2297526796260b630b70f9195be53b7b399c5548f616ddb0b5276785c6e40",
+    "crates/vibe-install/src/fetched.rs": "37a80d15c9039770e203bb9b558d98626af42b51c868a8f3b7b09e649af62675",
+    "crates/vibe-install/src/plan/fetch.rs": "27ee6f4599a2b5e86971e728c9570108cdfe398d7001fed9d423a489513481b0",
+    "crates/vibe-orchestrator/src/document_analysis/preview.rs": "b25c25a3953fff5b69cf81a5178489ff5f17348a99e9ba1d9b14f01b0f2395f4",
+    "crates/vibe-resolver/Cargo.toml": "69318ae75c99f1b6ccd29e5d973514339676d2d836099581cb8f7ec0cd755899",
+    "crates/vibe-resolver/src/features.rs": "815c3e4ea9b304f0050bb7e3c7b30ae4e1fc9e851d594cc056e9dc794a8b76a8",
+    "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+    "crates/vibe-resolver/src/lib.rs": "8bed408f057d983d0ebe6c20a621bec6fa823238c278bf5af55417dc2cae5705",
+    "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+    "rust-toolchain.toml": "a6a0bbd29ffaa8182dc22d1d9149709f1091e47df40ed96eb8a78a711c66a4ce",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "39990725d7d06da98eee3cfd8479d26335f8555142e005f2c60dd6cd53b6c4eb",
+    "crates/vibe-core/src/manifest/document.rs": "1721fe18a09f670f81284f5bec4a4de8c0af3b4ab817c40fdb43f4e95fe350bb",
+    "crates/vibe-core/src/manifest/lockfile.rs": "4e681c574114f243913024e7fd6ac4b0cb10ebabc641b383b10cca0692b0aafa",
+    "crates/vibe-core/src/manifest/package/skill.rs": "e255f68ac136b670e4bc066f1dda5bf5806151cb7ea9c1f72dca5bc6ab977268",
+    "crates/vibe-orchestrator/src/document_analysis/mod.rs": "8fce72af081a6ad8c91c297a50134a3f7334f1ca31bd9e80a375ffd8da562ff7",
+    "crates/vibe-orchestrator/src/document_analysis/m_16_d_1_cases.rs": "fbd653111a14bfbd54423d092551a25cd23747de52a330fd0cd8c2d24d3b43bc",
+    "crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs": "f1f6bdcdc40401a9bea265a6978f20aabc6c45fdfadabcacbaf2b04ecffbf81a",
+    "crates/vibe-install/src/lib.rs": "19753d6876832afdba9d9ce23844a3513c9e4cb1e8caf500638d37834cc0aa84",
+    "crates/vibe-install/src/plan.rs": "387836bf028d94f3e17c229c974292075acda2351031d12e7546ad5555f18778",
+    "crates/vibe-workspace/src/vibedeps.rs": "65faeedd6a84b17844dd22ea07e7cba1776f455f683e5a451be66039a9b35847"
+  },
+  "fresh_distinct_cases": 43,
+  "reused_distinct_cases": 0,
+  "actual_environment": "Isolated worktree stable Rust, private worktree target, bounded offline lib targets and scoped fmt/XML; no C3 shared target",
+  "evidence_files": {
+    "0": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/REPORT.json",
+      "sha256": "9d60dcdb1af43cf5e88988ef4b653f438be60bab38410d121711435d5ea61e87"
+    },
+    "1": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/FINDINGS.json",
+      "sha256": "fba71ab22b4201a79271ac7e32e6c74a209f2544e22f2d7c84f7ba97f461af8d"
+    },
+    "2": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/candidate-result.json",
+      "sha256": "5b02725935811cd7b8412e1fc9087bb1099821cc58ab9e5c6f327c968298ec93"
+    },
+    "3": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/ready-capture.json",
+      "sha256": "fbfbf85a2a08522f005abf60864e0026774c8412e50f3169224ce8f82bdb4f88"
+    },
+    "4": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/actual-runtime-binding.json",
+      "sha256": "77f8a34fe2c5f4abe86064c9362925046e8a78eb92bfae5a38997ad085c89ba5"
+    },
+    "5": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/ROOT-SOURCE-INTEGRATION.json",
+      "sha256": "6b770e375fb49f4623c18603f89d905faf89b5645c2e45bce5b158db2de396f8"
+    },
+    "6": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/cleanup-after-integration/ROOT-QUIESCENCE.json",
+      "sha256": "df19f84ece47baae9fa1e73f9f0b34dfb924f8ca0562f3d839c1ea6aad6b4624"
+    },
+    "7": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/ROOT-ACTUAL-LAUNCH.json",
+      "sha256": "f3fe9d6d452b270d405baa91fd71a1256c102075b6d6bc64f4cdc6c0097606cc"
+    },
+    "8": {
+      "path": "/fast/git/v/research/2026-10-15-m05b1-parallel-review/correction/REPORT.md",
+      "sha256": "e7d2f63b9901c782760dca853debab08619eefdd369b648694a11d5fd71fc772"
+    },
+    "9": {
+      "path": "/fast/git/v/research/2026-10-15-m05b1-parallel-review/correction/REPORT.json",
+      "sha256": "bdbfdf06b5f1549c0f7079974436aa14f9e303975fea8a493e6a863cb1f8a143"
+    },
+    "10": {
+      "path": "/fast/git/v/research/2026-10-15-m05b1-parallel-review/correction/source-hashes-before.json",
+      "sha256": "9383fc97a9eb4830d9d706aecf29e0bc178c65c9fcb39a373201096ad17af24a"
+    },
+    "11": {
+      "path": "/fast/git/v/research/2026-10-15-m05b1-parallel-review/correction/source-hashes-after.json",
+      "sha256": "9383fc97a9eb4830d9d706aecf29e0bc178c65c9fcb39a373201096ad17af24a"
+    },
+    "12": {
+      "path": "/fast/git/v/research/2026-10-15-m05b1-parallel-review/correction/ROOT-CANDIDATE-SNAPSHOT.json",
+      "sha256": "8542a49c89ed0cce05eca0eb2d9d04ffaf89f4147d389fac0cc77063f42825ce"
+    },
+    "13": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/final-source-hashes.json",
+      "sha256": "b7d398da8c54f69e7b927ccc154c252887855cfcfb0e39bbff4210587b9f1f5c"
+    },
+    "14": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-result.json",
+      "sha256": "497f76926efa55431d011768d8d1146e739971173734dd6cfc4ab1ecb6f00043"
+    },
+    "15": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-1.log",
+      "sha256": "244e44cf46b0c7e40a2550da50d42a13614c0c9d79ab6030a51f8b30e69aa8b8"
+    },
+    "16": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-2.log",
+      "sha256": "7abe652c8acad45b3d0d44bad336fe52e3f1a63e0fac472ce33db56bc9234732"
+    },
+    "17": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-result.json",
+      "sha256": "08977fa2043fbd31c490dbde26dfc259904fbf095a697cd8beb8269de6bb96f7"
+    },
+    "18": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-1.log",
+      "sha256": "1b2a0b4eeadf1c2fc67b70ffb72a60c38a9f450e5bee1262ecc80cad85496a5e"
+    },
+    "19": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-2.log",
+      "sha256": "458d009216b4e91e4be4f488c95fa093d01f00458383e3e5b7c574d5796acee2"
+    },
+    "20": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-3.log",
+      "sha256": "53d6166114b9886cfe04a4bd93dca406897b0670618deb42f1f210e5cd86b712"
+    },
+    "21": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-4.log",
+      "sha256": "e760edff9472a2db890c86bba058cf321a8f75e426bf5ca7d505fff3fcc3607e"
+    },
+    "22": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-5.log",
+      "sha256": "ec20b74317c15a7ac33129d814d10262ee8527f9e9f0ec880bebeb8fab988f2c"
+    },
+    "23": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-6.log",
+      "sha256": "9fdadca445ae57a7a4e34c91bb930eaa1c9760fb9cdff5cc2150c6a2db00b013"
+    },
+    "24": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-7.log",
+      "sha256": "725887366cea8cfb4d87293fd7c822bcd00b4addedea25861598ad236a1b9466"
+    },
+    "25": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-8.log",
+      "sha256": "1a4e6225dcc464e6f2704edea373ab832920693272b707953411efd015e60390"
+    },
+    "26": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-9.log",
+      "sha256": "2f9a5702b105db7becc5d8d8b62afa0fa9d7bce11b0df2cbff8e819931f765aa"
+    },
+    "27": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-10.log",
+      "sha256": "1b4d384c76f3831b452e86f34677eacdbcc6e9ea86e270adcda7bb7e5af08661"
+    },
+    "28": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V3-result.json",
+      "sha256": "a47e392a3a11fde7acbf130767c33d9f54a16e73500069e5a50befca98642abf"
+    },
+    "29": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V3-1.log",
+      "sha256": "e39f898e8d41410090e18383653f822fc105e124f19e468da3c97fc63af85cc1"
+    },
+    "30": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V4-result.json",
+      "sha256": "d458ac899477f8e7e50f5e05a4b89ead7ae51d73f01983e0427bf34d98ffd2fe"
+    },
+    "31": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V4-1.log",
+      "sha256": "9aed5f84199d53c7f9a0d228263b6cc94898348b3c794135febf37f44d76cdbb"
+    },
+    "32": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-result.json",
+      "sha256": "2bb255486dcf1913dfc2b7dd67556a96bc47f9dd44371de2745e5bf48bd14018"
+    },
+    "33": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "34": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "permanent_spec_log": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-spec-preservation.log",
+      "sha256": "9cc1378f7ab5eb8cd9882f13e5726431cb72609557d82830ed7ac29eeb6be0a7"
+    },
+    "root_MAIN-INTEGRATION.json": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/MAIN-INTEGRATION.json",
+      "sha256": "1aaa19987602cebc23049fb124ca82fe2904b62b494de8a684b51d5233209e29"
+    },
+    "root_ROOT-MAIN-INSTALL-CONSUMER.json": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/ROOT-MAIN-INSTALL-CONSUMER.json",
+      "sha256": "3dee3b4e9468e46dffa77b7d970df0293f4ec053a10496e06357cc011d74e4da"
+    },
+    "root_ROOT-MAIN-C3-REGRESSION.json": {
+      "path": "/fast/zap-managed/2026-10-15-m05b1-correction/ROOT-MAIN-C3-REGRESSION.json",
+      "sha256": "94967d9e38d561db20bc5b18d84a96fa57cfa7576af36421607bfd9121e2a23f"
+    }
+  },
+  "criterion_assessments": [
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#SOURCE-VERSUS-PLAN",
+      "statement": "Normalized algebra has no duplicated choices.requires dependency engine.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "rationale": "Normalized declaration IDs own requires metadata once; full-manifest fetch/defer and preview normalize Requires into FeatureProgram and use shared evaluator. Independent correction review found no second choices.requires engine. Actual caller tests pass after integration."
+    },
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#VIBEVM-OWNER",
+      "statement": "Legacy syntax lowers through one typed representation.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "rationale": "Legacy syntax shares lower_legacy_in_context and validate_in_context with typed effects. Unknown export catalogue remains explicit None while known-empty is strict; actual caller selector preservation, strong/weak, aliases and qualified parsing have fresh coverage. Both affected older assertions corrected without changing original scope."
+    }
+  ],
+  "main_integration": {
+    "path": "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/MAIN-INTEGRATION.json",
+    "sha256": "1aaa19987602cebc23049fb124ca82fe2904b62b494de8a684b51d5233209e29",
+    "status": "actual_integrated_checks_passed"
+  }
+}

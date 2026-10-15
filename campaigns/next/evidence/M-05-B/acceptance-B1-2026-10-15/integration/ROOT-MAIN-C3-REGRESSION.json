@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-lifecycle",
+    "--lib",
+    "mechanism::deploy::generic::m_08_c_3_cases::incumbent_logical_deployment_identity_imports_and_restores_exact_receipt",
+    "--",
+    "--exact"
+  ],
+  "exit": 0,
+  "seconds": 29.815543842036277,
+  "test_results": [
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 927 filtered out; finished in 0.35s"
+  ]
+}

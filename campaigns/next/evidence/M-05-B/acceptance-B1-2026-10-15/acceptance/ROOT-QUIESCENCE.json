@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-15T15:28:06.783716+00:00",
+  "normal_exact_stop_delivery": "delivered",
+  "advance_HTTP_status": 409,
+  "resolved_by_same_target_reinspection_without_reissuing": true,
+  "service_signal": "SIGTERM via pidfd after birth/executable check",
+  "complete_launch_identities": {
+    "1103386": {
+      "original_absent": true,
+      "expected_birth": 40224899
+    },
+    "1103466": {
+      "original_absent": true,
+      "expected_birth": 40224931
+    },
+    "1103577": {
+      "original_absent": true,
+      "expected_birth": 40225477
+    },
+    "1103663": {
+      "original_absent": true,
+      "expected_birth": 40225540
+    },
+    "1104099": {
+      "original_absent": true,
+      "expected_birth": 40226495
+    }
+  },
+  "all5_original_absent": true,
+  "all_absent": true,
+  "candidate_accepted": false
+}

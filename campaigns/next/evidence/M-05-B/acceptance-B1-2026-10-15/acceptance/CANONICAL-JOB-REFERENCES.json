@@ -1,0 +1,22 @@
+{
+  "source": "/fast/zap-managed/2026-10-15-m05b1-correction/accept-current-job.json",
+  "source_sha256": "ab5aaf73a7d069ee178e717b0be6c49e86cc5becd9d10b351b0129aeb6351071",
+  "kind": "bounded public reference projection, not complete runtime job",
+  "fields": {
+    "job_id": "job.runtime.packet.vibevm-m05b1-correction",
+    "attempt_id": "attempt.runtime.packet.vibevm-m05b1-correction",
+    "work_id": "work.m05b1-correction.prepare-plan",
+    "contract_id": "contract.m05b1-correction",
+    "contract_digest": "eef2f9f39546cbd7ec9d9b4756e253ea82844fde70510b1282bb294cc4908725",
+    "relevant_basis": "1b3e760df5c93a9d46ecfa4a02c7dd391f76abbdb4c1bbb3782821b8fe83e6a0",
+    "execution": "succeeded",
+    "effect": "completed",
+    "safe": "safe",
+    "safe_verifications": [
+      "verification.m05b1-correction"
+    ],
+    "candidate_id": "candidate.vibevm-m05b1-correction",
+    "acceptance": "unreviewed",
+    "revision": 505
+  }
+}

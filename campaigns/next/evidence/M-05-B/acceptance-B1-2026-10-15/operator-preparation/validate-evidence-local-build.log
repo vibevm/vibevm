@@ -1,0 +1,22 @@
+warning: constant `APPROVAL_TOKEN` is never used
+ --> /fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/acceptance-validation.rs:1:7
+  |
+1 | const APPROVAL_TOKEN:&str="Root approves FULL M05B1 corrected algebra with five actual proofs after main integration";
+  |       ^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `require_main` is never used
+ --> /fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/acceptance-validation.rs:2:4
+  |
+2 | fn require_main(review:&serde_json::Value)->Result<()> {
+  |    ^^^^^^^^^^^^
+
+warning: function `require_criterion_decisions` is never used
+ --> /fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/acceptance-validation.rs:6:4
+  |
+6 | fn require_criterion_decisions(review:&serde_json::Value,candidate:&CandidateResult)->Result<()> {
+  |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: 3 warnings emitted
+
