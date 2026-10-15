@@ -554,3 +554,5 @@ pub(crate) const BUILTIN_CODEX_PLUGIN_PIN: &str = "org.vibevm/vibe#codex-plugin"
 pub(crate) const BUILTIN_CODEX_PLUGIN_NAME: &str = "codex-plugin";
 pub(crate) const BUILTIN_OPENCODE_PLUGIN_PIN: &str = "org.vibevm/vibe#opencode-plugin";
 pub(crate) const BUILTIN_OPENCODE_PLUGIN_NAME: &str = "opencode-plugin";
+
+pub use deploy::generic;

@@ -57,6 +57,10 @@ pub(crate) fn preview(value: &str) -> String {
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum MechanismError {
+    /// Closed generic host refusal; the host retains the actual effect boundary.
+    #[error("generic host operation: {reason}")]
+    GenericHost { reason: String },
+
     /// A declared output names a kind this provider cannot produce.
     #[error(
         "target `{target}` output `{output}` declares kind `{kind}`, which the builtin provider \
