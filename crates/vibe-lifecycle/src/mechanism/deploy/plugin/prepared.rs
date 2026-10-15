@@ -1,7 +1,7 @@
 //! In-memory query evidence. This is never apply authority.
+use super::super::executable_observation::{ExecutableObservation, ObservationError, observe};
 use super::*;
 use crate::process::{ProcessError, ProcessOutput, ProcessSpec};
-use std::path::PathBuf;
 
 #[derive(Clone)]
 pub(super) struct Capture {
@@ -46,13 +46,6 @@ fn fingerprint_binding(request: &DeployTargetRequest<'_>) -> String {
         ..*request
     })
 }
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct ExecutableObservation {
-    launcher: PathBuf,
-    resolved: PathBuf,
-    state: vibe_safefs::StableFileState,
-    identity: String,
-}
 #[derive(Clone)]
 struct StateObservation {
     owner: Arc<dyn client_state::ClientStateOwner>,
@@ -75,41 +68,10 @@ fn read_executable(
     request: &DeployTargetRequest<'_>,
     initial: bool,
 ) -> Result<ExecutableObservation, MechanismError> {
-    let absent = || need(request, !initial);
-    let failed = || unavailable(request, false);
-    if !path.is_absolute() {
-        return Err(failed());
-    }
-    let resolve = || {
-        std::fs::canonicalize(path).map_err(|e| {
-            if e.kind() == std::io::ErrorKind::NotFound {
-                absent()
-            } else {
-                failed()
-            }
-        })
-    };
-    // Resolve only the admitted launcher, never search PATH. Parent and leaf
-    // links participate. The original launcher still goes to ProcessSpec.
-    let resolved = resolve()?;
-    let parent = resolved.parent().ok_or_else(failed)?;
-    let name = resolved
-        .file_name()
-        .and_then(|n| n.to_str())
-        .ok_or_else(failed)?;
-    let project = vibe_safefs::Project::open(parent).map_err(|_| failed())?;
-    let (state, identity) = project
-        .stable_file_state_with_identity(name)
-        .map_err(|_| failed())?
-        .ok_or_else(absent)?;
-    if resolve()? != resolved {
-        return Err(need(request, true));
-    }
-    Ok(ExecutableObservation {
-        launcher: path.into(),
-        resolved,
-        state,
-        identity: identity.observation_correlation_token(),
+    observe(path).map_err(|e| match e {
+        ObservationError::Absent => need(request, !initial),
+        ObservationError::Changed => need(request, true),
+        ObservationError::Unavailable => unavailable(request, false),
     })
 }
 impl Capture {

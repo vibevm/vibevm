@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "client": "claude",
+  "contract_version": 1,
+  "version": "2.1.7",
+  "operation": "install",
+  "coordinate": "plug@market",
+  "shell": "sh -c evil"
+}

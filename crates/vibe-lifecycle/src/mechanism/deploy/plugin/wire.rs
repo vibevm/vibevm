@@ -4,6 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 
 use std::ffi::OsString;
 use std::path::Path;
+use vibe_agent_projection::client_commands::{Client, Operation, render};
 
 use serde_json::Value;
 
@@ -38,7 +39,7 @@ pub(crate) fn probe_version(
     client: PluginClient,
     request: &DeployTargetRequest<'_>,
 ) -> Result<ClientVersion, DeployProviderError> {
-    let bytes = run(runner, client, request, "version probe", &["--version"])?;
+    let bytes = run_recipe(runner, client, request, "version probe", Operation::Version)?;
     let text = std::str::from_utf8(&bytes).map_err(|_| {
         command_error(
             client,
@@ -73,13 +74,7 @@ pub(crate) fn list(
     marketplace: &str,
     coordinate: &str,
 ) -> Result<Option<InstalledPlugin>, DeployProviderError> {
-    let bytes = run(
-        runner,
-        client,
-        request,
-        "plugin list",
-        &["plugin", "list", "--json"],
-    )?;
+    let bytes = run_recipe(runner, client, request, "plugin list", Operation::List)?;
     let document: Value = serde_json::from_slice(&bytes).map_err(|error| {
         command_error(
             client,
@@ -106,92 +101,60 @@ pub(crate) fn marketplace_add(
     request: &DeployTargetRequest<'_>,
     root: &Path,
 ) -> Result<(), DeployProviderError> {
-    let root = root.as_os_str().to_owned();
-    let args = match client {
-        PluginClient::Claude => vec![
-            "plugin".into(),
-            "marketplace".into(),
-            "add".into(),
-            "--scope".into(),
-            "user".into(),
-            root,
-        ],
-        PluginClient::Codex => vec![
-            "plugin".into(),
-            "marketplace".into(),
-            "add".into(),
-            "--json".into(),
-            root,
-        ],
-        PluginClient::OpenCode => unreachable!("OpenCode has no marketplace"),
-    };
-    run_os(runner, client, request, "marketplace add", args).map(drop)
+    run_recipe(
+        runner,
+        client,
+        request,
+        "marketplace add",
+        Operation::MarketplaceAdd(root.into()),
+    )
+    .map(drop)
 }
-
 pub(crate) fn install(
     runner: &dyn ProcessRunner,
     client: PluginClient,
     request: &DeployTargetRequest<'_>,
     coordinate: &str,
 ) -> Result<(), DeployProviderError> {
-    let args = match client {
-        PluginClient::Claude => vec![
-            "plugin".into(),
-            "install".into(),
-            "--scope".into(),
-            "user".into(),
-            coordinate.into(),
-        ],
-        PluginClient::Codex => vec![
-            "plugin".into(),
-            "add".into(),
-            "--json".into(),
-            coordinate.into(),
-        ],
-        PluginClient::OpenCode => unreachable!("OpenCode has no plugin command"),
-    };
-    run_os(runner, client, request, "plugin install", args).map(drop)
+    run_recipe(
+        runner,
+        client,
+        request,
+        "plugin install",
+        Operation::Install(coordinate.into()),
+    )
+    .map(drop)
 }
-
 pub(crate) fn remove(
     runner: &dyn ProcessRunner,
     client: PluginClient,
     request: &DeployTargetRequest<'_>,
     coordinate: &str,
 ) -> Result<(), DeployProviderError> {
-    let args = match client {
-        PluginClient::Claude => vec![
-            "plugin".into(),
-            "uninstall".into(),
-            "--scope".into(),
-            "user".into(),
-            coordinate.into(),
-        ],
-        PluginClient::Codex => vec![
-            "plugin".into(),
-            "remove".into(),
-            "--json".into(),
-            coordinate.into(),
-        ],
-        PluginClient::OpenCode => unreachable!("OpenCode has no plugin command"),
-    };
-    run_os(runner, client, request, "plugin remove", args).map(drop)
-}
-
-fn run(
-    runner: &dyn ProcessRunner,
-    client: PluginClient,
-    request: &DeployTargetRequest<'_>,
-    operation: &'static str,
-    args: &[&str],
-) -> Result<Vec<u8>, DeployProviderError> {
-    run_os(
+    run_recipe(
         runner,
         client,
         request,
-        operation,
-        args.iter().map(OsString::from).collect(),
+        "plugin remove",
+        Operation::Remove(coordinate.into()),
     )
+    .map(drop)
+}
+fn run_recipe(
+    runner: &dyn ProcessRunner,
+    client: PluginClient,
+    request: &DeployTargetRequest<'_>,
+    label: &'static str,
+    operation: Operation,
+) -> Result<Vec<u8>, DeployProviderError> {
+    let kind = match client {
+        PluginClient::Claude => Client::Claude,
+        PluginClient::Codex => Client::Codex,
+        PluginClient::OpenCode => Client::OpenCode,
+    };
+    let args =
+        render(kind, &operation).map_err(|e| command_error(client, request, label, e.into()))?;
+    run_os(runner, client, request, label, args)
 }
 
 fn run_os(

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "request": {
+    "schema": 1,
+    "client": "claude",
+    "contract_version": 1,
+    "version": "2.1.7",
+    "operation": "install",
+    "coordinate": "plug@market"
+  },
+  "executable": "/fixture/client",
+  "resolved": "/fixture/client",
+  "executable_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "executable_identity": "fixture-object",
+  "version_reply": "2.1.7",
+  "argv": [
+    "plugin",
+    "install",
+    "--scope",
+    "user",
+    "plug@market"
+  ],
+  "cwd": "/fixture",
+  "environment_ref": "fixture-env",
+  "environment": {
+    "HOME": "/fixture/home"
+  },
+  "roots": [
+    "/fixture"
+  ],
+  "principal": "fixture",
+  "policy": "1",
+  "evidence": "1",
+  "effects": [
+    "process execution",
+    "client user state mutation"
+  ]
+}
