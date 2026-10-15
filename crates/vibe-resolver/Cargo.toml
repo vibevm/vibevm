@@ -17,6 +17,7 @@ semver.workspace = true
 resolvo.workspace = true
 tracing.workspace = true
 vibe-core.workspace = true
+vibe-wire.workspace = true
 vibe-registry.workspace = true
 walkdir.workspace = true
 

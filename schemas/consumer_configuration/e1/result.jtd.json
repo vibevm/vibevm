@@ -1,0 +1,264 @@
+{
+  "metadata": {
+    "description": "Explicit consumer configuration result. No I/O authority.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#M05B2-CONSUMERS",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::consumer_configuration::e1::result"
+    }
+  },
+  "definitions": {
+    "OwnerId": {
+      "properties": {
+        "reference": {
+          "type": "string"
+        },
+        "producer": {
+          "type": "string"
+        }
+      }
+    },
+    "Domain": {
+      "properties": {
+        "definition": {
+          "ref": "OwnerId"
+        },
+        "target": {
+          "ref": "OwnerId"
+        },
+        "target_role": {
+          "enum": [
+            "executor",
+            "produced_tool_runtime",
+            "emitted_code_target"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "identity": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "lock": {
+          "ref": "OwnerId",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "Package": {
+      "discriminator": "kind",
+      "mapping": {
+        "vibe": {
+          "properties": {
+            "reference": {
+              "type": "string"
+            }
+          }
+        },
+        "native": {
+          "properties": {
+            "backend": {
+              "type": "string"
+            },
+            "package": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "Selection": {
+      "properties": {
+        "intent": {
+          "enum": [
+            "additive",
+            "exact"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "provenance": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "members": {
+          "metadata": {
+            "x-empty": "preserve"
+          },
+          "elements": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Edge": {
+      "properties": {
+        "consumer": {
+          "type": "string"
+        },
+        "dependency": {
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "build",
+            "runtime",
+            "build_and_runtime"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "domain": {
+          "ref": "Domain"
+        },
+        "instance": {
+          "type": "string"
+        },
+        "configuration": {
+          "type": "string"
+        },
+        "package": {
+          "ref": "Package"
+        },
+        "policy": {
+          "enum": [
+            "require_selection",
+            "use_declared_defaults"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "selections": {
+          "values": {
+            "ref": "Selection"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "features": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "all_features": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Outcome": {
+      "properties": {
+        "representative": {
+          "type": "uint32"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "needs_selection",
+            "conflict"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "active_features": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "selected": {
+          "values": {
+            "elements": {
+              "type": "string"
+            },
+            "metadata": {
+              "x-empty": "emit"
+            }
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "needs": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "conflicting_edges": {
+          "elements": {
+            "type": "uint32"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "defaults_used": {
+          "elements": {
+            "properties": {
+              "edge": {
+                "type": "uint32"
+              },
+              "group": {
+                "type": "string"
+              },
+              "provenance": {
+                "type": "string"
+              }
+            }
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "epoch": {
+      "enum": [
+        "1"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "edges": {
+      "elements": {
+        "ref": "Edge"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "outcomes": {
+      "elements": {
+        "ref": "Outcome"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  }
+}

@@ -60,6 +60,8 @@ pub enum FormatId {
     CompilerIr,
     CompilerTraceIndex,
     Config,
+    ConsumerConfigurationRequest,
+    ConsumerConfigurationResult,
     DeployCheckpoints,
     DeployGenericState,
     DeployIntent,

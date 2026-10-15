@@ -1,0 +1,40 @@
+{
+  "epoch": "1",
+  "edges": [
+    {
+      "consumer": "consumer-a",
+      "dependency": "org.example/dep",
+      "role": "runtime",
+      "domain": {
+        "definition": {
+          "reference": "env-a",
+          "producer": "definition-owner"
+        },
+        "target": {
+          "reference": "target-a",
+          "producer": "target-owner"
+        },
+        "target_role": "produced_tool_runtime",
+        "identity": "domain-a"
+      },
+      "instance": "instance-a",
+      "configuration": "configuration-a",
+      "package": {
+        "kind": "native",
+        "backend": "dpkg",
+        "package": "libexample",
+        "version": "2:1.0~rc1-4+vendor"
+      },
+      "policy": "require_selection",
+      "selections": {
+        "choice": {
+          "intent": "additive",
+          "provenance": "manifest:consumer-a",
+          "members": []
+        }
+      },
+      "features": [],
+      "all_features": false
+    }
+  ]
+}

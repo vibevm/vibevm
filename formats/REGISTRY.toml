@@ -1,4 +1,22 @@
 # formats/REGISTRY.toml — the format registry (PROP-044 §4.1 `##M-FORMAT-REGISTRY`).
+
+[format.consumer-configuration-request]
+epoch = 1
+schema = "schemas/consumer_configuration/e1/request.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/consumer-configuration-request/e1"
+sunset = "none"
+
+[format.consumer-configuration-result]
+epoch = 1
+schema = "schemas/consumer_configuration/e1/result.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/consumer-configuration-result/e1"
+sunset = "none"
 #
 # Every surface a foreign parser reads is inventoried here. From this file the
 # `FormatId` enum is generated (`cargo xtask codegen` →

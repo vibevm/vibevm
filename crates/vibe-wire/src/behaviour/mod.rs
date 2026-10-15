@@ -24,6 +24,7 @@ pub mod capability_coverage;
 pub mod change_query;
 pub mod compile_trace_report;
 pub mod compiler_trace_index;
+pub mod consumer_configuration;
 pub mod deploy_records;
 pub mod environment;
 pub mod extensions_analyze;

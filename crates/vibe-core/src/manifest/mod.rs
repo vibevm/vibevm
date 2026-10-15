@@ -83,6 +83,7 @@ pub use migration::{
 pub use package::application::{
     ApplicationDistributionDecl, ApplicationSourceDecl, ApplicationSourceKind,
 };
+pub use package::feature_constraints;
 pub use package::feature_effects;
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, ApplicationRuntime,
