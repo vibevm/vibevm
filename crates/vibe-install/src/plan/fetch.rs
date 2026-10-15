@@ -34,7 +34,8 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     } else {
         FeatureRequest::default()
     };
-    let feature_expansion = expand_features(&cached.manifest.features, &req)?;
+    let feature_expansion =
+        vibe_resolver::features::expand_manifest_features(&cached.manifest, &req)?;
     let embedded_sources =
         vibe_registry::lock_embedded_sources_with(&cached.manifest.embedded_sources, offline)?;
     Ok(Fetched {
@@ -132,7 +133,7 @@ pub(super) fn try_in_place_incremental(
     } else {
         FeatureRequest::default()
     };
-    let feature_expansion = expand_features(&manifest.features, &req)?;
+    let feature_expansion = vibe_resolver::features::expand_manifest_features(&manifest, &req)?;
     let cached = CachedPackage {
         resolved: ResolvedPackage {
             group: node.group.clone(),
@@ -342,4 +343,203 @@ fn sync_fetched_to_graph(
     }
     *fetched = next;
     Ok(())
+}
+
+#[cfg(test)]
+mod m_05_b_1_correction_cases {
+    use super::*;
+    use vibe_registry::{InPlaceMaterialised, RegistryError};
+    use vibe_resolver::{ResolvedGraph, SolveError};
+
+    struct Source(Manifest);
+    impl InstallSource for Source {
+        fn resolve_and_fetch(
+            &self,
+            _: &PackageRef,
+            store: &Path,
+            _: Option<&str>,
+        ) -> std::result::Result<CachedPackage, RegistryError> {
+            let meta = self.0.require_package().unwrap();
+            Ok(CachedPackage {
+                resolved: ResolvedPackage {
+                    group: meta.group.clone(),
+                    name: meta.name.clone(),
+                    version: meta.version.clone(),
+                    source_dir: store.into(),
+                },
+                cache_dir: store.into(),
+                manifest: self.0.clone(),
+                content_hash: "fixture".into(),
+                source_uri: "fixture".into(),
+                registry_name: None,
+                source_ref: None,
+                resolved_commit: None,
+                overridden: false,
+                is_git_source: false,
+                is_path_source: false,
+                is_embedded: false,
+                is_local: true,
+                via_redirect: None,
+            })
+        }
+        fn solve(&self, _: &[PackageRef]) -> std::result::Result<ResolvedGraph, SolveError> {
+            panic!("no solve at fetch boundary")
+        }
+        fn manifest_of(&self, _: &PackageRef) -> std::result::Result<Manifest, SolveError> {
+            panic!("no metadata lookup")
+        }
+        fn solve_masked(
+            &self,
+            _: &[PackageRef],
+            _: &BTreeSet<(String, String)>,
+        ) -> std::result::Result<ResolvedGraph, SolveError> {
+            panic!("no masked solve")
+        }
+        fn materialise_in_place(
+            &self,
+            _: &PackageRef,
+            _: &Path,
+        ) -> std::result::Result<InPlaceMaterialised, RegistryError> {
+            panic!("no materialization")
+        }
+    }
+
+    fn manifest(body: &str) -> Manifest {
+        Manifest::parse_str(&format!(
+            "[package]\ngroup='org.example'\nname='app'\nkind='flow'\nversion='1.0.0'\n{body}"
+        ))
+        .unwrap()
+    }
+    fn node(m: &Manifest) -> ResolvedNode {
+        let p = m.require_package().unwrap();
+        ResolvedNode {
+            group: p.group.clone(),
+            name: p.name.clone(),
+            version: p.version.clone(),
+            dependencies: m.requires.packages.clone(),
+            is_root: true,
+        }
+    }
+    fn fetch(body: &str) -> Result<Fetched> {
+        let source = Source(manifest(body));
+        let root = tempfile::tempdir().unwrap();
+        let lock = Lockfile::empty("test", "2026-10-15T00:00:00Z");
+        let out = fetch_node(
+            &source,
+            &node(&source.0),
+            &lock,
+            root.path(),
+            &FeatureRequest::default(),
+            true,
+            &vibe_core::progress::Progress::default(),
+        );
+        assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
+        out
+    }
+
+    #[test]
+    fn fetch_undeclared_default_activation_refuses() {
+        let error = fetch("[features]\ndefault=['dep:org.example/missing']").unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("undeclared dependency `org.example/missing`")
+        );
+    }
+    #[test]
+    fn fetch_dormant_undeclared_weak_reference_refuses() {
+        let error = fetch("[features]\n_private=['org.example/missing?/fast']").unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("undeclared dependency `org.example/missing`")
+        );
+    }
+    #[test]
+    fn fetch_required_dependency_enables_weak_request() {
+        let out = fetch("[requires.packages]\n'org.example/dep'='^1'\n[features]\ndefault=['org.example/dep?/fast']").unwrap();
+        assert!(
+            out.feature_expansion
+                .active_deps
+                .contains("org.example/dep")
+        );
+        assert!(out.feature_expansion.dep_features["org.example/dep"].contains("fast"));
+    }
+    fn defer(body: &str) -> Result<Option<Fetched>> {
+        let manifest = manifest(body);
+        let node = node(&manifest);
+        let root = tempfile::tempdir().unwrap();
+        let slot = vibedeps::in_place_slot_abs_path(root.path(), &node.group, &node.name);
+        std::fs::create_dir_all(&slot).unwrap();
+        // Only a fixture marker, never a Git repository or Git operation.
+        std::fs::write(slot.join(".git"), "fixture marker").unwrap();
+        let text = format!(
+            "[package]\ngroup='org.example'\nname='app'\nkind='flow'\nversion='1.0.0'\n{body}"
+        );
+        std::fs::write(slot.join(Manifest::FILENAME), &text).unwrap();
+        let lock_text = format!(
+            "[meta]\ngenerated_by='test'\ngenerated_at='2026-10-15T00:00:00Z'\nschema_version={}\n[[package]]\nkind='flow'\nname='app'\ngroup='org.example'\nversion='1.0.0'\nsource_url='fixture'\ncontent_hash='sha256:{}'\nmaterialization='in-place'\n",
+            vibe_core::manifest::CURRENT_SCHEMA_VERSION,
+            "a".repeat(64)
+        );
+        let lock_path = root.path().join(Lockfile::FILENAME);
+        std::fs::write(&lock_path, &lock_text).unwrap();
+        let lock = Lockfile::read(&lock_path).unwrap();
+        let before = lock.clone();
+        let out = try_in_place_incremental(&node, &lock, root.path(), &FeatureRequest::default());
+        assert_eq!(lock, before);
+        assert_eq!(std::fs::read_to_string(lock_path).unwrap(), lock_text);
+        assert_eq!(
+            std::fs::read_to_string(slot.join(Manifest::FILENAME)).unwrap(),
+            text
+        );
+        assert_eq!(
+            std::fs::read_to_string(slot.join(".git")).unwrap(),
+            "fixture marker"
+        );
+        out
+    }
+
+    #[test]
+    fn defer_undeclared_default_activation_refuses() {
+        let error = defer("[features]\ndefault=['dep:org.example/missing']").unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("undeclared dependency `org.example/missing`")
+        );
+    }
+    #[test]
+    fn defer_dormant_undeclared_weak_reference_refuses() {
+        let error = defer("[features]\n_private=['org.example/missing?/fast']").unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("undeclared dependency `org.example/missing`")
+        );
+    }
+    #[test]
+    fn defer_required_dependency_enables_weak_request() {
+        let out = defer("[requires.packages]\n'org.example/dep'='^1'\n[features]\ndefault=['org.example/dep?/fast']").unwrap().unwrap();
+        assert!(out.in_place_incremental);
+        assert!(
+            out.feature_expansion
+                .active_deps
+                .contains("org.example/dep")
+        );
+        assert!(out.feature_expansion.dep_features["org.example/dep"].contains("fast"));
+    }
+    #[test]
+    fn fetch_and_defer_preserve_legacy_subskill_selectors() {
+        let body = "[features]\ndefault=['a']\na=['subskill:stack/rust']";
+        let fetched = fetch(body).unwrap();
+        let deferred = defer(body).unwrap().unwrap();
+        assert!(
+            fetched
+                .feature_expansion
+                .active_subskills
+                .contains("stack/rust")
+        );
+        assert_eq!(fetched.feature_expansion, deferred.feature_expansion);
+    }
 }

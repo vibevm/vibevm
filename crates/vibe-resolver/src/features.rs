@@ -16,8 +16,13 @@ use std::collections::{BTreeMap, BTreeSet};
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::FeaturesTable;
+use vibe_core::manifest::feature_effects::{
+    ConfigValue, DependencyDeclarationId, EffectError, FeatureDeclarations, FeatureEffect,
+    FeatureProgram, FeatureStrength, LocalFeatureRef,
+};
 
-/// One activation entry, parsed from a feature's activation list.
+/// Compatibility view of a legacy activation string. Parsing delegates to
+/// the core algebra; this view is never evaluated by the expansion engine.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#features")]
 pub enum FeatureValue {
@@ -37,40 +42,27 @@ pub enum FeatureValue {
 
 impl FeatureValue {
     pub fn parse(raw: &str) -> Result<Self, FeatureError> {
-        if let Some(path) = raw.strip_prefix("subskill:") {
-            if path.is_empty() {
-                return Err(FeatureError::Malformed(raw.to_string()));
-            }
-            return Ok(FeatureValue::Subskill {
-                path: path.to_string(),
-            });
-        }
-        if let Some(name) = raw.strip_prefix("dep:") {
-            if name.is_empty() {
-                return Err(FeatureError::Malformed(raw.to_string()));
-            }
-            return Ok(FeatureValue::Dep {
-                dep_name: name.to_string(),
-            });
-        }
-        if let Some((dep, feat)) = raw.split_once('/') {
-            let (dep_name, weak) = match dep.strip_suffix('?') {
-                Some(stripped) => (stripped.to_string(), true),
-                None => (dep.to_string(), false),
-            };
-            if dep_name.is_empty() || feat.is_empty() {
-                return Err(FeatureError::Malformed(raw.to_string()));
-            }
-            return Ok(FeatureValue::DepFeature {
-                dep_name,
-                dep_feature: feat.to_string(),
-                weak,
-            });
-        }
-        if raw.is_empty() {
-            return Err(FeatureError::Malformed(raw.to_string()));
-        }
-        Ok(FeatureValue::Feature(raw.to_string()))
+        Ok(
+            match FeatureEffect::parse_legacy(raw).map_err(FeatureError::from)? {
+                FeatureEffect::Local(f) => Self::Feature(f.as_str().into()),
+                FeatureEffect::ActivateDependency(d) => Self::Dep {
+                    dep_name: d.as_str().into(),
+                },
+                FeatureEffect::TargetFeature {
+                    dependency,
+                    feature,
+                    strength,
+                } => Self::DepFeature {
+                    dep_name: dependency.as_str().into(),
+                    dep_feature: feature.as_str().into(),
+                    weak: strength == FeatureStrength::Weak,
+                },
+                FeatureEffect::ExportedSubskill(path) => Self::Subskill { path },
+                FeatureEffect::ConfigValue(_) => {
+                    unreachable!("legacy grammar has no config syntax")
+                }
+            },
+        )
     }
 }
 
@@ -92,12 +84,24 @@ pub struct FeatureExpansion {
     pub weak_dep_features: BTreeMap<String, BTreeSet<String>>,
     /// Subskill paths activated through features (manual channel).
     pub active_subskills: BTreeSet<String>,
+    /// Values selected from package-local declarations.
+    pub config_values: BTreeMap<String, ConfigValue>,
 }
 
 impl FeatureExpansion {
-    /// Merge another expansion into this one. Used at the cross-package
-    /// unification layer.
-    pub fn merge(&mut self, other: &FeatureExpansion) {
+    /// Merge requests for the same owning package, atomically refusing config
+    /// conflicts. Callers must keep expansions from distinct owners separate.
+    pub fn merge(&mut self, other: &FeatureExpansion) -> Result<(), FeatureError> {
+        for (key, value) in &other.config_values {
+            if self
+                .config_values
+                .get(key)
+                .is_some_and(|existing| existing != value)
+            {
+                return Err(FeatureError::ConfigConflict(key.clone()));
+            }
+        }
+        self.config_values.extend(other.config_values.clone());
         self.active_features
             .extend(other.active_features.iter().cloned());
         self.active_deps.extend(other.active_deps.iter().cloned());
@@ -115,6 +119,19 @@ impl FeatureExpansion {
         }
         self.active_subskills
             .extend(other.active_subskills.iter().cloned());
+        self.apply_weak_requests();
+        Ok(())
+    }
+
+    fn apply_weak_requests(&mut self) {
+        for (dep, features) in &self.weak_dep_features {
+            if self.active_deps.contains(dep) {
+                self.dep_features
+                    .entry(dep.clone())
+                    .or_default()
+                    .extend(features.iter().cloned());
+            }
+        }
     }
 }
 
@@ -133,7 +150,7 @@ pub struct FeatureRequest {
 /// Expand a `[features]` table from the requested starting set.
 ///
 /// Cycles **terminate silently**: an already-expanded feature is
-/// skipped via the `seen` set, never reported as an error — a cycle
+/// skipped via the active-feature set, never reported as an error — a cycle
 /// in a features table is redundant, not wrong (verified by the
 /// `cycles_terminate` test; AUD-0014 corrected this line, which used
 /// to claim cycles were "rejected"). Unknown feature names referenced
@@ -146,99 +163,162 @@ pub fn expand_features(
     table: &FeaturesTable,
     request: &FeatureRequest,
 ) -> Result<FeatureExpansion, FeatureError> {
-    // Build the seed set. The `default` feature, when present, is
-    // itself a real feature — its activation list expands during BFS
-    // through the normal feature-feature edge.
-    let mut seed: BTreeSet<String> = BTreeSet::new();
-    if request.all {
-        for k in table.features.keys() {
-            if !k.starts_with('_') {
-                seed.insert(k.clone());
-            }
+    let program = FeatureProgram::lower_table(table)?;
+    expand_program(
+        &program,
+        &FeatureDeclarations::default(),
+        request,
+        &BTreeSet::new(),
+    )
+}
+
+/// Expand validated typed effects with package-local declarations and an
+/// explicit set of already-active dependencies. Unknown IDs refuse.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#M05B1-EFFECTS")]
+pub fn expand_feature_effects(
+    program: &FeatureProgram,
+    declarations: &FeatureDeclarations,
+    request: &FeatureRequest,
+    already_active: &BTreeSet<DependencyDeclarationId>,
+) -> Result<FeatureExpansion, FeatureError> {
+    program.validate(declarations)?;
+    for id in already_active {
+        if !declarations.dependencies.contains_key(id) {
+            return Err(EffectError::UnknownDependency(id.as_str().into()).into());
         }
+    }
+    expand_program(program, declarations, request, already_active)
+}
+
+/// Declaration-aware legacy entry: identical lowering, validation and engine.
+pub fn expand_declared_features(
+    table: &FeaturesTable,
+    declarations: &FeatureDeclarations,
+    request: &FeatureRequest,
+    already_active: &BTreeSet<DependencyDeclarationId>,
+) -> Result<FeatureExpansion, FeatureError> {
+    let program = FeatureProgram::lower_legacy(table, declarations)?;
+    expand_feature_effects(&program, declarations, request, already_active)
+}
+
+/// Expand a full legacy manifest using its declarations. Requires has no
+/// optional wire field, so every declared dependency is a required seed.
+/// No ambient installed packages are treated as this package's dependencies.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#M05B1-MANIFEST-CALLERS"
+)]
+pub fn expand_manifest_features(
+    manifest: &vibe_core::manifest::Manifest,
+    request: &FeatureRequest,
+) -> Result<FeatureExpansion, FeatureError> {
+    let declarations = FeatureDeclarations::from_requires(&manifest.requires, &BTreeSet::new())?;
+    // Manifest has no authoritative subskill export catalogue. This lowering
+    // validates known dependency context but leaves selectors to downstream
+    // export validation, using the very same program and evaluator.
+    let program = FeatureProgram::lower_legacy_dependencies(&manifest.features, &declarations)?;
+    expand_program(&program, &declarations, request, &BTreeSet::new())
+}
+
+fn expand_program(
+    program: &FeatureProgram,
+    declarations: &FeatureDeclarations,
+    request: &FeatureRequest,
+    already_active: &BTreeSet<DependencyDeclarationId>,
+) -> Result<FeatureExpansion, FeatureError> {
+    let mut work = Vec::new();
+    if request.all {
+        work.extend(
+            program
+                .features
+                .keys()
+                .filter(|f| !f.as_str().starts_with('_'))
+                .cloned(),
+        );
     } else {
-        if !request.no_defaults && table.features.contains_key("default") {
-            seed.insert("default".to_string());
+        let default = LocalFeatureRef::new("default")?;
+        if !request.no_defaults && program.features.contains_key(&default) {
+            work.push(default);
         }
         for f in &request.explicit {
             if f.starts_with('_') {
                 return Err(FeatureError::PrivateFeature(f.clone()));
             }
-            if !table.features.contains_key(f) {
+            let local = LocalFeatureRef::new(f)?;
+            if !program.features.contains_key(&local) {
                 return Err(FeatureError::UnknownFeature(f.clone()));
             }
-            seed.insert(f.clone());
+            work.push(local);
         }
     }
-
     let mut out = FeatureExpansion::default();
-    // BFS / DFS expansion. Track feature names we've already processed
-    // so cycles terminate.
-    let mut work: Vec<String> = seed.into_iter().collect();
-    let mut seen: BTreeSet<String> = BTreeSet::new();
+    out.active_deps
+        .extend(already_active.iter().map(|id| id.as_str().to_string()));
+    out.active_deps.extend(
+        declarations
+            .dependencies
+            .iter()
+            .filter(|(_, d)| !d.optional)
+            .map(|(id, _)| id.as_str().to_string()),
+    );
     while let Some(f) = work.pop() {
-        if !seen.insert(f.clone()) {
+        if !out.active_features.insert(f.as_str().into()) {
             continue;
         }
-        if !table.features.contains_key(&f) {
-            return Err(FeatureError::UnknownFeature(f));
-        }
-        out.active_features.insert(f.clone());
-        let activations = table.get(&f).unwrap_or(&[]);
-        for raw in activations {
-            let val = FeatureValue::parse(raw).map_err(|e| match e {
-                FeatureError::Malformed(_) => {
-                    FeatureError::Malformed(format!("feature `{f}` activation `{raw}`",))
+        let effects = program
+            .features
+            .get(&f)
+            .ok_or_else(|| FeatureError::UnknownFeature(f.as_str().into()))?;
+        for effect in effects {
+            match effect {
+                FeatureEffect::Local(local) => work.push(local.clone()),
+                FeatureEffect::ActivateDependency(id) => {
+                    out.active_deps.insert(id.as_str().into());
                 }
-                other => other,
-            })?;
-            match val {
-                FeatureValue::Feature(name) => {
-                    if !table.features.contains_key(&name) {
-                        return Err(FeatureError::UnknownFeature(format!(
-                            "{name} (referenced by feature `{f}`)"
-                        )));
-                    }
-                    work.push(name);
-                }
-                FeatureValue::Dep { dep_name } => {
-                    out.active_deps.insert(dep_name);
-                }
-                FeatureValue::DepFeature {
-                    dep_name,
-                    dep_feature,
-                    weak,
+                FeatureEffect::TargetFeature {
+                    dependency,
+                    feature,
+                    strength,
                 } => {
-                    let target = if weak {
-                        &mut out.weak_dep_features
-                    } else {
-                        &mut out.dep_features
+                    let target = match strength {
+                        FeatureStrength::Strong => {
+                            out.active_deps.insert(dependency.as_str().into());
+                            &mut out.dep_features
+                        }
+                        FeatureStrength::Weak => &mut out.weak_dep_features,
                     };
                     target
-                        .entry(dep_name.clone())
+                        .entry(dependency.as_str().into())
                         .or_default()
-                        .insert(dep_feature);
-                    if !weak {
-                        out.active_deps.insert(dep_name);
-                    }
+                        .insert(feature.as_str().into());
                 }
-                FeatureValue::Subskill { path } => {
-                    out.active_subskills.insert(path);
+                FeatureEffect::ExportedSubskill(path) => {
+                    out.active_subskills.insert(path.clone());
+                }
+                FeatureEffect::ConfigValue(key) => {
+                    let value = declarations
+                        .config_values
+                        .get(key)
+                        .ok_or_else(|| EffectError::UnknownConfig(key.as_str().into()))?;
+                    out.config_values.insert(key.as_str().into(), value.clone());
                 }
             }
         }
     }
+    out.apply_weak_requests();
 
     // Exclusive-group check.
-    for (group, members) in &table.exclusive {
-        let active_in_group: Vec<&String> = members
+    for (group, members) in &program.exclusive {
+        let active_in_group: Vec<&LocalFeatureRef> = members
             .iter()
             .filter(|m| out.active_features.contains(m.as_str()))
             .collect();
         if active_in_group.len() > 1 {
             return Err(FeatureError::ExclusiveViolation {
                 group: group.clone(),
-                active: active_in_group.iter().map(|s| (*s).clone()).collect(),
+                active: active_in_group
+                    .iter()
+                    .map(|s| s.as_str().to_string())
+                    .collect(),
             });
         }
     }
@@ -251,43 +331,27 @@ pub fn expand_features(
 /// (empty = valid).
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#features")]
 pub fn validate_features_table(table: &FeaturesTable) -> Vec<String> {
-    let mut findings = Vec::new();
-    // Cycle detection by attempting an `--all-features` expansion.
-    let probe = FeatureRequest {
-        explicit: Vec::new(),
-        no_defaults: true,
-        all: true,
-    };
-    if let Err(e) = expand_features(table, &probe) {
-        // Only feature-graph problems should fan out here; surface
-        // them as findings rather than aborting the check pass.
-        findings.push(format!("features table: {e}"));
+    match FeatureProgram::lower_table(table) {
+        Err(e) => vec![format!("features table: {e}")],
+        Ok(program) => match expand_program(
+            &program,
+            &FeatureDeclarations::default(),
+            &FeatureRequest::default(),
+            &BTreeSet::new(),
+        ) {
+            Ok(_) => Vec::new(),
+            Err(e) => vec![format!("default features: {e}")],
+        },
     }
-    // Default activation must respect exclusive groups.
-    let defaults_probe = FeatureRequest {
-        explicit: Vec::new(),
-        no_defaults: false,
-        all: false,
-    };
-    if let Err(e) = expand_features(table, &defaults_probe)
-        && !matches!(e, FeatureError::UnknownFeature(_))
-    {
-        findings.push(format!("default features: {e}"));
-    }
-    // Subskill references look syntactically valid.
-    for (name, activations) in &table.features {
-        for raw in activations {
-            if let Err(e) = FeatureValue::parse(raw) {
-                findings.push(format!("feature `{name}` activation `{raw}`: {e}"));
-            }
-        }
-    }
-    findings
 }
 
 #[derive(Debug, Error, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#features")]
 pub enum FeatureError {
+    #[error(transparent)]
+    Declaration(EffectError),
+    #[error("conflicting declared config value `{0}`")]
+    ConfigConflict(String),
     #[error(
         "unknown feature: {0} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#features; \
@@ -316,6 +380,19 @@ pub enum FeatureError {
     )]
     ExclusiveViolation { group: String, active: Vec<String> },
 }
+
+impl From<EffectError> for FeatureError {
+    fn from(error: EffectError) -> Self {
+        match error {
+            EffectError::Malformed(s) => Self::Malformed(s),
+            EffectError::UnknownFeature(s) => Self::UnknownFeature(s),
+            other => Self::Declaration(other),
+        }
+    }
+}
+
+#[cfg(test)]
+mod m_05_b_1_cases;
 
 #[cfg(test)]
 mod tests {
@@ -582,7 +659,7 @@ b = []
             .entry("dep1".into())
             .or_default()
             .insert("feat-x".into());
-        a.merge(&b);
+        a.merge(&b).unwrap();
         assert!(a.active_features.contains("foo"));
         assert!(a.active_features.contains("baz"));
         assert!(a.active_deps.contains("bar"));
