@@ -1,0 +1,29 @@
+{
+  "source_commit": "9635e2f80cd1599b408fd0dcdf29f175941be0c1",
+  "WorkAccepted_revision": 479,
+  "work_state_observed": "Accepted",
+  "work_revision_observed": 5,
+  "safe_revisions": [
+    467,
+    468,
+    469
+  ],
+  "review_revision": 470,
+  "evidence_revisions": [
+    471,
+    472,
+    473,
+    474,
+    475,
+    476,
+    477
+  ],
+  "stage_revision": 478,
+  "normal_public_SDK": true,
+  "runtime_acceptance_projection": "Unreviewed separate from canonical WorkAccepted",
+  "accepted_task_contracts": 84,
+  "total_task_contracts": 222,
+  "failed_evidence_attempt": "StaleBasis0commits; corrected producer-owned artifact only",
+  "final_inspection": "Correctedhelper reads currentWorkAccepted5/evidence7, but its pre-fix no-commit assertion exits1 after successful retry; originalreadonlyinspect exits0 for RuntimeJob. Actual canonical WorkAccepted479 and current Work5 prove closure. No acceptance rollback/fabrication.",
+  "scope": "fulloriginalM08C3 allsteps/cases/criteria/safestop, all3reviewfindingsclosed"
+}

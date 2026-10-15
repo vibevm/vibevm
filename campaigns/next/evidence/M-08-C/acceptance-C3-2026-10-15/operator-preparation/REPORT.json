@@ -1,0 +1,152 @@
+{
+  "status": "READY_ROOT_REVIEW_AND_EXECUTION_REQUIRED",
+  "utc": "2026-10-15T15:07:58.437726+00:00",
+  "mutations_executed": 0,
+  "proposal_approved": false,
+  "required_approval_token": "Root approves FULL M08C3 corrected candidate with seven proofs and separate integrated codegen gate",
+  "observed_readonly": {
+    "revision": 466,
+    "work_state": "Active",
+    "work_revision": 3,
+    "execution": "Succeeded",
+    "acceptance": "Unreviewed",
+    "candidate": "candidate.vibevm-m08c3-correction"
+  },
+  "compile_results": [
+    {
+      "helper": "accept-candidate-local",
+      "exit": 0
+    },
+    {
+      "helper": "safe-candidate-local",
+      "exit": 0
+    },
+    {
+      "helper": "validate-evidence-local",
+      "exit": 0
+    }
+  ],
+  "validation_results": [
+    {
+      "step": "validate-evidence-local",
+      "exit": 0
+    },
+    {
+      "step": "readonly-inspect",
+      "exit": 0
+    }
+  ],
+  "source_commit": "9635e2f80cd1599b408fd0dcdf29f175941be0c1",
+  "source_subjects": 317,
+  "declared_methods": 7,
+  "criteria": 2,
+  "latest_actual_nonignored_rust": 54,
+  "reused_old_exact": 1,
+  "reported_executions_including_repeats": 96,
+  "new_test_functions": 5,
+  "V5": "Producer0/1/0 retained; distinct Root integrated check-codegen0 with exact source317 supplies separately bound current proof",
+  "V7": "Current old-only preservation true; original false remains history",
+  "known_capture_case_projection": "Empty derived positive/negative arrays do not remove full actualTaskContract/source2+2 obligations; Root must assess them",
+  "selected_evidence_ids": [
+    "evidence.verification.m08c3-correction.root-review",
+    "evidence.verification.m08c3-correction.1.root-review",
+    "evidence.verification.m08c3-correction.2.root-review",
+    "evidence.verification.m08c3-correction.3.root-review",
+    "evidence.verification.m08c3-correction.4.root-review",
+    "evidence.verification.m08c3-correction.5.root-review",
+    "evidence.verification.m08c3-correction.6.root-review"
+  ],
+  "approval_steps": [
+    "Root reads full proposal and independent review, judges both original criteria with nonempty rationales",
+    "Copy ROOT-REVIEW-PROPOSAL.json to ROOT-REVIEW.json in acceptance-preparation; set approved=true, exact approval_token, both review_disposition=satisfied and actual rationales/summary",
+    "Keep approved bytes immutable through Safe and later phases; Safe retains exact hash; preserve evidence_files and methods unless re-prepared/validated",
+    "Execute each listed phase separately and inspect receipt/exit; no acceptance is performed by preparation"
+  ],
+  "ordered_commands": [
+    {
+      "phase": "safe",
+      "argv": [
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/safe-candidate-local",
+        "1089105",
+        "1089168",
+        "1089289",
+        "1089364",
+        "1089895"
+      ],
+      "normal_records": [
+        "VerificationClaimedPayload (if absent)",
+        "VerificationResultPayload Passed with exact approved Root report and producer report artifacts",
+        "SafeStateRecordedPayload Safe bound to actual attempt/effect/boundary"
+      ]
+    },
+    {
+      "phase": "open-review",
+      "argv": [
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local",
+        "open-review",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/ROOT-REVIEW.json"
+      ]
+    },
+    {
+      "phase": "evidence",
+      "argv": [
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local",
+        "evidence",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/ROOT-REVIEW.json"
+      ]
+    },
+    {
+      "phase": "stage",
+      "argv": [
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local",
+        "stage",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/ROOT-REVIEW.json"
+      ]
+    },
+    {
+      "phase": "work",
+      "argv": [
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local",
+        "work",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/ROOT-REVIEW.json"
+      ]
+    },
+    {
+      "phase": "inspect",
+      "argv": [
+        "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local",
+        "inspect"
+      ]
+    }
+  ],
+  "normal_sequence": "existing SDK Safe verification and exact Safe state \u2192 Active-to-Candidate review transition \u2192 seven EvidenceAdjudicated \u2192 StageAccepted \u2192 WorkAccepted",
+  "conditions": [
+    "all5 exact original launch processes absent; root normal collected stop and quiescence evidence match",
+    "canonical collected-known-tail marker and exact candidate producer/contract/basis match",
+    "source317 and held raw logs/results/review/commit/gate hashes still current",
+    "Root approved both original criteria; producer satisfied claims alone never authorize",
+    "all7 selected proofs observed pass including separately current integrated gate; producer failure not rewritten"
+  ],
+  "artifact_provenance": "Evidence observation points to exact Root-approved report artifact already retained by Safe; original producer Report artifact is retained separately and hash-checked",
+  "files": {
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/ROOT-REVIEW-PROPOSAL.json": "1adfc346c45da0f8d1c5af32edd7a03c96f16f2d09f03a922be0247fdd913f30",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/EVIDENCE-CLOSURE.json": "1a73a37fd27b531de39a5ca83a0dd08c9a7d5696a3c61aa18fc2021d89f03fbf",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/acceptance-validation.rs": "432b675bf47b466e681d6313b3260f5ae80d5966279f4e50a1bc10ed94081fc7",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local.rs": "e416a038bf664b4222f2fc82d46c43d390c15b08665ee59da6dc882aea199bf3",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/safe-candidate-local.rs": "493a48336a2e202a825c30c6dd92d805e4ae34d4fc646b52235081935aeaa2a5",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/validate-evidence-local.rs": "f8adeb52a2209068317cba5a7fe96423f4634759b877f8dca9c02758e5c18e0f",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local-build-args.json": "c15fd3396f7ad639fac87a5ef1f9ddd9d2300e18e1fea4f6944346b7c72ad8b3",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/safe-candidate-local-build-args.json": "b1f6bbe5d77e20a47e440123a2d9671dbec57eea6c9136cd750b08def28d5fef",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/validate-evidence-local-build-args.json": "9b6f0d0b543f821490c8098b9fc8739a1700c3fff7024aed2f8cf04a63e2876f",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local-build.log": "52df27068ecc2c379ecac8d760c6bd97b2a40402b9b54526ca338de7f0bca6d4",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/validate-evidence-local-build.log": "f50bcb6851f595645878bfd9642419ed47ec32607903145f5844a8185359e642",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/BUILD-RESULTS.json": "864cbb696d142e9003b62447d57afa04ece57f5857a78015f651990f571a9345",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/validate-evidence-local.log": "c2193004f9e47e0d21c133567d711b561a5f4c0db7bafe061135f6a106523267",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/readonly-inspect.log": "d93e62f27c2f9e15b5d1c42c8e2ac53756a1cae872a3eecf48145105b6b6474c",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/VALIDATION-RESULTS.json": "582df90e8d541ef170dd1c3f0f50e9acd9bca99c9421f35a90ca7e55d2623fb5",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-candidate-local": "966fc3ac7260e0645606aebfc7daa9b12195ab6ffe1ac2e752a002c7edd166bd",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/safe-candidate-local-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/safe-candidate-local": "cbee932f0615c21a22a6a9e498426e4c65f93de2e26f4eaf735003f68e84b5bb",
+    "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/validate-evidence-local": "8cd70f0c8be1672c36e6e2b748a3b5a37546b548c02048315d5e51bfe4139a14"
+  }
+}

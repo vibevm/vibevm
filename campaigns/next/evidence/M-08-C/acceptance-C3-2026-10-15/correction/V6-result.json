@@ -1,0 +1,66 @@
+{
+  "group": "V6",
+  "executed": true,
+  "case_binding": null,
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-agent-projection/src/pkgskill.rs",
+        "crates/vibe-agent-projection/src/pkgskill/receipt.rs",
+        "crates/vibe-agent-projection/src/pkgskill/receipt/adoption.rs",
+        "crates/vibe-agent-projection/src/pkgskill/receipt/m_08_c_3_cases.rs",
+        "crates/vibe-agent-projection/src/pkgskill/receipt/reconcile.rs",
+        "crates/vibe-agent-projection/src/pkgskill/receipt/recover.rs",
+        "crates/vibe-agent-projection/src/pkgskill/receipt/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/adoption.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/inverse.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/m_08_c_3_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/receipt.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/inverse.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/inverse_resume.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/prior_receipt_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/saga.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state/generic.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/view.rs",
+        "crates/vibe-wire/src/behaviour/deploy_generic_state.rs",
+        "crates/vibe-wire/src/behaviour/mod.rs"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1.log",
+      "seconds": 0.20695468498161063,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2.log",
+      "seconds": 0.028571597998961806,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

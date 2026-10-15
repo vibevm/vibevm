@@ -1,0 +1,59 @@
+{
+  "group": "V1",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "mechanism::deploy::generic::m_08_c_3_cases::identical_standalone_receipts_cannot_substitute_donor_roots",
+      "mechanism::deploy::generic::m_08_c_3_cases::incumbent_logical_deployment_identity_imports_and_restores_exact_receipt",
+      "mechanism::deploy::generic::m_08_c_3_cases::replaced_named_arena_refuses_stale_generic_and_incumbent_hosts",
+      "mechanism::deploy::generic::m_08_c_3_cases::interrupted_member_inverse_does_not_complete_other_member",
+      "mechanism::deploy::generic::m_08_c_3_cases::changed_coordination_arena_refuses_retained_recovery",
+      "mechanism::deploy::generic::m_08_c_3_cases::c2_migration_requires_closed_match_and_never_invents_before_state",
+      "mechanism::deploy::generic::m_08_c_3_cases::member_inverse_preserves_current_foreign_neighbors",
+      "mechanism::deploy::generic::m_08_c_3_cases::removed_source_inverse_restores_owned_value",
+      "mechanism::deploy::generic::m_08_c_3_cases::revocation_refuses_forward_but_allows_current_cleanup",
+      "mechanism::deploy::generic::m_08_c_3_cases::durable_identity_excludes_process_capture",
+      "mechanism::deploy::generic::m_08_c_3_cases::typed_receipt_join_and_private_blob_integrity",
+      "mechanism::deploy::generic::m_08_c_3_cases::interrupted_publication_retains_uncertain_state",
+      "mechanism::deploy::generic::m_08_c_3_cases::upgrade_added_retained_removed_and_inverse_restore_exact_set",
+      "mechanism::deploy::generic::m_08_c_3_cases::initial_generation_recovers_publication_and_refuses_third_digest",
+      "mechanism::deploy::generic::m_08_c_3_cases::standalone_transfer_restores_exact_donor_without_source",
+      "mechanism::deploy::generic::m_08_c_3_cases::deployment_c2_transfer_and_exact_donor_restore",
+      "mechanism::deploy::generic::m_08_c_3_cases::initial_phase_classes_recover_with_exact_fresh_authority",
+      "mechanism::deploy::generic::m_08_c_3_cases::automatic_donor_retirement_interruption_recovers_then_restores",
+      "mechanism::deploy::generic::m_08_c_3_cases::retained_mode_create_new_restoration_and_existing_occupant_refusal",
+      "mechanism::deploy::generic::m_08_c_3_cases::representable_legacy_file_and_opencode_member_transfer_preserve_neighbors",
+      "mechanism::deploy::generic::m_08_c_3_cases::toml_literal_inverse_preserves_current_foreign_neighbors",
+      "mechanism::deploy::generic::m_08_c_3_cases::receipt_publication_window_rejects_changed_record_then_recovers"
+    ],
+    "expected": 22
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::generic::m_08_c_3_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "22",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1.log",
+      "seconds": 5.834937995008659,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,1322 @@
+{
+  "approved": true,
+  "approval_token": "Root approves FULL M08C3 corrected candidate with seven proofs and separate integrated codegen gate",
+  "summary": "Root accepts the full original C3 source contract at9635e2f80cd1599b408fd0dcdf29f175941be0c1 after independent full-task correction review,54 current successful cases+1 exact reused case and separate integrated check-codegen0; all original positive/negative scenarios assessed, no platform/global/release claim.",
+  "scope": "Full M-08-C.3 original3 steps,2 positives,2 negatives,2 criteria and safe stop; corrected exact donor identity, actual legacy deployment homes and current named arena",
+  "limitations": [
+    "Candidate dispositions are worker claims, not Root acceptance.",
+    "Preintegration check-codegen remains failed; separate Root postintegration gate exited0 with matching317 source closure.",
+    "Supported transfers are three donor families into generic and exact recorded inverse, not arbitrary family-to-family export.",
+    "Historical unavailable before-images remain non-reversible; unknown/corrupt/missing retained semantics refuse.",
+    "Current participating writers require the same explicit host-supplied arena. Reopen/compare detects ordinary named-root replacement, not hostile ABA or global coordination among unrelated arenas.",
+    "Only isolated representative phase classes were tested; no real vendor/provider, user HOME or platform commissioning.",
+    "Producer check-codegen exit1 retained; distinct Root integrated gate exit0 supplies current proof.",
+    "54 latest actual successful Rust executions plus1 reused old exact;96 includes repeats,5 new functions; not96 new cases.",
+    "Inherited ready-capture case arrays empty; actual task contract/source obligations retained and Root must assess all4 original cases."
+  ],
+  "observations": [
+    {
+      "group": "V1",
+      "verification_id": "verification.m08c3-correction",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V1"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V1"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-result.json",
+      "result_sha256": "fc628d6d9baf98c7af51577e9607df9855c9a68160b727c3d1b5dcbeb57ef788",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 22,
+      "reused_case_count": 0,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::generic::m_08_c_3_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "22",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1.log",
+          "seconds": 5.834937995008659,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "0cc0a985e921381f8df5f54d2cc9feae9adfbe90cd6fd5c582eb56174600c26c"
+        }
+      ],
+      "cases": [
+        "mechanism::deploy::generic::m_08_c_3_cases::identical_standalone_receipts_cannot_substitute_donor_roots",
+        "mechanism::deploy::generic::m_08_c_3_cases::incumbent_logical_deployment_identity_imports_and_restores_exact_receipt",
+        "mechanism::deploy::generic::m_08_c_3_cases::replaced_named_arena_refuses_stale_generic_and_incumbent_hosts",
+        "mechanism::deploy::generic::m_08_c_3_cases::interrupted_member_inverse_does_not_complete_other_member",
+        "mechanism::deploy::generic::m_08_c_3_cases::changed_coordination_arena_refuses_retained_recovery",
+        "mechanism::deploy::generic::m_08_c_3_cases::c2_migration_requires_closed_match_and_never_invents_before_state",
+        "mechanism::deploy::generic::m_08_c_3_cases::member_inverse_preserves_current_foreign_neighbors",
+        "mechanism::deploy::generic::m_08_c_3_cases::removed_source_inverse_restores_owned_value",
+        "mechanism::deploy::generic::m_08_c_3_cases::revocation_refuses_forward_but_allows_current_cleanup",
+        "mechanism::deploy::generic::m_08_c_3_cases::durable_identity_excludes_process_capture",
+        "mechanism::deploy::generic::m_08_c_3_cases::typed_receipt_join_and_private_blob_integrity",
+        "mechanism::deploy::generic::m_08_c_3_cases::interrupted_publication_retains_uncertain_state",
+        "mechanism::deploy::generic::m_08_c_3_cases::upgrade_added_retained_removed_and_inverse_restore_exact_set",
+        "mechanism::deploy::generic::m_08_c_3_cases::initial_generation_recovers_publication_and_refuses_third_digest",
+        "mechanism::deploy::generic::m_08_c_3_cases::standalone_transfer_restores_exact_donor_without_source",
+        "mechanism::deploy::generic::m_08_c_3_cases::deployment_c2_transfer_and_exact_donor_restore",
+        "mechanism::deploy::generic::m_08_c_3_cases::initial_phase_classes_recover_with_exact_fresh_authority",
+        "mechanism::deploy::generic::m_08_c_3_cases::automatic_donor_retirement_interruption_recovers_then_restores",
+        "mechanism::deploy::generic::m_08_c_3_cases::retained_mode_create_new_restoration_and_existing_occupant_refusal",
+        "mechanism::deploy::generic::m_08_c_3_cases::representable_legacy_file_and_opencode_member_transfer_preserve_neighbors",
+        "mechanism::deploy::generic::m_08_c_3_cases::toml_literal_inverse_preserves_current_foreign_neighbors",
+        "mechanism::deploy::generic::m_08_c_3_cases::receipt_publication_window_rejects_changed_record_then_recovers"
+      ]
+    },
+    {
+      "group": "V2",
+      "verification_id": "verification.m08c3-correction.1",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V2"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V2"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c3-correction/V2-result.json",
+      "result_sha256": "95210aabe2553f258b214aa3d49783a248b747246a2ddeafe4ad6c326e28d31a",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 6,
+      "reused_case_count": 0,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "pkgskill::receipt::m_08_c_3_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "6",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1.log",
+          "seconds": 4.530875852971803,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "e2c31b1f5bfb5c35655ea633cf26da3e8b43e7fa49f442e460719e20d616f517"
+        }
+      ],
+      "cases": [
+        "pkgskill::receipt::m_08_c_3_cases::replaced_arena_refuses_stale_writer_before_skill_effects",
+        "pkgskill::receipt::m_08_c_3_cases::nested_destination_roots_share_explicit_arena_before_parents_exist",
+        "pkgskill::receipt::m_08_c_3_cases::different_arena_is_not_claimed_as_same_authority",
+        "pkgskill::receipt::m_08_c_3_cases::automatic_hold_blocks_writer_and_restore_preserves_legacy_reader",
+        "pkgskill::receipt::m_08_c_3_cases::changed_donor_receipt_and_foreign_equal_bytes_refuse",
+        "pkgskill::receipt::m_08_c_3_cases::current_standalone_writer_waits_for_shared_arena"
+      ]
+    },
+    {
+      "group": "V3",
+      "verification_id": "verification.m08c3-correction.2",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V3"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V3"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-result.json",
+      "result_sha256": "e6b68de4d2bc0dcec7e79d48ee09957b72500b7d64e987bba7b3683598223e02",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 6,
+      "reused_case_count": 0,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-wire",
+            "--lib",
+            "behaviour::deploy_generic_state::m_08_c_3_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "5",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1.log",
+          "seconds": 11.269297741004266,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "dd239ad1f23b4005121de928f1ca3788fc4a1665834124f9a34d34dd30042905"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-wire",
+            "--lib",
+            "behaviour::deploy_records::tests::legacy_none_omits_binding_and_preserves_pair",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2.log",
+          "seconds": 0.15788412396796048,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "e30fab4acea307d37fac8bc5326ac432b1134663640e64ee8575f2b73ea2474e"
+        }
+      ],
+      "cases": [
+        "behaviour::deploy_generic_state::m_08_c_3_cases::strict_corpus_roundtrip",
+        "behaviour::deploy_generic_state::m_08_c_3_cases::transfer_root_is_required_and_bound_to_semantics",
+        "behaviour::deploy_generic_state::m_08_c_3_cases::semantic_phase_and_join_refusals",
+        "behaviour::deploy_generic_state::m_08_c_3_cases::retention_bounds_and_literal_keys",
+        "behaviour::deploy_generic_state::m_08_c_3_cases::legacy_reader_refuses_new_state"
+      ]
+    },
+    {
+      "group": "V4",
+      "verification_id": "verification.m08c3-correction.3",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V4"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V4"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-result.json",
+      "result_sha256": "d4e6d7b388c8c09d34305ea518f8c18a68d976f4f51890757d817844d1f3f3eb",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 20,
+      "reused_case_count": 1,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::generic::tests"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "13",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1.log",
+          "seconds": 1.281451141985599,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "0c3e9051690f780cf39d1b99baed287ee6982aedf79c4a4f7a33cb2175a8d7a2"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "pkgskill::receipt::tests::changed_declaration_after_crash_recovers_stored_plan_then_reconciles",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2.log",
+          "seconds": 0.2783534629852511,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "2be04d1cffb4226ab74ca95af8153f35f384d903e8986de5ca9c08053976f531"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "pkgskill::receipt::tests::tampered_owned_file_refuses_removal_and_preserves_bytes",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3.log",
+          "seconds": 0.24071835301583633,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "96c8cca56fb6093f2b33d884d661b5036ea05783a9bd8d9a72da7c84fac4a8d1"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "pkgskill::tests::owned_update_and_uninstall_preserve_unowned_neighbors",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4.log",
+          "seconds": 0.1983577610226348,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "ac974907801ec7a71a1a07af0d093ea557e2adea1ecdd026078cd62403b99bb0"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::inverse_tests::undeploy_holds_pending_as_well_as_committed_destination_locks",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5.log",
+          "seconds": 0.2786397729651071,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "704239da1e04eea938609dd4b20253dcdd6c3279f93e01fe2fcdb2a819bb39b1"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::prior_receipt_tests::apply_refuses_a_receipt_that_changed_after_the_pre_apply_epoch",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6.log",
+          "seconds": 0.30125025199959055,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "60df0616108c05af8ce4bd718cb904a722d14df0991dac8dd98a22dbde3f0cc1"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::sidecar_tests::an_update_crash_keeps_the_old_committed_beside_the_new_pending",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7.log",
+          "seconds": 0.29623523500049487,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "1f18d83879fb811808acc48cb672947a142536dee6e9b392cdfedb4395af884d"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::transaction_tests::recovery_refuses_a_third_digest_and_names_the_resources",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8.log",
+          "seconds": 0.24723374494351447,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "8b754ee89420c0e78dbf5e104aca46bf4c0fd97a08019b1296f91fe00be4f00e"
+        }
+      ],
+      "cases": [
+        "V4 scoped actual result"
+      ],
+      "reuse": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-lifecycle",
+          "--lib",
+          "mechanism::deploy::state::wire::tests::inverse_domain_conversion_keeps_exact_bytes_and_strict_reading",
+          "--",
+          "--exact"
+        ],
+        "rationale": "Reused, not a new pass: unchanged old inverse DTO conversion/strict reader/schema; no generic transfer or arena writer path. All named consumed sources match original command subject hashes.",
+        "source_hashes": {
+          "crates/vibe-lifecycle/src/mechanism/deploy/state/wire.rs": "733016920b0fc6a494f263f15eafb337e25cb04b358cde07da0383f5a68667f4",
+          "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs": "73b0eb3aba208e03c3220142b0b7ea3304984b0b04d0c0110a88e88f98936d8b",
+          "crates/vibe-wire/src/generated/deploy_inverse/mod.rs": "79df4fa3dc6f6d1e062574f6980cfcab2008ad38464c008f7de134431011ece1",
+          "schemas/deploy_inverse.jtd.json": "d43ce7c7f9cf2df2fc221df8b659e8a9982991625a1db2dadf9dea03ffe983c3",
+          "crates/vibe-wire/src/behaviour/deploy_records/mod.rs": "7234d4bf2a0bc6d0af6057e8eeda8256f65d0d5b7096ca3be191ceccb6b1c926",
+          "crates/vibe-wire/src/behaviour/deploy_records/tests.rs": "ddbece86295fd245c23ede18bfc6cb1275d870ddd09ada96f709d43fd5cb63b7"
+        },
+        "original_command_result": {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::state::wire::tests::inverse_domain_conversion_keeps_exact_bytes_and_strict_reading",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-resume3/V4-8.log",
+          "seconds": 0.20084230095380917,
+          "passed": true,
+          "source_drift": [],
+          "archived_log": "/fast/zap-managed/2026-10-15-m08c3-correction/reused-inverse-domain.log",
+          "log_sha256": "ae659cee85e0d4101f777b72a9e4d4952e3f1205d7b7af3ee623b84eac160644"
+        }
+      }
+    },
+    {
+      "group": "V5",
+      "verification_id": "verification.m08c3-correction.4",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V5"
+      ],
+      "actual_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "xtask",
+        "check-codegen"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-result.json",
+      "result_sha256": "7bbff300c2079081423bb6a74d658bbbec62a983925da8a8448a85617af68d6f",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 0,
+      "reused_case_count": 0,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "codegen"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1.log",
+          "seconds": 24.905545334971976,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "0a9ed4bd6687dc999be01f65ea8c9eb2a7148b54d31380ac440d74e90982d0c1"
+        },
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "check-codegen"
+          ],
+          "exit": 1,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2.log",
+          "seconds": 17.516326910990756,
+          "passed": false,
+          "source_drift": [],
+          "log_sha256": "428c2a1e01cff09cc7f2c2860f306bfc341d3ed4d9846300f5db7bb39f88048f"
+        },
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "wire-diff"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3.log",
+          "seconds": 12.995296362030786,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "32b9e67f07d3e6fa0fe28cbee529bc220c232385f03feef6c24d9687c4f1ebda"
+        }
+      ],
+      "cases": [
+        "Producer codegen0 and wire-diff0 plus separate Root postindex check-codegen0; preintegration exit1 remains failed history"
+      ],
+      "producer_group_passed": false,
+      "producer_failed_check_retained": true,
+      "integrated_gate": {
+        "path": "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-INTEGRATION-GATE.json",
+        "sha256": "ed13b9ca682040d9868bd4c2f731699b96668ca2711a8342f298f6a9f660c1da",
+        "command": [
+          "/home/olegchir/.cargo/bin/cargo",
+          "xtask",
+          "check-codegen"
+        ],
+        "exit": 0,
+        "log": "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-INTEGRATION-CHECK-CODEGEN.log",
+        "log_sha256": "41f02a782dab77b3238fbf39d9f7fe643f86b58ebeb8ab212d87a96f14945e9b"
+      }
+    },
+    {
+      "group": "V6",
+      "verification_id": "verification.m08c3-correction.5",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V6"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V6"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-result.json",
+      "result_sha256": "9143537b07ea20171d4f7287892d38aed0f58b9018df6ce1bd915ba1616f3ea1",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 0,
+      "reused_case_count": 0,
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-agent-projection/src/pkgskill.rs",
+            "crates/vibe-agent-projection/src/pkgskill/receipt.rs",
+            "crates/vibe-agent-projection/src/pkgskill/receipt/adoption.rs",
+            "crates/vibe-agent-projection/src/pkgskill/receipt/m_08_c_3_cases.rs",
+            "crates/vibe-agent-projection/src/pkgskill/receipt/reconcile.rs",
+            "crates/vibe-agent-projection/src/pkgskill/receipt/recover.rs",
+            "crates/vibe-agent-projection/src/pkgskill/receipt/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/adoption.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/inverse.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/m_08_c_3_cases.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/receipt.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/inverse.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/inverse_resume.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/prior_receipt_tests.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/saga.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state/generic.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/view.rs",
+            "crates/vibe-wire/src/behaviour/deploy_generic_state.rs",
+            "crates/vibe-wire/src/behaviour/mod.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1.log",
+          "seconds": 0.20695468498161063,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2.log",
+          "seconds": 0.028571597998961806,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "cases": [
+        "V6 scoped actual result"
+      ]
+    },
+    {
+      "group": "V7",
+      "verification_id": "verification.m08c3-correction.6",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V7"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c3-correction/verify-group.py",
+        "V7"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c3-correction/V7-result.json",
+      "result_sha256": "9a8dea5cbe1b370bc6e785090dbaa3677928e74afd6917a3d04d0b6126d32bd9",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 0,
+      "reused_case_count": 0,
+      "commands": [],
+      "cases": [
+        "V7 scoped actual result"
+      ]
+    }
+  ],
+  "supplementary_subjects": {
+    "review": "/fast/git/v/research/2026-10-15-m08c3-review/correction/REPORT.json",
+    "source317": "/fast/zap-managed/2026-10-15-m08c3-correction/final-source-hashes.json",
+    "original_obligations": {
+      "steps": [
+        "Record descriptor/semantics/grant identities and retained host-readable operation data in the existing receipt families.",
+        "Implement upgrade differences for added/retained/removed resources, before-images where supported and locked receipt/digest rechecks.",
+        "Implement explicit cross-family adoption and revocation; cleanup uses current separately scoped host authority even after descriptor removal, never revoked native code."
+      ],
+      "positive_cases": [
+        "Upgrade preserves foreign members and can restore retained before-images.",
+        "A removed descriptor still permits receipt inspection and authorized owned cleanup."
+      ],
+      "negative_cases": [
+        "Equal bytes do not transfer ownership; drifted destinations refuse removal.",
+        "Missing before-state yields honest non-reversible status; revoked apply cannot run."
+      ],
+      "acceptance": [
+        "Crash, changed-receipt and missing-provider scenarios retain exact partial/recovery status.",
+        "Each receipt family retains its owner and compatibility reader."
+      ],
+      "safe_stop": "Receipt migration and isolated inverse/revocation evidence are complete."
+    },
+    "root_source_commit_required": true,
+    "source_commit": "9635e2f80cd1599b408fd0dcdf29f175941be0c1"
+  },
+  "fresh_distinct_cases": 54,
+  "reused_distinct_cases": 1,
+  "actual_environment": "nightly1.101.0 edition2024; exact Root-owned main target and private tmp; isolated fixture effects only",
+  "evidence_files": {
+    "/fast/zap-managed/2026-10-15-m08c3-correction/REPORT.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/REPORT.json",
+      "sha256": "5886b18d9f134563a445c6b3154f8ced4fdbac85e4edf9efdca3f89398d72e81"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/FINDINGS.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/FINDINGS.json",
+      "sha256": "b4b0a345e0dff41ef50793dfafe435b06599f65049cb7c7b21526c117634fbef"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/candidate-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/candidate-result.json",
+      "sha256": "b23a0a2e6b913becda7b624faa8e624e9b62b3522229f1ba797bf29b93be88fa"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/ready-capture.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/ready-capture.json",
+      "sha256": "4e44eb827a60d69baa6857aac99a518bb04eda30dd5ca7f8a70c9fbabbabb254"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/actual-runtime-binding.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/actual-runtime-binding.json",
+      "sha256": "167884a87514757bb9f720623c04cbcfdce5f79ce127526e09b871064df0050c"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-ACTUAL-LAUNCH.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-ACTUAL-LAUNCH.json",
+      "sha256": "a80a6527864287c2fbdd539801e971e88d895c99ca607ffee12530487a0ad5aa"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-STAGED-SOURCE.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-STAGED-SOURCE.json",
+      "sha256": "411229dc1ade049e1dc95d7b8a12b263f042933225445ff597bed432f0be159f"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-INTEGRATION-GATE.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-INTEGRATION-GATE.json",
+      "sha256": "ed13b9ca682040d9868bd4c2f731699b96668ca2711a8342f298f6a9f660c1da"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/final-source-hashes.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/final-source-hashes.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-INTEGRATION-CHECK-CODEGEN.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-INTEGRATION-CHECK-CODEGEN.log",
+      "sha256": "41f02a782dab77b3238fbf39d9f7fe643f86b58ebeb8ab212d87a96f14945e9b"
+    },
+    "/fast/git/v/research/2026-10-15-m08c3-review/correction/REPORT.md": {
+      "path": "/fast/git/v/research/2026-10-15-m08c3-review/correction/REPORT.md",
+      "sha256": "79e1929a1997368badcbb508a4340d34f980d86708c7fc6ac98d5e470f8ed1d6"
+    },
+    "/fast/git/v/research/2026-10-15-m08c3-review/correction/REPORT.json": {
+      "path": "/fast/git/v/research/2026-10-15-m08c3-review/correction/REPORT.json",
+      "sha256": "680bfe0cbd808544af059096f703a7e3e9321ca3882c218bec7f95ea9075b6e8"
+    },
+    "/fast/git/v/research/2026-10-15-m08c3-review/correction/source-hashes-before.json": {
+      "path": "/fast/git/v/research/2026-10-15-m08c3-review/correction/source-hashes-before.json",
+      "sha256": "ca82d17fb96832a1f712fce5b7f0ec9fd0da7e4bc1db14ff75f7050882076e48"
+    },
+    "/fast/git/v/research/2026-10-15-m08c3-review/correction/source-hashes-after.json": {
+      "path": "/fast/git/v/research/2026-10-15-m08c3-review/correction/source-hashes-after.json",
+      "sha256": "ca82d17fb96832a1f712fce5b7f0ec9fd0da7e4bc1db14ff75f7050882076e48"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V1-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-result.json",
+      "sha256": "fc628d6d9baf98c7af51577e9607df9855c9a68160b727c3d1b5dcbeb57ef788"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1.log",
+      "sha256": "0cc0a985e921381f8df5f54d2cc9feae9adfbe90cd6fd5c582eb56174600c26c"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V2-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V2-result.json",
+      "sha256": "95210aabe2553f258b214aa3d49783a248b747246a2ddeafe4ad6c326e28d31a"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1.log",
+      "sha256": "e2c31b1f5bfb5c35655ea633cf26da3e8b43e7fa49f442e460719e20d616f517"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V3-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-result.json",
+      "sha256": "e6b68de4d2bc0dcec7e79d48ee09957b72500b7d64e987bba7b3683598223e02"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1.log",
+      "sha256": "dd239ad1f23b4005121de928f1ca3788fc4a1665834124f9a34d34dd30042905"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2.log",
+      "sha256": "e30fab4acea307d37fac8bc5326ac432b1134663640e64ee8575f2b73ea2474e"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-result.json",
+      "sha256": "d4e6d7b388c8c09d34305ea518f8c18a68d976f4f51890757d817844d1f3f3eb"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1.log",
+      "sha256": "0c3e9051690f780cf39d1b99baed287ee6982aedf79c4a4f7a33cb2175a8d7a2"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2.log",
+      "sha256": "2be04d1cffb4226ab74ca95af8153f35f384d903e8986de5ca9c08053976f531"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3.log",
+      "sha256": "96c8cca56fb6093f2b33d884d661b5036ea05783a9bd8d9a72da7c84fac4a8d1"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4.log",
+      "sha256": "ac974907801ec7a71a1a07af0d093ea557e2adea1ecdd026078cd62403b99bb0"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5.log",
+      "sha256": "704239da1e04eea938609dd4b20253dcdd6c3279f93e01fe2fcdb2a819bb39b1"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6.log",
+      "sha256": "60df0616108c05af8ce4bd718cb904a722d14df0991dac8dd98a22dbde3f0cc1"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7.log",
+      "sha256": "1f18d83879fb811808acc48cb672947a142536dee6e9b392cdfedb4395af884d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8.log",
+      "sha256": "8b754ee89420c0e78dbf5e104aca46bf4c0fd97a08019b1296f91fe00be4f00e"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/reused-inverse-domain.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/reused-inverse-domain.log",
+      "sha256": "ae659cee85e0d4101f777b72a9e4d4952e3f1205d7b7af3ee623b84eac160644"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-result.json",
+      "sha256": "7bbff300c2079081423bb6a74d658bbbec62a983925da8a8448a85617af68d6f"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1.log",
+      "sha256": "0a9ed4bd6687dc999be01f65ea8c9eb2a7148b54d31380ac440d74e90982d0c1"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2.log",
+      "sha256": "428c2a1e01cff09cc7f2c2860f306bfc341d3ed4d9846300f5db7bb39f88048f"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3.log",
+      "sha256": "32b9e67f07d3e6fa0fe28cbee529bc220c232385f03feef6c24d9687c4f1ebda"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V6-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-result.json",
+      "sha256": "9143537b07ea20171d4f7287892d38aed0f58b9018df6ce1bd915ba1616f3ea1"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V7-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V7-result.json",
+      "sha256": "9a8dea5cbe1b370bc6e785090dbaa3677928e74afd6917a3d04d0b6126d32bd9"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/pipeline-build.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/pipeline-build.log",
+      "sha256": "1242a690dffcadb15dd2d2a9560eef0d685440c129b1325991eab35cd029e1c6"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/bootstrap-codegen.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/bootstrap-codegen.log",
+      "sha256": "f7b913d5e0568b40b3b606f4d88699677d7c55e03af81b6db4f74a4b0d8722a7"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-1-subjects-before.json",
+      "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-1.log",
+      "sha256": "b1255a86ee203bbf591b92faface4afe67333c7b6086958066380cd84f78caa0"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/bootstrap-codegen-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/bootstrap-codegen-result.json",
+      "sha256": "2c83bbae1d0a85a7c43a62feecee7b23beb6182702b62a12c5484a6b4482261a"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/format-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/format-result.json",
+      "sha256": "4049875037e0641279ac15f7d1c52cd6924abac3c4cecd5711b09bfc573a30c7"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-2-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-2-subjects-after.json",
+      "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-2-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-2-subjects-before.json",
+      "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/CASE-BINDINGS.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/CASE-BINDINGS.json",
+      "sha256": "2c1b6a8e6c16458d23869254d2a002c9ac0d9539b24b05fe09ee91e2e131e5b3"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-3-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-3-subjects-before.json",
+      "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V1-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V1-1-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-2.log",
+      "sha256": "b1255a86ee203bbf591b92faface4afe67333c7b6086958066380cd84f78caa0"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/bootstrap-codegen-2-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/bootstrap-codegen-2-result.json",
+      "sha256": "60411b2c9f8027ee7b005bedff8bf11c61212f51f4a853b9cc861ed480a87ea8"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/capture-build.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/capture-build.log",
+      "sha256": "4078a5dcb189b303cee2db1dd75b0416f99cdfa85fb0f7371614455038d5069c"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/managed-config-build.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/managed-config-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/finish-candidate-build.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/finish-candidate-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/baseline-verification.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/baseline-verification.json",
+      "sha256": "4596932650f8c4e4edf94d51d86e50dbb346547351c36499f616d518f7d38869"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/toolchain.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/toolchain.json",
+      "sha256": "cdbab8648792264060b4da2c5208ae490d609f4956a981958656cefd07e49777"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/bootstrap-codegen-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/bootstrap-codegen-2.log",
+      "sha256": "767b338208fba8943259c12006ebe4c61b886233153283b442ebfef9e2f330a2"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-3.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-3.log",
+      "sha256": "b1255a86ee203bbf591b92faface4afe67333c7b6086958066380cd84f78caa0"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-1-subjects-after.json",
+      "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/format.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/pipeline.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/pipeline.log",
+      "sha256": "18fda30ca6c37ce20c97505be3ae55bdcb936b4c3109073707556d687e6de43a"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/capture.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/capture.log",
+      "sha256": "a36b5c9e47d768eb38ef632633cff7d9943d606954a61f46c725e1f28dad3111"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/managed-config.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/managed-config.log",
+      "sha256": "044aa6c162d465e41916b6ef596202b036f63d1981c96369e7701aae056df737"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-3-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-3-subjects-after.json",
+      "sha256": "77ea745b1256f0699bff370dc3cf408f9e55577bc4b7e81daa48f4b1066a9796"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-SELECTION.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-SELECTION.json",
+      "sha256": "5890f6c81b170eeac9c0b0796c876aaa037b458f2779afe89d0dc35ac8029787"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/correction.patch": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/correction.patch",
+      "sha256": "8d97763854b6968feb9e26e119f566708c84016237867485a580e9e321143310"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V1-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V1-1.log",
+      "sha256": "e1ca83b55ca79ebc271da3759fb877bf988b2d1500d1f5b66790a61997ff95ac"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V1-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V1-1-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-1-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-1-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-2-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-2-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-2-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-2-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/format-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/format-2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/format-2-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/format-2-result.json",
+      "sha256": "078c14fd91ae6439a44c57cfc5a0bf3a152adf9976cacfee3f966432622dc2ef"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V6-PATHS.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-PATHS.json",
+      "sha256": "6a6d3efa7e0795c029a18a7fdcb62f74307b322cacfd2bca23f1e35b078c0beb"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2-subjects-before.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2-subjects-after.json",
+      "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/safefs-format.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/safefs-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/safefs-format-result.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/safefs-format-result.json",
+      "sha256": "21aab3ea48d32871303ca8d63ca2543c128a854cc407e98c92701ec00310c879"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/candidate.patch": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/candidate.patch",
+      "sha256": "bd800a6f86af29d0e6eb1679a9e206c0426f853a0ffa2a3b23c4bb92c1d87ab3"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-2.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-2.log",
+      "sha256": "f51ea868b01506a65e31e654ca42dd2b91f685f72e0b16df140f56edb057a570"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/CASE-BINDINGS-initial.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/CASE-BINDINGS-initial.json",
+      "sha256": "368433e954bd40216e62ee4ab034e6b90d7e08ead0c155e9637e0e5384611ddf"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-1.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-1.log",
+      "sha256": "13472b3a0b35d73551ddadd873f815d9f05283c598748c218bae7734cd098008"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-1-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-1-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-1-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-1-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-2-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-2-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-2-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-2-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-3-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-3-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-3.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-3.log",
+      "sha256": "5ecfeec59ba5d533fccb6b39c0fd8f79295c531bd0bd6e2adcf23946e35301ea"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-3-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-3-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-4-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-4-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-4.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-4.log",
+      "sha256": "ac974907801ec7a71a1a07af0d093ea557e2adea1ecdd026078cd62403b99bb0"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-4-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-4-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-5-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-5-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-5.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-5.log",
+      "sha256": "704239da1e04eea938609dd4b20253dcdd6c3279f93e01fe2fcdb2a819bb39b1"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-5-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-5-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-6-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-6-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-6.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-6.log",
+      "sha256": "521478f625a92d3d0de50c4c3f6beed8410ff0444d2877fa10c17acb374888cb"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-6-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-6-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-7-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-7-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-7.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-7.log",
+      "sha256": "36804c595c215e5dc04ef9958f5ffdc01859dd660ec942a547629f7b58c8f1c6"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-7-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-7-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-8-subjects-before.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-8-subjects-before.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-8.log": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-8.log",
+      "sha256": "10733a21e5b0d9e284f7bb6cb7970a0eccab46b560e77c1864db778a730cc00a"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-8-subjects-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-8-subjects-after.json",
+      "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-SOURCE-INTEGRATION.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-SOURCE-INTEGRATION.json",
+      "sha256": "718946922f61153cfae003b2a7ce6c70c16e5109bc26ad3ea4f425b7584e988b"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/cleanup-after-integration/ROOT-QUIESCENCE.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/cleanup-after-integration/ROOT-QUIESCENCE.json",
+      "sha256": "8ddc304dfa9552d541abb64cee4a9503074e0fbd89d7a44004b9553470f46b33"
+    },
+    "/fast/zap-managed/2026-10-15-m08c3-correction/cleanup-after-integration/job-after.json": {
+      "path": "/fast/zap-managed/2026-10-15-m08c3-correction/cleanup-after-integration/job-after.json",
+      "sha256": "0016138a7f5373abbf4df7adfddb3a38371f2a4bae12c21f7738f0526e93cd99"
+    }
+  },
+  "criterion_assessments": [
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#SOURCE-VERSUS-PLAN",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "rationale": "Current receipts retain descriptor/semantics/grant and private before/desired state; added/retained/removed upgrades preserve foreign members. Initial/pending/publication/changed-receipt scenarios retain exact partial status and use fresh current authority. Removed or revoked providers cannot apply, while authorized retained cleanup/inverse remain provider-free; unavailable history stays non-reversible. F1 exact donor root, F2 actual logical deployment home and F3 named arena freshness are independently verified corrected."
+    },
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#VIBEVM-OWNER",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "rationale": "Deployment, automatic pkgskill and standalone owners retain their compatibility readers, durable holds and retirement/restoration protocols. Public genuine legacy import and inverse restore exact original receipts, equal bytes never grant donor ownership, drift refuses, and old wire/schema/body preservation is bounded and checked. Seven method proofs include the separately successful integrated codegen gate; the original producer failures remain history."
+    }
+  ]
+}

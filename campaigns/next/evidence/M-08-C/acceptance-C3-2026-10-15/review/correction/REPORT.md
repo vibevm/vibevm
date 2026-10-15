@@ -1,0 +1,38 @@
+# C3 correction review: bounded clear
+
+No remaining P1/P2 finding in this correction pass. All 317 actual source subjects match the Root snapshot before and after review; no drift. The correction patch new-side hunks match current source, and its actual delta is exactly the 15 declared paths. This is review evidence, not Root acceptance.
+
+## C3-F1 — closed
+
+TransferPlan binds donor_root_identity and includes it in exact plan identity; persisted Transfer requires it and semantic digest covers it. Skill adoption checks exact identity before effects; donor current-root, hold/ensure/check/retire/restore/resume paths retain/recheck it. Deployment donor also binds state-root identity and named settings/state freshness; retained execution verifies it. Actual tests use byte-identical standalone receipts in A/B and identical deployment receipt at another state root; wrong adoption and inverse refuse NoEffects, original owners/bytes preserved.
+
+## C3-F2 — closed
+
+deployment_donor now accepts logical project with package/target, constructs the incumbent home and validates receipt identity triple. New fixture actually invokes incumbent apply_selection with a logical identity different from the physical token, then public import/restore and exact original receipt-byte comparison; wrong physical-token project and package refuse. Synthetic legacy/OpenCode spelling fixture remains supplementary rather than sole home-resolution proof.
+
+## C3-F3 — closed
+
+GenericHost arena_identity reopens configured name, compares retained identity; current_roots includes arena and both apply/retained paths recheck before/after locking. CoordinatedDeploy and CoordinatedSkills do same. Ordinary rename/recreate fixtures exercise stale generic refusal, real incumbent wrapper apply/undeploy entry, projection install/recover/reconcile_vanished/uninstall and fresh-host success. No new SafeFS primitive or hostile ABA claim.
+
+## Full original task
+
+Original 3 steps, 2 positives, 2 negatives, 2 criteria and safe-stop scope remain. Typed incumbent transaction state, bounded pre-effect private before/desired bytes, resource-set upgrade, literal JSON/TOML foreign-neighbor preservation, separate current provider-free cleanup/inverse/revocation, all 3 donor families/exact donor handback, retained unknown/legacy limits and representative partial/recovery phases are preserved. No blocking regression found in the bounded correction pass.
+
+## Evidence and remaining gate
+
+V1 22; V2 6; V3 5+1; V4 13+7 exact =54. Old inverse-domain exact case reused, not a new pass. Five test functions are new; the producer reports 96 executions including repeated runs. Logs confirm the latest 54 successful nonignored executions.
+
+Latest V1/V4/V6 subject snapshots match final317. V2/V3/V5 differ only in lifecycle generic/adoption.rs and lifecycle C3 test file; these are not projection/wire/schema/generator inputs, and affected lifecycle family reran. No concretely impacted reuse gap found.
+
+Actual final codegen exit0, check-codegen exit1, wire-diff exit0. Failed check diff names only existing generated format_id/mod.rs, format_id/properties.rs, generated/mod.rs registration changes. Bootstrap/initial failure attempts remain historical failures.
+
+Corrected V7 reports true after excluding only the authorized new generic schema from protected-old schema comparison; historical false kept. Actual correction touches only 15 named paths, no old schema/generated body/TS changes. Canonical PROP054 adds exact donor capability and current arena contracts without removing prior clauses.
+
+**Remaining gate:** ONE Root postintegration/index-aware check-codegen result and normal Root final stability/semantic acceptance. Do not relabel preintegration exit1 as green. No broad suite, platform rollout, new grammar, exhaustive crash matrix or additional feature work requested.
+
+Read-only source/evidence/hash/hunk verification only; no Rust tests/builds/Git mutations/source edits.
+
+- Representative isolated phase evidence, not exhaustive failure scheduling or platform proof.
+- Same explicit arena required across participating wrappers; unrelated legacy defaults are not claimed globally coordinated.
+- No old-binary sidecar compatibility or arbitrary family-to-family export claim.
+- Forward pending recovery still needs selected enabled source; committed cleanup/inverse remain separately current-authorized and provider-free.

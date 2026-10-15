@@ -1,0 +1,13 @@
+{
+  "source_commit": "9635e2f80cd1599b408fd0dcdf29f175941be0c1",
+  "files": 41,
+  "frozen_subjects": 317,
+  "all_hashes_stable": true,
+  "independent_review": "bounded clear F1F2F3 closed fulltask",
+  "Root_check_codegen_exit": 0,
+  "Root_check_codegen_seconds": 9.644305939029437,
+  "latest_rust_executions": 54,
+  "reused_old_exact_case": 1,
+  "task_accepted": false,
+  "remaining": "normal SDKSafe/review/evidence/Stage/Work acceptance"
+}

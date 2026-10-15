@@ -1,0 +1,2 @@
+revision=479 work_state=Accepted work_revision=5
+Error: "Expected initial failed evidence command and zero evidence rows; Root must inspect current state"

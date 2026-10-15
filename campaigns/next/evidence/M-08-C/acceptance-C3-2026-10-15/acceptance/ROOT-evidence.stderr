@@ -1,0 +1,2 @@
+revision=470 work_state=Candidate work_revision=4
+Error: ZapError { code: StaleBasis, requirement: RequirementRef("spec://org.vibevm.zap/zap/flows/zap/ZAP-METHODOLOGY#CENTRAL-ACCEPTANCE"), message: BoundedText("violates REQ spec://org.vibevm.zap/zap/flows/zap/ZAP-METHODOLOGY#CENTRAL-ACCEPTANCE: candidate no longer matches its exact review basis, execution, packet, contract, generation, or material; fix surface: payload"), fix: Payload, detail: None }

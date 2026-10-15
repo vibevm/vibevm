@@ -1,0 +1,356 @@
+{
+  "group": "V4",
+  "executed": true,
+  "case_binding": null,
+  "conditional_selection": {
+    "run": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::prior_receipt_tests::apply_refuses_a_receipt_that_changed_after_the_pre_apply_epoch",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::sidecar_tests::an_update_crash_keeps_the_old_committed_beside_the_new_pending",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::inverse_tests::undeploy_holds_pending_as_well_as_committed_destination_locks",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::transaction_tests::recovery_refuses_a_third_digest_and_names_the_resources",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::tests::changed_declaration_after_crash_recovers_stored_plan_then_reconciles",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::tests::tampered_owned_file_refuses_removal_and_preserves_bytes",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::tests::owned_update_and_uninstall_preserve_unowned_neighbors",
+        "--",
+        "--exact"
+      ]
+    ],
+    "reused": [
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-lifecycle",
+          "--lib",
+          "mechanism::deploy::state::wire::tests::inverse_domain_conversion_keeps_exact_bytes_and_strict_reading",
+          "--",
+          "--exact"
+        ],
+        "rationale": "Reused, not a new pass: unchanged old inverse DTO conversion/strict reader/schema; no generic transfer or arena writer path. All named consumed sources match original command subject hashes.",
+        "source_hashes": {
+          "crates/vibe-lifecycle/src/mechanism/deploy/state/wire.rs": "733016920b0fc6a494f263f15eafb337e25cb04b358cde07da0383f5a68667f4",
+          "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs": "73b0eb3aba208e03c3220142b0b7ea3304984b0b04d0c0110a88e88f98936d8b",
+          "crates/vibe-wire/src/generated/deploy_inverse/mod.rs": "79df4fa3dc6f6d1e062574f6980cfcab2008ad38464c008f7de134431011ece1",
+          "schemas/deploy_inverse.jtd.json": "d43ce7c7f9cf2df2fc221df8b659e8a9982991625a1db2dadf9dea03ffe983c3",
+          "crates/vibe-wire/src/behaviour/deploy_records/mod.rs": "7234d4bf2a0bc6d0af6057e8eeda8256f65d0d5b7096ca3be191ceccb6b1c926",
+          "crates/vibe-wire/src/behaviour/deploy_records/tests.rs": "ddbece86295fd245c23ede18bfc6cb1275d870ddd09ada96f709d43fd5cb63b7"
+        },
+        "original_command_result": {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::state::wire::tests::inverse_domain_conversion_keeps_exact_bytes_and_strict_reading",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08c3-resume3/V4-8.log",
+          "seconds": 0.20084230095380917,
+          "passed": true,
+          "source_drift": [],
+          "archived_log": "/fast/zap-managed/2026-10-15-m08c3-correction/reused-inverse-domain.log",
+          "log_sha256": "ae659cee85e0d4101f777b72a9e4d4952e3f1205d7b7af3ee623b84eac160644"
+        }
+      }
+    ],
+    "run_rationale": "Other exact cases exercise full candidate ownership/transaction/hold admission and affected generic-state readers; original assertions retained."
+  },
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::generic::tests"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "13",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1.log",
+      "seconds": 1.281451141985599,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::tests::changed_declaration_after_crash_recovers_stored_plan_then_reconciles",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2.log",
+      "seconds": 0.2783534629852511,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::tests::tampered_owned_file_refuses_removal_and_preserves_bytes",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3.log",
+      "seconds": 0.24071835301583633,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::tests::owned_update_and_uninstall_preserve_unowned_neighbors",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4.log",
+      "seconds": 0.1983577610226348,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::inverse_tests::undeploy_holds_pending_as_well_as_committed_destination_locks",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5.log",
+      "seconds": 0.2786397729651071,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::prior_receipt_tests::apply_refuses_a_receipt_that_changed_after_the_pre_apply_epoch",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6.log",
+      "seconds": 0.30125025199959055,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::sidecar_tests::an_update_crash_keeps_the_old_committed_beside_the_new_pending",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7.log",
+      "seconds": 0.29623523500049487,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::transaction_tests::recovery_refuses_a_third_digest_and_names_the_resources",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8.log",
+      "seconds": 0.24723374494351447,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}
