@@ -556,3 +556,5 @@ pub(crate) const BUILTIN_OPENCODE_PLUGIN_PIN: &str = "org.vibevm/vibe#opencode-p
 pub(crate) const BUILTIN_OPENCODE_PLUGIN_NAME: &str = "opencode-plugin";
 
 pub use deploy::generic;
+
+pub use deploy::client_commands;

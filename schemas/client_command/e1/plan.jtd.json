@@ -1,0 +1,118 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "request": {
+      "properties": {
+        "schema": {
+          "type": "uint32"
+        },
+        "client": {
+          "enum": [
+            "claude",
+            "codex",
+            "opencode"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "contract_version": {
+          "type": "uint32"
+        },
+        "version": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "version",
+            "list",
+            "marketplace_add",
+            "install",
+            "remove"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "optionalProperties": {
+        "coordinate": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "path": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "executable": {
+      "type": "string"
+    },
+    "resolved": {
+      "type": "string"
+    },
+    "executable_digest": {
+      "type": "string"
+    },
+    "executable_identity": {
+      "type": "string"
+    },
+    "version_reply": {
+      "type": "string"
+    },
+    "argv": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "cwd": {
+      "type": "string"
+    },
+    "environment_ref": {
+      "type": "string"
+    },
+    "environment": {
+      "values": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "roots": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "principal": {
+      "type": "string"
+    },
+    "policy": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "effects": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  }
+}

@@ -54,3 +54,5 @@ pub fn preview_status(base: &'static str, dry_run: bool) -> &'static str {
 mod m_08_a_1_cases;
 
 pub mod client_capabilities;
+
+pub mod client_commands;

@@ -1862,3 +1862,21 @@ recoverable = false
 foreign_parsers = "none"
 corpus = "formats/corpora/deploy-generic-state/e1"
 sunset = "none"
+
+[format.client-command-request]
+epoch = 1
+schema = "schemas/client_command/e1/request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/client-command-request/e1"
+sunset = "none"
+
+[format.client-command-plan]
+epoch = 1
+schema = "schemas/client_command/e1/plan.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/client-command-plan/e1"
+sunset = "none"

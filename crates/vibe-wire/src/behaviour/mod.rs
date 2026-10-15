@@ -57,3 +57,5 @@ mod derivative;
 pub mod client_capability;
 
 pub mod deploy_generic_state;
+
+pub mod client_command;

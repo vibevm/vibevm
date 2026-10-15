@@ -1,0 +1,49 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "client": {
+      "enum": [
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "contract_version": {
+      "type": "uint32"
+    },
+    "version": {
+      "type": "string"
+    },
+    "operation": {
+      "enum": [
+        "version",
+        "list",
+        "marketplace_add",
+        "install",
+        "remove"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  },
+  "optionalProperties": {
+    "coordinate": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "path": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  }
+}

@@ -183,3 +183,5 @@ pub use vibe_core::lifecycle::{
 };
 
 pub use mechanism::generic;
+
+pub use mechanism::client_commands;

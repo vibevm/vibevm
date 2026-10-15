@@ -57,6 +57,8 @@ pub enum FormatId {
     ClientCapabilityError,
     ClientCapabilityRequest,
     ClientCapabilityResult,
+    ClientCommandPlan,
+    ClientCommandRequest,
     CompilerIr,
     CompilerTraceIndex,
     Config,
