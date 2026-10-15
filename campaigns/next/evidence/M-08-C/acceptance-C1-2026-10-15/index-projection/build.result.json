@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "cargo",
+    "build",
+    "--locked",
+    "--offline",
+    "-p",
+    "vibe-index",
+    "--lib"
+  ],
+  "exit": 0,
+  "seconds": 19.339110374450684,
+  "environment": {
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "TMPDIR": "/fast/git/v/research/2026-10-15-m08c1-index-projection/tmp/build-20261015-index-lib",
+    "RUSTUP_AUTO_INSTALL": "0",
+    "CARGO_NET_OFFLINE": "true"
+  },
+  "source_count": 95,
+  "index_source_equal": true,
+  "corpus_count": 18,
+  "corpus_equal": true,
+  "C1_count": 0,
+  "C1_equal": true,
+  "log_sha256": "fcd9b7e0d78e77307cfdb81a36666d65119c74c114c00d81c6f2fdc17a47f833"
+}

@@ -1,0 +1,72 @@
+{
+  "group": "V6",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-agent-projection/src/client_capabilities.rs",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-cli/src/commands/adapter_plan.rs",
+        "crates/vibe-cli/src/commands/adapter_plan/client_capabilities.rs",
+        "crates/vibe-cli/src/commands/adapter_plan/tests.rs",
+        "crates/vibe-core/src/manifest/mechanism/client_request.rs",
+        "crates/vibe-core/src/manifest/mechanism/mod.rs",
+        "crates/vibe-core/src/manifest/mechanism/wire.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-extension-registry/src/client_requests.rs",
+        "crates/vibe-extension-registry/src/lib.rs",
+        "crates/vibe-extension-registry/src/mechanism/builtin.rs",
+        "crates/vibe-extension-registry/src/mechanism/collect.rs",
+        "crates/vibe-extension-registry/src/mechanism/resolve.rs",
+        "crates/vibe-extension-registry/src/tests/support.rs",
+        "crates/vibe-lifecycle/src/mechanism/build/native_tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/build/tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_capabilities.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/package/support.rs",
+        "crates/vibe-lifecycle/src/native/compiler_facts_semantic_tests.rs",
+        "crates/vibe-lifecycle/src/native/mechanism_tests.rs",
+        "crates/vibe-lifecycle/src/native/tests.rs",
+        "crates/vibe-orchestrator/src/dispatch/native_build_package_e2e_tests.rs",
+        "crates/vibe-orchestrator/src/dispatch/native_mechanism_tests.rs",
+        "crates/vibe-orchestrator/src/dispatch/native_provider_e2e_tests.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/captured_host.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/client_capabilities.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/client_capabilities/tests.rs",
+        "crates/vibe-wire/src/behaviour/client_capability.rs",
+        "crates/vibe-wire/src/behaviour/mod.rs",
+        "fixtures/next/adapters/m-08-c1/fixture.rs"
+      ],
+      "exit": 1,
+      "counts": [],
+      "nonzero_nonignored": null,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V6-1.log",
+      "seconds": 0.10123778402339667,
+      "passed": false
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "nonzero_nonignored": null,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V6-2.log",
+      "seconds": 0.029130170005373657,
+      "passed": true
+    }
+  ],
+  "old_e1_preservation": null,
+  "passed": false
+}

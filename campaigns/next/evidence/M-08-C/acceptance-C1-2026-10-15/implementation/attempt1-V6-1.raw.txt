@@ -1,0 +1,10 @@
+Diff in /fast/git/v/vibevm-next/crates/vibe-extension-registry/src/client_requests.rs:70:
+                 root: "/selected/dependency".into(),
+                 version: "2.0.0".into(),
+                 kind: vibe_core::PackageKind::Tool,
+-                content_hash: vibe_core::ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap(),
++                content_hash: vibe_core::ContentHash::parse(&format!("sha256:{}", "a".repeat(64)))
++                    .unwrap(),
+             },
+             declarations: vec![],
+             controls: ExtensionsControl::default(),

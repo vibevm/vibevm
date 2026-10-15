@@ -1,0 +1,26 @@
+{
+  "group": "V7",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe"
+      ],
+      "exit": 101,
+      "counts": [],
+      "nonzero_nonignored": null,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V7-1.log",
+      "seconds": 29.316096610971726,
+      "passed": false
+    }
+  ],
+  "old_e1_preservation": null,
+  "passed": false
+}

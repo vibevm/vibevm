@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "rustc",
+    "--edition=2024",
+    "/fast/git/v/research/2026-10-15-m08c1-index-projection/operator.rs",
+    "--crate-name",
+    "index_projection_operator",
+    "--extern",
+    "vibe_index=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/libvibe_index.rlib",
+    "-L",
+    "dependency=/fast/git/v/vibevm-next/target/debug/deps",
+    "-C",
+    "linker=clang",
+    "-C",
+    "link-arg=-fuse-ld=mold",
+    "-o",
+    "/fast/git/v/research/2026-10-15-m08c1-index-projection/projector"
+  ],
+  "exit": 1,
+  "seconds": 0.032613277435302734,
+  "log_sha256": "83c34155e2920d2291ac64fc4d298d538e3bed0d26404fd8089c8bbd11a20bcc",
+  "library_sha256": "1392ed677fef90ebbecd5cf66dae024172066724bdccb3499b01f4df9015f323",
+  "artifact_count": 545,
+  "binary_sha256": null,
+  "operator_executed": false
+}

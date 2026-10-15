@@ -1,0 +1,21 @@
+{
+  "question_id": "m08c1-captured-mechanism-projection-1",
+  "approved": true,
+  "decision": "Use incumbent generator unchanged. Root relaxes only its incidental byte-preservation condition for TWO old generated module-header comments; full C1 compatibility criteria remain.",
+  "generator_source_edit_authorized": false,
+  "allowed_comment_only_paths": [
+    "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs"
+  ],
+  "constraints": [
+    "Run existing generator normally; do not hand-edit generated output or xtask.",
+    "For these two old files only, preserve and compare old/new exact bytes after removing the initial // comment header. All Rust tokens, module exports and body bytes remain identical.",
+    "All old adapter-plan e1 JTD schemas, concrete generated request/result/error types, corpora and legacy route behavior stay byte-exact/semantically compatible as previously required. Only the two automatic source-list comments are excepted from full13 rawhash equality.",
+    "Save actual before/after raw hashes, exact diffs and comment-stripped comparison evidence. State 11 exact +2 header-only explicitly, never claim all13 byte-exact after generation.",
+    "NEW capability family/operation stays separate; no new old-e1 union member/public AdapterTarget variant/MCP/source-context engine.",
+    "Read-only existing crates/vibe-orchestrator/src/world/invocation.rs is explicitly allowed to inspect capture_admission_metadata and related WorldLoadMode::Admission call. Existing owner can be consumed through current API with exact source-join/currentness; no source edit/new accessor authorized there.",
+    "Continue complete original C1 all criteria; C2/C3 execution/authority remain later."
+  ],
+  "reason": "Root directly inspected both old generated files: schema-home list occurs only in initial // comment header; generator-source change is unnecessary to meet actual reader/shape compatibility. Original blanket rawhash condition was my overconstraint.",
+  "utc": "2026-10-15T05:12:41.387944+00:00"
+}

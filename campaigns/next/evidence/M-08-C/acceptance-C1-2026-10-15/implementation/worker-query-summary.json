@@ -1,0 +1,16 @@
+{
+  "phases": 6,
+  "query_intervals": 12,
+  "measured_process_attempts": 0,
+  "measured_network_attempts": 0,
+  "measured_mutation_attempts": 0,
+  "measured_lock_attempts": 0,
+  "grant_issuer_calls": {
+    "count": 0,
+    "basis": "Structural source-bound query has no issuer/capability; this is not a syscall counter."
+  },
+  "finite_censuses": "full owned project/home/settings/config/cache/cwd/tmp membership + file bytes",
+  "fixture_setup_effects": "completed outside query intervals",
+  "marker_fixture": ".new-client/present exists during selected query and confers no authority",
+  "binary_sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d"
+}

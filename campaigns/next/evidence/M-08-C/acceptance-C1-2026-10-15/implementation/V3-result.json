@@ -1,0 +1,109 @@
+{
+  "group": "V3",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::adapter_plan::client_capabilities::tests"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "2",
+          "0",
+          "0"
+        ]
+      ],
+      "nonzero_nonignored": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V3-1.log",
+      "seconds": 5.282589949958492,
+      "passed": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "commands::adapter_plan::tests::m_08_c_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "nonzero_nonignored": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V3-2.log",
+      "seconds": 8.852788318006787,
+      "passed": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::adapter_plan::tests::prepared_plan_is_nonempty_deterministic_and_source_drift_refuses",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "nonzero_nonignored": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V3-3.log",
+      "seconds": 0.26962191599886864,
+      "passed": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::adapter_plan::tests::m_08_b_2_cases_selected_self_and_dependency_bridge_roots",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "nonzero_nonignored": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V3-4.log",
+      "seconds": 0.5536052539828233,
+      "passed": true
+    }
+  ],
+  "old_e1_preservation": null,
+  "passed": true
+}

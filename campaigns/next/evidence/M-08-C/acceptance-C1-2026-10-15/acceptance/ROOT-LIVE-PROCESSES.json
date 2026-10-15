@@ -1,0 +1,37 @@
+[
+  {
+    "pid": 143817,
+    "parent": 143756,
+    "start_ticks": "36801837",
+    "exe": "/fast/zap-managed/2026-10-15-m08c1/pins/zap",
+    "uid": 1000
+  },
+  {
+    "pid": 143819,
+    "parent": 143817,
+    "start_ticks": "36801859",
+    "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay",
+    "uid": 1000
+  },
+  {
+    "pid": 143991,
+    "parent": 143819,
+    "start_ticks": "36802419",
+    "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod",
+    "uid": 1000
+  },
+  {
+    "pid": 143998,
+    "parent": 143991,
+    "start_ticks": "36802482",
+    "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+    "uid": 1000
+  },
+  {
+    "pid": 144430,
+    "parent": 143998,
+    "start_ticks": "36803465",
+    "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+    "uid": 1000
+  }
+]

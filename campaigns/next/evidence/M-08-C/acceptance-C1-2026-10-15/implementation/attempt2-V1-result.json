@@ -1,0 +1,56 @@
+{
+  "group": "V1",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "m_08_c_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "2",
+          "0",
+          "0"
+        ]
+      ],
+      "nonzero_nonignored": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V1-1.log",
+      "seconds": 0.19968341797357425,
+      "passed": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-extension-registry",
+        "--lib",
+        "m_08_c_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "nonzero_nonignored": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V1-2.log",
+      "seconds": 1.0109558099647984,
+      "passed": true
+    }
+  ],
+  "old_e1_preservation": null,
+  "passed": true
+}

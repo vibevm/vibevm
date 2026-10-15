@@ -1,0 +1,13 @@
+{
+  "question_id": "m08c1-captured-mechanism-projection-1",
+  "paths": [
+    "xtask/src/codegen/mod.rs"
+  ],
+  "symbol": "generate_into module header source list",
+  "reason": "Actual generator builds sources from every schema in group and injects that list into EVERY module-tree mod.rs. Adding schemas/client_capability/e1 changes old adapter_plan/mod.rs and adapter_plan/e1/mod.rs bytes, violating exact13 preservation. No hand editing generated output is permitted.",
+  "requested_change": "Authorize minimal generator change preserving incumbent module-header bytes for unaffected branches while allowing new-family registration; or provide an owner-approved compatible generation solution. Need explicit authorization before editing xtask.",
+  "resolved_independently": {
+    "original_symbol": "SourceQueryService::captured_mechanism_world",
+    "resolution": "Found existing crate-private world::capture_admission_metadata(selected, &Workspace) in world/invocation.rs. It uses WorldLoadMode::Admission and does not hydrate skill payloads. Will consume incumbent mechanism rows then join against SourceQueryService captures with exact provider identity/root/version/self and descriptor equality; no new accessor needed."
+  }
+}

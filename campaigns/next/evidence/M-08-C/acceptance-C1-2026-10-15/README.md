@@ -1,0 +1,25 @@
+# Full M08C1 discovery source — accepted2026-10-15
+
+Root completed normal canonical Work acceptance: revision731,Work Accepted revision5. Exact accept-work receipt and root-final-state are under acceptance/. Count is82/222 PLUS separate M03A2 plan safe stop. Runtime Succeeded/Unreviewed and unchanged candidate remain distinct from canonical WorkAccepted. Root Safe719–721,OpenReview722,Evidence723–729,Stage730,Work731 are actual completed phases, not plans. UI/viewer projection is deferred and is not declared settled.
+
+## Full C1 and preserved limits
+
+The full104-file C1 source/spec/test/generated candidate is committed57e6dd64e; Root's separate journal-projected index stamp is043e5d11e. Discovery reads/validates typed requests without inferring grants, implementation readiness or availability. C2 execution/grants and C3 receipts remain subsequent tasks, not completed by SourceNoEffects discovery. The worker's original Unreviewed report and independent source review's required-V5-pending status remain exact historical bytes; later actual Root receipts and supplementary gate results close the captured acceptance conditions without editing those reports.
+
+Thirteen distinct final cases pass, no ignored cases; repeats/failures are retained, not counted as new coverage. One identical executable supports six phases/twelve measured query intervals, zero selected process/network/mutation/lock attempts and unchanged owned inventories; no issuer capability is available by source inspection, not a syscall-derived grant counter. Eleven old-e1 files are raw identical and two initial headers differ with exact Rust bodies, per Root's narrow answer. No claim of all13 raw-equal files, global platform/whole-stage/runtime/vendor certification or full old-reader migration is made. All full task criteria and safe-stop meaning are preserved.
+
+All122 exact worker-artifacts entries are copied, together with report/patch/candidate/task and approved question/answer. No trace exceeds2MiB here; all trace copies stay raw exact. Large-trace deterministic gzip handling would be explicit in MANIFEST rather than a false raw equality. Logs alone change extension to.raw.txt; bytes/trailing whitespace/EOF are unchanged. NativeEvent/private model/config/credentials/Pod homes/binaries/libraries/targets and full owner-input source capture are not copied. Source104 before/after maps bind current reviewed bytes; archive stage list contains archive files ONLY because source commits already exist.
+
+## Required V5 and actual index projection
+
+Original V5 remains codegen0/check-codegen1/wire-diff1. Its actual failed logs/bootstrap/metadata/fixture/compile/format attempts remain in implementation/. It was never a green original wrapper. Root's exact index operator uses existing journal default_dir→replay→project→Index::write_to with original generated_at. It compares the16 writer files and permits only repomd generator stamp1.0.0→1.1.0. Only projected repomd source is copied; no raw journal, full scratch corpus or two operator binaries.
+
+index-projection/ retains original preparation and blocked-link statements, followed by actual minimum index-library build/link receipts, source/corpus/artifact hash maps, Root execution stdout/stderr/result and integration receipt. Historical conventional debug/deps assumptions, rlib metadata-stub and rmeta missing-rlib failures stay raw. Final link with both exact rlib/rmeta succeeds. The original vacuous0-entry roster check stays in C1-BEFORE/AFTER; its explicit correction binds104 actual reviewer-source rows and does not invent a fresh pre-build104 snapshot or make those C1 files index build inputs.
+
+V5-supplement/ contains actual check-codegen exit0 and wire-diff exit0 as separate requested commands after committed projection repair. They establish one projected corpus/16 writer bytes and90 authored watched homes with no tracked schema/format HEAD shift to declare. This is not a new global epoch-shape/platform/whole-campaign certificate or13-test rerun. Root journal failure proposal is external only; this archive does not edit FIXED.
+
+## Operational evidence
+
+ROOT-LIVE-PROCESSES,RETIREMENT-BEFORE/RETIREMENT and native latest record the exact prior processes and actual normal collection/known tail/retirement, separate from review. ROOT-INSPECT-HTTP-FAILURE is the contemporaneous old-live6ae response-too-large observation and remains a hypothesis at that earlier time; its later Zap fix/qualification has separate canonical archives. Root acceptance does not rewrite historical states or private runtime pins.
+
+Root alone commits/updates task metadata; no source/FIXED/C2/C3/UI/Aeneas edit, test/Cargo/model/service/store/process/Git/staging/commit action is performed by the archivist. MANIFEST.json maps every raw/saved hash+size; SHA256SUMS/ARCHIVE-FILES/STAGE-FILES bind exact inventory. Scoped credential patterns are count-only with no secret values printed. Broader physical/platform/replay/whole-gate promises are not inferred.

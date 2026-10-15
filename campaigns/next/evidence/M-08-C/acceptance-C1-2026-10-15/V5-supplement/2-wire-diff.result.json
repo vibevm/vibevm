@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "cargo",
+    "--locked",
+    "--offline",
+    "xtask",
+    "wire-diff"
+  ],
+  "exit": 0,
+  "seconds": 13.669079303741455,
+  "raw_log": "/fast/git/v/research/2026-10-15-m08c1-v5-supplement/2-wire-diff.raw.log",
+  "raw_log_sha256": "b75fd75965a9029a6a3e004906c68187cf1ada98839d40c12db596267cd53cf3",
+  "subject_drift": {
+    "C1": [],
+    "corpus": [],
+    "generated": []
+  }
+}

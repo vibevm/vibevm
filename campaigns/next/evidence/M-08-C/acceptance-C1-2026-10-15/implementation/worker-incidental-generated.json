@@ -1,0 +1,22 @@
+{
+  "crates/progress-core/src/generated/artifact_requirements/mod.rs": {
+    "before": "f23782ba0f0f86d29c9617b02f2948a5f82435bb0a2992ccca488a53cf12b50f",
+    "after": "f23782ba0f0f86d29c9617b02f2948a5f82435bb0a2992ccca488a53cf12b50f"
+  },
+  "crates/progress-core/src/generated/mod.rs": {
+    "before": "8e0682f17d7d02db24ec6c19b23eb94f2e71344a4205c3346473d1d3433efd5d",
+    "after": "8e0682f17d7d02db24ec6c19b23eb94f2e71344a4205c3346473d1d3433efd5d"
+  },
+  "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated/mod.rs": {
+    "before": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96",
+    "after": "5a51f26aa808e4047b8d591e627af67e6278a74870ebb43d8b47909faa328e96"
+  },
+  "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs": {
+    "before": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce",
+    "after": "d7ee80f8d4b48c4a4358e4f00ba847e83d1660c0c0bcf98fcbbcee6f7d1c4fce"
+  },
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/site/src/generated/doc-manifest.ts": {
+    "before": "ceb02f9298d4c54c614734afb8022048725e7f537621bc3ed798ab41a498e98c",
+    "after": "ceb02f9298d4c54c614734afb8022048725e7f537621bc3ed798ab41a498e98c"
+  }
+}

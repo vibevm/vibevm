@@ -1,0 +1,28 @@
+{
+  "signals": [
+    {
+      "pid": 143817,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 144430,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 143998,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 143991,
+      "signal": "SIGTERM"
+    }
+  ],
+  "after": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "all_absent": true
+}

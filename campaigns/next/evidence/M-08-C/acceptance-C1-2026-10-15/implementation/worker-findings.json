@@ -1,0 +1,19 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Full C1 reaches the captured safe stop: external requests readable and validated, no grants inferred.",
+    "Thirteen distinct final scoped cases pass; identical CLI SHA256 is preserved across six observed fixture phases and twelve query intervals.",
+    "Root authorized two generated comment-header-only preservation exceptions; eleven old-e1 files remain raw byte identical and both excepted Rust bodies are identical.",
+    "Local source, generation, build, fixture and evidence writes completed outside pure query intervals."
+  ],
+  "unresolved": [
+    "V5 check-codegen exits 1 on genuine unstaged generated/index differences.",
+    "V5 wire-diff exits 1 on existing index/e1 repomd corpus drift; subsequent wire-diff epoch tail was not reached. Global wire/platform/release certification is not claimed."
+  ],
+  "proposed_follow_up": null
+}
