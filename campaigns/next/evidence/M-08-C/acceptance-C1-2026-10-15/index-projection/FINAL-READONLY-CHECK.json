@@ -1,0 +1,16 @@
+{
+  "index_source_count": 95,
+  "corpus_count": 18,
+  "C1_count": 104,
+  "link_artifacts_count": 1528,
+  "mismatches": {
+    "index": [],
+    "corpus": [],
+    "C1": [],
+    "link_artifacts": []
+  },
+  "projection_exists": false,
+  "operator_executed": false,
+  "binary_sha256": "186fb469e9cea66665137a25d9cb19f2fd42f50800fbc6401d31bab5007b6f05",
+  "operator_sha256": "6ad886312879860401d05fe2162591f5f71a213aade470c511bb396c45c190e7"
+}

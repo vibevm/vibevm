@@ -1,0 +1,308 @@
+xtask codegen: 169 schemas → 3 generated trees
+  - vocabularies (shared) → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/shared/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/shared
+📦 Generated Rust code.
+📦     Root schema converted into type: Shared
+📦     Definition "absorption_occurrence" converted into type: AbsorptionOccurrence
+📦     Definition "absorption_plan" converted into type: AbsorptionPlan
+📦     Definition "absorption_state" converted into type: AbsorptionState
+📦     Definition "artifact" converted into type: Artifact
+📦     Definition "artifact_context" converted into type: ArtifactContext
+📦     Definition "artifact_frame" converted into type: ArtifactFrame
+📦     Definition "artifact_target" converted into type: ArtifactTarget
+📦     Definition "artifact_witness" converted into type: ArtifactWitness
+📦     Definition "authority" converted into type: Authority
+📦     Definition "boot_snippet_entry" converted into type: BootSnippetEntry
+📦     Definition "cardinality_artifact" converted into type: CardinalityArtifact
+📦     Definition "cardinality_document" converted into type: CardinalityDocument
+📦     Definition "closure_contribution" converted into type: ClosureContribution
+📦     Definition "closure_document" converted into type: ClosureDocument
+📦     Definition "closure_edge" converted into type: ClosureEdge
+📦     Definition "closure_ir" converted into type: ClosureIr
+📦     Definition "closure_occurrence" converted into type: ClosureOccurrence
+📦     Definition "compatibility_entry" converted into type: CompatibilityEntry
+📦     Definition "compile_mode" converted into type: CompileMode
+📦     Definition "compile_trace_report" converted into type: CompileTraceReport
+📦     Definition "conflicts_entry" converted into type: ConflictsEntry
+📦     Definition "contribution_absorption" converted into type: ContributionAbsorption
+📦     Definition "contribution_meta" converted into type: ContributionMeta
+📦     Definition "delivery_mode" converted into type: DeliveryMode
+📦     Definition "digest_witness" converted into type: DigestWitness
+📦     Definition "directive" converted into type: Directive
+📦     Definition "directive_error" converted into type: DirectiveError
+📦     Definition "directives" converted into type: Directives
+📦     Definition "doc_node" converted into type: DocNode
+📦     Definition "doc_tree" converted into type: DocTree
+📦     Definition "document_address" converted into type: DocumentAddress
+📦     Definition "document_ir" converted into type: DocumentIr
+📦     Definition "document_observation" converted into type: DocumentObservation
+📦     Definition "document_provider" converted into type: DocumentProvider
+📦     Definition "document_subject" converted into type: DocumentSubject
+📦     Definition "documentation_entry" converted into type: DocumentationEntry
+📦     Definition "documents_entry" converted into type: DocumentsEntry
+📦     Definition "duration" converted into type: Duration
+📦     Definition "embed_resolution_snapshot" converted into type: EmbedResolutionSnapshot
+📦     Definition "embedded_source_entry" converted into type: EmbeddedSourceEntry
+📦     Definition "emission_contribution_witness" converted into type: EmissionContributionWitness
+📦     Definition "emission_provenance" converted into type: EmissionProvenance
+📦     Definition "emitted_artifact" converted into type: EmittedArtifact
+📦     Definition "environment_operation_binding" converted into type: EnvironmentOperationBinding
+📦     Definition "evidence_run" converted into type: EvidenceRun
+📦     Definition "evidence_status" converted into type: EvidenceStatus
+📦     Definition "execution" converted into type: Execution
+📦     Definition "expansion_observation" converted into type: ExpansionObservation
+📦     Definition "features_entry" converted into type: FeaturesEntry
+📦     Definition "fence_snapshot" converted into type: FenceSnapshot
+📦     Definition "group" converted into type: Group
+📦     Definition "i18n_entry" converted into type: I18nEntry
+📦     Definition "in_place_use" converted into type: InPlaceUse
+📦     Definition "input_measurement" converted into type: InputMeasurement
+📦     Definition "io" converted into type: Io
+📦     Definition "ir" converted into type: Ir
+📦     Definition "lane_chunk" converted into type: LaneChunk
+📦     Definition "lane_contribution" converted into type: LaneContribution
+📦     Definition "lane_frame" converted into type: LaneFrame
+📦     Definition "lane_ir" converted into type: LaneIr
+📦     Definition "lane_node" converted into type: LaneNode
+📦     Definition "level_closure" converted into type: LevelClosure
+📦     Definition "level_document" converted into type: LevelDocument
+📦     Definition "level_emitted" converted into type: LevelEmitted
+📦     Definition "level_lane" converted into type: LevelLane
+📦     Definition "level_source" converted into type: LevelSource
+📦     Definition "link_contribution_witness" converted into type: LinkContributionWitness
+📦     Definition "link_occurrence" converted into type: LinkOccurrence
+📦     Definition "link_result" converted into type: LinkResult
+📦     Definition "link_state" converted into type: LinkState
+📦     Definition "media_entry" converted into type: MediaEntry
+📦     Definition "migration_planning_error" converted into type: MigrationPlanningError
+📦     Definition "naming_convention" converted into type: NamingConvention
+📦     Definition "native_deploy_artifact_kind" converted into type: NativeDeployArtifactKind
+📦     Definition "native_deploy_artifact_shape" converted into type: NativeDeployArtifactShape
+📦     Definition "native_deploy_effect" converted into type: NativeDeployEffect
+📦     Definition "native_deploy_network" converted into type: NativeDeployNetwork
+📦     Definition "native_deploy_operation" converted into type: NativeDeployOperation
+📦     Definition "native_deploy_privilege" converted into type: NativeDeployPrivilege
+📦     Definition "native_deploy_reversibility" converted into type: NativeDeployReversibility
+📦     Definition "native_mechanism_role" converted into type: NativeMechanismRole
+📦     Definition "obsoletes_entry" converted into type: ObsoletesEntry
+📦     Definition "origin_rename" converted into type: OriginRename
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "project" converted into type: Project
+📦     Definition "provides_entry" converted into type: ProvidesEntry
+📦     Definition "qualification_state" converted into type: QualificationState
+📦     Definition "rename_entry" converted into type: RenameEntry
+📦     Definition "reply_artifact" converted into type: ReplyArtifact
+📦     Definition "reply_status" converted into type: ReplyStatus
+📦     Definition "requires_any_entry" converted into type: RequiresAnyEntry
+📦     Definition "requires_entry" converted into type: RequiresEntry
+📦     Definition "run" converted into type: Run
+📦     Definition "run_agent_mode" converted into type: RunAgentMode
+📦     Definition "scrape_health_finding" converted into type: ScrapeHealthFinding
+📦     Definition "scrape_health_phase" converted into type: ScrapeHealthPhase
+📦     Definition "scrape_health_row" converted into type: ScrapeHealthRow
+📦     Definition "scrape_health_rows" converted into type: ScrapeHealthRows
+📦     Definition "scrape_health_severity" converted into type: ScrapeHealthSeverity
+📦     Definition "scrape_health_step" converted into type: ScrapeHealthStep
+📦     Definition "scrape_health_stream_witness" converted into type: ScrapeHealthStreamWitness
+📦     Definition "scrape_health_terminal_state" converted into type: ScrapeHealthTerminalState
+📦     Definition "slot_target" converted into type: SlotTarget
+📦     Definition "source_doc" converted into type: SourceDoc
+📦     Definition "source_resolution_snapshot" converted into type: SourceResolutionSnapshot
+📦     Definition "span" converted into type: Span
+📦     Definition "spec_address" converted into type: SpecAddress
+📦     Definition "subskill_entry" converted into type: SubskillEntry
+📦     Definition "timestamp" converted into type: Timestamp
+📦     Definition "timing_row" converted into type: TimingRow
+📦     Definition "trace_report_status" converted into type: TraceReportStatus
+📦     Definition "translates_entry" converted into type: TranslatesEntry
+📦     Definition "verification_evidence" converted into type: VerificationEvidence
+📦     Definition "version" converted into type: Version
+📦     Definition "version_entry" converted into type: VersionEntry
+📦     Definition "workspace_origin_entry" converted into type: WorkspaceOriginEntry
+📦     Definition "world" converted into type: World
+📦     Definition "world_package" converted into type: WorldPackage
+  - /fast/git/v/vibevm-next/schemas/adapter_plan/e1/error.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/adapter_plan/e1/error/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/adapter_plan/e1/error
+📦 Generated Rust code.
+📦     Root schema converted into type: Error
+  - /fast/git/v/vibevm-next/schemas/adapter_plan/e1/request.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/adapter_plan/e1/request/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/adapter_plan/e1/request
+📦 Generated Rust code.
+📦     Root schema converted into type: Request
+📦     Definition "command" converted into type: Command
+  - /fast/git/v/vibevm-next/schemas/adapter_plan/e1/result.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/adapter_plan/e1/result/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/adapter_plan/e1/result
+📦 Generated Rust code.
+📦     Root schema converted into type: Result
+📦     Definition "body" converted into type: Body
+📦     Definition "file" converted into type: File
+📦     Definition "resource" converted into type: Resource
+📦     Definition "row" converted into type: Row
+  - /fast/git/v/vibevm-next/schemas/application/e1/bundle_manifest.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/bundle_manifest/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/bundle_manifest
+📦 Generated Rust code.
+📦     Root schema converted into type: BundleManifest
+📦     Definition "application_identity" converted into type: ApplicationIdentity
+📦     Definition "bundle_file" converted into type: BundleFile
+📦     Definition "bundle_launcher" converted into type: BundleLauncher
+📦     Definition "bundle_management" converted into type: BundleManagement
+📦     Definition "byte_count" converted into type: ByteCount
+📦     Definition "package_identity" converted into type: PackageIdentity
+  - /fast/git/v/vibevm-next/schemas/application/e1/context.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/context/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/context
+📦 Generated Rust code.
+📦     Root schema converted into type: Context
+📦     Definition "application_identity" converted into type: ApplicationIdentity
+📦     Definition "application_operation" converted into type: ApplicationOperation
+📦     Definition "package_identity" converted into type: PackageIdentity
+📦     Definition "path" converted into type: Path
+  - /fast/git/v/vibevm-next/schemas/application/e1/distribution_index.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/distribution_index/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/distribution_index
+📦 Generated Rust code.
+📦     Root schema converted into type: DistributionIndex
+📦     Definition "application_identity" converted into type: ApplicationIdentity
+📦     Definition "byte_count" converted into type: ByteCount
+📦     Definition "distribution_target" converted into type: DistributionTarget
+📦     Definition "package_identity" converted into type: PackageIdentity
+  - /fast/git/v/vibevm-next/schemas/application/e1/index.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/index/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/index
+📦 Generated Rust code.
+📦     Root schema converted into type: Index
+📦     Definition "application_identity" converted into type: ApplicationIdentity
+📦     Definition "application_launcher_ownership" converted into type: ApplicationLauncherOwnership
+📦     Definition "application_provenance" converted into type: ApplicationProvenance
+📦     Definition "application_record" converted into type: ApplicationRecord
+📦     Definition "application_selection" converted into type: ApplicationSelection
+📦     Definition "application_selection_mode" converted into type: ApplicationSelectionMode
+📦     Definition "application_source_observation" converted into type: ApplicationSourceObservation
+📦     Definition "application_status" converted into type: ApplicationStatus
+📦     Definition "management_entry" converted into type: ManagementEntry
+📦     Definition "management_runtime" converted into type: ManagementRuntime
+📦     Definition "package_identity" converted into type: PackageIdentity
+📦     Definition "path" converted into type: Path
+  - /fast/git/v/vibevm-next/schemas/application/e1/management.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/management/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/management
+📦 Generated Rust code.
+📦     Root schema converted into type: Management
+📦     Definition "owned_launcher" converted into type: OwnedLauncher
+📦     Definition "path" converted into type: Path
+  - /fast/git/v/vibevm-next/schemas/application/e1/reply.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/reply/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application/e1/reply
+📦 Generated Rust code.
+📦     Root schema converted into type: Reply
+📦     Definition "application_launcher_ownership" converted into type: ApplicationLauncherOwnership
+📦     Definition "application_operation" converted into type: ApplicationOperation
+📦     Definition "application_status" converted into type: ApplicationStatus
+📦     Definition "management_entry" converted into type: ManagementEntry
+📦     Definition "management_runtime" converted into type: ManagementRuntime
+📦     Definition "path" converted into type: Path
+  - /fast/git/v/vibevm-next/schemas/application_report.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application_report/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/application_report
+📦 Generated Rust code.
+📦     Root schema converted into type: ApplicationReport
+  - /fast/git/v/vibevm-next/schemas/artifact_record.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/artifact_record/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/artifact_record
+📦 Generated Rust code.
+📦     Root schema converted into type: ArtifactRecord
+📦     Definition "artifact_kind" converted into type: ArtifactKind
+📦     Definition "artifact_shape" converted into type: ArtifactShape
+📦     Definition "content_digest" converted into type: ContentDigest
+📦     Definition "digest_algorithm" converted into type: DigestAlgorithm
+📦     Definition "freshness_fingerprints" converted into type: FreshnessFingerprints
+📦     Definition "producer_identity" converted into type: ProducerIdentity
+📦     Definition "provider_identity" converted into type: ProviderIdentity
+📦     Definition "relative_identity" converted into type: RelativeIdentity
+📦     Definition "relative_root" converted into type: RelativeRoot
+📦     Definition "rfc3339_timestamp" converted into type: Rfc3339Timestamp
+📦     Definition "verification_state" converted into type: VerificationState
+📦     Definition "verification_status" converted into type: VerificationStatus
+  - /fast/git/v/vibevm-next/schemas/boot_artifact_transaction.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_artifact_transaction/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_artifact_transaction
+📦 Generated Rust code.
+📦     Root schema converted into type: BootArtifactTransaction
+📦     Definition "entry" converted into type: Entry
+📦     Definition "state" converted into type: State
+  - /fast/git/v/vibevm-next/schemas/boot_debugger/e1/error.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_debugger/e1/error/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_debugger/e1/error
+📦 Generated Rust code.
+📦     Root schema converted into type: Error
+  - /fast/git/v/vibevm-next/schemas/boot_debugger/e1/progress.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_debugger/e1/progress/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_debugger/e1/progress
+📦 Generated Rust code.
+📦     Root schema converted into type: Progress
+  - /fast/git/v/vibevm-next/schemas/boot_debugger/e1/request.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_debugger/e1/request/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_debugger/e1/request
+📦 Generated Rust code.
+📦     Root schema converted into type: Request
+📦     Definition "command" converted into type: Command
+  - /fast/git/v/vibevm-next/schemas/boot_debugger/e1/result.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_debugger/e1/result/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/boot_debugger/e1/result
+📦 Generated Rust code.
+📦     Root schema converted into type: Result
+📦     Definition "artifact_lines" converted into type: ArtifactLines
+📦     Definition "body" converted into type: Body
+📦     Definition "count" converted into type: Count
+📦     Definition "node" converted into type: Node
+📦     Definition "resource" converted into type: Resource
+📦     Definition "source" converted into type: Source
+📦     Definition "source_identity" converted into type: SourceIdentity
+  - /fast/git/v/vibevm-next/schemas/capability/e1/coverage.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/capability/e1/coverage/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/capability/e1/coverage
+📦 Generated Rust code.
+📦     Root schema converted into type: Coverage
+📦     Definition "disposition" converted into type: Disposition
+📦     Definition "external_access" converted into type: ExternalAccess
+📦     Definition "implementation" converted into type: Implementation
+📦     Definition "model" converted into type: Model
+📦     Definition "planned_family" converted into type: PlannedFamily
+📦     Definition "source" converted into type: Source
+📦     Definition "surface" converted into type: Surface
+📦     Definition "surface_kind" converted into type: SurfaceKind
+  - /fast/git/v/vibevm-next/schemas/change_query/e1/request.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/change_query/e1/request/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/change_query/e1/request
+📦 Generated Rust code.
+📦     Root schema converted into type: Request
+  - /fast/git/v/vibevm-next/schemas/change_query/e1/response.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/change_query/e1/response/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/change_query/e1/response
+📦 Generated Rust code.
+📦     Root schema converted into type: Response
+📦     Definition "adoption_observation" converted into type: AdoptionObservation
+📦     Definition "authoring_observation" converted into type: AuthoringObservation
+📦     Definition "fact" converted into type: Fact
+📦     Definition "fact_status" converted into type: FactStatus
+📦     Definition "gap" converted into type: Gap
+📦     Definition "need" converted into type: Need
+📦     Definition "origin" converted into type: Origin
+📦     Definition "relation_source" converted into type: RelationSource
+📦     Definition "required_artifact_kind" converted into type: RequiredArtifactKind
+📦     Definition "requirement_relation" converted into type: RequirementRelation
+📦     Definition "requirement_row" converted into type: RequirementRow
+📦     Definition "requirement_source" converted into type: RequirementSource
+📦     Definition "role" converted into type: Role
+📦     Definition "witness" converted into type: Witness
+📦     Definition "work_item" converted into type: WorkItem
+  - /fast/git/v/vibevm-next/schemas/change_scaffold_cli_report/e1/report.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/change_scaffold_cli_report/e1/report/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/change_scaffold_cli_report/e1/report
+📦 Generated Rust code.
+📦     Root schema converted into type: Report
+📦     Definition "origin" converted into type: Origin
+📦     Definition "origin_document" converted into type: OriginDocument
+📦     Definition "outcome" converted into type: Outcome
+📦     Definition "prepared" converted into type: Prepared
+📦     Definition "source_strength" converted into type: SourceStrength
+  - /fast/git/v/vibevm-next/schemas/client_capability/e1/error.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/client_capability/e1/error/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/client_capability/e1/error
+📦 Generated Rust code.
+📦     Root schema converted into type: Error
+  - /fast/git/v/vibevm-next/schemas/client_capability/e1/request.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/client_capability/e1/request/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/client_capability/e1/request
+📦 Generated Rust code.
+📦     Root schema converted into type: Request
+  - /fast/git/v/vibevm-next/schemas/client_capability/e1/result.jtd.json → /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/client_capability/e1/result/
+📝 Writing Rust code to: /fast/git/v/vibevm-next/crates/vibe-wire/src/generated.new-160830-1792041365367030590/client_capability/e1/result
+📦 Generated Rust code.
+📦     Root schema converted into type: Result
+📦     Definition "binding" converted into type: Binding
+📦     Definition "capability" converted into type: Capability
+Error: schema /fast/git/v/vibevm-next/schemas/client_capability/e1/result.jtd.json: the collection field `properties.capabilities` carries no `metadata."x-empty"` — whether an empty collection is written or omitted is decided per field on the schema side and is not derivable from the generated Rust.
+Fix: add `"x-empty": "omit"`, `"emit"` or `"preserve"` to this member's `metadata` (in /fast/git/v/vibevm-next/schemas/client_capability/e1/result.jtd.json itself, or in the vocabulary fragment it pulls from formats/vocabularies.json), then run `cargo xtask codegen`.

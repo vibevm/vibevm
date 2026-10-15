@@ -1,0 +1,55 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "--locked",
+        "--offline",
+        "xtask",
+        "check-codegen"
+      ],
+      "exit": 0,
+      "seconds": 15.431658029556274,
+      "raw_log": "/fast/git/v/research/2026-10-15-m08c1-v5-supplement/1-check-codegen.raw.log",
+      "raw_log_sha256": "fdca5c53ffb2354af05c755976a79bdc229dda331247995b74e7336c08fd33ce",
+      "subject_drift": {
+        "C1": [],
+        "corpus": [],
+        "generated": []
+      }
+    },
+    {
+      "argv": [
+        "cargo",
+        "--locked",
+        "--offline",
+        "xtask",
+        "wire-diff"
+      ],
+      "exit": 0,
+      "seconds": 13.669079303741455,
+      "raw_log": "/fast/git/v/research/2026-10-15-m08c1-v5-supplement/2-wire-diff.raw.log",
+      "raw_log_sha256": "b75fd75965a9029a6a3e004906c68187cf1ada98839d40c12db596267cd53cf3",
+      "subject_drift": {
+        "C1": [],
+        "corpus": [],
+        "generated": []
+      }
+    }
+  ],
+  "both_executed": true,
+  "both_exit0": true,
+  "no_subject_drift": true,
+  "task_acceptance": false,
+  "actual_verdicts": {
+    "check_codegen": "xtask check-codegen: clean.",
+    "wire_diff_projection": "1 projected corpus home proven against journal,16writer files byte-identical",
+    "wire_diff_shift_scope": "90authored golden homes watched; no tracked schemas/formats shifted vs commit, nothing to declare",
+    "not_claimed": [
+      "new epoch migration compatibility verdict for changed shapes",
+      "full product or whole campaign certification",
+      "rerun of13 C1 bounded tests",
+      "task acceptance"
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "group": "V4",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::client_capability::m_08_c_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "2",
+          "0",
+          "0"
+        ]
+      ],
+      "nonzero_nonignored": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V4-1.log",
+      "seconds": 11.528837877034675,
+      "passed": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::document::tests_mechanism_grammar::old_fixture_serializes_byte_identically_when_new_sections_absent",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "nonzero_nonignored": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c1/V4-2.log",
+      "seconds": 0.15590306196827441,
+      "passed": true
+    }
+  ],
+  "old_e1_preservation": {
+    "exact_files": 11,
+    "header_only_files": [
+      {
+        "path": "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+        "before_sha256": "317e23817a76eaecdad8014629540ca9753fc71ddd7308aa60ffaf97063ad50d",
+        "after_sha256": "aa2faebc037552b8022433f7140ce94129f38737edd08ea4a8d937af3d1e7316",
+        "comment_stripped_equal": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+        "before_sha256": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+        "after_sha256": "1a4e807907e701a9bacaf63569c3763e5aeb5fe118b9d4540f572fce62675594",
+        "comment_stripped_equal": true
+      }
+    ],
+    "drift": [],
+    "passed": true
+  },
+  "passed": true
+}

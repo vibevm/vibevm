@@ -1,0 +1,1108 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V1-1.log",
+    "seconds": 0.15349455596879125,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V1-1.log",
+    "log_sha256": "4997832ca79c218dc0775e19da33519f2c5fb090421b477b3ac7438459b76c7f",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-extension-registry",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V1-2.log",
+    "seconds": 0.695506573014427,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V1-2.log",
+    "log_sha256": "80540a39ade3bab586f3acf5cf5c798d4d6b38da936728be224e4200a3b9b295",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-agent-projection",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V2-1.log",
+    "seconds": 20.79930468398379,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V2-1.log",
+    "log_sha256": "224ed2747656b8c89f3483793bcbaaab0d82989577fe6630eabfa4bb81a4a3bf",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V2-2.log",
+    "seconds": 11.977135471010115,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V2-2.log",
+    "log_sha256": "fb081402ce0492a00727296e1386d0d6807743aa47b035f6612bef311aa84dd7",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "machine_operation::adapter_plan::client_capabilities::tests"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V3-1.log",
+    "seconds": 5.282589949958492,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V3-1.log",
+    "log_sha256": "b995d009cfa4593ac24dc86604489669fa2d9a8ae4cdda756c0fc52b62d42cc5",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "commands::adapter_plan::tests::m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V3-2.log",
+    "seconds": 8.852788318006787,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V3-2.log",
+    "log_sha256": "bfc3b1e60eb3a20bb37428b4d7799e1c1a5312c6ca3dd142a0531c8fffa6c4bc",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "machine_operation::adapter_plan::tests::prepared_plan_is_nonempty_deterministic_and_source_drift_refuses",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V3-3.log",
+    "seconds": 0.26962191599886864,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V3-3.log",
+    "log_sha256": "0382978bdbff693ea1abf9200712e8ce33a97771e2a1da37b117d54e2cf1ba34",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "machine_operation::adapter_plan::tests::m_08_b_2_cases_selected_self_and_dependency_bridge_roots",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V3-4.log",
+    "seconds": 0.5536052539828233,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V3-4.log",
+    "log_sha256": "40b0e36ac981a973e4fab92559d68476d2516d166aaa972a1e5c9275231d8b82",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-wire",
+      "--lib",
+      "behaviour::client_capability::m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V4-1.log",
+    "seconds": 11.528837877034675,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V4-1.log",
+    "log_sha256": "beedc650e312e3ac3b6b3a035e3892ea68315123665596b33ec3c02936c3f5d5",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "manifest::document::tests_mechanism_grammar::old_fixture_serializes_byte_identically_when_new_sections_absent",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V4-2.log",
+    "seconds": 0.15590306196827441,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V4-2.log",
+    "log_sha256": "70a896f10faf9f38c24ee526a50570e44396e0b0ce6f1d814a1c46664d1b8029",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "xtask",
+      "codegen"
+    ],
+    "exit": 0,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V5-1.log",
+    "seconds": 33.530610137037,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V5-1.log",
+    "log_sha256": "107ee2f1f6273ad672b1dafa4c09d8a5558ee61e2cfb47c7cccccb490793d163",
+    "actual_test_summaries": [],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "xtask",
+      "check-codegen"
+    ],
+    "exit": 1,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V5-2.log",
+    "seconds": 18.071366745978594,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V5-2.log",
+    "log_sha256": "929083c41961b96d76371a10d21d968fee48a3316485e3ccc342222cefd809c8",
+    "actual_test_summaries": [],
+    "failure_tail": "s/preview/e1/` / `schemas/scrape/e1/` / `schemas/scrape/e2/` / `schemas/scrape/e3/` / `schemas/source_query/e1/`. Editing\n+// `*.jtd.json` schema under `schemas/` / `schemas/adapter_plan/e1/` / `schemas/application/e1/` / `schemas/boot_debugger/e1/` / `schemas/capability/e1/` / `schemas/change_query/e1/` / `schemas/change_scaffold_cli_report/e1/` / `schemas/client_capability/e1/` / `schemas/compiler_ir/e1/` / `schemas/compiler_trace_index/e1/` / `schemas/distribution/e1/` / `schemas/environment/e1/` / `schemas/hello/e1/` / `schemas/index/e1/` / `schemas/index_cli/e1/` / `schemas/index_http/e1/` / `schemas/journal/e1/` / `schemas/lifecycle/e1/` / `schemas/lifecycle_state_v2/e2/` / `schemas/llm/openai_compatible/e1/` / `schemas/machine/e1/` / `schemas/migration/e1/` / `schemas/native/e1/` / `schemas/preview/e1/` / `schemas/scrape/e1/` / `schemas/scrape/e2/` / `schemas/scrape/e3/` / `schemas/source_query/e1/`. Editing\n // this file by hand will be overwritten on the next codegen run.\n \n pub mod doc_request;\ndiff --git a/crates/vibe-wire/src/generated/source_query/mod.rs b/crates/vibe-wire/src/generated/source_query/mod.rs\nindex 28cfa0f7d..7f22827c4 100644\n--- a/crates/vibe-wire/src/generated/source_query/mod.rs\n+++ b/crates/vibe-wire/src/generated/source_query/mod.rs\n@@ -1,7 +1,7 @@\n // Generated by `cargo xtask codegen`. DO NOT EDIT.\n //\n // Each submodule is generated by `jtd-codegen` from the matching\n-// `*.jtd.json` schema under `schemas/` / `schemas/adapter_plan/e1/` / `schemas/application/e1/` / `schemas/boot_debugger/e1/` / `schemas/capability/e1/` / `schemas/change_query/e1/` / `schemas/change_scaffold_cli_report/e1/` / `schemas/compiler_ir/e1/` / `schemas/compiler_trace_index/e1/` / `schemas/distribution/e1/` / `schemas/environment/e1/` / `schemas/hello/e1/` / `schemas/index/e1/` / `schemas/index_cli/e1/` / `schemas/index_http/e1/` / `schemas/journal/e1/` / `schemas/lifecycle/e1/` / `schemas/lifecycle_state_v2/e2/` / `schemas/llm/openai_compatible/e1/` / `schemas/machine/e1/` / `schemas/migration/e1/` / `schemas/native/e1/` / `schemas/preview/e1/` / `schemas/scrape/e1/` / `schemas/scrape/e2/` / `schemas/scrape/e3/` / `schemas/source_query/e1/`. Editing\n+// `*.jtd.json` schema under `schemas/` / `schemas/adapter_plan/e1/` / `schemas/application/e1/` / `schemas/boot_debugger/e1/` / `schemas/capability/e1/` / `schemas/change_query/e1/` / `schemas/change_scaffold_cli_report/e1/` / `schemas/client_capability/e1/` / `schemas/compiler_ir/e1/` / `schemas/compiler_trace_index/e1/` / `schemas/distribution/e1/` / `schemas/environment/e1/` / `schemas/hello/e1/` / `schemas/index/e1/` / `schemas/index_cli/e1/` / `schemas/index_http/e1/` / `schemas/journal/e1/` / `schemas/lifecycle/e1/` / `schemas/lifecycle_state_v2/e2/` / `schemas/llm/openai_compatible/e1/` / `schemas/machine/e1/` / `schemas/migration/e1/` / `schemas/native/e1/` / `schemas/preview/e1/` / `schemas/scrape/e1/` / `schemas/scrape/e2/` / `schemas/scrape/e3/` / `schemas/source_query/e1/`. Editing\n // this file by hand will be overwritten on the next codegen run.\n \n pub mod e1;\nError: generated code under /fast/git/v/vibevm-next/crates/vibe-wire/src/generated / /fast/git/v/vibevm-next/crates/progress-core/src/generated / /fast/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.1.0/crates/core-ai-native-specmap/src/generated / /fast/git/v/vibevm-next/vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/site/src/generated/doc-manifest.ts differs from what this machine's jtd-codegen emits for the current schemas and `formats/REGISTRY.toml`.\n\nTwo different things produce that difference, and the recipes are opposites \u2014 decide which before committing anything:\n1. The schemas moved and the tree did not. Fix: run `cargo xtask codegen` and commit the result.\n2. The generator is not the pinned build. This check compares the committed tree against the output of whatever binary was found \u2014 the project-local copy under `tools/jtd-codegen/` when present, otherwise `jtd-codegen` on PATH \u2014 so a different build reads as drift, and recipe 1 would commit ITS emission over ours. Fix: run `jtd-codegen --version`, compare it with the pin's single home (`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.1.0/README.md`), and install the pinned build per that recipe before regenerating.\n\nThe distinction is load-bearing: eight post-processing passes are keyed to the pinned emission shape (`codegen/postproc.rs`), and the diff itself cannot tell you which cause produced it.\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "xtask",
+      "wire-diff"
+    ],
+    "exit": 1,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V5-3.log",
+    "seconds": 13.291896315000486,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V5-3.log",
+    "log_sha256": "4753e5d65874128b327b1a6de168986371b50d81fcdc1f5910b283d6052c1477",
+    "actual_test_summaries": [],
+    "failure_tail": "  ^^^^^^^^^^^^^\n\nwarning: function `sha` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:411:15\n    |\n411 | pub(crate) fn sha(bytes: &[u8]) -> String {\n    |               ^^^\n\nwarning: function `ready_duplicate_matches` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:418:15\n    |\n418 | pub(crate) fn ready_duplicate_matches(\n    |               ^^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: struct `ReadySeal` is never constructed\n  --> crates/vibe-publish/src/package_git_operation/journal/ready.rs:22:19\n   |\n22 | pub(crate) struct ReadySeal {\n   |                   ^^^^^^^^^\n\nwarning: function `inspect_no_gitlinks_cold` is never used\n   --> crates/vibe-publish/src/package_git_provenance.rs:347:15\n    |\n347 | pub(crate) fn inspect_no_gitlinks_cold(\n    |               ^^^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: function `inspect_no_gitlinks_ready_cold` is never used\n   --> crates/vibe-publish/src/package_git_provenance.rs:368:15\n    |\n368 | pub(crate) fn inspect_no_gitlinks_ready_cold(\n    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: function `inspect_inner` is never used\n   --> crates/vibe-publish/src/package_git_provenance.rs:389:4\n    |\n389 | fn inspect_inner(\n    |    ^^^^^^^^^^^^^\n\nwarning: function `name` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:453:4\n    |\n453 | fn name(run_id: &str, suffix: &str) -> anyhow::Result<String> {\n    |    ^^^^\n\nwarning: function `read_bytes` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:460:15\n    |\n460 | pub(crate) fn read_bytes(\n    |               ^^^^^^^^^^\n\nwarning: function `read` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:472:15\n    |\n472 | pub(crate) fn read<T: for<'de> Deserialize<'de>>(\n    |               ^^^^\n\nwarning: function `publish` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:482:15\n    |\n482 | pub(crate) fn publish<T: Serialize>(\n    |               ^^^^^^^\n\nwarning: function `vault` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:504:15\n    |\n504 | pub(super) fn vault(\n    |               ^^^^^\n\nwarning: function `objects` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:524:15\n    |\n524 | pub(crate) fn objects(\n    |               ^^^^^^^\n\nwarning: function `gitlink_store` is never used\n   --> crates/vibe-publish/src/package_git_operation/journal.rs:544:15\n    |\n544 | pub(crate) fn gitlink_store(\n    |               ^^^^^^^^^^^^^\n\nwarning: field `installers` is never read\n  --> xtask/src/dist/capture.rs:37:5\n   |\n32 | pub(crate) struct PreparedSubjectCapture {\n   |                   ---------------------- field in this struct\n...\n37 |     installers: CommittedInstallerBytes,\n   |     ^^^^^^^^^^\n   |\n   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: function `prepare_local_with` is never used\n   --> xtask/src/dist/smoke/prepare.rs:184:15\n    |\n184 | pub(crate) fn prepare_local_with<F>(\n    |               ^^^^^^^^^^^^^^^^^^\n\nwarning: fields `bash`, `powershell`, and `cmd` are never read\n  --> xtask/src/dist/capture.rs:43:5\n   |\n42 | struct CommittedInstallerBytes {\n   |        ----------------------- fields in this struct\n43 |     bash: Vec<u8>,\n   |     ^^^^\n44 |     powershell: Vec<u8>,\n   |     ^^^^^^^^^^\n45 |     cmd: Vec<u8>,\n   |     ^^^\n\nwarning: method `final_payload_bytes` is never used\n  --> xtask/src/dist/capture.rs:49:19\n   |\n48 | impl PreparedSubjectCapture {\n   | --------------------------- method in this implementation\n49 |     pub(crate) fn final_payload_bytes(&self) -> FinalPayloadBytes<'_> {\n   |                   ^^^^^^^^^^^^^^^^^^^\n\nwarning: function `capture_prepared_subject` is never used\n   --> xtask/src/dist/capture.rs:146:15\n    |\n146 | pub(crate) fn capture_prepared_subject(\n    |               ^^^^^^^^^^^^^^^^^^^^^^^^\n\nrebuild: differs `repomd.json`\nError: rebuild --check: 1 drift item(s) against the journal under `/fast/git/v/vibevm-next/formats/corpora/index/e1`. A catalog that differs from its journal's projection carries a fact the journal does not describe \u2014 a derived artifact holding truth (violates spec://org.vibevm.core/vibevm/common/PROP-044#truth; fix: regenerate the catalog FROM the journal \u2014 every vibe-index mutation reprojects it wholesale \u2014 and never edit the journal to match the catalog \u2014 that would launder the secret truth into the truth layer.)\n"
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "--check",
+      "crates/vibe-agent-projection/src/client_capabilities.rs",
+      "crates/vibe-agent-projection/src/lib.rs",
+      "crates/vibe-cli/src/commands/adapter_plan.rs",
+      "crates/vibe-cli/src/commands/adapter_plan/client_capabilities.rs",
+      "crates/vibe-cli/src/commands/adapter_plan/tests.rs",
+      "crates/vibe-core/src/manifest/mechanism/client_request.rs",
+      "crates/vibe-core/src/manifest/mechanism/mod.rs",
+      "crates/vibe-core/src/manifest/mechanism/wire.rs",
+      "crates/vibe-core/src/manifest/mod.rs",
+      "crates/vibe-extension-registry/src/client_requests.rs",
+      "crates/vibe-extension-registry/src/lib.rs",
+      "crates/vibe-extension-registry/src/mechanism/builtin.rs",
+      "crates/vibe-extension-registry/src/mechanism/collect.rs",
+      "crates/vibe-extension-registry/src/mechanism/resolve.rs",
+      "crates/vibe-extension-registry/src/tests/support.rs",
+      "crates/vibe-lifecycle/src/mechanism/build/native_tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/build/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_capabilities.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/package/support.rs",
+      "crates/vibe-lifecycle/src/native/compiler_facts_semantic_tests.rs",
+      "crates/vibe-lifecycle/src/native/mechanism_tests.rs",
+      "crates/vibe-lifecycle/src/native/tests.rs",
+      "crates/vibe-orchestrator/src/dispatch/native_build_package_e2e_tests.rs",
+      "crates/vibe-orchestrator/src/dispatch/native_mechanism_tests.rs",
+      "crates/vibe-orchestrator/src/dispatch/native_provider_e2e_tests.rs",
+      "crates/vibe-orchestrator/src/machine_operation/adapter_plan.rs",
+      "crates/vibe-orchestrator/src/machine_operation/adapter_plan/captured_host.rs",
+      "crates/vibe-orchestrator/src/machine_operation/adapter_plan/client_capabilities.rs",
+      "crates/vibe-orchestrator/src/machine_operation/adapter_plan/client_capabilities/tests.rs",
+      "crates/vibe-wire/src/behaviour/client_capability.rs",
+      "crates/vibe-wire/src/behaviour/mod.rs",
+      "fixtures/next/adapters/m-08-c1/fixture.rs"
+    ],
+    "exit": 0,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V6-1.log",
+    "seconds": 0.10468180099269375,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V6-1.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": [],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V6-2.log",
+    "seconds": 0.03228093503275886,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V6-2.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": [],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "build",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe"
+    ],
+    "exit": 0,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V7-1.log",
+    "seconds": 31.20350496796891,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/V7-1.log",
+    "log_sha256": "98b2e3a79beca0420c59e1735107fd4142f0c3447608b42cc37f3988fab02aca",
+    "actual_test_summaries": [],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V1-1.log",
+    "seconds": 8.701077342033386,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V1-1.log",
+    "log_sha256": "98f0f905b9a8e4a1569f41c131025bdd855e93ad111b857fe25891155a073961",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-extension-registry",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 101,
+    "counts": [],
+    "nonzero_nonignored": false,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V1-2.log",
+    "seconds": 4.28020886098966,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V1-2.log",
+    "log_sha256": "af852187a58ac3b94fdaf326c8335c7ade5a633e99490d4832e4b9922371591b",
+    "actual_test_summaries": [],
+    "failure_tail": "-----\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-resolver` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-agent-projection/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-agent-projection` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc-server/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-doc-server` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc-shell/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-doc-shell` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-doc` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-graph/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-graph` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-scrape/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-scrape` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-llm/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-llm` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-index/Cargo.toml:10:12\n   |\n10 | homepage = \"https://gitverse.ru/vibevm/vibevm\"\n   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n11 | repository = \"https://gitverse.ru/vibevm/vibevm\"\n   |              -----------------------------------\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-index` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-settings/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-settings` (manifest) generated 1 warning\n   Compiling vibe-core v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-core)\n   Compiling vibe-extension-registry v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-extension-registry)\nerror[E0063]: missing field `effects` in initializer of `ExtensionDecl`\n   --> crates/vibe-extension-registry/src/tests/support.rs:167:5\n    |\n167 |     ExtensionDecl {\n    |     ^^^^^^^^^^^^^ missing `effects`\n\nerror[E0063]: missing field `effects` in initializer of `MechanismDecl`\n   --> crates/vibe-extension-registry/src/tests/support.rs:127:5\n    |\n127 |     MechanismDecl {\n    |     ^^^^^^^^^^^^^ missing `effects`\n\nFor more information about this error, try `rustc --explain E0063`.\nerror: could not compile `vibe-extension-registry` (lib test) due to 2 previous errors\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-agent-projection",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V2-1.log",
+    "seconds": 25.95911740703741,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V2-1.log",
+    "log_sha256": "2de1605350fa5a79c22c87df292a7b50fad65b2c423c621f31e0702e6a641f92",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V2-2.log",
+    "seconds": 15.281394320016261,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V2-2.log",
+    "log_sha256": "3c430e36505e8eda427115f2a992072ab82e47a970ff3add9ef6aeeee1bc5d3a",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "machine_operation::adapter_plan::client_capabilities::tests"
+    ],
+    "exit": 101,
+    "counts": [],
+    "nonzero_nonignored": false,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V3-1.log",
+    "seconds": 42.10640806995798,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V3-1.log",
+    "log_sha256": "16643bef7f27f8971d83de881a9940347367b8733a1100e5b2a85414cb71a147",
+    "actual_test_summaries": [
+      [
+        "FAILED",
+        "1",
+        "1",
+        "0"
+      ]
+    ],
+    "failure_tail": "e: `#[warn(deprecated)]` on by default\nhelp: replace the use of the deprecated method\n    |\n167 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))\n167 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))\n    |\n\nwarning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency\n   --> crates/vibe-orchestrator/src/document_analysis/mod.rs:112:14\n    |\n112 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))\n    |              ^^^^^^^^^^^^\n    |\nhelp: replace the use of the deprecated method\n    |\n112 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))\n112 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))\n    |\n\nwarning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency\n   --> crates/vibe-orchestrator/src/document_analysis/mod.rs:172:14\n    |\n172 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))\n    |              ^^^^^^^^^^^^\n    |\nhelp: replace the use of the deprecated method\n    |\n172 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))\n172 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))\n    |\n\nwarning: unused import: `RunObserver`\n  --> crates/vibe-orchestrator/src/phase.rs:38:26\n   |\n38 |     RegistryEnvironment, RunObserver,\n   |                          ^^^^^^^^^^^\n\nwarning: `vibe-lifecycle` (lib) generated 10 warnings\n   Compiling vibe-package-source v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-package-source)\nwarning: `vibe-orchestrator` (lib) generated 15 warnings (run `cargo fix --lib -p vibe-orchestrator` to apply 14 suggestions)\nwarning: unused import: `specmark::spec`\n  --> crates/vibe-orchestrator/src/phase.rs:15:5\n   |\n15 | use specmark::spec;\n   |     ^^^^^^^^^^^^^^\n   |\n   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\nwarning: unused import: `LifecycleStepReport`\n  --> crates/vibe-orchestrator/src/phase.rs:23:55\n   |\n23 |     LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,\n   |                                                       ^^^^^^^^^^^^^^^^^^^\n\nwarning: `vibe-orchestrator` (lib test) generated 14 warnings (12 duplicates) (run `cargo fix --lib -p vibe-orchestrator --tests` to apply 2 suggestions)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 42.03s\n     Running unittests src/lib.rs (/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/build/vibe-orchestrator/cfc44861d8fe8f1c/out/vibe_orchestrator-cfc44861d8fe8f1c)\n\nrunning 2 tests\ntest machine_operation::adapter_plan::client_capabilities::tests::wrong_context_operation_and_legacy_route_refuse ... ok\ntest machine_operation::adapter_plan::client_capabilities::tests::selected_package_descriptor_without_native_load ... FAILED\n\nfailures:\n\n---- machine_operation::adapter_plan::client_capabilities::tests::selected_package_descriptor_without_native_load stdout ----\n\nthread 'machine_operation::adapter_plan::client_capabilities::tests::selected_package_descriptor_without_native_load' (210538) panicked at crates/vibe-orchestrator/src/machine_operation/adapter_plan/client_capabilities/tests.rs:10:9:\nOperationEnvelope { body: Error(BodyError { completeness: Unavailable, effect_state: NoEffects, format_id: Some(\"client-capability-error\"), payload_json: Some(\"{\\\"code\\\":\\\"needs-preparation\\\",\\\"context_id\\\":\\\"adapter-context:4\\\",\\\"message\\\":\\\"Error { boundary: \\\\\\\"manifest grammar\\\\\\\", candidates: [], code: UnavailableWorld, message: \\\\\\\"Prepared selected source is unavailable\\\\\\\", schema: 1 }\\\",\\\"schema\\\":1,\\\"target_id\\\":\\\"sha256:4ec4a1c640bcfa3cb2e6b6ca532df44b66760a119cf829507e7e686979a3b632\\\"}\"), provenance_id: None }), domain_owner: Some(\"rust:vibe-orchestrator\"), evidence_id: None, operation_id: Some(\"rust:vibe-orchestrator:client-capabilities\"), schema: 1, source_id: Some(\"captured-client-capabilities/1\") }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    machine_operation::adapter_plan::client_capabilities::tests::selected_package_descriptor_without_native_load\n\ntest result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 643 filtered out; finished in 0.02s\n\nerror: test failed, to rerun pass `-p vibe-orchestrator --lib`\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "commands::adapter_plan::tests::m_08_c_1_cases"
+    ],
+    "exit": 101,
+    "counts": [],
+    "nonzero_nonignored": false,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V3-2.log",
+    "seconds": 47.7050003480399,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V3-2.log",
+    "log_sha256": "b716e12ea1144e3cf365751153a3696e753fb41bf5502db7b5793f51c944d676",
+    "actual_test_summaries": [
+      [
+        "FAILED",
+        "0",
+        "1",
+        "0"
+      ]
+    ],
+    "failure_tail": "^^^^^^\n...\n224 |     pub(crate) fn derive_staged_object_ids(&mut self) -> Result<(), PlanError> {\n    |                   ^^^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: `vibe-lifecycle` (lib) generated 10 warnings\nwarning: type `PlannedAssetCall` is more private than the item `AssetInspection::Next::call`\n  --> crates/vibe-publish/src/publication_full_plan/calls/asset_history.rs:24:9\n   |\n24 |         call: PlannedAssetCall,\n   |         ^^^^^^^^^^^^^^^^^^^^^^ field `AssetInspection::Next::call` is reachable at visibility `pub(in crate::publication_full_plan)`\n   |\nnote: but type `PlannedAssetCall` is only usable at visibility `pub(in crate::publication_full_plan::calls)`\n  --> crates/vibe-publish/src/publication_full_plan/calls/assets.rs:33:1\n   |\n33 | pub(super) struct PlannedAssetCall {\n   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n   = note: `#[warn(private_interfaces)]` on by default\n\nwarning: type `calls::CallObservation` is more private than the item `AssetInspection::Next::before`\n   --> crates/vibe-publish/src/publication_full_plan/calls/asset_history.rs:27:9\n    |\n 27 |         before: CallObservation,\n    |         ^^^^^^^^^^^^^^^^^^^^^^^ field `AssetInspection::Next::before` is reachable at visibility `pub(in crate::publication_full_plan)`\n    |\nnote: but type `calls::CallObservation` is only usable at visibility `pub(self)`\n   --> crates/vibe-publish/src/publication_full_plan/calls.rs:232:1\n    |\n232 | struct CallObservation {\n    | ^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: `vibe-publish` (lib) generated 496 warnings (run `cargo fix --lib -p vibe-publish` to apply 18 suggestions)\n   Compiling vibe-package-source v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-package-source)\n   Compiling vibe-mcp v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-mcp)\nwarning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency\n   --> crates/vibe-mcp/src/machine_session/state.rs:128:10\n    |\n128 |         .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))\n    |          ^^^^^^^^^^^^\n    |\n    = note: `#[warn(deprecated)]` on by default\nhelp: replace the use of the deprecated method\n    |\n128 -         .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))\n128 +         .try_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))\n    |\n\nwarning: `vibe-mcp` (lib) generated 1 warning (run `cargo fix --lib -p vibe-mcp` to apply 1 suggestion)\nwarning: `vibe-orchestrator` (lib) generated 15 warnings (run `cargo fix --lib -p vibe-orchestrator` to apply 14 suggestions)\n   Compiling vibe-cli v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-cli)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 46.92s\n     Running unittests src/main.rs (/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/build/vibe-cli/c974a364d4f47df5/out/vibe-c974a364d4f47df5)\n\nrunning 1 test\ntest commands::adapter_plan::tests::m_08_c_1_cases::same_binary_adds_client_then_rejects_duplicate_and_unknown_operation ... FAILED\n\nfailures:\n\n---- commands::adapter_plan::tests::m_08_c_1_cases::same_binary_adds_client_then_rejects_duplicate_and_unknown_operation stdout ----\n\nthread 'commands::adapter_plan::tests::m_08_c_1_cases::same_binary_adds_client_then_rejects_duplicate_and_unknown_operation' (218705) panicked at crates/vibe-cli/src/commands/adapter_plan/tests.rs:329:13:\nafter refusal: OperationEnvelope { body: Error(BodyError { completeness: Unavailable, effect_state: NoEffects, format_id: Some(\"client-capability-error\"), payload_json: Some(\"{\\\"code\\\":\\\"needs-preparation\\\",\\\"context_id\\\":\\\"adapter-context:1\\\",\\\"message\\\":\\\"Error { boundary: \\\\\\\"manifest grammar\\\\\\\", candidates: [], code: UnavailableWorld, message: \\\\\\\"Prepared selected source is unavailable\\\\\\\", schema: 1 }\\\",\\\"schema\\\":1,\\\"target_id\\\":\\\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\\\"}\"), provenance_id: None }), domain_owner: Some(\"rust:vibe-orchestrator\"), evidence_id: None, operation_id: Some(\"rust:vibe-orchestrator:client-capabilities\"), schema: 1, source_id: Some(\"captured-client-capabilities/1\") }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    commands::adapter_plan::tests::m_08_c_1_cases::same_binary_adds_client_then_rejects_duplicate_and_unknown_operation\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 943 filtered out; finished in 0.71s\n\nerror: test failed, to rerun pass `-p vibe-cli --bin vibe`\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "machine_operation::adapter_plan::tests::prepared_plan_is_nonempty_deterministic_and_source_drift_refuses",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V3-3.log",
+    "seconds": 0.2839963820297271,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V3-3.log",
+    "log_sha256": "ebc921777cfd1c2279dd97b7fc2d5102b5d9616a101d0dd65ea18a85a871369a",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "machine_operation::adapter_plan::tests::m_08_b_2_cases_selected_self_and_dependency_bridge_roots",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V3-4.log",
+    "seconds": 0.5408146010013297,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V3-4.log",
+    "log_sha256": "c4664af335218f92705ff884e3ac7ee91a480705e03b3c93b3a4d4c02438f9f5",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-wire",
+      "--lib",
+      "behaviour::client_capability::m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V4-1.log",
+    "seconds": 21.36324308195617,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V4-1.log",
+    "log_sha256": "bf7825eb701c523804a83a48f4cbbf48fb18cbeab92a4e4340ca55622f5a32db",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "manifest::document::tests_mechanism_grammar::old_fixture_serializes_byte_identically_when_new_sections_absent",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V4-2.log",
+    "seconds": 2.973051058012061,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V4-2.log",
+    "log_sha256": "affdc70a87b77659309a7cbd18750aed7ded5e088c5bedacceacaaeb057dea1b",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "xtask",
+      "codegen"
+    ],
+    "exit": 101,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V5-1.log",
+    "seconds": 16.774931630992796,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V5-1.log",
+    "log_sha256": "889f2d0a3b3ee370adb51526e89c0650ed3e826afd26bfac5efbbe1d28f86e8c",
+    "actual_test_summaries": [],
+    "failure_tail": "mepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc-shell/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-graph/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-scrape/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-llm/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-index/Cargo.toml:10:12\n   |\n10 | homepage = \"https://gitverse.ru/vibevm/vibevm\"\n   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n11 | repository = \"https://gitverse.ru/vibevm/vibevm\"\n   |              -----------------------------------\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-settings/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: function `during` is never used\n   --> crates/vibe-safefs/src/transaction.rs:262:12\n    |\n262 |     pub fn during(_: &crate::Pinned, _: &str) {}\n    |            ^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:10:5\n   |\n 9 | pub(super) enum NoReplaceError {\n   |                 -------------- variants in this enum\n10 |     Occupied,\n   |     ^^^^^^^^\n11 |     SourceChanged,\n   |     ^^^^^^^^^^^^^\n12 |     SourceReappeared,\n   |     ^^^^^^^^^^^^^^^^\n13 |     CrossFilesystem,\n   |     ^^^^^^^^^^^^^^^\n14 |     Unsupported,\n15 |     Io(std::io::Error),\n   |     ^^\n   |\n   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis\n\nwarning: variants `NotCreated` and `CreatedButUnsealed` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:19:5\n   |\n18 | pub(super) enum NativeCreateError {\n   |                 ----------------- variants in this enum\n19 |     NotCreated(std::io::Error),\n   |     ^^^^^^^^^^\n20 |     CreatedButUnsealed(std::io::Error),\n   |     ^^^^^^^^^^^^^^^^^^\n\nwarning: variants `Changed` and `Io` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:26:5\n   |\n25 | pub(super) enum NativeRemoveError {\n   |                 ----------------- variants in this enum\n26 |     Changed(String),\n   |     ^^^^^^^\n27 |     Io(std::io::Error),\n   |     ^^\n\nerror[E0433]: cannot find `client_capability` in `generated`\n --> crates/vibe-wire/src/behaviour/client_capability.rs:2:23\n  |\n2 | use crate::generated::client_capability::e1::{request as q,result as r,error as e};\n  |                       ^^^^^^^^^^^^^^^^^ could not find `client_capability` in `generated`\n\nFor more information about this error, try `rustc --explain E0433`.\nerror: could not compile `vibe-wire` (lib) due to 1 previous error\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "xtask",
+      "check-codegen"
+    ],
+    "exit": 101,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V5-2.log",
+    "seconds": 13.863537161960267,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V5-2.log",
+    "log_sha256": "889f2d0a3b3ee370adb51526e89c0650ed3e826afd26bfac5efbbe1d28f86e8c",
+    "actual_test_summaries": [],
+    "failure_tail": "mepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc-shell/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-graph/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-scrape/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-llm/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-index/Cargo.toml:10:12\n   |\n10 | homepage = \"https://gitverse.ru/vibevm/vibevm\"\n   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n11 | repository = \"https://gitverse.ru/vibevm/vibevm\"\n   |              -----------------------------------\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-settings/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: function `during` is never used\n   --> crates/vibe-safefs/src/transaction.rs:262:12\n    |\n262 |     pub fn during(_: &crate::Pinned, _: &str) {}\n    |            ^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:10:5\n   |\n 9 | pub(super) enum NoReplaceError {\n   |                 -------------- variants in this enum\n10 |     Occupied,\n   |     ^^^^^^^^\n11 |     SourceChanged,\n   |     ^^^^^^^^^^^^^\n12 |     SourceReappeared,\n   |     ^^^^^^^^^^^^^^^^\n13 |     CrossFilesystem,\n   |     ^^^^^^^^^^^^^^^\n14 |     Unsupported,\n15 |     Io(std::io::Error),\n   |     ^^\n   |\n   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis\n\nwarning: variants `NotCreated` and `CreatedButUnsealed` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:19:5\n   |\n18 | pub(super) enum NativeCreateError {\n   |                 ----------------- variants in this enum\n19 |     NotCreated(std::io::Error),\n   |     ^^^^^^^^^^\n20 |     CreatedButUnsealed(std::io::Error),\n   |     ^^^^^^^^^^^^^^^^^^\n\nwarning: variants `Changed` and `Io` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:26:5\n   |\n25 | pub(super) enum NativeRemoveError {\n   |                 ----------------- variants in this enum\n26 |     Changed(String),\n   |     ^^^^^^^\n27 |     Io(std::io::Error),\n   |     ^^\n\nerror[E0433]: cannot find `client_capability` in `generated`\n --> crates/vibe-wire/src/behaviour/client_capability.rs:2:23\n  |\n2 | use crate::generated::client_capability::e1::{request as q,result as r,error as e};\n  |                       ^^^^^^^^^^^^^^^^^ could not find `client_capability` in `generated`\n\nFor more information about this error, try `rustc --explain E0433`.\nerror: could not compile `vibe-wire` (lib) due to 1 previous error\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "xtask",
+      "wire-diff"
+    ],
+    "exit": 101,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V5-3.log",
+    "seconds": 13.715270142012741,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V5-3.log",
+    "log_sha256": "889f2d0a3b3ee370adb51526e89c0650ed3e826afd26bfac5efbbe1d28f86e8c",
+    "actual_test_summaries": [],
+    "failure_tail": "mepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc-shell/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-graph/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-scrape/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-llm/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-index/Cargo.toml:10:12\n   |\n10 | homepage = \"https://gitverse.ru/vibevm/vibevm\"\n   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n11 | repository = \"https://gitverse.ru/vibevm/vibevm\"\n   |              -----------------------------------\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-settings/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: function `during` is never used\n   --> crates/vibe-safefs/src/transaction.rs:262:12\n    |\n262 |     pub fn during(_: &crate::Pinned, _: &str) {}\n    |            ^^^^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:10:5\n   |\n 9 | pub(super) enum NoReplaceError {\n   |                 -------------- variants in this enum\n10 |     Occupied,\n   |     ^^^^^^^^\n11 |     SourceChanged,\n   |     ^^^^^^^^^^^^^\n12 |     SourceReappeared,\n   |     ^^^^^^^^^^^^^^^^\n13 |     CrossFilesystem,\n   |     ^^^^^^^^^^^^^^^\n14 |     Unsupported,\n15 |     Io(std::io::Error),\n   |     ^^\n   |\n   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis\n\nwarning: variants `NotCreated` and `CreatedButUnsealed` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:19:5\n   |\n18 | pub(super) enum NativeCreateError {\n   |                 ----------------- variants in this enum\n19 |     NotCreated(std::io::Error),\n   |     ^^^^^^^^^^\n20 |     CreatedButUnsealed(std::io::Error),\n   |     ^^^^^^^^^^^^^^^^^^\n\nwarning: variants `Changed` and `Io` are never constructed\n  --> crates/vibe-safefs/src/transaction/platform.rs:26:5\n   |\n25 | pub(super) enum NativeRemoveError {\n   |                 ----------------- variants in this enum\n26 |     Changed(String),\n   |     ^^^^^^^\n27 |     Io(std::io::Error),\n   |     ^^\n\nerror[E0433]: cannot find `client_capability` in `generated`\n --> crates/vibe-wire/src/behaviour/client_capability.rs:2:23\n  |\n2 | use crate::generated::client_capability::e1::{request as q,result as r,error as e};\n  |                       ^^^^^^^^^^^^^^^^^ could not find `client_capability` in `generated`\n\nFor more information about this error, try `rustc --explain E0433`.\nerror: could not compile `vibe-wire` (lib) due to 1 previous error\n"
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "--check",
+      "crates/vibe-agent-projection/src/client_capabilities.rs",
+      "crates/vibe-agent-projection/src/lib.rs",
+      "crates/vibe-cli/src/commands/adapter_plan.rs",
+      "crates/vibe-cli/src/commands/adapter_plan/client_capabilities.rs",
+      "crates/vibe-cli/src/commands/adapter_plan/tests.rs",
+      "crates/vibe-core/src/manifest/mechanism/client_request.rs",
+      "crates/vibe-core/src/manifest/mechanism/mod.rs",
+      "crates/vibe-core/src/manifest/mechanism/wire.rs",
+      "crates/vibe-core/src/manifest/mod.rs",
+      "crates/vibe-extension-registry/src/client_requests.rs",
+      "crates/vibe-extension-registry/src/lib.rs",
+      "crates/vibe-extension-registry/src/mechanism/builtin.rs",
+      "crates/vibe-extension-registry/src/mechanism/collect.rs",
+      "crates/vibe-extension-registry/src/mechanism/resolve.rs",
+      "crates/vibe-extension-registry/src/tests/support.rs",
+      "crates/vibe-lifecycle/src/mechanism/build/native_tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/build/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_capabilities.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/package/support.rs",
+      "crates/vibe-lifecycle/src/native/compiler_facts_semantic_tests.rs",
+      "crates/vibe-lifecycle/src/native/mechanism_tests.rs",
+      "crates/vibe-lifecycle/src/native/tests.rs",
+      "crates/vibe-orchestrator/src/dispatch/native_build_package_e2e_tests.rs",
+      "crates/vibe-orchestrator/src/dispatch/native_mechanism_tests.rs",
+      "crates/vibe-orchestrator/src/dispatch/native_provider_e2e_tests.rs",
+      "crates/vibe-orchestrator/src/machine_operation/adapter_plan.rs",
+      "crates/vibe-orchestrator/src/machine_operation/adapter_plan/captured_host.rs",
+      "crates/vibe-orchestrator/src/machine_operation/adapter_plan/client_capabilities.rs",
+      "crates/vibe-orchestrator/src/machine_operation/adapter_plan/client_capabilities/tests.rs",
+      "crates/vibe-wire/src/behaviour/client_capability.rs",
+      "crates/vibe-wire/src/behaviour/mod.rs",
+      "fixtures/next/adapters/m-08-c1/fixture.rs"
+    ],
+    "exit": 1,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V6-1.log",
+    "seconds": 0.10123778402339667,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V6-1.log",
+    "log_sha256": "6e94e5712e9b548364cc5ab4d4e37641d0d1fba693d5c54257e47dab2030845c",
+    "actual_test_summaries": [],
+    "failure_tail": "Diff in /fast/git/v/vibevm-next/crates/vibe-extension-registry/src/client_requests.rs:70:\n                 root: \"/selected/dependency\".into(),\n                 version: \"2.0.0\".into(),\n                 kind: vibe_core::PackageKind::Tool,\n-                content_hash: vibe_core::ContentHash::parse(&format!(\"sha256:{}\", \"a\".repeat(64))).unwrap(),\n+                content_hash: vibe_core::ContentHash::parse(&format!(\"sha256:{}\", \"a\".repeat(64)))\n+                    .unwrap(),\n             },\n             declarations: vec![],\n             controls: ExtensionsControl::default(),\n"
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V6-2.log",
+    "seconds": 0.029130170005373657,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V6-2.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": [],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "build",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe"
+    ],
+    "exit": 101,
+    "counts": [],
+    "nonzero_nonignored": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V7-1.log",
+    "seconds": 29.316096610971726,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt1-V7-1.log",
+    "log_sha256": "68d042215df109b54cdae430ae91128623eb0b2be9391469bddcc170c127368d",
+    "actual_test_summaries": [],
+    "failure_tail": "57 |     pub(crate) fn with_raw_object<T>(\n   |                   ^^^^^^^^^^^^^^^\n\nwarning: function `trusted_binary` is never used\n   --> crates/vibe-publish/src/package_git_submodule/git.rs:150:15\n    |\n150 | pub(super) fn trusted_binary(binary: &Path) -> bool {\n    |               ^^^^^^^^^^^^^^\n\nwarning: function `raw_compare` is never used\n   --> crates/vibe-publish/src/package_git_submodule.rs:391:4\n    |\n391 | fn raw_compare(\n    |    ^^^^^^^^^^^\n\nwarning: methods `object_size`, `pump`, and `tree` are never used\n  --> crates/vibe-publish/src/package_git_submodule_store/import.rs:27:8\n   |\n26 | impl Transfer<'_, '_, '_> {\n   | ------------------------- methods in this implementation\n27 |     fn object_size(&self, oid: &str, cap: u64) -> Result<u64> {\n   |        ^^^^^^^^^^^\n...\n44 |     fn pump(&mut self, kind: &str, oid: &str, cap: u64) -> Result<()> {\n   |        ^^^^\n...\n84 |     fn tree(&mut self, oid: &str, depth: usize) -> Result<()> {\n   |        ^^^^\n\nwarning: function `selected_commit` is never used\n   --> crates/vibe-publish/src/package_git_submodule_store/import.rs:109:15\n    |\n109 | pub(super) fn selected_commit(\n    |               ^^^^^^^^^^^^^^^\n\nwarning: function `selected_commit_with_hook` is never used\n   --> crates/vibe-publish/src/package_git_submodule_store/import.rs:119:15\n    |\n119 | pub(super) fn selected_commit_with_hook(\n    |               ^^^^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: function `metadata` is never used\n  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:27:4\n   |\n27 | fn metadata(rows: &[MetadataBlob]) -> Vec<GitlinkMetadataRow> {\n   |    ^^^^^^^^\n\nwarning: function `pending_row` is never used\n  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:38:15\n   |\n38 | pub(super) fn pending_row(\n   |               ^^^^^^^^^^^\n\nwarning: function `matches_raw` is never used\n  --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:96:15\n   |\n96 | pub(super) fn matches_raw(row: &GitlinkPending, raw: &RawComparison) -> bool {\n   |               ^^^^^^^^^^^\n\nwarning: function `landed_row` is never used\n   --> crates/vibe-publish/src/package_git_submodule_store/receipt.rs:107:15\n    |\n107 | pub(super) fn landed_row(\n    |               ^^^^^^^^^^\n\nwarning: function `compare_retained_byte_store` is never used\n   --> crates/vibe-publish/src/package_git_submodule.rs:436:15\n    |\n436 | pub(crate) fn compare_retained_byte_store(\n    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: function `compare_one` is never used\n   --> crates/vibe-publish/src/package_git_submodule.rs:467:15\n    |\n467 | pub(crate) fn compare_one(\n    |               ^^^^^^^^^^^\n\nwarning: function `compare_inner` is never used\n   --> crates/vibe-publish/src/package_git_submodule.rs:488:4\n    |\n488 | fn compare_inner(\n    |    ^^^^^^^^^^^^^\n\nwarning: type `PlannedAssetCall` is more private than the item `AssetInspection::Next::call`\n  --> crates/vibe-publish/src/publication_full_plan/calls/asset_history.rs:24:9\n   |\n24 |         call: PlannedAssetCall,\n   |         ^^^^^^^^^^^^^^^^^^^^^^ field `AssetInspection::Next::call` is reachable at visibility `pub(in crate::publication_full_plan)`\n   |\nnote: but type `PlannedAssetCall` is only usable at visibility `pub(in crate::publication_full_plan::calls)`\n  --> crates/vibe-publish/src/publication_full_plan/calls/assets.rs:33:1\n   |\n33 | pub(super) struct PlannedAssetCall {\n   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n   = note: `#[warn(private_interfaces)]` on by default\n\nwarning: type `calls::CallObservation` is more private than the item `AssetInspection::Next::before`\n   --> crates/vibe-publish/src/publication_full_plan/calls/asset_history.rs:27:9\n    |\n 27 |         before: CallObservation,\n    |         ^^^^^^^^^^^^^^^^^^^^^^^ field `AssetInspection::Next::before` is reachable at visibility `pub(in crate::publication_full_plan)`\n    |\nnote: but type `calls::CallObservation` is only usable at visibility `pub(self)`\n   --> crates/vibe-publish/src/publication_full_plan/calls.rs:232:1\n    |\n232 | struct CallObservation {\n    | ^^^^^^^^^^^^^^^^^^^^^^\n\nFor more information about this error, try `rustc --explain E0432`.\nwarning: `vibe-orchestrator` (lib) generated 15 warnings\nerror: could not compile `vibe-orchestrator` (lib) due to 1 previous error; 15 warnings emitted\nwarning: build failed, waiting for other jobs to finish...\nwarning: `vibe-publish` (lib) generated 496 warnings (run `cargo fix --lib -p vibe-publish` to apply 18 suggestions)\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V1-1.log",
+    "seconds": 0.19968341797357425,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt2-V1-1.log",
+    "log_sha256": "b46c8245662cfb49b193959cda96f9ccc70503d890d934f9eb68d0ed058d30b9",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-extension-registry",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V1-2.log",
+    "seconds": 1.0109558099647984,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt2-V1-2.log",
+    "log_sha256": "e5bb6112ed9e2bc988ba9f790e6a6f19194393e076957a92e3968c3b87b5791e",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "nonzero_nonignored": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V1-1.log",
+    "seconds": 0.15848974499385804,
+    "passed": true,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt3-V1-1.log",
+    "log_sha256": "e3441f7b92773e10dfc642f0a670835ca31a9a77afa5ecb43a01c260d9b216ba",
+    "actual_test_summaries": [
+      [
+        "ok",
+        "2",
+        "0",
+        "0"
+      ]
+    ],
+    "failure_tail": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-extension-registry",
+      "--lib",
+      "m_08_c_1_cases"
+    ],
+    "exit": 101,
+    "counts": [],
+    "nonzero_nonignored": false,
+    "log": "/fast/zap-managed/2026-10-15-m08c1/V1-2.log",
+    "seconds": 0.39282622595783323,
+    "passed": false,
+    "actual_log": "/fast/zap-managed/2026-10-15-m08c1/attempt3-V1-2.log",
+    "log_sha256": "542806e6fc5f6e02108d9446f3dddbd686b310351edba5e6b4f0645cb35f3e7e",
+    "actual_test_summaries": [],
+    "failure_tail": "ing: `vibe-resolver` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-agent-projection/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-agent-projection` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc-server/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-doc-server` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc-shell/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-doc-shell` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-doc/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-doc` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-graph/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-graph` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-scrape/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-scrape` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-llm/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-llm` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-index/Cargo.toml:10:12\n   |\n10 | homepage = \"https://gitverse.ru/vibevm/vibevm\"\n   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n11 | repository = \"https://gitverse.ru/vibevm/vibevm\"\n   |              -----------------------------------\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-index` (manifest) generated 1 warning\nwarning: `package.homepage` is redundant with `package.repository`\n  --> crates/vibe-settings/Cargo.toml:10:1\n   |\n 9 | repository.workspace = true\n   | ----------\n10 | homepage.workspace = true\n   | ^^^^^^^^\n   |\n   = note: `cargo::redundant_homepage` is set to `warn` by default\nhelp: consider removing `package.homepage`\nwarning: `vibe-settings` (manifest) generated 1 warning\n   Compiling vibe-extension-registry v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-extension-registry)\nerror[E0277]: the trait bound `ContentHash: FromStr` is not satisfied\n  --> crates/vibe-extension-registry/src/client_requests.rs:73:68\n   |\n73 |                 content_hash: format!(\"sha256:{}\", \"a\".repeat(64)).parse().unwrap(),\n   |                                                                    ^^^^^ the trait `FromStr` is not implemented for `ContentHash`\n   |\n   = help: the following other types implement trait `FromStr`:\n             ByteString\n             CString\n             CapabilityName\n             CapabilityNamespace\n             CapabilityRef\n             CompilePoint\n             ExtensionPoint\n             IpAddr\n           and 80 others\n\nFor more information about this error, try `rustc --explain E0277`.\nerror: could not compile `vibe-extension-registry` (lib test) due to 1 previous error\n"
+  }
+]

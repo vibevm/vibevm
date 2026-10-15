@@ -1,0 +1,9 @@
+{
+  "observed": "POST /v1/native managed_inspect HTTP409 resync_required response_too_large",
+  "service_runtime_pin": "6ae0aa4d35571982c4c6a86e156f0801aca4cfc026c7eafddcd21a93387429ca",
+  "model_pid": 143998,
+  "model_alive_at_observation": true,
+  "RootQuestionReadable": true,
+  "restarted": false,
+  "hypothesis": "Bounded stored_prefix expands under nested JSON byte-vector encoding beyond HTTP response cap; not yet proven"
+}

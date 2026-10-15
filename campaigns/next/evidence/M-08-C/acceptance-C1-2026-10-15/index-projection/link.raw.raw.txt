@@ -1,0 +1,8 @@
+error: only metadata stub found for `rlib` dependency `vibe_index` please provide path to the corresponding .rmeta file with full metadata
+ --> /fast/git/v/research/2026-10-15-m08c1-index-projection/operator.rs:3:5
+  |
+3 | use vibe_index::{index::{memory::WriteCtx, sha256_of_bytes, WRITER_DIRS, WRITER_FILES}, journal};
+  |     ^^^^^^^^^^
+
+error: aborting due to 1 previous error
+

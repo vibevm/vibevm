@@ -1,0 +1,668 @@
+{
+  "binary_sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d",
+  "phases": [
+    {
+      "phase": "before",
+      "argv": [
+        "/usr/bin/strace",
+        "-f",
+        "-s",
+        "65536",
+        "-o",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-before.trace",
+        "-e",
+        "trace=%file,%process,%network,%desc",
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/vibe",
+        "--offline",
+        "adapter-plan",
+        "--root",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project",
+        "--kind",
+        "clients",
+        "--prepare"
+      ],
+      "exit": 0,
+      "binary_sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d",
+      "fixture_census": {
+        "cache": "directory",
+        "config": "directory",
+        "cwd": "directory",
+        "home": "directory",
+        "project": "directory",
+        "project/vibe.toml": "f57beef61f575b7dc7cfafb121eb7d8f1740172130b73fa5452a4036840b88fd",
+        "settings": "directory",
+        "tmp": "directory"
+      },
+      "census_unchanged": true,
+      "answers": [
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{},\"capture_id\":\"sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{},\"capture_id\":\"sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{},\"capture_id\":\"sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        }
+      ],
+      "query_intervals": [
+        {
+          "trace_lines": 965,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        },
+        {
+          "trace_lines": 965,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        }
+      ],
+      "trace_sha256": "23378dbfd095fcecfec954c5ca1d23dfc32f7f1c4c78bd2edf4453257beff424"
+    },
+    {
+      "phase": "unselected",
+      "argv": [
+        "/usr/bin/strace",
+        "-f",
+        "-s",
+        "65536",
+        "-o",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-unselected.trace",
+        "-e",
+        "trace=%file,%process,%network,%desc",
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/vibe",
+        "--offline",
+        "adapter-plan",
+        "--root",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project",
+        "--kind",
+        "clients",
+        "--prepare"
+      ],
+      "exit": 0,
+      "binary_sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d",
+      "fixture_census": {
+        "cache": "directory",
+        "config": "directory",
+        "cwd": "directory",
+        "home": "directory",
+        "project": "directory",
+        "project/unselected": "directory",
+        "project/unselected/vibe.toml": "86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f",
+        "project/vibe.toml": "f57beef61f575b7dc7cfafb121eb7d8f1740172130b73fa5452a4036840b88fd",
+        "settings": "directory",
+        "tmp": "directory"
+      },
+      "census_unchanged": true,
+      "answers": [
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{},\"capture_id\":\"sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{},\"capture_id\":\"sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{},\"capture_id\":\"sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:e12b3c0c3dbdf265116352a013b7e36a9ad303c304cf835f68873ee919a4b2bd"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        }
+      ],
+      "query_intervals": [
+        {
+          "trace_lines": 965,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        },
+        {
+          "trace_lines": 965,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        }
+      ],
+      "trace_sha256": "51c42d44c52215c667966687a3cea07a1a758bacf3e306d9d49a9fcb397726d7"
+    },
+    {
+      "phase": "selected",
+      "argv": [
+        "/usr/bin/strace",
+        "-f",
+        "-s",
+        "65536",
+        "-o",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-selected.trace",
+        "-e",
+        "trace=%file,%process,%network,%desc",
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/vibe",
+        "--offline",
+        "adapter-plan",
+        "--root",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project",
+        "--kind",
+        "clients",
+        "--prepare"
+      ],
+      "exit": 0,
+      "binary_sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d",
+      "fixture_census": {
+        "cache": "directory",
+        "config": "directory",
+        "cwd": "directory",
+        "home": "directory",
+        "project": "directory",
+        "project/.new-client": "directory",
+        "project/.new-client/present": "90c535833826aacf98cee8295b25f5b188f2f21e5a46e768a9fd641742d9eecf",
+        "project/unselected": "directory",
+        "project/unselected/vibe.toml": "86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f",
+        "project/vibe.lock": "508f145120aa788be75747d99a253f69aec09fac4a92405c245537b61e985aec",
+        "project/vibe.toml": "d666b49044de6bcc770c6364c30a5f0b50c8531dcea16e4e70ed910c1a4e4070",
+        "project/vibevm": "directory",
+        "project/vibevm/vibedeps": "directory",
+        "project/vibevm/vibedeps/org.example.clients": "directory",
+        "project/vibevm/vibedeps/org.example.clients/vibe.toml": "86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f",
+        "settings": "directory",
+        "tmp": "directory"
+      },
+      "census_unchanged": true,
+      "answers": [
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{\"org.example/new-client\":{\"authorization\":\"not-granted\",\"availability\":\"not-probed\",\"bindings\":[{\"destination\":\".new-client/settings.json\",\"key\":[\"mcpServers\",\"new.key\"],\"operations\":[\"reconcile-json-member\"],\"scope\":\"project\",\"shape\":\"json-member\"}],\"descriptor_digest\":\"sha256:af6097786e28155d6e0c4b49c761e99f17a8248230587b2e447c3e8808e85cf4\",\"disabled\":false,\"implementation\":\"not-evaluated\",\"manifest_digest\":\"sha256:86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f\",\"provider\":\"org.example/clients#client\",\"source_strength\":\"lock-bound\",\"version\":\">=1.0.0\"}},\"capture_id\":\"sha256:f63e56ecfd3b7359dee80d1d85f5b86e8c56514211848be2676d8e9ff2ea6cc1\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:f63e56ecfd3b7359dee80d1d85f5b86e8c56514211848be2676d8e9ff2ea6cc1"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{\"org.example/new-client\":{\"authorization\":\"not-granted\",\"availability\":\"not-probed\",\"bindings\":[{\"destination\":\".new-client/settings.json\",\"key\":[\"mcpServers\",\"new.key\"],\"operations\":[\"reconcile-json-member\"],\"scope\":\"project\",\"shape\":\"json-member\"}],\"descriptor_digest\":\"sha256:af6097786e28155d6e0c4b49c761e99f17a8248230587b2e447c3e8808e85cf4\",\"disabled\":false,\"implementation\":\"not-evaluated\",\"manifest_digest\":\"sha256:86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f\",\"provider\":\"org.example/clients#client\",\"source_strength\":\"lock-bound\",\"version\":\">=1.0.0\"}},\"capture_id\":\"sha256:f63e56ecfd3b7359dee80d1d85f5b86e8c56514211848be2676d8e9ff2ea6cc1\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:f63e56ecfd3b7359dee80d1d85f5b86e8c56514211848be2676d8e9ff2ea6cc1"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "result",
+            "completeness": "complete",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-result",
+            "payload_json": "{\"capabilities\":{\"org.example/new-client\":{\"authorization\":\"not-granted\",\"availability\":\"not-probed\",\"bindings\":[{\"destination\":\".new-client/settings.json\",\"key\":[\"mcpServers\",\"new.key\"],\"operations\":[\"reconcile-json-member\"],\"scope\":\"project\",\"shape\":\"json-member\"}],\"descriptor_digest\":\"sha256:af6097786e28155d6e0c4b49c761e99f17a8248230587b2e447c3e8808e85cf4\",\"disabled\":false,\"implementation\":\"not-evaluated\",\"manifest_digest\":\"sha256:86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f\",\"provider\":\"org.example/clients#client\",\"source_strength\":\"lock-bound\",\"version\":\">=1.0.0\"}},\"capture_id\":\"sha256:f63e56ecfd3b7359dee80d1d85f5b86e8c56514211848be2676d8e9ff2ea6cc1\",\"context_id\":\"adapter-context:1\",\"principal\":\"not-admitted\",\"root\":\"/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": "sha256:f63e56ecfd3b7359dee80d1d85f5b86e8c56514211848be2676d8e9ff2ea6cc1"
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        }
+      ],
+      "query_intervals": [
+        {
+          "trace_lines": 1954,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        },
+        {
+          "trace_lines": 1954,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        }
+      ],
+      "trace_sha256": "bcf9d8275a6eb0fe3c19a0b3a50ec6577c2115860c14970e82efd2065a67e211"
+    },
+    {
+      "phase": "duplicate",
+      "argv": [
+        "/usr/bin/strace",
+        "-f",
+        "-s",
+        "65536",
+        "-o",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-duplicate.trace",
+        "-e",
+        "trace=%file,%process,%network,%desc",
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/vibe",
+        "--offline",
+        "adapter-plan",
+        "--root",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project",
+        "--kind",
+        "clients",
+        "--prepare"
+      ],
+      "exit": 0,
+      "binary_sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d",
+      "fixture_census": {
+        "cache": "directory",
+        "config": "directory",
+        "cwd": "directory",
+        "home": "directory",
+        "project": "directory",
+        "project/.new-client": "directory",
+        "project/.new-client/present": "90c535833826aacf98cee8295b25f5b188f2f21e5a46e768a9fd641742d9eecf",
+        "project/unselected": "directory",
+        "project/unselected/vibe.toml": "86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f",
+        "project/vibe.lock": "508f145120aa788be75747d99a253f69aec09fac4a92405c245537b61e985aec",
+        "project/vibe.toml": "d666b49044de6bcc770c6364c30a5f0b50c8531dcea16e4e70ed910c1a4e4070",
+        "project/vibevm": "directory",
+        "project/vibevm/vibedeps": "directory",
+        "project/vibevm/vibedeps/org.example.clients": "directory",
+        "project/vibevm/vibedeps/org.example.clients/vibe.toml": "6c6571ac7d494b02ee33a9752ce95f55c66e2378167fb82710b14b0665f79fdf",
+        "settings": "directory",
+        "tmp": "directory"
+      },
+      "census_unchanged": true,
+      "answers": [
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"collecting the mechanism plane from the effective world\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"collecting the mechanism plane from the effective world\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"collecting the mechanism plane from the effective world\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        }
+      ],
+      "query_intervals": [
+        {
+          "trace_lines": 1,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        },
+        {
+          "trace_lines": 1,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        }
+      ],
+      "trace_sha256": "9ab2cb07bb6e755ebe78a228a26b370489c89742e734cd500347a1d009dcb62a"
+    },
+    {
+      "phase": "unknown-operation",
+      "argv": [
+        "/usr/bin/strace",
+        "-f",
+        "-s",
+        "65536",
+        "-o",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-unknown-operation.trace",
+        "-e",
+        "trace=%file,%process,%network,%desc",
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/vibe",
+        "--offline",
+        "adapter-plan",
+        "--root",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project",
+        "--kind",
+        "clients",
+        "--prepare"
+      ],
+      "exit": 0,
+      "binary_sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d",
+      "fixture_census": {
+        "cache": "directory",
+        "config": "directory",
+        "cwd": "directory",
+        "home": "directory",
+        "project": "directory",
+        "project/.new-client": "directory",
+        "project/.new-client/present": "90c535833826aacf98cee8295b25f5b188f2f21e5a46e768a9fd641742d9eecf",
+        "project/unselected": "directory",
+        "project/unselected/vibe.toml": "86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f",
+        "project/vibe.lock": "508f145120aa788be75747d99a253f69aec09fac4a92405c245537b61e985aec",
+        "project/vibe.toml": "d666b49044de6bcc770c6364c30a5f0b50c8531dcea16e4e70ed910c1a4e4070",
+        "project/vibevm": "directory",
+        "project/vibevm/vibedeps": "directory",
+        "project/vibevm/vibedeps/org.example.clients": "directory",
+        "project/vibevm/vibedeps/org.example.clients/vibe.toml": "e7263f709f307888fd5811532799a674350f718ee837e5783d8815da7b60b9ad",
+        "settings": "directory",
+        "tmp": "directory"
+      },
+      "census_unchanged": true,
+      "answers": [
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"Error { boundary: \\\"manifest grammar\\\", candidates: [], code: UnavailableWorld, message: \\\"Prepared selected source is unavailable\\\", schema: 1 }\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"Error { boundary: \\\"manifest grammar\\\", candidates: [], code: UnavailableWorld, message: \\\"Prepared selected source is unavailable\\\", schema: 1 }\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"Error { boundary: \\\"manifest grammar\\\", candidates: [], code: UnavailableWorld, message: \\\"Prepared selected source is unavailable\\\", schema: 1 }\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        }
+      ],
+      "query_intervals": [
+        {
+          "trace_lines": 1,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        },
+        {
+          "trace_lines": 1,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        }
+      ],
+      "trace_sha256": "a8660a9048767a77ceb2f185b9be0e514850702975d155e17ed8c3f0e4cc17a6"
+    },
+    {
+      "phase": "unknown-epoch",
+      "argv": [
+        "/usr/bin/strace",
+        "-f",
+        "-s",
+        "65536",
+        "-o",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-unknown-epoch.trace",
+        "-e",
+        "trace=%file,%process,%network,%desc",
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/vibe",
+        "--offline",
+        "adapter-plan",
+        "--root",
+        "/fast/zap-managed/2026-10-15-m08c1/same-binary-fixture3/project",
+        "--kind",
+        "clients",
+        "--prepare"
+      ],
+      "exit": 0,
+      "binary_sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d",
+      "fixture_census": {
+        "cache": "directory",
+        "config": "directory",
+        "cwd": "directory",
+        "home": "directory",
+        "project": "directory",
+        "project/.new-client": "directory",
+        "project/.new-client/present": "90c535833826aacf98cee8295b25f5b188f2f21e5a46e768a9fd641742d9eecf",
+        "project/unselected": "directory",
+        "project/unselected/vibe.toml": "86337705ae441a2dc0ef6a630cf8a1cda9ccf1b6a7f53e8033bb4cb5c7ef9e5f",
+        "project/vibe.lock": "508f145120aa788be75747d99a253f69aec09fac4a92405c245537b61e985aec",
+        "project/vibe.toml": "d666b49044de6bcc770c6364c30a5f0b50c8531dcea16e4e70ed910c1a4e4070",
+        "project/vibevm": "directory",
+        "project/vibevm/vibedeps": "directory",
+        "project/vibevm/vibedeps/org.example.clients": "directory",
+        "project/vibevm/vibedeps/org.example.clients/vibe.toml": "96cb13ecd0cda8b6fd1901af08ba1d095b74b04428ec26548eec01d57af35299",
+        "settings": "directory",
+        "tmp": "directory"
+      },
+      "census_unchanged": true,
+      "answers": [
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"Error { boundary: \\\"manifest grammar\\\", candidates: [], code: UnavailableWorld, message: \\\"Prepared selected source is unavailable\\\", schema: 1 }\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"Error { boundary: \\\"manifest grammar\\\", candidates: [], code: UnavailableWorld, message: \\\"Prepared selected source is unavailable\\\", schema: 1 }\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        },
+        {
+          "body": {
+            "stage": "error",
+            "completeness": "unavailable",
+            "effect_state": "no_effects",
+            "format_id": "client-capability-error",
+            "payload_json": "{\"code\":\"needs-preparation\",\"context_id\":\"adapter-context:1\",\"message\":\"Error { boundary: \\\"manifest grammar\\\", candidates: [], code: UnavailableWorld, message: \\\"Prepared selected source is unavailable\\\", schema: 1 }\",\"schema\":1,\"target_id\":\"sha256:7335236d52d3cbb4ac071180174b58677589555fa2253a21d29cafe4aac8d37f\"}",
+            "provenance_id": null
+          },
+          "domain_owner": "rust:vibe-orchestrator",
+          "evidence_id": null,
+          "operation_id": "rust:vibe-orchestrator:client-capabilities",
+          "schema": 1,
+          "source_id": "captured-client-capabilities/1"
+        }
+      ],
+      "query_intervals": [
+        {
+          "trace_lines": 1,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        },
+        {
+          "trace_lines": 1,
+          "counters": {
+            "process": 0,
+            "network": 0,
+            "mutation": 0,
+            "lock": 0
+          },
+          "grant_issuance": "no grant-issuer call in the source-bound query path; not a syscall-observable counter"
+        }
+      ],
+      "trace_sha256": "43e07287a697b24548abf8fc46e767644a7407a93c6ce053c37db18105527eb7"
+    }
+  ],
+  "effects": "owned fixture setup completed; measured queries separate"
+}

@@ -1,0 +1,4 @@
+{
+  "mode": "run",
+  "rationale": "New authored C1 source and new-family schema are not present in any freshly bound executable; one scoped CLI build before both fixture phases."
+}

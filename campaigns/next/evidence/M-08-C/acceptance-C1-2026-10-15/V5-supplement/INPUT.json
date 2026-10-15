@@ -1,0 +1,20 @@
+{
+  "source_commit_supplied": "57e6dd64ebf0a2cc06d241bc68b2c2d699492c80",
+  "projection_commit_supplied": "043e5d11e0f3f4479474738da1860701495139a6",
+  "environment_selected": {
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "TMPDIR": "/fast/git/v/research/2026-10-15-m08c1-v5-supplement/tmp",
+    "RUSTUP_AUTO_INSTALL": "0",
+    "CARGO_NET_OFFLINE": "true"
+  },
+  "tool_identity": {
+    "rustc": "rustc 1.101.0-nightly (c36f14571 2026-10-01)\nbinary: rustc\ncommit-hash: c36f1457196e315bc204b9564a6a5a7fe7f5a51f\ncommit-date: 2026-10-01\nhost: x86_64-unknown-linux-gnu\nrelease: 1.101.0-nightly\nLLVM version: 23.1.1",
+    "cargo": "cargo 1.101.0-nightly (f3865b2a4 2026-09-29)",
+    "rustdoc": "rustdoc 1.101.0-nightly (c36f14571 2026-10-01)"
+  },
+  "preflight_writers": [],
+  "C1_count": 104,
+  "corpus_count": 18,
+  "generated_count": 229,
+  "projection_evidence": "/fast/git/v/research/2026-10-15-m08c1-index-projection/ROOT-PROJECTION-INTEGRATION.json"
+}

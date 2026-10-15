@@ -1,0 +1,9 @@
+{
+  "commit": "043e5d11e0f3f4479474738da1860701495139a6",
+  "path": "formats/corpora/index/e1/repomd.json",
+  "sha256": "a1d4fa5079669fcdb95e2e5e8a16bc64941171d3915833283668eaf1c49f2ba3",
+  "journal_files_unchanged": true,
+  "other17_corpus_files_unchanged": true,
+  "generated_by_actual_projector": true,
+  "task_acceptance": false
+}

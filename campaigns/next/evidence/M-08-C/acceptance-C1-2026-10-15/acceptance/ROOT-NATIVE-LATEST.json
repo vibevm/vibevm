@@ -1,0 +1,17 @@
+{
+  "accounting_pending": false,
+  "collected": false,
+  "failed": false,
+  "more_stored_output": false,
+  "operation": "managed.f7a87ca4dec6e9f5681f8614d02580be459e5b1dacb159bbb9765e5376d35e99",
+  "process_stopped": false,
+  "retry_at_ns": 0,
+  "source_sequence": 54,
+  "state": "collecting",
+  "target": {
+    "dispatch_id": "dispatch.runtime.packet.vibevm-m08c1",
+    "job_id": "job.runtime.packet.vibevm-m08c1",
+    "kind": "job"
+  },
+  "unknown_tail": false
+}

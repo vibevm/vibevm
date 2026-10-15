@@ -1,0 +1,131 @@
+[
+  {
+    "id": "V1",
+    "claims": "strict manifest grammar + pure selected registry",
+    "commands": [
+      "cargo test --offline --locked -p vibe-core --lib m_08_c_1_cases",
+      "cargo test --offline --locked -p vibe-extension-registry --lib m_08_c_1_cases"
+    ],
+    "expected": "each target nonzero; actual modules/case denominator bound before compilation",
+    "bound_cases": [
+      [
+        "manifest::mechanism::client_request::m_08_c_1_cases::strict_descriptor_identity_fields_and_absent_compatibility",
+        "manifest::mechanism::client_request::m_08_c_1_cases::unknown_epoch_operation_and_duplicate_client_refuse"
+      ],
+      [
+        "client_requests::m_08_c_1_cases::selected_order_owner_disable_and_source_binding"
+      ]
+    ],
+    "expected_counts": [
+      2,
+      1
+    ]
+  },
+  {
+    "id": "V2",
+    "claims": "canonical open map + legacy3 lifecycle bridges and authority separation",
+    "commands": [
+      "cargo test --offline --locked -p vibe-agent-projection --lib m_08_c_1_cases",
+      "cargo test --offline --locked -p vibe-lifecycle --lib m_08_c_1_cases"
+    ],
+    "expected": "each nonzero; cover positive and negative original obligations",
+    "bound_cases": [
+      [
+        "client_capabilities::m_08_c_1_cases::new_id_destination_and_key_are_map_data"
+      ],
+      [
+        "mechanism::deploy::client_capabilities::m_08_c_1_cases::legacy_three_profiles_and_executable_states_are_explicit"
+      ]
+    ],
+    "expected_counts": [
+      1,
+      1
+    ]
+  },
+  {
+    "id": "V3",
+    "claims": "actual upper registry/context consumer + identical executable package addition",
+    "commands": [
+      "cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::client_capabilities::tests",
+      "cargo test --offline --locked -p vibe-cli --bin vibe commands::adapter_plan::tests::m_08_c_1_cases",
+      "cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::tests::prepared_plan_is_nonempty_deterministic_and_source_drift_refuses -- --exact",
+      "cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::tests::m_08_b_2_cases_selected_self_and_dependency_bridge_roots -- --exact"
+    ],
+    "expected": "upper+CLI each >=1; binary identical hash before/after addition, no intervening build; no out-of-selected-world lookup",
+    "amendment": "NEW typed client-capability family actual upper/currentness, old route rejects new operation, same binary before/after package addition, no skill hydration",
+    "bound_cases": [
+      [
+        "machine_operation::adapter_plan::client_capabilities::tests::selected_package_descriptor_without_native_load",
+        "machine_operation::adapter_plan::client_capabilities::tests::wrong_context_operation_and_legacy_route_refuse"
+      ],
+      [
+        "commands::adapter_plan::tests::m_08_c_1_cases::same_binary_adds_client_then_rejects_duplicate_and_unknown_operation"
+      ],
+      [
+        "machine_operation::adapter_plan::tests::prepared_plan_is_nonempty_deterministic_and_source_drift_refuses"
+      ],
+      [
+        "machine_operation::adapter_plan::tests::m_08_b_2_cases_selected_self_and_dependency_bridge_roots"
+      ]
+    ],
+    "expected_counts": [
+      2,
+      1,
+      1,
+      1
+    ],
+    "preservation_reason": "Private capture extraction affects legacy prepared source join; exact B1 positive/stale and B2 selected self/dependency characterization bound before compilation."
+  },
+  {
+    "id": "V4",
+    "claims": "generated map reader/corpus + actual old grammar",
+    "commands": [
+      "cargo test --offline --locked -p vibe-wire --lib behaviour::client_capability::m_08_c_1_cases",
+      "cargo test --offline --locked -p vibe-core --lib manifest::document::tests_mechanism_grammar::old_fixture_serializes_byte_identically_when_new_sections_absent -- --exact"
+    ],
+    "expected": "new wire nonzero; existing exact1; old+new corpus identities",
+    "amendment": "old adapter-plan e1 schema/generated/corpus hashes unchanged; byte re-emission and legacy3/native e1 preservation; new-family/wrong-operation/format/context refusal",
+    "bound_cases": [
+      [
+        "behaviour::client_capability::m_08_c_1_cases::map_closed_schema_and_operations_keep_open_qualified_ids",
+        "behaviour::client_capability::m_08_c_1_cases::legacy_three_wire_roundtrip_and_unrepresentable_key_refusal"
+      ],
+      [
+        "manifest::document::tests_mechanism_grammar::old_fixture_serializes_byte_identically_when_new_sections_absent"
+      ]
+    ],
+    "expected_counts": [
+      2,
+      1
+    ]
+  },
+  {
+    "id": "V5",
+    "claims": "actual affected registered schema generation",
+    "commands": [
+      "cargo xtask codegen",
+      "cargo xtask check-codegen",
+      "cargo xtask wire-diff"
+    ],
+    "expected": "separate exits; real C1 schema additions trigger codegen, Root staging-dependent gate; inherited index wire debt reported, not invented green",
+    "amendment": "actual new-family codegen impact, conditional3mechanical destinations only; prior red/global-tail limits preserved"
+  },
+  {
+    "id": "V6",
+    "claims": "scoped authored format and whitespace",
+    "recipes": [
+      "rustfmt --edition 2024 --config skip_children=true --check <exact changed authored C1 paths>",
+      "git diff --check"
+    ],
+    "expected": "separate exits, effective edition/toolchain checked first; preserve unrelated/generated debt"
+  },
+  {
+    "id": "V7",
+    "claims": "one built core executable for V3",
+    "commands": [
+      "cargo build --offline --locked -p vibe-cli --bin vibe"
+    ],
+    "condition": "only if no freshly bound same-subject executable exists; build once before both fixture phases",
+    "expected": "compile claim only; V3 supplies behavioral proof, no cold target/deployment"
+  }
+]

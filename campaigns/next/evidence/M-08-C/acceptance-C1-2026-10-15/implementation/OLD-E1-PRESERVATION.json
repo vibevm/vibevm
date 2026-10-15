@@ -1,0 +1,18 @@
+{
+  "scope": "13 exact current schemas/generated/corpus paths; must remain byte-identical after generation",
+  "files": {
+    "crates/vibe-wire/src/generated/adapter_plan/e1/error/mod.rs": "4b6593c62a0248652bda5ce9c0203459f76089e842ae97d77b13cd2b2433213f",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs": "317e23817a76eaecdad8014629540ca9753fc71ddd7308aa60ffaf97063ad50d",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/request/mod.rs": "212d1bef76fcf688e7b8574155ffb698bd40b3a409a961cc94acf2fc0662bf90",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/result/mod.rs": "265f2b7a9490df68787a36e662b16eb7e5f376a737197347af6246ae79e9c6dc",
+    "crates/vibe-wire/src/generated/adapter_plan/mod.rs": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+    "formats/corpora/adapter-plan/e1/currentness-unavailable.json": "4aa45c673cbfac6a14debadd5e7e0c65879f06ee6186fcea9751e382e3d303a6",
+    "formats/corpora/adapter-plan/e1/error.json": "b907587f8b2403e524ec3a9a6f7812894b9938e27aad4b04fbc0f9b51cc9cfc5",
+    "formats/corpora/adapter-plan/e1/plan.json": "5fd1cdbf3c903a29519daa818203cb102bfd093cea2a85ace72edffc15c658b4",
+    "formats/corpora/adapter-plan/e1/request.json": "ccd4d4c665a76af2c3a215e390e2fea5c6be9a72391cb19ed999ff141c375691",
+    "formats/corpora/adapter-plan/e1/session.json": "2e4507914d91f8b850cf9c56741ea1bbff9261768ce7197307d5829d34ae194a",
+    "schemas/adapter_plan/e1/error.jtd.json": "93d8757bcfb47ff0e21bd59112ccf72e62ca3fb1bba71b0c7f2e686b96c55bc9",
+    "schemas/adapter_plan/e1/request.jtd.json": "2286cb1299d48fa4330bf94dff025a888624fca760b796105b3402f003e2da07",
+    "schemas/adapter_plan/e1/result.jtd.json": "257803a972e8243f96eedadf8ad998bd84ffc33dbb8fd45d093aee1e7b8fe835"
+  }
+}

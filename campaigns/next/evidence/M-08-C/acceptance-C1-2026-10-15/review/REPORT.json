@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "task": "M-08-C.1",
+  "status": "boundedclear_source_required_V5_pending",
+  "source_findings": [],
+  "acceptance_ready": false,
+  "acceptance_performed": false,
+  "root_supplied_runtime": "succeeded/effects completed; candidate revision717, unreviewed",
+  "source_subject": {"files": 104, "manifest_matches": true, "stable_before_after": true, "private_evidence_stable": 4},
+  "full_coverage": {
+    "typed_manifest_requests": true,
+    "selected_registry_whole_map_admission": true,
+    "actual_upper_open_map_consumer": true,
+    "captured_source_currentness_and_provider_join": true,
+    "separate_new_wire_family": true,
+    "legacy_public_API_preserved": true,
+    "no_inferred_authority": true,
+    "C2_C3_not_implemented": true
+  },
+  "verification": {"distinct_final_cases": 13, "ignored": 0, "supporting_artifact_hashes_match": 122, "reviewer_reruns": false},
+  "same_binary": {"sha256": "95ca9a0b6b085a62cff4d27d5260bd97287ebbbd68156a1912602d2e6e56696d", "bytes": 499522232, "independent_current_hash_match": true, "phases": 6, "query_intervals": 12, "selected_effect_attempts": 0, "grant_absence_basis": "structural source inspection, not syscall count", "post_build_drift": "explicit test-only registry section and fixture; no intervening production rebuild"},
+  "compatibility": {"old_e1_raw_equal": 11, "old_e1_header_only_body_exact": 2, "existing_generated_header_only": 51, "native_e1_subjects_unchanged": 36, "read_only_subjects_unchanged": 44, "extra_initializer_paths_only_None": 9, "incidental_generated_outputs_unchanged": 5, "PROP054_prior_bytes_preserved": true},
+  "required_gate_blockers": [
+    {"gate": "check-codegen", "exit": 1, "cause": "run_codegen followed by worktree-versus-index git diff includes intended unaccepted generated delta", "action": "Root ordinary reviewed snapshot/index integration then actual pass; no staging-only workaround or fake receipt"},
+    {"gate": "wire-diff", "exit": 1, "cause": "preexisting index/e1 repomd generator1.0.0 versus current writer1.1.0", "epoch_tail_executed": false, "baseline_confirmed": ["f676286eff01ee058eeb6d23b5dd9ec1848d57ab", "51c7472e3e435dfe4c0bf601c5f99c61447e05be"], "index_files_unchanged": 18, "action": "Use incumbent journal replay/project/write_to into owned scratch; confirm sole repomd delta; narrowly publish derived artifact, then actual checks"}
+  ],
+  "repair_direction": {
+    "existing_repair_CLI": false,
+    "check_command": "cargo xtask rebuild --check formats/corpora/index/e1",
+    "public_API": ["vibe_index::journal::default_dir", "vibe_index::journal::replay", "vibe_index::journal::project", "vibe_index::index::Index::write_to", "vibe_index::index::memory::WriteCtx"],
+    "time_input": "index.generated_at from journal fold",
+    "version_source": "default_generator uses env!(CARGO_PKG_VERSION), workspace1.1.0",
+    "expected_write_scope": "formats/corpora/index/e1/repomd.json only after exact scratch comparison",
+    "forbidden_substitutes": ["reindex", "journal mutation", "test normalization", "new product repair framework"],
+    "reviewer_created_or_ran_writer": false
+  },
+  "next": "Root handles narrow generated-catalog restoration and actual required V5 outcomes; source review clear does not replace requireObservedPass",
+  "artifacts": ["REPORT.md", "REPORT.json", "sourcehashes.json"]
+}

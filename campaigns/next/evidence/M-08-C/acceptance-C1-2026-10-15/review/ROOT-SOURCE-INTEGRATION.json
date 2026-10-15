@@ -1,0 +1,8 @@
+{
+  "commit": "57e6dd64ebf0a2cc06d241bc68b2c2d699492c80",
+  "source_files": 104,
+  "source_review": "bounded clear",
+  "task_acceptance": false,
+  "required_V5": "pending; original 0/1/1 retained",
+  "accepted_count": 81
+}

@@ -1,0 +1,9 @@
+{
+  "binary": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+  "sha256": "aac0bd9f007e90296d79aeb8906ec678f943b608891059ef33a6d63f1314f6dc",
+  "argv": [
+    "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+    "codegen"
+  ],
+  "exit": 1
+}

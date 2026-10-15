@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "cargo",
+    "--locked",
+    "--offline",
+    "xtask",
+    "check-codegen"
+  ],
+  "exit": 0,
+  "seconds": 15.431658029556274,
+  "raw_log": "/fast/git/v/research/2026-10-15-m08c1-v5-supplement/1-check-codegen.raw.log",
+  "raw_log_sha256": "fdca5c53ffb2354af05c755976a79bdc229dda331247995b74e7336c08fd33ce",
+  "subject_drift": {
+    "C1": [],
+    "corpus": [],
+    "generated": []
+  }
+}
