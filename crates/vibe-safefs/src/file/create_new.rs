@@ -100,6 +100,29 @@ impl Project {
         name: &str,
         bytes: &[u8],
     ) -> Result<EntryProof, PublishError> {
+        self.publish_new_proved_in_with_mode(directory, name, bytes, None)
+    }
+
+    /// Retain an exact mode on the originating stage before create-new
+    /// publication. Existing occupants still refuse, including equal bytes.
+    pub fn publish_new_in_with_mode(
+        &self,
+        directory: &Pinned,
+        name: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+    ) -> Result<(), PublishError> {
+        self.publish_new_proved_in_with_mode(directory, name, bytes, unix_mode)
+            .map(|_| ())
+    }
+
+    fn publish_new_proved_in_with_mode(
+        &self,
+        directory: &Pinned,
+        name: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+    ) -> Result<EntryProof, PublishError> {
         let before = |error: anyhow::Error| PublishError::before(Vec::new(), error);
         ensure_safe_component(name).map_err(&before)?;
         // Cheap, honest early refusal with a legible diagnostic. It is NOT
@@ -117,6 +140,19 @@ impl Project {
                 return Err(before(error));
             }
         };
+        if let Err(error) = super::stable::set_unix_mode(&std_file, unix_mode) {
+            drop(std_file);
+            if let Err(cleanup) = directory.dir.remove_file(&staged_name) {
+                return Err(PublishError::possibly(
+                    Vec::new(),
+                    anyhow::anyhow!(
+                        "mode preparation failed: {error}; owned stage {} survives: {cleanup}; destination was not published",
+                        directory.join(&staged_name).display()
+                    ),
+                ));
+            }
+            return Err(before(error.into()));
+        }
         let written = std_file
             .write_all(bytes)
             .and_then(|()| std_file.flush())
@@ -184,7 +220,17 @@ impl Project {
             .map_err(&possibly)?
         {
             Some(visible)
-                if visible.bytes.as_slice() == bytes && proof.matches_snapshot(&visible) => {}
+                if visible.bytes.as_slice() == bytes
+                    && proof.matches_snapshot(&visible)
+                    && super::stable::mode_matches(visible.unix_mode, unix_mode) => {}
+            Some(visible)
+                if visible.bytes.as_slice() == bytes && proof.matches_snapshot(&visible) =>
+            {
+                return Err(possibly(anyhow::anyhow!(
+                    "published file `{}` mode differs from the retained requested mode",
+                    directory.join(name).display()
+                )));
+            }
             Some(visible) if visible.bytes.as_slice() == bytes => {
                 return Err(possibly(anyhow::anyhow!(
                     "published file `{}` no longer identifies the originating staging object; identical bytes do not prove ownership",

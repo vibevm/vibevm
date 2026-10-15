@@ -1836,3 +1836,11 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/client-capability/e1"
 sunset = "none"
+
+[format.deploy-generic-state]
+epoch = 1
+schema = "schemas/deploy_generic_state.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/deploy-generic-state/e1"
+sunset = "none"

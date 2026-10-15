@@ -24,6 +24,7 @@ pub(super) fn resume_inverses(
     for selected in resolved {
         let home = home_of(execution, &selected.target.id);
         let _deployment = state.lock_deployment(&home)?;
+        state.require_legacy_state(&home)?;
         let Some(marker) = state.read_inverse(&home)? else {
             continue;
         };

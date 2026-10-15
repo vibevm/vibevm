@@ -61,6 +61,7 @@ pub enum FormatId {
     CompilerTraceIndex,
     Config,
     DeployCheckpoints,
+    DeployGenericState,
     DeployIntent,
     DeployInverse,
     DeployLockResources,

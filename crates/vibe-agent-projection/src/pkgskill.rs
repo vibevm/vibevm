@@ -46,6 +46,7 @@ pub use projection::{
     reconcile_project_skill_binding, reconcile_vanished_project_skill_bindings,
     recover_project_skill_bindings,
 };
+pub use receipt::adoption::{CoordinatedSkills, SkillDonor};
 
 /// The vibe-skill projection layer's failure surface (PROP-018 §2.5):
 /// reading a skill source, writing the projection into an agent's skills
@@ -231,6 +232,32 @@ pub fn install_package_skill_selecting(
             reason: error.to_string(),
         }
     })?;
+    let donor_project = if scope == Scope::Project {
+        project_root
+            .map(vibe_safefs::Project::open)
+            .transpose()
+            .map_err(|e| PackageSkillError::UnsafePath {
+                path: target.clone(),
+                reason: e.to_string(),
+            })?
+    } else {
+        None
+    };
+    let _donor_guard = donor_project
+        .as_ref()
+        .filter(|_| !dry_run)
+        .map(|p| p.lock("package-skills.lock"))
+        .transpose()
+        .map_err(|e| PackageSkillError::UnsafePath {
+            path: target.clone(),
+            reason: e.to_string(),
+        })?;
+    if let Some(p) = &donor_project {
+        receipt::adoption::refuse_hold(p).map_err(|e| PackageSkillError::UnsafePath {
+            path: target.clone(),
+            reason: e.to_string(),
+        })?;
+    }
     let path_str = machine_json_path(&target);
 
     let source_exists = source
@@ -338,6 +365,32 @@ pub fn uninstall_package_skill(
             reason: error.to_string(),
         }
     })?;
+    let donor_project = if scope == Scope::Project {
+        project_root
+            .map(vibe_safefs::Project::open)
+            .transpose()
+            .map_err(|e| PackageSkillError::UnsafePath {
+                path: target.clone(),
+                reason: e.to_string(),
+            })?
+    } else {
+        None
+    };
+    let _donor_guard = donor_project
+        .as_ref()
+        .filter(|_| !dry_run)
+        .map(|p| p.lock("package-skills.lock"))
+        .transpose()
+        .map_err(|e| PackageSkillError::UnsafePath {
+            path: target.clone(),
+            reason: e.to_string(),
+        })?;
+    if let Some(p) = &donor_project {
+        receipt::adoption::refuse_hold(p).map_err(|e| PackageSkillError::UnsafePath {
+            path: target.clone(),
+            reason: e.to_string(),
+        })?;
+    }
     let path_str = machine_json_path(&target);
     let exists = target
         .try_exists()

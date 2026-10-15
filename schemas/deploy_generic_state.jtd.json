@@ -1,0 +1,365 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    }
+  },
+  "metadata": {
+    "x-wire-order": [
+      "schema",
+      "committed",
+      "pending"
+    ],
+    "description": "Closed host-readable deployment ownership and recovery sidecar; blob references contain no payload bodies.",
+    "rustOptions": {
+      "package": "vibe_wire::deploy_generic_state"
+    },
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS"
+    }
+  },
+  "optionalProperties": {
+    "committed": {
+      "ref": "binding",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "pending": {
+      "ref": "binding",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "blob": {
+      "properties": {
+        "digest": {
+          "type": "string"
+        },
+        "bytes": {
+          "type": "uint32"
+        },
+        "mode": {
+          "type": "uint32"
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "digest",
+          "bytes",
+          "mode"
+        ]
+      }
+    },
+    "value": {
+      "discriminator": "kind",
+      "mapping": {
+        "absent": {
+          "properties": {}
+        },
+        "present": {
+          "properties": {
+            "blob": {
+              "ref": "blob"
+            }
+          }
+        }
+      }
+    },
+    "before": {
+      "discriminator": "kind",
+      "mapping": {
+        "absent": {
+          "properties": {}
+        },
+        "retained": {
+          "properties": {
+            "blob": {
+              "ref": "blob"
+            }
+          }
+        },
+        "unavailable": {
+          "properties": {
+            "reason": {
+              "enum": [
+                "legacy-no-before-state"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            }
+          }
+        }
+      }
+    },
+    "resource": {
+      "properties": {
+        "scope": {
+          "enum": [
+            "project",
+            "user"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "destination": {
+          "type": "string"
+        },
+        "key": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "operation": {
+          "enum": [
+            "file",
+            "json-member",
+            "toml-member"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "desired": {
+          "ref": "value"
+        },
+        "before": {
+          "ref": "before"
+        },
+        "progress": {
+          "enum": [
+            "not-started",
+            "uncertain",
+            "completed"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "scope",
+          "destination",
+          "key",
+          "operation",
+          "desired",
+          "before",
+          "progress"
+        ]
+      }
+    },
+    "pins": {
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "provider_version": {
+          "type": "string"
+        },
+        "provider_digest": {
+          "type": "string"
+        },
+        "declaration": {
+          "type": "string"
+        },
+        "declaration_digest": {
+          "type": "string"
+        },
+        "descriptor": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "source_digest": {
+          "type": "string"
+        },
+        "descriptor_digest": {
+          "type": "string"
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "provider",
+          "provider_version",
+          "provider_digest",
+          "declaration",
+          "declaration_digest",
+          "descriptor",
+          "source",
+          "source_digest",
+          "descriptor_digest"
+        ]
+      }
+    },
+    "transfer": {
+      "properties": {
+        "family": {
+          "enum": [
+            "deployment",
+            "package-skill",
+            "standalone-skill"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "donor_id": {
+          "type": "string"
+        },
+        "donor_root_identity": {
+          "type": "string"
+        },
+        "receipt_digest": {
+          "type": "string"
+        },
+        "hold_id": {
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "held",
+            "retired",
+            "restoring",
+            "restored"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "receipt_blob": {
+          "ref": "blob"
+        },
+        "resources": {
+          "elements": {
+            "ref": "resource"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "family",
+          "donor_id",
+          "donor_root_identity",
+          "receipt_digest",
+          "hold_id",
+          "phase",
+          "receipt_blob",
+          "resources"
+        ]
+      }
+    },
+    "binding": {
+      "properties": {
+        "deployment": {
+          "type": "string"
+        },
+        "generation": {
+          "type": "uint32"
+        },
+        "plan_hash": {
+          "type": "string"
+        },
+        "semantics": {
+          "enum": [
+            "closed-file-config/1"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "semantics_digest": {
+          "type": "string"
+        },
+        "grant_subject": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "apply",
+            "upgrade",
+            "cleanup",
+            "inverse",
+            "recovery",
+            "adoption",
+            "revocation"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "pins": {
+          "ref": "pins"
+        },
+        "resources": {
+          "elements": {
+            "ref": "resource"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "revoked": {
+          "type": "boolean"
+        },
+        "phase": {
+          "enum": [
+            "prepared",
+            "intent",
+            "publication",
+            "checkpoint",
+            "receipt",
+            "committed"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "receipt_digest": {
+          "type": "string",
+          "nullable": true
+        },
+        "coordination_identity": {
+          "type": "string"
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "deployment",
+          "coordination_identity",
+          "generation",
+          "plan_hash",
+          "semantics",
+          "semantics_digest",
+          "grant_subject",
+          "operation",
+          "pins",
+          "resources",
+          "revoked",
+          "phase",
+          "receipt_digest",
+          "transfer"
+        ]
+      },
+      "optionalProperties": {
+        "transfer": {
+          "ref": "transfer",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}

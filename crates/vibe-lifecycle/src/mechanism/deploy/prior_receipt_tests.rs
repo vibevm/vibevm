@@ -285,6 +285,7 @@ fn apply_refuses_a_receipt_that_changed_after_the_pre_apply_epoch() {
         0,
     );
 
+    let preparation_calls = stale.calls().to_vec();
     // A concurrent run of the same deployment finishes generation 1.
     fixture.rebuild("updated-bytes");
     apply_selection(
@@ -316,7 +317,7 @@ fn apply_refuses_a_receipt_that_changed_after_the_pre_apply_epoch() {
     assert!(found.contains("generation 1"), "{found}");
     assert_eq!(
         stale.calls(),
-        ["plan"],
+        preparation_calls,
         "the stale provider was never asked to apply: {:?}",
         stale.calls(),
     );

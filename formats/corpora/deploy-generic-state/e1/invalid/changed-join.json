@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "committed": {
+    "deployment": "3333333333333333333333333333333333333333333333333333333333333333",
+    "generation": 0,
+    "plan_hash": "4444444444444444444444444444444444444444444444444444444444444444",
+    "semantics": "closed-file-config/1",
+    "semantics_digest": "c7017658d18ded83c7b66e2529f3acbb9c831ff0a92c0bb7b71152cb33fc1c13",
+    "grant_subject": "5555555555555555555555555555555555555555555555555555555555555555",
+    "operation": "apply",
+    "pins": {
+      "provider": "fixture",
+      "provider_version": "fixture",
+      "provider_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "declaration": "fixture",
+      "declaration_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "descriptor": "fixture",
+      "source": "fixture",
+      "source_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "descriptor_digest": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "resources": [
+      {
+        "scope": "project",
+        "destination": ".client/file",
+        "key": [],
+        "operation": "file",
+        "desired": {
+          "kind": "present",
+          "blob": {
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "bytes": 4,
+            "mode": 384
+          }
+        },
+        "before": {
+          "kind": "absent"
+        },
+        "progress": "completed"
+      }
+    ],
+    "revoked": false,
+    "phase": "committed",
+    "receipt_digest": "6666666666666666666666666666666666666666666666666666666666666666",
+    "coordination_identity": "fixture-arena"
+  },
+  "pending": {
+    "deployment": "8888888888888888888888888888888888888888888888888888888888888888",
+    "generation": 1,
+    "plan_hash": "4444444444444444444444444444444444444444444444444444444444444444",
+    "semantics": "closed-file-config/1",
+    "semantics_digest": "4bc05a35ae7147c308332968b36e59457d2f0fdafeb34859abb831cffa9dbaad",
+    "grant_subject": "5555555555555555555555555555555555555555555555555555555555555555",
+    "operation": "cleanup",
+    "pins": {
+      "provider": "fixture",
+      "provider_version": "fixture",
+      "provider_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "declaration": "fixture",
+      "declaration_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "descriptor": "fixture",
+      "source": "fixture",
+      "source_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "descriptor_digest": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "resources": [
+      {
+        "scope": "project",
+        "destination": ".client/file",
+        "key": [],
+        "operation": "file",
+        "desired": {
+          "kind": "absent"
+        },
+        "before": {
+          "kind": "retained",
+          "blob": {
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "bytes": 4,
+            "mode": 384
+          }
+        },
+        "progress": "uncertain"
+      }
+    ],
+    "revoked": false,
+    "phase": "publication",
+    "receipt_digest": null,
+    "coordination_identity": "fixture-arena"
+  }
+}

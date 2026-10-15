@@ -5,9 +5,9 @@ use vibe_agent_projection::client_capabilities::ClientCapability;
 use vibe_core::manifest::*;
 
 const CLOCK: &str = "2026-10-15T00:00:00Z";
-struct Authority {
-    selected: Mutex<SelectedObservation>,
-    control: Mutex<ControlObservation>,
+pub(super) struct Authority {
+    pub(super) selected: Mutex<SelectedObservation>,
+    pub(super) control: Mutex<ControlObservation>,
 }
 impl GenericAuthority for Authority {
     fn selected_current(&self, _: &str) -> Result<SelectedObservation, String> {
@@ -17,12 +17,17 @@ impl GenericAuthority for Authority {
         Ok(self.control.lock().unwrap().clone())
     }
 }
-struct Fixture {
-    dir: tempfile::TempDir,
-    host: GenericHost,
-    authority: Arc<Authority>,
+pub(super) struct Fixture {
+    pub(super) dir: tempfile::TempDir,
+    pub(super) host: GenericHost,
+    pub(super) authority: Arc<Authority>,
 }
-fn binding(scope: ClientScope, shape: ClientShape, path: &str, keys: &[&str]) -> ClientBinding {
+pub(super) fn binding(
+    scope: ClientScope,
+    shape: ClientShape,
+    path: &str,
+    keys: &[&str],
+) -> ClientBinding {
     ClientBinding {
         scope,
         shape,
@@ -36,7 +41,7 @@ fn binding(scope: ClientScope, shape: ClientShape, path: &str, keys: &[&str]) ->
         }],
     }
 }
-fn request(bindings: Vec<ClientBinding>) -> ClientRequest {
+pub(super) fn request(bindings: Vec<ClientBinding>) -> ClientRequest {
     ClientRequest {
         schema: 1,
         client_id: "org.example/new-client".into(),
@@ -62,7 +67,7 @@ fn protections() -> ProtectedControls {
     }
 }
 impl Fixture {
-    fn new(r: ClientRequest) -> Self {
+    pub(super) fn new(r: ClientRequest) -> Self {
         let dir = tempfile::tempdir().unwrap();
         for name in ["project", "user", "settings"] {
             std::fs::create_dir(dir.path().join(name)).unwrap();
@@ -103,7 +108,7 @@ impl Fixture {
             authority,
         }
     }
-    fn map(&self) -> ClientCapabilities {
+    pub(super) fn map(&self) -> ClientCapabilities {
         let o = self.authority.selected.lock().unwrap().clone();
         ClientCapabilities::admit([ClientCapability {
             provider: o.identity.provider,
@@ -113,27 +118,27 @@ impl Fixture {
         }])
         .unwrap()
     }
-    fn admitted(&self, payloads: Vec<GenericPayload>) -> AdmittedClient {
+    pub(super) fn admitted(&self, payloads: Vec<GenericPayload>) -> AdmittedClient {
         let map = self.map();
         let id = map.rows().keys().next().unwrap();
         self.host
             .admit_payload(self.host.capture(&map, id).unwrap(), payloads)
             .unwrap()
     }
-    fn plan(&self, payloads: Vec<GenericPayload>) -> GenericPlan {
+    pub(super) fn plan(&self, payloads: Vec<GenericPayload>) -> GenericPlan {
         self.host.plan(&self.admitted(payloads)).unwrap()
     }
-    fn write(&self, scope: ClientScope, path: &str, bytes: &[u8]) {
+    pub(super) fn write(&self, scope: ClientScope, path: &str, bytes: &[u8]) {
         self.host.root(scope).write_atomic(path, bytes).unwrap();
     }
-    fn bytes(&self, scope: ClientScope, path: &str) -> Vec<u8> {
+    pub(super) fn bytes(&self, scope: ClientScope, path: &str) -> Vec<u8> {
         self.host
             .root(scope)
             .read_file_bounded(path, 4 * 1024 * 1024)
             .unwrap()
             .unwrap()
     }
-    fn census(&self) -> BTreeMap<String, String> {
+    pub(super) fn census(&self) -> BTreeMap<String, String> {
         census(self.dir.path())
     }
 }
@@ -175,7 +180,7 @@ fn unchanged(f: &Fixture, before: &BTreeMap<String, String>) {
     }
     assert_eq!(*before, after);
 }
-fn file_fixture() -> Fixture {
+pub(super) fn file_fixture() -> Fixture {
     Fixture::new(request(vec![binding(
         ClientScope::Project,
         ClientShape::File,
@@ -285,7 +290,7 @@ fn absent_wrong_broadened_and_changed_plans_have_zero_effects() {
             0 => p.resources.push(p.resources[0].clone()),
             1 => p.resources[0].operation = ClientOperation::ProjectTree,
             2 => p.admitted.capture.observation.identity.descriptor_digest = "b".repeat(64),
-            3 => p.documents[0].after.push(1),
+            3 => p.documents[0].after.as_mut().unwrap().push(1),
             4 => p.target.push('x'),
             _ => p.roots[0].push('x'),
         };

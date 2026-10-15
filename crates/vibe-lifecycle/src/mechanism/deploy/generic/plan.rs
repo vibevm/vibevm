@@ -14,7 +14,53 @@ pub struct GenericResource {
     pub operation: ClientOperation,
     pub desired_digest: String,
 }
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(super) struct GenericFootprint {
+    pub scope: ClientScope,
+    pub destination: String,
+    pub key: Vec<String>,
+    pub operation: ClientOperation,
+}
+pub(super) trait ResourceShape {
+    fn footprint(&self) -> GenericFootprint;
+}
+impl ResourceShape for GenericResource {
+    fn footprint(&self) -> GenericFootprint {
+        GenericFootprint {
+            scope: self.scope,
+            destination: self.destination.clone(),
+            key: self.key.clone(),
+            operation: self.operation,
+        }
+    }
+}
+impl ResourceShape for GenericFootprint {
+    fn footprint(&self) -> GenericFootprint {
+        self.clone()
+    }
+}
 impl GenericResource {
+    pub(crate) fn owned(&self, host: &GenericHost) -> String {
+        self.footprint().owned(host)
+    }
+    pub(crate) fn lock(&self, host: &GenericHost) -> String {
+        self.footprint().lock(host)
+    }
+    pub(crate) fn locks(&self, host: &GenericHost) -> Vec<String> {
+        self.footprint().locks(host)
+    }
+}
+impl GenericFootprint {
+    fn with_digest(self, digest: String) -> GenericResource {
+        GenericResource {
+            scope: self.scope,
+            destination: self.destination,
+            key: self.key,
+            operation: self.operation,
+            desired_digest: digest,
+        }
+    }
+
     pub(crate) fn owned(&self, host: &GenericHost) -> String {
         // JSON framing distinguishes literal slashes/dots and segment boundaries.
         format!(
@@ -68,7 +114,7 @@ pub(super) struct Document {
     pub scope: ClientScope,
     pub destination: String,
     pub before: Option<StableFileSnapshot>,
-    pub after: Vec<u8>,
+    pub after: Option<Vec<u8>>,
 }
 #[derive(Debug, Clone, PartialEq)]
 pub struct GenericPlan {
@@ -81,27 +127,89 @@ pub struct GenericPlan {
     pub(super) receipts: Vec<(String, DeployReceipt)>,
     pub(super) target: String,
     pub(super) state_identity: Option<String>,
+    pub(super) coordination_identity: String,
+    pub(super) migration: bool,
+    pub(super) transfer: Option<adoption::TransferPlan>,
+    pub(super) removed: Vec<GenericResource>,
+    pub(super) retained_state:
+        Option<vibe_wire::generated::deploy_generic_state::DeployGenericState>,
 }
 impl GenericPlan {
+    pub fn target(&self) -> &str {
+        &self.target
+    }
     pub fn resources(&self) -> &[GenericResource] {
         &self.resources
+    }
+    /// Explicit removal footprint, included in the exact upgrade grant.
+    pub fn removed_resources(&self) -> &[GenericResource] {
+        &self.removed
+    }
+    /// Complete document effects, including whole-file absence.
+    pub fn desired_documents(&self) -> impl Iterator<Item = (ClientScope, &str, Option<&[u8]>)> {
+        self.documents
+            .iter()
+            .map(|d| (d.scope, d.destination.as_str(), d.after.as_deref()))
     }
     pub fn payloads(&self) -> &[GenericPayload] {
         &self.admitted.payloads
     }
     /// Full resulting document content, including active MCP launch settings.
     pub fn documents(&self) -> impl Iterator<Item = (ClientScope, &str, &[u8])> {
-        self.documents
-            .iter()
-            .map(|d| (d.scope, d.destination.as_str(), d.after.as_slice()))
+        self.documents.iter().filter_map(|d| {
+            d.after
+                .as_deref()
+                .map(|bytes| (d.scope, d.destination.as_str(), bytes))
+        })
     }
-    /// Ephemeral typed host plan identity, not a persistent grant format.
+    /// Canonical durable subject. Process-local capture IDs and filesystem
+    /// handles remain freshness checks, never durable identity material.
     pub fn identity(&self) -> String {
-        digest(format!("generic-host-plan/1:{self:?}").as_bytes())
+        let documents = self
+            .documents
+            .iter()
+            .map(|d| {
+                (
+                    d.scope,
+                    &d.destination,
+                    d.before.as_ref().map(|b| (&b.sha256, b.size, b.unix_mode)),
+                    d.after.as_ref().map(|b| digest(b)),
+                )
+            })
+            .collect::<Vec<_>>();
+        digest(
+            &encoded(&(
+                "generic-host-plan/2",
+                &self.admitted.capture.observation.identity,
+                &self.admitted.capture.observation.request,
+                &self.control,
+                &self.roots,
+                &self.protected,
+                &self.resources,
+                documents,
+                &self.receipts,
+                &self.target,
+                &self.coordination_identity,
+                self.migration,
+                self.transfer.as_ref().map(|t| {
+                    (
+                        &t.family,
+                        &t.donor_id,
+                        &t.donor_root_identity,
+                        digest(&t.receipt),
+                        &t.resources,
+                    )
+                }),
+                &self.removed,
+                &self.retained_state,
+            ))
+            .expect("serializable closed plan"),
+        )
     }
     pub(super) fn locks(&self, host: &GenericHost) -> Vec<String> {
         self.resources
             .iter()
+            .chain(&self.removed)
             .flat_map(|r| r.locks(host))
             .collect::<std::collections::BTreeSet<_>>()
             .into_iter()
@@ -190,6 +298,23 @@ impl GenericHost {
             .transpose()
     }
     pub fn plan(&self, admitted: &AdmittedClient) -> Result<GenericPlan, GenericError> {
+        self.plan_mode(admitted, false, None)
+    }
+    /// Explicit migration of C2 ownership with independently supplied closed
+    /// semantics. Equal unowned bytes never qualify; original before-state is
+    /// unavailable, even though current owned bytes can be retained.
+    pub fn prepare_migration(
+        &self,
+        admitted: &AdmittedClient,
+    ) -> Result<GenericPlan, GenericError> {
+        self.plan_mode(admitted, true, None)
+    }
+    pub(super) fn plan_mode(
+        &self,
+        admitted: &AdmittedClient,
+        migration: bool,
+        transfer: Option<adoption::TransferPlan>,
+    ) -> Result<GenericPlan, GenericError> {
         self.current(&admitted.capture)?;
         let request = &admitted.capture.observation.request;
         request.validate().map_err(refuse)?;
@@ -202,10 +327,47 @@ impl GenericHost {
         let state_identity = self.state_identity()?;
         let receipts = self.receipts()?;
         let home = self.home(&target);
+        let mut retained = false;
+        let mut retained_state = None;
+        if let Some(state) = DeployState::observe_bound(&self.settings).map_err(refuse)? {
+            if let Some(record) = state.read_generic(&home).map_err(refuse)? {
+                retained = true;
+                retained_state = Some(record.clone());
+                if record.pending.is_some() {
+                    return Err(refuse("pending generic operation requires recovery"));
+                }
+                if let Some(c) = record.committed {
+                    if c.revoked {
+                        return Err(refuse("receipt revoked"));
+                    }
+                    if c.coordination_identity != self.arena_identity()? {
+                        return Err(refuse("coordination arena identity mismatch"));
+                    }
+                }
+            }
+        }
         let prior = receipts
             .iter()
             .find(|(id, _)| id == home.id())
             .map(|(_, r)| r);
+        if prior.is_some_and(|r| {
+            r.status == vibe_wire::generated::deploy_receipt::ReceiptStatus::RolledBack
+        }) {
+            return Err(refuse("inactive receipt proves no generic ownership"));
+        }
+        if migration && transfer.is_none() && (retained || prior.is_none()) {
+            return Err(refuse(
+                "migration requires an exact legacy receipt without retained state",
+            ));
+        }
+        if !migration && prior.is_some() && !retained {
+            return Err(refuse(
+                "legacy generic receipt requires explicit closed-semantics migration",
+            ));
+        }
+        if transfer.is_some() && (prior.is_some() || retained) {
+            return Err(refuse("recipient already owns state"));
+        }
         let mut resources = Vec::new();
         let mut values = Vec::new();
         // First judge authored binding footprints, including tree containers.
@@ -288,7 +450,7 @@ impl GenericHost {
                 .preflight_set_against(&paths, &protected)
                 .map_err(refuse)?;
         }
-        super::super::ownership::refuse_generic_foreign(&receipts, home.id(), self, &resources)
+        super::super::ownership::refuse_generic_foreign(&receipts.iter().filter(|(id,_)| !transfer.as_ref().is_some_and(|t|t.family == vibe_wire::generated::deploy_generic_state::TransferFamily::Deployment && t.donor_id == *id)).cloned().collect::<Vec<_>>(), home.id(), self, &resources)
             .map_err(refuse)?;
         // C3 owns resource-set migration. Existing exact sets may reconcile.
         if let Some(prior) = prior {
@@ -301,8 +463,21 @@ impl GenericHost {
                 .iter()
                 .map(|r| r.owned(self))
                 .collect::<std::collections::BTreeSet<_>>();
-            if old != new {
+            if migration && old != new {
                 return Err(refuse("generic resource-set upgrades require C3 admission"));
+            }
+        }
+        if let Some(t) = &transfer {
+            if resources.len() != t.resources.len()
+                || resources.iter().any(|r| {
+                    !t.resources
+                        .iter()
+                        .any(|o| same_closed_resource(o, r) && o.desired_digest == r.desired_digest)
+                })
+            {
+                return Err(refuse(
+                    "closed semantics do not match exact donor ownership",
+                ));
             }
         }
         let mut documents: Vec<Document> = vec![];
@@ -320,30 +495,123 @@ impl GenericHost {
                 documents.push(Document {
                     scope: r.scope,
                     destination: r.destination.clone(),
-                    after: before.as_ref().map_or_else(Vec::new, |b| b.bytes.clone()),
+                    after: before.as_ref().map(|b| b.bytes.clone()),
                     before,
                 });
                 documents.len() - 1
             };
             let doc = &mut documents[index];
             let found = observe_value(doc.before.as_ref().map(|b| b.bytes.as_slice()), r)?;
-            let owned = prior.and_then(|receipt| {
-                receipt
-                    .resources
-                    .iter()
-                    .find(|o| o.resource == r.owned(self))
-            });
+            let donor_owned = transfer
+                .as_ref()
+                .and_then(|t| t.resources.iter().find(|o| same_closed_resource(o, r)))
+                .map(|o| vibe_wire::generated::deploy_receipt::OwnedResource {
+                    resource: r.owned(self),
+                    post_digest: o.desired_digest.clone(),
+                });
+            let owned = prior
+                .and_then(|receipt| {
+                    receipt
+                        .resources
+                        .iter()
+                        .find(|o| o.resource == r.owned(self))
+                })
+                .or(donor_owned.as_ref());
+            if migration && owned.is_none_or(|o| o.post_digest != r.desired_digest) {
+                return Err(refuse("migration semantics do not match old ownership"));
+            }
             match (found, owned) {
                 (None, None) => {}
                 (Some(found), Some(owned)) if digest(&found) == owned.post_digest => {}
                 _ => return Err(refuse("foreign occupant or stale owned value")),
             }
-            doc.after = reconcile(&doc.after, r, v)?;
-            if doc.after.len() > CAP {
+            doc.after = Some(reconcile(doc.after.as_deref().unwrap_or_default(), r, v)?);
+            if doc.after.as_ref().is_some_and(|b| b.len() > CAP) {
                 return Err(refuse("resulting document exceeds bounded host budget"));
             }
         }
+        let mut removed = Vec::new();
+        if let Some(record) = &retained_state {
+            let c = record
+                .committed
+                .as_ref()
+                .ok_or_else(|| refuse("missing committed semantics"))?;
+            let receipt = prior.ok_or_else(|| refuse("missing joined receipt"))?;
+            if c.receipt_digest != Some(digest(&encoded(receipt)?))
+                || c.generation != receipt.generation
+            {
+                return Err(refuse("changed receipt join"));
+            }
+            if c.transfer.as_ref().is_some_and(|t| {
+                t.phase == vibe_wire::generated::deploy_generic_state::TransferPhase::Restored
+            }) {
+                return Err(refuse("recipient relinquished to donor"));
+            }
+            for row in &c.resources {
+                let r = inverse::resource(row);
+                if !receipt
+                    .resources
+                    .iter()
+                    .any(|o| o.resource == r.owned(self))
+                {
+                    continue;
+                }
+                if resources.iter().any(|n| n.owned(self) == r.owned(self)) {
+                    continue;
+                }
+                self.protect(r.scope, &r.destination)?;
+                if resources.iter().any(|n| {
+                    n.scope == r.scope
+                        && overlap(&n.destination, &r.destination)
+                        && (n.destination != r.destination || key_overlap(&n.key, &r.key))
+                }) {
+                    return Err(refuse("upgrade old/new footprints overlap"));
+                }
+                let index = if let Some(i) = documents
+                    .iter()
+                    .position(|d| d.scope == r.scope && d.destination == r.destination)
+                {
+                    i
+                } else {
+                    let before = self
+                        .root(r.scope)
+                        .read_file_snapshot_bounded(&r.destination, CAP)
+                        .map_err(refuse)?;
+                    documents.push(Document {
+                        scope: r.scope,
+                        destination: r.destination.clone(),
+                        after: before.as_ref().map(|b| b.bytes.clone()),
+                        before,
+                    });
+                    documents.len() - 1
+                };
+                let doc = &mut documents[index];
+                let found = observe_value(doc.before.as_ref().map(|b| b.bytes.as_slice()), &r)?;
+                let owned = receipt
+                    .resources
+                    .iter()
+                    .find(|o| o.resource == r.owned(self))
+                    .unwrap();
+                if found.as_ref().map(|b| digest(b)).as_ref() != Some(&owned.post_digest) {
+                    return Err(refuse("removed resource drift"));
+                }
+                doc.after = restore_value(doc.after.as_deref(), &r, None)?;
+                removed.push(r.with_digest(owned.post_digest.clone()));
+            }
+        }
         self.current(&admitted.capture)?;
+        if migration {
+            for document in &mut documents {
+                document.after = Some(
+                    document
+                        .before
+                        .as_ref()
+                        .ok_or_else(|| refuse("migration destination missing"))?
+                        .bytes
+                        .clone(),
+                );
+            }
+        }
         if self.authority.current_control().map_err(refuse)? != control {
             return Err(refuse("policy changed during plan"));
         }
@@ -351,6 +619,11 @@ impl GenericHost {
             return Err(refuse("state home changed during plan"));
         }
         Ok(GenericPlan {
+            migration,
+            transfer,
+            removed,
+            retained_state,
+            coordination_identity: self.arena_identity()?,
             state_identity,
             admitted: admitted.clone(),
             control,
@@ -362,7 +635,24 @@ impl GenericHost {
             target,
         })
     }
-    fn protect(&self, scope: ClientScope, destination: &str) -> Result<(), GenericError> {
+    pub(super) fn protect(
+        &self,
+        scope: ClientScope,
+        destination: &str,
+    ) -> Result<(), GenericError> {
+        if overlap(destination, ".vibe")
+            || destination
+                .split('/')
+                .any(|part| part.ends_with(".vibe-skill-receipt.toml"))
+        {
+            return Err(refuse("protected donor ownership state"));
+        }
+        if vibe_safefs::paths_overlap(
+            &self.root(scope).root_path().join(destination),
+            &self.arena().root_path().join(".vibe"),
+        ) {
+            return Err(refuse("protected coordination arena lock store"));
+        }
         for p in self.protected.rows().filter(|p| p.scope == scope) {
             if overlap(destination, &p.relative) {
                 return Err(refuse("protected host control resource or ancestor"));
@@ -486,8 +776,9 @@ fn toml_doc(bytes: &[u8]) -> Result<toml::Value, GenericError> {
 }
 pub(super) fn observe_value(
     bytes: Option<&[u8]>,
-    r: &GenericResource,
+    r: &impl ResourceShape,
 ) -> Result<Option<Vec<u8>>, GenericError> {
+    let r = r.footprint();
     let Some(bytes) = bytes else { return Ok(None) };
     if r.key.is_empty() {
         return Ok(Some(bytes.to_vec()));
@@ -529,9 +820,10 @@ pub(super) fn observe_value(
 }
 fn reconcile(
     bytes: &[u8],
-    r: &GenericResource,
+    r: &impl ResourceShape,
     p: &GenericPayload,
 ) -> Result<Vec<u8>, GenericError> {
+    let r = r.footprint();
     match p {
         GenericPayload::File(b) => Ok(b.clone()),
         GenericPayload::JsonMember(v) => {
@@ -566,4 +858,83 @@ fn reconcile(
         }
         _ => Err(refuse("unexpanded tree")),
     }
+}
+
+/// Restore/remove exactly one literal member while retaining current foreign
+/// neighbors. Whole-file absence is represented by None, never a digest.
+pub(super) fn restore_value(
+    bytes: Option<&[u8]>,
+    r: &impl ResourceShape,
+    desired: Option<&[u8]>,
+) -> Result<Option<Vec<u8>>, GenericError> {
+    let r = r.footprint();
+    if r.key.is_empty() {
+        return Ok(desired.map(<[u8]>::to_vec));
+    }
+    let bytes = bytes.unwrap_or_default();
+    if let Some(value) = desired {
+        let payload = match r.operation {
+            ClientOperation::ReconcileJsonMember => GenericPayload::JsonMember(json_doc(value)?),
+            ClientOperation::ReconcileTomlMember => GenericPayload::TomlMember(
+                toml_doc(value)?
+                    .get("value")
+                    .cloned()
+                    .ok_or_else(|| refuse("retained TOML value missing"))?,
+            ),
+            _ => return Err(refuse("unsupported retained operation")),
+        };
+        return reconcile(bytes, &r, &payload).map(Some);
+    }
+    match r.operation {
+        ClientOperation::ReconcileJsonMember => {
+            let mut doc = json_doc(bytes)?;
+            let mut at = &mut doc;
+            for key in &r.key[..r.key.len() - 1] {
+                let map = at
+                    .as_object_mut()
+                    .ok_or_else(|| refuse("scalar JSON ancestor"))?;
+                let Some(next) = map.get_mut(key) else {
+                    return Ok(Some(bytes.to_vec()));
+                };
+                at = next;
+            }
+            at.as_object_mut()
+                .ok_or_else(|| refuse("scalar JSON ancestor"))?
+                .remove(r.key.last().unwrap());
+            Ok(Some(serde_json::to_vec_pretty(&doc).map_err(refuse)?))
+        }
+        ClientOperation::ReconcileTomlMember => {
+            let mut doc = toml_doc(bytes)?;
+            let mut at = &mut doc;
+            for key in &r.key[..r.key.len() - 1] {
+                let map = at
+                    .as_table_mut()
+                    .ok_or_else(|| refuse("scalar TOML ancestor"))?;
+                let Some(next) = map.get_mut(key) else {
+                    return Ok(Some(bytes.to_vec()));
+                };
+                at = next;
+            }
+            at.as_table_mut()
+                .ok_or_else(|| refuse("scalar TOML ancestor"))?
+                .remove(r.key.last().unwrap());
+            Ok(Some(
+                toml::to_string_pretty(&doc).map_err(refuse)?.into_bytes(),
+            ))
+        }
+        _ => Err(refuse("unsupported retained operation")),
+    }
+}
+
+fn same_closed_resource(a: &GenericResource, b: &GenericResource) -> bool {
+    let file = |op| {
+        matches!(
+            op,
+            ClientOperation::ProjectFile | ClientOperation::ProjectTree
+        )
+    };
+    a.scope == b.scope
+        && a.destination == b.destination
+        && a.key == b.key
+        && (a.operation == b.operation || (file(a.operation) && file(b.operation)))
 }
