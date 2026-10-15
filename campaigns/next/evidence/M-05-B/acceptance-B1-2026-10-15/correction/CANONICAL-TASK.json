@@ -1,0 +1,230 @@
+{
+  "id": "M-05-B",
+  "tasks": [
+    {
+      "id": "M-05-B.1",
+      "title": "Implement one typed feature-effect algebra",
+      "goal": "Represent optional dependencies and forwarding without a second choices grammar.",
+      "read_paths": [
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-core/src/manifest/package/features.rs",
+        "crates/vibe-core/src/manifest/package/wire.rs",
+        "crates/vibe-core/src/manifest/package/capabilities.rs",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-core/src/manifest/package/deps.rs",
+        "crates/vibe-core/src/manifest/package/wire/requires.rs",
+        "crates/vibe-core/src/manifest/package/tests.rs",
+        "Cargo.toml",
+        "Cargo.lock",
+        "rust-toolchain.toml",
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs",
+        "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+        "crates/vibe-install/src/fetched.rs",
+        "crates/vibe-install/src/plan/fetch.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-core/src/manifest/package/",
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-resolver/src/features/",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs",
+        "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+        "crates/vibe-install/src/fetched.rs",
+        "crates/vibe-install/src/plan/fetch.rs"
+      ],
+      "steps": [
+        "Define stable dependency declaration IDs and local feature references under the permanent PROP-003 contract.",
+        "Implement effects for dependency activation, strong/weak target-feature requests, exported subskills and declared config values.",
+        "Keep source/version/link/visibility metadata once on dependency declarations; option aliases remain package-local."
+      ],
+      "positive_cases": [
+        "One effect set activates an optional dependency and forwards requested features."
+      ],
+      "negative_cases": [
+        "Undeclared target IDs, malformed qualified refs and weak-only activation without its dependency refuse or stay dormant as defined."
+      ],
+      "checks": [
+        "CORRECTION V1: rerun actual affected features::m_05_b_1_cases resolver --lib family and any changed core manifest::package::features::m_05_b_1_cases family via cargo test --offline --locked -p <crate> --lib <filter>; bind exact current names/nonzero counts before compilation. Reuse core proofs only if exact consumed source/dependency graph is unchanged; do not claim a fresh pass.",
+        "CORRECTION V2: separate cargo test --offline --locked -p vibe-resolver --lib m_05_a_2_cases::qualified_forwarding_first_slash_defect -- --exact and m_05_a_2_cases::exclusive_at_most_one_and_all_features_validation_defect -- --exact. Correct the superseded defect expectations; each expected one case. A rename requires an explicit old-to-new name mapping recorded before compilation.",
+        "CORRECTION V3 TO CREATE: cargo test --offline --locked -p vibe-install --lib plan::fetch::m_05_b_1_correction_cases; inline family in admitted plan/fetch.rs exercises actual full-manifest fetch/defer expansion boundary for undeclared default activation, dormant undeclared reference refusal and required dependency weak forwarding. Bind actual case names/nonzero denominator before compilation; no network/vendor effects.",
+        "CORRECTION V4 TO CREATE: cargo test --offline --locked -p vibe-orchestrator --lib document_analysis::preview::m_05_b_1_correction_cases; inline family in admitted preview.rs exercises actual preview full-manifest boundary for undeclared default/dormant references and required weak forwarding. Bind actual names/nonzero denominator before compilation.",
+        "CORRECTION V5: scoped rustfmt --edition 2024 --config skip_children=true --check for actual changed admitted Rust files; git diff --check; parse permanent PROP-003 XML, preserve old normative laws/history while explicitly superseding the two live defect-characterization assertions. Original 27 executed cases may be reused only with unchanged exact consumed sources/dependency graph; rerun affected old compatibility cases. Separate real exits/counts; no full suite, broad target discovery, schema/codegen/Lean."
+      ],
+      "acceptance": [
+        "Normalized algebra has no duplicated choices.requires dependency engine.",
+        "Legacy syntax lowers through one typed representation."
+      ],
+      "safe_stop": "Keep new grammar unpublished until its lowering and validation agree.",
+      "commit_subject": "feat(resolver): unify typed feature activation effects",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_b_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Dispatch binding: new core family lives under features module (proposed features/m_05_b_1_cases.rs or inline), new resolver family under features module (proposed features/m_05_b_1_cases.rs or inline). These are new tests, not existing passed cases. Bind concrete new names before compilation.",
+        "Full B1 only: keep all original steps, positive/negative cases, acceptance and safe_stop. No B2 constrained-group/domain implementation or B3 migration engine. Permanent PROP-003 source is updated by the actual managed writer.",
+        "Only necessary exports/registration changes inside admitted manifest/module owners; no dependency-version/Cargo.lock edits, schema/generator/shared output writes or new choices.requires grammar. Stop for exact owner amendment if integration needs another path.",
+        "Isolated worktree and private target; main C3 source and target remain untouched. Preserve metadata on one dependency declaration, and lower legacy feature syntax through the same typed algebra. Root integrates/revalidates actual affected consumers after C3.",
+        "Root review B1-F1/B1-F2 correction remains FULL original B1. Original eight-file candidate is unaccepted retained baseline, not accepted Git source. No criteria/safe-stop relaxation, B2/B3 implementation or second grammar/engine.",
+        "At the named current full-Manifest consumers, compose existing declaration normalization and shared effect evaluator with actual required/already-active dependency context. Keep table-only compatibility API for callers genuinely lacking declarations. Package-local metadata and aliases stay on one declaration.",
+        "The four added exact files are the only new correction source owners. Caller tests are inline under existing admitted fetch.rs/preview.rs, not permission for other fixtures or module files. No manifest/Cargo.lock/toolchain/dependency changes by default; ask Root for an essential additional owner.",
+        "Permanent PROP-003 must describe supersession of qualified-forwarding/all-features defect expectations, retaining historical receipts and unrelated normative laws. New caller families are TO CREATE, not preexisting passed evidence.",
+        "Fresh normal correction realm after old normally collected candidate/physical retirement; no old store replay/reset. Actual postclaim RuntimeJob basis and configured trusted terminal observation mandatory for candidate header. Findings wire enum values are satisfied/unsatisfied and not_started/completed/pending/unknown; completed local effects do not imply Root acceptance."
+      ]
+    },
+    {
+      "id": "M-05-B.2",
+      "title": "Add constrained groups and consumer resolution domains",
+      "goal": "Make semantic choices explicit while retaining environment and target roles.",
+      "read_paths": [
+        "crates/vibe-core/src/manifest/package/features.rs",
+        "crates/vibe-core/src/manifest/package/wire.rs",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-core/src/manifest/package.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-core/src/manifest/package/",
+        "crates/vibe-resolver/src/",
+        "schemas/",
+        "formats/",
+        "crates/vibe-wire/src/",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-resolver/Cargo.toml",
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-wire/Cargo.toml",
+        "crates/vibe-wire/src/lib.rs"
+      ],
+      "steps": [
+        "Consume accepted M-14 resolution-domain/target/dependency-role carriers instead of inventing a global package instance.",
+        "Define four cardinalities, positive same-package acyclic guards, explicit defaults and consumer requested selections.",
+        "Distinguish omission, explicit empty selection, dormant branch intent and exact shared-instance conflict; keep backend-native version identities outside Vibe SemVer conversion."
+      ],
+      "positive_cases": [
+        "Separate environments may select different configurations; same shared instance combines additive requests."
+      ],
+      "negative_cases": [
+        "Conflicting exact selections name both consumers; unsupported cross-package/expression guards refuse.",
+        "All-features cannot select constrained members implicitly."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-resolver target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-resolver <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
+      ],
+      "acceptance": [
+        "Generated requests retain owner edge/domain/target and choice provenance.",
+        "Defaults are explicit consumer policy inputs, never solver preferences."
+      ],
+      "safe_stop": "Definition discovery can return NeedsSelection without writes.",
+      "commit_subject": "feat(core): define constrained consumer configurations",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_b_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-05-B.3",
+      "title": "Implement syntax-preserving feature migration",
+      "goal": "Deliver deterministic old-to-new authored conversion using M-13 migration primitives.",
+      "read_paths": [
+        "crates/vibe-core/src/manifest/package/wire.rs",
+        "crates/vibe-core/src/manifest/package/features.rs",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "crates/vibe-install/src/record.rs",
+        "xtask/src/main.rs",
+        ".cargo/config.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "crates/vibe-core/src/manifest/package/",
+        "crates/vibe-orchestrator/src/migration/",
+        "schemas/",
+        "formats/",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-core/src/lib.rs",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
+      ],
+      "steps": [
+        "Recognize the exact old grammar and map unambiguous dependencies/features/groups to new typed declarations.",
+        "Preserve comments, user choices and unrelated values; report ambiguous slash names/options as NeedsInput before writes.",
+        "Add dry-run diff, saved-state CAS apply and idempotent replay through the existing migration engine."
+      ],
+      "positive_cases": [
+        "An unambiguous commented manifest migrates with unchanged selected meaning."
+      ],
+      "negative_cases": [
+        "Ambiguous references, unknown source epoch and concurrent edits do not produce partial authored changes."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check",
+        "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+        "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
+      ],
+      "acceptance": [
+        "Migration code and fixtures demonstrate preserved syntax/intent rather than prose instructions.",
+        "Running a completed conversion again makes no change."
+      ],
+      "safe_stop": "Keep exact diff and unresolved inputs; never ask an LLM to guess mappings.",
+      "commit_subject": "feat(core): migrate feature requests without losing intent",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_05_b_3_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "PROPOSED orchestrator src/migration/ is a write ceiling only; use the M-13-owned migration module if already supplied within the admitted perimeter.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ]
+}

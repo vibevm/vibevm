@@ -1,0 +1,10 @@
+warning: field `supplementary_subjects` is never read
+ --> /fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/accept-candidate-local.rs:8:225
+  |
+8 | ...ct Review{approved:bool,approval_token:String,summary:BoundedText<4096>,scope:BoundedText<4096>,limitations:Vec<BoundedText<4096>>,observations:serde_json::Value,supplementary_subjects:se...
+  |       ------ field in this struct                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+

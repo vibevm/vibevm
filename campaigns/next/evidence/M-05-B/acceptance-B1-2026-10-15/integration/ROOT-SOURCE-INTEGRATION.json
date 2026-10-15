@@ -1,0 +1,12 @@
+{
+  "source_commit": "50cca87f88fdd45efa79fd14ddd1e3397b191781",
+  "isolated_branch": "codex/vibevm-m05b1-parallel",
+  "files": 11,
+  "all_candidate_hashes_match": true,
+  "reviewed_subjects": 33,
+  "independent_review": "bounded clear bothF1F2closed; unavailableexportcontext honest",
+  "fresh_cases_passed": 43,
+  "all_original27_rerun": true,
+  "main_integration": "pending C3normalacceptance; no current main source mutation",
+  "task_accepted": false
+}

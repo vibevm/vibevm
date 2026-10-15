@@ -1,0 +1,59 @@
+{
+  "task": "M-05-B.1",
+  "status": "changes_required_before_full_task_acceptance",
+  "utc": "2026-10-15T14:24:00.026303+00:00",
+  "workspace": "/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next",
+  "source_hash_subjects": 20,
+  "subject_accounting": "17 baseline paths plus 3 new paths = 20 unique subjects; 8 final changed hashes replace applicable baseline values.",
+  "source_drift": [],
+  "findings": [
+    {
+      "id": "B1-F1",
+      "priority": "P2",
+      "title": "Update the two active defect-characterization tests affected by B1",
+      "path": "crates/vibe-resolver/src/m_05_a_2_cases.rs",
+      "line": 23,
+      "related_line": 80,
+      "counterexample": "qualified_forwarding_first_slash_defect expects dependency org.example and target feature dep/fast for org.example/dep/fast; the new shared parser correctly returns org.example/dep and fast. exclusive_at_most_one_and_all_features_validation_defect expects one diagnostic for a valid exclusive table with no defaults; the new validator correctly returns none. Both remain ordinary compiled #[test] cases in the library.",
+      "meaning": "The new behavior is intended, but the candidate leaves two active tests guaranteed to fail and permanent M05A2 characterization wording unreconciled with the new implementation. Selected V4 omits these directly affected cases.",
+      "correction": "Retain historical evidence, convert the two live cases to corrected regression expectations, and record supersession of the old behavioral assertions without deleting historical receipts. Run only those exact affected cases plus necessary changed B1 checks.",
+      "evidence_kind": "Source-derived deterministic assertion failures; reviewer did not execute tests."
+    },
+    {
+      "id": "B1-F2",
+      "priority": "P2",
+      "title": "Use available declarations at the current manifest expansion boundary",
+      "path": "crates/vibe-resolver/src/features.rs",
+      "line": 169,
+      "consumers": [
+        "crates/vibe-install/src/plan/fetch.rs:37",
+        "crates/vibe-install/src/plan/fetch.rs:135",
+        "crates/vibe-orchestrator/src/document_analysis/preview.rs:300"
+      ],
+      "counterexample": "A full manifest with empty requires and default=[\"dep:org.example/missing\"] succeeds through table-only expand_features and returns the undeclared dependency as active. A dormant _private=[\"org.example/missing?/fast\"] also passes. The named install fetch and preview paths already have the full Manifest but discard its requires context when calling this compatibility API. Likewise a declared required dependency plus a weak feature request is never seeded active by this path.",
+      "meaning": "The core declared API correctly refuses unknown IDs and seeds required dependencies, but the required behavior is bypassed by current consumers where the necessary dependency declarations are available. This is a concrete B1 integration gap, not a request for B2 domains, B3 migration, or broad installer redesign.",
+      "correction": "Compose the existing declaration normalization and shared evaluator at the named full-manifest boundaries, preserving package-local metadata/aliases and actual active-dependency context; keep the table-only API for callers that genuinely lack declarations. Add a bounded caller-level undeclared/dormant refusal and required weak-request case. Ask Root for the narrow additional write perimeter if needed.",
+      "evidence_kind": "Source-derived counterexample; no installed integration or runtime reproduction claimed."
+    }
+  ],
+  "verified_positive": [
+    "One FeatureEffect/FeatureProgram algebra and one expand_program evaluator serve typed and legacy entrypoints; no second choices.requires engine.",
+    "Stable declaration keys preserve metadata once and normalize package-local aliases. Typed/declaration-aware validation covers dormant/private local, dependency, config and exported-subskill references.",
+    "Strong activation, delayed weak forwarding, required/already-active seeds and atomic config-conflict merge implemented in the declared API.",
+    "New wire grammar remains unpublished; no schema/generated/dependency changes. Additive four-anchor permanent spec update preserves prior text."
+  ],
+  "producer_evidence": {
+    "rust_successful_nonignored_executions": 27,
+    "new_core": 9,
+    "new_resolver": 10,
+    "existing_exact_core": 3,
+    "existing_exact_resolver": 5,
+    "all_selected_exits": 0,
+    "scoped_fmt_diff_xml": "all exit0 observed in logs/report",
+    "not_claimed": "Full suite, cross-package installed integration, codegen, acceptance.",
+    "case_bindings_file": "case-bindings.json absent; exact 9/10 names and denominators embedded in REPORT.json."
+  },
+  "merge_review": "No FeatureExpansion::merge call exists in the four additionally authorized consumer files. The changed existing resolver merge test and new tests handle Result with unwrap; merge itself checks all config conflicts before mutation. No ignored-result production defect established within the named roster. Root confirmed the named consumer search is sufficient; no broader search or ignored-result finding.",
+  "runtime_metadata_observation": "Root verified actual strict producer/job/work/contract/basis/observation binding matches. The stale C3 candidate label is cosmetic in a fresh store; generic requirement anchors carry original criterion statements in the contract. No product defect or header correction requested.",
+  "reviewer_actions": "Read-only named isolated source, exact Git HEAD diffs and supplied evidence; wrote only permitted review artifacts. No source writes/builds/tests/Git mutations/models/process actions/acceptance."
+}

@@ -1,0 +1,46 @@
+{
+  "V1": {
+    "names": [
+      "features::m_05_b_1_cases::optional_activation_and_strong_forwarding_share_effect_set",
+      "features::m_05_b_1_cases::weak_only_stays_dormant_and_strong_alone_activates",
+      "features::m_05_b_1_cases::weak_forwarding_is_order_independent_and_survives_merge",
+      "features::m_05_b_1_cases::required_and_already_active_dependencies_enable_weak_requests",
+      "features::m_05_b_1_cases::typed_and_legacy_expansion_are_identical",
+      "features::m_05_b_1_cases::unknown_typed_legacy_and_already_active_targets_refuse",
+      "features::m_05_b_1_cases::qualified_weak_refs_and_malformed_refs_use_shared_parser",
+      "features::m_05_b_1_cases::option_aliases_do_not_escape_declaring_package",
+      "features::m_05_b_1_cases::validation_checks_definitions_without_selecting_alternatives",
+      "features::m_05_b_1_cases::config_conflict_merge_refuses_atomically",
+      "features::m_05_b_1_cases::full_manifest_refuses_undeclared_default_and_dormant_references",
+      "features::m_05_b_1_cases::full_manifest_required_dependency_enables_weak_forwarding"
+    ],
+    "expected_count": 12,
+    "source": "crates/vibe-resolver/src/features/m_05_b_1_cases.rs",
+    "sha256": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a"
+  },
+  "V3": {
+    "names": [
+      "plan::fetch::m_05_b_1_correction_cases::fetch_undeclared_default_activation_refuses",
+      "plan::fetch::m_05_b_1_correction_cases::fetch_dormant_undeclared_weak_reference_refuses",
+      "plan::fetch::m_05_b_1_correction_cases::fetch_required_dependency_enables_weak_request",
+      "plan::fetch::m_05_b_1_correction_cases::defer_undeclared_default_activation_refuses",
+      "plan::fetch::m_05_b_1_correction_cases::defer_dormant_undeclared_weak_reference_refuses",
+      "plan::fetch::m_05_b_1_correction_cases::defer_required_dependency_enables_weak_request",
+      "plan::fetch::m_05_b_1_correction_cases::fetch_and_defer_preserve_legacy_subskill_selectors"
+    ],
+    "expected_count": 7,
+    "source": "crates/vibe-install/src/plan/fetch.rs",
+    "sha256": "3a30e4572d2b8efdd6c748f90ff1c7967dd54e3b5ceba0b0940163461d623772"
+  },
+  "V4": {
+    "names": [
+      "document_analysis::preview::m_05_b_1_correction_cases::undeclared_default_activation_refuses",
+      "document_analysis::preview::m_05_b_1_correction_cases::dormant_undeclared_weak_reference_refuses",
+      "document_analysis::preview::m_05_b_1_correction_cases::required_dependency_enables_weak_request",
+      "document_analysis::preview::m_05_b_1_correction_cases::unavailable_export_catalogue_preserves_legacy_subskill_selector"
+    ],
+    "expected_count": 4,
+    "source": "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+    "sha256": "b25c25a3953fff5b69cf81a5178489ff5f17348a99e9ba1d9b14f01b0f2395f4"
+  }
+}

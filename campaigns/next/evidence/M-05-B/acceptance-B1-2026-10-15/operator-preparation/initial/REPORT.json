@@ -1,0 +1,66 @@
+{
+  "status": "helpers_ready_mutations_not_authorized_pending_Root_approval_and_main_integration",
+  "source_commit": "50cca87f88fdd45efa79fd14ddd1e3397b191781",
+  "pure_validation_exit": 0,
+  "helper_compile_exits": [
+    0,
+    0,
+    0
+  ],
+  "approved": false,
+  "criterion_judgments": "both pending; exact original B1 statements in proposal",
+  "main_gate": {
+    "path": "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/MAIN-INTEGRATION.json",
+    "required_fields": {
+      "task": "M-05-B.1",
+      "source_commit": "50cca87f88fdd45efa79fd14ddd1e3397b191781",
+      "integrated": true,
+      "main_commit": "actual40hexcommit_fromRoot"
+    },
+    "proposal_binding": "Root sets main_integration.sha256 to actual receipt hash before approving; include necessary actual consumer evidence in review evidence_files"
+  },
+  "root_review_path": "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/ROOT-REVIEW.json",
+  "proposal_path": "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/ROOT-REVIEW-PROPOSAL.json",
+  "approval_token": "Root approves FULL M05B1 corrected algebra with five actual proofs after main integration",
+  "ordered_commands": [
+    "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/validate-evidence-local",
+    "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/safe-candidate-local 1103386 1103466 1103577 1103663 1104099",
+    "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/accept-candidate-local open-review /fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/accept-candidate-local evidence /fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/accept-candidate-local stage /fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/ROOT-REVIEW.json",
+    "/fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/accept-candidate-local work /fast/zap-managed/2026-10-15-m05b1-correction/acceptance-preparation/ROOT-REVIEW.json"
+  ],
+  "proof_counts": {
+    "V1": 22,
+    "V2": 10,
+    "V3": 7,
+    "V4": 4,
+    "V5": 0
+  },
+  "total_fresh_tests": 43,
+  "reused_tests": 0,
+  "criteria": 2,
+  "methods": 5,
+  "EvidenceObservation_artifact": "9d60dcdb1af43cf5e88988ef4b653f438be60bab38410d121711435d5ea61e87",
+  "artifact_rule": "Each EvidenceAdjudicated uses producer report.digest; independent Root review retained separately in SafeVerification.artifacts. Native candidate unchanged. Approved review bytes immutable after Safe.",
+  "hashes": {
+    "final-source-hashes.json": "b7d398da8c54f69e7b927ccc154c252887855cfcfb0e39bbff4210587b9f1f5c",
+    "ROOT-REVIEW-PROPOSAL.json": "7664cbb2c4840063d60413a9991857b3b6162529d9dc0e34b1659722cb3b2664",
+    "acceptance-validation.rs": "c665dc3fb7d38b438ce95260f1908f4d883fbe907c5c68aad9188736b335d141",
+    "safe-candidate-local.rs": "da71de030448080ef8f2f3a5773d468c1879695cc72909d4455a33f226c57f4e",
+    "safe-candidate-local-build-args.json": "d7172101c9ef48929df537661c36936bd6bfa11974d65dc7f2f107635c7b6725",
+    "safe-candidate-local-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "safe-candidate-local": "8cdf7c793bb105b1653bee423d27bcb8db5001ae2972e5a065af19b79740d52b",
+    "accept-candidate-local.rs": "e5b7747c47afc1f286b45e792663af4cc9a1a0736507e14336770e5f240108ff",
+    "accept-candidate-local-build-args.json": "39ee346a39f4508062c8cfbdc596e4d43a8a9dd2cc4c133b889c159a41a8d6d3",
+    "accept-candidate-local-build.log": "0d5bda604a9a421cbfd76b5720a41208447c625854df082ddd820673aa04fafa",
+    "validate-evidence-local.rs": "fc2ead963f834512ca43dd852d7782c4600fd6ff697b9b821886585fc5ae7e3c",
+    "validate-evidence-local-build-args.json": "466add538bbd250304ff1068160a22fb5978729bcd2ab0cf1fa7225a18fed7b4",
+    "validate-evidence-local-build.log": "0792b2d40fc63d85a67647d66d7b39ef5dfcbfbfc908f49fc05da7b210762e6b",
+    "validate-evidence-local": "1d16313f95a739b0380e4df0d08eaa3ee555d40cb48cabf060ae8f85b82056fd",
+    "validation.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "accept-candidate-local": "2d754053234e2af5941e90705f2bb34e7b5f1ac646e6e15b45b31fad46571fcb",
+    "validation.stdout": "60d8c8a7066dec676a4c439a2b06f71a917bf0e913a4c3cde83514a82f148d99"
+  },
+  "actions": "No control submission, store open, acceptance/count/Git/source/product build/model. Three private standalone rustc links and pure file/hash/evidence validation only."
+}

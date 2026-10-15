@@ -1,0 +1,45 @@
+{
+  "group": "V5",
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-core/src/manifest/package.rs",
+        "crates/vibe-core/src/manifest/package/features.rs",
+        "crates/vibe-core/src/manifest/package/features/effects.rs",
+        "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs",
+        "crates/vibe-install/src/plan/fetch.rs",
+        "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+        "crates/vibe-resolver/src/features.rs",
+        "crates/vibe-resolver/src/features/m_05_b_1_cases.rs",
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs"
+      ],
+      "exit": 0,
+      "counts": [],
+      "expected": null,
+      "passed": true,
+      "seconds": 0.07010960578918457,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-1.log"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "expected": null,
+      "passed": true,
+      "seconds": 0.014281511306762695,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-2.log"
+    }
+  ],
+  "passed": true
+}

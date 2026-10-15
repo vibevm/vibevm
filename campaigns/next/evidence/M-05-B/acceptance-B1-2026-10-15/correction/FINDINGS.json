@@ -1,0 +1,16 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "B1-F1 corrected two live regression expectations while preserving historical normative clauses and receipts.",
+    "B1-F2 full-manifest fetch/defer and preview now normalize requires and evaluate through the one typed FeatureProgram engine. All 43 selected cases and scoped/spec checks passed fresh.",
+    "Unavailable subskill export catalogue is distinct from known empty. Authorized partial legacy lowering validates all dependency/local refs while preserving selectors for downstream validation; fully declared APIs remain strict.",
+    "Non-blocking unused expand_features import remains in read-only parent plan.rs; no outside-perimeter cleanup performed."
+  ],
+  "unresolved": [],
+  "proposed_follow_up": "Root may review/integrate this local candidate and remove the unused parent planner import in its owned scope; completed local effects do not imply acceptance."
+}

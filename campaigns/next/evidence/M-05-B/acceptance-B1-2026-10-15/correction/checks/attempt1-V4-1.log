@@ -1,0 +1,386 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling libc v0.2.185
+   Compiling num-traits v0.2.19
+   Compiling quick-xml v0.41.0
+   Compiling unicode-width v0.2.2
+   Compiling syn v2.0.117
+   Compiling pulldown-cmark v0.13.4
+   Compiling pulldown-cmark-escape v0.11.0
+   Compiling unicase v2.9.0
+   Compiling tokio-macros v2.7.0
+   Compiling getrandom v0.3.4
+   Compiling aho-corasick v1.1.4
+   Compiling option-ext v0.2.0
+   Compiling core-ai-native-specmark-grammar v0.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/lean-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-specmark-grammar)
+   Compiling libloading v0.9.0
+   Compiling predicates-core v1.0.10
+   Compiling assert_cmd v2.2.0
+   Compiling difflib v0.4.0
+   Compiling termtree v0.5.1
+   Compiling anstyle v1.0.14
+   Compiling vibe-extension-registry v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-extension-registry)
+   Compiling core-ai-native-specmark v0.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/lean-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-specmark)
+   Compiling getopts v0.2.24
+   Compiling predicates-tree v1.0.13
+   Compiling predicates v3.1.4
+   Compiling chrono v0.4.44
+   Compiling errno v0.3.14
+   Compiling mio v1.2.0
+   Compiling socket2 v0.6.3
+   Compiling getrandom v0.2.17
+   Compiling vibe-safefs v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-safefs)
+   Compiling getrandom v0.4.2
+   Compiling dirs-sys v0.4.1
+   Compiling nix v0.27.1
+   Compiling wait-timeout v0.2.1
+   Compiling signal-hook-registry v1.4.8
+   Compiling ring v0.17.14
+   Compiling ahash v0.8.12
+   Compiling tempfile v3.27.0
+   Compiling dirs v5.0.1
+   Compiling regex-automata v0.4.14
+   Compiling vibe-wire v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-wire)
+   Compiling progress-core v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/progress-core)
+   Compiling resolvo v0.11.0
+   Compiling tokio v1.52.1
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:252:12
+    |
+252 |     pub fn during(parent: &crate::Pinned, name: &str) {
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling command-group v5.0.1
+   Compiling rustls-webpki v0.103.13
+   Compiling core-ai-native-specmark-grammar v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmark-grammar)
+   Compiling core-ai-native-specmap v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.1.0/crates/vendor/core-ai-native-specmap)
+   Compiling core-ai-native-specmap v0.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/lean-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-specmap)
+   Compiling vibe-specdoc v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-specdoc)
+   Compiling rustls v0.23.39
+   Compiling lean-ai-native-check v0.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/vibevm/vibepacks/org.vibevm.ai-native/lean-ai-native-lang/v0.1.0/crates/lean-ai-native-check)
+   Compiling regex v1.12.3
+   Compiling bstr v1.12.1
+   Compiling hyper v1.9.0
+   Compiling tower v0.5.3
+   Compiling tower-http v0.6.8
+   Compiling hyper-util v0.1.20
+   Compiling tokio-rustls v0.26.4
+   Compiling hyper-rustls v0.27.9
+   Compiling reqwest v0.12.28
+   Compiling vibe-spec v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-spec)
+   Compiling vibe-registry v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-registry)
+   Compiling vibe-native-loader v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-native-loader)
+   Compiling vibe-ext v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-ext)
+   Compiling vibe-resolver v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-resolver)
+   Compiling vibe-native-loader-build-provider-fixture v1.0.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-build-provider)
+   Compiling vibe-native-loader-mechanism-fixture v1.0.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-mechanism-plugin)
+   Compiling vibe-native-loader-package-provider-fixture v1.0.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-package-provider)
+   Compiling vibe-native-loader-fixture v1.0.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-native-loader/tests/fixtures/native-plugin)
+   Compiling vibe-facts v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-facts)
+   Compiling vibe-workspace v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-workspace)
+warning: fields `host`, `resolution_identity`, and `visible` are never read
+   --> crates/vibe-workspace/src/source_query/capture.rs:164:16
+    |
+163 | pub struct BoundSourceInputs {
+    |            ----------------- fields in this struct
+164 |     pub(super) host: HostExtensionSource,
+    |                ^^^^
+165 |     pub(super) node_root: PathBuf,
+166 |     pub(super) resolution_identity: OrderedResolutionIdentity,
+    |                ^^^^^^^^^^^^^^^^^^^
+167 |     pub(super) visible: BTreeSet<NodeId>,
+    |                ^^^^^^^
+    |
+    = note: `BoundSourceInputs` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `selected_root` is never used
+   --> crates/vibe-workspace/src/source_query/capture.rs:273:19
+    |
+172 | impl BoundSourceInputs {
+    | ---------------------- method in this implementation
+...
+273 |     pub(crate) fn selected_root(&self, group: &str, name: &str) -> Option<&Path> {
+    |                   ^^^^^^^^^^^^^
+
+warning: method `revalidate_with` is never used
+   --> crates/vibe-workspace/src/source_query/capture/continuity.rs:185:8
+    |
+ 82 | impl WitnessedSourceWorld {
+    | ------------------------- method in this implementation
+...
+185 |     fn revalidate_with(
+    |        ^^^^^^^^^^^^^^^
+
+   Compiling vibe-agent-projection v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-agent-projection)
+   Compiling vibe-doc v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-doc)
+   Compiling vibe-requirements v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-requirements)
+   Compiling vibe-lifecycle v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-lifecycle)
+warning: `vibe-workspace` (lib) generated 3 warnings
+   Compiling vibe-trace v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-trace)
+warning: function `execute_host_admitted_bound_vibe_bin` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy.rs:110:15
+    |
+110 | pub(crate) fn execute_host_admitted_bound_vibe_bin(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `alias_warnings` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:389:19
+    |
+246 | impl AdmittedLocalDeployBinding {
+    | ------------------------------- method in this implementation
+...
+389 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: field `alias_note` is never read
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:510:5
+    |
+505 | struct NamedRootWitness {
+    |        ---------------- field in this struct
+...
+510 |     alias_note: Option<String>,
+    |     ^^^^^^^^^^
+
+warning: methods `user_home` and `alias_warnings` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:538:19
+    |
+528 | impl LockedLocalDeployBinding {
+    | ----------------------------- methods in this implementation
+...
+538 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+544 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: fields `compatibility` and `activation` are never read
+  --> crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs:35:9
+   |
+34 | pub(crate) struct DerivativeDecision {
+   |                   ------------------ fields in this struct
+35 |     pub compatibility: CompatibilityReport,
+   |         ^^^^^^^^^^^^^
+36 |     pub activation: ActivationState,
+   |         ^^^^^^^^^^
+   |
+   = note: `DerivativeDecision` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: struct `ClientExecutableMap` is never constructed
+ --> crates/vibe-lifecycle/src/mechanism/deploy/client_capabilities.rs:6:12
+  |
+6 | pub struct ClientExecutableMap(BTreeMap<String, ClientExecutable>);
+  |            ^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `from_legacy3`, `legacy3`, `observed`, `native_legacy3`, and `rows` are never used
+  --> crates/vibe-lifecycle/src/mechanism/deploy/client_capabilities.rs:8:12
+   |
+ 7 | impl ClientExecutableMap {
+   | ------------------------ associated items in this implementation
+ 8 |     pub fn from_legacy3(old: &ClientExecutables) -> Self {
+   |            ^^^^^^^^^^^^
+...
+15 |     pub fn legacy3(&self) -> Result<ClientExecutables, String> {
+   |            ^^^^^^^
+...
+32 |     pub fn observed(rows: BTreeMap<String, ClientExecutable>) -> Result<Self, String> {
+   |            ^^^^^^^^
+...
+51 |     pub fn native_legacy3(
+   |            ^^^^^^^^^^^^^^
+...
+73 |     pub fn rows(&self) -> &BTreeMap<String, ClientExecutable> {
+   |            ^^^^
+
+warning: method `remove_resource` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:471:19
+    |
+316 | impl<'a> BoundVibeBinStore<'a> {
+    | ------------------------------ method in this implementation
+...
+471 |     pub(crate) fn remove_resource(&self, relative: &str) -> Result<bool, BoundVibeBinError> {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: fields `run_id`, `reservation_ref`, and `pre_effect_plan_sha256` are never read
+  --> crates/vibe-lifecycle/src/state/install_stage.rs:54:16
+   |
+53 | pub struct InstallEnteredStage {
+   |            ------------------- fields in this struct
+54 |     pub(crate) run_id: String,
+   |                ^^^^^^
+55 |     pub(crate) reservation_ref: String,
+   |                ^^^^^^^^^^^^^^^
+56 |     pub(crate) pre_effect_plan_sha256: String,
+   |                ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `InstallEnteredStage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `begin` is never used
+   --> crates/vibe-lifecycle/src/state/source_stage.rs:115:19
+    |
+ 73 | impl ScriptSourceStage {
+    | ---------------------- method in this implementation
+...
+115 |     pub(crate) fn begin<'a>(
+    |                   ^^^^^
+
+   Compiling vibe-install v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-install)
+   Compiling vibe-test-support v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-test-support)
+warning: unused import: `expand_features`
+  --> crates/vibe-install/src/plan.rs:17:70
+   |
+17 |     FeatureRequest, ResolvedNode, conditional::ConditionalPredicate, expand_features,
+   |                                                                      ^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling vibe-orchestrator v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-orchestrator)
+warning: `vibe-install` (lib) generated 1 warning (run `cargo fix --lib -p vibe-install` to apply 1 suggestion)
+warning: unused import: `vibe_wire::generated::lifecycle_report::LifecycleContributionReport`
+  --> crates/vibe-orchestrator/src/dispatch/mod.rs:13:5
+   |
+13 | use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `specmark::spec`
+  --> crates/vibe-orchestrator/src/phase.rs:15:5
+   |
+15 | use specmark::spec;
+   |     ^^^^^^^^^^^^^^
+
+warning: unused import: `std::sync::Arc`
+  --> crates/vibe-orchestrator/src/phase.rs:17:5
+   |
+17 | use std::sync::Arc;
+   |     ^^^^^^^^^^^^^^
+
+warning: unused import: `vibe_core::manifest::TargetOs`
+  --> crates/vibe-orchestrator/src/phase.rs:20:5
+   |
+20 | use vibe_core::manifest::TargetOs;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `AgentBackend`, `LifecycleLease`, and `RunMetadata`
+  --> crates/vibe-orchestrator/src/phase.rs:21:22
+   |
+21 | use vibe_lifecycle::{AgentBackend, LifecycleLease, Phase, RunMetadata};
+   |                      ^^^^^^^^^^^^  ^^^^^^^^^^^^^^         ^^^^^^^^^^^
+
+warning: unused imports: `LifecycleContributionReport` and `LifecycleStepReport`
+  --> crates/vibe-orchestrator/src/phase.rs:23:5
+   |
+23 |     LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^                       ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `vibe_wire::generated::shared::Timestamp`
+  --> crates/vibe-orchestrator/src/phase.rs:25:5
+   |
+25 | use vibe_wire::generated::shared::Timestamp;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `vibe_workspace::compile_trace::TraceRun`
+  --> crates/vibe-orchestrator/src/phase.rs:26:5
+   |
+26 | use vibe_workspace::compile_trace::TraceRun;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `InstallInputs` and `InstallPolicy`
+  --> crates/vibe-orchestrator/src/phase.rs:31:43
+   |
+31 |     InstallDisposition, InstallExecution, InstallInputs, InstallPolicy, PreparedSelection,
+   |                                           ^^^^^^^^^^^^^  ^^^^^^^^^^^^^
+
+warning: unused imports: `ConfirmGate`, `InstallManifestMutation`, `InstallObserver`, `PackageSourceFactory`, and `RegistryEnvironment`
+  --> crates/vibe-orchestrator/src/phase.rs:37:5
+   |
+37 |     ConfirmGate, InstallManifestMutation, InstallObserver, PackageSourceFactory,
+   |     ^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+38 |     RegistryEnvironment, RunObserver,
+   |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `bail`
+ --> crates/vibe-orchestrator/src/phase/invocation.rs:6:31
+  |
+6 | use anyhow::{Context, Result, bail};
+  |                               ^^^^
+
+warning: `vibe-lifecycle` (lib) generated 10 warnings
+warning: unused import: `RunObserver`
+  --> crates/vibe-orchestrator/src/phase.rs:38:26
+   |
+38 |     RegistryEnvironment, RunObserver,
+   |                          ^^^^^^^^^^^
+
+   Compiling vibe-package-source v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-package-source)
+warning: `vibe-orchestrator` (lib) generated 12 warnings (run `cargo fix --lib -p vibe-orchestrator` to apply 11 suggestions)
+warning: unused import: `specmark::spec`
+  --> crates/vibe-orchestrator/src/phase.rs:15:5
+   |
+15 | use specmark::spec;
+   |     ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `LifecycleStepReport`
+  --> crates/vibe-orchestrator/src/phase.rs:23:55
+   |
+23 |     LifecycleContributionReport, LifecycleDelegation, LifecycleStepReport,
+   |                                                       ^^^^^^^^^^^^^^^^^^^
+
+warning: `vibe-orchestrator` (lib test) generated 11 warnings (9 duplicates) (run `cargo fix --lib -p vibe-orchestrator --tests` to apply 2 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 19s
+     Running unittests src/lib.rs (target/debug/deps/vibe_orchestrator-2d07584aed7ea11d)
+
+running 3 tests
+test document_analysis::preview::m_05_b_1_correction_cases::dormant_undeclared_weak_reference_refuses ... ok
+test document_analysis::preview::m_05_b_1_correction_cases::undeclared_default_activation_refuses ... ok
+test document_analysis::preview::m_05_b_1_correction_cases::required_dependency_enables_weak_request ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 645 filtered out; finished in 0.00s
+

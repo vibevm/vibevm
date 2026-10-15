@@ -1,0 +1,690 @@
+{
+  "task": "M-05-B.1",
+  "status": "full local implementation and selected checks completed; candidate only, no Root acceptance",
+  "workspace": "/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next",
+  "source_head": "adfb5992574bcc76f57089ce4bde225eadb00ca2",
+  "source_verification": {
+    "initial": {
+      "Cargo.lock": true,
+      "Cargo.toml": true,
+      "crates/vibe-core/Cargo.toml": true,
+      "crates/vibe-core/src/lib.rs": true,
+      "crates/vibe-core/src/manifest/mod.rs": true,
+      "crates/vibe-core/src/manifest/package.rs": true,
+      "crates/vibe-core/src/manifest/package/capabilities.rs": true,
+      "crates/vibe-core/src/manifest/package/deps.rs": true,
+      "crates/vibe-core/src/manifest/package/features.rs": true,
+      "crates/vibe-core/src/manifest/package/features/effects.rs": true,
+      "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs": true,
+      "crates/vibe-core/src/manifest/package/tests.rs": true,
+      "crates/vibe-core/src/manifest/package/wire.rs": true,
+      "crates/vibe-core/src/manifest/package/wire/requires.rs": true,
+      "crates/vibe-install/src/fetched.rs": true,
+      "crates/vibe-install/src/plan/fetch.rs": true,
+      "crates/vibe-orchestrator/src/document_analysis/preview.rs": true,
+      "crates/vibe-resolver/Cargo.toml": true,
+      "crates/vibe-resolver/src/features.rs": true,
+      "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": true,
+      "crates/vibe-resolver/src/lib.rs": true,
+      "crates/vibe-resolver/src/m_05_a_2_cases.rs": true,
+      "rust-toolchain.toml": true,
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": true
+    },
+    "unchanged_outside_admitted_changes": true,
+    "supporting_read_hashes_match": true,
+    "root_answers": [
+      "read-owner-answer.json",
+      "defer-owner-answer.json"
+    ]
+  },
+  "changes": [
+    {
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "e23791dabfb77520b4beb9888c844791e80ec9b35120bdd3bdc6af40f40ffcf6"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package.rs",
+      "sha256": "a38307e78acc0c2ecdf9c4386ffda8d886b9cdcc8c9bc83851a747200629cf26"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features.rs",
+      "sha256": "e3f95b53247c50db19bec74771943015ed1c53469d23c4b32070ba69f9cd4078"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/effects.rs",
+      "sha256": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs",
+      "sha256": "2a5d900e76d3f5ccf41d8310fc939cbe18b259162c8973628ccd929cb166f529"
+    },
+    {
+      "path": "crates/vibe-install/src/plan/fetch.rs",
+      "sha256": "27ee6f4599a2b5e86971e728c9570108cdfe398d7001fed9d423a489513481b0"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+      "sha256": "b25c25a3953fff5b69cf81a5178489ff5f17348a99e9ba1d9b14f01b0f2395f4"
+    },
+    {
+      "path": "crates/vibe-resolver/src/features.rs",
+      "sha256": "815c3e4ea9b304f0050bb7e3c7b30ae4e1fc9e851d594cc056e9dc794a8b76a8"
+    },
+    {
+      "path": "crates/vibe-resolver/src/features/m_05_b_1_cases.rs",
+      "sha256": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a"
+    },
+    {
+      "path": "crates/vibe-resolver/src/m_05_a_2_cases.rs",
+      "sha256": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46"
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "39990725d7d06da98eee3cfd8479d26335f8555142e005f2c60dd6cd53b6c4eb"
+    }
+  ],
+  "retained_implementation": [
+    "Preserved the original unaccepted eight-file implementation. Stable DependencyDeclarationId and LocalFeatureRef, FeatureDeclarations, FeatureEffect and FeatureProgram remain the normalized carriers.",
+    "One declaration owns source/version/link/access/friend/exclude metadata. Stable qualified IDs ignore vector position, version and package-local aliases. Duplicate and dangling metadata refuse.",
+    "The same effect algebra supports optional dependency activation, strong/weak target-feature requests, exported subskills and declared config values. Required and caller-supplied active dependencies seed weak requests; weak-only optional requests stay dormant and merge applies pending requests. Conflicting configs refuse atomically.",
+    "Typed and all legacy entrypoints evaluate FeatureProgram through expand_program. No choices.requires grammar or second dependency evaluator. New authored grammar remains unpublished; no B2/B3 changes."
+  ],
+  "corrections": [
+    {
+      "finding": "B1-F1",
+      "disposition": "satisfied",
+      "implementation": "Only the two superseded live M05A2 expectations were corrected; exact names retained. Qualified forwarding preserves group/name and weak strength, and definition validation accepts unselected exclusive alternatives. Existing at-most-one all-features violation assertion retained. Permanent PROP003 adds explicit supersession while preserving history and normative clauses.",
+      "checks": [
+        "V2-1",
+        "V2-2",
+        "V5-spec-preservation"
+      ]
+    },
+    {
+      "finding": "B1-F2",
+      "disposition": "satisfied",
+      "implementation": "fetch_node, try_in_place_incremental and configuration_preview now call expand_manifest_features. It normalizes actual requires declarations with required seeds, lowers all local/dependency refs including dormant branches, and uses expand_program. Actual caller tests prove undeclared default/dormant refusal and required weak forwarding.",
+      "checks": [
+        "V3 7/7",
+        "V4 4/4"
+      ]
+    },
+    {
+      "finding": "Root partial export catalogue clarification",
+      "disposition": "satisfied",
+      "implementation": "lower_legacy_dependencies shares lower_legacy_in_context and validate_in_context with the fully declared legacy API. Option<&BTreeSet<String>> distinguishes unavailable export catalogue from known empty. The former preserves syntactically valid selectors without inventing export declarations; the latter remains strict. Config refs remain strict. Core regression and actual fetch/defer/preview preservation cases cover this distinction.",
+      "checks": [
+        "V1 core unavailable_export_catalogue_is_not_known_empty",
+        "V3 fetch_and_defer_preserve_legacy_subskill_selectors",
+        "V4 unavailable_export_catalogue_preserves_legacy_subskill_selector"
+      ]
+    }
+  ],
+  "original_steps": [
+    "Define stable dependency declaration IDs and local feature references under the permanent PROP-003 contract.",
+    "Implement effects for dependency activation, strong/weak target-feature requests, exported subskills and declared config values.",
+    "Keep source/version/link/visibility metadata once on dependency declarations; option aliases remain package-local."
+  ],
+  "positive_case_evidence": "optional_activation_and_strong_forwarding_share_effect_set checks optional activation, target forwarding, exported subskill and config through one effect set; typed_and_legacy_expansion_are_identical verifies equality.",
+  "negative_case_evidence": "Unknown typed, legacy, dormant and active target IDs refuse; malformed qualified refs refuse; weak-only optional requests stay dormant; actual full-manifest callers refuse undeclared defaults/dormant refs.",
+  "criteria": [
+    {
+      "statement": "Normalized algebra has no duplicated choices.requires dependency engine.",
+      "disposition": "satisfied",
+      "evidence": "Shared FeatureProgram/expand_program and selected typed/legacy equality and strict/partial context regressions; no choices.requires engine."
+    },
+    {
+      "statement": "Legacy syntax lowers through one typed representation.",
+      "disposition": "satisfied",
+      "evidence": "Shared FeatureProgram/expand_program and selected typed/legacy equality and strict/partial context regressions; no choices.requires engine."
+    }
+  ],
+  "safe_stop": "Keep new grammar unpublished until its lowering and validation agree.",
+  "case_bindings": {
+    "V1": {
+      "names": [
+        "features::m_05_b_1_cases::optional_activation_and_strong_forwarding_share_effect_set",
+        "features::m_05_b_1_cases::weak_only_stays_dormant_and_strong_alone_activates",
+        "features::m_05_b_1_cases::weak_forwarding_is_order_independent_and_survives_merge",
+        "features::m_05_b_1_cases::required_and_already_active_dependencies_enable_weak_requests",
+        "features::m_05_b_1_cases::typed_and_legacy_expansion_are_identical",
+        "features::m_05_b_1_cases::unknown_typed_legacy_and_already_active_targets_refuse",
+        "features::m_05_b_1_cases::qualified_weak_refs_and_malformed_refs_use_shared_parser",
+        "features::m_05_b_1_cases::option_aliases_do_not_escape_declaring_package",
+        "features::m_05_b_1_cases::validation_checks_definitions_without_selecting_alternatives",
+        "features::m_05_b_1_cases::config_conflict_merge_refuses_atomically",
+        "features::m_05_b_1_cases::full_manifest_refuses_undeclared_default_and_dormant_references",
+        "features::m_05_b_1_cases::full_manifest_required_dependency_enables_weak_forwarding"
+      ],
+      "expected_count": 12,
+      "source": "crates/vibe-resolver/src/features/m_05_b_1_cases.rs",
+      "sha256": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a"
+    },
+    "V3": {
+      "names": [
+        "plan::fetch::m_05_b_1_correction_cases::fetch_undeclared_default_activation_refuses",
+        "plan::fetch::m_05_b_1_correction_cases::fetch_dormant_undeclared_weak_reference_refuses",
+        "plan::fetch::m_05_b_1_correction_cases::fetch_required_dependency_enables_weak_request",
+        "plan::fetch::m_05_b_1_correction_cases::defer_undeclared_default_activation_refuses",
+        "plan::fetch::m_05_b_1_correction_cases::defer_dormant_undeclared_weak_reference_refuses",
+        "plan::fetch::m_05_b_1_correction_cases::defer_required_dependency_enables_weak_request",
+        "plan::fetch::m_05_b_1_correction_cases::fetch_and_defer_preserve_legacy_subskill_selectors"
+      ],
+      "expected_count": 7,
+      "source": "crates/vibe-install/src/plan/fetch.rs",
+      "sha256": "3a30e4572d2b8efdd6c748f90ff1c7967dd54e3b5ceba0b0940163461d623772"
+    },
+    "V4": {
+      "names": [
+        "document_analysis::preview::m_05_b_1_correction_cases::undeclared_default_activation_refuses",
+        "document_analysis::preview::m_05_b_1_correction_cases::dormant_undeclared_weak_reference_refuses",
+        "document_analysis::preview::m_05_b_1_correction_cases::required_dependency_enables_weak_request",
+        "document_analysis::preview::m_05_b_1_correction_cases::unavailable_export_catalogue_preserves_legacy_subskill_selector"
+      ],
+      "expected_count": 4,
+      "source": "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+      "sha256": "b25c25a3953fff5b69cf81a5178489ff5f17348a99e9ba1d9b14f01b0f2395f4"
+    }
+  },
+  "core_recheck": {
+    "rerun": true,
+    "names": [
+      "manifest::package::features::m_05_b_1_cases::stable_ids_ignore_order_version_and_aliases",
+      "manifest::package::features::m_05_b_1_cases::all_source_kinds_preserve_explicit_metadata_once",
+      "manifest::package::features::m_05_b_1_cases::legacy_and_typed_effect_sets_are_identical",
+      "manifest::package::features::m_05_b_1_cases::typed_config_and_exports_require_declarations",
+      "manifest::package::features::m_05_b_1_cases::undeclared_targets_and_private_dormant_refs_refuse",
+      "manifest::package::features::m_05_b_1_cases::malformed_qualified_refs_and_paths_refuse",
+      "manifest::package::features::m_05_b_1_cases::aliases_are_local_and_cannot_shadow_ids",
+      "manifest::package::features::m_05_b_1_cases::duplicate_declarations_and_dangling_metadata_refuse",
+      "manifest::package::features::m_05_b_1_cases::new_wire_grammar_remains_unpublished",
+      "manifest::package::features::m_05_b_1_cases::unavailable_export_catalogue_is_not_known_empty"
+    ],
+    "source_sha256": "2a5d900e76d3f5ccf41d8310fc939cbe18b259162c8973628ccd929cb166f529",
+    "reason": "Core export-context distinction changed; fresh proof required"
+  },
+  "binding_history": "initial-CASE-BINDINGS.json bound existing actual names before first compile. Current CASE-BINDINGS and CORE-RECHECK bound added core/install/preview names and nonzero denominators before compiling those additions. Install fixture implementation changed after the first compile error without case renames/count changes. FINAL-SOURCE-HASHES records final bytes.",
+  "checks": [
+    {
+      "group": "V1",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::m_05_b_1_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "12",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 12,
+          "passed": true,
+          "seconds": 12.660973072052002,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-1.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::m_05_b_1_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "10",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 10,
+          "passed": true,
+          "seconds": 5.061540365219116,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-2.log"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "group": "V2",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "m_05_a_2_cases::qualified_forwarding_first_slash_defect",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.2776451110839844,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-1.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "m_05_a_2_cases::exclusive_at_most_one_and_all_features_validation_defect",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.25080323219299316,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-2.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::features::tests::features_table_roundtrips",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.2023911476135254,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-3.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::tests::requires_visibility_metadata_roundtrips_exactly",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.20678019523620605,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-4.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::package::tests::requires_visibility_metadata_supports_every_source_kind",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.21249055862426758,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-5.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::parses_feature_value_variants",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.2546210289001465,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-6.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::parse_rejects_empty",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.2519392967224121,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-7.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::transitive_expansion",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.25815367698669434,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-8.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::weak_dep_feature_does_not_pull_dep",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.25585174560546875,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-9.log"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::tests::cycles_terminate",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 1,
+          "passed": true,
+          "seconds": 0.24938559532165527,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V2-10.log"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "group": "V3",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::fetch::m_05_b_1_correction_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "7",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 7,
+          "passed": true,
+          "seconds": 1.5387945175170898,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V3-1.log"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "group": "V4",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "document_analysis::preview::m_05_b_1_correction_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "4",
+              "0",
+              "0"
+            ]
+          ],
+          "expected": 4,
+          "passed": true,
+          "seconds": 17.746788501739502,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V4-1.log"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "group": "V5",
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-core/src/manifest/mod.rs",
+            "crates/vibe-core/src/manifest/package.rs",
+            "crates/vibe-core/src/manifest/package/features.rs",
+            "crates/vibe-core/src/manifest/package/features/effects.rs",
+            "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs",
+            "crates/vibe-install/src/plan/fetch.rs",
+            "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+            "crates/vibe-resolver/src/features.rs",
+            "crates/vibe-resolver/src/features/m_05_b_1_cases.rs",
+            "crates/vibe-resolver/src/m_05_a_2_cases.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "expected": null,
+          "passed": true,
+          "seconds": 0.07010960578918457,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-1.log"
+        },
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "expected": null,
+          "passed": true,
+          "seconds": 0.014281511306762695,
+          "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-2.log"
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "fresh_successful_test_count": 43,
+  "historical_proof_reused": false,
+  "historical_proof_note": "All original 27 selected cases were rerun fresh in this realm. Historical logs/receipts are preserved as history only. Final selected total is 43.",
+  "permanent_spec_check": {
+    "argv": [
+      "python3",
+      "/fast/zap-managed/2026-10-15-m05b1-correction/check-permanent-spec.py"
+    ],
+    "exit": 0,
+    "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V5-spec-preservation.log",
+    "passed": true,
+    "meaning": "XML parses; every pre-correction leaf text and attributes preserved; correction anchors exist."
+  },
+  "patch_reverse_check": {
+    "argv": [
+      "git",
+      "apply",
+      "--reverse",
+      "--check",
+      "/fast/zap-managed/2026-10-15-m05b1-correction/PATCH.diff"
+    ],
+    "exit": 0,
+    "log": "/fast/zap-managed/2026-10-15-m05b1-correction/patch-reverse-check.log"
+  },
+  "previous_attempts": [
+    {
+      "files": [
+        "attempt1-V1-result.json",
+        "attempt1-V2-result.json",
+        "attempt1-V4-result.json"
+      ],
+      "outcome": "Passed their then-current bound cases; superseded after core partial export-context implementation and added preservation cases. Final affected groups rerun."
+    },
+    {
+      "files": [
+        "attempt1-V3-result.json",
+        "attempt1-V3-1.log"
+      ],
+      "outcome": "Compile exit101: fixture referenced toml without a direct crate dependency. Replaced with existing Manifest/Lockfile reader APIs and private fixture text; no dependency added. Final V3 passed 7/7."
+    }
+  ],
+  "limits": [
+    "Selected library families and exact cases only; no full suite/codegen/Lean execution, network, install, dependency changes, cache copying/cleaning, model changes, or Git mutation.",
+    "Full legacy Manifest has no authoritative exported-subskill/config catalogue. Partial lowering preserves incumbent subskill selector handling and does not certify export existence. Fully declared APIs enforce supplied catalogues. No fake declarations from use strings.",
+    "Required weak forwarding is verified at expansion boundaries; no claim of installed cross-package feature delivery. Preview positive weak-request fixture intentionally lacks a dependency catalogue and observes subsequent captured-resolution diagnostic independently of successful feature expansion.",
+    "Cargo emitted existing dependency warnings and a newly unused expand_features import in read-only crates/vibe-install/src/plan.rs after its child stopped using the table-only API. This non-blocking warning was not suppressed or edited outside the write perimeter.",
+    "completed means local working-tree effects only; Root owns integration and acceptance."
+  ],
+  "effect_state": "completed",
+  "checks_attempted": true,
+  "patch": {
+    "path": "/fast/zap-managed/2026-10-15-m05b1-correction/PATCH.diff",
+    "sha256": "ccae637b60fbe9304dd9e61dd37d200a1c6dc60599f66b58c3c21907910e7b5e",
+    "bytes": 76849
+  },
+  "runtime_binding": "finish-candidate must consume Root-owned actual-runtime-binding.json and configured trusted terminal observation; this report invents no header."
+}

@@ -1,0 +1,30 @@
+{
+  "group": "V4",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "document_analysis::preview::m_05_b_1_correction_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "3",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 3,
+      "passed": true,
+      "seconds": 79.29333734512329,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V4-1.log"
+    }
+  ],
+  "passed": true
+}

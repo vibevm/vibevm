@@ -1,0 +1,54 @@
+{
+  "group": "V1",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::m_05_b_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "12",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 12,
+      "passed": true,
+      "seconds": 2.44114351272583,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-1.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::package::features::m_05_b_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "9",
+          "0",
+          "0"
+        ]
+      ],
+      "expected": 9,
+      "passed": true,
+      "seconds": 0.22153544425964355,
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/V1-2.log"
+    }
+  ],
+  "passed": true
+}

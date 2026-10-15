@@ -1,0 +1,27 @@
+{
+  "question_id": "m05b1-defer-fixture-read-owners",
+  "decision": "Approve exact read-only fixture owners; validate known dependency declarations strictly while preserving honest partial export-context/legacy behavior.",
+  "repository_root": "/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next",
+  "read_paths": [
+    "crates/vibe-core/src/manifest/lockfile.rs",
+    "crates/vibe-workspace/src/vibedeps.rs",
+    "crates/vibe-core/src/manifest/package/skill.rs"
+  ],
+  "read_sha256": {
+    "crates/vibe-core/src/manifest/lockfile.rs": "4e681c574114f243913024e7fd6ac4b0cb10ebabc641b383b10cca0692b0aafa",
+    "crates/vibe-workspace/src/vibedeps.rs": "65faeedd6a84b17844dd22ea07e7cba1776f455f683e5a451be66039a9b35847",
+    "crates/vibe-core/src/manifest/package/skill.rs": "e255f68ac136b670e4bc066f1dda5bf5806151cb7ea9c1f72dca5bc6ab977268"
+  },
+  "write_paths_added": [],
+  "constraints": [
+    "Read requested lockfile/vibedeps owners; in_place_slot_abs_path and is_in_place_slot are actually defined in vibedeps.rs at262/273. Added skill.rs read shows agent projection SkillDecl names, not permission to equate those with exported subskill paths.",
+    "Do not infer exported-subskill/config declarations from their uses. An unavailable export catalogue is not a known empty catalogue. Normalize and validate actual requires declarations/aliases/required seeds strictly at the named callers.",
+    "Do not introduce a regression: legacy table syntax default=[a], a=[subskill:stack/rust] was accepted as an active-subskill selection. The full-Manifest callers lack an authoritative export catalogue, so do not simply pass an empty closed export set to strict validation and reject all such legacy manifests. Returned selectors are not proof or authority that exports exist. Preserve incumbent downstream validation.",
+    "A narrow dependency-context-aware legacy lowering/profile using the SAME FeatureProgram/expand_program engine is authorized within already admitted features/effects.rs/resolver owners. Validate all known dependency/local references including dormant refs and required weak seeds; distinguish unavailable export catalogue without fake self-declarations. Keep the fully declared typed API strict for caller-supplied export/config catalogues. No second engine/grammar/new manifest field/B2B3 implementation.",
+    "Include one actual caller-level legacy subskill-selector preservation assertion in the already selected small caller family, alongside undeclared dependency/dormant/required weak cases. No broader suite. Document honest catalogue limits in existing PROP003.",
+    "If this exact partial-profile distinction cannot be implemented without essential outside owners, ask Root rather than weakening dependency checks or silently rejecting previously valid selectors."
+  ],
+  "operator_permission_only": true,
+  "canonical_acceptance": false,
+  "utc": "2026-10-15T14:47:57.468040+00:00"
+}

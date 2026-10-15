@@ -1,0 +1,181 @@
+[
+  {
+    "id": "V1",
+    "kind": "affected_algebra",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::m_05_b_1_cases"
+      ]
+    ]
+  },
+  {
+    "id": "V2",
+    "kind": "exact_existing",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "m_05_a_2_cases::qualified_forwarding_first_slash_defect",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "m_05_a_2_cases::exclusive_at_most_one_and_all_features_validation_defect",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::package::features::tests::features_table_roundtrips",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::package::tests::requires_visibility_metadata_roundtrips_exactly",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::package::tests::requires_visibility_metadata_supports_every_source_kind",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::parses_feature_value_variants",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::parse_rejects_empty",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::transitive_expansion",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::weak_dep_feature_does_not_pull_dep",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::tests::cycles_terminate",
+        "--",
+        "--exact"
+      ]
+    ]
+  },
+  {
+    "id": "V3",
+    "kind": "TO_CREATE",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--lib",
+        "plan::fetch::m_05_b_1_correction_cases"
+      ]
+    ]
+  },
+  {
+    "id": "V4",
+    "kind": "TO_CREATE",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "document_analysis::preview::m_05_b_1_correction_cases"
+      ]
+    ]
+  },
+  {
+    "id": "V5",
+    "kind": "scoped",
+    "commands": []
+  }
+]

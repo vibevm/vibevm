@@ -1,0 +1,65 @@
+{
+  "main_base": "9635e2f80cd1599b408fd0dcdf29f175941be0c1",
+  "cherry_picks": [
+    {
+      "original": "b184b8ba304554be986197b09d49830b558e57df",
+      "main_commit": "d9b52d6fe245c9db3ef2fbe7b1387a84bfce60d6"
+    },
+    {
+      "original": "adfb5992574bcc76f57089ce4bde225eadb00ca2",
+      "main_commit": "ee413edc8f299b06081ee941967fa5ade3221d6f"
+    },
+    {
+      "original": "50cca87f88fdd45efa79fd14ddd1e3397b191781",
+      "main_commit": "24adacb4cc9f8f68ab80af877500619108d4b8cc"
+    }
+  ],
+  "main_head": "24adacb4cc9f8f68ab80af877500619108d4b8cc",
+  "conflicts": false,
+  "source_and_metadata_integrated": true,
+  "consumer_checks": [
+    {
+      "command": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--lib",
+        "plan::fetch::m_05_b_1_correction_cases"
+      ],
+      "exit": 0,
+      "seconds": 27.46738774998812,
+      "test_results": [
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m05b1-correction/ROOT-MAIN-INSTALL-CONSUMER.log"
+    },
+    {
+      "command": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::generic::m_08_c_3_cases::incumbent_logical_deployment_identity_imports_and_restores_exact_receipt",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "seconds": 29.815543842036277,
+      "test_results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 927 filtered out; finished in 0.35s"
+      ]
+    }
+  ],
+  "task_accepted": false,
+  "task": "M-05-B.1",
+  "source_commit": "50cca87f88fdd45efa79fd14ddd1e3397b191781",
+  "integrated": true,
+  "main_commit": "24adacb4cc9f8f68ab80af877500619108d4b8cc",
+  "matching_source_subjects": 33
+}

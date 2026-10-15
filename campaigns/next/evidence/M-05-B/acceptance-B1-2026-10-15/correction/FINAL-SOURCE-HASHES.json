@@ -1,0 +1,13 @@
+{
+  "crates/vibe-core/src/manifest/mod.rs": "e23791dabfb77520b4beb9888c844791e80ec9b35120bdd3bdc6af40f40ffcf6",
+  "crates/vibe-core/src/manifest/package.rs": "a38307e78acc0c2ecdf9c4386ffda8d886b9cdcc8c9bc83851a747200629cf26",
+  "crates/vibe-core/src/manifest/package/features.rs": "e3f95b53247c50db19bec74771943015ed1c53469d23c4b32070ba69f9cd4078",
+  "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+  "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs": "2a5d900e76d3f5ccf41d8310fc939cbe18b259162c8973628ccd929cb166f529",
+  "crates/vibe-install/src/plan/fetch.rs": "27ee6f4599a2b5e86971e728c9570108cdfe398d7001fed9d423a489513481b0",
+  "crates/vibe-orchestrator/src/document_analysis/preview.rs": "b25c25a3953fff5b69cf81a5178489ff5f17348a99e9ba1d9b14f01b0f2395f4",
+  "crates/vibe-resolver/src/features.rs": "815c3e4ea9b304f0050bb7e3c7b30ae4e1fc9e851d594cc056e9dc794a8b76a8",
+  "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+  "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+  "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "39990725d7d06da98eee3cfd8479d26335f8555142e005f2c60dd6cd53b6c4eb"
+}

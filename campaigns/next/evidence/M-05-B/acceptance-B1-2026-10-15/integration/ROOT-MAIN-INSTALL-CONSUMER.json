@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-install",
+    "--lib",
+    "plan::fetch::m_05_b_1_correction_cases"
+  ],
+  "exit": 0,
+  "seconds": 27.46738774998812,
+  "test_results": [
+    "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s"
+  ],
+  "log": "/fast/zap-managed/2026-10-15-m05b1-correction/ROOT-MAIN-INSTALL-CONSUMER.log"
+}

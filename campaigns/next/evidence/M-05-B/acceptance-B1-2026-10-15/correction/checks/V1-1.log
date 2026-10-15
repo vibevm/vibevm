@@ -1,0 +1,72 @@
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `vibe-cli` (manifest) generated 1 warning
+   Compiling vibe-wire v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-wire)
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:262:12
+    |
+262 |     pub fn during(_: &crate::Pinned, _: &str) {}
+    |            ^^^^^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+   Compiling vibe-registry v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-registry)
+   Compiling vibe-resolver v1.1.0 (/home/olegchir/.codex/worktrees/vibevm-m05b1-parallel/vibevm-next/crates/vibe-resolver)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.59s
+     Running unittests src/lib.rs (target/debug/deps/vibe_resolver-e8a283d00f593293)
+
+running 12 tests
+test features::m_05_b_1_cases::config_conflict_merge_refuses_atomically ... ok
+test features::m_05_b_1_cases::qualified_weak_refs_and_malformed_refs_use_shared_parser ... ok
+test features::m_05_b_1_cases::full_manifest_refuses_undeclared_default_and_dormant_references ... ok
+test features::m_05_b_1_cases::full_manifest_required_dependency_enables_weak_forwarding ... ok
+test features::m_05_b_1_cases::unknown_typed_legacy_and_already_active_targets_refuse ... ok
+test features::m_05_b_1_cases::optional_activation_and_strong_forwarding_share_effect_set ... ok
+test features::m_05_b_1_cases::option_aliases_do_not_escape_declaring_package ... ok
+test features::m_05_b_1_cases::required_and_already_active_dependencies_enable_weak_requests ... ok
+test features::m_05_b_1_cases::validation_checks_definitions_without_selecting_alternatives ... ok
+test features::m_05_b_1_cases::typed_and_legacy_expansion_are_identical ... ok
+test features::m_05_b_1_cases::weak_only_stays_dormant_and_strong_alone_activates ... ok
+test features::m_05_b_1_cases::weak_forwarding_is_order_independent_and_survives_merge ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 99 filtered out; finished in 0.00s
+
