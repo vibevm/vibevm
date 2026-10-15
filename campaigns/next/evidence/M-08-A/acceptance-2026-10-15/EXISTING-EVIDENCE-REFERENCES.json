@@ -1,0 +1,75 @@
+{
+  "referenced_without_rewriting": [
+    {
+      "path": "fixtures/next/adapters/four-client-contracts.json",
+      "sha256": "2423fc75eb5ece6f435fc7a16f9a58d9d815490de7d77c07e5a40df405f86cc5",
+      "bytes": 5386853
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "sha256": "4993ad6b32a321d33dbdddcb6eaf5fa2ad1a0982d2a673792043df993dc4a202",
+      "bytes": 176600
+    },
+    {
+      "path": "campaigns/next/tasks/M-08-A.json",
+      "sha256": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+      "bytes": 10318
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/REPORT-correction.md",
+      "sha256": "432bc378979fa211eccd4d20406878faadd1871e67039072be1cb028bcd95501",
+      "bytes": 3836
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/claude_code-version-correction.json",
+      "sha256": "9e4cdf1e0794ee0a0ffc2774e1357c91c08071995930263946c8573f79154b3c",
+      "bytes": 1749
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/codex-version-correction.json",
+      "sha256": "8eb7b9b44443e1d316cb08c9c7b6c05ed7559d6af69e103c249756380e4a59ed",
+      "bytes": 1781
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/discovery-correction.json",
+      "sha256": "15a2de93c3a42cb818bd7dc3a3d9f4163ee76f9d929696d5d1a24cd2cacdf5b2",
+      "bytes": 663
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/findings-correction.json",
+      "sha256": "8d8abc55f73b871de0f03424451feccab7fa07b876bdc97afa420ebfe204214e",
+      "bytes": 2989
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/metadata-correction-final.log",
+      "sha256": "c688f7bfc0b2fb532bb87330fd2d063012a4e0af1679e8c849dc435a7acd4266",
+      "bytes": 316
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/preservation-correction.json",
+      "sha256": "46dad3768780e6c56daae01c77cb3d1eba0d54261e1b1f27fa7ae44c5e93474d",
+      "bytes": 5232
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/reads-correction.json",
+      "sha256": "40434757071d763e9486b2cdf3d77735a042a12145d092027ae62818cbac96dc",
+      "bytes": 10530
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/report-correction.json",
+      "sha256": "7dc1584359533b36177b44ef3ebbf5dab22077668438ed65f17b56742ae806da",
+      "bytes": 13154
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/sources-correction.json",
+      "sha256": "fec766f646884520664cc3c3ae8f5fd73654ccb5476b425677652c172f9aafea",
+      "bytes": 27153
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A/verification-correction.json",
+      "sha256": "f3839a599330fb83d28163bc2ce6a9fe11acab1974547c1e7130006c83b10daf",
+      "bytes": 1037
+    }
+  ],
+  "note": "Includes actualClaude/Codex probeJSON, preservation, discovery, source records and permanent report; no duplicate probes needed."
+}

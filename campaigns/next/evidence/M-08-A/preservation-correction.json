@@ -1,0 +1,116 @@
+{
+  "legacy": [
+    {
+      "path": "fixtures/next/adapters/skill-v1.md",
+      "before": "957f06b72fc966aa6d1488799017f253745d73e87cbd59ba9cedaac6e7a95e79",
+      "after": "957f06b72fc966aa6d1488799017f253745d73e87cbd59ba9cedaac6e7a95e79",
+      "unchanged": true
+    },
+    {
+      "path": "fixtures/next/adapters/skill-v2.md",
+      "before": "42c389ae23886a24720711eb20f4d60bcf0657259362d46a368795fcb8885f96",
+      "after": "42c389ae23886a24720711eb20f4d60bcf0657259362d46a368795fcb8885f96",
+      "unchanged": true
+    },
+    {
+      "path": "fixtures/next/adapters/foreign.json",
+      "before": "36ab7ef7d7d9559e8c85708139dba2ccc8e23726cf2e01859e893982e01de02e",
+      "after": "36ab7ef7d7d9559e8c85708139dba2ccc8e23726cf2e01859e893982e01de02e",
+      "unchanged": true
+    },
+    {
+      "path": "fixtures/next/adapters/matrix.json",
+      "before": "bcd81616ad9a24b20f45cd9660ea84f57bb9bd4d036d404dad2d886e262b6fe8",
+      "after": "bcd81616ad9a24b20f45cd9660ea84f57bb9bd4d036d404dad2d886e262b6fe8",
+      "unchanged": true
+    },
+    {
+      "path": "fixtures/next/adapters/foreign-after-remove.json",
+      "before": "0c757d47b279b2f074df212273c3cfa0a9f81e9de42f6625f1e769eca32c08af",
+      "after": "0c757d47b279b2f074df212273c3cfa0a9f81e9de42f6625f1e769eca32c08af",
+      "unchanged": true
+    }
+  ],
+  "old_prop054_subtrees": 23,
+  "seven_rule_properties": "All original elements/attributes/direct text preserved by selected verifier; new non-fact commentary siblings only.",
+  "source_files": [
+    {
+      "path": "campaigns/next/tasks/M-08-A.json",
+      "head_sha256": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+      "current_sha256": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/Cargo.toml",
+      "head_sha256": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+      "current_sha256": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents.rs",
+      "head_sha256": "feba74de71ca49c4060f373ff1efa5c7cb8e9e4e31fb110015dfc37069c23b6a",
+      "current_sha256": "feba74de71ca49c4060f373ff1efa5c7cb8e9e4e31fb110015dfc37069c23b6a",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents/ambient_paths.rs",
+      "head_sha256": "aba9a76b10728b9fa4d865add54e82f0f1a47d7955b2186123a93b4f03536142",
+      "current_sha256": "aba9a76b10728b9fa4d865add54e82f0f1a47d7955b2186123a93b4f03536142",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents/home_paths.rs",
+      "head_sha256": "942ac90b86780b8f1f96b07d7d49cb865cf10821904e3946e6e28e76bbb01cb7",
+      "current_sha256": "942ac90b86780b8f1f96b07d7d49cb865cf10821904e3946e6e28e76bbb01cb7",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/m_08_a_1_cases.rs",
+      "head_sha256": "2a2da0601f86b86a338bc83d8fc5ed44c9d976205b4fdfc5169dd4ac3ccf0161",
+      "current_sha256": "2a2da0601f86b86a338bc83d8fc5ed44c9d976205b4fdfc5169dd4ac3ccf0161",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/Cargo.toml",
+      "head_sha256": "714eba1c48ca1ab18930715070b0cef06ae528958bffe8f13dbb34a3ffbd10c4",
+      "current_sha256": "714eba1c48ca1ab18930715070b0cef06ae528958bffe8f13dbb34a3ffbd10c4",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/m_08_a_1_cases.rs",
+      "head_sha256": "246b464bcf58e5dc0e6e3bb34f869896c45f067801d13a1308f31e33bf099c16",
+      "current_sha256": "246b464bcf58e5dc0e6e3bb34f869896c45f067801d13a1308f31e33bf099c16",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client.rs",
+      "head_sha256": "67c813a4025eb2e138c1778f17bce289648576d9aa57d618368726c55971feeb",
+      "current_sha256": "67c813a4025eb2e138c1778f17bce289648576d9aa57d618368726c55971feeb",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs",
+      "head_sha256": "15996ea56bacc8109259c0abca8ce7a44fc89690d53a37ecaf2a6df7add7cb89",
+      "current_sha256": "15996ea56bacc8109259c0abca8ce7a44fc89690d53a37ecaf2a6df7add7cb89",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+      "head_sha256": "be92ac78f6ef19f0404d67264a5aeb375f10d78bcf8cd67ab6ba35f0dd5d9eb5",
+      "current_sha256": "be92ac78f6ef19f0404d67264a5aeb375f10d78bcf8cd67ab6ba35f0dd5d9eb5",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+      "head_sha256": "e1758d88a71669312211389e3f2ac4244f42b72c3690103006b88e6345a863c2",
+      "current_sha256": "e1758d88a71669312211389e3f2ac4244f42b72c3690103006b88e6345a863c2",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/process/mod.rs",
+      "head_sha256": "e993da0c7c202d6585863339ad49dc8ea2ace245e62160a6e394c051053663db",
+      "current_sha256": "e993da0c7c202d6585863339ad49dc8ea2ace245e62160a6e394c051053663db",
+      "unchanged": true
+    }
+  ]
+}

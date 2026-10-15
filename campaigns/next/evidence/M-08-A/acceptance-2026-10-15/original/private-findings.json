@@ -1,0 +1,25 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Criterion 1: actual observations, source characterization, proposed contracts and unexecuted gates are separated in four-client-contracts.json; exact versions remain missing, not supported.",
+    "Criterion 2: each of 33 rows has all 12 concrete future scenario groups, including explicit refusal branches, before-image inverse and actual-client observation gates; their execution is not claimed.",
+    "Current source already includes Qwen Agent and Codex project MCP; legacy standalone, automatic and deployment receipts stay distinct.",
+    "OpenCode native plugins differ from projected skills/MCP; Qwen extensions use user storage with optional project activation.",
+    "Metadata verification exit 0: 4 clients, 33 rows, 26 sources, 396 proof bindings; 23 original PROP054 child subtrees preserved; zero legacy fixture changes."
+  ],
+  "unresolved": [
+    "unsatisfied exact-version observations: all four literal executable candidates missing from managed worker PATH; zero version probes, no install authorized or performed.",
+    "unsatisfied release-specific behavior binding: all fetched vendor sources are live/unversioned; legacy version policies do not qualify any exact CLI tuple.",
+    "unsatisfied future runtime gates: 396 proof cases unexecuted, including actual client discovery/update/removal. No runtime support inferred from metadata validation.",
+    "unsatisfied preparation detail for client-managed plugin paths/activation stores: Claude/Codex cache children and Qwen project activation storage must be captured from exact prepared client before effects; package manifest paths are specified.",
+    "unsatisfied safe no-provider skill/effective-config observation routes and complete user-root isolation: CODEX_HOME does not prove isolation of HOME/.agents; Qwen private-root override not established; OpenCode additive config override is not full isolation.",
+    "Existing plugin artifact update refuses undeploy-then-deploy; existing skill update has no reversible prior-state handle. Successful general update/inverse and cleanup after provider removal require later owning implementation/proof.",
+    "M-06-C.2 standalone interactive VibeVM boot inspector remains mandatory future work. Root acceptance and campaign counters unchanged."
+  ],
+  "proposed_follow_up": null
+}

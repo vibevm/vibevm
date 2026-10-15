@@ -1,0 +1,31 @@
+{
+  "exit": 0,
+  "executed_metadata_case_count": 1,
+  "program": "/usr/bin/python3",
+  "arguments": [
+    "/fast/zap-managed/2026-10-15-m08a2-correction/verify-m08a2.py",
+    "/fast/git/v/vibevm-next/fixtures/next/adapters/four-client-contracts.json"
+  ],
+  "working_directory": "/fast/git/v/vibevm-next",
+  "log": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/metadata-correction-final.log",
+  "log_sha256": "c688f7bfc0b2fb532bb87330fd2d063012a4e0af1679e8c849dc435a7acd4266",
+  "actual_stdout": {
+    "kind": "M08A2_metadata_validation",
+    "clients": 4,
+    "rows": 33,
+    "sources": 27,
+    "proof_bindings": 396,
+    "scenario_groups": 12,
+    "old_PROP054_children_preserved": 23,
+    "legacy_changes": [],
+    "runtime_support_qualified": false,
+    "checks": "JSON/XML/coverage/references/provenance separation/preservation/scoped whitespace"
+  },
+  "script_hashes": {
+    "/fast/zap-managed/2026-10-15-m08a2-correction/verify-m08a2.py": "6ff0dfc1dc34d8f0cbf3569814ffe13e12291be32a56f3381880635f4b340cfb",
+    "/fast/zap-managed/2026-10-15-m08a2-correction/verify_semantics.py": "9322d57090b3b5ea7289ebab7bfc167988220995271d295a03e416206ee818b8"
+  },
+  "runtime_tests_executed": 0,
+  "probe_reply_observations": 2,
+  "count_meaning": "4clients33rows396bindings1872branches are metadata counts, not tests/runtimeproofs"
+}

@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "task": "M-08-A.2",
+  "verdict": "changes_required",
+  "full_task_accepted": false,
+  "findings": [
+    {
+      "id": "F1",
+      "priority": 2,
+      "title": "Bind known available exact Claude and Codex versions before completing version-contract step",
+      "file": "fixtures/next/adapters/four-client-contracts.json",
+      "line": 45,
+      "rows": "clients.codex.version; all version_applicability fields; probe_preparation",
+      "evidence": "All four exact versions null and zero probes; worker PATH miss only. Read ROOT-EXECUTABLE-METADATA.json: two available vendor ELFs at Claude2.1.299 and Codex0.159.3 paths; these path identities are not actual version replies. Three named OpenCode paths and one qwen path absent, not machine-wide absence.",
+      "minimal_fix": "Root binds two absolute vendor --version calls to same managed producer with documented CODEX_HOME/CLAUDE_CONFIG_DIR, bounded private cwd/minenv; record actual replies and bind proposed version-specific rows, preserving source applicability and genuinely missing client debt.",
+      "no_new_requirement": "No HOME/.agents discovery isolation gate for trusted version-only probe; no install, model, login, runtime commissioning or kernel/network sandbox."
+    },
+    {
+      "id": "F2",
+      "priority": 2,
+      "title": "Make future receipt expectations scenario-specific and consistent",
+      "file": "fixtures/next/adapters/four-client-contracts.json",
+      "line": 3929,
+      "proof_examples": ["claude_code.skill.project.prepare_plan", "claude_code.skill.project.owned_update", "claude_code.skill.project.uninstall_revocation"],
+      "affected_nonunsupported_rows": 30,
+      "repeated_gen1_receipt_bindings": 360,
+      "evidence": "Plan forbids receipt but receipt oracle requires generation1; update requires generation2 but oracle generation1; common absent/no-receipt prestate conflicts with owned-v1 scenarios.",
+      "minimal_fix": "Separate absent/acquired/retained/updated/restored/retired/refused transitions and coherent initial states per scenario; no runtime execution now."
+    },
+    {
+      "id": "F3",
+      "priority": 2,
+      "title": "Include the full skill tree in exact owned footprint",
+      "file": "fixtures/next/adapters/four-client-contracts.json",
+      "line": 486,
+      "affected_rows": "all eight skill project/user rows",
+      "evidence": "Additional reference.txt is installed and later deleted, while logical resource/lock/plan/receipt/uninstall name only SKILL.md.",
+      "minimal_fix": "Enumerate both files or define a tree root with exact member manifest; bind update and cleanup to owned full footprint and preserve foreign neighbor."
+    }
+  ],
+  "coverage": {
+    "clients": 4,
+    "rows": 33,
+    "sources": 26,
+    "proof_bindings": 396,
+    "scenario_groups": 12,
+    "runtime_proofs_executed": 0,
+    "version_probes_executed": 0,
+    "sources_release_pinned": 0,
+    "interpretation": "generated metadata bindings, not independently implemented/executed tests"
+  },
+  "preservation": {
+    "old_prop054_sha256": "078299cd2c040b6886a019aad09a88185952590152cfb525be6d8167d3497c18",
+    "old_prefix_bytes_preserved": true,
+    "old_semantic_children_preserved": 23,
+    "new_children": 1,
+    "tail_change": "Only trailing separator whitespace at old last child before new sibling",
+    "legacy_fixture_hashes_unchanged": 5,
+    "rust_regressions_needed_for_separate_json": false
+  },
+  "review_limits": {
+    "candidate_hashes_stable_between_observations": true,
+    "hash_file": "sourcehashes.json",
+    "process_terminal_verified": false,
+    "frozen_subject_claim": false,
+    "official_pages_independently_refetched": false,
+    "runtime_or_test_execution": false,
+    "repository_edits": false,
+    "acceptance_mutation": false
+  },
+  "disclosed_remaining_bindings": [
+    "Claude/Codex vendor-managed plugin paths and Qwen activation store",
+    "Eight config effective-value discovery routes and OpenCode skill catalogue route",
+    "Qwen user plugin lock repeats project-store wording",
+    "Live docs exact-release applicability remains distinct from proposed requested version"
+  ],
+  "root_executable_metadata": {
+    "source": "/fast/zap-managed/2026-10-15-m08a2/ROOT-EXECUTABLE-METADATA.json",
+    "claude": {"path": "/home/olegchir/.local/share/claude/versions/2.1.299", "sha256": "2d894a4b1bfaaa9aab72aeff7803e3c73bc2510f279a171f6b8f59f72d17d077"},
+    "codex": {"path": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex", "sha256": "8bf204b36a2f6dd0dab73aa2f639892e67ef9ac8befccb4a05b1496ebf25c479"},
+    "version_reply_observed": false
+  },
+  "next": "Return three findings and two bounded absolute vendor probe bindings to same actual Zap/PodBay managed producer; Root reviews corrected candidate. M06C2 remains mandatory pending."
+}

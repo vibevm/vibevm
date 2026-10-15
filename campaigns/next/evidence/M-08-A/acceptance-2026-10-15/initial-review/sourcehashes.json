@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "candidate_files": [
+    {
+      "path": "/fast/git/v/vibevm-next/fixtures/next/adapters/four-client-contracts.json",
+      "before": "5ed0fd407f194b409ed2b47c8a603979be4fa56223b411e05030d22e0fdfd94e",
+      "after": "5ed0fd407f194b409ed2b47c8a603979be4fa56223b411e05030d22e0fdfd94e",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "before": "63e60bcaae522deae5f7363eb6263a9c64da9cfdc6f5a79e72a7a3af560397ce",
+      "after": "63e60bcaae522deae5f7363eb6263a9c64da9cfdc6f5a79e72a7a3af560397ce",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/tasks/M-08-A.json",
+      "before": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+      "after": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/observations.json",
+      "before": "7e1abe08f589c90fe15ad7e493307f3abef7abddcb66da8aa03b0e410f24a286",
+      "after": "7e1abe08f589c90fe15ad7e493307f3abef7abddcb66da8aa03b0e410f24a286",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/metadata-verification.log",
+      "before": "62e035528d06505c749a98c3ab3158d4b04093adb57267737d203fe427ac4538",
+      "after": "62e035528d06505c749a98c3ab3158d4b04093adb57267737d203fe427ac4538",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/findings.json",
+      "before": "9b5a7eb491015671f13b8a703829c69365f864cb5250230112ce9955cac73a1c",
+      "after": "9b5a7eb491015671f13b8a703829c69365f864cb5250230112ce9955cac73a1c",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/report.json",
+      "before": "0e7c337db76d128c5120ae42149d9b71eb01428ae649c1cd469e8b8021833109",
+      "after": "0e7c337db76d128c5120ae42149d9b71eb01428ae649c1cd469e8b8021833109",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/REPORT.md",
+      "before": "3a0b3b194986daba7b742c032c5106ea43d190cfda13a7cf89ac2bdc906fbff9",
+      "after": "3a0b3b194986daba7b742c032c5106ea43d190cfda13a7cf89ac2bdc906fbff9",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2/candidate-result.json",
+      "before": "afec5c026df80eebbf19a0d3bf9de7cd69a5e6ce44950f10e6b470a9535c2655",
+      "after": "afec5c026df80eebbf19a0d3bf9de7cd69a5e6ce44950f10e6b470a9535c2655",
+      "unchanged": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2/candidate.patch",
+      "before": "0c4854fea66090f606d33255c6fec5d245b66dcdafa387f0b9c83f4ba22b5061",
+      "after": "0c4854fea66090f606d33255c6fec5d245b66dcdafa387f0b9c83f4ba22b5061",
+      "unchanged": true
+    }
+  ],
+  "all_equal": true,
+  "freeze_claim": false,
+  "physical_terminal_verified": false
+}

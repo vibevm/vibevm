@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "task": "M-08-A.2",
+  "verdict": "bounded_clear_full_A2_documentation_contracts",
+  "findings": [],
+  "original_findings": {"F1": "closed", "F2": "closed", "F3": "closed"},
+  "criterion2": {
+    "root_can_accept_for_A2": true,
+    "additional_metadata_fix_required": false,
+    "producer_disposition": "unsatisfied; preserve as raw evidence",
+    "reason": "Per-row concrete future expected values, complete footprint/receipt transitions and explicit no-effect refusal on unbound route/path satisfy documentation proof contract. Actual runtime observation binding/execution is a later commissioning prerequisite.",
+    "not_reason": "Structural verifier pass alone",
+    "protocol_action": "Root records independent rationale through normal review/stage semantics; no rewriting producer claim or bypassing guards",
+    "runtime_commissioning_accepted": false
+  },
+  "subject": {
+    "fixture_sha256": "2423fc75eb5ece6f435fc7a16f9a58d9d815490de7d77c07e5a40df405f86cc5",
+    "patch_sha256": "56c2cc3c526c965957ef27898f0d3cf278c9f846dca952b81c88b193047c9ec2",
+    "patch_bytes": 5573728,
+    "report_sha256": "7dc1584359533b36177b44ef3ebbf5dab22077668438ed65f17b56742ae806da",
+    "report_bytes": 13154,
+    "prop054_sha256": "4993ad6b32a321d33dbdddcb6eaf5fa2ad1a0982d2a673792043df993dc4a202",
+    "task_sha256": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+    "stable_files_between_observations": 16,
+    "physical_terminal_verified": false,
+    "frozen_subject_claim": false
+  },
+  "probe_evidence": {
+    "claude_code": {"version": "2.1.299", "exit": 0, "platform": "linux-x86_64", "root_pinned_hash_matched": true},
+    "codex": {"version": "0.159.3", "exit": 0, "platform": "linux-x86_64", "root_pinned_hash_matched": true},
+    "opencode_qwen": "Bounded named-path/PATH absence debt, not machine-wide absence",
+    "runtime_operation_support_inferred": false,
+    "reviewer_ran_probes": false
+  },
+  "semantic_coverage": {
+    "clients": 4,
+    "rows": 33,
+    "sources": 27,
+    "scenario_bindings": 396,
+    "structured_branches": 1872,
+    "scenario_groups": 12,
+    "full_skill_footprints": 8,
+    "opencode_projection_members": 2,
+    "unsupported_rows": 3,
+    "counts_are_executed_tests": false
+  },
+  "preservation": {
+    "original_prop054_children": 23,
+    "current_children": 25,
+    "original_semantic_children_preserved": true,
+    "original_byte_prefix_preserved": true,
+    "legacy_fixtures_unchanged": 5,
+    "rust_test_replay_required": false
+  },
+  "remaining_runtime_debt": [
+    "Eight effective-config observation routes and OpenCode skill catalogue route",
+    "Exact private-root/startup skill UI binding",
+    "Vendor-managed plugin cache/installed paths and Qwen scope activation identity",
+    "OpenCode/Qwen exact available versions",
+    "Live-document exact-release applicability",
+    "Actual adapter/runtime commissioning execution and implementation gates"
+  ],
+  "reviewer_effects": {"product_edits": false, "git_or_index_actions": false, "builds_or_tests": false, "network_or_models": false, "service_or_store_actions": false, "acceptance_changes": false},
+  "M06C2": "mandatory pending",
+  "artifacts": ["REPORT.md", "REPORT.json", "sourcehashes.json"]
+}

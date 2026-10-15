@@ -1,0 +1,223 @@
+{
+  "actual_named_reads": [
+    {
+      "path": "campaigns/next/evidence/M-08-A.1/accepted-2026-10-14.md",
+      "sha256": "255f534204cecf93230c52957dd03c5e1a5388ac3a6667b034df9cd1eb162d7b",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A.1/report.json",
+      "sha256": "b15d84c6a051dc3dcd26d5d27ebacbabe00ca1d1df8f361d35fe813d6ed50ea6",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A.1/root-review.json",
+      "sha256": "b16c701cdf9d1376d882314a8e909565aeb32b5210548c197bb3eaba2aa6753d",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A.1/work-receipts.json",
+      "sha256": "ee8901555efe54629ba64d6464277d19cd1946dd70f29551527a6f924f0a30e5",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "campaigns/next/tasks/M-08-A.json",
+      "sha256": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-agent-projection/Cargo.toml",
+      "sha256": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents.rs",
+      "sha256": "feba74de71ca49c4060f373ff1efa5c7cb8e9e4e31fb110015dfc37069c23b6a",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents/ambient_paths.rs",
+      "sha256": "aba9a76b10728b9fa4d865add54e82f0f1a47d7955b2186123a93b4f03536142",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents/home_paths.rs",
+      "sha256": "942ac90b86780b8f1f96b07d7d49cb865cf10821904e3946e6e28e76bbb01cb7",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/m_08_a_1_cases.rs",
+      "sha256": "2a2da0601f86b86a338bc83d8fc5ed44c9d976205b4fdfc5169dd4ac3ccf0161",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-lifecycle/Cargo.toml",
+      "sha256": "714eba1c48ca1ab18930715070b0cef06ae528958bffe8f13dbb34a3ffbd10c4",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/m_08_a_1_cases.rs",
+      "sha256": "246b464bcf58e5dc0e6e3bb34f869896c45f067801d13a1308f31e33bf099c16",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client.rs",
+      "sha256": "67c813a4025eb2e138c1778f17bce289648576d9aa57d618368726c55971feeb",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs",
+      "sha256": "15996ea56bacc8109259c0abca8ce7a44fc89690d53a37ecaf2a6df7add7cb89",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+      "sha256": "be92ac78f6ef19f0404d67264a5aeb375f10d78bcf8cd67ab6ba35f0dd5d9eb5",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+      "sha256": "e1758d88a71669312211389e3f2ac4244f42b72c3690103006b88e6345a863c2",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/process/mod.rs",
+      "sha256": "e993da0c7c202d6585863339ad49dc8ea2ace245e62160a6e394c051053663db",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "fixtures/next/adapters/matrix.json",
+      "sha256": "bcd81616ad9a24b20f45cd9660ea84f57bb9bd4d036d404dad2d886e262b6fe8",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/flows/fast-rust-compiler/FAST-RUST-COMPILER.xml",
+      "sha256": "3139b3a3b60a607e14868656c359c7d86bc3b77f43a139cf4184eefd62be556d",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml",
+      "sha256": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "sha256": "4993ad6b32a321d33dbdddcb6eaf5fa2ad1a0982d2a673792043df993dc4a202",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "campaigns/next/verification-policy.json",
+      "sha256": "0a3339b333551d5975a2cb384693886bb1432dd7bea63020f3d3eaded1bb5089",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "fixtures/next/adapters/four-client-contracts.json",
+      "sha256": "2423fc75eb5ece6f435fc7a16f9a58d9d815490de7d77c07e5a40df405f86cc5",
+      "role": "named source/evidence or current candidate"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/READ-ROSTER.json",
+      "sha256": "2c4b2565409295fce7a10ef0c4b583a6b6b6ef1c3fe55e203dc9f85e5cd34751",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/METADATA-CONTRACT.md",
+      "sha256": "7ce4c16293dce7755e0f01556f4e23d79aefad2c77570bcf118a0d333ded138a",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/verify-m08a2.py",
+      "sha256": "6ff0dfc1dc34d8f0cbf3569814ffe13e12291be32a56f3381880635f4b340cfb",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/verify_semantics.py",
+      "sha256": "9322d57090b3b5ea7289ebab7bfc167988220995271d295a03e416206ee818b8",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/OPERATOR-PROBE-BINDINGS.json",
+      "sha256": "29ed513f3c633091e23fa65b9d4b740ab00e39c0da50dcac7094749c40bddc8a",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/ROOT-TARGET-HANDOVER.json",
+      "sha256": "5781450af82de97641c6cfb4a0a5c067867459fa27295ccf34a8db36241f6c80",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/START-PLAN.md",
+      "sha256": "07a563cbd5acf96794f48ef32b96c5702249371c6f62aff55f4c06e06ccceb6b",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/source-baseline.json",
+      "sha256": "efded1e6578479865aedf76527b8c320d80d92932475a7b2b58be09362fe4a73",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/finish-candidate.rs",
+      "sha256": "791e61e9f9aae42b3d3e9e7757ddc80c9b9a5c6caf11dcee39c0eb2e5800aec2",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/ready-capture.json",
+      "sha256": "aa0b0697a8cf30f337393f09efd00edca3ad1920ba55b8883f9ef422d75966f8",
+      "role": "private operator contract; ready-capture read limited to required criteria"
+    },
+    {
+      "path": "/home/olegchir/.codex/skills/.system/openai-docs/SKILL.md",
+      "sha256": "aa6829e21df2223167c85d2e49b6337a7345c84c1033f1ec10182c7882b36d45",
+      "role": "named standing skill or owner-supplied evidence, not replacement source authority"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2/ROOT-EXECUTABLE-METADATA.json",
+      "sha256": "86f798d16fb3b3c5ef49ac306c657004d7b4049ee1933eaaf8dc589fdb83bb1c",
+      "role": "named standing skill or owner-supplied evidence, not replacement source authority"
+    },
+    {
+      "path": "/fast/git/v/research/2026-10-15-m08a2-preflight/REPORT.md",
+      "sha256": "2434655351e9df8dc4ba409d0fa906d1cd39fd506be5a6b34d9db1a44af2444c",
+      "role": "named standing skill or owner-supplied evidence, not replacement source authority"
+    },
+    {
+      "path": "/fast/git/v/research/2026-10-15-m08a2-review/REPORT.md",
+      "sha256": "989b9aaded907297cfdfa99e9e528d73a46c7fc326a18f8f84b6e46303e058d6",
+      "role": "named standing skill or owner-supplied evidence, not replacement source authority"
+    },
+    {
+      "path": "/fast/git/v/research/2026-10-15-m08a2-review/REPORT.json",
+      "sha256": "af3596c100346af52fe5bbd9a90224599b8747ebb9de6e4a57b1661ba016721b",
+      "role": "named standing skill or owner-supplied evidence, not replacement source authority"
+    },
+    {
+      "path": "/fast/git/v/research/2026-10-15-m08a2-review/sourcehashes.json",
+      "sha256": "60d356da8a3b8dab6e7a2e07e3297df5702976e1163682ddc7316354f25db611",
+      "role": "named standing skill or owner-supplied evidence, not replacement source authority"
+    }
+  ],
+  "implicit_verifier_reads": [
+    "private before/PROP-054.xml",
+    "private legacy-fixtures-before.json",
+    "all JSON under campaigns/next/evidence/M-08-A",
+    "legacy fixtures hashed without executing them"
+  ],
+  "excluded": [
+    "AGENTS/full boot/INDEX/STATIC",
+    "steward/global-rule/history traversal",
+    "plan.seed.toml (listed in roster, not needed or read)",
+    "process/scratch.rs",
+    "real client configurations or credentials"
+  ],
+  "other_reads": [
+    "Existing candidate findings.json and selected fields of retained metadata",
+    "Two known ELF files for SHA-256 identity only",
+    "Named executable resolution metadata",
+    "Scoped git diff/ls-files and git show of named source inputs for patch/preservation"
+  ]
+}

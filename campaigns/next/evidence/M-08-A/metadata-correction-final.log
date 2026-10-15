@@ -1,0 +1,1 @@
+{"kind": "M08A2_metadata_validation", "clients": 4, "rows": 33, "sources": 27, "proof_bindings": 396, "scenario_groups": 12, "old_PROP054_children_preserved": 23, "legacy_changes": [], "runtime_support_qualified": false, "checks": "JSON/XML/coverage/references/provenance separation/preservation/scoped whitespace"}

@@ -1,0 +1,49 @@
+{
+  "executable_path": "/home/olegchir/.local/share/claude/versions/2.1.299",
+  "executable_sha256": "2d894a4b1bfaaa9aab72aeff7803e3c73bc2510f279a171f6b8f59f72d17d077",
+  "argv": [
+    "--version"
+  ],
+  "probe_executed": true,
+  "timeout_seconds": 15,
+  "max_bytes_per_stream": 65536,
+  "stdin_closed": true,
+  "override_names": [
+    "CLAUDE_CONFIG_DIR",
+    "LANG",
+    "LC_ALL",
+    "PATH",
+    "TMPDIR",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME"
+  ],
+  "cwd": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/cwd",
+  "platform": "linux-x86_64",
+  "started_at": "2026-10-15T00:02:12.821774+00:00",
+  "finished_at": "2026-10-15T00:02:12.927930+00:00",
+  "exit": 0,
+  "stdout": "2.1.299 (Claude Code)\n",
+  "stderr": "",
+  "bounded_tooling_argv": [
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "15s",
+    "/usr/bin/prlimit",
+    "--fsize=65536:65536",
+    "--",
+    "/home/olegchir/.local/share/claude/versions/2.1.299",
+    "--version"
+  ],
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "LANG": "C",
+    "LC_ALL": "C",
+    "TMPDIR": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/temp",
+    "XDG_CONFIG_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/config",
+    "XDG_DATA_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/data",
+    "XDG_CACHE_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/cache",
+    "CLAUDE_CONFIG_DIR": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/config"
+  },
+  "assumption": "Root-authorized trusted early version flag; no hard network or full discovery isolation claim"
+}

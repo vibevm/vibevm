@@ -1,0 +1,251 @@
+{
+  "task": "M-08-A.2",
+  "status": "corrected documentation/contracts candidate; not accepted",
+  "basis": "af61dd1aaf57ba4117e41f8d586b55a74bb26153 plus retained unaccepted A2 candidate; no clean/accepted-source claim",
+  "ownership": "VibeVM packages/projection/workspace/context; Zap goals/task/concurrency/review/acceptance; PodBay physical launch/lifecycle/resources/I/O. Only existing managed execution and output contract used.",
+  "corrections": {
+    "F1": "Actual two known-ELF --version attempts and exact row target binding; other misses scoped, not machine-wide.",
+    "F2": "Replaced contradictory common gen1 prestate/oracles with split independent phase-specific receipt_cases and checkpoint transitions.",
+    "F3": "Full enumerated skill ownership manifests and locks, v1/v2 cleanup, two typed OpenCode resources, Qwen user-specific lock debt."
+  },
+  "verification": {
+    "program": "/usr/bin/python3",
+    "arguments": [
+      "/fast/zap-managed/2026-10-15-m08a2-correction/verify-m08a2.py",
+      "/fast/git/v/vibevm-next/fixtures/next/adapters/four-client-contracts.json"
+    ],
+    "working_directory": "/fast/git/v/vibevm-next",
+    "exit": 0,
+    "stdout": "{\"kind\": \"M08A2_metadata_validation\", \"clients\": 4, \"rows\": 33, \"sources\": 27, \"proof_bindings\": 396, \"scenario_groups\": 12, \"old_PROP054_children_preserved\": 23, \"legacy_changes\": [], \"runtime_support_qualified\": false, \"checks\": \"JSON/XML/coverage/references/provenance separation/preservation/scoped whitespace\"}\n",
+    "stderr": "",
+    "log": "campaigns/next/evidence/M-08-A/metadata-correction-final.log",
+    "log_sha256": "c688f7bfc0b2fb532bb87330fd2d063012a4e0af1679e8c849dc435a7acd4266",
+    "timestamp": "2026-10-15T00:07:07.175404+00:00",
+    "runtime_tests_executed": 0,
+    "interpretation": "Finite private JSON/XML/proof binding/semantic guards and preservation only; counts are metadata, not executed commissioning tests."
+  },
+  "counts": {
+    "kind": "M08A2_metadata_validation",
+    "clients": 4,
+    "rows": 33,
+    "sources": 27,
+    "proof_bindings": 396,
+    "scenario_groups": 12,
+    "old_PROP054_children_preserved": 23,
+    "legacy_changes": [],
+    "runtime_support_qualified": false,
+    "checks": "JSON/XML/coverage/references/provenance separation/preservation/scoped whitespace"
+  },
+  "receipt_branches": 1872,
+  "count_interpretation": "Rows, source records and generated proof bindings/branches are documentation counts; not implemented or passed runtime tests.",
+  "actual_probes": [
+    {
+      "executable_path": "/home/olegchir/.local/share/claude/versions/2.1.299",
+      "executable_sha256": "2d894a4b1bfaaa9aab72aeff7803e3c73bc2510f279a171f6b8f59f72d17d077",
+      "argv": [
+        "--version"
+      ],
+      "probe_executed": true,
+      "timeout_seconds": 15,
+      "max_bytes_per_stream": 65536,
+      "stdin_closed": true,
+      "override_names": [
+        "CLAUDE_CONFIG_DIR",
+        "LANG",
+        "LC_ALL",
+        "PATH",
+        "TMPDIR",
+        "XDG_CACHE_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME"
+      ],
+      "cwd": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/cwd",
+      "platform": "linux-x86_64",
+      "started_at": "2026-10-15T00:02:12.821774+00:00",
+      "finished_at": "2026-10-15T00:02:12.927930+00:00",
+      "exit": 0,
+      "stdout": "2.1.299 (Claude Code)\n",
+      "stderr": "",
+      "bounded_tooling_argv": [
+        "/usr/bin/timeout",
+        "--signal=KILL",
+        "15s",
+        "/usr/bin/prlimit",
+        "--fsize=65536:65536",
+        "--",
+        "/home/olegchir/.local/share/claude/versions/2.1.299",
+        "--version"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "TMPDIR": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/temp",
+        "XDG_CONFIG_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/config",
+        "XDG_DATA_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/data",
+        "XDG_CACHE_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/cache",
+        "CLAUDE_CONFIG_DIR": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/claude_code-version-c15cg2h8/config"
+      },
+      "assumption": "Root-authorized trusted early version flag; no hard network or full discovery isolation claim"
+    },
+    {
+      "executable_path": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "executable_sha256": "8bf204b36a2f6dd0dab73aa2f639892e67ef9ac8befccb4a05b1496ebf25c479",
+      "argv": [
+        "--version"
+      ],
+      "probe_executed": true,
+      "timeout_seconds": 15,
+      "max_bytes_per_stream": 65536,
+      "stdin_closed": true,
+      "override_names": [
+        "CODEX_HOME",
+        "LANG",
+        "LC_ALL",
+        "PATH",
+        "TMPDIR",
+        "XDG_CACHE_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME"
+      ],
+      "cwd": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/cwd",
+      "platform": "linux-x86_64",
+      "started_at": "2026-10-15T00:02:13.276966+00:00",
+      "finished_at": "2026-10-15T00:02:13.382107+00:00",
+      "exit": 0,
+      "stdout": "codex-cli 0.159.3\n",
+      "stderr": "",
+      "bounded_tooling_argv": [
+        "/usr/bin/timeout",
+        "--signal=KILL",
+        "15s",
+        "/usr/bin/prlimit",
+        "--fsize=65536:65536",
+        "--",
+        "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+        "--version"
+      ],
+      "environment": {
+        "PATH": "/usr/bin:/bin",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "TMPDIR": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/temp",
+        "XDG_CONFIG_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/config",
+        "XDG_DATA_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/data",
+        "XDG_CACHE_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/cache",
+        "CODEX_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/config"
+      },
+      "assumption": "Root-authorized trusted early version flag; no hard network or full discovery isolation claim"
+    }
+  ],
+  "discovery": {
+    "PATH_candidates": {
+      "claude": null,
+      "codex": null,
+      "opencode": null,
+      "qwen": null
+    },
+    "named_paths": [
+      {
+        "path": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+        "exists": true
+      },
+      {
+        "path": "/home/olegchir/.local/bin/opencode",
+        "exists": false
+      },
+      {
+        "path": "/home/olegchir/opt/bin/opencode",
+        "exists": false
+      },
+      {
+        "path": "/home/olegchir/.opencode/bin/opencode",
+        "exists": false
+      },
+      {
+        "path": "/home/olegchir/.local/bin/qwen",
+        "exists": false
+      }
+    ],
+    "machine_wide_absence_claimed": false
+  },
+  "rust_tests_executed": 0,
+  "A1_retained": "WorkAccepted2029/11 characterization cases retained without replay. Consumed legacy fixtures unchanged.",
+  "conditional_checks": {
+    "cargo": "not applicable: separate metadata did not alter consumed legacy fixture bytes",
+    "format": "not applicable: no Rust delta; no global formatting cleanup",
+    "whole_project_or_exhaustive_facts": "not triggered: additive non-fact commentary and fixtures only; no composition/adoption/extraction/closure behavior change",
+    "whitespace": "scoped git diff --check executed by selected verifier"
+  },
+  "historical_artifacts": "Original private candidate, metadata0/log/probes0-of4 retained untouched. Original permanent report/findings/log remain historical; this correction report and findings-correction.json supersede their current completion claim.",
+  "authoring_attempts": [
+    {
+      "action": "private correction data authoring script",
+      "exit": 1,
+      "reason": "Initial string/dict source_basis assignment TypeError; no fixture write occurred before error."
+    },
+    {
+      "action": "corrected private authoring script",
+      "exit": 0
+    },
+    {
+      "action": "initial updated metadata verification",
+      "exit": 0,
+      "counts": {
+        "clients": 4,
+        "rows": 33,
+        "sources": 26,
+        "proof_bindings": 396
+      }
+    },
+    {
+      "action": "additional prose/footprint/source refinement",
+      "exit": 0
+    },
+    {
+      "action": "final selected metadata verification",
+      "exit": 0,
+      "log": "campaigns/next/evidence/M-08-A/metadata-correction-final.log"
+    }
+  ],
+  "writes": [
+    "fixtures/next/adapters/four-client-contracts.json",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+    "campaigns/next/evidence/M-08-A/*-correction.json",
+    "campaigns/next/evidence/M-08-A/metadata-correction-final.log",
+    "campaigns/next/evidence/M-08-A/REPORT-correction.md"
+  ],
+  "private_writes": "Only Root private tmp children/scripts/probe captures, candidate patch/report publication artifacts under correction root; no old private artifacts overwritten.",
+  "preservation": "preservation-correction.json",
+  "reads": "reads-correction.json",
+  "sources": "sources-correction.json",
+  "findings": {
+    "dispositions": [
+      "satisfied",
+      "unsatisfied"
+    ],
+    "checks_attempted": true,
+    "effect_state": "completed",
+    "discoveries": [
+      "Observed/source-characterized/proposed/unexecuted classes are separate. Actual bounded version replies: Claude Code 2.1.299 and codex-cli 0.159.3, both exit0 with Root-pinned hashes on linux-x86_64; no operation support claim.",
+      "All 33 rows retain 12 future scenario groups (396 bindings), now with independent receipt branches: no-write plan; install1; retained repeat/verify; update2 versus refused expansion; checkpoint recovery; real-before-image inverse; retired cleanup after v1/v2; no acquisition on foreign/unsupported branches.",
+      "All eight skill rows enumerate SKILL.md plus reference.txt v1, reference removal v2, sorted manifests/digests/full receipt resources/locks and foreign siblings. OpenCode projection has two typed members and individual oracles. Qwen user activation has user-specific storage/lock debt.",
+      "Final selected metadata verifier exit0: 4 clients, 33 rows, 27 sources, 396 proof bindings, 12 groups; 23 original PROP054 subtrees and all five legacy fixtures preserved. Zero Rust/runtime cases executed; A1 WorkAccepted2029/11 cases retained, not replayed.",
+      "Only authorized documentation/contract trees changed. Source/task/manifests unchanged. Root alone accepts; supplied count78/222 and separate M03A2 safe-stop unchanged."
+    ],
+    "unresolved": [
+      "Unsatisfied exact-target binding for OpenCode and Qwen: literal PATH and supplied named paths did not resolve executables. No machine-wide absence claim, installation or fabricated version.",
+      "Unsatisfied concrete actual-client proof binding for some requested tuples: eight effective-config observations and OpenCode skill catalogue have no established safe no-provider route. Skill UI routes still require exact private-root/startup binding. Criterion2 is conservatively unsatisfied despite complete lifecycle/refusal metadata; structural pass does not establish these missing bindings.",
+      "Unsatisfied precise client-managed plugin preparation: Claude/Codex installed path/cache membership and Qwen scope-specific activation-store physical locks need exact prepared-client identity. Unknown lock/path refuses before writes; Qwen user storage is not a project activation lock.",
+      "Live official documents are unversioned and do not prove exact-version behavior. Observed Codex0.159.3 is outside existing0.148.x plugin policy; that legacy provider must refuse without policy changes.",
+      "All runtime commissioning remains unexecuted. Future inverse requires actual captured before-images, never documentation expectations as measured history. Legacy plugin replacement remains undeploy then deploy; existing skill updates are not newly reversible.",
+      "M06C2 standalone interactive VibeVM boot inspector remains mandatory future work. Root semantic review and acceptance remain pending."
+    ],
+    "proposed_follow_up": null
+  },
+  "effect_state": "completed",
+  "effect_meaning": "Authorized metadata/evidence writes completed; acceptance and runtime gates remain pending.",
+  "scope_safety": "No Rust/source/manifest/task/registry/Git mutations, no install/login/help/list/plugin/provider/model client call, no HOME repurpose/global environment rewrite or real config/credential access. Two trusted version-only probes are observations, not hard isolation/network proof.",
+  "supplied_campaign_count": "78/222 unchanged, separate M03A2 safe-stop; no current acceptance claim",
+  "mandatory_future": "M06C2 standalone interactive VibeVM inspector remains mandatory."
+}

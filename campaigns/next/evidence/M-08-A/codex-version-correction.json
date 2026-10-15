@@ -1,0 +1,49 @@
+{
+  "executable_path": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+  "executable_sha256": "8bf204b36a2f6dd0dab73aa2f639892e67ef9ac8befccb4a05b1496ebf25c479",
+  "argv": [
+    "--version"
+  ],
+  "probe_executed": true,
+  "timeout_seconds": 15,
+  "max_bytes_per_stream": 65536,
+  "stdin_closed": true,
+  "override_names": [
+    "CODEX_HOME",
+    "LANG",
+    "LC_ALL",
+    "PATH",
+    "TMPDIR",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME"
+  ],
+  "cwd": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/cwd",
+  "platform": "linux-x86_64",
+  "started_at": "2026-10-15T00:02:13.276966+00:00",
+  "finished_at": "2026-10-15T00:02:13.382107+00:00",
+  "exit": 0,
+  "stdout": "codex-cli 0.159.3\n",
+  "stderr": "",
+  "bounded_tooling_argv": [
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "15s",
+    "/usr/bin/prlimit",
+    "--fsize=65536:65536",
+    "--",
+    "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+    "--version"
+  ],
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "LANG": "C",
+    "LC_ALL": "C",
+    "TMPDIR": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/temp",
+    "XDG_CONFIG_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/config",
+    "XDG_DATA_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/data",
+    "XDG_CACHE_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/cache",
+    "CODEX_HOME": "/fast/zap-managed/2026-10-15-m08a2-correction/tmp/codex-version-78rktyip/config"
+  },
+  "assumption": "Root-authorized trusted early version flag; no hard network or full discovery isolation claim"
+}

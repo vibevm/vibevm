@@ -1,0 +1,48 @@
+[
+  {
+    "candidate": "/home/olegchir/.local/bin/claude",
+    "exists": true,
+    "resolved": "/home/olegchir/.local/share/claude/versions/2.1.299",
+    "uid": 1000,
+    "bytes": 265342136,
+    "sha256": "2d894a4b1bfaaa9aab72aeff7803e3c73bc2510f279a171f6b8f59f72d17d077",
+    "elf": true,
+    "script": false
+  },
+  {
+    "candidate": "/home/olegchir/.local/bin/codex",
+    "exists": true,
+    "resolved": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+    "uid": 1000,
+    "bytes": 287086056,
+    "sha256": "8bf204b36a2f6dd0dab73aa2f639892e67ef9ac8befccb4a05b1496ebf25c479",
+    "elf": true,
+    "script": false
+  },
+  {
+    "candidate": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+    "exists": true,
+    "resolved": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+    "uid": 1000,
+    "bytes": 287086056,
+    "sha256": "8bf204b36a2f6dd0dab73aa2f639892e67ef9ac8befccb4a05b1496ebf25c479",
+    "elf": true,
+    "script": false
+  },
+  {
+    "candidate": "/home/olegchir/.local/bin/opencode",
+    "exists": false
+  },
+  {
+    "candidate": "/home/olegchir/opt/bin/opencode",
+    "exists": false
+  },
+  {
+    "candidate": "/home/olegchir/.opencode/bin/opencode",
+    "exists": false
+  },
+  {
+    "candidate": "/home/olegchir/.local/bin/qwen",
+    "exists": false
+  }
+]
