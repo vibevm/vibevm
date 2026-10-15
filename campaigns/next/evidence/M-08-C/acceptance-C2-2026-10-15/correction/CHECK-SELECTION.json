@@ -1,0 +1,40 @@
+{
+  "V2": {
+    "mode": "not_applicable",
+    "rationale": "No client_projection module introduced."
+  },
+  "V3": {
+    "mode": "unchanged_source",
+    "rationale": "Consumed owners unchanged from reviewed prior candidate. Generic planner and test-only hooks changed; no shared lock owner, SafeFS or C1 map change. Reuse recorded prior evidence, not a new pass.",
+    "source_hashes": {
+      "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs": "0a7382ddcaa030fd54cb7e655f28d4a62ea642d94a95d987513e4c6adb1d4e6d",
+      "crates/vibe-lifecycle/src/mechanism/deploy/preplan_tests.rs": "6926dcd1bb62b3817c2139a739d58c87dae73c55910eed56f7c499aed595a809",
+      "crates/vibe-lifecycle/src/mechanism/deploy/model.rs": "6a944b4890337bb4bd2a620ab2095e4eb58fd8fb39efb423df125c5690d90e52",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec"
+    },
+    "prior_evidence": "PRIOR-worker-report.md; FULL-REVIEW-REPORT.md/json and FULL-REVIEW-sourcehashes.json"
+  },
+  "V4": {
+    "mode": "unchanged_source",
+    "rationale": "Consumed owners unchanged from reviewed prior candidate. Generic planner and test-only hooks changed; no shared lock owner, SafeFS or C1 map change. Reuse recorded prior evidence, not a new pass.",
+    "source_hashes": {
+      "crates/vibe-safefs/src/component.rs": "7a61118f9e2af8629e3868d6c016f74903a2c803659b71c3852459ff767e97f1",
+      "crates/vibe-safefs/src/component/tests.rs": "11dd896177117bcdea0d49b653af830eb2651e6138e65ba1663e71ebf75fd482",
+      "crates/vibe-safefs/src/project.rs": "1adb308a571c857d10b3f446bb9810577c9b2531a3d7f4ae98f1838a07022f1d",
+      "crates/vibe-safefs/src/file.rs": "0e1dbc161f03d9f6a1930642dd0da1755f881e4992ae287db4810854d5933729",
+      "crates/vibe-safefs/src/file/project_methods.rs": "34a08356cf1fe1d4bcfee9a8e1fe0e9571d148fd6c0dbda9b88dcbb74477fd78"
+    },
+    "prior_evidence": "PRIOR-worker-report.md; FULL-REVIEW-REPORT.md/json and FULL-REVIEW-sourcehashes.json"
+  },
+  "V5": {
+    "mode": "unchanged_source",
+    "rationale": "Consumed owners unchanged from reviewed prior candidate. Generic planner and test-only hooks changed; no shared lock owner, SafeFS or C1 map change. Reuse recorded prior evidence, not a new pass.",
+    "source_hashes": {
+      "crates/vibe-agent-projection/src/client_capabilities.rs": "89ae44f464ee0a89ddf1274dcc0a224919faecf7bd1b58dc59d50f3da9fca2b2",
+      "crates/vibe-agent-projection/src/lib.rs": "c93970a3b66cb14d69a5f0d7cb48ad3cf3ea25ede507b65fa57846bbf416c0b9",
+      "crates/vibe-core/src/manifest/mechanism/client_request.rs": "001f40c3e91b08b4beb4dc496bddfcdcbb75fbbd54d4c970c4d4af047ab1ed91"
+    },
+    "prior_evidence": "PRIOR-worker-report.md; FULL-REVIEW-REPORT.md/json and FULL-REVIEW-sourcehashes.json"
+  }
+}

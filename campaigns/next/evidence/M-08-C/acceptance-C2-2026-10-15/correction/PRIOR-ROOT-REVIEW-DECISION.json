@@ -1,0 +1,25 @@
+{
+  "schema": "root-review-decision/1",
+  "task": "M-08-C.2",
+  "decision": "correction_required",
+  "accepted": false,
+  "accepted_task_contracts": 82,
+  "total_task_contracts": 222,
+  "review_report": "/fast/git/v/research/2026-10-15-m08c2-review/REPORT.json",
+  "review_sha256": "b3981cc2ab65fde47630297e49bfd126b5bbed31dcab899583c4a9d27f330c93",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "P2",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "line": 30,
+      "title": "Physical document lock identity changes with symbolic scope/root spelling",
+      "counterexample": "Two admitted hosts share settings; A project=/p1,user=/shared and B project=/shared,user=/u2. A User doc.json and B Project doc.json lock home:doc.json versus /shared/doc.json for the same file. Distinct deployment locks do not serialize their publications.",
+      "basis": "Source-derived supported API counterexample; not executed by reviewer. SafeFS guarded write requires cooperating lease and is not atomic CAS.",
+      "minimal_fix": "Common physical document lock coordination across admitted scope/root spellings, compatible with incumbent providers; focused two-host contention case."
+    }
+  ],
+  "original_candidate_preserved": true,
+  "next_attempt": "new normal managed correction; preserve original full contract and prior candidate history; not same-store continuation qualification",
+  "utc": "2026-10-15T08:24:52.937581+00:00"
+}

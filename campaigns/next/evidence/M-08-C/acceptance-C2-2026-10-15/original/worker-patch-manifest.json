@@ -1,0 +1,67 @@
+{
+  "crates/vibe-lifecycle/src/lib.rs": {
+    "sha256": "4dc723a03b5bcd8a2806b88b638e5efa18f5d4e60696c2917208b9f06ba4b7b1",
+    "bytes": 8258,
+    "new": false
+  },
+  "crates/vibe-lifecycle/src/mechanism.rs": {
+    "sha256": "713b2b4e7da5de1c7ad4b0656f17cf94efe37c9f63b72086e1a0d4dc19e02675",
+    "bytes": 23651,
+    "new": false
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy.rs": {
+    "sha256": "13761900f7feb429887786dff6f12b24e0a47c24a31cc832d166c7d7b75e245d",
+    "bytes": 30211,
+    "new": false
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs": {
+    "sha256": "7218bece02df41af201b1dd9b0fb0fb0d3042ecf5e81d2d83eff1f3fffdfc293",
+    "bytes": 9756,
+    "new": true
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs": {
+    "sha256": "a2c59b266c5b8093f76faede08e94911a17ad456d44308d6fa6cd1e6d652fc14",
+    "bytes": 12426,
+    "new": true
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs": {
+    "sha256": "8ebe972ad045aa9b790d4c8ea1a0bbaa059b56174e05b09e8ad5f2359356b062",
+    "bytes": 2459,
+    "new": true
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs": {
+    "sha256": "94ec04ed7c717954fa7a574fae482004d088b62844027370ef20f774ac259ff2",
+    "bytes": 21124,
+    "new": true
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs": {
+    "sha256": "947d6c9bd73989e930ab3773d6fde653a567a97ff586c09e042355685d7a5ee6",
+    "bytes": 31339,
+    "new": true
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs": {
+    "sha256": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+    "bytes": 9164,
+    "new": false
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/state.rs": {
+    "sha256": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec",
+    "bytes": 36180,
+    "new": false
+  },
+  "crates/vibe-lifecycle/src/mechanism/error.rs": {
+    "sha256": "f33532ebf551362c8e98d97c713c2d42076b195996bdc080371c05da88621377",
+    "bytes": 23820,
+    "new": false
+  },
+  "crates/vibe-safefs/src/component/tests.rs": {
+    "sha256": "11dd896177117bcdea0d49b653af830eb2651e6138e65ba1663e71ebf75fd482",
+    "bytes": 12234,
+    "new": false
+  },
+  "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": {
+    "sha256": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54",
+    "bytes": 183397,
+    "new": false
+  }
+}

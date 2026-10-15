@@ -1,0 +1,11 @@
+{
+  "preparation_hashes": 65,
+  "read_sources": 52,
+  "candidate_sources": 13,
+  "binary_pins": 6,
+  "head": "ec310e2ed755e2f55140efb5172ea4cd77ca205a",
+  "root_launch_authorized": true,
+  "review_correction": "same full C2, one physical document lock identity finding",
+  "accepted_count": 82,
+  "utc": "2026-10-15T08:33:27.827127+00:00"
+}

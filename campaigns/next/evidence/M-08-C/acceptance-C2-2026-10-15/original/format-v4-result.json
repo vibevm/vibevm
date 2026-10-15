@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "rustfmt",
+    "--edition",
+    "2024",
+    "--config",
+    "skip_children=true",
+    "crates/vibe-safefs/src/component/tests.rs"
+  ],
+  "exit": 0
+}

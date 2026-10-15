@@ -1,0 +1,54 @@
+{
+  "crates/vibe-lifecycle/src/lib.rs": {
+    "sha256": "4dc723a03b5bcd8a2806b88b638e5efa18f5d4e60696c2917208b9f06ba4b7b1",
+    "bytes": 8258
+  },
+  "crates/vibe-lifecycle/src/mechanism.rs": {
+    "sha256": "713b2b4e7da5de1c7ad4b0656f17cf94efe37c9f63b72086e1a0d4dc19e02675",
+    "bytes": 23651
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy.rs": {
+    "sha256": "13761900f7feb429887786dff6f12b24e0a47c24a31cc832d166c7d7b75e245d",
+    "bytes": 30211
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs": {
+    "sha256": "7218bece02df41af201b1dd9b0fb0fb0d3042ecf5e81d2d83eff1f3fffdfc293",
+    "bytes": 9756
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs": {
+    "sha256": "dc64cd80ef5292a290e35d72b54f9dcc8c3e9f6bd437abbce29a772d2519b780",
+    "bytes": 12773
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs": {
+    "sha256": "8ebe972ad045aa9b790d4c8ea1a0bbaa059b56174e05b09e8ad5f2359356b062",
+    "bytes": 2459
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs": {
+    "sha256": "edfe9c1bcdf53d6eb4ca90809b946561dbfbdbcf6bcaf774d568cac7c02d1876",
+    "bytes": 22320
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs": {
+    "sha256": "6a716480c17174a98c5370a7ca7a29bead36df8f0732e08870629e935fda3d2e",
+    "bytes": 37241
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs": {
+    "sha256": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+    "bytes": 9164
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/state.rs": {
+    "sha256": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec",
+    "bytes": 36180
+  },
+  "crates/vibe-lifecycle/src/mechanism/error.rs": {
+    "sha256": "f33532ebf551362c8e98d97c713c2d42076b195996bdc080371c05da88621377",
+    "bytes": 23820
+  },
+  "crates/vibe-safefs/src/component/tests.rs": {
+    "sha256": "11dd896177117bcdea0d49b653af830eb2651e6138e65ba1663e71ebf75fd482",
+    "bytes": 12234
+  },
+  "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": {
+    "sha256": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54",
+    "bytes": 183397
+  }
+}

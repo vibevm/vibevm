@@ -1,0 +1,2443 @@
+diff --git a/crates/vibe-lifecycle/src/lib.rs b/crates/vibe-lifecycle/src/lib.rs
+index af3492e4d..3fdad5f80 100644
+--- a/crates/vibe-lifecycle/src/lib.rs
++++ b/crates/vibe-lifecycle/src/lib.rs
+@@ -181,3 +181,5 @@ pub use vibe_core::lifecycle::{
+     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,
+     Phase, PhaseParseError, PhasePoint, PhasePointParseError, SlotPoint, SlotPointParseError,
+ };
++
++pub use mechanism::generic;
+diff --git a/crates/vibe-lifecycle/src/mechanism.rs b/crates/vibe-lifecycle/src/mechanism.rs
+index 0d760b60a..f5974a630 100644
+--- a/crates/vibe-lifecycle/src/mechanism.rs
++++ b/crates/vibe-lifecycle/src/mechanism.rs
+@@ -554,3 +554,5 @@ pub(crate) const BUILTIN_CODEX_PLUGIN_PIN: &str = "org.vibevm/vibe#codex-plugin"
+ pub(crate) const BUILTIN_CODEX_PLUGIN_NAME: &str = "codex-plugin";
+ pub(crate) const BUILTIN_OPENCODE_PLUGIN_PIN: &str = "org.vibevm/vibe#opencode-plugin";
+ pub(crate) const BUILTIN_OPENCODE_PLUGIN_NAME: &str = "opencode-plugin";
++
++pub use deploy::generic;
+diff --git a/crates/vibe-lifecycle/src/mechanism/deploy.rs b/crates/vibe-lifecycle/src/mechanism/deploy.rs
+index d3ece7696..0c48a3be4 100644
+--- a/crates/vibe-lifecycle/src/mechanism/deploy.rs
++++ b/crates/vibe-lifecycle/src/mechanism/deploy.rs
+@@ -16,6 +16,7 @@ pub(crate) mod binding;
+ pub(crate) mod bridge;
+ pub(crate) mod derivative;
+ pub(crate) mod error;
++pub mod generic;
+ pub(crate) mod inverse;
+ mod inverse_resume;
+ pub(crate) mod ledger;
+diff --git a/crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs b/crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs
+index 2dd072ac0..575ee07eb 100644
+--- a/crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs
+@@ -162,3 +162,52 @@ fn refuse_foreign_ownership_rows(
+     }
+     Ok(())
+ }
++
++/// Generic logical keys are structured literal segments, not path strings.
++/// Reuse the incumbent receipt census while keeping filesystem alias rules
++/// confined to the physical document. Legacy ownership is conservative: a
++/// legacy member in that document requires explicit cross-family adoption.
++pub(crate) fn refuse_generic_foreign(
++    receipts: &[(String, DeployReceipt)],
++    own_id: &str,
++    host: &super::generic::GenericHost,
++    resources: &[super::generic::GenericResource],
++) -> Result<(), String> {
++    type Structured = (String, String, Vec<String>);
++    for (owner, receipt) in receipts {
++        if owner == own_id || receipt.status == ReceiptStatus::RolledBack {
++            continue;
++        }
++        for mine in resources {
++            let encoded = mine.owned(host);
++            let (root, path, key): Structured =
++                serde_json::from_str(encoded.strip_prefix("generic:").unwrap())
++                    .map_err(|e| e.to_string())?;
++            let absolute = std::path::Path::new(&root).join(&path);
++            for foreign in &receipt.resources {
++                let conflicts = if let Some(encoded) = foreign.resource.strip_prefix("generic:") {
++                    let (other_root, other_path, other_key): Structured =
++                        serde_json::from_str(encoded).map_err(|e| e.to_string())?;
++                    let other = std::path::Path::new(&other_root).join(other_path);
++                    let same = vibe_safefs::path_identity_key(&absolute.to_string_lossy())
++                        == vibe_safefs::path_identity_key(&other.to_string_lossy());
++                    vibe_safefs::paths_overlap(&absolute, &other)
++                        && (!same || key.starts_with(&other_key) || other_key.starts_with(&key))
++                } else {
++                    let physical = mine.lock(host);
++                    let a = vibe_safefs::path_identity_key(&physical);
++                    let b = vibe_safefs::path_identity_key(&foreign.resource);
++                    b.starts_with(&(a.clone() + "#"))
++                        || vibe_safefs::paths_overlap(
++                            std::path::Path::new(&a),
++                            std::path::Path::new(&b),
++                        )
++                };
++                if conflicts {
++                    return Err(format!("resource conflicts with deployment {owner}"));
++                }
++            }
++        }
++    }
++    Ok(())
++}
+diff --git a/crates/vibe-lifecycle/src/mechanism/deploy/state.rs b/crates/vibe-lifecycle/src/mechanism/deploy/state.rs
+index 0a3c07d87..85a9a3992 100644
+--- a/crates/vibe-lifecycle/src/mechanism/deploy/state.rs
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/state.rs
+@@ -240,6 +240,42 @@ impl DeployState {
+         })
+     }
+ 
++    /// Identity observation for a pure generic plan, never grant authority.
++    pub(crate) fn generic_root_identity(&self) -> Result<String, DeployError> {
++        self.project
++            .root_correlation_token()
++            .map_err(|error| DeployError::StateHome {
++                path: rendered(&self.root),
++                reason: error.to_string(),
++            })
++    }
++
++    /// Read-only generic preparation through the retained settings capability.
++    pub(crate) fn observe_bound(settings: &Project) -> Result<Option<Self>, DeployError> {
++        let components = bound_state_components();
++        if settings
++            .dir_if_present(&components)
++            .map_err(|error| DeployError::StateHome {
++                path: rendered(settings.root_path()),
++                reason: error.to_string(),
++            })?
++            .is_none()
++        {
++            return Ok(None);
++        }
++        let project = settings
++            .subproject(&components)
++            .map_err(|error| DeployError::StateHome {
++                path: rendered(settings.root_path()),
++                reason: error.to_string(),
++            })?;
++        Ok(Some(Self {
++            root: settings.root_path().join(DEPLOY_STATE_DIR),
++            project,
++            bound: true,
++        }))
++    }
++
+     /// Open/create the deployment state below an already-admitted settings
+     /// capability. No ambient pathname is reopened; the returned Project
+     /// retains the actual child directory even if its display name moves.
+diff --git a/crates/vibe-lifecycle/src/mechanism/error.rs b/crates/vibe-lifecycle/src/mechanism/error.rs
+index 888c63dc4..4c79298b1 100644
+--- a/crates/vibe-lifecycle/src/mechanism/error.rs
++++ b/crates/vibe-lifecycle/src/mechanism/error.rs
+@@ -57,6 +57,10 @@ pub(crate) fn preview(value: &str) -> String {
+ #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
+ #[derive(Debug, Clone, PartialEq, Eq, Error)]
+ pub enum MechanismError {
++    /// Closed generic host refusal; the host retains the actual effect boundary.
++    #[error("generic host operation: {reason}")]
++    GenericHost { reason: String },
++
+     /// A declared output names a kind this provider cannot produce.
+     #[error(
+         "target `{target}` output `{output}` declares kind `{kind}`, which the builtin provider \
+diff --git a/crates/vibe-safefs/src/component/tests.rs b/crates/vibe-safefs/src/component/tests.rs
+index b072cacca..f7e2a8f0d 100644
+--- a/crates/vibe-safefs/src/component/tests.rs
++++ b/crates/vibe-safefs/src/component/tests.rs
+@@ -284,11 +284,13 @@ fn complete_sets_share_the_identity_and_literal_path_laws() {
+ 
+ #[test]
+ fn overlap_and_containment_use_the_same_component_boundaries() {
+-    let target = Path::new(r"C:\project\.claude\skills\demo");
+-    let alias = Path::new(r"c:\PROJECT\.CLAUDE\skills\demo\nested");
+-    let sibling = Path::new(r"C:\project\.claude\skills\other");
+-    assert!(paths_overlap(target, alias));
+-    assert!(!paths_overlap(target, sibling));
++    let target = Path::new("project").join(".claude/skills/demo");
++    let alias = Path::new("PROJECT").join(".CLAUDE/skills/demo/nested");
++    let sibling = Path::new("project").join(".claude/skills/other");
++    let prefix_sibling = Path::new("project").join(".claude/skills/demo-other");
++    assert!(paths_overlap(&target, &alias));
++    assert!(!paths_overlap(&target, &sibling));
++    assert!(!paths_overlap(&target, &prefix_sibling));
+ 
+     let scope = tempfile::tempdir().unwrap();
+     let root = scope.path().join("project");
+diff --git a/vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml b/vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml
+index 935a9a749..97efcb125 100644
+--- a/vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml
++++ b/vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml
+@@ -649,4 +649,5 @@ machine cache   ~/.vibe/cache — the per-machine package store (PROP-010); neve
+     <p><ADAPTER-CLIENT-STATE-CONTINUITY fact="true" status="spec/plan">Captured client list replies remain historical unless a trusted client-state owner qualifies a finite complete read-only witness for the selected client, coordinate, scope and injected root. Bracket version/list preparation with the same witness, including selected membership and absence, and compare it for public plan, fingerprint and exported prepared observation. Drift refuses without probes or replacing historical evidence. Unqualified production Claude/Codex state returns client-state-unavailable rather than a complete current Plan; no fixture filename is a production vendor format and no HOME, credential or history scan supplies missing qualification. Local/builtin/OpenCode and owner-qualified fixture routes retain their supported positive paths. Effect transactions may consume their explicit preparation result while preserving independent apply/recover/remove admission; a public query cannot use that seam.</ADAPTER-CLIENT-STATE-CONTINUITY></p>
+   </prepared-adapters>
+   <p><CLIENT-CAPABILITY-REQUESTS fact="true" status="spec/plan">Optional strict mechanism client_request metadata carries epoch 1, qualified client identity, version applicability, project/user symbolic scope, shape, normalized relative destinations, structured member keys and closed requested host operations. The existing selected registry refuses unknown epochs/operations and duplicate client bindings as a whole. A canonical open map feeds the separate client-capability-request/result/error epoch-1 family at rust:vibe-orchestrator:client-capabilities. Private shared source capture binds context/root, selected provider coordinate/version/self, manifest and descriptor digests and pre/post currentness; discovery never hydrates skills or invokes native handlers. Source strength, implementation, availability and authorization remain separate. Descriptor/marker/hash/version data grants no principal, filesystem or process authority. Explicit legacy3/profile adapters refuse unrepresentable identities; old adapter-plan/e1 and native/e1 shapes remain unchanged. Generic execution and exact grants, and receipt ownership/recovery, remain separately owned subsequent work.</CLIENT-CAPABILITY-REQUESTS></p>
++  <p><GENERIC-HOST-EXACT-GRANTS fact="true" status="spec/plan">The injected-root lifecycle host consumes the canonical C1 map as inert data and captures only the selected enabled request confirmed by its trusted scoped currentness provider. Provider, declaration, source and descriptor identities/digests, separately admitted owned payloads, retained project/user/settings roots, current principal/policy generation and the host-declared complete grant/policy/producer-trust/publication-mode control surface are independent inputs. Pure plans enumerate full file/tree footprints, literal segmented JSON/TOML ownership and whole-document locks, and expose actual resulting launch configuration content. Alias, traversal, ancestor, duplicate, protected-control and whole-document/member conflicts refuse before issuance. Explicit host approval issues an immutable non-deserializable exact plan grant; missing, broadened, wrong or stale authority refuses before lock/state creation. Apply uses incumbent deployment locks, ownership census, sidecars, journal, checkpoints and receipts with retained SafeFS publication, rereading all destination snapshots and ownership under lock without refreshing the plan or partially merging stale content. Distinct logical members share one physical document lock; foreign values/files survive. Infrastructure and possibly-published destination errors retain their actual effect boundary. Configuration writes grant no process execution. Existing vibe-bin admission remains unchanged; upper CLI/MCP wiring and generic receipt migration, resource-set upgrades, inverse/recovery/revocation require separate C3 authority.</GENERIC-HOST-EXACT-GRANTS></p>
+ </spec>
+diff --git a/crates/vibe-lifecycle/src/mechanism/deploy/generic.rs b/crates/vibe-lifecycle/src/mechanism/deploy/generic.rs
+new file mode 100644
+index 000000000..3ae6626ce
+--- /dev/null
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/generic.rs
+@@ -0,0 +1,281 @@
++//! Closed file/config effects. Only the composed host can capture, admit and
++//! approve; descriptor DTOs and serialized plans carry no authority.
++use serde::Serialize;
++use sha2::{Digest, Sha256};
++use std::collections::BTreeMap;
++use std::sync::Arc;
++use vibe_agent_projection::client_capabilities::ClientCapabilities;
++use vibe_core::manifest::{ClientRequest, ClientScope};
++use vibe_safefs::Project;
++
++mod apply;
++mod grant;
++mod plan;
++#[cfg(test)]
++mod tests;
++pub use apply::GenericOutcome;
++pub use grant::ExactGrant;
++pub use plan::{GenericPlan, GenericResource};
++
++/// A scoped observation from the host's existing source owner, not a resolver.
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct SourceIdentity {
++    pub provider: String,
++    pub provider_version: String,
++    pub provider_digest: String,
++    pub declaration: String,
++    pub declaration_digest: String,
++    pub descriptor: String,
++    pub source: String,
++    pub source_digest: String,
++    pub descriptor_digest: String,
++}
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct SelectedObservation {
++    pub identity: SourceIdentity,
++    pub request: ClientRequest,
++    pub selected: bool,
++    pub enabled: bool,
++}
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct ControlObservation {
++    pub principal: String,
++    pub policy_generation: String,
++}
++/// Implemented by the trusted embedding host. Implementations must observe
++/// only the requested captured selection, and return current policy/source
++/// facts. Neither method may resolve/hydrate a source world or execute code.
++pub trait GenericAuthority: Send + Sync {
++    fn selected_current(&self, client: &str) -> Result<SelectedObservation, String>;
++    fn current_control(&self) -> Result<ControlObservation, String>;
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct ProtectedResource {
++    pub scope: ClientScope,
++    pub relative: String,
++}
++/// Host declaration of its COMPLETE control surface. Each category must be
++/// explicitly populated; hosts with no such stores must supply the capability
++/// boundary containing that category, not an empty denylist.
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct ProtectedControls {
++    pub grants: Vec<ProtectedResource>,
++    pub policy: Vec<ProtectedResource>,
++    pub producer_trust: Vec<ProtectedResource>,
++    pub publication_mode: Vec<ProtectedResource>,
++}
++impl ProtectedControls {
++    fn rows(&self) -> impl Iterator<Item = &ProtectedResource> {
++        self.grants
++            .iter()
++            .chain(&self.policy)
++            .chain(&self.producer_trust)
++            .chain(&self.publication_mode)
++    }
++}
++
++/// Owned payload is supplied independently of source metadata. Every byte of
++/// active launch configuration remains inspectable in the eventual plan.
++#[derive(Debug, Clone, PartialEq, Serialize)]
++pub enum GenericPayload {
++    File(Vec<u8>),
++    Tree(BTreeMap<String, Vec<u8>>),
++    JsonMember(serde_json::Value),
++    TomlMember(toml::Value),
++}
++#[derive(Debug, Clone, PartialEq)]
++pub struct CapturedClient {
++    observation: SelectedObservation,
++    host: u64,
++}
++#[derive(Debug, Clone, PartialEq)]
++pub struct AdmittedClient {
++    capture: CapturedClient,
++    payloads: Vec<GenericPayload>,
++}
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum GenericEffect {
++    NoEffects,
++    /// Lock/state/intent infrastructure may have been created.
++    Infrastructure,
++    /// A destination file/directory changed or its publication may have done so.
++    Destinations,
++}
++#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
++#[error("{reason} (effect boundary: {effect:?})")]
++pub struct GenericError {
++    pub reason: String,
++    pub effect: GenericEffect,
++}
++fn refuse(reason: impl ToString) -> GenericError {
++    GenericError {
++        reason: reason.to_string(),
++        effect: GenericEffect::NoEffects,
++    }
++}
++fn digest(bytes: &[u8]) -> String {
++    format!("{:x}", Sha256::digest(bytes))
++}
++fn encoded(value: &impl Serialize) -> Result<Vec<u8>, GenericError> {
++    serde_json::to_vec(value).map_err(refuse)
++}
++
++/// Roots and control authority are supplied by the embedding host, never by a
++/// descriptor. Constructing/capturing/planning/approving creates no files.
++pub struct GenericHost {
++    project: Project,
++    user: Project,
++    settings: Project,
++    authority: Arc<dyn GenericAuthority>,
++    protected: ProtectedControls,
++    roots: [String; 3],
++    instance: u64,
++}
++impl GenericHost {
++    pub fn new(
++        project: Project,
++        user: Project,
++        settings: Project,
++        authority: Arc<dyn GenericAuthority>,
++        protected: ProtectedControls,
++    ) -> Result<Self, GenericError> {
++        if [
++            &protected.grants,
++            &protected.policy,
++            &protected.producer_trust,
++            &protected.publication_mode,
++        ]
++        .iter()
++        .any(|v| v.is_empty())
++        {
++            return Err(refuse("complete protected-control categories required"));
++        }
++        for row in protected.rows() {
++            vibe_safefs::split_relative(&row.relative).map_err(refuse)?;
++        }
++        // Disjoint capabilities prevent alternate root spellings from hiding
++        // aliases or routing descriptor writes into lifecycle state.
++        for (a, b) in [(&project, &user), (&project, &settings), (&user, &settings)] {
++            if vibe_safefs::paths_overlap(a.root_path(), b.root_path())
++                || a.root_identity().map_err(refuse)? == b.root_identity().map_err(refuse)?
++            {
++                return Err(refuse(
++                    "generic roots must be physically distinct and disjoint",
++                ));
++            }
++        }
++        let roots = [
++            project.root_correlation_token().map_err(refuse)?,
++            user.root_correlation_token().map_err(refuse)?,
++            settings.root_correlation_token().map_err(refuse)?,
++        ];
++        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
++        Ok(Self {
++            project,
++            user,
++            settings,
++            authority,
++            protected,
++            roots,
++            instance: NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
++        })
++    }
++    fn root(&self, scope: ClientScope) -> &Project {
++        match scope {
++            ClientScope::Project => &self.project,
++            ClientScope::User => &self.user,
++        }
++    }
++    fn current(&self, capture: &CapturedClient) -> Result<(), GenericError> {
++        if capture.host != self.instance {
++            return Err(refuse("capture belongs to another host"));
++        }
++        let now = self
++            .authority
++            .selected_current(&capture.observation.request.client_id)
++            .map_err(refuse)?;
++        if !now.selected || !now.enabled || now != capture.observation {
++            return Err(refuse(
++                "selection, disabled state, provider, descriptor or source drift",
++            ));
++        }
++        for (root, token) in [&self.project, &self.user, &self.settings]
++            .into_iter()
++            .zip(&self.roots)
++        {
++            let named = Project::open(root.root_path()).map_err(refuse)?;
++            if named.root_correlation_token().map_err(refuse)? != *token {
++                return Err(refuse("root identity drift"));
++            }
++        }
++        Ok(())
++    }
++    /// The canonical C1 map is checked as inert data against the CURRENT
++    /// trusted selected provider. A caller-supplied row alone cannot capture.
++    pub fn capture(
++        &self,
++        map: &ClientCapabilities,
++        client: &str,
++    ) -> Result<CapturedClient, GenericError> {
++        let row = map
++            .rows()
++            .get(client)
++            .ok_or_else(|| refuse("client absent from canonical map"))?;
++        let observed = self.authority.selected_current(client).map_err(refuse)?;
++        if !observed.selected
++            || !observed.enabled
++            || row.disabled
++            || row.request != observed.request
++            || row.provider != observed.identity.provider
++            || row.descriptor_digest != observed.identity.descriptor_digest
++        {
++            return Err(refuse(
++                "map does not match current selected enabled capture",
++            ));
++        }
++        observed.request.validate().map_err(refuse)?;
++        if [
++            &observed.identity.provider,
++            &observed.identity.provider_version,
++            &observed.identity.declaration,
++            &observed.identity.descriptor,
++            &observed.identity.source,
++        ]
++        .iter()
++        .any(|s| s.is_empty())
++        {
++            return Err(refuse("incomplete source identity"));
++        }
++        for hash in [
++            &observed.identity.provider_digest,
++            &observed.identity.declaration_digest,
++            &observed.identity.source_digest,
++            &observed.identity.descriptor_digest,
++        ] {
++            if hash.len() != 64
++                || !hash
++                    .bytes()
++                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
++            {
++                return Err(refuse("invalid captured identity digest"));
++            }
++        }
++        let capture = CapturedClient {
++            observation: observed,
++            host: self.instance,
++        };
++        self.current(&capture)?;
++        Ok(capture)
++    }
++    /// Explicit payload admission is separate from capture and approval.
++    pub fn admit_payload(
++        &self,
++        capture: CapturedClient,
++        payloads: Vec<GenericPayload>,
++    ) -> Result<AdmittedClient, GenericError> {
++        self.current(&capture)?;
++        plan::validate_payloads(&capture.observation.request, &payloads)?;
++        Ok(AdmittedClient { capture, payloads })
++    }
++}
+diff --git a/crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs b/crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs
+new file mode 100644
+index 000000000..751a2d495
+--- /dev/null
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs
+@@ -0,0 +1,327 @@
++use super::super::model::{ClientExecutable, ClientExecutables};
++use super::super::protocol::*;
++use super::super::state::{CheckpointLedger, DeployState};
++use super::super::transaction::Transaction;
++use super::*;
++use crate::mechanism::{
++    DeployProvider, EffectClass, MechanismError, NetworkUse, PrivilegeNeed, ProviderDescriptor,
++    ProviderOperation, Reversibility,
++};
++use std::cell::Cell;
++use vibe_wire::generated::deploy_receipt::DeployIdentity;
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct GenericOutcome {
++    pub generation: u32,
++    pub resources: Vec<String>,
++    pub effect: GenericEffect,
++}
++impl GenericHost {
++    pub fn apply(
++        &self,
++        plan: &GenericPlan,
++        grant: Option<&ExactGrant>,
++        created_at: &str,
++    ) -> Result<GenericOutcome, GenericError> {
++        // Even the clock is checked before lock/state infrastructure.
++        self.check_grant(plan, grant)?;
++        self.check_state_identity(plan)?;
++        created_at
++            .parse::<vibe_wire::generated::deploy_receipt::Rfc3339Timestamp>()
++            .map_err(refuse)?;
++        let boundary = Cell::new(GenericEffect::Infrastructure);
++        let result = (|| {
++            let state = DeployState::open_bound(&self.settings).map_err(refuse)?;
++            if let Some(expected) = &plan.state_identity {
++                if state.generic_root_identity().map_err(refuse)? != *expected {
++                    return Err(refuse("state home changed while opening apply"));
++                }
++            }
++            let home = self.home(&plan.target);
++            let _deployment = state.lock_deployment(&home).map_err(refuse)?;
++            #[cfg(test)]
++            BEFORE_DOCUMENT_LOCK_HOOK.with(|hook| {
++                if let Some(h) = hook.borrow_mut().take() {
++                    h();
++                }
++            });
++            let _destinations = state.lock_destinations(&plan.locks(self)).map_err(refuse)?;
++            #[cfg(test)]
++            LOCKED_HOOK.with(|hook| {
++                if let Some(h) = hook.borrow_mut().take() {
++                    h();
++                }
++            });
++            state.verify_bound_home(&self.settings).map_err(refuse)?;
++            self.check_grant(plan, grant)?;
++            if state.read_intent(&home).map_err(refuse)?.is_some() {
++                return Err(refuse(
++                    "interrupted generic transaction requires separately admitted C3 recovery",
++                ));
++            }
++            let prior = state.read_receipt(&home).map_err(refuse)?;
++            let planned_prior = plan
++                .receipts
++                .iter()
++                .find(|(id, _)| id == home.id())
++                .map(|(_, r)| r);
++            if prior.as_ref() != planned_prior {
++                return Err(refuse("ownership changed under deployment lock"));
++            }
++            super::super::ownership::refuse_generic_foreign(
++                &state.receipts_bound().map_err(refuse)?,
++                home.id(),
++                self,
++                &plan.resources,
++            )
++            .map_err(refuse)?;
++            let target = vibe_core::manifest::DeployTarget {
++                id: plan.target.clone(),
++                artifact: String::new(),
++                mechanism: "deploy:generic-host".parse().map_err(refuse)?,
++                provider: None,
++                when: None,
++                depends_on: None,
++                config: None,
++            };
++            let missing = || ClientExecutable::Missing {
++                command: "not-admitted".into(),
++            };
++            let clients = ClientExecutables {
++                claude: missing(),
++                codex: missing(),
++                opencode: missing(),
++            };
++            let request = DeployTargetRequest {
++                target: &target,
++                profile: "generic-host",
++                project_root: self.project.root_path(),
++                settings_root: self.settings.root_path(),
++                user_home: self.user.root_path(),
++                clients: &clients,
++                prior_receipt: prior.as_ref(),
++                recovery_intent: None,
++                artifact: None,
++                staging: None,
++            };
++            let identity = DeployIdentity {
++                project: self.roots[0].clone(),
++                package: None,
++            };
++            let provider = ClosedProvider {
++                host: self,
++                plan,
++                boundary: &boundary,
++            };
++            let transaction = Transaction {
++                state: &state,
++                home: &home,
++                identity: &identity,
++                provider_pin: &plan.admitted.capture.observation.identity.provider,
++                scope: EffectClass::User,
++                created_at,
++            };
++            let applied = transaction
++                .apply(&provider, &request, &plan.deploy_plan(self))
++                .map_err(refuse)?;
++            self.current(&plan.admitted.capture)?;
++            if self.authority.current_control().map_err(refuse)? != plan.control {
++                return Err(refuse("control drift after publication"));
++            }
++            state.verify_bound_home(&self.settings).map_err(refuse)?;
++            Ok(GenericOutcome {
++                generation: applied.generation,
++                resources: applied.resources.into_iter().map(|r| r.resource).collect(),
++                effect: boundary.get(),
++            })
++        })();
++        result.map_err(|mut error: GenericError| {
++            error.effect = boundary.get();
++            error
++        })
++    }
++}
++
++struct ClosedProvider<'a> {
++    host: &'a GenericHost,
++    plan: &'a GenericPlan,
++    boundary: &'a Cell<GenericEffect>,
++}
++fn mechanism(error: impl ToString) -> MechanismError {
++    MechanismError::GenericHost {
++        reason: error.to_string(),
++    }
++}
++impl ClosedProvider<'_> {
++    fn current(&self) -> Result<(), MechanismError> {
++        self.host
++            .current(&self.plan.admitted.capture)
++            .map_err(mechanism)?;
++        if self.host.authority.current_control().map_err(mechanism)? != self.plan.control {
++            return Err(mechanism("current policy/principal drift"));
++        }
++        Ok(())
++    }
++}
++impl DeployProvider for ClosedProvider<'_> {
++    fn descriptor(&self) -> DeployDescriptor<'_> {
++        DeployDescriptor {
++            provider: ProviderDescriptor {
++                key: &self.plan.admitted.capture.observation.identity.provider,
++                kinds: &[],
++                effect: EffectClass::User,
++                network: NetworkUse::Never,
++                privilege: PrivilegeNeed::None,
++                reversibility: Reversibility::Irreversible,
++                operations: &[
++                    ProviderOperation::Plan,
++                    ProviderOperation::Apply,
++                    ProviderOperation::Verify,
++                    ProviderOperation::Fingerprint,
++                ],
++            },
++            atomic_replacement: true,
++            reference_ownership: true,
++        }
++    }
++    fn plan(&self, _: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {
++        Ok(self.plan.deploy_plan(self.host))
++    }
++    fn fingerprint(
++        &self,
++        _: &DeployTargetRequest<'_>,
++        _: &DeployPlan,
++    ) -> Result<DeployFingerprint, MechanismError> {
++        self.current()?;
++        Ok(DeployFingerprint {
++            digest: self.plan.identity(),
++            summary: "captured source and separately admitted payload".into(),
++        })
++    }
++    fn apply(
++        &self,
++        _: &DeployTargetRequest<'_>,
++        _: &DeployPlan,
++        ledger: &mut CheckpointLedger<'_>,
++    ) -> Result<ApplyReport, MechanismError> {
++        // Recheck ALL destinations before the first external write. Planning
++        // merged distinct members into one whole-document publication.
++        for d in &self.plan.documents {
++            let now = self
++                .host
++                .root(d.scope)
++                .read_file_snapshot_bounded(&d.destination, 4 * 1024 * 1024)
++                .map_err(mechanism)?;
++            if now != d.before {
++                return Err(mechanism("destination changed after locked validation"));
++            }
++        }
++        for d in &self.plan.documents {
++            self.current()?;
++            let root = self.host.root(d.scope);
++            let publication = if let Some(expected) = &d.before {
++                // Existing documents retain their mode and must still name
++                // the exact snapshot under the cooperating document lock.
++                match root.write_snapshot_guarded(&d.destination, expected, &d.after) {
++                    Ok(_) => Ok(()),
++                    Err(vibe_safefs::GuardedPublishError::Publication(error)) => Err(error),
++                    Err(error) => {
++                        return Err(mechanism(format!("guarded destination changed: {error:?}")));
++                    }
++                }
++            } else {
++                // Absence is not replacement authority. The incumbent
++                // create-new publication preserves a racing foreign occupant.
++                let (parents, name) =
++                    vibe_safefs::split_relative(&d.destination).map_err(mechanism)?;
++                let components = parents.iter().map(String::as_str).collect::<Vec<_>>();
++                if root
++                    .dir_if_present(&components)
++                    .map_err(mechanism)?
++                    .is_none()
++                {
++                    // A failed directory walk may have created a prefix.
++                    self.boundary.set(GenericEffect::Destinations);
++                }
++                let directory = root.dir(&components, true).map_err(mechanism)?;
++                root.publish_new_in(&directory, &name, &d.after)
++            };
++            match publication {
++                Ok(_) => self.boundary.set(GenericEffect::Destinations),
++                Err(error) => {
++                    if error.stage == vibe_safefs::PublishStage::PossiblyPublished
++                        || !error.created_directories.is_empty()
++                    {
++                        self.boundary.set(GenericEffect::Destinations);
++                    }
++                    return Err(mechanism(format!(
++                        "{}: {:?}; created directories {:?}; {}",
++                        d.destination, error.stage, error.created_directories, error.source
++                    )));
++                }
++            }
++            for r in self
++                .plan
++                .resources
++                .iter()
++                .filter(|r| r.scope == d.scope && r.destination == d.destination)
++            {
++                ledger.completed(&r.owned(self.host)).map_err(mechanism)?;
++            }
++        }
++        Ok(ApplyReport {
++            prior_state_handle: None,
++            evidence: "closed host writes through retained SafeFS; no process capability".into(),
++        })
++    }
++    fn verify(
++        &self,
++        _: &DeployTargetRequest<'_>,
++        resources: &[String],
++    ) -> Result<Vec<ObservedResource>, MechanismError> {
++        self.current()?;
++        resources
++            .iter()
++            .map(|name| {
++                let r = self
++                    .plan
++                    .resources
++                    .iter()
++                    .find(|r| r.owned(self.host) == *name)
++                    .ok_or_else(|| mechanism("verify resource outside exact grant"))?;
++                let bytes = self
++                    .host
++                    .root(r.scope)
++                    .read_file_bounded(&r.destination, 4 * 1024 * 1024)
++                    .map_err(mechanism)?;
++                let value = plan::observe_value(bytes.as_deref(), r).map_err(mechanism)?;
++                Ok(ObservedResource {
++                    resource: name.clone(),
++                    digest: value.map(|b| digest(&b)),
++                })
++            })
++            .collect()
++    }
++    fn remove(
++        &self,
++        _: &DeployTargetRequest<'_>,
++        _: &[String],
++        _: Option<&str>,
++    ) -> Result<RemoveReport, MechanismError> {
++        Err(mechanism("generic inverse requires C3 authority"))
++    }
++    fn recover(
++        &self,
++        _: &DeployTargetRequest<'_>,
++        _: &DeployPlan,
++        _: &[ObservedResource],
++        _: &mut CheckpointLedger<'_>,
++    ) -> Result<ApplyReport, MechanismError> {
++        Err(mechanism("generic recovery requires C3 authority"))
++    }
++}
++#[cfg(test)]
++thread_local! {pub(super) static LOCKED_HOOK:std::cell::RefCell<Option<Box<dyn FnOnce()>>>=std::cell::RefCell::new(None);}
++
++#[cfg(test)]
++thread_local! {pub(super) static BEFORE_DOCUMENT_LOCK_HOOK:std::cell::RefCell<Option<Box<dyn FnOnce()>>>=std::cell::RefCell::new(None);}
+diff --git a/crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs b/crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs
+new file mode 100644
+index 000000000..d8324a651
+--- /dev/null
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs
+@@ -0,0 +1,64 @@
++use super::*;
++
++/// Immutable in-process authority. No Deserialize, public fields, raw-root
++/// issuer, persistent marker or global grant table exists.
++#[derive(Debug)]
++pub struct ExactGrant {
++    plan: GenericPlan,
++    host: u64,
++}
++impl GenericHost {
++    /// Explicit host approval of this entire inspectable plan. Approval is a
++    /// distinct call after payload admission and pure preparation.
++    pub fn approve(&self, plan: &GenericPlan) -> Result<ExactGrant, GenericError> {
++        self.check_state_identity(plan)?;
++        self.check_plan(plan)?;
++        Ok(ExactGrant {
++            plan: plan.clone(),
++            host: self.instance,
++        })
++    }
++    pub(super) fn check_state_identity(&self, plan: &GenericPlan) -> Result<(), GenericError> {
++        if self.state_identity()? != plan.state_identity {
++            return Err(refuse("state home identity changed"));
++        }
++        Ok(())
++    }
++    pub(super) fn check_plan(&self, plan: &GenericPlan) -> Result<(), GenericError> {
++        self.current(&plan.admitted.capture)?;
++        if self.roots != plan.roots
++            || self.protected != plan.protected
++            || self.authority.current_control().map_err(refuse)? != plan.control
++        {
++            return Err(refuse("root, principal, policy or protected-control drift"));
++        }
++        // Re-observe only the captured selection/destinations and incumbent
++        // ownership. Never refresh a stale plan or partially merge it.
++        if self.receipts()? != plan.receipts {
++            return Err(refuse("ownership census changed"));
++        }
++        for document in &plan.documents {
++            let root = self.root(document.scope);
++            root.preflight(&document.destination).map_err(refuse)?;
++            if root
++                .read_file_snapshot_bounded(&document.destination, 4 * 1024 * 1024)
++                .map_err(refuse)?
++                != document.before
++            {
++                return Err(refuse("destination changed since plan"));
++            }
++        }
++        Ok(())
++    }
++    pub(super) fn check_grant(
++        &self,
++        plan: &GenericPlan,
++        grant: Option<&ExactGrant>,
++    ) -> Result<(), GenericError> {
++        let grant = grant.ok_or_else(|| refuse("missing exact host grant"))?;
++        if grant.host != self.instance || grant.plan != *plan {
++            return Err(refuse("wrong, modified or broadened exact host grant"));
++        }
++        self.check_plan(plan)
++    }
++}
+diff --git a/crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs b/crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs
+new file mode 100644
+index 000000000..29c019350
+--- /dev/null
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs
+@@ -0,0 +1,569 @@
++use super::super::state::{DeployState, DeploymentHome};
++use super::*;
++use vibe_core::manifest::{ClientOperation, ClientShape};
++use vibe_safefs::StableFileSnapshot;
++use vibe_wire::generated::deploy_receipt::DeployReceipt;
++
++const CAP: usize = 4 * 1024 * 1024;
++#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
++pub struct GenericResource {
++    pub scope: ClientScope,
++    pub destination: String,
++    /// Literal key segments, never a filesystem path.
++    pub key: Vec<String>,
++    pub operation: ClientOperation,
++    pub desired_digest: String,
++}
++impl GenericResource {
++    pub(crate) fn owned(&self, host: &GenericHost) -> String {
++        // JSON framing distinguishes literal slashes/dots and segment boundaries.
++        format!(
++            "generic:{}",
++            serde_json::to_string(&(
++                host.root(self.scope)
++                    .root_path()
++                    .components()
++                    .collect::<std::path::PathBuf>()
++                    .to_string_lossy(),
++                &self.destination,
++                &self.key
++            ))
++            .expect("string tuple")
++        )
++    }
++    // Incumbent resource spelling also used by legacy receipt ownership.
++    pub(crate) fn lock(&self, host: &GenericHost) -> String {
++        match self.scope {
++            ClientScope::User => format!("home:{}", self.destination),
++            ClientScope::Project => host
++                .project
++                .root_path()
++                .join(&self.destination)
++                .to_string_lossy()
++                .into_owned(),
++        }
++    }
++    pub(crate) fn locks(&self, host: &GenericHost) -> Vec<String> {
++        // Scope and root boundaries are host composition choices, not physical
++        // document identities. Project accepts component-normalized absolute
++        // roots (no parent traversal or links); collect components so accepted
++        // `.`/separator spellings share the same absolute destination key.
++        // DeployState owns Unicode/case normalization and ordered acquisition.
++        let absolute = host
++            .root(self.scope)
++            .root_path()
++            .join(&self.destination)
++            .components()
++            .collect::<std::path::PathBuf>()
++            .to_string_lossy()
++            .into_owned();
++        // Retain the incumbent spelling too: User home:relative, or the
++        // original Project absolute spelling. The existing owner deduplicates
++        // and acquires both in its total order, never replacing their lease.
++        vec![absolute, self.lock(host)]
++    }
++}
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub(super) struct Document {
++    pub scope: ClientScope,
++    pub destination: String,
++    pub before: Option<StableFileSnapshot>,
++    pub after: Vec<u8>,
++}
++#[derive(Debug, Clone, PartialEq)]
++pub struct GenericPlan {
++    pub(super) admitted: AdmittedClient,
++    pub(super) control: ControlObservation,
++    pub(super) roots: [String; 3],
++    pub(super) protected: ProtectedControls,
++    pub(super) resources: Vec<GenericResource>,
++    pub(super) documents: Vec<Document>,
++    pub(super) receipts: Vec<(String, DeployReceipt)>,
++    pub(super) target: String,
++    pub(super) state_identity: Option<String>,
++}
++impl GenericPlan {
++    pub fn resources(&self) -> &[GenericResource] {
++        &self.resources
++    }
++    pub fn payloads(&self) -> &[GenericPayload] {
++        &self.admitted.payloads
++    }
++    /// Full resulting document content, including active MCP launch settings.
++    pub fn documents(&self) -> impl Iterator<Item = (ClientScope, &str, &[u8])> {
++        self.documents
++            .iter()
++            .map(|d| (d.scope, d.destination.as_str(), d.after.as_slice()))
++    }
++    /// Ephemeral typed host plan identity, not a persistent grant format.
++    pub fn identity(&self) -> String {
++        digest(format!("generic-host-plan/1:{self:?}").as_bytes())
++    }
++    pub(super) fn locks(&self, host: &GenericHost) -> Vec<String> {
++        self.resources
++            .iter()
++            .flat_map(|r| r.locks(host))
++            .collect::<std::collections::BTreeSet<_>>()
++            .into_iter()
++            .collect()
++    }
++    pub(super) fn deploy_plan(&self, host: &GenericHost) -> super::super::protocol::DeployPlan {
++        use super::super::protocol::{DeployPlan, PlannedDeployResource};
++        DeployPlan {
++            resources: self
++                .resources
++                .iter()
++                .map(|r| PlannedDeployResource {
++                    resource: r.owned(host),
++                    desired_digest: r.desired_digest.clone(),
++                })
++                .collect(),
++            lock_resources: self.locks(host),
++            config_digest: self.identity(),
++            reversible: false,
++            summary: "explicitly admitted generic file/config projection; no process execution"
++                .into(),
++        }
++    }
++}
++
++pub(super) fn validate_payloads(
++    request: &ClientRequest,
++    payloads: &[GenericPayload],
++) -> Result<(), GenericError> {
++    if request.bindings.len() != payloads.len() {
++        return Err(refuse(
++            "one separately admitted payload per binding required",
++        ));
++    }
++    let mut total = 0usize;
++    for (binding, payload) in request.bindings.iter().zip(payloads) {
++        match (binding.shape, payload) {
++            (ClientShape::File, GenericPayload::File(bytes)) => {
++                total = total.saturating_add(bytes.len())
++            }
++            (ClientShape::Tree, GenericPayload::Tree(files))
++                if !files.is_empty() && files.len() <= 4096 =>
++            {
++                for (path, bytes) in files {
++                    vibe_safefs::split_relative(path).map_err(refuse)?;
++                    total = total.saturating_add(bytes.len());
++                }
++            }
++            (ClientShape::JsonMember, GenericPayload::JsonMember(v)) => {
++                total = total.saturating_add(encoded(v)?.len())
++            }
++            (ClientShape::TomlMember, GenericPayload::TomlMember(v)) => {
++                total = total.saturating_add(encoded(v)?.len())
++            }
++            _ => return Err(refuse("payload/closed-operation shape mismatch")),
++        }
++    }
++    if total > CAP {
++        return Err(refuse("admitted payload exceeds bounded host budget"));
++    }
++    Ok(())
++}
++
++impl GenericHost {
++    pub(super) fn home(&self, target: &str) -> DeploymentHome {
++        DeploymentHome::new(
++            &self
++                .settings
++                .root_path()
++                .join(super::super::model::DEPLOY_STATE_DIR),
++            &self.roots[0],
++            None,
++            target,
++        )
++    }
++    pub(super) fn receipts(&self) -> Result<Vec<(String, DeployReceipt)>, GenericError> {
++        match DeployState::observe_bound(&self.settings).map_err(refuse)? {
++            Some(state) => state.receipts_bound().map_err(refuse),
++            None => Ok(vec![]),
++        }
++    }
++    pub(super) fn state_identity(&self) -> Result<Option<String>, GenericError> {
++        DeployState::observe_bound(&self.settings)
++            .map_err(refuse)?
++            .map(|s| s.generic_root_identity().map_err(refuse))
++            .transpose()
++    }
++    pub fn plan(&self, admitted: &AdmittedClient) -> Result<GenericPlan, GenericError> {
++        self.current(&admitted.capture)?;
++        let request = &admitted.capture.observation.request;
++        request.validate().map_err(refuse)?;
++        validate_payloads(request, &admitted.payloads)?;
++        let control = self.authority.current_control().map_err(refuse)?;
++        if control.principal.is_empty() || control.policy_generation.is_empty() {
++            return Err(refuse("current principal and policy generation required"));
++        }
++        let target = format!("generic-{}", digest(request.client_id.as_bytes()));
++        let state_identity = self.state_identity()?;
++        let receipts = self.receipts()?;
++        let home = self.home(&target);
++        let prior = receipts
++            .iter()
++            .find(|(id, _)| id == home.id())
++            .map(|(_, r)| r);
++        let mut resources = Vec::new();
++        let mut values = Vec::new();
++        // First judge authored binding footprints, including tree containers.
++        for (i, a) in request.bindings.iter().enumerate() {
++            vibe_safefs::split_relative(&a.destination).map_err(refuse)?;
++            self.protect(a.scope, &a.destination)?;
++            for b in &request.bindings[..i] {
++                if a.scope != b.scope {
++                    continue;
++                }
++                if overlap(&a.destination, &b.destination) {
++                    let same = a.destination == b.destination;
++                    if !same
++                        || a.key.is_empty()
++                        || b.key.is_empty()
++                        || a.shape != b.shape
++                        || key_overlap(&a.key, &b.key)
++                    {
++                        return Err(refuse(
++                            "duplicate, alias, ancestor or whole-document/member conflict",
++                        ));
++                    }
++                }
++            }
++        }
++        for (b, p) in request.bindings.iter().zip(&admitted.payloads) {
++            let rows: Vec<(String, GenericPayload)> = match p {
++                GenericPayload::Tree(files) => files
++                    .iter()
++                    .map(|(path, bytes)| {
++                        (
++                            format!("{}/{path}", b.destination),
++                            GenericPayload::File(bytes.clone()),
++                        )
++                    })
++                    .collect(),
++                _ => vec![(b.destination.clone(), p.clone())],
++            };
++            for (destination, value) in rows {
++                self.protect(b.scope, &destination)?;
++                let bytes = value_bytes(&value)?;
++                resources.push(GenericResource {
++                    scope: b.scope,
++                    destination,
++                    key: b.key.clone(),
++                    operation: b.operations[0],
++                    desired_digest: digest(&bytes),
++                });
++                values.push(value);
++            }
++        }
++        for (i, a) in resources.iter().enumerate() {
++            for b in &resources[..i] {
++                if a.scope == b.scope
++                    && overlap(&a.destination, &b.destination)
++                    && (a.destination != b.destination
++                        || a.key.is_empty()
++                        || b.key.is_empty()
++                        || key_overlap(&a.key, &b.key))
++                {
++                    return Err(refuse("expanded footprint aliases or overlaps"));
++                }
++            }
++        }
++        for scope in [ClientScope::Project, ClientScope::User] {
++            let paths = resources
++                .iter()
++                .filter(|r| r.scope == scope)
++                .map(|r| r.destination.clone())
++                .collect::<std::collections::BTreeSet<_>>()
++                .into_iter()
++                .collect::<Vec<_>>();
++            let protected = self
++                .protected
++                .rows()
++                .filter(|r| r.scope == scope)
++                .map(|r| r.relative.clone())
++                .collect::<Vec<_>>();
++            self.root(scope)
++                .preflight_set_against(&paths, &protected)
++                .map_err(refuse)?;
++        }
++        super::super::ownership::refuse_generic_foreign(&receipts, home.id(), self, &resources)
++            .map_err(refuse)?;
++        // C3 owns resource-set migration. Existing exact sets may reconcile.
++        if let Some(prior) = prior {
++            let old = prior
++                .resources
++                .iter()
++                .map(|r| r.resource.clone())
++                .collect::<std::collections::BTreeSet<_>>();
++            let new = resources
++                .iter()
++                .map(|r| r.owned(self))
++                .collect::<std::collections::BTreeSet<_>>();
++            if old != new {
++                return Err(refuse("generic resource-set upgrades require C3 admission"));
++            }
++        }
++        let mut documents: Vec<Document> = vec![];
++        for (r, v) in resources.iter().zip(&values) {
++            let index = if let Some(index) = documents
++                .iter()
++                .position(|d| d.scope == r.scope && d.destination == r.destination)
++            {
++                index
++            } else {
++                let before = self
++                    .root(r.scope)
++                    .read_file_snapshot_bounded(&r.destination, CAP)
++                    .map_err(refuse)?;
++                documents.push(Document {
++                    scope: r.scope,
++                    destination: r.destination.clone(),
++                    after: before.as_ref().map_or_else(Vec::new, |b| b.bytes.clone()),
++                    before,
++                });
++                documents.len() - 1
++            };
++            let doc = &mut documents[index];
++            let found = observe_value(doc.before.as_ref().map(|b| b.bytes.as_slice()), r)?;
++            let owned = prior.and_then(|receipt| {
++                receipt
++                    .resources
++                    .iter()
++                    .find(|o| o.resource == r.owned(self))
++            });
++            match (found, owned) {
++                (None, None) => {}
++                (Some(found), Some(owned)) if digest(&found) == owned.post_digest => {}
++                _ => return Err(refuse("foreign occupant or stale owned value")),
++            }
++            doc.after = reconcile(&doc.after, r, v)?;
++            if doc.after.len() > CAP {
++                return Err(refuse("resulting document exceeds bounded host budget"));
++            }
++        }
++        self.current(&admitted.capture)?;
++        if self.authority.current_control().map_err(refuse)? != control {
++            return Err(refuse("policy changed during plan"));
++        }
++        if self.state_identity()? != state_identity {
++            return Err(refuse("state home changed during plan"));
++        }
++        Ok(GenericPlan {
++            state_identity,
++            admitted: admitted.clone(),
++            control,
++            roots: self.roots.clone(),
++            protected: self.protected.clone(),
++            resources,
++            documents,
++            receipts,
++            target,
++        })
++    }
++    fn protect(&self, scope: ClientScope, destination: &str) -> Result<(), GenericError> {
++        for p in self.protected.rows().filter(|p| p.scope == scope) {
++            if overlap(destination, &p.relative) {
++                return Err(refuse("protected host control resource or ancestor"));
++            }
++        }
++        Ok(())
++    }
++}
++pub(super) fn overlap(a: &str, b: &str) -> bool {
++    vibe_safefs::paths_overlap(std::path::Path::new(a), std::path::Path::new(b))
++}
++pub(super) fn key_overlap(a: &[String], b: &[String]) -> bool {
++    a.starts_with(b) || b.starts_with(a)
++}
++pub(super) fn value_bytes(p: &GenericPayload) -> Result<Vec<u8>, GenericError> {
++    match p {
++        GenericPayload::File(b) => Ok(b.clone()),
++        GenericPayload::JsonMember(v) => encoded(v),
++        GenericPayload::TomlMember(v) => toml_value_bytes(v),
++        GenericPayload::Tree(_) => Err(refuse("unexpanded tree")),
++    }
++}
++fn toml_value_bytes(value: &toml::Value) -> Result<Vec<u8>, GenericError> {
++    // TOML datetime is not a JSON object; preserve the typed distinction.
++    fn finite(v: &toml::Value) -> bool {
++        match v {
++            toml::Value::Float(f) => f.is_finite(),
++            toml::Value::Array(a) => a.iter().all(finite),
++            toml::Value::Table(t) => t.values().all(finite),
++            _ => true,
++        }
++    }
++    if !finite(value) {
++        return Err(refuse(
++            "nonfinite TOML values are outside admitted closed payload semantics",
++        ));
++    }
++    let table = toml::Value::Table(toml::map::Map::from_iter([(
++        "value".to_owned(),
++        value.clone(),
++    )]));
++    Ok(toml::to_string(&table).map_err(refuse)?.into_bytes())
++}
++
++// Strict dynamic JSON decoding uses serde's incumbent parser, rejecting
++// duplicate members instead of losing a foreign value during reconciliation.
++struct UniqueJson(serde_json::Value);
++impl<'de> serde::Deserialize<'de> for UniqueJson {
++    fn deserialize<D: serde::Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
++        struct Visitor;
++        impl<'de> serde::de::Visitor<'de> for Visitor {
++            type Value = UniqueJson;
++            fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
++                f.write_str("JSON with unique object keys")
++            }
++            fn visit_bool<E: serde::de::Error>(self, v: bool) -> Result<Self::Value, E> {
++                Ok(UniqueJson(v.into()))
++            }
++            fn visit_i64<E: serde::de::Error>(self, v: i64) -> Result<Self::Value, E> {
++                Ok(UniqueJson(v.into()))
++            }
++            fn visit_u64<E: serde::de::Error>(self, v: u64) -> Result<Self::Value, E> {
++                Ok(UniqueJson(v.into()))
++            }
++            fn visit_f64<E: serde::de::Error>(self, v: f64) -> Result<Self::Value, E> {
++                serde_json::Number::from_f64(v)
++                    .map(|n| UniqueJson(n.into()))
++                    .ok_or_else(|| E::custom("nonfinite JSON number"))
++            }
++            fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
++                Ok(UniqueJson(v.into()))
++            }
++            fn visit_string<E: serde::de::Error>(self, v: String) -> Result<Self::Value, E> {
++                Ok(UniqueJson(v.into()))
++            }
++            fn visit_unit<E: serde::de::Error>(self) -> Result<Self::Value, E> {
++                Ok(UniqueJson(serde_json::Value::Null))
++            }
++            fn visit_seq<A: serde::de::SeqAccess<'de>>(
++                self,
++                mut a: A,
++            ) -> Result<Self::Value, A::Error> {
++                let mut values = Vec::new();
++                while let Some(v) = a.next_element::<UniqueJson>()? {
++                    values.push(v.0);
++                }
++                Ok(UniqueJson(values.into()))
++            }
++            fn visit_map<A: serde::de::MapAccess<'de>>(
++                self,
++                mut a: A,
++            ) -> Result<Self::Value, A::Error> {
++                let mut values = serde_json::Map::new();
++                while let Some((key, value)) = a.next_entry::<String, UniqueJson>()? {
++                    if values.insert(key, value.0).is_some() {
++                        return Err(serde::de::Error::custom("duplicate JSON member"));
++                    }
++                }
++                Ok(UniqueJson(values.into()))
++            }
++        }
++        d.deserialize_any(Visitor)
++    }
++}
++
++fn json_doc(bytes: &[u8]) -> Result<serde_json::Value, GenericError> {
++    if bytes.is_empty() {
++        Ok(serde_json::json!({}))
++    } else {
++        serde_json::from_slice::<UniqueJson>(bytes)
++            .map(|v| v.0)
++            .map_err(refuse)
++    }
++}
++fn toml_doc(bytes: &[u8]) -> Result<toml::Value, GenericError> {
++    if bytes.is_empty() {
++        Ok(toml::Value::Table(Default::default()))
++    } else {
++        toml::from_str(std::str::from_utf8(bytes).map_err(refuse)?).map_err(refuse)
++    }
++}
++pub(super) fn observe_value(
++    bytes: Option<&[u8]>,
++    r: &GenericResource,
++) -> Result<Option<Vec<u8>>, GenericError> {
++    let Some(bytes) = bytes else { return Ok(None) };
++    if r.key.is_empty() {
++        return Ok(Some(bytes.to_vec()));
++    }
++    if bytes.is_empty() && r.operation == ClientOperation::ReconcileJsonMember {
++        return Err(refuse("existing empty JSON document is invalid"));
++    }
++    match r.operation {
++        ClientOperation::ReconcileJsonMember => {
++            let doc = json_doc(bytes)?;
++            let mut at = &doc;
++            for key in &r.key {
++                let map = at
++                    .as_object()
++                    .ok_or_else(|| refuse("scalar JSON ancestor"))?;
++                let Some(next) = map.get(key) else {
++                    return Ok(None);
++                };
++                at = next;
++            }
++            Ok(Some(encoded(at)?))
++        }
++        ClientOperation::ReconcileTomlMember => {
++            let doc = toml_doc(bytes)?;
++            let mut at = &doc;
++            for key in &r.key {
++                let map = at
++                    .as_table()
++                    .ok_or_else(|| refuse("scalar TOML ancestor"))?;
++                let Some(next) = map.get(key) else {
++                    return Ok(None);
++                };
++                at = next;
++            }
++            Ok(Some(toml_value_bytes(at)?))
++        }
++        _ => Err(refuse("member operation mismatch")),
++    }
++}
++fn reconcile(
++    bytes: &[u8],
++    r: &GenericResource,
++    p: &GenericPayload,
++) -> Result<Vec<u8>, GenericError> {
++    match p {
++        GenericPayload::File(b) => Ok(b.clone()),
++        GenericPayload::JsonMember(v) => {
++            let mut doc = json_doc(bytes)?;
++            let mut at = &mut doc;
++            for key in &r.key[..r.key.len() - 1] {
++                at = at
++                    .as_object_mut()
++                    .ok_or_else(|| refuse("scalar JSON ancestor"))?
++                    .entry(key.clone())
++                    .or_insert_with(|| serde_json::json!({}));
++            }
++            at.as_object_mut()
++                .ok_or_else(|| refuse("scalar JSON ancestor"))?
++                .insert(r.key.last().unwrap().clone(), v.clone());
++            serde_json::to_vec_pretty(&doc).map_err(refuse)
++        }
++        GenericPayload::TomlMember(v) => {
++            let mut doc = toml_doc(bytes)?;
++            let mut at = &mut doc;
++            for key in &r.key[..r.key.len() - 1] {
++                at = at
++                    .as_table_mut()
++                    .ok_or_else(|| refuse("scalar TOML ancestor"))?
++                    .entry(key.clone())
++                    .or_insert_with(|| toml::Value::Table(Default::default()));
++            }
++            at.as_table_mut()
++                .ok_or_else(|| refuse("scalar TOML ancestor"))?
++                .insert(r.key.last().unwrap().clone(), v.clone());
++            Ok(toml::to_string_pretty(&doc).map_err(refuse)?.into_bytes())
++        }
++        _ => Err(refuse("unexpanded tree")),
++    }
++}
+diff --git a/crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs b/crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs
+new file mode 100644
+index 000000000..f39191883
+--- /dev/null
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs
+@@ -0,0 +1,988 @@
++use super::*;
++use std::path::Path;
++use std::sync::Mutex;
++use vibe_agent_projection::client_capabilities::ClientCapability;
++use vibe_core::manifest::*;
++
++const CLOCK: &str = "2026-10-15T00:00:00Z";
++struct Authority {
++    selected: Mutex<SelectedObservation>,
++    control: Mutex<ControlObservation>,
++}
++impl GenericAuthority for Authority {
++    fn selected_current(&self, _: &str) -> Result<SelectedObservation, String> {
++        Ok(self.selected.lock().unwrap().clone())
++    }
++    fn current_control(&self) -> Result<ControlObservation, String> {
++        Ok(self.control.lock().unwrap().clone())
++    }
++}
++struct Fixture {
++    dir: tempfile::TempDir,
++    host: GenericHost,
++    authority: Arc<Authority>,
++}
++fn binding(scope: ClientScope, shape: ClientShape, path: &str, keys: &[&str]) -> ClientBinding {
++    ClientBinding {
++        scope,
++        shape,
++        destination: path.into(),
++        key: keys.iter().map(|s| s.to_string()).collect(),
++        operations: vec![match shape {
++            ClientShape::File => ClientOperation::ProjectFile,
++            ClientShape::Tree => ClientOperation::ProjectTree,
++            ClientShape::JsonMember => ClientOperation::ReconcileJsonMember,
++            ClientShape::TomlMember => ClientOperation::ReconcileTomlMember,
++        }],
++    }
++}
++fn request(bindings: Vec<ClientBinding>) -> ClientRequest {
++    ClientRequest {
++        schema: 1,
++        client_id: "org.example/new-client".into(),
++        version: "*".into(),
++        bindings,
++    }
++}
++fn protections() -> ProtectedControls {
++    let category = |name: &str| {
++        [ClientScope::Project, ClientScope::User]
++            .into_iter()
++            .map(|scope| ProtectedResource {
++                scope,
++                relative: format!("controls/{name}"),
++            })
++            .collect()
++    };
++    ProtectedControls {
++        grants: category("grants"),
++        policy: category("policy"),
++        producer_trust: category("trust"),
++        publication_mode: category("publication"),
++    }
++}
++impl Fixture {
++    fn new(r: ClientRequest) -> Self {
++        let dir = tempfile::tempdir().unwrap();
++        for name in ["project", "user", "settings"] {
++            std::fs::create_dir(dir.path().join(name)).unwrap();
++        }
++        let authority = Arc::new(Authority {
++            selected: Mutex::new(SelectedObservation {
++                identity: SourceIdentity {
++                    provider: "org.example/provider#client".into(),
++                    provider_version: "1.0.0".into(),
++                    provider_digest: "b".repeat(64),
++                    declaration: "client".into(),
++                    declaration_digest: "c".repeat(64),
++                    descriptor: "client-descriptor".into(),
++                    source: "fixture-capture".into(),
++                    source_digest: "a".repeat(64),
++                    descriptor_digest: digest(&encoded(&r).unwrap()),
++                },
++                request: r,
++                selected: true,
++                enabled: true,
++            }),
++            control: Mutex::new(ControlObservation {
++                principal: "fixture-owner".into(),
++                policy_generation: "generation-1".into(),
++            }),
++        });
++        let host = GenericHost::new(
++            Project::open(&dir.path().join("project")).unwrap(),
++            Project::open(&dir.path().join("user")).unwrap(),
++            Project::open(&dir.path().join("settings")).unwrap(),
++            authority.clone(),
++            protections(),
++        )
++        .unwrap();
++        Self {
++            dir,
++            host,
++            authority,
++        }
++    }
++    fn map(&self) -> ClientCapabilities {
++        let o = self.authority.selected.lock().unwrap().clone();
++        ClientCapabilities::admit([ClientCapability {
++            provider: o.identity.provider,
++            descriptor_digest: o.identity.descriptor_digest,
++            request: o.request,
++            disabled: !o.enabled,
++        }])
++        .unwrap()
++    }
++    fn admitted(&self, payloads: Vec<GenericPayload>) -> AdmittedClient {
++        let map = self.map();
++        let id = map.rows().keys().next().unwrap();
++        self.host
++            .admit_payload(self.host.capture(&map, id).unwrap(), payloads)
++            .unwrap()
++    }
++    fn plan(&self, payloads: Vec<GenericPayload>) -> GenericPlan {
++        self.host.plan(&self.admitted(payloads)).unwrap()
++    }
++    fn write(&self, scope: ClientScope, path: &str, bytes: &[u8]) {
++        self.host.root(scope).write_atomic(path, bytes).unwrap();
++    }
++    fn bytes(&self, scope: ClientScope, path: &str) -> Vec<u8> {
++        self.host
++            .root(scope)
++            .read_file_bounded(path, 4 * 1024 * 1024)
++            .unwrap()
++            .unwrap()
++    }
++    fn census(&self) -> BTreeMap<String, String> {
++        census(self.dir.path())
++    }
++}
++fn census(root: &Path) -> BTreeMap<String, String> {
++    fn walk(root: &Path, at: &Path, out: &mut BTreeMap<String, String>) {
++        for e in std::fs::read_dir(at).unwrap() {
++            let p = e.unwrap().path();
++            let metadata = std::fs::symlink_metadata(&p).unwrap();
++            let relative = p.strip_prefix(root).unwrap().to_string_lossy().into_owned();
++            if metadata.is_dir() {
++                out.insert(relative, "directory".into());
++                walk(root, &p, out);
++            } else if metadata.file_type().is_symlink() {
++                out.insert(
++                    relative,
++                    format!("link:{:?}", std::fs::read_link(p).unwrap()),
++                );
++            } else {
++                out.insert(relative, digest(&std::fs::read(p).unwrap()));
++            }
++        }
++    }
++    let mut out = BTreeMap::new();
++    walk(root, root, &mut out);
++    out
++}
++#[track_caller]
++fn unchanged(f: &Fixture, before: &BTreeMap<String, String>) {
++    let after = f.census();
++    if let Some(directory) = std::env::var_os("M08C2_EVIDENCE_DIR") {
++        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
++        let sequence = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
++        let record = serde_json::json!({"source_line":std::panic::Location::caller().line(),"before":before,"after":after,"equal":*before==after});
++        std::fs::write(
++            Path::new(&directory).join(format!("census-{sequence}.json")),
++            serde_json::to_vec_pretty(&record).unwrap(),
++        )
++        .unwrap();
++    }
++    assert_eq!(*before, after);
++}
++fn file_fixture() -> Fixture {
++    Fixture::new(request(vec![binding(
++        ClientScope::Project,
++        ClientShape::File,
++        "new/file",
++        &[],
++    )]))
++}
++fn payload() -> Vec<GenericPayload> {
++    vec![GenericPayload::File(b"owned".to_vec())]
++}
++
++#[test]
++fn four_shapes_exact_grant_preserves_foreign_files_and_members() {
++    let f = Fixture::new(request(vec![
++        binding(ClientScope::Project, ClientShape::File, "new/output", &[]),
++        binding(ClientScope::User, ClientShape::Tree, "bundle", &[]),
++        binding(
++            ClientScope::User,
++            ClientShape::JsonMember,
++            "client.json",
++            &["mcpServers", "new.key/segment"],
++        ),
++        binding(
++            ClientScope::Project,
++            ClientShape::TomlMember,
++            "client.toml",
++            &["mcp", "literal.dot/slash"],
++        ),
++    ]));
++    f.write(ClientScope::User, "bundle/foreign", b"untouched");
++    f.write(
++        ClientScope::User,
++        "client.json",
++        br#"{"foreign":true,"mcpServers":{"neighbor":{"command":"inert"}}}"#,
++    );
++    f.write(
++        ClientScope::Project,
++        "client.toml",
++        b"foreign = 7\n[mcp.neighbor]\ncommand = 'inert'\n",
++    );
++    let before = f.census();
++    let plan = f.plan(vec![
++        GenericPayload::File(b"file".to_vec()),
++        GenericPayload::Tree(BTreeMap::from([
++            ("a".into(), b"A".to_vec()),
++            ("nested/b".into(), b"B".to_vec()),
++        ])),
++        GenericPayload::JsonMember(
++            serde_json::json!({"command":"never-executed","args":["--inert"]}),
++        ),
++        GenericPayload::TomlMember(toml::Value::String("config".into())),
++    ]);
++    unchanged(&f, &before);
++    let grant = f.host.approve(&plan).unwrap();
++    unchanged(&f, &before);
++    assert_eq!(
++        f.host.apply(&plan, None, CLOCK).unwrap_err().effect,
++        GenericEffect::NoEffects
++    );
++    unchanged(&f, &before);
++    let outcome = f.host.apply(&plan, Some(&grant), CLOCK).unwrap();
++    assert_eq!(outcome.resources.len(), 5);
++    assert_eq!(outcome.effect, GenericEffect::Destinations);
++    assert_eq!(f.bytes(ClientScope::Project, "new/output"), b"file");
++    assert_eq!(f.bytes(ClientScope::User, "bundle/a"), b"A");
++    assert_eq!(f.bytes(ClientScope::User, "bundle/nested/b"), b"B");
++    assert_eq!(f.bytes(ClientScope::User, "bundle/foreign"), b"untouched");
++    let json: serde_json::Value =
++        serde_json::from_slice(&f.bytes(ClientScope::User, "client.json")).unwrap();
++    assert_eq!(json["foreign"], true);
++    assert_eq!(json["mcpServers"]["neighbor"]["command"], "inert");
++    assert_eq!(
++        json["mcpServers"]["new.key/segment"]["command"],
++        "never-executed"
++    );
++    let toml: toml::Value =
++        toml::from_str(std::str::from_utf8(&f.bytes(ClientScope::Project, "client.toml")).unwrap())
++            .unwrap();
++    assert_eq!(toml["foreign"].as_integer(), Some(7));
++    assert_eq!(toml["mcp"]["neighbor"]["command"].as_str(), Some("inert"));
++    assert_eq!(toml["mcp"]["literal.dot/slash"].as_str(), Some("config"));
++    let state = super::super::state::DeployState::observe_bound(&f.host.settings)
++        .unwrap()
++        .unwrap();
++    let home = f.host.home(&plan.target);
++    let receipt = state.read_receipt(&home).unwrap().unwrap();
++    assert_eq!(receipt.resources.len(), 5);
++    assert!(state.read_intent(&home).unwrap().is_none());
++    let locks = state.read_lock_resources(&home).unwrap().unwrap();
++    assert!(locks.pending.is_none());
++    // Five physical documents plus three incumbent User compatibility keys.
++    assert_eq!(locks.committed.unwrap().resources.len(), 8);
++}
++#[test]
++fn absent_wrong_broadened_and_changed_plans_have_zero_effects() {
++    let f = file_fixture();
++    let plan = f.plan(payload());
++    let grant = f.host.approve(&plan).unwrap();
++    let other = f.plan(vec![GenericPayload::File(b"different".to_vec())]);
++    let wrong = f.host.approve(&other).unwrap();
++    let before = f.census();
++    assert!(f.host.apply(&plan, None, CLOCK).is_err());
++    assert!(f.host.apply(&plan, Some(&wrong), CLOCK).is_err());
++    for change in 0..6 {
++        let mut p = plan.clone();
++        match change {
++            0 => p.resources.push(p.resources[0].clone()),
++            1 => p.resources[0].operation = ClientOperation::ProjectTree,
++            2 => p.admitted.capture.observation.identity.descriptor_digest = "b".repeat(64),
++            3 => p.documents[0].after.push(1),
++            4 => p.target.push('x'),
++            _ => p.roots[0].push('x'),
++        };
++        assert_eq!(
++            f.host.apply(&p, Some(&grant), CLOCK).unwrap_err().effect,
++            GenericEffect::NoEffects
++        );
++        unchanged(&f, &before);
++    }
++    let f2 = file_fixture();
++    assert_eq!(
++        f2.host
++            .apply(&plan, Some(&grant), CLOCK)
++            .unwrap_err()
++            .effect,
++        GenericEffect::NoEffects
++    );
++    unchanged(&f, &before);
++}
++#[test]
++fn current_selection_source_principal_policy_and_root_drift_refuse() {
++    let f = file_fixture();
++    let plan = f.plan(payload());
++    let grant = f.host.approve(&plan).unwrap();
++    let original = f.authority.selected.lock().unwrap().clone();
++    let control = f.authority.control.lock().unwrap().clone();
++    let before = f.census();
++    for change in 0..13 {
++        {
++            let mut o = f.authority.selected.lock().unwrap();
++            *o = original.clone();
++            match change {
++                0 => o.selected = false,
++                1 => o.enabled = false,
++                2 => o.identity.provider.push('x'),
++                3 => o.identity.declaration.push('x'),
++                4 => o.identity.source.push('x'),
++                5 => o.identity.source_digest.push('x'),
++                6 => o.identity.descriptor_digest.push('x'),
++                9 => o.identity.provider_digest.push('x'),
++                10 => o.identity.declaration_digest.push('x'),
++                11 => o.identity.descriptor.push('x'),
++                12 => o.identity.provider_version.push('x'),
++                _ => {}
++            }
++        }
++        {
++            let mut c = f.authority.control.lock().unwrap();
++            *c = control.clone();
++            if change == 7 {
++                c.principal.push('x')
++            }
++            if change == 8 {
++                c.policy_generation.push('x')
++            }
++        }
++        assert!(f.host.approve(&plan).is_err());
++        assert_eq!(
++            f.host.apply(&plan, Some(&grant), CLOCK).unwrap_err().effect,
++            GenericEffect::NoEffects
++        );
++        unchanged(&f, &before);
++    }
++    *f.authority.selected.lock().unwrap() = original;
++    *f.authority.control.lock().unwrap() = control;
++    let state = super::super::state::DeployState::open_bound(&f.host.settings).unwrap();
++    drop(state);
++    let state_plan = f.plan(payload());
++    let state_grant = f.host.approve(&state_plan).unwrap();
++    let state_path = f
++        .host
++        .settings
++        .root_path()
++        .join(super::super::model::DEPLOY_STATE_DIR);
++    let saved = f.dir.path().join("old-state");
++    std::fs::rename(&state_path, &saved).unwrap();
++    std::fs::create_dir(&state_path).unwrap();
++    let state_changed = f.census();
++    assert_eq!(
++        f.host
++            .apply(&state_plan, Some(&state_grant), CLOCK)
++            .unwrap_err()
++            .effect,
++        GenericEffect::NoEffects
++    );
++    unchanged(&f, &state_changed);
++    let project = f.dir.path().join("project");
++    std::fs::rename(&project, f.dir.path().join("old-project")).unwrap();
++    std::fs::create_dir(&project).unwrap();
++    let drifted = f.census();
++    assert!(f.host.apply(&plan, Some(&grant), CLOCK).is_err());
++    unchanged(&f, &drifted);
++}
++#[test]
++fn caller_map_is_not_selection_or_payload_authority() {
++    let f = file_fixture();
++    let map = f.map();
++    let before = f.census();
++    f.authority.selected.lock().unwrap().selected = false;
++    assert!(f.host.capture(&map, "org.example/new-client").is_err());
++    f.authority.selected.lock().unwrap().selected = true;
++    let capture = f.host.capture(&map, "org.example/new-client").unwrap();
++    assert!(
++        f.host
++            .admit_payload(
++                capture,
++                vec![GenericPayload::JsonMember(serde_json::json!({}))]
++            )
++            .is_err()
++    );
++    let mut row = map.rows().values().next().unwrap().clone();
++    row.request.bindings[0].destination = "changed".into();
++    let map = ClientCapabilities::admit([row]).unwrap();
++    assert!(f.host.capture(&map, "org.example/new-client").is_err());
++    unchanged(&f, &before);
++}
++#[test]
++fn traversal_reserved_alias_ancestor_and_member_conflicts_refuse() {
++    for path in [
++        "../escape",
++        "/absolute",
++        "a//b",
++        "a\\b",
++        "CON",
++        ".vibe-stage-forbidden",
++    ] {
++        let f = Fixture::new(request(vec![binding(
++            ClientScope::Project,
++            ClientShape::File,
++            path,
++            &[],
++        )]));
++        let before = f.census();
++        let o = f.authority.selected.lock().unwrap().clone();
++        let map = ClientCapabilities::admit([ClientCapability {
++            provider: o.identity.provider,
++            descriptor_digest: o.identity.descriptor_digest,
++            request: o.request,
++            disabled: false,
++        }]);
++        if let Ok(map) = map {
++            let c = f.host.capture(&map, "org.example/new-client").unwrap();
++            let a = f.host.admit_payload(c, payload()).unwrap();
++            assert!(f.host.plan(&a).is_err(), "{path}");
++        }
++        unchanged(&f, &before);
++    }
++    for (a, b) in [("same", "SAME"), ("a", "a/b")] {
++        let f = Fixture::new(request(vec![
++            binding(ClientScope::Project, ClientShape::File, a, &[]),
++            binding(ClientScope::Project, ClientShape::File, b, &[]),
++        ]));
++        let before = f.census();
++        assert!(
++            f.host
++                .plan(&f.admitted(vec![
++                    GenericPayload::File(vec![]),
++                    GenericPayload::File(vec![])
++                ]))
++                .is_err()
++        );
++        unchanged(&f, &before);
++    }
++    for keys in [vec!["x"], vec!["x", "child"]] {
++        let f = Fixture::new(request(vec![
++            binding(ClientScope::Project, ClientShape::JsonMember, "doc", &["x"]),
++            binding(ClientScope::Project, ClientShape::JsonMember, "doc", &keys),
++        ]));
++        if f.authority
++            .selected
++            .lock()
++            .unwrap()
++            .request
++            .validate()
++            .is_ok()
++        {
++            assert!(
++                f.host
++                    .plan(&f.admitted(vec![GenericPayload::JsonMember(serde_json::json!(1)); 2]))
++                    .is_err()
++            );
++        }
++    }
++    let f = Fixture::new(request(vec![
++        binding(ClientScope::Project, ClientShape::Tree, "tree", &[]),
++        binding(ClientScope::Project, ClientShape::File, "tree/child", &[]),
++    ]));
++    assert!(
++        f.host
++            .plan(&f.admitted(vec![
++                GenericPayload::Tree(BTreeMap::from([("a".into(), vec![])])),
++                GenericPayload::File(vec![])
++            ]))
++            .is_err()
++    );
++    let f = Fixture::new(request(vec![
++        binding(ClientScope::Project, ClientShape::File, "doc", &[]),
++        binding(ClientScope::Project, ClientShape::JsonMember, "doc", &["x"]),
++    ]));
++    assert!(
++        f.host
++            .plan(&f.admitted(vec![
++                GenericPayload::File(vec![]),
++                GenericPayload::JsonMember(serde_json::json!(1))
++            ]))
++            .is_err()
++    );
++    let f = Fixture::new(request(vec![binding(
++        ClientScope::Project,
++        ClientShape::Tree,
++        "tree",
++        &[],
++    )]));
++    assert!(
++        f.host
++            .plan(&f.admitted(vec![GenericPayload::Tree(BTreeMap::from([
++                ("a".into(), vec![]),
++                ("a/b".into(), vec![])
++            ]))]))
++            .is_err()
++    );
++}
++#[test]
++fn all_host_protected_categories_and_aliases_refuse() {
++    for scope in [ClientScope::Project, ClientScope::User] {
++        for path in [
++            "controls/grants",
++            "controls/policy",
++            "controls/trust",
++            "controls/publication",
++            "Controls/GRANTS",
++            "controls",
++            "controls/policy/child",
++        ] {
++            let f = Fixture::new(request(vec![binding(scope, ClientShape::File, path, &[])]));
++            let before = f.census();
++            assert!(f.host.plan(&f.admitted(payload())).is_err(), "{path}");
++            unchanged(&f, &before);
++        }
++    }
++    let f = file_fixture();
++    let mut protected = protections();
++    protected.grants.clear();
++    assert!(
++        GenericHost::new(
++            Project::open(f.host.project.root_path()).unwrap(),
++            Project::open(f.host.user.root_path()).unwrap(),
++            Project::open(f.host.settings.root_path()).unwrap(),
++            f.authority.clone(),
++            protected
++        )
++        .is_err()
++    );
++}
++#[cfg(unix)]
++#[test]
++fn physical_links_and_protected_aliases_refuse_without_writes() {
++    let f = file_fixture();
++    f.write(ClientScope::Project, "controls/policy", b"policy");
++    std::fs::create_dir(f.host.project.root_path().join("new")).unwrap();
++    std::fs::hard_link(
++        f.host.project.root_path().join("controls/policy"),
++        f.host.project.root_path().join("new/file"),
++    )
++    .unwrap();
++    let before = f.census();
++    assert!(f.host.plan(&f.admitted(payload())).is_err());
++    unchanged(&f, &before);
++    let f = file_fixture();
++    std::os::unix::fs::symlink(
++        f.host.user.root_path(),
++        f.host.project.root_path().join("new"),
++    )
++    .unwrap();
++    let before = f.census();
++    assert!(f.host.plan(&f.admitted(payload())).is_err());
++    unchanged(&f, &before);
++}
++#[test]
++fn launch_content_is_inspectable_changes_identity_and_never_executes() {
++    let f = Fixture::new(request(vec![binding(
++        ClientScope::User,
++        ClientShape::JsonMember,
++        "mcp.json",
++        &["mcp", "server"],
++    )]));
++    let marker = f.dir.path().join("process-must-not-run");
++    let value = serde_json::json!({"command":"sh","args":["-c",format!("touch {}",marker.display())],"enabled":true});
++    let p = f.plan(vec![GenericPayload::JsonMember(value.clone())]);
++    let grant = f.host.approve(&p).unwrap();
++    assert!(p.documents().any(|(_, _, bytes)| {
++        std::str::from_utf8(bytes)
++            .unwrap()
++            .contains("process-must-not-run")
++    }));
++    assert_eq!(p.payloads(), &[GenericPayload::JsonMember(value)]);
++    let other = f.plan(vec![GenericPayload::JsonMember(
++        serde_json::json!({"command":"other"}),
++    )]);
++    assert_ne!(p.identity(), other.identity());
++    assert!(f.host.apply(&other, Some(&grant), CLOCK).is_err());
++    f.host.apply(&p, Some(&grant), CLOCK).unwrap();
++    assert!(!marker.exists());
++}
++#[test]
++fn physical_document_contention_and_literal_member_coexistence() {
++    let f = Fixture::new(request(vec![
++        binding(
++            ClientScope::User,
++            ClientShape::JsonMember,
++            "shared.json",
++            &["mcp", "A/B"],
++        ),
++        binding(
++            ClientScope::User,
++            ClientShape::JsonMember,
++            "shared.json",
++            &["mcp", "a/b"],
++        ),
++    ]));
++    let state = super::super::state::DeployState::open_bound(&f.host.settings).unwrap();
++    let plan = f.plan(vec![
++        GenericPayload::JsonMember(serde_json::json!(1)),
++        GenericPayload::JsonMember(serde_json::json!(2)),
++    ]);
++    // One document: a common absolute lease plus its incumbent User lease.
++    assert_eq!(plan.locks(&f.host).len(), 2);
++    let grant = f.host.approve(&plan).unwrap();
++    let held = state.lock_destinations(&plan.locks(&f.host)).unwrap();
++    let (tx, rx) = std::sync::mpsc::channel();
++    std::thread::scope(|scope| {
++        let worker = scope.spawn(|| {
++            super::apply::LOCKED_HOOK.with(|h| {
++                *h.borrow_mut() = Some(Box::new(move || {
++                    tx.send(()).unwrap();
++                }))
++            });
++            f.host.apply(&plan, Some(&grant), CLOCK)
++        });
++        assert!(
++            rx.recv_timeout(std::time::Duration::from_millis(100))
++                .is_err()
++        );
++        drop(held);
++        rx.recv_timeout(std::time::Duration::from_secs(5)).unwrap();
++        worker.join().unwrap().unwrap();
++    });
++    let doc: serde_json::Value =
++        serde_json::from_slice(&f.bytes(ClientScope::User, "shared.json")).unwrap();
++    assert_eq!(doc["mcp"]["A/B"], 1);
++    assert_eq!(doc["mcp"]["a/b"], 2);
++    {
++        let mut o = f.authority.selected.lock().unwrap();
++        o.request.client_id = "org.example/second-client".into();
++        o.request.bindings = vec![binding(
++            ClientScope::User,
++            ClientShape::JsonMember,
++            "shared.json",
++            &["mcp", "C"],
++        )];
++    }
++    let p = f.plan(vec![GenericPayload::JsonMember(serde_json::json!(3))]);
++    assert_eq!(p.locks(&f.host), plan.locks(&f.host));
++    let g = f.host.approve(&p).unwrap();
++    f.host.apply(&p, Some(&g), CLOCK).unwrap();
++    let doc: serde_json::Value =
++        serde_json::from_slice(&f.bytes(ClientScope::User, "shared.json")).unwrap();
++    assert_eq!(doc["mcp"]["A/B"], 1);
++    assert_eq!(doc["mcp"]["C"], 3);
++    {
++        let mut o = f.authority.selected.lock().unwrap();
++        o.request.client_id = "org.example/third-client".into();
++        o.request.bindings[0].key = vec!["mcp".into()];
++    }
++    let before = f.census();
++    assert!(
++        f.host
++            .plan(&f.admitted(vec![GenericPayload::JsonMember(serde_json::json!({}))]))
++            .is_err()
++    );
++    unchanged(&f, &before);
++}
++#[test]
++fn stale_locked_destination_and_ownership_refuse_without_partial_merge() {
++    let raced = file_fixture();
++    raced.write(ClientScope::Project, "new/neighbor", b"foreign");
++    let raced_plan = raced.plan(payload());
++    let raced_grant = raced.host.approve(&raced_plan).unwrap();
++    vibe_safefs::arm_before_link(Some(Box::new(|directory, name| {
++        std::fs::write(directory.path().join(name), b"late-foreign").unwrap();
++    })));
++    let race_result = raced.host.apply(&raced_plan, Some(&raced_grant), CLOCK);
++    vibe_safefs::arm_before_link(None);
++    assert_eq!(
++        race_result.unwrap_err().effect,
++        GenericEffect::Infrastructure
++    );
++    assert_eq!(
++        raced.bytes(ClientScope::Project, "new/file"),
++        b"late-foreign"
++    );
++
++    let f = file_fixture();
++    let p = f.plan(payload());
++    let g = f.host.approve(&p).unwrap();
++    let path = f.host.project.root_path().join("new/file");
++    super::apply::LOCKED_HOOK.with(|h| {
++        *h.borrow_mut() = Some(Box::new(move || {
++            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
++            std::fs::write(path, b"foreign-race").unwrap();
++        }))
++    });
++    let error = f.host.apply(&p, Some(&g), CLOCK).unwrap_err();
++    assert_eq!(error.effect, GenericEffect::Infrastructure);
++    assert_eq!(f.bytes(ClientScope::Project, "new/file"), b"foreign-race");
++    let state = super::super::state::DeployState::observe_bound(&f.host.settings)
++        .unwrap()
++        .unwrap();
++    assert!(
++        state
++            .read_intent(&f.host.home(&p.target))
++            .unwrap()
++            .is_none()
++    );
++    let source_fixture = file_fixture();
++    let source_plan = source_fixture.plan(payload());
++    let source_grant = source_fixture.host.approve(&source_plan).unwrap();
++    let authority = source_fixture.authority.clone();
++    super::apply::LOCKED_HOOK.with(|h| {
++        *h.borrow_mut() = Some(Box::new(move || {
++            authority.selected.lock().unwrap().identity.source_digest = "d".repeat(64);
++        }))
++    });
++    assert_eq!(
++        source_fixture
++            .host
++            .apply(&source_plan, Some(&source_grant), CLOCK)
++            .unwrap_err()
++            .effect,
++        GenericEffect::Infrastructure
++    );
++    assert!(
++        !source_fixture
++            .host
++            .project
++            .root_path()
++            .join("new/file")
++            .exists()
++    );
++    let f = file_fixture();
++    let p = f.plan(payload());
++    let g = f.host.approve(&p).unwrap();
++    f.host.apply(&p, Some(&g), CLOCK).unwrap();
++    let p = f.plan(payload());
++    let g = f.host.approve(&p).unwrap();
++    let settings = f.host.settings.root_path().to_owned();
++    let target = p.target.clone();
++    let root = f.host.roots[0].clone();
++    super::apply::LOCKED_HOOK.with(|h| {
++        *h.borrow_mut() = Some(Box::new(move || {
++            let settings = Project::open(&settings).unwrap();
++            let state = super::super::state::DeployState::observe_bound(&settings)
++                .unwrap()
++                .unwrap();
++            let home = super::super::state::DeploymentHome::new(
++                &settings
++                    .root_path()
++                    .join(super::super::model::DEPLOY_STATE_DIR),
++                &root,
++                None,
++                &target,
++            );
++            let mut r = state.read_receipt(&home).unwrap().unwrap();
++            r.evidence = Some("changed ownership witness".into());
++            state.write_receipt(&home, &r).unwrap();
++        }))
++    });
++    assert_eq!(
++        f.host.apply(&p, Some(&g), CLOCK).unwrap_err().effect,
++        GenericEffect::Infrastructure
++    );
++    assert_eq!(f.bytes(ClientScope::Project, "new/file"), b"owned");
++}
++#[test]
++fn publication_failure_reports_destination_effect_and_retained_intent() {
++    let preparation = file_fixture();
++    let preparation_plan = preparation.plan(payload());
++    let preparation_grant = preparation.host.approve(&preparation_plan).unwrap();
++    vibe_safefs::fail_before_publish(Some("file"));
++    let prepared = preparation
++        .host
++        .apply(&preparation_plan, Some(&preparation_grant), CLOCK);
++    vibe_safefs::fail_before_publish(None);
++    let error = prepared.unwrap_err();
++    assert_eq!(error.effect, GenericEffect::Destinations);
++    assert!(error.reason.contains("BeforePublication"));
++    assert!(preparation.host.project.root_path().join("new").is_dir());
++    assert!(
++        !preparation
++            .host
++            .project
++            .root_path()
++            .join("new/file")
++            .exists()
++    );
++
++    let f = file_fixture();
++    let p = f.plan(payload());
++    let g = f.host.approve(&p).unwrap();
++    vibe_safefs::fail_after_publish(Some("file"));
++    let result = f.host.apply(&p, Some(&g), CLOCK);
++    vibe_safefs::fail_after_publish(None);
++    let error = result.unwrap_err();
++    assert_eq!(error.effect, GenericEffect::Destinations);
++    assert!(error.reason.contains("PossiblyPublished"));
++    assert_eq!(f.bytes(ClientScope::Project, "new/file"), b"owned");
++    let state = super::super::state::DeployState::observe_bound(&f.host.settings)
++        .unwrap()
++        .unwrap();
++    let home = f.host.home(&p.target);
++    assert!(state.read_intent(&home).unwrap().is_some());
++    assert!(state.read_receipt(&home).unwrap().is_none());
++    assert!(
++        state
++            .read_lock_resources(&home)
++            .unwrap()
++            .unwrap()
++            .pending
++            .is_some()
++    );
++    let before = f.census();
++    assert!(f.host.apply(&p, Some(&g), CLOCK).is_err());
++    unchanged(&f, &before);
++}
++#[test]
++fn scalar_ancestors_and_equal_foreign_values_do_not_transfer_ownership() {
++    for bytes in [b"".as_slice(), br#"{"foreign":1,"foreign":2}"#] {
++        let f = Fixture::new(request(vec![binding(
++            ClientScope::Project,
++            ClientShape::JsonMember,
++            "doc",
++            &["new"],
++        )]));
++        f.write(ClientScope::Project, "doc", bytes);
++        let before = f.census();
++        assert!(
++            f.host
++                .plan(&f.admitted(vec![GenericPayload::JsonMember(serde_json::json!(1))]))
++                .is_err()
++        );
++        unchanged(&f, &before);
++    }
++
++    for shape in [ClientShape::JsonMember, ClientShape::TomlMember] {
++        let f = Fixture::new(request(vec![binding(
++            ClientScope::Project,
++            shape,
++            "doc",
++            &["a", "b"],
++        )]));
++        let (bytes, value) = match shape {
++            ClientShape::JsonMember => (
++                br#"{"a":1}"#.to_vec(),
++                GenericPayload::JsonMember(serde_json::json!(1)),
++            ),
++            _ => (
++                b"a=1\n".to_vec(),
++                GenericPayload::TomlMember(toml::Value::Integer(1)),
++            ),
++        };
++        f.write(ClientScope::Project, "doc", &bytes);
++        let before = f.census();
++        assert!(f.host.plan(&f.admitted(vec![value])).is_err());
++        unchanged(&f, &before);
++    }
++    let f = file_fixture();
++    f.write(ClientScope::Project, "new/file", b"owned");
++    let before = f.census();
++    assert!(f.host.plan(&f.admitted(payload())).is_err());
++    unchanged(&f, &before);
++}
++
++#[test]
++fn two_hosts_opposite_scopes_share_document_lock_and_replan() {
++    use std::sync::mpsc::{RecvTimeoutError, channel};
++    use std::time::Duration;
++    let wait = Duration::from_secs(5);
++    let blocked = Duration::from_millis(100);
++    // Both directions, with different retained root boundaries and accepted
++    // root `.` spellings. No links or case-insensitive filesystem assumption.
++    for first_scope in [ClientScope::User, ClientScope::Project] {
++        let second_scope = match first_scope {
++            ClientScope::User => ClientScope::Project,
++            ClientScope::Project => ClientScope::User,
++        };
++        let a = Fixture::new(request(vec![binding(
++            first_scope,
++            ClientShape::JsonMember,
++            "nested/shared.json",
++            &["first"],
++        )]));
++        a.write(first_scope, "nested/shared.json", br#"{"foreign":7}"#);
++        let mut b = Fixture::new(request(vec![binding(
++            second_scope,
++            ClientShape::JsonMember,
++            "shared.json",
++            &["second"],
++        )]));
++        let shared = a.host.root(first_scope).root_path().join("nested/.");
++        let (project, user) = match second_scope {
++            ClientScope::Project => (shared, b.host.user.root_path().to_path_buf()),
++            ClientScope::User => (b.host.project.root_path().to_path_buf(), shared),
++        };
++        b.host = GenericHost::new(
++            Project::open(&project).unwrap(),
++            Project::open(&user).unwrap(),
++            Project::open(a.host.settings.root_path()).unwrap(),
++            b.authority.clone(),
++            protections(),
++        )
++        .unwrap();
++        let state = super::super::state::DeployState::open_bound(&a.host.settings).unwrap();
++        let pa = a.plan(vec![GenericPayload::JsonMember(serde_json::json!(1))]);
++        let pb = b.plan(vec![GenericPayload::JsonMember(serde_json::json!(2))]);
++        let ga = a.host.approve(&pa).unwrap();
++        let gb = b.host.approve(&pb).unwrap();
++        assert_ne!(a.host.home(&pa.target).id(), b.host.home(&pb.target).id());
++        assert_eq!(pa.documents[0].before, pb.documents[0].before);
++        // Incumbent providers name User locks as home:relative and Project
++        // locks as absolute. Acquire that key alone to prove compatibility.
++        let incumbent = match first_scope {
++            ClientScope::User => "home:nested/shared.json".to_owned(),
++            ClientScope::Project => a
++                .host
++                .project
++                .root_path()
++                .join("nested/shared.json")
++                .to_string_lossy()
++                .into_owned(),
++        };
++        let legacy = state.lock_destinations(&[incumbent]).unwrap();
++        let (a_attempt_tx, a_attempt_rx) = channel();
++        let (a_enter_tx, a_enter_rx) = channel();
++        let (release_tx, release_rx) = channel();
++        let (b_attempt_tx, b_attempt_rx) = channel();
++        let (b_enter_tx, b_enter_rx) = channel();
++        std::thread::scope(|scope| {
++            let first = scope.spawn(|| {
++                super::apply::BEFORE_DOCUMENT_LOCK_HOOK.with(|h| {
++                    *h.borrow_mut() = Some(Box::new(move || a_attempt_tx.send(()).unwrap()));
++                });
++                super::apply::LOCKED_HOOK.with(|h| {
++                    *h.borrow_mut() = Some(Box::new(move || {
++                        a_enter_tx.send(()).unwrap();
++                        release_rx.recv_timeout(wait).unwrap();
++                    }));
++                });
++                a.host.apply(&pa, Some(&ga), CLOCK)
++            });
++            a_attempt_rx.recv_timeout(wait).unwrap();
++            let legacy_blocked = a_enter_rx.recv_timeout(blocked);
++            drop(legacy);
++            a_enter_rx.recv_timeout(wait).unwrap();
++            let second = scope.spawn(|| {
++                super::apply::BEFORE_DOCUMENT_LOCK_HOOK.with(|h| {
++                    *h.borrow_mut() = Some(Box::new(move || b_attempt_tx.send(()).unwrap()));
++                });
++                super::apply::LOCKED_HOOK.with(|h| {
++                    *h.borrow_mut() = Some(Box::new(move || b_enter_tx.send(()).unwrap()));
++                });
++                b.host.apply(&pb, Some(&gb), CLOCK)
++            });
++            b_attempt_rx.recv_timeout(wait).unwrap();
++            let document_blocked = b_enter_rx.recv_timeout(blocked);
++            // No publication has happened while A holds the critical section.
++            let while_held = a.bytes(first_scope, "nested/shared.json");
++            release_tx.send(()).unwrap();
++            first.join().unwrap().unwrap();
++            b_enter_rx.recv_timeout(wait).unwrap();
++            let stale = second.join().unwrap().unwrap_err();
++            assert_eq!(legacy_blocked, Err(RecvTimeoutError::Timeout));
++            assert_eq!(document_blocked, Err(RecvTimeoutError::Timeout));
++            assert_eq!(while_held, br#"{"foreign":7}"#);
++            assert_eq!(stale.effect, GenericEffect::Infrastructure);
++            assert!(stale.reason.contains("ownership census changed"));
++        });
++        let landed: serde_json::Value =
++            serde_json::from_slice(&a.bytes(first_scope, "nested/shared.json")).unwrap();
++        assert_eq!(landed, serde_json::json!({"foreign":7,"first":1}));
++        let fresh = b.plan(vec![GenericPayload::JsonMember(serde_json::json!(2))]);
++        let fresh_grant = b.host.approve(&fresh).unwrap();
++        b.host.apply(&fresh, Some(&fresh_grant), CLOCK).unwrap();
++        let final_doc: serde_json::Value =
++            serde_json::from_slice(&a.bytes(first_scope, "nested/shared.json")).unwrap();
++        assert_eq!(
++            final_doc,
++            serde_json::json!({"foreign":7,"first":1,"second":2})
++        );
++    }
++}

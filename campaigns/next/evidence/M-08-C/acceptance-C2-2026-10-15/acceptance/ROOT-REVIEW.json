@@ -1,0 +1,533 @@
+{
+  "approved": true,
+  "approval_token": "Root approves FULL M08C2 corrected candidate with six applicable proofs and V2 N/A",
+  "summary": "Root accepts full corrected C2 implementation after source integration b048345b7, independent correction review,13 fresh cases plus4 unchanged-source reused cases; no C3/global claim",
+  "scope": "Full original C2 injected-root generic operations and exact grants; cross-host document lock correction",
+  "limitations": [
+    "V2 not applicable: projection module not introduced; no pass/fail adjudication created for it",
+    "V3/V4/V5 reuse actual original1+2+1 passes on unchanged consumed owners; no new execution claimed",
+    "13 fresh plus4 reused distinct cases is aggregate17, not one uninterrupted run",
+    "Linux injected roots only; no arbitrary mount-alias/hostile CAS/ABA or C3/upper CLI/MCP proof",
+    "Original V4 failure retained historically; no schema or criterion edits",
+    "0664 private prep config incident preserved for Root FIXED after integration"
+  ],
+  "observations": [
+    {
+      "group": "V1",
+      "verification_id": "verification.m08c2",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V1"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V1"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c2-correction/V1-result.json",
+      "result_sha256": "bde92ec6555d43cc713bade25109e4ab8edd831397b1c0c86495113a022b80c0",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 13,
+      "reused_case_count": 0,
+      "cases": [
+        "mechanism::deploy::generic::tests::four_shapes_exact_grant_preserves_foreign_files_and_members",
+        "mechanism::deploy::generic::tests::absent_wrong_broadened_and_changed_plans_have_zero_effects",
+        "mechanism::deploy::generic::tests::current_selection_source_principal_policy_and_root_drift_refuse",
+        "mechanism::deploy::generic::tests::caller_map_is_not_selection_or_payload_authority",
+        "mechanism::deploy::generic::tests::traversal_reserved_alias_ancestor_and_member_conflicts_refuse",
+        "mechanism::deploy::generic::tests::all_host_protected_categories_and_aliases_refuse",
+        "mechanism::deploy::generic::tests::physical_links_and_protected_aliases_refuse_without_writes",
+        "mechanism::deploy::generic::tests::launch_content_is_inspectable_changes_identity_and_never_executes",
+        "mechanism::deploy::generic::tests::physical_document_contention_and_literal_member_coexistence",
+        "mechanism::deploy::generic::tests::stale_locked_destination_and_ownership_refuse_without_partial_merge",
+        "mechanism::deploy::generic::tests::publication_failure_reports_destination_effect_and_retained_intent",
+        "mechanism::deploy::generic::tests::scalar_ancestors_and_equal_foreign_values_do_not_transfer_ownership",
+        "mechanism::deploy::generic::tests::two_hosts_opposite_scopes_share_document_lock_and_replan"
+      ],
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::generic::tests"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "13",
+              "0",
+              "0"
+            ]
+          ],
+          "count_matches": true,
+          "log": "/fast/zap-managed/2026-10-15-m08c2-correction/V1-1.log",
+          "seconds": 6.1962074199691415,
+          "passed": true,
+          "consumed_sources_stable": true,
+          "log_sha256": "f8f317f6749c2125a7eff0be1a1e59ce2f8f1c5b7c84eac8b16f1274dfdfe057"
+        }
+      ]
+    },
+    {
+      "group": "V2",
+      "verification_id": "verification.m08c2.1",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V2"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V2"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c2-correction/V2-result.json",
+      "result_sha256": "796607efee68e6ff861baacd2647b049ed8c8f4ff315410d3ee896397af8912d",
+      "selected_for_acceptance": false,
+      "observed_result": null,
+      "fresh_case_count": 0,
+      "reused_case_count": 0,
+      "cases": [
+        "V2 not applicable; no module"
+      ],
+      "commands": []
+    },
+    {
+      "group": "V3",
+      "verification_id": "verification.m08c2.2",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V3"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2/verify-group.py",
+        "V3"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c2-correction/V3-result.json",
+      "result_sha256": "007f547dcc991d9216ed6e753f96c7dead202b6a030f88589bcc4f48ca688085",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 0,
+      "reused_case_count": 1,
+      "cases": [
+        "mechanism::deploy::preplan_tests::a_shared_physical_lock_needs_reference_ownership_from_every_participant"
+      ],
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::preplan_tests::a_shared_physical_lock_needs_reference_ownership_from_every_participant",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "count_matches": true,
+          "log": "/fast/zap-managed/2026-10-15-m08c2/V3-1.log",
+          "seconds": 0.2980105889728293,
+          "passed": true,
+          "log_sha256": "19a475de025de5145ec753ef43aac1eef52983308a6e45b933ceb28006e860e6"
+        }
+      ],
+      "prior_result_path": "/fast/zap-managed/2026-10-15-m08c2/V3-result.json",
+      "prior_result_sha256": "0314fb5920f9d63652a3c1017f4796a4cbc85cdb5b889637c4803145b736191c",
+      "reuse_rationale": "Consumed owners unchanged from reviewed prior candidate. Generic planner and test-only hooks changed; no shared lock owner, SafeFS or C1 map change. Reuse recorded prior evidence, not a new pass."
+    },
+    {
+      "group": "V4",
+      "verification_id": "verification.m08c2.3",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V4"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2/verify-group.py",
+        "V4"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c2-correction/V4-result.json",
+      "result_sha256": "c6a798468cbea0e99751b47d6959aa3df27ca77ffe5de64da2cc012e2608c65f",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 0,
+      "reused_case_count": 2,
+      "cases": [
+        "component::tests::complete_sets_share_the_identity_and_literal_path_laws",
+        "component::tests::overlap_and_containment_use_the_same_component_boundaries"
+      ],
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-safefs",
+            "--lib",
+            "component::tests::complete_sets_share_the_identity_and_literal_path_laws",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "count_matches": true,
+          "log": "/fast/zap-managed/2026-10-15-m08c2/V4-1.log",
+          "seconds": 0.9165939380181953,
+          "passed": true,
+          "log_sha256": "aab4594ac64211f7de8058773aa8cad83e257d2fa187c7c328ed265fcbe09e6e"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-safefs",
+            "--lib",
+            "component::tests::overlap_and_containment_use_the_same_component_boundaries",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "count_matches": true,
+          "log": "/fast/zap-managed/2026-10-15-m08c2/V4-2.log",
+          "seconds": 0.1639998439932242,
+          "passed": true,
+          "log_sha256": "635405e878958e7f29fe6bbd160a70b26255c60ff50bb0d7e433758766f1e037"
+        }
+      ],
+      "prior_result_path": "/fast/zap-managed/2026-10-15-m08c2/V4-result.json",
+      "prior_result_sha256": "eedb9f4650d4c624d268f81804eb5e1b40659b6df095b4deb61107e1159864b7",
+      "reuse_rationale": "Consumed owners unchanged from reviewed prior candidate. Generic planner and test-only hooks changed; no shared lock owner, SafeFS or C1 map change. Reuse recorded prior evidence, not a new pass."
+    },
+    {
+      "group": "V5",
+      "verification_id": "verification.m08c2.4",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V5"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2/verify-group.py",
+        "V5"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c2-correction/V5-result.json",
+      "result_sha256": "bf8efb22452d7ad3d72b03ce58c86c5be5543171861b6197997707bad21ce2d2",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 0,
+      "reused_case_count": 1,
+      "cases": [
+        "client_capabilities::m_08_c_1_cases::new_id_destination_and_key_are_map_data"
+      ],
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "client_capabilities::m_08_c_1_cases::new_id_destination_and_key_are_map_data",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "count_matches": true,
+          "log": "/fast/zap-managed/2026-10-15-m08c2/V5-1.log",
+          "seconds": 3.465395829989575,
+          "passed": true,
+          "log_sha256": "070dbc3648c7481f273fd3c57ef982172cc8d38e041beda828ef18966f96c89d"
+        }
+      ],
+      "prior_result_path": "/fast/zap-managed/2026-10-15-m08c2/V5-result.json",
+      "prior_result_sha256": "7dcd2d2c2581acee00589734cd275dd3a2f3935e96eaaf4a5af705e1f423a8fe",
+      "reuse_rationale": "Consumed owners unchanged from reviewed prior candidate. Generic planner and test-only hooks changed; no shared lock owner, SafeFS or C1 map change. Reuse recorded prior evidence, not a new pass."
+    },
+    {
+      "group": "V6",
+      "verification_id": "verification.m08c2.5",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V6"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V6"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-result.json",
+      "result_sha256": "87e3597c7453eb0792c8c74b0b8d7d14349ba1883639f0687927b1267163b6f6",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 0,
+      "reused_case_count": 0,
+      "cases": [
+        "V6 actual bounded result"
+      ],
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "count_matches": null,
+          "log": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-1.log",
+          "seconds": 0.04904278798494488,
+          "passed": true,
+          "consumed_sources_stable": true,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "count_matches": null,
+          "log": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-2.log",
+          "seconds": 0.019492196035571396,
+          "passed": true,
+          "consumed_sources_stable": true,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "group": "V7",
+      "verification_id": "verification.m08c2.6",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V7"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-15-m08c2-correction/verify-group.py",
+        "V7"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-15-m08c2-correction/V7-result.json",
+      "result_sha256": "dff16ad4817f86cbd08acf3dcf404e845349f882c44b4278897782c403c8f74e",
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "fresh_case_count": 0,
+      "reused_case_count": 0,
+      "cases": [
+        "V7 actual bounded result"
+      ],
+      "commands": []
+    }
+  ],
+  "supplementary_subjects": {},
+  "fresh_distinct_cases": 13,
+  "reused_distinct_cases": 4,
+  "actual_environment": "Rust1.101-nightly, edition2024, offline/locked private warm target; actual commands and hashes retained",
+  "evidence_files": {
+    "V1_result": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V1-result.json",
+      "sha256": "bde92ec6555d43cc713bade25109e4ab8edd831397b1c0c86495113a022b80c0"
+    },
+    "V1_log0": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V1-1.log",
+      "sha256": "f8f317f6749c2125a7eff0be1a1e59ce2f8f1c5b7c84eac8b16f1274dfdfe057"
+    },
+    "V2_result": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V2-result.json",
+      "sha256": "796607efee68e6ff861baacd2647b049ed8c8f4ff315410d3ee896397af8912d"
+    },
+    "V3_result": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V3-result.json",
+      "sha256": "007f547dcc991d9216ed6e753f96c7dead202b6a030f88589bcc4f48ca688085"
+    },
+    "V3_prior_actual": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V3-result.json",
+      "sha256": "0314fb5920f9d63652a3c1017f4796a4cbc85cdb5b889637c4803145b736191c"
+    },
+    "V3_log0": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V3-1.log",
+      "sha256": "19a475de025de5145ec753ef43aac1eef52983308a6e45b933ceb28006e860e6"
+    },
+    "V4_result": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V4-result.json",
+      "sha256": "c6a798468cbea0e99751b47d6959aa3df27ca77ffe5de64da2cc012e2608c65f"
+    },
+    "V4_prior_actual": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V4-result.json",
+      "sha256": "eedb9f4650d4c624d268f81804eb5e1b40659b6df095b4deb61107e1159864b7"
+    },
+    "V4_log0": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V4-1.log",
+      "sha256": "aab4594ac64211f7de8058773aa8cad83e257d2fa187c7c328ed265fcbe09e6e"
+    },
+    "V4_log1": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V4-2.log",
+      "sha256": "635405e878958e7f29fe6bbd160a70b26255c60ff50bb0d7e433758766f1e037"
+    },
+    "V5_result": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V5-result.json",
+      "sha256": "bf8efb22452d7ad3d72b03ce58c86c5be5543171861b6197997707bad21ce2d2"
+    },
+    "V5_prior_actual": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V5-result.json",
+      "sha256": "7dcd2d2c2581acee00589734cd275dd3a2f3935e96eaaf4a5af705e1f423a8fe"
+    },
+    "V5_log0": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V5-1.log",
+      "sha256": "070dbc3648c7481f273fd3c57ef982172cc8d38e041beda828ef18966f96c89d"
+    },
+    "V6_result": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-result.json",
+      "sha256": "87e3597c7453eb0792c8c74b0b8d7d14349ba1883639f0687927b1267163b6f6"
+    },
+    "V6_log0": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "V6_log1": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "V7_result": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V7-result.json",
+      "sha256": "dff16ad4817f86cbd08acf3dcf404e845349f882c44b4278897782c403c8f74e"
+    },
+    "candidate": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/candidate-result.json",
+      "sha256": "9a47800f9287940a009fe5ad912bdfbf694df18544026786379f263b750724fc"
+    },
+    "claim": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/ready-capture.json",
+      "sha256": "f783187973950a71c5d6713c2f3a816a2ff43c5736ee80bf60fc707bddc29c40"
+    },
+    "producer_report": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/worker-report.md",
+      "sha256": "23c851ffcd75b88f2b518d7110e013a854289279adc4a270636dcbc50de446f8"
+    },
+    "patch_manifest": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/worker-patch-manifest.json",
+      "sha256": "848ec7a5c8e8ea33f6b3a943b98599cf022e0f98edb1e4215695540da373d60e"
+    },
+    "final_sources": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/final-source-observations.json",
+      "sha256": "5a3b0122f58bf5ada91131afaa78a5169511fb648a8807493775aa718efd8d59"
+    },
+    "retirement": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/ROOT-RETIREMENT.json",
+      "sha256": "577867914ffc91dbcb868f56eb6ad14e434b2f33973a53dded927c7e0f3af3a4"
+    },
+    "live_identities": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/ROOT-LIVE-PROCESSES.json",
+      "sha256": "d61857870249dc2dada26004aad412ca6d7347f7dcc059e3b85ed6717af32e16"
+    },
+    "independent_review": {
+      "path": "/fast/git/v/research/2026-10-15-m08c2-review/correction/REPORT.json",
+      "sha256": "dc137e26f6a0f7e224d2789efcb8f4895128bc1d7f7881d07db7a578b5205668"
+    },
+    "independent_review_prose": {
+      "path": "/fast/git/v/research/2026-10-15-m08c2-review/correction/REPORT.md",
+      "sha256": "bb449ce9072de5797ae2195545950d44eb1747e35d58cff413519886a814b4f0"
+    },
+    "original_review": {
+      "path": "/fast/git/v/research/2026-10-15-m08c2-review/REPORT.json",
+      "sha256": "b3981cc2ab65fde47630297e49bfd126b5bbed31dcab899583c4a9d27f330c93"
+    },
+    "V1-1-subjects-after": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V1-1-subjects-after.json",
+      "sha256": "c02534e552a307589d4dfb2995c3627f630b995c106e855d97f6b7db531f1879"
+    },
+    "V1-1-subjects-before": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V1-1-subjects-before.json",
+      "sha256": "c02534e552a307589d4dfb2995c3627f630b995c106e855d97f6b7db531f1879"
+    },
+    "V6-1-subjects-before": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-1-subjects-before.json",
+      "sha256": "c02534e552a307589d4dfb2995c3627f630b995c106e855d97f6b7db531f1879"
+    },
+    "V6-1-subjects-after": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-1-subjects-after.json",
+      "sha256": "c02534e552a307589d4dfb2995c3627f630b995c106e855d97f6b7db531f1879"
+    },
+    "V6-2-subjects-before": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-2-subjects-before.json",
+      "sha256": "c02534e552a307589d4dfb2995c3627f630b995c106e855d97f6b7db531f1879"
+    },
+    "V6-2-subjects-after": {
+      "path": "/fast/zap-managed/2026-10-15-m08c2-correction/V6-2-subjects-after.json",
+      "sha256": "c02534e552a307589d4dfb2995c3627f630b995c106e855d97f6b7db531f1879"
+    }
+  },
+  "criterion_assessments": [
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#SOURCE-VERSUS-PLAN",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "rationale": "Full original C2 criterion1: real exact host approval is required for all four supported operation shapes; the new generic family proves missing/wrong/broadened/stale grants refuse before effects and the issued exact grant succeeds while preserving foreign data. Full source/task/spec review and final13-case pass bind the integrated subject."
+    },
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#VIBEVM-OWNER",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "rationale": "Full original C2 criterion2: logical JSON/TOML member ownership coexists with real whole-document serialization. Corrected common physical identity plus incumbent keys is exercised by two valid opposite-scope hosts, actual blocking, stale-plan refusal and explicit replan; independent review confirms original P2 resolved."
+    }
+  ]
+}

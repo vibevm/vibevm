@@ -1,0 +1,14 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Corrected reviewed P2: common component-normalized absolute document locks across scope/root boundaries, with incumbent User and Project lock spellings retained through DeployState. Two valid hosts demonstrably block, stale apply refuses under lock, and explicit replanning preserves both members and foreign content.",
+    "Original all-Satisfied self-report and independent P2 rejection preserved. This is a fresh realm for the same full C2 task, not same-store continuation or acceptance."
+  ],
+  "unresolved": [],
+  "proposed_follow_up": null
+}

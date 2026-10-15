@@ -1,0 +1,22 @@
+{
+  "source_line": 556,
+  "before": {
+    "project": "directory",
+    "project/controls": "directory",
+    "project/controls/policy": "823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812",
+    "project/new": "directory",
+    "project/new/file": "823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "after": {
+    "project": "directory",
+    "project/controls": "directory",
+    "project/controls/policy": "823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812",
+    "project/new": "directory",
+    "project/new/file": "823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "equal": true
+}

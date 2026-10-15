@@ -1,0 +1,34 @@
+{
+  "source_line": 819,
+  "before": {
+    "project": "directory",
+    "project/new": "directory",
+    "project/new/file": "f5e6d024c05c9cc2746a3e127408b91a8b7a7f2a30da0c259bc54265502ddef4",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "settings/state/deployments/.vibe": "directory",
+    "settings/state/deployments/.vibe/46455ddd4606989f8063f88710e001b515a63d0691c275ea40cf8d5031d392a0.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-fcc76a3c3794ce3f6447967a1a1038813844f6f433c17e839fce8b7799b75773.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/fcc76a3c3794ce3f6447967a1a1038813844f6f433c17e839fce8b7799b75773": "directory",
+    "settings/state/deployments/fcc76a3c3794ce3f6447967a1a1038813844f6f433c17e839fce8b7799b75773/intent.json": "c817e98f9ca86a3e7e68e367da7f011e896714346bbe234482373062df3c95cb",
+    "settings/state/deployments/fcc76a3c3794ce3f6447967a1a1038813844f6f433c17e839fce8b7799b75773/lock-resources.json": "f83873bef2f1867f6840221a10aa35cca2c8758c2131788de8bba88212a8bc18",
+    "user": "directory"
+  },
+  "after": {
+    "project": "directory",
+    "project/new": "directory",
+    "project/new/file": "f5e6d024c05c9cc2746a3e127408b91a8b7a7f2a30da0c259bc54265502ddef4",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "settings/state/deployments/.vibe": "directory",
+    "settings/state/deployments/.vibe/46455ddd4606989f8063f88710e001b515a63d0691c275ea40cf8d5031d392a0.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-fcc76a3c3794ce3f6447967a1a1038813844f6f433c17e839fce8b7799b75773.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/fcc76a3c3794ce3f6447967a1a1038813844f6f433c17e839fce8b7799b75773": "directory",
+    "settings/state/deployments/fcc76a3c3794ce3f6447967a1a1038813844f6f433c17e839fce8b7799b75773/intent.json": "c817e98f9ca86a3e7e68e367da7f011e896714346bbe234482373062df3c95cb",
+    "settings/state/deployments/fcc76a3c3794ce3f6447967a1a1038813844f6f433c17e839fce8b7799b75773/lock-resources.json": "f83873bef2f1867f6840221a10aa35cca2c8758c2131788de8bba88212a8bc18",
+    "user": "directory"
+  },
+  "equal": true
+}

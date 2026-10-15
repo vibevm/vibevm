@@ -1,0 +1,42 @@
+{
+  "source_line": 669,
+  "before": {
+    "project": "directory",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "settings/state/deployments/.vibe": "directory",
+    "settings/state/deployments/.vibe/b30dbf2b29fe5841281281f847525bb5421ed886f9b907b7004eb4861a013a86.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/b67f84be1c0e377ce4b2bdb5bcfaee7f9cc6acf77e2749dd1fc054cb4a16ef70.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-7943cb3a20b922a70988505f76ee58997d64b2c61e4539ee69910e6c30a72f4b.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-b7f1174ab5deb2591b52a34f9e2608f9479cf6183dffd80ccfe47a471196c1bc.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/7943cb3a20b922a70988505f76ee58997d64b2c61e4539ee69910e6c30a72f4b": "directory",
+    "settings/state/deployments/7943cb3a20b922a70988505f76ee58997d64b2c61e4539ee69910e6c30a72f4b/lock-resources.json": "1eee4e3f47f18ba2f5c4b20553c9d52ef88be2770b8fdadc1113e5bec8f21206",
+    "settings/state/deployments/7943cb3a20b922a70988505f76ee58997d64b2c61e4539ee69910e6c30a72f4b/receipt.json": "0306c272a7d5f072368435cef71f09a600ea9a4970a08c638ab48f7365a40977",
+    "settings/state/deployments/b7f1174ab5deb2591b52a34f9e2608f9479cf6183dffd80ccfe47a471196c1bc": "directory",
+    "settings/state/deployments/b7f1174ab5deb2591b52a34f9e2608f9479cf6183dffd80ccfe47a471196c1bc/lock-resources.json": "ba348d2dcb1c7b4cb0239231ec66a1f0a90ab31450f68806f6a44a3a31a9b66c",
+    "settings/state/deployments/b7f1174ab5deb2591b52a34f9e2608f9479cf6183dffd80ccfe47a471196c1bc/receipt.json": "319dacd9f5da329deffc1a97a710724d9ef3765df53d9e048e4604d8c150c0f0",
+    "user": "directory",
+    "user/shared.json": "208249305e7479cdf18315d4cbf199107980eaeb0585c707e657babcda87394f"
+  },
+  "after": {
+    "project": "directory",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "settings/state/deployments/.vibe": "directory",
+    "settings/state/deployments/.vibe/b30dbf2b29fe5841281281f847525bb5421ed886f9b907b7004eb4861a013a86.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/b67f84be1c0e377ce4b2bdb5bcfaee7f9cc6acf77e2749dd1fc054cb4a16ef70.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-7943cb3a20b922a70988505f76ee58997d64b2c61e4539ee69910e6c30a72f4b.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-b7f1174ab5deb2591b52a34f9e2608f9479cf6183dffd80ccfe47a471196c1bc.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/7943cb3a20b922a70988505f76ee58997d64b2c61e4539ee69910e6c30a72f4b": "directory",
+    "settings/state/deployments/7943cb3a20b922a70988505f76ee58997d64b2c61e4539ee69910e6c30a72f4b/lock-resources.json": "1eee4e3f47f18ba2f5c4b20553c9d52ef88be2770b8fdadc1113e5bec8f21206",
+    "settings/state/deployments/7943cb3a20b922a70988505f76ee58997d64b2c61e4539ee69910e6c30a72f4b/receipt.json": "0306c272a7d5f072368435cef71f09a600ea9a4970a08c638ab48f7365a40977",
+    "settings/state/deployments/b7f1174ab5deb2591b52a34f9e2608f9479cf6183dffd80ccfe47a471196c1bc": "directory",
+    "settings/state/deployments/b7f1174ab5deb2591b52a34f9e2608f9479cf6183dffd80ccfe47a471196c1bc/lock-resources.json": "ba348d2dcb1c7b4cb0239231ec66a1f0a90ab31450f68806f6a44a3a31a9b66c",
+    "settings/state/deployments/b7f1174ab5deb2591b52a34f9e2608f9479cf6183dffd80ccfe47a471196c1bc/receipt.json": "319dacd9f5da329deffc1a97a710724d9ef3765df53d9e048e4604d8c150c0f0",
+    "user": "directory",
+    "user/shared.json": "208249305e7479cdf18315d4cbf199107980eaeb0585c707e657babcda87394f"
+  },
+  "equal": true
+}

@@ -1,0 +1,120 @@
+{
+  "source": [
+    {
+      "path": "crates/vibe-lifecycle/src/lib.rs",
+      "before": "4dc723a03b5bcd8a2806b88b638e5efa18f5d4e60696c2917208b9f06ba4b7b1",
+      "after": "4dc723a03b5bcd8a2806b88b638e5efa18f5d4e60696c2917208b9f06ba4b7b1",
+      "prior": "4dc723a03b5bcd8a2806b88b638e5efa18f5d4e60696c2917208b9f06ba4b7b1",
+      "changed": false
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism.rs",
+      "before": "713b2b4e7da5de1c7ad4b0656f17cf94efe37c9f63b72086e1a0d4dc19e02675",
+      "after": "713b2b4e7da5de1c7ad4b0656f17cf94efe37c9f63b72086e1a0d4dc19e02675",
+      "prior": "713b2b4e7da5de1c7ad4b0656f17cf94efe37c9f63b72086e1a0d4dc19e02675",
+      "changed": false
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "before": "13761900f7feb429887786dff6f12b24e0a47c24a31cc832d166c7d7b75e245d",
+      "after": "13761900f7feb429887786dff6f12b24e0a47c24a31cc832d166c7d7b75e245d",
+      "prior": "13761900f7feb429887786dff6f12b24e0a47c24a31cc832d166c7d7b75e245d",
+      "changed": false
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+      "before": "7218bece02df41af201b1dd9b0fb0fb0d3042ecf5e81d2d83eff1f3fffdfc293",
+      "after": "7218bece02df41af201b1dd9b0fb0fb0d3042ecf5e81d2d83eff1f3fffdfc293",
+      "prior": "7218bece02df41af201b1dd9b0fb0fb0d3042ecf5e81d2d83eff1f3fffdfc293",
+      "changed": false
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+      "before": "dc64cd80ef5292a290e35d72b54f9dcc8c3e9f6bd437abbce29a772d2519b780",
+      "after": "dc64cd80ef5292a290e35d72b54f9dcc8c3e9f6bd437abbce29a772d2519b780",
+      "prior": "a2c59b266c5b8093f76faede08e94911a17ad456d44308d6fa6cd1e6d652fc14",
+      "changed": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "before": "8ebe972ad045aa9b790d4c8ea1a0bbaa059b56174e05b09e8ad5f2359356b062",
+      "after": "8ebe972ad045aa9b790d4c8ea1a0bbaa059b56174e05b09e8ad5f2359356b062",
+      "prior": "8ebe972ad045aa9b790d4c8ea1a0bbaa059b56174e05b09e8ad5f2359356b062",
+      "changed": false
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "before": "edfe9c1bcdf53d6eb4ca90809b946561dbfbdbcf6bcaf774d568cac7c02d1876",
+      "after": "edfe9c1bcdf53d6eb4ca90809b946561dbfbdbcf6bcaf774d568cac7c02d1876",
+      "prior": "94ec04ed7c717954fa7a574fae482004d088b62844027370ef20f774ac259ff2",
+      "changed": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+      "before": "6a716480c17174a98c5370a7ca7a29bead36df8f0732e08870629e935fda3d2e",
+      "after": "6a716480c17174a98c5370a7ca7a29bead36df8f0732e08870629e935fda3d2e",
+      "prior": "947d6c9bd73989e930ab3773d6fde653a567a97ff586c09e042355685d7a5ee6",
+      "changed": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "before": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+      "after": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+      "prior": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+      "changed": false
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "before": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec",
+      "after": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec",
+      "prior": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec",
+      "changed": false
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/error.rs",
+      "before": "f33532ebf551362c8e98d97c713c2d42076b195996bdc080371c05da88621377",
+      "after": "f33532ebf551362c8e98d97c713c2d42076b195996bdc080371c05da88621377",
+      "prior": "f33532ebf551362c8e98d97c713c2d42076b195996bdc080371c05da88621377",
+      "changed": false
+    },
+    {
+      "path": "crates/vibe-safefs/src/component/tests.rs",
+      "before": "11dd896177117bcdea0d49b653af830eb2651e6138e65ba1663e71ebf75fd482",
+      "after": "11dd896177117bcdea0d49b653af830eb2651e6138e65ba1663e71ebf75fd482",
+      "prior": "11dd896177117bcdea0d49b653af830eb2651e6138e65ba1663e71ebf75fd482",
+      "changed": false
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "before": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54",
+      "after": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54",
+      "prior": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54",
+      "changed": false
+    }
+  ],
+  "stable": true,
+  "V1_subjects_count": 52,
+  "V1_before_after_equal": true,
+  "V1_current_mismatches": [],
+  "reuse_mismatches": [],
+  "census_count": 57,
+  "census_mismatches": [],
+  "prior_spec_sha256": "cd594468e7b3cad5a5edf92855e01fcabe613426182f6fe7a60ecc03f47db2e5",
+  "evidence_hashes": {
+    "worker-report.md": "23c851ffcd75b88f2b518d7110e013a854289279adc4a270636dcbc50de446f8",
+    "worker-findings.json": "f3389ca11a53f09623e18462441d710f84abf6e1786853fa5c032045737b21a1",
+    "worker-patch-manifest.json": "848ec7a5c8e8ea33f6b3a943b98599cf022e0f98edb1e4215695540da373d60e",
+    "V1-result.json": "bde92ec6555d43cc713bade25109e4ab8edd831397b1c0c86495113a022b80c0",
+    "V1-1.log": "f8f317f6749c2125a7eff0be1a1e59ce2f8f1c5b7c84eac8b16f1274dfdfe057",
+    "V6-result.json": "87e3597c7453eb0792c8c74b0b8d7d14349ba1883639f0687927b1267163b6f6",
+    "V7-result.json": "dff16ad4817f86cbd08acf3dcf404e845349f882c44b4278897782c403c8f74e",
+    "CHECK-SELECTION.json": "5e6f316215449115091143a8e1ec52e396341f45379b3e23886a79b83de9e132",
+    "CENSUS-MANIFEST.json": "3dd33cbda3d3f03aed3e96e95392968fb7494c610afb009bef04c3feb66c39b9",
+    "V1-1-subjects-before.json": "c02534e552a307589d4dfb2995c3627f630b995c106e855d97f6b7db531f1879",
+    "V1-1-subjects-after.json": "c02534e552a307589d4dfb2995c3627f630b995c106e855d97f6b7db531f1879",
+    "attempt-1-V1-1.log": "1eb87ad84c15af830fec5889252794b309f5d213ac282327e8421aada9dd63e9",
+    "attempt-2-V1-1.log": "3c7fab0701f281f2921a6b1aa0dccd12627b47fcbbda4f10d829e771145a6711",
+    "attempt-3-V1-1.log": "c672e3a0f0278e4bf13ac2f1c3b70f496bb099b574c9276cc059e30e7305a400",
+    "ROOT-NATIVE-LATEST.json": "ee76594ae89f751a545781fcece86c83535fa13192fa8115e980678812a23b22"
+  }
+}

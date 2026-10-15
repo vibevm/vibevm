@@ -1,0 +1,21 @@
+--- a/crates/vibe-safefs/src/component/tests.rs
++++ b/crates/vibe-safefs/src/component/tests.rs
+@@ -284,11 +284,13 @@
+ 
+ #[test]
+ fn overlap_and_containment_use_the_same_component_boundaries() {
+-    let target = Path::new(r"C:\project\.claude\skills\demo");
+-    let alias = Path::new(r"c:\PROJECT\.CLAUDE\skills\demo\nested");
+-    let sibling = Path::new(r"C:\project\.claude\skills\other");
+-    assert!(paths_overlap(target, alias));
+-    assert!(!paths_overlap(target, sibling));
++    let target = Path::new("project").join(".claude/skills/demo");
++    let alias = Path::new("PROJECT").join(".CLAUDE/skills/demo/nested");
++    let sibling = Path::new("project").join(".claude/skills/other");
++    let prefix_sibling = Path::new("project").join(".claude/skills/demo-other");
++    assert!(paths_overlap(&target, &alias));
++    assert!(!paths_overlap(&target, &sibling));
++    assert!(!paths_overlap(&target, &prefix_sibling));
+ 
+     let scope = tempfile::tempdir().unwrap();
+     let root = scope.path().join("project");

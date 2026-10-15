@@ -1,0 +1,18 @@
+{
+  "source_line": 866,
+  "before": {
+    "project": "directory",
+    "project/new": "directory",
+    "project/new/file": "f5e6d024c05c9cc2746a3e127408b91a8b7a7f2a30da0c259bc54265502ddef4",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "after": {
+    "project": "directory",
+    "project/new": "directory",
+    "project/new/file": "f5e6d024c05c9cc2746a3e127408b91a8b7a7f2a30da0c259bc54265502ddef4",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "equal": true
+}

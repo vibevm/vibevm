@@ -1,0 +1,16 @@
+{
+  "source_line": 860,
+  "before": {
+    "project": "directory",
+    "project/doc": "fe3209d6d4f51935b391288a43df48d9ddece1a992597ae53387ca16611a9179",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "after": {
+    "project": "directory",
+    "project/doc": "fe3209d6d4f51935b391288a43df48d9ddece1a992597ae53387ca16611a9179",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "equal": true
+}

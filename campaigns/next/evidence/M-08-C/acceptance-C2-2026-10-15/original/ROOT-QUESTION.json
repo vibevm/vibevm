@@ -1,0 +1,10 @@
+{
+  "question_id": "m08c2-v4-native-path-fixture-2",
+  "paths": [
+    "crates/vibe-safefs/src/component/tests.rs"
+  ],
+  "symbol": "component::tests::overlap_and_containment_use_the_same_component_boundaries",
+  "reason": "Actual V4 first exact case passes; second exits 101 at line290 paths_overlap(target,alias). Existing test constructs Windows backslash Path strings even on Linux. The production paths_overlap uses native Path::components and correctly treats backslash as a Unix filename byte; generic C2 destinations already reject backslash. Reinterpreting Windows syntax in a native Path primitive would change the owner contract unnecessarily. This is a concrete portability defect in the selected existing test, not a missing mutation primitive. Failed log/result retained.",
+  "requested_change": "Authorize only replacing the three hardcoded Windows Path fixture strings in this exact test with platform-native Path::join components retaining case alias/descendant/sibling assertions. Add a same-prefix non-ancestor assertion in that same test. No SafeFS production edits. Include this exact file in scoped V6; rerun the two selected V4 cases and additionally the existing Unix component::tests::non_utf8_overlap_keys_are_reversible_and_ascii_folded exact case. V1 will be rerun only if needed for actual source impact; no mutation-safety claim from component cases.",
+  "proposed_patch": "/fast/zap-managed/2026-10-15-m08c2/v4-fixture-proposed.patch"
+}

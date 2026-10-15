@@ -1,0 +1,16 @@
+{
+  "source_line": 564,
+  "before": {
+    "project": "directory",
+    "project/new": "link:\"/fast/zap-managed/2026-10-15-m08c2/tmp/.tmprh7I6w/user\"",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "after": {
+    "project": "directory",
+    "project/new": "link:\"/fast/zap-managed/2026-10-15-m08c2/tmp/.tmprh7I6w/user\"",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "equal": true
+}

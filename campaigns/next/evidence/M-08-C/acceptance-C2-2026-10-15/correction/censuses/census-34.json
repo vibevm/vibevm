@@ -1,0 +1,20 @@
+{
+  "source_line": 374,
+  "before": {
+    "old-state": "directory",
+    "project": "directory",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "user": "directory"
+  },
+  "after": {
+    "old-state": "directory",
+    "project": "directory",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "user": "directory"
+  },
+  "equal": true
+}

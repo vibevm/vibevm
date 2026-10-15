@@ -1,0 +1,65 @@
+##subagent-quiet-clause
+
+# SAME FULL C2: bounded correction of independent review P2
+
+Read FULL-REVIEW-REPORT.md/json and FULL-REVIEW-sourcehashes.json, PRIOR-worker-report.md, PRIOR-worker-patch-manifest.json, PRIOR-worker.patch, PRIOR-worker-findings.json, PRIOR-candidate-result.json and copied approved-error/approved-v4 answers. The original producer claimed both criteria Satisfied; Root independently rejected the candidate for one P2. Preserve that original self-report and all13 current source/spec files. No rollback, candidate rewriting, criteria relaxation or narrower replacement task. Count82/222 unchanged. This is a fresh realm for the SAME full human task, NOT proof of same-store continuation: shipped continuation refuses an all-Satisfied candidate despite external review rejection. No replay/migration framework requested.
+
+Correction target: GenericResource::lock currently uses User home:relative versus Project absolute. Two valid hosts sharing settings and one physical document through opposite scopes acquire different locks and can race. SafeFS guarded replacement explicitly requires the cooperating lease and is not atomic content CAS. Correct common physical-document serialization across supported root/scope spellings while retaining incumbent provider lock compatibility. Reuse existing lock owner; do not replace it with receipt rechecks, claim hostile CAS, weaken supported topology or add a new lock engine.
+
+Add ONE meaningful two-host contention regression in the actual generic family (new name TO CREATE and bind before compile). It must use two independently valid host/root compositions, one shared document/settings, demonstrate real blocking before concurrent critical sections, then stale-plan refusal/replanning or safe ordered coexistence. Exercise scope variants and only supported alias semantics; do not invent unsupported symlink/platform guarantees. Existing single-host User contention case alone is insufficient. Preserve all original eight obligations and the complete C2 acceptance/safe stop.
+
+Seven groups retained. V1 reruns the actual affected generic family including the new regression; preserve existing12 cases, bind final actual denominator (do not guess13 passes). V2 stays not-applicable unless an actual new projection module appears. V3/V4/V5 reuse prior recorded evidence only when consumed sources are unchanged; if shared lock owner changes invalidate V3, run that exact case and explain why. No unconditional V4/V5 rerun. V6 scoped authored fmt/diff; V7 preserve current candidate spec bytes plus previous old-clause reconstruction. Wrapper records before/after source hashes per executed command. Retain original16 distinct passes and V4 exit101 as prior evidence, not new passes.
+
+Current baseline includes Root-approved MechanismError::GenericHost variant in mechanism/error.rs and native SafeFS component test fixture correction. Those exact approvals are copied and remain narrow; SafeFS production stays read-only. No C3/upper/CLI/MCP/schema/manifest expansion. Existing generic/state owner scope covers the correction; any real outside owner needs matching Root answer before edit.
+
+Do not start coding/testing or use the inherited build target until Root actually dispatches after original normal collection and physical retirement. Initial stable hashes alone do not prove terminality. Root alone launches/reviews/accepts/commits. Local matching-ID Root Q/A, questions profileNone, remains an explicit workaround, not canonical protocol proof.
+
+## Retained complete original C2 obligations and scope
+
+##subagent-quiet-clause
+
+# FULL M-08-C.2 — exact host grants for generic file/config operations
+
+One gpt-6-astra/medium Middle worker, actual Zap→PodBay path, implements the entire C2 task itself. No recursive workers, Git mutations, task/campaign acceptance/count edits, public actions or next task. VibeVM owns package/source/context/projection/filesystem semantics; Zap owns task/planning/concurrency/questions/review; PodBay owns physical process lifecycle/resources/I/O. Canonical owner anchor: vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml. No duplicate resolver, context, filesystem, grant store or process engine.
+
+Read READ-ROSTER.json exact standing/governing/source paths, complete CANONICAL-TASK.json C2 (C3 interface only), PREFLIGHT.md/json and named accepted C1 archive reports/receipt. No AGENTS/full boot/steward. Current HEAD ec310e2ed755e2f55140efb5172ea4cd77ca205a dirty13 retained unaccepted candidate; archive parent58886e9c5; accepted C1 sources57e6dd64e+043e5d11e. Canonical C1 WorkAccepted731/workrev5, Root count82/222 plus separate M03A2 safe stop. Old preflight pending flags/count81 are historical and superseded, not a new replay or acceptance gate. Retained B2/M14/M16 prerequisites remain; aggregate platform/release debt stays separate.
+
+Preserve all original three steps, two positive/two negative cases, both criteria and safe stop. Deliver full injected-root lifecycle generic host composition. No upper CLI/MCP/new wire integration is required or authorized. C3 receipts/upgrade/inverse/revocation is unstarted; do not claim it done. Existing vibe-bin bound admission restrictions remain unchanged.
+
+## Root-selected host boundary
+
+Reuse C1 closed ClientRequest File/Tree/JsonMember/TomlMember and canonical map as inert data. A new typed lifecycle host API takes an actually selected and enabled captured request PLUS separately explicitly admitted payload. A public ClientRequest/ClientCapabilities DTO asserting identity/selection is not sufficient. Trusted host supplies scoped selection/source-currentness observations, pins original provider/declaration/source/descriptor identities/digests, and compares against the CURRENT trusted provider at issue and apply. Reject selection, disabled-state and currentness drift; do not rebuild a source world, scan ambient slots or expose a raw getter/context engine.
+
+Trusted control inputs MUST be host-owned project/user root capabilities, current principal plus policy-generation provider, and a host-supplied COMPLETE protected-control resource set/capabilities covering grant/policy/producer-trust/publication-mode resources. Descriptor data cannot supply/change these values. The fixture host defines its complete protected set; an unqualified empty denylist is not self-grant proof. Reject protected resources and aliases/ancestors. Invent no universal hidden filenames or persistent policy store.
+
+Planning is pure data. Explicit host approval separately issues an exact immutable plan/operation/FULL-resource grant binding descriptor/provider/source identities, root identities, principal and current policy generation. Admitted carrier fields are private and non-deserializable; no public raw-root grant issuer, marker/JSON grant authority or unchecked side table. Missing/wrong/broadened/stale authority refuses before effects, including lock/state/receipt infrastructure. The trusted provider is not read from a descriptor or supplied grant itself.
+
+Reuse existing SafeFS retained capabilities and actual shared lock/ownership/state/sidecar/transaction contracts. Enumerate complete file/tree footprints and physical document locks; reject traversal/reserved components, physical/case aliases, duplicates, file/tree ancestors, whole-document/member conflicts and overlapping member prefixes before issuance. JSON/TOML keys are literal structured segments (dots/slashes inside a segment remain literal), not joined filesystem paths. Distinct logical members may share ONE actual whole-document lock. Reread destination and ownership under lock, preserve foreign values/files, refuse stale source/destination/ownership without refresh or partial merge. Report actual post-publication error/effect boundary; do not relabel it NoEffects.
+
+Plan must expose actual active MCP launch configuration content, not only a digest. Content changes alter plan/grant identity. Applying explicitly admitted configuration never launches processes or inherits execution approval from a hash. Fixture roots/payloads are inert and owned; no real HOME/vendor/client/network or Native Plan.
+
+## Finite source writes
+
+Only the24 exact committed C2 write_paths apply: new deploy/generic.rs and generic/{plan,grant,apply,tests}.rs; necessary deploy.rs/mechanism.rs/lib.rs registration; named shared model/protocol/binding/preplan/ownership/state/sidecar/transaction/error owners only for real integration; optional pure client_projection.rs/tests and its lib export; additive PROP054; optional three exact fixture files under fixtures/next/adapters/m-08-c2. Preserve all old C1/A2/B1 spec bytes and legacy execution behavior.
+
+SafeFS primitives, C1 ClientRequest/ClientCapabilities, OpenCode, upper discovery, manifests/dependencies, schemas/formats/wire are READ ONLY initially. No blanket initializer sweep. A concrete missing primitive, accessor, dependency or outside initializer requires exact file/symbol/change and Root answer BEFORE write. No whole-layer rewrite or alternate engine. Do not touch external Aeneas packs or PR templates.
+
+## Full meaningful verification
+
+SELECTED-CHECKS.json has seven groups. V1 mechanism::deploy::generic::tests is TO CREATE and MUST cover all eight preflight obligations: four-shape exact grants/foreign preservation; absent/wrong/expanded grant zero effects; plan/descriptor/operation/root/principal/policy/source/selection-disabled drift; traversal/alias/ancestor conflicts; supplied protected resources; inspectable active launch content/no process; real whole-document contention/logical coexistence; stale locked apply and truthful publication-failure boundary. Eight obligations are not an invented test count.
+
+V2 client_projection::tests is TO CREATE only if that module is introduced. Bind actual full Rust case names and expected nonzero/nonignored count in CASE-BINDINGS.json BEFORE compiling either family. V3 exact shared-lock case, V4 two exact SafeFS component cases, V5 exact C1 map case run on actual consumed-owner impact; otherwise CHECK-SELECTION.json records unchanged_source hashes and rationale. Reuse is not a fresh executed pass. V2 not_applicable is legal only if no projection module exists. Scope widening for an actual primitive requires its relevant extra case, not pretending component tests prove mutation safety.
+
+V6 V6-PATHS.json lists exact authored changed Rust paths for edition2024/skip_children format plus separate diff check. V7 parses XML and proves prior PROP054 lines/bytes untouched except inserted addition. No default codegen/wire/whole-project spec/facts gate, broad suite, --list, Lean or CLI rebuild. A genuine new corresponding contract impact needs an exact scope amendment; directory ceilings are not triggers. Each underlying command has separate log/exit/count. verify-group.py is finite operator plumbing, not task policy or acceptance.
+
+Private compatible warm CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; TMPDIR=/fast/zap-managed/2026-10-15-m08c2-correction/tmp. Effective repository1.101-nightly/edition2024. Root verified C1 retirement and idle target; no cold target/copy/clean/install/toolchain network or duplicate writer.
+
+## Questions and handback
+
+Questions profileNone: this task deliberately uses the local Root-supervisor workaround, NOT canonical question protocol proof. For an actual missing owner write /fast/zap-managed/2026-10-15-m08c2-correction/ROOT-QUESTION.json immediately with question_id, exact paths/symbol/reason/requested_change. Continue independent authorized work, then bounded-poll /fast/zap-managed/2026-10-15-m08c2-correction/ROOT-ANSWER.json and require matching question_id plus affirmative answer before outside edit. FirstAgent repeats exactly this promise and proxies the busy owner. No failed smoke row reuse, reset, semantic migration or new handoff/custody ritual.
+
+Complete full C2; do not voluntarily stop after a helper or subset. Return full scoped patch, report, actual tests/counts/exits, source/fixture/spec hashes, no-effect censuses and actual effect boundaries. Distinguish planned/observed/inferred. Use supplied finish-candidate after actual work/check attempts and return its exact JSON stdout; candidate remains Unreviewed. Root alone reviews/accepts/commits/counts. A real hard limit must name exact remaining work, never fabricate success or permission debt.
+
+Root subsequently confirmed original normal candidate_collected2622, unknown_tail=false, failed=false and retired all five exact old PIDs. This is operator cleanup, not a native PodBay stop receipt. ROOT-TARGET-HANDOVER now authorizes private preparation; actual coding starts only with Root dispatch.
+
+Compatibility clarification: do not simply remove the incumbent User home:relative key. Verify coordination with incumbent providers; new common physical-document coordination may coexist with incumbent keys when needed. Keep verification limited to actual correction risk, and preserve the uncommitted/unaccepted13-file baseline rather than manufacturing an accepted Git checkpoint.

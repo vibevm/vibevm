@@ -1,0 +1,40 @@
+{
+  "source_line": 667,
+  "before": {
+    "project": "directory",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "settings/state/deployments/.vibe": "directory",
+    "settings/state/deployments/.vibe/b30dbf2b29fe5841281281f847525bb5421ed886f9b907b7004eb4861a013a86.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-3215c4aae4ad2a98823bdc7662f5cf2fff698e9009d27046c0bcbf3eb0110669.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-e04451c07096ef278d5a38d8a29e1916def4c8db4eb182915ae1689fe2ae59b0.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/3215c4aae4ad2a98823bdc7662f5cf2fff698e9009d27046c0bcbf3eb0110669": "directory",
+    "settings/state/deployments/3215c4aae4ad2a98823bdc7662f5cf2fff698e9009d27046c0bcbf3eb0110669/lock-resources.json": "4f3b2747cad667ecd35ba5b3399365f9206ae458a3a90bb0989ce4f28d7b3343",
+    "settings/state/deployments/3215c4aae4ad2a98823bdc7662f5cf2fff698e9009d27046c0bcbf3eb0110669/receipt.json": "b31c337069165d3380e3d5f3137358b0862650b48a20ea558b08a5c3cf91da56",
+    "settings/state/deployments/e04451c07096ef278d5a38d8a29e1916def4c8db4eb182915ae1689fe2ae59b0": "directory",
+    "settings/state/deployments/e04451c07096ef278d5a38d8a29e1916def4c8db4eb182915ae1689fe2ae59b0/lock-resources.json": "3f7e502082412fde2f2d893f26751a49b532dc6a60d0605257678bb3b1c3a831",
+    "settings/state/deployments/e04451c07096ef278d5a38d8a29e1916def4c8db4eb182915ae1689fe2ae59b0/receipt.json": "e83c87f93a02e9b9b2de967e81a1ae4837e1f5b9541d5b44fb7dd577384ea15b",
+    "user": "directory",
+    "user/shared.json": "208249305e7479cdf18315d4cbf199107980eaeb0585c707e657babcda87394f"
+  },
+  "after": {
+    "project": "directory",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "settings/state/deployments/.vibe": "directory",
+    "settings/state/deployments/.vibe/b30dbf2b29fe5841281281f847525bb5421ed886f9b907b7004eb4861a013a86.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-3215c4aae4ad2a98823bdc7662f5cf2fff698e9009d27046c0bcbf3eb0110669.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-e04451c07096ef278d5a38d8a29e1916def4c8db4eb182915ae1689fe2ae59b0.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/3215c4aae4ad2a98823bdc7662f5cf2fff698e9009d27046c0bcbf3eb0110669": "directory",
+    "settings/state/deployments/3215c4aae4ad2a98823bdc7662f5cf2fff698e9009d27046c0bcbf3eb0110669/lock-resources.json": "4f3b2747cad667ecd35ba5b3399365f9206ae458a3a90bb0989ce4f28d7b3343",
+    "settings/state/deployments/3215c4aae4ad2a98823bdc7662f5cf2fff698e9009d27046c0bcbf3eb0110669/receipt.json": "b31c337069165d3380e3d5f3137358b0862650b48a20ea558b08a5c3cf91da56",
+    "settings/state/deployments/e04451c07096ef278d5a38d8a29e1916def4c8db4eb182915ae1689fe2ae59b0": "directory",
+    "settings/state/deployments/e04451c07096ef278d5a38d8a29e1916def4c8db4eb182915ae1689fe2ae59b0/lock-resources.json": "3f7e502082412fde2f2d893f26751a49b532dc6a60d0605257678bb3b1c3a831",
+    "settings/state/deployments/e04451c07096ef278d5a38d8a29e1916def4c8db4eb182915ae1689fe2ae59b0/receipt.json": "e83c87f93a02e9b9b2de967e81a1ae4837e1f5b9541d5b44fb7dd577384ea15b",
+    "user": "directory",
+    "user/shared.json": "208249305e7479cdf18315d4cbf199107980eaeb0585c707e657babcda87394f"
+  },
+  "equal": true
+}

@@ -1,0 +1,14 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Selected existing V4 native Path fixture used Windows backslash strings on Linux and failed0/1 exit101. Exact Root-approved test-only correction now passes both selected cases; failure retained.",
+    "Exact Root-approved MechanismError::GenericHost variant integrates the closed generic provider with incumbent transaction errors; no legacy behavior or SafeFS production primitive changed."
+  ],
+  "unresolved": [],
+  "proposed_follow_up": null
+}

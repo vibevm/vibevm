@@ -1,0 +1,48 @@
+{
+  "task": "M-08-C.2",
+  "status": "findings",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "P2",
+      "file": "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "line": 30,
+      "title": "Physical document lock identity changes with symbolic scope/root spelling",
+      "counterexample": "Two admitted hosts share settings; A project=/p1,user=/shared and B project=/shared,user=/u2. A User doc.json and B Project doc.json lock home:doc.json versus /shared/doc.json for the same file. Distinct deployment locks do not serialize their publications.",
+      "basis": "Source-derived supported API counterexample; not executed by reviewer. SafeFS guarded write requires cooperating lease and is not atomic CAS.",
+      "minimal_fix": "Common physical document lock coordination across admitted scope/root spellings, compatible with incumbent providers; focused two-host contention case."
+    }
+  ],
+  "source_files": 13,
+  "artifacts_verified": 51,
+  "source_observations_verified": 46,
+  "census_pairs_verified": 57,
+  "distinct_passing_tests": 16,
+  "test_counts": {
+    "V1": 12,
+    "V3": 1,
+    "V4": 2,
+    "V5": 1
+  },
+  "V2": "not_applicable",
+  "failed_attempt_retained": {
+    "group": "V4",
+    "exit": 101,
+    "passed": 0,
+    "failed": 1
+  },
+  "source_stable": true,
+  "acceptance_performed": false,
+  "tests_run_by_reviewer": false,
+  "product_edits": false,
+  "full_original_contract_reviewed": true,
+  "normal_collection_status": "not inferred from local artifacts",
+  "limits": [
+    "Linux injected-root evidence",
+    "no per-command consumed-source hash manifest; final binding partly worker chronology",
+    "no hostile CAS/ABA promise",
+    "C3 and CLI/MCP integration remain separate"
+  ],
+  "report": "REPORT.md",
+  "hashes": "sourcehashes.json"
+}

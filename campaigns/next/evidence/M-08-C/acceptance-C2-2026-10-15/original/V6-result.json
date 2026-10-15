@@ -1,0 +1,49 @@
+{
+  "group": "V6",
+  "executed": true,
+  "case_binding": null,
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/error.rs",
+        "crates/vibe-safefs/src/component/tests.rs"
+      ],
+      "exit": 0,
+      "counts": [],
+      "count_matches": null,
+      "log": "/fast/zap-managed/2026-10-15-m08c2/V6-1.log",
+      "seconds": 0.061061357031576335,
+      "passed": true
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "count_matches": null,
+      "log": "/fast/zap-managed/2026-10-15-m08c2/V6-2.log",
+      "seconds": 0.01565787399886176,
+      "passed": true
+    }
+  ],
+  "passed": true
+}
