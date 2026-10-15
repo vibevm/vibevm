@@ -1,0 +1,220 @@
+{
+  "approved": true,
+  "scope": "Only generator-owned global directory header comment changes; old non-comment Rust bodies/schema semantics MUST remain exact; no hand edits or generator change.",
+  "observed": [
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_capability/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+      "change": "generator global schema-directory comment adds consumer_configuration/e1; non-comment body identical"
+    }
+  ],
+  "reason": "Existing generator emits full schema-directory list in each module header; new schema registration necessarily changes this comment. Do not create generator refactor or restore inconsistent comments.",
+  "exact_single_header_substitution_verified": true
+}

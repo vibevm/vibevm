@@ -1,0 +1,40 @@
+{
+  "group": "V6",
+  "executed": true,
+  "case_binding": null,
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-wire/src/behaviour/consumer_configuration.rs",
+        "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m05b2-correction/V6-1.log",
+      "seconds": 0.02826330700190738,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m05b2-correction/V6-2.log",
+      "seconds": 0.032386744976975024,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

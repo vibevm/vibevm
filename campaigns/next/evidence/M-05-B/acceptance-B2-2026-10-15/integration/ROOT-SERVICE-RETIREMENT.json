@@ -1,0 +1,7 @@
+{
+  "normal_stop": "process_stopped/knownTail1113",
+  "action": "exact_owned_serviceSIGTERM_afterchildrenabsent",
+  "pid": 1373456,
+  "birth": 41122061,
+  "time_unix": 1792084813.721903
+}

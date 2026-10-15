@@ -1,0 +1,19 @@
+{
+  "task": "M-05-B.2",
+  "accepted": true,
+  "work_state": "Accepted",
+  "work_revision": 5,
+  "work_accepted_store_revision": 245,
+  "source_commit": "4271112df9f39937e9774fd9d1ca257492ec6ca6",
+  "source_subjects": 455,
+  "source_files": 85,
+  "fresh_successes": 22,
+  "new_tests_since_first_candidate": 1,
+  "methods": 7,
+  "root_codegen_exit": 0,
+  "producer_v5_failure_retained": true,
+  "accepted_task_contracts": 86,
+  "total_task_contracts": 222,
+  "separate_M03A2_plan_safe_stop_not_counted": true,
+  "review_sha256": "fe25241a8a25b2051576ed6b94767aeb2046c22da31b4587d80eea132c9cd654"
+}

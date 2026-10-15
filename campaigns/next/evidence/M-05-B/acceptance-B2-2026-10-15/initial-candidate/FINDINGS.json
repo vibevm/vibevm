@@ -1,0 +1,15 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Incumbent codegen rewrites 53 protected module header comments when a schema home is added; Root approved exact paths/hashes through matching question m05b2-generated-header-drift-1. Original V7 failure retained."
+  ],
+  "unresolved": [
+    "Preintegration check-codegen exits 1 against the unchanged source index. Failure and logs retained; Root owns postintegration gate and acceptance."
+  ],
+  "proposed_follow_up": null
+}

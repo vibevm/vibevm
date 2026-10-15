@@ -1,0 +1,14 @@
+{
+  "all_absent": true,
+  "normal_exact_stop_delivery": "delivered",
+  "pids": [
+    1373456,
+    1373460,
+    1373649,
+    1373657,
+    1375912
+  ],
+  "root_exec_exit": 0,
+  "normal_inspection": "/fast/zap-managed/2026-10-15-m05b2-correction/acceptance-preparation/ROOT-STOP-INSPECT.json",
+  "original_retirement": "/fast/zap-managed/2026-10-15-m05b2-correction/ROOT-QUIESCENCE.json"
+}

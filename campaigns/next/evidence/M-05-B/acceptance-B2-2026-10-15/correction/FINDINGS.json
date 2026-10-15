@@ -1,0 +1,15 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "B2-F1 reproduced red (exit101) and corrected at shared wire admission; focused regression green in wire4. Total current panel22 = repeated21 + new1."
+  ],
+  "unresolved": [
+    "Historical preintegration check-codegen exit1 retained; Root integrated gate and full task acceptance pending."
+  ],
+  "proposed_follow_up": null
+}

@@ -1,0 +1,9 @@
+{
+  "task": "M-05-B.2",
+  "integrated": true,
+  "review_clear": true,
+  "source_commit": "4271112df9f39937e9774fd9d1ca257492ec6ca6",
+  "source_subjects": 455,
+  "reviewed_source_files": 85,
+  "root_gate_exit": 0
+}
