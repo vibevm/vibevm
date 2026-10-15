@@ -1,0 +1,636 @@
+{
+  "at": "2026-10-14T23:34:29.253119+00:00",
+  "platform": "linux-x86_64",
+  "discovery": {
+    "claude": null,
+    "codex": null,
+    "opencode": null,
+    "qwen": null
+  },
+  "source_head": "af61dd1aaf57ba4117e41f8d586b55a74bb26153",
+  "reads": [
+    {
+      "path": "campaigns/next/evidence/M-08-A.1/accepted-2026-10-14.md",
+      "sha256": "255f534204cecf93230c52957dd03c5e1a5388ac3a6667b034df9cd1eb162d7b"
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A.1/report.json",
+      "sha256": "b15d84c6a051dc3dcd26d5d27ebacbabe00ca1d1df8f361d35fe813d6ed50ea6"
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A.1/root-review.json",
+      "sha256": "b16c701cdf9d1376d882314a8e909565aeb32b5210548c197bb3eaba2aa6753d"
+    },
+    {
+      "path": "campaigns/next/evidence/M-08-A.1/work-receipts.json",
+      "sha256": "ee8901555efe54629ba64d6464277d19cd1946dd70f29551527a6f924f0a30e5"
+    },
+    {
+      "path": "campaigns/next/tasks/M-08-A.json",
+      "sha256": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09"
+    },
+    {
+      "path": "crates/vibe-agent-projection/Cargo.toml",
+      "sha256": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152"
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents.rs",
+      "sha256": "feba74de71ca49c4060f373ff1efa5c7cb8e9e4e31fb110015dfc37069c23b6a"
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents/ambient_paths.rs",
+      "sha256": "aba9a76b10728b9fa4d865add54e82f0f1a47d7955b2186123a93b4f03536142"
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/agents/home_paths.rs",
+      "sha256": "942ac90b86780b8f1f96b07d7d49cb865cf10821904e3946e6e28e76bbb01cb7"
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/m_08_a_1_cases.rs",
+      "sha256": "2a2da0601f86b86a338bc83d8fc5ed44c9d976205b4fdfc5169dd4ac3ccf0161"
+    },
+    {
+      "path": "crates/vibe-lifecycle/Cargo.toml",
+      "sha256": "714eba1c48ca1ab18930715070b0cef06ae528958bffe8f13dbb34a3ffbd10c4"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/m_08_a_1_cases.rs",
+      "sha256": "246b464bcf58e5dc0e6e3bb34f869896c45f067801d13a1308f31e33bf099c16"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client.rs",
+      "sha256": "67c813a4025eb2e138c1778f17bce289648576d9aa57d618368726c55971feeb"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs",
+      "sha256": "15996ea56bacc8109259c0abca8ce7a44fc89690d53a37ecaf2a6df7add7cb89"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+      "sha256": "be92ac78f6ef19f0404d67264a5aeb375f10d78bcf8cd67ab6ba35f0dd5d9eb5"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+      "sha256": "e1758d88a71669312211389e3f2ac4244f42b72c3690103006b88e6345a863c2"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/process/mod.rs",
+      "sha256": "e993da0c7c202d6585863339ad49dc8ea2ace245e62160a6e394c051053663db"
+    },
+    {
+      "path": "fixtures/next/adapters/matrix.json",
+      "sha256": "bcd81616ad9a24b20f45cd9660ea84f57bb9bd4d036d404dad2d886e262b6fe8"
+    },
+    {
+      "path": "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/flows/fast-rust-compiler/FAST-RUST-COMPILER.xml",
+      "sha256": "3139b3a3b60a607e14868656c359c7d86bc3b77f43a139cf4184eefd62be556d"
+    },
+    {
+      "path": "vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml",
+      "sha256": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "sha256": "078299cd2c040b6886a019aad09a88185952590152cfb525be6d8167d3497c18"
+    },
+    {
+      "path": "campaigns/next/verification-policy.json",
+      "sha256": "0a3339b333551d5975a2cb384693886bb1432dd7bea63020f3d3eaded1bb5089"
+    },
+    {
+      "path": "/home/olegchir/.codex/skills/.system/openai-docs/SKILL.md",
+      "sha256": "aa6829e21df2223167c85d2e49b6337a7345c84c1033f1ec10182c7882b36d45"
+    },
+    {
+      "path": "/fast/git/v/research/2026-10-15-m08a2-preflight/REPORT.md",
+      "sha256": "2434655351e9df8dc4ba409d0fa906d1cd39fd506be5a6b34d9db1a44af2444c"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2/READ-ROSTER.json",
+      "sha256": "2c4b2565409295fce7a10ef0c4b583a6b6b6ef1c3fe55e203dc9f85e5cd34751"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2/METADATA-CONTRACT.md",
+      "sha256": "2d576774885f2db3c6037af3de447d94c9b32b9f5d0d831a75160944d951e0a3"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2/verify-m08a2.py",
+      "sha256": "13025fd27535a053905cc7a7c27e0a4d701a2782c3b42737c515257db8e585bd"
+    }
+  ],
+  "official_sources": [
+    {
+      "id": "claude_code.skills",
+      "client_id": "claude_code",
+      "url": "https://code.claude.com/docs/en/skills",
+      "title": "Extend Claude with skills",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Filesystem skills and frontmatter; project .claude/skills and personal skills. No exact binary support claim.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "Anthropic Claude Code documentation domain, product navigation and Anthropic product links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "claude_code.mcp",
+      "client_id": "claude_code",
+      "url": "https://code.claude.com/docs/en/mcp",
+      "title": "Connect Claude Code to tools via MCP",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "JSON mcpServers; project .mcp.json versus user .claude.json; project server approval and folder trust; list/get can health-check servers.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "Anthropic Claude Code documentation domain, product navigation and Anthropic product links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "claude_code.settings",
+      "client_id": "claude_code",
+      "url": "https://code.claude.com/docs/en/settings",
+      "title": "Settings files and precedence",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Project .claude/settings.json and user ~/.claude/settings.json; local overrides and managed precedence are distinct.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "Anthropic Claude Code documentation domain, product navigation and Anthropic product links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "claude_code.plugins-reference",
+      "client_id": "claude_code",
+      "url": "https://code.claude.com/docs/en/plugins-reference",
+      "title": "Plugin manifest reference",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Plugin package manifest .claude-plugin/plugin.json with skill directories; no assertion that all manifest features are implemented by VibeVM.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "Anthropic Claude Code documentation domain, product navigation and Anthropic product links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "claude_code.cli-reference",
+      "client_id": "claude_code",
+      "url": "https://code.claude.com/docs/en/cli-reference",
+      "title": "CLI reference",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "--version and CLI entrypoint; interactive/default launch is not a safe version probe.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "Anthropic Claude Code documentation domain, product navigation and Anthropic product links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "claude_code.plugins-cli-reference",
+      "client_id": "claude_code",
+      "url": "https://code.claude.com/docs/en/plugins/cli-reference",
+      "title": "Plugin commands reference",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Scoped plugin install/uninstall and list; vendor update differs from legacy VibeVM undeploy/deploy limitation.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "Anthropic Claude Code documentation domain, product navigation and Anthropic product links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "claude_code.env-vars",
+      "client_id": "claude_code",
+      "url": "https://code.claude.com/docs/en/env-vars",
+      "title": "Environment variables",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "CLAUDE_CONFIG_DIR redirects settings, session history and plugins. Exact credential/bootstrap isolation remains to be established before future launch.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "Anthropic Claude Code documentation domain, product navigation and Anthropic product links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "claude_code.permissions",
+      "client_id": "claude_code",
+      "url": "https://code.claude.com/docs/en/permissions",
+      "title": "Configure permissions",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "permissions.deny rules and host tool authority; writing configuration is distinct from permitting execution.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "Anthropic Claude Code documentation domain, product navigation and Anthropic product links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "codex.skills",
+      "client_id": "codex",
+      "url": "https://learn.chatgpt.com/docs/build-skills",
+      "title": "Build skills",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Repository and user .agents/skills, SKILL.md name/description and /skills UI; symlinks accepted by vendor do not relax VibeVM no-link ownership.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenAI-owned allowed documentation domains; developers.openai.com redirects to learn.chatgpt.com.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "codex.mcp",
+      "client_id": "codex",
+      "url": "https://learn.chatgpt.com/docs/extend/mcp?surface=cli",
+      "title": "Model Context Protocol",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "mcp_servers TOML tables, command/args, trusted project .codex/config.toml and user config; mcp list.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenAI-owned allowed documentation domains; developers.openai.com redirects to learn.chatgpt.com.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "codex.commands",
+      "client_id": "codex",
+      "url": "https://learn.chatgpt.com/docs/developer-commands?surface=cli",
+      "title": "Developer commands",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "plugin add/list/remove and marketplace commands, JSON installed/available arrays; unversioned CLI documentation.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenAI-owned allowed documentation domains; developers.openai.com redirects to learn.chatgpt.com.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "codex.plugin",
+      "client_id": "codex",
+      "url": "https://developers.openai.com/plugins/build/plugins",
+      "title": "Package your plugin",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Portable root plugin.json and mcp.json; optional .codex-plugin/plugin.json compatibility fallback. Keep legacy artifact format distinct from new portable format.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenAI-owned allowed documentation domains; developers.openai.com redirects to learn.chatgpt.com.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "codex.config",
+      "client_id": "codex",
+      "url": "https://learn.chatgpt.com/docs/config-file/config-basic",
+      "title": "Config basics",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Config scope/precedence and approval_policy; managed requirements may constrain settings.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenAI-owned allowed documentation domains; developers.openai.com redirects to learn.chatgpt.com.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "codex.environment",
+      "client_id": "codex",
+      "url": "https://learn.chatgpt.com/docs/config-file/environment-variables",
+      "title": "Environment variables",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "CODEX_HOME selects Codex state and must exist. Does not establish isolated HOME/.agents skill discovery.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenAI-owned allowed documentation domains; developers.openai.com redirects to learn.chatgpt.com.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "codex.cli",
+      "client_id": "codex",
+      "url": "https://learn.chatgpt.com/docs/cli/reference",
+      "title": "Command line options \u2013 Codex CLI",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "CLI launch reference; no client executed and no CLI version inferred from documentation.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenAI-owned allowed documentation domains; developers.openai.com redirects to learn.chatgpt.com.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "opencode.skills",
+      "client_id": "opencode",
+      "url": "https://docs.opencode.ai/docs/skills/",
+      "title": "Agent Skills",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Project .opencode/skills and global .config/opencode/skills; YAML name/description and permission.skill rules.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenCode documentation site, Anomaly copyright and upstream Edit page links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "opencode.mcp-servers",
+      "client_id": "opencode",
+      "url": "https://docs.opencode.ai/docs/mcp-servers/",
+      "title": "MCP servers",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "mcp members use local type, command string array and enabled boolean.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenCode documentation site, Anomaly copyright and upstream Edit page links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "opencode.config",
+      "client_id": "opencode",
+      "url": "https://docs.opencode.ai/docs/config/",
+      "title": "Config",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "JSON/JSONC, project opencode.json, user .config/opencode/opencode.json and autoupdate. Legacy VibeVM member writer is JSON only.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenCode documentation site, Anomaly copyright and upstream Edit page links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "opencode.plugins",
+      "client_id": "opencode",
+      "url": "https://docs.opencode.ai/docs/plugins/",
+      "title": "Plugins",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Local JS/TS modules in project .opencode/plugins or global .config/opencode/plugins; npm plugin config can install dependencies. Not the VibeVM skill/MCP projection.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenCode documentation site, Anomaly copyright and upstream Edit page links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "opencode.cli",
+      "client_id": "opencode",
+      "url": "https://docs.opencode.ai/docs/cli/",
+      "title": "CLI",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "--version, mcp subcommands and launch reference. No opencode plugin subcommand inferred.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenCode documentation site, Anomaly copyright and upstream Edit page links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "opencode.troubleshooting",
+      "client_id": "opencode",
+      "url": "https://docs.opencode.ai/docs/troubleshooting/",
+      "title": "Troubleshooting",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Runtime state/cache documentation is preparation context only; no isolation guarantee inferred.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "OpenCode documentation site, Anomaly copyright and upstream Edit page links.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "qwen_code.skills",
+      "client_id": "qwen_code",
+      "url": "https://qwenlm.github.io/qwen-code-docs/en/users/features/skills/",
+      "title": "Agent Skills",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Project .qwen/skills and user .qwen/skills; extension skills have a qualified owner name.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "QwenLM-hosted Qwen Code documentation, product and upstream repository navigation.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "qwen_code.mcp",
+      "client_id": "qwen_code",
+      "url": "https://qwenlm.github.io/qwen-code-docs/en/users/features/mcp/",
+      "title": "Connect Qwen Code to tools via MCP",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "mcpServers in project/user settings; command/args, trust and CLI management. Local health checks must use a deterministic fixture, not a provider.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "QwenLM-hosted Qwen Code documentation, product and upstream repository navigation.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "qwen_code.config",
+      "client_id": "qwen_code",
+      "url": "https://qwenlm.github.io/qwen-code-docs/en/users/configuration/settings/",
+      "title": "Qwen Code Configuration",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Settings paths, skills.disabled string array and --version CLI argument. No QWEN_HOME-style override established by this page.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "QwenLM-hosted Qwen Code documentation, product and upstream repository navigation.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "qwen_code.extensions",
+      "client_id": "qwen_code",
+      "url": "https://qwenlm.github.io/qwen-code-docs/en/users/extension/introduction/",
+      "title": "Qwen Code Extensions",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "qwen extensions commands; .qwen/extensions user storage with qwen-extension.json; --scope project controls activation, not a project installation directory.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "QwenLM-hosted Qwen Code documentation, product and upstream repository navigation.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    },
+    {
+      "id": "qwen_code.trust",
+      "client_id": "qwen_code",
+      "url": "https://qwenlm.github.io/qwen-code-docs/en/users/configuration/trusted-folders/",
+      "title": "Trusted Folders",
+      "fetched_at": "2026-10-14T23:38:17.422020+00:00",
+      "applicability": "Optional security.folderTrust.enabled and trust decisions; untrusted workspace ignores project settings. Feature is documented as default-off.",
+      "revision_status": "Live unversioned documentation; fetched during this execution, no release pin or local-version applicability established.",
+      "official_owner_verified": true,
+      "ownership_basis": "QwenLM-hosted Qwen Code documentation, product and upstream repository navigation.",
+      "observation_kind": "official_document_observation",
+      "runtime_support_proved": false
+    }
+  ],
+  "version_probes": [
+    {
+      "id": "claude_code",
+      "binary_candidate": "claude",
+      "platform": "linux-x86_64",
+      "architecture": "x86_64",
+      "runtime_support_proved": false,
+      "version": {
+        "status": "missing",
+        "exact": null,
+        "executable_path": null,
+        "executable_sha256": null,
+        "argv": [
+          "--version"
+        ],
+        "exit": null,
+        "debt": "Literal candidate claude did not resolve in the managed worker PATH; no absolute vendor executable was supplied. No --version process launched. No install or search of real client homes performed.",
+        "observed_at": "2026-10-14T23:34:29.253119+00:00",
+        "discovery_method": "bash command -v and Python shutil.which; filesystem/PATH metadata only",
+        "override_names": [],
+        "probe_executed": false
+      },
+      "legacy_plugin_policy": "2.1.x",
+      "legacy_policy_is_version_observation": false,
+      "versioned_operation_admission": "none: exact executable and version applicability unresolved",
+      "source_ids": [
+        "claude_code.skills",
+        "claude_code.mcp",
+        "claude_code.settings",
+        "claude_code.plugins-reference",
+        "claude_code.cli-reference",
+        "claude_code.plugins-cli-reference",
+        "claude_code.env-vars",
+        "claude_code.permissions"
+      ]
+    },
+    {
+      "id": "codex",
+      "binary_candidate": "codex",
+      "platform": "linux-x86_64",
+      "architecture": "x86_64",
+      "runtime_support_proved": false,
+      "version": {
+        "status": "missing",
+        "exact": null,
+        "executable_path": null,
+        "executable_sha256": null,
+        "argv": [
+          "--version"
+        ],
+        "exit": null,
+        "debt": "Literal candidate codex did not resolve in the managed worker PATH; no absolute vendor executable was supplied. No --version process launched. No install or search of real client homes performed.",
+        "observed_at": "2026-10-14T23:34:29.253119+00:00",
+        "discovery_method": "bash command -v and Python shutil.which; filesystem/PATH metadata only",
+        "override_names": [],
+        "probe_executed": false
+      },
+      "legacy_plugin_policy": "0.148.x",
+      "legacy_policy_is_version_observation": false,
+      "versioned_operation_admission": "none: exact executable and version applicability unresolved",
+      "source_ids": [
+        "codex.skills",
+        "codex.mcp",
+        "codex.commands",
+        "codex.plugin",
+        "codex.config",
+        "codex.environment",
+        "codex.cli"
+      ]
+    },
+    {
+      "id": "opencode",
+      "binary_candidate": "opencode",
+      "platform": "linux-x86_64",
+      "architecture": "x86_64",
+      "runtime_support_proved": false,
+      "version": {
+        "status": "missing",
+        "exact": null,
+        "executable_path": null,
+        "executable_sha256": null,
+        "argv": [
+          "--version"
+        ],
+        "exit": null,
+        "debt": "Literal candidate opencode did not resolve in the managed worker PATH; no absolute vendor executable was supplied. No --version process launched. No install or search of real client homes performed.",
+        "observed_at": "2026-10-14T23:34:29.253119+00:00",
+        "discovery_method": "bash command -v and Python shutil.which; filesystem/PATH metadata only",
+        "override_names": [],
+        "probe_executed": false
+      },
+      "legacy_plugin_policy": "1.17.x",
+      "legacy_policy_is_version_observation": false,
+      "versioned_operation_admission": "none: exact executable and version applicability unresolved",
+      "source_ids": [
+        "opencode.skills",
+        "opencode.mcp-servers",
+        "opencode.config",
+        "opencode.plugins",
+        "opencode.cli",
+        "opencode.troubleshooting"
+      ]
+    },
+    {
+      "id": "qwen_code",
+      "binary_candidate": "qwen",
+      "platform": "linux-x86_64",
+      "architecture": "x86_64",
+      "runtime_support_proved": false,
+      "version": {
+        "status": "missing",
+        "exact": null,
+        "executable_path": null,
+        "executable_sha256": null,
+        "argv": [
+          "--version"
+        ],
+        "exit": null,
+        "debt": "Literal candidate qwen did not resolve in the managed worker PATH; no absolute vendor executable was supplied. No --version process launched. No install or search of real client homes performed.",
+        "observed_at": "2026-10-14T23:34:29.253119+00:00",
+        "discovery_method": "bash command -v and Python shutil.which; filesystem/PATH metadata only",
+        "override_names": [],
+        "probe_executed": false
+      },
+      "legacy_plugin_policy": null,
+      "legacy_policy_is_version_observation": false,
+      "versioned_operation_admission": "none: exact executable and version applicability unresolved",
+      "source_ids": [
+        "qwen_code.skills",
+        "qwen_code.mcp",
+        "qwen_code.config",
+        "qwen_code.extensions",
+        "qwen_code.trust"
+      ]
+    }
+  ],
+  "probe_count": 0,
+  "runtime_proof_count": 0,
+  "failed_auxiliary_commands": [
+    {
+      "operation": "Attempt to read finish-candidate as UTF-8 text",
+      "exit": 1,
+      "reason": "Executable is binary; UnicodeDecodeError, no mutation."
+    },
+    {
+      "argv": [
+        "/fast/zap-managed/2026-10-15-m08a2/finish-candidate",
+        "--help"
+      ],
+      "exit": 1,
+      "reason": "Usage printed; no candidate publication."
+    }
+  ],
+  "source_retrieval_debt": [
+    "Qwen guessed configuration/cli-reference URL returned browser internal error; actual settings page Command-Line Arguments and MCP CLI section used instead."
+  ],
+  "skipped_reads": [
+    "campaigns/next/plan.seed.toml: roster entry not needed by exact task",
+    "process/scratch.rs: optional, not needed",
+    "legacy inert fixture bodies: not needed; preservation verifier hashes them"
+  ],
+  "network": "Official documentation retrieval only planned network activity; no hard network-isolation guarantee claimed.",
+  "additional_discovery": {
+    "command": [
+      "bash (non-login)",
+      "command -v claude codex opencode qwen"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "meaning": "None of the four names resolved; no client process executed."
+  }
+}

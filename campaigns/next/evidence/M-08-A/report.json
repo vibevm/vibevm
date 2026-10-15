@@ -1,0 +1,219 @@
+{
+  "task": "M-08-A.2",
+  "work_id": "work.m08a2.characterize",
+  "source_basis": "af61dd1aaf57ba4117e41f8d586b55a74bb26153",
+  "status": "checked metadata candidate; Root review/acceptance pending",
+  "effect_state": {
+    "documentation_writes": "completed",
+    "runtime_commissioning": "not_started",
+    "root_acceptance": "pending"
+  },
+  "created_at": "2026-10-14T23:40:37.792721+00:00",
+  "owner": "VibeVM contracts/projection/workspace/context; Zap task semantics/concurrency/review/acceptance; PodBay physical process execution/lifecycle/resources/I/O. Existing managed worker/tool path only.",
+  "skill": {
+    "name": "OpenAI Docs",
+    "path": "/home/olegchir/.codex/skills/.system/openai-docs/SKILL.md",
+    "source_order": "Concise official-domain search Codex skills MCP config CLI plugins, then official Package your plugin/skills/MCP/CLI pages opened before substantive Codex source research. No route reference needed."
+  },
+  "actual_reads": "observations.json reads lists exact paths and pre-edit SHA-256. Full task and full PROP054 read; no AGENTS/full boot/INDEX/STATIC/steward/history/neighbor code.",
+  "source_observations": {
+    "official_sources": 26,
+    "retrieval": "web search then actual official page opens/finds; direct final citations and applicability in fixture and observations.json",
+    "fetched_at_semantics": "Source timestamp records completion of this execution research batch, not the page publication date or release revision.",
+    "versions": "All sources unversioned; local CLI version debt retained."
+  },
+  "version_discovery": {
+    "platform": "linux-x86_64",
+    "literal_names": [
+      "claude",
+      "codex",
+      "opencode",
+      "qwen"
+    ],
+    "result": "all unresolved",
+    "login_shell_resolution": "command -v, repeated via shutil.which",
+    "nonlogin_resolution": {
+      "command": "command -v claude codex opencode qwen",
+      "exit": 1,
+      "stdout": ""
+    },
+    "version_probe_count": 0,
+    "no_probe_exit_fabricated": true,
+    "no_install": true
+  },
+  "verification_plan": {
+    "verification_id": "verification.m08a2",
+    "program": "/usr/bin/python3",
+    "arguments": [
+      "/fast/zap-managed/2026-10-15-m08a2/verify-m08a2.py",
+      "/fast/git/v/vibevm-next/fixtures/next/adapters/four-client-contracts.json"
+    ],
+    "target": "actual four-client JSON/XML/source/proof/preservation metadata",
+    "not_runtime_support": true
+  },
+  "checks_attempted": [
+    {
+      "verification_id": "verification.m08a2",
+      "program": "/usr/bin/python3",
+      "arguments": [
+        "/fast/zap-managed/2026-10-15-m08a2/verify-m08a2.py",
+        "/fast/git/v/vibevm-next/fixtures/next/adapters/four-client-contracts.json"
+      ],
+      "cwd": "/fast/git/v/vibevm-next",
+      "exit": 0,
+      "stdout": "{\"kind\": \"M08A2_metadata_validation\", \"clients\": 4, \"rows\": 33, \"sources\": 26, \"proof_bindings\": 396, \"scenario_groups\": 12, \"old_PROP054_children_preserved\": 23, \"legacy_changes\": [], \"runtime_support_qualified\": false, \"checks\": \"JSON/XML/coverage/references/provenance separation/preservation/scoped whitespace\"}\n",
+      "stderr": "",
+      "at": "2026-10-14T23:40:37.792721+00:00",
+      "counts": {
+        "kind": "M08A2_metadata_validation",
+        "clients": 4,
+        "rows": 33,
+        "sources": 26,
+        "proof_bindings": 396,
+        "scenario_groups": 12,
+        "old_PROP054_children_preserved": 23,
+        "legacy_changes": [],
+        "runtime_support_qualified": false,
+        "checks": "JSON/XML/coverage/references/provenance separation/preservation/scoped whitespace"
+      },
+      "log": "campaigns/next/evidence/M-08-A/metadata-verification.log",
+      "log_sha256": "62e035528d06505c749a98c3ab3158d4b04093adb57267737d203fe427ac4538"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "fixtures/next/adapters/",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "campaigns/next/evidence/M-08-A/"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "program": "/usr/bin/python3 (finite inline author review)",
+      "exit": 0,
+      "checks": [
+        "66 example SHA-256 values match literal bytes",
+        "33 unique row IDs each bind 12 proofs",
+        "all named pre-edit read owners except additive PROP054 retain exact SHA-256"
+      ],
+      "preserved_read_paths": [
+        "campaigns/next/evidence/M-08-A.1/accepted-2026-10-14.md",
+        "campaigns/next/evidence/M-08-A.1/report.json",
+        "campaigns/next/evidence/M-08-A.1/root-review.json",
+        "campaigns/next/evidence/M-08-A.1/work-receipts.json",
+        "campaigns/next/tasks/M-08-A.json",
+        "crates/vibe-agent-projection/Cargo.toml",
+        "crates/vibe-agent-projection/src/agents.rs",
+        "crates/vibe-agent-projection/src/agents/ambient_paths.rs",
+        "crates/vibe-agent-projection/src/agents/home_paths.rs",
+        "crates/vibe-agent-projection/src/m_08_a_1_cases.rs",
+        "crates/vibe-lifecycle/Cargo.toml",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_a_1_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+        "crates/vibe-lifecycle/src/process/mod.rs",
+        "fixtures/next/adapters/matrix.json",
+        "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/flows/fast-rust-compiler/FAST-RUST-COMPILER.xml",
+        "vibevm/vibespecs/boot/90-user.xml",
+        "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml",
+        "campaigns/next/verification-policy.json",
+        "/home/olegchir/.codex/skills/.system/openai-docs/SKILL.md",
+        "/fast/git/v/research/2026-10-15-m08a2-preflight/REPORT.md",
+        "/fast/zap-managed/2026-10-15-m08a2/READ-ROSTER.json",
+        "/fast/zap-managed/2026-10-15-m08a2/METADATA-CONTRACT.md",
+        "/fast/zap-managed/2026-10-15-m08a2/verify-m08a2.py"
+      ]
+    },
+    {
+      "program": "/usr/bin/python3",
+      "arguments": [
+        "/fast/zap-managed/2026-10-15-m08a2/verify-m08a2.py",
+        "/fast/git/v/vibevm-next/fixtures/next/adapters/four-client-contracts.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"kind\": \"M08A2_metadata_validation\", \"clients\": 4, \"rows\": 33, \"sources\": 26, \"proof_bindings\": 396, \"scenario_groups\": 12, \"old_PROP054_children_preserved\": 23, \"legacy_changes\": [], \"runtime_support_qualified\": false, \"checks\": \"JSON/XML/coverage/references/provenance separation/preservation/scoped whitespace\"}\n",
+      "stderr": "",
+      "reason": "Final selected metadata verification after permanent report/findings JSON were created; includes their parsing."
+    }
+  ],
+  "prior_metadata_attempt": {
+    "exit": 0,
+    "clients": 4,
+    "rows": 33,
+    "sources": 26,
+    "proof_bindings": 396,
+    "reason_for_final_repeat": "Semantic metadata edits after initial pass: explicit private-root preparation, per-row source references, precise locks and permission-only OpenCode config example."
+  },
+  "counts": {
+    "rust_tests_executed": 0,
+    "runtime_proofs_executed": 0,
+    "version_probes_executed": 0,
+    "metadata_rows": 33,
+    "metadata_sources": 26,
+    "future_proof_bindings": 396,
+    "scenario_groups_per_row": 12,
+    "retained_A1_characterization_cases": 11
+  },
+  "legacy_fixture_changes": [],
+  "preservation": {
+    "kind": "M08A2_metadata_validation",
+    "clients": 4,
+    "rows": 33,
+    "sources": 26,
+    "proof_bindings": 396,
+    "scenario_groups": 12,
+    "old_PROP054_children_preserved": 23,
+    "legacy_changes": [],
+    "runtime_support_qualified": false,
+    "checks": "JSON/XML/coverage/references/provenance separation/preservation/scoped whitespace"
+  },
+  "conditional_checks": {
+    "A1_Rust": "not applicable: no consumed legacy fixture bytes changed; accepted WorkAccepted2029/11 cases retained without replay. No cold/warm target touched.",
+    "scoped_format": "not applicable: no Rust delta.",
+    "whole_project_check": "not triggered: additive non-fact prose section and separate inert metadata; no boot/dependency composition change.",
+    "facts_exhaustive": "not triggered: no new fact/status/adoption/extraction/closure declarations; focused XML subtree preservation."
+  },
+  "actual_repository_writes": [
+    "fixtures/next/adapters/four-client-contracts.json",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+    "campaigns/next/evidence/M-08-A/observations.json",
+    "campaigns/next/evidence/M-08-A/metadata-verification.log",
+    "campaigns/next/evidence/M-08-A/report.json",
+    "campaigns/next/evidence/M-08-A/REPORT.md",
+    "campaigns/next/evidence/M-08-A/findings.json"
+  ],
+  "private_writes": [
+    "tmp/observations.json",
+    "tmp/author-contracts.py",
+    "candidate.patch",
+    "REPORT.md",
+    "findings.json"
+  ],
+  "forbidden_effects_performed": [],
+  "safety": "No source/manifests/task/Git mutations, client homes/config reads, client processes, plugin/install/login/help/list/model/provider runs, service creation or commissioning. Official HTTPS research is the only planned network; no hard network containment assertion.",
+  "unresolved": [
+    "unsatisfied exact-version observations: all four literal executable candidates missing from managed worker PATH; zero version probes, no install authorized or performed.",
+    "unsatisfied release-specific behavior binding: all fetched vendor sources are live/unversioned; legacy version policies do not qualify any exact CLI tuple.",
+    "unsatisfied future runtime gates: 396 proof cases unexecuted, including actual client discovery/update/removal. No runtime support inferred from metadata validation.",
+    "unsatisfied preparation detail for client-managed plugin paths/activation stores: Claude/Codex cache children and Qwen project activation storage must be captured from exact prepared client before effects; package manifest paths are specified.",
+    "unsatisfied safe no-provider skill/effective-config observation routes and complete user-root isolation: CODEX_HOME does not prove isolation of HOME/.agents; Qwen private-root override not established; OpenCode additive config override is not full isolation.",
+    "Existing plugin artifact update refuses undeploy-then-deploy; existing skill update has no reversible prior-state handle. Successful general update/inverse and cleanup after provider removal require later owning implementation/proof.",
+    "M-06-C.2 standalone interactive VibeVM boot inspector remains mandatory future work. Root acceptance and campaign counters unchanged."
+  ],
+  "acceptance": "Root alone accepts; no task counters changed; metadata writes completed is not WorkAccepted.",
+  "final_artifact_digests": {
+    "fixtures/next/adapters/four-client-contracts.json": "5ed0fd407f194b409ed2b47c8a603979be4fa56223b411e05030d22e0fdfd94e",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": "63e60bcaae522deae5f7363eb6263a9c64da9cfdc6f5a79e72a7a3af560397ce",
+    "campaigns/next/evidence/M-08-A/observations.json": "7e1abe08f589c90fe15ad7e493307f3abef7abddcb66da8aa03b0e410f24a286",
+    "campaigns/next/evidence/M-08-A/findings.json": "9b5a7eb491015671f13b8a703829c69365f864cb5250230112ce9955cac73a1c",
+    "campaigns/next/evidence/M-08-A/REPORT.md": "3a0b3b194986daba7b742c032c5106ea43d190cfda13a7cf89ac2bdc906fbff9",
+    "campaigns/next/evidence/M-08-A/metadata-verification.log": "62e035528d06505c749a98c3ab3158d4b04093adb57267737d203fe427ac4538"
+  }
+}

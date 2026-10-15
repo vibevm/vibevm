@@ -1,0 +1,24 @@
+{
+  "dispositions": [
+    "satisfied",
+    "unsatisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Observed/source-characterized/proposed/unexecuted classes are separate. Actual bounded version replies: Claude Code 2.1.299 and codex-cli 0.159.3, both exit0 with Root-pinned hashes on linux-x86_64; no operation support claim.",
+    "All 33 rows retain 12 future scenario groups (396 bindings), now with independent receipt branches: no-write plan; install1; retained repeat/verify; update2 versus refused expansion; checkpoint recovery; real-before-image inverse; retired cleanup after v1/v2; no acquisition on foreign/unsupported branches.",
+    "All eight skill rows enumerate SKILL.md plus reference.txt v1, reference removal v2, sorted manifests/digests/full receipt resources/locks and foreign siblings. OpenCode projection has two typed members and individual oracles. Qwen user activation has user-specific storage/lock debt.",
+    "Final selected metadata verifier exit0: 4 clients, 33 rows, 27 sources, 396 proof bindings, 12 groups; 23 original PROP054 subtrees and all five legacy fixtures preserved. Zero Rust/runtime cases executed; A1 WorkAccepted2029/11 cases retained, not replayed.",
+    "Only authorized documentation/contract trees changed. Source/task/manifests unchanged. Root alone accepts; supplied count78/222 and separate M03A2 safe-stop unchanged."
+  ],
+  "unresolved": [
+    "Unsatisfied exact-target binding for OpenCode and Qwen: literal PATH and supplied named paths did not resolve executables. No machine-wide absence claim, installation or fabricated version.",
+    "Unsatisfied concrete actual-client proof binding for some requested tuples: eight effective-config observations and OpenCode skill catalogue have no established safe no-provider route. Skill UI routes still require exact private-root/startup binding. Criterion2 is conservatively unsatisfied despite complete lifecycle/refusal metadata; structural pass does not establish these missing bindings.",
+    "Unsatisfied precise client-managed plugin preparation: Claude/Codex installed path/cache membership and Qwen scope-specific activation-store physical locks need exact prepared-client identity. Unknown lock/path refuses before writes; Qwen user storage is not a project activation lock.",
+    "Live official documents are unversioned and do not prove exact-version behavior. Observed Codex0.159.3 is outside existing0.148.x plugin policy; that legacy provider must refuse without policy changes.",
+    "All runtime commissioning remains unexecuted. Future inverse requires actual captured before-images, never documentation expectations as measured history. Legacy plugin replacement remains undeploy then deploy; existing skill updates are not newly reversible.",
+    "M06C2 standalone interactive VibeVM boot inspector remains mandatory future work. Root semantic review and acceptance remain pending."
+  ],
+  "proposed_follow_up": null
+}

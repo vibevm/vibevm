@@ -1,0 +1,7 @@
+{
+  "fixtures/next/adapters/skill-v1.md": "957f06b72fc966aa6d1488799017f253745d73e87cbd59ba9cedaac6e7a95e79",
+  "fixtures/next/adapters/skill-v2.md": "42c389ae23886a24720711eb20f4d60bcf0657259362d46a368795fcb8885f96",
+  "fixtures/next/adapters/foreign.json": "36ab7ef7d7d9559e8c85708139dba2ccc8e23726cf2e01859e893982e01de02e",
+  "fixtures/next/adapters/matrix.json": "bcd81616ad9a24b20f45cd9660ea84f57bb9bd4d036d404dad2d886e262b6fe8",
+  "fixtures/next/adapters/foreign-after-remove.json": "0c757d47b279b2f074df212273c3cfa0a9f81e9de42f6625f1e769eca32c08af"
+}

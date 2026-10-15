@@ -1,0 +1,118 @@
+{
+  "observed_utc": "2026-10-15T00:17:47.559912+00:00",
+  "reason": "Root retires canonically collected reviewed M08A2 correction before independent normal review/evidence/stage",
+  "native": {
+    "accounting_pending": false,
+    "collected": true,
+    "failed": false,
+    "more_stored_output": true,
+    "operation": "managed.e2d153cd652d1b42ef696e7055eecadefab6de18323db3a247fc4b77a004ae38",
+    "process_stopped": false,
+    "retry_at_ns": 0,
+    "source_sequence": 1827,
+    "state": "candidate_collected",
+    "target": {
+      "dispatch_id": "dispatch.runtime.packet.vibevm-m08a2-correction",
+      "job_id": "job.runtime.packet.vibevm-m08a2-correction",
+      "kind": "job"
+    },
+    "unknown_tail": false
+  },
+  "jobs": [
+    {
+      "acceptance": "unreviewed",
+      "candidate_id": "candidate.vibevm-m08a2-correction",
+      "effect": "completed",
+      "execution": "succeeded",
+      "job_id": "job.runtime.packet.vibevm-m08a2-correction",
+      "revision": 346,
+      "safe": "unknown"
+    }
+  ],
+  "processes": [
+    {
+      "pid": 3725733,
+      "state": "S",
+      "ppid": 3725339,
+      "start_ticks": 34967605,
+      "uid": 1000,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host"
+    },
+    {
+      "pid": 3725339,
+      "state": "S",
+      "ppid": 3725309,
+      "start_ticks": 34966756,
+      "uid": 1000,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex"
+    },
+    {
+      "pid": 3725309,
+      "state": "S",
+      "ppid": 3725209,
+      "start_ticks": 34966694,
+      "uid": 1000,
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod"
+    },
+    {
+      "pid": 3725209,
+      "state": "S",
+      "ppid": 3725206,
+      "start_ticks": 34966146,
+      "uid": 1000,
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay"
+    },
+    {
+      "pid": 3725206,
+      "state": "S",
+      "ppid": 47725,
+      "start_ticks": 34966123,
+      "uid": 1000,
+      "exe": "/fast/git/v/.workers/zap-s5-target/debug/zap"
+    }
+  ],
+  "signals": [
+    {
+      "pid": 3725733,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3725339,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3725309,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3725209,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3725206,
+      "signal": "SIGTERM"
+    }
+  ],
+  "after": [
+    {
+      "pid": 3725733,
+      "exists": false
+    },
+    {
+      "pid": 3725339,
+      "exists": false
+    },
+    {
+      "pid": 3725309,
+      "exists": false
+    },
+    {
+      "pid": 3725209,
+      "exists": false
+    },
+    {
+      "pid": 3725206,
+      "exists": false
+    }
+  ]
+}

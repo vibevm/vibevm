@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "files": [
+    {
+      "path": "/fast/git/v/vibevm-next/fixtures/next/adapters/four-client-contracts.json",
+      "before": "2423fc75eb5ece6f435fc7a16f9a58d9d815490de7d77c07e5a40df405f86cc5",
+      "after": "2423fc75eb5ece6f435fc7a16f9a58d9d815490de7d77c07e5a40df405f86cc5",
+      "bytes": 5386853,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "before": "4993ad6b32a321d33dbdddcb6eaf5fa2ad1a0982d2a673792043df993dc4a202",
+      "after": "4993ad6b32a321d33dbdddcb6eaf5fa2ad1a0982d2a673792043df993dc4a202",
+      "bytes": 176600,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/tasks/M-08-A.json",
+      "before": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+      "after": "6be3bb130297e7889bcfec738958ea3bb6ef0dd6a2a17395165086375157ca09",
+      "bytes": 10318,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/candidate-result.json",
+      "before": "a16fc96c1998cf5c144f2d39343d94b3a00f4061fde547a9cd6d53ac6a526542",
+      "after": "a16fc96c1998cf5c144f2d39343d94b3a00f4061fde547a9cd6d53ac6a526542",
+      "bytes": 4212,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/candidate-correction.patch",
+      "before": "56c2cc3c526c965957ef27898f0d3cf278c9f846dca952b81c88b193047c9ec2",
+      "after": "56c2cc3c526c965957ef27898f0d3cf278c9f846dca952b81c88b193047c9ec2",
+      "bytes": 5573728,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/REPORT-correction.md",
+      "before": "432bc378979fa211eccd4d20406878faadd1871e67039072be1cb028bcd95501",
+      "after": "432bc378979fa211eccd4d20406878faadd1871e67039072be1cb028bcd95501",
+      "bytes": 3836,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/claude_code-version-correction.json",
+      "before": "9e4cdf1e0794ee0a0ffc2774e1357c91c08071995930263946c8573f79154b3c",
+      "after": "9e4cdf1e0794ee0a0ffc2774e1357c91c08071995930263946c8573f79154b3c",
+      "bytes": 1749,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/codex-version-correction.json",
+      "before": "8eb7b9b44443e1d316cb08c9c7b6c05ed7559d6af69e103c249756380e4a59ed",
+      "after": "8eb7b9b44443e1d316cb08c9c7b6c05ed7559d6af69e103c249756380e4a59ed",
+      "bytes": 1781,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/discovery-correction.json",
+      "before": "15a2de93c3a42cb818bd7dc3a3d9f4163ee76f9d929696d5d1a24cd2cacdf5b2",
+      "after": "15a2de93c3a42cb818bd7dc3a3d9f4163ee76f9d929696d5d1a24cd2cacdf5b2",
+      "bytes": 663,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/findings-correction.json",
+      "before": "8d8abc55f73b871de0f03424451feccab7fa07b876bdc97afa420ebfe204214e",
+      "after": "8d8abc55f73b871de0f03424451feccab7fa07b876bdc97afa420ebfe204214e",
+      "bytes": 2989,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/metadata-correction-final.log",
+      "before": "c688f7bfc0b2fb532bb87330fd2d063012a4e0af1679e8c849dc435a7acd4266",
+      "after": "c688f7bfc0b2fb532bb87330fd2d063012a4e0af1679e8c849dc435a7acd4266",
+      "bytes": 316,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/preservation-correction.json",
+      "before": "46dad3768780e6c56daae01c77cb3d1eba0d54261e1b1f27fa7ae44c5e93474d",
+      "after": "46dad3768780e6c56daae01c77cb3d1eba0d54261e1b1f27fa7ae44c5e93474d",
+      "bytes": 5232,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/reads-correction.json",
+      "before": "40434757071d763e9486b2cdf3d77735a042a12145d092027ae62818cbac96dc",
+      "after": "40434757071d763e9486b2cdf3d77735a042a12145d092027ae62818cbac96dc",
+      "bytes": 10530,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/report-correction.json",
+      "before": "7dc1584359533b36177b44ef3ebbf5dab22077668438ed65f17b56742ae806da",
+      "after": "7dc1584359533b36177b44ef3ebbf5dab22077668438ed65f17b56742ae806da",
+      "bytes": 13154,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/sources-correction.json",
+      "before": "fec766f646884520664cc3c3ae8f5fd73654ccb5476b425677652c172f9aafea",
+      "after": "fec766f646884520664cc3c3ae8f5fd73654ccb5476b425677652c172f9aafea",
+      "bytes": 27153,
+      "unchanged": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/verification-correction.json",
+      "before": "f3839a599330fb83d28163bc2ce6a9fe11acab1974547c1e7130006c83b10daf",
+      "after": "f3839a599330fb83d28163bc2ce6a9fe11acab1974547c1e7130006c83b10daf",
+      "bytes": 1037,
+      "unchanged": true
+    }
+  ],
+  "stable": true,
+  "physical_terminal_verified": false,
+  "freeze_claim": false,
+  "artifact_bindings": [
+    {
+      "kind": "patch",
+      "path": "/fast/zap-managed/2026-10-15-m08a2-correction/candidate-correction.patch",
+      "expected_digest": "56c2cc3c526c965957ef27898f0d3cf278c9f846dca952b81c88b193047c9ec2",
+      "expected_bytes": 5573728
+    },
+    {
+      "kind": "report",
+      "expected_digest": "7dc1584359533b36177b44ef3ebbf5dab22077668438ed65f17b56742ae806da",
+      "expected_bytes": 13154,
+      "matching_files": [
+        "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-A/report-correction.json"
+      ]
+    }
+  ]
+}

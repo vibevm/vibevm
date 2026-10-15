@@ -1,0 +1,31 @@
+{
+  "PATH_candidates": {
+    "claude": null,
+    "codex": null,
+    "opencode": null,
+    "qwen": null
+  },
+  "named_paths": [
+    {
+      "path": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "exists": true
+    },
+    {
+      "path": "/home/olegchir/.local/bin/opencode",
+      "exists": false
+    },
+    {
+      "path": "/home/olegchir/opt/bin/opencode",
+      "exists": false
+    },
+    {
+      "path": "/home/olegchir/.opencode/bin/opencode",
+      "exists": false
+    },
+    {
+      "path": "/home/olegchir/.local/bin/qwen",
+      "exists": false
+    }
+  ],
+  "machine_wide_absence_claimed": false
+}
