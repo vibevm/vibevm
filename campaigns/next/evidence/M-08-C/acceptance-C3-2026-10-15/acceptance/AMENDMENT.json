@@ -1,0 +1,28 @@
+{
+  "kind": "operator-only single EvidenceObservation artifact correction",
+  "cause": "Previous helper incorrectly referenced posthoc Root review artifact outside CandidateProvenance.artifacts; strict product guard correctly refused",
+  "production_delta": "EvidenceObservation.artifact=report.digest from exact candidate.artifacts Report",
+  "readonly_delta": "inspect prints lookup of first failed evidence command and all7 evidence IDs; writes no previous inspect artifact",
+  "root_approved_review_sha256": "be8194597de174a6ca92c628911265ab037fbddf37b7f3bb9192be06ef7c8ff1",
+  "old_source_sha256": "e416a038bf664b4222f2fc82d46c43d390c15b08665ee59da6dc882aea199bf3",
+  "old_executable_sha256": "966fc3ac7260e0645606aebfc7daa9b12195ab6ffe1ac2e752a002c7edd166bd",
+  "new_source_sha256": "4ce9ba6086dded642d3c8bcf5614ecd8d6d76a3d91030315a0002e3c23dd6068",
+  "new_executable_sha256": "60991231a1af69a72b08d7e815cf0c133ae4201fadfd98a129748848170217de",
+  "compile_exit": 0,
+  "readonly_inspect_exit": 0,
+  "readonly_observation": {
+    "acceptance": "unreviewed",
+    "candidate": "candidate.vibevm-m08c3-correction",
+    "execution": "succeeded",
+    "failed_command": "root-review.m08c3-correction.evidence.verification.m08c3-correction",
+    "failed_command_committed": false,
+    "recorded_evidence_ids": [],
+    "root_approval_sha256": "be8194597de174a6ca92c628911265ab037fbddf37b7f3bb9192be06ef7c8ff1",
+    "work_revision": 4,
+    "work_state": "candidate"
+  },
+  "root_review_retention": "Exact approved review artifact remains separately retained in canonical SafeVerification.artifacts; no CandidateProvenance append",
+  "mutations_submitted": 0,
+  "old_manifest_and_failure_logs": "untouched",
+  "next": "Root reviews new hashes then runs new executable evidence/stage/work with unchanged ROOT-REVIEW.json"
+}

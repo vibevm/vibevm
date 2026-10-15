@@ -1,0 +1,47 @@
+{
+  "utc": "2026-10-15T14:29:00.166972+00:00",
+  "session_id": 37335,
+  "binding_verified_against_actual_job": true,
+  "trusted_terminal_observation_verified": true,
+  "native": {
+    "state": "collecting",
+    "source_sequence": 42,
+    "collected": false,
+    "failed": false,
+    "unknown_tail": true,
+    "process_stopped": false
+  },
+  "processes": {
+    "1089105": {
+      "ppid": 47725,
+      "comm": "zap",
+      "birth": 40177711,
+      "state": "S"
+    },
+    "1089168": {
+      "ppid": 1089105,
+      "comm": "podbay",
+      "birth": 40177742,
+      "state": "R"
+    },
+    "1089289": {
+      "ppid": 1089168,
+      "comm": "podbay-pod",
+      "birth": 40178308,
+      "state": "S"
+    },
+    "1089364": {
+      "ppid": 1089289,
+      "comm": "codex",
+      "birth": 40178371,
+      "state": "S"
+    },
+    "1089895": {
+      "ppid": 1089364,
+      "comm": "codex-code-mode",
+      "birth": 40179859,
+      "state": "S"
+    }
+  },
+  "accepted": false
+}

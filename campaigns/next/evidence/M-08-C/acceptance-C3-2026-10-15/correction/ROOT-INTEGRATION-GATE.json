@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "xtask",
+    "check-codegen"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 9.644305939029437,
+  "log": "/fast/zap-managed/2026-10-15-m08c3-correction/ROOT-INTEGRATION-CHECK-CODEGEN.log",
+  "source_staged": true,
+  "full_suite": false
+}

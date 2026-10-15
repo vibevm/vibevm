@@ -1,0 +1,15 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Exact donor capability identity is now bound in approval and retained state; actual incumbent logical identity and named-arena replacement regressions pass."
+  ],
+  "unresolved": [
+    "Preintegration cargo xtask check-codegen exit1 is preserved; Root owns the separate postintegration index-aware gate and final acceptance."
+  ],
+  "proposed_follow_up": null
+}

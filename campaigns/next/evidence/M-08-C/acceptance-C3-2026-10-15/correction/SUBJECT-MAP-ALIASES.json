@@ -1,0 +1,312 @@
+[
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-1-subjects-before.json",
+    "archive": "correction/subject-maps/6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb.json",
+    "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-2-subjects-after.json",
+    "archive": "correction/subject-maps/6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb.json",
+    "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-2-subjects-before.json",
+    "archive": "correction/subject-maps/6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb.json",
+    "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-3-subjects-before.json",
+    "archive": "correction/subject-maps/6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb.json",
+    "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V1-1-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-1-subjects-after.json",
+    "archive": "correction/subject-maps/6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb.json",
+    "sha256": "6d8e094d8e1c6afe4a0256ff740dd09c8550afc61552fdcff7294be3227fa5fb"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V5-3-subjects-after.json",
+    "archive": "correction/subject-maps/77ea745b1256f0699bff370dc3cf408f9e55577bc4b7e81daa48f4b1066a9796.json",
+    "sha256": "77ea745b1256f0699bff370dc3cf408f9e55577bc4b7e81daa48f4b1066a9796"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V2-1-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-1-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-2-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V5-3-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-1-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-2-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-3-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-4-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-5-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-6-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-7-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V4-8-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V1-1-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-1-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-1-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-2-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V6-2-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V1-1-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-1-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2-subjects-before.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/V6-2-subjects-after.json",
+    "archive": "correction/subject-maps/c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712.json",
+    "sha256": "c69bde9b7dcb9e851578a6102bdbe07ff3c56f0e8f11d4cd08f7908dfeeac712"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-1-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-1-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-2-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-2-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-3-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-3-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-4-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-4-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-5-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-5-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-6-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-6-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-7-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-7-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-8-subjects-before.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  },
+  {
+    "original": "/fast/zap-managed/2026-10-15-m08c3-correction/attempt1-V4-8-subjects-after.json",
+    "archive": "correction/subject-maps/7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d.json",
+    "sha256": "7c8c81b0a0e9ff68e7ca0b89010473152816f3b75afc36c01d0aa8cc2750f71d"
+  }
+]

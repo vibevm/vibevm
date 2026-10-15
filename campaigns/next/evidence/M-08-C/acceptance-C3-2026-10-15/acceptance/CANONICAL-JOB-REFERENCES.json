@@ -1,0 +1,44 @@
+{
+  "kind": "bounded projection of existing canonical SDK readonly inspect output; NOT independent export of Safe records",
+  "source_path": "/fast/zap-managed/2026-10-15-m08c3-correction/acceptance-preparation/accept-current-job.json",
+  "source_sha256": "1edb4a2ca526565123dff3985851e5acbb50431ae64410176c9b99a3ee4e1ac6",
+  "json_fields": [
+    "job_id",
+    "attempt_id",
+    "dispatch_id",
+    "work_id",
+    "candidate_id",
+    "contract_id",
+    "contract_digest",
+    "relevant_basis",
+    "execution",
+    "effect",
+    "safe",
+    "safe_observation",
+    "safe_verifications",
+    "verifications",
+    "acceptance",
+    "revision"
+  ],
+  "data": {
+    "job_id": "job.runtime.packet.vibevm-m08c3-correction",
+    "attempt_id": "attempt.runtime.packet.vibevm-m08c3-correction",
+    "dispatch_id": "dispatch.runtime.packet.vibevm-m08c3-correction",
+    "work_id": "work.m08c3-correction.prepare-plan",
+    "candidate_id": "candidate.vibevm-m08c3-correction",
+    "contract_id": "contract.m08c3-correction",
+    "contract_digest": "f7fa62afbd36447c8c94389c59186e295b922b8e051285a7c76a9722eff91bee",
+    "relevant_basis": "d93a832382d612ca956d6dfaea99ba16200f6dc17b06e362cdcd0843a4b5c7ab",
+    "execution": "succeeded",
+    "effect": "completed",
+    "safe": "safe",
+    "safe_observation": "observation.vibevm-m08c3-correction",
+    "safe_verifications": [
+      "verification.m08c3-correction"
+    ],
+    "verifications": [],
+    "acceptance": "unreviewed",
+    "revision": 469
+  },
+  "limitation": "Standalone Safe stdout and independent Safe record export are absent. Safe467\u2013469 revisions are attested by ROOT-ACCEPTANCE, with retained verifier references here; no fabricated raw Safe output."
+}

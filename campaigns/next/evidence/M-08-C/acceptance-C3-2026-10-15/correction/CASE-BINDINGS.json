@@ -1,0 +1,159 @@
+{
+  "V1": {
+    "names": [
+      "mechanism::deploy::generic::m_08_c_3_cases::identical_standalone_receipts_cannot_substitute_donor_roots",
+      "mechanism::deploy::generic::m_08_c_3_cases::incumbent_logical_deployment_identity_imports_and_restores_exact_receipt",
+      "mechanism::deploy::generic::m_08_c_3_cases::replaced_named_arena_refuses_stale_generic_and_incumbent_hosts",
+      "mechanism::deploy::generic::m_08_c_3_cases::interrupted_member_inverse_does_not_complete_other_member",
+      "mechanism::deploy::generic::m_08_c_3_cases::changed_coordination_arena_refuses_retained_recovery",
+      "mechanism::deploy::generic::m_08_c_3_cases::c2_migration_requires_closed_match_and_never_invents_before_state",
+      "mechanism::deploy::generic::m_08_c_3_cases::member_inverse_preserves_current_foreign_neighbors",
+      "mechanism::deploy::generic::m_08_c_3_cases::removed_source_inverse_restores_owned_value",
+      "mechanism::deploy::generic::m_08_c_3_cases::revocation_refuses_forward_but_allows_current_cleanup",
+      "mechanism::deploy::generic::m_08_c_3_cases::durable_identity_excludes_process_capture",
+      "mechanism::deploy::generic::m_08_c_3_cases::typed_receipt_join_and_private_blob_integrity",
+      "mechanism::deploy::generic::m_08_c_3_cases::interrupted_publication_retains_uncertain_state",
+      "mechanism::deploy::generic::m_08_c_3_cases::upgrade_added_retained_removed_and_inverse_restore_exact_set",
+      "mechanism::deploy::generic::m_08_c_3_cases::initial_generation_recovers_publication_and_refuses_third_digest",
+      "mechanism::deploy::generic::m_08_c_3_cases::standalone_transfer_restores_exact_donor_without_source",
+      "mechanism::deploy::generic::m_08_c_3_cases::deployment_c2_transfer_and_exact_donor_restore",
+      "mechanism::deploy::generic::m_08_c_3_cases::initial_phase_classes_recover_with_exact_fresh_authority",
+      "mechanism::deploy::generic::m_08_c_3_cases::automatic_donor_retirement_interruption_recovers_then_restores",
+      "mechanism::deploy::generic::m_08_c_3_cases::retained_mode_create_new_restoration_and_existing_occupant_refusal",
+      "mechanism::deploy::generic::m_08_c_3_cases::representable_legacy_file_and_opencode_member_transfer_preserve_neighbors",
+      "mechanism::deploy::generic::m_08_c_3_cases::toml_literal_inverse_preserves_current_foreign_neighbors",
+      "mechanism::deploy::generic::m_08_c_3_cases::receipt_publication_window_rejects_changed_record_then_recovers"
+    ],
+    "expected": 22
+  },
+  "V2": {
+    "names": [
+      "pkgskill::receipt::m_08_c_3_cases::replaced_arena_refuses_stale_writer_before_skill_effects",
+      "pkgskill::receipt::m_08_c_3_cases::nested_destination_roots_share_explicit_arena_before_parents_exist",
+      "pkgskill::receipt::m_08_c_3_cases::different_arena_is_not_claimed_as_same_authority",
+      "pkgskill::receipt::m_08_c_3_cases::automatic_hold_blocks_writer_and_restore_preserves_legacy_reader",
+      "pkgskill::receipt::m_08_c_3_cases::changed_donor_receipt_and_foreign_equal_bytes_refuse",
+      "pkgskill::receipt::m_08_c_3_cases::current_standalone_writer_waits_for_shared_arena"
+    ],
+    "expected": 6
+  },
+  "V3": {
+    "names": [
+      "behaviour::deploy_generic_state::m_08_c_3_cases::strict_corpus_roundtrip",
+      "behaviour::deploy_generic_state::m_08_c_3_cases::transfer_root_is_required_and_bound_to_semantics",
+      "behaviour::deploy_generic_state::m_08_c_3_cases::semantic_phase_and_join_refusals",
+      "behaviour::deploy_generic_state::m_08_c_3_cases::retention_bounds_and_literal_keys",
+      "behaviour::deploy_generic_state::m_08_c_3_cases::legacy_reader_refuses_new_state"
+    ],
+    "expected": 5,
+    "legacy_exact": {
+      "name": "behaviour::deploy_records::tests::legacy_none_omits_binding_and_preserves_pair",
+      "expected": 1
+    }
+  },
+  "V4": {
+    "names": [
+      "mechanism::deploy::generic::tests::four_shapes_exact_grant_preserves_foreign_files_and_members",
+      "mechanism::deploy::generic::tests::absent_wrong_broadened_and_changed_plans_have_zero_effects",
+      "mechanism::deploy::generic::tests::current_selection_source_principal_policy_and_root_drift_refuse",
+      "mechanism::deploy::generic::tests::caller_map_is_not_selection_or_payload_authority",
+      "mechanism::deploy::generic::tests::traversal_reserved_alias_ancestor_and_member_conflicts_refuse",
+      "mechanism::deploy::generic::tests::all_host_protected_categories_and_aliases_refuse",
+      "mechanism::deploy::generic::tests::physical_links_and_protected_aliases_refuse_without_writes",
+      "mechanism::deploy::generic::tests::launch_content_is_inspectable_changes_identity_and_never_executes",
+      "mechanism::deploy::generic::tests::physical_document_contention_and_literal_member_coexistence",
+      "mechanism::deploy::generic::tests::stale_locked_destination_and_ownership_refuse_without_partial_merge",
+      "mechanism::deploy::generic::tests::publication_failure_reports_destination_effect_and_retained_intent",
+      "mechanism::deploy::generic::tests::scalar_ancestors_and_equal_foreign_values_do_not_transfer_ownership",
+      "mechanism::deploy::generic::tests::two_hosts_opposite_scopes_share_document_lock_and_replan"
+    ],
+    "expected": 13,
+    "exact_commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::prior_receipt_tests::apply_refuses_a_receipt_that_changed_after_the_pre_apply_epoch",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::sidecar_tests::an_update_crash_keeps_the_old_committed_beside_the_new_pending",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::inverse_tests::undeploy_holds_pending_as_well_as_committed_destination_locks",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::transaction_tests::recovery_refuses_a_third_digest_and_names_the_resources",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::tests::changed_declaration_after_crash_recovers_stored_plan_then_reconciles",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::tests::tampered_owned_file_refuses_removal_and_preserves_bytes",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::tests::owned_update_and_uninstall_preserve_unowned_neighbors",
+        "--",
+        "--exact"
+      ]
+    ],
+    "each_exact_expected": 1
+  }
+}

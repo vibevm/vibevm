@@ -1,0 +1,4 @@
+Error: CARGO_MANIFEST_DIR not set; is xtask running under cargo?
+
+Caused by:
+    environment variable not found

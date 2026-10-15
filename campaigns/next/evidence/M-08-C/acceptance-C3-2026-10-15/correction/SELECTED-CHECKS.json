@@ -1,0 +1,204 @@
+[
+  {
+    "id": "V1",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::generic::m_08_c_3_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V2",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::m_08_c_3_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V3",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::deploy_generic_state::m_08_c_3_cases"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::deploy_records::tests::legacy_none_omits_binding_and_preserves_pair",
+        "--",
+        "--exact"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V4",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::generic::tests"
+      ]
+    ],
+    "existing_conditional_commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::prior_receipt_tests::apply_refuses_a_receipt_that_changed_after_the_pre_apply_epoch",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::sidecar_tests::an_update_crash_keeps_the_old_committed_beside_the_new_pending",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::inverse_tests::undeploy_holds_pending_as_well_as_committed_destination_locks",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::transaction_tests::recovery_refuses_a_third_digest_and_names_the_resources",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::state::wire::tests::inverse_domain_conversion_keeps_exact_bytes_and_strict_reading",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::tests::changed_declaration_after_crash_recovers_stored_plan_then_reconciles",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::receipt::tests::tampered_owned_file_refuses_removal_and_preserves_bytes",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::tests::owned_update_and_uninstall_preserve_unowned_neighbors",
+        "--",
+        "--exact"
+      ]
+    ]
+  },
+  {
+    "id": "V5",
+    "commands": [
+      [
+        "cargo",
+        "xtask",
+        "codegen"
+      ],
+      [
+        "cargo",
+        "xtask",
+        "check-codegen"
+      ],
+      [
+        "cargo",
+        "xtask",
+        "wire-diff"
+      ]
+    ],
+    "limits": "Separate exits; preserve preintegration failures, no fake green."
+  },
+  {
+    "id": "V6",
+    "commands": "scoped rustfmt from V6-PATHS plus git diff --check"
+  },
+  {
+    "id": "V7",
+    "commands": "XML/prior-byte and old schema/generated-body preservation"
+  }
+]

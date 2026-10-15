@@ -1,0 +1,68 @@
+{
+  "group": "V3",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "behaviour::deploy_generic_state::m_08_c_3_cases::strict_corpus_roundtrip",
+      "behaviour::deploy_generic_state::m_08_c_3_cases::transfer_root_is_required_and_bound_to_semantics",
+      "behaviour::deploy_generic_state::m_08_c_3_cases::semantic_phase_and_join_refusals",
+      "behaviour::deploy_generic_state::m_08_c_3_cases::retention_bounds_and_literal_keys",
+      "behaviour::deploy_generic_state::m_08_c_3_cases::legacy_reader_refuses_new_state"
+    ],
+    "expected": 5
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::deploy_generic_state::m_08_c_3_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "5",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-1.log",
+      "seconds": 11.269297741004266,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::deploy_records::tests::legacy_none_omits_binding_and_preserves_pair",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08c3-correction/V3-2.log",
+      "seconds": 0.15788412396796048,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}
