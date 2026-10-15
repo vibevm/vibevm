@@ -136,6 +136,7 @@ fn lock_inverse(
     receipt: &DeployReceipt,
 ) -> Result<Vec<vibe_safefs::LockGuard>, DeployError> {
     let deployment = state.lock_deployment(home)?;
+    state.require_legacy_state(home)?;
     let locks = sidecar::inverse_locks(
         state.read_lock_resources(home)?.as_ref(),
         receipt,

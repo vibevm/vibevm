@@ -26,6 +26,9 @@ impl GenericHost {
     }
     pub(super) fn check_plan(&self, plan: &GenericPlan) -> Result<(), GenericError> {
         self.current(&plan.admitted.capture)?;
+        if self.arena_identity()? != plan.coordination_identity {
+            return Err(refuse("coordination arena changed"));
+        }
         if self.roots != plan.roots
             || self.protected != plan.protected
             || self.authority.current_control().map_err(refuse)? != plan.control
@@ -36,6 +39,17 @@ impl GenericHost {
         // ownership. Never refresh a stale plan or partially merge it.
         if self.receipts()? != plan.receipts {
             return Err(refuse("ownership census changed"));
+        }
+        let state =
+            super::super::state::DeployState::observe_bound(&self.settings).map_err(refuse)?;
+        let observed = state
+            .as_ref()
+            .map(|s| s.read_generic(&self.home(&plan.target)))
+            .transpose()
+            .map_err(refuse)?
+            .flatten();
+        if observed != plan.retained_state {
+            return Err(refuse("retained sidecar changed"));
         }
         for document in &plan.documents {
             let root = self.root(document.scope);

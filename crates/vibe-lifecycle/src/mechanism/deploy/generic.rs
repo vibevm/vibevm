@@ -8,11 +8,18 @@ use vibe_agent_projection::client_capabilities::ClientCapabilities;
 use vibe_core::manifest::{ClientRequest, ClientScope};
 use vibe_safefs::Project;
 
+mod adoption;
 mod apply;
 mod grant;
+mod inverse;
 mod plan;
+mod receipt;
+pub use inverse::{ReceiptInspection, RetainedGrant, RetainedOperation, RetainedPlan};
+#[cfg(test)]
+mod m_08_c_3_cases;
 #[cfg(test)]
 mod tests;
+pub use adoption::DeploymentDonor;
 pub use apply::GenericOutcome;
 pub use grant::ExactGrant;
 pub use plan::{GenericPlan, GenericResource};
@@ -131,6 +138,7 @@ pub struct GenericHost {
     protected: ProtectedControls,
     roots: [String; 3],
     instance: u64,
+    coordination: Option<Project>,
 }
 impl GenericHost {
     pub fn new(
@@ -179,7 +187,26 @@ impl GenericHost {
             protected,
             roots,
             instance: NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
+            coordination: None,
         })
+    }
+    /// Explicit shared lock-only capability for cross-family writers. The
+    /// compatibility constructor uses its existing settings capability.
+    pub fn with_coordination(mut self, arena: Project) -> Result<Self, GenericError> {
+        arena.root_correlation_token().map_err(refuse)?;
+        self.coordination = Some(arena);
+        Ok(self)
+    }
+    fn arena(&self) -> &Project {
+        self.coordination.as_ref().unwrap_or(&self.settings)
+    }
+    fn arena_identity(&self) -> Result<String, GenericError> {
+        let retained = self.arena().root_correlation_token().map_err(refuse)?;
+        let named = Project::open(self.arena().root_path()).map_err(refuse)?;
+        if named.root_correlation_token().map_err(refuse)? != retained {
+            return Err(refuse("coordination arena changed"));
+        }
+        Ok(retained)
     }
     fn root(&self, scope: ClientScope) -> &Project {
         match scope {
@@ -200,6 +227,10 @@ impl GenericHost {
                 "selection, disabled state, provider, descriptor or source drift",
             ));
         }
+        self.current_roots()
+    }
+    fn current_roots(&self) -> Result<(), GenericError> {
+        self.arena_identity()?;
         for (root, token) in [&self.project, &self.user, &self.settings]
             .into_iter()
             .zip(&self.roots)

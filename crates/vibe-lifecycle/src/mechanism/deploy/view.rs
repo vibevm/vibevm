@@ -52,6 +52,20 @@ pub(crate) struct DeployStateView {
 }
 
 impl DeployStateView {
+    pub(crate) fn require_legacy_state(&self, home: &DeploymentHome) -> Result<(), DeployError> {
+        if let Some(project) = &self.project {
+            let present = project
+                .read_file_bounded(&home.member("generic-state.json"), 4 * 1024 * 1024)
+                .map_err(|e| DeployError::RecordInvalid {
+                    record: "generic-state.json",
+                    reason: e.to_string(),
+                })?;
+            if present.is_some() {
+                return Err(DeployError::RecordInvalid { record: "generic-state.json", reason: "generic state requires current generic host admission before provider preparation".into() });
+            }
+        }
+        Ok(())
+    }
     /// Pin an EXISTING state home, or record that there is none.
     ///
     /// The metadata probe is deliberately `symlink_metadata`: a link at the

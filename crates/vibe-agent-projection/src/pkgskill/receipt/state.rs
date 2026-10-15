@@ -303,7 +303,7 @@ fn artifacts_match(binding: &ProjectSkillBinding, artifacts: &[StateArtifact]) -
     actual == expected
 }
 
-fn validate_receipt(project_root: &Path, receipt: &PackageSkillReceipt) -> Result<()> {
+pub(super) fn validate_receipt(project_root: &Path, receipt: &PackageSkillReceipt) -> Result<()> {
     validate_bindings(project_root, &receipt.binding)?;
     if let Some(applying) = &receipt.applying {
         validate_nonce(&applying.nonce)?;

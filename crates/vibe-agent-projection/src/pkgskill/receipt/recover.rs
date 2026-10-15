@@ -19,6 +19,7 @@ use crate::pkgskill::PackageSkillReport;
 pub(crate) fn recover_pending(project_root: &Path) -> Result<Vec<PackageSkillReport>> {
     let project = Project::open(project_root)?;
     let _guard = project.lock(super::nofollow::LOCK_FILE)?;
+    super::adoption::refuse_hold(&project)?;
     let Some(receipt) = read_receipt(&project)? else {
         return Ok(Vec::new());
     };

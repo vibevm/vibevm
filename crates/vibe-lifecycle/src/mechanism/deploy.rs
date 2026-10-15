@@ -872,3 +872,63 @@ pub use prepared_query::{
 };
 
 pub mod client_capabilities;
+
+/// Host-supplied common exclusion capability for deployments participating in
+/// generic handoff. Acquire arena before all incumbent deployment/destination
+/// leases; the arena confers no provider or destination authority.
+pub struct CoordinatedDeploy {
+    arena: vibe_safefs::Project,
+    identity: String,
+}
+impl CoordinatedDeploy {
+    pub fn new(arena: vibe_safefs::Project) -> Result<Self, DeployError> {
+        let identity = arena
+            .root_correlation_token()
+            .map_err(|e| DeployError::RecordInvalid {
+                record: "coordination arena",
+                reason: e.to_string(),
+            })?;
+        Ok(Self { arena, identity })
+    }
+    fn current_arena(&self) -> Result<(), DeployError> {
+        if vibe_safefs::Project::open(self.arena.root_path())
+            .and_then(|named| named.root_correlation_token())
+            .map_err(|e| DeployError::RecordInvalid {
+                record: "coordination arena",
+                reason: e.to_string(),
+            })?
+            != self.identity
+        {
+            return Err(DeployError::BindingMismatch {
+                record: "coordination arena",
+            });
+        }
+        Ok(())
+    }
+    fn lock(&self) -> Result<vibe_safefs::LockGuard, DeployError> {
+        self.current_arena()?;
+        let guard = self
+            .arena
+            .lock("deploy-physical-coordination.lock")
+            .map_err(|e| DeployError::RecordInvalid {
+                record: "coordination arena",
+                reason: e.to_string(),
+            })?;
+        self.current_arena()?;
+        Ok(guard)
+    }
+    pub fn apply(
+        &self,
+        execution: &DeployExecution<'_>,
+    ) -> Result<Vec<DeployOutcome>, DeployError> {
+        let _arena = self.lock()?;
+        execute_deploy_targets(execution)
+    }
+    pub fn undeploy(
+        &self,
+        execution: &DeployExecution<'_>,
+    ) -> Result<Vec<RemovalOutcome>, DeployError> {
+        let _arena = self.lock()?;
+        undeploy_targets(execution)
+    }
+}

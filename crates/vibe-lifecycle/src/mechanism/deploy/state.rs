@@ -58,6 +58,7 @@ use super::error::DeployError;
 use super::model::DEPLOY_STATE_DIR;
 use super::sidecar::{LOCK_RESOURCES_FILE, LockResources};
 
+pub(crate) mod generic;
 mod inverse;
 pub(crate) use inverse::InverseRecord;
 mod wire;

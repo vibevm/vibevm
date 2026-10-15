@@ -76,6 +76,7 @@ pub(crate) fn preplan(
     for selected in resolved {
         let artifact = resolve_artifact(execution.project_root, selected.target)?;
         let home = home_of(execution, &selected.target.id);
+        state.require_legacy_state(&home)?;
         let prior_receipt = state.read_receipt(&home)?;
         // §7.2's crash window, read at the same no-create seam: an
         // unretired intent is settlement-reachability evidence for the plan

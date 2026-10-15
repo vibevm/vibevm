@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "pending": {
+    "deployment": "3333333333333333333333333333333333333333333333333333333333333333",
+    "generation": 0,
+    "plan_hash": "4444444444444444444444444444444444444444444444444444444444444444",
+    "semantics": "closed-file-config/1",
+    "semantics_digest": "e74ce1a37b97ecd84e120887da98db224e11b8f4370810de756c9ac5caff9154",
+    "grant_subject": "5555555555555555555555555555555555555555555555555555555555555555",
+    "operation": "adoption",
+    "pins": {
+      "provider": "fixture",
+      "provider_version": "fixture",
+      "provider_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "declaration": "fixture",
+      "declaration_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "descriptor": "fixture",
+      "source": "fixture",
+      "source_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "descriptor_digest": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "resources": [
+      {
+        "scope": "project",
+        "destination": ".client/file",
+        "key": [],
+        "operation": "file",
+        "desired": {
+          "kind": "present",
+          "blob": {
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "bytes": 4,
+            "mode": 384
+          }
+        },
+        "before": {
+          "kind": "absent"
+        },
+        "progress": "not-started"
+      }
+    ],
+    "revoked": false,
+    "phase": "prepared",
+    "receipt_digest": null,
+    "transfer": {
+      "family": "package-skill",
+      "donor_id": "fixture-skill",
+      "receipt_digest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "hold_id": "7777777777777777777777777777777777777777777777777777777777777777",
+      "phase": "held",
+      "receipt_blob": {
+        "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+        "bytes": 4,
+        "mode": 384
+      },
+      "resources": [
+        {
+          "scope": "project",
+          "destination": ".client/file",
+          "key": [],
+          "operation": "file",
+          "desired": {
+            "kind": "present",
+            "blob": {
+              "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+              "bytes": 4,
+              "mode": 384
+            }
+          },
+          "before": {
+            "kind": "absent"
+          },
+          "progress": "not-started"
+        }
+      ],
+      "donor_root_identity": "fixture-donor-root"
+    },
+    "coordination_identity": "fixture-arena"
+  }
+}

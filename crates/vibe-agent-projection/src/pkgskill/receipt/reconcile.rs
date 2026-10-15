@@ -23,6 +23,7 @@ pub(crate) fn reconcile_binding(
 ) -> Result<Vec<PackageSkillReport>> {
     let project = Project::open(project_root)?;
     let _guard = project.lock(super::nofollow::LOCK_FILE)?;
+    super::adoption::refuse_hold(&project)?;
     let Some(mut receipt) = read_receipt(&project)? else {
         return reconcile_with_receipt(&project, project_root, binding, empty_receipt());
     };
@@ -193,6 +194,7 @@ pub(crate) fn reconcile_vanished(
 ) -> Result<Vec<PackageSkillReport>> {
     let project = Project::open(project_root)?;
     let _guard = project.lock(super::nofollow::LOCK_FILE)?;
+    super::adoption::refuse_hold(&project)?;
     let Some(mut receipt) = read_receipt(&project)? else {
         // A missing receipt proves no ownership and therefore authorises no
         // deletion. This is deliberately a successful, write-free no-op.

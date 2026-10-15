@@ -58,6 +58,7 @@ pub(crate) fn undeploy_resolved(
         // §6.3.1.3's order: the deployment-state lock first, so the receipt
         // and the sidecar this reversal reads cannot change under it.
         let _deployment = state.lock_deployment(&home)?;
+        state.require_legacy_state(&home)?;
         let receipt = state
             .read_receipt(&home)?
             .ok_or_else(|| DeployError::NoReceipt {

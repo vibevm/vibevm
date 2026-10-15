@@ -22,6 +22,7 @@ pub mod client_capability;
 pub mod compiler_ir;
 pub mod compiler_trace_index;
 pub mod deploy_checkpoints;
+pub mod deploy_generic_state;
 pub mod deploy_intent;
 pub mod deploy_inverse;
 pub mod deploy_lock_resources;

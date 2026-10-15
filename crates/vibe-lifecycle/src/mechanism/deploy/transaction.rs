@@ -102,12 +102,152 @@ impl Settlement {
 }
 
 impl Transaction<'_> {
+    /// Receipt-scoped closed operation. The typed sidecar records absence;
+    /// epoch-1 intent/receipt resources contain only actual present digests.
+    pub(crate) fn retained(
+        &self,
+        prior: Option<&DeployReceipt>,
+        basis: &DeployReceipt,
+        mut record: vibe_wire::generated::deploy_generic_state::DeployGenericState,
+        locks: &[String],
+        owned: &[OwnedResource],
+        execute: &mut dyn FnMut(&mut CheckpointLedger<'_>) -> Result<(), DeployError>,
+    ) -> Result<AppliedDeployment, DeployError> {
+        use vibe_wire::generated::deploy_generic_state::BindingPhase;
+        let pending = record
+            .pending
+            .as_ref()
+            .ok_or(DeployError::BindingMismatch {
+                record: "retained pending",
+            })?;
+        let generation = pending.generation;
+        let hash = pending.plan_hash.clone();
+        if self.state.read_receipt(self.home)?.as_ref() != prior {
+            return Err(DeployError::BindingMismatch {
+                record: "retained receipt changed",
+            });
+        }
+        if let Some(intent) = self.state.read_intent(self.home)? {
+            if intent.plan_hash != hash || intent.target.generation != generation {
+                return Err(DeployError::BindingMismatch {
+                    record: "retained intent changed",
+                });
+            }
+        }
+        self.state.write_generic(self.home, &record)?;
+        sidecar::stage_pending(self.state, self.home, generation, &hash, locks, None)?;
+        let intent = DeployIntent {
+            operation_binding: None,
+            plan_hash: hash.clone(),
+            resources: owned
+                .iter()
+                .map(|r| IntentResource {
+                    resource: r.resource.clone(),
+                    desired_digest: r.post_digest.clone(),
+                    prior_digest: prior_digest(prior, &r.resource),
+                })
+                .collect(),
+            schema: INTENT_EPOCH,
+            started_at: self
+                .created_at
+                .parse()
+                .map_err(|_| DeployError::BindingMismatch {
+                    record: "retained timestamp",
+                })?,
+            target: DeployTargetIdentity {
+                generation,
+                profile: basis.profile.clone(),
+                project: basis.identity.project.clone(),
+                target: basis.target.clone(),
+                package: basis.identity.package.clone(),
+            },
+            prior_generation: prior
+                .filter(|r| r.generation != generation)
+                .map(|r| r.generation),
+        };
+        self.state.write_intent(self.home, &intent)?;
+        self.generic_phase(BindingPhase::Intent)?;
+        let mut ledger = CheckpointLedger::open(self.state, self.home, &hash)?;
+        execute(&mut ledger)?;
+        record = self
+            .state
+            .read_generic(self.home)?
+            .ok_or(DeployError::BindingMismatch {
+                record: "retained state disappeared",
+            })?;
+        let p = record
+            .pending
+            .as_mut()
+            .ok_or(DeployError::BindingMismatch {
+                record: "retained pending disappeared",
+            })?;
+        let mut receipt = basis.clone();
+        receipt.generation = generation;
+        receipt.resources = owned.to_vec();
+        receipt.status = ReceiptStatus::Verified;
+        receipt.desired_config_digest = p.grant_subject.clone();
+        receipt.prior_state_handle = None;
+        receipt.finalized_at = Some(intent.started_at.clone());
+        receipt.reversible = p.resources.iter().all(|r| {
+            !matches!(
+                r.before,
+                vibe_wire::generated::deploy_generic_state::Before::Unavailable(_)
+            )
+        });
+        p.receipt_digest = Some(format!(
+            "{:x}",
+            Sha256::digest(serde_json::to_vec(&receipt).expect("receipt encoding"))
+        ));
+        // Retain the exact expected receipt digest before its publication,
+        // including the crash window before the sidecar phase advances.
+        self.state.write_generic(self.home, &record)?;
+        self.state.write_receipt(self.home, &receipt)?;
+        record.pending.as_mut().expect("pending receipt").phase = BindingPhase::Receipt;
+        self.state.write_generic(self.home, &record)?;
+        sidecar::promote(self.state, self.home, generation, &hash)?;
+        let mut committed = record.pending.take().expect("pending retained");
+        committed.phase = BindingPhase::Committed;
+        record.committed = Some(committed);
+        self.state.write_generic(self.home, &record)?;
+        self.state.retire_intent(self.home)?;
+        Ok(AppliedDeployment {
+            generation,
+            reversible: receipt.reversible,
+            resources: owned.to_vec(),
+            prior_state_handle: None,
+            settlement: Settlement::Nothing,
+        })
+    }
+    fn generic_phase(
+        &self,
+        phase: vibe_wire::generated::deploy_generic_state::BindingPhase,
+    ) -> Result<(), DeployError> {
+        if let Some(mut value) = self.state.read_generic(self.home)? {
+            if let Some(pending) = &mut value.pending {
+                pending.phase = phase;
+                self.state.write_generic(self.home, &value)?;
+            }
+        }
+        Ok(())
+    }
     /// Apply one target through the whole §7.2 sequence.
     ///
     /// The plan arrives already made and its destinations already locked:
     /// locking inside would make the plan an unlocked read of a
     /// destination another process may be mid-apply on.
     pub(crate) fn apply(
+        &self,
+        provider: &dyn DeployProvider,
+        request: &DeployTargetRequest<'_>,
+        plan: &DeployPlan,
+    ) -> Result<AppliedDeployment, DeployError> {
+        self.state.require_legacy_state(self.home)?;
+        self.apply_generic(provider, request, plan)
+    }
+
+    /// The generic host has separately admitted the typed retained operation.
+    /// Journal, checkpoint and receipt publication stay in this transaction.
+    pub(crate) fn apply_generic(
         &self,
         provider: &dyn DeployProvider,
         request: &DeployTargetRequest<'_>,
@@ -171,6 +311,7 @@ impl Transaction<'_> {
             prior_generation: prior.as_ref().map(|receipt| receipt.generation),
         };
         self.state.write_intent(self.home, &intent)?;
+        self.generic_phase(vibe_wire::generated::deploy_generic_state::BindingPhase::Intent)?;
         // 3 — apply, checkpointing each completed operation. The
         // provider's own freshness fingerprint is taken first and rides
         // into the receipt's evidence: §3.2 lists `fingerprint` as one of
@@ -213,6 +354,7 @@ impl Transaction<'_> {
         admitted: &LockedLocalDeployBinding,
         current_generation: &mut dyn FnMut() -> Result<Option<String>, DeployError>,
     ) -> Result<AppliedDeployment, DeployError> {
+        self.state.require_legacy_state(self.home)?;
         let binding = admitted.binding();
         if self.home.operation_binding() != Some(binding) {
             return Err(DeployError::BindingMismatch {
@@ -564,7 +706,38 @@ impl Transaction<'_> {
         // success — but a deployment that applied and then failed to verify
         // really did touch the destination, and a state home that stayed
         // silent about it would leave that mutation with no owner.
+        if let Some(mut generic) = self.state.read_generic(self.home)? {
+            if let Some(p) = &mut generic.pending {
+                if p.generation != receipt.generation || p.plan_hash != generation.plan_hash {
+                    return Err(DeployError::BindingMismatch {
+                        record: "generic prepublication receipt",
+                    });
+                }
+                p.receipt_digest = Some(format!(
+                    "{:x}",
+                    Sha256::digest(serde_json::to_vec(&receipt).expect("receipt encoding"))
+                ));
+                self.state.write_generic(self.home, &generic)?;
+            }
+        }
         self.state.write_receipt(self.home, &receipt)?;
+        if let Some(mut generic) = self.state.read_generic(self.home)? {
+            if let Some(pending) = &mut generic.pending {
+                if pending.generation != receipt.generation
+                    || pending.plan_hash != generation.plan_hash
+                {
+                    return Err(DeployError::BindingMismatch {
+                        record: "generic receipt publication",
+                    });
+                }
+                pending.phase = vibe_wire::generated::deploy_generic_state::BindingPhase::Receipt;
+                pending.receipt_digest = Some(format!(
+                    "{:x}",
+                    Sha256::digest(serde_json::to_vec(&receipt).expect("receipt encoding"))
+                ));
+                self.state.write_generic(self.home, &generic)?;
+            }
+        }
         // And for the same reason the promotion is unconditional: a failed
         // receipt owns whatever independent verify observed, so the inverse
         // that removes it must lock the physical destinations this
@@ -577,6 +750,13 @@ impl Transaction<'_> {
             generation.number,
             generation.plan_hash,
         )?;
+        if let Some(mut generic) = self.state.read_generic(self.home)? {
+            if let Some(mut pending) = generic.pending.take() {
+                pending.phase = vibe_wire::generated::deploy_generic_state::BindingPhase::Committed;
+                generic.committed = Some(pending);
+                self.state.write_generic(self.home, &generic)?;
+            }
+        }
         self.state.retire_intent(self.home)?;
         if !mismatched.is_empty() {
             return Err(DeployError::VerifyMismatch {
@@ -605,6 +785,7 @@ impl Transaction<'_> {
         prior_state_handle: Option<&str>,
         status: ReceiptStatus,
     ) -> Result<Vec<String>, DeployError> {
+        self.state.require_legacy_state(self.home)?;
         let inverse = match (prior_state_handle, receipt.resources.as_slice()) {
             (Some(handle), [owned])
                 if self.provider_pin == crate::mechanism::BUILTIN_VIBE_OPT_LAUNCHER_PIN =>

@@ -2,8 +2,13 @@
 //! R1-style per-file reconciliation for the automatic project-scope
 //! package-skill binding.
 
+#[path = "receipt/adoption.rs"]
+pub(super) mod adoption;
 #[path = "receipt/containment.rs"]
 mod containment;
+#[cfg(test)]
+#[path = "receipt/m_08_c_3_cases.rs"]
+mod m_08_c_3_cases;
 #[path = "receipt/nofollow.rs"]
 mod nofollow;
 #[path = "receipt/reconcile.rs"]
