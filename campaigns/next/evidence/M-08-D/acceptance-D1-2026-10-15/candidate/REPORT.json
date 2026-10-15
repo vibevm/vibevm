@@ -1,0 +1,814 @@
+{
+  "work_id": "work.m08d1.prepare-plan",
+  "status": "unreviewed_candidate",
+  "acceptance_owner": "Root",
+  "runtime_binding": {
+    "attempt_id": "attempt.runtime.packet.vibevm-m08d1",
+    "contract_digest": "61e1954b8c263e2f5d6b64ff6a501c5c4b87b6a35ea2ed95770f573359392f54",
+    "contract_id": "contract.m08d1",
+    "job_id": "job.runtime.packet.vibevm-m08d1",
+    "packet_id": "packet.vibevm-m08d1",
+    "producer": {
+      "actor": {
+        "operation": {
+          "id": "attempt.runtime.packet.vibevm-m08d1",
+          "kind": "attempt"
+        },
+        "principal_id": "worker.middle",
+        "role": "worker"
+      },
+      "attempt_id": "attempt.runtime.packet.vibevm-m08d1",
+      "job_id": "job.runtime.packet.vibevm-m08d1",
+      "packet_id": "packet.vibevm-m08d1"
+    },
+    "relevant_basis": "f086130a6fb0189c631ac782c0610da36357aecf53b07d18d02d71911cdb1b86",
+    "terminal_observation": "observation.vibevm-m08d1",
+    "version": 1,
+    "work_id": "work.m08d1.prepare-plan"
+  },
+  "summary": "Typed fixed command recipes, shared accepted executable observation, inert request/plan wire and explicit trusted preparation with opaque exact process approval, qualified only with injected ProcessRunner fixtures.",
+  "original_steps": [
+    {
+      "step": 1,
+      "implemented": "Shared pure native OsString renderer maps version/list/marketplace_add/install/remove; all 11 allowed client/operation recipes have exact argv oracles; legacy wire builders consume this renderer."
+    },
+    {
+      "step": 2,
+      "implemented": "Explicit preparation resolves the admitted absolute launcher using the extracted B1 observer, brackets the fixture version probe and binds version reply, host evidence, actual composed environment, cwd, held roots, principal and policy. Pure inspect exposes active argv and process effects. Opaque approval and execute recheck current bindings."
+    },
+    {
+      "step": 3,
+      "implemented": "Unknown/native client contracts, raw shell/argv/template fields and unsupported verbs/versions refuse. Generic ExactGrant remains distinct; a real approved file plan cannot authorize the process port. Existing native capability path remains unchanged."
+    }
+  ],
+  "criteria": [
+    {
+      "statement": "Fixture runner observes only the approved executable/argv/environment/cwd.",
+      "disposition": "satisfied",
+      "evidence": [
+        "V2 exact_approval_runs_only_inspected_spec_and_query_is_pure",
+        "V2 stale_control_version_environment_cwd_roots_and_revocation_refuse",
+        "V2 real_generic_file_approval_confers_no_process_authority"
+      ]
+    },
+    {
+      "statement": "Plan exposes active content and process effects before admission.",
+      "disposition": "satisfied",
+      "evidence": [
+        "V2 exact_approval_runs_only_inspected_spec_and_query_is_pure",
+        "V3 strict_corpus_and_roundtrip"
+      ]
+    }
+  ],
+  "checks": {
+    "V1": {
+      "group": "V1",
+      "executed": true,
+      "case_binding": {
+        "names": [
+          "client_commands::m_08_d_1_cases::fixed_recipes_are_deterministic",
+          "client_commands::m_08_d_1_cases::literal_values_and_option_refusal",
+          "client_commands::m_08_d_1_cases::unsupported_contracts_refuse",
+          "client_commands::m_08_d_1_cases::native_paths_are_lossless"
+        ],
+        "expected": 4
+      },
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "client_commands::m_08_d_1_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "4",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V1-1.log",
+          "seconds": 10.949953085975721,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V2": {
+      "group": "V2",
+      "executed": true,
+      "case_binding": {
+        "names": [
+          "mechanism::deploy::client_commands::m_08_d_1_cases::exact_approval_runs_only_inspected_spec_and_query_is_pure",
+          "mechanism::deploy::client_commands::m_08_d_1_cases::stale_control_version_environment_cwd_roots_and_revocation_refuse",
+          "mechanism::deploy::client_commands::m_08_d_1_cases::wrong_grants_and_unknown_contracts_refuse_before_operation",
+          "mechanism::deploy::client_commands::m_08_d_1_cases::executable_and_root_replacement_refuse",
+          "mechanism::deploy::client_commands::m_08_d_1_cases::quoted_path_is_data_and_nonutf8_wire_refuses",
+          "mechanism::deploy::client_commands::m_08_d_1_cases::real_generic_file_approval_confers_no_process_authority"
+        ],
+        "expected": 6
+      },
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::client_commands::m_08_d_1_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "6",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V2-1.log",
+          "seconds": 3.9174423049553297,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V3": {
+      "group": "V3",
+      "executed": true,
+      "case_binding": {
+        "names": [
+          "behaviour::client_command::m_08_d_1_cases::strict_corpus_and_roundtrip",
+          "behaviour::client_command::m_08_d_1_cases::inert_grammars_reject_shell_native_and_unknown_epochs"
+        ],
+        "expected": 2
+      },
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-wire",
+            "--lib",
+            "behaviour::client_command::m_08_d_1_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "2",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V3-1.log",
+          "seconds": 17.080605205032043,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V4": {
+      "group": "V4",
+      "executed": true,
+      "case_binding": null,
+      "conditional_selection": {
+        "run": [
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::plugin::m_08_a_1_cases::cli_plugin_wire_is_inert_user_scope_install_remove_and_update_refusal",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::m_08_b_1_cases::missing_client_capture_refuses_without_process_and_prepared_query_is_pure",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::m_08_b_1_cases::correction::equal_byte_launcher_retarget_refuses_for_parent_and_leaf",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::m_08_b_1_cases::correction::executable_mode_content_and_object_drift_refuse",
+            "--",
+            "--exact"
+          ]
+        ],
+        "reused": []
+      },
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::m_08_b_1_cases::correction::equal_byte_launcher_retarget_refuses_for_parent_and_leaf",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V4-1.log",
+          "seconds": 0.7688387529924512,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::m_08_b_1_cases::correction::executable_mode_content_and_object_drift_refuse",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V4-2.log",
+          "seconds": 0.9591526520089246,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::m_08_b_1_cases::missing_client_capture_refuses_without_process_and_prepared_query_is_pure",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V4-3.log",
+          "seconds": 0.4320992919965647,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::plugin::m_08_a_1_cases::cli_plugin_wire_is_inert_user_scope_install_remove_and_update_refusal",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V4-4.log",
+          "seconds": 0.20178581803338602,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V5": {
+      "group": "V5",
+      "executed": true,
+      "case_binding": null,
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "codegen"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V5-1.log",
+          "seconds": 23.59995566494763,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "check-codegen"
+          ],
+          "exit": 1,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V5-2.log",
+          "seconds": 17.875232894031797,
+          "passed": false,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "wire-diff"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V5-3.log",
+          "seconds": 13.516627965029329,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": false
+    },
+    "V6": {
+      "group": "V6",
+      "executed": true,
+      "case_binding": null,
+      "conditional_selection": null,
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-agent-projection/src/lib.rs",
+            "crates/vibe-agent-projection/src/client_commands.rs",
+            "crates/vibe-agent-projection/src/client_commands/m_08_d_1_cases.rs",
+            "crates/vibe-lifecycle/src/lib.rs",
+            "crates/vibe-lifecycle/src/mechanism.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/client_commands/m_08_d_1_cases.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/executable_observation.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/plugin/prepared.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client.rs",
+            "crates/vibe-wire/src/behaviour/mod.rs",
+            "crates/vibe-wire/src/behaviour/client_command.rs",
+            "crates/vibe-wire/src/behaviour/client_command/m_08_d_1_cases.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V6-1.log",
+          "seconds": 0.05933789996197447,
+          "passed": true,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-15-m08d1/V6-2.log",
+          "seconds": 0.03309039998566732,
+          "passed": true,
+          "source_drift": []
+        }
+      ],
+      "passed": true
+    },
+    "V7": {
+      "group": "V7",
+      "executed": true,
+      "xml_parsed": true,
+      "prior_spec_lines_preserved": true,
+      "old_schema_drift": [],
+      "required_registration_changes": [
+        "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "crates/vibe-wire/src/generated/mod.rs"
+      ],
+      "unqualified_generated_drift": [],
+      "passed": true,
+      "Root_preauthorized_exact_global_header_insertion": [
+        "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+        "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+        "crates/vibe-wire/src/generated/application/e1/mod.rs",
+        "crates/vibe-wire/src/generated/application/mod.rs",
+        "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+        "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+        "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+        "crates/vibe-wire/src/generated/capability/mod.rs",
+        "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+        "crates/vibe-wire/src/generated/change_query/mod.rs",
+        "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+        "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+        "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+        "crates/vibe-wire/src/generated/client_capability/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+        "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+        "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+        "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+        "crates/vibe-wire/src/generated/distribution/mod.rs",
+        "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+        "crates/vibe-wire/src/generated/environment/mod.rs",
+        "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+        "crates/vibe-wire/src/generated/hello/mod.rs",
+        "crates/vibe-wire/src/generated/index/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index/mod.rs",
+        "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index_cli/mod.rs",
+        "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+        "crates/vibe-wire/src/generated/index_http/mod.rs",
+        "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+        "crates/vibe-wire/src/generated/journal/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+        "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+        "crates/vibe-wire/src/generated/llm/mod.rs",
+        "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+        "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+        "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "crates/vibe-wire/src/generated/machine/mod.rs",
+        "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "crates/vibe-wire/src/generated/migration/mod.rs",
+        "crates/vibe-wire/src/generated/native/e1/mod.rs",
+        "crates/vibe-wire/src/generated/native/mod.rs",
+        "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "crates/vibe-wire/src/generated/preview/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+        "crates/vibe-wire/src/generated/scrape/mod.rs",
+        "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+        "crates/vibe-wire/src/generated/source_query/mod.rs"
+      ]
+    }
+  },
+  "case_bindings": {
+    "V1": {
+      "names": [
+        "client_commands::m_08_d_1_cases::fixed_recipes_are_deterministic",
+        "client_commands::m_08_d_1_cases::literal_values_and_option_refusal",
+        "client_commands::m_08_d_1_cases::unsupported_contracts_refuse",
+        "client_commands::m_08_d_1_cases::native_paths_are_lossless"
+      ],
+      "expected": 4
+    },
+    "V2": {
+      "names": [
+        "mechanism::deploy::client_commands::m_08_d_1_cases::exact_approval_runs_only_inspected_spec_and_query_is_pure",
+        "mechanism::deploy::client_commands::m_08_d_1_cases::stale_control_version_environment_cwd_roots_and_revocation_refuse",
+        "mechanism::deploy::client_commands::m_08_d_1_cases::wrong_grants_and_unknown_contracts_refuse_before_operation",
+        "mechanism::deploy::client_commands::m_08_d_1_cases::executable_and_root_replacement_refuse",
+        "mechanism::deploy::client_commands::m_08_d_1_cases::quoted_path_is_data_and_nonutf8_wire_refuses",
+        "mechanism::deploy::client_commands::m_08_d_1_cases::real_generic_file_approval_confers_no_process_authority"
+      ],
+      "expected": 6
+    },
+    "V3": {
+      "names": [
+        "behaviour::client_command::m_08_d_1_cases::strict_corpus_and_roundtrip",
+        "behaviour::client_command::m_08_d_1_cases::inert_grammars_reject_shell_native_and_unknown_epochs"
+      ],
+      "expected": 2
+    }
+  },
+  "history": [
+    "history/generated-bootstrap/V5-1-subjects-after.json",
+    "history/generated-bootstrap/V5-1-subjects-before.json",
+    "history/generated-bootstrap/V5-1.log",
+    "history/generated-bootstrap/V5-2-subjects-after.json",
+    "history/generated-bootstrap/V5-2-subjects-before.json",
+    "history/generated-bootstrap/V5-2.log",
+    "history/generated-bootstrap/V5-3-subjects-after.json",
+    "history/generated-bootstrap/V5-3-subjects-before.json",
+    "history/generated-bootstrap/V5-3.log",
+    "history/generated-bootstrap/V5-result.json",
+    "history/generation-bootstrap/V5-1-subjects-after.json",
+    "history/generation-bootstrap/V5-1-subjects-before.json",
+    "history/generation-bootstrap/V5-1.log",
+    "history/generation-bootstrap/V5-2-subjects-after.json",
+    "history/generation-bootstrap/V5-2-subjects-before.json",
+    "history/generation-bootstrap/V5-2.log",
+    "history/generation-bootstrap/V5-3-subjects-after.json",
+    "history/generation-bootstrap/V5-3-subjects-before.json",
+    "history/generation-bootstrap/V5-3.log",
+    "history/generation-bootstrap/V5-result.json",
+    "history/initial-renderer-oracle/V1-1-subjects-after.json",
+    "history/initial-renderer-oracle/V1-1-subjects-before.json",
+    "history/initial-renderer-oracle/V1-1.log",
+    "history/initial-renderer-oracle/V1-result.json",
+    "history/preformat/V2-1-subjects-after.json",
+    "history/preformat/V2-1-subjects-before.json",
+    "history/preformat/V2-1.log",
+    "history/preformat/V2-result.json",
+    "history/quoted-root/V2-1-subjects-after.json",
+    "history/quoted-root/V2-1-subjects-before.json",
+    "history/quoted-root/V2-1.log",
+    "history/quoted-root/V2-result.json",
+    "history/schema-defaults/V5-1-subjects-after.json",
+    "history/schema-defaults/V5-1-subjects-before.json",
+    "history/schema-defaults/V5-1.log",
+    "history/schema-defaults/V5-2-subjects-after.json",
+    "history/schema-defaults/V5-2-subjects-before.json",
+    "history/schema-defaults/V5-2.log",
+    "history/schema-defaults/V5-3-subjects-after.json",
+    "history/schema-defaults/V5-3-subjects-before.json",
+    "history/schema-defaults/V5-3.log",
+    "history/schema-defaults/V5-result.json",
+    "history/schema-metadata/V5-1-subjects-after.json",
+    "history/schema-metadata/V5-1-subjects-before.json",
+    "history/schema-metadata/V5-1.log",
+    "history/schema-metadata/V5-2-subjects-after.json",
+    "history/schema-metadata/V5-2-subjects-before.json",
+    "history/schema-metadata/V5-2.log",
+    "history/schema-metadata/V5-3-subjects-after.json",
+    "history/schema-metadata/V5-3-subjects-before.json",
+    "history/schema-metadata/V5-3.log",
+    "history/schema-metadata/V5-result.json"
+  ],
+  "historical_failures": [
+    "Initial codegen consumers referred to not-yet-generated types: exits 101/101/101. Temporary new-module disconnection allowed bootstrap generation, restored before qualification.",
+    "New schema collection x-empty metadata missing: exits 1/1/0. Added metadata to new inputs only.",
+    "New schema optional scalar x-default metadata missing: exits 1/1/0. Added metadata to new inputs only.",
+    "First lifecycle run: 5 passed, 1 failed because SafeFS root syntax rejects quote-bearing marketplace path. Corrected path composition to retain trusted roots and check canonical argument mapping and containment, leaving quoted path literal. Final 6 passed."
+  ],
+  "preintegration_gate": {
+    "codegen_exit": 0,
+    "check_codegen_exit": 1,
+    "wire_diff_exit": 0,
+    "reason": "check-codegen uses git diff --exit-code against the index in xtask/src/codegen/mod.rs; generated changes remain unstaged by worker contract. Final generation made no byte changes. Root owns separate poststage gate.",
+    "not_claimed_green": true
+  },
+  "scope": {
+    "changed_paths": [
+      "crates/vibe-agent-projection/src/lib.rs",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/mechanism.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/plugin/prepared.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+      "crates/vibe-wire/src/behaviour/mod.rs",
+      "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+      "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+      "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "crates/vibe-wire/src/generated/application/mod.rs",
+      "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "crates/vibe-wire/src/generated/capability/mod.rs",
+      "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "crates/vibe-wire/src/generated/change_query/mod.rs",
+      "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+      "crates/vibe-wire/src/generated/client_capability/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+      "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+      "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "crates/vibe-wire/src/generated/environment/mod.rs",
+      "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "crates/vibe-wire/src/generated/hello/mod.rs",
+      "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index/mod.rs",
+      "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "crates/vibe-wire/src/generated/journal/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "crates/vibe-wire/src/generated/llm/mod.rs",
+      "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "crates/vibe-wire/src/generated/machine/mod.rs",
+      "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "crates/vibe-wire/src/generated/migration/mod.rs",
+      "crates/vibe-wire/src/generated/mod.rs",
+      "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "crates/vibe-wire/src/generated/native/mod.rs",
+      "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "crates/vibe-wire/src/generated/preview/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "crates/vibe-wire/src/generated/source_query/mod.rs",
+      "formats/REGISTRY.toml",
+      "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "crates/vibe-agent-projection/src/client_commands.rs",
+      "crates/vibe-agent-projection/src/client_commands/m_08_d_1_cases.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_commands/m_08_d_1_cases.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/executable_observation.rs",
+      "crates/vibe-wire/src/behaviour/client_command.rs",
+      "crates/vibe-wire/src/behaviour/client_command/m_08_d_1_cases.rs",
+      "crates/vibe-wire/src/generated/client_command/e1/mod.rs",
+      "crates/vibe-wire/src/generated/client_command/e1/plan/mod.rs",
+      "crates/vibe-wire/src/generated/client_command/e1/request/mod.rs",
+      "crates/vibe-wire/src/generated/client_command/mod.rs",
+      "formats/corpora/client-command-plan/e1/invalid/missing-executable.json",
+      "formats/corpora/client-command-plan/e1/valid/bound-plan.json",
+      "formats/corpora/client-command-request/e1/invalid/arbitrary-shell.json",
+      "formats/corpora/client-command-request/e1/invalid/unknown-operation.json",
+      "formats/corpora/client-command-request/e1/valid/fixed-install.json",
+      "formats/corpora/client-command-request/e1/valid/quoted-path.json",
+      "schemas/client_command/e1/plan.jtd.json",
+      "schemas/client_command/e1/request.jtd.json"
+    ],
+    "no_source_git_mutation": true,
+    "no_plan_count_acceptance_mutation": true,
+    "no_dependency_change": true,
+    "no_new_launcher": true,
+    "process_owner_unchanged": true,
+    "native_owner_unchanged": true,
+    "no_recursive_worker": true
+  },
+  "safe_stop": "Typed command preparation is complete; no real client operation performed.",
+  "effects": "Source/corpus/generated edits and temporary fixture I/O completed. ProcessRunner calls were injected recording fixtures only; no vendor executable or native provider was executed.",
+  "limitations": [
+    "Legacy SystemProcessRunner remains recorded debt; production hosts must supply their existing PodBay adapter through ProcessRunner.",
+    "Finite executable/root continuity does not promise hostile ABA atomicity or sandbox arbitrary client behavior.",
+    "Root review, acceptance and poststage check-codegen remain outstanding; UI viewer and D2/D3 are later work."
+  ],
+  "final_source_sha256": {
+    "crates/vibe-agent-projection/src/lib.rs": "5828064da8e2b374c22a3ac5839341b009518ad5e596f28183dd60ea4b133115",
+    "crates/vibe-lifecycle/src/lib.rs": "9103efe1a679c7aede4202cc17a7c5d8dece32912749a5db8c79e70039825221",
+    "crates/vibe-lifecycle/src/mechanism.rs": "f4d1f9d542513f429a896cb1b40e84f4ceead1c332bdbeee2c981d69c646d102",
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs": "7694d70bb46692158ae7ab95f9a1e81e3b5ca4fe59ce55e0629af671f3e329e3",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/prepared.rs": "f0c0a5d09c79ad0aa0de071dd8da8fc71ddaa38fb3226d69af2d9884dfc3a113",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs": "db598ffa18bba6e3a10fe1975bb830e8ccf4c8437799b9cc78ff1fd1337ab108",
+    "crates/vibe-wire/src/behaviour/mod.rs": "8ad9e36892ba91130033726cda90046d44b1b5ab069263dc31dc846d535839c5",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs": "d63527f82aca0140639d7956c37d8e2c83228942ea76029ae376e20cbb35c8cd",
+    "crates/vibe-wire/src/generated/adapter_plan/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/application/e1/mod.rs": "58e30ed6fc4bc6908fad018b878b3f8197acec864ca7280983e4e0356f0e49f4",
+    "crates/vibe-wire/src/generated/application/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs": "63b95bfa5695224aba69f61eb3bd8de968751a031061e246299f66a0e876dd80",
+    "crates/vibe-wire/src/generated/boot_debugger/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/capability/e1/mod.rs": "40363c8ebb1a33ac0f785588cb1433d6515cc9597eb0ab920df130eb3c7602f7",
+    "crates/vibe-wire/src/generated/capability/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/change_query/e1/mod.rs": "ec1752d22cbdc1d3ed10256f19117c800aaa3f60e153fe64b53868d7268592b5",
+    "crates/vibe-wire/src/generated/change_query/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs": "d48d473ba29d78825cc0c1d39f166bd8e6be6fc1a4c6a5f8934c9ea5565fe73c",
+    "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/client_capability/e1/mod.rs": "d63527f82aca0140639d7956c37d8e2c83228942ea76029ae376e20cbb35c8cd",
+    "crates/vibe-wire/src/generated/client_capability/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs": "a04f3258baae62f6f445e3f41ff55405a58aa5e07b7b922b878f37b9cf5cb5b2",
+    "crates/vibe-wire/src/generated/compiler_ir/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs": "a83f95e9540baee3ba2f98eaec0ded97636e41c01cfe8a64c8ce15ebb39edd94",
+    "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs": "f18e33d04171187c14f77fb141cd3d10312dfd082a86de51c3d7e76a6e49b04b",
+    "crates/vibe-wire/src/generated/consumer_configuration/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/distribution/e1/mod.rs": "1b2e467ed053f4b3b83012d41a8d7974fa73d34f47cd5d8cc4d6b81a2b43e444",
+    "crates/vibe-wire/src/generated/distribution/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/environment/e1/mod.rs": "ae74105640004699687b5b300624b924e019d2414c001242257be9ae0b8fd4db",
+    "crates/vibe-wire/src/generated/environment/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/format_id/mod.rs": "e76700a7afa4f0720a7a3cdc403ba8e979f227505c51a5f56ed97f03848f0c45",
+    "crates/vibe-wire/src/generated/format_id/properties.rs": "a9bb2bd91f0ef23b4cd3ce776d6306a7fbee03fe2f44ff6702d1042c0d0a5055",
+    "crates/vibe-wire/src/generated/hello/e1/mod.rs": "258e0618a63913a8ee15496a420caac4574f3f6103e241662cb7e0cdb3643a2c",
+    "crates/vibe-wire/src/generated/hello/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/index/e1/mod.rs": "7197b1503611505007818f611cc8e6f3bcb7d8c7726e41afe050fbb712fd1e8d",
+    "crates/vibe-wire/src/generated/index/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/index_cli/e1/mod.rs": "cc4a37ce076552f91cfda9a5965ef268c1b001c508291da8b099ded4e982deb6",
+    "crates/vibe-wire/src/generated/index_cli/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/index_http/e1/mod.rs": "242bf4bbed088ab72f2b491200db260c1ee5621046f8a243db2e3beeee6ee358",
+    "crates/vibe-wire/src/generated/index_http/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/journal/e1/mod.rs": "79af386733f425324a43f71fde0c821889c2be2791d5f55109dec4ab93e6381e",
+    "crates/vibe-wire/src/generated/journal/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs": "4c112b7b5a7c2f17ac1831b8344d27d14f81fd267b9a780aa0328b202699c03a",
+    "crates/vibe-wire/src/generated/lifecycle/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs": "a72237b6d9533773a6205a1881d7870eedbd43026df22a9e073d4792b5f04933",
+    "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs": "5b3a3fe52f4bcb65ee94ce02116cf1fa90cc85783951fb7f9923f36cd4f3f884",
+    "crates/vibe-wire/src/generated/llm/mod.rs": "7897f1c5048c807dcf1cb80407d8bfa78907ad8c46dbe3575f463f335849ef1a",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs": "de1120ed5c6c44739920df95550162e88c198a41ca6a3196cad76346daadf1b7",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/machine/e1/mod.rs": "70d6b30a810682cd7a76ee72923ab4fe171de053fbd2a5a30aad286ae6a01160",
+    "crates/vibe-wire/src/generated/machine/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/migration/e1/mod.rs": "3f5c0fbeabdd74bc7b9145c376768257642ce59f4dd317c28194171c65e4d8ea",
+    "crates/vibe-wire/src/generated/migration/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/mod.rs": "cfe2bd63665c6808295cfce93761f82779a313585434aa773c6545425ad219d6",
+    "crates/vibe-wire/src/generated/native/e1/mod.rs": "9eef71c13503e40bc69ea161acd617ff7e371695f7511051f5451d5b1dd03927",
+    "crates/vibe-wire/src/generated/native/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/preview/e1/mod.rs": "24212c84b0ca646bb10cef48ab4e90aabd2889fa2fdb132d3a5370b7b2aed9ba",
+    "crates/vibe-wire/src/generated/preview/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "crates/vibe-wire/src/generated/scrape/e1/mod.rs": "7bc82637f1e332637a55ec77acbf2fff7295101796c5cb67ad1a07f181218a63",
+    "crates/vibe-wire/src/generated/scrape/e2/mod.rs": "2172cf76117b799066d00841792802bd614482163c33eb936f2f138acb888460",
+    "crates/vibe-wire/src/generated/scrape/e3/mod.rs": "1c77ff415e7d03769832b1e4f8f66712f5517302b3904560ec2616c0a05053aa",
+    "crates/vibe-wire/src/generated/scrape/mod.rs": "620a74b11d94729a8aa06143845e8f130853105606c82f7ec2735f0eb0be3bd3",
+    "crates/vibe-wire/src/generated/source_query/e1/mod.rs": "0de6f30fbd9a8433007a538e5d50509ecaeb97a312e46a5c4668d98fa310e7d3",
+    "crates/vibe-wire/src/generated/source_query/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "formats/REGISTRY.toml": "42bfeca798de8d82ce0488c42e28611fb88bcc38179ea7645679c6e3c4502e91",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": "423af029f0b958b370fe007f96bd9adaee3808bb3dfaa61e5a9163d381b5654e",
+    "crates/vibe-agent-projection/src/client_commands.rs": "3976b29af04afafe06e02e3d37e89de672faee5d56f281dad7323974fbdfc08e",
+    "crates/vibe-agent-projection/src/client_commands/m_08_d_1_cases.rs": "8259c8439d25f4d6f135735353ba96f3b39154cd1ca1a58cb0510e127ee8f6cc",
+    "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs": "283369b9520f126e4f82cd7989309967ca69d884a97c28555c510ca69b2ab690",
+    "crates/vibe-lifecycle/src/mechanism/deploy/client_commands/m_08_d_1_cases.rs": "d68f043a719d52f94a291a61a8f1cee495a1f70667e86a2f23b7c7b2e355a384",
+    "crates/vibe-lifecycle/src/mechanism/deploy/executable_observation.rs": "b821409bc91e218a01b12c00d372e5f0b98205f2857867d54f89bce9a9a3bf4b",
+    "crates/vibe-wire/src/behaviour/client_command.rs": "c90f526a29a22e39709f1e7d9c0a3b38b846fb17e47b4af365e64fcb5704747c",
+    "crates/vibe-wire/src/behaviour/client_command/m_08_d_1_cases.rs": "562a308dfb764c808671d0284fc4a12be64a3d2ab0a89ae420bfc8cf02e58f77",
+    "crates/vibe-wire/src/generated/client_command/e1/mod.rs": "e8ed3a03e9479aa2f26ea1e2220c649bbcb217ba912a9c74554a5f945e9df646",
+    "crates/vibe-wire/src/generated/client_command/e1/plan/mod.rs": "f58bf1ef172438282020a917c0883c93b87f42414c99de1c81c4e0845d90f213",
+    "crates/vibe-wire/src/generated/client_command/e1/request/mod.rs": "283ae7146d4d7893b9e9e4129b61f5b4e02d23979a5301e9cb7daef079a9cc8a",
+    "crates/vibe-wire/src/generated/client_command/mod.rs": "44027d95c03a14495ab076b6e4c8ffac3da3275b0b5570ecbd9bf6048ef6a90b",
+    "formats/corpora/client-command-plan/e1/invalid/missing-executable.json": "1d16b29fce487dba39a55cf27307d0fd63797c44492d4a5052c160d7e3e11dc6",
+    "formats/corpora/client-command-plan/e1/valid/bound-plan.json": "5fdd84c0730b8f98c28f33e4491b2e66ee642ea87c19228abf703b3304a97692",
+    "formats/corpora/client-command-request/e1/invalid/arbitrary-shell.json": "ead4e17cb6de5043c61a69ce9da0387f6ec328ae689dae0f53a86af0d2a981b3",
+    "formats/corpora/client-command-request/e1/invalid/unknown-operation.json": "ad237ba6d5bbdfe015681202a09d581f44dedf595f23824c061b50ff66170390",
+    "formats/corpora/client-command-request/e1/valid/fixed-install.json": "c1376927bbb936c339fb574762d9e1ac038524ff8faf643a71ffc45ef83aedfd",
+    "formats/corpora/client-command-request/e1/valid/quoted-path.json": "6cc85e8a0f3a07e35c7cee77ab97a48019efe0cc1f11a922118aa5a4cff16671",
+    "schemas/client_command/e1/plan.jtd.json": "0d22afdd2a5c4fb59895a77e79e913cd8e5a4582a9bb69205a549b1ce4ac57c9",
+    "schemas/client_command/e1/request.jtd.json": "5d8c0c718532423fa2d0a8389a539522b0a4fb64d4eedc976ac09f6d1fcff93d"
+  },
+  "patch_sha256": "0d77f4fa5f0c2d7ca52aaa9228fdb4aad761b5a2316a03bf4b578f815a0939a2"
+}

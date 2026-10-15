@@ -1,0 +1,10 @@
+{
+  "task": "M-08-D.1",
+  "integrated": true,
+  "review_clear": true,
+  "source_commit": "0a3769398ad981fc5f8f2e0e0f4f2c8664e90a24",
+  "changed_files": 86,
+  "source_subjects": 464,
+  "independent_review": "/fast/git/v/research/2026-10-15-m08d1-review/REPORT.json",
+  "root_review": "/fast/zap-managed/2026-10-15-m08d1/ROOT-REVIEW.json"
+}

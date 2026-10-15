@@ -1,0 +1,53 @@
+{
+  "group": "V6",
+  "executed": true,
+  "case_binding": null,
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-agent-projection/src/client_commands.rs",
+        "crates/vibe-agent-projection/src/client_commands/m_08_d_1_cases.rs",
+        "crates/vibe-lifecycle/src/lib.rs",
+        "crates/vibe-lifecycle/src/mechanism.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_commands/m_08_d_1_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/executable_observation.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/wire.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/prepared.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client.rs",
+        "crates/vibe-wire/src/behaviour/mod.rs",
+        "crates/vibe-wire/src/behaviour/client_command.rs",
+        "crates/vibe-wire/src/behaviour/client_command/m_08_d_1_cases.rs"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m08d1/V6-1.log",
+      "seconds": 0.05933789996197447,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-15-m08d1/V6-2.log",
+      "seconds": 0.03309039998566732,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

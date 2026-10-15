@@ -1,0 +1,43 @@
+{
+  "group": "V2",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "mechanism::deploy::client_commands::m_08_d_1_cases::exact_approval_runs_only_inspected_spec_and_query_is_pure",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::stale_control_version_environment_cwd_roots_and_revocation_refuse",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::wrong_grants_and_unknown_contracts_refuse_before_operation",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::executable_and_root_replacement_refuse",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::quoted_path_is_data_and_nonutf8_wire_refuses",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::real_generic_file_approval_confers_no_process_authority"
+    ],
+    "expected": 6
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::client_commands::m_08_d_1_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "6",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08d1/V2-1.log",
+      "seconds": 5.8077972220489755,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "passed": true
+}

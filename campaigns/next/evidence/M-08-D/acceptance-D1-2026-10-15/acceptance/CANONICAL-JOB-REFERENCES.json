@@ -1,0 +1,22 @@
+{
+  "source": "/fast/zap-managed/2026-10-15-m08d1/accept-current-job.json",
+  "source_sha256": "24866f5bd75378d698c0812a2bbe05be234480e75ccabcf7f1a170f55bd9756c",
+  "kind": "bounded public metadata projection, not full runtime record or independent Safe-record export",
+  "fields": {
+    "job_id": "job.runtime.packet.vibevm-m08d1",
+    "attempt_id": "attempt.runtime.packet.vibevm-m08d1",
+    "work_id": "work.m08d1.prepare-plan",
+    "contract_id": "contract.m08d1",
+    "contract_digest": "61e1954b8c263e2f5d6b64ff6a501c5c4b87b6a35ea2ed95770f573359392f54",
+    "relevant_basis": "f086130a6fb0189c631ac782c0610da36357aecf53b07d18d02d71911cdb1b86",
+    "execution": "succeeded",
+    "effect": "completed",
+    "safe": "safe",
+    "safe_verifications": [
+      "verification.m08d1"
+    ],
+    "candidate_id": "candidate.vibevm-m08d1",
+    "acceptance": "unreviewed",
+    "revision": 421
+  }
+}

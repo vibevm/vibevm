@@ -1,0 +1,16 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Qualification used only recording fixtures through existing ProcessRunner; legacy SystemProcessRunner remains debt.",
+    "Final codegen and wire-diff exited 0; preintegration check-codegen exited 1 against the unstaged index, preserved separately from Root poststage gate."
+  ],
+  "unresolved": [
+    "Root review/acceptance and poststage check-codegen gate remain outstanding."
+  ],
+  "proposed_follow_up": null
+}
