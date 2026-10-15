@@ -1,0 +1,22 @@
+{
+  "source_line": 238,
+  "before": {
+    "project": "directory",
+    "project/client.toml": "d4769f542f2e90e215aaaa785ea5c2bbb8af0195d011f642b8d37870fa9fd381",
+    "settings": "directory",
+    "user": "directory",
+    "user/bundle": "directory",
+    "user/bundle/foreign": "d59c2a5f721ce135ce54628b1ad8ad8b8eb26c8bbe2e2abe1cdca97e2d6ab446",
+    "user/client.json": "05e1a79b5588f4da13ee4dec77bc050cf2f81cc3a4df8750b050a08327789ddf"
+  },
+  "after": {
+    "project": "directory",
+    "project/client.toml": "d4769f542f2e90e215aaaa785ea5c2bbb8af0195d011f642b8d37870fa9fd381",
+    "settings": "directory",
+    "user": "directory",
+    "user/bundle": "directory",
+    "user/bundle/foreign": "d59c2a5f721ce135ce54628b1ad8ad8b8eb26c8bbe2e2abe1cdca97e2d6ab446",
+    "user/client.json": "05e1a79b5588f4da13ee4dec77bc050cf2f81cc3a4df8750b050a08327789ddf"
+  },
+  "equal": true
+}

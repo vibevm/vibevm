@@ -1,0 +1,442 @@
+{
+  "source": [
+    {
+      "path": "crates/vibe-lifecycle/src/lib.rs",
+      "before_sha256": "4dc723a03b5bcd8a2806b88b638e5efa18f5d4e60696c2917208b9f06ba4b7b1",
+      "after_sha256": "4dc723a03b5bcd8a2806b88b638e5efa18f5d4e60696c2917208b9f06ba4b7b1",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism.rs",
+      "before_sha256": "713b2b4e7da5de1c7ad4b0656f17cf94efe37c9f63b72086e1a0d4dc19e02675",
+      "after_sha256": "713b2b4e7da5de1c7ad4b0656f17cf94efe37c9f63b72086e1a0d4dc19e02675",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "before_sha256": "13761900f7feb429887786dff6f12b24e0a47c24a31cc832d166c7d7b75e245d",
+      "after_sha256": "13761900f7feb429887786dff6f12b24e0a47c24a31cc832d166c7d7b75e245d",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+      "before_sha256": "7218bece02df41af201b1dd9b0fb0fb0d3042ecf5e81d2d83eff1f3fffdfc293",
+      "after_sha256": "7218bece02df41af201b1dd9b0fb0fb0d3042ecf5e81d2d83eff1f3fffdfc293",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+      "before_sha256": "a2c59b266c5b8093f76faede08e94911a17ad456d44308d6fa6cd1e6d652fc14",
+      "after_sha256": "a2c59b266c5b8093f76faede08e94911a17ad456d44308d6fa6cd1e6d652fc14",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "before_sha256": "8ebe972ad045aa9b790d4c8ea1a0bbaa059b56174e05b09e8ad5f2359356b062",
+      "after_sha256": "8ebe972ad045aa9b790d4c8ea1a0bbaa059b56174e05b09e8ad5f2359356b062",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "before_sha256": "94ec04ed7c717954fa7a574fae482004d088b62844027370ef20f774ac259ff2",
+      "after_sha256": "94ec04ed7c717954fa7a574fae482004d088b62844027370ef20f774ac259ff2",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+      "before_sha256": "947d6c9bd73989e930ab3773d6fde653a567a97ff586c09e042355685d7a5ee6",
+      "after_sha256": "947d6c9bd73989e930ab3773d6fde653a567a97ff586c09e042355685d7a5ee6",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "before_sha256": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+      "after_sha256": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "before_sha256": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec",
+      "after_sha256": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/error.rs",
+      "before_sha256": "f33532ebf551362c8e98d97c713c2d42076b195996bdc080371c05da88621377",
+      "after_sha256": "f33532ebf551362c8e98d97c713c2d42076b195996bdc080371c05da88621377",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "crates/vibe-safefs/src/component/tests.rs",
+      "before_sha256": "11dd896177117bcdea0d49b653af830eb2651e6138e65ba1663e71ebf75fd482",
+      "after_sha256": "11dd896177117bcdea0d49b653af830eb2651e6138e65ba1663e71ebf75fd482",
+      "matches_manifest_and_first_pass": true
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "before_sha256": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54",
+      "after_sha256": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54",
+      "matches_manifest_and_first_pass": true
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/CASE-BINDINGS.json",
+      "expected_sha256": "5387e70e5c5b6ad140b733475d7527c247c14f8aa253c7559c15c15d87c1665f",
+      "after_sha256": "5387e70e5c5b6ad140b733475d7527c247c14f8aa253c7559c15c15d87c1665f",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/CENSUS-MANIFEST.json",
+      "expected_sha256": "41004c6f6f7918faec93211280fc61630a02b7e80f2e6ee7a391ce12e1602d32",
+      "after_sha256": "41004c6f6f7918faec93211280fc61630a02b7e80f2e6ee7a391ce12e1602d32",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/CHECK-SELECTION.json",
+      "expected_sha256": "a3e8250b56d51c5b46a54ae10d08c5a9bf7a450b072b3ba50640e52ca0f16f94",
+      "after_sha256": "a3e8250b56d51c5b46a54ae10d08c5a9bf7a450b072b3ba50640e52ca0f16f94",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/COMMAND-LEDGER.json",
+      "expected_sha256": "fd4b5333728d831a409f149461a1c4eb031cceb8d60ebc57b72bc500d1be0989",
+      "after_sha256": "fd4b5333728d831a409f149461a1c4eb031cceb8d60ebc57b72bc500d1be0989",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/ROOT-ANSWER.json",
+      "expected_sha256": "f5652c92a530429d07d1c7c9c28f5d8d133082c1c9419a7af0d02277374d4e63",
+      "after_sha256": "f5652c92a530429d07d1c7c9c28f5d8d133082c1c9419a7af0d02277374d4e63",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/ROOT-QUESTION.json",
+      "expected_sha256": "7e0ad3f8c74b5a1ad7d9c5450e4dafd446e6a9afb528cf75e18b49088aabe53b",
+      "after_sha256": "7e0ad3f8c74b5a1ad7d9c5450e4dafd446e6a9afb528cf75e18b49088aabe53b",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V1-1.log",
+      "expected_sha256": "f3cf74f09155e009a27cfc4989875a1235a21f268f50d89bd96258b732eecd9b",
+      "after_sha256": "f3cf74f09155e009a27cfc4989875a1235a21f268f50d89bd96258b732eecd9b",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V1-result.json",
+      "expected_sha256": "abdb5549d825643c0a80d8b2212414372fe5155d5c8c27ac23070eb90ff50345",
+      "after_sha256": "abdb5549d825643c0a80d8b2212414372fe5155d5c8c27ac23070eb90ff50345",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V2-result.json",
+      "expected_sha256": "d1c56c40d0a2983bc8df2554f6bd451be2c3d241c26032e6a91a60294095d002",
+      "after_sha256": "d1c56c40d0a2983bc8df2554f6bd451be2c3d241c26032e6a91a60294095d002",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V3-1.log",
+      "expected_sha256": "19a475de025de5145ec753ef43aac1eef52983308a6e45b933ceb28006e860e6",
+      "after_sha256": "19a475de025de5145ec753ef43aac1eef52983308a6e45b933ceb28006e860e6",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V3-result.json",
+      "expected_sha256": "0314fb5920f9d63652a3c1017f4796a4cbc85cdb5b889637c4803145b736191c",
+      "after_sha256": "0314fb5920f9d63652a3c1017f4796a4cbc85cdb5b889637c4803145b736191c",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V4-1.log",
+      "expected_sha256": "aab4594ac64211f7de8058773aa8cad83e257d2fa187c7c328ed265fcbe09e6e",
+      "after_sha256": "aab4594ac64211f7de8058773aa8cad83e257d2fa187c7c328ed265fcbe09e6e",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V4-2.log",
+      "expected_sha256": "635405e878958e7f29fe6bbd160a70b26255c60ff50bb0d7e433758766f1e037",
+      "after_sha256": "635405e878958e7f29fe6bbd160a70b26255c60ff50bb0d7e433758766f1e037",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V4-result.json",
+      "expected_sha256": "eedb9f4650d4c624d268f81804eb5e1b40659b6df095b4deb61107e1159864b7",
+      "after_sha256": "eedb9f4650d4c624d268f81804eb5e1b40659b6df095b4deb61107e1159864b7",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V5-1.log",
+      "expected_sha256": "070dbc3648c7481f273fd3c57ef982172cc8d38e041beda828ef18966f96c89d",
+      "after_sha256": "070dbc3648c7481f273fd3c57ef982172cc8d38e041beda828ef18966f96c89d",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V5-result.json",
+      "expected_sha256": "7dcd2d2c2581acee00589734cd275dd3a2f3935e96eaaf4a5af705e1f423a8fe",
+      "after_sha256": "7dcd2d2c2581acee00589734cd275dd3a2f3935e96eaaf4a5af705e1f423a8fe",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V6-1.log",
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V6-2.log",
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V6-PATHS.json",
+      "expected_sha256": "1b64337aad155f2e32628d54235087e94b90c174cc70547c249c6eead6024b84",
+      "after_sha256": "1b64337aad155f2e32628d54235087e94b90c174cc70547c249c6eead6024b84",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V6-result.json",
+      "expected_sha256": "a7934587e1ee50e155065d55b64a362eac2d4975d88a37b32b68281b4da6b7f9",
+      "after_sha256": "a7934587e1ee50e155065d55b64a362eac2d4975d88a37b32b68281b4da6b7f9",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/V7-result.json",
+      "expected_sha256": "e98e22229dd3122ea2d46bd9918e1d7475e9b6ee2350879ac94095423d8b2fa8",
+      "after_sha256": "e98e22229dd3122ea2d46bd9918e1d7475e9b6ee2350879ac94095423d8b2fa8",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/additional-read-sources.json",
+      "expected_sha256": "08a26488303d04e470c9ae88bcd1030b7a68e9117eb845a8bcb1808c2d72bbbc",
+      "after_sha256": "08a26488303d04e470c9ae88bcd1030b7a68e9117eb845a8bcb1808c2d72bbbc",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/approved-error-ROOT-ANSWER.json",
+      "expected_sha256": "c4e6fab8445bc697ae94ddac61b6a0cc4f08390d847125714dfbb4158ebaca70",
+      "after_sha256": "c4e6fab8445bc697ae94ddac61b6a0cc4f08390d847125714dfbb4158ebaca70",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/approved-error-ROOT-QUESTION.json",
+      "expected_sha256": "a076dea2e2747b76605615373e4a30a763d3024b52caa3dd8b68423e1b60318f",
+      "after_sha256": "a076dea2e2747b76605615373e4a30a763d3024b52caa3dd8b68423e1b60318f",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-1-V1-1.log",
+      "expected_sha256": "712563c102f74ac1da1907b4bc285f8a1dc57eebacd08007b806aa3bd0b2a454",
+      "after_sha256": "712563c102f74ac1da1907b4bc285f8a1dc57eebacd08007b806aa3bd0b2a454",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-1-V1-result.json",
+      "expected_sha256": "da59ab9ba27f6171530ba26461a24d72c06f7c683438e43169d9c63ad3da718f",
+      "after_sha256": "da59ab9ba27f6171530ba26461a24d72c06f7c683438e43169d9c63ad3da718f",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-1-V4-1.log",
+      "expected_sha256": "a1c3b1cf14bd87deb86ac15cfc2e08d440ec514cb2a01369d15ad6369c675129",
+      "after_sha256": "a1c3b1cf14bd87deb86ac15cfc2e08d440ec514cb2a01369d15ad6369c675129",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-1-V4-2.log",
+      "expected_sha256": "61b61e09d6569b4eeeb8d10cbcac9cb1f0e8b147850b68d0ea92b3c33f0fdbb6",
+      "after_sha256": "61b61e09d6569b4eeeb8d10cbcac9cb1f0e8b147850b68d0ea92b3c33f0fdbb6",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-1-V4-result.json",
+      "expected_sha256": "82ed2a58fe06c772e4b978ac0e95f7d8eed2a61eed3944950423992998efb197",
+      "after_sha256": "82ed2a58fe06c772e4b978ac0e95f7d8eed2a61eed3944950423992998efb197",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-1-V6-1.log",
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-1-V6-2.log",
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-1-V6-result.json",
+      "expected_sha256": "4ee23d5faddeaefb67bc8203b92ad1dacbce1abf683fdf48f61604328c73010e",
+      "after_sha256": "4ee23d5faddeaefb67bc8203b92ad1dacbce1abf683fdf48f61604328c73010e",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-2-V1-1.log",
+      "expected_sha256": "2f8225b4be4bdf49f553f21d970f57c37866c17cd1c61ebf61a788706e510383",
+      "after_sha256": "2f8225b4be4bdf49f553f21d970f57c37866c17cd1c61ebf61a788706e510383",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-2-V1-result.json",
+      "expected_sha256": "c9197fac1b306fb90c9beb0fc17e0d9d76b76fc4a4fa8b930e562973f7ce2b61",
+      "after_sha256": "c9197fac1b306fb90c9beb0fc17e0d9d76b76fc4a4fa8b930e562973f7ce2b61",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-2-V6-1.log",
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-2-V6-2.log",
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-2-V6-result.json",
+      "expected_sha256": "0ea7898f1be4f583bb381d3a2af88ed38dffdb290b0b6944d268e4880b91ee92",
+      "after_sha256": "0ea7898f1be4f583bb381d3a2af88ed38dffdb290b0b6944d268e4880b91ee92",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-3-V1-1.log",
+      "expected_sha256": "f6b30cc08736d5651d7363b98a23f99bf75308c8a4fce336afcfdb56ad5f7ffb",
+      "after_sha256": "f6b30cc08736d5651d7363b98a23f99bf75308c8a4fce336afcfdb56ad5f7ffb",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/attempt-3-V1-result.json",
+      "expected_sha256": "f98bae8d01a69b05dbb59b5e922557a98e0f556e585585158ded820d63898d04",
+      "after_sha256": "f98bae8d01a69b05dbb59b5e922557a98e0f556e585585158ded820d63898d04",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/effective-environment.json",
+      "expected_sha256": "ad85467d6d6ff94f7232f0e4d86651f3ec5a6a1b6c71f0b6651702f164dcfcc1",
+      "after_sha256": "ad85467d6d6ff94f7232f0e4d86651f3ec5a6a1b6c71f0b6651702f164dcfcc1",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/format-apply-result.json",
+      "expected_sha256": "e4f8816234a309ee8a26ed5693bbd38da41e5735057505f7dc1447445ce83594",
+      "after_sha256": "e4f8816234a309ee8a26ed5693bbd38da41e5735057505f7dc1447445ce83594",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/format-final-result.json",
+      "expected_sha256": "e4f8816234a309ee8a26ed5693bbd38da41e5735057505f7dc1447445ce83594",
+      "after_sha256": "e4f8816234a309ee8a26ed5693bbd38da41e5735057505f7dc1447445ce83594",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/format-publication-result.json",
+      "expected_sha256": "e4f8816234a309ee8a26ed5693bbd38da41e5735057505f7dc1447445ce83594",
+      "after_sha256": "e4f8816234a309ee8a26ed5693bbd38da41e5735057505f7dc1447445ce83594",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/format-v4-result.json",
+      "expected_sha256": "5117ef3fcfc2fa62794d64f7358e286df5907a0b587f38ee797ccafe80547b15",
+      "after_sha256": "5117ef3fcfc2fa62794d64f7358e286df5907a0b587f38ee797ccafe80547b15",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/source-observations.json",
+      "expected_sha256": "9682aeb0c45bd25fe2b09cc6143c305cba3301a60cffda69b424b8196ace7e1d",
+      "after_sha256": "9682aeb0c45bd25fe2b09cc6143c305cba3301a60cffda69b424b8196ace7e1d",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/spec-byte-preservation.json",
+      "expected_sha256": "154b88782f71bccb8c0a82c64c0e24bb07c0ddd4a515a5b254f555dff2b23ea3",
+      "after_sha256": "154b88782f71bccb8c0a82c64c0e24bb07c0ddd4a515a5b254f555dff2b23ea3",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/v4-fixture-proposed.patch",
+      "expected_sha256": "f052609bdfe5d868c1ef6a72b6c6283f28a748c36493ce4a3a0511ad7d3902e2",
+      "after_sha256": "f052609bdfe5d868c1ef6a72b6c6283f28a748c36493ce4a3a0511ad7d3902e2",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/verify-group-original.py",
+      "expected_sha256": "af57f2039ee3dad03f68a27d8d4712952854aeb502dd050e3a437c33a466166c",
+      "after_sha256": "af57f2039ee3dad03f68a27d8d4712952854aeb502dd050e3a437c33a466166c",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/verify-group.py",
+      "expected_sha256": "1adbe98ac811548ffac8e1581d6cc2ece647cdd79973c5489d8cade51f60063d",
+      "after_sha256": "1adbe98ac811548ffac8e1581d6cc2ece647cdd79973c5489d8cade51f60063d",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/worker-patch-manifest.json",
+      "expected_sha256": "5f1d3e666e6193f6f3bd2b655fc7333d7e7bb98672ecdffbefaebd2c51690421",
+      "after_sha256": "5f1d3e666e6193f6f3bd2b655fc7333d7e7bb98672ecdffbefaebd2c51690421",
+      "matches_first_pass": true
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-15-m08c2/worker.patch",
+      "expected_sha256": "91c48de21ccb406130ef7cd97c05c7b387b74f80ba8db0ec729c97e11d8779a3",
+      "after_sha256": "91c48de21ccb406130ef7cd97c05c7b387b74f80ba8db0ec729c97e11d8779a3",
+      "matches_first_pass": true
+    }
+  ],
+  "source_observations_match": {
+    ".cargo/config.toml": true,
+    "campaigns/next/evidence/M-08-C/acceptance-C1-2026-10-15/MANIFEST.json": true,
+    "campaigns/next/evidence/M-08-C/acceptance-C1-2026-10-15/V5-supplement/REPORT.md": true,
+    "campaigns/next/evidence/M-08-C/acceptance-C1-2026-10-15/acceptance/accept-work-receipt.json": true,
+    "campaigns/next/evidence/M-08-C/acceptance-C1-2026-10-15/implementation/worker-report.md": true,
+    "campaigns/next/evidence/M-08-C/acceptance-C1-2026-10-15/review/REPORT.md": true,
+    "campaigns/next/evidence/M-08-C/prerequisites-2026-10-15.json": true,
+    "campaigns/next/tasks/M-08-C.json": true,
+    "campaigns/next/verification-policy.json": true,
+    "crates/vibe-agent-projection/Cargo.toml": true,
+    "crates/vibe-agent-projection/src/client_capabilities.rs": true,
+    "crates/vibe-agent-projection/src/lib.rs": true,
+    "crates/vibe-core/src/manifest/mechanism/client_request.rs": true,
+    "crates/vibe-lifecycle/Cargo.toml": true,
+    "crates/vibe-lifecycle/src/lib.rs": true,
+    "crates/vibe-lifecycle/src/mechanism.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/binding.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/binding_tests.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/bound_effect_tests.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/bridge.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/client_capabilities.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/error.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/model.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/preplan_tests.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/sidecar_tests.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/state.rs": true,
+    "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs": true,
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan/client_capabilities.rs": true,
+    "crates/vibe-safefs/Cargo.toml": true,
+    "crates/vibe-safefs/src/component.rs": true,
+    "crates/vibe-safefs/src/component/tests.rs": true,
+    "crates/vibe-safefs/src/file.rs": true,
+    "crates/vibe-safefs/src/file/project_methods.rs": true,
+    "crates/vibe-safefs/src/lib.rs": true,
+    "crates/vibe-safefs/src/project.rs": true,
+    "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/flows/fast-rust-compiler/FAST-RUST-COMPILER.xml": true,
+    "vibevm/vibespecs/boot/90-user.xml": true,
+    "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": true,
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": true,
+    "xtask/src/main.rs": true
+  },
+  "prop054_reconstructed_prior_sha256": "cd594468e7b3cad5a5edf92855e01fcabe613426182f6fe7a60ecc03f47db2e5",
+  "stable": true,
+  "notes": "First-pass source and artifact hashes matched declared manifests; after-pass independently rehashed. Does not assert managed turn completion. Main worker-report read but not included in ARTIFACT-MANIFEST.",
+  "worker_report_after_sha256": "97e84258dfe90b97a3a0929d1b7c1a6c9ed322a94d9e37c2532b05ffbc423fbc"
+}

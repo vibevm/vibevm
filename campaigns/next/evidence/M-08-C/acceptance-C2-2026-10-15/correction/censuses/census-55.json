@@ -1,0 +1,34 @@
+{
+  "source_line": 821,
+  "before": {
+    "project": "directory",
+    "project/new": "directory",
+    "project/new/file": "f5e6d024c05c9cc2746a3e127408b91a8b7a7f2a30da0c259bc54265502ddef4",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "settings/state/deployments/.vibe": "directory",
+    "settings/state/deployments/.vibe/c4bf9c4a740eebe10388d8b7d86a943fbd12fdb8bb10e2a55daadfa9c86aaacb.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-961160d41e11ad0013decdf9a842c9f1df2d2b40b962a721f2c27f0445bceb43.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/961160d41e11ad0013decdf9a842c9f1df2d2b40b962a721f2c27f0445bceb43": "directory",
+    "settings/state/deployments/961160d41e11ad0013decdf9a842c9f1df2d2b40b962a721f2c27f0445bceb43/intent.json": "edbd7be28d69618e0f6750c4f9dde286bb4301e76dc29a2407405fde2d93ca13",
+    "settings/state/deployments/961160d41e11ad0013decdf9a842c9f1df2d2b40b962a721f2c27f0445bceb43/lock-resources.json": "f1adb56a1ebae97cbddd0c8bd66a8a1a400ba2348691ce675de21b760c2bc719",
+    "user": "directory"
+  },
+  "after": {
+    "project": "directory",
+    "project/new": "directory",
+    "project/new/file": "f5e6d024c05c9cc2746a3e127408b91a8b7a7f2a30da0c259bc54265502ddef4",
+    "settings": "directory",
+    "settings/state": "directory",
+    "settings/state/deployments": "directory",
+    "settings/state/deployments/.vibe": "directory",
+    "settings/state/deployments/.vibe/c4bf9c4a740eebe10388d8b7d86a943fbd12fdb8bb10e2a55daadfa9c86aaacb.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/.vibe/deployment-961160d41e11ad0013decdf9a842c9f1df2d2b40b962a721f2c27f0445bceb43.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "settings/state/deployments/961160d41e11ad0013decdf9a842c9f1df2d2b40b962a721f2c27f0445bceb43": "directory",
+    "settings/state/deployments/961160d41e11ad0013decdf9a842c9f1df2d2b40b962a721f2c27f0445bceb43/intent.json": "edbd7be28d69618e0f6750c4f9dde286bb4301e76dc29a2407405fde2d93ca13",
+    "settings/state/deployments/961160d41e11ad0013decdf9a842c9f1df2d2b40b962a721f2c27f0445bceb43/lock-resources.json": "f1adb56a1ebae97cbddd0c8bd66a8a1a400ba2348691ce675de21b760c2bc719",
+    "user": "directory"
+  },
+  "equal": true
+}

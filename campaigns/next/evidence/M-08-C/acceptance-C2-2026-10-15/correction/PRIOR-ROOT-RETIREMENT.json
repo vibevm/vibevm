@@ -1,0 +1,60 @@
+{
+  "before": [
+    {
+      "pid": 394424,
+      "parent": 394363,
+      "start_ticks": "37578167",
+      "exe": "/fast/zap-managed/2026-10-15-m08c2/pins/zap",
+      "uid": 1000
+    },
+    {
+      "pid": 394426,
+      "parent": 394424,
+      "start_ticks": "37578190",
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay",
+      "uid": 1000
+    },
+    {
+      "pid": 394546,
+      "parent": 394426,
+      "start_ticks": "37578752",
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod",
+      "uid": 1000
+    },
+    {
+      "pid": 394559,
+      "parent": 394546,
+      "start_ticks": "37578816",
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "uid": 1000
+    },
+    {
+      "pid": 395451,
+      "parent": 394559,
+      "start_ticks": "37582306",
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+      "uid": 1000
+    }
+  ],
+  "after": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "all_absent": true,
+  "normal_collection": {
+    "operation": "managed.b045207c9686ff7245244625849c667db90e2dd3d0efc084272b7e7c68dbd011",
+    "state": "candidate_collected",
+    "source_sequence": 2622,
+    "unknown_tail": false,
+    "collected": true,
+    "failed": false,
+    "process_stopped": false
+  },
+  "acceptance": false,
+  "review": "correction_required F1",
+  "provenance": "Root exact owned pidfd cleanup after normal collection; not a PodBay native-stop receipt",
+  "no_reuse_of_old_physical_realm": true
+}

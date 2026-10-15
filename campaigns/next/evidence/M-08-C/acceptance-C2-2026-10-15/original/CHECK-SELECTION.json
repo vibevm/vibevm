@@ -1,0 +1,18 @@
+{
+  "V2": {
+    "mode": "not_applicable",
+    "rationale": "Pure member reconciliation lives in lifecycle generic/plan.rs; no projection module introduced."
+  },
+  "V3": {
+    "mode": "run",
+    "rationale": "Generic composition consumes shared physical lock and reference ownership contract."
+  },
+  "V4": {
+    "mode": "run",
+    "rationale": "Generic footprint consumes SafeFS component identity/overlap checks."
+  },
+  "V5": {
+    "mode": "run",
+    "rationale": "Generic capture consumes canonical C1 ClientCapabilities map."
+  }
+}

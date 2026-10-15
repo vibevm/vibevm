@@ -1,0 +1,42 @@
+{
+  "crates/vibe-safefs/src/file/guarded.rs": {
+    "sha256": "008262fadc566fec512ccf6b23d484029fd4739ccf1d5f455aca68d73f7bd95c",
+    "bytes": 2875,
+    "unchanged_from_HEAD": true
+  },
+  "crates/vibe-safefs/src/file/bounded.rs": {
+    "sha256": "1791f235fddb62f78fcb61828fc826572d8d5aad15bb053b2a02f1dfc7555910",
+    "bytes": 22082,
+    "unchanged_from_HEAD": true
+  },
+  "crates/vibe-safefs/src/file/stable.rs": {
+    "sha256": "ecfde6b2879949955f202f60977c2ead4cc98cebcd1ba993235dac210d1c2a21",
+    "bytes": 19344,
+    "unchanged_from_HEAD": true
+  },
+  "crates/vibe-safefs/src/file/create_new.rs": {
+    "sha256": "c235cc094aa4ddb9b2325dc93c753705e1393f0014b3fe6d7413c120c1418363",
+    "bytes": 14906,
+    "unchanged_from_HEAD": true
+  },
+  "crates/vibe-safefs/src/publish.rs": {
+    "sha256": "e3caafc2cd2b5d5f4c1b5a33c5ba4135276ab874b184209fceb51d6c8da6256e",
+    "bytes": 4307,
+    "unchanged_from_HEAD": true
+  },
+  "crates/vibe-safefs/src/race_hook.rs": {
+    "sha256": "e0761844f96a6d3c85a4a69816e56d8ad070eed3a2847caa5e50ef151a5e051f",
+    "bytes": 12782,
+    "unchanged_from_HEAD": true
+  },
+  "crates/vibe-lifecycle/src/mechanism/deploy/ledger.rs": {
+    "sha256": "12267e7dc2b7db2afdc747f7fb3e5d5b09593071cdb4092df9a59423c5579ed5",
+    "bytes": 2807,
+    "unchanged_from_HEAD": true
+  },
+  "crates/vibe-core/src/manifest/deploy/mod.rs": {
+    "sha256": "1d9aaa5dfc564a3a689991328492ce9eb63ed7c44ecce418f7e520e1cb343036",
+    "bytes": 13091,
+    "unchanged_from_HEAD": true
+  }
+}

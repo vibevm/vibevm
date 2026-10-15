@@ -1,0 +1,54 @@
+{
+  "group": "V4",
+  "executed": true,
+  "case_binding": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "--lib",
+        "component::tests::complete_sets_share_the_identity_and_literal_path_laws",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "count_matches": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c2/V4-1.log",
+      "seconds": 1.4761207650299184,
+      "passed": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "--lib",
+        "component::tests::overlap_and_containment_use_the_same_component_boundaries",
+        "--",
+        "--exact"
+      ],
+      "exit": 101,
+      "counts": [],
+      "count_matches": false,
+      "log": "/fast/zap-managed/2026-10-15-m08c2/V4-2.log",
+      "seconds": 0.15019343799212947,
+      "passed": false
+    }
+  ],
+  "passed": false
+}

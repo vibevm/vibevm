@@ -1,0 +1,14 @@
+{
+  "question_id": "m08c2-v4-native-path-fixture-2",
+  "approved": true,
+  "additional_write_paths": [
+    "crates/vibe-safefs/src/component/tests.rs"
+  ],
+  "decision": "Approve the exact test-only native Path fixture correction shown in v4-fixture-proposed.patch. Preserve production SafeFS behavior.",
+  "constraints": [
+    "Only the named test and its fixture/assertions; include this file in V6.",
+    "Retain the failed V4 result. Rerun the two selected V4 cases. No additional non-UTF8 test is necessary for this fixture-only amendment unless a concrete new risk appears.",
+    "No SafeFS production or unrelated scope changes."
+  ],
+  "utc": "2026-10-15T08:12:45.106861+00:00"
+}

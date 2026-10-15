@@ -1,0 +1,9 @@
+{
+  "operation": "managed.b045207c9686ff7245244625849c667db90e2dd3d0efc084272b7e7c68dbd011",
+  "state": "candidate_collected",
+  "source_sequence": 2622,
+  "unknown_tail": false,
+  "collected": true,
+  "failed": false,
+  "process_stopped": false
+}

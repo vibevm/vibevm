@@ -1,0 +1,287 @@
+[
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-0.json",
+    "sha256": "47a995bebe9382c9b4f862a5d91b644e447c108561825e67b20e68b7a5480afc",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-1.json",
+    "sha256": "c67d64ec976b788b4927afea984e543a58953105452f1eb9696fc582af612dc6",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-10.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-11.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-12.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-13.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-14.json",
+    "sha256": "2887aa871d29dee5c05b2d606ff6991b6e69885f55a78d2dd83fa9eb3ccd91f7",
+    "entries": 4
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-15.json",
+    "sha256": "47a995bebe9382c9b4f862a5d91b644e447c108561825e67b20e68b7a5480afc",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-16.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-17.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-18.json",
+    "sha256": "5884e2a01e1648053cff4634312b692f2fd08fc4d34ee533c591330091289de5",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-19.json",
+    "sha256": "5884e2a01e1648053cff4634312b692f2fd08fc4d34ee533c591330091289de5",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-2.json",
+    "sha256": "47a995bebe9382c9b4f862a5d91b644e447c108561825e67b20e68b7a5480afc",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-20.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-21.json",
+    "sha256": "5884e2a01e1648053cff4634312b692f2fd08fc4d34ee533c591330091289de5",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-22.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-23.json",
+    "sha256": "5884e2a01e1648053cff4634312b692f2fd08fc4d34ee533c591330091289de5",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-24.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-25.json",
+    "sha256": "5884e2a01e1648053cff4634312b692f2fd08fc4d34ee533c591330091289de5",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-26.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-27.json",
+    "sha256": "5884e2a01e1648053cff4634312b692f2fd08fc4d34ee533c591330091289de5",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-28.json",
+    "sha256": "47a995bebe9382c9b4f862a5d91b644e447c108561825e67b20e68b7a5480afc",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-29.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-3.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-30.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-31.json",
+    "sha256": "f0a88252ae52d4dbb15f3dda1d6e2e8874e91e4eee51c253d02b87e97c7eb9b3",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-32.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-33.json",
+    "sha256": "932f8244999e002f90b2667283962778c8e4d77c3f35478dd206279a19bba86f",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-34.json",
+    "sha256": "5964501ba5864eaec82b487afb5dce25a6459ae7643617e8f3bad9bcb37829ee",
+    "entries": 6
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-35.json",
+    "sha256": "fe0386ce7b5fc081830ee14d7f850e19587da3dbaff455f437bb9944a7840b0b",
+    "entries": 7
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-36.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-37.json",
+    "sha256": "932f8244999e002f90b2667283962778c8e4d77c3f35478dd206279a19bba86f",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-38.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-39.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-4.json",
+    "sha256": "47a995bebe9382c9b4f862a5d91b644e447c108561825e67b20e68b7a5480afc",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-40.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-41.json",
+    "sha256": "a63e7b158234bfdaab3fd6da984ff9bfa0492cdd72512c6154a8f3ff93473c48",
+    "entries": 4
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-42.json",
+    "sha256": "7f1457eb2afa4aac592b83c7695883915a6265220c0cf28d7c935209e167a266",
+    "entries": 7
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-43.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-44.json",
+    "sha256": "40b0a09196c17f04b52a600cd368fda71ef34dc4ea40efb25fc5e9531d367e38",
+    "entries": 4
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-45.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-46.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-47.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-48.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-49.json",
+    "sha256": "65aff8b64bd3f1980cd145e45fbfd9bae733c0b7d979220dd34800d4fab6eb35",
+    "entries": 4
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-5.json",
+    "sha256": "47a995bebe9382c9b4f862a5d91b644e447c108561825e67b20e68b7a5480afc",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-50.json",
+    "sha256": "82fa6141c60f9be4bf13866cda90f1eb5d28b2e1ab4c2c8318e6e35f8b7bae58",
+    "entries": 7
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-51.json",
+    "sha256": "d89afc02302df6add94e8950c794687ca68c2f81a8d921c40195bfdea8e769b5",
+    "entries": 7
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-52.json",
+    "sha256": "8fff1a03f616413970481204a688a54cbbf72030dc7979e9d6e8fc3eb5cb13b6",
+    "entries": 7
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-53.json",
+    "sha256": "7921f08b7dff63c60d94cf744dcc6caa85471d00f2b8689cdb587ea4b54cdadb",
+    "entries": 4
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-54.json",
+    "sha256": "a90b7b1095bb372f2cb427412b42b4a171f030abfae4f56793e5227a11b60f93",
+    "entries": 5
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-55.json",
+    "sha256": "2aeacf302ff907ce25fbfa7c2cdb43e01aa078260c62c999560fb1c971b83311",
+    "entries": 13
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-56.json",
+    "sha256": "fc6f0ea59a5f2506f568451805f2685c77071385062691f26bf6ea4e9e83f184",
+    "entries": 17
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-6.json",
+    "sha256": "2ac474a57bb7c0fa942255c4305b002684ce7508f548757fc26734972fc5e52e",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-7.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-8.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-15-m08c2-correction/censuses/census-9.json",
+    "sha256": "358b7261e6520859487e0c936b76ee9835beb8c54c67c5fd2cdb6adc98f35424",
+    "entries": 3
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "source_line": 350,
+  "before": {
+    "project": "directory",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "after": {
+    "project": "directory",
+    "settings": "directory",
+    "user": "directory"
+  },
+  "equal": true
+}

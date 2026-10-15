@@ -1,0 +1,1 @@
+{"group": "V2", "executed": false, "disposition": "module not introduced; not an executed pass", "choice": {"mode": "not_applicable", "rationale": "No client_projection module introduced."}}

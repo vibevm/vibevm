@@ -1,0 +1,224 @@
+--- a/crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs
+@@ -39,6 +39,12 @@
+             }
+             let home = self.home(&plan.target);
+             let _deployment = state.lock_deployment(&home).map_err(refuse)?;
++            #[cfg(test)]
++            BEFORE_DOCUMENT_LOCK_HOOK.with(|hook| {
++                if let Some(h) = hook.borrow_mut().take() {
++                    h();
++                }
++            });
+             let _destinations = state.lock_destinations(&plan.locks(self)).map_err(refuse)?;
+             #[cfg(test)]
+             LOCKED_HOOK.with(|hook| {
+@@ -316,3 +322,6 @@
+ }
+ #[cfg(test)]
+ thread_local! {pub(super) static LOCKED_HOOK:std::cell::RefCell<Option<Box<dyn FnOnce()>>>=std::cell::RefCell::new(None);}
++
++#[cfg(test)]
++thread_local! {pub(super) static BEFORE_DOCUMENT_LOCK_HOOK:std::cell::RefCell<Option<Box<dyn FnOnce()>>>=std::cell::RefCell::new(None);}
+--- a/crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs
+@@ -20,13 +20,18 @@
+         format!(
+             "generic:{}",
+             serde_json::to_string(&(
+-                host.root(self.scope).root_path().to_string_lossy(),
++                host.root(self.scope)
++                    .root_path()
++                    .components()
++                    .collect::<std::path::PathBuf>()
++                    .to_string_lossy(),
+                 &self.destination,
+                 &self.key
+             ))
+             .expect("string tuple")
+         )
+     }
++    // Incumbent resource spelling also used by legacy receipt ownership.
+     pub(crate) fn lock(&self, host: &GenericHost) -> String {
+         match self.scope {
+             ClientScope::User => format!("home:{}", self.destination),
+@@ -37,6 +42,25 @@
+                 .to_string_lossy()
+                 .into_owned(),
+         }
++    }
++    pub(crate) fn locks(&self, host: &GenericHost) -> Vec<String> {
++        // Scope and root boundaries are host composition choices, not physical
++        // document identities. Project accepts component-normalized absolute
++        // roots (no parent traversal or links); collect components so accepted
++        // `.`/separator spellings share the same absolute destination key.
++        // DeployState owns Unicode/case normalization and ordered acquisition.
++        let absolute = host
++            .root(self.scope)
++            .root_path()
++            .join(&self.destination)
++            .components()
++            .collect::<std::path::PathBuf>()
++            .to_string_lossy()
++            .into_owned();
++        // Retain the incumbent spelling too: User home:relative, or the
++        // original Project absolute spelling. The existing owner deduplicates
++        // and acquires both in its total order, never replacing their lease.
++        vec![absolute, self.lock(host)]
+     }
+ }
+ #[derive(Debug, Clone, PartialEq, Eq)]
+@@ -78,7 +102,7 @@
+     pub(super) fn locks(&self, host: &GenericHost) -> Vec<String> {
+         self.resources
+             .iter()
+-            .map(|r| r.lock(host))
++            .flat_map(|r| r.locks(host))
+             .collect::<std::collections::BTreeSet<_>>()
+             .into_iter()
+             .collect()
+--- a/crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs
++++ b/crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs
+@@ -266,7 +266,8 @@
+     assert!(state.read_intent(&home).unwrap().is_none());
+     let locks = state.read_lock_resources(&home).unwrap().unwrap();
+     assert!(locks.pending.is_none());
+-    assert_eq!(locks.committed.unwrap().resources.len(), 5);
++    // Five physical documents plus three incumbent User compatibility keys.
++    assert_eq!(locks.committed.unwrap().resources.len(), 8);
+ }
+ #[test]
+ fn absent_wrong_broadened_and_changed_plans_have_zero_effects() {
+@@ -610,7 +611,8 @@
+         GenericPayload::JsonMember(serde_json::json!(1)),
+         GenericPayload::JsonMember(serde_json::json!(2)),
+     ]);
+-    assert_eq!(plan.locks(&f.host).len(), 1);
++    // One document: a common absolute lease plus its incumbent User lease.
++    assert_eq!(plan.locks(&f.host).len(), 2);
+     let grant = f.host.approve(&plan).unwrap();
+     let held = state.lock_destinations(&plan.locks(&f.host)).unwrap();
+     let (tx, rx) = std::sync::mpsc::channel();
+@@ -865,3 +867,122 @@
+     assert!(f.host.plan(&f.admitted(payload())).is_err());
+     unchanged(&f, &before);
+ }
++
++#[test]
++fn two_hosts_opposite_scopes_share_document_lock_and_replan() {
++    use std::sync::mpsc::{RecvTimeoutError, channel};
++    use std::time::Duration;
++    let wait = Duration::from_secs(5);
++    let blocked = Duration::from_millis(100);
++    // Both directions, with different retained root boundaries and accepted
++    // root `.` spellings. No links or case-insensitive filesystem assumption.
++    for first_scope in [ClientScope::User, ClientScope::Project] {
++        let second_scope = match first_scope {
++            ClientScope::User => ClientScope::Project,
++            ClientScope::Project => ClientScope::User,
++        };
++        let a = Fixture::new(request(vec![binding(
++            first_scope,
++            ClientShape::JsonMember,
++            "nested/shared.json",
++            &["first"],
++        )]));
++        a.write(first_scope, "nested/shared.json", br#"{"foreign":7}"#);
++        let mut b = Fixture::new(request(vec![binding(
++            second_scope,
++            ClientShape::JsonMember,
++            "shared.json",
++            &["second"],
++        )]));
++        let shared = a.host.root(first_scope).root_path().join("nested/.");
++        let (project, user) = match second_scope {
++            ClientScope::Project => (shared, b.host.user.root_path().to_path_buf()),
++            ClientScope::User => (b.host.project.root_path().to_path_buf(), shared),
++        };
++        b.host = GenericHost::new(
++            Project::open(&project).unwrap(),
++            Project::open(&user).unwrap(),
++            Project::open(a.host.settings.root_path()).unwrap(),
++            b.authority.clone(),
++            protections(),
++        )
++        .unwrap();
++        let state = super::super::state::DeployState::open_bound(&a.host.settings).unwrap();
++        let pa = a.plan(vec![GenericPayload::JsonMember(serde_json::json!(1))]);
++        let pb = b.plan(vec![GenericPayload::JsonMember(serde_json::json!(2))]);
++        let ga = a.host.approve(&pa).unwrap();
++        let gb = b.host.approve(&pb).unwrap();
++        assert_ne!(a.host.home(&pa.target).id(), b.host.home(&pb.target).id());
++        assert_eq!(pa.documents[0].before, pb.documents[0].before);
++        // Incumbent providers name User locks as home:relative and Project
++        // locks as absolute. Acquire that key alone to prove compatibility.
++        let incumbent = match first_scope {
++            ClientScope::User => "home:nested/shared.json".to_owned(),
++            ClientScope::Project => a
++                .host
++                .project
++                .root_path()
++                .join("nested/shared.json")
++                .to_string_lossy()
++                .into_owned(),
++        };
++        let legacy = state.lock_destinations(&[incumbent]).unwrap();
++        let (a_attempt_tx, a_attempt_rx) = channel();
++        let (a_enter_tx, a_enter_rx) = channel();
++        let (release_tx, release_rx) = channel();
++        let (b_attempt_tx, b_attempt_rx) = channel();
++        let (b_enter_tx, b_enter_rx) = channel();
++        std::thread::scope(|scope| {
++            let first = scope.spawn(|| {
++                super::apply::BEFORE_DOCUMENT_LOCK_HOOK.with(|h| {
++                    *h.borrow_mut() = Some(Box::new(move || a_attempt_tx.send(()).unwrap()));
++                });
++                super::apply::LOCKED_HOOK.with(|h| {
++                    *h.borrow_mut() = Some(Box::new(move || {
++                        a_enter_tx.send(()).unwrap();
++                        release_rx.recv_timeout(wait).unwrap();
++                    }));
++                });
++                a.host.apply(&pa, Some(&ga), CLOCK)
++            });
++            a_attempt_rx.recv_timeout(wait).unwrap();
++            let legacy_blocked = a_enter_rx.recv_timeout(blocked);
++            drop(legacy);
++            a_enter_rx.recv_timeout(wait).unwrap();
++            let second = scope.spawn(|| {
++                super::apply::BEFORE_DOCUMENT_LOCK_HOOK.with(|h| {
++                    *h.borrow_mut() = Some(Box::new(move || b_attempt_tx.send(()).unwrap()));
++                });
++                super::apply::LOCKED_HOOK.with(|h| {
++                    *h.borrow_mut() = Some(Box::new(move || b_enter_tx.send(()).unwrap()));
++                });
++                b.host.apply(&pb, Some(&gb), CLOCK)
++            });
++            b_attempt_rx.recv_timeout(wait).unwrap();
++            let document_blocked = b_enter_rx.recv_timeout(blocked);
++            // No publication has happened while A holds the critical section.
++            let while_held = a.bytes(first_scope, "nested/shared.json");
++            release_tx.send(()).unwrap();
++            first.join().unwrap().unwrap();
++            b_enter_rx.recv_timeout(wait).unwrap();
++            let stale = second.join().unwrap().unwrap_err();
++            assert_eq!(legacy_blocked, Err(RecvTimeoutError::Timeout));
++            assert_eq!(document_blocked, Err(RecvTimeoutError::Timeout));
++            assert_eq!(while_held, br#"{"foreign":7}"#);
++            assert_eq!(stale.effect, GenericEffect::Infrastructure);
++            assert!(stale.reason.contains("ownership census changed"));
++        });
++        let landed: serde_json::Value =
++            serde_json::from_slice(&a.bytes(first_scope, "nested/shared.json")).unwrap();
++        assert_eq!(landed, serde_json::json!({"foreign":7,"first":1}));
++        let fresh = b.plan(vec![GenericPayload::JsonMember(serde_json::json!(2))]);
++        let fresh_grant = b.host.approve(&fresh).unwrap();
++        b.host.apply(&fresh, Some(&fresh_grant), CLOCK).unwrap();
++        let final_doc: serde_json::Value =
++            serde_json::from_slice(&a.bytes(first_scope, "nested/shared.json")).unwrap();
++        assert_eq!(
++            final_doc,
++            serde_json::json!({"foreign":7,"first":1,"second":2})
++        );
++    }
++}

@@ -1,0 +1,9 @@
+{
+  "job_id": "job.runtime.packet.vibevm-m08c2",
+  "execution": "starting",
+  "effect": "started",
+  "safe": "unknown",
+  "acceptance": "unreviewed",
+  "candidate_id": null,
+  "revision": 56
+}

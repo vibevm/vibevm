@@ -1,0 +1,17 @@
+{
+  "group": "V3",
+  "executed": false,
+  "disposition": "unchanged prior candidate source/evidence reused; candidate remains unaccepted, no new test pass claimed",
+  "choice": {
+    "mode": "unchanged_source",
+    "rationale": "Consumed owners unchanged from reviewed prior candidate. Generic planner and test-only hooks changed; no shared lock owner, SafeFS or C1 map change. Reuse recorded prior evidence, not a new pass.",
+    "source_hashes": {
+      "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs": "0a7382ddcaa030fd54cb7e655f28d4a62ea642d94a95d987513e4c6adb1d4e6d",
+      "crates/vibe-lifecycle/src/mechanism/deploy/preplan_tests.rs": "6926dcd1bb62b3817c2139a739d58c87dae73c55910eed56f7c499aed595a809",
+      "crates/vibe-lifecycle/src/mechanism/deploy/model.rs": "6a944b4890337bb4bd2a620ab2095e4eb58fd8fb39efb423df125c5690d90e52",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs": "2201530f8b05ecd835bccd5798c09910cf8799499feed350930d76666413f5ec"
+    },
+    "prior_evidence": "PRIOR-worker-report.md; FULL-REVIEW-REPORT.md/json and FULL-REVIEW-sourcehashes.json"
+  }
+}

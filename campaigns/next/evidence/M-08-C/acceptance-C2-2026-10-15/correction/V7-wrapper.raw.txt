@@ -1,0 +1,1 @@
+{"group": "V7", "executed": true, "xml_parsed": true, "old_bytes_preserved_as_unchanged_lines": true, "old_sha256": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54", "new_sha256": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54", "passed": true}

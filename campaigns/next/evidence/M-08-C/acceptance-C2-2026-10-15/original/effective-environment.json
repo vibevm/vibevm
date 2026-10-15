@@ -1,0 +1,49 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "rustc",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "rustc 1.101.0-nightly (c36f14571 2026-10-01)\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "cargo",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "cargo 1.101.0-nightly (f3865b2a4 2026-09-29)\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "rustfmt",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "rustfmt 1.11.0-nightly (c36f145719 2026-10-01)\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "ec310e2ed755e2f55140efb5172ea4cd77ca205a\n",
+      "stderr": ""
+    }
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "TMPDIR": "/fast/zap-managed/2026-10-15-m08c2/tmp",
+    "CARGO_NET_OFFLINE": "true",
+    "RUSTUP_AUTO_INSTALL": "0"
+  },
+  "edition": "2024",
+  "target_handover": "ROOT-TARGET-HANDOVER.json"
+}

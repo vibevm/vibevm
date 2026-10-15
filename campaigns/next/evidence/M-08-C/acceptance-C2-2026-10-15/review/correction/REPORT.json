@@ -1,0 +1,26 @@
+{
+  "task": "M-08-C.2",
+  "status": "boundedclear",
+  "prior_finding": "P2 physical document lock identity: resolved",
+  "findings": [],
+  "reviewed_source_files": 13,
+  "changed_since_prior_review": 3,
+  "stable": true,
+  "fresh_distinct_tests": 13,
+  "reused_distinct_tests": 4,
+  "aggregate_not_single_run": 17,
+  "consumed_subject_hashes": 52,
+  "census_pairs_verified": 57,
+  "tests_run_by_reviewer": false,
+  "product_edits": false,
+  "acceptance_performed": false,
+  "collection": "Root-reported normal candidate_collected1343 unknown_tail=false failed=false; process exit not inferred",
+  "limits": [
+    "Supported retained no-follow roots and shared incumbent lock owner",
+    "No arbitrary mount-alias or hostile CAS/ABA claim",
+    "Linux fixture execution, no cross-platform runtime certification",
+    "C3 and upper CLI/MCP unchanged separate work"
+  ],
+  "report": "REPORT.md",
+  "hashes": "sourcehashes.json"
+}

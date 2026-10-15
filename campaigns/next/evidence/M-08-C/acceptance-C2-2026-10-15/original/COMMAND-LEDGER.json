@@ -1,0 +1,587 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::generic::tests"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "12",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V1-1.log",
+    "seconds": 20.110810601036064,
+    "passed": true,
+    "group": "V1",
+    "result_file": "attempt-1-V1-result.json",
+    "saved_log": "attempt-1-V1-1.log",
+    "log_sha256": "712563c102f74ac1da1907b4bc285f8a1dc57eebacd08007b806aa3bd0b2a454",
+    "actual_test_summaries": [
+      [
+        "12",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "component::tests::complete_sets_share_the_identity_and_literal_path_laws",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V4-1.log",
+    "seconds": 1.4761207650299184,
+    "passed": true,
+    "group": "V4",
+    "result_file": "attempt-1-V4-result.json",
+    "saved_log": "attempt-1-V4-1.log",
+    "log_sha256": "a1c3b1cf14bd87deb86ac15cfc2e08d440ec514cb2a01369d15ad6369c675129",
+    "actual_test_summaries": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "component::tests::overlap_and_containment_use_the_same_component_boundaries",
+      "--",
+      "--exact"
+    ],
+    "exit": 101,
+    "counts": [],
+    "count_matches": false,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V4-2.log",
+    "seconds": 0.15019343799212947,
+    "passed": false,
+    "group": "V4",
+    "result_file": "attempt-1-V4-result.json",
+    "saved_log": "attempt-1-V4-2.log",
+    "log_sha256": "61b61e09d6569b4eeeb8d10cbcac9cb1f0e8b147850b68d0ea92b3c33f0fdbb6",
+    "actual_test_summaries": [
+      [
+        "0",
+        "1",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "--check",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/mechanism.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "crates/vibe-lifecycle/src/mechanism/error.rs"
+    ],
+    "exit": 0,
+    "counts": [],
+    "count_matches": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V6-1.log",
+    "seconds": 0.06009893404552713,
+    "passed": true,
+    "group": "V6",
+    "result_file": "attempt-1-V6-result.json",
+    "saved_log": "attempt-1-V6-1.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": []
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "counts": [],
+    "count_matches": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V6-2.log",
+    "seconds": 0.016286358004435897,
+    "passed": true,
+    "group": "V6",
+    "result_file": "attempt-1-V6-result.json",
+    "saved_log": "attempt-1-V6-2.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": []
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::generic::tests"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "12",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V1-1.log",
+    "seconds": 7.806657552020624,
+    "passed": true,
+    "group": "V1",
+    "result_file": "attempt-2-V1-result.json",
+    "saved_log": "attempt-2-V1-1.log",
+    "log_sha256": "2f8225b4be4bdf49f553f21d970f57c37866c17cd1c61ebf61a788706e510383",
+    "actual_test_summaries": [
+      [
+        "12",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "--check",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/mechanism.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "crates/vibe-lifecycle/src/mechanism/error.rs"
+    ],
+    "exit": 0,
+    "counts": [],
+    "count_matches": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V6-1.log",
+    "seconds": 0.06115254800533876,
+    "passed": true,
+    "group": "V6",
+    "result_file": "attempt-2-V6-result.json",
+    "saved_log": "attempt-2-V6-1.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": []
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "counts": [],
+    "count_matches": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V6-2.log",
+    "seconds": 0.015877127007115632,
+    "passed": true,
+    "group": "V6",
+    "result_file": "attempt-2-V6-result.json",
+    "saved_log": "attempt-2-V6-2.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": []
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::generic::tests"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "12",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V1-1.log",
+    "seconds": 7.862363560998347,
+    "passed": true,
+    "group": "V1",
+    "result_file": "attempt-3-V1-result.json",
+    "saved_log": "attempt-3-V1-1.log",
+    "log_sha256": "f6b30cc08736d5651d7363b98a23f99bf75308c8a4fce336afcfdb56ad5f7ffb",
+    "actual_test_summaries": [
+      [
+        "12",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::generic::tests"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "12",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V1-1.log",
+    "seconds": 5.817872229963541,
+    "passed": true,
+    "group": "V1",
+    "result_file": "V1-result.json",
+    "saved_log": "V1-1.log",
+    "log_sha256": "f3cf74f09155e009a27cfc4989875a1235a21f268f50d89bd96258b732eecd9b",
+    "actual_test_summaries": [
+      [
+        "12",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::preplan_tests::a_shared_physical_lock_needs_reference_ownership_from_every_participant",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V3-1.log",
+    "seconds": 0.2980105889728293,
+    "passed": true,
+    "group": "V3",
+    "result_file": "V3-result.json",
+    "saved_log": "V3-1.log",
+    "log_sha256": "19a475de025de5145ec753ef43aac1eef52983308a6e45b933ceb28006e860e6",
+    "actual_test_summaries": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "component::tests::complete_sets_share_the_identity_and_literal_path_laws",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V4-1.log",
+    "seconds": 0.9165939380181953,
+    "passed": true,
+    "group": "V4",
+    "result_file": "V4-result.json",
+    "saved_log": "V4-1.log",
+    "log_sha256": "aab4594ac64211f7de8058773aa8cad83e257d2fa187c7c328ed265fcbe09e6e",
+    "actual_test_summaries": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-safefs",
+      "--lib",
+      "component::tests::overlap_and_containment_use_the_same_component_boundaries",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V4-2.log",
+    "seconds": 0.1639998439932242,
+    "passed": true,
+    "group": "V4",
+    "result_file": "V4-result.json",
+    "saved_log": "V4-2.log",
+    "log_sha256": "635405e878958e7f29fe6bbd160a70b26255c60ff50bb0d7e433758766f1e037",
+    "actual_test_summaries": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-agent-projection",
+      "--lib",
+      "client_capabilities::m_08_c_1_cases::new_id_destination_and_key_are_map_data",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "counts": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ],
+    "count_matches": true,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V5-1.log",
+    "seconds": 3.465395829989575,
+    "passed": true,
+    "group": "V5",
+    "result_file": "V5-result.json",
+    "saved_log": "V5-1.log",
+    "log_sha256": "070dbc3648c7481f273fd3c57ef982172cc8d38e041beda828ef18966f96c89d",
+    "actual_test_summaries": [
+      [
+        "1",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "--check",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/mechanism.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "crates/vibe-lifecycle/src/mechanism/error.rs",
+      "crates/vibe-safefs/src/component/tests.rs"
+    ],
+    "exit": 0,
+    "counts": [],
+    "count_matches": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V6-1.log",
+    "seconds": 0.061061357031576335,
+    "passed": true,
+    "group": "V6",
+    "result_file": "V6-result.json",
+    "saved_log": "V6-1.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": []
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "counts": [],
+    "count_matches": null,
+    "log": "/fast/zap-managed/2026-10-15-m08c2/V6-2.log",
+    "seconds": 0.01565787399886176,
+    "passed": true,
+    "group": "V6",
+    "result_file": "V6-result.json",
+    "saved_log": "V6-2.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_test_summaries": []
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/mechanism.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "crates/vibe-lifecycle/src/mechanism/error.rs"
+    ],
+    "exit": 0,
+    "result_file": "format-apply-result.json"
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/mechanism.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "crates/vibe-lifecycle/src/mechanism/error.rs"
+    ],
+    "exit": 0,
+    "result_file": "format-final-result.json"
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/mechanism.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "crates/vibe-lifecycle/src/mechanism/error.rs"
+    ],
+    "exit": 0,
+    "result_file": "format-publication-result.json"
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "crates/vibe-safefs/src/component/tests.rs"
+    ],
+    "exit": 0,
+    "result_file": "format-v4-result.json"
+  }
+]

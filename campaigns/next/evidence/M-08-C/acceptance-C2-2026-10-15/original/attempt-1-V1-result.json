@@ -1,0 +1,52 @@
+{
+  "group": "V1",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "mechanism::deploy::generic::tests::four_shapes_exact_grant_preserves_foreign_files_and_members",
+      "mechanism::deploy::generic::tests::absent_wrong_broadened_and_changed_plans_have_zero_effects",
+      "mechanism::deploy::generic::tests::current_selection_source_principal_policy_and_root_drift_refuse",
+      "mechanism::deploy::generic::tests::caller_map_is_not_selection_or_payload_authority",
+      "mechanism::deploy::generic::tests::traversal_reserved_alias_ancestor_and_member_conflicts_refuse",
+      "mechanism::deploy::generic::tests::all_host_protected_categories_and_aliases_refuse",
+      "mechanism::deploy::generic::tests::physical_links_and_protected_aliases_refuse_without_writes",
+      "mechanism::deploy::generic::tests::launch_content_is_inspectable_changes_identity_and_never_executes",
+      "mechanism::deploy::generic::tests::physical_document_contention_and_literal_member_coexistence",
+      "mechanism::deploy::generic::tests::stale_locked_destination_and_ownership_refuse_without_partial_merge",
+      "mechanism::deploy::generic::tests::publication_failure_reports_destination_effect_and_retained_intent",
+      "mechanism::deploy::generic::tests::scalar_ancestors_and_equal_foreign_values_do_not_transfer_ownership"
+    ],
+    "expected": 12,
+    "coverage": "eight preflight obligations; fixture subrows not counted as tests",
+    "target": "vibe-lifecycle --lib",
+    "platform": "Linux",
+    "bound_before_compilation": true
+  },
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::generic::tests"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "12",
+          "0",
+          "0"
+        ]
+      ],
+      "count_matches": true,
+      "log": "/fast/zap-managed/2026-10-15-m08c2/V1-1.log",
+      "seconds": 20.110810601036064,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,131 @@
+[
+  {
+    "id": "V1",
+    "kind": "required_new_lifecycle",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::generic::tests"
+      ]
+    ],
+    "cases": "TO CREATE; bind actual nonzero/nonignored cases/count before compilation; all eight obligations"
+  },
+  {
+    "id": "V2",
+    "kind": "conditional_new_projection",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "client_projection::tests"
+      ]
+    ],
+    "cases": "TO CREATE only if module introduced"
+  },
+  {
+    "id": "V3",
+    "kind": "conditional_existing",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::preplan_tests::a_shared_physical_lock_needs_reference_ownership_from_every_participant",
+        "--",
+        "--exact"
+      ]
+    ],
+    "reuse_required": [
+      "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/preplan_tests.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+    ]
+  },
+  {
+    "id": "V4",
+    "kind": "conditional_existing",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "--lib",
+        "component::tests::complete_sets_share_the_identity_and_literal_path_laws",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-safefs",
+        "--lib",
+        "component::tests::overlap_and_containment_use_the_same_component_boundaries",
+        "--",
+        "--exact"
+      ]
+    ],
+    "reuse_required": [
+      "crates/vibe-safefs/src/component.rs",
+      "crates/vibe-safefs/src/component/tests.rs",
+      "crates/vibe-safefs/src/project.rs",
+      "crates/vibe-safefs/src/file.rs",
+      "crates/vibe-safefs/src/file/project_methods.rs"
+    ]
+  },
+  {
+    "id": "V5",
+    "kind": "conditional_existing",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "client_capabilities::m_08_c_1_cases::new_id_destination_and_key_are_map_data",
+        "--",
+        "--exact"
+      ]
+    ],
+    "reuse_required": [
+      "crates/vibe-agent-projection/src/client_capabilities.rs",
+      "crates/vibe-agent-projection/src/lib.rs",
+      "crates/vibe-core/src/manifest/mechanism/client_request.rs"
+    ]
+  },
+  {
+    "id": "V6",
+    "kind": "scoped_format_whitespace",
+    "commands": "rustfmt exact V6-PATHS.json then git diff --check, separate exits"
+  },
+  {
+    "id": "V7",
+    "kind": "focused_spec_preservation",
+    "commands": "parse actual PROP054 XML and preserve all previous baseline lines/bytes; no global oracle"
+  }
+]

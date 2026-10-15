@@ -1,0 +1,8 @@
+{
+  "source_commit": "b048345b7b6038eeaa4aeaa791051bfbe5b9a067",
+  "files": 13,
+  "worker_manifest_sha256": "848ec7a5c8e8ea33f6b3a943b98599cf022e0f98edb1e4215695540da373d60e",
+  "review": "/fast/git/v/research/2026-10-15-m08c2-review/correction/REPORT.json",
+  "task_accepted": false,
+  "accepted_count": 82
+}

@@ -1,0 +1,15 @@
+{
+  "question_id": "m08c2-generic-provider-error-1",
+  "approved": true,
+  "decision": "Authorize this exact additional protocol error owner and scoped V6 formatting; reuse incumbent DeployProvider/Transaction without mislabeling generic failures.",
+  "additional_write_paths": [
+    "crates/vibe-lifecycle/src/mechanism/error.rs"
+  ],
+  "constraints": [
+    "Add only the distinct GenericHost reason variant needed by the new generic provider; retain all existing variants and behavior.",
+    "No unrelated public API/rewrite/schema or dependency changes.",
+    "Preserve the existing task requirement to report actual publication/effect boundary; do not turn post-publication failure into NoEffects.",
+    "Include exact diff/hash/scoped formatting and existing V1 exercised conversion; ask only if a concrete additional exhaustive caller requires a mechanical edit."
+  ],
+  "utc": "2026-10-15T07:24:42.403637+00:00"
+}

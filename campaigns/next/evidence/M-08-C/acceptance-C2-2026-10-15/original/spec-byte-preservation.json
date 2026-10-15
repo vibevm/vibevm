@@ -1,0 +1,7 @@
+{
+  "exactly_one_added_line": true,
+  "all_prior_bytes_exact": true,
+  "old_sha256": "cd594468e7b3cad5a5edf92855e01fcabe613426182f6fe7a60ecc03f47db2e5",
+  "new_sha256": "f250c99d77352c640e8335b275f4175e73a657faeb911d5ccfed3106ab26ca54",
+  "addition_sha256": "d304d2939358d9c554d0848fbad0c6cf1e96d9b9cd0bef75f6ae597c2b38bc9d"
+}

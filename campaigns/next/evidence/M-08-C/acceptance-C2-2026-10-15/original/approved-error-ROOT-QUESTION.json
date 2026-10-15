@@ -1,0 +1,9 @@
+{
+  "question_id": "m08c2-generic-provider-error-1",
+  "paths": [
+    "crates/vibe-lifecycle/src/mechanism/error.rs"
+  ],
+  "symbol": "MechanismError",
+  "reason": "Generic closed semantics will implement the incumbent DeployProvider protocol and use Transaction::apply. Its errors must cross MechanismError without mislabeling generic authorization/publication failures as a legacy provider error. The authorized deploy/error.rs is DeployError, not this protocol error owner.",
+  "requested_change": "Add one GenericHost { reason: String } error variant to MechanismError. No existing variant behavior changes. Format the exact file and include its hash/diff in report; V1 exercises this conversion. Please authorize this exact additional write and V6 path."
+}

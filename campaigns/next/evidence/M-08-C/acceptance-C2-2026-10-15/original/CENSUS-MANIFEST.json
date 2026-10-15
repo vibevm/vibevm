@@ -1,0 +1,405 @@
+{
+  "pair_count": 57,
+  "all_equal": true,
+  "rows": [
+    {
+      "path": "censuses/census-0.json",
+      "sha256": "b69af72485383329e49672bd9597451e9bb394bf68761568da0787ceaa6029d9",
+      "entries": 3,
+      "source_line": 433,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-1.json",
+      "sha256": "b69af72485383329e49672bd9597451e9bb394bf68761568da0787ceaa6029d9",
+      "entries": 3,
+      "source_line": 433,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-10.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-11.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-12.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-13.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-14.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-15.json",
+      "sha256": "b69af72485383329e49672bd9597451e9bb394bf68761568da0787ceaa6029d9",
+      "entries": 3,
+      "source_line": 433,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-16.json",
+      "sha256": "957d1f628bb15cf79bf717d13281e5b36eb936276ef7d63dd029d1f70bca3568",
+      "entries": 3,
+      "source_line": 295,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-17.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-18.json",
+      "sha256": "957d1f628bb15cf79bf717d13281e5b36eb936276ef7d63dd029d1f70bca3568",
+      "entries": 3,
+      "source_line": 295,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-19.json",
+      "sha256": "957d1f628bb15cf79bf717d13281e5b36eb936276ef7d63dd029d1f70bca3568",
+      "entries": 3,
+      "source_line": 295,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-2.json",
+      "sha256": "b69af72485383329e49672bd9597451e9bb394bf68761568da0787ceaa6029d9",
+      "entries": 3,
+      "source_line": 433,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-20.json",
+      "sha256": "957d1f628bb15cf79bf717d13281e5b36eb936276ef7d63dd029d1f70bca3568",
+      "entries": 3,
+      "source_line": 295,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-21.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-22.json",
+      "sha256": "957d1f628bb15cf79bf717d13281e5b36eb936276ef7d63dd029d1f70bca3568",
+      "entries": 3,
+      "source_line": 295,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-23.json",
+      "sha256": "957d1f628bb15cf79bf717d13281e5b36eb936276ef7d63dd029d1f70bca3568",
+      "entries": 3,
+      "source_line": 295,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-24.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-25.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-26.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-27.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-28.json",
+      "sha256": "ff18f3f502a2d7db1d58159e7168884419aa3d519e6e96b6f9c3588eb3ff0151",
+      "entries": 3,
+      "source_line": 305,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-29.json",
+      "sha256": "b69af72485383329e49672bd9597451e9bb394bf68761568da0787ceaa6029d9",
+      "entries": 3,
+      "source_line": 433,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-3.json",
+      "sha256": "10da19701c04d1a2681566e2ab5d48319c1b3ce12faba8587e28063f597c2686",
+      "entries": 3,
+      "source_line": 402,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-30.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-31.json",
+      "sha256": "a23acf5cea0d148d22533cc47479042dd1754a55e5ca4a82ff883113edab1d43",
+      "entries": 7,
+      "source_line": 555,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-32.json",
+      "sha256": "0558adac8ab42e0f01bd7ef95287e84d02f75ccc5c50cb94cf40841511f98860",
+      "entries": 6,
+      "source_line": 373,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-33.json",
+      "sha256": "b9fa90b0a9334639dfa5b6a11c1e350a9fd4105385da590c4b8351f5309c66ce",
+      "entries": 3,
+      "source_line": 449,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-34.json",
+      "sha256": "d18ac0b4c992048c79013d59d45c6f6937e4c0e0172204ab786cdc22c78f7ded",
+      "entries": 7,
+      "source_line": 379,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-35.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-36.json",
+      "sha256": "a5f493810a494529ae22db5a7883caa7748359f36072a89d2e61c033ced48c84",
+      "entries": 4,
+      "source_line": 564,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-37.json",
+      "sha256": "b9fa90b0a9334639dfa5b6a11c1e350a9fd4105385da590c4b8351f5309c66ce",
+      "entries": 3,
+      "source_line": 449,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-38.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-39.json",
+      "sha256": "f15a4efad8c28676ad4495bb0753d3d0431cf0d4a12edeb42268854bc30946fd",
+      "entries": 4,
+      "source_line": 837,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-4.json",
+      "sha256": "b69af72485383329e49672bd9597451e9bb394bf68761568da0787ceaa6029d9",
+      "entries": 3,
+      "source_line": 433,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-40.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-41.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-42.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-43.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-44.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-45.json",
+      "sha256": "fab97ad03e34a1016d0dc577a8fd7752ed10c6e9fda90b5e656ecad3eb1de2ab",
+      "entries": 4,
+      "source_line": 860,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-46.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-47.json",
+      "sha256": "82fa6141c60f9be4bf13866cda90f1eb5d28b2e1ab4c2c8318e6e35f8b7bae58",
+      "entries": 7,
+      "source_line": 231,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-48.json",
+      "sha256": "d89afc02302df6add94e8950c794687ca68c2f81a8d921c40195bfdea8e769b5",
+      "entries": 7,
+      "source_line": 233,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-49.json",
+      "sha256": "8fff1a03f616413970481204a688a54cbbf72030dc7979e9d6e8fc3eb5cb13b6",
+      "entries": 7,
+      "source_line": 238,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-5.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-50.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-51.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-52.json",
+      "sha256": "a6c8bafa863bb6af3b27831e1e221fb227ea46ebf5baa95c95ce39833240a0ac",
+      "entries": 3,
+      "source_line": 525,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-53.json",
+      "sha256": "1fc01269a4f4918911d106d3289350e23db2ee97a47c52f3e0eaa68151b3242b",
+      "entries": 4,
+      "source_line": 860,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-54.json",
+      "sha256": "d56d146794fc9050ff4b25f2aa466947a79e77ba7b1478342af789d8b03ebe81",
+      "entries": 5,
+      "source_line": 866,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-55.json",
+      "sha256": "75ff0cc22dc81db9cfc785d47e2b381dbbad0ca57a6844990deadbbfb0796f75",
+      "entries": 13,
+      "source_line": 819,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-56.json",
+      "sha256": "ba880dc91ee312ed46b5dfed86add5f3c34105986641a276f46135d7e2438d08",
+      "entries": 16,
+      "source_line": 667,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-6.json",
+      "sha256": "7336f0198e3c16d93f0221c20687260459dafcfd9a9b330783ccc2d50105a993",
+      "entries": 4,
+      "source_line": 837,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-7.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-8.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    },
+    {
+      "path": "censuses/census-9.json",
+      "sha256": "199486da91acf85a62e46a14e5a77cce63360d5659eeaea9e8937f9b39eb3c56",
+      "entries": 3,
+      "source_line": 349,
+      "equal": true
+    }
+  ]
+}

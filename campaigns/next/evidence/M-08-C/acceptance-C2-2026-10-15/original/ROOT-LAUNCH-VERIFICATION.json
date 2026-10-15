@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-15T07:15:16.457726+00:00",
+  "source_files_verified": 46,
+  "preparation_hashes_verified": 52,
+  "binary_pins_verified": 6,
+  "source_head": "ec310e2ed755e2f55140efb5172ea4cd77ca205a",
+  "model": "gpt-6-astra",
+  "effort": "medium",
+  "accepted_task_contracts_before": 82,
+  "canonical_C1_revision": 731,
+  "questions": "None/local matching-ID workaround",
+  "full_C2_contract": true,
+  "new_model_launch_authorized": true
+}
