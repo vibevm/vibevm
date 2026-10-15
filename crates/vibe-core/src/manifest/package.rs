@@ -60,6 +60,7 @@ pub(crate) use documentation::{
 };
 pub use embedded_source::{EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSourceKind};
 pub use features::FeaturesTable;
+pub use features::effects as feature_effects;
 pub use hooks::HooksDecl;
 pub use mcp_server::{MCP_ARG_VARS, McpServerDecl};
 pub use meta::PackageMeta;

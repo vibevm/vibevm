@@ -118,3 +118,7 @@ stacks = ["rust-stack", "python-stack"]
         assert_eq!(ft, back);
     }
 }
+
+pub mod effects;
+#[cfg(test)]
+mod m_05_b_1_cases;

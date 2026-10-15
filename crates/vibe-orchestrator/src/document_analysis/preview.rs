@@ -297,17 +297,18 @@ impl AnalysisCapture {
             }
         };
         result.coordinate = primary.consumer_node().map(|n| n.coordinate());
-        result.features = match vibe_resolver::expand_features(&primary.features, requested) {
-            Ok(f) => Some(f),
-            Err(e) => {
-                result.diagnostics.push(self.diagnostic(
-                    self.primary,
-                    "feature-expansion",
-                    e.to_string(),
-                ));
-                None
-            }
-        };
+        result.features =
+            match vibe_resolver::features::expand_manifest_features(&primary, requested) {
+                Ok(f) => Some(f),
+                Err(e) => {
+                    result.diagnostics.push(self.diagnostic(
+                        self.primary,
+                        "feature-expansion",
+                        e.to_string(),
+                    ));
+                    None
+                }
+            };
         if result.features.is_none() {
             return result;
         }
@@ -350,5 +351,107 @@ impl AnalysisCapture {
         result.dependencies = Some(graph.clone());
         self.boot_preview(&primary, &graph, &mut result);
         result
+    }
+}
+
+#[cfg(test)]
+mod m_05_b_1_correction_cases {
+    use super::*;
+
+    fn preview(body: &str) -> ConfigurationPreview {
+        let root = tempfile::tempdir().unwrap();
+        let text = format!(
+            "[package]\ngroup='org.example'\nname='app'\nkind='flow'\nversion='1.0.0'\n{body}"
+        );
+        std::fs::write(root.path().join("vibe.toml"), &text).unwrap();
+        let host = DocumentAnalysisHost::new(
+            root.path(),
+            "vibe.toml",
+            vec![ResourceDeclaration {
+                path: "vibe.toml".into(),
+                role: ResourceRole::Manifest,
+            }],
+            AnalysisLimits {
+                resource_bytes: 1024 * 1024,
+                capture_bytes: 2 * 1024 * 1024,
+                open_buffers: 1,
+            },
+        )
+        .unwrap();
+        let client = host.client().unwrap();
+        let capture = client.freeze().unwrap();
+        // Prove the preview consumes frozen input, not a new manifest read.
+        std::fs::write(root.path().join("vibe.toml"), "poison after capture").unwrap();
+        let result = capture.configuration_preview(&FeatureRequest::default());
+        assert_eq!(
+            std::fs::read_to_string(root.path().join("vibe.toml")).unwrap(),
+            "poison after capture"
+        );
+        result
+    }
+
+    #[test]
+    fn undeclared_default_activation_refuses() {
+        let result = preview("[features]\ndefault=['dep:org.example/missing']");
+        assert!(result.features.is_none());
+        assert!(result.dependencies.is_none());
+        assert!(result.diagnostics.iter().any(|d| {
+            d.code == "feature-expansion"
+                && d.message
+                    .contains("undeclared dependency `org.example/missing`")
+        }));
+    }
+
+    #[test]
+    fn dormant_undeclared_weak_reference_refuses() {
+        let result = preview("[features]\n_private=['org.example/missing?/fast']");
+        assert!(result.features.is_none());
+        assert!(result.dependencies.is_none());
+        assert!(result.diagnostics.iter().any(|d| {
+            d.code == "feature-expansion"
+                && d.message
+                    .contains("undeclared dependency `org.example/missing`")
+        }));
+    }
+
+    #[test]
+    fn required_dependency_enables_weak_request() {
+        let result = preview(
+            "[requires.packages]\n'org.example/dep'='^1'\n[features]\ndefault=['org.example/dep?/fast']",
+        );
+        let expansion = result.features.unwrap();
+        assert!(expansion.active_deps.contains("org.example/dep"));
+        assert!(expansion.dep_features["org.example/dep"].contains("fast"));
+        assert!(
+            !result
+                .diagnostics
+                .iter()
+                .any(|d| d.code == "feature-expansion")
+        );
+        // The bounded capture has no dependency catalog; feature evaluation
+        // succeeds before the separate resolution stage reports that absence.
+        assert!(
+            result
+                .diagnostics
+                .iter()
+                .any(|d| d.code == "captured-resolution")
+        );
+    }
+    #[test]
+    fn unavailable_export_catalogue_preserves_legacy_subskill_selector() {
+        let result = preview("[features]\ndefault=['a']\na=['subskill:stack/rust']");
+        assert!(
+            result
+                .features
+                .unwrap()
+                .active_subskills
+                .contains("stack/rust")
+        );
+        assert!(
+            !result
+                .diagnostics
+                .iter()
+                .any(|d| d.code == "feature-expansion")
+        );
     }
 }

@@ -1,4 +1,4 @@
-//! Bounded characterizations; defects are intentionally pinned, not repaired.
+//! Bounded characterizations; B1 supersedes the two feature defect expectations.
 use super::*;
 use specmark::verifies;
 use vibe_core::manifest::FeaturesTable;
@@ -16,23 +16,32 @@ fn qualified_forwarding_first_slash_defect() {
             dep_name: "org.example/dep".into()
         }
     );
-    for (raw, tail) in [
-        ("org.example/dep/fast", "dep/fast"),
-        ("org.example/dep?/fast", "dep?/fast"),
+    for (raw, weak) in [
+        ("org.example/dep/fast", false),
+        ("org.example/dep?/fast", true),
     ] {
         assert_eq!(
             FeatureValue::parse(raw).unwrap(),
             FeatureValue::DepFeature {
-                dep_name: "org.example".into(),
-                dep_feature: tail.into(),
-                weak: false
+                dep_name: "org.example/dep".into(),
+                dep_feature: "fast".into(),
+                weak,
             }
         );
         let t = table(&format!("default = [\"{raw}\"]"));
         let out = expand_features(&t, &FeatureRequest::default()).unwrap();
-        assert_eq!(out.active_deps, ["org.example".into()].into());
-        assert!(out.weak_dep_features.is_empty());
-        assert_eq!(out.dep_features["org.example"], [tail.into()].into());
+        if weak {
+            assert!(out.active_deps.is_empty());
+            assert!(out.dep_features.is_empty());
+            assert_eq!(
+                out.weak_dep_features["org.example/dep"],
+                ["fast".into()].into()
+            );
+        } else {
+            assert_eq!(out.active_deps, ["org.example/dep".into()].into());
+            assert!(out.weak_dep_features.is_empty());
+            assert_eq!(out.dep_features["org.example/dep"], ["fast".into()].into());
+        }
     }
 }
 
@@ -77,8 +86,7 @@ fn exclusive_at_most_one_and_all_features_validation_defect() {
         matches!(expand_features(&t, &FeatureRequest { all: true, ..Default::default() }), Err(FeatureError::ExclusiveViolation { group, .. }) if group == "choice")
     );
     let findings = validate_features_table(&t);
-    assert_eq!(findings.len(), 1);
-    assert!(findings[0].contains("exclusive group `choice` violated"));
+    assert!(findings.is_empty());
 }
 
 #[derive(Clone)]
