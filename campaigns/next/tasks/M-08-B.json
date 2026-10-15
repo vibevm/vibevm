@@ -29,7 +29,11 @@
         "crates/vibe-orchestrator/src/install/mod.rs",
         "crates/vibe-orchestrator/src/install/ready.rs",
         "crates/vibe-orchestrator/src/phase/prerequisite/tests.rs",
-        "crates/vibe-orchestrator/src/dispatch/native_all_owner_tests/support.rs"
+        "crates/vibe-orchestrator/src/dispatch/native_all_owner_tests/support.rs",
+        "crates/vibe-orchestrator/src/callback.rs",
+        "crates/vibe-orchestrator/src/phase/invocation.rs",
+        "crates/vibe-orchestrator/src/phase.rs",
+        "crates/vibe-orchestrator/src/world/invocation.rs"
       ],
       "write_paths": [
         "crates/vibe-agent-projection/src/",
@@ -69,7 +73,11 @@
         "crates/vibe-orchestrator/src/install/mod.rs",
         "crates/vibe-orchestrator/src/install/ready.rs",
         "crates/vibe-orchestrator/src/phase/prerequisite/tests.rs",
-        "crates/vibe-orchestrator/src/dispatch/native_all_owner_tests/support.rs"
+        "crates/vibe-orchestrator/src/dispatch/native_all_owner_tests/support.rs",
+        "crates/vibe-orchestrator/src/callback.rs",
+        "crates/vibe-orchestrator/src/phase/invocation.rs",
+        "crates/vibe-orchestrator/src/phase.rs",
+        "crates/vibe-orchestrator/src/world/invocation.rs"
       ],
       "steps": [
         "Trace each prepare/plan/projection call to hydration, cache writes, PATH resolution and version probes.",
@@ -111,7 +119,8 @@
         "Effectful preparation alone owns hydration/composition/PATH/version/list and offline forwarding. Pure plan, public inspect, fingerprint and legacy dry-run cannot call them or native Plan. Install/apply may explicitly prepare within their effectful operation. Captures are provenance, never fresh write authority.",
         "New command registration includes command_progress policy/inventory: AdapterPlan is PersistentProtocol without generic activity. Additive PROP054/080 updates preserve all prior clauses and accepted A2 contracts. Existing lifecycle test allowing plan-time version/list must explicitly separate preparation from the zero-effect query interval.",
         "Raw selected skill closure uses existing M01 selection/extraction plus finite owner-private SafeFS captures; document-only SourceQueryService APIs must not be misrepresented as arbitrary skill capture. Any genuinely missing existing-owner API requires an exact packet correction before writes.",
-        "Exact offline preparation policy must be forwarded from incumbent RunMetadata.offline in install/mod.rs::regenerate_native_world and install/ready.rs::apply to world::prepare_owner_runtime_inputs; update only their actual helper-signature test callers in phase/prerequisite/tests.rs and dispatch/native_all_owner_tests/support.rs as needed. These four exact owners are authorized after the first managed B1 handback exposed the missing perimeter. Preserve all other lifecycle/install rules; no ambient/global policy fallback or independent resolver."
+        "Exact offline preparation policy must be forwarded from incumbent RunMetadata.offline in install/mod.rs::regenerate_native_world and install/ready.rs::apply to world::prepare_owner_runtime_inputs; update only their actual helper-signature test callers in phase/prerequisite/tests.rs and dispatch/native_all_owner_tests/support.rs as needed. These four exact owners are authorized after the first managed B1 handback exposed the missing perimeter. Preserve all other lifecycle/install rules; no ambient/global policy fallback or independent resolver.",
+        "Complete upper integration includes effectful callback.rs::stage and phase/invocation.rs::prepare plus phase.rs execution planning and world/invocation.rs carrier construction. Consume an exact retained prepared capture/sidecar through incumbent owners; do not restore hydration in query or break PROP-054 ADMITTED-INVOCATION-ORDER by running effects before full admission. Existing callback run.native preparation and phase prerequisite ordering must be traced. Extend the already bound meaningful world/adapter tests for these actual consumers, with no unsupported full-command claim. The first partial B1 delta remains unaccepted until the complete original B1 safe stop and all criteria are met."
       ]
     },
     {
