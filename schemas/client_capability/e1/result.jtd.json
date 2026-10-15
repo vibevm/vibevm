@@ -1,0 +1,148 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "capture_id": {
+      "type": "string"
+    },
+    "root": {
+      "type": "string"
+    },
+    "principal": {
+      "enum": [
+        "not-admitted"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "capabilities": {
+      "values": {
+        "ref": "capability"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "binding": {
+      "properties": {
+        "scope": {
+          "enum": [
+            "project",
+            "user"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "shape": {
+          "enum": [
+            "file",
+            "tree",
+            "json-member",
+            "toml-member"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "destination": {
+          "type": "string"
+        },
+        "key": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "operations": {
+          "elements": {
+            "enum": [
+              "project-file",
+              "project-tree",
+              "reconcile-json-member",
+              "reconcile-toml-member"
+            ],
+            "metadata": {
+              "x-vocabulary": "closed"
+            }
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "capability": {
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "descriptor_digest": {
+          "type": "string"
+        },
+        "manifest_digest": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "source_strength": {
+          "enum": [
+            "observed",
+            "lock-bound"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "authorization": {
+          "enum": [
+            "not-granted"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "implementation": {
+          "enum": [
+            "not-evaluated"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "availability": {
+          "enum": [
+            "not-probed"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "bindings": {
+          "elements": {
+            "ref": "binding"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  }
+}

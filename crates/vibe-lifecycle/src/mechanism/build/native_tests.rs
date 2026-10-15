@@ -117,6 +117,7 @@ fn registry(root: &Path) -> MechanismRegistry {
                 declarations: Vec::new(),
                 controls: ExtensionsControl::default(),
                 mechanisms: vec![MechanismDecl {
+                    client_request: None,
                     effects: None,
                     id: "builder".to_owned(),
                     role: MechanismRole::Build,

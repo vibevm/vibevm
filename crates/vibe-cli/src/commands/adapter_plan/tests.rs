@@ -267,3 +267,103 @@ fn configured_deploy_cli_mcp_share_positive_stale_and_unavailable_currentness() 
         }
     }
 }
+
+mod m_08_c_1_cases {
+    use super::*;
+    use sha2::{Digest, Sha256};
+    mod fixture {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../fixtures/next/adapters/m-08-c1/fixture.rs"
+        ));
+    }
+    fn query(binary: &std::path::Path, root: &std::path::Path) -> env::OperationEnvelope {
+        let before = fixture::inventory(root);
+        let out = std::process::Command::new(binary)
+            .env("HOME", root.join("home"))
+            .env("VIBE_SETTINGS", root.join("settings"))
+            .env("XDG_CONFIG_HOME", root.join("config"))
+            .env("XDG_CACHE_HOME", root.join("cache"))
+            .args(["--offline", "adapter-plan", "--root"])
+            .arg(root)
+            .args(["--kind", "clients", "--prepare"])
+            .stdin(std::process::Stdio::null())
+            .output()
+            .unwrap();
+        assert!(
+            out.status.success(),
+            "{}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert_eq!(before, fixture::inventory(root));
+        serde_json::from_slice(&out.stdout).unwrap()
+    }
+    #[test]
+    fn same_binary_adds_client_then_rejects_duplicate_and_unknown_operation() {
+        let binary =
+            PathBuf::from(std::env::var_os("VIBE_M08_C1_TEST_BINARY").expect("V7 exact binary"));
+        let digest =
+            |p: &std::path::Path| format!("{:x}", Sha256::digest(std::fs::read(p).unwrap()));
+        let hash = digest(&binary);
+        let root = tempfile::tempdir().unwrap();
+        fixture::host(root.path());
+        let before = query(&binary, root.path());
+        let env::Body::Result(body) = before.body else {
+            panic!("before refusal");
+        };
+        let result: vibe_wire::generated::client_capability::e1::result::Result =
+            serde_json::from_str(body.payload_json.as_deref().unwrap()).unwrap();
+        assert!(result.capabilities.is_empty());
+        // An unselected directory cannot introduce an identity.
+        std::fs::create_dir(root.path().join("unselected")).unwrap();
+        std::fs::write(
+            root.path().join("unselected/vibe.toml"),
+            fixture::DESCRIPTOR,
+        )
+        .unwrap();
+        let unselected = query(&binary, root.path());
+        assert!(matches!(unselected.body, env::Body::Result(_)));
+        let slot = fixture::add(root.path());
+        let after = query(&binary, root.path());
+        let env::Body::Result(body) = after.body else {
+            panic!("after refusal: {after:?}");
+        };
+        let result: serde_json::Value =
+            serde_json::from_str(body.payload_json.as_deref().unwrap()).unwrap();
+        assert_eq!(
+            result["capabilities"]["org.example/new-client"]["bindings"][0]["destination"],
+            ".new-client/settings.json"
+        );
+        assert_eq!(
+            result["capabilities"]["org.example/new-client"]["bindings"][0]["key"][1],
+            "new.key"
+        );
+        let declaration = fixture::DESCRIPTOR.split("[[mechanism]]").nth(1).unwrap();
+        std::fs::write(
+            slot.join("vibe.toml"),
+            format!(
+                "{}\n[[mechanism]]{}",
+                fixture::DESCRIPTOR,
+                declaration.replace("id = 'client'", "id = 'duplicate'")
+            ),
+        )
+        .unwrap();
+        assert!(matches!(
+            query(&binary, root.path()).body,
+            env::Body::Error(_)
+        ));
+        std::fs::write(
+            slot.join("vibe.toml"),
+            fixture::DESCRIPTOR.replace("reconcile-json-member", "launch-arbitrary"),
+        )
+        .unwrap();
+        assert!(matches!(
+            query(&binary, root.path()).body,
+            env::Body::Error(_)
+        ));
+        assert_eq!(hash, digest(&binary));
+        eprintln!(
+            "M08C1 same_binary_sha256={hash} phases=before,unselected,selected,duplicate,unknown-operation mutation_census=unchanged queries=5"
+        );
+    }
+}

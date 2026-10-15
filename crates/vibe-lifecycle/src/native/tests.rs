@@ -322,6 +322,7 @@ fn host_route_displacing_build_cargo_refuses_unlanded_transport() {
     let root = tempdir().unwrap();
     let mut owned = world(root.path(), Vec::new());
     owned.host.mechanisms.push(MechanismDecl {
+        client_request: None,
         effects: None,
         id: "cargo-alt".to_owned(),
         role: MechanismRole::Build,

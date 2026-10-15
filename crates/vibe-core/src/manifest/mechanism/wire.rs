@@ -18,6 +18,8 @@ const ONE_MACHINE: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MAC
 pub(crate) struct MechanismDeclWire {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     effects: Option<crate::manifest::DeclaredEffects>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    client_request: Option<super::ClientRequest>,
     id: String,
     role: MechanismRoleWire,
     name: String,
@@ -61,6 +63,7 @@ impl TryFrom<MechanismDeclWire> for MechanismDecl {
 
     fn try_from(wire: MechanismDeclWire) -> Result<Self, Self::Error> {
         Ok(Self {
+            client_request: wire.client_request,
             effects: wire.effects,
             id: wire.id,
             role: wire.role.into(),
@@ -79,6 +82,7 @@ impl TryFrom<MechanismDecl> for MechanismDeclWire {
     fn try_from(declaration: MechanismDecl) -> Result<Self, Self::Error> {
         declaration.validate()?;
         Ok(Self {
+            client_request: declaration.client_request,
             effects: declaration.effects,
             id: declaration.id,
             role: declaration.role.into(),

@@ -125,6 +125,7 @@ fn missing_native_result_refuses_before_image_admission() {
     let fixture = support::Fixture::new("inert");
     let mut world = empty_world();
     world.installed.push(tests::installed(MechanismDecl {
+        client_request: None,
         effects: None,
         id: "installer".into(),
         role: MechanismRole::Deploy,

@@ -12,6 +12,7 @@ use vibe_wire::generated::adapter_plan::e1::request::{Command, CommandDescribe, 
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum Kind {
+    Clients,
     Skills,
     Deploy,
 }
@@ -37,6 +38,7 @@ pub struct AdapterPlanArgs {
 impl AdapterPlanArgs {
     fn target(&self) -> Result<AdapterTarget> {
         match self.kind {
+            Kind::Clients => anyhow::bail!("clients uses its own wire family"),
             Kind::Skills => {
                 anyhow::ensure!(self.profile.is_none(), "--profile applies only to deploy");
                 let scope = match self.scope.unwrap_or(Scope::Project) {
@@ -61,11 +63,15 @@ impl AdapterPlanArgs {
     }
 }
 pub fn run(args: AdapterPlanArgs, offline: bool) -> Result<()> {
+    if args.kind == Kind::Clients {
+        return client_capabilities::run(args);
+    }
     let target = args.target()?;
     let root = super::resolve_project_root(&args.root)?;
     let host = AdapterPlanHost::new(&root, target)?;
     let prepared = if args.prepare {
         Some(match args.kind {
+            Kind::Clients => unreachable!("branched before legacy route"),
             Kind::Skills => host.prepare(offline)?,
             Kind::Deploy => super::deploy::prepare_adapter_plan(
                 &host,
@@ -127,3 +133,5 @@ pub fn serve(
 
 #[cfg(test)]
 mod tests;
+
+mod client_capabilities;

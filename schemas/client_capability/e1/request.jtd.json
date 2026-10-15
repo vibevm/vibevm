@@ -1,0 +1,25 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "action": {
+      "enum": [
+        "describe",
+        "read"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  },
+  "metadata": {
+    "description": "Captured client request discovery; no effect authority."
+  }
+}

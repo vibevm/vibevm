@@ -1,0 +1,29 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "code": {
+      "enum": [
+        "invalid-request",
+        "unsupported-epoch",
+        "wrong-context",
+        "needs-preparation",
+        "invalid-descriptor",
+        "resource-limit"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "message": {
+      "type": "string"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    }
+  }
+}

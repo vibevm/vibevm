@@ -1,0 +1,29 @@
+[package]
+group = 'org.example'
+name = 'clients'
+kind = 'tool'
+version = '1.0.0'
+authors = ['Fixture']
+license = 'MIT'
+description = 'Inert client request fixture'
+keywords = ['fixture']
+materialization = 'in-place'
+
+[[mechanism]]
+id = 'client'
+role = 'deploy'
+name = 'client'
+handler = { kind = 'binary', name = 'never-run-this-client' }
+protocol = 1
+config_schema = 'schema.json'
+freshness = 'engine'
+[mechanism.client_request]
+schema = 1
+client_id = 'org.example/new-client'
+version = '>=1.0.0'
+[[mechanism.client_request.bindings]]
+scope = 'project'
+shape = 'json-member'
+destination = '.new-client/settings.json'
+key = ['mcpServers', 'new.key']
+operations = ['reconcile-json-member']

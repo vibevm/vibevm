@@ -284,6 +284,7 @@ pub fn builtin_mechanism_source() -> BuiltinMechanismSource {
         declarations: BUILTINS
             .iter()
             .map(|builtin| MechanismDecl {
+                client_request: None,
                 effects: builtin.effects.map(|values| {
                     vibe_core::manifest::DeclaredEffects::new(values.to_vec())
                         .expect("closed engine effect descriptor")

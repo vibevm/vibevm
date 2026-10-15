@@ -52,3 +52,5 @@ pub fn preview_status(base: &'static str, dry_run: bool) -> &'static str {
 
 #[cfg(test)]
 mod m_08_a_1_cases;
+
+pub mod client_capabilities;
