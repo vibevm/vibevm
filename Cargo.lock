@@ -5054,6 +5054,7 @@ dependencies = [
  "trybuild",
  "vibe-core",
  "vibe-registry",
+ "vibe-wire",
  "walkdir",
 ]
 

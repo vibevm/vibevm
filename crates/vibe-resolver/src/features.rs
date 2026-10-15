@@ -12,6 +12,7 @@
 //! union of requested features.
 
 use std::collections::{BTreeMap, BTreeSet};
+pub mod configuration;
 
 use specmark::spec;
 use thiserror::Error;
