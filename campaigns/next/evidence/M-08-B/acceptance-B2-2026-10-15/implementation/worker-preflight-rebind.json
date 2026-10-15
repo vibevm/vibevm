@@ -1,0 +1,23 @@
+{
+  "InputSha": "f073b1ddd4b24508c4bdb9d3a1a048071f3f5de934f52c1ae503f16da409505b",
+  "differences": [
+    {
+      "path": "/fast/git/v/vibevm-next/campaigns/next/tasks/M-08-B.json",
+      "preflight": "e6defdc11f4b11e6ea3368351a9549d86f291f99a8dff3f578e7b3954febfa56",
+      "current": "2ba09f21f8c9681193e397e2f611fbcb8a7eaac44a579e395dfa3953df004fcf"
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "preflight": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+      "current": "ab85011cd156fe4ed65b0f62b227bcf4742536837262df05b3cc7ce8f07121bb"
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs",
+      "preflight": "5a1cae74ab1b858ba4c94fd013f98d40ffc088f83a13cae4ba2e6e7a51f30e43",
+      "current": "a00be0c8539a2117e9424104ea9b858167a087e883d06fd9bac9cd1fafa13a5f"
+    }
+  ],
+  "metadata_commit": "8ff5e173506bbd28342043ef296b88777360a441",
+  "source_commit": "4f55717b78d9bb38ea8899e1e02b874088ec8b02",
+  "initial_roster_check": "worker-roster-check.json"
+}

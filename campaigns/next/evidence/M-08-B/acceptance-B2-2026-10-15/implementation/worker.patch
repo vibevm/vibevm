@@ -1,0 +1,870 @@
+diff --git a/crates/vibe-agent-projection/src/pkgskill/projection.rs b/crates/vibe-agent-projection/src/pkgskill/projection.rs
+index 8b68acc7f..a6d3c41e4 100644
+--- a/crates/vibe-agent-projection/src/pkgskill/projection.rs
++++ b/crates/vibe-agent-projection/src/pkgskill/projection.rs
+@@ -53,6 +53,10 @@ pub struct SourcePreparationRequired;
+ #[path = "projection/m_08_b_1_cases.rs"]
+ mod m_08_b_1_cases;
+ 
++#[cfg(test)]
++#[path = "projection/m_08_b_2_cases.rs"]
++mod m_08_b_2_cases;
++
+ /// A package or project `[[skill]]` declaration lowered to its absolute
+ /// source path and a stable human-facing origin label.
+ #[derive(Debug, Clone)]
+diff --git a/crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs b/crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs
+index e5814a570..0efdc23e7 100644
+--- a/crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs
++++ b/crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs
+@@ -187,3 +187,61 @@ fn unqualified_deploy_retains_history_and_returns_typed_unavailable() {
+     assert!(route.capture_id().is_some());
+     assert_eq!(std::fs::read(&trace).unwrap(), before);
+ }
++
++#[path = "m_08_b_2_fixture.rs"]
++mod m_08_b_2_fixture;
++
++#[test]
++fn m_08_b_2_cases_selected_self_and_dependency_bridge_roots() {
++    m_08_b_2_fixture::isolated(
++        "m_08_b_2_cases_selected_self_and_dependency_bridge_roots",
++        |owned| {
++            let fixture = m_08_b_2_fixture::Fixture::new(owned);
++            fixture.positive();
++        },
++    );
++}
++#[test]
++fn m_08_b_2_cases_missing_changed_and_membership_drift_refuse_without_refresh() {
++    m_08_b_2_fixture::isolated(
++        "m_08_b_2_cases_missing_changed_and_membership_drift_refuse_without_refresh",
++        |owned| {
++            for kind in [
++                "missing",
++                "changed",
++                "member",
++                "composed",
++                "lock",
++                "manifest",
++                "absent-cache",
++            ] {
++                let fixture = m_08_b_2_fixture::Fixture::new(owned);
++                fixture.positive();
++                fixture.tamper(kind);
++                for _ in 0..2 {
++                    let error = fixture.query(kind).unwrap_err();
++                    assert_eq!(error.code, e::ErrorCode::NeedsPreparation);
++                    assert_eq!(error.reason, Some(e::ErrorReason::SourceCaptureStale));
++                }
++            }
++        },
++    );
++}
++#[test]
++fn m_08_b_2_cases_decoy_roots_cannot_override_selected_context() {
++    m_08_b_2_fixture::isolated(
++        "m_08_b_2_cases_decoy_roots_cannot_override_selected_context",
++        |owned| {
++            let fixture = m_08_b_2_fixture::Fixture::new(owned);
++            let before = fixture.positive();
++            fixture.decoys();
++            assert_eq!(fixture.positive(), before);
++            assert!(
++                fixture
++                    .route
++                    .compare_context_root(&std::env::current_dir().unwrap())
++                    .is_err()
++            );
++        },
++    );
++}
+diff --git a/crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs b/crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs
+new file mode 100644
+index 000000000..bae260251
+--- /dev/null
++++ b/crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs
+@@ -0,0 +1,332 @@
++//! Root-selection characterization; preparation effects are outside query intervals.
++use super::*;
++use sha2::{Digest, Sha256};
++use std::cell::Cell;
++use vibe_core::manifest::SkillResourceDecl;
++
++fn put(root: &Path, path: &str, bytes: &str) {
++    let path = root.join(path);
++    fs::create_dir_all(path.parent().unwrap()).unwrap();
++    fs::write(path, bytes).unwrap();
++}
++fn inventory(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
++    fn walk(root: &Path, at: &Path, rows: &mut BTreeMap<PathBuf, Option<Vec<u8>>>) {
++        for entry in fs::read_dir(at).unwrap() {
++            let path = entry.unwrap().path();
++            rows.insert(
++                path.strip_prefix(root).unwrap().into(),
++                if path.is_dir() {
++                    None
++                } else {
++                    Some(fs::read(&path).unwrap())
++                },
++            );
++            if path.is_dir() {
++                walk(root, &path, rows);
++            }
++        }
++    }
++    let mut rows = BTreeMap::new();
++    walk(root, root, &mut rows);
++    rows
++}
++fn digest(files: &BTreeMap<String, Vec<u8>>) -> String {
++    let mut h = Sha256::new();
++    h.update(b"vibe-package-skill-snapshot\0epoch=1\0");
++    for (path, bytes) in files {
++        h.update((path.len() as u64).to_be_bytes());
++        h.update(path);
++        h.update((bytes.len() as u64).to_be_bytes());
++        h.update(bytes);
++    }
++    format!("sha256:{:x}", h.finalize())
++}
++struct Fixture {
++    owned: tempfile::TempDir,
++    project: PathBuf,
++    provider: PathBuf,
++    upstream: PathBuf,
++    composed: PathBuf,
++}
++impl Fixture {
++    fn new() -> Self {
++        let owned = tempfile::tempdir().unwrap();
++        let project = owned.path().join("selected");
++        let provider = project.join("dependency");
++        let upstream = owned.path().join("authenticated");
++        let composed = owned.path().join("composition");
++        for root in [&project, &provider] {
++            put(root, "vibe.toml", "retained provider manifest");
++            put(root, "skills/demo/SKILL.md", "provider decoy");
++            put(root, "skills/demo/references/deep/a.md", "wrong root");
++            put(root, "docs/deep/resource.md", "wrong resource");
++        }
++        put(&provider, "adapters/demo/SKILL.md", "body");
++        put(
++            &provider,
++            "adapters/demo/references/deep/a.md",
++            "nested source",
++        );
++        put(&upstream, "skills/demo/SKILL.md", "body");
++        put(
++            &upstream,
++            "skills/demo/references/deep/a.md",
++            "nested source",
++        );
++        put(&upstream, "skills/demo/omit.txt", "excluded");
++        put(&upstream, "docs/deep/resource.md", "nested resource");
++        put(&upstream, "docs/omit.txt", "excluded resource");
++        Self {
++            owned,
++            project,
++            provider,
++            upstream,
++            composed,
++        }
++    }
++    fn skill(&self, installed: bool, composed: bool) -> DeclaredSkill {
++        let provider = if installed {
++            DeclaredSkillProvider::Installed {
++                group: "org.example".parse().unwrap(),
++                name: "bridge".parse().unwrap(),
++                version: "2.3.4".into(),
++                kind: PackageKind::Tool,
++                root: self.provider.clone(),
++                content_hash: ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap(),
++                embedded_sources: vec![],
++                declared_sources: vec![],
++            }
++        } else {
++            DeclaredSkillProvider::Authored {
++                group: "org.example".parse().unwrap(),
++                name: "bridge".parse().unwrap(),
++                version: "2.3.4".into(),
++                kind: PackageKind::Tool,
++                root: self.provider.clone(),
++                embedded_sources: vec![],
++            }
++        };
++        DeclaredSkill {
++            decl: SkillDecl {
++                name: "demo".into(),
++                source: (!composed).then(|| "upstream".into()),
++                path: if composed {
++                    "adapters/demo"
++                } else {
++                    "skills/demo"
++                }
++                .into(),
++                description: None,
++                agents: vec!["claude".into()],
++                include: vec!["SKILL.md".into(), "references/**".into()],
++                resources: if composed {
++                    vec![SkillResourceDecl {
++                        embedded_source: "upstream".into(),
++                        path: "docs".into(),
++                        include: vec!["**/*.md".into()],
++                        target: "references/vendor".into(),
++                    }]
++                } else {
++                    vec![]
++                },
++            },
++            source: self.provider.join(if composed {
++                "adapters/demo"
++            } else {
++                "skills/demo"
++            }),
++            source_root: self.provider.clone(),
++            origin: "fixture".into(),
++            provider,
++        }
++    }
++    fn expected(&self, composed: bool) -> BTreeMap<String, Vec<u8>> {
++        let mut files = BTreeMap::from([
++            ("SKILL.md".into(), b"body".to_vec()),
++            ("references/deep/a.md".into(), b"nested source".to_vec()),
++        ]);
++        if composed {
++            files.insert(
++                "references/vendor/deep/resource.md".into(),
++                b"nested resource".to_vec(),
++            );
++        }
++        files
++    }
++    fn assert_binding(&self, b: &ProjectSkillBinding, composed: bool) {
++        let expected = self.expected(composed);
++        assert_eq!(b.selected_files.as_ref(), Some(&expected));
++        assert_eq!(b.source_snapshot, digest(&expected));
++        assert_eq!(b.skill.provider.root(), self.provider);
++        assert_ne!(b.skill.provider.root(), b.skill.source_root);
++        assert_eq!(
++            b.skill.source_root,
++            if composed {
++                &self.composed
++            } else {
++                &self.upstream
++            }
++            .to_path_buf()
++        );
++        assert_eq!(
++            b.skill.source,
++            if composed {
++                self.composed.clone()
++            } else {
++                self.upstream.join("skills/demo")
++            }
++        );
++        assert_eq!(b.targets.len(), 1);
++        assert_eq!(b.targets[0].path, self.project.join(".claude/skills/demo"));
++    }
++    fn prepare(
++        &self,
++        composed: bool,
++        resolutions: &Cell<usize>,
++        publications: &Cell<usize>,
++    ) -> PreparedProjectSkills {
++        let skill = self.skill(true, composed);
++        capture::prepare_with_ports(
++            &self.project,
++            vec![ProjectSkillProviderInput {
++                provider: skill.provider,
++                declarations: vec![skill.decl],
++            }],
++            true,
++            |provider, name, offline| {
++                assert!(offline);
++                assert_eq!(name, "upstream");
++                assert_eq!(provider.root(), self.provider);
++                resolutions.set(resolutions.get() + 1);
++                Ok(self.upstream.clone())
++            },
++            |provider, name, files| {
++                assert_eq!(provider, "org.example/bridge");
++                assert_eq!(name, "demo");
++                assert_eq!(*files, self.expected(true));
++                publications.set(publications.get() + 1);
++                super::super::write_snapshot(&self.composed, files)?;
++                Ok(self.composed.clone())
++            },
++        )
++        .unwrap()
++    }
++}
++#[test]
++fn direct_embedded_capture_ignores_provider_decoy_and_retains_full_membership() {
++    let f = Fixture::new();
++    let mut skill = f.skill(false, false);
++    hydrate_declared_skill_using(
++        &mut skill,
++        true,
++        |_, _, offline| {
++            assert!(offline);
++            Ok(f.upstream.clone())
++        },
++        |_, _, _| bail!("direct source cannot compose"),
++    )
++    .unwrap();
++    let before = inventory(f.owned.path());
++    let b = binding::lower_one_binding(&f.project, skill).unwrap();
++    f.assert_binding(&b, false);
++    assert_eq!(b.skill.decl.include, ["SKILL.md", "references/**"]);
++    assert_eq!(inventory(f.owned.path()), before);
++}
++#[test]
++fn composed_resources_keep_exact_roots_includes_and_digest() {
++    let f = Fixture::new();
++    let resolutions = Cell::new(0);
++    let publications = Cell::new(0);
++    let before_setup = inventory(f.owned.path());
++    let capture = f.prepare(true, &resolutions, &publications);
++    assert_ne!(inventory(f.owned.path()), before_setup);
++    assert_eq!((resolutions.get(), publications.get()), (1, 1));
++    let before = inventory(f.owned.path());
++    let a = capture.plan().unwrap();
++    let b = capture.plan().unwrap();
++    f.assert_binding(&a[0], true);
++    assert!(a[0].skill.decl.include.is_empty());
++    assert!(a[0].skill.decl.resources.is_empty());
++    assert_eq!(a[0].selected_files, b[0].selected_files);
++    assert_eq!((resolutions.get(), publications.get()), (1, 1));
++    assert_eq!(inventory(f.owned.path()), before);
++}
++#[test]
++fn missing_or_changed_selected_closure_refuses_without_fallback() {
++    for composed in [false, true] {
++        for change in ["missing", "changed", "member", "output"] {
++            let f = Fixture::new();
++            let resolutions = Cell::new(0);
++            let publications = Cell::new(0);
++            let capture = f.prepare(composed, &resolutions, &publications);
++            let root = if change == "output" && composed {
++                &f.composed
++            } else {
++                &f.upstream
++            };
++            let member = if composed {
++                "docs/deep/resource.md"
++            } else {
++                "skills/demo/references/deep/a.md"
++            };
++            match change {
++                "missing" => fs::remove_file(root.join(member)).unwrap(),
++                "changed" => put(root, member, "drift"),
++                "member" => put(
++                    root,
++                    if composed {
++                        "docs/deep/new.md"
++                    } else {
++                        "skills/demo/references/deep/new.md"
++                    },
++                    "new member",
++                ),
++                _ if composed => put(root, "references/vendor/deep/resource.md", "output drift"),
++                _ => put(root, "skills/demo/SKILL.md", "output drift"),
++            }
++            let before = inventory(f.owned.path());
++            let counters = (resolutions.get(), publications.get());
++            for _ in 0..2 {
++                assert!(
++                    capture
++                        .plan()
++                        .unwrap_err()
++                        .downcast_ref::<SourceCaptureStale>()
++                        .is_some()
++                );
++            }
++            assert_eq!(inventory(f.owned.path()), before);
++            assert_eq!((resolutions.get(), publications.get()), counters);
++        }
++    }
++}
++#[test]
++fn installed_provider_identity_survives_hydration() {
++    let f = Fixture::new();
++    let mut skill = f.skill(true, false);
++    hydrate_declared_skill_using(
++        &mut skill,
++        true,
++        |_, _, _| Ok(f.upstream.clone()),
++        |_, _, _| bail!("unexpected compose"),
++    )
++    .unwrap();
++    let b = binding::lower_one_binding(&f.project, skill).unwrap();
++    f.assert_binding(&b, false);
++    let DeclaredSkillProvider::Installed {
++        group,
++        name,
++        version,
++        content_hash,
++        root,
++        ..
++    } = b.skill.provider
++    else {
++        panic!("lost installed identity")
++    };
++    assert_eq!(group.as_str(), "org.example");
++    assert_eq!(name.as_str(), "bridge");
++    assert_eq!(version, "2.3.4");
++    assert_eq!(root, f.provider);
++    assert_eq!(content_hash.as_str(), format!("sha256:{}", "a".repeat(64)));
++}
+diff --git a/crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs b/crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs
+new file mode 100644
+index 000000000..297581ad9
+--- /dev/null
++++ b/crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs
+@@ -0,0 +1,445 @@
++//! Offline cache input, verified by the existing registry owner, never by this seed writer.
++use super::*;
++use std::{
++    collections::BTreeMap,
++    fs,
++    process::{Command, Stdio},
++    time::{Duration, Instant},
++};
++use vibe_agent_projection::pkgskill::DeclaredSkillProvider;
++use vibe_core::{
++    ContentHash,
++    manifest::{LockedEmbeddedSource, Lockfile, Manifest, SpecFormat},
++};
++
++pub fn isolated(case: &str, run: impl FnOnce(&Path)) {
++    if std::env::var("VIBE_B2_CHILD").as_deref() == Ok(case) {
++        let root = PathBuf::from(std::env::var_os("VIBE_B2_ROOT").unwrap());
++        run(&root);
++        return;
++    }
++    let owned = tempfile::tempdir().unwrap();
++    for dir in ["home", "settings", "tmp", "cwd"] {
++        fs::create_dir(owned.path().join(dir)).unwrap();
++    }
++    // The child alone has an unrelated cwd and private environment. No runner-wide mutation.
++    put(
++        &owned.path().join("cwd"),
++        "vibe.toml",
++        &package("cwd-decoy"),
++    );
++    let out = fs::File::create(owned.path().join("stdout")).unwrap();
++    let err = fs::File::create(owned.path().join("stderr")).unwrap();
++    let mut child = Command::new(std::env::current_exe().unwrap())
++        .args([
++            &format!("machine_operation::adapter_plan::tests::{case}"),
++            "--exact",
++            "--nocapture",
++            "--test-threads=1",
++        ])
++        .env("VIBE_B2_CHILD", case)
++        .env("VIBE_B2_ROOT", owned.path())
++        .env("VIBE_SETTINGS", owned.path().join("settings"))
++        .env("HOME", owned.path().join("home"))
++        .env("TMPDIR", owned.path().join("tmp"))
++        .env("XDG_CACHE_HOME", owned.path().join("home/cache"))
++        .env("XDG_CONFIG_HOME", owned.path().join("home/config"))
++        .env("PATH", owned.path().join("no-executables"))
++        .current_dir(owned.path().join("cwd"))
++        .stdin(Stdio::null())
++        .stdout(out)
++        .stderr(err)
++        .spawn()
++        .unwrap();
++    let start = Instant::now();
++    let status = loop {
++        if let Some(status) = child.try_wait().unwrap() {
++            break status;
++        }
++        if start.elapsed() > Duration::from_secs(45) {
++            child.kill().unwrap();
++            let _ = child.wait();
++            panic!("bounded inert child timeout");
++        }
++        std::thread::sleep(Duration::from_millis(20));
++    };
++    println!(
++        "{}",
++        fs::read_to_string(owned.path().join("stdout")).unwrap()
++    );
++    println!(
++        "{}",
++        fs::read_to_string(owned.path().join("stderr")).unwrap()
++    );
++    assert!(status.success(), "inert fixture child: {status}");
++}
++fn put(root: &Path, path: &str, text: &str) {
++    let path = root.join(path);
++    fs::create_dir_all(path.parent().unwrap()).unwrap();
++    fs::write(path, text).unwrap();
++}
++fn package(name: &str) -> String {
++    format!(
++        "[package]\ngroup='org.example'\nname='{name}'\nkind='tool'\nversion='2.3.4'\nauthors=['Fixture']\nlicense='MIT'\ndescription='Fixture'\nkeywords=['fixture']\n"
++    )
++}
++fn inventory(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
++    fn walk(root: &Path, at: &Path, rows: &mut BTreeMap<PathBuf, Option<Vec<u8>>>) {
++        for entry in fs::read_dir(at).unwrap() {
++            let path = entry.unwrap().path();
++            rows.insert(
++                path.strip_prefix(root).unwrap().into(),
++                if path.is_dir() {
++                    None
++                } else {
++                    Some(fs::read(&path).unwrap())
++                },
++            );
++            if path.is_dir() {
++                walk(root, &path, rows);
++            }
++        }
++    }
++    let mut rows = BTreeMap::new();
++    walk(root, root, &mut rows);
++    rows
++}
++fn snapshot(files: &BTreeMap<String, Vec<u8>>) -> String {
++    let mut h = Sha256::new();
++    h.update(b"vibe-package-skill-snapshot\0epoch=1\0");
++    for (path, bytes) in files {
++        h.update((path.len() as u64).to_be_bytes());
++        h.update(path);
++        h.update((bytes.len() as u64).to_be_bytes());
++        h.update(bytes);
++    }
++    format!("sha256:{:x}", h.finalize())
++}
++pub struct Fixture {
++    pub root: PathBuf,
++    pub selected: PathBuf,
++    pub dependency: PathBuf,
++    pub tree: PathBuf,
++    pub route: AdapterPlanRoute,
++    pub compositions: Vec<PathBuf>,
++}
++impl Fixture {
++    pub fn new(owned: &Path) -> Self {
++        // vibe-test-support's pre-thread constructor may relocate VIBE_SETTINGS again.
++        // Consume that existing owner setting and prove it stays within this child fixture.
++        let settings = vibe_core::settings::settings_dir().unwrap();
++        assert!(settings.starts_with(owned));
++        let composition_cache = settings.join("cache/skill-compositions");
++        if composition_cache.exists() {
++            fs::remove_dir_all(&composition_cache).unwrap();
++        }
++        // Each scenario gets fresh retained objects; deliberate tampering never repairs a session.
++        let scenario = tempfile::Builder::new()
++            .prefix("scenario-")
++            .tempdir_in(owned.join("tmp"))
++            .unwrap()
++            .keep();
++        let selected = scenario.join("selected");
++        let original = scenario.join("original-dependency");
++        let upstream = scenario.join("upstream-input");
++        put(&upstream, "LICENSE", "MIT fixture\n");
++        put(&upstream, "skills/demo/SKILL.md", "body");
++        put(
++            &upstream,
++            "skills/demo/references/deep/a.md",
++            "nested source",
++        );
++        put(&upstream, "skills/demo/omit.txt", "excluded");
++        put(&upstream, "docs/deep/resource.md", "nested resource");
++        put(&upstream, "docs/omit.txt", "excluded resource");
++        let content_hash =
++            vibe_registry::compute_content_hash_with(vibe_registry::RecipeId::Tree1, &upstream)
++                .unwrap();
++        assert_eq!(
++            content_hash,
++            "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1"
++        );
++        let commit = "0123456789abcdef0123456789abcdef01234567";
++        let url = "https://example.invalid/b2.git";
++        let mut key = Sha256::new();
++        key.update(b"vibe-embedded-source-v1\0");
++        key.update(url);
++        key.update([0]);
++        key.update(commit);
++        key.update([0]);
++        key.update(&content_hash);
++        let entry = settings
++            .join("cache/embedded/git/v1")
++            .join(format!("{:x}", key.finalize()));
++        // Literal cache-layout fixture input only. No validator or fallback is implemented here.
++        let tree = entry.join("tree");
++        if entry.exists() {
++            fs::remove_dir_all(&entry).unwrap();
++        }
++        for (path, bytes) in inventory(&upstream) {
++            if let Some(bytes) = bytes {
++                let to = tree.join(path);
++                fs::create_dir_all(to.parent().unwrap()).unwrap();
++                fs::write(to, bytes).unwrap();
++            }
++        }
++        put(
++            &entry,
++            "source.toml",
++            &format!(
++                "source_url='{url}'\nresolved_commit='{commit}'\ntree_oid='{commit}'\ncontent_hash='{content_hash}'\n"
++            ),
++        );
++        put(&entry, "complete", "ok\n");
++        let embedded = format!(
++            "\n[[embedded_source]]\nname='upstream'\nkind='git'\nurl='{url}'\ncommit='{commit}'\ncontent_hash='{content_hash}'\nauth='none'\nupstream_authors=['Fixture']\nupstream_license='MIT'\nlicense_path='LICENSE'\nlicense_url='https://example.invalid/b2/blob/{commit}/LICENSE'\n"
++        );
++        for (root, name) in [(&selected, "selected"), (&original, "dependency")] {
++            let mut text = package(name) + &embedded;
++            put(root, "adapters/demo/SKILL.md", "body");
++            put(root, "adapters/demo/references/deep/a.md", "nested source");
++            put(root, "adapters/demo/omit.txt", "excluded local");
++            for mode in ["direct", "composed"] {
++                let source = if mode == "direct" {
++                    "source='upstream'\npath='skills/demo'"
++                } else {
++                    "path='adapters/demo'"
++                };
++                text += &format!(
++                    "\n[[skill]]\nname='{name}-{mode}'\n{source}\nagents=['claude']\ninclude=['SKILL.md','references/**']\n"
++                );
++                if mode == "composed" {
++                    text += "[[skill.resource]]\nembedded_source='upstream'\npath='docs'\ninclude=['**/*.md']\ntarget='references/vendor'\n";
++                }
++            }
++            if name == "selected" {
++                text += "\n[requires.packages]\n'tool:org.example/dependency'='=2.3.4'\n";
++            }
++            put(root, "vibe.toml", &text);
++            put(root, "skills/demo/SKILL.md", "provider decoy");
++            put(root, "skills/demo/references/deep/a.md", "wrong root");
++            put(root, "docs/deep/resource.md", "wrong resource");
++        }
++        let manifest = Manifest::read(&original.join("vibe.toml")).unwrap();
++        let declaration = &manifest.embedded_sources[0];
++        // This call is the real cache verifier and must succeed before host preparation.
++        let verified = vibe_registry::cache_embedded_source_with(declaration, true).unwrap();
++        assert_eq!(verified.tree, tree);
++        assert_eq!(verified.content_hash.as_str(), content_hash);
++        let pin = LockedEmbeddedSource {
++            name: declaration.name.clone(),
++            source_url: vibe_core::SourceUrl::new(url),
++            source_ref: None,
++            resolved_commit: commit.into(),
++            tree_oid: commit.into(),
++            content_hash: verified.content_hash,
++            upstream_authors: declaration.upstream_authors.clone(),
++            upstream_license: declaration.upstream_license.clone(),
++            license_path: declaration.license_path.clone(),
++            license_url: declaration.license_url.clone(),
++            license_file_sha256: ContentHash::parse(&hash(b"MIT fixture\n")).unwrap(),
++        };
++        assert!(pin.matches_declaration(declaration));
++        let package_hash = ContentHash::parse(
++            &vibe_registry::compute_content_hash_with(vibe_registry::RecipeId::Tree1, &original)
++                .unwrap(),
++        )
++        .unwrap();
++        let group = "org.example".parse().unwrap();
++        let version = "2.3.4".parse().unwrap();
++        vibe_workspace::vibedeps::materialise_with_spec_format(
++            &selected,
++            &group,
++            "dependency",
++            &version,
++            &original,
++            vibe_workspace::vibedeps::CopyMode::Copy,
++            SpecFormat::Mixed,
++            &package_hash,
++        )
++        .unwrap();
++        let dependency =
++            vibe_workspace::vibedeps::slot_abs_path(&selected, &group, "dependency", &version);
++        let mut lock = Lockfile::empty("b2-fixture", "2026-10-15T00:00:00Z");
++        let mut row: vibe_core::manifest::LockedPackage = toml::from_str(&format!("kind='tool'\ngroup='org.example'\nname='dependency'\nversion='2.3.4'\nsource_url='https://example.invalid/bridge.git'\ncontent_hash='{package_hash}'\n")).unwrap();
++        row.embedded_sources.push(pin);
++        lock.packages.push(row);
++        lock.write(selected.join("vibe.lock")).unwrap();
++        let host = host(&selected);
++        let before = inventory(&settings);
++        let prepared = host.prepare(true).unwrap();
++        let after = inventory(&settings);
++        assert_ne!(before, after, "explicit preparation publishes compositions");
++        let bindings = prepared.skills.plan().unwrap();
++        assert_eq!(bindings.len(), 4);
++        let mut compositions = Vec::new();
++        for b in &bindings {
++            let composed = b.skill.decl.name.ends_with("-composed");
++            match &b.skill.provider {
++                DeclaredSkillProvider::Authored {
++                    group,
++                    name,
++                    version,
++                    root,
++                    ..
++                } => {
++                    assert_eq!(group.as_str(), "org.example");
++                    assert_eq!(name.as_str(), "selected");
++                    assert_eq!(version, "2.3.4");
++                    assert_eq!(root, &selected);
++                }
++                DeclaredSkillProvider::Installed {
++                    group,
++                    name,
++                    version,
++                    root,
++                    content_hash,
++                    embedded_sources,
++                    ..
++                } => {
++                    assert_eq!(group.as_str(), "org.example");
++                    assert_eq!(name.as_str(), "dependency");
++                    assert_eq!(version, "2.3.4");
++                    assert_eq!(root, &dependency);
++                    assert_eq!(content_hash, &package_hash);
++                    assert_eq!(embedded_sources.len(), 1);
++                }
++            }
++            if composed {
++                assert!(
++                    b.skill
++                        .source_root
++                        .starts_with(settings.join("cache/skill-compositions/v1"))
++                );
++                assert_eq!(b.skill.source, b.skill.source_root);
++                compositions.push(b.skill.source_root.clone());
++            } else {
++                assert_eq!(b.skill.source_root, tree);
++                assert_eq!(b.skill.source, tree.join("skills/demo"));
++            }
++            assert_ne!(b.skill.source_root, selected);
++            assert_ne!(b.skill.source_root, dependency);
++            assert_eq!(b.selected_files.as_ref(), Some(&Self::expected(composed)));
++            assert_eq!(b.source_snapshot, snapshot(&Self::expected(composed)));
++        }
++        let route = AdapterPlanRoute::new(host, Some(prepared)).unwrap();
++        assert_eq!(route.root(), selected);
++        assert_ne!(std::env::current_dir().unwrap(), selected);
++        println!(
++            "B2_PREPARATION {}",
++            serde_json::json!({"selected":selected,"dependency":dependency,"embedded":tree,"compositions":compositions,"package_hash":package_hash.to_string(),"cache_hash":content_hash,"settings":settings,"settings_before_entries":before.len(),"settings_after_entries":after.len(),"settings_before_digest":hash(&serde_json::to_vec(&before).unwrap()),"settings_after_digest":hash(&serde_json::to_vec(&after).unwrap()),"effects":"fixture writes, materialisation, two composition publications"})
++        );
++        Self {
++            root: scenario,
++            selected,
++            dependency,
++            tree,
++            route,
++            compositions,
++        }
++    }
++    fn expected(composed: bool) -> BTreeMap<String, Vec<u8>> {
++        let mut files = BTreeMap::from([
++            ("SKILL.md".into(), b"body".to_vec()),
++            ("references/deep/a.md".into(), b"nested source".to_vec()),
++        ]);
++        if composed {
++            files.insert(
++                "references/vendor/deep/resource.md".into(),
++                b"nested resource".to_vec(),
++            );
++        }
++        files
++    }
++    pub fn query(&self, label: &str) -> Answer<r::Result> {
++        let settings = PathBuf::from(std::env::var_os("VIBE_SETTINGS").unwrap());
++        let home = PathBuf::from(std::env::var_os("HOME").unwrap());
++        let before = (
++            inventory(&self.root),
++            inventory(&settings),
++            inventory(&home),
++            inventory(&std::env::current_dir().unwrap()),
++        );
++        eprintln!("B2_QUERY_BEGIN {label}");
++        let answer = self.route.request(plan(&self.route));
++        eprintln!("B2_QUERY_END {label}");
++        let after = (
++            inventory(&self.root),
++            inventory(&settings),
++            inventory(&home),
++            inventory(&std::env::current_dir().unwrap()),
++        );
++        assert_eq!(after, before);
++        println!(
++            "B2_QUERY_CENSUS {}",
++            serde_json::json!({"label":label,"before":hash(&serde_json::to_vec(&before).unwrap()),"after":hash(&serde_json::to_vec(&after).unwrap()),"roots":[self.root.clone(),settings,home,std::env::current_dir().unwrap()],"result":if answer.is_ok() { "complete" } else { "refused" }})
++        );
++        answer
++    }
++    pub fn positive(&self) -> r::Result {
++        let a = self.query("positive").unwrap();
++        assert_eq!(self.query("repeat").unwrap(), a);
++        let r::Body::Plan(body) = &a.body else {
++            panic!()
++        };
++        assert!(body.complete);
++        assert_eq!(body.rows.len(), 4);
++        for row in &body.rows {
++            let r::Row::Skill(skill) = row else { panic!() };
++            let provider = if skill.declaration.starts_with("selected-") {
++                "selected"
++            } else {
++                "dependency"
++            };
++            assert_eq!(skill.provider, format!("org.example/{provider}"));
++            assert_eq!(skill.proof, r::RowSkillProof::Observed);
++            assert_eq!(skill.ownership, r::RowSkillOwnership::Unavailable);
++            assert_eq!(skill.scope, r::RowSkillScope::Project);
++            assert_eq!(skill.agent, "claude");
++            assert_eq!(
++                skill.target,
++                format!(".claude/skills/{}", skill.declaration)
++            );
++            let expected = Self::expected(skill.declaration.ends_with("-composed"));
++            assert_eq!(skill.source_digest, snapshot(&expected));
++            assert_eq!(skill.files.len(), expected.len());
++            for (file, (path, bytes)) in skill.files.iter().zip(&expected) {
++                assert_eq!(&file.path, path);
++                assert_eq!(file.bytes, bytes.len().to_string());
++                assert_eq!(file.sha256, format!("{:x}", Sha256::digest(bytes)));
++            }
++        }
++        a
++    }
++    pub fn tamper(&self, kind: &str) {
++        match kind {
++            "absent-cache" => fs::remove_dir_all(&self.tree).unwrap(),
++            "missing" => {
++                fs::remove_file(self.tree.join("skills/demo/references/deep/a.md")).unwrap()
++            }
++            "changed" => put(&self.tree, "docs/deep/resource.md", "changed resource"),
++            "member" => put(&self.tree, "docs/deep/new.md", "new included member"),
++            "composed" => put(
++                &self.compositions[0],
++                "references/vendor/deep/resource.md",
++                "changed output",
++            ),
++            "lock" => put(&self.selected, "vibe.lock", "changed selected world"),
++            "manifest" => put(&self.dependency, "vibe.toml", "changed provider"),
++            _ => panic!("unknown tamper"),
++        }
++    }
++    pub fn decoys(&self) {
++        put(&self.tree, "skills/demo/omit.txt", "excluded bytes changed");
++        put(&self.tree, "docs/omit.txt", "excluded resource changed");
++        for root in [
++            &self.selected,
++            &self.dependency,
++            &std::env::current_dir().unwrap(),
++        ] {
++            put(root, "skills/demo/SKILL.md", "new same-path decoy");
++            put(root, "skills/demo/references/deep/a.md", "new wrong root");
++            put(root, "docs/deep/resource.md", "new wrong resource");
++        }
++    }
++}

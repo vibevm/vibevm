@@ -1,0 +1,37 @@
+{
+  "direct": {
+    "source_snapshot": "sha256:400278bcdf96f442dffea96a9934a09621549cac6a5099bdf3163871347b0d04",
+    "files": {
+      "SKILL.md": {
+        "bytes": 4,
+        "sha256": "230d8358dc8e8890b4c58deeb62912ee2f20357ae92a5cc861b98e68fe31acb5",
+        "utf8": "body"
+      },
+      "references/deep/a.md": {
+        "bytes": 13,
+        "sha256": "4332eb1427ba11715d5faa046304070e4286c5a2a22f19486a0c522c59a57de6",
+        "utf8": "nested source"
+      }
+    }
+  },
+  "composed": {
+    "source_snapshot": "sha256:3c41b364e8e1eced61f5164848ec528a8538b9cf3b8dcc0a6cbe3c5114a67f5c",
+    "files": {
+      "SKILL.md": {
+        "bytes": 4,
+        "sha256": "230d8358dc8e8890b4c58deeb62912ee2f20357ae92a5cc861b98e68fe31acb5",
+        "utf8": "body"
+      },
+      "references/deep/a.md": {
+        "bytes": 13,
+        "sha256": "4332eb1427ba11715d5faa046304070e4286c5a2a22f19486a0c522c59a57de6",
+        "utf8": "nested source"
+      },
+      "references/vendor/deep/resource.md": {
+        "bytes": 15,
+        "sha256": "559bef277536042572778c4f5b7d8ca586a6fc074da08c4aed852a9538eb9fff",
+        "utf8": "nested resource"
+      }
+    }
+  }
+}

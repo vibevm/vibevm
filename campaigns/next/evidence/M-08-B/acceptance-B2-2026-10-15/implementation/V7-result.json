@@ -1,0 +1,20 @@
+{
+  "group": "V7",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "meets_expected_count": null,
+      "log": "/fast/zap-managed/2026-10-15-m08b2/V7-1.log",
+      "seconds": 0.010646895039826632,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

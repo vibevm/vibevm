@@ -1,0 +1,27 @@
+{
+  "group": "V6",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs"
+      ],
+      "exit": 0,
+      "counts": [],
+      "meets_expected_count": null,
+      "log": "/fast/zap-managed/2026-10-15-m08b2/V6-1.log",
+      "seconds": 0.0373602929757908,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

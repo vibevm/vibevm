@@ -1,0 +1,42 @@
+{
+  "distinct_cases": 2,
+  "new_execution": false,
+  "source_selection": "implementation/V5-SELECTION.json",
+  "references": [
+    {
+      "original_private_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-final.log",
+      "canonical_saved_B1_path": "campaigns/next/evidence/M-08-B/acceptance-2026-10-15/implementation/worker-cli-final.log",
+      "sha256": "8151ac5774a85ecd5dec1022ffcfc0cd48536e8fc5535848df8a7ef4edc4ca8f",
+      "verified_exact": true,
+      "copied_again": false
+    },
+    {
+      "original_private_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-mcp.log",
+      "canonical_saved_B1_path": "campaigns/next/evidence/M-08-B/acceptance-2026-10-15/implementation/worker-mcp.log",
+      "sha256": "ea03ae27d1f7eeb82cf5196a0e96519d2eab5b33302fc601c24b3473ac98c935",
+      "verified_exact": true,
+      "copied_again": false
+    },
+    {
+      "original_private_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-command-results.json",
+      "canonical_saved_B1_path": "campaigns/next/evidence/M-08-B/acceptance-2026-10-15/implementation/worker-command-results.json",
+      "sha256": "2fa501bcad7928a8859106f38f148a7d36e5bc4ed15d2fcc2a5b32fdb1ef144a",
+      "verified_exact": true,
+      "copied_again": false
+    },
+    {
+      "original_private_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-subjects.json",
+      "canonical_saved_B1_path": "campaigns/next/evidence/M-08-B/acceptance-2026-10-15/implementation/worker-subjects.json",
+      "sha256": "5179af1fb046a932406aa92e9870007a73654e21b515969b673151a26fd43b57",
+      "verified_exact": true,
+      "copied_again": false
+    },
+    {
+      "original_private_path": "/fast/git/v/research/2026-10-15-m08b1-correction-review/REPORT.md",
+      "canonical_saved_B1_path": "campaigns/next/evidence/M-08-B/acceptance-2026-10-15/review/REPORT.md",
+      "sha256": "73b7c3f2ec1fcb62d9eec336ea52dd3447af1076dbe6a7b8dea664f7a48becf2",
+      "verified_exact": true,
+      "copied_again": false
+    }
+  ]
+}

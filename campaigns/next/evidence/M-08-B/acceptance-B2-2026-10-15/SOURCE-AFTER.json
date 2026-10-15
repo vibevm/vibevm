@@ -1,0 +1,18 @@
+{
+  "crates/vibe-agent-projection/src/pkgskill/projection.rs": {
+    "sha256": "ab85011cd156fe4ed65b0f62b227bcf4742536837262df05b3cc7ce8f07121bb",
+    "bytes": 21597
+  },
+  "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs": {
+    "sha256": "70470810c02fda69264b7a1fa0a4c2baa3fd4fa617edef51c72d3c3dc673db18",
+    "bytes": 11805
+  },
+  "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs": {
+    "sha256": "8b034c83344f37254dd0dfeec00bc088580f1a1a6766cd79c0b1a9da743b2765",
+    "bytes": 8122
+  },
+  "crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs": {
+    "sha256": "0cd918a6c6dd6d6e10929c342a7cd4c304910ceb04c9fab5fbddbf54c9831871",
+    "bytes": 19049
+  }
+}

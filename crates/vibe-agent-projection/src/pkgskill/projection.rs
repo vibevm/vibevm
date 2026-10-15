@@ -53,6 +53,10 @@ pub struct SourcePreparationRequired;
 #[path = "projection/m_08_b_1_cases.rs"]
 mod m_08_b_1_cases;
 
+#[cfg(test)]
+#[path = "projection/m_08_b_2_cases.rs"]
+mod m_08_b_2_cases;
+
 /// A package or project `[[skill]]` declaration lowered to its absolute
 /// source path and a stable human-facing origin label.
 #[derive(Debug, Clone)]

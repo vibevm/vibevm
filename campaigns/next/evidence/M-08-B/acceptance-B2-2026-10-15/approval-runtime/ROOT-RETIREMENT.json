@@ -1,0 +1,88 @@
+{
+  "utc": "2026-10-15T04:41:52.067088+00:00",
+  "before": [
+    {
+      "pid": 75057,
+      "parent": 74996,
+      "start_ticks": "36556700",
+      "exe": "/fast/zap-managed/2026-10-15-m08b2/pins/zap",
+      "uid": 1000
+    },
+    {
+      "pid": 75060,
+      "parent": 75057,
+      "start_ticks": "36556722",
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay",
+      "uid": 1000
+    },
+    {
+      "pid": 75191,
+      "parent": 75060,
+      "start_ticks": "36557284",
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod",
+      "uid": 1000
+    },
+    {
+      "pid": 75222,
+      "parent": 75191,
+      "start_ticks": "36557347",
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "uid": 1000
+    },
+    {
+      "pid": 75677,
+      "parent": 75222,
+      "start_ticks": "36558414",
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+      "uid": 1000
+    }
+  ],
+  "signals": [
+    {
+      "pid": 75057,
+      "signal": "SIGTERM",
+      "via": "checked pidfd"
+    },
+    {
+      "pid": 75191,
+      "signal": "SIGTERM",
+      "via": "checked pidfd"
+    },
+    {
+      "pid": 75222,
+      "signal": "SIGTERM",
+      "via": "checked pidfd"
+    },
+    {
+      "pid": 75677,
+      "signal": "SIGTERM",
+      "via": "checked pidfd"
+    }
+  ],
+  "after": [
+    {
+      "pid": 75057,
+      "exists": false
+    },
+    {
+      "pid": 75060,
+      "exists": false
+    },
+    {
+      "pid": 75191,
+      "exists": false
+    },
+    {
+      "pid": 75222,
+      "exists": false
+    },
+    {
+      "pid": 75677,
+      "exists": false
+    }
+  ],
+  "candidate_hashes_match": true,
+  "normal_collection": "candidate_collected sequence1681 unknown_tailfalse failedfalse",
+  "no_process_groups": true,
+  "scope": "exact completed reviewed M08B2 tree only"
+}

@@ -1,0 +1,568 @@
+{
+  "preparations": [
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/scenario-1vLOgz/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/scenario-1vLOgz/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/vibevm-test-homes/p96969-1792038808255449330/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/vibevm-test-homes/p96969-1792038808255449330/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/vibevm-test-homes/p96969-1792038808255449330/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/vibevm-test-homes/p96969-1792038808255449330/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    },
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/scenario-KznDFu/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/scenario-KznDFu/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/vibevm-test-homes/p96968-1792038808259993810/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/vibevm-test-homes/p96968-1792038808259993810/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/vibevm-test-homes/p96968-1792038808259993810/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/vibevm-test-homes/p96968-1792038808259993810/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    },
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-Fw4RlC/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-Fw4RlC/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    },
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5myYla/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5myYla/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    },
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-hUdXEs/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-hUdXEs/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    },
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-qItpFq/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-qItpFq/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    },
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5DYUDr/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5DYUDr/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    },
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-rHYm0l/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-rHYm0l/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    },
+    {
+      "selected": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-ZV7HZ0/selected",
+      "dependency": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-ZV7HZ0/selected/vibevm/vibedeps/org.example.dependency/2.3.4",
+      "embedded": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/embedded/git/v1/da43a02a15a8198d8f76f8eddaec2f88c1261a2aef0e49c9d141d782bdd49c01/tree",
+      "compositions": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/e8eba6fa148c72e4dffc66d5d95f67e19734c5a9f6e03009b87ce57e06d2d495/tree",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings/cache/skill-compositions/v1/059e7426dadabcccb77c49ebabaed5d5c388132ec254076b525cc2a2ec3fa907/tree"
+      ],
+      "package_hash": "sha256-tree/1:2cf364d35344a5cc10ac95b018fc78df7fecf3f09b4b7704c1fd3173caefd6ca",
+      "cache_hash": "sha256-tree/1:754fe606cb3d22d9b92a22d42fcf8e21af15c254693816c588ac5cd6376b6ec1",
+      "settings": "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+      "settings_before_entries": 20,
+      "settings_after_entries": 40,
+      "settings_before_digest": "sha256:92d0feb06d880fd0efab17aee60aa4ca95cb753c5917f160cb7a602ea895e03c",
+      "settings_after_digest": "sha256:ca79446b44ad00be734c4d70db7cdd06f48f22df8f48c108ef3deb595b523565",
+      "effects": "fixture writes, materialisation, two composition publications"
+    }
+  ],
+  "queries": [
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/scenario-1vLOgz",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/vibevm-test-homes/p96969-1792038808255449330/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/scenario-1vLOgz",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/tmp/vibevm-test-homes/p96969-1792038808255449330/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpkU15ZZ/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/scenario-KznDFu",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/vibevm-test-homes/p96968-1792038808259993810/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/scenario-KznDFu",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/vibevm-test-homes/p96968-1792038808259993810/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:423ac025e87333e3661a49ff378ca0923b339c0a7aea8d090311d8826887c005",
+      "after": "sha256:423ac025e87333e3661a49ff378ca0923b339c0a7aea8d090311d8826887c005",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/scenario-KznDFu",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/vibevm-test-homes/p96968-1792038808259993810/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:423ac025e87333e3661a49ff378ca0923b339c0a7aea8d090311d8826887c005",
+      "after": "sha256:423ac025e87333e3661a49ff378ca0923b339c0a7aea8d090311d8826887c005",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/scenario-KznDFu",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/tmp/vibevm-test-homes/p96968-1792038808259993810/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmpffCFPu/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-Fw4RlC",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-Fw4RlC",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "missing",
+      "before": "sha256:a4f97ac16f7bd48364cb0ccea04211c62dc935a79ea8cf5de834c33be8f94562",
+      "after": "sha256:a4f97ac16f7bd48364cb0ccea04211c62dc935a79ea8cf5de834c33be8f94562",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-Fw4RlC",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "missing",
+      "before": "sha256:a4f97ac16f7bd48364cb0ccea04211c62dc935a79ea8cf5de834c33be8f94562",
+      "after": "sha256:a4f97ac16f7bd48364cb0ccea04211c62dc935a79ea8cf5de834c33be8f94562",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-Fw4RlC",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5myYla",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5myYla",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "changed",
+      "before": "sha256:d5673864e7174f45e2fdb27a9370e31789db059a1d19fadbea9d72c162cd0772",
+      "after": "sha256:d5673864e7174f45e2fdb27a9370e31789db059a1d19fadbea9d72c162cd0772",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5myYla",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "changed",
+      "before": "sha256:d5673864e7174f45e2fdb27a9370e31789db059a1d19fadbea9d72c162cd0772",
+      "after": "sha256:d5673864e7174f45e2fdb27a9370e31789db059a1d19fadbea9d72c162cd0772",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5myYla",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-hUdXEs",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-hUdXEs",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "member",
+      "before": "sha256:691354dfca600b6e4d55b88cd6c077d866584f861206adcd95cc879db972eceb",
+      "after": "sha256:691354dfca600b6e4d55b88cd6c077d866584f861206adcd95cc879db972eceb",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-hUdXEs",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "member",
+      "before": "sha256:691354dfca600b6e4d55b88cd6c077d866584f861206adcd95cc879db972eceb",
+      "after": "sha256:691354dfca600b6e4d55b88cd6c077d866584f861206adcd95cc879db972eceb",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-hUdXEs",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-qItpFq",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-qItpFq",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "composed",
+      "before": "sha256:9bc929869dd8d7bac27f136f3f6adf83f03021ef437eec970274f1d7dc293552",
+      "after": "sha256:9bc929869dd8d7bac27f136f3f6adf83f03021ef437eec970274f1d7dc293552",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-qItpFq",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "composed",
+      "before": "sha256:9bc929869dd8d7bac27f136f3f6adf83f03021ef437eec970274f1d7dc293552",
+      "after": "sha256:9bc929869dd8d7bac27f136f3f6adf83f03021ef437eec970274f1d7dc293552",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-qItpFq",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5DYUDr",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5DYUDr",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "lock",
+      "before": "sha256:12817ee7bc5dcf353f2a75acb8e88f51887e85b029f1a166c30b69b66ed97f82",
+      "after": "sha256:12817ee7bc5dcf353f2a75acb8e88f51887e85b029f1a166c30b69b66ed97f82",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5DYUDr",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "lock",
+      "before": "sha256:12817ee7bc5dcf353f2a75acb8e88f51887e85b029f1a166c30b69b66ed97f82",
+      "after": "sha256:12817ee7bc5dcf353f2a75acb8e88f51887e85b029f1a166c30b69b66ed97f82",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-5DYUDr",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-rHYm0l",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-rHYm0l",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "manifest",
+      "before": "sha256:0680cbc2ad93a6fc03782658ba693110581e5171f38e0d2a437ac49ada879e12",
+      "after": "sha256:0680cbc2ad93a6fc03782658ba693110581e5171f38e0d2a437ac49ada879e12",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-rHYm0l",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "manifest",
+      "before": "sha256:0680cbc2ad93a6fc03782658ba693110581e5171f38e0d2a437ac49ada879e12",
+      "after": "sha256:0680cbc2ad93a6fc03782658ba693110581e5171f38e0d2a437ac49ada879e12",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-rHYm0l",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "positive",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-ZV7HZ0",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "repeat",
+      "before": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "after": "sha256:3d144267ea5a5254b97615497276a9a141247b19b2a7721ea56973a6418184a9",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-ZV7HZ0",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "complete"
+    },
+    {
+      "label": "absent-cache",
+      "before": "sha256:b585b17bbfa08712eab70525d8bdef74cd86f3aca39aedfb57e25337c63c57b0",
+      "after": "sha256:b585b17bbfa08712eab70525d8bdef74cd86f3aca39aedfb57e25337c63c57b0",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-ZV7HZ0",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    },
+    {
+      "label": "absent-cache",
+      "before": "sha256:b585b17bbfa08712eab70525d8bdef74cd86f3aca39aedfb57e25337c63c57b0",
+      "after": "sha256:b585b17bbfa08712eab70525d8bdef74cd86f3aca39aedfb57e25337c63c57b0",
+      "roots": [
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/scenario-ZV7HZ0",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/tmp/vibevm-test-homes/p96967-1792038808259271019/settings",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/home",
+        "/fast/zap-managed/2026-10-15-m08b2/tmp/.tmphLw5A8/cwd"
+      ],
+      "result": "refused"
+    }
+  ],
+  "cleanup": "Parent TempDir removes owned fixture trees after each bounded child exits; Rust test-support constructor settings also lie within child TMPDIR. No real home/cache used."
+}

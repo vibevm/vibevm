@@ -1,0 +1,59 @@
+{
+  "group": "V4",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::adapter_plan::tests::unprepared_and_foreign_bindings_have_closed_refusals",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "meets_expected_count": true,
+      "log": "/fast/zap-managed/2026-10-15-m08b2/V4-1.log",
+      "seconds": 0.22754916694248095,
+      "passed": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::adapter_plan::tests::unknown_capture_and_unknown_fields_refuse_without_refresh",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "meets_expected_count": true,
+      "log": "/fast/zap-managed/2026-10-15-m08b2/V4-2.log",
+      "seconds": 0.2385801050113514,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

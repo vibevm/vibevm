@@ -1,0 +1,449 @@
+[
+  {
+    "result_file": "V1-result.json",
+    "sha256": "3a1aa4ace1a9b181768e21ae7601408163296f4346caf8fbdb7f269eace72484",
+    "result": {
+      "group": "V1",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "pkgskill::projection::m_08_b_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "4",
+              "0",
+              "0"
+            ]
+          ],
+          "meets_expected_count": true,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V1-1.log",
+          "seconds": 1.553632638999261,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  {
+    "result_file": "V2-result.json",
+    "sha256": "d548257884ecf32055251d651d2063bda83d33586e6b1cd3da808e4cab7c5ba5",
+    "result": {
+      "group": "V2",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::adapter_plan::tests::m_08_b_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "3",
+              "0",
+              "0"
+            ]
+          ],
+          "meets_expected_count": true,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V2-1.log",
+          "seconds": 19.537752706033643,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  {
+    "result_file": "V3-result.json",
+    "sha256": "80e7ea8763c39583048bdef074098819323a9f4e73db79cd122f433c01e2402b",
+    "result": {
+      "group": "V3",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "pkgskill::projection::m_08_b_1_cases::prepared_embedded_closure_uses_injected_provider_once_and_exact_offline",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "meets_expected_count": true,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V3-1.log",
+          "seconds": 0.207229282008484,
+          "passed": true
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "pkgskill::projection::m_08_b_1_cases::prepared_resources_preserve_includes_and_only_prepare_publishes_owned_cache",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "meets_expected_count": true,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V3-2.log",
+          "seconds": 0.20204756199382246,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  {
+    "result_file": "V4-result.json",
+    "sha256": "162274ecfeef970fbcd3d47a9ba269c065a1f65dcd7f0dd9583a47f2c8855aaf",
+    "result": {
+      "group": "V4",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::adapter_plan::tests::unprepared_and_foreign_bindings_have_closed_refusals",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "meets_expected_count": true,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V4-1.log",
+          "seconds": 0.22754916694248095,
+          "passed": true
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::adapter_plan::tests::unknown_capture_and_unknown_fields_refuse_without_refresh",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "meets_expected_count": true,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V4-2.log",
+          "seconds": 0.2385801050113514,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  {
+    "result_file": "V5-result.json",
+    "sha256": "17dcc8ae78336f89acf011c59df11d75006ad2bb4e672babc51e56013e8869ba",
+    "result": {
+      "group": "V5",
+      "executed": false,
+      "disposition": "matching evidence reused; not a new pass"
+    }
+  },
+  {
+    "result_file": "V6-result.json",
+    "sha256": "303d6b740194289b056ad771d0d0ab66b146fdcb01e09202505ab037857c56a3",
+    "result": {
+      "group": "V6",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs",
+            "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs",
+            "crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "meets_expected_count": null,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V6-1.log",
+          "seconds": 0.0373602929757908,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  {
+    "result_file": "V7-result.json",
+    "sha256": "35a1b0b8da710bf00cd7ead4ca8e44374f90825ce78af045c6447d46d881752d",
+    "result": {
+      "group": "V7",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "meets_expected_count": null,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V7-1.log",
+          "seconds": 0.010646895039826632,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  {
+    "result_file": "attempt1-V1-result.json",
+    "sha256": "2e9f4828c77ab79f413ea238e5b0bc933dde2eb3d9b0d58deaacc2157e4ee121",
+    "result": {
+      "group": "V1",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-agent-projection",
+            "--lib",
+            "pkgskill::projection::m_08_b_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "4",
+              "0",
+              "0"
+            ]
+          ],
+          "meets_expected_count": true,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V1-1.log",
+          "seconds": 12.623706086014863,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  {
+    "result_file": "attempt1-V2-result.json",
+    "sha256": "a35b30871531e2e21a40eb3cedda94cb68e4badf7654be38f88d448be63210ce",
+    "result": {
+      "group": "V2",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::adapter_plan::tests::m_08_b_2_cases"
+          ],
+          "exit": 101,
+          "counts": [],
+          "meets_expected_count": false,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V2-1.log",
+          "seconds": 25.827728090051096,
+          "passed": false
+        }
+      ],
+      "passed": false
+    }
+  },
+  {
+    "result_file": "attempt2-V2-result.json",
+    "sha256": "f6af5b45b93db330aa6e87f5926c8394a93fead4bd3adea4e65cf248e251f159",
+    "result": {
+      "group": "V2",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::adapter_plan::tests::m_08_b_2_cases"
+          ],
+          "exit": 101,
+          "counts": [],
+          "meets_expected_count": false,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V2-1.log",
+          "seconds": 9.579614415008109,
+          "passed": false
+        }
+      ],
+      "passed": false
+    }
+  },
+  {
+    "result_file": "attempt3-V2-result.json",
+    "sha256": "c5ef07d39e096acfad371a7e387e887a0484d9134fc883a31f09a04106cd3e90",
+    "result": {
+      "group": "V2",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::adapter_plan::tests::m_08_b_2_cases"
+          ],
+          "exit": 101,
+          "counts": [],
+          "meets_expected_count": false,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V2-1.log",
+          "seconds": 6.333652594999876,
+          "passed": false
+        }
+      ],
+      "passed": false
+    }
+  },
+  {
+    "result_file": "attempt4-V2-result.json",
+    "sha256": "c8afc1d1d0d8ada99e7ca8242266605d5b76162a80fc5284a533f37941ac66b4",
+    "result": {
+      "group": "V2",
+      "executed": true,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::adapter_plan::tests::m_08_b_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "3",
+              "0",
+              "0"
+            ]
+          ],
+          "meets_expected_count": true,
+          "log": "/fast/zap-managed/2026-10-15-m08b2/V2-1.log",
+          "seconds": 14.843038171005901,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  }
+]
