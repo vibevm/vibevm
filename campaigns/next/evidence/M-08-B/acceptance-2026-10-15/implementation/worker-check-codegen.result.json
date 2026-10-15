@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cargo",
+    "--offline",
+    "--locked",
+    "xtask",
+    "check-codegen"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 1,
+  "seconds": 22.03279423713684,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-check-codegen.log",
+  "log_sha256": "fb445786fde5694086e7e0b3cda59d0f1f9efaacadfb0320cf78a3f1f9570572",
+  "counts": [],
+  "nonzero_case_count": 0
+}

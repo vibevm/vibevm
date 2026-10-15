@@ -1,0 +1,220 @@
+{
+  "intent": {
+    "schema": "zap-domain/intent-proposed/1",
+    "intent_id": "intent.m08b1",
+    "revision": 1,
+    "previous_intent_id": null,
+    "summary": "Separate hydration and probes from pure adapter planning for VibeVM M-08-B.1",
+    "beneficiaries": [
+      "project reviewers"
+    ],
+    "values": [
+      "Admitted source and client captures; pure CLI MCP and incumbent inspect paths; explicit preparation"
+    ],
+    "constraints": [
+      "Do not invent project facts"
+    ],
+    "source_refs": [
+      "source.vibevm-m08b1-review-correction.owner-input"
+    ]
+  },
+  "charter": {
+    "charter_id": "charter.m08b1",
+    "policy_id": "policy.m08b1",
+    "campaign_id": "campaign.vibevm-m08b1-review-correction.live",
+    "revision": 1,
+    "parent_digest": null,
+    "intent_id": "intent.m08b1",
+    "intent_digest": "1ba840239c4aba1b82d85cceb3d9327417e42fc9743424b8d28c4d97709a63da",
+    "expected_outcome_id": "outcome.m08b1",
+    "allowed_actions": [
+      "outcome.adopt",
+      "plan.lower",
+      "work.dispatch"
+    ],
+    "mutable_obligations": [
+      "obligation.m08b1"
+    ],
+    "essential_obligations": [],
+    "allowed_dispositions": [
+      "retained"
+    ],
+    "completion_duty_policy": {
+      "final_gate": "no_duty_allowed",
+      "promotion": "no_duty_allowed"
+    },
+    "status": "proposed",
+    "digest": "620e93191744c02fd0a6ee801d075d5cc40f3763bc00c253d2cbe4185b232e36"
+  },
+  "outcome": {
+    "schema": "zap-domain/outcome-proposed/1",
+    "outcome_id": "outcome.m08b1",
+    "revision": 1,
+    "previous_outcome_id": null,
+    "intent_id": "intent.m08b1",
+    "summary": "Pure deterministic prepared adapter planning and typed missing or stale evidence refusals",
+    "benefits": [
+      "Root can distinguish confirmed defects from hypotheses"
+    ],
+    "guarantees": [
+      "Every project claim cites a retained source or is labelled unknown"
+    ],
+    "tradeoffs": [],
+    "obligations": [
+      {
+        "obligation_id": "obligation.m08b1",
+        "statement": "Make adapter inspection operate only on admitted prepared captures.",
+        "essential": false,
+        "source_refs": [
+          "source.vibevm-m08b1-review-correction.owner-input"
+        ],
+        "owners": [
+          {
+            "work_id": "work.m08b1",
+            "role": "implementation"
+          }
+        ]
+      }
+    ],
+    "required_final_gate_evidence_ids": [],
+    "required_promotions": [],
+    "final_gate_disposition": {
+      "kind": "no_duty",
+      "charter_id": "charter.m08b1",
+      "charter_revision": 1,
+      "charter_digest": "620e93191744c02fd0a6ee801d075d5cc40f3763bc00c253d2cbe4185b232e36",
+      "reason": "This bounded pilot stops at an unreviewed candidate; campaign final gate and promotion remain outside this pilot and no task acceptance is implied"
+    },
+    "promotion_disposition": {
+      "kind": "no_duty",
+      "charter_id": "charter.m08b1",
+      "charter_revision": 1,
+      "charter_digest": "620e93191744c02fd0a6ee801d075d5cc40f3763bc00c253d2cbe4185b232e36",
+      "reason": "This bounded pilot stops at an unreviewed candidate; campaign final gate and promotion remain outside this pilot and no task acceptance is implied"
+    }
+  },
+  "strategy": {
+    "strategic_revision_id": "strategy.m08b1",
+    "previous": null,
+    "intent_id": "intent.m08b1",
+    "outcome_id": "outcome.m08b1",
+    "nodes": [
+      {
+        "work_id": "work.m08b1",
+        "title": "M-08-B.1 prepared adapter planning branch",
+        "obligation_ids": [
+          "obligation.m08b1"
+        ],
+        "depends_on": [],
+        "refinement_trigger": "Owner accepts the initial plan"
+      }
+    ],
+    "obligation_ids": [
+      "obligation.m08b1"
+    ],
+    "forks": [],
+    "risks": [],
+    "integration_conditions": [],
+    "relevant_basis": "14e8358ae1b590f3e2449f3b1500f7d3f1f64ca9a345150c884e3506ef90a4e3",
+    "state": "candidate",
+    "semantic_digest": "d6603c8d07284e26dbdbb91454361df826db61f311e2084c413c720e2694a56a",
+    "revision": 1
+  },
+  "milestones": [
+    {
+      "schema": "zap-domain/milestone-created/1",
+      "milestone_id": "milestone.m08b1",
+      "revision_id": "milestone.m08b1.v1",
+      "affected_work_ids": [],
+      "definition": {
+        "strategic_revision_id": "strategy.m08b1",
+        "strategic_record_revision": 1,
+        "strategic_semantic_digest": "d6603c8d07284e26dbdbb91454361df826db61f311e2084c413c720e2694a56a",
+        "outcome_id": "outcome.m08b1",
+        "outcome_revision": 1,
+        "name": "Prepared adapter query and explicit preparation ready",
+        "purpose": "Reuse M01 selected captures and SafeFS plus M16 envelopes; explicit hydration and client probes; no new resolver",
+        "result_criterion": "Root reviews full six owner families, zero-effect query counters, prepared positives, stale/missing capture refusals and actual CLI MCP parity",
+        "consumers": [
+          {
+            "kind": "outcome",
+            "id": "outcome.m08b1"
+          }
+        ],
+        "required_obligation_ids": [
+          "obligation.m08b1"
+        ],
+        "contributions": [
+          {
+            "kind": "work",
+            "work_id": "work.m08b1"
+          }
+        ],
+        "dependencies": [],
+        "lifecycle": "active",
+        "retirement_reason": null
+      }
+    }
+  ],
+  "plan": {
+    "milestone_revision_ids": [
+      "milestone.m08b1.v1"
+    ],
+    "admission_work_ids": [],
+    "focus_milestone_revision_id": "milestone.m08b1.v1",
+    "frontier_milestone_revision_ids": [
+      "milestone.m08b1.v1"
+    ],
+    "horizons": [],
+    "obligation_coverage": [
+      {
+        "obligation_id": "obligation.m08b1",
+        "milestone_revision_ids": [
+          "milestone.m08b1.v1"
+        ]
+      }
+    ],
+    "rationales": [
+      {
+        "milestone_revision_id": "milestone.m08b1.v1",
+        "kind": "consumer_outcome",
+        "sources": [
+          {
+            "source_id": "source.vibevm-m08b1-review-correction.owner-input",
+            "digest": "e13c0af9450c0c15df663db5fd1efb7611c2ff3ec6a09af75bbee426b2575458"
+          }
+        ],
+        "explanation": "M-08-B.1 is the explicitly selected bounded initial pilot"
+      }
+    ]
+  },
+  "horizons": [
+    {
+      "subject": {
+        "kind": "work",
+        "id": "work.m08b1"
+      },
+      "obligation_ids": [
+        "obligation.m08b1"
+      ],
+      "question": "Lower full M08B1 pure adapter planning after owner adoption",
+      "refinement_trigger": "Owner-authorized pilot bootstrap supplies exact contract and workspace"
+    }
+  ],
+  "assumptions": [],
+  "unknowns": [
+    "Implementation and selected nonzero verification remain unexecuted until the managed worker acts"
+  ],
+  "alternatives": [
+    "Reuse accepted M08A contracts and existing source/client owners; no second resolver or process authority"
+  ],
+  "rationale": "Full M08B1 prepared adapter planning; 79 accepted contracts and separate M03A2 safe stop remain source evidence",
+  "resource_assessment": "One PodBay-managed Codex worker, selected gpt-6-astra/medium; Root retains verification and acceptance",
+  "sources": [
+    {
+      "source_id": "source.vibevm-m08b1-review-correction.owner-input",
+      "revision": 1,
+      "digest": "e13c0af9450c0c15df663db5fd1efb7611c2ff3ec6a09af75bbee426b2575458"
+    }
+  ]
+}

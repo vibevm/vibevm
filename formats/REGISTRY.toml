@@ -1782,3 +1782,30 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/derivative-rebase-journal/e1"
 sunset = "none"
+
+[format.adapter-plan-request]
+epoch = 1
+schema = "schemas/adapter_plan/e1/request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/adapter-plan/e1"
+sunset = "none"
+
+[format.adapter-plan-result]
+epoch = 1
+schema = "schemas/adapter_plan/e1/result.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/adapter-plan/e1"
+sunset = "none"
+
+[format.adapter-plan-error]
+epoch = 1
+schema = "schemas/adapter_plan/e1/error.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/adapter-plan/e1"
+sunset = "none"

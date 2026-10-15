@@ -29,15 +29,29 @@ use documentation::{documentation_skills, lower_manifest_skills};
 
 #[path = "projection/binding.rs"]
 mod binding;
+#[path = "projection/capture.rs"]
+mod capture;
 pub(super) use binding::lower_one_binding;
 pub use binding::{
     PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
     ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget,
-    collect_project_skill_bindings, lower_project_skill_bindings, probe_project_skill_binding,
-    probe_recovered_project_skill_bindings, probe_vanished_project_skill_bindings,
-    project_skill_receipt_exists, reconcile_project_skill_binding,
-    reconcile_vanished_project_skill_bindings, recover_project_skill_bindings,
+    collect_project_skill_bindings, lower_project_skill_bindings, prepare_project_skill_bindings,
+    probe_project_skill_binding, probe_recovered_project_skill_bindings,
+    probe_vanished_project_skill_bindings, project_skill_receipt_exists,
+    reconcile_project_skill_binding, reconcile_vanished_project_skill_bindings,
+    recover_project_skill_bindings,
 };
+pub use capture::{PreparedProjectSkills, SourceCaptureStale, prepare_project_skill_capture};
+
+/// The selected declaration needs an explicit source preparation boundary.
+/// This error never means that an attempted preparation had no effects.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, thiserror::Error)]
+#[error("source-capture-missing: explicit adapter source preparation is required")]
+pub struct SourcePreparationRequired;
+
+#[cfg(test)]
+#[path = "projection/m_08_b_1_cases.rs"]
+mod m_08_b_1_cases;
 
 /// A package or project `[[skill]]` declaration lowered to its absolute
 /// source path and a stable human-facing origin label.
@@ -291,6 +305,24 @@ pub fn prepare_declared_skill_projection(
     filter: &DeclaredSkillFilter<'_>,
     scope: Scope,
 ) -> Result<DeclaredSkillProjection> {
+    declared_skill_projection(project_root, filter, scope, true)
+}
+
+/// Read-only compatibility inspection. Embedded/composed sources require an
+/// admitted prepared adapter session and are never hydrated by a dry-run.
+pub fn inspect_declared_skill_projection(
+    project_root: &Path,
+    filter: &DeclaredSkillFilter<'_>,
+    scope: Scope,
+) -> Result<DeclaredSkillProjection> {
+    declared_skill_projection(project_root, filter, scope, false)
+}
+fn declared_skill_projection(
+    project_root: &Path,
+    filter: &DeclaredSkillFilter<'_>,
+    scope: Scope,
+    prepare: bool,
+) -> Result<DeclaredSkillProjection> {
     // Keep standalone diagnostic precedence byte-compatible: CLI agent
     // syntax was validated before workspace discovery in the original
     // surface-owned orchestration.
@@ -312,7 +344,11 @@ pub fn prepare_declared_skill_projection(
     let scopes = scope.expand();
     let mut tasks = Vec::new();
     for mut skill in selected {
-        hydrate_declared_skill(&mut skill, filter.offline)?;
+        if prepare {
+            hydrate_declared_skill(&mut skill, filter.offline)?;
+        } else if skill.decl.source.is_some() || !skill.decl.resources.is_empty() {
+            return Err(SourcePreparationRequired.into());
+        }
         super::receipt::ensure_no_follow_walk(&skill.source_root, &skill.source, true)
             .with_context(|| format!("unsafe source for declared skill `{}`", skill.decl.name))?;
         if skill.source.exists() {
@@ -341,8 +377,26 @@ pub fn prepare_declared_skill_projection(
 /// package root. Direct external skills point at the verified upstream cache;
 /// a local adapter with resources becomes one immutable composed source tree.
 pub(super) fn hydrate_declared_skill(skill: &mut DeclaredSkill, offline: bool) -> Result<()> {
+    hydrate_declared_skill_with(skill, offline, |provider, name, offline| {
+        provider.embedded_root(name, offline)
+    })
+}
+
+fn hydrate_declared_skill_with(
+    skill: &mut DeclaredSkill,
+    offline: bool,
+    resolve: impl FnMut(&DeclaredSkillProvider, &str, bool) -> Result<PathBuf>,
+) -> Result<()> {
+    hydrate_declared_skill_using(skill, offline, resolve, composed_skill_tree)
+}
+fn hydrate_declared_skill_using(
+    skill: &mut DeclaredSkill,
+    offline: bool,
+    mut resolve: impl FnMut(&DeclaredSkillProvider, &str, bool) -> Result<PathBuf>,
+    mut compose: impl FnMut(&str, &str, &BTreeMap<String, Vec<u8>>) -> Result<PathBuf>,
+) -> Result<()> {
     if let Some(source) = skill.decl.source.as_deref() {
-        let root = skill.provider.embedded_root(source, offline)?;
+        let root = resolve(&skill.provider, source, offline)?;
         skill.source = root.join(&skill.decl.path);
         skill.source_root = root;
     }
@@ -354,9 +408,7 @@ pub(super) fn hydrate_declared_skill(skill: &mut DeclaredSkill, offline: bool) -
         .with_context(|| format!("unsafe local adapter source for `{}`", skill.decl.name))?;
     let mut desired = super::snapshot_source(&skill.source, &skill.decl.include)?;
     for resource in &skill.decl.resources {
-        let root = skill
-            .provider
-            .embedded_root(&resource.embedded_source, offline)?;
+        let root = resolve(&skill.provider, &resource.embedded_source, offline)?;
         let source = root.join(&resource.path);
         super::receipt::ensure_no_follow_walk(&root, &source, false).with_context(|| {
             format!(
@@ -386,7 +438,7 @@ pub(super) fn hydrate_declared_skill(skill: &mut DeclaredSkill, offline: bool) -
             skill.decl.name
         )
     })?;
-    let tree = composed_skill_tree(&skill.provider.identity(), &skill.decl.name, &desired)?;
+    let tree = compose(&skill.provider.identity(), &skill.decl.name, &desired)?;
     skill.source = tree.clone();
     skill.source_root = tree;
     skill.decl.include.clear();

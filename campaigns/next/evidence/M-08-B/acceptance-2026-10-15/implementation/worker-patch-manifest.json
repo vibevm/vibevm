@@ -1,0 +1,381 @@
+{
+  "sha256": "b753a7ed5d1b16439437b893b9954676f4c705ac9ade0f38946720a2a26c5dd9",
+  "bytes": 387083,
+  "files": 122,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--binary",
+        "HEAD"
+      ],
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-cli/src/commands/adapter_plan.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-cli/src/commands/adapter_plan/tests.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases/correction.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client_state.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/prepared.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-lifecycle/src/mechanism/deploy/prepared_query.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-mcp/src/tools/adapter_plan.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/test_fixture.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-orchestrator/src/world/m_08_b_1_cases.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-wire/src/behaviour/adapter_plan.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-wire/src/generated/adapter_plan/e1/error/mod.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-wire/src/generated/adapter_plan/e1/request/mod.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-wire/src/generated/adapter_plan/e1/result/mod.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "crates/vibe-wire/src/generated/adapter_plan/mod.rs"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "formats/corpora/adapter-plan/e1/currentness-unavailable.json"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "formats/corpora/adapter-plan/e1/error.json"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "formats/corpora/adapter-plan/e1/plan.json"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "formats/corpora/adapter-plan/e1/request.json"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "formats/corpora/adapter-plan/e1/session.json"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "schemas/adapter_plan/e1/error.jtd.json"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "schemas/adapter_plan/e1/request.jtd.json"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--no-index",
+        "--binary",
+        "--",
+        "/dev/null",
+        "schemas/adapter_plan/e1/result.jtd.json"
+      ],
+      "exit": 1,
+      "meaning": "expected diff-present status, not a verification failure"
+    }
+  ],
+  "index_mutations": false
+}

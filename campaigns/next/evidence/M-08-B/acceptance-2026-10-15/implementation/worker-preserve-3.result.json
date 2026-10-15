@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-lifecycle",
+    "--lib",
+    "mechanism::deploy::plugin::lifecycle_tests::claude_compiled_fake_drives_plan_apply_idempotence_and_inverse",
+    "--",
+    "--exact"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 0.5467348098754883,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-3.log",
+  "log_sha256": "65cc8df560bf2f0f8188b4ccb96d702a54d2b758d6bc17b41eb88f37d9262573",
+  "counts": [
+    {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 891
+    }
+  ],
+  "nonzero_case_count": 1
+}

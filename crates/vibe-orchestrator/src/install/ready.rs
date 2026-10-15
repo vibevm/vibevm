@@ -98,12 +98,17 @@ pub(super) fn apply(
     let mut runtime_sidecar = None;
     let mut prepare = |post_workspace: &Workspace,
                        resolution: &[vibe_workspace::install::ResolvedDep]| {
-        crate::world::prepare_owner_runtime_inputs(project_root, post_workspace, resolution)
-            .map(|(world, lowering, sidecar)| {
-                runtime_sidecar = Some(sidecar);
-                (world, lowering)
-            })
-            .map_err(|error| format!("{error:#}"))
+        crate::world::prepare_owner_runtime_inputs(
+            project_root,
+            post_workspace,
+            resolution,
+            run_metadata.offline,
+        )
+        .map(|(world, lowering, sidecar)| {
+            runtime_sidecar = Some(sidecar);
+            (world, lowering)
+        })
+        .map_err(|error| format!("{error:#}"))
     };
     let applied = vibe_install::PreparedApplyReport::apply_native(
         resolver,

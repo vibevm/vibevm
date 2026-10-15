@@ -42,6 +42,7 @@ pub use model::{
     DeploymentRow, RemovalOutcome, deploy_state_home,
 };
 pub use plan::plan_deploy_targets;
+pub use plugin::client_state::{ClientStateBinding, ClientStateOwner, ClientStateWitness};
 
 use super::error::deploy::native_transport;
 use super::order::{GraphNode, OrderFault, Unresolved, dag_order};
@@ -319,16 +320,17 @@ pub(crate) fn execute_prepared_deploy_targets(
     execution: &DeployExecution<'_>,
     prepared: &crate::native::PreparedNativeMechanisms,
 ) -> Result<Vec<DeployOutcome>, DeployError> {
-    let resolved = resolve_selection_with(execution, Some(prepared))?;
+    let resolved = resolve_selection_with(execution, Some(prepared), false)?;
     apply_selection(execution, &resolved)
 }
 
 pub(crate) fn plan_prepared_deploy_targets(
     execution: &DeployExecution<'_>,
-    prepared: &crate::native::PreparedNativeMechanisms,
+    _prepared: &crate::native::PreparedNativeMechanisms,
 ) -> Result<Vec<DeployPlanReport>, DeployError> {
-    let resolved = resolve_selection_with(execution, Some(prepared))?;
-    plan::plan_resolved(execution, &resolved)
+    // A prepared image is not a prepared Plan result. Never admit/load an
+    // image just because a read-only caller supplied the build-fence sidecar.
+    plan::plan_deploy_targets(execution)
 }
 
 /// Reverse every selected target in reverse dependency order.
@@ -344,7 +346,7 @@ pub(crate) fn undeploy_prepared_targets(
     execution: &DeployExecution<'_>,
     prepared: &crate::native::PreparedNativeMechanisms,
 ) -> Result<Vec<RemovalOutcome>, DeployError> {
-    let resolved = resolve_selection_with(execution, Some(prepared))?;
+    let resolved = resolve_selection_with(execution, Some(prepared), false)?;
     undeploy_resolved(execution, &resolved)
 }
 
@@ -388,12 +390,19 @@ impl GraphNode for Selected<'_> {
 fn resolve_selection<'a>(
     execution: &DeployExecution<'a>,
 ) -> Result<Vec<Selected<'a>>, DeployError> {
-    resolve_selection_with(execution, None)
+    resolve_selection_with(execution, None, false)
+}
+
+fn resolve_query_selection<'a>(
+    execution: &DeployExecution<'a>,
+) -> Result<Vec<Selected<'a>>, DeployError> {
+    resolve_selection_with(execution, None, true)
 }
 
 fn resolve_selection_with<'a>(
     execution: &DeployExecution<'a>,
     prepared: Option<&crate::native::PreparedNativeMechanisms>,
+    query: bool,
 ) -> Result<Vec<Selected<'a>>, DeployError> {
     let mut selected = Vec::with_capacity(execution.selection.targets.len());
     for id in &execution.selection.targets {
@@ -430,6 +439,11 @@ fn resolve_selection_with<'a>(
         let row = selection.row();
         let pin = row.pin().to_string();
         if matches!(row.handler(), ExtensionHandler::Native { .. }) {
+            if query {
+                return Err(super::MechanismError::from(super::error::DeployProviderError::NeedsPreparation {
+                    target: target.id.clone(), reason: vibe_wire::generated::adapter_plan::e1::error::ErrorReason::NativePlanCaptureMissing,
+                }).into());
+            }
             return Err(native_transport(
                 &target.id,
                 &pin,
@@ -552,7 +566,7 @@ pub(super) fn builtin_provider(
     handler: &ExtensionHandler,
     key: &str,
     pin: &str,
-) -> Result<Box<dyn DeployProvider>, DeployError> {
+) -> Result<Box<dyn DeployProvider + Send + Sync>, DeployError> {
     use skill::SkillClient;
     match handler {
         ExtensionHandler::Builtin { name } if name == BUILTIN_VIBE_BIN_NAME => {
@@ -846,3 +860,12 @@ mod bridge_tests;
 
 #[cfg(test)]
 mod m_08_a_1_cases;
+
+#[cfg(test)]
+mod m_08_b_1_cases;
+
+mod prepared_query;
+pub use prepared_query::{
+    PreparedDeployQuery, PreparedDeployRow, prepare_deploy_query,
+    prepare_deploy_query_with_client_state_owner,
+};

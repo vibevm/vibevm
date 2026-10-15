@@ -1,0 +1,53 @@
+{
+  "session_id": 52130,
+  "baseline": "8a1caa7fac81dbec1f99cb5c05deb698678cbabc",
+  "clean": false,
+  "retained_candidate_files": 116,
+  "source_files": 175,
+  "owner_epoch": 2,
+  "grant": "grant.1",
+  "processes": [
+    {
+      "pid": 4100565,
+      "parent": 4100564,
+      "start_ticks": 36052188,
+      "exe": "/fast/zap-managed/2026-10-15-m08b1-review-correction/pins/zap"
+    },
+    {
+      "pid": 4100569,
+      "parent": 4100565,
+      "start_ticks": 36052211,
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay"
+    },
+    {
+      "pid": 4100677,
+      "parent": 4100569,
+      "start_ticks": 36052778,
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod"
+    },
+    {
+      "pid": 4100703,
+      "parent": 4100677,
+      "start_ticks": 36052840,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex"
+    }
+  ],
+  "native": {
+    "accounting_pending": false,
+    "collected": false,
+    "failed": false,
+    "more_stored_output": false,
+    "operation": "managed.3ffa5d0a65dcc7158e6fcc44e9a60d8d77579d3087b4fd87009f2d4f0b02d7a7",
+    "process_stopped": false,
+    "retry_at_ns": 0,
+    "source_sequence": 65,
+    "state": "collecting",
+    "target": {
+      "dispatch_id": "dispatch.runtime.packet.vibevm-m08b1-review-correction",
+      "job_id": "job.runtime.packet.vibevm-m08b1-review-correction",
+      "kind": "job"
+    },
+    "unknown_tail": false
+  },
+  "question_pending": false
+}

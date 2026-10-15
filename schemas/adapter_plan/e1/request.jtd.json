@@ -1,0 +1,43 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "command": {
+      "ref": "command"
+    }
+  },
+  "definitions": {
+    "command": {
+      "discriminator": "action",
+      "mapping": {
+        "describe": {
+          "properties": {}
+        },
+        "plan": {
+          "properties": {},
+          "optionalProperties": {
+            "capture_id": {
+              "type": "string",
+              "metadata": {
+                "x-default": null
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "description": "Host-bound prepared adapter queries; no preparation or effect authority.",
+    "rustOptions": {
+      "package": "vibe_wire::adapter_plan::e1::request"
+    }
+  }
+}

@@ -19,6 +19,9 @@
 /// two stay in lockstep in both directions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
+    AdapterPlanError,
+    AdapterPlanRequest,
+    AdapterPlanResult,
     ApplicationBundleManifest,
     ApplicationContext,
     ApplicationDistributionIndex,

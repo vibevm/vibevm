@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-lifecycle",
+    "--lib",
+    "mechanism::deploy::plugin::lifecycle_tests::interrupted_cli_apply_recovers_without_a_second_install",
+    "--",
+    "--exact"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 5.16489315032959,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-recovery.log",
+  "log_sha256": "234ad39712d1bd29c6652527c6f0da31aba2678efe6789e31afb72c4b6a1e0e5",
+  "counts": [
+    {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 891
+    }
+  ],
+  "nonzero_case_count": 1
+}

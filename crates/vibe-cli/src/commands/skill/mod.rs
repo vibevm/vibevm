@@ -15,7 +15,7 @@ use dialoguer::Confirm;
 use vibe_agent_projection::agents::Scope;
 use vibe_agent_projection::pkgskill::{
     DeclaredSkillFilter, PackageSkillReport, collect_declared_skills,
-    prepare_declared_skill_projection,
+    inspect_declared_skill_projection, prepare_declared_skill_projection,
 };
 use vibe_core::machine_json_path;
 
@@ -163,7 +163,11 @@ fn run_install(ctx: &output::Context, args: SkillInstallArgs, offline: bool) -> 
     let scope = resolve_scope(&args.scope)?;
     let filter =
         DeclaredSkillFilter::new(&args.skills, args.agent.as_deref()).with_offline(offline);
-    let plan = prepare_declared_skill_projection(&project_root, &filter, scope)?;
+    let plan = if args.dry_run {
+        inspect_declared_skill_projection(&project_root, &filter, scope)?
+    } else {
+        prepare_declared_skill_projection(&project_root, &filter, scope)?
+    };
 
     ctx.heading("Skill install plan:");
     let previews = plan.install(true)?;
@@ -196,7 +200,11 @@ fn run_uninstall(ctx: &output::Context, args: SkillUninstallArgs, offline: bool)
     let scope = resolve_scope(&args.scope)?;
     let filter =
         DeclaredSkillFilter::new(&args.skills, args.agent.as_deref()).with_offline(offline);
-    let plan = prepare_declared_skill_projection(&project_root, &filter, scope)?;
+    let plan = if args.dry_run {
+        inspect_declared_skill_projection(&project_root, &filter, scope)?
+    } else {
+        prepare_declared_skill_projection(&project_root, &filter, scope)?
+    };
 
     ctx.heading("Skill uninstall plan:");
     let previews = plan.uninstall(true)?;

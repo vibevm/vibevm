@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "context_id": "context",
+  "target_id": "target",
+  "result_id": "result",
+  "capture_id": "capture",
+  "body": {
+    "kind": "plan",
+    "complete": true,
+    "rows": [
+      {
+        "kind": "skill",
+        "provider": "org.example/fixture",
+        "declaration": "demo",
+        "agent": "claude",
+        "scope": "project",
+        "target": ".claude/skills/demo",
+        "source_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "proof": "observed",
+        "ownership": "unavailable",
+        "files": [
+          {
+            "path": "SKILL.md",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "bytes": "4"
+          }
+        ]
+      }
+    ]
+  }
+}

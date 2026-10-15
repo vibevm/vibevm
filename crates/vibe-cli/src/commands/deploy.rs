@@ -120,7 +120,8 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
     };
     let loaded = vibe_orchestrator::inspect(&root)?;
     let roots = state_roots()?;
-    let (user_home, clients) = client_authority()?;
+    let user_home = dirs::home_dir().context("host user home unavailable")?;
+    let clients = clients::unprepared_clients();
     let targets = deploy_targets(&manifest);
     let created_at = now();
     let execution = DeployExecution {
@@ -137,40 +138,13 @@ fn plan(ctx: &output::Context, args: &DeployArgs) -> Result<()> {
         package: None,
         created_at: &created_at,
     };
-    let preflight = ctx.progress().task("Preparing deploy providers");
-    preflight.set_progress(
-        0,
-        Some(resolution.selection().targets.len() as u64),
-        "targets",
-    );
-    let prepared = match rehydrate(&execution, platform) {
-        Ok(prepared) => {
-            for target in &resolution.selection().targets {
-                preflight
-                    .progress()
-                    .task(format!("Prepared deploy provider for {target}"))
-                    .finish();
-            }
-            preflight.set_progress(
-                resolution.selection().targets.len() as u64,
-                Some(resolution.selection().targets.len() as u64),
-                "targets",
-            );
-            preflight.finish();
-            prepared
-        }
-        Err(error) => {
-            preflight.fail("deploy provider preparation failed");
-            return Err(error);
-        }
-    };
     let planning = ctx.progress().task("Planning deploy targets");
     planning.set_progress(
         0,
         Some(resolution.selection().targets.len() as u64),
         "targets",
     );
-    let reports = match prepared.plan_deploy_targets(&execution) {
+    let reports = match vibe_lifecycle::plan_deploy_targets(&execution) {
         Ok(reports) => {
             for report in &reports {
                 planning
@@ -421,4 +395,37 @@ pub(crate) fn identity(manifest: &Manifest) -> String {
 /// surface is where a clock is read.
 fn now() -> String {
     chrono::Utc::now().to_rfc3339()
+}
+
+/// Startup-only adapter preparation through the incumbent profile and client owners.
+pub(crate) fn prepare_adapter_plan(
+    host: &vibe_orchestrator::machine_operation::adapter_plan::AdapterPlanHost,
+    root: &std::path::Path,
+    profile: &str,
+    offline: bool,
+) -> Result<vibe_orchestrator::machine_operation::adapter_plan::PreparedAdapterSession> {
+    let manifest = read_manifest(root)?;
+    let platform = NativePlatform::current()?;
+    let resolution = resolve_profile(
+        manifest.deploy.as_ref(),
+        Some(profile),
+        profile::ProfileMode::Forward(current_target_os(platform)),
+    )?
+    .context("deploy profile is empty")?;
+    let roots = state_roots()?;
+    let (user_home, clients) = client_authority()?;
+    let targets = deploy_targets(&manifest);
+    Ok(host.prepare_deploy(
+        offline,
+        vibe_orchestrator::machine_operation::adapter_plan::AdapterDeployPreparation {
+            targets: &targets,
+            os: current_target_os(platform),
+            selection: resolution.selection(),
+            state_home: &roots.deployments,
+            settings_root: &roots.settings,
+            user_home: &user_home,
+            clients: &clients,
+            project: &identity(&manifest),
+        },
+    )?)
 }

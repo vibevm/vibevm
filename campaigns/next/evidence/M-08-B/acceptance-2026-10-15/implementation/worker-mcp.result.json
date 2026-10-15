@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-mcp",
+    "--lib",
+    "tools::adapter_plan::tests"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 3.6931755542755127,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-mcp.log",
+  "log_sha256": "ea03ae27d1f7eeb82cf5196a0e96519d2eab5b33302fc601c24b3473ac98c935",
+  "counts": [
+    {
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 209
+    }
+  ],
+  "nonzero_case_count": 3
+}

@@ -323,6 +323,7 @@ impl MachineOperationService {
     }
 }
 
+pub mod adapter_plan;
 pub mod boot_debugger;
 mod coverage;
 mod discovery;

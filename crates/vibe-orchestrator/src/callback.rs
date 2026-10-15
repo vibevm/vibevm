@@ -132,7 +132,12 @@ fn stage(
     // The install's OWN workspace — including a `--git` delta it just recorded
     // in memory. Planning from a rediscovery here would collect a world the
     // command did not produce.
-    let ritual = world::plan_default_prepared(path, workspace, &phases)?;
+    let ritual = world::plan_with_runtime(
+        path,
+        workspace,
+        run.native.as_ref().map(|native| native.parts()),
+        &phases,
+    )?;
     let metadata = run.metadata.clone();
     surface_plan(observer, &ritual, &metadata, false)?;
     let state_chain = metadata.chain.clone();

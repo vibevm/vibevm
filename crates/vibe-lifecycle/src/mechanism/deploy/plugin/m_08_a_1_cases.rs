@@ -226,7 +226,8 @@ fn cli_plugin_wire_is_inert_user_scope_install_remove_and_update_refusal() {
         let provider = ClientPluginProvider {
             client,
             runner: Arc::new(Capture::default()),
-            planned_version: Mutex::new(None),
+            prepared: Mutex::new(None),
+            state_owner: Mutex::new(None),
         };
         let receipt = receipt_owning(0, &[]);
         let req = request(&world, &row, None, Some(&receipt), false);
@@ -272,7 +273,8 @@ fn plugin_admission_rejects_file_and_unsupported_tree_shapes() {
         let provider = ClientPluginProvider {
             client,
             runner: Arc::new(Capture::default()),
-            planned_version: Mutex::new(None),
+            prepared: Mutex::new(None),
+            state_owner: Mutex::new(None),
         };
         assert!(
             provider

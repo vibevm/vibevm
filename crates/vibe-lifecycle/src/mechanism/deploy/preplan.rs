@@ -97,7 +97,8 @@ pub(crate) fn preplan(
             artifact: Some(&artifact),
             staging: None,
         };
-        let plan = selected.provider.plan(&request)?;
+        selected.provider.prepare_plan(&request)?;
+        let (plan, _) = selected.provider.preparation_result(&request)?;
         validate_lock_set(selected, &plan)?;
         prepared.push(Preplanned {
             artifact,

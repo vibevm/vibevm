@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-cli",
+    "--bin",
+    "vibe",
+    "commands::adapter_plan::tests"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 36.55927920341492,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli.log",
+  "log_sha256": "e50a6d6f3b252373c075e199afc26763b6a1262098b60da86f037da7f265cf29",
+  "counts": [
+    {
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 939
+    }
+  ],
+  "nonzero_case_count": 4
+}

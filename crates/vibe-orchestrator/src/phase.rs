@@ -366,13 +366,14 @@ fn run(
     let chain_installs = executes_install;
     let ritual = match admitted_current {
         Some(ritual) => ritual,
-        None => match collector.native(chain_installs)? {
-            Some(native) => {
-                let (epoch, sidecar) = native.parts();
-                world::plan_default_from_runtime(epoch, sidecar, &phases)?
-            }
-            None => world::plan_default_prepared(&project_root, planning_workspace, &phases)?,
-        },
+        None => world::plan_with_runtime(
+            &project_root,
+            planning_workspace,
+            collector
+                .native(chain_installs)?
+                .map(|native| native.parts()),
+            &phases,
+        )?,
     };
     // Retain the opaque replay authority across the complete dispatch. R5.4-
     // FENCE will consume it at the build fence; INSTALL's responsibility is

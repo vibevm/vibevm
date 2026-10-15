@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-lifecycle",
+    "--lib",
+    "mechanism::deploy::plugin::lifecycle_tests::read_only_plan_runs_only_version_and_list_and_creates_no_support_or_state",
+    "--",
+    "--exact"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 0.4186079502105713,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-0.log",
+  "log_sha256": "7527bc529ff396d59769d2e39942dfc419c65d6d0101d3d94a4150ebab44de36",
+  "counts": [
+    {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 891
+    }
+  ],
+  "nonzero_case_count": 1
+}

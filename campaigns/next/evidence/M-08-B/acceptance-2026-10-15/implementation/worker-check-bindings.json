@@ -1,0 +1,63 @@
+{
+  "before_first_compile": true,
+  "case_names": {
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases.rs": [
+      "missing_client_capture_refuses_without_process_and_prepared_query_is_pure",
+      "prepared_three_clients_fingerprint_without_reprobe_and_changed_executable_refuses",
+      "missing_native_result_refuses_before_image_admission",
+      "injected_process_and_mutation_attempts_are_zero_during_plan_and_fingerprint"
+    ],
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases/correction.rs": [
+      "admitted_parent_and_leaf_symlink_preserves_launcher_execution",
+      "large_inert_executable_uses_size_independent_observation",
+      "equal_byte_launcher_retarget_refuses_for_parent_and_leaf",
+      "executable_mode_content_and_object_drift_refuse",
+      "owned_client_disable_remove_scope_and_version_drift_refuse",
+      "absent_state_then_foreign_installation_refuses_all_query_views",
+      "client_state_change_during_list_refuses_capture",
+      "unqualified_state_keeps_historical_probes_but_all_queries_refuse",
+      "absent_and_unsupported_executables_have_distinct_refusals"
+    ],
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs": [
+      "prepared_plan_is_nonempty_deterministic_and_source_drift_refuses",
+      "unprepared_and_foreign_bindings_have_closed_refusals",
+      "unknown_capture_and_unknown_fields_refuse_without_refresh",
+      "prepared_deploy_binds_client_probes_and_refuses_executable_drift",
+      "both_scopes_use_host_injected_home_without_creating_destinations",
+      "unqualified_deploy_retains_history_and_returns_typed_unavailable"
+    ],
+    "crates/vibe-mcp/src/tools/adapter_plan.rs": [
+      "registered_configured_arc_matches_owner_and_refuses_source_drift",
+      "unconfigured_and_wrong_root_return_generated_errors",
+      "configured_deploy_currentness_unavailable_is_generated_no_effects"
+    ],
+    "crates/vibe-cli/src/commands/adapter_plan/tests.rs": [
+      "clap_admits_offline_prepare_and_rejects_incompatible_targets",
+      "serve_and_registered_mcp_share_positive_and_missing_payloads",
+      "spawned_prepared_offline_cli_emits_only_protocol_and_retains_plan",
+      "configured_deploy_cli_mcp_share_positive_stale_and_unavailable_currentness"
+    ],
+    "crates/vibe-wire/src/behaviour/adapter_plan.rs": [
+      "golden_readers_reject_foreign_binding_and_effect_completeness",
+      "generated_request_rejects_unknown_and_wrong_optional_types",
+      "currentness_unavailable_reasons_roundtrip_and_reject_malformed_combinations",
+      "error_requires_reason_only_for_preparation_and_preserves_binding",
+      "session_and_complete_ordered_plan_roundtrip"
+    ]
+  },
+  "expected_family_counts": {
+    "lifecycle": 13,
+    "orchestrator": 6,
+    "mcp": 3,
+    "cli": 4,
+    "wire": 5
+  },
+  "exact_regressions": [
+    "read_only_plan_runs_only_version_and_list_and_creates_no_support_or_state",
+    "installed_coordinate_without_receipt_is_an_unowned_occupant",
+    "apply_rechecks_opencode_occupancy_after_a_clean_plan",
+    "claude_compiled_fake_drives_plan_apply_idempotence_and_inverse",
+    "codex_compiled_fake_observes_the_exact_json_argv_contract"
+  ],
+  "groups": "SELECTED-CHECKS.json and correction-preflight.md all eight; projection/world and command_progress conditional reuse subject hashes"
+}

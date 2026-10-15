@@ -40,6 +40,7 @@ pub(super) struct NativeDeployProvider {
     atomic_replacement: bool,
     reference_ownership: bool,
     planned: Mutex<Vec<PlannedDeployResource>>,
+    query: Mutex<Option<(String, String, DeployPlan, DeployFingerprint)>>,
 }
 
 impl NativeDeployProvider {
@@ -88,7 +89,115 @@ impl NativeDeployProvider {
             binding: restart,
             provider: binding.pin.clone(),
             planned: Mutex::new(Vec::new()),
+            query: Mutex::new(None),
         })
+    }
+
+    fn prepare_native_plan(
+        &self,
+        call: &DeployTargetRequest<'_>,
+    ) -> Result<DeployPlan, MechanismError> {
+        let request = request::DeployRequest::Plan(Box::new(request::DeployRequestPlan {
+            envelope: ENVELOPE_EPOCH,
+            protocol: PROTOCOL_EPOCH,
+            identity: self.identity(call),
+            artifact: self.artifact(call, "plan")?,
+            authority: authority(call),
+            config_toml: config(call, &self.provider)?,
+            prior_receipt: call.prior_receipt.map(prior_receipt),
+            recovery_intent: call.recovery_intent.map(recovery_intent),
+        }));
+        let reply::DeployReply::Plan(reply) = self.invoke(&call.target.id, "plan", &request)?
+        else {
+            unreachable!("loader admits exact reply operation")
+        };
+        let reply::PlanResult::Ok(result) = reply.result else {
+            let reply::PlanResult::Fail(fail) = reply.result else {
+                unreachable!()
+            };
+            return Err(native_fault(
+                &call.target.id,
+                &self.provider,
+                "plan",
+                &fail.message,
+            ));
+        };
+        scalar(&result.summary, call, &self.provider, "plan", "summary")?;
+        digest(&result.config_digest, call, &self.provider, "plan")?;
+        let resources = result
+            .resources
+            .into_iter()
+            .map(|row| {
+                digest(&row.desired_digest, call, &self.provider, "plan")?;
+                Ok(PlannedDeployResource {
+                    resource: owned_resource(&row.resource, call, &self.provider, "plan")?,
+                    desired_digest: row.desired_digest,
+                })
+            })
+            .collect::<Result<Vec<_>, MechanismError>>()?;
+        let lock_resources = result
+            .lock_resources
+            .iter()
+            .map(|resource| lock_resource(resource, call, &self.provider, "plan"))
+            .collect::<Result<Vec<_>, _>>()?;
+        *self.planned.lock().map_err(|_| {
+            native_fault(
+                &call.target.id,
+                &self.provider,
+                "plan",
+                "native plan cache is unavailable",
+            )
+        })? = resources.clone();
+        Ok(DeployPlan {
+            resources,
+            lock_resources,
+            config_digest: result.config_digest,
+            reversible: result.reversible,
+            summary: result.summary,
+        })
+    }
+
+    fn prepare_native_fingerprint(
+        &self,
+        call: &DeployTargetRequest<'_>,
+        plan: &DeployPlan,
+    ) -> Result<DeployFingerprint, MechanismError> {
+        let request =
+            request::DeployRequest::Fingerprint(Box::new(request::DeployRequestFingerprint {
+                envelope: ENVELOPE_EPOCH,
+                protocol: PROTOCOL_EPOCH,
+                identity: self.identity(call),
+                artifact: self.artifact(call, "fingerprint")?,
+                plan: wire_plan(plan),
+                config_toml: config(call, &self.provider)?,
+            }));
+        let reply::DeployReply::Fingerprint(reply) =
+            self.invoke(&call.target.id, "fingerprint", &request)?
+        else {
+            unreachable!("loader admits exact reply operation")
+        };
+        match reply.result {
+            reply::FingerprintResult::Ok(result) => {
+                digest(&result.digest, call, &self.provider, "fingerprint")?;
+                scalar(
+                    &result.summary,
+                    call,
+                    &self.provider,
+                    "fingerprint",
+                    "summary",
+                )?;
+                Ok(DeployFingerprint {
+                    digest: result.digest,
+                    summary: result.summary,
+                })
+            }
+            reply::FingerprintResult::Fail(fail) => Err(native_fault(
+                &call.target.id,
+                &self.provider,
+                "fingerprint",
+                &fail.message,
+            )),
+        }
     }
 
     fn invoke(
@@ -203,107 +312,42 @@ impl DeployProvider for NativeDeployProvider {
         Some(&self.binding)
     }
 
-    fn plan(&self, call: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {
-        let request = request::DeployRequest::Plan(Box::new(request::DeployRequestPlan {
-            envelope: ENVELOPE_EPOCH,
-            protocol: PROTOCOL_EPOCH,
-            identity: self.identity(call),
-            artifact: self.artifact(call, "plan")?,
-            authority: authority(call),
-            config_toml: config(call, &self.provider)?,
-            prior_receipt: call.prior_receipt.map(prior_receipt),
-            recovery_intent: call.recovery_intent.map(recovery_intent),
-        }));
-        let reply::DeployReply::Plan(reply) = self.invoke(&call.target.id, "plan", &request)?
-        else {
-            unreachable!("loader admits exact reply operation")
-        };
-        let reply::PlanResult::Ok(result) = reply.result else {
-            let reply::PlanResult::Fail(fail) = reply.result else {
-                unreachable!()
-            };
-            return Err(native_fault(
-                &call.target.id,
-                &self.provider,
-                "plan",
-                &fail.message,
-            ));
-        };
-        scalar(&result.summary, call, &self.provider, "plan", "summary")?;
-        digest(&result.config_digest, call, &self.provider, "plan")?;
-        let resources = result
-            .resources
-            .into_iter()
-            .map(|row| {
-                digest(&row.desired_digest, call, &self.provider, "plan")?;
-                Ok(PlannedDeployResource {
-                    resource: owned_resource(&row.resource, call, &self.provider, "plan")?,
-                    desired_digest: row.desired_digest,
-                })
-            })
-            .collect::<Result<Vec<_>, MechanismError>>()?;
-        let lock_resources = result
-            .lock_resources
-            .iter()
-            .map(|resource| lock_resource(resource, call, &self.provider, "plan"))
-            .collect::<Result<Vec<_>, _>>()?;
-        *self.planned.lock().map_err(|_| {
-            native_fault(
-                &call.target.id,
-                &self.provider,
-                "plan",
-                "native plan cache is unavailable",
-            )
-        })? = resources.clone();
-        Ok(DeployPlan {
-            resources,
-            lock_resources,
-            config_digest: result.config_digest,
-            reversible: result.reversible,
-            summary: result.summary,
-        })
+    fn prepare_plan(&self, call: &DeployTargetRequest<'_>) -> Result<(), MechanismError> {
+        *self.query.lock().expect("native query capture") = None;
+        let plan = self.prepare_native_plan(call)?;
+        let fingerprint = self.prepare_native_fingerprint(call, &plan)?;
+        *self.query.lock().expect("native query capture") = Some((
+            format!("{:?}:{call:?}", self.binding),
+            format!(
+                "{:?}:{:?}",
+                self.binding,
+                DeployTargetRequest {
+                    staging: None,
+                    recovery_intent: None,
+                    ..*call
+                }
+            ),
+            plan,
+            fingerprint,
+        ));
+        Ok(())
     }
-
+    fn plan(&self, call: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {
+        let slot = self.query.lock().expect("native query capture");
+        match slot.as_ref() {
+            Some((binding, _, plan, _)) if *binding == format!("{:?}:{call:?}", self.binding) => Ok(plan.clone()),
+            _ => Err(crate::mechanism::error::DeployProviderError::NeedsPreparation { target: call.target.id.clone(), reason: vibe_wire::generated::adapter_plan::e1::error::ErrorReason::NativePlanCaptureMissing }.into()),
+        }
+    }
     fn fingerprint(
         &self,
         call: &DeployTargetRequest<'_>,
         plan: &DeployPlan,
     ) -> Result<DeployFingerprint, MechanismError> {
-        let request =
-            request::DeployRequest::Fingerprint(Box::new(request::DeployRequestFingerprint {
-                envelope: ENVELOPE_EPOCH,
-                protocol: PROTOCOL_EPOCH,
-                identity: self.identity(call),
-                artifact: self.artifact(call, "fingerprint")?,
-                plan: wire_plan(plan),
-                config_toml: config(call, &self.provider)?,
-            }));
-        let reply::DeployReply::Fingerprint(reply) =
-            self.invoke(&call.target.id, "fingerprint", &request)?
-        else {
-            unreachable!("loader admits exact reply operation")
-        };
-        match reply.result {
-            reply::FingerprintResult::Ok(result) => {
-                digest(&result.digest, call, &self.provider, "fingerprint")?;
-                scalar(
-                    &result.summary,
-                    call,
-                    &self.provider,
-                    "fingerprint",
-                    "summary",
-                )?;
-                Ok(DeployFingerprint {
-                    digest: result.digest,
-                    summary: result.summary,
-                })
-            }
-            reply::FingerprintResult::Fail(fail) => Err(native_fault(
-                &call.target.id,
-                &self.provider,
-                "fingerprint",
-                &fail.message,
-            )),
+        let slot = self.query.lock().expect("native query capture");
+        match slot.as_ref() {
+            Some((_, binding, expected, fingerprint)) if *binding == format!("{:?}:{:?}", self.binding, DeployTargetRequest { staging: None, recovery_intent: None, ..*call }) && expected == plan => Ok(fingerprint.clone()),
+            _ => Err(crate::mechanism::error::DeployProviderError::NeedsPreparation { target: call.target.id.clone(), reason: vibe_wire::generated::adapter_plan::e1::error::ErrorReason::NativePlanCaptureMissing }.into()),
         }
     }
 

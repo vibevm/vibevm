@@ -1,0 +1,190 @@
+{
+  "claims": [
+    {
+      "claim": "projection",
+      "snapshot": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-1.json",
+      "log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-1.log",
+      "log_sha256": "adce37dc735b675e2f52d3799a3f1999d3950503d7817227d71f22423630ce7e",
+      "consumed_subjects": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "crates/vibe-agent-projection/Cargo.toml": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+        "crates/vibe-agent-projection/src/lib.rs": "38a25cd8a23510c9411c2b1e2533bddce84639080336490c3dbb3717d2a428f2",
+        "crates/vibe-agent-projection/src/pkgskill.rs": "d7fcba0b9df6831d1cba668b9f93a6f0642a28d3d2c1c6143f2f97f41b56f9d7",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": "457102da4ade5bce279ad5bd7fd917e17d3a0bfe228d4a6817aeca4707661337",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding/tests.rs": "bf739fcc30cac5c8d5db628ac62af573adcf76ddbf300d2895bc5398843bb327",
+        "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs": "70e5289a64de3e9b4f1a8a8c2f178bb285a101f6ef05b0bf37ba65e4d8ebd359",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs": "5f1b3781b77fb6d27bceb2b6ab639d84a3f12d73d54503375ba1b9f77309f729",
+        "crates/vibe-agent-projection/src/pkgskill/projection/tests.rs": "a4b69bd9d7a68a2e21ba8685ddbe23ad3c5ac799d63f58ce93105a17d536d086",
+        "crates/vibe-agent-projection/src/pkgskill/receipt.rs": "8b9cb574567788140f7d03fee218d7e14b8ebbf4e85fbddaf890d272fab42d69"
+      },
+      "mismatches": []
+    },
+    {
+      "claim": "projection",
+      "snapshot": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-9.json",
+      "log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-9.log",
+      "log_sha256": "eb147f634a0da3d9e2ceac58bc69fde20eeedb51e1caa8727c0f1c9198b404d5",
+      "consumed_subjects": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "crates/vibe-agent-projection/Cargo.toml": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+        "crates/vibe-agent-projection/src/lib.rs": "38a25cd8a23510c9411c2b1e2533bddce84639080336490c3dbb3717d2a428f2",
+        "crates/vibe-agent-projection/src/pkgskill.rs": "d7fcba0b9df6831d1cba668b9f93a6f0642a28d3d2c1c6143f2f97f41b56f9d7",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": "457102da4ade5bce279ad5bd7fd917e17d3a0bfe228d4a6817aeca4707661337",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding/tests.rs": "bf739fcc30cac5c8d5db628ac62af573adcf76ddbf300d2895bc5398843bb327",
+        "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs": "70e5289a64de3e9b4f1a8a8c2f178bb285a101f6ef05b0bf37ba65e4d8ebd359",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs": "5f1b3781b77fb6d27bceb2b6ab639d84a3f12d73d54503375ba1b9f77309f729",
+        "crates/vibe-agent-projection/src/pkgskill/projection/tests.rs": "a4b69bd9d7a68a2e21ba8685ddbe23ad3c5ac799d63f58ce93105a17d536d086",
+        "crates/vibe-agent-projection/src/pkgskill/receipt.rs": "8b9cb574567788140f7d03fee218d7e14b8ebbf4e85fbddaf890d272fab42d69"
+      },
+      "mismatches": []
+    },
+    {
+      "claim": "projection",
+      "snapshot": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-10.json",
+      "log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-10.log",
+      "log_sha256": "9aa7c0da3a9de1fed3f546eae1661cc40121805255feedff30082b7a1b4de75b",
+      "consumed_subjects": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "crates/vibe-agent-projection/Cargo.toml": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+        "crates/vibe-agent-projection/src/lib.rs": "38a25cd8a23510c9411c2b1e2533bddce84639080336490c3dbb3717d2a428f2",
+        "crates/vibe-agent-projection/src/pkgskill.rs": "d7fcba0b9df6831d1cba668b9f93a6f0642a28d3d2c1c6143f2f97f41b56f9d7",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": "457102da4ade5bce279ad5bd7fd917e17d3a0bfe228d4a6817aeca4707661337",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding/tests.rs": "bf739fcc30cac5c8d5db628ac62af573adcf76ddbf300d2895bc5398843bb327",
+        "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs": "70e5289a64de3e9b4f1a8a8c2f178bb285a101f6ef05b0bf37ba65e4d8ebd359",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs": "5f1b3781b77fb6d27bceb2b6ab639d84a3f12d73d54503375ba1b9f77309f729",
+        "crates/vibe-agent-projection/src/pkgskill/projection/tests.rs": "a4b69bd9d7a68a2e21ba8685ddbe23ad3c5ac799d63f58ce93105a17d536d086",
+        "crates/vibe-agent-projection/src/pkgskill/receipt.rs": "8b9cb574567788140f7d03fee218d7e14b8ebbf4e85fbddaf890d272fab42d69"
+      },
+      "mismatches": []
+    },
+    {
+      "claim": "projection",
+      "snapshot": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-11.json",
+      "log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-11.log",
+      "log_sha256": "baba20014ff969fb2ccc8e627cce0d122bb481b2462ea4a07d44d5650ddbfc37",
+      "consumed_subjects": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "crates/vibe-agent-projection/Cargo.toml": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+        "crates/vibe-agent-projection/src/lib.rs": "38a25cd8a23510c9411c2b1e2533bddce84639080336490c3dbb3717d2a428f2",
+        "crates/vibe-agent-projection/src/pkgskill.rs": "d7fcba0b9df6831d1cba668b9f93a6f0642a28d3d2c1c6143f2f97f41b56f9d7",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": "457102da4ade5bce279ad5bd7fd917e17d3a0bfe228d4a6817aeca4707661337",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding/tests.rs": "bf739fcc30cac5c8d5db628ac62af573adcf76ddbf300d2895bc5398843bb327",
+        "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs": "70e5289a64de3e9b4f1a8a8c2f178bb285a101f6ef05b0bf37ba65e4d8ebd359",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs": "5f1b3781b77fb6d27bceb2b6ab639d84a3f12d73d54503375ba1b9f77309f729",
+        "crates/vibe-agent-projection/src/pkgskill/projection/tests.rs": "a4b69bd9d7a68a2e21ba8685ddbe23ad3c5ac799d63f58ce93105a17d536d086",
+        "crates/vibe-agent-projection/src/pkgskill/receipt.rs": "8b9cb574567788140f7d03fee218d7e14b8ebbf4e85fbddaf890d272fab42d69"
+      },
+      "mismatches": []
+    },
+    {
+      "claim": "projection",
+      "snapshot": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-12.json",
+      "log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-12.log",
+      "log_sha256": "0880c49c514c62959b99fd699a908bb265a9d64717714cfb15e3d9072b21375b",
+      "consumed_subjects": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "crates/vibe-agent-projection/Cargo.toml": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+        "crates/vibe-agent-projection/src/lib.rs": "38a25cd8a23510c9411c2b1e2533bddce84639080336490c3dbb3717d2a428f2",
+        "crates/vibe-agent-projection/src/pkgskill.rs": "d7fcba0b9df6831d1cba668b9f93a6f0642a28d3d2c1c6143f2f97f41b56f9d7",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": "457102da4ade5bce279ad5bd7fd917e17d3a0bfe228d4a6817aeca4707661337",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding/tests.rs": "bf739fcc30cac5c8d5db628ac62af573adcf76ddbf300d2895bc5398843bb327",
+        "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs": "70e5289a64de3e9b4f1a8a8c2f178bb285a101f6ef05b0bf37ba65e4d8ebd359",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs": "5f1b3781b77fb6d27bceb2b6ab639d84a3f12d73d54503375ba1b9f77309f729",
+        "crates/vibe-agent-projection/src/pkgskill/projection/tests.rs": "a4b69bd9d7a68a2e21ba8685ddbe23ad3c5ac799d63f58ce93105a17d536d086",
+        "crates/vibe-agent-projection/src/pkgskill/receipt.rs": "8b9cb574567788140f7d03fee218d7e14b8ebbf4e85fbddaf890d272fab42d69"
+      },
+      "mismatches": []
+    },
+    {
+      "claim": "world",
+      "snapshot": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-4.json",
+      "log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-4.log",
+      "log_sha256": "ad27862fcbc3b7c4c6f4a93599889bc4613ec9d51529f9be11a1082761bde16c",
+      "consumed_subjects": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "crates/vibe-agent-projection/Cargo.toml": "e02b2762832f5bd6f17a773d59777bf7088c52a8e1161411dd54ce9c97e90152",
+        "crates/vibe-agent-projection/src/lib.rs": "38a25cd8a23510c9411c2b1e2533bddce84639080336490c3dbb3717d2a428f2",
+        "crates/vibe-agent-projection/src/pkgskill.rs": "d7fcba0b9df6831d1cba668b9f93a6f0642a28d3d2c1c6143f2f97f41b56f9d7",
+        "crates/vibe-agent-projection/src/pkgskill/projection.rs": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": "457102da4ade5bce279ad5bd7fd917e17d3a0bfe228d4a6817aeca4707661337",
+        "crates/vibe-agent-projection/src/pkgskill/projection/binding/tests.rs": "bf739fcc30cac5c8d5db628ac62af573adcf76ddbf300d2895bc5398843bb327",
+        "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs": "70e5289a64de3e9b4f1a8a8c2f178bb285a101f6ef05b0bf37ba65e4d8ebd359",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs": "5f1b3781b77fb6d27bceb2b6ab639d84a3f12d73d54503375ba1b9f77309f729",
+        "crates/vibe-agent-projection/src/pkgskill/projection/tests.rs": "a4b69bd9d7a68a2e21ba8685ddbe23ad3c5ac799d63f58ce93105a17d536d086",
+        "crates/vibe-agent-projection/src/pkgskill/receipt.rs": "8b9cb574567788140f7d03fee218d7e14b8ebbf4e85fbddaf890d272fab42d69",
+        "crates/vibe-orchestrator/src/callback.rs": "13c79980a360390ecc93a9e48f233de38da52e4a4c6e1de3838b71645496d853",
+        "crates/vibe-orchestrator/src/install/mod.rs": "67156af619627b11f74ec5c67e6ef7550bed5e1bfcc8d0e8c449e27ae28883e0",
+        "crates/vibe-orchestrator/src/install/ready.rs": "11a23785a9adbaa62dedce2f1731adfbc5085d2813305e28ab32adc7129d8fc6",
+        "crates/vibe-orchestrator/src/phase.rs": "0eb23562b0e50b88767e7c6c1811d31c4c0445d33f638d8d77f021765187e233",
+        "crates/vibe-orchestrator/src/phase/invocation.rs": "e38331c57ba162f9913be3bfa05714401f24e42ff0e98b428b9452b1c8f6e5dc",
+        "crates/vibe-orchestrator/src/phase/prerequisite/tests.rs": "79d05e123776f65d8ed86be40370072a6e3f138aac0ea8225d5f570a92632302",
+        "crates/vibe-orchestrator/src/world/invocation.rs": "103ab1dc0eedbeb62b13c337c89e6c5cac5e486de136becc165c869af47751d2",
+        "crates/vibe-orchestrator/src/world/m_08_b_1_cases.rs": "6930fb9009db7c1e0a1db84df293828e6b91f60c2620b47e4a32101e3ace2d18",
+        "crates/vibe-orchestrator/src/world/mod.rs": "43777ed604ed490edc46d3224b886125df187926d6b163960d40a0ad400dc0b6",
+        "crates/vibe-orchestrator/src/world/package_skill.rs": "c402b02c098f753626116ee92b82f0e57b7c5d7b51f4484c0969ff50725ace3a",
+        "crates/vibe-workspace/src/extension_world.rs": "682527e5560ffe661382375192eef895c7cde93a8135805ecbea1537181f34f5",
+        "crates/vibe-workspace/src/extension_world/epoch.rs": "b5e7bd5cc84000b7bd7a1ee4048cfbb282fb6a4633cecf48e6d693d95ead7056",
+        "crates/vibe-workspace/src/source_query/capture.rs": "d16ef66a6d264ba690ebc898f035fb9c9b9da8d5c64b3178ab35970fc99e4b2e",
+        "crates/vibe-workspace/src/source_query/capture/continuity.rs": "dcd1c847a8526ff3a20ba4d64b62ea9fb0c1457352c97f9b3ac44638620620c9",
+        "crates/vibe-workspace/src/source_query/capture/continuity/extract.rs": "4e4f38a09d3cf73ec573f6d3c4b7180564e48b45975247336875972bfe746f0b",
+        "crates/vibe-workspace/src/source_query/capture/continuity/service.rs": "abbbd741d1350930e08217afcb0d4933a19a43e26603db6ec152cfc1ac99c7b7",
+        "crates/vibe-workspace/src/source_query/capture/continuity/service/document.rs": "998235896bb24158c3abfb38f5a955049a31220d0a9459f35a780517ae30f2b8",
+        "crates/vibe-workspace/src/source_query/capture/continuity/service/preparation.rs": "d3f83c7accc76be8bebac71df5feb5222a959c894d99c2036829e3c4003028d7",
+        "crates/vibe-workspace/src/source_query/mod.rs": "ce819a07db55e62a8f0a94c93ec1b076b2b93e928bd0959c5b040831bc32a6a9"
+      },
+      "mismatches": []
+    },
+    {
+      "claim": "command_progress",
+      "snapshot": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-13.json",
+      "log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-13.log",
+      "log_sha256": "96710c124ce42e3f662e97f2f9b8604cb7fd9848c070db214f3ee49e5d15a3e9",
+      "consumed_subjects": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "crates/vibe-cli/src/cli.rs": "fe40b1239507dc221d96deb40d9b80f09cdf29a5b79314e116ffcb4bbb2c9244",
+        "crates/vibe-cli/src/command_progress.rs": "d994f02b34a48774c78a7b6bfc72e3f9a1a14b664fe85ee5ddc936c8b8ba24cb",
+        "crates/vibe-cli/src/command_progress/tests.rs": "9767272504fdd75811d1e2207197c7f8259c2f8f8d8d66047e95f8cd31360bec",
+        "crates/vibe-cli/src/commands/mod.rs": "190cfe9ed9f0dfd89cc2998822e8b372eeaf33bc9d8ba44cd62a5f25129a6877",
+        "crates/vibe-cli/src/main.rs": "03041e22b0de73b77f6380c5c6254073106d5e2bee368bb9a34baa9273f8a042"
+      },
+      "mismatches": []
+    },
+    {
+      "claim": "command_progress",
+      "snapshot": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-14.json",
+      "log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-14.log",
+      "log_sha256": "43357ab8993b57b2619783ee787af8ae9880bf964d5a68d1cce566f6b630862c",
+      "consumed_subjects": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "5907ed13f00934e88a2ce7dc8c1cb0cdb3c78c89f789e80e5cd7d941983e65b3",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "crates/vibe-cli/src/cli.rs": "fe40b1239507dc221d96deb40d9b80f09cdf29a5b79314e116ffcb4bbb2c9244",
+        "crates/vibe-cli/src/command_progress.rs": "d994f02b34a48774c78a7b6bfc72e3f9a1a14b664fe85ee5ddc936c8b8ba24cb",
+        "crates/vibe-cli/src/command_progress/tests.rs": "9767272504fdd75811d1e2207197c7f8259c2f8f8d8d66047e95f8cd31360bec",
+        "crates/vibe-cli/src/commands/mod.rs": "190cfe9ed9f0dfd89cc2998822e8b372eeaf33bc9d8ba44cd62a5f25129a6877",
+        "crates/vibe-cli/src/main.rs": "03041e22b0de73b77f6380c5c6254073106d5e2bee368bb9a34baa9273f8a042"
+      },
+      "mismatches": []
+    }
+  ],
+  "rationale": "Reuse is limited to unchanged source closure/world admission and CLI command registration claims. F1/F2 change client executable/list observation, deploy preparation-result carriage and new refusal vocabulary, none of which these selected source-world/registration cases execute. Source capture/projection owners, world callbacks/phase admission helpers, fixtures and registration inputs match the recorded checked subjects. This is not reuse of the whole old binaries or old client/CLI purity claims; all affected client/query/wire/CLI consumers were rebuilt and executed."
+}

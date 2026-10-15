@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "env",
+    "CARGO_MANIFEST_DIR=/fast/git/v/vibevm-next/xtask",
+    "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+    "codegen"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 4.3956122398376465,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen-bootstrap2.log",
+  "log_sha256": "c27ff3cc164ea9831aacb24aa1e9a8759e04e7da812a96bf0eea6630978b5a84",
+  "counts": [],
+  "nonzero_case_count": 0
+}

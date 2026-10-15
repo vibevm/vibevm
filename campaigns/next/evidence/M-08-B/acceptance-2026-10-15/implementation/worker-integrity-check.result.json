@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "python3",
+    "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-integrity.py"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 0.13486218452453613,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-integrity-check.log",
+  "log_sha256": "b71f812971b28df589f1f0d995f3436b8ef3b6e3569eff89913f058cc23e0c7d",
+  "counts": [],
+  "nonzero_case_count": 0
+}

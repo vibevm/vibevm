@@ -7,7 +7,7 @@ use anyhow::{Context, Result, bail};
 use vibe_agent_projection::pkgskill::{
     DeclaredSkillProvider, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
     ProjectSkillBinding, ProjectSkillProviderInput, lower_project_skill_bindings,
-    project_skill_receipt_exists,
+    prepare_project_skill_bindings, project_skill_receipt_exists,
 };
 use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
 use vibe_core::manifest::{
@@ -35,7 +35,23 @@ pub(super) fn presets(
     host_skills: &[SkillDecl],
     host_embedded_sources: &[EmbeddedSourceDecl],
     installed: &[LoadedDependency],
+    preparation: Option<bool>,
 ) -> Result<PresetPlan> {
+    let inputs = inputs(host, host_skills, host_embedded_sources, installed)?;
+    let bindings = match preparation {
+        Some(offline) => prepare_project_skill_bindings(selected, inputs, offline),
+        None => lower_project_skill_bindings(selected, inputs),
+    }
+    .context("lowering authenticated project-scope package skill bindings")?;
+    from_bindings(selected, host, bindings)
+}
+
+fn inputs(
+    host: &HostProvider,
+    host_skills: &[SkillDecl],
+    host_embedded_sources: &[EmbeddedSourceDecl],
+    installed: &[LoadedDependency],
+) -> Result<Vec<ProjectSkillProviderInput>> {
     let mut inputs = Vec::new();
     if !host_skills.is_empty() {
         inputs.push(ProjectSkillProviderInput {
@@ -53,8 +69,34 @@ pub(super) fn presets(
             }),
     );
 
-    let bindings = lower_project_skill_bindings(selected, inputs)
-        .context("lowering authenticated project-scope package skill bindings")?;
+    Ok(inputs)
+}
+
+pub(super) fn prepared_presets(
+    selected: &Path,
+    host: &HostProvider,
+    host_skills: &[SkillDecl],
+    host_embedded_sources: &[EmbeddedSourceDecl],
+    installed: &[LoadedDependency],
+    offline: bool,
+) -> Result<(
+    PresetPlan,
+    vibe_agent_projection::pkgskill::PreparedProjectSkills,
+)> {
+    let capture = vibe_agent_projection::pkgskill::prepare_project_skill_capture(
+        selected,
+        inputs(host, host_skills, host_embedded_sources, installed)?,
+        offline,
+    )?;
+    let presets = from_bindings(selected, host, capture.plan()?)?;
+    Ok((presets, capture))
+}
+
+fn from_bindings(
+    selected: &Path,
+    host: &HostProvider,
+    bindings: Vec<ProjectSkillBinding>,
+) -> Result<PresetPlan> {
     let desired = bindings
         .iter()
         .map(ProjectSkillBinding::identity)
@@ -88,6 +130,66 @@ pub(super) fn presets(
         }
     }
     Ok((presets, by_key, desired))
+}
+
+/// Declaration-only rows for pre-effect classification, never payloads.
+pub(super) fn admission_presets(
+    selected: &Path,
+    host: &HostProvider,
+    host_skills: &[SkillDecl],
+    installed: &[LoadedDependency],
+) -> Result<Vec<SyntheticPresetSource>> {
+    let mut rows = Vec::new();
+    let mut append = |provider: ExtensionProvider, identity: String, skills: &[SkillDecl]| {
+        for skill in skills {
+            rows.push(SyntheticPresetSource {
+                key: ExtensionKey::authored(format!(
+                    "@vibe/package/skill/{identity}/{}",
+                    skill.name
+                )),
+                provider: provider.clone(),
+                declaration: internal_declaration(
+                    format!("package-skill-{}", skill.name),
+                    toml::Table::new(),
+                ),
+            });
+        }
+    };
+    if !host_skills.is_empty() {
+        let provider = authored_provider(host, &[])?;
+        append(
+            ExtensionProvider::Host(host.clone()),
+            provider.identity(),
+            host_skills,
+        );
+    }
+    for dependency in installed {
+        append(
+            ExtensionProvider::Dependency(dependency.source.provider.clone()),
+            dependency.source.provider.id.to_string(),
+            &dependency.skills,
+        );
+    }
+    if project_skill_receipt_exists(selected)? {
+        let desired = rows.iter().map(|row| row.key.to_string()).collect();
+        rows.insert(
+            0,
+            SyntheticPresetSource {
+                key: ExtensionKey::authored(RECONCILE_KEY),
+                provider: ExtensionProvider::Host(host.clone()),
+                declaration: reconcile_declaration(&desired),
+            },
+        );
+        rows.insert(
+            0,
+            SyntheticPresetSource {
+                key: ExtensionKey::authored(RECOVER_KEY),
+                provider: ExtensionProvider::Host(host.clone()),
+                declaration: recovery_declaration(),
+            },
+        );
+    }
+    Ok(rows)
 }
 
 fn authored_provider(

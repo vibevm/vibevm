@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "cargo",
+    "build",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-cli",
+    "--bin",
+    "vibe"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 31.81207275390625,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-build.log",
+  "log_sha256": "17829dfdd2a41d2e55a70118b5bb4d0041a6d59e455d2b71f405c6b9c51764f9",
+  "counts": [],
+  "nonzero_case_count": 0
+}

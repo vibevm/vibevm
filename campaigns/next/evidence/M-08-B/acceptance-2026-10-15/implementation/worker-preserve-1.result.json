@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-lifecycle",
+    "--lib",
+    "mechanism::deploy::plugin::lifecycle_tests::installed_coordinate_without_receipt_is_an_unowned_occupant",
+    "--",
+    "--exact"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 0.4743320941925049,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-1.log",
+  "log_sha256": "a1df1a818585c72ec15d267c3afe03517b4b35237142935358232e61a0f258b5",
+  "counts": [
+    {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 891
+    }
+  ],
+  "nonzero_case_count": 1
+}

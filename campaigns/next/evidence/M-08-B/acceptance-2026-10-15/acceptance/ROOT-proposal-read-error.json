@@ -1,0 +1,6 @@
+{
+  "operation": "read-only proposal inspection",
+  "error": "KeyError checks; new proposal uses observations",
+  "mutation_sent": false,
+  "resolution": "Root read actual observations shape and independently verified all eight before approval"
+}

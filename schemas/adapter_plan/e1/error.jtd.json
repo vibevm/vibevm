@@ -1,0 +1,67 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "code": {
+      "enum": [
+        "needs-preparation",
+        "wrong-context",
+        "wrong-target",
+        "unknown-capture",
+        "invalid-request",
+        "unsupported-epoch",
+        "unsupported",
+        "resource-limit",
+        "internal"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "message": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "context_id": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "target_id": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "capture_id": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "reason": {
+      "enum": [
+        "source-capture-missing",
+        "source-capture-stale",
+        "client-capture-missing",
+        "client-capture-stale",
+        "client-state-unavailable",
+        "client-executable-unavailable",
+        "native-plan-capture-missing"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "x-default": null
+      }
+    }
+  },
+  "metadata": {
+    "description": "Host-bound prepared adapter queries; no preparation or effect authority.",
+    "rustOptions": {
+      "package": "vibe_wire::adapter_plan::e1::error"
+    }
+  }
+}

@@ -527,12 +527,57 @@ impl DeployDescriptor<'_> {
 /// owns the intent journal, the checkpoints, the receipt, the locks, the
 /// staging directory, the ordering and the redaction; the provider owns
 /// only what a destination looks like and how bytes get there.
+pub(crate) trait PreparedDeployObservation: Send + Sync {
+    fn current(
+        &self,
+        request: &DeployTargetRequest<'_>,
+    ) -> Result<(DeployPlan, DeployFingerprint), MechanismError>;
+}
+
 pub(crate) trait DeployProvider {
+    fn set_client_state_owner(
+        &self,
+        _owner: std::sync::Arc<dyn super::plugin::client_state::ClientStateOwner>,
+    ) {
+    }
+
+    /// Historical result of explicit preparation, used only while preparing a
+    /// host capture or an effect transaction. Never reusable query admission.
+    fn preparation_result(
+        &self,
+        request: &DeployTargetRequest<'_>,
+    ) -> Result<(DeployPlan, DeployFingerprint), MechanismError> {
+        let plan = self.plan(request)?;
+        let fingerprint = self.fingerprint(request, &plan)?;
+        Ok((plan, fingerprint))
+    }
+
     /// What this provider declares about itself. `plan` support is
     /// mandatory (§3.2) and the executor refuses a descriptor that omits
     /// it — a deploy that cannot be planned cannot be dry-run, and §7's
     /// `--plan` is a law, not a convenience.
     fn descriptor(&self) -> DeployDescriptor<'_>;
+
+    /// Transfer immutable query evidence without exposing any effect verb.
+    fn prepared_query_observation(&self) -> Option<Box<dyn PreparedDeployObservation>> {
+        None
+    }
+
+    /// Explicit preparation belongs to an effectful host operation, never plan.
+    fn prepare_plan(&self, _request: &DeployTargetRequest<'_>) -> Result<(), MechanismError> {
+        Ok(())
+    }
+
+    /// Effect transaction consumes preparation evidence without claiming a
+    /// reusable current query. The transaction still performs its independent
+    /// locked apply/verify/recover checks.
+    fn preparation_fingerprint(
+        &self,
+        request: &DeployTargetRequest<'_>,
+        plan: &DeployPlan,
+    ) -> Result<DeployFingerprint, MechanismError> {
+        self.fingerprint(request, plan)
+    }
 
     /// Durable restart identity when this is a package native provider.
     fn native_binding(&self) -> Option<&NativeProviderBinding> {

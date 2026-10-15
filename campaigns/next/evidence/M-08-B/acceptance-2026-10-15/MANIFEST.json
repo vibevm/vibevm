@@ -1,0 +1,1515 @@
+{
+  "schema": 1,
+  "task": "M-08-B.1",
+  "Root_accepted": true,
+  "canonical_command": "root-review.m08b1.work",
+  "canonical_revision": 567,
+  "Work_revision": 5,
+  "Work_state": "Accepted",
+  "runtime": {
+    "execution": "succeeded",
+    "safe": "safe",
+    "acceptance": "unreviewed"
+  },
+  "native": {
+    "collected": true,
+    "source_sequence": 2088,
+    "unknown_tail": false,
+    "failed": false
+  },
+  "count": "80/222 plus separate M03A2 safe stop",
+  "candidate_sources": 122,
+  "all_subjects": 182,
+  "source_before_after_equal": true,
+  "raw_artifacts": [
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-report.md",
+      "saved_path": "implementation/worker-report.md",
+      "raw_sha256": "80fac5ff803f6c31b8b111bdff01b87b9a6d184341ba2e91636ea2ff503cba60",
+      "saved_sha256": "80fac5ff803f6c31b8b111bdff01b87b9a6d184341ba2e91636ea2ff503cba60",
+      "raw_bytes": 90517,
+      "saved_bytes": 90517,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/candidate-result.json",
+      "saved_path": "implementation/candidate-result.json",
+      "raw_sha256": "5752730fee7126a58aafd51bb227bbac27384ff187a9e017e33766dc1428520d",
+      "saved_sha256": "5752730fee7126a58aafd51bb227bbac27384ff187a9e017e33766dc1428520d",
+      "raw_bytes": 3007,
+      "saved_bytes": 3007,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker.patch",
+      "saved_path": "implementation/worker.patch",
+      "raw_sha256": "b753a7ed5d1b16439437b893b9954676f4c705ac9ade0f38946720a2a26c5dd9",
+      "saved_sha256": "b753a7ed5d1b16439437b893b9954676f4c705ac9ade0f38946720a2a26c5dd9",
+      "raw_bytes": 387083,
+      "saved_bytes": 387083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-subjects.json",
+      "saved_path": "implementation/worker-subjects.json",
+      "raw_sha256": "5179af1fb046a932406aa92e9870007a73654e21b515969b673151a26fd43b57",
+      "saved_sha256": "5179af1fb046a932406aa92e9870007a73654e21b515969b673151a26fd43b57",
+      "raw_bytes": 22260,
+      "saved_bytes": 22260,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-integrity.json",
+      "saved_path": "implementation/worker-integrity.json",
+      "raw_sha256": "3289c20829d1f91a148a66acba033929c0e1251489bd52761224303ab6c3287d",
+      "saved_sha256": "3289c20829d1f91a148a66acba033929c0e1251489bd52761224303ab6c3287d",
+      "raw_bytes": 12034,
+      "saved_bytes": 12034,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-patch-manifest.json",
+      "saved_path": "implementation/worker-patch-manifest.json",
+      "raw_sha256": "840dc4cf1025b73475603d5cc651f64c34ecbb148b8a1d90f911364472d66ca1",
+      "saved_sha256": "840dc4cf1025b73475603d5cc651f64c34ecbb148b8a1d90f911364472d66ca1",
+      "raw_bytes": 8804,
+      "saved_bytes": 8804,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-reused-evidence.json",
+      "saved_path": "implementation/worker-reused-evidence.json",
+      "raw_sha256": "12642c2f2e01897cbae64943f45841217141017f33db8c9caac8b4c75f41e027",
+      "saved_sha256": "12642c2f2e01897cbae64943f45841217141017f33db8c9caac8b4c75f41e027",
+      "raw_bytes": 17681,
+      "saved_bytes": 17681,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-command-results.json",
+      "saved_path": "implementation/worker-command-results.json",
+      "raw_sha256": "2fa501bcad7928a8859106f38f148a7d36e5bc4ed15d2fcc2a5b32fdb1ef144a",
+      "saved_sha256": "2fa501bcad7928a8859106f38f148a7d36e5bc4ed15d2fcc2a5b32fdb1ef144a",
+      "raw_bytes": 22621,
+      "saved_bytes": 22621,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-oracle-results.json",
+      "saved_path": "implementation/worker-oracle-results.json",
+      "raw_sha256": "81dee20e75dcdafca58793bbed643660bc8c00cb6b388cca348d6d2724875caa",
+      "saved_sha256": "81dee20e75dcdafca58793bbed643660bc8c00cb6b388cca348d6d2724875caa",
+      "raw_bytes": 123750,
+      "saved_bytes": 123750,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-index-debt.json",
+      "saved_path": "implementation/worker-index-debt.json",
+      "raw_sha256": "398ad155d2f6f97adae1a7c5b5ddb1e3971fbbef31c327f362959fece0f42b29",
+      "saved_sha256": "398ad155d2f6f97adae1a7c5b5ddb1e3971fbbef31c327f362959fece0f42b29",
+      "raw_bytes": 6335,
+      "saved_bytes": 6335,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-generated-format-debt.json",
+      "saved_path": "implementation/worker-generated-format-debt.json",
+      "raw_sha256": "df80db153ee96e0a65d2914355cd13627b32b6c8f3894142b817c1eda97524f4",
+      "saved_sha256": "df80db153ee96e0a65d2914355cd13627b32b6c8f3894142b817c1eda97524f4",
+      "raw_bytes": 503,
+      "saved_bytes": 503,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-binary.json",
+      "saved_path": "implementation/worker-binary.json",
+      "raw_sha256": "349c8b1ed44af43facba344250a04193551a8b24921c02541eb2415ea970dcf3",
+      "saved_sha256": "349c8b1ed44af43facba344250a04193551a8b24921c02541eb2415ea970dcf3",
+      "raw_bytes": 448,
+      "saved_bytes": 448,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-check-bindings.json",
+      "saved_path": "implementation/worker-check-bindings.json",
+      "raw_sha256": "3655e56879ef4df88b5d22542510e0ba08d7a3cfb24c9087a4286fa7075aa892",
+      "saved_sha256": "3655e56879ef4df88b5d22542510e0ba08d7a3cfb24c9087a4286fa7075aa892",
+      "raw_bytes": 3331,
+      "saved_bytes": 3331,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-final-binding.json",
+      "saved_path": "implementation/worker-cli-final-binding.json",
+      "raw_sha256": "61d7b97920c3f5e76cbd19276e99e3d0b38011c38815e9fb593938634113f563",
+      "saved_sha256": "61d7b97920c3f5e76cbd19276e99e3d0b38011c38815e9fb593938634113f563",
+      "raw_bytes": 339,
+      "saved_bytes": 339,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-recovery-binding.json",
+      "saved_path": "implementation/worker-recovery-binding.json",
+      "raw_sha256": "7650d0a0f3da930437c68ad30ab6911f4d3a12f623740483bf515806fefde50b",
+      "saved_sha256": "7650d0a0f3da930437c68ad30ab6911f4d3a12f623740483bf515806fefde50b",
+      "raw_bytes": 290,
+      "saved_bytes": 290,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-spec-preservation.json",
+      "saved_path": "implementation/worker-spec-preservation.json",
+      "raw_sha256": "1e539ab42313cced1cc7b8910458732ffa86279d0c5f976a8d8dcb06c8eb3735",
+      "saved_sha256": "1e539ab42313cced1cc7b8910458732ffa86279d0c5f976a8d8dcb06c8eb3735",
+      "raw_bytes": 788,
+      "saved_bytes": 788,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/source-baseline.json",
+      "saved_path": "implementation/source-baseline.json",
+      "raw_sha256": "96f14c853505481b26ad4e32e03021bf1828a5622561b268564a1b2be5756b61",
+      "saved_sha256": "96f14c853505481b26ad4e32e03021bf1828a5622561b268564a1b2be5756b61",
+      "raw_bytes": 36586,
+      "saved_bytes": 36586,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-authored-files.json",
+      "saved_path": "implementation/worker-authored-files.json",
+      "raw_sha256": "8ba95f831fc6c1bbe2028f5c3b017e219c861477160534f7495b5593603cdca9",
+      "saved_sha256": "8ba95f831fc6c1bbe2028f5c3b017e219c861477160534f7495b5593603cdca9",
+      "raw_bytes": 1426,
+      "saved_bytes": 1426,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-baseline-check.json",
+      "saved_path": "implementation/worker-baseline-check.json",
+      "raw_sha256": "11612d4cab60275c4fefcd647c618494242d4d7ef88cd068b6b4a33152647d6d",
+      "saved_sha256": "11612d4cab60275c4fefcd647c618494242d4d7ef88cd068b6b4a33152647d6d",
+      "raw_bytes": 41,
+      "saved_bytes": 41,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-spec-blocks.json",
+      "saved_path": "implementation/worker-spec-blocks.json",
+      "raw_sha256": "4d5200ececa64aeb7d1e9b8c78e3c2d0bf9598774c119e7cda596955d770b6f2",
+      "saved_sha256": "4d5200ececa64aeb7d1e9b8c78e3c2d0bf9598774c119e7cda596955d770b6f2",
+      "raw_bytes": 2751,
+      "saved_bytes": 2751,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-panel-results.json",
+      "saved_path": "implementation/worker-panel-results.json",
+      "raw_sha256": "d2638cd148cf90c5378704cc7aa30fa41f46ed115104b35b73cc55e5e0af7817",
+      "saved_sha256": "d2638cd148cf90c5378704cc7aa30fa41f46ed115104b35b73cc55e5e0af7817",
+      "raw_bytes": 608,
+      "saved_bytes": 608,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-panel-plan.json",
+      "saved_path": "implementation/worker-panel-plan.json",
+      "raw_sha256": "61fbaa0a355f5f969bd44d6fd23a6907531e62eaf8ffe45c32c0b821ba36844c",
+      "saved_sha256": "61fbaa0a355f5f969bd44d6fd23a6907531e62eaf8ffe45c32c0b821ba36844c",
+      "raw_bytes": 2729,
+      "saved_bytes": 2729,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-findings.json",
+      "saved_path": "implementation/worker-findings.json",
+      "raw_sha256": "7ea20105aa68d138eebc87d3089dc235f600fb7c342c1b95edb25250f4908b4d",
+      "saved_sha256": "7ea20105aa68d138eebc87d3089dc235f600fb7c342c1b95edb25250f4908b4d",
+      "raw_bytes": 1008,
+      "saved_bytes": 1008,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-syscalls.json",
+      "saved_path": "implementation/worker-cli-syscalls.json",
+      "raw_sha256": "1936b0c2fc236be42999ee91b57e2a76d5f319f08c9f512dd9b642e33bc8bd06",
+      "saved_sha256": "1936b0c2fc236be42999ee91b57e2a76d5f319f08c9f512dd9b642e33bc8bd06",
+      "raw_bytes": 6193,
+      "saved_bytes": 6193,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-syscalls.trace",
+      "saved_path": "implementation/worker-cli-syscalls.trace",
+      "raw_sha256": "918c68700ea7ad73eb5185ca2192a10b28e46322e857032b98bba22ba27d2b91",
+      "saved_sha256": "918c68700ea7ad73eb5185ca2192a10b28e46322e857032b98bba22ba27d2b91",
+      "raw_bytes": 477687,
+      "saved_bytes": 477687,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-syscalls.py",
+      "saved_path": "implementation/worker-cli-syscalls.py",
+      "raw_sha256": "1fb1d33b2c1bc1121f996f070b09e7e037a521f8caa722d4f14103e021f04845",
+      "saved_sha256": "1fb1d33b2c1bc1121f996f070b09e7e037a521f8caa722d4f14103e021f04845",
+      "raw_bytes": 4392,
+      "saved_bytes": 4392,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-integrity.py",
+      "saved_path": "implementation/worker-integrity.py",
+      "raw_sha256": "dcb571882240f05770a9e5afea71ec91cdbd09eead692475eb1fda980b782785",
+      "saved_sha256": "dcb571882240f05770a9e5afea71ec91cdbd09eead692475eb1fda980b782785",
+      "raw_bytes": 4612,
+      "saved_bytes": 4612,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-run.py",
+      "saved_path": "implementation/worker-run.py",
+      "raw_sha256": "d13dd355946a5ce6cc5c31d84f1590cba3098faebcff65c32223688be97927bd",
+      "saved_sha256": "d13dd355946a5ce6cc5c31d84f1590cba3098faebcff65c32223688be97927bd",
+      "raw_bytes": 1159,
+      "saved_bytes": 1159,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-oracles.py",
+      "saved_path": "implementation/worker-oracles.py",
+      "raw_sha256": "8adb0a7fe2ae372bb4fd2c33c19ec7cdeadd4edd237995ee766dc2e9e17928c0",
+      "saved_sha256": "8adb0a7fe2ae372bb4fd2c33c19ec7cdeadd4edd237995ee766dc2e9e17928c0",
+      "raw_bytes": 1031,
+      "saved_bytes": 1031,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-panel.py",
+      "saved_path": "implementation/worker-panel.py",
+      "raw_sha256": "d97ee94b98e9decd926bc8669116d956a6f8a630f26cd7a41134eb6d1fa52d20",
+      "saved_sha256": "d97ee94b98e9decd926bc8669116d956a6f8a630f26cd7a41134eb6d1fa52d20",
+      "raw_bytes": 1629,
+      "saved_bytes": 1629,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact current named worker artifact or its bounded reproducer"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-check-codegen.log",
+      "saved_path": "implementation/worker-check-codegen.log",
+      "raw_sha256": "fb445786fde5694086e7e0b3cda59d0f1f9efaacadfb0320cf78a3f1f9570572",
+      "saved_sha256": "fb445786fde5694086e7e0b3cda59d0f1f9efaacadfb0320cf78a3f1f9570572",
+      "raw_bytes": 390819,
+      "saved_bytes": 390819,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-check-codegen.result.json",
+      "saved_path": "implementation/worker-check-codegen.result.json",
+      "raw_sha256": "d808247d42f2078b66b00552544c4ace048ea8cc359cc87fd3bcbb70c9b9d2c0",
+      "saved_sha256": "d808247d42f2078b66b00552544c4ace048ea8cc359cc87fd3bcbb70c9b9d2c0",
+      "raw_bytes": 396,
+      "saved_bytes": 396,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-build.log",
+      "saved_path": "implementation/worker-cli-build.log",
+      "raw_sha256": "17829dfdd2a41d2e55a70118b5bb4d0041a6d59e455d2b71f405c6b9c51764f9",
+      "saved_sha256": "17829dfdd2a41d2e55a70118b5bb4d0041a6d59e455d2b71f405c6b9c51764f9",
+      "raw_bytes": 138422,
+      "saved_bytes": 138422,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-build.result.json",
+      "saved_path": "implementation/worker-cli-build.result.json",
+      "raw_sha256": "c0acde4ff4e90e3f523c3a52be383291457fa6cf88c9bbaff4165df06ff038b8",
+      "saved_sha256": "c0acde4ff4e90e3f523c3a52be383291457fa6cf88c9bbaff4165df06ff038b8",
+      "raw_bytes": 422,
+      "saved_bytes": 422,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-final.log",
+      "saved_path": "implementation/worker-cli-final.log",
+      "raw_sha256": "8151ac5774a85ecd5dec1022ffcfc0cd48536e8fc5535848df8a7ef4edc4ca8f",
+      "saved_sha256": "8151ac5774a85ecd5dec1022ffcfc0cd48536e8fc5535848df8a7ef4edc4ca8f",
+      "raw_bytes": 139703,
+      "saved_bytes": 139703,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-final.result.json",
+      "saved_path": "implementation/worker-cli-final.result.json",
+      "raw_sha256": "5e557ecff57828da8eaccb67758900eef4798cf37c916c2671dfe01078788f5c",
+      "saved_sha256": "5e557ecff57828da8eaccb67758900eef4798cf37c916c2671dfe01078788f5c",
+      "raw_bytes": 575,
+      "saved_bytes": 575,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-syscall-proof.log",
+      "saved_path": "implementation/worker-cli-syscall-proof.log",
+      "raw_sha256": "71a7c77b8e43fa49b56beaf113e382ea692c4cf1348092286f6f9f450568bc03",
+      "saved_sha256": "71a7c77b8e43fa49b56beaf113e382ea692c4cf1348092286f6f9f450568bc03",
+      "raw_bytes": 238,
+      "saved_bytes": 238,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-syscall-proof.result.json",
+      "saved_path": "implementation/worker-cli-syscall-proof.result.json",
+      "raw_sha256": "26b7b497b7e9a8ba7ec58b474934996889afd069657f95f5512faa010c28a747",
+      "saved_sha256": "26b7b497b7e9a8ba7ec58b474934996889afd069657f95f5512faa010c28a747",
+      "raw_bytes": 419,
+      "saved_bytes": 419,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli.log",
+      "saved_path": "implementation/worker-cli.log",
+      "raw_sha256": "e50a6d6f3b252373c075e199afc26763b6a1262098b60da86f037da7f265cf29",
+      "saved_sha256": "e50a6d6f3b252373c075e199afc26763b6a1262098b60da86f037da7f265cf29",
+      "raw_bytes": 139593,
+      "saved_bytes": 139593,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli.result.json",
+      "saved_path": "implementation/worker-cli.result.json",
+      "raw_sha256": "16e87609f44c3aea1f3f86c3a5f440b2f97b384ab9600f9a01faf56eedaecf1f",
+      "saved_sha256": "16e87609f44c3aea1f3f86c3a5f440b2f97b384ab9600f9a01faf56eedaecf1f",
+      "raw_bytes": 568,
+      "saved_bytes": 568,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen-bootstrap.log",
+      "saved_path": "implementation/worker-codegen-bootstrap.log",
+      "raw_sha256": "f7b913d5e0568b40b3b606f4d88699677d7c55e03af81b6db4f74a4b0d8722a7",
+      "saved_sha256": "f7b913d5e0568b40b3b606f4d88699677d7c55e03af81b6db4f74a4b0d8722a7",
+      "raw_bytes": 112,
+      "saved_bytes": 112,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen-bootstrap.result.json",
+      "saved_path": "implementation/worker-codegen-bootstrap.result.json",
+      "raw_sha256": "75f5efce00ab1b2b49e4f00adcb3fa30925088ae8a5602d24f34c3898723f139",
+      "saved_sha256": "75f5efce00ab1b2b49e4f00adcb3fa30925088ae8a5602d24f34c3898723f139",
+      "raw_bytes": 416,
+      "saved_bytes": 416,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen-bootstrap2.log",
+      "saved_path": "implementation/worker-codegen-bootstrap2.log",
+      "raw_sha256": "c27ff3cc164ea9831aacb24aa1e9a8759e04e7da812a96bf0eea6630978b5a84",
+      "saved_sha256": "c27ff3cc164ea9831aacb24aa1e9a8759e04e7da812a96bf0eea6630978b5a84",
+      "raw_bytes": 155845,
+      "saved_bytes": 155845,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen-bootstrap2.result.json",
+      "saved_path": "implementation/worker-codegen-bootstrap2.result.json",
+      "raw_sha256": "3572f5267775b9ce3311a58a059e3268cca0aa4c72c921fd740d680fa4fa1dcf",
+      "saved_sha256": "3572f5267775b9ce3311a58a059e3268cca0aa4c72c921fd740d680fa4fa1dcf",
+      "raw_bytes": 482,
+      "saved_bytes": 482,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen.log",
+      "saved_path": "implementation/worker-codegen.log",
+      "raw_sha256": "08e067e31bd48ffa32ab75a23462e0b36f6dfee898fe3d288666e9c20b135837",
+      "saved_sha256": "08e067e31bd48ffa32ab75a23462e0b36f6dfee898fe3d288666e9c20b135837",
+      "raw_bytes": 16395,
+      "saved_bytes": 16395,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen.result.json",
+      "saved_path": "implementation/worker-codegen.result.json",
+      "raw_sha256": "323312dd3c6c27cd585e1d2a89045b704e915606c215f116322f175b38580b0a",
+      "saved_sha256": "323312dd3c6c27cd585e1d2a89045b704e915606c215f116322f175b38580b0a",
+      "raw_bytes": 354,
+      "saved_bytes": 354,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen2.log",
+      "saved_path": "implementation/worker-codegen2.log",
+      "raw_sha256": "5394b3dc3230f89add2849e0f54634bce922a1a1bc895b8402d8adc43edef94e",
+      "saved_sha256": "5394b3dc3230f89add2849e0f54634bce922a1a1bc895b8402d8adc43edef94e",
+      "raw_bytes": 284602,
+      "saved_bytes": 284602,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-codegen2.result.json",
+      "saved_path": "implementation/worker-codegen2.result.json",
+      "raw_sha256": "0a6f06b8da7f678322e2b1be1458cc6ff887f7ffa2e56bb962db5cc398e0323f",
+      "saved_sha256": "0a6f06b8da7f678322e2b1be1458cc6ff887f7ffa2e56bb962db5cc398e0323f",
+      "raw_bytes": 353,
+      "saved_bytes": 353,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-diff-check.log",
+      "saved_path": "implementation/worker-diff-check.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "saved_bytes": 0,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-diff-check.result.json",
+      "saved_path": "implementation/worker-diff-check.result.json",
+      "raw_sha256": "6994ff8dbf49524cdca3ad44c717e6e0bdd98f798b5649b700c4183cb1e83c46",
+      "saved_sha256": "6994ff8dbf49524cdca3ad44c717e6e0bdd98f798b5649b700c4183cb1e83c46",
+      "raw_bytes": 352,
+      "saved_bytes": 352,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-format-check.log",
+      "saved_path": "implementation/worker-format-check.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "saved_bytes": 0,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-format-check.result.json",
+      "saved_path": "implementation/worker-format-check.result.json",
+      "raw_sha256": "af2d777d85096a0bd346c0acba9378b0cce9bb04c3d322956da71a339d494d8e",
+      "saved_sha256": "af2d777d85096a0bd346c0acba9378b0cce9bb04c3d322956da71a339d494d8e",
+      "raw_bytes": 1888,
+      "saved_bytes": 1888,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-format.log",
+      "saved_path": "implementation/worker-format.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "saved_bytes": 0,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-format.result.json",
+      "saved_path": "implementation/worker-format.result.json",
+      "raw_sha256": "808362954c12977f50ad7280c9030ae259aa4435d42760b3ece8f5a8f277bafc",
+      "saved_sha256": "808362954c12977f50ad7280c9030ae259aa4435d42760b3ece8f5a8f277bafc",
+      "raw_bytes": 1867,
+      "saved_bytes": 1867,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-integrity-check.log",
+      "saved_path": "implementation/worker-integrity-check.log",
+      "raw_sha256": "b71f812971b28df589f1f0d995f3436b8ef3b6e3569eff89913f058cc23e0c7d",
+      "saved_sha256": "b71f812971b28df589f1f0d995f3436b8ef3b6e3569eff89913f058cc23e0c7d",
+      "raw_bytes": 133,
+      "saved_bytes": 133,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-integrity-check.result.json",
+      "saved_path": "implementation/worker-integrity-check.result.json",
+      "raw_sha256": "93389b3af205f273291db96d6818a06c991f265c5534a98fd7bb87d543258e9a",
+      "saved_sha256": "93389b3af205f273291db96d6818a06c991f265c5534a98fd7bb87d543258e9a",
+      "raw_bytes": 415,
+      "saved_bytes": 415,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle-final-bound.log",
+      "saved_path": "implementation/worker-lifecycle-final-bound.log",
+      "raw_sha256": "82b2e5c26dc9cc897d225cb0a7d8e34b0f84bd79eac628d3c839f48721f0df61",
+      "saved_sha256": "82b2e5c26dc9cc897d225cb0a7d8e34b0f84bd79eac628d3c839f48721f0df61",
+      "raw_bytes": 22076,
+      "saved_bytes": 22076,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle-final-bound.result.json",
+      "saved_path": "implementation/worker-lifecycle-final-bound.result.json",
+      "raw_sha256": "2e159de5a460f33cc7bcad116a7e7729926b7c458228b181cff3018497b44abe",
+      "saved_sha256": "2e159de5a460f33cc7bcad116a7e7729926b7c458228b181cff3018497b44abe",
+      "raw_bytes": 616,
+      "saved_bytes": 616,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle-final.log",
+      "saved_path": "implementation/worker-lifecycle-final.log",
+      "raw_sha256": "a8579f0313c0ff9da0483240bf8d466e02af45eea9bb47ed1971c8e53f2b9ee3",
+      "saved_sha256": "a8579f0313c0ff9da0483240bf8d466e02af45eea9bb47ed1971c8e53f2b9ee3",
+      "raw_bytes": 21595,
+      "saved_bytes": 21595,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle-final.result.json",
+      "saved_path": "implementation/worker-lifecycle-final.result.json",
+      "raw_sha256": "ce2a0437c9ce2fc0984101d4c11c37106fdfb92034d35caaae9a5b9c7bdfb7d1",
+      "saved_sha256": "ce2a0437c9ce2fc0984101d4c11c37106fdfb92034d35caaae9a5b9c7bdfb7d1",
+      "raw_bytes": 610,
+      "saved_bytes": 610,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle-purity.log",
+      "saved_path": "implementation/worker-lifecycle-purity.log",
+      "raw_sha256": "ac022e594d95cb38e741a7494e0f8133de1eebbf93911dfebcb768d449c960e9",
+      "saved_sha256": "ac022e594d95cb38e741a7494e0f8133de1eebbf93911dfebcb768d449c960e9",
+      "raw_bytes": 22950,
+      "saved_bytes": 22950,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle-purity.result.json",
+      "saved_path": "implementation/worker-lifecycle-purity.result.json",
+      "raw_sha256": "931ac78e7a19f23768e85fd1b9e49d8ffd29055a3056c02c2a1a915f047b35ff",
+      "saved_sha256": "931ac78e7a19f23768e85fd1b9e49d8ffd29055a3056c02c2a1a915f047b35ff",
+      "raw_bytes": 609,
+      "saved_bytes": 609,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle1.log",
+      "saved_path": "implementation/worker-lifecycle1.log",
+      "raw_sha256": "faee3a20e1acdd84f808491aa09e6e9f18ebe42abd8f794d73369ffc01499037",
+      "saved_sha256": "faee3a20e1acdd84f808491aa09e6e9f18ebe42abd8f794d73369ffc01499037",
+      "raw_bytes": 20436,
+      "saved_bytes": 20436,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle1.result.json",
+      "saved_path": "implementation/worker-lifecycle1.result.json",
+      "raw_sha256": "dd1e84723ec86c4db1bdfbb0b244a9e79908ee9ea8f4aef4b56bcf456bae103c",
+      "saved_sha256": "dd1e84723ec86c4db1bdfbb0b244a9e79908ee9ea8f4aef4b56bcf456bae103c",
+      "raw_bytes": 489,
+      "saved_bytes": 489,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle2.log",
+      "saved_path": "implementation/worker-lifecycle2.log",
+      "raw_sha256": "09d04101b289429b7e38847f244c97ee400975484624e59de4678921e111d7ff",
+      "saved_sha256": "09d04101b289429b7e38847f244c97ee400975484624e59de4678921e111d7ff",
+      "raw_bytes": 20644,
+      "saved_bytes": 20644,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle2.result.json",
+      "saved_path": "implementation/worker-lifecycle2.result.json",
+      "raw_sha256": "1593b6acdb249813c971f77a5171c6c9bddd9a926baaed8e65d23e592e60aa95",
+      "saved_sha256": "1593b6acdb249813c971f77a5171c6c9bddd9a926baaed8e65d23e592e60aa95",
+      "raw_bytes": 605,
+      "saved_bytes": 605,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-mcp.log",
+      "saved_path": "implementation/worker-mcp.log",
+      "raw_sha256": "ea03ae27d1f7eeb82cf5196a0e96519d2eab5b33302fc601c24b3473ac98c935",
+      "saved_sha256": "ea03ae27d1f7eeb82cf5196a0e96519d2eab5b33302fc601c24b3473ac98c935",
+      "raw_bytes": 26944,
+      "saved_bytes": 26944,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-mcp.result.json",
+      "saved_path": "implementation/worker-mcp.result.json",
+      "raw_sha256": "ea6d7911385843ed3fcdc1b9eb5d5ccf50ca3961e41a6b9957329f2e4663071f",
+      "saved_sha256": "ea6d7911385843ed3fcdc1b9eb5d5ccf50ca3961e41a6b9957329f2e4663071f",
+      "raw_bytes": 554,
+      "saved_bytes": 554,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-0-bound.log",
+      "saved_path": "implementation/worker-preserve-0-bound.log",
+      "raw_sha256": "303113d262fb701ae63757b48e663202a4325e2c35fda72c5218f7bf2a39c027",
+      "saved_sha256": "303113d262fb701ae63757b48e663202a4325e2c35fda72c5218f7bf2a39c027",
+      "raw_bytes": 18757,
+      "saved_bytes": 18757,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-0-bound.result.json",
+      "saved_path": "implementation/worker-preserve-0-bound.result.json",
+      "raw_sha256": "c00ce9cd332dd0f1c4e8ec676d58fd97b411f2d491b6a118f261bef03d493238",
+      "saved_sha256": "c00ce9cd332dd0f1c4e8ec676d58fd97b411f2d491b6a118f261bef03d493238",
+      "raw_bytes": 688,
+      "saved_bytes": 688,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-0.log",
+      "saved_path": "implementation/worker-preserve-0.log",
+      "raw_sha256": "7527bc529ff396d59769d2e39942dfc419c65d6d0101d3d94a4150ebab44de36",
+      "saved_sha256": "7527bc529ff396d59769d2e39942dfc419c65d6d0101d3d94a4150ebab44de36",
+      "raw_bytes": 18757,
+      "saved_bytes": 18757,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-0.result.json",
+      "saved_path": "implementation/worker-preserve-0.result.json",
+      "raw_sha256": "568e553890b2e1b9a4f8a6b33260565e5298e48ce91eeda8fa51f10554bc9192",
+      "saved_sha256": "568e553890b2e1b9a4f8a6b33260565e5298e48ce91eeda8fa51f10554bc9192",
+      "raw_bytes": 683,
+      "saved_bytes": 683,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-1-bound.log",
+      "saved_path": "implementation/worker-preserve-1-bound.log",
+      "raw_sha256": "d9a9e47a2cf9977ccde6d3ba1b666e6f28aff958b3f61399ca48827869fe4939",
+      "saved_sha256": "d9a9e47a2cf9977ccde6d3ba1b666e6f28aff958b3f61399ca48827869fe4939",
+      "raw_bytes": 18743,
+      "saved_bytes": 18743,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-1-bound.result.json",
+      "saved_path": "implementation/worker-preserve-1-bound.result.json",
+      "raw_sha256": "94ab22cd6643f508fb58d2469c528f17b402ce2e2781c6d6518fd15193f75d25",
+      "saved_sha256": "94ab22cd6643f508fb58d2469c528f17b402ce2e2781c6d6518fd15193f75d25",
+      "raw_bytes": 675,
+      "saved_bytes": 675,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-1.log",
+      "saved_path": "implementation/worker-preserve-1.log",
+      "raw_sha256": "a1df1a818585c72ec15d267c3afe03517b4b35237142935358232e61a0f258b5",
+      "saved_sha256": "a1df1a818585c72ec15d267c3afe03517b4b35237142935358232e61a0f258b5",
+      "raw_bytes": 18743,
+      "saved_bytes": 18743,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-1.result.json",
+      "saved_path": "implementation/worker-preserve-1.result.json",
+      "raw_sha256": "d33d4a835dcf8c0ba60bc8f8b8760bacc04917c800c4fd26344bbedc8b9ceb6d",
+      "saved_sha256": "d33d4a835dcf8c0ba60bc8f8b8760bacc04917c800c4fd26344bbedc8b9ceb6d",
+      "raw_bytes": 669,
+      "saved_bytes": 669,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-2-bound.log",
+      "saved_path": "implementation/worker-preserve-2-bound.log",
+      "raw_sha256": "2dd3dca502a70806800e8277195b6f9bba9f1a7b1f2c17cb3a44042f81360b11",
+      "saved_sha256": "2dd3dca502a70806800e8277195b6f9bba9f1a7b1f2c17cb3a44042f81360b11",
+      "raw_bytes": 18736,
+      "saved_bytes": 18736,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-2-bound.result.json",
+      "saved_path": "implementation/worker-preserve-2-bound.result.json",
+      "raw_sha256": "b447676a0b13540f64adedadc9f6c7ebbdd29726634763889c5488a1e747d82b",
+      "saved_sha256": "b447676a0b13540f64adedadc9f6c7ebbdd29726634763889c5488a1e747d82b",
+      "raw_bytes": 669,
+      "saved_bytes": 669,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-2.log",
+      "saved_path": "implementation/worker-preserve-2.log",
+      "raw_sha256": "a201b0b01884452315ee015dcd666ea88d3216ba86daee0b03ae9f7b0e38b075",
+      "saved_sha256": "a201b0b01884452315ee015dcd666ea88d3216ba86daee0b03ae9f7b0e38b075",
+      "raw_bytes": 18736,
+      "saved_bytes": 18736,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-2.result.json",
+      "saved_path": "implementation/worker-preserve-2.result.json",
+      "raw_sha256": "d64401110d837eaea05636daa9b34237aedc41195b96191552a31f1263db3b1b",
+      "saved_sha256": "d64401110d837eaea05636daa9b34237aedc41195b96191552a31f1263db3b1b",
+      "raw_bytes": 663,
+      "saved_bytes": 663,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-3-bound.log",
+      "saved_path": "implementation/worker-preserve-3-bound.log",
+      "raw_sha256": "f82c23f610c5518b49729a5ecd400616513ef0804f9fb6ae6583aa1db0e48f3f",
+      "saved_sha256": "f82c23f610c5518b49729a5ecd400616513ef0804f9fb6ae6583aa1db0e48f3f",
+      "raw_bytes": 18746,
+      "saved_bytes": 18746,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-3-bound.result.json",
+      "saved_path": "implementation/worker-preserve-3-bound.result.json",
+      "raw_sha256": "b54d3b6408c79aeb5bfd8550c24596a6388f180a94d39e674b64b9779a0d0131",
+      "saved_sha256": "b54d3b6408c79aeb5bfd8550c24596a6388f180a94d39e674b64b9779a0d0131",
+      "raw_bytes": 678,
+      "saved_bytes": 678,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-3.log",
+      "saved_path": "implementation/worker-preserve-3.log",
+      "raw_sha256": "65cc8df560bf2f0f8188b4ccb96d702a54d2b758d6bc17b41eb88f37d9262573",
+      "saved_sha256": "65cc8df560bf2f0f8188b4ccb96d702a54d2b758d6bc17b41eb88f37d9262573",
+      "raw_bytes": 18746,
+      "saved_bytes": 18746,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-3.result.json",
+      "saved_path": "implementation/worker-preserve-3.result.json",
+      "raw_sha256": "318daba2e3beabbe5023ca5a5f4aa1a3f4fea6b1f5a40e96d09fade9ac85fe8e",
+      "saved_sha256": "318daba2e3beabbe5023ca5a5f4aa1a3f4fea6b1f5a40e96d09fade9ac85fe8e",
+      "raw_bytes": 672,
+      "saved_bytes": 672,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-4-bound.log",
+      "saved_path": "implementation/worker-preserve-4-bound.log",
+      "raw_sha256": "8f659a242cb8ecef84e9459c4d9d55824e04a1fc88db8c016d484009c2f3daab",
+      "saved_sha256": "8f659a242cb8ecef84e9459c4d9d55824e04a1fc88db8c016d484009c2f3daab",
+      "raw_bytes": 18741,
+      "saved_bytes": 18741,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-4-bound.result.json",
+      "saved_path": "implementation/worker-preserve-4-bound.result.json",
+      "raw_sha256": "4b00541b65b7f7dcd0427363c4ba73445e1a15616c6c59d24ec50eab2d61e456",
+      "saved_sha256": "4b00541b65b7f7dcd0427363c4ba73445e1a15616c6c59d24ec50eab2d61e456",
+      "raw_bytes": 674,
+      "saved_bytes": 674,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-4.log",
+      "saved_path": "implementation/worker-preserve-4.log",
+      "raw_sha256": "0ff27ea50c33ba4cf6bb5a182f83b727a947b5bf580adaa65557cb33fe25f934",
+      "saved_sha256": "0ff27ea50c33ba4cf6bb5a182f83b727a947b5bf580adaa65557cb33fe25f934",
+      "raw_bytes": 18741,
+      "saved_bytes": 18741,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-4.result.json",
+      "saved_path": "implementation/worker-preserve-4.result.json",
+      "raw_sha256": "13ee1b93555756c313b18f6b1fbe99465277c80f8c963d11077bb61c4108a3c4",
+      "saved_sha256": "13ee1b93555756c313b18f6b1fbe99465277c80f8c963d11077bb61c4108a3c4",
+      "raw_bytes": 668,
+      "saved_bytes": 668,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-recovery.log",
+      "saved_path": "implementation/worker-recovery.log",
+      "raw_sha256": "234ad39712d1bd29c6652527c6f0da31aba2678efe6789e31afb72c4b6a1e0e5",
+      "saved_sha256": "234ad39712d1bd29c6652527c6f0da31aba2678efe6789e31afb72c4b6a1e0e5",
+      "raw_bytes": 18822,
+      "saved_bytes": 18822,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-recovery.result.json",
+      "saved_path": "implementation/worker-recovery.result.json",
+      "raw_sha256": "db3ad3c0f34185e95b2853f484fdd1e47c586aff07c4ac49ad8eec410b5dddbf",
+      "saved_sha256": "db3ad3c0f34185e95b2853f484fdd1e47c586aff07c4ac49ad8eec410b5dddbf",
+      "raw_bytes": 661,
+      "saved_bytes": 661,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-route.log",
+      "saved_path": "implementation/worker-route.log",
+      "raw_sha256": "ffededc7b3f3bccb0f4305967b44f96e4a2099419b228f1622fba49b97c4fd60",
+      "saved_sha256": "ffededc7b3f3bccb0f4305967b44f96e4a2099419b228f1622fba49b97c4fd60",
+      "raw_bytes": 29175,
+      "saved_bytes": 29175,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-route.result.json",
+      "saved_path": "implementation/worker-route.result.json",
+      "raw_sha256": "c82147e8967c7632402aff1a6432c07934dd51eebf1fa804404fe887cdb6e4db",
+      "saved_sha256": "c82147e8967c7632402aff1a6432c07934dd51eebf1fa804404fe887cdb6e4db",
+      "raw_bytes": 576,
+      "saved_bytes": 576,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-wire-diff.log",
+      "saved_path": "implementation/worker-wire-diff.log",
+      "raw_sha256": "bb90c0bd3642d1349007df7e3607337ecbf7572b3309f1acf3f3486a7a588968",
+      "saved_sha256": "bb90c0bd3642d1349007df7e3607337ecbf7572b3309f1acf3f3486a7a588968",
+      "raw_bytes": 129311,
+      "saved_bytes": 129311,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-wire-diff.result.json",
+      "saved_path": "implementation/worker-wire-diff.result.json",
+      "raw_sha256": "0321ca9c2891487c6ecc3355870c847ee7dbbb0bba09d65ee5c1ce04d8da8012",
+      "saved_sha256": "0321ca9c2891487c6ecc3355870c847ee7dbbb0bba09d65ee5c1ce04d8da8012",
+      "raw_bytes": 389,
+      "saved_bytes": 389,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-wire.log",
+      "saved_path": "implementation/worker-wire.log",
+      "raw_sha256": "cffbdd6268a22e9e346ecbd48a341135eb113ca66dd20215a2aee2fb3bf9950d",
+      "saved_sha256": "cffbdd6268a22e9e346ecbd48a341135eb113ca66dd20215a2aee2fb3bf9950d",
+      "raw_bytes": 15275,
+      "saved_bytes": 15275,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command log, including failures"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-wire.result.json",
+      "saved_path": "implementation/worker-wire.result.json",
+      "raw_sha256": "8375439636a16788c77dee32901ec3edddf70d81e785dec75e854cf75119c26d",
+      "saved_sha256": "8375439636a16788c77dee32901ec3edddf70d81e785dec75e854cf75119c26d",
+      "raw_bytes": 560,
+      "saved_bytes": 560,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "actual command result receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-1.json",
+      "saved_path": "reused/worker-final2-subjects-1.json",
+      "raw_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "saved_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "raw_bytes": 21083,
+      "saved_bytes": 21083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-1.log",
+      "saved_path": "reused/worker-final2-check-1.log",
+      "raw_sha256": "adce37dc735b675e2f52d3799a3f1999d3950503d7817227d71f22423630ce7e",
+      "saved_sha256": "adce37dc735b675e2f52d3799a3f1999d3950503d7817227d71f22423630ce7e",
+      "raw_bytes": 18701,
+      "saved_bytes": 18701,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-9.json",
+      "saved_path": "reused/worker-final2-subjects-9.json",
+      "raw_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "saved_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "raw_bytes": 21083,
+      "saved_bytes": 21083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-9.log",
+      "saved_path": "reused/worker-final2-check-9.log",
+      "raw_sha256": "eb147f634a0da3d9e2ceac58bc69fde20eeedb51e1caa8727c0f1c9198b404d5",
+      "saved_sha256": "eb147f634a0da3d9e2ceac58bc69fde20eeedb51e1caa8727c0f1c9198b404d5",
+      "raw_bytes": 17910,
+      "saved_bytes": 17910,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-10.json",
+      "saved_path": "reused/worker-final2-subjects-10.json",
+      "raw_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "saved_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "raw_bytes": 21083,
+      "saved_bytes": 21083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-10.log",
+      "saved_path": "reused/worker-final2-check-10.log",
+      "raw_sha256": "9aa7c0da3a9de1fed3f546eae1661cc40121805255feedff30082b7a1b4de75b",
+      "saved_sha256": "9aa7c0da3a9de1fed3f546eae1661cc40121805255feedff30082b7a1b4de75b",
+      "raw_bytes": 17902,
+      "saved_bytes": 17902,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-11.json",
+      "saved_path": "reused/worker-final2-subjects-11.json",
+      "raw_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "saved_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "raw_bytes": 21083,
+      "saved_bytes": 21083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-11.log",
+      "saved_path": "reused/worker-final2-check-11.log",
+      "raw_sha256": "baba20014ff969fb2ccc8e627cce0d122bb481b2462ea4a07d44d5650ddbfc37",
+      "saved_sha256": "baba20014ff969fb2ccc8e627cce0d122bb481b2462ea4a07d44d5650ddbfc37",
+      "raw_bytes": 17882,
+      "saved_bytes": 17882,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-12.json",
+      "saved_path": "reused/worker-final2-subjects-12.json",
+      "raw_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "saved_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "raw_bytes": 21083,
+      "saved_bytes": 21083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-12.log",
+      "saved_path": "reused/worker-final2-check-12.log",
+      "raw_sha256": "0880c49c514c62959b99fd699a908bb265a9d64717714cfb15e3d9072b21375b",
+      "saved_sha256": "0880c49c514c62959b99fd699a908bb265a9d64717714cfb15e3d9072b21375b",
+      "raw_bytes": 17902,
+      "saved_bytes": 17902,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-4.json",
+      "saved_path": "reused/worker-final2-subjects-4.json",
+      "raw_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "saved_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "raw_bytes": 21083,
+      "saved_bytes": 21083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-4.log",
+      "saved_path": "reused/worker-final2-check-4.log",
+      "raw_sha256": "ad27862fcbc3b7c4c6f4a93599889bc4613ec9d51529f9be11a1082761bde16c",
+      "saved_sha256": "ad27862fcbc3b7c4c6f4a93599889bc4613ec9d51529f9be11a1082761bde16c",
+      "raw_bytes": 26898,
+      "saved_bytes": 26898,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-13.json",
+      "saved_path": "reused/worker-final2-subjects-13.json",
+      "raw_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "saved_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "raw_bytes": 21083,
+      "saved_bytes": 21083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-13.log",
+      "saved_path": "reused/worker-final2-check-13.log",
+      "raw_sha256": "96710c124ce42e3f662e97f2f9b8604cb7fd9848c070db214f3ee49e5d15a3e9",
+      "saved_sha256": "96710c124ce42e3f662e97f2f9b8604cb7fd9848c070db214f3ee49e5d15a3e9",
+      "raw_bytes": 137014,
+      "saved_bytes": 137014,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-subjects-14.json",
+      "saved_path": "reused/worker-final2-subjects-14.json",
+      "raw_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "saved_sha256": "7f935184090f106b8ddb18761aa9e57af2078068705d7ee7981e9a7fc89bde7f",
+      "raw_bytes": 21083,
+      "saved_bytes": 21083,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-final2-check-14.log",
+      "saved_path": "reused/worker-final2-check-14.log",
+      "raw_sha256": "43357ab8993b57b2619783ee787af8ae9880bf964d5a68d1cce566f6b630862c",
+      "saved_sha256": "43357ab8993b57b2619783ee787af8ae9880bf964d5a68d1cce566f6b630862c",
+      "raw_bytes": 137027,
+      "saved_bytes": 137027,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact named prior matched-consumed-subject reuse evidence"
+    },
+    {
+      "raw_path": "/fast/git/v/research/2026-10-15-m08b1-correction-review/REPORT.md",
+      "saved_path": "review/REPORT.md",
+      "raw_sha256": "73b7c3f2ec1fcb62d9eec336ea52dd3447af1076dbe6a7b8dea664f7a48becf2",
+      "saved_sha256": "73b7c3f2ec1fcb62d9eec336ea52dd3447af1076dbe6a7b8dea664f7a48becf2",
+      "raw_bytes": 11385,
+      "saved_bytes": 11385,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "independent full-source final review"
+    },
+    {
+      "raw_path": "/fast/git/v/research/2026-10-15-m08b1-correction-review/REPORT.json",
+      "saved_path": "review/REPORT.json",
+      "raw_sha256": "9dea684ae1eed28e3554ccbb1fd6138c56631cdca4794b4f579b38ed1db78d82",
+      "saved_sha256": "9dea684ae1eed28e3554ccbb1fd6138c56631cdca4794b4f579b38ed1db78d82",
+      "raw_bytes": 4019,
+      "saved_bytes": 4019,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "independent full-source final review"
+    },
+    {
+      "raw_path": "/fast/git/v/research/2026-10-15-m08b1-correction-review/sourcehashes.json",
+      "saved_path": "review/sourcehashes.json",
+      "raw_sha256": "5ae6c59322c026277a17af479f2721012917af8ecf30b747095c9dbddf8ec345",
+      "saved_sha256": "5ae6c59322c026277a17af479f2721012917af8ecf30b747095c9dbddf8ec345",
+      "raw_bytes": 41904,
+      "saved_bytes": 41904,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "independent full-source final review"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/ROOT-RETIREMENT.json",
+      "saved_path": "acceptance/ROOT-RETIREMENT.json",
+      "raw_sha256": "6b09fa9416eb91d1c80a9f2e0572d61205ab33e611db0078a6be4535c8b3fb72",
+      "saved_sha256": "6b09fa9416eb91d1c80a9f2e0572d61205ab33e611db0078a6be4535c8b3fb72",
+      "raw_bytes": 1512,
+      "saved_bytes": 1512,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/ROOT-LAUNCH.json",
+      "saved_path": "acceptance/ROOT-LAUNCH.json",
+      "raw_sha256": "a814c33d99d6959389a1305594ef51cebbb79164c57867090065f1444f7b79c4",
+      "saved_sha256": "a814c33d99d6959389a1305594ef51cebbb79164c57867090065f1444f7b79c4",
+      "raw_bytes": 1501,
+      "saved_bytes": 1501,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/ROOT-NATIVE-LATEST.json",
+      "saved_path": "acceptance/ROOT-NATIVE-LATEST.json",
+      "raw_sha256": "4c4bf14bf220f7e0e396e6d48a3550cb04b1bff6000d63ecc3f03243ee5f26e0",
+      "saved_sha256": "4c4bf14bf220f7e0e396e6d48a3550cb04b1bff6000d63ecc3f03243ee5f26e0",
+      "raw_bytes": 510,
+      "saved_bytes": 510,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/ROOT-REVIEW.json",
+      "saved_path": "acceptance/ROOT-REVIEW.json",
+      "raw_sha256": "ee439782cc17a20c51fd0d8eb736eaf18ac7875a1a7113b48990d5c48b0a3ac8",
+      "saved_sha256": "ee439782cc17a20c51fd0d8eb736eaf18ac7875a1a7113b48990d5c48b0a3ac8",
+      "raw_bytes": 69784,
+      "saved_bytes": 69784,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/ACCEPTANCE-BINDINGS.json",
+      "saved_path": "acceptance/ACCEPTANCE-BINDINGS.json",
+      "raw_sha256": "ddc2613ed34b5581c384b88fdc4da183cec0ab73783acffd69a175262c69ed29",
+      "saved_sha256": "ddc2613ed34b5581c384b88fdc4da183cec0ab73783acffd69a175262c69ed29",
+      "raw_bytes": 11810,
+      "saved_bytes": 11810,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/ACCEPTANCE-PREPARATION.md",
+      "saved_path": "acceptance/ACCEPTANCE-PREPARATION.md",
+      "raw_sha256": "d17d2e87c27d622ece2f708b99a103669b92ddaaa6bc11da9492ffe45c1bb3ba",
+      "saved_sha256": "d17d2e87c27d622ece2f708b99a103669b92ddaaa6bc11da9492ffe45c1bb3ba",
+      "raw_bytes": 4175,
+      "saved_bytes": 4175,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-open-review-receipt.json",
+      "saved_path": "acceptance/accept-open-review-receipt.json",
+      "raw_sha256": "ab6e2d3c445d5afae16f2ee831251891d8cb8e2e5c286a142cded2c6f74f05c8",
+      "saved_sha256": "ab6e2d3c445d5afae16f2ee831251891d8cb8e2e5c286a142cded2c6f74f05c8",
+      "raw_bytes": 945,
+      "saved_bytes": 945,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-stage-receipt.json",
+      "saved_path": "acceptance/accept-stage-receipt.json",
+      "raw_sha256": "db8b2b97d1608e16ecf7b1dcbd34ac464ceb8bbc478bbe94a60d6c43bd548a2b",
+      "saved_sha256": "db8b2b97d1608e16ecf7b1dcbd34ac464ceb8bbc478bbe94a60d6c43bd548a2b",
+      "raw_bytes": 927,
+      "saved_bytes": 927,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-work-receipt.json",
+      "saved_path": "acceptance/accept-work-receipt.json",
+      "raw_sha256": "c9a81e0de8810460ca9f60868f3db0d48188a2aabd268eac61be881d97d283bf",
+      "saved_sha256": "c9a81e0de8810460ca9f60868f3db0d48188a2aabd268eac61be881d97d283bf",
+      "raw_bytes": 924,
+      "saved_bytes": 924,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-current-job.json",
+      "saved_path": "acceptance/accept-current-job.json",
+      "raw_sha256": "94d0b629cb0c78b0505711ff9d04023a354d279e0e480ac65b10c64e11b8f898",
+      "saved_sha256": "94d0b629cb0c78b0505711ff9d04023a354d279e0e480ac65b10c64e11b8f898",
+      "raw_bytes": 67553,
+      "saved_bytes": 67553,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/root-before-acceptance.log",
+      "saved_path": "acceptance/root-before-acceptance.log",
+      "raw_sha256": "f12a3c46281d45785638a26c2528ea8db72f20618e9d9d329c79c6b9d074f27f",
+      "saved_sha256": "f12a3c46281d45785638a26c2528ea8db72f20618e9d9d329c79c6b9d074f27f",
+      "raw_bytes": 161,
+      "saved_bytes": 161,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/root-safe.log",
+      "saved_path": "acceptance/root-safe.log",
+      "raw_sha256": "a93602d7753a0de2371fed8e76d7d7e5971635e575c2014420f5bdeb9aadcd2c",
+      "saved_sha256": "a93602d7753a0de2371fed8e76d7d7e5971635e575c2014420f5bdeb9aadcd2c",
+      "raw_bytes": 7173,
+      "saved_bytes": 7173,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/root-after-safe.log",
+      "saved_path": "acceptance/root-after-safe.log",
+      "raw_sha256": "37a2ee22933fdad35c1250112c3700ca82b507f34a11a3a33ccd32c883bc7a5e",
+      "saved_sha256": "37a2ee22933fdad35c1250112c3700ca82b507f34a11a3a33ccd32c883bc7a5e",
+      "raw_bytes": 161,
+      "saved_bytes": 161,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/root-open-review.log",
+      "saved_path": "acceptance/root-open-review.log",
+      "raw_sha256": "64e31df1673605ba6dc2c20f954c83edbf5ffe0a977c7ca1c4a960d697e051ca",
+      "saved_sha256": "64e31df1673605ba6dc2c20f954c83edbf5ffe0a977c7ca1c4a960d697e051ca",
+      "raw_bytes": 682,
+      "saved_bytes": 682,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/root-evidence.log",
+      "saved_path": "acceptance/root-evidence.log",
+      "raw_sha256": "a302704c7bdc1d27090ec01600caa737cb39e4ad622d3f012e76eb0330dd5595",
+      "saved_sha256": "a302704c7bdc1d27090ec01600caa737cb39e4ad622d3f012e76eb0330dd5595",
+      "raw_bytes": 5556,
+      "saved_bytes": 5556,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/root-stage.log",
+      "saved_path": "acceptance/root-stage.log",
+      "raw_sha256": "1ff93ab936bfa431ac8edde432614de88d32a8910b78bb3c1190113959541c36",
+      "saved_sha256": "1ff93ab936bfa431ac8edde432614de88d32a8910b78bb3c1190113959541c36",
+      "raw_bytes": 667,
+      "saved_bytes": 667,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/root-work.log",
+      "saved_path": "acceptance/root-work.log",
+      "raw_sha256": "368ac183ed402005cd4327201b89ca9c5899a1b9dd4c2cb9b0cd2a8e01af690e",
+      "saved_sha256": "368ac183ed402005cd4327201b89ca9c5899a1b9dd4c2cb9b0cd2a8e01af690e",
+      "raw_bytes": 664,
+      "saved_bytes": 664,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/root-final-state.log",
+      "saved_path": "acceptance/root-final-state.log",
+      "raw_sha256": "3219b62aed7e816adf3c4d63d374503dbb193dc931c041a86aa7bf36ede4856f",
+      "saved_sha256": "3219b62aed7e816adf3c4d63d374503dbb193dc931c041a86aa7bf36ede4856f",
+      "raw_bytes": 163,
+      "saved_bytes": 163,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/ROOT-proposal-read-error.json",
+      "saved_path": "acceptance/ROOT-proposal-read-error.json",
+      "raw_sha256": "1001d9540e8e7eb4b8fde90c6775bec366c4d9ba00e942ef77acc6a7602c448e",
+      "saved_sha256": "1001d9540e8e7eb4b8fde90c6775bec366c4d9ba00e942ef77acc6a7602c448e",
+      "raw_bytes": 247,
+      "saved_bytes": 247,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/ready-capture.json",
+      "saved_path": "acceptance/ready-capture.json",
+      "raw_sha256": "f6fd39c6a9de4d079a98da1975193e800d621e45e84883d103b17fb70f92fbf5",
+      "saved_sha256": "f6fd39c6a9de4d079a98da1975193e800d621e45e84883d103b17fb70f92fbf5",
+      "raw_bytes": 71603,
+      "saved_bytes": 71603,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/actual-candidate.json",
+      "saved_path": "acceptance/actual-candidate.json",
+      "raw_sha256": "86fa8c90141d5f9fea97c6db4725f60b53c493439a6a9d5899a9d28901ea3656",
+      "saved_sha256": "86fa8c90141d5f9fea97c6db4725f60b53c493439a6a9d5899a9d28901ea3656",
+      "raw_bytes": 7282,
+      "saved_bytes": 7282,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/prepare-acceptance.py",
+      "saved_path": "acceptance/prepare-acceptance.py",
+      "raw_sha256": "04cc6d7c2369053b0a95c27d9e0190fa97d67177ccf636361664369ea5477a27",
+      "saved_sha256": "04cc6d7c2369053b0a95c27d9e0190fa97d67177ccf636361664369ea5477a27",
+      "raw_bytes": 11579,
+      "saved_bytes": 11579,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/safe-candidate-local.rs",
+      "saved_path": "acceptance/safe-candidate-local.rs",
+      "raw_sha256": "e6c97aee4598d06682129621110366767e150bf7007bbbac98bca9a61e13d014",
+      "saved_sha256": "e6c97aee4598d06682129621110366767e150bf7007bbbac98bca9a61e13d014",
+      "raw_bytes": 11966,
+      "saved_bytes": 11966,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-candidate-local.rs",
+      "saved_path": "acceptance/accept-candidate-local.rs",
+      "raw_sha256": "9851a73fda71a5b0c6fd39de64845d4415369b3bc9be50d99b535279f04aa1e0",
+      "saved_sha256": "9851a73fda71a5b0c6fd39de64845d4415369b3bc9be50d99b535279f04aa1e0",
+      "raw_bytes": 17074,
+      "saved_bytes": 17074,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-evidence.verification.m08b1-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b1-receipt.json",
+      "raw_sha256": "5aea1e1847825a44f2c3cc4de3c440f94c6fb838275f2cc8790dc7e2b2b426c2",
+      "saved_sha256": "5aea1e1847825a44f2c3cc4de3c440f94c6fb838275f2cc8790dc7e2b2b426c2",
+      "raw_bytes": 993,
+      "saved_bytes": 993,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-evidence.verification.m08b1.1-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b1.1-receipt.json",
+      "raw_sha256": "622dfa30e86f89e1036314c1c5712dd7152900b8978c0cab1482e70ce156a9d1",
+      "saved_sha256": "622dfa30e86f89e1036314c1c5712dd7152900b8978c0cab1482e70ce156a9d1",
+      "raw_bytes": 999,
+      "saved_bytes": 999,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-evidence.verification.m08b1.2-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b1.2-receipt.json",
+      "raw_sha256": "f16c5fa1b2f45f2f01e09aa968882e8376b7eee3139c2c6be5e36ac729f5dfa2",
+      "saved_sha256": "f16c5fa1b2f45f2f01e09aa968882e8376b7eee3139c2c6be5e36ac729f5dfa2",
+      "raw_bytes": 999,
+      "saved_bytes": 999,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-evidence.verification.m08b1.3-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b1.3-receipt.json",
+      "raw_sha256": "1b909221d0158516588e07d648d2c36b3bc48c0955d9358d8501724193de84c6",
+      "saved_sha256": "1b909221d0158516588e07d648d2c36b3bc48c0955d9358d8501724193de84c6",
+      "raw_bytes": 999,
+      "saved_bytes": 999,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-evidence.verification.m08b1.4-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b1.4-receipt.json",
+      "raw_sha256": "97319a0c64f61ed34482a7311e2140c9bde9192430fc059c7376e245a141c5fb",
+      "saved_sha256": "97319a0c64f61ed34482a7311e2140c9bde9192430fc059c7376e245a141c5fb",
+      "raw_bytes": 999,
+      "saved_bytes": 999,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-evidence.verification.m08b1.5-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b1.5-receipt.json",
+      "raw_sha256": "43d941e8f577309167902212ef7f75aa106bcd3f834c1451ef8ecbf2b067d640",
+      "saved_sha256": "43d941e8f577309167902212ef7f75aa106bcd3f834c1451ef8ecbf2b067d640",
+      "raw_bytes": 999,
+      "saved_bytes": 999,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-evidence.verification.m08b1.6-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b1.6-receipt.json",
+      "raw_sha256": "e697511101a277602c2ae922a2b0847f676ea5f986064317bdcceb644dcb1e88",
+      "saved_sha256": "e697511101a277602c2ae922a2b0847f676ea5f986064317bdcceb644dcb1e88",
+      "raw_bytes": 999,
+      "saved_bytes": 999,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b1-review-correction/accept-evidence.verification.m08b1.7-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b1.7-receipt.json",
+      "raw_sha256": "f9fe286881c9e802bafd1e54ee0aad40adedbf2e9fae5718ac63269a6043c318",
+      "saved_sha256": "f9fe286881c9e802bafd1e54ee0aad40adedbf2e9fae5718ac63269a6043c318",
+      "raw_bytes": 999,
+      "saved_bytes": 999,
+      "transformation": "none; exact raw bytes/newlines/EOF; no sanitization",
+      "reason": "exact Root canonical acceptance/retirement/binding evidence or bounded preparation helper source"
+    }
+  ],
+  "prior_retained_baseline_count": 116,
+  "baseline_bodies_copied": false,
+  "new_fresh_unique_cases": 37,
+  "matched_reused_unique_cases": 18,
+  "not_55_fresh": true,
+  "generated_files": [
+    "README.md",
+    "accepted-2026-10-15.md",
+    "MANIFEST.json",
+    "SHA256SUMS",
+    "ARCHIVE-FILES.txt",
+    "B1-STAGE-FILES.txt",
+    "SOURCE-BEFORE.json",
+    "SOURCE-AFTER.json",
+    "CANDIDATE-SOURCE-HASHES.json",
+    "SECRET-SCAN.json"
+  ],
+  "archive_worker_actions": "evidence reads/copies/hash/scan/inventory only; no source/task/FIXED edits, test/build/model/CLI/process/Git mutation/staging/commit/cleanup",
+  "limits": "full requested B1 safe-stop task accepted; vendor/native/platform/ABA/global-oracle/whole-campaign limits retained"
+}

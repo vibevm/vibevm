@@ -64,11 +64,12 @@ pub use build::{
 };
 pub use client_projection::ClientProjectionError;
 pub use deploy::{
-    ClientExecutable, ClientExecutables, DEPLOY_STATE_DIR, DeployError, DeployExecution,
-    DeployOutcome, DeployPlanReport, DeployResourcePlan, DeploySelection, DeployStatus,
-    DeployedResource, DeploymentRow, RemovalOutcome, deploy_state_home,
+    ClientExecutable, ClientExecutables, ClientStateBinding, ClientStateOwner, ClientStateWitness,
+    DEPLOY_STATE_DIR, DeployError, DeployExecution, DeployOutcome, DeployPlanReport,
+    DeployResourcePlan, DeploySelection, DeployStatus, DeployedResource, DeploymentRow,
+    PreparedDeployQuery, PreparedDeployRow, RemovalOutcome, deploy_state_home,
     execute_bound_deploy_targets, execute_deploy_targets, list_deployments, plan_deploy_targets,
-    undeploy_targets,
+    prepare_deploy_query, prepare_deploy_query_with_client_state_owner, undeploy_targets,
 };
 pub use error::{DeployProviderError, MechanismError};
 pub use package::{

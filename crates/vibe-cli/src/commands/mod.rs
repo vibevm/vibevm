@@ -25,6 +25,7 @@ pub(crate) fn resolve_project_root(path: &Path) -> Result<PathBuf> {
     Ok(stripped)
 }
 
+pub mod adapter_plan;
 pub mod agentic;
 pub mod aiui;
 pub mod application;

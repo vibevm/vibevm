@@ -54,6 +54,7 @@ pub(crate) fn prepare_owner_runtime_inputs(
     selected: &Path,
     workspace: &Workspace,
     resolution: &[ResolvedDep],
+    offline: bool,
 ) -> Result<(
     ExtensionWorldEpoch,
     OwnerRuntimeLowering,
@@ -109,6 +110,7 @@ pub(crate) fn prepare_owner_runtime_inputs(
             &manifest.skills,
             &manifest.embedded_sources,
             &dependencies,
+            Some(offline),
         )?;
         if rel == selected_rel {
             selected_sidecar = Some(RuntimePlanSidecar {
@@ -190,7 +192,9 @@ pub fn plan_default_prepared(
 }
 
 mod invocation;
-pub(crate) use invocation::{capture_default_prepared, plan_from_loaded};
+pub(crate) use invocation::{
+    capture_admission_metadata, capture_default_prepared, plan_from_loaded, plan_with_runtime,
+};
 
 /// The compatibility wrapper: ONE ordinary discovery, then the prepared seam.
 ///
@@ -259,11 +263,15 @@ pub fn plan_clean_prepared(selected: &Path, workspace: &Workspace) -> Result<Rit
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum WorldLoadMode {
     Default,
+    Admission,
+    PrepareAdapters(bool),
     PreClean,
 }
 
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub struct LoadedRegistry {
+    admission_only: bool,
+    pub(crate) adapter_sources: Option<vibe_agent_projection::pkgskill::PreparedProjectSkills>,
     /// The ordered, typed contribution registry of the selected world.
     pub registry: ExtensionRegistry,
     /// The mechanism plane of the SAME world — the provider rows the
@@ -296,6 +304,11 @@ pub struct LoadedRegistry {
 /// ```
 pub fn inspect(path: &Path) -> Result<LoadedRegistry> {
     load_registry(path, WorldLoadMode::Default)
+}
+
+/// Explicit hydration/capture boundary for a host-owned adapter session.
+pub(crate) fn prepare_adapter_sources(path: &Path, offline: bool) -> Result<LoadedRegistry> {
+    load_registry(path, WorldLoadMode::PrepareAdapters(offline))
 }
 
 /// The one discovery the compatibility paths perform.
@@ -376,17 +389,44 @@ fn load_registry_prepared(
 
     let project = envelope_project(&host.provider, &selected);
     let world = envelope_world(workspace, &installed);
-    let (presets, package_bindings, package_desired_keys) = if mode == WorldLoadMode::Default {
-        package_skill::presets(
-            &selected,
-            &host.provider,
-            &host_skills,
-            &host_embedded_sources,
-            &loaded_dependencies,
-        )?
-    } else {
-        (Vec::new(), BTreeMap::new(), BTreeSet::new())
-    };
+    let mut adapter_sources = None;
+    let (presets, package_bindings, package_desired_keys) =
+        if let WorldLoadMode::PrepareAdapters(offline) = mode {
+            let (presets, capture) = package_skill::prepared_presets(
+                &selected,
+                &host.provider,
+                &host_skills,
+                &host_embedded_sources,
+                &loaded_dependencies,
+                offline,
+            )?;
+            adapter_sources = Some(capture);
+            presets
+        } else if mode == WorldLoadMode::Default {
+            package_skill::presets(
+                &selected,
+                &host.provider,
+                &host_skills,
+                &host_embedded_sources,
+                &loaded_dependencies,
+                None,
+            )?
+        } else {
+            (
+                if mode == WorldLoadMode::Admission {
+                    package_skill::admission_presets(
+                        &selected,
+                        &host.provider,
+                        &host_skills,
+                        &loaded_dependencies,
+                    )?
+                } else {
+                    Vec::new()
+                },
+                BTreeMap::new(),
+                BTreeSet::new(),
+            )
+        };
     let slot_targets = loaded_dependencies
         .iter()
         .map(|dep| dep.slot_target.clone())
@@ -407,6 +447,8 @@ fn load_registry_prepared(
     let registry = collect_extensions_with_presets(effective_world, presets)
         .context("collecting lifecycle extensions from the effective world")?;
     Ok(LoadedRegistry {
+        admission_only: mode == WorldLoadMode::Admission,
+        adapter_sources,
         registry,
         mechanisms,
         mechanism_routes,
@@ -592,3 +634,6 @@ mod tests;
 #[cfg(test)]
 #[path = "prepared_tests.rs"]
 mod prepared_tests;
+
+#[cfg(test)]
+mod m_08_b_1_cases;

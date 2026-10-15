@@ -1,0 +1,9 @@
+{
+  "path": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/vibe",
+  "sha256": "c8d7222ee480efdf5cdcfae738b4237df0089198ba79b08f45b083ab56917709",
+  "bytes": 496811208,
+  "build_result": "worker-cli-build.result.json",
+  "actual_syscall_result": "worker-cli-syscalls.json",
+  "final_binary_matches_measured": true,
+  "toolchain": "rustc 1.101.0-nightly (c36f14571 2026-10-01); nightly directory override /fast/git/v/vibevm-next"
+}

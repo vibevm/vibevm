@@ -281,3 +281,32 @@ fn trace(exe: &Path, client: &str, args: &[String]) { let mut keys:Vec<String>=e
 fn audit_env(client: &str, home: &Path) { let keys:BTreeSet<String>=env::vars_os().map(|(k,_)|k.to_string_lossy().into_owned()).collect(); let allowed:BTreeSet<String>=["SystemRoot","WINDIR","TEMP","TMP","LANG","LC_ALL","HOME","USERPROFILE",if client=="claude"{"CLAUDE_CONFIG_DIR"}else if client=="codex"{"CODEX_HOME"}else{"HOME"}].into_iter().map(str::to_owned).collect(); if !keys.is_subset(&allowed) { fail(&format!("leaked env: {:?}",keys.difference(&allowed).collect::<Vec<_>>())); } if env::var_os("USERPROFILE").as_deref()!=Some(home.as_os_str()) { fail("USERPROFILE mismatch"); } }
 fn fail(message:&str)->! { eprintln!("{message}"); std::process::exit(91) }
 "###;
+
+/// Fixture-native format qualification: FAKE_CLIENT::read_state and both list
+/// renderers depend only on this exact file; all other HOME members are irrelevant.
+/// Absence is the fake's empty state, not a production vendor claim.
+pub(crate) struct FakeStateOwner;
+impl crate::ClientStateOwner for FakeStateOwner {
+    fn observe(
+        &self,
+        binding: &crate::ClientStateBinding,
+    ) -> Result<crate::ClientStateWitness, String> {
+        if binding.scope != "user" || !["claude", "codex"].contains(&binding.client.as_str()) {
+            return Err("fixture scope unavailable".into());
+        }
+        let member = format!(".{}/fake-plugin-state.txt", binding.client);
+        crate::ClientStateWitness::observe_files(
+            "compiled-fake-client/1",
+            binding,
+            &binding.user_home,
+            &[&member],
+        )
+    }
+}
+pub(crate) fn qualify(resolved: &[crate::mechanism::deploy::Selected<'_>]) {
+    for selected in resolved {
+        selected
+            .provider
+            .set_client_state_owner(std::sync::Arc::new(FakeStateOwner));
+    }
+}

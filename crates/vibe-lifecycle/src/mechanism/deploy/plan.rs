@@ -32,7 +32,7 @@ use super::model::{DeployExecution, DeployPlanReport, DeployResourcePlan};
 use super::preplan::{Participant, judge_resources, validate_lock_set};
 use super::protocol::{DeployPlan, ResolvedDeployArtifact};
 use super::view::DeployStateView;
-use super::{Selected, home_of, resolve_selection};
+use super::{Selected, home_of, resolve_query_selection};
 use crate::mechanism::DeployTargetRequest;
 use vibe_wire::generated::deploy_receipt::{DeployReceipt, ReceiptStatus};
 
@@ -46,7 +46,7 @@ use vibe_wire::generated::deploy_receipt::{DeployReceipt, ReceiptStatus};
 pub fn plan_deploy_targets(
     execution: &DeployExecution<'_>,
 ) -> Result<Vec<DeployPlanReport>, DeployError> {
-    let resolved = resolve_selection(execution)?;
+    let resolved = resolve_query_selection(execution)?;
     plan_resolved(execution, &resolved)
 }
 
@@ -58,6 +58,21 @@ pub fn plan_deploy_targets(
 pub(crate) fn plan_resolved(
     execution: &DeployExecution<'_>,
     resolved: &[Selected<'_>],
+) -> Result<Vec<DeployPlanReport>, DeployError> {
+    plan_resolved_mode(execution, resolved, false)
+}
+
+pub(crate) fn prepare_resolved(
+    execution: &DeployExecution<'_>,
+    resolved: &[Selected<'_>],
+) -> Result<Vec<DeployPlanReport>, DeployError> {
+    plan_resolved_mode(execution, resolved, true)
+}
+
+fn plan_resolved_mode(
+    execution: &DeployExecution<'_>,
+    resolved: &[Selected<'_>],
+    prepare: bool,
 ) -> Result<Vec<DeployPlanReport>, DeployError> {
     let state = DeployStateView::open(execution.state_home)?;
     let mut reports: Vec<DeployPlanReport> = Vec::with_capacity(resolved.len());
@@ -133,7 +148,17 @@ pub(crate) fn plan_resolved(
             // could write into.
             staging: None,
         };
-        let plan = selected.provider.plan(&request)?;
+        if selected.provider.native_binding().is_some() {
+            return Err(crate::mechanism::MechanismError::from(crate::mechanism::error::DeployProviderError::NeedsPreparation {
+                target: selected.target.id.clone(), reason: vibe_wire::generated::adapter_plan::e1::error::ErrorReason::NativePlanCaptureMissing,
+            }).into());
+        }
+        let plan = if prepare {
+            selected.provider.prepare_plan(&request)?;
+            selected.provider.preparation_result(&request)?.0
+        } else {
+            selected.provider.plan(&request)?
+        };
         // The per-provider half of the law, at the same point the pre-apply
         // epoch applies it: a provider that did not declare reference
         // ownership may not shift its lock set, and reporting such a plan

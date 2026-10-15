@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "code": "needs-preparation",
+  "reason": "source-capture-missing",
+  "message": "explicit preparation required"
+}
