@@ -79,6 +79,24 @@ pub fn lower_project_skill_bindings(
     project_root: &Path,
     providers: Vec<ProjectSkillProviderInput>,
 ) -> Result<Vec<ProjectSkillBinding>> {
+    lower_provider_skills(project_root, providers, None)
+}
+
+/// Explicit effectful preparation of automatic package bindings. The caller
+/// supplies its invocation's offline policy; query lowering never calls this.
+pub fn prepare_project_skill_bindings(
+    project_root: &Path,
+    providers: Vec<ProjectSkillProviderInput>,
+    offline: bool,
+) -> Result<Vec<ProjectSkillBinding>> {
+    lower_provider_skills(project_root, providers, Some(offline))
+}
+
+fn lower_provider_skills(
+    project_root: &Path,
+    providers: Vec<ProjectSkillProviderInput>,
+    preparation: Option<bool>,
+) -> Result<Vec<ProjectSkillBinding>> {
     let mut skills = Vec::new();
     for input in providers {
         let base = input.provider.root().to_path_buf();
@@ -93,18 +111,41 @@ pub fn lower_project_skill_bindings(
             });
         }
     }
-    lower_skills(project_root, skills)
+    lower_skills_with_preparation(project_root, skills, preparation)
 }
 
 fn lower_skills(
     project_root: &Path,
     skills: Vec<DeclaredSkill>,
 ) -> Result<Vec<ProjectSkillBinding>> {
+    lower_skills_with_preparation(project_root, skills, None)
+}
+
+fn lower_skills_with_preparation(
+    project_root: &Path,
+    skills: Vec<DeclaredSkill>,
+    preparation: Option<bool>,
+) -> Result<Vec<ProjectSkillBinding>> {
+    lower_skills_with(project_root, skills, preparation, hydrate_declared_skill)
+}
+
+pub(super) fn lower_skills_with(
+    project_root: &Path,
+    skills: Vec<DeclaredSkill>,
+    preparation: Option<bool>,
+    mut hydrate: impl FnMut(&mut DeclaredSkill, bool) -> Result<()>,
+) -> Result<Vec<ProjectSkillBinding>> {
     let mut bindings = Vec::with_capacity(skills.len());
     let mut identities = BTreeSet::new();
     let mut physical_targets: BTreeMap<receipt::FoldKey, String> = BTreeMap::new();
     for mut skill in skills {
-        hydrate_declared_skill(&mut skill, false)?;
+        match preparation {
+            Some(offline) => hydrate(&mut skill, offline)?,
+            None if skill.decl.source.is_some() || !skill.decl.resources.is_empty() => {
+                return Err(super::SourcePreparationRequired.into());
+            }
+            None => {}
+        }
         let binding = lower_one_binding(project_root, skill)?;
         let identity = binding.identity();
         if !identities.insert(identity.clone()) {

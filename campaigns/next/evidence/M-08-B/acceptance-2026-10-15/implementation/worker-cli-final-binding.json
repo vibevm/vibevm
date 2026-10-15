@@ -1,0 +1,7 @@
+{
+  "family": "commands::adapter_plan::tests",
+  "expected_count": 4,
+  "extended_case": "configured_deploy_cli_mcp_share_positive_stale_and_unavailable_currentness",
+  "before_compile": true,
+  "coverage": "shared configured CLI/MCP positive, state stale, state unavailable and executable unavailable with zero additional fixture calls"
+}

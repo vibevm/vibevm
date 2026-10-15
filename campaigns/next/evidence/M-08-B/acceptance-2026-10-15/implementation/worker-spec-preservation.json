@@ -1,0 +1,14 @@
+{
+  "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml": {
+    "all_previous_bytes_preserved": true,
+    "original_sha256": "15e09be5754ef6641e724d4f26e6d5e86e919e49130c6284ccb09e45dc9153cd",
+    "stripped_sha256": "15e09be5754ef6641e724d4f26e6d5e86e919e49130c6284ccb09e45dc9153cd",
+    "current_sha256": "cbde74883534383d948ca6e2a88c27435965b7672d36e68582b05394a5ea324e"
+  },
+  "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml": {
+    "all_previous_bytes_preserved": true,
+    "original_sha256": "eface5cae0736de9a9180c3d842275e4c42ab8d96fbcdd99365e605a14400431",
+    "stripped_sha256": "eface5cae0736de9a9180c3d842275e4c42ab8d96fbcdd99365e605a14400431",
+    "current_sha256": "b6d5675b7f87825b74f1d469846bf105c826b064f5d456fac96f81ef9acf3262"
+  }
+}

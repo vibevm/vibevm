@@ -176,7 +176,7 @@ impl Transaction<'_> {
         // into the receipt's evidence: §3.2 lists `fingerprint` as one of
         // the six operations, and an operation nothing ever calls is a
         // declaration, not a protocol.
-        let fingerprint = provider.fingerprint(request, plan)?;
+        let fingerprint = provider.preparation_fingerprint(request, plan)?;
         let mut ledger = CheckpointLedger::open(self.state, self.home, &plan_hash)?;
         let report = provider.apply(request, plan, &mut ledger)?;
         // 4 — INDEPENDENT verify, the finalized receipt, the promotion of

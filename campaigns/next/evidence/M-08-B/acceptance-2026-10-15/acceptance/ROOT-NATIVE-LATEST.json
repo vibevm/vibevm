@@ -1,0 +1,17 @@
+{
+  "accounting_pending": false,
+  "collected": true,
+  "failed": false,
+  "more_stored_output": true,
+  "operation": "managed.3ffa5d0a65dcc7158e6fcc44e9a60d8d77579d3087b4fd87009f2d4f0b02d7a7",
+  "process_stopped": false,
+  "retry_at_ns": 0,
+  "source_sequence": 2088,
+  "state": "candidate_collected",
+  "target": {
+    "dispatch_id": "dispatch.runtime.packet.vibevm-m08b1-review-correction",
+    "job_id": "job.runtime.packet.vibevm-m08b1-review-correction",
+    "kind": "job"
+  },
+  "unknown_tail": false
+}

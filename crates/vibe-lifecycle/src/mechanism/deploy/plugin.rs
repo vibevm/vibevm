@@ -25,9 +25,11 @@ use crate::process::{ProcessRunner, SystemProcessRunner};
 
 mod artifact;
 mod client;
+pub(crate) mod client_state;
 mod config;
 mod marketplace;
 mod opencode;
+mod prepared;
 mod wire;
 
 const ADAPTER_EPOCH: u32 = 1;
@@ -47,7 +49,8 @@ const OPERATIONS: [ProviderOperation; 6] = [
 pub(crate) struct ClientPluginProvider {
     client: PluginClient,
     runner: Arc<dyn ProcessRunner>,
-    planned_version: Mutex<Option<ClientVersion>>,
+    prepared: Mutex<Option<prepared::Capture>>,
+    state_owner: Mutex<Option<Arc<dyn client_state::ClientStateOwner>>>,
 }
 
 struct Admitted<'a> {
@@ -61,7 +64,18 @@ impl ClientPluginProvider {
         Self {
             client,
             runner: Arc::new(SystemProcessRunner),
-            planned_version: Mutex::new(None),
+            prepared: Mutex::new(None),
+            state_owner: Mutex::new(None),
+        }
+    }
+
+    #[cfg(test)]
+    pub(crate) fn with_runner(client: PluginClient, runner: Arc<dyn ProcessRunner>) -> Self {
+        Self {
+            client,
+            runner,
+            prepared: Mutex::new(None),
+            state_owner: Mutex::new(None),
         }
     }
 
@@ -116,11 +130,58 @@ impl ClientPluginProvider {
     }
 
     fn version(&self, request: &DeployTargetRequest<'_>) -> Result<ClientVersion, MechanismError> {
-        let version = wire::probe_version(self.runner.as_ref(), self.client, request)?;
-        if let Ok(mut slot) = self.planned_version.lock() {
-            *slot = Some(version.clone());
+        Ok(wire::probe_version(
+            self.runner.as_ref(),
+            self.client,
+            request,
+        )?)
+    }
+
+    fn cli_plan(
+        &self,
+        request: &DeployTargetRequest<'_>,
+        admitted: &Admitted<'_>,
+        identity: CliIdentity,
+        installed: Option<&InstalledPlugin>,
+    ) -> Result<DeployPlan, MechanismError> {
+        let already = self.judge_cli(request, &identity, installed, true)?;
+        Ok(DeployPlan {
+            resources: vec![PlannedDeployResource {
+                resource: identity.resource.clone(),
+                desired_digest: identity.desired_digest,
+            }],
+            lock_resources: vec![self.client.logical_lock().to_owned()],
+            config_digest: self.config_digest(&admitted.config.name),
+            reversible: request.prior_receipt.is_none(),
+            summary: format!(
+                "{} plugin `{}` at `{}` ({})",
+                self.client.as_str(),
+                admitted.config.name,
+                identity.coordinate,
+                if already {
+                    "already desired"
+                } else {
+                    "install"
+                },
+            ),
+        })
+    }
+    fn version_fingerprint(&self, version: &ClientVersion) -> DeployFingerprint {
+        DeployFingerprint {
+            digest: framed_hash(
+                FINGERPRINT_DOMAIN,
+                &[
+                    ("client", self.client.as_str()),
+                    ("adapter-epoch", &ADAPTER_EPOCH.to_string()),
+                    ("client-version", &version.rendered),
+                ],
+            ),
+            summary: format!(
+                "{} client plugin adapter epoch {ADAPTER_EPOCH}, tested client {}",
+                self.client.as_str(),
+                version.rendered,
+            ),
         }
-        Ok(version)
     }
 
     fn config_digest(&self, name: &str) -> String {
@@ -339,6 +400,34 @@ impl ClientPluginProvider {
 }
 
 impl DeployProvider for ClientPluginProvider {
+    fn set_client_state_owner(&self, owner: Arc<dyn client_state::ClientStateOwner>) {
+        *self.prepared.lock().expect("capture lock") = None;
+        *self.state_owner.lock().expect("state owner lock") = Some(owner);
+    }
+    fn preparation_result(
+        &self,
+        request: &DeployTargetRequest<'_>,
+    ) -> Result<(DeployPlan, DeployFingerprint), MechanismError> {
+        ClientPluginProvider::preparation_result(self, request)
+    }
+
+    fn preparation_fingerprint(
+        &self,
+        request: &DeployTargetRequest<'_>,
+        plan: &DeployPlan,
+    ) -> Result<DeployFingerprint, MechanismError> {
+        let (prepared, fingerprint) = self.preparation_result(request)?;
+        if prepared != *plan {
+            return Err(prepared::need(request, true));
+        }
+        Ok(fingerprint)
+    }
+    fn prepared_query_observation(
+        &self,
+    ) -> Option<Box<dyn super::protocol::PreparedDeployObservation>> {
+        self.query_observation()
+    }
+
     fn descriptor(&self) -> DeployDescriptor {
         DeployDescriptor {
             provider: ProviderDescriptor {
@@ -355,67 +444,18 @@ impl DeployProvider for ClientPluginProvider {
         }
     }
 
-    fn plan(&self, request: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {
-        let admitted = self.admit(request)?;
-        self.version(request)?;
-        if self.client == PluginClient::OpenCode {
-            return opencode::plan(
-                request,
-                &admitted.projection,
-                self.config_digest(&admitted.config.name),
-            );
-        }
-        let identity = self.cli_identity(request, &admitted)?;
-        let installed = self.list_cli(request, &admitted, &identity)?;
-        let already = self.judge_cli(request, &identity, installed.as_ref(), true)?;
-        Ok(DeployPlan {
-            resources: vec![PlannedDeployResource {
-                resource: identity.resource.clone(),
-                desired_digest: identity.desired_digest,
-            }],
-            lock_resources: vec![self.client.logical_lock().to_owned()],
-            config_digest: self.config_digest(&admitted.config.name),
-            reversible: request.prior_receipt.is_none(),
-            summary: format!(
-                "{} plugin `{}` at `{}` ({})",
-                self.client.as_str(),
-                admitted.config.name,
-                identity.coordinate,
-                if already {
-                    "already desired"
-                } else {
-                    "install"
-                },
-            ),
-        })
+    fn prepare_plan(&self, request: &DeployTargetRequest<'_>) -> Result<(), MechanismError> {
+        self.prepare_capture(request)
     }
-
+    fn plan(&self, request: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {
+        Ok(self.captured(request)?.plan)
+    }
     fn fingerprint(
         &self,
         request: &DeployTargetRequest<'_>,
-        _plan: &DeployPlan,
+        plan: &DeployPlan,
     ) -> Result<DeployFingerprint, MechanismError> {
-        let version = self
-            .planned_version
-            .lock()
-            .ok()
-            .and_then(|slot| slot.clone())
-            .map_or_else(|| self.version(request), Ok)?;
-        Ok(DeployFingerprint {
-            digest: framed_hash(
-                FINGERPRINT_DOMAIN,
-                &[
-                    ("client", self.client.as_str()),
-                    ("adapter-epoch", &ADAPTER_EPOCH.to_string()),
-                    ("client-version", &version.rendered),
-                ],
-            ),
-            summary: format!(
-                "{} client plugin adapter epoch {ADAPTER_EPOCH}, tested client {}",
-                self.client.as_str(),
-                version.rendered,
-            ),
-        })
+        self.captured_fingerprint(request, plan)
     }
 
     fn apply(

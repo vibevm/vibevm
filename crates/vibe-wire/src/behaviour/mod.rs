@@ -18,6 +18,7 @@
 //! Nothing here is generated, and nothing here edits the generated
 //! files.
 
+pub mod adapter_plan;
 pub mod artifact_record;
 pub mod capability_coverage;
 pub mod change_query;

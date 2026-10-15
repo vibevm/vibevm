@@ -40,6 +40,12 @@ use super::{MechanismError, preview};
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS")]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum DeployProviderError {
+    #[error("adapter target `{target}` needs explicit preparation: {reason}", reason = preparation_reason(.reason))]
+    NeedsPreparation {
+        target: String,
+        reason: vibe_wire::generated::adapter_plan::e1::error::ErrorReason,
+    },
+
     /// A pinned bound provider has been planned, but the engine has not yet
     /// proved a binding-aware durable journal for this effect verb. No
     /// provider effect is attempted through this refusal.
@@ -538,4 +544,19 @@ fn native_lock_fault(target: &str, provider: &str, operation: &'static str) -> M
         operation,
         "provider lock is not a canonical forward-slashed absolute destination",
     )
+}
+
+fn preparation_reason(
+    reason: &vibe_wire::generated::adapter_plan::e1::error::ErrorReason,
+) -> &'static str {
+    use vibe_wire::generated::adapter_plan::e1::error::ErrorReason::*;
+    match reason {
+        SourceCaptureMissing => "source-capture-missing",
+        SourceCaptureStale => "source-capture-stale",
+        ClientCaptureMissing => "client-capture-missing",
+        ClientCaptureStale => "client-capture-stale",
+        NativePlanCaptureMissing => "native-plan-capture-missing",
+        ClientStateUnavailable => "client-state-unavailable",
+        ClientExecutableUnavailable => "client-executable-unavailable",
+    }
 }

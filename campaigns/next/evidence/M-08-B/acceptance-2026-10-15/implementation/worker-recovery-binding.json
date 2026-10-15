@@ -1,0 +1,6 @@
+{
+  "group": 2,
+  "case": "mechanism::deploy::plugin::lifecycle_tests::interrupted_cli_apply_recovers_without_a_second_install",
+  "expected_count": 1,
+  "reason": "preplan preparation-result protocol changes affect the explicit failure wrapper; preserve recover without a second install"
+}

@@ -111,7 +111,7 @@ fn the_exact_native_epoch_crosses_the_prerequisite_callback_once() {
     let workspace = workspace();
     let root = workspace.root.clone();
     let (world, lowering, sidecar) =
-        crate::world::prepare_owner_runtime_inputs(&root, &workspace, &[]).unwrap();
+        crate::world::prepare_owner_runtime_inputs(&root, &workspace, &[], true).unwrap();
     let platform = vibe_lifecycle::native::NativePlatform::current().unwrap();
     let facts = vibe_workspace::extension_world::OwnerRuntimeRunFacts {
         run_id: "install-epoch".into(),

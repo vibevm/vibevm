@@ -215,7 +215,7 @@ fn a_routed_native_target_requires_its_prepared_binding() {
 }
 
 /// One installed package declaring one deploy provider.
-fn installed(declaration: MechanismDecl) -> crate::DependencyExtensionSource {
+pub(super) fn installed(declaration: MechanismDecl) -> crate::DependencyExtensionSource {
     use vibe_core::manifest::ExtensionsControl;
     use vibe_core::{ContentHash, Group, PackageKind, PackageName};
     let (group, name, hash) = match (

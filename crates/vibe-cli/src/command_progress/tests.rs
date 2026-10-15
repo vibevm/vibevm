@@ -110,6 +110,20 @@ fn terminal_and_protocol_owners_get_no_generic_fallback() {
             parsed_policy(
                 &[
                     "vibe",
+                    "adapter-plan",
+                    "--root",
+                    "/fixture",
+                    "--kind",
+                    "skills"
+                ],
+                attached
+            ),
+            CommandPolicy::PersistentProtocol
+        );
+        assert_eq!(
+            parsed_policy(
+                &[
+                    "vibe",
                     "boot",
                     "--root",
                     "/fixture",
@@ -124,6 +138,14 @@ fn terminal_and_protocol_owners_get_no_generic_fallback() {
         );
     }
     for argv in [
+        &[
+            "vibe",
+            "adapter-plan",
+            "--root",
+            "/fixture",
+            "--kind",
+            "skills",
+        ][..],
         &[
             "vibe",
             "boot",

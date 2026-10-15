@@ -1,0 +1,8 @@
+{
+  "subject": "crates/vibe-wire/src/generated/format_id/properties.rs",
+  "hash": "e4f95cc0580e2ad92c5dab28ffc34b3faf015627e7a5f990c09254eeffe175b1",
+  "matches_pre_correction": true,
+  "retained_log": "/fast/zap-managed/2026-10-15-m08b1-continuation/worker-format-generated-debt.log",
+  "retained_log_sha256": "6b83d5d65b2b10ab94c4fa6be17217ba34d3cba826dd51d9c3332c669a422189",
+  "disposition": "Unchanged generated long match-arm formatting debt; no hand format and no new global formatting claim."
+}

@@ -161,6 +161,8 @@ pub struct Cli {
 pub enum Command {
     /// Exchange structured boot debugger requests on stdin/stdout.
     Boot(crate::commands::boot::BootArgs),
+    /// Query an explicitly prepared adapter session over bounded JSON lines.
+    AdapterPlan(crate::commands::adapter_plan::AdapterPlanArgs),
     /// Prepare or explicitly create a local exact-origin change.
     Change(crate::commands::change::ChangeArgs),
     /// Read a classified selected source or resolve its native location.

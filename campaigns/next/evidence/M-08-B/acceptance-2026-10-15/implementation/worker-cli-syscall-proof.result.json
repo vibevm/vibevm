@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "python3",
+    "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-syscalls.py"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 0.8618180751800537,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-syscall-proof.log",
+  "log_sha256": "71a7c77b8e43fa49b56beaf113e382ea692c4cf1348092286f6f9f450568bc03",
+  "counts": [],
+  "nonzero_case_count": 0
+}

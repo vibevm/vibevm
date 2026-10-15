@@ -16,6 +16,7 @@ use vibe_core::progress::{Progress, ProgressTask};
 /// Every top-level Clap command, used by the policy-inventory regression.
 #[cfg(test)]
 pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
+    "adapter-plan",
     "agentic",
     "aiui",
     "bin",
@@ -191,7 +192,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             AiuiSubcommand::PtyStart(_) => FiniteFallback("Command aiui pty-start"),
             AiuiSubcommand::Scrollbar(_) => FiniteFallback("Command aiui scrollbar"),
         },
-        Command::Boot(_) => PersistentProtocol,
+        Command::Boot(_) | Command::AdapterPlan(_) => PersistentProtocol,
         Command::Term(_) | Command::Frame(_) => TerminalPassthrough,
         Command::Skill(args) => match &args.command {
             SkillSubcommand::List(_) => FastMetadata,

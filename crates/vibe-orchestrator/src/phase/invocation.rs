@@ -51,8 +51,12 @@ pub(super) fn prepare(
                 .map_err(|error| InvocationPreparationNeed::CurrentWorld(format!("{error:?}")))?,
         )
     };
-    let loaded = world::capture_default_prepared(root, workspace)
-        .map_err(|error| InvocationPreparationNeed::CurrentWorld(error.to_string()))?;
+    let loaded = if intent.admits_product_source() {
+        world::capture_admission_metadata(root, workspace)
+    } else {
+        world::capture_default_prepared(root, workspace)
+    }
+    .map_err(|error| InvocationPreparationNeed::CurrentWorld(error.to_string()))?;
     if let Some(checked) = &checked {
         for package in &loaded.world.packages {
             // Minting performs the incumbent before/after continuity checks

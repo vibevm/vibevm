@@ -2,7 +2,7 @@ use super::fixture::{World, selection, target, write};
 use super::*;
 use crate::mechanism::deploy::state::{CheckpointLedger, DeployState, DeploymentHome};
 use crate::mechanism::deploy::{Selected, apply_selection};
-use crate::mechanism::deploy::{execute_deploy_targets, plan_deploy_targets, undeploy_targets};
+use crate::mechanism::deploy::{execute_deploy_targets, undeploy_targets};
 use crate::process::{ProcessError, ProcessOutput, ProcessRunner, ProcessSpec};
 use specmark::verifies;
 use vibe_extension_registry::SelectionStep;
@@ -143,8 +143,15 @@ fn read_only_plan_runs_only_version_and_list_and_creates_no_support_or_state() {
     )];
     let selected = selection("plan-target");
     let execution = world.execution(&targets, &selected);
+    let resolved = crate::mechanism::deploy::resolve_selection(&execution).unwrap();
+    super::fixture::qualify(&resolved);
+    crate::mechanism::deploy::plan::prepare_resolved(&execution, &resolved)
+        .expect("explicit preparation");
+    let trace_before = world.trace();
     let home_before = world.home_census();
-    let plans = plan_deploy_targets(&execution).expect("plan is readable");
+    let plans = crate::mechanism::deploy::plan::plan_resolved(&execution, &resolved)
+        .expect("prepared plan is readable");
+    assert_eq!(world.trace(), trace_before, "query launched a client");
     assert_eq!(plans.len(), 1);
     assert_eq!(
         world.home_census(),
@@ -161,7 +168,7 @@ fn read_only_plan_runs_only_version_and_list_and_creates_no_support_or_state() {
     assert_eq!(
         argv,
         ["--version", "plugin\tlist\t--json"],
-        "external plan trace must be non-vacuous and exact: {trace:?}"
+        "explicit preparation trace must be non-vacuous and exact: {trace:?}"
     );
 }
 
@@ -300,7 +307,11 @@ fn installed_coordinate_without_receipt_is_an_unowned_occupant() {
         .find(|entry| !entry.file_name().to_string_lossy().starts_with('.'))
         .expect("deployment directory");
     std::fs::remove_file(deployment.path().join("receipt.json")).unwrap();
-    let error = plan_deploy_targets(&execution).unwrap_err().to_string();
+    let resolved = crate::mechanism::deploy::resolve_selection(&execution).unwrap();
+    super::fixture::qualify(&resolved);
+    let error = crate::mechanism::deploy::plan::prepare_resolved(&execution, &resolved)
+        .unwrap_err()
+        .to_string();
     assert!(error.contains("no owning prior receipt"), "{error}");
 }
 
@@ -336,6 +347,9 @@ fn apply_rechecks_opencode_occupancy_after_a_clean_plan() {
         artifact: Some(&artifact),
         staging: None,
     };
+    provider
+        .prepare_plan(&planning)
+        .expect("explicit preparation");
     let plan = provider.plan(&planning).expect("empty destination plans");
     write(
         world.home.path(),
@@ -369,6 +383,23 @@ fn apply_rechecks_opencode_occupancy_after_a_clean_plan() {
 struct CrashAfterApply(ClientPluginProvider);
 
 impl DeployProvider for CrashAfterApply {
+    fn preparation_result(
+        &self,
+        request: &DeployTargetRequest<'_>,
+    ) -> Result<(DeployPlan, DeployFingerprint), MechanismError> {
+        self.0.preparation_result(request)
+    }
+    fn preparation_fingerprint(
+        &self,
+        request: &DeployTargetRequest<'_>,
+        plan: &DeployPlan,
+    ) -> Result<DeployFingerprint, MechanismError> {
+        self.0.preparation_fingerprint(request, plan)
+    }
+
+    fn prepare_plan(&self, request: &DeployTargetRequest<'_>) -> Result<(), MechanismError> {
+        self.0.prepare_plan(request)
+    }
     fn descriptor(&self) -> DeployDescriptor {
         self.0.descriptor()
     }

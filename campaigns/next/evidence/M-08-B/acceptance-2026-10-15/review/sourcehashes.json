@@ -1,0 +1,905 @@
+{
+  "schema": 1,
+  "head": "8a1caa7fac81dbec1f99cb5c05deb698678cbabc",
+  "candidate_files": [
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "before": "d7fcba0b9df6831d1cba668b9f93a6f0642a28d3d2c1c6143f2f97f41b56f9d7",
+      "after": "d7fcba0b9df6831d1cba668b9f93a6f0642a28d3d2c1c6143f2f97f41b56f9d7",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "before": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+      "after": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "before": "457102da4ade5bce279ad5bd7fd917e17d3a0bfe228d4a6817aeca4707661337",
+      "after": "457102da4ade5bce279ad5bd7fd917e17d3a0bfe228d4a6817aeca4707661337",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs",
+      "before": "70e5289a64de3e9b4f1a8a8c2f178bb285a101f6ef05b0bf37ba65e4d8ebd359",
+      "after": "70e5289a64de3e9b4f1a8a8c2f178bb285a101f6ef05b0bf37ba65e4d8ebd359",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs",
+      "before": "5f1b3781b77fb6d27bceb2b6ab639d84a3f12d73d54503375ba1b9f77309f729",
+      "after": "5f1b3781b77fb6d27bceb2b6ab639d84a3f12d73d54503375ba1b9f77309f729",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/cli.rs",
+      "before": "fe40b1239507dc221d96deb40d9b80f09cdf29a5b79314e116ffcb4bbb2c9244",
+      "after": "fe40b1239507dc221d96deb40d9b80f09cdf29a5b79314e116ffcb4bbb2c9244",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/command_progress.rs",
+      "before": "d994f02b34a48774c78a7b6bfc72e3f9a1a14b664fe85ee5ddc936c8b8ba24cb",
+      "after": "d994f02b34a48774c78a7b6bfc72e3f9a1a14b664fe85ee5ddc936c8b8ba24cb",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/command_progress/tests.rs",
+      "before": "9767272504fdd75811d1e2207197c7f8259c2f8f8d8d66047e95f8cd31360bec",
+      "after": "9767272504fdd75811d1e2207197c7f8259c2f8f8d8d66047e95f8cd31360bec",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/adapter_plan.rs",
+      "before": "8cfad2ee9fd75221bd9b2d97e3bdcf45e81782a0aebbd4b77f4fccd634fa61f8",
+      "after": "8cfad2ee9fd75221bd9b2d97e3bdcf45e81782a0aebbd4b77f4fccd634fa61f8",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/deploy.rs",
+      "before": "db517c6b9c20656649b2ea0ab31ac4e296f4833f3ff635bdd0150020975aefe9",
+      "after": "db517c6b9c20656649b2ea0ab31ac4e296f4833f3ff635bdd0150020975aefe9",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/deploy/clients.rs",
+      "before": "7fc20d42745eb250c2940294b6a514fb9cde461f35457fc49494d097fe52a942",
+      "after": "7fc20d42745eb250c2940294b6a514fb9cde461f35457fc49494d097fe52a942",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/mod.rs",
+      "before": "190cfe9ed9f0dfd89cc2998822e8b372eeaf33bc9d8ba44cd62a5f25129a6877",
+      "after": "190cfe9ed9f0dfd89cc2998822e8b372eeaf33bc9d8ba44cd62a5f25129a6877",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/skill/mod.rs",
+      "before": "31ddef7f8b0ddd0e37b8bf28bbce6e4f6d43f01dfb0397f79d3ddaff8ff33914",
+      "after": "31ddef7f8b0ddd0e37b8bf28bbce6e4f6d43f01dfb0397f79d3ddaff8ff33914",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/main.rs",
+      "before": "03041e22b0de73b77f6380c5c6254073106d5e2bee368bb9a34baa9273f8a042",
+      "after": "03041e22b0de73b77f6380c5c6254073106d5e2bee368bb9a34baa9273f8a042",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/native.rs",
+      "before": "49aa40cad1a03b61a7e41e183b2903b2d12dffc6ca26c5cf4495bdd89edaa579",
+      "after": "49aa40cad1a03b61a7e41e183b2903b2d12dffc6ca26c5cf4495bdd89edaa579",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/tests.rs",
+      "before": "c2ccccb21b94bdee4b109ef88338698f6d72a9601eff1b9225a8b9296069e792",
+      "after": "c2ccccb21b94bdee4b109ef88338698f6d72a9601eff1b9225a8b9296069e792",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-mcp/src/context.rs",
+      "before": "d53d3cb89453b1945723415c7a5520ea181534f6affe487b8187f6c9ce4d9218",
+      "after": "d53d3cb89453b1945723415c7a5520ea181534f6affe487b8187f6c9ce4d9218",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "before": "cb6756ea04660f3c31d5f9757ad17d6ac55bd8bf0ce2c4e2ad23e8bd3a85b47f",
+      "after": "cb6756ea04660f3c31d5f9757ad17d6ac55bd8bf0ce2c4e2ad23e8bd3a85b47f",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/callback.rs",
+      "before": "13c79980a360390ecc93a9e48f233de38da52e4a4c6e1de3838b71645496d853",
+      "after": "13c79980a360390ecc93a9e48f233de38da52e4a4c6e1de3838b71645496d853",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/dispatch/native_all_owner_tests/support.rs",
+      "before": "8228d56ec0b6c8ef9a2384a62574cc2317c8cd43d5fc2630f998c3955905d3ad",
+      "after": "8228d56ec0b6c8ef9a2384a62574cc2317c8cd43d5fc2630f998c3955905d3ad",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/install/mod.rs",
+      "before": "67156af619627b11f74ec5c67e6ef7550bed5e1bfcc8d0e8c449e27ae28883e0",
+      "after": "67156af619627b11f74ec5c67e6ef7550bed5e1bfcc8d0e8c449e27ae28883e0",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/install/ready.rs",
+      "before": "11a23785a9adbaa62dedce2f1731adfbc5085d2813305e28ab32adc7129d8fc6",
+      "after": "11a23785a9adbaa62dedce2f1731adfbc5085d2813305e28ab32adc7129d8fc6",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation.rs",
+      "before": "a7058bfb39d47e0e1750660ca40d82740fc5a2d44c1abe32f48f593ab4d3a650",
+      "after": "a7058bfb39d47e0e1750660ca40d82740fc5a2d44c1abe32f48f593ab4d3a650",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/phase.rs",
+      "before": "0eb23562b0e50b88767e7c6c1811d31c4c0445d33f638d8d77f021765187e233",
+      "after": "0eb23562b0e50b88767e7c6c1811d31c4c0445d33f638d8d77f021765187e233",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/phase/invocation.rs",
+      "before": "e38331c57ba162f9913be3bfa05714401f24e42ff0e98b428b9452b1c8f6e5dc",
+      "after": "e38331c57ba162f9913be3bfa05714401f24e42ff0e98b428b9452b1c8f6e5dc",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/phase/prerequisite/tests.rs",
+      "before": "79d05e123776f65d8ed86be40370072a6e3f138aac0ea8225d5f570a92632302",
+      "after": "79d05e123776f65d8ed86be40370072a6e3f138aac0ea8225d5f570a92632302",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/world/invocation.rs",
+      "before": "103ab1dc0eedbeb62b13c337c89e6c5cac5e486de136becc165c869af47751d2",
+      "after": "103ab1dc0eedbeb62b13c337c89e6c5cac5e486de136becc165c869af47751d2",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/world/m_08_b_1_cases.rs",
+      "before": "6930fb9009db7c1e0a1db84df293828e6b91f60c2620b47e4a32101e3ace2d18",
+      "after": "6930fb9009db7c1e0a1db84df293828e6b91f60c2620b47e4a32101e3ace2d18",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/world/mod.rs",
+      "before": "43777ed604ed490edc46d3224b886125df187926d6b163960d40a0ad400dc0b6",
+      "after": "43777ed604ed490edc46d3224b886125df187926d6b163960d40a0ad400dc0b6",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/world/package_skill.rs",
+      "before": "c402b02c098f753626116ee92b82f0e57b7c5d7b51f4484c0969ff50725ace3a",
+      "after": "c402b02c098f753626116ee92b82f0e57b7c5d7b51f4484c0969ff50725ace3a",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/mod.rs",
+      "before": "6afac0ed8f9b4411ab2fff3cc732a16befb5841fd7fdaa2fd0dd3b50a29e8794",
+      "after": "6afac0ed8f9b4411ab2fff3cc732a16befb5841fd7fdaa2fd0dd3b50a29e8794",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+      "before": "317e23817a76eaecdad8014629540ca9753fc71ddd7308aa60ffaf97063ad50d",
+      "after": "317e23817a76eaecdad8014629540ca9753fc71ddd7308aa60ffaf97063ad50d",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/e1/request/mod.rs",
+      "before": "212d1bef76fcf688e7b8574155ffb698bd40b3a409a961cc94acf2fc0662bf90",
+      "after": "212d1bef76fcf688e7b8574155ffb698bd40b3a409a961cc94acf2fc0662bf90",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/e1/result/mod.rs",
+      "before": "265f2b7a9490df68787a36e662b16eb7e5f376a737197347af6246ae79e9c6dc",
+      "after": "265f2b7a9490df68787a36e662b16eb7e5f376a737197347af6246ae79e9c6dc",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "before": "9e69e5162835e1a5645081dcc21074651fdc99eb9597227696480bd145487a2f",
+      "after": "9e69e5162835e1a5645081dcc21074651fdc99eb9597227696480bd145487a2f",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "before": "b0fc2bc3ae3879c74913c03248bf6a32b4d987c670f4f0586150cb8f897705f5",
+      "after": "b0fc2bc3ae3879c74913c03248bf6a32b4d987c670f4f0586150cb8f897705f5",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "before": "87aa7e21836613a49a7b84b335e2ee9a26b491fc17162ad0fc888ff128f955c7",
+      "after": "87aa7e21836613a49a7b84b335e2ee9a26b491fc17162ad0fc888ff128f955c7",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "before": "a691b7ddd652d62efc82c44a3e940172eb81cd2aa8528d89ac95818239143256",
+      "after": "a691b7ddd652d62efc82c44a3e940172eb81cd2aa8528d89ac95818239143256",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "before": "a54a50ce3664f95db56aca1b1a981b5668b2622510fd01f69b79011b2f3c2d73",
+      "after": "a54a50ce3664f95db56aca1b1a981b5668b2622510fd01f69b79011b2f3c2d73",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "before": "944d7c4bd46f1d6db12351eb6b205fb7383f557c98b3f6689e2ebb5948a24c4c",
+      "after": "944d7c4bd46f1d6db12351eb6b205fb7383f557c98b3f6689e2ebb5948a24c4c",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "before": "51ef6283d13d54bf8cd0b3180708e990e04267c7dca327141903940977104e56",
+      "after": "51ef6283d13d54bf8cd0b3180708e990e04267c7dca327141903940977104e56",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "before": "001e3f4c3b97371d8c2b16e199d360d42ad30bfdb7f73998db3cacd5f269cc4a",
+      "after": "001e3f4c3b97371d8c2b16e199d360d42ad30bfdb7f73998db3cacd5f269cc4a",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "before": "a09a941af75240319b4bccad850d36afd00d77d0d6bb025363a8dd365c79179d",
+      "after": "a09a941af75240319b4bccad850d36afd00d77d0d6bb025363a8dd365c79179d",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "before": "6c347dbeee6259955df628980f7cc7005a5c5c16d2fbb4fe0b989b89208736f5",
+      "after": "6c347dbeee6259955df628980f7cc7005a5c5c16d2fbb4fe0b989b89208736f5",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "before": "e4f95cc0580e2ad92c5dab28ffc34b3faf015627e7a5f990c09254eeffe175b1",
+      "after": "e4f95cc0580e2ad92c5dab28ffc34b3faf015627e7a5f990c09254eeffe175b1",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "before": "253a58436fbb1c336c2d8ebfc6fa3a6f8edcbc55adc0ea60e829ba6a9cf11e3b",
+      "after": "253a58436fbb1c336c2d8ebfc6fa3a6f8edcbc55adc0ea60e829ba6a9cf11e3b",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "before": "6be12d7e750e6f9d40d1fa3446da0999cd38a075446cc48a73a821a596eda97d",
+      "after": "6be12d7e750e6f9d40d1fa3446da0999cd38a075446cc48a73a821a596eda97d",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "before": "d01cfe16e7d53378cfb5252b37911f22c6ec51bf5cf444f8fdb4e69b2240ceea",
+      "after": "d01cfe16e7d53378cfb5252b37911f22c6ec51bf5cf444f8fdb4e69b2240ceea",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "before": "a9eb86527dc98d52e356f2b1b9dd6e8297a73a3e5341418dc3b3d9f6bbcacd6e",
+      "after": "a9eb86527dc98d52e356f2b1b9dd6e8297a73a3e5341418dc3b3d9f6bbcacd6e",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "before": "170eeaf38e7ac82ed7e312a73b7f6ee9c89b86ca02b661f389befbe4d48b8ff6",
+      "after": "170eeaf38e7ac82ed7e312a73b7f6ee9c89b86ca02b661f389befbe4d48b8ff6",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "before": "2afab04fcc24985261b4c6d0019154bc34d0f5c5dd2f1732311e53e8c65b6023",
+      "after": "2afab04fcc24985261b4c6d0019154bc34d0f5c5dd2f1732311e53e8c65b6023",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "before": "8381277bab16c2d9d5cec682cc06617e27686ffd4f1e186f43f8ee4d579fa353",
+      "after": "8381277bab16c2d9d5cec682cc06617e27686ffd4f1e186f43f8ee4d579fa353",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "before": "4462440fa15821af4aa54e35b605356e5fa97b054a51357a1eb6cc5053874ae4",
+      "after": "4462440fa15821af4aa54e35b605356e5fa97b054a51357a1eb6cc5053874ae4",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "before": "77c7cb3727ff0290c7bbc335bf11351f4b919eef69ef9652c0e64f43a89a2955",
+      "after": "77c7cb3727ff0290c7bbc335bf11351f4b919eef69ef9652c0e64f43a89a2955",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "before": "70ab8274e2af97ee1bb3b7d540c9ddde9548f1b3dbf3ef6571cc414a77ed7318",
+      "after": "70ab8274e2af97ee1bb3b7d540c9ddde9548f1b3dbf3ef6571cc414a77ed7318",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "before": "f39afc6b391d563636126aefbf2270c41285f821d541148138e48a1fc1c94b50",
+      "after": "f39afc6b391d563636126aefbf2270c41285f821d541148138e48a1fc1c94b50",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "before": "cb7d3229a7d8d9c55cb33adf3523b7fff03bed9fe52f483ebcf3cb3f215c2c92",
+      "after": "cb7d3229a7d8d9c55cb33adf3523b7fff03bed9fe52f483ebcf3cb3f215c2c92",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "before": "2aa369b0f88763d7113d103e35a5ab0fe0969ab7eba0b1b95d6b82948b6b51b9",
+      "after": "2aa369b0f88763d7113d103e35a5ab0fe0969ab7eba0b1b95d6b82948b6b51b9",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "before": "6e1cad5e44dbfcb936f6dd7882929c6077c149f8ab8d197734d2013d181c5fec",
+      "after": "6e1cad5e44dbfcb936f6dd7882929c6077c149f8ab8d197734d2013d181c5fec",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "before": "5e64a0b06d0f1b03ce9f93f51a6133bc8b45b0bb02679204d93552f05842ba47",
+      "after": "5e64a0b06d0f1b03ce9f93f51a6133bc8b45b0bb02679204d93552f05842ba47",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "before": "2cf94ba7c54625ad2fa09b01ad6a2cc3f0bfb2c2899f79135f065e035c15b9c1",
+      "after": "2cf94ba7c54625ad2fa09b01ad6a2cc3f0bfb2c2899f79135f065e035c15b9c1",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "before": "60fd442209d1e1488bc5c4a0027f9adf423298288d9ea174420d7e63e014be3c",
+      "after": "60fd442209d1e1488bc5c4a0027f9adf423298288d9ea174420d7e63e014be3c",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "before": "543591839a89040b690b6566daa56667d6ec37f90d34baab17b06cee99be508d",
+      "after": "543591839a89040b690b6566daa56667d6ec37f90d34baab17b06cee99be508d",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "before": "0284f50467d6019a2ef056b8bc762991cfcbb2c540ffcc3bb10024dbc6549561",
+      "after": "0284f50467d6019a2ef056b8bc762991cfcbb2c540ffcc3bb10024dbc6549561",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "before": "be7a0f60958b09dfbfa52a5698280aa0efd1148bb3263eaa8e48d9625ef99425",
+      "after": "be7a0f60958b09dfbfa52a5698280aa0efd1148bb3263eaa8e48d9625ef99425",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+      "before": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "after": "326d7606254d3c71ae98d3127429f343bf9d87e5a6a233d278710301795b9744",
+      "unchanged": true
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "before": "05281c34c64f3ed2de0c84843f67491b5663ccd56fff012bd23c0cb4bce559aa",
+      "after": "05281c34c64f3ed2de0c84843f67491b5663ccd56fff012bd23c0cb4bce559aa",
+      "unchanged": true
+    },
+    {
+      "path": "formats/corpora/adapter-plan/e1/error.json",
+      "before": "b907587f8b2403e524ec3a9a6f7812894b9938e27aad4b04fbc0f9b51cc9cfc5",
+      "after": "b907587f8b2403e524ec3a9a6f7812894b9938e27aad4b04fbc0f9b51cc9cfc5",
+      "unchanged": true
+    },
+    {
+      "path": "formats/corpora/adapter-plan/e1/plan.json",
+      "before": "5fd1cdbf3c903a29519daa818203cb102bfd093cea2a85ace72edffc15c658b4",
+      "after": "5fd1cdbf3c903a29519daa818203cb102bfd093cea2a85ace72edffc15c658b4",
+      "unchanged": true
+    },
+    {
+      "path": "formats/corpora/adapter-plan/e1/request.json",
+      "before": "ccd4d4c665a76af2c3a215e390e2fea5c6be9a72391cb19ed999ff141c375691",
+      "after": "ccd4d4c665a76af2c3a215e390e2fea5c6be9a72391cb19ed999ff141c375691",
+      "unchanged": true
+    },
+    {
+      "path": "formats/corpora/adapter-plan/e1/session.json",
+      "before": "2e4507914d91f8b850cf9c56741ea1bbff9261768ce7197307d5829d34ae194a",
+      "after": "2e4507914d91f8b850cf9c56741ea1bbff9261768ce7197307d5829d34ae194a",
+      "unchanged": true
+    },
+    {
+      "path": "schemas/adapter_plan/e1/request.jtd.json",
+      "before": "2286cb1299d48fa4330bf94dff025a888624fca760b796105b3402f003e2da07",
+      "after": "2286cb1299d48fa4330bf94dff025a888624fca760b796105b3402f003e2da07",
+      "unchanged": true
+    },
+    {
+      "path": "schemas/adapter_plan/e1/result.jtd.json",
+      "before": "257803a972e8243f96eedadf8ad998bd84ffc33dbb8fd45d093aee1e7b8fe835",
+      "after": "257803a972e8243f96eedadf8ad998bd84ffc33dbb8fd45d093aee1e7b8fe835",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/adapter_plan/tests.rs",
+      "before": "df98d0c90c6f18e24818d3f3ce731a729cdc336c528da1fb9cfdf1f921ee85e0",
+      "after": "df98d0c90c6f18e24818d3f3ce731a729cdc336c528da1fb9cfdf1f921ee85e0",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/lib.rs",
+      "before": "9d2cdbfd74f8dfaaa4776d383e67730428e90c510ee74df5add7f3d46203f8c4",
+      "after": "9d2cdbfd74f8dfaaa4776d383e67730428e90c510ee74df5add7f3d46203f8c4",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism.rs",
+      "before": "26ea9f9143c9dc67461ab44130d164e36a9c314cc6a185fa2f7e8a9362bc83f5",
+      "after": "26ea9f9143c9dc67461ab44130d164e36a9c314cc6a185fa2f7e8a9362bc83f5",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "before": "59a7b02c91e0058195238bf2b969f6ad372abddee414b2c9fe1e7ef8871b195b",
+      "after": "59a7b02c91e0058195238bf2b969f6ad372abddee414b2c9fe1e7ef8871b195b",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases.rs",
+      "before": "798cf160f0241f78a757e6d829ef9f5b6750f3e06577a831301fd0b5dcc5419d",
+      "after": "798cf160f0241f78a757e6d829ef9f5b6750f3e06577a831301fd0b5dcc5419d",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases/correction.rs",
+      "before": "3bbfb64fa5f400a65bec4f2ee62e419ffca9ad92ceab315a2d794221a6db73ff",
+      "after": "3bbfb64fa5f400a65bec4f2ee62e419ffca9ad92ceab315a2d794221a6db73ff",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plan.rs",
+      "before": "7625c0b550b6b65aa1d5bdbab2857707f3cb60d3b1c92eb7edcd75f82ec94a43",
+      "after": "7625c0b550b6b65aa1d5bdbab2857707f3cb60d3b1c92eb7edcd75f82ec94a43",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin.rs",
+      "before": "5eefea05c736378d239bf3f11043d0bc9f2b91fa2bd98eaaf14e11c64bb3893d",
+      "after": "5eefea05c736378d239bf3f11043d0bc9f2b91fa2bd98eaaf14e11c64bb3893d",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client_state.rs",
+      "before": "be643eb729de4f9346c001f9540f98c624e711c8bb5e9687b8f3a22b133cad47",
+      "after": "be643eb729de4f9346c001f9540f98c624e711c8bb5e9687b8f3a22b133cad47",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/fixture.rs",
+      "before": "132645eb9d54392efe3d6617b6b95ae099da1895774536bebe9dd56ba6845138",
+      "after": "132645eb9d54392efe3d6617b6b95ae099da1895774536bebe9dd56ba6845138",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/lifecycle_tests.rs",
+      "before": "3bd041f18e8b65255784473545a014f507578fb3238484700d7a63be9abc42f0",
+      "after": "3bd041f18e8b65255784473545a014f507578fb3238484700d7a63be9abc42f0",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs",
+      "before": "be7b3ec17c332ac85b28d8adf06946208f6b0f0484a8c7a05fc2e9e43f498741",
+      "after": "be7b3ec17c332ac85b28d8adf06946208f6b0f0484a8c7a05fc2e9e43f498741",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/plugin/prepared.rs",
+      "before": "eae5380bc6bc06bff05f401de9a6d7a7467255020b36ff15718ea4968a83eed0",
+      "after": "eae5380bc6bc06bff05f401de9a6d7a7467255020b36ff15718ea4968a83eed0",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/prepared_query.rs",
+      "before": "761a2f7bcf2475a5486de33aeff95f9818463e9c0068b7c0bc512bd854e3d8b0",
+      "after": "761a2f7bcf2475a5486de33aeff95f9818463e9c0068b7c0bc512bd854e3d8b0",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+      "before": "0a7382ddcaa030fd54cb7e655f28d4a62ea642d94a95d987513e4c6adb1d4e6d",
+      "after": "0a7382ddcaa030fd54cb7e655f28d4a62ea642d94a95d987513e4c6adb1d4e6d",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+      "before": "d0b4b847baac6ef0e61566c9d71664e7afa4e81c5dad5037e53e20171b9c5b15",
+      "after": "d0b4b847baac6ef0e61566c9d71664e7afa4e81c5dad5037e53e20171b9c5b15",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+      "before": "af143675841a5199639b4c8297f3762929529e7eeed090912728f6d3eb44f67d",
+      "after": "af143675841a5199639b4c8297f3762929529e7eeed090912728f6d3eb44f67d",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/error/deploy.rs",
+      "before": "ece4204175be6177c39dd96b330976a89e1ff5fde3728d7a423dd35cb53d1d93",
+      "after": "ece4204175be6177c39dd96b330976a89e1ff5fde3728d7a423dd35cb53d1d93",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/adapter_plan.rs",
+      "before": "c9793326c4a3636ded11074cabe844933c1146ee8be530f58bad4e269a2cd852",
+      "after": "c9793326c4a3636ded11074cabe844933c1146ee8be530f58bad4e269a2cd852",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/adapter_plan.rs",
+      "before": "0bb9641e200fe28ecf2a558b52973e1f45cca592eb3affff9c53404333ed5a3b",
+      "after": "0bb9641e200fe28ecf2a558b52973e1f45cca592eb3affff9c53404333ed5a3b",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/adapter_plan/test_fixture.rs",
+      "before": "fd802bfdb1fd7e660cb978f861b4b907d2f2d90fa7846cb2da59708041974584",
+      "after": "fd802bfdb1fd7e660cb978f861b4b907d2f2d90fa7846cb2da59708041974584",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs",
+      "before": "5a1cae74ab1b858ba4c94fd013f98d40ffc088f83a13cae4ba2e6e7a51f30e43",
+      "after": "5a1cae74ab1b858ba4c94fd013f98d40ffc088f83a13cae4ba2e6e7a51f30e43",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/adapter_plan.rs",
+      "before": "72ec2748861d1fa81a3999e8079de682c2d62d9cd7232f8f91310e0467785114",
+      "after": "72ec2748861d1fa81a3999e8079de682c2d62d9cd7232f8f91310e0467785114",
+      "unchanged": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/e1/error/mod.rs",
+      "before": "4b6593c62a0248652bda5ce9c0203459f76089e842ae97d77b13cd2b2433213f",
+      "after": "4b6593c62a0248652bda5ce9c0203459f76089e842ae97d77b13cd2b2433213f",
+      "unchanged": true
+    },
+    {
+      "path": "formats/corpora/adapter-plan/e1/currentness-unavailable.json",
+      "before": "4aa45c673cbfac6a14debadd5e7e0c65879f06ee6186fcea9751e382e3d303a6",
+      "after": "4aa45c673cbfac6a14debadd5e7e0c65879f06ee6186fcea9751e382e3d303a6",
+      "unchanged": true
+    },
+    {
+      "path": "schemas/adapter_plan/e1/error.jtd.json",
+      "before": "93d8757bcfb47ff0e21bd59112ccf72e62ca3fb1bba71b0c7f2e686b96c55bc9",
+      "after": "93d8757bcfb47ff0e21bd59112ccf72e62ca3fb1bba71b0c7f2e686b96c55bc9",
+      "unchanged": true
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "before": "cbde74883534383d948ca6e2a88c27435965b7672d36e68582b05394a5ea324e",
+      "after": "cbde74883534383d948ca6e2a88c27435965b7672d36e68582b05394a5ea324e",
+      "unchanged": true
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+      "before": "b6d5675b7f87825b74f1d469846bf105c826b064f5d456fac96f81ef9acf3262",
+      "after": "b6d5675b7f87825b74f1d469846bf105c826b064f5d456fac96f81ef9acf3262",
+      "unchanged": true
+    }
+  ],
+  "all_182_subjects_stable": true,
+  "prior_review_reused_paths": [
+    "crates/vibe-agent-projection/src/pkgskill.rs",
+    "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+    "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+    "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs",
+    "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs",
+    "crates/vibe-cli/src/cli.rs",
+    "crates/vibe-cli/src/command_progress.rs",
+    "crates/vibe-cli/src/command_progress/tests.rs",
+    "crates/vibe-cli/src/commands/adapter_plan.rs",
+    "crates/vibe-cli/src/commands/deploy.rs",
+    "crates/vibe-cli/src/commands/deploy/clients.rs",
+    "crates/vibe-cli/src/commands/mod.rs",
+    "crates/vibe-cli/src/commands/skill/mod.rs",
+    "crates/vibe-cli/src/main.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/native.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/tests.rs",
+    "crates/vibe-mcp/src/context.rs",
+    "crates/vibe-mcp/src/tools.rs",
+    "crates/vibe-orchestrator/src/callback.rs",
+    "crates/vibe-orchestrator/src/dispatch/native_all_owner_tests/support.rs",
+    "crates/vibe-orchestrator/src/install/mod.rs",
+    "crates/vibe-orchestrator/src/install/ready.rs",
+    "crates/vibe-orchestrator/src/machine_operation.rs",
+    "crates/vibe-orchestrator/src/phase.rs",
+    "crates/vibe-orchestrator/src/phase/invocation.rs",
+    "crates/vibe-orchestrator/src/phase/prerequisite/tests.rs",
+    "crates/vibe-orchestrator/src/world/invocation.rs",
+    "crates/vibe-orchestrator/src/world/m_08_b_1_cases.rs",
+    "crates/vibe-orchestrator/src/world/mod.rs",
+    "crates/vibe-orchestrator/src/world/package_skill.rs",
+    "crates/vibe-wire/src/behaviour/mod.rs",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/request/mod.rs",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/result/mod.rs",
+    "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+    "crates/vibe-wire/src/generated/application/e1/mod.rs",
+    "crates/vibe-wire/src/generated/application/mod.rs",
+    "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+    "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+    "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+    "crates/vibe-wire/src/generated/capability/mod.rs",
+    "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+    "crates/vibe-wire/src/generated/change_query/mod.rs",
+    "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+    "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+    "crates/vibe-wire/src/generated/distribution/mod.rs",
+    "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+    "crates/vibe-wire/src/generated/environment/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/mod.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs",
+    "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+    "crates/vibe-wire/src/generated/hello/mod.rs",
+    "crates/vibe-wire/src/generated/index/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_cli/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+    "crates/vibe-wire/src/generated/index_http/mod.rs",
+    "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+    "crates/vibe-wire/src/generated/journal/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+    "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+    "crates/vibe-wire/src/generated/llm/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+    "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+    "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+    "crates/vibe-wire/src/generated/machine/mod.rs",
+    "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+    "crates/vibe-wire/src/generated/migration/mod.rs",
+    "crates/vibe-wire/src/generated/mod.rs",
+    "crates/vibe-wire/src/generated/native/e1/mod.rs",
+    "crates/vibe-wire/src/generated/native/mod.rs",
+    "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+    "crates/vibe-wire/src/generated/preview/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+    "crates/vibe-wire/src/generated/scrape/mod.rs",
+    "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+    "crates/vibe-wire/src/generated/source_query/mod.rs",
+    "formats/REGISTRY.toml",
+    "formats/corpora/adapter-plan/e1/error.json",
+    "formats/corpora/adapter-plan/e1/plan.json",
+    "formats/corpora/adapter-plan/e1/request.json",
+    "formats/corpora/adapter-plan/e1/session.json",
+    "schemas/adapter_plan/e1/request.jtd.json",
+    "schemas/adapter_plan/e1/result.jtd.json"
+  ],
+  "correction_delta_paths": [
+    "crates/vibe-cli/src/commands/adapter_plan/tests.rs",
+    "crates/vibe-lifecycle/src/lib.rs",
+    "crates/vibe-lifecycle/src/mechanism.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases/correction.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plan.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/client_state.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/fixture.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/lifecycle_tests.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/plugin/prepared.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/prepared_query.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+    "crates/vibe-lifecycle/src/mechanism/error/deploy.rs",
+    "crates/vibe-mcp/src/tools/adapter_plan.rs",
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan.rs",
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan/test_fixture.rs",
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs",
+    "crates/vibe-wire/src/behaviour/adapter_plan.rs",
+    "crates/vibe-wire/src/generated/adapter_plan/e1/error/mod.rs",
+    "formats/corpora/adapter-plan/e1/currentness-unavailable.json",
+    "schemas/adapter_plan/e1/error.jtd.json",
+    "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+    "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+  ],
+  "private_evidence": [
+    {
+      "path": "worker-report.md",
+      "before": "80fac5ff803f6c31b8b111bdff01b87b9a6d184341ba2e91636ea2ff503cba60",
+      "after": "80fac5ff803f6c31b8b111bdff01b87b9a6d184341ba2e91636ea2ff503cba60",
+      "bytes": 90517,
+      "unchanged": true
+    },
+    {
+      "path": "worker.patch",
+      "before": "b753a7ed5d1b16439437b893b9954676f4c705ac9ade0f38946720a2a26c5dd9",
+      "after": "b753a7ed5d1b16439437b893b9954676f4c705ac9ade0f38946720a2a26c5dd9",
+      "bytes": 387083,
+      "unchanged": true
+    },
+    {
+      "path": "candidate-result.json",
+      "before": "5752730fee7126a58aafd51bb227bbac27384ff187a9e017e33766dc1428520d",
+      "after": "5752730fee7126a58aafd51bb227bbac27384ff187a9e017e33766dc1428520d",
+      "bytes": 3007,
+      "unchanged": true
+    },
+    {
+      "path": "worker-subjects.json",
+      "before": "5179af1fb046a932406aa92e9870007a73654e21b515969b673151a26fd43b57",
+      "after": "5179af1fb046a932406aa92e9870007a73654e21b515969b673151a26fd43b57",
+      "bytes": 22260,
+      "unchanged": true
+    },
+    {
+      "path": "worker-command-results.json",
+      "before": "2fa501bcad7928a8859106f38f148a7d36e5bc4ed15d2fcc2a5b32fdb1ef144a",
+      "after": "2fa501bcad7928a8859106f38f148a7d36e5bc4ed15d2fcc2a5b32fdb1ef144a",
+      "bytes": 22621,
+      "unchanged": true
+    }
+  ],
+  "runtime_terminal_verified": false,
+  "canonical_collection_verified": false,
+  "acceptance_performed": false
+}

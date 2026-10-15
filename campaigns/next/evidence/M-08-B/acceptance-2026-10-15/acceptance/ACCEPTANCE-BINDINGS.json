@@ -1,0 +1,308 @@
+{
+  "candidate_sha256": "5752730fee7126a58aafd51bb227bbac27384ff187a9e017e33766dc1428520d",
+  "producer_report_sha256": "80fac5ff803f6c31b8b111bdff01b87b9a6d184341ba2e91636ea2ff503cba60",
+  "patch_sha256": "b753a7ed5d1b16439437b893b9954676f4c705ac9ade0f38946720a2a26c5dd9",
+  "subjects": 182,
+  "primary_checks": [
+    {
+      "verification_id": "verification.m08b1",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::m_08_b_1_cases"
+      ],
+      "actual_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::m_08_b_1_cases",
+        "--",
+        "--nocapture"
+      ],
+      "normalization": "Only trailing -- --nocapture adds measurement output; selection unchanged",
+      "exit": 0,
+      "count": 13,
+      "cases": [
+        "mechanism::deploy::m_08_b_1_cases::missing_native_result_refuses_before_image_admission",
+        "mechanism::deploy::m_08_b_1_cases::correction::absent_and_unsupported_executables_have_distinct_refusals",
+        "mechanism::deploy::m_08_b_1_cases::correction::client_state_change_during_list_refuses_capture",
+        "mechanism::deploy::m_08_b_1_cases::missing_client_capture_refuses_without_process_and_prepared_query_is_pure",
+        "mechanism::deploy::m_08_b_1_cases::correction::admitted_parent_and_leaf_symlink_preserves_launcher_execution",
+        "mechanism::deploy::m_08_b_1_cases::correction::unqualified_state_keeps_historical_probes_but_all_queries_refuse",
+        "mechanism::deploy::m_08_b_1_cases::correction::absent_state_then_foreign_installation_refuses_all_query_views",
+        "mechanism::deploy::m_08_b_1_cases::injected_process_and_mutation_attempts_are_zero_during_plan_and_fingerprint",
+        "mechanism::deploy::m_08_b_1_cases::correction::equal_byte_launcher_retarget_refuses_for_parent_and_leaf",
+        "mechanism::deploy::m_08_b_1_cases::prepared_three_clients_fingerprint_without_reprobe_and_changed_executable_refuses",
+        "mechanism::deploy::m_08_b_1_cases::correction::executable_mode_content_and_object_drift_refuse",
+        "mechanism::deploy::m_08_b_1_cases::correction::large_inert_executable_uses_size_independent_observation",
+        "mechanism::deploy::m_08_b_1_cases::correction::owned_client_disable_remove_scope_and_version_drift_refuse"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-lifecycle-final-bound.log",
+      "log_sha256": "82b2e5c26dc9cc897d225cb0a7d8e34b0f84bd79eac628d3c839f48721f0df61",
+      "target": "vibe-lifecycle --lib mechanism::deploy::m_08_b_1_cases"
+    },
+    {
+      "verification_id": "verification.m08b1.1",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::plugin::lifecycle_tests::read_only_plan_runs_only_version_and_list_and_creates_no_support_or_state",
+        "--",
+        "--exact"
+      ],
+      "actual_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::plugin::lifecycle_tests::read_only_plan_runs_only_version_and_list_and_creates_no_support_or_state",
+        "--",
+        "--exact"
+      ],
+      "normalization": "exact captured argv",
+      "exit": 0,
+      "count": 1,
+      "cases": [
+        "mechanism::deploy::plugin::lifecycle_tests::read_only_plan_runs_only_version_and_list_and_creates_no_support_or_state"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-0-bound.log",
+      "log_sha256": "303113d262fb701ae63757b48e663202a4325e2c35fda72c5218f7bf2a39c027",
+      "target": "vibe-lifecycle --lib mechanism::deploy::plugin::lifecycle_tests::read_only_plan_runs_only_version_and_list_and_creates_no_support_or_state -- --exact"
+    },
+    {
+      "verification_id": "verification.m08b1.2",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::plugin::lifecycle_tests::installed_coordinate_without_receipt_is_an_unowned_occupant",
+        "--",
+        "--exact"
+      ],
+      "actual_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::plugin::lifecycle_tests::installed_coordinate_without_receipt_is_an_unowned_occupant",
+        "--",
+        "--exact"
+      ],
+      "normalization": "exact captured argv",
+      "exit": 0,
+      "count": 1,
+      "cases": [
+        "mechanism::deploy::plugin::lifecycle_tests::installed_coordinate_without_receipt_is_an_unowned_occupant"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-1-bound.log",
+      "log_sha256": "d9a9e47a2cf9977ccde6d3ba1b666e6f28aff958b3f61399ca48827869fe4939",
+      "target": "vibe-lifecycle --lib mechanism::deploy::plugin::lifecycle_tests::installed_coordinate_without_receipt_is_an_unowned_occupant -- --exact"
+    },
+    {
+      "verification_id": "verification.m08b1.3",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::plugin::lifecycle_tests::apply_rechecks_opencode_occupancy_after_a_clean_plan",
+        "--",
+        "--exact"
+      ],
+      "actual_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::plugin::lifecycle_tests::apply_rechecks_opencode_occupancy_after_a_clean_plan",
+        "--",
+        "--exact"
+      ],
+      "normalization": "exact captured argv",
+      "exit": 0,
+      "count": 1,
+      "cases": [
+        "mechanism::deploy::plugin::lifecycle_tests::apply_rechecks_opencode_occupancy_after_a_clean_plan"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-preserve-2-bound.log",
+      "log_sha256": "2dd3dca502a70806800e8277195b6f9bba9f1a7b1f2c17cb3a44042f81360b11",
+      "target": "vibe-lifecycle --lib mechanism::deploy::plugin::lifecycle_tests::apply_rechecks_opencode_occupancy_after_a_clean_plan -- --exact"
+    },
+    {
+      "verification_id": "verification.m08b1.4",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::adapter_plan::tests"
+      ],
+      "actual_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::adapter_plan::tests"
+      ],
+      "normalization": "exact captured argv",
+      "exit": 0,
+      "count": 6,
+      "cases": [
+        "machine_operation::adapter_plan::tests::unprepared_and_foreign_bindings_have_closed_refusals",
+        "machine_operation::adapter_plan::tests::unknown_capture_and_unknown_fields_refuse_without_refresh",
+        "machine_operation::adapter_plan::tests::unqualified_deploy_retains_history_and_returns_typed_unavailable",
+        "machine_operation::adapter_plan::tests::both_scopes_use_host_injected_home_without_creating_destinations",
+        "machine_operation::adapter_plan::tests::prepared_plan_is_nonempty_deterministic_and_source_drift_refuses",
+        "machine_operation::adapter_plan::tests::prepared_deploy_binds_client_probes_and_refuses_executable_drift"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-route.log",
+      "log_sha256": "ffededc7b3f3bccb0f4305967b44f96e4a2099419b228f1622fba49b97c4fd60",
+      "target": "vibe-orchestrator --lib machine_operation::adapter_plan::tests"
+    },
+    {
+      "verification_id": "verification.m08b1.5",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "tools::adapter_plan::tests"
+      ],
+      "actual_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "tools::adapter_plan::tests"
+      ],
+      "normalization": "exact captured argv",
+      "exit": 0,
+      "count": 3,
+      "cases": [
+        "tools::adapter_plan::tests::unconfigured_and_wrong_root_return_generated_errors",
+        "tools::adapter_plan::tests::configured_deploy_currentness_unavailable_is_generated_no_effects",
+        "tools::adapter_plan::tests::registered_configured_arc_matches_owner_and_refuses_source_drift"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-mcp.log",
+      "log_sha256": "ea03ae27d1f7eeb82cf5196a0e96519d2eab5b33302fc601c24b3473ac98c935",
+      "target": "vibe-mcp --lib tools::adapter_plan::tests"
+    },
+    {
+      "verification_id": "verification.m08b1.6",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "commands::adapter_plan::tests"
+      ],
+      "actual_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "commands::adapter_plan::tests"
+      ],
+      "normalization": "exact captured argv",
+      "exit": 0,
+      "count": 4,
+      "cases": [
+        "commands::adapter_plan::tests::clap_admits_offline_prepare_and_rejects_incompatible_targets",
+        "commands::adapter_plan::tests::serve_and_registered_mcp_share_positive_and_missing_payloads",
+        "commands::adapter_plan::tests::spawned_prepared_offline_cli_emits_only_protocol_and_retains_plan",
+        "commands::adapter_plan::tests::configured_deploy_cli_mcp_share_positive_stale_and_unavailable_currentness"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-cli-final.log",
+      "log_sha256": "8151ac5774a85ecd5dec1022ffcfc0cd48536e8fc5535848df8a7ef4edc4ca8f",
+      "target": "vibe-cli --bin vibe commands::adapter_plan::tests"
+    },
+    {
+      "verification_id": "verification.m08b1.7",
+      "captured_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::adapter_plan::tests"
+      ],
+      "actual_argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::adapter_plan::tests"
+      ],
+      "normalization": "exact captured argv",
+      "exit": 0,
+      "count": 5,
+      "cases": [
+        "behaviour::adapter_plan::tests::error_requires_reason_only_for_preparation_and_preserves_binding",
+        "behaviour::adapter_plan::tests::currentness_unavailable_reasons_roundtrip_and_reject_malformed_combinations",
+        "behaviour::adapter_plan::tests::generated_request_rejects_unknown_and_wrong_optional_types",
+        "behaviour::adapter_plan::tests::session_and_complete_ordered_plan_roundtrip",
+        "behaviour::adapter_plan::tests::golden_readers_reject_foreign_binding_and_effect_completeness"
+      ],
+      "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-wire.log",
+      "log_sha256": "cffbdd6268a22e9e346ecbd48a341135eb113ca66dd20215a2aee2fb3bf9950d",
+      "target": "vibe-wire --lib behaviour::adapter_plan::tests"
+    }
+  ],
+  "retirement_available": false,
+  "no_phases_executed": true
+}

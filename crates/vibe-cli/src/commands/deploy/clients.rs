@@ -173,3 +173,18 @@ fn executable_extensions() -> Vec<String> {
 #[cfg(test)]
 #[path = "clients/tests.rs"]
 mod tests;
+
+/// Query surfaces have no executable observation and perform no PATH search.
+pub(crate) fn unprepared_clients() -> ClientExecutables {
+    ClientExecutables {
+        claude: ClientExecutable::Missing {
+            command: CLAUDE.into(),
+        },
+        codex: ClientExecutable::Missing {
+            command: CODEX.into(),
+        },
+        opencode: ClientExecutable::Missing {
+            command: OPENCODE.into(),
+        },
+    }
+}

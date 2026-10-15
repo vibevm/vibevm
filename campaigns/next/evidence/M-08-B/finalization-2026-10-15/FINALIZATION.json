@@ -1,0 +1,23 @@
+{
+  "task": "M-08-B.1",
+  "canonical_work_accepted_revision": 567,
+  "accepted_task_contracts": 80,
+  "total_task_contracts": 222,
+  "codegen_after_exact_staging": {
+    "exit": 0,
+    "method": [
+      "env",
+      "CARGO_MANIFEST_DIR=/fast/git/v/vibevm-next/xtask",
+      "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+      "check-codegen"
+    ],
+    "log_sha256": "c53007edb5453c59079d0279c66dff286ccf6c59f210f264b6d4ec508beaa0b9"
+  },
+  "source_subjects_182_unchanged": true,
+  "runtime_acceptance_projection": "unreviewed; canonical WorkAccepted separately committed",
+  "wire_diff": "prior exit1 unchanged repomd before epoch verdict; global epoch tail remains unexecuted",
+  "fresh_unique_cases": 37,
+  "reused_matching_subject_cases": 18,
+  "real_vendor_or_native_or_cross_platform_commissioning": false,
+  "source_files": 122
+}

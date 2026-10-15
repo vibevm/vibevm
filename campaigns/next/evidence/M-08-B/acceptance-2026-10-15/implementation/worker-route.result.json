@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-orchestrator",
+    "--lib",
+    "machine_operation::adapter_plan::tests"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 29.50964879989624,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-route.log",
+  "log_sha256": "ffededc7b3f3bccb0f4305967b44f96e4a2099419b228f1622fba49b97c4fd60",
+  "counts": [
+    {
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 634
+    }
+  ],
+  "nonzero_case_count": 6
+}

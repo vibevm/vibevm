@@ -1,0 +1,1 @@
+{"binary_sha256": "c8d7222ee480efdf5cdcfae738b4237df0089198ba79b08f45b083ab56917709", "exit": 0, "query_trace_lines": 1200, "rows": 1, "effects": {"mutation_attempts": 0, "process_attempts": 0, "network_attempts": 0, "lock_attempts": 0}}

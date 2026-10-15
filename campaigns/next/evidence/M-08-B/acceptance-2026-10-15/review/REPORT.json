@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "task": "M-08-B.1",
+  "verdict": "bounded_clear_full_corrected_candidate",
+  "findings": [],
+  "closed_findings": ["F1 executable admitted shape/size", "F2 client-state currentness"],
+  "acceptance_performed": false,
+  "runtime_terminal_verified": false,
+  "canonical_collection_verified": false,
+  "local_candidate_is_terminal_proof": false,
+  "subject": {
+    "head": "8a1caa7fac81dbec1f99cb5c05deb698678cbabc",
+    "candidate_paths": 122,
+    "prior_paths_retained": 116,
+    "prior_paths_unchanged": 94,
+    "delta_subjects": 28,
+    "extra_candidate_paths": 6,
+    "all_named_subjects_stable": 182,
+    "main_private_evidence_stable": 5,
+    "report_sha256": "80fac5ff803f6c31b8b111bdff01b87b9a6d184341ba2e91636ea2ff503cba60",
+    "report_bytes": 90517,
+    "patch_sha256": "b753a7ed5d1b16439437b893b9954676f4c705ac9ade0f38946720a2a26c5dd9",
+    "patch_bytes": 387083
+  },
+  "F1": {
+    "status": "closed",
+    "evidence": "Existing SafeFS streamed state/object identity; admitted launcher resolved before/after and around probes; original launcher executed; no64MiB image cap or retained image body",
+    "actual_cases": "parent/leaf links, equal-byte retarget, mode/content/object drift,265342136-byte inert sparse image",
+    "limits": "finite detection-bound continuity; proportional I/O; no vendor execution or hostile-ABA claim"
+  },
+  "F2": {
+    "status": "closed",
+    "evidence": "Trusted finite owner binding/witness brackets probes and all public query/fingerprint/exported observations revalidate without process ports",
+    "unqualified_production": "historical preparation retained; typed client-state-unavailable",
+    "positives_retained": ["local skills", "stateless builtins", "OpenCode", "qualified compiled fake and script fixture"],
+    "effectful_compatibility": "private preparation-result/fingerprint seam with independent locked apply/verify/recover admission"
+  },
+  "full_scope_preserved": ["raw selected source/resource capture and drift", "existing M01 selected-world joins", "offline forwarding", "public inspect/dry-run separation", "callback/phase metadata admission and runtime sidecar", "host-owned route", "configured same-Arc CLI/MCP", "bounded PersistentProtocol", "generated typed errors and NoEffects publication"],
+  "verification": {
+    "fresh_distinct": 37,
+    "fresh_counts": {"lifecycle": 13, "exact_lifecycle": 6, "route": 6, "mcp": 3, "cli": 4, "wire": 5},
+    "reused_distinct": 18,
+    "reused_consumed_subjects_and_logs_match": true,
+    "total_distinct_aggregate": 55,
+    "command_log_hashes_matched": 33,
+    "late_lifecycle_and_cli_reruns_checked": true,
+    "reviewer_reruns": false,
+    "per_command_atomic_tree_snapshot_claim": false
+  },
+  "binary_and_query": {
+    "sha256": "c8d7222ee480efdf5cdcfae738b4237df0089198ba79b08f45b083ab56917709",
+    "bytes": 496811208,
+    "independent_read_hash_matches": true,
+    "query_trace_lines": 1200,
+    "identical_nonempty_plans": 2,
+    "root_censuses_equal": 7,
+    "observed_mutation_process_network_lock_attempts": 0,
+    "scope": "actual Linux local-skill CLI query interval"
+  },
+  "preservation": {"PROP054_prior_bytes": true, "PROP080_prior_bytes": true, "A2_clauses": true, "B2_unchanged": true},
+  "oracle_debt": {"check_codegen_exit": 1, "generated_reproducible": true, "wire_diff_exit": 1, "reason": "unchanged index repomd drift", "epoch_verdict_tail_executed": false, "generated_format_debt": "unchanged long match arm", "global_green_claim": false},
+  "profile_limits": ["production Claude/Codex state owners not qualified", "positive native runtime commissioning not claimed", "cross-platform runtime proof not claimed", "finite continuity is not hostile atomicity"],
+  "next": "Root may use bounded-clear review in normal full-B1 acceptance after its own runtime/canonical candidate handling; no additional correction or extra gate requested by reviewer",
+  "reviewer_effects": "external report files only",
+  "artifacts": ["REPORT.md", "REPORT.json", "sourcehashes.json"]
+}

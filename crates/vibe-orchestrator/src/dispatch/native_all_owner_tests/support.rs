@@ -185,7 +185,12 @@ impl Fixture {
             },
         ];
         let (world, lowering, sidecar) = must(
-            crate::world::prepare_owner_runtime_inputs(self.root.path(), &workspace, &resolution),
+            crate::world::prepare_owner_runtime_inputs(
+                self.root.path(),
+                &workspace,
+                &resolution,
+                true,
+            ),
             "owner runtime inputs",
         );
         let platform = must(

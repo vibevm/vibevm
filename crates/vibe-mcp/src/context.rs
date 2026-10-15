@@ -43,6 +43,9 @@ mod migration_tests;
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
 pub struct ServerContext {
+    adapter_plan: Option<
+        std::sync::Arc<vibe_orchestrator::machine_operation::adapter_plan::AdapterPlanRoute>,
+    >,
     boot_debugger: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::boot_debugger::BootDebuggerRoute>,
     >,
@@ -98,6 +101,21 @@ pub struct ServerContext {
 }
 
 impl ServerContext {
+    pub fn with_adapter_plan_route(
+        mut self,
+        route: std::sync::Arc<vibe_orchestrator::machine_operation::adapter_plan::AdapterPlanRoute>,
+    ) -> Result<Self, vibe_wire::generated::adapter_plan::e1::error::Error> {
+        route.compare_context_root(&self.project_root)?;
+        self.adapter_plan = Some(route);
+        Ok(self)
+    }
+    pub fn adapter_plan_route(
+        &self,
+    ) -> Option<&std::sync::Arc<vibe_orchestrator::machine_operation::adapter_plan::AdapterPlanRoute>>
+    {
+        self.adapter_plan.as_ref()
+    }
+
     pub fn with_boot_debugger_route(
         mut self,
         route: std::sync::Arc<
@@ -302,6 +320,7 @@ impl ServerContext {
             .unwrap_or_default();
         ServerContext {
             document_analysis: None,
+            adapter_plan: None,
             boot_debugger: None,
             document_edit_authority: None,
             project_root: project_root.into(),
@@ -327,6 +346,7 @@ impl ServerContext {
     ) -> Self {
         ServerContext {
             document_analysis: None,
+            adapter_plan: None,
             boot_debugger: None,
             document_edit_authority: None,
             project_root: project_root.into(),
@@ -437,6 +457,7 @@ mod tests {
     fn context_carries_exactly_public_roots_and_private_lifecycle_authority() {
         fn destructure(context: ServerContext) {
             let ServerContext {
+                adapter_plan,
                 boot_debugger,
                 document_analysis,
                 document_edit_authority,
@@ -453,6 +474,7 @@ mod tests {
                 fixed_deploy_bridge,
             } = context;
             let _ = (
+                adapter_plan,
                 boot_debugger,
                 document_analysis,
                 document_edit_authority,

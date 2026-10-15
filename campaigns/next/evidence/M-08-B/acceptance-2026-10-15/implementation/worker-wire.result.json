@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-wire",
+    "--lib",
+    "behaviour::adapter_plan::tests"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 0,
+  "seconds": 11.612300634384155,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-wire.log",
+  "log_sha256": "cffbdd6268a22e9e346ecbd48a341135eb113ca66dd20215a2aee2fb3bf9950d",
+  "counts": [
+    {
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 259
+    }
+  ],
+  "nonzero_case_count": 5
+}

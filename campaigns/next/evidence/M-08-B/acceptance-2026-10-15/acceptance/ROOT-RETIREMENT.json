@@ -1,0 +1,67 @@
+{
+  "before": [
+    {
+      "pid": 4100565,
+      "parent": 4100564,
+      "start_ticks": 36052188,
+      "exe": "/fast/zap-managed/2026-10-15-m08b1-review-correction/pins/zap"
+    },
+    {
+      "pid": 4100569,
+      "parent": 4100565,
+      "start_ticks": 36052211,
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay"
+    },
+    {
+      "pid": 4100677,
+      "parent": 4100569,
+      "start_ticks": 36052778,
+      "exe": "/fast/git/v/.workers/podbay-tool-stdio-target/debug/podbay-pod"
+    },
+    {
+      "pid": 4100703,
+      "parent": 4100677,
+      "start_ticks": 36052840,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex"
+    },
+    {
+      "pid": 4101090,
+      "parent": 4100703,
+      "start_ticks": 36053540,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host"
+    }
+  ],
+  "after": [
+    {
+      "pid": 4100565,
+      "exists": false
+    },
+    {
+      "pid": 4100569,
+      "exists": false
+    },
+    {
+      "pid": 4100677,
+      "exists": false
+    },
+    {
+      "pid": 4100703,
+      "exists": false
+    },
+    {
+      "pid": 4101090,
+      "exists": false
+    }
+  ],
+  "sent_sigterm": [
+    4100565,
+    4100677,
+    4100703,
+    4101090
+  ],
+  "method": "exact checked pidfds; root service first for normal SDK cleanup",
+  "native_collected": true,
+  "unknown_tail": false,
+  "source_subjects_unchanged": 182,
+  "work_accepted": false
+}

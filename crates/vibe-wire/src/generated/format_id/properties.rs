@@ -5,6 +5,9 @@ use super::{ForeignParsers, FormatId, UnknownFields};
 impl FormatId {
     /// Every variant, in registry (sorted-id) order.
     pub const ALL: &[FormatId] = &[
+        FormatId::AdapterPlanError,
+        FormatId::AdapterPlanRequest,
+        FormatId::AdapterPlanResult,
         FormatId::ApplicationBundleManifest,
         FormatId::ApplicationContext,
         FormatId::ApplicationDistributionIndex,
@@ -182,6 +185,9 @@ impl FormatId {
     /// The registry id, verbatim (e.g. `cli-init-report`).
     pub fn id(self) -> &'static str {
         match self {
+            FormatId::AdapterPlanError => "adapter-plan-error",
+            FormatId::AdapterPlanRequest => "adapter-plan-request",
+            FormatId::AdapterPlanResult => "adapter-plan-result",
             FormatId::ApplicationBundleManifest => "application-bundle-manifest",
             FormatId::ApplicationContext => "application-context",
             FormatId::ApplicationDistributionIndex => "application-distribution-index",
@@ -360,6 +366,9 @@ impl FormatId {
     /// The epoch this format lives in (PROP-044 §4.6 `##M-EPOCHS`).
     pub fn epoch(self) -> u32 {
         match self {
+            FormatId::AdapterPlanError => 1,
+            FormatId::AdapterPlanRequest => 1,
+            FormatId::AdapterPlanResult => 1,
             FormatId::ApplicationBundleManifest => 1,
             FormatId::ApplicationContext => 1,
             FormatId::ApplicationDistributionIndex => 1,
@@ -538,6 +547,9 @@ impl FormatId {
     /// Whether the format is rebuildable without a human (PROP-044 §5).
     pub fn recoverable(self) -> bool {
         match self {
+            FormatId::AdapterPlanError => false,
+            FormatId::AdapterPlanRequest => false,
+            FormatId::AdapterPlanResult => false,
             FormatId::ApplicationBundleManifest => false,
             FormatId::ApplicationContext => true,
             FormatId::ApplicationDistributionIndex => false,
@@ -716,6 +728,9 @@ impl FormatId {
     /// How many independent parsers read this format (PROP-044 §5).
     pub fn foreign_parsers(self) -> ForeignParsers {
         match self {
+            FormatId::AdapterPlanError => ForeignParsers::None,
+            FormatId::AdapterPlanRequest => ForeignParsers::None,
+            FormatId::AdapterPlanResult => ForeignParsers::None,
             FormatId::ApplicationBundleManifest => ForeignParsers::Many,
             FormatId::ApplicationContext => ForeignParsers::Many,
             FormatId::ApplicationDistributionIndex => ForeignParsers::Many,
@@ -894,6 +909,9 @@ impl FormatId {
     /// Policy for undeclared object members, independent of parser count.
     pub fn unknown_fields(self) -> UnknownFields {
         match self {
+            FormatId::AdapterPlanError => UnknownFields::Deny,
+            FormatId::AdapterPlanRequest => UnknownFields::Deny,
+            FormatId::AdapterPlanResult => UnknownFields::Deny,
             FormatId::ApplicationBundleManifest => UnknownFields::Deny,
             FormatId::ApplicationContext => UnknownFields::Deny,
             FormatId::ApplicationDistributionIndex => UnknownFields::Deny,

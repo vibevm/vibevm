@@ -67,8 +67,12 @@ fn regenerate_native_world(
     metadata: &RunMetadata,
     lease: &LifecycleLease,
 ) -> Result<(Vec<String>, outcome::NativeInstallContext)> {
-    let (world, lowering, sidecar) =
-        crate::world::prepare_owner_runtime_inputs(project_root, workspace, resolution)?;
+    let (world, lowering, sidecar) = crate::world::prepare_owner_runtime_inputs(
+        project_root,
+        workspace,
+        resolution,
+        metadata.offline,
+    )?;
     let platform = vibe_lifecycle::native::NativePlatform::current()?;
     let run = vibe_workspace::extension_world::OwnerRuntimeRunFacts {
         run_id: metadata.run_id.clone(),

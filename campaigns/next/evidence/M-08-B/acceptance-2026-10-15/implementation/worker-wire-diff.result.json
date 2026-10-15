@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cargo",
+    "--offline",
+    "--locked",
+    "xtask",
+    "wire-diff"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "exit": 1,
+  "seconds": 13.202250719070435,
+  "log": "/fast/zap-managed/2026-10-15-m08b1-review-correction/worker-wire-diff.log",
+  "log_sha256": "bb90c0bd3642d1349007df7e3607337ecbf7572b3309f1acf3f3486a7a588968",
+  "counts": [],
+  "nonzero_case_count": 0
+}

@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "context_id": "context",
+  "target_id": "target",
+  "result_id": "result",
+  "capture_id": "capture",
+  "body": {
+    "kind": "session",
+    "adapter_kind": "skills",
+    "scope": "project",
+    "preparation": "ready",
+    "source_evidence": [
+      "source"
+    ],
+    "client_evidence": [],
+    "complete": true
+  }
+}
