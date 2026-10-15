@@ -135,14 +135,32 @@
         "crates/vibe-install/src/slot_verify.rs",
         "crates/vibe-workspace/src/vibedeps/slot_record.rs",
         "crates/vibe-agent-projection/Cargo.toml",
-        "crates/vibe-agent-projection/src/lib.rs"
+        "crates/vibe-agent-projection/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "crates/vibe-agent-projection/src/pkgskill/projection/capture.rs",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs",
+        "crates/vibe-orchestrator/src/world/package_skill.rs",
+        "crates/vibe-orchestrator/src/world/mod.rs",
+        "crates/vibe-workspace/src/source_query/capture/continuity/service/document.rs",
+        "crates/vibe-workspace/src/source_query/capture/continuity/service/preparation.rs",
+        "crates/vibe-registry/src/embedded_source.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-cli/src/commands/adapter_plan.rs",
+        "crates/vibe-cli/src/commands/adapter_plan/tests.rs",
+        "crates/vibe-mcp/src/tools/adapter_plan.rs"
       ],
       "write_paths": [
         "crates/vibe-agent-projection/src/",
         "fixtures/next/adapters/",
         "campaigns/next/evidence/M-08-B/",
         "crates/vibe-agent-projection/Cargo.toml",
-        "crates/vibe-agent-projection/src/lib.rs"
+        "crates/vibe-agent-projection/src/lib.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs"
       ],
       "steps": [
         "Create a fixture where provider.root differs from the hydrated captured source root and resources include nested files.",
@@ -158,9 +176,12 @@
         "Missing/changed captured resource gives an explicit refusal rather than a partial plugin."
       ],
       "checks": [
-        "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
-        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
-        "cargo fmt --all -- --check",
+        "V1 — TO CREATE: cargo test --offline --locked -p vibe-agent-projection --lib pkgskill::projection::m_08_b_2_cases. Each command has its own log, exit and expected nonzero count; no combined green verdict.",
+        "V2 — TO CREATE upper real consumer: cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::tests::m_08_b_2_cases. Each command has its own log, exit and expected nonzero count; no combined green verdict.",
+        "V3 — existing lower preservation: cargo test --offline --locked -p vibe-agent-projection --lib pkgskill::projection::m_08_b_1_cases::prepared_embedded_closure_uses_injected_provider_once_and_exact_offline -- --exact; cargo test --offline --locked -p vibe-agent-projection --lib pkgskill::projection::m_08_b_1_cases::prepared_resources_preserve_includes_and_only_prepare_publishes_owned_cache -- --exact. Each command has its own log, exit and expected nonzero count; no combined green verdict.",
+        "V4 — existing upper preservation: cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::tests::unprepared_and_foreign_bindings_have_closed_refusals -- --exact; cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::tests::unknown_capture_and_unknown_fields_refuse_without_refresh -- --exact. Each command has its own log, exit and expected nonzero count; no combined green verdict.",
+        "V5 — conditional only actual upper product contract change; otherwise reuse qualified B1 subject evidence: cargo test --offline --locked -p vibe-cli --bin vibe commands::adapter_plan::tests::serve_and_registered_mcp_share_positive_and_missing_payloads -- --exact; cargo test --offline --locked -p vibe-mcp --lib tools::adapter_plan::tests::registered_configured_arc_matches_owner_and_refuses_source_drift -- --exact. Each command has its own log, exit and expected nonzero count; no combined green verdict.",
+        "V6 — SCOPED FORMAT: rustfmt --edition 2024 --config skip_children=true --check <exact changed authored Rust paths>. Revalidate effective toolchain/edition; preserve unrelated/generated formatter debt.",
         "git diff --check"
       ],
       "acceptance": [
@@ -171,7 +192,13 @@
       "commit_subject": "fix(adapters): bind projected resources to admitted source captures",
       "notes": [
         "If no bug reproduces, use a test(adapters) commit subject describing the characterization instead of claiming a fix.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Accepted B1 source/archive commit 4f55717b78d9bb38ea8899e1e02b874088ec8b02 follows canonical WorkAccepted revision 567. Evidence is campaigns/next/evidence/M-08-B/acceptance-2026-10-15; Root owns that archive. Existing prepare_with_ports, hydrate_declared_skill_using, lower_one_binding, AdapterPlanHost::prepare_source and SourceQueryService are the reused owners; these evidence pointers are not runtime dependencies.",
+        "Actual worker source writes are narrowed to projection.rs registration and new projection/m_08_b_2_cases.rs; projection/capture.rs and projection/binding.rs only for a demonstrated defect; fixtures/next/adapters/m-08-b2/**; and the two exact upper test/helper files listed above. Upper writes are test-only, registered from existing tests.rs. No upper production, schema/format/wire, source engine, spec or generated changes are granted. Evidence goes to the private job directory, never overwrites the accepted B1 archive.",
+        "V1 lower family is TO CREATE with direct_embedded_capture_ignores_provider_decoy_and_retains_full_membership, composed_resources_keep_exact_roots_includes_and_digest, missing_or_changed_selected_closure_refuses_without_fallback, installed_provider_identity_survives_hydration (at least four nonignored cases). V2 upper family is TO CREATE with m_08_b_2_cases_selected_self_and_dependency_bridge_roots, m_08_b_2_cases_missing_changed_and_membership_drift_refuse_without_refresh, m_08_b_2_cases_decoy_roots_cannot_override_selected_context (at least three nonignored cases). Bind actual names before compiling; each V3/V4 exact command expects one case.",
+        "Upper proof must actually call AdapterPlanHost::new with selected root and Skills/Project, prepare(true), AdapterPlanRoute::new and Plan, traversing selected source membership and original provider joins; no hand-constructed private prepared session. Test authenticated embedded roots and resource composition with nested includes and same-relative-path provider/workspace decoys. Preserve original provider coordinate/version/self-dependency identity independently of captured source_root, complete membership/length/hash/source_snapshot and Observed strength; no source-proven promotion from pins alone.",
+        "Use the existing registry Tree1/cache verifier with deterministic offline owned fixture input. Isolate VIBE_SETTINGS/cache/home in a bounded inert regression child or existing safe injected owner; no global concurrent set_var/chdir, real HOME, ShellGit/network or vendor call. Measure query-only effects separately from setup/preparation; missing/changed/membership drift refuses without partial rows, cache repair, resolver/composer refresh or native Plan.",
+        "At most seven verification plans: V1/V2 newly bound families, V3/V4 existing exact preservation pairs, V5 CLI/MCP parity pair only for actual upper product contract impact (otherwise reuse matching B1 subject evidence), V6 scoped authored formatting, V7 separate whitespace. No broad suite/test-list/cold target. Target lease/toolchain/TMPDIR are Root-bound after physical idle. No codegen/global wire oracle for fixture-only changes; demonstrated generated-contract impact needs an exact scope amendment. Preserve known B1 oracle limitations honestly."
       ]
     }
   ]
