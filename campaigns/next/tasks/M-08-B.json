@@ -21,7 +21,11 @@
         "crates/vibe-lifecycle/src/mechanism.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/command_progress/tests.rs"
       ],
       "write_paths": [
         "crates/vibe-agent-projection/src/",
@@ -37,7 +41,27 @@
         "crates/vibe-lifecycle/src/mechanism.rs",
         "crates/vibe-lifecycle/src/mechanism/deploy.rs",
         "crates/vibe-mcp/Cargo.toml",
-        "crates/vibe-mcp/src/lib.rs"
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-orchestrator/src/machine_operation.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan.rs",
+        "crates/vibe-orchestrator/src/machine_operation/adapter_plan/",
+        "crates/vibe-orchestrator/src/world/mod.rs",
+        "crates/vibe-orchestrator/src/world/package_skill.rs",
+        "crates/vibe-orchestrator/src/world/m_08_b_1_cases.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-cli/src/commands/adapter_plan.rs",
+        "crates/vibe-cli/src/commands/adapter_plan/",
+        "crates/vibe-cli/src/commands/mod.rs",
+        "crates/vibe-cli/src/cli.rs",
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/skill/mod.rs",
+        "crates/vibe-cli/src/commands/deploy.rs",
+        "crates/vibe-cli/src/commands/deploy/clients.rs",
+        "crates/vibe-cli/src/command_progress.rs",
+        "crates/vibe-cli/src/command_progress/tests.rs",
+        "crates/vibe-lifecycle/src/mechanism/error/deploy.rs",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
       ],
       "steps": [
         "Trace each prepare/plan/projection call to hydration, cache writes, PATH resolution and version probes.",
@@ -61,8 +85,10 @@
         "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
         "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
         "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
-        "cargo fmt --all -- --check",
-        "git diff --check"
+        "SCOPED FORMAT: check changed Rust files only with effective project edition/toolchain and skip_children; preserve unrelated formatter debt.",
+        "git diff --check",
+        "SELECT/RUN UPPER OWNER: meaningful nonzero vibe-orchestrator --lib machine_operation::adapter_plan tests for prepared source/client capture, public inspect/offline purity and refusal; bind exact registered module family before compiling.",
+        "SELECT/RUN CLI: vibe-cli --bin vibe commands::adapter_plan tests exercise configured positive shared CLI/MCP protocol and typed NeedsPreparation; include actual command parsing, PersistentProtocol classification and the two existing command_progress inventory/protocol-owner cases."
       ],
       "acceptance": [
         "Operation spies and byte snapshots prove empty-cache query purity.",
@@ -72,7 +98,11 @@
       "commit_subject": "refactor(adapters): separate preparation from pure projection planning",
       "notes": [
         "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Chosen prototype: host-owned in-memory AdapterPlanRoute; explicit startup --prepare on bounded JSON-lines vibe adapter-plan command; configured MCP Arc shares exact route/capture/context/target. No wire prepare verb, persisted capability database, new resolver/context registry or raw world getter. Missing/stale captures return generated typed NeedsPreparation; configured positive route must work.",
+        "Effectful preparation alone owns hydration/composition/PATH/version/list and offline forwarding. Pure plan, public inspect, fingerprint and legacy dry-run cannot call them or native Plan. Install/apply may explicitly prepare within their effectful operation. Captures are provenance, never fresh write authority.",
+        "New command registration includes command_progress policy/inventory: AdapterPlan is PersistentProtocol without generic activity. Additive PROP054/080 updates preserve all prior clauses and accepted A2 contracts. Existing lifecycle test allowing plan-time version/list must explicitly separate preparation from the zero-effect query interval.",
+        "Raw selected skill closure uses existing M01 selection/extraction plus finite owner-private SafeFS captures; document-only SourceQueryService APIs must not be misrepresented as arbitrary skill capture. Any genuinely missing existing-owner API requires an exact packet correction before writes."
       ]
     },
     {
