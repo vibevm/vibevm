@@ -1,0 +1,6 @@
+{
+  "projection_without_only_new_cfg_test_registration": "938cd624d49fe552b1f4ba1e169d90be62ae9ff4abb0a2a6528640727dc4d90c",
+  "upper_tests_before_append": "5a1cae74ab1b858ba4c94fd013f98d40ffc088f83a13cae4ba2e6e7a51f30e43",
+  "all_other_roster_sources_unchanged": true,
+  "proof": "Exact removal of new cfg(test) registration and exact pre-append prefix reconstruct accepted B1 bytes; V5-SELECTION validates remaining unchanged source hashes."
+}

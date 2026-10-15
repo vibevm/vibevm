@@ -1,0 +1,2 @@
+revision=310 work_state=Active work_revision=3
+execution=Succeeded acceptance=Unreviewed candidate=Some(CandidateId("candidate.vibevm-m08b2"))

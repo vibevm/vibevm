@@ -1,0 +1,450 @@
+{
+  "trace_sha256": "71aaf9a7acbf8073bcd10899fe0934f6ef2de73d69e86869b96bb77b2e25297e",
+  "query_intervals": 34,
+  "effects_count": 0,
+  "intervals": [
+    {
+      "tid": "96972",
+      "begin_line": 163677,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 175855
+    },
+    {
+      "tid": "96971",
+      "begin_line": 173093,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 186541
+    },
+    {
+      "tid": "96972",
+      "begin_line": 180410,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 192207
+    },
+    {
+      "tid": "96970",
+      "begin_line": 179083,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 193350
+    },
+    {
+      "tid": "96971",
+      "begin_line": 192283,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 206307
+    },
+    {
+      "tid": "96972",
+      "begin_line": 196810,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 208402
+    },
+    {
+      "tid": "96970",
+      "begin_line": 198597,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 212594
+    },
+    {
+      "tid": "96971",
+      "begin_line": 211197,
+      "syscalls": {
+        "write": 2,
+        "openat": 19,
+        "fcntl": 635,
+        "statx": 318,
+        "openat2": 193
+      },
+      "effects": [],
+      "end_line": 216959
+    },
+    {
+      "tid": "96972",
+      "begin_line": 212993,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 221441
+    },
+    {
+      "tid": "96971",
+      "begin_line": 220936,
+      "syscalls": {
+        "write": 2,
+        "openat": 19,
+        "fcntl": 635,
+        "statx": 318,
+        "openat2": 193
+      },
+      "effects": [],
+      "end_line": 223919
+    },
+    {
+      "tid": "96971",
+      "begin_line": 244900,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 247417
+    },
+    {
+      "tid": "96971",
+      "begin_line": 248204,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 250717
+    },
+    {
+      "tid": "96971",
+      "begin_line": 251506,
+      "syscalls": {
+        "write": 2,
+        "openat": 30,
+        "fcntl": 824,
+        "statx": 479,
+        "openat2": 261
+      },
+      "effects": [],
+      "end_line": 253116
+    },
+    {
+      "tid": "96971",
+      "begin_line": 253901,
+      "syscalls": {
+        "write": 2,
+        "openat": 30,
+        "fcntl": 824,
+        "statx": 479,
+        "openat2": 261
+      },
+      "effects": [],
+      "end_line": 255510
+    },
+    {
+      "tid": "96971",
+      "begin_line": 276099,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 278614
+    },
+    {
+      "tid": "96971",
+      "begin_line": 279397,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 281914
+    },
+    {
+      "tid": "96971",
+      "begin_line": 282710,
+      "syscalls": {
+        "write": 2,
+        "openat": 30,
+        "fcntl": 832,
+        "statx": 490,
+        "openat2": 265
+      },
+      "effects": [],
+      "end_line": 284338
+    },
+    {
+      "tid": "96971",
+      "begin_line": 285134,
+      "syscalls": {
+        "write": 2,
+        "openat": 30,
+        "fcntl": 832,
+        "statx": 490,
+        "openat2": 265
+      },
+      "effects": [],
+      "end_line": 286762
+    },
+    {
+      "tid": "96971",
+      "begin_line": 307345,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 309862
+    },
+    {
+      "tid": "96971",
+      "begin_line": 310648,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 313167
+    },
+    {
+      "tid": "96971",
+      "begin_line": 313956,
+      "syscalls": {
+        "write": 2,
+        "openat": 36,
+        "fcntl": 896,
+        "statx": 540,
+        "openat2": 286
+      },
+      "effects": [],
+      "end_line": 315725
+    },
+    {
+      "tid": "96971",
+      "begin_line": 316515,
+      "syscalls": {
+        "write": 2,
+        "openat": 36,
+        "fcntl": 896,
+        "statx": 540,
+        "openat2": 286
+      },
+      "effects": [],
+      "end_line": 318286
+    },
+    {
+      "tid": "96971",
+      "begin_line": 338871,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 341386
+    },
+    {
+      "tid": "96971",
+      "begin_line": 342174,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 344689
+    },
+    {
+      "tid": "96971",
+      "begin_line": 345481,
+      "syscalls": {
+        "write": 2,
+        "openat": 1,
+        "fcntl": 33,
+        "statx": 16,
+        "openat2": 10
+      },
+      "effects": [],
+      "end_line": 345544
+    },
+    {
+      "tid": "96971",
+      "begin_line": 346332,
+      "syscalls": {
+        "write": 2,
+        "openat": 1,
+        "fcntl": 33,
+        "statx": 16,
+        "openat2": 10
+      },
+      "effects": [],
+      "end_line": 346395
+    },
+    {
+      "tid": "96971",
+      "begin_line": 366972,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 369489
+    },
+    {
+      "tid": "96971",
+      "begin_line": 370276,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 372793
+    },
+    {
+      "tid": "96971",
+      "begin_line": 373583,
+      "syscalls": {
+        "write": 2,
+        "openat": 3,
+        "fcntl": 111,
+        "statx": 52,
+        "openat2": 34
+      },
+      "effects": [],
+      "end_line": 373786
+    },
+    {
+      "tid": "96971",
+      "begin_line": 374569,
+      "syscalls": {
+        "write": 2,
+        "openat": 3,
+        "fcntl": 111,
+        "statx": 52,
+        "openat2": 34
+      },
+      "effects": [],
+      "end_line": 374775
+    },
+    {
+      "tid": "96971",
+      "begin_line": 395368,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 397882
+    },
+    {
+      "tid": "96971",
+      "begin_line": 398667,
+      "syscalls": {
+        "write": 2,
+        "openat": 57,
+        "fcntl": 1229,
+        "statx": 812,
+        "openat2": 402
+      },
+      "effects": [],
+      "end_line": 401184
+    },
+    {
+      "tid": "96971",
+      "begin_line": 401961,
+      "syscalls": {
+        "write": 2,
+        "openat": 15,
+        "fcntl": 575,
+        "statx": 273,
+        "openat2": 174
+      },
+      "effects": [],
+      "end_line": 403004
+    },
+    {
+      "tid": "96971",
+      "begin_line": 403699,
+      "syscalls": {
+        "write": 2,
+        "openat": 15,
+        "fcntl": 575,
+        "statx": 273,
+        "openat2": 174
+      },
+      "effects": [],
+      "end_line": 404748
+    }
+  ],
+  "scope": "Linux selected traced syscall families, actual child query thread intervals only; marker writes to stderr excluded; setup, compiler, inert child launch and teardown outside intervals. No cross-platform or hostile-ABA guarantee."
+}

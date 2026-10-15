@@ -1,0 +1,59 @@
+{
+  "group": "V3",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::projection::m_08_b_1_cases::prepared_embedded_closure_uses_injected_provider_once_and_exact_offline",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "meets_expected_count": true,
+      "log": "/fast/zap-managed/2026-10-15-m08b2/V3-1.log",
+      "seconds": 0.207229282008484,
+      "passed": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::projection::m_08_b_1_cases::prepared_resources_preserve_includes_and_only_prepare_publishes_owned_cache",
+        "--",
+        "--exact"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "meets_expected_count": true,
+      "log": "/fast/zap-managed/2026-10-15-m08b2/V3-2.log",
+      "seconds": 0.20204756199382246,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

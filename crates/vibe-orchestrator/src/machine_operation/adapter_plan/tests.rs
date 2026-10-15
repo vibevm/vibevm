@@ -187,3 +187,61 @@ fn unqualified_deploy_retains_history_and_returns_typed_unavailable() {
     assert!(route.capture_id().is_some());
     assert_eq!(std::fs::read(&trace).unwrap(), before);
 }
+
+#[path = "m_08_b_2_fixture.rs"]
+mod m_08_b_2_fixture;
+
+#[test]
+fn m_08_b_2_cases_selected_self_and_dependency_bridge_roots() {
+    m_08_b_2_fixture::isolated(
+        "m_08_b_2_cases_selected_self_and_dependency_bridge_roots",
+        |owned| {
+            let fixture = m_08_b_2_fixture::Fixture::new(owned);
+            fixture.positive();
+        },
+    );
+}
+#[test]
+fn m_08_b_2_cases_missing_changed_and_membership_drift_refuse_without_refresh() {
+    m_08_b_2_fixture::isolated(
+        "m_08_b_2_cases_missing_changed_and_membership_drift_refuse_without_refresh",
+        |owned| {
+            for kind in [
+                "missing",
+                "changed",
+                "member",
+                "composed",
+                "lock",
+                "manifest",
+                "absent-cache",
+            ] {
+                let fixture = m_08_b_2_fixture::Fixture::new(owned);
+                fixture.positive();
+                fixture.tamper(kind);
+                for _ in 0..2 {
+                    let error = fixture.query(kind).unwrap_err();
+                    assert_eq!(error.code, e::ErrorCode::NeedsPreparation);
+                    assert_eq!(error.reason, Some(e::ErrorReason::SourceCaptureStale));
+                }
+            }
+        },
+    );
+}
+#[test]
+fn m_08_b_2_cases_decoy_roots_cannot_override_selected_context() {
+    m_08_b_2_fixture::isolated(
+        "m_08_b_2_cases_decoy_roots_cannot_override_selected_context",
+        |owned| {
+            let fixture = m_08_b_2_fixture::Fixture::new(owned);
+            let before = fixture.positive();
+            fixture.decoys();
+            assert_eq!(fixture.positive(), before);
+            assert!(
+                fixture
+                    .route
+                    .compare_context_root(&std::env::current_dir().unwrap())
+                    .is_err()
+            );
+        },
+    );
+}

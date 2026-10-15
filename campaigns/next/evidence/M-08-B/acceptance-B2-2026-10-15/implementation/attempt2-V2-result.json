@@ -1,0 +1,25 @@
+{
+  "group": "V2",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::adapter_plan::tests::m_08_b_2_cases"
+      ],
+      "exit": 101,
+      "counts": [],
+      "meets_expected_count": false,
+      "log": "/fast/zap-managed/2026-10-15-m08b2/V2-1.log",
+      "seconds": 9.579614415008109,
+      "passed": false
+    }
+  ],
+  "passed": false
+}

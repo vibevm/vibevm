@@ -1,0 +1,31 @@
+{
+  "group": "V1",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::projection::m_08_b_2_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "4",
+          "0",
+          "0"
+        ]
+      ],
+      "meets_expected_count": true,
+      "log": "/fast/zap-managed/2026-10-15-m08b2/V1-1.log",
+      "seconds": 1.553632638999261,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,962 @@
+{
+  "schema": 1,
+  "status": "Root full M08B2 characterization canonically WorkAccepted323; exact evidence frozen",
+  "candidate_sources": 4,
+  "source_before": {
+    "crates/vibe-agent-projection/src/pkgskill/projection.rs": {
+      "sha256": "ab85011cd156fe4ed65b0f62b227bcf4742536837262df05b3cc7ce8f07121bb",
+      "bytes": 21597
+    },
+    "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs": {
+      "sha256": "70470810c02fda69264b7a1fa0a4c2baa3fd4fa617edef51c72d3c3dc673db18",
+      "bytes": 11805
+    },
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs": {
+      "sha256": "8b034c83344f37254dd0dfeec00bc088580f1a1a6766cd79c0b1a9da743b2765",
+      "bytes": 8122
+    },
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs": {
+      "sha256": "0cd918a6c6dd6d6e10929c342a7cd4c304910ceb04c9fab5fbddbf54c9831871",
+      "bytes": 19049
+    }
+  },
+  "source_after": {
+    "crates/vibe-agent-projection/src/pkgskill/projection.rs": {
+      "sha256": "ab85011cd156fe4ed65b0f62b227bcf4742536837262df05b3cc7ce8f07121bb",
+      "bytes": 21597
+    },
+    "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs": {
+      "sha256": "70470810c02fda69264b7a1fa0a4c2baa3fd4fa617edef51c72d3c3dc673db18",
+      "bytes": 11805
+    },
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan/tests.rs": {
+      "sha256": "8b034c83344f37254dd0dfeec00bc088580f1a1a6766cd79c0b1a9da743b2765",
+      "bytes": 8122
+    },
+    "crates/vibe-orchestrator/src/machine_operation/adapter_plan/m_08_b_2_fixture.rs": {
+      "sha256": "0cd918a6c6dd6d6e10929c342a7cd4c304910ceb04c9fab5fbddbf54c9831871",
+      "bytes": 19049
+    }
+  },
+  "Root_FIXED_separate_stage_path": "FIXED-ISSUES.md",
+  "worker_artifact_entries": 40,
+  "raw_mappings": [
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V1-1.log",
+      "saved_path": "implementation/V1-1.raw.txt",
+      "raw_sha256": "356cc30fe09b0e32807fc4212d7df73b22d0ba89b55ae847bf8384dca0fb2a6f",
+      "raw_bytes": 18334,
+      "saved_sha256": "356cc30fe09b0e32807fc4212d7df73b22d0ba89b55ae847bf8384dca0fb2a6f",
+      "saved_bytes": 18334,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V1-result.json",
+      "saved_path": "implementation/V1-result.json",
+      "raw_sha256": "3a1aa4ace1a9b181768e21ae7601408163296f4346caf8fbdb7f269eace72484",
+      "raw_bytes": 562,
+      "saved_sha256": "3a1aa4ace1a9b181768e21ae7601408163296f4346caf8fbdb7f269eace72484",
+      "saved_bytes": 562,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V2-1.log",
+      "saved_path": "implementation/V2-1.raw.txt",
+      "raw_sha256": "819b33f301be57059bb47f0d7bd2ed2c35a6cb2f385a210bc8cda5a29715f853",
+      "raw_bytes": 60832,
+      "saved_sha256": "819b33f301be57059bb47f0d7bd2ed2c35a6cb2f385a210bc8cda5a29715f853",
+      "saved_bytes": 60832,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V2-result.json",
+      "saved_path": "implementation/V2-result.json",
+      "raw_sha256": "d548257884ecf32055251d651d2063bda83d33586e6b1cd3da808e4cab7c5ba5",
+      "raw_bytes": 772,
+      "saved_sha256": "d548257884ecf32055251d651d2063bda83d33586e6b1cd3da808e4cab7c5ba5",
+      "saved_bytes": 772,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V2.trace",
+      "saved_path": "implementation/V2.trace.gz",
+      "raw_sha256": "71aaf9a7acbf8073bcd10899fe0934f6ef2de73d69e86869b96bb77b2e25297e",
+      "raw_bytes": 55973183,
+      "saved_sha256": "354db88ef51c51900a94f16601a0544bcb94ad39c73c50de9deb0c628da847b6",
+      "saved_bytes": 2536165,
+      "transformation": {
+        "kind": "deterministic lossless gzip",
+        "mtime": 0,
+        "compression_level": 6,
+        "gzip_filename_header": "",
+        "python_gzip_zlib_version": "1.3.1",
+        "decompressed_sha256": "71aaf9a7acbf8073bcd10899fe0934f6ef2de73d69e86869b96bb77b2e25297e",
+        "decompressed_bytes": 55973183,
+        "raw_retained_private_path": "/fast/zap-managed/2026-10-15-m08b2/V2.trace"
+      },
+      "reason": "worker-artifacts exact entry; trace deterministic lossless gzip"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V3-1.log",
+      "saved_path": "implementation/V3-1.raw.txt",
+      "raw_sha256": "32ac5295fcdf9df1ce6ed317621fa28c07c674e3cd796ce5fe20c236048988c7",
+      "raw_bytes": 17919,
+      "saved_sha256": "32ac5295fcdf9df1ce6ed317621fa28c07c674e3cd796ce5fe20c236048988c7",
+      "saved_bytes": 17919,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V3-2.log",
+      "saved_path": "implementation/V3-2.raw.txt",
+      "raw_sha256": "e0a1c24f50f440653b1fbd4bbfa4c9c78e9216d72c31d576ef884e1815ef2e94",
+      "raw_bytes": 17923,
+      "saved_sha256": "e0a1c24f50f440653b1fbd4bbfa4c9c78e9216d72c31d576ef884e1815ef2e94",
+      "saved_bytes": 17923,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V3-result.json",
+      "saved_path": "implementation/V3-result.json",
+      "raw_sha256": "80e7ea8763c39583048bdef074098819323a9f4e73db79cd122f433c01e2402b",
+      "raw_bytes": 1264,
+      "saved_sha256": "80e7ea8763c39583048bdef074098819323a9f4e73db79cd122f433c01e2402b",
+      "saved_bytes": 1264,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V4-1.log",
+      "saved_path": "implementation/V4-1.raw.txt",
+      "raw_sha256": "c4f4594a47bd9affa70c74c32deef335f0dfe68e3ea2913b883376421be42b5c",
+      "raw_bytes": 26620,
+      "saved_sha256": "c4f4594a47bd9affa70c74c32deef335f0dfe68e3ea2913b883376421be42b5c",
+      "saved_bytes": 26620,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V4-2.log",
+      "saved_path": "implementation/V4-2.raw.txt",
+      "raw_sha256": "43650bb2abd863aa43437e69a48cb85416b058ccd5603ed867ea6a153276633c",
+      "raw_bytes": 26625,
+      "saved_sha256": "43650bb2abd863aa43437e69a48cb85416b058ccd5603ed867ea6a153276633c",
+      "saved_bytes": 26625,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V4-result.json",
+      "saved_path": "implementation/V4-result.json",
+      "raw_sha256": "162274ecfeef970fbcd3d47a9ba269c065a1f65dcd7f0dd9583a47f2c8855aaf",
+      "raw_bytes": 1224,
+      "saved_sha256": "162274ecfeef970fbcd3d47a9ba269c065a1f65dcd7f0dd9583a47f2c8855aaf",
+      "saved_bytes": 1224,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V5-SELECTION.json",
+      "saved_path": "implementation/V5-SELECTION.json",
+      "raw_sha256": "64bb57094279c3200919887c99f3b5783a9a252c8c986510736a838bed55be46",
+      "raw_bytes": 24186,
+      "saved_sha256": "64bb57094279c3200919887c99f3b5783a9a252c8c986510736a838bed55be46",
+      "saved_bytes": 24186,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V5-result.json",
+      "saved_path": "implementation/V5-result.json",
+      "raw_sha256": "17dcc8ae78336f89acf011c59df11d75006ad2bb4e672babc51e56013e8869ba",
+      "raw_bytes": 24700,
+      "saved_sha256": "17dcc8ae78336f89acf011c59df11d75006ad2bb4e672babc51e56013e8869ba",
+      "saved_bytes": 24700,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V6-1.log",
+      "saved_path": "implementation/V6-1.raw.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_bytes": 0,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V6-PATHS.json",
+      "saved_path": "implementation/V6-PATHS.json",
+      "raw_sha256": "af586aa5031d41be51ce6ba6372460830929593f9ab96d223506d022c7a12d4c",
+      "raw_bytes": 288,
+      "saved_sha256": "af586aa5031d41be51ce6ba6372460830929593f9ab96d223506d022c7a12d4c",
+      "saved_bytes": 288,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V6-result.json",
+      "saved_path": "implementation/V6-result.json",
+      "raw_sha256": "303d6b740194289b056ad771d0d0ab66b146fdcb01e09202505ab037857c56a3",
+      "raw_bytes": 751,
+      "saved_sha256": "303d6b740194289b056ad771d0d0ab66b146fdcb01e09202505ab037857c56a3",
+      "saved_bytes": 751,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V7-1.log",
+      "saved_path": "implementation/V7-1.raw.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0,
+      "saved_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved_bytes": 0,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/V7-result.json",
+      "saved_path": "implementation/V7-result.json",
+      "raw_sha256": "35a1b0b8da710bf00cd7ead4ca8e44374f90825ce78af045c6447d46d881752d",
+      "raw_bytes": 358,
+      "saved_sha256": "35a1b0b8da710bf00cd7ead4ca8e44374f90825ce78af045c6447d46d881752d",
+      "saved_bytes": 358,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt1-V1-1.log",
+      "saved_path": "implementation/attempt1-V1-1.raw.txt",
+      "raw_sha256": "36faf70f1b88579f1accffd191e5ab76aeaa8a61137106893b9cc0f551ecf771",
+      "raw_bytes": 18880,
+      "saved_sha256": "36faf70f1b88579f1accffd191e5ab76aeaa8a61137106893b9cc0f551ecf771",
+      "saved_bytes": 18880,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt1-V1-result.json",
+      "saved_path": "implementation/attempt1-V1-result.json",
+      "raw_sha256": "2e9f4828c77ab79f413ea238e5b0bc933dde2eb3d9b0d58deaacc2157e4ee121",
+      "raw_bytes": 563,
+      "saved_sha256": "2e9f4828c77ab79f413ea238e5b0bc933dde2eb3d9b0d58deaacc2157e4ee121",
+      "saved_bytes": 563,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt1-V2-1.log",
+      "saved_path": "implementation/attempt1-V2-1.raw.txt",
+      "raw_sha256": "ab4f67d71e7cd8feb01a6229834e19770ffefa49290ca8b1e9d1fc374614ba9d",
+      "raw_bytes": 31362,
+      "saved_sha256": "ab4f67d71e7cd8feb01a6229834e19770ffefa49290ca8b1e9d1fc374614ba9d",
+      "saved_bytes": 31362,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt1-V2-result.json",
+      "saved_path": "implementation/attempt1-V2-result.json",
+      "raw_sha256": "a35b30871531e2e21a40eb3cedda94cb68e4badf7654be38f88d448be63210ce",
+      "raw_bytes": 511,
+      "saved_sha256": "a35b30871531e2e21a40eb3cedda94cb68e4badf7654be38f88d448be63210ce",
+      "saved_bytes": 511,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt2-V2-1.log",
+      "saved_path": "implementation/attempt2-V2-1.raw.txt",
+      "raw_sha256": "11efc7109af2ed410378df6cde1a8dc4a6b05f5378bf54c740a9e9a6a48f40a8",
+      "raw_bytes": 30921,
+      "saved_sha256": "11efc7109af2ed410378df6cde1a8dc4a6b05f5378bf54c740a9e9a6a48f40a8",
+      "saved_bytes": 30921,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt2-V2-result.json",
+      "saved_path": "implementation/attempt2-V2-result.json",
+      "raw_sha256": "f6af5b45b93db330aa6e87f5926c8394a93fead4bd3adea4e65cf248e251f159",
+      "raw_bytes": 510,
+      "saved_sha256": "f6af5b45b93db330aa6e87f5926c8394a93fead4bd3adea4e65cf248e251f159",
+      "saved_bytes": 510,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt3-V2-1.log",
+      "saved_path": "implementation/attempt3-V2-1.raw.txt",
+      "raw_sha256": "6519c147c33d692d1138d6f07ac1e1b5d3790fff0e4959878e396c96895f7be9",
+      "raw_bytes": 31326,
+      "saved_sha256": "6519c147c33d692d1138d6f07ac1e1b5d3790fff0e4959878e396c96895f7be9",
+      "saved_bytes": 31326,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt3-V2-result.json",
+      "saved_path": "implementation/attempt3-V2-result.json",
+      "raw_sha256": "c5ef07d39e096acfad371a7e387e887a0484d9134fc883a31f09a04106cd3e90",
+      "raw_bytes": 510,
+      "saved_sha256": "c5ef07d39e096acfad371a7e387e887a0484d9134fc883a31f09a04106cd3e90",
+      "saved_bytes": 510,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt4-V2-1.log",
+      "saved_path": "implementation/attempt4-V2-1.raw.txt",
+      "raw_sha256": "4432ecbbef629fb8cc0652558121e10a94235775a38e84c79fb9d950644c9ae7",
+      "raw_bytes": 38681,
+      "saved_sha256": "4432ecbbef629fb8cc0652558121e10a94235775a38e84c79fb9d950644c9ae7",
+      "saved_bytes": 38681,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/attempt4-V2-result.json",
+      "saved_path": "implementation/attempt4-V2-result.json",
+      "raw_sha256": "c8afc1d1d0d8ada99e7ca8242266605d5b76162a80fc5284a533f37941ac66b4",
+      "raw_bytes": 772,
+      "saved_sha256": "c8afc1d1d0d8ada99e7ca8242266605d5b76162a80fc5284a533f37941ac66b4",
+      "saved_bytes": 772,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-b1-preservation.json",
+      "saved_path": "implementation/worker-b1-preservation.json",
+      "raw_sha256": "fa4013611077a5c9ba9c110ed6f8ccf93ce28048e8820051f159df2721cc2bf5",
+      "raw_bytes": 445,
+      "saved_sha256": "fa4013611077a5c9ba9c110ed6f8ccf93ce28048e8820051f159df2721cc2bf5",
+      "saved_bytes": 445,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-baseline-rebind.json",
+      "saved_path": "implementation/worker-baseline-rebind.json",
+      "raw_sha256": "4c0992e0676d6442e2f0fe7b1f2eaf6bf456f426a4451695712c9727ba5573cb",
+      "raw_bytes": 622,
+      "saved_sha256": "4c0992e0676d6442e2f0fe7b1f2eaf6bf456f426a4451695712c9727ba5573cb",
+      "saved_bytes": 622,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-check-bindings.json",
+      "saved_path": "implementation/worker-check-bindings.json",
+      "raw_sha256": "813b798d29c34f59fa84df1b68db1769b80aeee3d4c6b4091c47641ca96b707d",
+      "raw_bytes": 3822,
+      "saved_sha256": "813b798d29c34f59fa84df1b68db1769b80aeee3d4c6b4091c47641ca96b707d",
+      "saved_bytes": 3822,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-command-results.json",
+      "saved_path": "implementation/worker-command-results.json",
+      "raw_sha256": "27254996cbb08220de1973c2974557a4dfa4b0f7042d11fa248cde242f55e3a2",
+      "raw_bytes": 11199,
+      "saved_sha256": "27254996cbb08220de1973c2974557a4dfa4b0f7042d11fa248cde242f55e3a2",
+      "saved_bytes": 11199,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-expected-membership.json",
+      "saved_path": "implementation/worker-expected-membership.json",
+      "raw_sha256": "a1e68146bc2d36e75d8a7e069c57b52acc66cb5ff31b347d6c56a21196d12598",
+      "raw_bytes": 1151,
+      "saved_sha256": "a1e68146bc2d36e75d8a7e069c57b52acc66cb5ff31b347d6c56a21196d12598",
+      "saved_bytes": 1151,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-fixture-effects.json",
+      "saved_path": "implementation/worker-fixture-effects.json",
+      "raw_sha256": "cea9b2678280633bb5d18c84b2a80d1967ff154188c224917010f1d9378d512a",
+      "raw_bytes": 35566,
+      "saved_sha256": "cea9b2678280633bb5d18c84b2a80d1967ff154188c224917010f1d9378d512a",
+      "saved_bytes": 35566,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-patch-manifest.json",
+      "saved_path": "implementation/worker-patch-manifest.json",
+      "raw_sha256": "c48e3f72c34960d022fb384a79e1f3088403188485e5543bac93e0256708933e",
+      "raw_bytes": 730,
+      "saved_sha256": "c48e3f72c34960d022fb384a79e1f3088403188485e5543bac93e0256708933e",
+      "saved_bytes": 730,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-preflight-rebind.json",
+      "saved_path": "implementation/worker-preflight-rebind.json",
+      "raw_sha256": "d2f9180f3873407527ed508ca8167090d5262af8b9bb9c6b7f43f94fc88a77ff",
+      "raw_bytes": 1122,
+      "saved_sha256": "d2f9180f3873407527ed508ca8167090d5262af8b9bb9c6b7f43f94fc88a77ff",
+      "saved_bytes": 1122,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-query-census.json",
+      "saved_path": "implementation/worker-query-census.json",
+      "raw_sha256": "2b54bf3f0f71fc212b908b0053d5e63f0471f61c1a61f191f7dc9f3f551f9e31",
+      "raw_bytes": 8803,
+      "saved_sha256": "2b54bf3f0f71fc212b908b0053d5e63f0471f61c1a61f191f7dc9f3f551f9e31",
+      "saved_bytes": 8803,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-roster-check.json",
+      "saved_path": "implementation/worker-roster-check.json",
+      "raw_sha256": "4e92cea545f6cdb3ffe90ba1fd5d55206a602512bba101c243a76847ecf0a480",
+      "raw_bytes": 40,
+      "saved_sha256": "4e92cea545f6cdb3ffe90ba1fd5d55206a602512bba101c243a76847ecf0a480",
+      "saved_bytes": 40,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-trace-census.py",
+      "saved_path": "implementation/worker-trace-census.py",
+      "raw_sha256": "89e621c7296ab4e9c4cdc073e2211ab1f5358db5b61fdadf7dd60c5229101194",
+      "raw_bytes": 2550,
+      "saved_sha256": "89e621c7296ab4e9c4cdc073e2211ab1f5358db5b61fdadf7dd60c5229101194",
+      "saved_bytes": 2550,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker.patch",
+      "saved_path": "implementation/worker.patch",
+      "raw_sha256": "6a18dc3e51d58a08ff9969fd1e8fcc4c149687ca0ef06d8729b3fc8e88f7aace",
+      "raw_bytes": 35402,
+      "saved_sha256": "6a18dc3e51d58a08ff9969fd1e8fcc4c149687ca0ef06d8729b3fc8e88f7aace",
+      "saved_bytes": 35402,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "worker-artifacts exact entry"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/WORKER-PACKET.md",
+      "saved_path": "implementation/WORKER-PACKET.md",
+      "raw_sha256": "f49155ae77b13d9cd20ffea144d99cf6c28136c321789f6a84bd0afb876b1d95",
+      "raw_bytes": 7000,
+      "saved_sha256": "f49155ae77b13d9cd20ffea144d99cf6c28136c321789f6a84bd0afb876b1d95",
+      "saved_bytes": 7000,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "explicit worker protocol/report/manifest or bounded command wrapper"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/CANONICAL-TASK.json",
+      "saved_path": "implementation/CANONICAL-TASK.json",
+      "raw_sha256": "2ba09f21f8c9681193e397e2f611fbcb8a7eaac44a579e395dfa3953df004fcf",
+      "raw_bytes": 20801,
+      "saved_sha256": "2ba09f21f8c9681193e397e2f611fbcb8a7eaac44a579e395dfa3953df004fcf",
+      "saved_bytes": 20801,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "explicit worker protocol/report/manifest or bounded command wrapper"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/SELECTED-CHECKS.json",
+      "saved_path": "implementation/SELECTED-CHECKS.json",
+      "raw_sha256": "35bf79787fc1b9a8e88c351ed9bbb6351a19b956f52dd3eb38b945d0a57a9719",
+      "raw_bytes": 3005,
+      "saved_sha256": "35bf79787fc1b9a8e88c351ed9bbb6351a19b956f52dd3eb38b945d0a57a9719",
+      "saved_bytes": 3005,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "explicit worker protocol/report/manifest or bounded command wrapper"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-report.md",
+      "saved_path": "implementation/worker-report.md",
+      "raw_sha256": "8a68ec0260a96bd6c5decce1cf966c1ff857bc6101901537e74cf59e16d03f65",
+      "raw_bytes": 15584,
+      "saved_sha256": "8a68ec0260a96bd6c5decce1cf966c1ff857bc6101901537e74cf59e16d03f65",
+      "saved_bytes": 15584,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "explicit worker protocol/report/manifest or bounded command wrapper"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-findings.json",
+      "saved_path": "implementation/worker-findings.json",
+      "raw_sha256": "2ee1e64d9cf461b3e21f41edc619e80e17859b17086e61ad24b1a6498c8f0234",
+      "raw_bytes": 874,
+      "saved_sha256": "2ee1e64d9cf461b3e21f41edc619e80e17859b17086e61ad24b1a6498c8f0234",
+      "saved_bytes": 874,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "explicit worker protocol/report/manifest or bounded command wrapper"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/worker-artifacts.json",
+      "saved_path": "implementation/worker-artifacts.json",
+      "raw_sha256": "944fe3dd64c76652cce15a5d124c27151b59bcb3f0f71187884534e023e49202",
+      "raw_bytes": 5223,
+      "saved_sha256": "944fe3dd64c76652cce15a5d124c27151b59bcb3f0f71187884534e023e49202",
+      "saved_bytes": 5223,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "explicit worker protocol/report/manifest or bounded command wrapper"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/verify-group.py",
+      "saved_path": "implementation/verify-group.py",
+      "raw_sha256": "a3ff20f216372474dccdc116b4166f1fa3b4743bcc023cfe14833af20ea2567e",
+      "raw_bytes": 3430,
+      "saved_sha256": "a3ff20f216372474dccdc116b4166f1fa3b4743bcc023cfe14833af20ea2567e",
+      "saved_bytes": 3430,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "explicit worker protocol/report/manifest or bounded command wrapper"
+    },
+    {
+      "raw_path": "/fast/git/v/research/2026-10-15-m08b2-review/REPORT.md",
+      "saved_path": "review/REPORT.md",
+      "raw_sha256": "ac0174d41521dd740d103d7d5366c7ab4cca1b2084b174da233b0aba7ed799da",
+      "raw_bytes": 6814,
+      "saved_sha256": "ac0174d41521dd740d103d7d5366c7ab4cca1b2084b174da233b0aba7ed799da",
+      "saved_bytes": 6814,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "final independent full characterization review"
+    },
+    {
+      "raw_path": "/fast/git/v/research/2026-10-15-m08b2-review/REPORT.json",
+      "saved_path": "review/REPORT.json",
+      "raw_sha256": "e55ea105ae8458bbbd16064e195faa06581b6c78275af4a01f10f30a46079072",
+      "raw_bytes": 2838,
+      "saved_sha256": "e55ea105ae8458bbbd16064e195faa06581b6c78275af4a01f10f30a46079072",
+      "saved_bytes": 2838,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "final independent full characterization review"
+    },
+    {
+      "raw_path": "/fast/git/v/research/2026-10-15-m08b2-review/sourcehashes.json",
+      "saved_path": "review/sourcehashes.json",
+      "raw_sha256": "b0693578dba59c9401f968ed632a95f13e2143df9c03590c11df16cfd4cc50fa",
+      "raw_bytes": 54289,
+      "saved_sha256": "b0693578dba59c9401f968ed632a95f13e2143df9c03590c11df16cfd4cc50fa",
+      "saved_bytes": 54289,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "final independent full characterization review"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/ROOT-REVIEW.json",
+      "saved_path": "approval-runtime/ROOT-REVIEW.json",
+      "raw_sha256": "32f554a5d6406439566452f78cbe643a36e36f136f45ec9242e6c14798b4b9d3",
+      "raw_bytes": 73589,
+      "saved_sha256": "32f554a5d6406439566452f78cbe643a36e36f136f45ec9242e6c14798b4b9d3",
+      "saved_bytes": 73589,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "immutable approval/actual normal collection/retirement; not Work acceptance receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/ROOT-NATIVE-LATEST.json",
+      "saved_path": "approval-runtime/ROOT-NATIVE-LATEST.json",
+      "raw_sha256": "9e28cd54e37228c4b5f26ba814401587dca3f0b8e01af3e7d3af05f80c669aba",
+      "raw_bytes": 474,
+      "saved_sha256": "9e28cd54e37228c4b5f26ba814401587dca3f0b8e01af3e7d3af05f80c669aba",
+      "saved_bytes": 474,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "immutable approval/actual normal collection/retirement; not Work acceptance receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/ROOT-RETIREMENT.json",
+      "saved_path": "approval-runtime/ROOT-RETIREMENT.json",
+      "raw_sha256": "69c8cb5add87269153f3b9d36b04e2c6de6f45696b69f75afeb503c73716ae94",
+      "raw_bytes": 1926,
+      "saved_sha256": "69c8cb5add87269153f3b9d36b04e2c6de6f45696b69f75afeb503c73716ae94",
+      "saved_bytes": 1926,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "immutable approval/actual normal collection/retirement; not Work acceptance receipt"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/root-before-acceptance.log",
+      "saved_path": "acceptance/root-before-acceptance.raw.txt",
+      "raw_sha256": "36e7990fbfb1ff1c7b51b4200a181e61a2092bfeae3e95615aef3c7cf26287d7",
+      "raw_bytes": 143,
+      "saved_sha256": "36e7990fbfb1ff1c7b51b4200a181e61a2092bfeae3e95615aef3c7cf26287d7",
+      "saved_bytes": 143,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/root-safe.log",
+      "saved_path": "acceptance/root-safe.raw.txt",
+      "raw_sha256": "57764e9da24f41b83a781877122352bda457fbc7278afae7bad90e0f2becacdd",
+      "raw_bytes": 6323,
+      "saved_sha256": "57764e9da24f41b83a781877122352bda457fbc7278afae7bad90e0f2becacdd",
+      "saved_bytes": 6323,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/root-open-review.log",
+      "saved_path": "acceptance/root-open-review.raw.txt",
+      "raw_sha256": "080b769d462a328dbb3418dd4d46d61e83c7b0d47e8727b741f7556b6b84755d",
+      "raw_bytes": 628,
+      "saved_sha256": "080b769d462a328dbb3418dd4d46d61e83c7b0d47e8727b741f7556b6b84755d",
+      "saved_bytes": 628,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/root-evidence.log",
+      "saved_path": "acceptance/root-evidence.raw.txt",
+      "raw_sha256": "908e41df8c1e72b3f8750830b2ad70dd65e27493f9af632430f887e8193bcb85",
+      "raw_bytes": 4489,
+      "saved_sha256": "908e41df8c1e72b3f8750830b2ad70dd65e27493f9af632430f887e8193bcb85",
+      "saved_bytes": 4489,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/root-stage.log",
+      "saved_path": "acceptance/root-stage.raw.txt",
+      "raw_sha256": "3360bc08e3e91bacf2aa93552e1645f6426c69e9cfc0844097e513db38efa607",
+      "raw_bytes": 613,
+      "saved_sha256": "3360bc08e3e91bacf2aa93552e1645f6426c69e9cfc0844097e513db38efa607",
+      "saved_bytes": 613,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/root-work.log",
+      "saved_path": "acceptance/root-work.raw.txt",
+      "raw_sha256": "804c138ff67cfb0551b55de0aaaf5827dd9a13d57349a3ecd3fbd8818e533697",
+      "raw_bytes": 610,
+      "saved_sha256": "804c138ff67cfb0551b55de0aaaf5827dd9a13d57349a3ecd3fbd8818e533697",
+      "saved_bytes": 610,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/root-final-state.log",
+      "saved_path": "acceptance/root-final-state.raw.txt",
+      "raw_sha256": "36c2423e5d7e3aa2e75d47512083ead16b9cad0df20926506a90895dd8fa0c08",
+      "raw_bytes": 145,
+      "saved_sha256": "36c2423e5d7e3aa2e75d47512083ead16b9cad0df20926506a90895dd8fa0c08",
+      "saved_bytes": 145,
+      "transformation": {
+        "kind": "none; exact bytes/newlines/EOF; .log extension renamed .raw.txt"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-open-review-receipt.json",
+      "saved_path": "acceptance/accept-open-review-receipt.json",
+      "raw_sha256": "db16b71f30674b819b648ee439e383fcc72536c504b4a68952d3e8ae4f62c5f3",
+      "raw_bytes": 891,
+      "saved_sha256": "db16b71f30674b819b648ee439e383fcc72536c504b4a68952d3e8ae4f62c5f3",
+      "saved_bytes": 891,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-stage-receipt.json",
+      "saved_path": "acceptance/accept-stage-receipt.json",
+      "raw_sha256": "ae3166f5574f39bcc408ea9fcf2cd40448c4113001a35d0b87ed55b013181ce2",
+      "raw_bytes": 873,
+      "saved_sha256": "ae3166f5574f39bcc408ea9fcf2cd40448c4113001a35d0b87ed55b013181ce2",
+      "saved_bytes": 873,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-work-receipt.json",
+      "saved_path": "acceptance/accept-work-receipt.json",
+      "raw_sha256": "1cbdacfe43aa65ed2b0595ea00f9787065fd49af23cbe6174fb29c51b869577e",
+      "raw_bytes": 871,
+      "saved_sha256": "1cbdacfe43aa65ed2b0595ea00f9787065fd49af23cbe6174fb29c51b869577e",
+      "saved_bytes": 871,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-current-job.json",
+      "saved_path": "acceptance/accept-current-job.json",
+      "raw_sha256": "254f15f5216285c2235040fc4e23d5cb8b9c6b135af8d6bb6649bd7c2037ca8d",
+      "raw_bytes": 60835,
+      "saved_sha256": "254f15f5216285c2235040fc4e23d5cb8b9c6b135af8d6bb6649bd7c2037ca8d",
+      "saved_bytes": 60835,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/ACCEPTANCE-PREPARATION.md",
+      "saved_path": "acceptance/ACCEPTANCE-PREPARATION.md",
+      "raw_sha256": "43a0a92b63e7c26bbb5965700c837054d4a8f7c15897abea0f389e92c55126e2",
+      "raw_bytes": 4022,
+      "saved_sha256": "43a0a92b63e7c26bbb5965700c837054d4a8f7c15897abea0f389e92c55126e2",
+      "saved_bytes": 4022,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-evidence.verification.m08b2-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b2-receipt.json",
+      "raw_sha256": "2417834dcbbbd0ac3eae258e867a34e12e16ec97e136cff85a7acacbf0322989",
+      "raw_bytes": 939,
+      "saved_sha256": "2417834dcbbbd0ac3eae258e867a34e12e16ec97e136cff85a7acacbf0322989",
+      "saved_bytes": 939,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-evidence.verification.m08b2.1-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b2.1-receipt.json",
+      "raw_sha256": "07119093df1e4becfee7d71a1ded2430b3d4eb08ad55a9b4fa8cd9625dca1f6a",
+      "raw_bytes": 945,
+      "saved_sha256": "07119093df1e4becfee7d71a1ded2430b3d4eb08ad55a9b4fa8cd9625dca1f6a",
+      "saved_bytes": 945,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-evidence.verification.m08b2.2-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b2.2-receipt.json",
+      "raw_sha256": "0bd698a21db2fbb80dfc14448cccfb952e468f8b7350bc9edfbe57ae5f68f529",
+      "raw_bytes": 945,
+      "saved_sha256": "0bd698a21db2fbb80dfc14448cccfb952e468f8b7350bc9edfbe57ae5f68f529",
+      "saved_bytes": 945,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-evidence.verification.m08b2.3-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b2.3-receipt.json",
+      "raw_sha256": "c52f33a8c84a988f0a2eb8b49b7acb7bf0bcc7d4da9ffc876b66be10ad55d866",
+      "raw_bytes": 945,
+      "saved_sha256": "c52f33a8c84a988f0a2eb8b49b7acb7bf0bcc7d4da9ffc876b66be10ad55d866",
+      "saved_bytes": 945,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-evidence.verification.m08b2.4-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b2.4-receipt.json",
+      "raw_sha256": "b0b662d8fa723ac16ca35a68083cf9f4f1ec4e41854489909db7337e749d49a0",
+      "raw_bytes": 945,
+      "saved_sha256": "b0b662d8fa723ac16ca35a68083cf9f4f1ec4e41854489909db7337e749d49a0",
+      "saved_bytes": 945,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-evidence.verification.m08b2.5-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b2.5-receipt.json",
+      "raw_sha256": "6176fdd872dc85d2bd1a21d74be8affa8f3133581c32b88760ef55cbd88ce7bb",
+      "raw_bytes": 945,
+      "saved_sha256": "6176fdd872dc85d2bd1a21d74be8affa8f3133581c32b88760ef55cbd88ce7bb",
+      "saved_bytes": 945,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    },
+    {
+      "raw_path": "/fast/zap-managed/2026-10-15-m08b2/accept-evidence.verification.m08b2.6-receipt.json",
+      "saved_path": "acceptance/accept-evidence.verification.m08b2.6-receipt.json",
+      "raw_sha256": "e898b54a4b2ada6a8644d3dec22f4b977dcf9045e160d1444b40079ed2400704",
+      "raw_bytes": 945,
+      "saved_sha256": "e898b54a4b2ada6a8644d3dec22f4b977dcf9045e160d1444b40079ed2400704",
+      "saved_bytes": 945,
+      "transformation": {
+        "kind": "none; exact bytes"
+      },
+      "reason": "complete immutable actual Root canonical acceptance phase/readback after final notification"
+    }
+  ],
+  "trace_transformation": "only V2.trace lossless deterministic gzip; raw/decompressed/saved SHA and lengths retained",
+  "fresh_unique_cases": 11,
+  "new_unique_cases": 7,
+  "fresh_preservation_cases": 4,
+  "V5_reused_cases": 2,
+  "V5_new_pass": false,
+  "query_intervals": 34,
+  "Root_approval_sha256": "32f554a5d6406439566452f78cbe643a36e36f136f45ec9242e6c14798b4b9d3",
+  "final_WorkAccepted_receipt_included": true,
+  "count_at_checkpoint": "81/222 plus separate M03A2 safe stop",
+  "future_closure_step": null,
+  "generated_files": [
+    "README.md",
+    "MANIFEST.json",
+    "SHA256SUMS",
+    "ARCHIVE-FILES.txt",
+    "STAGE-FILES.txt",
+    "SOURCE-BEFORE.json",
+    "SOURCE-AFTER.json",
+    "SECRET-SCAN.json",
+    "REUSE-REFERENCES.json"
+  ],
+  "canonical_acceptance": {
+    "command": "root-review.m08b2.work",
+    "revision": 323,
+    "Work_state": "Accepted",
+    "Work_revision": 5,
+    "runtime_execution": "succeeded",
+    "runtime_effect": "completed",
+    "runtime_safe": "safe",
+    "runtime_acceptance": "unreviewed",
+    "actual_phases": "Safe311\u2013313/OpenReview314/Evidence315\u2013321/Stage322/Work323",
+    "normal_receipt_revisions": [
+      314,
+      315,
+      316,
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323
+    ],
+    "new_product_bug_or_fix": false
+  }
+}

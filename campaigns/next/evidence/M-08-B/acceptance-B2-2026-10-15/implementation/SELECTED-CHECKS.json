@@ -1,0 +1,70 @@
+[
+  {
+    "id": "V1",
+    "kind": "TO CREATE",
+    "commands": [
+      "cargo test --offline --locked -p vibe-agent-projection --lib pkgskill::projection::m_08_b_2_cases"
+    ],
+    "cases": [
+      "direct_embedded_capture_ignores_provider_decoy_and_retains_full_membership",
+      "composed_resources_keep_exact_roots_includes_and_digest",
+      "missing_or_changed_selected_closure_refuses_without_fallback",
+      "installed_provider_identity_survives_hydration"
+    ],
+    "expected_min_nonzero": 4
+  },
+  {
+    "id": "V2",
+    "kind": "TO CREATE upper real consumer",
+    "commands": [
+      "cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::tests::m_08_b_2_cases"
+    ],
+    "cases": [
+      "m_08_b_2_cases_selected_self_and_dependency_bridge_roots",
+      "m_08_b_2_cases_missing_changed_and_membership_drift_refuse_without_refresh",
+      "m_08_b_2_cases_decoy_roots_cannot_override_selected_context"
+    ],
+    "expected_min_nonzero": 3
+  },
+  {
+    "id": "V3",
+    "kind": "existing lower preservation",
+    "commands": [
+      "cargo test --offline --locked -p vibe-agent-projection --lib pkgskill::projection::m_08_b_1_cases::prepared_embedded_closure_uses_injected_provider_once_and_exact_offline -- --exact",
+      "cargo test --offline --locked -p vibe-agent-projection --lib pkgskill::projection::m_08_b_1_cases::prepared_resources_preserve_includes_and_only_prepare_publishes_owned_cache -- --exact"
+    ],
+    "expected_nonzero_each": 1
+  },
+  {
+    "id": "V4",
+    "kind": "existing upper preservation",
+    "commands": [
+      "cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::tests::unprepared_and_foreign_bindings_have_closed_refusals -- --exact",
+      "cargo test --offline --locked -p vibe-orchestrator --lib machine_operation::adapter_plan::tests::unknown_capture_and_unknown_fields_refuse_without_refresh -- --exact"
+    ],
+    "expected_nonzero_each": 1
+  },
+  {
+    "id": "V5",
+    "kind": "conditional only actual upper product contract change; otherwise reuse qualified B1 subject evidence",
+    "commands": [
+      "cargo test --offline --locked -p vibe-cli --bin vibe commands::adapter_plan::tests::serve_and_registered_mcp_share_positive_and_missing_payloads -- --exact",
+      "cargo test --offline --locked -p vibe-mcp --lib tools::adapter_plan::tests::registered_configured_arc_matches_owner_and_refuses_source_drift -- --exact"
+    ],
+    "expected_nonzero_each": 1
+  },
+  {
+    "id": "V6",
+    "kind": "scoped authored formatting",
+    "command_recipe": "rustfmt --edition 2024 --config skip_children=true --check <exact changed authored Rust paths>",
+    "selection": "effective edition 2024 verified from accepted B1 fmt ledger; revalidate effective toolchain after Root commit; do not include unrelated/generated debt"
+  },
+  {
+    "id": "V7",
+    "kind": "whitespace",
+    "commands": [
+      "git diff --check"
+    ],
+    "scope": "actual B2 delta, retain separate exit"
+  }
+]

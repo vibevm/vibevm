@@ -1,0 +1,17 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "No product root-selection defect reproduced; this is test(adapters) characterization, with no product fix.",
+    "Existing manifest law requires local adapter plus embedded resources for composition; invalid fixture was corrected.",
+    "Existing test-support pre-thread constructor relocates VIBE_SETTINGS; fixture consumes the owner settings path and proves child-root containment.",
+    "Final seven new cases and four exact preservation cases passed; V5 reuses bound accepted B1 evidence, not an executed pass.",
+    "34 actual upper Plan intervals: 20 successes and 14 refusals, unchanged four-root inventories and zero observed mutation/process/network/lock attempts."
+  ],
+  "unresolved": [],
+  "proposed_follow_up": null
+}

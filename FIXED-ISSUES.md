@@ -1,5 +1,14 @@
 # Сбои Zap и PodBay при разработке VibeVM
 
+## 2026-10-15 — M08B2: ошибки новых тестовых фикстур управляемого воркера
+
+- Root operator diagnostic: read-only proposal inspection incorrectly assumed a `methods` key; the actual schema uses `observations`. KeyError occurred before approval or store mutations. Root inspected the actual keys and used the seven existing observations; no contract or test changed. This is a separately attributed operator error, not another V2 failure or product bug.
+
+- Incident: VIBE-M08B2-FIXTURE-20261015; компонент VibeVM/tests, а не обнаруженный дефект Zap/PodBay или выбора корня ресурсов.
+- Наблюдались три неуспешные команды V2: attempt1 exit101 до запуска тестов (два обращения к закрытому модулю и неверная типизация SourceUrl); attempt2 exit101, три уникальных случая failed из-за недопустимой декларации direct-source+resources; attempt3 exit101, три случая failed из-за размещения cache seed не под фактическим VIBE_SETTINGS, который заранее переносит существующий test-support constructor. Воркер исправил тестовые входы через действующие публичные типы и settings_dir, без изменения производственных правил.
+- Повтор attempt4 и окончательный V2 прошли три уникальных случая. Детские one-pass summaries и родительский three-pass summary не считаются шестью случаями. Окончательный V1 прошёл четыре случая после исправления слишком разрешающей нижней фикстуры; V3/V4 — четыре прежних точечных случая. V5 — явно привязанное повторное использование прежних свидетельств, не новый прогон.
+- Проверяемый дефект продукта не воспроизведён; кандидат содержит только четыре тестовых Rust-файла. Местные проверки завершены, независимое ревью и каноническое принятие на момент записи ещё не завершены. Raw failures, итоговые exits и причины: /fast/zap-managed/2026-10-15-m08b2/worker-report.md, worker-command-results.json, attempt1-V2-result.json, attempt2-V2-result.json, attempt3-V2-result.json. Запись сделана Первым Агентом отдельно от патча воркера для статистики; она не увеличивает счётчик принятых задач.
+
 Канонический журнал по указанию владельца2026-10-12. Записываем каждый наблюдённый сбой, обход и исправление; неразрешённые случаи сохраняем явно. Изменение исходников не считается установленным исправлением. Повторные наблюдения одного incident_id — обновления, а не новые баги. Для приоритизации сохраняем компонент, этап, симптом, причину или помеченную гипотезу, действие, стоимость/повторы и доказательство продвижения. Секреты, pairing-ссылки и личные сообщения сюда не попадают.
 
 ## Текущий запуск
