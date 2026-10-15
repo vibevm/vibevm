@@ -4,7 +4,7 @@
   "registry_url": "https://gitverse.ru/vibespecs",
   "naming": "fqdn",
   "generated_at": "2026-08-09T10:00:00Z",
-  "generator": "vibe-index 1.0.0",
+  "generator": "vibe-index 1.1.0",
   "package_count": 6,
   "version_count": 8,
   "files": {
