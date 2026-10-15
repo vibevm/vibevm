@@ -25,7 +25,11 @@
         "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
         "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
         "crates/vibe-cli/src/command_progress.rs",
-        "crates/vibe-cli/src/command_progress/tests.rs"
+        "crates/vibe-cli/src/command_progress/tests.rs",
+        "crates/vibe-orchestrator/src/install/mod.rs",
+        "crates/vibe-orchestrator/src/install/ready.rs",
+        "crates/vibe-orchestrator/src/phase/prerequisite/tests.rs",
+        "crates/vibe-orchestrator/src/dispatch/native_all_owner_tests/support.rs"
       ],
       "write_paths": [
         "crates/vibe-agent-projection/src/",
@@ -61,7 +65,11 @@
         "crates/vibe-cli/src/command_progress/tests.rs",
         "crates/vibe-lifecycle/src/mechanism/error/deploy.rs",
         "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
-        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+        "crates/vibe-orchestrator/src/install/mod.rs",
+        "crates/vibe-orchestrator/src/install/ready.rs",
+        "crates/vibe-orchestrator/src/phase/prerequisite/tests.rs",
+        "crates/vibe-orchestrator/src/dispatch/native_all_owner_tests/support.rs"
       ],
       "steps": [
         "Trace each prepare/plan/projection call to hydration, cache writes, PATH resolution and version probes.",
@@ -102,7 +110,8 @@
         "Chosen prototype: host-owned in-memory AdapterPlanRoute; explicit startup --prepare on bounded JSON-lines vibe adapter-plan command; configured MCP Arc shares exact route/capture/context/target. No wire prepare verb, persisted capability database, new resolver/context registry or raw world getter. Missing/stale captures return generated typed NeedsPreparation; configured positive route must work.",
         "Effectful preparation alone owns hydration/composition/PATH/version/list and offline forwarding. Pure plan, public inspect, fingerprint and legacy dry-run cannot call them or native Plan. Install/apply may explicitly prepare within their effectful operation. Captures are provenance, never fresh write authority.",
         "New command registration includes command_progress policy/inventory: AdapterPlan is PersistentProtocol without generic activity. Additive PROP054/080 updates preserve all prior clauses and accepted A2 contracts. Existing lifecycle test allowing plan-time version/list must explicitly separate preparation from the zero-effect query interval.",
-        "Raw selected skill closure uses existing M01 selection/extraction plus finite owner-private SafeFS captures; document-only SourceQueryService APIs must not be misrepresented as arbitrary skill capture. Any genuinely missing existing-owner API requires an exact packet correction before writes."
+        "Raw selected skill closure uses existing M01 selection/extraction plus finite owner-private SafeFS captures; document-only SourceQueryService APIs must not be misrepresented as arbitrary skill capture. Any genuinely missing existing-owner API requires an exact packet correction before writes.",
+        "Exact offline preparation policy must be forwarded from incumbent RunMetadata.offline in install/mod.rs::regenerate_native_world and install/ready.rs::apply to world::prepare_owner_runtime_inputs; update only their actual helper-signature test callers in phase/prerequisite/tests.rs and dispatch/native_all_owner_tests/support.rs as needed. These four exact owners are authorized after the first managed B1 handback exposed the missing perimeter. Preserve all other lifecycle/install rules; no ambient/global policy fallback or independent resolver."
       ]
     },
     {
