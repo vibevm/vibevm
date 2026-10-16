@@ -1,0 +1,132 @@
+[
+  {
+    "name": "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+        "sha256": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7"
+      }
+    ]
+  },
+  {
+    "name": "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+        "sha256": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7"
+      }
+    ]
+  },
+  {
+    "name": "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+        "sha256": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7"
+      }
+    ]
+  },
+  {
+    "name": "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+        "sha256": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7"
+      }
+    ]
+  },
+  {
+    "name": "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+        "sha256": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7"
+      }
+    ]
+  },
+  {
+    "name": "resolvo_engine::tests::resolvo_disjunction_backtracks_past_conflicting_alternative",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/tests.rs",
+        "sha256": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+      }
+    ]
+  },
+  {
+    "name": "resolvo_engine::tests::resolvo_drops_obsoleted_packages",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/tests.rs",
+        "sha256": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+      }
+    ]
+  },
+  {
+    "name": "naive::tests::capability_requires_self_satisfaction",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-resolver/src/naive/tests.rs",
+        "sha256": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876"
+      }
+    ]
+  },
+  {
+    "name": "source::m_05_c_1_cases::same_version_replacement_keeps_frozen_snapshot",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs",
+        "sha256": "4394c7eec0715cd24008baff7332bf9070036108b717c4e707a58da13bc2128a"
+      }
+    ]
+  },
+  {
+    "name": "source::m_05_c_1_cases::missing_and_corrupt_catalog_differ_from_missing_option",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs",
+        "sha256": "4394c7eec0715cd24008baff7332bf9070036108b717c4e707a58da13bc2128a"
+      }
+    ]
+  },
+  {
+    "name": "fence_tests::cell_constructors_live_only_in_cells_rs",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-package-source/src/fence_tests.rs",
+        "sha256": "ebdfdba33a041b3dbbcfffb3a996274b270413c004c35e6dcab08cc9a00d8fbc"
+      }
+    ]
+  },
+  {
+    "name": "plan::m_05_c_1_cases::catalog_identity_is_inspected_through_eto_before_effects",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-install/src/plan/m_05_c_1_cases.rs",
+        "sha256": "b47f508c42344248e3b6564295d3a47609fa6fe855e32fcc106d11e3116b9cdd"
+      }
+    ]
+  },
+  {
+    "name": "plan::m_05_c_1_cases::unavailable_or_corrupt_catalog_prevents_install_effects",
+    "expected": 1,
+    "sources": [
+      {
+        "path": "crates/vibe-install/src/plan/m_05_c_1_cases.rs",
+        "sha256": "b47f508c42344248e3b6564295d3a47609fa6fe855e32fcc106d11e3116b9cdd"
+      }
+    ]
+  }
+]

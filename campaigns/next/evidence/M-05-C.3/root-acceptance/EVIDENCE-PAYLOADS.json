@@ -1,0 +1,536 @@
+[
+  {
+    "phase": "evidence.verification.m05c3r",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05c3r.root-review",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "verification_id": "verification.m05c3r",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05c3r",
+        "obligation_ids": [
+          "obligation.m05c3r"
+        ],
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05c3r.owner-input",
+          "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d"
+        }
+      ],
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-package-source",
+          "--lib",
+          "source::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "source::m_05_c_3_cases::same_request_catalog_across_solve_metadata_and_masked_routes",
+          "source::m_05_c_3_cases::unsupported_backend_refuses_without_fallback",
+          "source::m_05_c_3_cases::production_visibility_retry_retains_configured_choices",
+          "source::m_05_c_3_cases::production_conditional_route_retains_selected_declaration"
+        ],
+        "environment": "Linux; repository nightly; exclusive Root-bound warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted C3 production route scope, with explicitly unsupported configuration/conditional combinations preserved; no new persistence schema or D/E scope.",
+        "V1/V2/V3/V4 are 4/4/2/13 fresh final-source cases. Four fresh failed fixture attempts and the earlier stopped attempt/compiler failures remain historical evidence, not current passes.",
+        "Scoped formatter --check passed; excluded historical eight-file global formatter failure remains separate, never global pass.",
+        "V7 is structural evidence; Root independent semantic review remains required.",
+        "Safe verification concerns reviewed completed reversible code effects at the exact attempt boundary; it does not claim worker/process retirement.",
+        "Old C3 Work has no candidate and remains unaccepted. New operational C3r Work represents the same logical task; Root counts C3 once only after canonical WorkAccepted."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05c3r.root-review",
+        "result": "observed_pass",
+        "artifact": "4c13a5d70ab36f6d17d6abfff34d528f0ecbe201d804b9cd98343d2151660a70",
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05c3r.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05c3r.1",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05c3r.1.root-review",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "verification_id": "verification.m05c3r.1",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05c3r",
+        "obligation_ids": [
+          "obligation.m05c3r"
+        ],
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05c3r.owner-input",
+          "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d"
+        }
+      ],
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-install",
+          "--lib",
+          "plan::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "plan::m_05_c_3_cases::visibility_retry_preserves_requests_and_exact_choices",
+          "plan::m_05_c_3_cases::conditional_route_retains_all_root_constraints",
+          "plan::m_05_c_3_cases::inconsistent_or_unsupported_route_refuses_before_effects",
+          "plan::m_05_c_3_cases::workspace_root_constraints"
+        ],
+        "environment": "Linux; repository nightly; exclusive Root-bound warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted C3 production route scope, with explicitly unsupported configuration/conditional combinations preserved; no new persistence schema or D/E scope.",
+        "V1/V2/V3/V4 are 4/4/2/13 fresh final-source cases. Four fresh failed fixture attempts and the earlier stopped attempt/compiler failures remain historical evidence, not current passes.",
+        "Scoped formatter --check passed; excluded historical eight-file global formatter failure remains separate, never global pass.",
+        "V7 is structural evidence; Root independent semantic review remains required.",
+        "Safe verification concerns reviewed completed reversible code effects at the exact attempt boundary; it does not claim worker/process retirement.",
+        "Old C3 Work has no candidate and remains unaccepted. New operational C3r Work represents the same logical task; Root counts C3 once only after canonical WorkAccepted."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05c3r.1.root-review",
+        "result": "observed_pass",
+        "artifact": "4c13a5d70ab36f6d17d6abfff34d528f0ecbe201d804b9cd98343d2151660a70",
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05c3r.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05c3r.2",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05c3r.2.root-review",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "verification_id": "verification.m05c3r.2",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05c3r",
+        "obligation_ids": [
+          "obligation.m05c3r"
+        ],
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05c3r.owner-input",
+          "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d"
+        }
+      ],
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "resolvo_engine::m_05_c_3_cases::selected_capability_and_or_edges_keep_exact_provenance",
+          "resolvo_engine::m_05_c_3_cases::duplicate_root_constraints_are_not_first_wins"
+        ],
+        "environment": "Linux; repository nightly; exclusive Root-bound warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted C3 production route scope, with explicitly unsupported configuration/conditional combinations preserved; no new persistence schema or D/E scope.",
+        "V1/V2/V3/V4 are 4/4/2/13 fresh final-source cases. Four fresh failed fixture attempts and the earlier stopped attempt/compiler failures remain historical evidence, not current passes.",
+        "Scoped formatter --check passed; excluded historical eight-file global formatter failure remains separate, never global pass.",
+        "V7 is structural evidence; Root independent semantic review remains required.",
+        "Safe verification concerns reviewed completed reversible code effects at the exact attempt boundary; it does not claim worker/process retirement.",
+        "Old C3 Work has no candidate and remains unaccepted. New operational C3r Work represents the same logical task; Root counts C3 once only after canonical WorkAccepted."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05c3r.2.root-review",
+        "result": "observed_pass",
+        "artifact": "4c13a5d70ab36f6d17d6abfff34d528f0ecbe201d804b9cd98343d2151660a70",
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05c3r.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05c3r.3",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05c3r.3.root-review",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "verification_id": "verification.m05c3r.3",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05c3r",
+        "obligation_ids": [
+          "obligation.m05c3r"
+        ],
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05c3r.owner-input",
+          "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d"
+        }
+      ],
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+          "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+          "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+          "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+          "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+          "resolvo_engine::tests::resolvo_disjunction_backtracks_past_conflicting_alternative",
+          "resolvo_engine::tests::resolvo_drops_obsoleted_packages",
+          "naive::tests::capability_requires_self_satisfaction",
+          "source::m_05_c_1_cases::same_version_replacement_keeps_frozen_snapshot",
+          "source::m_05_c_1_cases::missing_and_corrupt_catalog_differ_from_missing_option",
+          "fence_tests::cell_constructors_live_only_in_cells_rs",
+          "plan::m_05_c_1_cases::catalog_identity_is_inspected_through_eto_before_effects",
+          "plan::m_05_c_1_cases::unavailable_or_corrupt_catalog_prevents_install_effects"
+        ],
+        "environment": "Linux; repository nightly; exclusive Root-bound warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V4: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted C3 production route scope, with explicitly unsupported configuration/conditional combinations preserved; no new persistence schema or D/E scope.",
+        "V1/V2/V3/V4 are 4/4/2/13 fresh final-source cases. Four fresh failed fixture attempts and the earlier stopped attempt/compiler failures remain historical evidence, not current passes.",
+        "Scoped formatter --check passed; excluded historical eight-file global formatter failure remains separate, never global pass.",
+        "V7 is structural evidence; Root independent semantic review remains required.",
+        "Safe verification concerns reviewed completed reversible code effects at the exact attempt boundary; it does not claim worker/process retirement.",
+        "Old C3 Work has no candidate and remains unaccepted. New operational C3r Work represents the same logical task; Root counts C3 once only after canonical WorkAccepted."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05c3r.3.root-review",
+        "result": "observed_pass",
+        "artifact": "4c13a5d70ab36f6d17d6abfff34d528f0ecbe201d804b9cd98343d2151660a70",
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05c3r.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05c3r.4",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05c3r.4.root-review",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "verification_id": "verification.m05c3r.4",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05c3r",
+        "obligation_ids": [
+          "obligation.m05c3r"
+        ],
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05c3r.owner-input",
+          "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d"
+        }
+      ],
+      "method": {
+        "argv": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--config",
+          "skip_children=true",
+          "--check",
+          "crates/vibe-resolver/src/lib.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/naive.rs",
+          "crates/vibe-resolver/src/sat.rs",
+          "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+          "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/cells.rs",
+          "crates/vibe-package-source/src/qualified.rs",
+          "crates/vibe-install/src/lib.rs",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/fetch.rs",
+          "crates/vibe-install/src/plan/transaction.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-install/src/apply.rs"
+        ],
+        "cases": [
+          "Task-owned scoped formatter --check"
+        ],
+        "environment": "Linux; repository nightly; exclusive Root-bound warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted C3 production route scope, with explicitly unsupported configuration/conditional combinations preserved; no new persistence schema or D/E scope.",
+        "V1/V2/V3/V4 are 4/4/2/13 fresh final-source cases. Four fresh failed fixture attempts and the earlier stopped attempt/compiler failures remain historical evidence, not current passes.",
+        "Scoped formatter --check passed; excluded historical eight-file global formatter failure remains separate, never global pass.",
+        "V7 is structural evidence; Root independent semantic review remains required.",
+        "Safe verification concerns reviewed completed reversible code effects at the exact attempt boundary; it does not claim worker/process retirement.",
+        "Old C3 Work has no candidate and remains unaccepted. New operational C3r Work represents the same logical task; Root counts C3 once only after canonical WorkAccepted."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05c3r.4.root-review",
+        "result": "observed_pass",
+        "artifact": "4c13a5d70ab36f6d17d6abfff34d528f0ecbe201d804b9cd98343d2151660a70",
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05c3r.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05c3r.5",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05c3r.5.root-review",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "verification_id": "verification.m05c3r.5",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05c3r",
+        "obligation_ids": [
+          "obligation.m05c3r"
+        ],
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05c3r.owner-input",
+          "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d"
+        }
+      ],
+      "method": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "Actual git diff --check"
+        ],
+        "environment": "Linux; repository nightly; exclusive Root-bound warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted C3 production route scope, with explicitly unsupported configuration/conditional combinations preserved; no new persistence schema or D/E scope.",
+        "V1/V2/V3/V4 are 4/4/2/13 fresh final-source cases. Four fresh failed fixture attempts and the earlier stopped attempt/compiler failures remain historical evidence, not current passes.",
+        "Scoped formatter --check passed; excluded historical eight-file global formatter failure remains separate, never global pass.",
+        "V7 is structural evidence; Root independent semantic review remains required.",
+        "Safe verification concerns reviewed completed reversible code effects at the exact attempt boundary; it does not claim worker/process retirement.",
+        "Old C3 Work has no candidate and remains unaccepted. New operational C3r Work represents the same logical task; Root counts C3 once only after canonical WorkAccepted."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05c3r.5.root-review",
+        "result": "observed_pass",
+        "artifact": "4c13a5d70ab36f6d17d6abfff34d528f0ecbe201d804b9cd98343d2151660a70",
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05c3r.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05c3r.6",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05c3r.6.root-review",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "verification_id": "verification.m05c3r.6",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05c3r",
+        "obligation_ids": [
+          "obligation.m05c3r"
+        ],
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05c3r.owner-input",
+          "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d"
+        }
+      ],
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "Structural PROP003 preservation; semantic disposition awaits separate Root review"
+        ],
+        "environment": "Linux; repository nightly; exclusive Root-bound warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted C3 production route scope, with explicitly unsupported configuration/conditional combinations preserved; no new persistence schema or D/E scope.",
+        "V1/V2/V3/V4 are 4/4/2/13 fresh final-source cases. Four fresh failed fixture attempts and the earlier stopped attempt/compiler failures remain historical evidence, not current passes.",
+        "Scoped formatter --check passed; excluded historical eight-file global formatter failure remains separate, never global pass.",
+        "V7 is structural evidence; Root independent semantic review remains required.",
+        "Safe verification concerns reviewed completed reversible code effects at the exact attempt boundary; it does not claim worker/process retirement.",
+        "Old C3 Work has no candidate and remains unaccepted. New operational C3r Work represents the same logical task; Root counts C3 once only after canonical WorkAccepted."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05c3r.6.root-review",
+        "result": "observed_pass",
+        "artifact": "4c13a5d70ab36f6d17d6abfff34d528f0ecbe201d804b9cd98343d2151660a70",
+        "work_ids": [
+          "work.m05c3r.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05c3r.owner-input"
+        ]
+      }
+    }
+  }
+]

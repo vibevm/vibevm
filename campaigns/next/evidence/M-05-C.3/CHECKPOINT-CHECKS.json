@@ -1,0 +1,543 @@
+{
+  "V1-result": {
+    "passed": true,
+    "fresh_tests": 2,
+    "source_bound_historical_evidence": true,
+    "commands": [
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-package-source",
+          "--lib",
+          "source::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "2",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V1-1.log",
+        "log_sha256": "9b1c0447033a925b8e51f6beadeb8584584f9d076725304c27332d71b83d2b49",
+        "seconds": 3.8583780900007696,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      }
+    ]
+  },
+  "V2-result": {
+    "passed": false,
+    "fresh_tests": 0,
+    "source_bound_historical_evidence": true,
+    "commands": [
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-install",
+          "--lib",
+          "plan::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "exit": 101,
+        "counts": [],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V2-1.log",
+        "log_sha256": "341e7747dd64a8b0099dae1b1713c393efbcd2571cdb9392c83c4c72d1e079d6",
+        "seconds": 1.628763548003917,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs"
+        ],
+        "all_consumed_sources_match_current": false
+      }
+    ]
+  },
+  "V3-result": {
+    "passed": true,
+    "fresh_tests": 2,
+    "source_bound_historical_evidence": true,
+    "commands": [
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "2",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V3-1.log",
+        "log_sha256": "a13e3431226ab719c7a1466d5fdc8d807350f4962baf8e5d52f14ce49da4fa3a",
+        "seconds": 2.5392442270022,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/visibility_projection.rs"
+        ],
+        "all_consumed_sources_match_current": false
+      }
+    ]
+  },
+  "V4-result": {
+    "passed": true,
+    "fresh_tests": 11,
+    "source_bound_historical_evidence": true,
+    "commands": [
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-1.log",
+        "log_sha256": "123d0f15be69b115bd9839f83ea3ffca68a93ec511786e5af54f5aa537380cba",
+        "seconds": 2.4575873549983953,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-2.log",
+        "log_sha256": "b84a89720e68939aad8e206f32eca251997f43a5311e4709f87ed5375a2da80d",
+        "seconds": 0.18324447700433666,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-3.log",
+        "log_sha256": "39fbea7e467cc2f133eb3191096123a183c32889a7c9a292e88b6fa26da1c506",
+        "seconds": 0.18489968300127657,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-4.log",
+        "log_sha256": "06704a0f451a5beae48e8b24d5461cd4d45d7c8213f249c6fc9d96c9bb0b0831",
+        "seconds": 0.1874993559977156,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-5.log",
+        "log_sha256": "bb42c290fa615124d0511f78cc73ad02bf3e3e7868e7c854feac917b0ce404a6",
+        "seconds": 0.185607875995629,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::tests::resolvo_disjunction_backtracks_past_conflicting_alternative",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-6.log",
+        "log_sha256": "3829e5d13b5d6ae6645ccc088f3aa49bd7a1324fe889ec2a611f02dced6669da",
+        "seconds": 0.18288005200156476,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::tests::resolvo_drops_obsoleted_packages",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-7.log",
+        "log_sha256": "9d15aacd45e2d1bf6f9b971d485bddfc67379f2f27f893e9887c93867019855b",
+        "seconds": 0.18020712999714306,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "naive::tests::capability_requires_self_satisfaction",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-8.log",
+        "log_sha256": "a780e3c4e82c504e5baa67a675e257d83b2d9634c4b8bb44b02f7e065fced92e",
+        "seconds": 0.17910015700181248,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-package-source",
+          "--lib",
+          "source::m_05_c_1_cases::same_version_replacement_keeps_frozen_snapshot",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-9.log",
+        "log_sha256": "083006f1b7fb1f5ec8e353ad7e34e80a6034c98f5071b4330e1a5ae95158bdfe",
+        "seconds": 0.2024072249987512,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-package-source",
+          "--lib",
+          "source::m_05_c_1_cases::missing_and_corrupt_catalog_differ_from_missing_option",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-10.log",
+        "log_sha256": "1fb58e0558fd9cda03a3c01a6448afe309510cd899a3be1dd723f8f324354ad1",
+        "seconds": 0.1971383380005136,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-package-source",
+          "--lib",
+          "fence_tests::cell_constructors_live_only_in_cells_rs",
+          "--",
+          "--exact"
+        ],
+        "exit": 0,
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "log": "/fast/zap-managed/2026-10-16-m05c3/V4-11.log",
+        "log_sha256": "176003a34c35bb676edc08e8a4417fcf5786330c26656b44d5349ec53e279a22",
+        "seconds": 0.20418256599805318,
+        "current_source_mismatches": [
+          "campaigns/next/tasks/M-05-C.json",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+        ],
+        "all_consumed_sources_match_current": false
+      }
+    ]
+  }
+}

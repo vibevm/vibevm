@@ -1,0 +1,14 @@
+{
+  "kind": "native_driver",
+  "request": {
+    "kind": "managed_stop",
+    "request": {
+      "request_id": "root.m05c3r.stop.after-accepted",
+      "job_id": "job.runtime.packet.vibevm-m05c3r",
+      "dispatch_id": "dispatch.runtime.packet.vibevm-m05c3r",
+      "effect_id": "effect.runtime.packet.vibevm-m05c3r",
+      "expected_revision": 309,
+      "reason": "Root normal retirement after canonical C3 WorkAccepted; preserve old stopped no-candidate attempt and all evidence."
+    }
+  }
+}

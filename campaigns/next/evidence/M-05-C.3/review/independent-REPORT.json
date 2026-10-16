@@ -1,0 +1,40 @@
+{
+  "schema": "m05c3-independent-review/1",
+  "recommendation": "accept_reviewed_source_subject_to_root_collection_and_acceptance",
+  "blocking_findings": [],
+  "collection_observed_by_reviewer": false,
+  "acceptance_mutated": false,
+  "count_changed": false,
+  "tests_run_by_reviewer": false,
+  "source_sha256": {
+    "crates/vibe-package-source/src/source/transaction.rs": "d9d9c621ec76c6541e37973071c82040a37f0752afaa748fe561bd4bab996d83",
+    "crates/vibe-package-source/src/cells.rs": "fb0c6de0c3bf7c63de69b8318cb02538bf398cbb61f5c5e0e0f551c49aa3bc1e",
+    "crates/vibe-resolver/src/resolvo_engine/request.rs": "675b0d1271144108f9802a19514a6c091ff4837ea5d240d4fb03b374298a7c24",
+    "crates/vibe-resolver/src/resolvo_engine/provider.rs": "4b59d1d26bbe3e04046a0cd2830810d0e1b273c6f918729dcc8f5f2569b06f7c",
+    "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "e17847976d66a93f1d145f0f4d4c27c48fefe473dcf95d7d5e20239377c2e56f",
+    "crates/vibe-resolver/src/resolvo_engine/mod.rs": "0b1e705616d5a3d4f21f235e643395aa0b653362ced3ded25f63c9f4d05b7760",
+    "crates/vibe-install/src/plan.rs": "b5aba63bf5ae4628f3c2ea67980f5c7e73631a17be8fb2375233a273d139374f",
+    "crates/vibe-install/src/plan/fetch.rs": "a4bab3732f64d68eede122c3089e53cb2510f821ccabb6081f9bb4cc9ef0939b",
+    "crates/vibe-install/src/plan/transaction.rs": "b2b6f7162a7e85bc9998e5dc303e4aa8e2dc76e22d46b364a1b31da991ec870b",
+    "crates/vibe-install/src/visibility_projection.rs": "a5471b916d06b4ad0ba8beabb0c165fbd28c9f572aee62a723fa93ea55a407b0",
+    "crates/vibe-install/src/apply.rs": "767645329033b49d188a367c7e66dfe8bb602172f99752b175e29d7bb2cc1625",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "361de652bdfb1d0fb0b8f116cb48de6e7fef54bb8a1d6dca774b96144ae08b02"
+  },
+  "receipt_counts": {
+    "V1": 4,
+    "V2": 4,
+    "V3": 2,
+    "V4": 13
+  },
+  "log_and_recorded_source_hash_mismatches": [],
+  "V5": "scoped check exit0",
+  "V6": "diff check exit0",
+  "V7": "structural only",
+  "limits": [
+    "source-owned admitted Rust configuration input; no new CLI grammar",
+    "configured unsupported combinations and unstable conditional routes refuse",
+    "no lock schema or D/E persistence expansion",
+    "Root canonical collection/acceptance/runtime stop remain separate"
+  ],
+  "report": "REPORT.md"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "m05c3-admission-20261016-01",
+  "question_id": "m05c3-admission-20261016-01",
+  "question": "C2 requires explicit caller-admitted normalized consumer Request, CandidateConfiguration definitions, and exact DefaultBinding receipts. Production InstallRequest currently carries only legacy FeatureRequest, and begin_transaction takes only PackageRef roots. May C3 add an optional source-owned normalized transaction binding (on InstallSource/InstallResolver, forwarded by PlanningSource) that existing solve/manifest_of/solve_masked and conditional/visibility calls consume, while legacy install requests are bound losslessly as legacy intent without fabricating B2 consumer/domain/default identities? This would expose configured admission at the existing Rust source seam, preserve ordinary callers, and keep new authored grammar/CLI/schema out of scope. If the required production admission is instead from another existing caller, please name that authoritative input/interface and admit its owner if outside the roster.",
+  "evidence": [
+    "crates/vibe-install/src/plan.rs: InstallRequest has roots and FeatureRequest, no B2 Request/definitions/default receipts",
+    "crates/vibe-install/src/lib.rs: InstallSource::begin_transaction accepts only roots",
+    "crates/vibe-resolver/src/resolvo_engine/configuration.rs: solve_configuration requires Request, CandidateConfiguration and DefaultBinding; M05C2-ADMITTED-SURFACE requires caller admission, not inference"
+  ],
+  "independent_work": "Tracing exact SAT disjunction witness retention and current graph/visibility projection interfaces; no source edits or compiler use yet."
+}

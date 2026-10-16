@@ -1,0 +1,34 @@
+{
+  "store": {
+    "store_id": "store.vibevm-m05c3r.live",
+    "campaign_id": "campaign.vibevm-m05c3r.live",
+    "base_id": "base.vibevm-m05c3r.live",
+    "store_epoch": "zap/2",
+    "codec_epoch": 2,
+    "reducer_epoch": 1
+  },
+  "command_id": "root-review.m05c3r.evidence.verification.m05c3r.2",
+  "event_id": "event:root-review.m05c3r.evidence.verification.m05c3r.2",
+  "transaction_id": "tx:root-review.m05c3r.evidence.verification.m05c3r.2",
+  "revision": 313,
+  "event_digest": "a0e994fd8638e89ec44129dbea715d6da4ec5ef25f2af868f10a9d31e990aef3",
+  "output": [
+    123,
+    34,
+    114,
+    101,
+    118,
+    105,
+    115,
+    105,
+    111,
+    110,
+    34,
+    58,
+    51,
+    49,
+    51,
+    125
+  ],
+  "disposition": "committed"
+}

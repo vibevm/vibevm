@@ -1,0 +1,190 @@
+{
+  "active": true,
+  "contract": {
+    "acceptance": [
+      "Route parity fixtures produce identical selected graph or equivalent typed conflicts.",
+      "Every graph edge has a selected declaration/provider provenance."
+    ],
+    "checks": [
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V1"
+        ],
+        "cases": [
+          "V1"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V2"
+        ],
+        "cases": [
+          "V2"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V3"
+        ],
+        "cases": [
+          "V3"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "V4"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V4: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V5"
+        ],
+        "cases": [
+          "V5"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V6"
+        ],
+        "cases": [
+          "V6"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "V7"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      }
+    ],
+    "contract_id": "contract.m05c3r",
+    "delivery_route": {
+      "kind": "direct"
+    },
+    "goal": "Prevent visibility retry and metadata paths from losing constraints or selected edges.",
+    "integration_owner": "work.m05c3r.prepare-plan",
+    "negative_cases": [
+      "First-wins dedup, reconstructed old manifest or unsupported backend cannot silently drop requested effects."
+    ],
+    "obligation_ids": [
+      "obligation.m05c3r"
+    ],
+    "positive_cases": [
+      "Visibility retry preserves the same consumer requests and exact choices as initial solving."
+    ],
+    "read_subjects": [
+      {
+        "id": "source.vibevm-m05c3r.owner-input",
+        "kind": "source"
+      }
+    ],
+    "required_stage": "functional",
+    "resources": [
+      "resource.workspace"
+    ],
+    "safe_stop": "Do not apply a graph assembled from inconsistent solve routes.",
+    "source_handles": [
+      "source.vibevm-m05c3r.owner-input"
+    ],
+    "steps": [
+      "Thread the same immutable request/catalog through solve, manifest_of, solve_masked and conditional/visibility routes.",
+      "Retain all root constraints and actual capability/OR-provider choices in the final graph.",
+      "Expose backend capability refusal without fallback; keep incomplete conditional combinations explicitly unsupported."
+    ],
+    "title": "Use normalized requests across every solve route",
+    "work_id": "work.m05c3r.prepare-plan",
+    "write_subjects": [
+      {
+        "id": "work.m05c3r.prepare-plan",
+        "kind": "work"
+      }
+    ]
+  },
+  "contract_digest": "d45493f4ed54967b5f5294383c1af7780eaad0606d71536d9feb87b26b0e03f6",
+  "contract_id": "contract.m05c3r",
+  "version": 1,
+  "work_id": "work.m05c3r.prepare-plan"
+}

@@ -1,0 +1,18 @@
+{
+  "acceptance": [
+    "Route parity fixtures produce identical selected graph or equivalent typed conflicts.",
+    "Every graph edge has a selected declaration/provider provenance."
+  ],
+  "active_job": "job.runtime.packet.vibevm-m05c3r",
+  "depends_on": [],
+  "kind": "atom",
+  "order": 1,
+  "parent_id": "work.m05c3r",
+  "required_stage": "functional",
+  "revision": 3,
+  "state": "active",
+  "title": "Use normalized requests across every solve route",
+  "validation_generation": 0,
+  "work_id": "work.m05c3r.prepare-plan",
+  "work_type": "change"
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "V1",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-package-source",
+        "--lib",
+        "source::m_05_c_3_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "same_request_catalog_across_solve_metadata_and_masked_routes",
+      "unsupported_backend_refuses_without_fallback"
+    ]
+  },
+  {
+    "id": "V2",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--lib",
+        "plan::m_05_c_3_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "visibility_retry_preserves_requests_and_exact_choices",
+      "conditional_route_retains_all_root_constraints",
+      "inconsistent_or_unsupported_route_refuses_before_effects"
+    ]
+  },
+  {
+    "id": "V3",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_3_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "selected_capability_and_or_edges_keep_exact_provenance",
+      "duplicate_root_constraints_are_not_first_wins"
+    ]
+  },
+  {
+    "id": "V4",
+    "kind": "conditional_compatibility",
+    "commands": [],
+    "rule": "Only exact C1/C2/ordinary route cases whose consumed owners change, including deciding C2 defaults/known-implication regressions if affected. Otherwise qualified source-bound reuse, no fresh-run claim."
+  },
+  {
+    "id": "V5",
+    "kind": "task_format",
+    "commands": [],
+    "rule": "Actual scoped rustfmt --check on affected authorized Rust files; retain excluded historical8-file global formatter failure, no unrelated reformat or global pass claim."
+  },
+  {
+    "id": "V6",
+    "kind": "diff",
+    "commands": [
+      [
+        "git",
+        "diff",
+        "--check"
+      ]
+    ]
+  },
+  {
+    "id": "V7",
+    "kind": "spec_preservation",
+    "commands": [],
+    "rule": "Parse PROP003 and retain preserved/additive/replaced semantic map; Root independently judges route parity and edge provenance."
+  }
+]

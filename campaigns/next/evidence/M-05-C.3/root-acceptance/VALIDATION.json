@@ -1,0 +1,24 @@
+{
+  "evidence_validation": {
+    "valid": true,
+    "fresh_final_cases": 23,
+    "fresh_failed_attempts_retained": 4,
+    "historical_attempt_retained": true,
+    "qualified_reused_cases": 0,
+    "new_tests_run": 0,
+    "commands_submitted": 0,
+    "global_fmt_pass_claim": false
+  },
+  "public_API_and_typed_encoding": {
+    "status": "READY_NOT_APPLIED",
+    "typed_payloads_encoded": 13,
+    "commands_submitted": 0,
+    "canonical_revision": 306,
+    "job_id": "job.runtime.packet.vibevm-m05c3r",
+    "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+    "safe": "unknown",
+    "runtime_acceptance_projection": "unreviewed",
+    "native_stopped": false,
+    "canonical_work_state": "active"
+  }
+}

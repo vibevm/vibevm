@@ -1,0 +1,62 @@
+{
+  "open-review": {
+    "kind": "domain.work-transitioned",
+    "payload": {
+      "schema": "zap-domain/work-transitioned/1",
+      "work_id": "work.m05c3r.prepare-plan",
+      "from_state": "active",
+      "to_state": "candidate",
+      "successor_ids": []
+    }
+  },
+  "stage": {
+    "kind": "domain.stage-accepted",
+    "payload": {
+      "schema": "zap-domain/stage-accepted/1",
+      "stage_acceptance_id": "stage.m05c3r.functional",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "work_id": "work.m05c3r.prepare-plan",
+      "stage": "functional",
+      "outcome_id": "outcome.m05c3r",
+      "evidence_ids": [
+        "evidence.verification.m05c3r.1.root-review",
+        "evidence.verification.m05c3r.2.root-review",
+        "evidence.verification.m05c3r.3.root-review",
+        "evidence.verification.m05c3r.4.root-review",
+        "evidence.verification.m05c3r.5.root-review",
+        "evidence.verification.m05c3r.6.root-review",
+        "evidence.verification.m05c3r.root-review"
+      ],
+      "obligation_ids": [
+        "obligation.m05c3r"
+      ],
+      "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers.",
+      "summary": "Root accepts full original C3 after reviewing exact source-bound current evidence and independent semantic review; old stopped attempt remains unaccepted, logical C3 counted once."
+    }
+  },
+  "work": {
+    "kind": "domain.work-accepted",
+    "payload": {
+      "schema": "zap-domain/work-accepted/1",
+      "acceptance_id": "acceptance.m05c3r.root",
+      "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+      "work_id": "work.m05c3r.prepare-plan",
+      "outcome_id": "outcome.m05c3r",
+      "stage_acceptance_id": "stage.m05c3r.functional",
+      "evidence_ids": [
+        "evidence.verification.m05c3r.1.root-review",
+        "evidence.verification.m05c3r.2.root-review",
+        "evidence.verification.m05c3r.3.root-review",
+        "evidence.verification.m05c3r.4.root-review",
+        "evidence.verification.m05c3r.5.root-review",
+        "evidence.verification.m05c3r.6.root-review",
+        "evidence.verification.m05c3r.root-review"
+      ],
+      "obligation_ids": [
+        "obligation.m05c3r"
+      ],
+      "integration_acceptance_ids": [],
+      "summary": "Root accepts full original C3 after reviewing exact source-bound current evidence and independent semantic review; old stopped attempt remains unaccepted, logical C3 counted once."
+    }
+  }
+}

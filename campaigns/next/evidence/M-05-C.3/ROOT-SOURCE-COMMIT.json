@@ -1,0 +1,33 @@
+{
+  "commit": "5698d64d9f822d0a19c368f0b67edf3cb836bc5e",
+  "task": "M-05-C.3",
+  "work_accepted_revision": 319,
+  "accepted_count": 92,
+  "campaign_total": 222,
+  "files": [
+    "crates/vibe-install/src/apply.rs",
+    "crates/vibe-install/src/lib.rs",
+    "crates/vibe-install/src/plan.rs",
+    "crates/vibe-install/src/plan/fetch.rs",
+    "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+    "crates/vibe-install/src/plan/transaction.rs",
+    "crates/vibe-install/src/visibility_projection.rs",
+    "crates/vibe-package-source/src/cells.rs",
+    "crates/vibe-package-source/src/qualified.rs",
+    "crates/vibe-package-source/src/source.rs",
+    "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+    "crates/vibe-package-source/src/source/transaction.rs",
+    "crates/vibe-resolver/src/error.rs",
+    "crates/vibe-resolver/src/lib.rs",
+    "crates/vibe-resolver/src/naive.rs",
+    "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+    "crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs",
+    "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+    "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+    "crates/vibe-resolver/src/resolvo_engine/request.rs",
+    "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+    "crates/vibe-resolver/src/sat.rs",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+  ],
+  "old_stopped_attempt_not_accepted": true
+}

@@ -1,0 +1,50 @@
+{
+  "preserved": [
+    {
+      "rules": [
+        "M05C1-IDENTITY",
+        "M05C1-TRANSACTION",
+        "M05C1-FAILURE",
+        "M05C1-OBSERVATION",
+        "M05C2-CONDITIONING",
+        "M05C2-CONSUMERS",
+        "M05C2-DEFAULTS",
+        "M05C2-BOUNDARY"
+      ],
+      "reason": "Preserve accepted candidate catalog, admitted definition and authorization contracts; C3 adds production route obligations."
+    },
+    {
+      "rules": [
+        "all other pre-existing PROP003 elements except the explicitly replaced rules"
+      ],
+      "reason": "No unrelated rule deletion or modification; existing historical implementation claims are not new C3 acceptance evidence."
+    }
+  ],
+  "new": [
+    {
+      "rules": [
+        "M05C3-REQUEST",
+        "M05C3-EDGES",
+        "M05C3-REFUSAL",
+        "M05C3-PARITY",
+        "M05C3-ADMISSION",
+        "M05C3-ROOT-UNION"
+      ],
+      "reason": "Restate the unchanged canonical C3 requirements before implementation assertions cite these anchors."
+    }
+  ],
+  "replaced": [
+    {
+      "rules": [
+        "CONDITIONAL-FIXPOINT"
+      ],
+      "reason": "Remove an unsupported completeness guarantee; retain actual bounded conditional orchestration, all active constraints, candidate identity and explicit unsupported outcomes."
+    },
+    {
+      "rules": [
+        "M05C2-ADMITTED-SURFACE"
+      ],
+      "reason": "Lift only the technical-disjunction projection limitation now that solver-selected witnesses are retained; preserve native/domain/forwarding/non-registry/conditional/obsolete limits and exact default admission."
+    }
+  ]
+}

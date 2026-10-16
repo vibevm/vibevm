@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/previous-attempt/questions/m05c3-admission-20261016-01-ROOT-ANSWER.json",
+    "sha256": "368c1e4962f2ee2d6fdd8efc851b61bc2440510ba51ba5e53fec2339c11c362b",
+    "answer": {
+      "id": "m05c3-admission-20261016-01",
+      "question_id": "m05c3-admission-20261016-01",
+      "author": "Root First Agent acting for owner",
+      "utc": "2026-10-16T16:54:18.781085+00:00",
+      "approved": true,
+      "answer": "Yes. Add the optional source-owned normalized transaction binding at the existing InstallSource/InstallResolver Rust seam and forward it through actual PlanningSource/production routing. The explicitly admitted Request, CandidateConfiguration and exact DefaultBinding receipts are authoritative; capture them with the same immutable catalog and use them for solve, manifest_of, solve_masked, visibility retry and applicable conditional paths. Preserve legacy intent losslessly, including all roots/constraints and the original FeatureRequest/default flags, without inventing B2 consumer/domain/default authorization identities. This must be wired into the real existing planner/source routes and tested there; a disconnected optional API alone is not C3 completion. Preserve actual selected declaration/provider provenance and typed refusals; do not silently fall back to a different backend or discard a configured request. Explicitly unsupported conditional/configuration combinations may refuse honestly, while supported ordinary capability/OR routes must not be blanket-disabled. Existing C3 owner perimeters (including approved plan/fetch.rs and plan/transaction.rs) cover this change. No new CLI/grammar/schema is commissioned: M05-D.1/D.2 and E tasks own persistence/consumer/interaction expansion later. Full C3 steps/criteria and scope are unchanged. Add this admitted boundary to governing PROP003 and report any genuine remaining missing external owner rather than manufacturing input."
+    }
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/previous-attempt/questions/m05c3-root-union-20261016-02-ROOT-ANSWER.json",
+    "sha256": "baac7974a2dc25753a7e4bd0effa893989a92ed4bfc45a82937bc7f2833e604e",
+    "answer": {
+      "id": "m05c3-root-union-20261016-02",
+      "question_id": "m05c3-root-union-20261016-02",
+      "author": "Root First Agent acting for owner",
+      "utc": "2026-10-16T17:12:16.437240+00:00",
+      "approved": true,
+      "answer": "Authorize your selected-project replacement rule. Bare install preserves ALL workspace member declarations/constraints, including repeated coordinates; incompatible constraints yield a typed conflict with origins rather than first-wins loss. Explicit CLI install/update keeps every supplied CLI root (including repeated/conflicting ones) and supersedes prior declarations for that named coordinate ONLY on the exact selected project node being edited. Those superseded old selected-node declarations are not active incoming constraints of the new request. Preserve the original constraints of every other member and every unnamed coordinate; never silently modify/drop another member declaration. Important minimum-churn detail: for a CLI-named coordinate, keep other-member original ranges/constraints but do NOT convert them to the old lock pin, since that coordinate was explicitly selected for fresh resolution. Thus a compatible other-member range permits an upgrade, while a genuinely incompatible other-member exact/range constraint still conflicts. Retain hold-pins behavior for other untouched coordinates. Identify selected node through existing exact project/workspace identity; no first-node guess. This clarifies the existing named-packages-fresh/full-effective-union intent in PROP011, not a new update command or schema. Document the clarified effective-root boundary in the admitted PROP003 C3 rules, preserving prior rules and full criteria. Add only directly deciding focused cases for bare conflicting members and explicit selected-node upgrade with compatible/incompatible other-member constraints, and retain unrelated roots. No broad test suite or scope reduction."
+    }
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "status": "READY_NOT_APPLIED",
+  "utc": "2026-10-16T17:39:12.335040+00:00",
+  "current_state": {
+    "status": "READY_NOT_APPLIED",
+    "typed_payloads_encoded": 13,
+    "commands_submitted": 0,
+    "canonical_revision": 306,
+    "job_id": "job.runtime.packet.vibevm-m05c3r",
+    "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+    "safe": "unknown",
+    "runtime_acceptance_projection": "unreviewed",
+    "native_stopped": false,
+    "canonical_work_state": "active"
+  },
+  "root_review_proposal": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/ROOT-REVIEW-PROPOSAL.json",
+  "required_Root_flags": [
+    "approved=true",
+    "safe_boundary_attestation.approved=true"
+  ],
+  "approval_token": "Root approves full M05C3 both criteria and 23 fresh cases, with reviewed safe boundary and no physical stop claim",
+  "independent_review": {
+    "path": "/fast/git/v/research/2026-10-16-m05c3-review/REPORT.md",
+    "sha256": "a5d37bbd2fe1ce4aa8b4cd35498702e88d8b4f74f26d64900b127ca662bbe7ca"
+  },
+  "independent_review_root_agreement": "Root reported full source and peer review agreement; Root alone writes final approval.",
+  "ordered_commands": [
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/root-accept.py",
+      "safe",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/root-accept.py",
+      "open-review",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/root-accept.py",
+      "evidence",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/root-accept.py",
+      "stage",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/root-accept.py",
+      "work",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/root-accept.py",
+      "inspect"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/root-accept.py",
+      "stop",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/root-accept.py",
+      "stop-observe"
+    ]
+  ],
+  "stop_revision": "Read fresh actual job revision at invocation, no pin to304. Exact request retained for uncertain-outcome retry.",
+  "safe_scope": "Root-reviewed completed reversible code effects and actual candidate boundary; not physical stop.",
+  "fresh_cases": 23,
+  "case_groups": [
+    4,
+    4,
+    2,
+    13
+  ],
+  "historical_failures_retained": true,
+  "old_C3_work_accepted": false,
+  "global_fmt_pass_claim": false,
+  "source_commit": "Root pending; exact current source hashes checked, no invented SHA.",
+  "count": "91/222 until Root canonical acceptance; then logical M05C3 counted exactly once.",
+  "pins": {
+    "root-accept.py": "d2d7c80a7a4e5c4b2e13ebe633f8b50c4609bf16fd16e160400683edd1c95bcb",
+    "validate-review.py": "246285f70242dfd1e0dfc613f92b02e244d1e5cb46393e26453ff6e7709e3bc5",
+    "ROOT-REVIEW-PROPOSAL.json": "e645624d409337743f3665cc3c14a260086d63ef7dc094d71928bc10d4b93acc",
+    "STATIC-PAYLOADS.json": "447d593b40983b613e1795a5960d315a128489acea57bad1ee99a858d105395e",
+    "EVIDENCE-PAYLOADS.json": "6db46ba3f2378d0bd28044a9a730636b743097df71e3910bd578bfaa634606ff",
+    "OPERATOR-PINS.json": "857b858d9e0def2d684dbad5640e3061aa929f3d93fb610929357c29ff346658",
+    "FINAL-SOURCE-HASHES.json": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37",
+    "VALIDATION.json": "9666ec52f7a85983454948e37880a37e72e7094f6ebeacba9d4f38979b3ea4a6"
+  },
+  "new_tests_models_builds": 0,
+  "commands_submitted": 0,
+  "live_DB_opened": false
+}

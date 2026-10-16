@@ -1,0 +1,42 @@
+{
+  "V1": {
+    "status": "Bound to created Rust test definitions before compiler dispatch",
+    "crate": "vibe-package-source",
+    "filter": "source::m_05_c_3_cases",
+    "names": [
+      "source::m_05_c_3_cases::same_request_catalog_across_solve_metadata_and_masked_routes",
+      "source::m_05_c_3_cases::unsupported_backend_refuses_without_fallback"
+    ],
+    "expected": 2,
+    "source_paths": [
+      "crates/vibe-package-source/src/source/m_05_c_3_cases.rs"
+    ]
+  },
+  "V2": {
+    "status": "Bound to created Rust test definitions before compiler dispatch",
+    "crate": "vibe-install",
+    "filter": "plan::m_05_c_3_cases",
+    "names": [
+      "plan::m_05_c_3_cases::visibility_retry_preserves_requests_and_exact_choices",
+      "plan::m_05_c_3_cases::conditional_route_retains_all_root_constraints",
+      "plan::m_05_c_3_cases::inconsistent_or_unsupported_route_refuses_before_effects"
+    ],
+    "expected": 3,
+    "source_paths": [
+      "crates/vibe-install/src/plan/m_05_c_3_cases.rs"
+    ]
+  },
+  "V3": {
+    "status": "Bound to created Rust test definitions before compiler dispatch",
+    "crate": "vibe-resolver",
+    "filter": "resolvo_engine::m_05_c_3_cases",
+    "names": [
+      "resolvo_engine::m_05_c_3_cases::selected_capability_and_or_edges_keep_exact_provenance",
+      "resolvo_engine::m_05_c_3_cases::duplicate_root_constraints_are_not_first_wins"
+    ],
+    "expected": 2,
+    "source_paths": [
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs"
+    ]
+  }
+}
