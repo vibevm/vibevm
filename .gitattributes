@@ -59,3 +59,6 @@ vibevm/vibepacks/**/vibevm/vibespecs/boot/STATIC.md whitespace=-trailing-space,-
 # language. Keep it out of stats; tooling can still read it.
 vibe.lock        linguist-generated=true
 Cargo.lock       linguist-generated=true
+
+# This diagnostic embeds CRLF fixture bytes; retain its recorded raw hash.
+campaigns/next/evidence/M-05-B.3/logs/core-failure-1.log -text
