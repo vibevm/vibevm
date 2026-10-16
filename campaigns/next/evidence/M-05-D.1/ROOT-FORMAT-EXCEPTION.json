@@ -1,0 +1,7 @@
+{
+  "file": "crates/vibe-wire/src/generated/format_id/properties.rs",
+  "preexisting_unchanged_line": "            FormatId::MachineProfiledDeployActionRequest => \"machine-profiled-deploy-action-request\",",
+  "old_head": "c9cd87ebd7500fb0e6c4831244a3459a95d52179",
+  "scope": "Existing generator emits this same preexisting long match arm; current D1 changes add separate format entries. Existing eight-file baseline waiver applies only to this unchanged issue. No all-generated-file or global formatter pass is claimed.",
+  "new_generation_gate": "required postcommit check-codegen still pending"
+}

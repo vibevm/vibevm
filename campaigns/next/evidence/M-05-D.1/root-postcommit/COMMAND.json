@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "xtask",
+    "check-codegen"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "environment": {
+    "RUSTUP_AUTO_INSTALL": "0",
+    "CARGO_NET_OFFLINE": "true",
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "TMPDIR": "/fast/zap-managed/2026-10-16-m05d1/tmp0700"
+  },
+  "source_head": "cecd8552725a3fc17dd9139b1eabf0c5910db4ef",
+  "reason": "Required actual changed-format postcommit generation gate; no broad test suite"
+}

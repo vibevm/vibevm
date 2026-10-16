@@ -1,0 +1,45 @@
+{
+  "reason": "New requested/resolved schemas and registered generated wire payloads affect actual lock persistence. Current CLI has no per-format selector.",
+  "actual_format_impact": [
+    "schemas/lock_configuration/e1",
+    "formats/REGISTRY.toml",
+    "crates/vibe-wire/src/generated/lock_configuration"
+  ],
+  "no_adequate_narrower_existing_oracle": true,
+  "run": [
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-install",
+      "--lib",
+      "fetched::lock_regeneration_tests::unsupported_schema_lock_reads_as_empty",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-core",
+      "--lib",
+      "manifest::lockfile::tests::read_rejects_non_current_version",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "xtask",
+      "wire-diff"
+    ],
+    [
+      "cargo",
+      "xtask",
+      "check-codegen"
+    ]
+  ]
+}

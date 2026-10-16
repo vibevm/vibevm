@@ -1,0 +1,14 @@
+{
+  "excluded_global_baseline_files": [
+    "crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+    "crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+    "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+    "crates/vibe-mcp/src/machine_session/incremental.rs",
+    "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+    "crates/vibe-publish/src/package_git_payload/tests.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs"
+  ],
+  "first_scoped_attempt": "Failed on unchanged baseline long match arm in generated format_id/properties.rs; retained V5 history.",
+  "policy": "No handwritten fix to generated format output. Explicit eight-file baseline exclusion; no global formatter pass claimed."
+}

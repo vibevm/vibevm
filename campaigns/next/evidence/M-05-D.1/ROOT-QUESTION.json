@@ -1,0 +1,11 @@
+{
+  "id": "m05d1-replay-policy-001",
+  "question_id": "m05d1-replay-policy-001",
+  "question": "Which existing install invocation requests exact replay, and which explicitly requests intentional regeneration of a current configured lock? InstallRequest.exact means manifest version pinning, not replay. Proposed bounded policy: when a current configured lock exists, bare install requires matching newly supplied authored normalized request/default receipts and exact identities; explicit CLI roots request regeneration; missing authored configuration refuses rather than using lock-derived authority. Please confirm or specify the intended existing selector; no new CLI grammar proposed.",
+  "evidence": [
+    "crates/vibe-install/src/plan.rs:36-54 InstallRequest only roots/features/language/exact/generated_by/offline",
+    "crates/vibe-install/src/plan.rs: bare-install freshness currently skips admitted requests",
+    "crates/vibe-install/src/fetched.rs:57 load_or_empty_lockfile regenerates every unsupported schema"
+  ],
+  "independent_work": "Reviewing persistence projection, generated contract machinery and prerequisite types; no implementation assertion yet."
+}

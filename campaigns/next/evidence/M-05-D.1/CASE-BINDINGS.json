@@ -1,0 +1,43 @@
+{
+  "V1": {
+    "status": "BOUND before first compilation; actual test functions created",
+    "crate": "vibe-install",
+    "filter": "record::m_05_d_1_cases",
+    "names": [
+      "record::m_05_d_1_cases::production_apply_records_requested_and_resolved_separately",
+      "record::m_05_d_1_cases::exact_replay_rejects_changed_definition_or_lost_request",
+      "record::m_05_d_1_cases::induced_edges_retain_declaration_and_consumer_intent"
+    ],
+    "expected": 3,
+    "source_paths": [
+      "crates/vibe-install/src/record/m_05_d_1_cases.rs"
+    ]
+  },
+  "V2": {
+    "status": "BOUND before first compilation; actual test functions created",
+    "crate": "vibe-core",
+    "filter": "manifest::lockfile::m_05_d_1_cases",
+    "names": [
+      "manifest::lockfile::m_05_d_1_cases::lock_roundtrip_preserves_active_dormant_and_feature_closure",
+      "manifest::lockfile::m_05_d_1_cases::legacy_lock_is_recognized_and_unknown_epoch_refuses",
+      "manifest::lockfile::m_05_d_1_cases::derived_selection_cannot_supply_authored_authority"
+    ],
+    "expected": 3,
+    "source_paths": [
+      "crates/vibe-core/src/manifest/lockfile/m_05_d_1_cases.rs"
+    ]
+  },
+  "V3": {
+    "status": "BOUND before first compilation; actual test functions created",
+    "crate": "vibe-wire",
+    "filter": "m_05_d_1_cases",
+    "names": [
+      "m_05_d_1_cases::generated_configuration_record_roundtrips_canonically",
+      "m_05_d_1_cases::unknown_epoch_or_missing_exact_identity_refuses"
+    ],
+    "expected": 2,
+    "source_paths": [
+      "crates/vibe-wire/src/m_05_d_1_cases.rs"
+    ]
+  }
+}

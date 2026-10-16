@@ -1,0 +1,45 @@
+{
+  "evidence_validation": {
+    "valid": true,
+    "passing_test_cases": 10,
+    "producer_V4_passed": false,
+    "root_postcommit_codegen_exit": 0,
+    "root_postcommit_seconds": 17.4786890960022,
+    "qualified_earlier_snapshot_differences": {
+      "V1": [],
+      "V2": [
+        "crates/vibe-install/src/apply.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-install/src/record/m_05_d_1_cases.rs"
+      ],
+      "V3": [
+        "crates/vibe-install/src/apply.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-install/src/record/m_05_d_1_cases.rs"
+      ],
+      "V4": [
+        "crates/vibe-install/src/apply.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-install/src/record/m_05_d_1_cases.rs"
+      ],
+      "V5": [],
+      "V6": [],
+      "V7": []
+    },
+    "new_tests_builds": 0,
+    "commands_submitted": 0,
+    "global_fmt_pass_claim": false
+  },
+  "public_API_and_typed_encoding": {
+    "status": "READY_NOT_APPLIED",
+    "typed_payloads_encoded": 13,
+    "commands_submitted": 0,
+    "canonical_revision": 524,
+    "job_id": "job.runtime.packet.vibevm-m05d1",
+    "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+    "safe": "unknown",
+    "runtime_acceptance_projection": "unreviewed",
+    "native_stopped": false,
+    "canonical_work_state": "active"
+  }
+}

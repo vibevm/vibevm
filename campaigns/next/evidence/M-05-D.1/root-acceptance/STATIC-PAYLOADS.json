@@ -1,0 +1,62 @@
+{
+  "open-review": {
+    "kind": "domain.work-transitioned",
+    "payload": {
+      "schema": "zap-domain/work-transitioned/1",
+      "work_id": "work.m05d1.prepare-plan",
+      "from_state": "active",
+      "to_state": "candidate",
+      "successor_ids": []
+    }
+  },
+  "stage": {
+    "kind": "domain.stage-accepted",
+    "payload": {
+      "schema": "zap-domain/stage-accepted/1",
+      "stage_acceptance_id": "stage.m05d1.functional",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "work_id": "work.m05d1.prepare-plan",
+      "stage": "functional",
+      "outcome_id": "outcome.m05d1",
+      "evidence_ids": [
+        "evidence.verification.m05d1.1.root-review",
+        "evidence.verification.m05d1.2.root-review",
+        "evidence.verification.m05d1.3.root-review",
+        "evidence.verification.m05d1.4.root-review",
+        "evidence.verification.m05d1.5.root-review",
+        "evidence.verification.m05d1.6.root-review",
+        "evidence.verification.m05d1.root-review"
+      ],
+      "obligation_ids": [
+        "obligation.m05d1"
+      ],
+      "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+      "summary": "Root accepts full original D1 after exact candidate/source review and separate postcommit codegen0; prior failed gate remains unchanged."
+    }
+  },
+  "work": {
+    "kind": "domain.work-accepted",
+    "payload": {
+      "schema": "zap-domain/work-accepted/1",
+      "acceptance_id": "acceptance.m05d1.root",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "work_id": "work.m05d1.prepare-plan",
+      "outcome_id": "outcome.m05d1",
+      "stage_acceptance_id": "stage.m05d1.functional",
+      "evidence_ids": [
+        "evidence.verification.m05d1.1.root-review",
+        "evidence.verification.m05d1.2.root-review",
+        "evidence.verification.m05d1.3.root-review",
+        "evidence.verification.m05d1.4.root-review",
+        "evidence.verification.m05d1.5.root-review",
+        "evidence.verification.m05d1.6.root-review",
+        "evidence.verification.m05d1.root-review"
+      ],
+      "obligation_ids": [
+        "obligation.m05d1"
+      ],
+      "integration_acceptance_ids": [],
+      "summary": "Root accepts full original D1 after exact candidate/source review and separate postcommit codegen0; prior failed gate remains unchanged."
+    }
+  }
+}

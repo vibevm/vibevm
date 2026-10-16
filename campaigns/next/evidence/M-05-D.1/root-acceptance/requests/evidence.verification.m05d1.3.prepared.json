@@ -1,0 +1,55 @@
+{
+  "store": {
+    "store_id": "store.vibevm-m05d1.live",
+    "campaign_id": "campaign.vibevm-m05d1.live",
+    "base_id": "base.vibevm-m05d1.live",
+    "store_epoch": "zap/2",
+    "codec_epoch": 2,
+    "reducer_epoch": 1
+  },
+  "observed_revision": 531,
+  "request": {
+    "alternative_id": "alternative.root-review.m05d1.evidence.verification.m05d1.3",
+    "committed_prefix": [],
+    "initial_basis": "5c82be1ddd91051eb00f5f942c3937c90cbf8e3addc43dbbfced1469dcbfdbfc",
+    "effects": [],
+    "no_op_basis": {
+      "purpose": {
+        "kind": "verification",
+        "subject": "verification.m05d1.3"
+      },
+      "roots": [
+        {
+          "kind": "outcome",
+          "id": "outcome.m05d1"
+        },
+        {
+          "kind": "obligation",
+          "id": "obligation.m05d1"
+        },
+        {
+          "kind": "work",
+          "id": "work.m05d1.prepare-plan"
+        },
+        {
+          "kind": "source",
+          "id": "source.vibevm-m05d1.owner-input"
+        }
+      ],
+      "policy": "not_applicable",
+      "capacity": "not_applicable",
+      "closure": "known_graph"
+    },
+    "request_digest": "c747c3edc891624ec98e59892d4f662ea6caaf605e4a7560ab669fb95a6f7f5a"
+  },
+  "preflight": {
+    "alternative_id": "alternative.root-review.m05d1.evidence.verification.m05d1.3",
+    "request_digest": "c747c3edc891624ec98e59892d4f662ea6caaf605e4a7560ab669fb95a6f7f5a",
+    "committed_prefix": [],
+    "effects": [],
+    "initial_basis": "5c82be1ddd91051eb00f5f942c3937c90cbf8e3addc43dbbfced1469dcbfdbfc",
+    "final_basis": "5c82be1ddd91051eb00f5f942c3937c90cbf8e3addc43dbbfced1469dcbfdbfc",
+    "digest": "fdfe6abde6ef6f08a49e2b91459a643e170d96897712e4f04c28dc18fcf0118a"
+  },
+  "affected_scopes": []
+}

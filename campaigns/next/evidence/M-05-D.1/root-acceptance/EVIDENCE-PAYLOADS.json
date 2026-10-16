@@ -1,0 +1,582 @@
+[
+  {
+    "phase": "evidence.verification.m05d1",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05d1.root-review",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "verification_id": "verification.m05d1",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05d1",
+        "obligation_ids": [
+          "obligation.m05d1"
+        ],
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05d1.owner-input",
+          "digest": "a34e8d4e2fc0a2d0159c7aade08989a168ef4945e502eff9f31ed0a37e8b990f"
+        }
+      ],
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-install",
+          "--lib",
+          "record::m_05_d_1_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "record::m_05_d_1_cases::production_apply_records_requested_and_resolved_separately",
+          "record::m_05_d_1_cases::exact_replay_rejects_changed_definition_or_lost_request",
+          "record::m_05_d_1_cases::induced_edges_retain_declaration_and_consumer_intent"
+        ],
+        "environment": "Linux; existing repository nightly and Root-granted warm target. Producer cargo --offline --locked; Root postcommit exact environment recorded in COMMAND.json. No test/build by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted D1 semantics; no E2 full CLI exact-reinstall/update routing or new authored grammar.",
+        "V1 is3 final-source cases; V2/V3/V4 are3/2/2 actual passing cases on directly consumed unchanged owners, with reviewed later apply/record/test differences; no identical-full-source claim.",
+        "Producer V4 precommit group remains false with check-codegen exit1. Root postcommit COMMAND/RESULT/log independently establish check-codegen exit0 on cecd855 with no source drift/clean tree; no old log or report rewritten.",
+        "Scoped formatter --check passed; historical global formatter failure remains excluded and failed. V7 structural evidence is distinct from semantic review.",
+        "Safe concerns reviewed completed reversible code effects at actual candidate boundary, not physical retirement.",
+        "The existing candidate Report remains the witnessed artifact; Root approval hash binds the additional postcommit evidence through protected command reasons."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05d1.root-review",
+        "result": "observed_pass",
+        "artifact": "068313ba90aebbdd0772e6452d9c09b78effac97e298b914ccb40891a8e19594",
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05d1.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05d1.1",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05d1.1.root-review",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "verification_id": "verification.m05d1.1",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05d1",
+        "obligation_ids": [
+          "obligation.m05d1"
+        ],
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05d1.owner-input",
+          "digest": "a34e8d4e2fc0a2d0159c7aade08989a168ef4945e502eff9f31ed0a37e8b990f"
+        }
+      ],
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::lockfile::m_05_d_1_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "manifest::lockfile::m_05_d_1_cases::lock_roundtrip_preserves_active_dormant_and_feature_closure",
+          "manifest::lockfile::m_05_d_1_cases::legacy_lock_is_recognized_and_unknown_epoch_refuses",
+          "manifest::lockfile::m_05_d_1_cases::derived_selection_cannot_supply_authored_authority"
+        ],
+        "environment": "Linux; existing repository nightly and Root-granted warm target. Producer cargo --offline --locked; Root postcommit exact environment recorded in COMMAND.json. No test/build by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted D1 semantics; no E2 full CLI exact-reinstall/update routing or new authored grammar.",
+        "V1 is3 final-source cases; V2/V3/V4 are3/2/2 actual passing cases on directly consumed unchanged owners, with reviewed later apply/record/test differences; no identical-full-source claim.",
+        "Producer V4 precommit group remains false with check-codegen exit1. Root postcommit COMMAND/RESULT/log independently establish check-codegen exit0 on cecd855 with no source drift/clean tree; no old log or report rewritten.",
+        "Scoped formatter --check passed; historical global formatter failure remains excluded and failed. V7 structural evidence is distinct from semantic review.",
+        "Safe concerns reviewed completed reversible code effects at actual candidate boundary, not physical retirement.",
+        "The existing candidate Report remains the witnessed artifact; Root approval hash binds the additional postcommit evidence through protected command reasons."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05d1.1.root-review",
+        "result": "observed_pass",
+        "artifact": "068313ba90aebbdd0772e6452d9c09b78effac97e298b914ccb40891a8e19594",
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05d1.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05d1.2",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05d1.2.root-review",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "verification_id": "verification.m05d1.2",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05d1",
+        "obligation_ids": [
+          "obligation.m05d1"
+        ],
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05d1.owner-input",
+          "digest": "a34e8d4e2fc0a2d0159c7aade08989a168ef4945e502eff9f31ed0a37e8b990f"
+        }
+      ],
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-wire",
+          "--lib",
+          "m_05_d_1_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "m_05_d_1_cases::generated_configuration_record_roundtrips_canonically",
+          "m_05_d_1_cases::unknown_epoch_or_missing_exact_identity_refuses"
+        ],
+        "environment": "Linux; existing repository nightly and Root-granted warm target. Producer cargo --offline --locked; Root postcommit exact environment recorded in COMMAND.json. No test/build by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted D1 semantics; no E2 full CLI exact-reinstall/update routing or new authored grammar.",
+        "V1 is3 final-source cases; V2/V3/V4 are3/2/2 actual passing cases on directly consumed unchanged owners, with reviewed later apply/record/test differences; no identical-full-source claim.",
+        "Producer V4 precommit group remains false with check-codegen exit1. Root postcommit COMMAND/RESULT/log independently establish check-codegen exit0 on cecd855 with no source drift/clean tree; no old log or report rewritten.",
+        "Scoped formatter --check passed; historical global formatter failure remains excluded and failed. V7 structural evidence is distinct from semantic review.",
+        "Safe concerns reviewed completed reversible code effects at actual candidate boundary, not physical retirement.",
+        "The existing candidate Report remains the witnessed artifact; Root approval hash binds the additional postcommit evidence through protected command reasons."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05d1.2.root-review",
+        "result": "observed_pass",
+        "artifact": "068313ba90aebbdd0772e6452d9c09b78effac97e298b914ccb40891a8e19594",
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05d1.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05d1.3",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05d1.3.root-review",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "verification_id": "verification.m05d1.3",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05d1",
+        "obligation_ids": [
+          "obligation.m05d1"
+        ],
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05d1.owner-input",
+          "digest": "a34e8d4e2fc0a2d0159c7aade08989a168ef4945e502eff9f31ed0a37e8b990f"
+        }
+      ],
+      "method": {
+        "argv": [
+          "/home/olegchir/.cargo/bin/cargo",
+          "xtask",
+          "check-codegen"
+        ],
+        "cases": [
+          "fetched::lock_regeneration_tests::unsupported_schema_lock_reads_as_empty",
+          "manifest::lockfile::tests::read_rejects_non_current_version",
+          "Producer wire-diff exit0",
+          "Distinct Root postcommit check-codegen exit0; producer V4 group remains failed"
+        ],
+        "environment": "Linux; existing repository nightly and Root-granted warm target. Producer cargo --offline --locked; Root postcommit exact environment recorded in COMMAND.json. No test/build by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "D1 V4 combined evidence: two actual compatibility passes and wire-diff0, plus separate successful Root postcommit generation gate",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted D1 semantics; no E2 full CLI exact-reinstall/update routing or new authored grammar.",
+        "V1 is3 final-source cases; V2/V3/V4 are3/2/2 actual passing cases on directly consumed unchanged owners, with reviewed later apply/record/test differences; no identical-full-source claim.",
+        "Producer V4 precommit group remains false with check-codegen exit1. Root postcommit COMMAND/RESULT/log independently establish check-codegen exit0 on cecd855 with no source drift/clean tree; no old log or report rewritten.",
+        "Scoped formatter --check passed; historical global formatter failure remains excluded and failed. V7 structural evidence is distinct from semantic review.",
+        "Safe concerns reviewed completed reversible code effects at actual candidate boundary, not physical retirement.",
+        "The existing candidate Report remains the witnessed artifact; Root approval hash binds the additional postcommit evidence through protected command reasons."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05d1.3.root-review",
+        "result": "observed_pass",
+        "artifact": "068313ba90aebbdd0772e6452d9c09b78effac97e298b914ccb40891a8e19594",
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05d1.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05d1.4",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05d1.4.root-review",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "verification_id": "verification.m05d1.4",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05d1",
+        "obligation_ids": [
+          "obligation.m05d1"
+        ],
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05d1.owner-input",
+          "digest": "a34e8d4e2fc0a2d0159c7aade08989a168ef4945e502eff9f31ed0a37e8b990f"
+        }
+      ],
+      "method": {
+        "argv": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--config",
+          "skip_children=true",
+          "--check",
+          "crates/vibe-core/src/manifest/lockfile.rs",
+          "crates/vibe-core/src/manifest/lockfile/m_05_d_1_cases.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-install/src/apply.rs",
+          "crates/vibe-install/src/fetched.rs",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/record.rs",
+          "crates/vibe-install/src/record/m_05_d_1_cases.rs",
+          "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+          "crates/vibe-wire/src/behaviour/lock_configuration.rs",
+          "crates/vibe-wire/src/behaviour/mod.rs",
+          "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+          "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+          "crates/vibe-wire/src/generated/application/e1/mod.rs",
+          "crates/vibe-wire/src/generated/application/mod.rs",
+          "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+          "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+          "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+          "crates/vibe-wire/src/generated/capability/mod.rs",
+          "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+          "crates/vibe-wire/src/generated/change_query/mod.rs",
+          "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+          "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+          "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+          "crates/vibe-wire/src/generated/client_capability/mod.rs",
+          "crates/vibe-wire/src/generated/client_command/e1/mod.rs",
+          "crates/vibe-wire/src/generated/client_command/mod.rs",
+          "crates/vibe-wire/src/generated/client_deploy/e1/mod.rs",
+          "crates/vibe-wire/src/generated/client_deploy/mod.rs",
+          "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+          "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+          "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+          "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+          "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+          "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+          "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+          "crates/vibe-wire/src/generated/distribution/mod.rs",
+          "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+          "crates/vibe-wire/src/generated/environment/mod.rs",
+          "crates/vibe-wire/src/generated/format_id/mod.rs",
+          "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+          "crates/vibe-wire/src/generated/hello/mod.rs",
+          "crates/vibe-wire/src/generated/index/e1/mod.rs",
+          "crates/vibe-wire/src/generated/index/mod.rs",
+          "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+          "crates/vibe-wire/src/generated/index_cli/mod.rs",
+          "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+          "crates/vibe-wire/src/generated/index_http/mod.rs",
+          "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+          "crates/vibe-wire/src/generated/journal/mod.rs",
+          "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+          "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+          "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+          "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+          "crates/vibe-wire/src/generated/llm/mod.rs",
+          "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+          "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+          "crates/vibe-wire/src/generated/lock_configuration/e1/mod.rs",
+          "crates/vibe-wire/src/generated/lock_configuration/e1/requested/mod.rs",
+          "crates/vibe-wire/src/generated/lock_configuration/e1/resolved/mod.rs",
+          "crates/vibe-wire/src/generated/lock_configuration/mod.rs",
+          "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+          "crates/vibe-wire/src/generated/machine/mod.rs",
+          "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+          "crates/vibe-wire/src/generated/migration/e2/mod.rs",
+          "crates/vibe-wire/src/generated/migration/mod.rs",
+          "crates/vibe-wire/src/generated/mod.rs",
+          "crates/vibe-wire/src/generated/native/e1/mod.rs",
+          "crates/vibe-wire/src/generated/native/mod.rs",
+          "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+          "crates/vibe-wire/src/generated/preview/mod.rs",
+          "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+          "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+          "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+          "crates/vibe-wire/src/generated/scrape/mod.rs",
+          "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+          "crates/vibe-wire/src/generated/source_query/mod.rs",
+          "crates/vibe-wire/src/lib.rs",
+          "crates/vibe-wire/src/m_05_d_1_cases.rs"
+        ],
+        "cases": [
+          "Task-owned scoped formatter --check"
+        ],
+        "environment": "Linux; existing repository nightly and Root-granted warm target. Producer cargo --offline --locked; Root postcommit exact environment recorded in COMMAND.json. No test/build by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted D1 semantics; no E2 full CLI exact-reinstall/update routing or new authored grammar.",
+        "V1 is3 final-source cases; V2/V3/V4 are3/2/2 actual passing cases on directly consumed unchanged owners, with reviewed later apply/record/test differences; no identical-full-source claim.",
+        "Producer V4 precommit group remains false with check-codegen exit1. Root postcommit COMMAND/RESULT/log independently establish check-codegen exit0 on cecd855 with no source drift/clean tree; no old log or report rewritten.",
+        "Scoped formatter --check passed; historical global formatter failure remains excluded and failed. V7 structural evidence is distinct from semantic review.",
+        "Safe concerns reviewed completed reversible code effects at actual candidate boundary, not physical retirement.",
+        "The existing candidate Report remains the witnessed artifact; Root approval hash binds the additional postcommit evidence through protected command reasons."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05d1.4.root-review",
+        "result": "observed_pass",
+        "artifact": "068313ba90aebbdd0772e6452d9c09b78effac97e298b914ccb40891a8e19594",
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05d1.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05d1.5",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05d1.5.root-review",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "verification_id": "verification.m05d1.5",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05d1",
+        "obligation_ids": [
+          "obligation.m05d1"
+        ],
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05d1.owner-input",
+          "digest": "a34e8d4e2fc0a2d0159c7aade08989a168ef4945e502eff9f31ed0a37e8b990f"
+        }
+      ],
+      "method": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "Actual git diff --check"
+        ],
+        "environment": "Linux; existing repository nightly and Root-granted warm target. Producer cargo --offline --locked; Root postcommit exact environment recorded in COMMAND.json. No test/build by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted D1 semantics; no E2 full CLI exact-reinstall/update routing or new authored grammar.",
+        "V1 is3 final-source cases; V2/V3/V4 are3/2/2 actual passing cases on directly consumed unchanged owners, with reviewed later apply/record/test differences; no identical-full-source claim.",
+        "Producer V4 precommit group remains false with check-codegen exit1. Root postcommit COMMAND/RESULT/log independently establish check-codegen exit0 on cecd855 with no source drift/clean tree; no old log or report rewritten.",
+        "Scoped formatter --check passed; historical global formatter failure remains excluded and failed. V7 structural evidence is distinct from semantic review.",
+        "Safe concerns reviewed completed reversible code effects at actual candidate boundary, not physical retirement.",
+        "The existing candidate Report remains the witnessed artifact; Root approval hash binds the additional postcommit evidence through protected command reasons."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05d1.5.root-review",
+        "result": "observed_pass",
+        "artifact": "068313ba90aebbdd0772e6452d9c09b78effac97e298b914ccb40891a8e19594",
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05d1.owner-input"
+        ]
+      }
+    }
+  },
+  {
+    "phase": "evidence.verification.m05d1.6",
+    "kind": "domain.evidence-adjudicated",
+    "payload": {
+      "schema": "zap-domain/evidence-adjudicated/1",
+      "evidence_id": "evidence.verification.m05d1.6.root-review",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "verification_id": "verification.m05d1.6",
+      "expected_revision": 0,
+      "disposition": "accepted",
+      "applies_to": {
+        "outcome_id": "outcome.m05d1",
+        "obligation_ids": [
+          "obligation.m05d1"
+        ],
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "stage": "functional",
+        "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate."
+      },
+      "source_captures": [
+        {
+          "source_id": "source.vibevm-m05d1.owner-input",
+          "digest": "a34e8d4e2fc0a2d0159c7aade08989a168ef4945e502eff9f31ed0a37e8b990f"
+        }
+      ],
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "Structural PROP003/PROP044 preservation plus separate independent source review"
+        ],
+        "environment": "Linux; existing repository nightly and Root-granted warm target. Producer cargo --offline --locked; Root postcommit exact environment recorded in COMMAND.json. No test/build by acceptance preparer.",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "limitations": [
+        "Full admitted D1 semantics; no E2 full CLI exact-reinstall/update routing or new authored grammar.",
+        "V1 is3 final-source cases; V2/V3/V4 are3/2/2 actual passing cases on directly consumed unchanged owners, with reviewed later apply/record/test differences; no identical-full-source claim.",
+        "Producer V4 precommit group remains false with check-codegen exit1. Root postcommit COMMAND/RESULT/log independently establish check-codegen exit0 on cecd855 with no source drift/clean tree; no old log or report rewritten.",
+        "Scoped formatter --check passed; historical global formatter failure remains excluded and failed. V7 structural evidence is distinct from semantic review.",
+        "Safe concerns reviewed completed reversible code effects at actual candidate boundary, not physical retirement.",
+        "The existing candidate Report remains the witnessed artifact; Root approval hash binds the additional postcommit evidence through protected command reasons."
+      ],
+      "observation": {
+        "evidence_id": "evidence.verification.m05d1.6.root-review",
+        "result": "observed_pass",
+        "artifact": "068313ba90aebbdd0772e6452d9c09b78effac97e298b914ccb40891a8e19594",
+        "work_ids": [
+          "work.m05d1.prepare-plan"
+        ],
+        "source_ids": [
+          "source.vibevm-m05d1.owner-input"
+        ]
+      }
+    }
+  }
+]

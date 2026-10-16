@@ -1,0 +1,39 @@
+{
+  "preserved": [
+    {
+      "anchors": [
+        "M05B1-DECLARATIONS",
+        "M05B2-CONSUMERS",
+        "M05C1-IDENTITY",
+        "M05C2-DEFAULTS",
+        "M05C3-REQUEST",
+        "M05C3-EDGES"
+      ],
+      "reason": "Persistence consumes existing normalized semantics and selected receipts; solver and authorization unchanged."
+    },
+    {
+      "document": "PROP-044",
+      "reason": "Derived-state recovery and current public=false epoch policy retained; unknown configuration record epochs are not exact replay."
+    }
+  ],
+  "additive": [
+    {
+      "anchors": [
+        "M05D1-REQUEST",
+        "M05D1-IDENTITY",
+        "M05D1-READER",
+        "M05D1-INVOCATION"
+      ],
+      "reason": "Requested versus resolved persistence and validated replay."
+    }
+  ],
+  "replaced": [],
+  "implementation_status": "Implemented; V1/V2/V3 passed 3/3/2 cases. Root semantic review and final postcommit codegen gate remain separate.",
+  "boundary": {
+    "core": "schema_version remains 7; optional configuration envelope uses independent epoch 1",
+    "registry": "lockfile registry epoch remains 1; two generated e1 payload formats registered",
+    "authority": "current admitted authored request and exact default receipts; no restoration of authority from resolved selections",
+    "replay": "bare configured install compares requested identity, captured candidate receipts and recomputed resolved payload; explicit roots allow bounded named regeneration",
+    "normalization": "generated payload encoding; ordered B1/B2 maps; resolved vectors sorted by package/declaration/consumer indices; authored sequence order retained"
+  }
+}

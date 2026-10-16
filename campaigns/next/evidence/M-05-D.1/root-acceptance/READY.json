@@ -1,0 +1,82 @@
+{
+  "status": "READY_NOT_APPLIED",
+  "utc": "2026-10-16T18:28:23.824523+00:00",
+  "current_state": {
+    "status": "READY_NOT_APPLIED",
+    "typed_payloads_encoded": 13,
+    "commands_submitted": 0,
+    "canonical_revision": 524,
+    "job_id": "job.runtime.packet.vibevm-m05d1",
+    "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+    "safe": "unknown",
+    "runtime_acceptance_projection": "unreviewed",
+    "native_stopped": false,
+    "canonical_work_state": "active"
+  },
+  "source_commit": "cecd8552725a3fc17dd9139b1eabf0c5910db4ef",
+  "proposal": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/ROOT-REVIEW-PROPOSAL.json",
+  "required_Root_flags": [
+    "approved=true",
+    "safe_boundary_attestation.approved=true"
+  ],
+  "approval_token": "Root approves full M05D1 both criteria and 10 observed passing cases and separate Root postcommit codegen pass, with reviewed safe boundary and no physical stop claim",
+  "ordered_acceptance_commands": [
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/root-accept.py",
+      "safe",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/root-accept.py",
+      "open-review",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/root-accept.py",
+      "evidence",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/root-accept.py",
+      "stage",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/root-accept.py",
+      "work",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/root-accept.py",
+      "inspect"
+    ]
+  ],
+  "verification": "10 observed passing cases3/3/2/2 with reviewed earlier-owner scope, wire-diff0, scopedfmt/diff/spec receipts; distinct Root postcommit check-codegen0/17.478689s/clean/source_drift[].",
+  "producer_V4_unchanged_sha256": "4c676ca189baece8c139b0afcaf95960287cf513f8a19dfc6b0f064a31ae1d3d",
+  "root_postcommit_result_sha256": "6ff6bccf096d56446f52be8e89ecbbb9be3ddd719756034827ebe62291d77319",
+  "root_postcommit_log_sha256": "7a8e99156888630dd96bbb371cf9963ba659fac7738a384f07b704f60d7f619f",
+  "root_postcommit_method_sha256": "39a5b251e94997984e539235251ff32e7bc97b2c251531181dfa7052adef5750",
+  "physical_stop_claim": false,
+  "acceptance_projection_vs_canonical": "RuntimeJob unreviewed is distinct from canonical WorkAccepted; inspect reports both.",
+  "count": "92/222 until Root canonical acceptance.",
+  "pins": {
+    "root-accept.py": "c927f76bbd9a4c414b39ab31c620bdb053cb36790116962970edf15924ab8c6f",
+    "validate-review.py": "6b68b8d657c2a11a59b507fc40e94e5dc9835c80bdc16f765bd4ce3289db92ec",
+    "ROOT-REVIEW-PROPOSAL.json": "3d5311d778effca07355105f20e09820dc12bee29e81705eb2377968d20f4851",
+    "EVIDENCE-PAYLOADS.json": "8bfeb87d8bc0ed0e52aadb104f5c72cf893c90a2d8ece77ec69d4b1bbb39b5ed",
+    "STATIC-PAYLOADS.json": "4c5bd8f87dbbc6deec14b2e6c99690bcaef3d942534b28e799ca66e297ce3c44",
+    "OPERATOR-PINS.json": "657e38a5f540d3a1425854bfabd5e1384cd94b98c5221b44591d8393b1ef3ec5",
+    "VALIDATION.json": "8da5bcd3fc4879b515e3a1f4bd36b8c2302f4684df9b94ceb8c6bb13093fc936",
+    "producer-V4-original.json": "4c676ca189baece8c139b0afcaf95960287cf513f8a19dfc6b0f064a31ae1d3d"
+  },
+  "commands_submitted": 0,
+  "new_tests_builds_models": 0,
+  "live_DB_opened": false,
+  "retirement": "Root controls later stop/retirement; helper supports stop/stop-observe only after canonical acceptance, fresh job revision."
+}

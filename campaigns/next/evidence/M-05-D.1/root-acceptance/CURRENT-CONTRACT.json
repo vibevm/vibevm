@@ -1,0 +1,191 @@
+{
+  "active": true,
+  "contract": {
+    "acceptance": [
+      "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+      "Every induced edge explains its source declaration and consumer intent."
+    ],
+    "checks": [
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V1"
+        ],
+        "cases": [
+          "V1"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V2"
+        ],
+        "cases": [
+          "V2"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V3"
+        ],
+        "cases": [
+          "V3"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "V4"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V4: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V5"
+        ],
+        "cases": [
+          "V5"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V6"
+        ],
+        "cases": [
+          "V6"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "V7"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      }
+    ],
+    "contract_id": "contract.m05d1",
+    "delivery_route": {
+      "kind": "direct"
+    },
+    "goal": "Make lock replay explain exact choices, captures and selected technical edges.",
+    "integration_owner": "work.m05d1.prepare-plan",
+    "negative_cases": [
+      "Same-version changed definition or lost request digest cannot be accepted as exact replay.",
+      "Derived selections cannot become the only authored authority."
+    ],
+    "obligation_ids": [
+      "obligation.m05d1"
+    ],
+    "positive_cases": [
+      "Lock preserves explicit choices and actual provider edges for offline replay."
+    ],
+    "read_subjects": [
+      {
+        "id": "source.vibevm-m05d1.owner-input",
+        "kind": "source"
+      }
+    ],
+    "required_stage": "functional",
+    "resources": [
+      "resource.workspace"
+    ],
+    "safe_stop": "Keep an old lock recognizable; do not silently reinterpret unknown epochs.",
+    "source_handles": [
+      "source.vibevm-m05d1.owner-input"
+    ],
+    "steps": [
+      "Serialize authored-request digest separately from active/dormant resolved selections and feature closure.",
+      "Record exact owner capture/definition, resolution domain/target, induced dependencies and selected capability providers.",
+      "Add reader migration/refusal and canonical ordering through existing generated format machinery."
+    ],
+    "title": "Persist requested intent separately from resolved configuration",
+    "work_id": "work.m05d1.prepare-plan",
+    "write_subjects": [
+      {
+        "id": "work.m05d1.prepare-plan",
+        "kind": "work"
+      }
+    ]
+  },
+  "contract_digest": "fc05651fdd9c493f44c4e8a128433c4aeb6a809cd10926e2f57ff4b7d4fae0d8",
+  "contract_id": "contract.m05d1",
+  "version": 1,
+  "work_id": "work.m05d1.prepare-plan"
+}
