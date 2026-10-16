@@ -19,6 +19,7 @@ description = "The install orchestrator - plan/apply over an abstract InstallSou
 test = false
 
 [dependencies]
+serde_json.workspace = true
 semver.workspace = true
 specmark.workspace = true
 thiserror.workspace = true

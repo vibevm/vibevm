@@ -1,0 +1,1 @@
+{"all_features":false,"defaults":[],"definitions":[],"epoch":"1","features":[],"no_defaults":false,"origins":[{"constraint":"org.example/a","consumer":"caller","declaration":"roots[0]"}],"roots":["org.example/a"]}

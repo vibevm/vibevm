@@ -104,6 +104,11 @@ pub struct Lockfile {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LockfileMeta {
+    /// D1 normalized request and resolved provenance. Absence is a legacy lock,
+    /// never evidence authorizing configured exact replay.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub configuration: Option<LockedConfiguration>,
+
     pub generated_by: String,
     pub generated_at: String,
 
@@ -498,6 +503,7 @@ impl Lockfile {
                 generated_by: generated_by.into(),
                 generated_at: generated_at.into(),
                 schema_version: CURRENT_SCHEMA_VERSION,
+                configuration: None,
                 solver: None,
                 root_dependencies: Vec::new(),
                 language_chain: Vec::new(),
@@ -510,11 +516,22 @@ impl Lockfile {
 
     pub fn read(path: impl AsRef<Path>) -> Result<Self> {
         let lockfile: Lockfile = read_toml(path)?;
+        if let Some(configuration) = &lockfile.meta.configuration {
+            configuration.validate()?;
+            if lockfile.meta.schema_version != CURRENT_SCHEMA_VERSION {
+                return Err(crate::Error::InvalidManifest {
+                    reason: "configured lock schema is unsupported; exact replay refused".into(),
+                });
+            }
+        }
         if lockfile.meta.schema_version != CURRENT_SCHEMA_VERSION {
             return Err(crate::error::Error::UnsupportedLockfile {
                 found: lockfile.meta.schema_version,
                 expected: CURRENT_SCHEMA_VERSION,
             });
+        }
+        if let Some(configuration) = &lockfile.meta.configuration {
+            configuration.validate()?;
         }
         // `find`/`find_mut`/`remove` below treat `(group, name)` as a
         // unique key — first match wins. A lockfile carrying duplicate
@@ -535,6 +552,9 @@ impl Lockfile {
     }
 
     pub fn write(&self, path: impl AsRef<Path>) -> Result<()> {
+        if let Some(configuration) = &self.meta.configuration {
+            configuration.validate()?;
+        }
         write_toml(path, self)
     }
 
@@ -591,3 +611,50 @@ impl LockedPackage {
 #[cfg(test)]
 #[path = "lockfile/tests.rs"]
 mod tests;
+
+/// Core storage envelope. The requested/resolved payloads are canonical JSON
+/// owned by the generated wire formats; core never depends on vibe-wire.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LockedConfiguration {
+    pub epoch: u32,
+    pub requested: String,
+    pub request_digest: String,
+    pub resolved: String,
+}
+impl LockedConfiguration {
+    pub const EPOCH: u32 = 1;
+
+    pub fn digest(requested: &str) -> String {
+        use sha2::{Digest, Sha256};
+        let mut hash = Sha256::new();
+        hash.update(b"vibe-lock-authored-request-e1\0");
+        hash.update(requested.as_bytes());
+        format!("sha256:{:x}", hash.finalize())
+    }
+
+    pub fn validate(&self) -> Result<()> {
+        if self.epoch != Self::EPOCH {
+            return Err(crate::Error::InvalidManifest {
+                reason: format!(
+                    "unknown configuration lock epoch {}; exact replay refused",
+                    self.epoch
+                ),
+            });
+        }
+        if self.requested.is_empty()
+            || self.resolved.is_empty()
+            || self.request_digest != Self::digest(&self.requested)
+        {
+            return Err(crate::Error::InvalidManifest {
+                reason: "configuration lock lost authored request/digest; exact replay refused"
+                    .into(),
+            });
+        }
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+#[path = "lockfile/m_05_d_1_cases.rs"]
+mod m_05_d_1_cases;

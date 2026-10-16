@@ -1,0 +1,149 @@
+{
+  "properties": {
+    "epoch": {
+      "enum": [
+        "1"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "roots": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "origins": {
+      "elements": {
+        "ref": "Origins"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "features": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "no_defaults": {
+      "type": "boolean"
+    },
+    "all_features": {
+      "type": "boolean"
+    },
+    "definitions": {
+      "elements": {
+        "ref": "Definitions"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "defaults": {
+      "elements": {
+        "ref": "Defaults"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "optionalProperties": {
+    "configuration": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "metadata": {
+    "description": "D1 requested lock provenance; separate authored authority and derived choices.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#M05D1-REQUEST",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lock_configuration::e1::requested"
+    }
+  },
+  "definitions": {
+    "Origins": {
+      "properties": {
+        "constraint": {
+          "type": "string"
+        },
+        "consumer": {
+          "type": "string"
+        },
+        "declaration": {
+          "type": "string"
+        }
+      }
+    },
+    "DefinitionsIdentity": {
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        }
+      }
+    },
+    "Definitions": {
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "identity": {
+          "ref": "DefinitionsIdentity"
+        },
+        "definition": {
+          "type": "string"
+        }
+      }
+    },
+    "DefaultsIdentity": {
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        }
+      }
+    },
+    "Defaults": {
+      "properties": {
+        "edge": {
+          "type": "uint32"
+        },
+        "identity": {
+          "ref": "DefaultsIdentity"
+        },
+        "definition": {
+          "type": "string"
+        },
+        "request": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

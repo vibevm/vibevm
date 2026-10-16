@@ -61,3 +61,5 @@ pub mod deploy_generic_state;
 pub mod client_command;
 
 pub mod client_deploy;
+
+pub mod lock_configuration;

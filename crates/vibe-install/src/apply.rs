@@ -308,6 +308,16 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
     planned.validate_selected_routes()?;
+    let preflight_configuration = crate::record::configuration_record(
+        planned.normalized_request.as_ref(),
+        &planned.selected_provenance,
+        &planned.fetched,
+    )?;
+    crate::record::validate_replayed_result(
+        &planned.lockfile,
+        preflight_configuration.as_ref(),
+        &planned.request.roots,
+    )?;
     let PlannedInstall {
         strict_conversion,
         project_root,
@@ -319,9 +329,9 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         mut fetched,
         mut resolution,
         // Checked against the fetched graph before any apply effects. These
-        // are transaction evidence, not a new lockfile persistence schema.
-        normalized_request: _normalized_request,
-        selected_provenance: _selected_provenance,
+        // are also captured in the D1 record above before apply effects.
+        normalized_request,
+        selected_provenance,
         // The plan's pre-apply tree. Step 7 below replaces it with the
         // post-write epoch, so it is deliberately not read between here and
         // there — a value that is about to be stale must not be consulted.
@@ -539,6 +549,11 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         merge_root_dependencies(&mut lockfile, &finalized_roots);
     }
 
+    lockfile.meta.configuration = crate::record::configuration_record(
+        normalized_request.as_ref(),
+        &selected_provenance,
+        &fetched,
+    )?;
     lockfile.write(workspace.lockfile_path())?;
     record_task.finish();
 

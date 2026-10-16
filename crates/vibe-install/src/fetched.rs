@@ -53,7 +53,9 @@ pub struct Fetched {
 /// an error: `vibe install` is the regeneration path the schema policy names
 /// («the fix is always to regenerate with `vibe install`»), so it must never
 /// refuse to run because the artifact it is about to rewrite is outdated.
-/// Every other reader keeps the strict rejection.
+/// Every other reader keeps the strict rejection. A D1 configuration record
+/// is validated before schema recovery: unknown epochs and configured schema
+/// mismatches are not UnsupportedLockfile and cannot take this legacy branch.
 pub(crate) fn load_or_empty_lockfile(root: &Path, generated_by: &str) -> Result<Lockfile> {
     let path = root.join(Lockfile::FILENAME);
     if path.exists() {
