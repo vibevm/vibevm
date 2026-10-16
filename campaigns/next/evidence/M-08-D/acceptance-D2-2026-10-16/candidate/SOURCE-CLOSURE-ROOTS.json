@@ -1,0 +1,11 @@
+[
+  "crates/vibe-lifecycle/src",
+  "crates/vibe-orchestrator/src",
+  "crates/vibe-mcp/src",
+  "crates/vibe-cli/src",
+  "crates/vibe-wire/src",
+  "xtask/src",
+  "schemas",
+  "formats",
+  "fixtures/next/adapters"
+]

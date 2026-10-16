@@ -1,0 +1,54 @@
+{
+  "group": "V1",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::full_apply_verify_update_remove_preserves_foreign_state",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::interrupted_command_prefix_recovers_with_fresh_authority",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::changed_executable_descriptor_and_expanded_plan_refuse_stale_grant",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::cancel_boundaries_and_post_effect_error_retain_owned_prefix",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::identical_dto_foreign_prepared_grant_refuses_before_files",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::repeated_cold_combined_recovery_preserves_original_c3_subject",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::receipt_publication_crash_recovers_same_run_and_refuses_foreign_join"
+    ],
+    "expected": 7,
+    "source_paths": [
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs"
+    ],
+    "status": "actual source definitions bound; execution not yet observed",
+    "source_hashes": {
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs": "bb11fe02f58e63859936cf7be061d4c22f59c1485507a8f612369f96f0163d67"
+    }
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "7",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V1-1.log",
+      "seconds": 10.96970188501291,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "preservation": null,
+  "passed": true,
+  "full_closure_subject_count": 2655,
+  "full_closure_drift": []
+}

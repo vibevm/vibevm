@@ -1,0 +1,672 @@
+{
+  "task_id": "M-08-D.2",
+  "title": "Connect admitted commands to full deployment lifecycle",
+  "status": "unreviewed_candidate",
+  "effect_state": "completed",
+  "acceptance_owner": "Root; no Work acceptance or count mutation",
+  "runtime_binding": {
+    "attempt_id": "attempt.runtime.packet.vibevm-m08d2-correction",
+    "contract_digest": "9ce78026c4c079a07b31a42102b6a23f13d279abb4db6a27a3728d6d2f06aa5e",
+    "contract_id": "contract.m08d2-correction",
+    "job_id": "job.runtime.packet.vibevm-m08d2-correction",
+    "packet_id": "packet.vibevm-m08d2-correction",
+    "producer": {
+      "actor": {
+        "operation": {
+          "id": "attempt.runtime.packet.vibevm-m08d2-correction",
+          "kind": "attempt"
+        },
+        "principal_id": "worker.middle",
+        "role": "worker"
+      },
+      "attempt_id": "attempt.runtime.packet.vibevm-m08d2-correction",
+      "job_id": "job.runtime.packet.vibevm-m08d2-correction",
+      "packet_id": "packet.vibevm-m08d2-correction"
+    },
+    "relevant_basis": "7ebad5e04cd05fe04ae975f2288003f99dcbd00d9339449359e32e31a8653f11",
+    "terminal_observation": "observation.vibevm-m08d2-correction",
+    "version": 1,
+    "work_id": "work.m08d2-correction.prepare-plan"
+  },
+  "baseline": {
+    "head": "64d69d8f382eb68ed26c39e3f57407d305f05741",
+    "kind": "retained DIRTY unaccepted WIP",
+    "source_baseline_sha256": "e87b72a0ac1040b447c43caa64ecb98de34465459400f36774a8cbbf78f6cd26",
+    "historical_D1": "Work431/rev5 accepted; prerequisite only, no repeated acceptance"
+  },
+  "scope": {
+    "goal": "Run plan/apply/verify/recover/remove through the existing engine and universal operation service.",
+    "steps": [
+      "Route admitted command/file plans into existing deployment journals and M16 durable operation IDs; avoid a second deploy engine.",
+      "Implement independent observed-state checks, cancellation boundaries and recover/remove using retained host operation data.",
+      "Expose equivalent typed CLI/API/MCP outcomes including partial effects and newly required authority on expansion."
+    ],
+    "positive_cases": [
+      "A full isolated apply→verify→update→remove preserves foreign state.",
+      "Response loss reconnects to the same operation; supported recovery resumes the owned prefix."
+    ],
+    "negative_cases": [
+      "A changed executable/descriptor/grant cannot reuse stale authorization.",
+      "Provider error after one effect retains partial state instead of returning only text."
+    ],
+    "effective_roster_sha256": "6087b89db06ea99e4c9849e938a1e95edf7e504478af2a1eda4952d737bc5b6e",
+    "prior_scope_extensions": "Retained machine_session/state.rs trusted route binding and generic/grant.rs additive approval port remain in effective roster and full consumed closure. No additional owner permission needed or requested."
+  },
+  "corrections": [
+    {
+      "id": "R1",
+      "disposition": "satisfied",
+      "implementation": "D1 Host::validate_process_grant performs the original exact Host/Prepared identity and currentness validation without effects. D2 validates every opaque command grant during complete preflight before C3 effects; execute still rechecks.",
+      "evidence": "V1 identical_dto_foreign_prepared_grant_refuses_before_files: equal DTO plans prepared twice, first grants refuse second before any file/command effect; fresh matching grant succeeds."
+    },
+    {
+      "id": "R2",
+      "disposition": "satisfied",
+      "implementation": "Client journal preserves the initial file_subject for the run. Fresh C3 retained approval identity remains separate; target, resource and original grant_subject joins stay strict.",
+      "evidence": "V1 repeated_cold_combined_recovery_preserves_original_c3_subject: partial combined apply, cold fresh C3/D1 admission, pre-dispatch cancellation, another cold fresh admission completes same run. Two commands execute once each; foreign JSON member survives."
+    },
+    {
+      "id": "R3",
+      "disposition": "satisfied",
+      "implementation": "The existing client state retains final reply, exact future receipt digest and generation before receipt publication. Recovery validates receipt content and identity plus exact sidecar and intent joins under incumbent locks, completes promotion/retirement/publication in the same run, then resumes any partial prefix. Pending cancellation is retained during unfinished finalization.",
+      "evidence": "V1 receipt_publication_crash_recovers_same_run_and_refuses_foreign_join table-drives completed and partial prefixes at receipt publication, sidecar promotion and intent retirement. Cold fresh-authority recovery completes without repeating landed commands; foreign receipt, sidecar and intent each refuse."
+    },
+    {
+      "id": "R4",
+      "disposition": "satisfied",
+      "implementation": "Production machine-session run calls the shared dispatch entry with explicit host capability and framed I/O parameters. Trusted composition can supply a ClientDeployRoute; default None refuses. Existing modes retain their own I/O locking.",
+      "evidence": "V4 real_cli_dispatch_injected_host_executes_full_lifecycle_and_ungranted_refuses drives real CLI dispatch with initialize and plan/apply/verify/update/remove/recover frames, compares owner outcomes, exercises partial recovery, verifies ten command effects and foreign-state preservation; ungranted dispatch refuses."
+    }
+  ],
+  "criteria": [
+    {
+      "statement": "External surfaces agree on exact resources, authority decision and terminal/partial status.",
+      "disposition": "satisfied",
+      "evidence": [
+        "V2",
+        "V3",
+        "V4",
+        "V5"
+      ]
+    },
+    {
+      "statement": "All lifecycle verbs have executable behavior; plan-only is not acceptance.",
+      "disposition": "satisfied",
+      "evidence": [
+        "V1",
+        "V2",
+        "V3",
+        "V4"
+      ]
+    }
+  ],
+  "safe_stop": {
+    "boundary": "Full engine integration works on controlled client fixtures.",
+    "status": "completed",
+    "qualification": "Injected ProcessRunner and independently observed actual fixture state only; production physical adapter remains host/PodBay supplied."
+  },
+  "checks": {
+    "V1": {
+      "status": "completed",
+      "passed": true,
+      "exits": [
+        0
+      ],
+      "observed_passed_cases": 7,
+      "result_path": "V1-result.json",
+      "result_sha256": "dc2afdc885f50bd352b816dcf254843e4efe904758f23f5eb62083b446fcf929",
+      "logs": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V1-1.log",
+          "sha256": "0bedcd19e4cefead6e0399061eda8857e41cb4b2ba8baea72de9d75e238f043e"
+        }
+      ],
+      "closure_count": 2655,
+      "before_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+      "after_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    },
+    "V2": {
+      "status": "completed",
+      "passed": true,
+      "exits": [
+        0
+      ],
+      "observed_passed_cases": 3,
+      "result_path": "V2-result.json",
+      "result_sha256": "44207e872294f2f34f76ef07ab3909b9a46a45d07b6ad4083c6e6b8d964ebda8",
+      "logs": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V2-1.log",
+          "sha256": "3430726cafcc881160b9d43eb16a06223f1bd25bdf7bff46dec0cefcd6e0d301"
+        }
+      ],
+      "closure_count": 2655,
+      "before_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+      "after_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    },
+    "V3": {
+      "status": "completed",
+      "passed": true,
+      "exits": [
+        0
+      ],
+      "observed_passed_cases": 2,
+      "result_path": "V3-result.json",
+      "result_sha256": "f94bbc6c21c86ba645fd79c02d409efc4da7a907b99695c6e32ff8243d858258",
+      "logs": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V3-1.log",
+          "sha256": "e56290f07a33e95d74bf436f21e273786956a0b71685793670566bb9b02fad44"
+        }
+      ],
+      "closure_count": 2655,
+      "before_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+      "after_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    },
+    "V4": {
+      "status": "completed",
+      "passed": true,
+      "exits": [
+        0
+      ],
+      "observed_passed_cases": 3,
+      "result_path": "V4-result.json",
+      "result_sha256": "f607d9cf15b1964efaa21c559e1317572b34ba788269601e558c6303c359bcb5",
+      "logs": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V4-1.log",
+          "sha256": "d08f99a1ac8124f83c51044b858b57d3886d2e635d576b5476ffbf077131a87d"
+        }
+      ],
+      "closure_count": 2655,
+      "before_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+      "after_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    },
+    "V5": {
+      "status": "completed",
+      "passed": true,
+      "exits": [
+        0
+      ],
+      "observed_passed_cases": 2,
+      "result_path": "V5-result.json",
+      "result_sha256": "bc033304062c0a7ab6ca94818177dbbbc33cbe6e841a91dbd8860c30f95d3a24",
+      "logs": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V5-1.log",
+          "sha256": "316664c25ba4a84499e2feb5e853b270a9e6c5a4143d864336ed289502c48ed3"
+        }
+      ],
+      "closure_count": 2655,
+      "before_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+      "after_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    },
+    "V6": {
+      "status": "completed",
+      "passed": true,
+      "exits": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "observed_passed_cases": 5,
+      "result_path": "V6-result.json",
+      "result_sha256": "af39ef90108467c0645bba33509e2470da815c6bb5ea8d2b520fb2f27e72106d",
+      "logs": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-1.log",
+          "sha256": "d740331494e271db66c40372bea72f0f621ddf9342d7385eb5dd73803be7f139"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-2.log",
+          "sha256": "6238297027bc6ab0ef54b1653aab0835f99e81f0b81d6596637686986a5a4d60"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-3.log",
+          "sha256": "3591f1dacc4b75a36503a9dc216600f536b669fcee80bcc533c12628d4eadf7e"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-4.log",
+          "sha256": "fbf51ad0aa535b3d850bcee0ad3c40a0da128c854153fbd9ac17c9dd604c403c"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-5.log",
+          "sha256": "0a3d6993284804aa6140c7a69041241a4636e42a44fd48a0cdbe4ad530eb79bd"
+        }
+      ],
+      "closure_count": 2655,
+      "before_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+      "after_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    },
+    "V7": {
+      "status": "completed",
+      "passed": false,
+      "exits": [
+        0,
+        1,
+        0
+      ],
+      "observed_passed_cases": 0,
+      "result_path": "V7-result.json",
+      "result_sha256": "25f449aab190da190eda3d7d5cefccdd053a1ccdf603835444fedc3c3fe713bf",
+      "logs": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-1.log",
+          "sha256": "7f6619b8971d2849e3d30f14d0d324146df73508935cc5f024b90928d5c12066"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-2.log",
+          "sha256": "b78141020cb5c131d05a29bcd30375271b08067141f31b5cd61a32251d23e95b"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-3.log",
+          "sha256": "2ac61a33802642686403156d6532295089287cb8a78be38f4e505343170e1894"
+        }
+      ],
+      "closure_count": 2655,
+      "before_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+      "after_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    },
+    "V8": {
+      "status": "completed",
+      "passed": true,
+      "exits": [
+        0,
+        0
+      ],
+      "observed_passed_cases": 0,
+      "result_path": "V8-result.json",
+      "result_sha256": "4e3e29f4e4cbb3d1b88fe1b795d4ff44bf11b57862f3f954f3c6da3820904636",
+      "logs": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V8-1.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08d2-correction/V8-2.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "closure_count": 2655,
+      "before_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+      "after_sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    }
+  },
+  "observed_new_case_functions": 17,
+  "observed_existing_exact_cases": 5,
+  "test_binding": {
+    "path": "CASE-BINDINGS.json",
+    "sha256": "f716049fd6582b2f8f759a06dee41b8f41105bc15d70ffa10ba6221af1cc5d8b",
+    "counts": {
+      "V1": 7,
+      "V2": 3,
+      "V3": 2,
+      "V4": 3,
+      "V5": 2
+    },
+    "original_13_retained": true,
+    "focused_regressions_added": 4
+  },
+  "source_closure": {
+    "path": "SOURCE-CLOSURE.json",
+    "sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c",
+    "files": 2655,
+    "all_final_group_before_after_equal_final_closure": true,
+    "omitted_historical_36_paths_included": true,
+    "per_command_snapshots": "Each verify-group command retains its own full dynamic before/after manifests as well as group manifests."
+  },
+  "correction_delta": [
+    {
+      "path": "crates/vibe-cli/src/commands/machine_session.rs",
+      "before_sha256": "dbd5671d35f2c56936220abd0f52227b1c9c6d4d5d20311c4101d8a9496ad150",
+      "after_sha256": "7a4de3ef6c1284948e002a0175e3655a56a3d2e7fae129fcd29e5a1e9f997139"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/machine_session/client_deploy/m_08_d_2_cases.rs",
+      "before_sha256": "39a377d68f54d404ed971caf658e625ec74323c35c45e86aecd143a2ad54466b",
+      "after_sha256": "ee8e00ad44f9387271d7827d963157a87cd619f0a6ca9abefa55622c3e088b03"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+      "before_sha256": "e84154d0fd904411a8046028243f39f7c8585c4c52350c70dd45042f5d8e540b",
+      "after_sha256": "1e2a99b2ba11165b213a902c0b4198e04e01553ee9e23a906ace1870a1e22d88"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs",
+      "before_sha256": "d3f1deed338de6631b10f155cc71e6ff0bc98e8f187e57c708bec640ae9d15fe",
+      "after_sha256": "71b0e08bc360833d9a5aab16810b38f5815962e3ba038fbc77901bc458ed9e5a"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/journal.rs",
+      "before_sha256": "f534f1cdad28b5dec8df283f579e927b931ac70d33dbcc69aff44d6dbb4c9680",
+      "after_sha256": "ebcee1b8d0e3c9dd1f34028e6792f7080a9e6cc6c81bb10bf351a0bba44e54c0"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs",
+      "before_sha256": "d79f4c0b45142e4325ed42453581ee1e48a8988cc52888f220c1450cd81bdd36",
+      "after_sha256": "799834f0f6fc4ed77654f65f80e26963d8331209722cd989ffd0f647fc53fc0a"
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/client_deploy.rs",
+      "before_sha256": "e88f3efaf0fd39126787cc8aefed51c89ac4e83ac87691e7a68945ce1ff109d0",
+      "after_sha256": "215d4eacf98734e91c002f10f05208e5ce9b33cc94f9587bcb13afbb7d821afd"
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/client_deploy/m_08_d_2_cases.rs",
+      "before_sha256": "b2e75ec97099f383ca4a4c767eba27cd398c4138bdad7b777d5237ce79024cf5",
+      "after_sha256": "cd361a269327d56fb652db1014b84b78f22dae104f9074f0b644a62838cd902d"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/deploy_client_state/mod.rs",
+      "before_sha256": "7bfba22182555bc35bd1dcf07b3af1e2e67cce6dda04a4dccfab3e74db9c8710",
+      "after_sha256": "119217084bdfda5fea7f550a64ef50c8abbd8969a4f5a6158fff2b750aeef65b"
+    },
+    {
+      "path": "schemas/deploy_client_state.jtd.json",
+      "before_sha256": "ed77281ce7b6544eb5d2be1d92512844e93465731881a54dfdf1887f17fc12f4",
+      "after_sha256": "c7b05fc0be45bf3cacc8a9e710df1076fe6d3976b57fcd7a8b5fd2e9ce499892"
+    }
+  ],
+  "generated": {
+    "inventory": "GENERATED-INVENTORY.json",
+    "sha256": "c8995107919f2c0c888cb4efe6d749b3e8c9b08edf002a9a1e96d9196f08e3e4",
+    "new_shards_in_correction": [],
+    "changed_by_generator": [
+      "crates/vibe-wire/src/generated/deploy_client_state/mod.rs"
+    ],
+    "old_generated_preservation": "238 protected files byte-identical to dirty correction baseline, including the already approved header insertion. No second insertion; no hand-edited generated types."
+  },
+  "preservation": {
+    "group": "V8",
+    "executed": true,
+    "xml_parsed": true,
+    "prior_spec_lines_preserved": true,
+    "old_schema_drift": [],
+    "required_registration_changes": [],
+    "unqualified_generated_drift": [],
+    "passed": true,
+    "Root_preauthorized_exact_global_header_insertion": []
+  },
+  "history": [
+    {
+      "path": "verification-history/1792117483864351009/V7-result.json",
+      "sha256": "08dd30f394054584eff569b2106ddb5b147e1873198deee58fa5aa232416317c",
+      "group": "V7",
+      "exits": [
+        101,
+        101,
+        101
+      ],
+      "passed": false
+    },
+    {
+      "path": "verification-history/1792117678056857119/V1-result.json",
+      "sha256": "158ee9b6f174557e12816d08feb43febfad1a2ffcadf191db8a942314e36666f",
+      "group": "V1",
+      "exits": [
+        0
+      ],
+      "passed": true
+    },
+    {
+      "path": "verification-history/1792117791790276204/V7-result.json",
+      "sha256": "d9e656358f2666decc09702c6cab403fe19c7f0dc40118694229f5f0978a6f04",
+      "group": "V7",
+      "exits": [
+        101,
+        101,
+        101
+      ],
+      "passed": false
+    },
+    {
+      "path": "verification-history/1792117872204025873/V1-result.json",
+      "sha256": "3c966f1bebd8bf8b86ef14ee70fe3325da6d0f4d8b95a70608e73c6c677b47d1",
+      "group": "V1",
+      "exits": [
+        0
+      ],
+      "passed": true
+    },
+    {
+      "path": "verification-history/1792117898228895243/V2-result.json",
+      "sha256": "22726afce04d58b1a008e7bfe53c8b350815c33854d56bfcd82f72e0e8fe6230",
+      "group": "V2",
+      "exits": [
+        0
+      ],
+      "passed": true
+    },
+    {
+      "path": "verification-history/1792117916314965505/V3-result.json",
+      "sha256": "8add9d40e965106288358231e2e76758d017e36db1d76089f29e02d587f7fc14",
+      "group": "V3",
+      "exits": [
+        0
+      ],
+      "passed": true
+    },
+    {
+      "path": "verification-history/1792117920861280821/V4-result.json",
+      "sha256": "29ebde0768904e5d243a632545f211282313c85cd69aac0083681d668c5a38c0",
+      "group": "V4",
+      "exits": [
+        0
+      ],
+      "passed": true
+    },
+    {
+      "path": "verification-history/1792117945050708068/V5-result.json",
+      "sha256": "9b31c29929ce86a1cf4b1f4d3cb50101a3dc98161837dedacbae47fe53d0e1ab",
+      "group": "V5",
+      "exits": [
+        0
+      ],
+      "passed": true
+    },
+    {
+      "path": "verification-history/1792117955534547802/V6-result.json",
+      "sha256": "ee61e96b3f17ab05ba4315d8e00dccd594d9549f3e212d29ad1aec3205d5e97f",
+      "group": "V6",
+      "exits": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "path": "verification-history/1792117959880546767/V7-result.json",
+      "sha256": "0dced5ab83ef7a4f50f7dac6a7288364d913dfda6fb27c3c3ff58020e0f6348d",
+      "group": "V7",
+      "exits": [
+        0,
+        1,
+        0
+      ],
+      "passed": false
+    },
+    {
+      "path": "verification-history/1792118001414332572/V8-result.json",
+      "sha256": "25a82a34adfc005b28c94ef848bf7544dab909f4d7fc8787e76178b5316f9f1d",
+      "group": "V8",
+      "exits": [
+        0,
+        0
+      ],
+      "passed": true
+    }
+  ],
+  "bootstrap_attempts": [
+    {
+      "result": "bootstrap-codegen-result.json",
+      "sha256": "3bb538e4581704f6d909fc773ef8cd76cd4ebfbd2112a689c220232876a546c2",
+      "argv": [
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+        "codegen"
+      ],
+      "exit": 1,
+      "generator_binary_sha256": "b48d1b8e643ee2f21ec0ad4dd04d1fb74c29f8b53686f3b44d98cf89a9478058",
+      "changed_paths": [],
+      "closure_count": 2655
+    },
+    {
+      "result": "bootstrap-codegen-2-result.json",
+      "sha256": "164bf9702691bfb946e127f90b1e8c4d5621632df0c5696bf70efd7fc00ad7cd",
+      "argv": [
+        "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+        "codegen"
+      ],
+      "exit": 0,
+      "generator_binary_sha256": "b48d1b8e643ee2f21ec0ad4dd04d1fb74c29f8b53686f3b44d98cf89a9478058",
+      "changed_paths": [
+        "crates/vibe-wire/src/generated/deploy_client_state/mod.rs"
+      ],
+      "closure_count": 2655
+    }
+  ],
+  "bootstrap_explanation": "Initial cargo xtask attempts failed compiling consumers of not-yet-generated fields (all exits retained). Existing warm xtask binary first failed without CARGO_MANIFEST_DIR, then generated the new state fields with it set. Subsequent required cargo xtask codegen reproduced the same bytes successfully; check-codegen remains separately failed.",
+  "historical_evidence": "HISTORICAL-EVIDENCE-REFERENCES.json remains historical. Original 13 tests/471 hash rows, prior V7 failures and obsolete V8 wrapper failure are not relabelled as fresh or green.",
+  "unresolved": [
+    {
+      "status": "pending",
+      "owner": "Root",
+      "item": "V7 check-codegen exit 1 remains a failed preintegration gate. The logged Git-relative generated diff includes retained approved new-family registration/header changes. Root must independently review/stage and run the integrated gate; this producer did not stage or mutate Git."
+    }
+  ],
+  "legacy_limits": [
+    "No production vendor/network/install/platform commissioning.",
+    "No new physical process manager, durable task engine or reservation table.",
+    "Existing SystemProcessRunner migration debt is unchanged."
+  ],
+  "supplemental_observations": "One read-only git diff --check outside the wrapper returned 0; it is not used as qualification. Final V8 independently records the scoped formatting and whitespace exits with full before/after closure.",
+  "patch": {
+    "basis": "64d69d8f382eb68ed26c39e3f57407d305f05741",
+    "kind": "aggregate retained unaccepted WIP plus correction, HEAD-relative; do not apply over dirty source",
+    "tracked": [
+      "crates/vibe-cli/src/cli/machine.rs",
+      "crates/vibe-cli/src/commands/machine_session.rs",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/mechanism.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/inverse.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/state/wire.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+      "crates/vibe-mcp/src/context.rs",
+      "crates/vibe-mcp/src/machine_session.rs",
+      "crates/vibe-mcp/src/machine_session/state.rs",
+      "crates/vibe-mcp/src/tools.rs",
+      "crates/vibe-orchestrator/src/machine_operation.rs",
+      "crates/vibe-orchestrator/src/machine_submission.rs",
+      "crates/vibe-wire/src/behaviour/mod.rs",
+      "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+      "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+      "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "crates/vibe-wire/src/generated/application/mod.rs",
+      "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "crates/vibe-wire/src/generated/capability/mod.rs",
+      "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "crates/vibe-wire/src/generated/change_query/mod.rs",
+      "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+      "crates/vibe-wire/src/generated/client_capability/mod.rs",
+      "crates/vibe-wire/src/generated/client_command/e1/mod.rs",
+      "crates/vibe-wire/src/generated/client_command/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+      "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+      "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "crates/vibe-wire/src/generated/environment/mod.rs",
+      "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "crates/vibe-wire/src/generated/hello/mod.rs",
+      "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index/mod.rs",
+      "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "crates/vibe-wire/src/generated/journal/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "crates/vibe-wire/src/generated/llm/mod.rs",
+      "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "crates/vibe-wire/src/generated/machine/mod.rs",
+      "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "crates/vibe-wire/src/generated/migration/mod.rs",
+      "crates/vibe-wire/src/generated/mod.rs",
+      "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "crates/vibe-wire/src/generated/native/mod.rs",
+      "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "crates/vibe-wire/src/generated/preview/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "crates/vibe-wire/src/generated/source_query/mod.rs",
+      "formats/REGISTRY.toml",
+      "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+    ],
+    "untracked": [
+      "crates/vibe-cli/src/commands/machine_session/client_deploy.rs",
+      "crates/vibe-cli/src/commands/machine_session/client_deploy/m_08_d_2_cases.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/journal.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs",
+      "crates/vibe-mcp/src/machine_session/client_deploy.rs",
+      "crates/vibe-mcp/src/tools/client_deploy_operation.rs",
+      "crates/vibe-mcp/src/tools/client_deploy_operation/m_08_d_2_cases.rs",
+      "crates/vibe-orchestrator/src/machine_operation/client_deploy.rs",
+      "crates/vibe-orchestrator/src/machine_operation/client_deploy/m_08_d_2_cases.rs",
+      "crates/vibe-orchestrator/src/machine_submission/client_deploy.rs",
+      "crates/vibe-wire/src/behaviour/client_deploy.rs",
+      "crates/vibe-wire/src/behaviour/client_deploy/m_08_d_2_cases.rs",
+      "crates/vibe-wire/src/generated/client_deploy/e1/error/mod.rs",
+      "crates/vibe-wire/src/generated/client_deploy/e1/mod.rs",
+      "crates/vibe-wire/src/generated/client_deploy/e1/reply/mod.rs",
+      "crates/vibe-wire/src/generated/client_deploy/e1/request/mod.rs",
+      "crates/vibe-wire/src/generated/client_deploy/mod.rs",
+      "crates/vibe-wire/src/generated/deploy_client_state/mod.rs",
+      "fixtures/next/adapters/m-08-d2/foreign.json",
+      "fixtures/next/adapters/m-08-d2/initial.json",
+      "fixtures/next/adapters/m-08-d2/update.json",
+      "formats/corpora/client-deploy/e1/invalid/foreign-operation.json",
+      "formats/corpora/client-deploy/e1/valid/apply.json",
+      "formats/corpora/client-deploy/e1/valid/authority-required.json",
+      "formats/corpora/client-deploy/e1/valid/partial.json",
+      "formats/corpora/client-deploy/e1/valid/plan.json",
+      "formats/corpora/client-deploy/e1/valid/recover.json",
+      "formats/corpora/deploy-client-state/e1/invalid/changed-subject.json",
+      "formats/corpora/deploy-client-state/e1/valid/retained-prefix.json",
+      "schemas/client_deploy/e1/error.jtd.json",
+      "schemas/client_deploy/e1/reply.jtd.json",
+      "schemas/client_deploy/e1/request.jtd.json",
+      "schemas/deploy_client_state.jtd.json"
+    ],
+    "bytes": 385472,
+    "sha256": "974b99eec1d1386d7651a040fd8e9aa8a23af8bfd4893dbfbe7f172067309644"
+  },
+  "follow_up": "Root semantic review, integration/staging, separate integrated codegen gate, and acceptance decision."
+}

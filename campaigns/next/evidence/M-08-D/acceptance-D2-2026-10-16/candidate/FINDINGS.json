@@ -1,0 +1,16 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "R1-R4 corrected and exercised by the original 13 plus exactly four focused regressions; final V1-V5 observed 7/3/2/3/2 nonignored passes and V6 five exact passes.",
+    "All eight final verification groups retain full 2655-file before/after source closure; V8 preservation and formatting passed."
+  ],
+  "unresolved": [
+    "V7 check-codegen remains failed with exit 1; codegen/wire-diff exited 0/0. Root owns separate staged integration gate, review and acceptance. Historical failures remain retained."
+  ],
+  "proposed_follow_up": "Root reviews the unaccepted aggregate candidate, stages only approved changes, runs the separate integrated codegen gate and decides acceptance."
+}

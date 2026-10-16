@@ -1,0 +1,49 @@
+{
+  "group": "V3",
+  "executed": true,
+  "case_binding": {
+    "names": [
+      "tools::client_deploy_operation::m_08_d_2_cases::mcp_and_api_all_verbs_have_equal_typed_outcomes",
+      "tools::client_deploy_operation::m_08_d_2_cases::ungranted_and_post_effect_refusals_keep_distinct_boundaries"
+    ],
+    "expected": 2,
+    "source_paths": [
+      "crates/vibe-mcp/src/tools/client_deploy_operation/m_08_d_2_cases.rs"
+    ],
+    "status": "actual source definitions bound; execution not yet observed",
+    "source_hashes": {
+      "crates/vibe-mcp/src/tools/client_deploy_operation/m_08_d_2_cases.rs": "e4a0e1fd7b54525e732805f757f122689feabac55b990c4d1ec0a8fbcda56cd8"
+    }
+  },
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "tools::client_deploy_operation::m_08_d_2_cases"
+      ],
+      "exit": 0,
+      "counts": [
+        [
+          "2",
+          "0",
+          "0"
+        ]
+      ],
+      "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V3-1.log",
+      "seconds": 3.8136706679943018,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "preservation": null,
+  "passed": true,
+  "full_closure_subject_count": 2655,
+  "full_closure_drift": []
+}

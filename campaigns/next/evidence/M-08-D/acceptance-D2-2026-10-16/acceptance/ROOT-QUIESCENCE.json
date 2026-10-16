@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-16T02:49:15.623771+00:00",
+  "all_absent": true,
+  "normal_exact_stop_delivery": "delivered",
+  "processes": [
+    {
+      "pid": 2260942,
+      "ppid": 2260941,
+      "birth": 44441381,
+      "exe": "/fast/zap-managed/2026-10-16-m08d2-correction/pins/zap",
+      "absent": true
+    },
+    {
+      "pid": 2260944,
+      "ppid": 2260942,
+      "birth": 44441404,
+      "exe": "/fast/zap-managed/2026-10-16-m08d2-correction/pins/podbay",
+      "absent": true
+    },
+    {
+      "pid": 2261090,
+      "ppid": 2260944,
+      "birth": 44441993,
+      "exe": "/fast/zap-managed/2026-10-16-m08d2-correction/pins/podbay-pod",
+      "absent": true
+    },
+    {
+      "pid": 2261116,
+      "ppid": 2261090,
+      "birth": 44442056,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex",
+      "absent": true
+    },
+    {
+      "pid": 2261660,
+      "ppid": 2261116,
+      "birth": 44443093,
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+      "absent": true
+    }
+  ],
+  "native_metadata": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/STOP-INSPECT-METADATA.json",
+  "stop_request": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/STOP-REQUEST.json"
+}

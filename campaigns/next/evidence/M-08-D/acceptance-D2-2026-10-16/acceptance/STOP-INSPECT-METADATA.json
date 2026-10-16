@@ -1,0 +1,9 @@
+{
+  "accounting_pending": false,
+  "collected": true,
+  "failed": false,
+  "process_stopped": true,
+  "source_sequence": 1955,
+  "state": "process_stopped",
+  "unknown_tail": false
+}
