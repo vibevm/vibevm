@@ -1,0 +1,23 @@
+{
+  "evidence_validation": {
+    "valid": true,
+    "fresh_final_green_cases": 7,
+    "historical_red_failures": 2,
+    "qualified_reused_cases": 8,
+    "new_tests_run": 0,
+    "commands_submitted": 0,
+    "global_fmt_pass_claim": false
+  },
+  "public_API_and_typed_encoding": {
+    "status": "READY_NOT_APPLIED",
+    "typed_payloads_encoded": 13,
+    "commands_submitted": 0,
+    "canonical_revision": 497,
+    "job_id": "job.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+    "candidate_id": "managed-result.ad742a0fce0cea44195e93019f745205d7703059ff20031020b8d5d3e65c97be",
+    "safe": "unknown",
+    "runtime_acceptance_projection": "unreviewed",
+    "native_stopped": false,
+    "canonical_work_state": "active"
+  }
+}

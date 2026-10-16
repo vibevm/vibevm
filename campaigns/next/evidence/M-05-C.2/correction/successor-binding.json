@@ -1,0 +1,8 @@
+{
+  "job_id": "job.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+  "attempt_id": "attempt.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+  "packet_id": "packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+  "work_id": "work.m05c2r.prepare-plan",
+  "original_candidate": "managed-result.618a03bed84d8ed1ffb327c781ac112c03e37963de3e666e4f594513722bcea9",
+  "source": "Official normal continuation output; no guessed IDs"
+}

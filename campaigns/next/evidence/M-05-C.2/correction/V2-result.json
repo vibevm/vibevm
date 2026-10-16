@@ -1,0 +1,211 @@
+{
+  "executed": false,
+  "group": "V2",
+  "commands": [],
+  "binding": null,
+  "extra": {
+    "run": [],
+    "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim.",
+    "reused": [
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-1.log",
+        "sha256": "bb8619113dfbcd4e7b35e3459d39cb5197c60c16ab71f9a8713ed9f9c4b52561",
+        "source_hashes": {
+          "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+          "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+          "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+          "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+          "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+        },
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+          "--",
+          "--exact"
+        ],
+        "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+        "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-2.log",
+        "sha256": "2e4607e19fa1de57da3e7638eea6d99d0a3a8769df42188476d1ffc852e1ab1c",
+        "source_hashes": {
+          "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+          "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+          "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+          "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+          "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+        },
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+          "--",
+          "--exact"
+        ],
+        "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+        "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-3.log",
+        "sha256": "bf72c282841d77b6cb0e31edfed061c62f168dfb52956ba7948f279f8c165f9a",
+        "source_hashes": {
+          "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+          "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+          "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+          "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+          "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+        },
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator",
+          "--",
+          "--exact"
+        ],
+        "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+        "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+      }
+    ]
+  },
+  "fresh_tests": 0,
+  "passed": null,
+  "acceptance_implied": false,
+  "selected_for_fresh_verification": false,
+  "reused_evidence": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-1.log",
+      "sha256": "bb8619113dfbcd4e7b35e3459d39cb5197c60c16ab71f9a8713ed9f9c4b52561",
+      "source_hashes": {
+        "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+        "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+        "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+        "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+        "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+      },
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+        "--",
+        "--exact"
+      ],
+      "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+      "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-2.log",
+      "sha256": "2e4607e19fa1de57da3e7638eea6d99d0a3a8769df42188476d1ffc852e1ab1c",
+      "source_hashes": {
+        "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+        "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+        "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+        "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+        "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+      },
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+        "--",
+        "--exact"
+      ],
+      "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+      "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-3.log",
+      "sha256": "bf72c282841d77b6cb0e31edfed061c62f168dfb52956ba7948f279f8c165f9a",
+      "source_hashes": {
+        "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+        "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+        "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+        "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+        "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+      },
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator",
+        "--",
+        "--exact"
+      ],
+      "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+      "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+    }
+  ],
+  "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim."
+}

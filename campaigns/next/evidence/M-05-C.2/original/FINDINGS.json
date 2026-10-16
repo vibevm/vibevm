@@ -1,0 +1,18 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Configured activation uses candidate-local dependencies and incompatibility reasons in the incumbent resolvo provider; original consumer requests are retained.",
+    "Default authorization binds the C1 receipt, full shown normalized definition and original request; selected drift requires rediscovery.",
+    "All five new regression cases and eight exact compatibility cases passed. Historical failed runs are retained."
+  ],
+  "unresolved": [
+    "Configured API accepts fixed explicit incoming Vibe consumers with one instance per package. Native selection, cross-package feature forwarding, multiple instances, non-registry sources, conditional targets, requires_any and obsoletes explicitly refuse; support for those combinations is not claimed.",
+    "The configured entry is not integrated into install callers here; universal caller-route parity remains separate C3 work."
+  ],
+  "proposed_follow_up": "Root review the configured-entry support boundary and counterexamples against the full C2 task before acceptance or commit; retain caller-route integration as separate work."
+}

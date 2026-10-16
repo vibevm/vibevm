@@ -1,0 +1,51 @@
+{
+  "revision": 515,
+  "job": {
+    "job_id": "job.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+    "candidate_id": "managed-result.ad742a0fce0cea44195e93019f745205d7703059ff20031020b8d5d3e65c97be",
+    "revision": 515,
+    "execution": "succeeded",
+    "effect": "completed",
+    "safe": "safe",
+    "acceptance": "unreviewed",
+    "stop_receipt": {
+      "delivery": "delivered",
+      "effect_id": "effect.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+      "observation": "observation.vibevm-m05c2r"
+    }
+  },
+  "native": {
+    "operation": "managed.2ca8aecfa414d9eafa12b2beddda6cd1bfe8bda015a47ec26baa28aba7d6bba8",
+    "state": "process_stopped",
+    "source_sequence": 901,
+    "collected": true,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": true,
+    "accounting_pending": false,
+    "result": {
+      "disposition": "reported_unverified",
+      "id": "managed.2ca8aecfa414d9eafa12b2beddda6cd1bfe8bda015a47ec26baa28aba7d6bba8",
+      "input_digest": "1cb67e8b5a4ca8f3228443466cb149b13f85edb1f274d1b7ddc2d9ae28dbe30d",
+      "native_turn": {
+        "command_id": "command.pb04.67ae1e8a985dbf2e8962598c0cba30888253dae5d07df5b69ad86244cdf117e7",
+        "thread_id": "01a14575-5158-73f3-b991-734f46852a8a",
+        "turn_id": "01a14575-518f-7e33-b70f-362983df42a3"
+      },
+      "protocol": "content_only_v2",
+      "raw_reply_digest": "f1c7e561ccb63cf5760607e214b6f09572fdfa13d02f3d28a3cbd0bb77204be9",
+      "revision": 496,
+      "source_sequence": 901,
+      "status": {
+        "candidate_digest": "f47f3a39e0c7e1c52e5a09e3cc182185b3d1536ceef26d74c5d43e8ad43d72d7",
+        "candidate_id": "managed-result.ad742a0fce0cea44195e93019f745205d7703059ff20031020b8d5d3e65c97be",
+        "kind": "bound"
+      },
+      "target": {
+        "dispatch_id": "dispatch.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+        "job_id": "job.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+        "kind": "job"
+      }
+    }
+  }
+}

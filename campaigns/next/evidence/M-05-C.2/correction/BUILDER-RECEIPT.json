@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "/fast/git/v/research/2026-10-16-zap-review-rework-rollout/pins/zap",
+    "build-managed-continuation-decision",
+    "/fast/zap-managed/2026-10-16-m05c2r/service/managed.json",
+    "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/intent.json"
+  ],
+  "exit": 0,
+  "runtime_started": false,
+  "model_started": false
+}

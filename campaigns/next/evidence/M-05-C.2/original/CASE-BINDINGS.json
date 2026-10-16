@@ -1,0 +1,18 @@
+{
+  "V1": {
+    "status": "BOUND: five implemented resolver lib cases; source names checked before dispatch",
+    "crate": "vibe-resolver",
+    "filter": "resolvo_engine::m_05_c_2_cases",
+    "names": [
+      "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+      "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+      "resolvo_engine::m_05_c_2_cases::unreachable_mandatory_group_has_no_prompt",
+      "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+      "resolvo_engine::m_05_c_2_cases::conflict_retains_consumer_and_candidate_reasons"
+    ],
+    "expected": 5,
+    "source_paths": [
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs"
+    ]
+  }
+}
