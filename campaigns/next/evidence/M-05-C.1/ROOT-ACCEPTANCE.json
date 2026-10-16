@@ -1,0 +1,22 @@
+{
+  "task": "M-05-C.1",
+  "accepted": true,
+  "canonical_revision": 630,
+  "source_commit": "f5a9dc9873e22989db4a54dde0e372dff85dcc64",
+  "candidate_id": "managed-result.5d073615700285a7a2d9c2121a104cd4710fc8f6aa5f04b67d111552a29b3610",
+  "fresh_cases": 19,
+  "case_groups": [
+    3,
+    2,
+    2,
+    12
+  ],
+  "canonical_work_state": "accepted",
+  "runtime_job_acceptance_projection": "unreviewed",
+  "safe": "safe",
+  "accepted_task_contracts": 90,
+  "total_task_contracts": 222,
+  "formatting": "Global exit1 retained as separate ObservedFail; task-scoped diagnostic projection accepted explicitly; no global pass claimed. See B-250.",
+  "normal_shutdown": "RootExec82224 exit0; exact4knownprocessidentities absent, manager directchildren empty before signal.",
+  "original_obligations": "Both original C1 criteria/all steps/cases remain. C2/C3, E1 deferred/unsupported commissioning and remaining campaign duties unchanged."
+}

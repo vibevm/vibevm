@@ -1,0 +1,17 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Exact metadata/source identity required the existing registry read/ref-pinning owners; Root approved matching scope expansions.",
+    "Final V1/V2/V3/V4 ran 3/2/2/12 tests successfully; V6 and V7 succeeded.",
+    "Actual ETO catalog identity was independently recomputed from observed candidate/inventory fields and fixture bytes."
+  ],
+  "unresolved": [
+    "Required repository-wide cargo fmt --all -- --check remains failed on eight unchanged files outside this task write perimeter."
+  ],
+  "proposed_follow_up": "Root reviews expanded registry-owner diff and the observed behavior, handles the unrelated formatting baseline, and performs Git/acceptance decisions."
+}

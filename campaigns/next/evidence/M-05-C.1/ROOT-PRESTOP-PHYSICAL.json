@@ -1,0 +1,33 @@
+{
+  "observed_unix": 1792162422.5502765,
+  "known_identities": [
+    {
+      "pid": 558001,
+      "expected_birth": 2677921,
+      "present": true,
+      "actual_birth": 2677921,
+      "exe": "/fast/zap-managed/2026-10-16-m05c1/pins/zap",
+      "state": "S"
+    },
+    {
+      "pid": 558003,
+      "expected_birth": 2677945,
+      "present": true,
+      "actual_birth": 2677945,
+      "exe": "/fast/zap-managed/2026-10-16-m05c1/pins/podbay",
+      "state": "R"
+    },
+    {
+      "pid": 558117,
+      "expected_birth": 2678683,
+      "present": false
+    },
+    {
+      "pid": 558129,
+      "expected_birth": 2678741,
+      "present": false
+    }
+  ],
+  "manager_children": [],
+  "claim": "Original coding Pod/native absent; actual current manager has no direct children. Does not reconstruct past helper exits/release receipts."
+}

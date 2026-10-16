@@ -1,0 +1,34 @@
+# M-05-C.1 independent bounded review
+
+**Recommendation: accept the implementation, subject to Root's explicit disposition of the retained unrelated formatting baseline failure. No concrete blocking correctness finding identified in this review.** This report does not mutate acceptance, counts, Git or runtime state.
+
+Reviewed original full C1 task and canonical contract, worker packet, three retained owner-scope answers, REPORT/FINDINGS, SEMANTICS-MAP, changed source and new modules, selected direct owner context and test evidence. No tests/builds/model calls or runtime controls were executed.
+
+## Code and contract assessment
+
+- `crates/vibe-registry/src/candidate_metadata.rs` binds parsed definition bytes to a domain-tagged digest and the actual source plus content identity. Local capture brackets definition reads with the checked shippable-tree hash. Git metadata acquisition in `git_package_registry/lookup.rs` resolves the ref to an immutable object before reading that object's manifest; clone fallback checks the commit and reads its object bytes rather than a mutable working-tree manifest. The actual serving source survives mirror fallback. This is materially stronger than a package/version label.
+- `crates/vibe-resolver/src/resolvo_engine/catalog.rs` retains immutable candidate definitions and version outcomes in ordered maps, validates coordinate/version against the parsed manifest, and hashes both inventory and candidate identity rows. Candidate capabilities are retained within that catalog. Resolution and manifest lookup return captured values after the source changes. The catalog discovery path has no consumer-choice prompt or activation operation.
+- `crates/vibe-package-source/src/source/transaction.rs` composes the existing Local/Multi/Embedded source selection and validated solver choice. `FrozenSource` uses the catalog for solve, masked solve and manifest observations; before acquisition it compares a fresh source identity to the captured identity. Acquired content is checked against the captured commit/tree and definition at existing registry fetch seams before store insertion where those seams insert. Direct resolvo calls separately retain one MetadataSnapshot across prescan, hard solve and recommendation trials. That direct cache is not falsely advertised as an external-source receipt for legacy providers.
+- `crates/vibe-install/src/plan.rs:356` begins the transaction and calls the typed `PlanObserver.catalog` hook before resolution/acquisition. Selected bindings are validated before acquisition begins. Later per-node fetch paths also validate. Operational/corrupt failures propagate; recorded source absence still produces its existing typed outcome. Capability prescan does not turn operational errors into “no capability.” Held-pin retry excludes operational provider failures while retaining version incompatibility fallback.
+- Case-c authored migration is now delayed until successful catalog-backed planning; the Fresh path still persists it. This intentional change is recorded in SEMANTICS-MAP rather than hidden. C1's pre-effect refusal is exercised with unchanged authored bytes and zero acquisition counters. Existing native filesystem race limits remain: these reads are not hostile-writer CAS and no such guarantee is claimed.
+- Existing capability reachability rules remain in prescan; the broader catalog closure does not itself activate recommendations/conditional/discarded candidates. The code does not claim C2 activation or C3 universal caller parity. Legacy InstallSource implementations retain an explicit absent transaction/inspection default, rather than inventing an empty identity.
+- PROP003 adds four anchors and deletes no previous rule. B3 profile/reader source is untouched. Ordinary installation continues its existing manifest reader; this change does not silently enable the opt-in B3 grammar. Solver selection remains validated through the incumbent cells owner, with no backend fallback introduced.
+
+## Evidence actually checked
+
+I independently checked final V1–V4 result artifacts against their referenced log hashes and recorded source hashes: **3 + 2 + 2 + 12 = 19 passing cases**, with no hash mismatch. Each group's before/after source manifest is equal. No rerun was performed.
+
+The new cases demonstrate actual local catalog identity/replay, frozen same-version replacement with pre-fetch refusal and empty store, a controlled Git moving-ref/mirror receipt, direct resolver one-read consistency, discarded-candidate discovery without selection, and install observer inspection before acquisition. Source corruption tests differ from the valid candidate's missing option; focused capability-incompatibility and source-absence regressions are retained. Remote tests combine a controlled backend with an actual local-Git ref-pinning/object-read compatibility case; they are not live upstream/network qualification.
+
+V6 is the reported `git diff --check` exit 0. V7's recorder is correctly labeled structural XML/semantic-map checking; the separate ETO evidence records actual candidate/inventory rows, source-tree and definition bytes and their independently recomputed identities. This review also read the actual observer/test/source path rather than treating the V7 structural boolean as semantic proof.
+
+V5's repository-wide `cargo fmt --all -- --check` remains **exit 1**. FORMAT-ANALYSIS names eight files, with no changed task file among them. I independently compared all eight file bytes to HEAD and found them identical. The reported scoped formatter was write-mode exit 0, not a formatting-check pass. Root should retain and disposition this baseline failure; forcing unrelated formatting changes is unnecessary for this candidate.
+
+## Known limits, not blockers added by this review
+
+- The full immutable source-bound catalog is supplied by the production InstallResolver transaction seam; compatible legacy embeddings can explicitly lack it. Direct solver caching supplies consistent metadata but cannot manufacture source receipts absent a source owner.
+- Local source identity is the incumbent shippable-tree identity; Git content is an immutable object identity. No atomic whole-machine snapshot, hostile writer exclusion or model/network test is claimed.
+- The evidence covers the selected current install/solver seams and focused supported local/Git paths, not universal C3 route parity. Catalog closure is eager across reachable available candidates; invalid source metadata aborts before acquisition as required, even when a later solve might discard that candidate.
+- C2 candidate-conditioned feature activation, later route work and remaining earlier campaign obligations are unchanged.
+
+No new implementation correction is requested. Root owns final acceptance, commit, candidate/service retirement and the unrelated-formatting gate disposition.

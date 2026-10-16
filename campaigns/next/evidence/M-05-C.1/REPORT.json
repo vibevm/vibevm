@@ -1,0 +1,1144 @@
+{
+  "task": "M-05-C.1",
+  "summary": "One install-planning transaction captures an immutable source/content/definition-bound candidate catalog; existing resolver, capability and plan seams consume it. Typed observer exposes actual reproducible identity before acquisition. Source errors remain distinct from incompatibility.",
+  "implementation": [
+    "Capture exact local shippable-tree hash plus definition-byte digest, or pin the actual Git metadata read to an immutable object and retain the serving source; reject unavailable/invalid identity.",
+    "Freeze reachable candidates and version-availability outcomes in one catalog. Cache candidate capability records while retaining the prior capability-discovery closure, without global selection or candidate activation.",
+    "Use the same catalog for existing plan solve, manifest observation, held-pin retry, visibility masking and conditional reads within that transaction. Direct resolvo solves cache repeated provider reads independently.",
+    "Propagate operational/corrupt metadata errors; preserve typed absence and version-incompatibility outcomes. Check selected source bindings before acquisition and enforce captured content/definition before store insertion.",
+    "Keep B3 opt-in grammar and ordinary install parser unchanged. Defer migration persistence until catalog-backed planning succeeds; fresh-lock migration still persists."
+  ],
+  "criterion_observations": [
+    {
+      "slot": 0,
+      "supported_by": [
+        "V1",
+        "V2",
+        "V3",
+        "V7"
+      ],
+      "observation": "Actual catalog candidates and version inventory determine digest; typed PlanObserver sees it before acquisition; independent replay reproduces digest and actual fixture content/definition hashes."
+    },
+    {
+      "slot": 1,
+      "supported_by": [
+        "V1",
+        "V2",
+        "V3",
+        "V4"
+      ],
+      "observation": "Source corruption/unavailability returns provider failure; absent option remains a valid candidate observation and capability incompatibility retains its separate outcome. Negative fixtures leave install-effect counters and authored files unchanged."
+    }
+  ],
+  "checks": [
+    {
+      "slot": 0,
+      "group": "V1",
+      "reported_result": "passed",
+      "fresh_tests": 3,
+      "receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V1-result.json",
+        "sha256": "1f62050ef362a8b3865644204bcfb8d5539cd89ed6b34b4413cb096fca88d82e"
+      },
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-package-source",
+            "--lib",
+            "source::m_05_c_1_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "3",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V1-1.log",
+          "log_sha256": "5ee40e8b6ef648939d29702715018657205e2d41f55a6b628fcf55d075302231",
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 1,
+      "group": "V2",
+      "reported_result": "passed",
+      "fresh_tests": 2,
+      "receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V2-result.json",
+        "sha256": "9f3d131597fa768e3963e8b726b57b1596eed2ec823d50969667e0954dc205c5"
+      },
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_1_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "2",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V2-1.log",
+          "log_sha256": "0583a090a9b718691f3293f4331f50fde51007f18bcc37a9a3f246b8cfa738d3",
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "group": "V3",
+      "reported_result": "passed",
+      "fresh_tests": 2,
+      "receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V3-result.json",
+        "sha256": "856c92684a02b46b0af68870e867557bd0fca911a9d7862a940dcea3359a04dc"
+      },
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::m_05_c_1_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "2",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V3-1.log",
+          "log_sha256": "c73daf1c922f3f0eba8b7bbecf2d1af8179b8731b45f384d606b7d11435cc0b1",
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 3,
+      "group": "V4",
+      "reported_result": "passed",
+      "fresh_tests": 12,
+      "receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V4-result.json",
+        "sha256": "6938cf769b4ca85a0cd12d98b2ceb557241ca662ff0ba9c3f009145a4d6d61be"
+      },
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_solves_disjunction_via_available_alternative",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-1.log",
+          "log_sha256": "c2c8aa0bee3f29918eca9993345094e4ead604a3b4b9743ced7d6bd3bbd0af77",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_reports_unmet_capability",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-2.log",
+          "log_sha256": "abce568fc8e1e39208335f9d1dc5b9d0c2736b1d86d460437b7a93b98b15030f",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_surfaces_unknown_package",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-3.log",
+          "log_sha256": "4bffe33f6af27f353a4c8b2c7b19e73d598f85eb2d09f6963b8d80e7e1ef8e6c",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_prefers_newest",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-4.log",
+          "log_sha256": "a79c3fd659a3de0ab2e9a68634c6afd3a3c93c54f22f8f462426f56817f2c744",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-package-source",
+            "--lib",
+            "fence_tests::cell_constructors_live_only_in_cells_rs",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-5.log",
+          "log_sha256": "653648906defbbb938001556573ce5d99521764e445eaeaf93312b4e636421fd",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-package-source",
+            "--lib",
+            "qualified::tests::the_install_source_seam_delegates_to_the_resolver",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-6.log",
+          "log_sha256": "6f52514cca06b1f43ef1eb3034e27fce07486d39c402ef510de24a68e90d8252",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::fetch::m_05_b_1_correction_cases::fetch_and_defer_preserve_legacy_subskill_selectors",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-7.log",
+          "log_sha256": "feb8eca33111ef54c7d0b55c06d3e179f8b27189126f49f2a2dea230df1dbc72",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::fetch::m_05_b_1_correction_cases::fetch_undeclared_default_activation_refuses",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-8.log",
+          "log_sha256": "221c34eb361cb259a9404c0019d72f202ec133b07ac3ef9a54db468bba2a7bbc",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::fetch::m_05_b_1_correction_cases::defer_required_dependency_enables_weak_request",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-9.log",
+          "log_sha256": "2b08c466d8e85fe9c18f4a847f3e3da81081808572718b614ea436b45bf36805",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-registry",
+            "--lib",
+            "git_backend::shell::tests::bootstrap_peels_annotated_and_lightweight_tags_to_detached_commits",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-10.log",
+          "log_sha256": "351b4ff8117eb431c15055d66ab9981c9cca431517e782015aa923040a4a1000",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-registry",
+            "--lib",
+            "git_package_registry::lookup::tests::fetch_dep_manifest_clone_fallback_uses_mirror_dispatch",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-11.log",
+          "log_sha256": "250a590127790080068ab3bf8241fa1c898a2bce761f16cd939653a4e0a74bfd",
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-registry",
+            "--lib",
+            "multi_registry_resolver::sources::tests::fetch_path_source_reads_the_live_member_dir_and_hashes_it",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V4-12.log",
+          "log_sha256": "6c832a64de94a544e61384afcf353cd0a82773264f9d5388234b677d92a77f7d",
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 4,
+      "group": "V5",
+      "reported_result": "failed",
+      "fresh_tests": 0,
+      "receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V5-result.json",
+        "sha256": "32f7938a385921237995154e8c5942c8bc05d27e60715be7adafc55e9095b073"
+      },
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "fmt",
+            "--all",
+            "--",
+            "--check"
+          ],
+          "exit": 1,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V5-1.log",
+          "log_sha256": "8b9a5238a41550559d75d9c6a780879f7a3cde4ec98d9aeccf9a7e96164af0fd",
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 5,
+      "group": "V6",
+      "reported_result": "passed",
+      "fresh_tests": 0,
+      "receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V6-result.json",
+        "sha256": "d8a5c1cf0d164723611caa6263b64dedd6006ff56417fb70c531acd1baea6846"
+      },
+      "commands": [
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m05c1/V6-1.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 6,
+      "group": "V7",
+      "reported_result": "passed",
+      "fresh_tests": 0,
+      "receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V7-result.json",
+        "sha256": "49a8732e1ce7ad58bbe5b0520e55254e8edd3f56d9a6a1407bd2304d3dab075a"
+      },
+      "commands": []
+    }
+  ],
+  "fresh_final_test_total": 19,
+  "reused_test_evidence": [],
+  "failure_history": "All verification-history entries and original logs retained. Initial V3 compilation failed because the test omitted DepSolver import; corrected and re-run. Full fmt-check fails on eight unchanged files; no changed file appears in its diff. Early recorder-shape mismatch was discovered by inspection and Root corrected it before the first V6 invocation; that invocation succeeded.",
+  "format_failure": {
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "unchanged_files": [
+      "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs",
+      "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs"
+    ],
+    "changed_files_with_format_diff": [],
+    "scoped_formatter": {
+      "path": "/fast/zap-managed/2026-10-16-m05c1/scoped-format-final.json",
+      "sha256": "b93b7c174420b087b6246be6295958d3a4cad967537a249e648d048907667944"
+    }
+  },
+  "source": {
+    "base": "35787c131ef8eb6af38bc7c6563617cbd7601d94",
+    "files": {
+      "crates/vibe-install/src/events.rs": "1cb1bd84ced2093f35faa9341c3a96f3c22dc8fe94d7d6ac339ef265b5d70049",
+      "crates/vibe-install/src/lib.rs": "0a3800e64894d547fbbe0ff64e51c46c590567ae91091cb59471ef11220a958f",
+      "crates/vibe-install/src/plan.rs": "9acc2a9da70a10784eb1c22d881684758970a01015c11ba91365d661e1c50438",
+      "crates/vibe-install/src/plan/fetch.rs": "438cb36f8f8f3dc71118ae4962d80283646eb407a19843320ba3348546f6d35a",
+      "crates/vibe-package-source/src/cells.rs": "d8bdc3c88bf94bdb1640bc38bc6b0ed7074458aa04ad138a904aadf8f23e757f",
+      "crates/vibe-package-source/src/qualified.rs": "2d14e2849a45ddd7a7b5029ad51e58b3e756e3edd214a3f4191971b29c99efc2",
+      "crates/vibe-package-source/src/source.rs": "33d345622f10e0499e8f53fd1a6c123559c6ff07f508b066fa38e3b709060d86",
+      "crates/vibe-registry/src/git_backend/mod.rs": "9f8dd73554c1713e148cff713fa70088d0568ea5804b4124f1d733b8bbdb092d",
+      "crates/vibe-registry/src/git_backend/shell.rs": "200521f4056cf68da6b53c823bf30810f62b402291c7707826fc83cb2eeb5c07",
+      "crates/vibe-registry/src/git_backend/shell/tests.rs": "0b7a82cfecfaacdbe42520ce10991183d1742953c28ec5cba5b404fa8892dcdf",
+      "crates/vibe-registry/src/git_package_registry/fetch.rs": "2fa9162d9ee20a55ce8021942d47114049b6085064cf0ed297d2b8cc2bdd2c73",
+      "crates/vibe-registry/src/git_package_registry/lookup.rs": "92e4f6e2fde705ad74b9ca5c21682c2a22ea8aa14b509a113b7b8ac0ddf6511b",
+      "crates/vibe-registry/src/lib.rs": "db247bbf5467611aa9c2b3131fa28b0c32d586c0c2b2b7543c5998065d3d2004",
+      "crates/vibe-registry/src/local_registry.rs": "eb7acf079804d9e54e10946bfba28545079a1f025a455c2dae43b5e803202333",
+      "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs": "420968c45bd333b00a821fd27919296ae98f469955d9bb2d2c04fbf12b9e24a2",
+      "crates/vibe-registry/src/multi_registry_resolver/redirect_follow.rs": "2c2562253fb1a6c4a1b845aa73cd965ba31f68ce36a1e7b56fe22dfc2ee59543",
+      "crates/vibe-registry/src/multi_registry_resolver/sources.rs": "7cdddb4bce0b88a568366d739779571cf29a5cbf57d470fa567e2441388a9233",
+      "crates/vibe-registry/src/multi_registry_resolver/walk.rs": "b8ef7f85aefbe2b483f5a40cb6ada5a76bcd39e5e56d05dfe67632d44f649d88",
+      "crates/vibe-registry/src/multi_registry_resolver/walk/observation.rs": "591dd5d9506e4f382004d22dea636097ae946dde857312422fc08569d93de49d",
+      "crates/vibe-registry/src/shippable.rs": "8f851360bbd2a0329d5c0d1ee97fb4303d27b8bd3c0245b90f296a449fca061a",
+      "crates/vibe-resolver/src/lib.rs": "bcd1b8a704ef0ab966ed873ba67abdc8b8ee255027111bf66503146c90740a0e",
+      "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+      "crates/vibe-resolver/src/resolvo_engine/mod.rs": "af0afaaeec32885171948c028809d8f439589c4371010902495e0c7da9063056",
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "443669a7c4de54c9a30b4ff810ca1eb75148d3a71fb7305df399d6732ad85d2d",
+      "crates/vibe-install/src/plan/m_05_c_1_cases.rs": "b47f508c42344248e3b6564295d3a47609fa6fe855e32fcc106d11e3116b9cdd",
+      "crates/vibe-install/src/plan/transaction.rs": "fad5ddc881795375e00481edba6a120e399409b1c1054db5a06366395eb780f7",
+      "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs": "4394c7eec0715cd24008baff7332bf9070036108b717c4e707a58da13bc2128a",
+      "crates/vibe-package-source/src/source/transaction.rs": "0bcfefaabf14dba8a5ace7e1c7b53c83c1e80aa083f02296890df3a95d806764",
+      "crates/vibe-registry/src/candidate_metadata.rs": "3a194a9a8452240078f363c532d5cfce9393c0d5f540d572f549fc0c91b8da15",
+      "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+      "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "5a00d047cf2a0854c7f1b907e77edf0ceae7b9ee4f5f1977677c8d6878346f0c"
+    },
+    "patch_sha256": "68d889cbe457f2236157cc1b7a07c9d0fd1af81a8717411fb82fd366fe5aa046",
+    "patch_bytes": 118023
+  },
+  "changed_owners": {
+    "crates/vibe-install/src/events.rs": "Typed PlanObserver catalog inspection before acquisition effects.",
+    "crates/vibe-install/src/lib.rs": "Use transaction catalog for actual plan reads, reject source failures before effects and retain deferred/in-place definition consistency.",
+    "crates/vibe-install/src/plan.rs": "Use transaction catalog for actual plan reads, reject source failures before effects and retain deferred/in-place definition consistency.",
+    "crates/vibe-install/src/plan/fetch.rs": "Use transaction catalog for actual plan reads, reject source failures before effects and retain deferred/in-place definition consistency.",
+    "crates/vibe-package-source/src/cells.rs": "Incumbent InstallResolver transaction binding, provider/solver selection, qualified delegation and pre-store catalog gates.",
+    "crates/vibe-package-source/src/qualified.rs": "Incumbent InstallResolver transaction binding, provider/solver selection, qualified delegation and pre-store catalog gates.",
+    "crates/vibe-package-source/src/source.rs": "Incumbent InstallResolver transaction binding, provider/solver selection, qualified delegation and pre-store catalog gates.",
+    "crates/vibe-registry/src/git_backend/mod.rs": "Resolve exact Git object identity and read immutable checkout bytes; preserve credential scrubbing; focused existing checkout regression.",
+    "crates/vibe-registry/src/git_backend/shell.rs": "Resolve exact Git object identity and read immutable checkout bytes; preserve credential scrubbing; focused existing checkout regression.",
+    "crates/vibe-registry/src/git_backend/shell/tests.rs": "Resolve exact Git object identity and read immutable checkout bytes; preserve credential scrubbing; focused existing checkout regression.",
+    "crates/vibe-registry/src/git_package_registry/fetch.rs": "Pass optional catalog binding through incumbent acquisition and verify before store insertion; bind Git fetch to captured commit.",
+    "crates/vibe-registry/src/git_package_registry/lookup.rs": "Return bound receipt from the actual selected metadata read; retain old unbound API and existing source dispatch.",
+    "crates/vibe-registry/src/lib.rs": "Register and export registry receipt types and digest API.",
+    "crates/vibe-registry/src/local_registry.rs": "Pass optional catalog binding through incumbent acquisition and verify before store insertion; bind Git fetch to captured commit.",
+    "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs": "Pass optional catalog binding through incumbent acquisition and verify before store insertion; bind Git fetch to captured commit.",
+    "crates/vibe-registry/src/multi_registry_resolver/redirect_follow.rs": "Pass optional catalog binding through incumbent acquisition and verify before store insertion; bind Git fetch to captured commit.",
+    "crates/vibe-registry/src/multi_registry_resolver/sources.rs": "Pass optional catalog binding through incumbent acquisition and verify before store insertion; bind Git fetch to captured commit.",
+    "crates/vibe-registry/src/multi_registry_resolver/walk.rs": "Return bound receipt from the actual selected metadata read; retain old unbound API and existing source dispatch.",
+    "crates/vibe-registry/src/multi_registry_resolver/walk/observation.rs": "Return bound receipt from the actual selected metadata read; retain old unbound API and existing source dispatch.",
+    "crates/vibe-registry/src/shippable.rs": "Strict traversal-error reporting for catalog content capture while preserving legacy hash recipe and existing callers.",
+    "crates/vibe-resolver/src/lib.rs": "Immutable catalog and capability cache, exact metadata seam, transaction read consistency and source-error propagation.",
+    "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "Immutable catalog and capability cache, exact metadata seam, transaction read consistency and source-error propagation.",
+    "crates/vibe-resolver/src/resolvo_engine/mod.rs": "Immutable catalog and capability cache, exact metadata seam, transaction read consistency and source-error propagation.",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "Add governing C1 semantics before implementation; preserve all original spec bytes.",
+    "crates/vibe-install/src/plan/m_05_c_1_cases.rs": "Bound regression coverage for candidate metadata/catalog/ETO behavior.",
+    "crates/vibe-install/src/plan/transaction.rs": "Use transaction catalog for actual plan reads, reject source failures before effects and retain deferred/in-place definition consistency.",
+    "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs": "Bound regression coverage for candidate metadata/catalog/ETO behavior.",
+    "crates/vibe-package-source/src/source/transaction.rs": "Incumbent InstallResolver transaction binding, provider/solver selection, qualified delegation and pre-store catalog gates.",
+    "crates/vibe-registry/src/candidate_metadata.rs": "Bind actual metadata bytes to source/content/definition and compute reproducible catalog identity.",
+    "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "Immutable catalog and capability cache, exact metadata seam, transaction read consistency and source-error propagation.",
+    "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "Bound regression coverage for candidate metadata/catalog/ETO behavior.",
+    "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "Immutable catalog and capability cache, exact metadata seam, transaction read consistency and source-error propagation."
+  },
+  "semantic_map": {
+    "baseline_sha256": "5b39f53225ce5f0e2de3d2271dab8a3406303b3512ff86326f7735f3631477e2",
+    "preserved": {
+      "status-line": "cb7d762d927230285e44e7b21c28f9dc14f03a3c3ad626becc7e80636a1beb34",
+      "revision-r2": "e7fd18d31189e78ecc85fc074a33753e872b11f8c630556265b0db5203482a24",
+      "r2-delivery-modes": "dacac6fad6ec5fee9871b5a6e3b678a23ac8fd8f6e41c777129835eb6a6e2ee6",
+      "r2-description-field": "b7b629ae0e2327d955522c822f6db3d9bbe9214a3f3cac33be495be6a7db7968",
+      "r2-broadened-probes": "ca3db76671fd2f5f434c5cba4cc807bceb081f7baa67f6e30d38cd3019a3eeb7",
+      "r2-llm-refactor": "e18a87e9aac06581916271534abd65d9636ed13cfc23ce3a472677475277431a",
+      "r2-describes-purl": "b41f3657886fca3b93db76b2ea0719f2b6aa314a32b3e6189a31c2f3cac6f860",
+      "r2-conditional-deps": "59a931a831dd94e4de21a0782a6618f05d8719682b91ac4c7370b327f4759533",
+      "r2-exclusive-groups": "76b70c254cb642eb5d9fb9507d36b69d0a71361316c3a445b8acbab121f64666",
+      "r2-activation-conflict": "73724cb06ac4e2ef7e08c49a45449479328b9f421a456b2398eb480c26e792bd",
+      "r2-inline-note": "bbe1e77267375e664d9d133190dc4f4ffa6abb9ade1d8e2a812f27c3e6d86fa7",
+      "scope-lead": "56c1425019ed388b814e5772346b4bc681fcd3df95fb58c1108924319519f365",
+      "scope-solver": "37b7a6471077a992b77ac47b4ccffc03253b9292dc950d04849e967b070840c4",
+      "scope-features": "e30a26488b67f7c60db16b7007a9ec387fbd7db162e04f2fdb439bb55521b005",
+      "scope-subskills": "daf01b82815d8ba9aaa3d71e35b9e1df666b94f15a365f271639969bd80bc235",
+      "scope-i18n": "960fe6830f26ac617cf24d979d5ff1640cb20c65509a5e7ec1905d035aacdd5e",
+      "why-now": "1ec94a15be4a4ac604be9d01b989fbe6e323883e1d270e9121da83e43ef3fd91",
+      "reading-order": "9815a7850c7540456aa1160d61757b1d0cb3078a056ff0c46f7c42105596c3c3",
+      "current-surface": "d03f293c7d7cf2e1c4355e1c15222390d1b54a827f4424104c340c4f2bd9a64b",
+      "shortfalls-lead": "3f6d1b84048751c4f4913ec446bcd456b223d5b26a02c74a95af57432846ea1c",
+      "SHORTFALL-DISJUNCTION": "54c4796188ab2faca9e1c95e1c449b826138008a63b15f82e80e4eac1391092b",
+      "SHORTFALL-MONOLITH": "d7782b80e6c53336e35dd7e3b9b2be578c9e42a8d1ed01180f821bab835e0a03",
+      "SHORTFALL-LANGUAGE-LOCK": "d82db50952c88c4d271344bf64e3180629604034014f7596e40fa2f39dd0259d",
+      "fourth-dimension-lead": "d5260d26932aad186c82dba77fa52a889bcba519e705c0ec762cf1f8d4b94875",
+      "SHORTFALL-LLM-ACTIVATION": "4e6ea706c370d29b0073ef8ea5d62ae0039e40d2d48f02c9986041b68de31c58",
+      "vision-claim": "779da45f98fd7a2f96658142cab6e3cf6289932aeaa4d742531b4c90908d1a79",
+      "SOLVER-TWO-IMPLS": "1bd1ffbbe47faa0ecd1b9bcc859ff7001d25bb9395cd91e08bd6fd13dfb68f87",
+      "SOLVER-SELECTOR": "342a602100e98146530e5a084ea27799fad677ed2f978b0d41b95caa6da3bdfd",
+      "two-impls-why": "a700811e3abe388ba93b15d5a6d2761975006a55351a7a2ab56a70292d36ebb7",
+      "TRAIT-PIN-PREFERENCES": "873a963cbf27bf428cfe76056417da71eb0f1ba9509a8fda40a1166124e26e02",
+      "pin-preferences-purpose": "796b331f66b5971900f7e3313dab4ed8c2515a00741b7c537254fc9172cfaeb5",
+      "SUPERSEDED-BY-PROP-017": "b74633313a1167792f7a29d89f02967824e05529220605aa026b2547c1b85b6f",
+      "LIBSOLV-DECISION": "d8e6437854c61ebfaafaf51b6f992c7118c623a387a6c0379fe1c0890e002d9d",
+      "license-audit": "3c0d1f6eb4d5bf656f2f790871ffdd8b269fffd095db27cd7a1bb00d62cab949",
+      "libsolv-why-lead": "6856dc86ab6bb2497915a78539fd16f0be8033b8bb0b0e399708d8ff0185d847",
+      "alt-resolvo": "c9e9b25c61b1cc9365715e78fa5ab2df982e8e41faf57e5b207e97745910138a",
+      "alt-pubgrub": "bc4b355e709c598d908755ad87140e9b94337cd11521feeaa1590704eed207a4",
+      "alt-custom": "845c645ce06351d802226b461af36fa3dbc66a588518e0947d2e22f13c0cfd87",
+      "ffi-surface-lead": "b17766f005bdbac6906c0c9e76ca4c08539b164ec19652ba037d5b680c1689a6",
+      "ffi-build-side": "b8d6f66a7c932c555ef5554f24722639fb630a07b6f7ee792d8e277acc12a417",
+      "ffi-cargo-feature": "aca28456302f7155351856388827f55357ce80e280245d86ee36728a724202b2",
+      "solver-features-lead": "0eeb94ea8703c4e808447b3b076cce892874b0022cfcb56cb34079a8e5d07661",
+      "CAP-CDCL": "2777a31bbf9d13a6ede5fcca731c14839e2487fe45918fe5eb4859b40a97fac1",
+      "CAP-WATCHED-LITERALS": "e46d99265afecae50ac3c361aa8b1b34c79e141c06fe942552b4cf4ad4d1fb31",
+      "CAP-WEAK-DEPS": "f71e416080a4c7eae326c62338575bf1b4b1bcf59bec7c856017554e1a9d7cb7",
+      "CAP-RECOMMENDS": "a4742d86412e597717c522a7bf28b1352cb02afe904c56388e84b34b9bf2076b",
+      "CAP-SUGGESTS": "908d83c026b57f67ce9b2cd74f80d004f4c9160da5e7aa3aa9bd63797937a471",
+      "CAP-SUPPLEMENTS": "3a544f9f4c2b2eab953951374dfb95d047808d2893bf2ef7b6f309353efdc1b4",
+      "CAP-ENHANCES": "fc5859774c0f3da98bac2e4ab5d53adea7f36da9c1a3446fb762a365af1f77d6",
+      "CAP-WEAK-DEPS-MAPPING": "7df48d6151db3796ffcda9ed5234f8e4dacae8f1e8c4c405b57d7acaccdce6c3",
+      "CAP-WEAK-DEPS-WARNING": "ec4f4e74831b830684f63b270d684d6e48982106d2bd8e7529be3844b57fecae",
+      "CAP-PROBLEM-REPORTING": "a0b33d69b720dc0340cdf05b3fc47b7e5b680fdefbde16ffa07ad25b416b055e",
+      "CAP-FAVOR-PIN": "c634f743fa2c8b494b1eab72d9697556b290766aa04eafd7ba44dfac59739498",
+      "CAP-MULTIARCH-UNUSED": "d34cfa7c6bdef62553fc326e9bfc48330d8607ffbfbef3a622939116109f8ca2",
+      "not-relied-lead": "df59a8b0d4916bfffac96989ac092f53cd14c3e030f79989205ed87657d4220f",
+      "NOT-RICH-DEPS": "6b4035a634743bc57ff5a65b40cf68b697d6e18e03e53b95dbf21c7cc578fa37",
+      "NOT-MODULES": "4dfd463e32359848a37c22fa10d2f9d27e0aa748a6a3c3f677a8f34971dc736d",
+      "NOT-REPO-READERS": "950a267b09c318ee890182e43411e6588e06872345571811faa7a29ad026a64a",
+      "FEATURES-TABLE": "6285676d26cb41a883e850cedc7597536ab745f6e70d8b666b32ea4c079e74a9",
+      "features-semantics-lead": "b2066fb9e6b9f9fbd7a727947d2bb07762103d885d09f191f10d8bac2a814687",
+      "cargo-keep-lead": "5ebed5a6b1a836ff63721811e3341120c623a6c3964c5bd54aa9954023b33892",
+      "KEEP-ADDITIVE": "971a4b5cb3105bcbfde50e5095ac80f67e02276341c5e09d345886eedbb68528",
+      "KEEP-DEFAULT": "68a7f19cb7fbe2a5f8559228d6c018ded603b7ebdd19ef77d8366dd8da9f34eb",
+      "KEEP-FEATURE-DEP": "22ea04b35d02da67ab0bbec7b4a0b2c5051c661a79b6f6e5abcf81a5e0b60f0d",
+      "KEEP-OPTIONAL-DEP": "9a96870f5fcda196bac3d79ff5e9ea0b4712612d96de81b318d8ef4274516700",
+      "KEEP-WEAK-FEATURE": "b6c53514b4cfd914eb92b350e276fb3c89fe69f3a3412909cf73d6b5faf25e16",
+      "KEEP-PER-TARGET": "be30437869b228e95c0e980aaad6a2c8dc3b39340a281f97daf62247b0a3c1c9",
+      "KEEP-UNIFICATION": "9b0ab9c17a023c46094064373eae018d750afd93bdda2576d64db5cb11e68b86",
+      "cargo-drop-lead": "c150315044143c88a2fdc67afb18184feb052db4e9db65f4cfbc31bc17d6cf4a",
+      "DROP-DEV-BUILD": "3cc7272be75da29052325e4ee8322948817787cdad2dc4bb8d28c0c88dd8f6ba",
+      "DROP-RESOLVER-V1": "d5369ec91016ee02305fa204bc9199870bb60c6873c410a9c692024e167d60c9",
+      "DROP-CFG-TRIPLE": "657b933f00ce688513336dbeed19d46eacbfaacdbb491c0159ef6d2ffea7b80a",
+      "vibevm-ext-lead": "455972e1637df22c1ff38b62048627db99a4f04855e0d129711ba904799b7cb0",
+      "EXT-EXCLUSIVE": "1abdd5dfa0832c0f92aea66015638c1828b49a024bdbcfde70ade790db4161b1",
+      "EXT-SUBSKILL-MAP": "48d3ad43b52f87a710361197886bff8989a7d36429650e90e58dae0248d396e3",
+      "EXT-VISIBILITY": "efc8e9791040b6ebc6f6e1a298a49e4a213f750153c06f445feac523efa45985",
+      "REDBOOK-CONTINUITY-SELECTION": "32ba5f8e032811c0d92bdef9195f6504719d379a41b9aef86af229376310432f",
+      "SUBSKILLS-TREE": "b36de2f2fd09200768c56c2248556f48b4b2e659b4b9693ca3b7059244fcba69",
+      "SUBSKILL-DEFINITION": "5becbbed9bace5e4bb3c186037d4fd7afa898cad58e5bc5b72c2c7a55c5d9ac1",
+      "DELIVERY-PRIMARY-AXIS": "3788897148d22735aa34e561ab2193504ecb5241ec505e8a67c358e2a946d659",
+      "MODE-EAGER": "d4e5cebc122b71ee0f6c6edc0c708385f1a9f1c0453f6eba1f5bfd03b53c8e6e",
+      "MODE-LAZY-PUSH": "f90dfd766ce28eec43bedcdcf4a7eaace189b5d6534616df40a7b5b51c0fe9d1",
+      "MODE-LAZY-PULL": "ec01637a83ba34b4ec144614ce22fcb3d8f335c37d218ac9f06339b8f1bb7ae4",
+      "modes-tessl-mirror": "2af1f728011fcdf2c8896af037815000fea3c4c2d73e817aae4c56a23cc5db4e",
+      "MODES-LOCKFILE-IMPACT": "f46193ad2ae9bd58fc21dae668dfd8c213afb5b23217bede9e5db15aef2ca2db",
+      "modes-why-day-one": "01e39c1f22ae6b68db40a24052d8f19aa3e8a8b032ce5b14a6716cba16d1f516",
+      "MANIFEST-STRICT-SUBSET": "a3319dbcdf422c092222ec6be68fa2b58c87c5561acedab9a5d6a2f5dfa6efc6",
+      "DESCRIPTION-REQUIRED": "aef327f281017056858fb9cf41647a812f1deeaf9304d9fc5a8a9b1b1f3d3bc2",
+      "description-length-policy": "f476aaad534c437f85707ace9b7d60c0820ff407dba42692bf493d672885a0e5",
+      "ACTIVATION-ANY-MATCH": "b6ce551a9501d6c5fcb211af96bf1950f3be52147ae251874406ce30028ef21a",
+      "CH-MANUAL-FEATURE": "110f65709d3c2bca5f139dc7f32cad61f2fb8289c06b4d6274d17c4ddf4e5d08",
+      "CH-IF-PRESENT": "c9bd771d9d4a7f24c0c2a5415f11fc6c2d277019e88a74ff86ff5a0f249ed76c",
+      "CH-IF-PROVIDES": "6b1f02f2f9647fd320b580aace8e4e5527cfdc2e96aad1f7780346c279951269",
+      "CH-IF-FILES": "ee907765bd2408e9d72dfbbf6e6c8ba4bab2e2f1c739d31443587a7d6344eeae",
+      "CH-IF-COMMAND": "79fb6cda7637638d148724e3bd4d444d501e7cd67829313a7c49d9afe69cfaf8",
+      "CH-IF-ENV": "8e13a131d4d380c562cca1ce9ceac3070e67edf94d2daceae1157a32deaa1e63",
+      "CH-IF-OS": "6862b88b64bd7dacfde15f20d13e53a3bb38570fa28dd91f9ed5d7d977780e5b",
+      "CH-IF-DESCRIBES-MATCH": "79f7c2bcd4da4ccc6d9ae14c6f0c1c141ffb99344cae41daa66892d31af00a32",
+      "CH-IF-LANGUAGE": "a1883d5fee39325ee41b7081da5647334fc6e5f725fa1fbacb3d1f34cc5270a6",
+      "CH-LLM-VIRTUAL": "cbf11bfa97661a9aeb2284c679a8e15148b91b83f14908e0bfacb4acbfccf54e",
+      "CHANNELS-OPT-IN": "9ab99fa60b64f7d37119b9391b7a8645a045fb9e78d132865123b64e1d4970f0",
+      "llm-r1-history": "53c0cb0a9bf9a9e8aa0cce8277ed172acda073a2c86a83cfd4f0a2fe282d4629",
+      "llm-r2-reformulation": "ea9aeb1addaba4fca42a8ead75c44717dc6effe3f4c6dc47a3db0154ff9593db",
+      "LLM-STEP-INVOKE": "bbcc5b6e1b4a2b0780836df8246019fc5b8c0a36e96313cba42020e695f51fb9",
+      "LLM-STEP-QUESTION": "2d49b3cf7bb868ebccb96d79379d800d249c7a522cc0c0e6f28917544ef03ad9",
+      "LLM-STEP-EMIT": "db210e885d347d554786f32c87ef46744c3346deb6ce983a470cade5503ab5eb",
+      "LLM-STEP-GRAFT": "d817fe46321a8dfc601a50bcebe824e3ee910887fb5ca193d07eb5d8d3437a12",
+      "LLM-STEP-AUDIT": "6ae4abcb4378e1b55e9c52d3d3f59c4dc9fe61075095bce650d15de6fa8cb521",
+      "llm-power-identical": "bb06402341fc6a29c728d5f29b36596278670bda417dd0ed5bc76960886e9a43",
+      "LLM-DIFF-AUDIT-POINT": "0bac55faf680f102594e114b5d8fe61100c947c0a7b75641daf86291d208b180",
+      "LLM-DIFF-STATIC-WINS": "381894140f1251924164f6dfbb91c8eabf3f68de2cd658616772771f9c1b04fa",
+      "LLM-DIFF-TRANSPARENCY": "1ac649e5a42e2f9a79b6030cc054292fee861997c82d64191404333fd2e66644",
+      "LLM-DIFF-OPT-OUT": "098b5a87dcea78d9356e99ca1619a167292556c51bdf9119d465e8aec93342cc",
+      "split-alternative": "0cc6369996d1387f226db8111a6428ce60237f8a1ced6b600d4bc15ceef8aa66",
+      "RATIONALE-COHESION": "8b16d73cde4d5886ab0ce0de15ea44c287d482a7ea6c3063e22fdec43d123daf",
+      "RATIONALE-DISCOVERY": "c910f980c352c203e6be4da0c8afbfccbdff39ed53e29ed1d9c27deaf8a00e69",
+      "cargo-tessl-comparison": "b85c561478c33ba948fb435e98f71d95b5f07e9e37b4a5eec0917eb9f3d311f0",
+      "RECURSIVE-SUBSKILLS": "73d5edee23a68a333342b7b2ae1e2bf5991368339a3711b41816fed72f6f9747",
+      "DESCRIBES-ON-SUBSKILLS": "57fc49a5a3898937540414edf8eef4740b0d3894ed7daaa989eac1dd739dcbfc",
+      "DESCRIBES-FORMAT": "40eb4cb0bf75ed63045d626fc898d47e27709806bd937f406ef2a29f43e71af1",
+      "DESCRIBES-LOCKFILE-RECORD": "aa9cb93ec0da051988dc4a18214a12297b06d99b101246db1f7c2c9d66ee0289",
+      "DESCRIBES-DRIFT-OUTDATED": "479f95b24257843b237dfd36313738c26a07aa42a225116eecf9b2e6ace84362",
+      "INTERFACE-TAGS-DECISION": "49549aa236a58a9287d69f248d63c2be8ed52e988a0a8a079d2161c43fdfb5d1",
+      "iface-differences-lead": "94d279e77ce908de6d87fa4c77ed9f22c8ce7839ad1ee25c3eb65d5157742b57",
+      "IFACE-ABSTRACTION": "839823cb395a9398a0acca9080a524f59161c371bc0651567acbefcc5198c52a",
+      "IFACE-DISCOVERY": "97f28e4b86c45e59374dc78066393c78458fcb790dac6ebeb3abf9a28b8f9ad2",
+      "IFACE-NAMING": "0ce8eaa196ba6b659401603e4204a7a1d4ebc42bb6260a46d2349a4b809d98e2",
+      "IFACE-PROVENANCE": "c55c99832a7995c0a21331331dca88883b7ab274e006c6fc6f87bd9832ebe3f8",
+      "CONDITIONAL-DEPS-DECISION": "b270e4e10285eca4e2d435a1f245adf0c776e4e7a76185588d62764c913a4b8e",
+      "conditional-grammar-req": "8005c2a875feb9772e6574274a20de6e4b7a132d8e44c28d9d694adc534c20c0",
+      "CONDITIONAL-GRAMMAR": "6f3261d43f6e38e1d3ff783b9d5d1dc61f4f432d9954dd0db41efd9597edb8d0",
+      "conditional-when-to-use-design": "79bb68e9035d1d0323fdca2505424db1ee12177703f0af414b9f16357521dba9",
+      "conditional-choice-guidance": "aa51fe991419e615ca162bf8dce69e27f19f9d1c376c4ebab822ef059d6b289a",
+      "conditional-fixpoint-req": "b0dfee7209cb84879c94a8f385858ea1df442b6489efb7743b579f0c6e22446e",
+      "CONDITIONAL-FIXPOINT": "a584e7cf8620606af2da223b5d262acfe1756e2f0682b6efb3247566d72f7c59",
+      "conditional-host-invariance-req": "62877680f971267cd9db750efbced5e5eba6d7ff1230d1fe6e8928af86b5c79c",
+      "CONDITIONAL-HOST-INVARIANCE": "e3a971d9d9c52ea31c6b7079e9792fd9ac3f71ad860b8fbb799618faed89b0fd",
+      "conditional-composition-req": "32d1635657392d2b17ccd14eb11040660b2061a9d81c737d8da31aef1af21879",
+      "CONDITIONAL-COMPOSITION": "54276429c971e98d22c9ebcac32851f72d82968a4cca749a977dc062695d8686",
+      "I18N-DECISION": "36b1275569942ffda2936f584ac62aceed0d4a159c8e21b7af7e4a3c639b9647",
+      "SIDECAR-PATTERN": "54f6d387abeafb80f2e67d25375a31c7c00837c5f4cb61f59baae9bd0b724eb2",
+      "sidecar-why-lead": "822742149e7212b93bb1d316033c6e557a4f2229c0dee2243e1517d34ddbc1b4",
+      "ROW-SIDECAR": "46eba90f11c8a4c63c2ed34d8ababef3fd7fc92b031f678bd51104dc85937dc7",
+      "ROW-SIDECAR-PRO": "d2e9855f19a801278cee59559713f405e321bc187c7d0aad799f689bf0b81a3e",
+      "ROW-SIDECAR-CON": "765e042bea0d0152c96fe95709636fe0c81a56f58358bd57c407ee1c3361696a",
+      "ROW-LANG-DIRECTORY": "a567ed82a77dcc23c7256d240aefcc25e05397d93031214f2c3dfe9ef9dfd36d",
+      "ROW-LANG-DIRECTORY-PRO": "cc445dc137abad29b9208ffea32a998c9007b94d1b36dd826e3790012f5ba826",
+      "ROW-LANG-DIRECTORY-CON": "50cc4ecddc9f02305a6690264a3ca116ec7d3b9e9180c8f1a66e96679e6b2840",
+      "ROW-UNDERSCORE-SUFFIX": "345e06591e77038ba89065a371dfb6323158407d3c01fc7478d5371c8129ee31",
+      "ROW-UNDERSCORE-SUFFIX-PRO": "5c8636adf0ea7d26226c919b3a252bd86a60d05bac8a80848485ced09e102fcf",
+      "ROW-UNDERSCORE-SUFFIX-CON": "0d21ea37efb2c78b0b4ee31baea5b9ebfdc0b14532aa043c282e623a5e94f22f",
+      "ROW-INLINE-TOML": "163b30a57b79e25ca5712aaac5d58e7ff75877e489ec6f874d0db81ace87fc00",
+      "ROW-INLINE-TOML-PRO": "d3958a465f93b1dfcee27786c83fd8d15800ac69573f84a82d9c8e61c9c221be",
+      "ROW-INLINE-TOML-CON": "2c42b67b1a1662cb776e733bef156c2da55df10f5e0d1cee94ef19008415c867",
+      "sidecar-wins": "044e2e9d5ea3c0cc2aa19f8b771ccd2efb82f82b8fa23fdeedb61f35b8c7f151",
+      "fallback-chain-lead": "c86be0a50c9f25e56487d373f4d6097f040e40982545d5802331d5429701a315",
+      "FB-EXACT": "b589f9c819d27ba73214987cfdbc673ff7b504ad60b47702cc6b766442a2a7b7",
+      "FB-REGION": "1d9c251e307c73351e4d4caf26a405492ae31ef50011770d0fc7f2be883f941e",
+      "FB-CANONICAL": "994238ba228810177d2f786c3cd292359ce7d5f7ac842ca3ff3fbe2d98d52f69",
+      "FB-HARD-ERROR": "c03aecd682687c6d6c0ad8577e3ba45d43769de3b2de87dfbfaa70cc2eabd587",
+      "I18N-CANONICAL-INVARIANT": "c46309a16ffdb2fb697b9ab3e7c02fa2bf7a1843cc3115e838ded2714dcd486a",
+      "i18n-prefs-lead": "7ec4e239990427c49ba6a3711351f355dd279b83125d4ca54a8e74a6d871d188",
+      "PREF-CLI-FLAG": "c59f64f69b848bf78a8c833dc922213ae9103d8acb47f92df8fbdf9c5fb9a8fe",
+      "PREF-ENV": "d38a0124a1e2890941e64672c4231951d835268865f80f3323ffeccdb4edceb5",
+      "PREF-PROJECT-MANIFEST": "9583a5d8da806722ca883a8c52f5ce0f08bf4b912c03b44bf442e5a2a45649af",
+      "PREF-PACKAGE-MANIFEST": "9f0ff9136018689cff85a0100ed720a65598b74bbe22d4c956cf48e1768d36fd",
+      "PREF-BUILTIN-DEFAULT": "49626a4f30f70ca41aa5424e49a418b935f8345f8c4928164e05c3a497c529b3",
+      "DOTTED-KEY-DECISION": "007b99f037fcf2a2c75f3aa9579abccf50e4a879aba43afd831bcb0ea85cf0f1",
+      "toml-mixing-correction": "c6f6baf41fabe22ef8816c23cf66d9099d56002cc1f610cacce1b85c240dc2b0",
+      "dotted-key-readable-form": "1712d94dfcfc82b8b337a51f7ddc5f8f737dd87393206c784032c9e3e3440cc2",
+      "DOTTED-KEY-PARSER": "da8dff20794ffe6ccad03bf93b06f52c057e025bdd38e1af14b8a7750a26f561",
+      "I18N-LOCKFILE-META": "76989eb25829e4c17119b8657b97f6ad4c6f3567097c73652c2e56b1f4b5e429",
+      "language-fallback-clearing": "70a89a33509fab03be3b9b5d7da83cbe769adc69baada85ec28bf185ef40970b",
+      "I18N-DOC-PACKAGES": "565d2f6176d3ecc03c1c4d5dbab430ce2fe8919747dfe897eed6cd8fd7aa2078",
+      "manifest-consolidated-lead": "9194a4852d3263351b8ef5f241df769e8961fdea3ed04acdd7fcdf956ef3e1f5",
+      "SUBSKILL-MANIFEST-PER": "3356a597e5174c2482766ddddb91299229d1d4d24b6d45049dbc6ca9f35e4c29",
+      "DENY-UNKNOWN-FIELDS": "89569d097e2864f9487c9891208cb8816fbec7d118c66da591ef7ca69e0e3134",
+      "lockfile-v3-lead": "cd83f499d9397ff445fe1184d58747f5bcb45b57bfd6ac43cbf1ddb7ae5156b2",
+      "LF-META-LANGUAGE": "11a64035ad2c4aba7994cc2a57b2568dc4f302273aaefaf5163d46ae5d48a679",
+      "LF-META-ACTIVE-FEATURES": "ed421fdf959d9f8ec4ea9cad0021c9ef588b3e1dd3ba6ebe415c34c630df0b77",
+      "LF-META-VIRTUAL-CAPS": "e3cb975e68f939f0e84023b149e466346b6a61ddf3d663d79023e459ea584227",
+      "LF-PKG-FEATURES-SUBSKILLS": "0b087e1dad8585cf749387035814045c97ce0880c938389db0b5b875574dcd9c",
+      "LF-PKG-LANGUAGE": "d6dcbbc85cbdf17bdf1f778d383f292ef5e6fd022dabe67d17bb3748c800363c",
+      "LF-DESCRIBES-PURL": "80ba2572864246c53cb535c9a2284edc27ebe0c116f996fe97d154e002be4faf",
+      "SCHEMA-V3-MIGRATION": "2897536cb2d0e439096a1c8b0bf8058958c3b729b13a98f68d07cfcf85184e11",
+      "cli-new-lead": "8adc77c2f925d47a628e0362bcf3d0437903fa3479f9b54240c8b3332fcec6b4",
+      "CLI-INSTALL-FEATURES": "11cbfc8fca43a25457a6c6b5485db93090c49cf50968a53eb8ec51ec6440f7ad",
+      "CLI-INSTALL-LANGUAGE": "75596d58894f37cdf13cb5ac6fca5e59ca28d06d9d52a586d4e705f17983b2e7",
+      "CLI-SHOW-FEATURES": "890dc5e679978f8850ad2da44d96eeb20a471ce46a69ff140d3f2ba323b6d8e6",
+      "CLI-SHOW-SUBSKILLS": "f4be1b523f101cf8d5898078c615767569c051ad96f390abdaaa9e5922f20b16",
+      "CHECK-FOUR-ENTRIES": "a5ae4781624868faeb592655f3d4ed9202b516303b93f360ac4a76ec5faf4f6e",
+      "CHECK-I18N-COVERAGE": "e2a8cf82717e23b0025580b417a3105499308e8c6028a1a50766d6a1073eb33d",
+      "CHECK-SUBSKILL-STRUCTURE": "6a60b8e9be36292eaa1dad75881460f191027bb813e3b06f127b0df15af309ae",
+      "CHECK-FEATURE-GRAPH": "8075c04484e963e49241cf20a6c067b29ace892d023f0410ff6a6b942f4301ff",
+      "CHECK-ACTIVATION-CONFLICT": "edc3c41735af2416eb787e0da75d7b2d81c1c39273bcfa640c774d18f9ed0d38",
+      "cli-existing-lead": "91222ba273b1000bf1d2196ef9c7d92191e8055ad8abbc4cd6481a0585c34354",
+      "CLI-UPDATE-FEATURES": "f1821c4ce48e4743e1eae69b976439ef9d4c3d71f221cb532fcdfc30948814a8",
+      "CLI-SHOW-CONFIG-LANGUAGE": "fddb56fe083229e93fb140309871ef45c58b15ebdf3a479f0387c2073527f911",
+      "CLI-SHOW-EFFECTIVE-LANGUAGE": "2ac4c8b9321cc1058d200dd1bc710f03ebe62d85cda90ad5e29f2fdece1e9067",
+      "migration-lead": "18072b5a2606635b5c17413c2851ef2c4d6988dcbb50aca3d85c4481e9eb2278",
+      "MIG-LIBSOLV-FFI": "b652eda6aa30a36d4e11fa5c3be908ff10049aa512afd2deec733ee4e1db4e6d",
+      "MIG-MANIFEST-PARSER": "cd1e2aa078b17ab3b112a940384a889af4277b1c68aa4b7c1c21d86ecc549d30",
+      "MIG-FEATURES": "e89ee7c28a7b9e48eac3cebfe61f6424244bb7b93e455e32a4cbf10c846adfe0",
+      "MIG-SUBSKILL-MAT": "9db98c5cbfb0f8bb41288709e99fc45fe78efdb3a81c9db44c98b5557d1de8df",
+      "MIG-I18N": "d44b45c5fdad00e779af88fe37ca9dd839272e7d989480ebf52e775316d191df",
+      "MIG-DEFAULT-SAT": "66ba3a24c582599483e8f9c99afbd7367b142c8179eb98236a16767e85a0ced9",
+      "MIG-LOCKFILE-V3": "13c2690cbf7287c3bbbece5a02074636ec4cfa65074296194fa9069c63121709",
+      "migration-cadence": "fb6204f752ab1052fe03c89dff1d208e74fe5b2769a3f73292f10f1fd24c0f52",
+      "rule-encoding-lead": "d3c0f6f832b8ae91f34a5e9c279cf1c654a88fcd5c234dcbba93ed9a6aaaebb2",
+      "ROW-ENC-REQUIRES": "45581713135b8274b38484609a896d51f76b13b67b5418ce4fcd8cb2530b701f",
+      "ROW-ENC-REQUIRES-LIBSOLV-RULE": "e7f407f23d0e6c7690320ea65a8a382aa37bc55d81d4ee58576560ea09c33cb2",
+      "ROW-ENC-REQUIRES-ANY": "0fd3ec38f8d1b404c7bb526f9f44ff9cd09e784cc1cf582f76b4703e7ddcadeb",
+      "ROW-ENC-REQUIRES-ANY-LIBSOLV-RULE": "c6bf5fcadd2d74d16407b545a3a95c5bb3766519840187d2e40e604413134823",
+      "ROW-ENC-PROVIDES": "48aa8ac88afd1a550d157bc42683072e618b632174212fb15804d4083025ca2c",
+      "ROW-ENC-PROVIDES-LIBSOLV-RULE": "e08668f7793d745df729c52fc799d957ad73641e68f6bfc14a60736a764fcca9",
+      "ROW-ENC-OBSOLETES": "30471e5c56a9cbd4c137ae3bad9e83a9e045cbb00ef2647c35f52214dad1f646",
+      "ROW-ENC-OBSOLETES-LIBSOLV-RULE": "a12ea2b9509dd41730dd2e0af66d87e5bd3d453e8da86b16090597bd8b29db57",
+      "ROW-ENC-CONFLICTS": "bda23d4c61655ddcf9637863bca9a7eab8845b761169dac31820fef48b959ede",
+      "ROW-ENC-CONFLICTS-LIBSOLV-RULE": "1b82044c87c21c6d4d687616b2865161fe5144a5b88509bd5e94587f2c37dd10",
+      "ROW-ENC-RECOMMENDS": "30f36b58887127038e84d744a11f09cd4026e8ab3343e96fa4bc70a0d842e006",
+      "ROW-ENC-RECOMMENDS-LIBSOLV-RULE": "631f04cf09e88a8d5e374fd6bb68ac34bc26bc6fe231c156a8ba3102ad986c51",
+      "ROW-ENC-SUGGESTS": "dbaa7c6d05513abdecd2fe2db0d19b618fd125d0d907491eba90cacd575282e1",
+      "ROW-ENC-SUGGESTS-LIBSOLV-RULE": "67b854a155a01e13efdf8e681f5461e3821d102085b8006aef8c419f9a092874",
+      "ROW-ENC-SUPPLEMENTS": "695cb6426dae9f5d584f980a3548b65c08c57751db2d9e2c20002170d8e6fa50",
+      "ROW-ENC-SUPPLEMENTS-LIBSOLV-RULE": "67eef7efa5944eef9874fd9f055243883120ad57a0417c3b0358ba61d6a0a031",
+      "ROW-ENC-ENHANCES": "b895d97a04568014b3d10adc0d75a5d0311bffdf916fb38a7ed9b566b4d6cfbc",
+      "ROW-ENC-ENHANCES-LIBSOLV-RULE": "27abf95f7ffb751d6b3fe509940a00b5132d5ba8182e039278e7bcfd484582a2",
+      "ROW-ENC-EXCLUSIVE": "8f83669d929eee5ec59eee085e1b3d36f58837d0b1a5a5e9cbc0c07031f8ff36",
+      "ROW-ENC-EXCLUSIVE-LIBSOLV-RULE": "63fcf073767884f3e451d37c8ae09306751ae8edcb3c15c9efa7cf0a1158752e",
+      "ROW-ENC-FEATURE-DEP": "c698cf9efe9d5af02385e09669203054b46ad65d748dd710b4a3dbabc41cc171",
+      "ROW-ENC-FEATURE-DEP-LIBSOLV-RULE": "a868588037e102012f4536a448db03cb78540c7ecb345d337d2d130a4cbf8b5f",
+      "ROW-ENC-WEAK-FEATURE": "905d7007f83b61a3626ae0cc1a561216fc922d10f81d59b70048a267c081fcaf",
+      "ROW-ENC-WEAK-FEATURE-LIBSOLV-RULE": "ff44d1e91590c4917220cef08468759cd97850963beca0156ca46862f3bfb202",
+      "ROW-ENC-SUBSKILL-PRESENT": "c75c614d912ad0ccb1eb437a73fd12a383a27b0150d5d3046a7ff84e625ca2e3",
+      "ROW-ENC-SUBSKILL-PRESENT-LIBSOLV-RULE": "de6a8334c04242cef2973e2f55627b0f484f360d53234da19bbee1993739cfac",
+      "ROW-ENC-SUBSKILL-PROVIDES": "3f8640299dfa50a46d5174ce3672d59dfa8a0c18c0d3029b194678a8241c15d9",
+      "ROW-ENC-SUBSKILL-PROVIDES-LIBSOLV-RULE": "852cb8c45037a32a0cd3e5e941a0264ddfcc47211255b622e2f2d7ca79000295",
+      "dnf5-same-encoding": "aacdd4b74309d9ef8404b9a6f828013a284ef299ce540fb9d0ce2d54942f32a3",
+      "solver-phases-lead": "d59e456037fc038515307a6814156821dd0f0331b6b87ee211d058c287d1caa9",
+      "PHASE-POOL": "5e15f859c57dc4cb185622f2244f331f4723fe3b9dae65ac8b69d6b78de3998c",
+      "PHASE-JOBS": "cb4f75f4567746826a97ba51338983ac51741248a2bab2c4d1aead68faacbba7",
+      "PHASE-RULES": "af4392de6c9a01fefe5caf1f92a21550b7e5e33f8ff4c76e260897d14f52ad1e",
+      "PHASE-SOLVE": "d39353b940e8be207c8f9d45f05c82ebfa7e543d064249639802fe4c92b00a21",
+      "PHASE-DECODE": "6e7a9f99f46c88a50e356671125c1620b90cfb08d91e8a1eac0757b679d8fec5",
+      "PHASE-SUBSKILL-PROJECTION": "bdc3c3b1b728227b1b80ec5abd1ca6f5225f9fbde892caee483afba50fa97848",
+      "PHASE-MATERIALISATION": "974de7100974040504b226faee615c1a6543d616144b4120e28150029f88c4f8",
+      "libsolv-determinism": "83d93ababf72091e766477967c0bf2aacd249f58b61ff418d82bfe657f6a20e8",
+      "perf-envelope": "6655135727302eac0849749a34ba763eb41e193d3458ee0777e9bfc8fc4cc343",
+      "ffi-cost": "5733093db4a7266347e2785c665d9474c04a213149bae75514b8b4fa7ce0eb13",
+      "rejected-lead": "db0b42db8a5c2cc908dfac0f871a6db183458b1f8f4d0261c9ba56749dec6d57",
+      "REJ-RESOLVO": "1ad2d1af800176e52958576ef4020379714094a459ed4ca213d850d1fcb51d29",
+      "REJ-PUBGRUB": "52756b136cfae32ff02f4810879638858b6f66c5e0de2dc4bc279a29e9b7e65e",
+      "REJ-PACKAGES-ONLY": "0b5b2252deeb7f83bf78cb70ff7d03c39ffbe7d48ff9ad64d84e3f756ccc9690",
+      "REJ-UNDERSCORE-SUFFIX": "7726b8d51b9d765c16d8971e08278446b09733bcbd71299a53db98354aaf5143",
+      "REJ-LANG-DIRECTORY": "3180492afc01cc12aca156d79c20149531ef73d54246c3324865ab4bbc41787c",
+      "REJ-LLM-PROVIDES": "026e74052fdf9b06f38fb2b2f8b2202c583e28dd5d2da44239d19c5c899e715f",
+      "REJ-INLINE-I18N": "fa8e74ac82d8dd53566ebac85bc06e31cfaed386a2e3cde65015f9d1e494c984",
+      "REJ-PER-PACKAGE-SOLVER": "984ae1d85d1fb433a9da159d20ae6f51c7a85f28cec4fdf1ab8ffe0c959a1e06",
+      "OOS-MODULES": "31c80ef50fbb5ae200b3e662a58b7588dd86e9068d8e027d1950447e817451e3",
+      "OOS-NON-SEMVER": "6fd8012ed36ba3c092f957c1aebaf0aef9f3c813c410afd574691e3c06a9385d",
+      "OOS-RICH-DEPS": "a4c0fb82b627d6371e520d1bf059cb389107b75541b68b30c55690ab0e44eb13",
+      "OOS-TRUST": "beb1c048c735d54678180f00d393def2fd0d097bf0da1238b86f1d54d659b1f5",
+      "OOS-TRANSLATION-TOOLING": "ce911fae4a0c9e25f4fe48189e94997af90486814795434d0e94b050a42a9e2c",
+      "phases-lead": "4e920de09bae0fba181f68bcb6903b5ca130bf5f4f96abede8b77ae514532433",
+      "PA-FFI-CRATE": "1eb50178f5eeb4321d876403ec600ac58265ffde56ffc0039183a94fc1f9ba26",
+      "PA-SAT-IMPL": "79ab5ece0fb6bd1b16deb7152eeb40c70f8c6e0badd2f363cbde2b5a2db5ebe1",
+      "PA-NAIVE-DEFAULT": "9d60e321a894903824b61586064bd3ec7c5e896be13dda6f2f5041facd0daabc",
+      "PA-ACCEPTANCE": "8464ee27a9f70cf3208d6c34805675445dff8041702f4d35cb64ceaa34696a8e",
+      "PB-MANIFEST": "c504d830746e1ecf8b03c96151d21551889f9da2a64bf4773c6271b844c0ff79",
+      "PB-SOLVER-LOCKFILE": "2792230dfde9aca22eb907da8f14550f7080f055aea331d52dd5ea9fc6f79c9f",
+      "PB-CLI-FLAGS": "8104d18c90e5ea96ef036040d7fc2a6a18c008ab8c40709dada56b62b04c1b57",
+      "PB-ACCEPTANCE": "da161013fc6bba3a71328de63567816fa314c3f02f53a51443b2e452443d8092",
+      "PC-MANIFEST-FORMAT": "34414a3a0e6cf825bfdec9d8bbe27b13aa3c2b3fb99538a35bb48516b81ec833",
+      "PC-FIELDS": "6f52dbb82cf69efccd656e454e9b55d25816a03bd74d77868a1f02bb13a8c90e",
+      "PC-MANUAL-MAPPING": "312435515b21fb436c95023591b7fad4ffdc322c36482654373453cb6ca2e042",
+      "PC-CONTEXT-POST-PASS": "a2ee37f0f61b5de73d88fae2af0b3e8e116193ad97cfaba8d060bff9641c29f0",
+      "PC-EAGER-MATERIALISATION": "ea14c6b225473545ebfb2980d8cc0f275e87a3b463016b1efbc28350dd23eefa",
+      "PC-SHOW-SUBSKILLS": "fcfaa68efce1139d2358ed77afe6879907cbe090ceb36cf0445f5f7a34c1f66d",
+      "PC-ACCEPTANCE": "4197e86dc671f19a71ba9bf367c66e3626bce5772d473f650e5a3bdeb41d6d91",
+      "PD-SIDECAR": "82f9d1473579c5e273d0cc97c7ea3ba0a9a5df57dbd14878c55e84ba1d0963a3",
+      "PD-FIELD-TRANSLATIONS": "a99ac494f7153ff568cf44cad77a1cb483f0a5fa52ecbe164e5b4d1790cd94d6",
+      "PD-LANGUAGE-FLAG": "a5d83fe1cd521aae58c0ef475c108eea40f66cfc48373cb541bb49336d862c01",
+      "PD-LOCKFILE-LANGUAGE": "e92031be387e9a37c55a84edad6089e0c05d54dbcc3b4b46b754d1a9e6bc55c4",
+      "PD-ACCEPTANCE": "ee4c492605e30e375707e81f3d56813e5851559188a00c97a1e93b8eda2b64c6",
+      "PE-DEFAULT-FLIP": "819c8a78d8c18b4599656353abb7adc282e00c9690bfc9b2db54ced0bdf1b725",
+      "PE-NAIVE-DEMOTED": "e8b732f0986c9190b93c6a036aafd42bd4982968730acb9b1f180f36940a63a3",
+      "PE-ACCEPTANCE": "e43417b03250cba55b7670d41930ec8c1cbe73df2b04239160dce37c35da3b5d",
+      "PF-BUILD-LOOP": "6d0f38720539d8e01f774a2af8e95ea521a385dde33d3e8ed7eb3536467a4f58",
+      "PF-EMISSION-REQUEST": "0a276f21693e1f6dd25d5915d6c9fa3222b847b7d3acd90f349ca4fc3e013170",
+      "PF-ACTIVATION-CHANNEL": "8b93fe34ab42f4137e4b3390422e9f0b086531e825607e1261696604a0607f34",
+      "PF-AUDIT-SURFACE": "26be8fd4e298c9dfd7044e76da22b1a56f907552ce930bebcb46d7068bb136df",
+      "PF-POLICY": "fe37cb6c2d13fe2d305ecff04af93cea19f98e7d1a2947a593257453aca6261a",
+      "PF-ACCEPTANCE": "cecd90f4191c4252410a093c032e9f6cb996ab0e53820f58b3eaabccca89259a",
+      "OPEN-CROSS-PACKAGE-EXCLUSION": "81b79020fe56c9c5ced4abbe0b296c167c75b1b9281ed28894483d7ef219935b",
+      "OPEN-SUBSKILL-VERSIONING": "02e5d3996062556fa5b7dc4f2be3da3cd99fed587f72815b924dba78df1820d6",
+      "OPEN-TRANSLATION-PROVENANCE": "da27ec5e67448c59dc987c674113e076bf235aa583ee5b10da5a9510b20678bd",
+      "OPEN-IFACE-NAMESPACING": "f27dec49e34d8448f8b94f2e29f4e1e6b07d6f8db1ca404caede66202859049f",
+      "OPEN-EMISSION-RATE-LIMIT": "fb745928fb13f0d32a2f79c536aa2186ddca65d5b84f817184122d1c89a6b891",
+      "OPEN-WORKSPACE-MONOREPO": "9168c248c17bdb05971197adad5d0a35f7a498207048653eeb44a846f690e297",
+      "OPEN-DESCRIBES-COVERAGE": "4033389d9d8aef762c60723b94059eeed7c1277a637d0ff07b0f6a2cbefeef75",
+      "OPEN-CONFLICT-THRESHOLD": "9c614b856bbab17274b223beef831793eecc008b100118d6beb0e4f1dd54ce73",
+      "OPEN-ENV-FEATURES": "0c77ef05a18f362619942f836e9fa0f3c46dafb33db16184c2f498f4736e81b5",
+      "OPEN-LLM-DENYLIST": "d1103f888d97fac669ef001c62cefdb0800b962d3583318ffea858d5850e9ffd",
+      "ref-cargo-features": "7aca50aa225137cd24087420dee5792c375cfb9608745a9b48b820a640be352d",
+      "ref-cargo-resolver-v2": "30ef8066536b5646bffa86e4d131a1429800d5bd659b70e6800cad749491b628",
+      "ref-cargo-source": "76a52b6c11dfc3e287e4c33a645537b5bf73aa1ff190dbd538737606ce5e06b2",
+      "ref-libsolv": "276335db2346eb909e049ffde12c006835c959f61bafe607fe6e56afd389327c",
+      "ref-libsolv-docs": "70d9ee146d7f6f611c7c708fee8988eeb5cdfba78ea3e91ac9bd7836ae75cfc1",
+      "ref-dnf5": "7b3b1093bd807bd99cd232b3683cec97522e6f21841e98fce9594ffc97cbfedd",
+      "ref-dnf-legacy": "c2ac521e2df0cc8fb80d33b51d49a014c121fd453919fcce9b68abe51c85c88b",
+      "ref-bcp47": "ff5828a86598c8875334b4e00ef7b1a7df92ea144809059b2c63eb5ad21a4ce5",
+      "ref-toml": "4dd3a25eab57fb94f1735eaabd7d154aeda51452a980487ded909f71bbb823a8",
+      "ref-depsolver-trait": "30dc91affa90dcbfbf90086e3769e5f61e7362a1b1e9535b0d64328755ef0365",
+      "ref-manifest-model": "849568f1fca28083ebc81ddf107cc0207dede715ccb5019bc93f494ddaf7160a",
+      "closing-note": "51619434d8f18a525d27921a9ca8602de8e548afdf1d0f38f802e1cb66c2b6d6",
+      "M05A1-ROOT-UNION": "1150fd20ce87fcd21d489fad86936482bba6b25e5ff9f904ad217997ddb6b4b7",
+      "M05A1-FRESH-REQUESTED-FEATURES": "7a4cc8744b4ee063a28d1638d5a8b063da34b8fd209672ff7578c00b00736908",
+      "M05A1-CANDIDATE-BOUNDARY": "e731117b178dca6688aa3c035cb5ecb6631ca389e312c74c5f508528025781d5",
+      "M05A2-SYNTAX": "65901a7b1bc258787e96d3e693a2f60e57ee4adaa6123672cb8f7ba8237600d7",
+      "M05A2-CONSTRAINTS": "f5df239a5713d871fa85e3999e86f3f0c3562483f3ec25d5448a480dd7f354d2",
+      "M05A2-BACKEND-MATRIX": "0da6b267f2a6abd37ae8e2d31c1770d31a3b87e2f75c417cded4c14405867bac",
+      "M05A2-CONDITIONAL": "9504865beff79eca933f2316dfdfb24c6a32ff75ab7ec6d566e15dbba23f223b",
+      "M05A2-REVIEW-BOUNDARY": "8c69ab5fff68f3319da19b2f80140f3cc9df5d8637457ba4bc9531af092d0047",
+      "M05B1-DECLARATIONS": "65f7474cf694c00b3050f0aa44d3c221e3af12b12a1813098d07034f7018215f",
+      "M05B1-EFFECTS": "735c7a3413efa292b066a1b151b24eab92f23f0bd1b297b1ba4e854273a2dbdf",
+      "M05B1-LOWERING": "835369478e59e85945f642b4fb9d5015480fe064beffdd6eca24be94ed7d2b61",
+      "M05B1-SAFE-STOP": "ddb7f043e479144ae9989dc903389700065b70a416008998edcc9e59557e820e",
+      "M05B1-CHARACTERIZATION-SUPERSESSION": "5efb1701c394c86b15af91d4fd210aa51f4ce8f2f67dca6b94be25863b487edd",
+      "M05B1-MANIFEST-CALLERS": "b701a33f863f4184167149cf562a3cdda64eb39d5ca677f75e12352d5ea8ef5c",
+      "M05B2-GROUPS": "ea08a48564551e397867b5b5ce6e63c5a02327f8de3f12159f4d56fe39d42e9a",
+      "M05B2-CONSUMERS": "a41f1e401d752a4486f0945004dbc4e1915c03c7d24ba088e4e0c86e1683d622",
+      "M05B2-SELECTION": "8c3e9562c23dcea7c09d0d74a7f7014f997f65975959da49cd6d9d67ea5f673d",
+      "M05B2-COMPOSITION": "2cc8b8df81ae04f2027aaf1bb8f47498c64dcfc9fc00ede6ca5b9d4ea25055f7",
+      "M05B3-PROFILES": "fcac0b5787e8a96e49657db2f793ae1cfceab9ab0fe42193e4ac9a65964ce921",
+      "M05B3-GRAMMAR": "17709d68cb3147450ff193bfdd202562d3d7040fc2458d879e37f9732d250766",
+      "M05B3-TYPED-SPELLING": "afad8d8047be00dfc761aaec28cb41e2b201409d01c913a29e34f211a7aaac5d",
+      "M05B3-AMBIGUITY": "cd0be5406b001d576c456cb4f6401d4b363a554370d6d335e5bd083eb1576b10",
+      "M05B3-PRESERVATION": "7afff5dfba5ca1cdae4af6b89674822c90f41e87013b7cb6f3deaa876be0628d"
+    },
+    "new": [
+      "M05C1-IDENTITY",
+      "M05C1-TRANSACTION",
+      "M05C1-FAILURE",
+      "M05C1-OBSERVATION"
+    ],
+    "replaced": [
+      {
+        "behavior": "Repeated solve/capability metadata reads may reopen a mutable provider",
+        "replacement": "one snapshot per direct resolvo solve; one bound immutable transaction catalog for install planning"
+      },
+      {
+        "behavior": "Capability prescan suppresses operational source errors",
+        "replacement": "preserve source absence outcomes, propagate corrupt/unavailable metadata as provider failure"
+      },
+      {
+        "behavior": "Held-pin fallback retries every provider error",
+        "replacement": "source failures stop; version incompatibility still permits held-pin retry"
+      },
+      {
+        "behavior": "Case-c migration writes before resolution",
+        "replacement": "migration content remains identical, but write follows successful catalog-backed planning (fresh-lock path still persists migration)"
+      }
+    ],
+    "boundary": "B1/B2/B3 remain incumbent. No C2 activation or C3 universal route parity claim.",
+    "new_semantics": {
+      "M05C1-IDENTITY": "Actual read binds source, tree hash or immutable Git object, and parsed legacy definition byte digest; sorted inventory and candidate bindings determine digest.",
+      "M05C1-TRANSACTION": "InstallSource-owned transaction shares immutable definitions and per-candidate capability cache across existing solve/manifest/masked/conditional planning reads. Capability indexing retains incumbent reachable-closure rules.",
+      "M05C1-FAILURE": "Unavailable/corrupt capture refuses before acquisition or migration writes; per-source checkout guards check definitions and content before store insertion.",
+      "M05C1-OBSERVATION": "PlanObserver.catalog receives actual CatalogInspection before solve/acquisition; tests inspect its data and recompute digest."
+    },
+    "not_claimed": [
+      "C2 candidate-conditioned activation",
+      "C3 universal caller/route parity",
+      "hostile external writer exclusion or filesystem CAS",
+      "switching ordinary install to B3 opt-in typed grammar"
+    ]
+  },
+  "eto_inspection": {
+    "spec_original_bytes_preserved": true,
+    "original_spec_sha256": "5b39f53225ce5f0e2de3d2271dab8a3406303b3512ff86326f7735f3631477e2",
+    "observations": [
+      {
+        "group": "V1",
+        "observed_digest": "sha256:e364273bcc74730494201aaabdb587e0dd87e81665a0372f5c0f26cf7cff48d7",
+        "coordinate": "org.example/app@1.0.0",
+        "source": "file:///fast/zap-managed/2026-10-16-m05c1/tmp/.tmpPyBryC/org.example/app/v1.0.0",
+        "content": "sha256:734aa2ab269e379cf7e18149cf22c68e28bcfff79528ffc56e2d35f98b0cb872",
+        "definition": "sha256:6ec94b0231b4fac9b1d7cc9bb40ee9b114c29925d34fafcb93d4ebde252c2d48",
+        "inventory": [
+          [
+            "org.example/app",
+            "available:1.0.0"
+          ]
+        ],
+        "independent_replay": true,
+        "raw_fixture_sha256": "bd255de33ad2bb7aca9a62d92fbdc24abcce94a77812e350be608660ef4d1111",
+        "log_sha256": "5ee40e8b6ef648939d29702715018657205e2d41f55a6b628fcf55d075302231"
+      },
+      {
+        "group": "V3",
+        "observed_digest": "sha256:e50fa52967d6bc60a6c11559b52cc545667e4f06b40aa0f999ccae9f7497c453",
+        "coordinate": "org.example/app@1.0.0",
+        "source": "file:///fast/zap-managed/2026-10-16-m05c1/tmp/.tmpMrLF7R/candidate",
+        "content": "sha256:069f87cb35020795f2978f52a5f4ed4853ddcdc571ca75cbaa95fee9c003921a",
+        "definition": "sha256:9c7f670bec002acf279cfeba45d57468123e0177539d79e1afc296a6f5d955e5",
+        "inventory": [
+          [
+            "org.example/app",
+            "available:1.0.0"
+          ]
+        ],
+        "independent_replay": true,
+        "raw_fixture_sha256": "542130db83fe895cc5b35c33f20831793659f9cf54c6c3a6fb4c938cb8443c27",
+        "log_sha256": "c73daf1c922f3f0eba8b7bbecf2d1af8179b8731b45f384d606b7d11435cc0b1"
+      }
+    ],
+    "scope": "Actual source and typed PlanObserver fixture identities independently replayed from fixture bytes and observed candidate/inventory rows."
+  },
+  "eto_command": {
+    "path": "/fast/zap-managed/2026-10-16-m05c1/V7-eto-final-command.json",
+    "sha256": "69c501574b8ee2d1b51979d802ae9558089f98692d68fb88239781f51be838fa"
+  },
+  "case_bindings": {
+    "V2": {
+      "crate": "vibe-resolver",
+      "filter": "resolvo_engine::m_05_c_1_cases",
+      "expected": 2,
+      "source_paths": [
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs"
+      ],
+      "names": [
+        "resolvo_engine::m_05_c_1_cases::solve_and_manifest_observation_share_catalog_identity",
+        "resolvo_engine::m_05_c_1_cases::discarded_candidate_metadata_never_requests_global_selection"
+      ],
+      "limits": "Direct mutable-provider consistency, actual bound catalog solve and manifest inspection, cached capabilities, pure discarded-candidate discovery and corrupt-source propagation. ETO dispatch exercised by V3.",
+      "source_hashes": {
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "af0afaaeec32885171948c028809d8f439589c4371010902495e0c7da9063056"
+      }
+    },
+    "V1": {
+      "crate": "vibe-package-source",
+      "filter": "source::m_05_c_1_cases",
+      "expected": 3,
+      "source_paths": [
+        "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs",
+        "crates/vibe-package-source/src/source.rs"
+      ],
+      "names": [
+        "source::m_05_c_1_cases::repeated_metadata_preserves_definition_and_capability_identity",
+        "source::m_05_c_1_cases::same_version_replacement_keeps_frozen_snapshot",
+        "source::m_05_c_1_cases::missing_and_corrupt_catalog_differ_from_missing_option"
+      ],
+      "source_hashes": {
+        "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs": "4394c7eec0715cd24008baff7332bf9070036108b717c4e707a58da13bc2128a",
+        "crates/vibe-package-source/src/source.rs": "33d345622f10e0499e8f53fd1a6c123559c6ff07f508b066fa38e3b709060d86"
+      }
+    },
+    "V3": {
+      "crate": "vibe-install",
+      "filter": "plan::m_05_c_1_cases",
+      "expected": 2,
+      "source_paths": [
+        "crates/vibe-install/src/plan/m_05_c_1_cases.rs",
+        "crates/vibe-install/src/plan.rs"
+      ],
+      "names": [
+        "plan::m_05_c_1_cases::catalog_identity_is_inspected_through_eto_before_effects",
+        "plan::m_05_c_1_cases::unavailable_or_corrupt_catalog_prevents_install_effects"
+      ],
+      "source_hashes": {
+        "crates/vibe-install/src/plan/m_05_c_1_cases.rs": "b47f508c42344248e3b6564295d3a47609fa6fe855e32fcc106d11e3116b9cdd",
+        "crates/vibe-install/src/plan.rs": "9acc2a9da70a10784eb1c22d881684758970a01015c11ba91365d661e1c50438"
+      }
+    }
+  },
+  "scope_responses": {
+    "consumed_matching_ids": [
+      "m05c1-owner-seams-1792158715262475924",
+      "m05c1-provider-read-1792158865740252069",
+      "m05c1-registry-identity-1792158986415856330"
+    ],
+    "history": "/fast/zap-managed/2026-10-16-m05c1/question-history",
+    "pending": []
+  },
+  "target_handover": {
+    "path": "/fast/zap-managed/2026-10-16-m05c1/ROOT-TARGET-HANDOVER.json",
+    "sha256": "32f2216694764f38584d8448af3a3841e240318292ea22946caaed016284df58"
+  },
+  "limits": [
+    "No C2 candidate-conditioned activation or C3 universal route-parity completion claim.",
+    "Legacy InstallSource embeddings without transaction support retain explicit absence of catalog inspection; no fabricated identity.",
+    "No hostile external-writer exclusion or filesystem CAS guarantee.",
+    "Tests use hermetic local sources and a controlled moving-ref/mirror backend; existing focused local-Git checkout test covers actual ref pinning and immutable checkout reads. No upstream/model/network tests.",
+    "Root retains review, Git commits and canonical decision; this report contains producer observations only."
+  ],
+  "effect_description": "Repository edits and private verification artifacts only; no real install/apply, publishing to upstream, dependency downloads/version changes, model traffic, or repository commits performed.",
+  "evidence_paths": [
+    "/fast/zap-managed/2026-10-16-m05c1/verification-history",
+    "/fast/zap-managed/2026-10-16-m05c1/question-history",
+    "/fast/zap-managed/2026-10-16-m05c1/SOURCE-AUDIT.json",
+    "/fast/zap-managed/2026-10-16-m05c1/PATCH-COMMANDS.json"
+  ],
+  "unresolved": [
+    "Required repository-wide cargo fmt --all -- --check remains failed on eight unchanged files outside this task write perimeter."
+  ],
+  "proposed_follow_up": "Root reviews expanded registry-owner diff and the observed behavior, handles the unrelated formatting baseline, and performs Git/acceptance decisions.",
+  "publisher_validation_history": [
+    {
+      "argv": [
+        "/fast/zap-managed/2026-10-16-m05c1/publish-content",
+        "/fast/zap-managed/2026-10-16-m05c1/candidate.patch",
+        "/fast/zap-managed/2026-10-16-m05c1/REPORT.json",
+        "/fast/zap-managed/2026-10-16-m05c1/FINDINGS.json"
+      ],
+      "exit": 1,
+      "phase": "findings deserialization before any artifact publication",
+      "error": "Error: Error(\"unknown variant `none`, expected one of `not_started`, `completed`, `pending`, `unknown`\", line: 7, column: 24)"
+    }
+  ],
+  "effect_state_meaning": "Completed reversible implementation and verification work; no outstanding install/apply effects."
+}

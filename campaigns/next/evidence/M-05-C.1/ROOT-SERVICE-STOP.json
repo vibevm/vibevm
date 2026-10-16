@@ -1,0 +1,9 @@
+{
+  "unix": 1792162454.8352323,
+  "pid": 558001,
+  "birth": 2677921,
+  "signal": "SIGTERM",
+  "method": "pidfd",
+  "canonical_work_accepted_revision": 630,
+  "manager_direct_children_before_signal": []
+}
