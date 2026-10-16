@@ -1,0 +1,18 @@
+{
+  "discoveries": [
+    "Initial workspace contained only retained resolver registration/tests and additive governing specification edits; preserved them.",
+    "Added Rust captured-subskill parser and safe filesystem capture helper in the workspace owner. Validates canonical declaration placement, selected export existence, content membership, duplicate content, path containment and nonempty lazy descriptions; preserves declaration/activation/delivery and exact captured content.",
+    "Connected validation to actual configuration_record preflight before requested/resolved lock publication, including feature selections without normalized configuration. No legacy subskills_active rows or package-tree filtering added.",
+    "Install regression exercises directory-only export refusal, then valid selected/inactive preflight with unchanged complete source hash and unselected file bytes.",
+    "Five focused tests succeeded across install/workspace/resolver; final install/workspace runs used the formatted source. Both original acceptance criteria remain unsatisfied."
+  ],
+  "unresolved": [
+    "The complete task is unfinished. Selected captured contributions are not yet consumed by ordinary boot/loading or MCP visibility/read/context delivery; neither original criterion has a deciding end-to-end fixture.",
+    "Implement explicit current-preflight contribution handoff through ordinary and native install-to-boot callers. Do not reread the previous durable lock as current install authority.",
+    "Retain provider/content/definition provenance in the effective view through consumers. Current catalogue retains declaration digest and bytes, but preflight validates and discards it; it does not establish an independently authenticated capture or retain a contribution view.",
+    "Implement eager loading, lazy-pull discovery/read from admitted slots, and lazy-push context offers/delivery with descriptions and references. Handle materialized representations through existing source/descriptor authority.",
+    "Add full active/inactive captured fixtures with nonmatching independent Agent Skill names, actual boot/MCP output observations, lock provenance and unchanged complete captured/materialized source bytes.",
+    "Projection/MCP and orchestrator obligations were not run; proposed cases are not treated as actual tests. Existing Agent Skill behavior was not revalidated in an end-to-end case.",
+    "Global cargo fmt was not run per current scoped-format instruction. Scoped success does not establish a global-format result."
+  ]
+}

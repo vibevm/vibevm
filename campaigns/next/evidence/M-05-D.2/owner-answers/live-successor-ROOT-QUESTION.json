@@ -1,0 +1,34 @@
+{
+  "id": "m05d2-boot-error-propagation-perimeter-20261016-2",
+  "question_id": "m05d2-boot-error-propagation-perimeter-20261016-2",
+  "question": "Please extend the write roster to crates/vibe-workspace/src/install/bootgen/analyze.rs and crates/vibe-workspace/src/install/bootgen/native_managed.rs for propagation of Result from node_dependency_boot. Captured subskill declaration/content validation must refuse malformed or mismatched providers through every ordinary boot consumer; the shared function currently returns Vec and these four call sites require ? after its conversion to Result. No semantic mapping change is requested.",
+  "evidence": [
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/node_dependency.rs:11",
+      "finding": "Shared dependency loading function returns Vec<DependencyBoot>; validation needs a fallible result."
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "finding": "Three production callers at lines 168, 263 and 345 consume Vec directly; file absent from write roster."
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/native_managed.rs:166",
+      "finding": "Production managed compilation caller consumes Vec directly; file absent from write roster."
+    }
+  ],
+  "independent_work": "Reviewing current capture and selection seams and preserving prior partial WIP. No compiler invocation or changes outside the existing perimeter.",
+  "additional_boundary": {
+    "finding": "vibe-install apply.rs performs workspace apply/boot generation before writing the new configuration lock. Consumer selection cannot safely come from re-reading the old durable lock during that phase.",
+    "evidence": [
+      "crates/vibe-install/src/apply.rs:430",
+      "crates/vibe-install/src/apply.rs:552",
+      "crates/vibe-workspace/src/install/hook_output.rs:146",
+      "crates/vibe-workspace/src/install/hook_output.rs:293"
+    ],
+    "requested_scope": [
+      "crates/vibe-workspace/src/install/hook_output.rs",
+      "crates/vibe-workspace/src/install.rs"
+    ],
+    "purpose": "Explicit handoff of the preflight configuration/effective contribution view through compatibility/native apply-to-boot composition, keeping existing public entrypoints as compatibility wrappers and avoiding thread-local state, temporary lock publication, or mutations to Manifest/ResolvedDep as a covert selection channel."
+  }
+}

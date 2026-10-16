@@ -1,0 +1,66 @@
+{
+  "representation": "Readable projection only: listed byte vectors decoded without changing their semantic JSON/string values. Not a replay request. Original remains immutable at origin.",
+  "origin": "/fast/zap-managed/2026-10-16-m05d2/acceptance/requests/stage.json",
+  "original_sha256": "a1739fc344210d9ef3fff276f2829bdb95f9adbc8ecda8759bd90343838b3d1b",
+  "decoded_byte_vectors": [
+    {
+      "path": "$.command.frame.payload.canonical_json",
+      "byte_length": 1231,
+      "sha256": "c8e557001d56297651ec4f107dd717e36115cbb44102a320370681b7ddcdc7e6",
+      "decoded_as": "JSON"
+    }
+  ],
+  "value": {
+    "command": {
+      "frame": {
+        "header": {
+          "base_id": "base.vibevm-m05d2.live",
+          "basis": {
+            "digest": "a5e6e3cae308b9bba6dbbaa294a5b4e5bcfca3e6772bab8a9e152c132a7f6e48",
+            "kind": "exact"
+          },
+          "campaign_id": "campaign.vibevm-m05d2.live",
+          "causes": [],
+          "command_id": "review.118790715dcd52de03f39534.stage",
+          "event_id": "event:review.118790715dcd52de03f39534.stage",
+          "expected_revision": 827,
+          "kind": "domain.stage-accepted",
+          "protocol": 2,
+          "store_id": "store.vibevm-m05d2.live"
+        },
+        "payload": {
+          "canonical_json": {
+            "candidate_id": "managed-result.667c8cd42a6c7ecce5c1d4aeb18d9b53a9d0007176f482cd0123f3a5cf21d6c5",
+            "evidence_ids": [
+              "evidence.review.118790715dcd52de03f39534.0",
+              "evidence.review.118790715dcd52de03f39534.1",
+              "evidence.review.118790715dcd52de03f39534.2",
+              "evidence.review.118790715dcd52de03f39534.3",
+              "evidence.review.118790715dcd52de03f39534.4",
+              "evidence.review.118790715dcd52de03f39534.5",
+              "evidence.review.118790715dcd52de03f39534.6"
+            ],
+            "obligation_ids": [
+              "obligation.m05d2"
+            ],
+            "outcome_id": "outcome.m05d2",
+            "schema": "zap-domain/stage-accepted/1",
+            "scope": "Full original M-05-D.2: selected captured SubskillManifest contributions in actual ordinary/native boot loading, INDEX offer and MCP query/read/materialise, independent Agent Skills preserved, dormant drift retained and complete captured package bytes unchanged.",
+            "stage": "functional",
+            "stage_acceptance_id": "stage.review.118790715dcd52de03f39534",
+            "summary": "Root reviewed the complete producer report and independent code/test review. Both original criteria are supported by consumed production code and14 distinct successful focused cases. All30 reviewed source files remained stable and were committed unchanged. Prior red checks remain retained.",
+            "work_id": "work.m05d2.prepare-plan"
+          },
+          "codec": 2
+        },
+        "reason": {
+          "change": null,
+          "decision": null,
+          "evidence": [],
+          "summary": "Root reviewed actual D2 code/receipts and independent semantic review; decision ec69b8deaeaaa78b371798e51dd60fe79380d2b74a4b73cb37ce83bb8a79f9f5"
+        }
+      }
+    },
+    "kind": "command"
+  }
+}

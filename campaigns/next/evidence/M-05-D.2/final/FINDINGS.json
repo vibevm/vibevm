@@ -1,0 +1,29 @@
+{
+  "discoveries": [
+    "Реализован явный preflight configuration handoff через обычный и native install; durable regeneration/analyzer читают опубликованную selection.",
+    "Eager content включён в фактический boot output. Lazy-push передаёт description, captured declaration reference и MCP read request через существующий INDEX; lazy-pull доступен по query/read без boot content.",
+    "Native descriptor consumer получает отдельный captured SubskillManifest witness; существующая package.sources validation сохранена.",
+    "MCP читает lock-selected slots; новый derived-view path не заполняет legacy copy rows и не копирует subskill files в project tree.",
+    "Independent Agent Skills не сопоставляются с subskills; fixture проверяет реальную неизменную projection в .agents/skills/independent."
+  ],
+  "resolved_findings": [
+    {
+      "observation": "First compile failed: newly explicit native preflight signature missed compatibility caller.",
+      "resolution": "Updated ordinary native caller to supply durable configuration; Ready uses explicit preflight path."
+    },
+    {
+      "observation": "Whole materialized-slot hash differed from source hash in first install fixture.",
+      "resolution": "Existing generated boot artifacts are not captured source. Fixture compares every source file with its materialized counterpart and compares complete captured source hashes across activation states."
+    },
+    {
+      "observation": "Native selected-source compiler rejected subskill content without root package.sources row.",
+      "resolution": "Added explicit selected SubskillManifest witnesses; recheck declaration digest and content bytes before native compilation, retaining descriptor refusal regression."
+    },
+    {
+      "observation": "Lazy-push description did not appear in INDEX when carried only in display origin.",
+      "resolution": "Added typed SubskillOffer provenance and INDEX comments; actual output assertions now succeed."
+    }
+  ],
+  "unresolved": [],
+  "effect_uncertainty": "Evidence covers local Rust fixtures and generated/read output. No live agent task matching or model invocation was performed; matching an offered description and requesting content remains with the consuming agent. No deployment or Git publication was performed."
+}

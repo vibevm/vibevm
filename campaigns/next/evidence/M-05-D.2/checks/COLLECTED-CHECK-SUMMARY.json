@@ -1,0 +1,162 @@
+{
+  "observed_utc": "2026-10-16T21:20:50.580831+00:00",
+  "report": "/fast/zap-managed/2026-10-16-m05d2/current-work/REPORT.json",
+  "report_sha256": "29f2b09a22187ef5de6c34d004423862617c6aac3fad4f18519636bf3573c3d2",
+  "evidence_kind": "Read-only extraction of producer report and named check summaries; not independent semantic judgment or acceptance",
+  "distinct_successful_cases_claimed": 14,
+  "deduplicated_final_counts": {
+    "install": 2,
+    "workspace": 2,
+    "resolver": 2,
+    "projection": 1,
+    "mcp": 1,
+    "native_selected_group": 4,
+    "orchestrator": 1,
+    "descriptor": 1
+  },
+  "final_named_checks": [
+    {
+      "name": "descriptor-regression",
+      "exit": 0,
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 739 filtered out; finished in 0.05s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/descriptor-regression.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/descriptor-regression.log"
+    },
+    {
+      "name": "diff-check",
+      "exit": 0,
+      "test_summaries": [],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/diff-check.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/diff-check.log"
+    },
+    {
+      "name": "format-check",
+      "exit": 0,
+      "test_summaries": [],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/format-check.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/format-check.log"
+    },
+    {
+      "name": "install-5",
+      "exit": 0,
+      "test_summaries": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.33s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/install-5.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/install-5.log"
+    },
+    {
+      "name": "mcp-2",
+      "exit": 0,
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 214 filtered out; finished in 0.02s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/mcp-2.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/mcp-2.log"
+    },
+    {
+      "name": "native-regression",
+      "exit": 0,
+      "test_summaries": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 736 filtered out; finished in 0.13s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/native-regression.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/native-regression.log"
+    },
+    {
+      "name": "orchestrator-1",
+      "exit": 0,
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 651 filtered out; finished in 0.01s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/orchestrator-1.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/orchestrator-1.log"
+    },
+    {
+      "name": "projection-1",
+      "exit": 0,
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 108 filtered out; finished in 0.01s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/projection-1.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/projection-1.log"
+    },
+    {
+      "name": "resolver-1",
+      "exit": 0,
+      "test_summaries": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 131 filtered out; finished in 0.00s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/resolver-1.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/resolver-1.log"
+    },
+    {
+      "name": "spec-preservation",
+      "exit": 0,
+      "test_summaries": [],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/spec-preservation.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/spec-preservation.log"
+    },
+    {
+      "name": "workspace-1",
+      "exit": 0,
+      "test_summaries": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 738 filtered out; finished in 0.00s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/workspace-1.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/workspace-1.log"
+    }
+  ],
+  "retained_nonzero_checks": [
+    {
+      "name": "install-1",
+      "exit": 101,
+      "test_summaries": [],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/install-1.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/install-1.log",
+      "compiler_error_summaries": [
+        "error[E0061]: this function takes 9 arguments but 8 arguments were supplied",
+        "error: could not compile `vibe-workspace` (lib) due to 1 previous error"
+      ]
+    },
+    {
+      "name": "install-2",
+      "exit": 101,
+      "test_summaries": [
+        "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.12s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/install-2.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/install-2.log",
+      "compiler_error_summaries": []
+    },
+    {
+      "name": "install-4",
+      "exit": 101,
+      "test_summaries": [
+        "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.12s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/install-4.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/install-4.log",
+      "compiler_error_summaries": []
+    },
+    {
+      "name": "native-1",
+      "exit": 101,
+      "test_summaries": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 739 filtered out; finished in 0.03s"
+      ],
+      "record_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/native-1.json",
+      "log_path": "/fast/zap-managed/2026-10-16-m05d2/current-work/continuation-20261016T210632Z/native-1.log",
+      "compiler_error_summaries": []
+    }
+  ],
+  "limitations": [
+    "No full test suite, global formatting, toolchain installation, models, nested delegation or Git mutation.",
+    "Focused fixtures exercise native boot composition without launching an external native provider process.",
+    "Captured source files are compared separately from generated boot files in materialized slots.",
+    "Checks retain source SHA-256 at dispatch; final formatting is recorded separately and final source hashes follow."
+  ],
+  "acceptance_by_observer": false
+}

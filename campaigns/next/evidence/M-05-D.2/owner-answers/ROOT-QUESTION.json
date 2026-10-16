@@ -1,0 +1,24 @@
+{
+  "id": "m05d2-export-consumer-mapping-20261016-1",
+  "question_id": "m05d2-export-consumer-mapping-20261016-1",
+  "question": "What authoritative existing mapping binds admitted exported_subskills paths to named SkillDecl/extension declarations for visibility, loading and automatic package projection, preserving eager/lazy-push/lazy-pull delivery? Please supply the mapping contract or authorize a concrete contract correction. No directory-presence inference or new authored grammar will be introduced.",
+  "evidence": [
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/effects.rs:120",
+      "finding": "FeatureDeclarations.exported_subskills is BTreeSet<String>; names alone carry no consumer declaration identity."
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/subskill.rs",
+      "finding": "SubskillManifest owns delivery metadata and content.files_written, but has no SkillDecl or extension export declaration."
+    },
+    {
+      "path": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs:31",
+      "finding": "ProjectSkillProviderInput accepts Vec<SkillDecl>; automatic binding derives identity from provider plus declared skill name."
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml:877",
+      "finding": "M05B1-MANIFEST-CALLERS explicitly says Manifest lacks authoritative exported-subskill catalogue and selectors do not prove export existence."
+    }
+  ],
+  "independent_work": "Add deciding dormant removed-option and no-inactive-effects regressions using existing B2 exact definition evaluation. Consumer changes held at task safe stop."
+}

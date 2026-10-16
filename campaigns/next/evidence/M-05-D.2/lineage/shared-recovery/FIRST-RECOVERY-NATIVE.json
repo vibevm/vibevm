@@ -1,0 +1,17 @@
+{
+  "job_id": "job.runtime.packet.recovery.88d399f515ab31c52c339f76c7bda41f04c6b61a09e9f88cf4e46105e22b1141",
+  "revision": 339,
+  "execution": "starting",
+  "effect": "started",
+  "acceptance": "unreviewed",
+  "native": {
+    "operation": "managed.2bd27501d4eeb516b6f81cc7e08bbdc572fe17529dea66dff3a00a9f6c20353a",
+    "state": "collecting",
+    "source_sequence": 135,
+    "collected": false,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": false,
+    "accounting_pending": false
+  }
+}

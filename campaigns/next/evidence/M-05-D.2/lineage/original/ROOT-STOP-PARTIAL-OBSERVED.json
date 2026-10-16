@@ -1,0 +1,15 @@
+{
+  "job_revision": 159,
+  "stop_delivery": "delivered",
+  "candidate_id": "managed-result.f13942cebcf028ec63b1a194c740247bd7533d1c7a2d245ec1433471233364fb",
+  "safe": "unknown",
+  "canonical_contract": "5139ad0220fe3d46b580554689c0c6137f9b84fdf445a67f09996f74b3aba5dc",
+  "native": {
+    "source_sequence": 767,
+    "collected": true,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": true,
+    "accounting_pending": false
+  }
+}

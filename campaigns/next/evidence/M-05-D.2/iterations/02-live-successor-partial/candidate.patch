@@ -1,0 +1,161 @@
+diff --git a/crates/vibe-resolver/src/features.rs b/crates/vibe-resolver/src/features.rs
+index fa59f016f..5f5a2fbf0 100644
+--- a/crates/vibe-resolver/src/features.rs
++++ b/crates/vibe-resolver/src/features.rs
+@@ -14,6 +14,9 @@
+ use std::collections::{BTreeMap, BTreeSet};
+ pub mod configuration;
+ 
++#[cfg(test)]
++mod m_05_d_2_cases;
++
+ use specmark::spec;
+ use thiserror::Error;
+ use vibe_core::manifest::FeaturesTable;
+diff --git a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+index d146fc9f1..261c145c9 100644
+--- a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
++++ b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+@@ -915,4 +915,11 @@ files_written = [
+     <p><M05D1-READER status="spec/plan">The actual apply path writes this record and the normal planner reads and validates it. Legacy locks remain recognizable as derived state eligible for intentional regeneration under PROP-044. The registry lockfile epoch and core schema version are independent of the configuration-record epoch. Unknown configuration epochs refuse without silently regenerating or reinterpreting them. Generated schema and ordering machinery remain the wire authority. This addition does not change solver semantics, global discovery, authored grammar or the core-to-wire dependency direction.</M05D1-READER></p>
+     <p><M05D1-INVOCATION status="spec/plan">For a current configured lock, bare-install exact reuse requires current authoritative normalized intent and explicit default receipts from the existing admitted source seam, with matching captures and definitions. Legitimately retained authored decision receipts suffice; repeated human permission is not required. Missing current authority refuses and never strips configuration. Explicit CLI roots permit fresh resolution of named coordinates under current authority, not dropping other configuration, changing other choices or inferring new default permission. InstallRequest.exact remains manifest pinning. Full exact-reinstall/update routing and prompt-free prepared offline reinstall remain E.2; D1 adds no CLI flag.</M05D1-INVOCATION></p>
+   </section>
++  <section title="18. Contribution activation (M-05-D.2)">
++    <p><M05D2-DORMANT status="spec/plan">Dormant selections remain authored intent. Validate requested groups and members against the current exact admitted definition before evaluating guards: a removed dormant option diagnoses drift, even while its branch is inactive. An inactive branch emits no feature, subskill or config effects. Reactivation uses the retained authored selection, never a derived selection promoted to authority or an invented default. This preserves M05B2-SELECTION and M05D1-REQUEST.</M05D2-DORMANT></p>
++    <p><M05D2-CONSUMER-BOUNDARY status="spec/plan">Selected exports must reach real visibility, loading and package projection consumers with declaration identity, delivery mode and provider provenance intact. Full captured and materialized package content and its content identity remain independent of activation; only effective contributions and target projection may change. Do not admit completed subskill semantics until every required consumer works. Export-to-consumer mappings require authoritative declarations, never inference from directory presence. This requirement does not publish new authored grammar or weaken exact request, definition and default receipts.</M05D2-CONSUMER-BOUNDARY></p>
++    <p><M05D2-CAPTURED-DECLARATIONS status="spec/plan">The subskill export catalogue consists of actual SubskillManifest declarations from the exact admitted captured provider. Canonical subskill.path, content.files_written, delivery, description and activation belong to that declaration; validate its path and content membership against the capture and retain provider, capture and definition provenance. A directory or a selector alone is not an export. Independent [[skill]] and extension declarations retain their existing semantics; no relation to a subskill is inferred from names, paths or presence.</M05D2-CAPTURED-DECLARATIONS></p>
++    <p><M05D2-DELIVERY-CONSUMERS status="spec/plan">A derived contribution view joins B1/B2 selected exports and D1 exact requested/resolved selections to captured child declarations. Selected eager content participates in ordinary workspace loading. Selected lazy-pull content is discoverable and read from the admitted captured slot only on request. Selected lazy-push content reaches the actual context-offer/delivery mechanism with its description and content reference, without eager Agent Skill substitution or project-file writes. Every required consumer must work before subskill semantics are admitted; an unused helper or test-only publisher does not discharge this requirement.</M05D2-DELIVERY-CONSUMERS></p>
++    <p><M05D2-FULL-SLOTS status="spec/plan">PROP-009 full-slot materialization remains intact, including unselected files. Activation changes effective loading and generated projection, never captured or materialized package bytes or content identity. Do not repopulate legacy subskills_active rows to restore install-time project-tree copying. The derived view may be recomputed from existing exact lock selections and captured declarations without a new lock epoch. M05B1 identity and declaration laws, M05B2 default and dormant-selection laws, and M05D1 authored-request and exact-replay laws remain unchanged.</M05D2-FULL-SLOTS></p>
++  </section>
+ </spec>
+diff --git a/crates/vibe-resolver/src/features/m_05_d_2_cases.rs b/crates/vibe-resolver/src/features/m_05_d_2_cases.rs
+new file mode 100644
+index 000000000..c202faee8
+--- /dev/null
++++ b/crates/vibe-resolver/src/features/m_05_d_2_cases.rs
+@@ -0,0 +1,125 @@
++use super::configuration::{ConfigurationDefinition, resolve_consumer_configuration};
++use std::collections::{BTreeMap, BTreeSet};
++use vibe_core::manifest::{feature_constraints::*, feature_effects::*};
++use vibe_wire::behaviour::consumer_configuration as codec;
++use vibe_wire::generated::consumer_configuration::e1::request::{Request, SelectionIntent};
++
++fn f(name: &str) -> LocalFeatureRef {
++    LocalFeatureRef::new(name).unwrap()
++}
++
++fn fixture() -> (Request, ConfigurationDefinition) {
++    let mut request = codec::decode_request(include_bytes!(
++        "../../../../formats/corpora/consumer-configuration-request/e1/valid/omitted.json"
++    ))
++    .unwrap();
++    let choice = request.edges[0].selections.get_mut("choice").unwrap();
++    choice.members = Some(vec!["a".into()]);
++    let mut branch = choice.clone();
++    branch.members = Some(vec!["c".into()]);
++    branch.intent = SelectionIntent::Exact;
++    branch.provenance = "authored:dormant".into();
++    request.edges[0].selections.insert("branch".into(), branch);
++    let definition = ConfigurationDefinition {
++        instance: codec::admit_request(&request).unwrap()[0].instance.clone(),
++        program: FeatureProgram {
++            features: [
++                (f("a"), BTreeSet::new()),
++                (f("b"), BTreeSet::new()),
++                (
++                    f("c"),
++                    [
++                        FeatureEffect::ExportedSubskill("stack/rust".into()),
++                        FeatureEffect::ConfigValue(f("flag")),
++                    ]
++                    .into(),
++                ),
++            ]
++            .into(),
++            exclusive: BTreeMap::new(),
++        },
++        declarations: FeatureDeclarations {
++            exported_subskills: ["stack/rust".into()].into(),
++            config_values: [(f("flag"), ConfigValue::Bool(true))].into(),
++            ..Default::default()
++        },
++        constraints: Constraints {
++            groups: [
++                (
++                    f("choice"),
++                    ConstrainedGroup {
++                        cardinality: Cardinality::ExactlyOne,
++                        members: [f("a"), f("b")].into(),
++                        guards: vec![],
++                        defaults: None,
++                    },
++                ),
++                (
++                    f("branch"),
++                    ConstrainedGroup {
++                        cardinality: Cardinality::ExactlyOne,
++                        members: [f("c")].into(),
++                        guards: vec![Guard::Member(f("b"))],
++                        defaults: None,
++                    },
++                ),
++            ]
++            .into(),
++            member_guards: BTreeMap::new(),
++        },
++    };
++    (request, definition)
++}
++
++#[test]
++fn dormant_selection_is_retained_without_effects() {
++    let (mut request, definition) = fixture();
++    let authored = request.clone();
++    let result =
++        resolve_consumer_configuration(&request, std::slice::from_ref(&definition)).unwrap();
++    let effects = result.expansions[0].as_ref().unwrap();
++    assert_eq!(effects.active_features, ["a".into()].into());
++    assert!(effects.active_subskills.is_empty());
++    assert!(effects.config_values.is_empty());
++    assert!(result.result.outcomes[0].defaults_used.is_empty());
++    assert_eq!(
++        result.result.edges[0].selections["branch"].members,
++        Some(vec!["c".into()])
++    );
++    assert_eq!(
++        result.result.edges[0].selections["branch"].provenance,
++        "authored:dormant"
++    );
++    assert_eq!(request, authored);
++
++    request.edges[0]
++        .selections
++        .get_mut("choice")
++        .unwrap()
++        .members = Some(vec!["b".into()]);
++    let result = resolve_consumer_configuration(&request, &[definition]).unwrap();
++    let effects = result.expansions[0].as_ref().unwrap();
++    assert_eq!(effects.active_subskills, ["stack/rust".into()].into());
++    assert_eq!(effects.config_values["flag"], ConfigValue::Bool(true));
++    assert!(result.result.outcomes[0].defaults_used.is_empty());
++}
++
++#[test]
++fn removed_dormant_option_reports_drift() {
++    let (request, mut definition) = fixture();
++    let authored = request.clone();
++    // A coherent current definition replaces c with d while its guard stays off.
++    let effects = definition.program.features.remove(&f("c")).unwrap();
++    definition.program.features.insert(f("d"), effects);
++    definition
++        .constraints
++        .groups
++        .get_mut(&f("branch"))
++        .unwrap()
++        .members = [f("d")].into();
++    let error = resolve_consumer_configuration(&request, &[definition])
++        .err()
++        .unwrap();
++    assert_eq!(error, "unknown requested member");
++    assert_eq!(request, authored);
++}

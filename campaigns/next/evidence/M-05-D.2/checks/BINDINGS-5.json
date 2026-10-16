@@ -1,0 +1,98 @@
+{
+  "cases": [
+    {
+      "package": "vibe-install",
+      "target": "--lib",
+      "filter": "record::m_05_d_1_cases::m_05_d_2_",
+      "expected": 2,
+      "obligations": [
+        "preflight rejection",
+        "actual loading and lock provenance",
+        "full slot bytes invariant"
+      ]
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "filter": "install::bootgen::effective_subskills::m_05_d_2_cases",
+      "expected": 2,
+      "obligations": [
+        "captured validation",
+        "selection bytes"
+      ]
+    },
+    {
+      "package": "vibe-resolver",
+      "target": "--lib",
+      "filter": "features::m_05_d_2_cases",
+      "expected": 2,
+      "obligations": [
+        "dormant intent",
+        "removed dormant drift"
+      ]
+    },
+    {
+      "package": "vibe-agent-projection",
+      "target": "--lib",
+      "filter": "pkgskill::projection::tests::package_binding_defaults_to_every_project_skill_loader_and_hashes_selected_source",
+      "exact": true,
+      "expected": 1,
+      "obligations": [
+        "independent Agent Skill regression"
+      ]
+    },
+    {
+      "package": "vibe-mcp",
+      "target": "--lib",
+      "filter": "tools::m_05_d_2_cases::captured_delivery_is_visible_readable_and_inactive_is_hidden",
+      "exact": true,
+      "expected": 1,
+      "obligations": [
+        "actual registered MCP tools visibility and delivery",
+        "inactive hidden",
+        "no project copy"
+      ]
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "filter": "install::bootgen::selected_node_tests::m_05_d_2_native_writer_loads_current_selection_without_old_lock",
+      "exact": true,
+      "expected": 1,
+      "obligations": [
+        "actual native boot writer uses current explicit selection",
+        "deactivation removes output without changing content"
+      ]
+    },
+    {
+      "package": "vibe-orchestrator",
+      "target": "--lib",
+      "filter": "world::tests::package_skill_presets_use_only_selected_member_and_reachable_world",
+      "exact": true,
+      "expected": 1,
+      "obligations": [
+        "existing independent Agent Skill world scoping"
+      ]
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "filter": "install::bootgen::selected_node_tests",
+      "expected": 4,
+      "obligations": [
+        "native selected contribution output",
+        "existing descriptor identity/source refusal regressions"
+      ]
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "filter": "boot_artifacts::inputs::tests::bound_simple_boot_projects_only_selected_vibe_and_refuses_raw_same_stem",
+      "exact": true,
+      "expected": 1,
+      "obligations": [
+        "descriptor source refusal retained beside explicit subskill authority"
+      ]
+    }
+  ]
+}

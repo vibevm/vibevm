@@ -1,0 +1,80 @@
+[
+  {
+    "phase": "safe.claim",
+    "revision": 817,
+    "command_id": "review.118790715dcd52de03f39534.safe.claim",
+    "receipt_sha256": "e559df1dc9d0b32e2b8518fd9c90f145110efc7527eccd409dd51c9a899cad09"
+  },
+  {
+    "phase": "safe.result",
+    "revision": 818,
+    "command_id": "review.118790715dcd52de03f39534.safe.result",
+    "receipt_sha256": "072c06acb11e9e87695851dd14c3ee8d8e304dcdee1d1681101d37c6f24f3091"
+  },
+  {
+    "phase": "safe.record",
+    "revision": 819,
+    "command_id": "review.118790715dcd52de03f39534.safe.record",
+    "receipt_sha256": "ab324b39f0970334b71185025aa2b12c9a49181a74368296c5275666b9f13a42"
+  },
+  {
+    "phase": "open",
+    "revision": 820,
+    "command_id": "review.118790715dcd52de03f39534.open",
+    "receipt_sha256": "d52f975bbb2e34d857cfdbf20d00c262257be9811e59309ced5f0d310d460820"
+  },
+  {
+    "phase": "evidence.0",
+    "revision": 821,
+    "command_id": "review.118790715dcd52de03f39534.evidence.0",
+    "receipt_sha256": "8683fc642a90cb5e670803caf4255e1aa922b92417bebf4ae911a55dd07c6621"
+  },
+  {
+    "phase": "evidence.1",
+    "revision": 822,
+    "command_id": "review.118790715dcd52de03f39534.evidence.1",
+    "receipt_sha256": "7067a47a733651beda8687054cb5ee6ac4d20d5c2b00f69b13c01782509afdfa"
+  },
+  {
+    "phase": "evidence.2",
+    "revision": 823,
+    "command_id": "review.118790715dcd52de03f39534.evidence.2",
+    "receipt_sha256": "81c7f1ec8e0079f15d499dd3c97dffecfca02c2d48ab9e3539fe77740abb1a7b"
+  },
+  {
+    "phase": "evidence.3",
+    "revision": 824,
+    "command_id": "review.118790715dcd52de03f39534.evidence.3",
+    "receipt_sha256": "4076432217497299bce43872c57325931b53d4d607e31d5af34c251838c9fbf2"
+  },
+  {
+    "phase": "evidence.4",
+    "revision": 825,
+    "command_id": "review.118790715dcd52de03f39534.evidence.4",
+    "receipt_sha256": "2c45945e65e9f9494af2c09d69bf9e141c2a470552e3a033c5486cfe34d18ae6"
+  },
+  {
+    "phase": "evidence.5",
+    "revision": 826,
+    "command_id": "review.118790715dcd52de03f39534.evidence.5",
+    "receipt_sha256": "3c454918d971af5d2341102f10723188e94462a84b75efb5b6b77d4627dfa7e3"
+  },
+  {
+    "phase": "evidence.6",
+    "revision": 827,
+    "command_id": "review.118790715dcd52de03f39534.evidence.6",
+    "receipt_sha256": "541bd4178938d5a29e232f6c90a01e1fac9244afd02040fb1100c10874f61754"
+  },
+  {
+    "phase": "stage",
+    "revision": 828,
+    "command_id": "review.118790715dcd52de03f39534.stage",
+    "receipt_sha256": "e0783349c127be58aa5bdcc4248908b7210cc995b98f86031e407af53ca81b7b"
+  },
+  {
+    "phase": "work",
+    "revision": 829,
+    "command_id": "review.118790715dcd52de03f39534.work",
+    "receipt_sha256": "6da18fecd605ca17dc38b80ad6c4cf1f9f14cfaa1687214876d59f4b56ea730e"
+  }
+]

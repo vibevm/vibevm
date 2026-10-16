@@ -1,0 +1,30 @@
+{
+  "root_exec_handle": 14393,
+  "exit_code": 0,
+  "old_births_absent": [
+    {
+      "pid": 1041739,
+      "birth": "4627198"
+    },
+    {
+      "pid": 1041803,
+      "birth": "4627237"
+    },
+    {
+      "pid": 1248644,
+      "birth": "4837113"
+    },
+    {
+      "pid": 1248647,
+      "birth": "4837135"
+    }
+  ],
+  "manager_counts": {
+    "accepted": 226,
+    "completed": 226,
+    "auth_failures": 0,
+    "exchange_failures": 0
+  },
+  "new_service_launched": false,
+  "reason": "Await owner-requested found-work heuristic before new dispatch"
+}

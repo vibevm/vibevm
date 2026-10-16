@@ -1,0 +1,55 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--offline",
+    "--locked",
+    "-p",
+    "vibe-install",
+    "--lib",
+    "record::m_05_d_1_cases::m_05_d_2_",
+    "--",
+    "--nocapture"
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "RUSTUP_AUTO_INSTALL": "0",
+    "CARGO_NET_OFFLINE": "true"
+  },
+  "source_sha256": {
+    "crates/vibe-install/src/apply.rs": "123c8017dedfba9df5af38a7cccc237fa1a5040a50814d818988aa224b128f10",
+    "crates/vibe-install/src/record.rs": "a3c645b1d0bdd0d07d69ac81b47bcf7267b8e24e32706d942cd24ab7fc24cbe8",
+    "crates/vibe-install/src/record/m_05_d_1_cases.rs": "af840435df3f26dfdecf7eef4335785d236d0c40c213d49fbeacff0d8dd82bc8",
+    "crates/vibe-mcp/src/tools.rs": "f20ddb58758218abc2f17dcb5ef96290573365cb84ac8c72f2b2c31b01880607",
+    "crates/vibe-resolver/src/features.rs": "525ecac874bc54032faca59e6c08e20552c9d839c7ace584bcf9418a80a57803",
+    "crates/vibe-workspace/src/boot.rs": "6adcd50483026c7169922f884eab0e16870a548ecd8f35deb66730f891b2d5c8",
+    "crates/vibe-workspace/src/boot_artifacts.rs": "148e3a0f9bf1ec32665ce53ff868a0fe22323cb83ec33ce3566e17fc4c1c8841",
+    "crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs": "7248688bb5842e21ca586a4e242d34d56779f1a9146c5913cfd51c11b15ab48c",
+    "crates/vibe-workspace/src/boot_artifacts/descriptor_reader/tests.rs": "5d399b96a9358d3962c4feaecb1cb062c164b1746d07dad3657f593f05b9af88",
+    "crates/vibe-workspace/src/boot_artifacts/inputs.rs": "0d835fa8ae14cfe569a32b8b1273dd1c179216e097f00a1a899918169805f4aa",
+    "crates/vibe-workspace/src/boot_artifacts/inputs_tests.rs": "7bbc6bcb78936be89033ad6d71a5c02851d47599e8dc699728a9c693cdbc61d9",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed_unit_parity_tests.rs": "acf47d1e64fa505f5668c1341de15752722f545a2a1b418d34e8f924483bc37a",
+    "crates/vibe-workspace/src/install.rs": "3e9501555a7140d1f0af78bb06e173360f28cf9c6c41d3753c4cdd49fd1c37b3",
+    "crates/vibe-workspace/src/install/bootgen.rs": "265a398ae237c2eb2c3a9e4d1df0d98eaf4bac1cbd937f00dfcaa1b5a06e52d1",
+    "crates/vibe-workspace/src/install/bootgen/analyze.rs": "e46739068a974f8b480c420d916e3dc2ae5fc5f3016082dd4df227fe4ecba72d",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs": "19a7a21f852baf5561e7b7a733b138a33ad16fc91dfce3d55195b38eed5f9ef4",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit/native_managed.rs": "6ae0fef8d7d5504a82048be79a8910fa695c922a1700b04c2fe7f604ec41f3b7",
+    "crates/vibe-workspace/src/install/bootgen/materialised_read.rs": "631f243b30c11e0131ebd52e354b1f95075a5d5613c71918f0c6d425e8968c18",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs": "08bf450db973b9f1522a4dfa60c3d64adf7c4a97706bf6c7b13e64dd5d91c361",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs": "6279283af6ce175097ca53b26ac447bf56bd234aea5abb21b33edc4aa70dd74e",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare/tests.rs": "91fade0619d43a05954e94fe390c65b595d556ad9722d7ff63c74b8dcbff3860",
+    "crates/vibe-workspace/src/install/bootgen/selected_node_tests.rs": "324611eb9b7aa41253b099e8bdee36959ae2c1fe16be5ef24512f2813b436bbd",
+    "crates/vibe-workspace/src/install/hook_output.rs": "456b263e08c3dd37e862e8a2930c6b1d85daa78fb25a27ca4668e032f2f45153",
+    "crates/vibe-workspace/src/install/native.rs": "02a9e7bc255da33e7488a2f55eff26485f8153d95fdfd373d828b0c68eabe26c",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "2228ebcb891b7ea52d3fcaf648d54b8169ffa5d84087b842559f7f7aaa4f025a",
+    "crates/vibe-mcp/src/tools/m_05_d_2_cases.rs": "d51f4ed1b3087441651a0faf6ce1e00c17b40f326354b8682359e7922ab26028",
+    "crates/vibe-mcp/src/tools/subskills.rs": "353d12cb4c05432e6cbc014f25a5b5cd4d4ea155a80f58b6837285857559ea47",
+    "crates/vibe-resolver/src/features/m_05_d_2_cases.rs": "8fa43d69089d2183ea61dac6c782fbf4f09d8a2a43aad6fa1e9bb547b1df0bbd",
+    "crates/vibe-workspace/src/install/bootgen/effective_subskills.rs": "197f225fd7e235f7f2faee9625eaf51ca228cb4fafbcaf41c2b7eaa9b4543b8e",
+    "crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs": "5be74bcddb520c52b5ca884be7fbdfd38e7242998901f1f59d0bccf64856a3b6"
+  },
+  "exit": 0,
+  "test_summaries": [
+    "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.33s"
+  ]
+}

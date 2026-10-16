@@ -1,0 +1,23 @@
+{
+  "id": "m05d2-export-consumer-mapping-20261016-1",
+  "question_id": "m05d2-export-consumer-mapping-20261016-1",
+  "answered_by": "Root acting as owner proxy",
+  "at": "2026-10-16T19:31:30.110242+00:00",
+  "source_head": "9f946ba187516f51da2470b1e9c0a03c7203c499",
+  "decision": "Correct the consumer perimeter. No export-to-SkillDecl mapping is authorized or needed; implement selected SubskillManifest contributions through their actual loading/visibility/delivery consumers.",
+  "answer": [
+    "Agent Skills and subskills are explicitly distinct under PROP-018 and manifest/package/skill.rs. Preserve independent [[skill]] and extension declarations under their existing semantics; never infer a relation from names, paths or presence.",
+    "An authoritative subskill export is the actual SubskillManifest declaration from the exact admitted captured provider: canonical subskill.path, content.files_written, delivery, description and activation. Validate declared path/content membership against that capture and retain provider/capture/definition provenance. A directory alone is not an export declaration. The root Manifest alone still cannot prove this catalogue; obtain it from the actual captured child declarations at the owning source seam.",
+    "Wire B1/B2/D1 selected exports into an effective contribution view consumed by ordinary workspace boot/loading and MCP visibility/read paths. Parent task metadata now admits the real bootgen and MCP owners. Update governing permanent contract additively; retain previous B1/B2/D1 identity, request and default laws.",
+    "PROP-009 full-slot materialization remains intact. Activation may change effective loading and generated projection, never captured/materialized package bytes or content identity. Do not repopulate legacy lock rows as a shortcut to restore project-tree copying. A normalized derived view may be recomputed from existing exact lock selections plus captured declarations; avoid an unnecessary new wire epoch.",
+    "Preserve original delivery: eager selected content participates in effective loading; lazy-pull is discoverable and read from its admitted captured slot only on request; lazy-push reaches the real context-offer/delivery mechanism with its description and content reference, without eager Agent Skill projection or project-file writes. If that consumer is absent, implement the smallest owner-specific Rust connection through existing loading/MCP composition and report the precise boundary. Do not fake completion with an unused helper, eager substitution, or a test-only publisher.",
+    "All original full D2 acceptance and safe-stop conditions remain. Include an active/inactive captured subskill with nonmatching independent SkillDecl names, actual output/read observations, unchanged complete source bytes, retained dormant intent and removed dormant-option drift. Existing Agent Skill behavior must remain unchanged. Keep selected checks small; retain existing groups for their real obligations, add a narrowly required MCP consumer command within a group if necessary and bind it before compilation. No Claude/model traffic or full suite.",
+    "Current partial source and two genuine regressions are retained but unaccepted. Root will continue this same Work/current full contract after normal stopped-collected admission and fresh current material. This answer grants no acceptance, physical-stop assertion, new worker authority or new authored grammar."
+  ],
+  "evidence": [
+    "/fast/git/v/research/2026-10-16-m05d2-export-mapping/REPORT.md",
+    "crates/vibe-core/src/manifest/subskill.rs",
+    "crates/vibe-core/src/manifest/package/skill.rs",
+    "campaigns/next/tasks/M-05-D.json#M-05-D.2"
+  ]
+}

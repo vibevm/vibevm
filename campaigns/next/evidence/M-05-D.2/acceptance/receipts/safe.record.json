@@ -1,0 +1,51 @@
+{
+  "representation": "Readable projection only: listed byte vectors decoded without changing their semantic JSON/string values. Not a replay request. Original remains immutable at origin.",
+  "origin": "/fast/zap-managed/2026-10-16-m05d2/acceptance/receipts/safe.record.json",
+  "original_sha256": "ab324b39f0970334b71185025aa2b12c9a49181a74368296c5275666b9f13a42",
+  "decoded_byte_vectors": [
+    {
+      "path": "$.output",
+      "byte_length": 592,
+      "sha256": "409360af80fde0ca8abfb1be979472b267d476ef0bbea152783636079b679271",
+      "decoded_as": "JSON"
+    }
+  ],
+  "value": {
+    "command_id": "review.118790715dcd52de03f39534.safe.record",
+    "disposition": "committed",
+    "event_digest": "47061b3c6269c46d4a295d5eef78e0105bce6fc81801a33dce8560658860d6fc",
+    "event_id": "event:review.118790715dcd52de03f39534.safe.record",
+    "output": {
+      "attempt_id": "attempt.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+      "contract_digest": "5139ad0220fe3d46b580554689c0c6137f9b84fdf445a67f09996f74b3aba5dc",
+      "contract_id": "contract.m05d2",
+      "effect": "completed",
+      "execution": "succeeded",
+      "job_id": "job.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+      "revision": 819,
+      "safe_state": "safe",
+      "subjects": [
+        {
+          "id": "work.m05d2.prepare-plan",
+          "kind": "work"
+        },
+        {
+          "id": "source.vibevm-m05d2.owner-input",
+          "kind": "source"
+        }
+      ],
+      "validation_generation": 0,
+      "work_id": "work.m05d2.prepare-plan"
+    },
+    "revision": 819,
+    "store": {
+      "base_id": "base.vibevm-m05d2.live",
+      "campaign_id": "campaign.vibevm-m05d2.live",
+      "codec_epoch": 2,
+      "reducer_epoch": 1,
+      "store_epoch": "zap/2",
+      "store_id": "store.vibevm-m05d2.live"
+    },
+    "transaction_id": "tx:review.118790715dcd52de03f39534.safe.record"
+  }
+}

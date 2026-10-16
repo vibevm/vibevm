@@ -1,0 +1,114 @@
+[
+  {
+    "id": "V1",
+    "kind": "small_bound_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--lib",
+        "record::m_05_d_2_cases",
+        "--",
+        "--nocapture"
+      ]
+    ]
+  },
+  {
+    "id": "V2",
+    "kind": "small_bound_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "install::bootgen::m_05_d_2_cases",
+        "--",
+        "--nocapture"
+      ]
+    ]
+  },
+  {
+    "id": "V3",
+    "kind": "small_bound_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "pkgskill::projection::m_05_d_2_cases",
+        "--",
+        "--nocapture"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "tools::m_05_d_2_cases",
+        "--",
+        "--nocapture"
+      ]
+    ]
+  },
+  {
+    "id": "V4",
+    "kind": "small_bound_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "features::m_05_d_2_cases",
+        "--",
+        "--nocapture"
+      ]
+    ]
+  },
+  {
+    "id": "V5",
+    "kind": "small_bound_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "world::m_05_d_2_cases",
+        "--",
+        "--nocapture"
+      ]
+    ]
+  },
+  {
+    "id": "V6",
+    "kind": "scoped_format_and_diff",
+    "commands": []
+  },
+  {
+    "id": "V7",
+    "kind": "spec_preservation",
+    "commands": []
+  }
+]
