@@ -26,7 +26,13 @@
         "schemas/",
         "formats/",
         "crates/vibe-wire/",
-        "tools/preview-transition/"
+        "tools/preview-transition/",
+        "xtask/src/bin/preview-transition-check/",
+        "xtask/Cargo.toml",
+        "crates/vibe-core/Cargo.toml",
+        "crates/vibe-requirements/Cargo.toml",
+        "crates/vibe-orchestrator/src/change/",
+        "crates/vibe-cli/src/commands/change/"
       ],
       "steps": [
         "After the root-bound M-02 prerequisites, inspect their actual immutable ID grammar and document-role registration. Adopt each bootstrap record as the release-impact non-normative evidence role of the same change; do not mint replacement IDs or create a second change directory family.",
@@ -65,7 +71,8 @@
         "Permanent release records use immutable change IDs, capability/topic IDs and exact captures, never NEXT task IDs as product identity. The temporary task-to-change bridge is execution evidence and is removed at campaign retirement.",
         "TO CREATE checks name future obligations and must not be reported as existing or passing. BASE.2 defines and tests their exact command grammar; later packets use that accepted grammar. A missing validator, zero selected tests or unavailable platform is an unmet check.",
         "Keep NEXT-EXECUTION-AUTHORITY blocked during planning. These tasks do not authorize public publication, host installation, version bumps, prototype graduation, new IDE clients or an autonomous scheduler.",
-        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution."
+        "Verification follows the current multi-user-planning economy: run required affected checks against exact inputs; mutation testing is optional only for a concrete suspicious signal and a bounded cheaper proof, never a ritual for every contribution.",
+        "2026-10-17 owner-scope clarification: BASE.2 implemented the permanent checker in the existing Rust xtask preview-transition-check owner; tools/preview-transition/check.py is thin transport. That checker and ordinary necessary native role/module/Cargo wiring are included in BIND.1. Preserve all retained release-impact IDs and bytes, reconcile governing law explicitly, and do not expand into the later BIND.2 facade/migration scope."
       ]
     },
     {
