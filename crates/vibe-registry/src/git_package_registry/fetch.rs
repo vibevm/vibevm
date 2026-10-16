@@ -14,6 +14,15 @@ mod bring;
 use bring::BringIntent;
 
 impl GitPerPackageRegistry {
+    pub(super) fn metadata_checkout(
+        &self,
+        group: &Group,
+        name: &str,
+        commit: &str,
+    ) -> Result<String, RegistryError> {
+        self.ensure_clone_against_sources(group, name, commit)
+    }
+
     /// Bring the per-package clone at `package_clone_dir(kind, name)`
     /// to `refname` by trying the primary URL first, then each mirror
     /// URL in priority order. Returns the URL that ultimately served
@@ -252,12 +261,25 @@ impl GitPerPackageRegistry {
         store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
+        self.fetch_with_catalog(resolved, store_root, expected_hash, None)
+    }
+
+    pub fn fetch_with_catalog(
+        &self,
+        resolved: &ResolvedPackage,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        catalog: Option<&crate::CandidateMetadata>,
+    ) -> Result<CachedPackage, RegistryError> {
         // PROP-002 §2.2.1 — bail before any clone work when this
         // registry is `auth = "token-env"` but the env-var resolved
         // empty.
         self.ensure_token_loaded()?;
         let canonical_url = self.package_repo_url(&resolved.group, &resolved.name)?;
-        let tag = format!("v{}", resolved.version);
+        let tag = catalog
+            .and_then(|m| m.identity.content.strip_prefix("git:"))
+            .map(str::to_owned)
+            .unwrap_or_else(|| format!("v{}", resolved.version));
         let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
         let clone_dir = self.package_clone_dir(&resolved.group, &resolved.name);
 
@@ -308,6 +330,9 @@ impl GitPerPackageRegistry {
                     reason: "registry package manifest must carry a [package] table".to_string(),
                 })?;
             let resolved_commit = self.backend.head_commit(&clone_dir)?;
+            if let Some(metadata) = catalog {
+                metadata.verify_checkout(&clone_dir, resolved_commit.as_deref())?;
+            }
 
             // An `in-place` package (PROP-022 §2.4) is placed as a git working
             // tree, so vibevm never walks its tree: skip the `.git`-stripped

@@ -80,6 +80,21 @@ pub enum InstallResolver {
 }
 
 impl InstallSource for InstallResolver {
+    fn begin_transaction(
+        &self,
+        roots: &[PackageRef],
+    ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
+        let provider = transaction::CaptureProvider {
+            source: self,
+            provider: crate::cells::catalog_provider(self.provider_resource()),
+        };
+        let catalog = vibe_resolver::resolvo_engine::TransactionCatalog::capture(&provider, roots)?;
+        Ok(Some(Box::new(transaction::FrozenSource {
+            source: self,
+            catalog,
+        })))
+    }
+
     /// Resolve `pkgref` and insert its content into the machine-global
     /// store under `store_root` (PROP-010 §2.7). `expected_hash`
     /// (typically the lockfile pin for `(pkgref.kind, pkgref.name,
@@ -95,7 +110,7 @@ impl InstallSource for InstallResolver {
         store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
-        self.resolve_and_fetch_inner(pkgref, store_root, expected_hash, None)
+        self.resolve_and_fetch_inner(pkgref, store_root, expected_hash, None, None)
     }
 
     fn resolve_and_fetch_with_progress(
@@ -106,9 +121,13 @@ impl InstallSource for InstallResolver {
         progress: &vibe_core::progress::Progress,
     ) -> Result<CachedPackage, RegistryError> {
         match self {
-            InstallResolver::Multi(..) => {
-                self.resolve_and_fetch_inner(pkgref, store_root, expected_hash, Some(progress))
-            }
+            InstallResolver::Multi(..) => self.resolve_and_fetch_inner(
+                pkgref,
+                store_root,
+                expected_hash,
+                Some(progress),
+                None,
+            ),
             // Local/embedded dispatch already has its own precedence and
             // provenance rules. Keep that one algorithm and wrap it with an
             // honest component task instead of duplicating the walk here.
@@ -119,6 +138,7 @@ impl InstallSource for InstallResolver {
                     store_root,
                     expected_hash,
                     Some(&task.progress()),
+                    None,
                 );
                 match &result {
                     Ok(cached) if cached.is_local || cached.is_embedded => {
@@ -226,11 +246,12 @@ impl InstallResolver {
         store_root: &Path,
         expected_hash: Option<&str>,
         progress: Option<&vibe_core::progress::Progress>,
+        catalog: Option<&vibe_registry::CandidateMetadata>,
     ) -> Result<CachedPackage, RegistryError> {
         match self {
             InstallResolver::Local(r, _) => {
                 let resolved = r.resolve(pkgref)?;
-                r.fetch(&resolved, store_root)
+                r.fetch_with_catalog(&resolved, store_root, catalog)
             }
             InstallResolver::Multi(m, _) => {
                 let resolution = match progress {
@@ -241,6 +262,15 @@ impl InstallResolver {
                     )?,
                     None => m.resolve_for(pkgref, ResolutionPurpose::DownloadSource)?,
                 };
+                if catalog.is_some() {
+                    return m.fetch_with_catalog_progress(
+                        &resolution,
+                        store_root,
+                        expected_hash,
+                        progress.unwrap_or(&vibe_core::progress::Progress::default()),
+                        catalog,
+                    );
+                }
                 match progress {
                     Some(progress) => m.fetch_with_expected_hash_progress(
                         &resolution,
@@ -274,7 +304,8 @@ impl InstallResolver {
                     for (idx, local) in locals.iter().enumerate() {
                         match local.resolve(pkgref) {
                             Ok(resolved) => {
-                                let mut cached = local.fetch(&resolved, store_root)?;
+                                let mut cached =
+                                    local.fetch_with_catalog(&resolved, store_root, catalog)?;
                                 if idx < *project_local_count {
                                     cached.is_local = true;
                                 } else {
@@ -311,6 +342,15 @@ impl InstallResolver {
                                 )?,
                                 None => m.resolve_for(pkgref, ResolutionPurpose::DownloadSource)?,
                             };
+                            if catalog.is_some() {
+                                return m.fetch_with_catalog_progress(
+                                    &resolution,
+                                    store_root,
+                                    expected_hash,
+                                    progress.unwrap_or(&vibe_core::progress::Progress::default()),
+                                    catalog,
+                                );
+                            }
                             match progress {
                                 Some(progress) => m.fetch_with_expected_hash_progress(
                                     &resolution,
@@ -432,3 +472,9 @@ pub(crate) fn is_registry_absent(err: &RegistryError) -> bool {
 #[cfg(test)]
 #[path = "source_progress_tests.rs"]
 mod progress_tests;
+
+mod transaction;
+
+#[cfg(test)]
+#[path = "source/m_05_c_1_cases_tests.rs"]
+mod m_05_c_1_cases;

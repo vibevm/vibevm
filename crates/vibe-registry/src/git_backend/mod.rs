@@ -32,6 +32,11 @@ pub use shell::ShellGit;
 )]
 pub enum GitError {
     #[error(
+        "immutable metadata identity is unavailable from backend for `{url}` (spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#M05C1-FAILURE; use a backend supporting exact metadata receipts)"
+    )]
+    MetadataIdentityUnavailable { url: String },
+
+    #[error(
         "the `git` executable is not available on PATH; install git \
          (https://git-scm.com/downloads) and retry \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend; \
@@ -166,6 +171,28 @@ pub enum GitError {
 /// # Ok::<(), GitError>(())
 /// ```
 pub trait GitBackend: Send + Sync {
+    /// Read immutable bytes from an already populated metadata checkout.
+    fn checkout_file_at_commit(
+        &self,
+        directory: &Path,
+        commit: &str,
+        path: &str,
+    ) -> Result<Vec<u8>, GitError> {
+        Err(GitError::FileNotFoundInRef {
+            url: directory.display().to_string(),
+            refname: commit.into(),
+            path: path.into(),
+        })
+    }
+
+    /// Resolve a mutable ref before reading immutable candidate metadata.
+    /// Backends without this capability report unavailability, never a fake pin.
+    fn resolve_metadata_ref(&self, url: &str, _refname: &str) -> Result<String, GitError> {
+        Err(GitError::MetadataIdentityUnavailable {
+            url: shell::without_userinfo(url),
+        })
+    }
+
     /// Clone `url` (checked out at `refname`) into `dest`.
     ///
     /// The caller guarantees `dest` is either empty or absent. On error,

@@ -238,6 +238,7 @@ impl MultiRegistryResolver {
         resolution: &MultiResolution,
         store_root: &Path,
         _expected_hash: Option<&str>,
+        catalog: Option<&crate::CandidateMetadata>,
     ) -> Result<CachedPackage, RegistryError> {
         let group = &resolution.resolved.group;
         let name = resolution.resolved.name.as_str();
@@ -271,7 +272,15 @@ impl MultiRegistryResolver {
         let credentialed = target_reg.credentialed_url(&plain_url);
 
         let clone_dir = self.redirect_clone_dir(group, name);
-        ensure_clone_at(self.backend.as_ref(), &credentialed, &refname, &clone_dir)?;
+        let selected_ref = catalog
+            .and_then(|m| m.identity.content.strip_prefix("git:"))
+            .unwrap_or(&refname);
+        ensure_clone_at(
+            self.backend.as_ref(),
+            &credentialed,
+            selected_ref,
+            &clone_dir,
+        )?;
         if credentialed != plain_url {
             self.backend
                 .set_remote_url(&clone_dir, "origin", &plain_url)
@@ -281,6 +290,14 @@ impl MultiRegistryResolver {
         // Hash the clone directly (the recipe skips `.git`), then
         // insert write-once into the machine store; an already-present
         // entry is returned untouched, its manifest read back.
+        let resolved_commit = if catalog.is_some() {
+            self.backend.head_commit(&clone_dir)?
+        } else {
+            None
+        };
+        if let Some(metadata) = catalog {
+            metadata.verify_checkout(&clone_dir, resolved_commit.as_deref())?;
+        }
         let content_hash = compute_content_hash(&clone_dir)?;
         let dest = store::insert_current_at(
             store_root,
@@ -316,7 +333,7 @@ impl MultiRegistryResolver {
             // `vibe.toml` named.
             registry_name: resolution.registry_name.clone(),
             source_ref: Some(refname),
-            resolved_commit: None,
+            resolved_commit,
             overridden: false,
             is_git_source: false,
             is_path_source: false,

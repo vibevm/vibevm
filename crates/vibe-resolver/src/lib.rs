@@ -214,6 +214,18 @@ impl ResolvedGraph {
 /// ```
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub trait DepProvider {
+    /// Exact metadata receipt, when the provider can bind its actual source read.
+    fn candidate_metadata(
+        &self,
+        _group: &Group,
+        _name: &str,
+        _version: &semver::Version,
+    ) -> Result<vibe_registry::CandidateMetadata, DepProviderError> {
+        Err(DepProviderError::Other(
+            "exact candidate catalog metadata is unavailable from this provider".into(),
+        ))
+    }
+
     /// Pick a concrete version satisfying `pkgref.version` from the
     /// available versions of `(pkgref.kind, pkgref.name)`. Implementors
     /// fan out to multi-registry / mirror / override resolution as
@@ -267,6 +279,11 @@ pub trait DepProvider {
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
 )]
 pub trait VersionEnumerator: DepProvider {
+    /// Capability index captured with an immutable transaction catalog.
+    fn cached_capabilities(&self) -> Option<&resolvo_engine::CapIndex> {
+        None
+    }
+
     /// All available versions of `(group, name)`, in any order — the
     /// solver sorts. Backed by `Registry::list_versions` in production.
     fn list_versions(
@@ -348,7 +365,7 @@ pub trait DepSolver {
 ///      fix: check the name, or add the registry that hosts it to [[registry]])",
 /// );
 /// ```
-#[derive(Debug, Error)]
+#[derive(Debug, Clone, Error)]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 )]

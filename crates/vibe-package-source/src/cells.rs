@@ -391,3 +391,35 @@ mod tests {
         assert!(FLAGS.iter().all(|f| !f.sunset.is_empty()));
     }
 }
+
+// Candidate capture uses the incumbent provider selection and its enumeration.
+pub(crate) fn catalog_provider(
+    resource: ProviderResource<'_>,
+) -> Box<dyn vibe_resolver::VersionEnumerator + '_> {
+    match resource {
+        ProviderResource::Local(r) => Box::new(LocalRegistryDepProvider::new(r)),
+        ProviderResource::Multi(m) => Box::new(MultiRegistryDepProvider::new(m)),
+        ProviderResource::Embedded {
+            locals,
+            declared,
+            precedence,
+            short_circuit,
+        } => Box::new(embedded_dep_provider(
+            locals,
+            declared,
+            precedence,
+            short_circuit,
+        )),
+    }
+}
+pub(crate) fn catalog_solver<'a>(
+    flags: &SelectionFlags,
+    catalog: &'a vibe_resolver::resolvo_engine::TransactionCatalog,
+) -> Box<dyn DepSolver + 'a> {
+    match flags.solver.value {
+        "resolvo" => Box::new(ResolvoDepSolver::new(catalog)),
+        "naive" => Box::new(NaiveDepSolver::new(catalog)),
+        "sat" => Box::new(SatDepSolver::new(catalog)),
+        _ => unreachable!("validated solver selection"),
+    }
+}

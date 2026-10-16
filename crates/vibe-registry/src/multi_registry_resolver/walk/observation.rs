@@ -74,13 +74,13 @@ pub(super) fn resolution(
     result
 }
 
-pub(super) fn manifest(
+pub(super) fn manifest<T>(
     progress: &vibe_core::progress::Progress,
     group: &Group,
     name: &str,
     version: &semver::Version,
-    operation: impl FnOnce(&vibe_core::progress::ProgressTask) -> Result<Manifest, RegistryError>,
-) -> Result<Manifest, RegistryError> {
+    operation: impl FnOnce(&vibe_core::progress::ProgressTask) -> Result<T, RegistryError>,
+) -> Result<T, RegistryError> {
     let task = progress.task(format!(
         "Reading package metadata for {group}/{name}@{version}"
     ));
