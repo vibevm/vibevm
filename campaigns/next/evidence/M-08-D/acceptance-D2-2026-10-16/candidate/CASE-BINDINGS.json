@@ -1,0 +1,79 @@
+{
+  "V1": {
+    "names": [
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::full_apply_verify_update_remove_preserves_foreign_state",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::interrupted_command_prefix_recovers_with_fresh_authority",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::changed_executable_descriptor_and_expanded_plan_refuse_stale_grant",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::cancel_boundaries_and_post_effect_error_retain_owned_prefix",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::identical_dto_foreign_prepared_grant_refuses_before_files",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::repeated_cold_combined_recovery_preserves_original_c3_subject",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::receipt_publication_crash_recovers_same_run_and_refuses_foreign_join"
+    ],
+    "expected": 7,
+    "source_paths": [
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs"
+    ],
+    "status": "actual source definitions bound; execution not yet observed",
+    "source_hashes": {
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs": "799834f0f6fc4ed77654f65f80e26963d8331209722cd989ffd0f647fc53fc0a"
+    }
+  },
+  "V2": {
+    "names": [
+      "machine_operation::client_deploy::m_08_d_2_cases::response_loss_reconnects_same_operation_without_duplicate_effect",
+      "machine_operation::client_deploy::m_08_d_2_cases::changed_payload_same_key_and_foreign_scope_refuse",
+      "machine_operation::client_deploy::m_08_d_2_cases::all_verbs_publish_exact_owner_resource_authority_and_partial_status"
+    ],
+    "expected": 3,
+    "source_paths": [
+      "crates/vibe-orchestrator/src/machine_operation/client_deploy/m_08_d_2_cases.rs"
+    ],
+    "status": "actual source definitions bound; execution not yet observed",
+    "source_hashes": {
+      "crates/vibe-orchestrator/src/machine_operation/client_deploy/m_08_d_2_cases.rs": "a1e0500e07982dffe8336b1d71da5380dbf1693ef027ca2a16afc1342c2ce04f"
+    }
+  },
+  "V3": {
+    "names": [
+      "tools::client_deploy_operation::m_08_d_2_cases::mcp_and_api_all_verbs_have_equal_typed_outcomes",
+      "tools::client_deploy_operation::m_08_d_2_cases::ungranted_and_post_effect_refusals_keep_distinct_boundaries"
+    ],
+    "expected": 2,
+    "source_paths": [
+      "crates/vibe-mcp/src/tools/client_deploy_operation/m_08_d_2_cases.rs"
+    ],
+    "status": "actual source definitions bound; execution not yet observed",
+    "source_hashes": {
+      "crates/vibe-mcp/src/tools/client_deploy_operation/m_08_d_2_cases.rs": "e4a0e1fd7b54525e732805f757f122689feabac55b990c4d1ec0a8fbcda56cd8"
+    }
+  },
+  "V4": {
+    "names": [
+      "commands::machine_session::client_deploy::m_08_d_2_cases::cli_frames_and_api_match_full_fixture_lifecycle",
+      "commands::machine_session::client_deploy::m_08_d_2_cases::lost_output_reattaches_same_run_and_preserves_partial_reply",
+      "commands::machine_session::client_deploy::m_08_d_2_cases::real_cli_dispatch_injected_host_executes_full_lifecycle_and_ungranted_refuses"
+    ],
+    "expected": 3,
+    "source_paths": [
+      "crates/vibe-cli/src/commands/machine_session/client_deploy/m_08_d_2_cases.rs"
+    ],
+    "status": "actual source definitions bound; execution not yet observed",
+    "source_hashes": {
+      "crates/vibe-cli/src/commands/machine_session/client_deploy/m_08_d_2_cases.rs": "ee8e00ad44f9387271d7827d963157a87cd619f0a6ca9abefa55622c3e088b03"
+    }
+  },
+  "V5": {
+    "names": [
+      "behaviour::client_deploy::m_08_d_2_cases::strict_action_reply_and_retained_prefix_corpus",
+      "behaviour::client_deploy::m_08_d_2_cases::unknown_identity_and_forged_completed_partial_refuse"
+    ],
+    "expected": 2,
+    "source_paths": [
+      "crates/vibe-wire/src/behaviour/client_deploy/m_08_d_2_cases.rs"
+    ],
+    "status": "actual source definitions bound; execution not yet observed",
+    "source_hashes": {
+      "crates/vibe-wire/src/behaviour/client_deploy/m_08_d_2_cases.rs": "cd361a269327d56fb652db1014b84b78f22dae104f9074f0b644a62838cd902d"
+    }
+  }
+}

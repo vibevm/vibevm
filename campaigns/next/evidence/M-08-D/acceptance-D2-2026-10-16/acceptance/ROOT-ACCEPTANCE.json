@@ -1,0 +1,59 @@
+{
+  "utc": "2026-10-16T02:54:13.757935+00:00",
+  "task": "M-08-D.2",
+  "source_commit": "785e4fcd033fb57dc032aa7972a4a34b79896cd5",
+  "actual_work_accept_receipt": {
+    "kind": "command",
+    "value": {
+      "status": "committed",
+      "receipt": {
+        "store": {
+          "store_id": "store.vibevm-m08d2-correction.live",
+          "campaign_id": "campaign.vibevm-m08d2-correction.live",
+          "base_id": "base.vibevm-m08d2-correction.live",
+          "store_epoch": "zap/2",
+          "codec_epoch": 2,
+          "reducer_epoch": 1
+        },
+        "command_id": "root-review.m08d2-correction.work",
+        "event_id": "event:root-review.m08d2-correction.work",
+        "transaction_id": "tx:root-review.m08d2-correction.work",
+        "revision": 436,
+        "event_digest": "552f895a85efe7324d5ad1db5e77ffc96f63ea232739a47b727256ecbe76dd4f",
+        "output": [
+          123,
+          34,
+          114,
+          101,
+          118,
+          105,
+          115,
+          105,
+          111,
+          110,
+          34,
+          58,
+          52,
+          51,
+          54,
+          125
+        ],
+        "disposition": "committed"
+      }
+    }
+  },
+  "work_state": "Accepted",
+  "work_revision": 5,
+  "observed_store_head": 436,
+  "accepted_task_contracts": 88,
+  "total_task_contracts": 222,
+  "runtime_job_acceptance": "unreviewed",
+  "runtime_job_safe": "safe",
+  "root_exec_exit": 0,
+  "original_pids_absent": true,
+  "focused_functions": 22,
+  "source_subjects": 2655,
+  "root_gate_exit": 0,
+  "root_gate_seconds": 6.15327447099844,
+  "review_sha256": "b115a52dc0f1cb6d56511573ebd79dece253b4d2906e9c1df3847e6cd285d33e"
+}

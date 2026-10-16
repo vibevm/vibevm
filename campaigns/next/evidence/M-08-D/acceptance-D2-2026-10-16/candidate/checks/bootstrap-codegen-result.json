@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+    "codegen"
+  ],
+  "exit": 1,
+  "generator_binary_sha256": "b48d1b8e643ee2f21ec0ad4dd04d1fb74c29f8b53686f3b44d98cf89a9478058",
+  "changed_paths": [],
+  "closure_count": 2655
+}

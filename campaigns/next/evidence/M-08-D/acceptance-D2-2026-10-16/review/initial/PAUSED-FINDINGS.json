@@ -1,0 +1,24 @@
+{
+  "status": "paused_incomplete_review_no_acceptance",
+  "utc": "2026-10-15T20:37:27.051888+00:00",
+  "reviewer": "/root/vibe_m08d2_full_review",
+  "reason": "Owner temporarily stops all work except Lean LLVM experiment",
+  "findings_reported_before_interrupt": [
+    {
+      "topic": "composed C3 cold recovery",
+      "observation": "save writes file_subject from Files::identity including retained recovery identity; later prepare_recovery compares original grant_subject, so repeated cold recovery may refuse after saved interrupted recovery",
+      "verification": "source finding reported by reviewer; full report/tests not completed"
+    },
+    {
+      "topic": "complete approval before effects",
+      "observation": "D2 validate_approval compares plan hash/count but does not validate each opaque D1 ProcessGrant against exact Prepared before file effects; identical inspect DTOs can hide differing private prepared IDs",
+      "verification": "source finding reported by reviewer; full report/tests not completed"
+    },
+    {
+      "topic": "receipt publication crash window",
+      "observation": "journal writes/promotes new DeployReceipt before client record new receipt_digest; interruption can leave prefix joined to prior digest and recovery rejects same-operation publication",
+      "verification": "source finding reported by reviewer; full report/tests not completed"
+    }
+  ],
+  "no_source_corrections_started": true
+}

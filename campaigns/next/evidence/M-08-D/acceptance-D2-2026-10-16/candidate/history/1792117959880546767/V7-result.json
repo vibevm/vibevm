@@ -1,0 +1,51 @@
+{
+  "group": "V7",
+  "executed": true,
+  "case_binding": null,
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "xtask",
+        "codegen"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-1.log",
+      "seconds": 25.132841624959838,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "xtask",
+        "check-codegen"
+      ],
+      "exit": 1,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-2.log",
+      "seconds": 19.106953202048317,
+      "passed": false,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "cargo",
+        "xtask",
+        "wire-diff"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-3.log",
+      "seconds": 13.669499296986032,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "preservation": null,
+  "passed": false,
+  "full_closure_subject_count": 2655,
+  "full_closure_drift": []
+}

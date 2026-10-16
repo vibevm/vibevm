@@ -1,0 +1,59 @@
+{
+  "group": "V8",
+  "executed": true,
+  "case_binding": null,
+  "conditional_selection": null,
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-cli/src/commands/machine_session.rs",
+        "crates/vibe-cli/src/commands/machine_session/client_deploy/m_08_d_2_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/journal.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs",
+        "crates/vibe-wire/src/behaviour/client_deploy.rs",
+        "crates/vibe-wire/src/behaviour/client_deploy/m_08_d_2_cases.rs"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V8-1.log",
+      "seconds": 0.22753696399740875,
+      "passed": true,
+      "source_drift": []
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V8-2.log",
+      "seconds": 0.18512314202962443,
+      "passed": true,
+      "source_drift": []
+    }
+  ],
+  "preservation": {
+    "group": "V8",
+    "executed": true,
+    "xml_parsed": true,
+    "prior_spec_lines_preserved": true,
+    "old_schema_drift": [],
+    "required_registration_changes": [],
+    "unqualified_generated_drift": [],
+    "passed": true,
+    "Root_preauthorized_exact_global_header_insertion": []
+  },
+  "passed": true,
+  "full_closure_subject_count": 2655,
+  "full_closure_drift": []
+}

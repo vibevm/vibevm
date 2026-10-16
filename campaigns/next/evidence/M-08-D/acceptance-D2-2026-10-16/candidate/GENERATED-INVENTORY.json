@@ -1,0 +1,41 @@
+{
+  "generator": "incumbent cargo xtask codegen; warm binary bootstrap logged separately",
+  "files": [
+    {
+      "path": "crates/vibe-wire/src/generated/client_deploy/e1/error/mod.rs",
+      "sha256": "993d356c4910d169de958222e1ef5bcc1edbcdb91fd0b85c3475edec49290adc",
+      "baseline_sha256": "993d356c4910d169de958222e1ef5bcc1edbcdb91fd0b85c3475edec49290adc",
+      "created_in_correction": false
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_deploy/e1/mod.rs",
+      "sha256": "097645ac3863863c3f4b5a5ef22e7e8c5c095aebaecb331e299eb42713e3a92f",
+      "baseline_sha256": "097645ac3863863c3f4b5a5ef22e7e8c5c095aebaecb331e299eb42713e3a92f",
+      "created_in_correction": false
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_deploy/e1/reply/mod.rs",
+      "sha256": "e98742b222f678dd4795478581c277cbbd74b20eca4fee627bff5d172fad2f6d",
+      "baseline_sha256": "e98742b222f678dd4795478581c277cbbd74b20eca4fee627bff5d172fad2f6d",
+      "created_in_correction": false
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_deploy/e1/request/mod.rs",
+      "sha256": "1c40899815d272e9d0adfdbbbc9ee41378b0af4ab44ab47811cac9917b765574",
+      "baseline_sha256": "1c40899815d272e9d0adfdbbbc9ee41378b0af4ab44ab47811cac9917b765574",
+      "created_in_correction": false
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_deploy/mod.rs",
+      "sha256": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "baseline_sha256": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "created_in_correction": false
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/deploy_client_state/mod.rs",
+      "sha256": "119217084bdfda5fea7f550a64ef50c8abbd8969a4f5a6158fff2b750aeef65b",
+      "baseline_sha256": "7bfba22182555bc35bd1dcf07b3af1e2e67cce6dda04a4dccfab3e74db9c8710",
+      "created_in_correction": false
+    }
+  ]
+}

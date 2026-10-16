@@ -1,0 +1,130 @@
+{
+  "task": "M-08-D.2",
+  "verdict": "changes_required",
+  "root_acceptance": false,
+  "review_mode": "read-only source and retained evidence; no builds/tests/process management/Git mutations/source changes",
+  "candidate_unchanged_since_pause": true,
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "P1",
+      "title": "Validate opaque D1 grants before any composed file effect",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs",
+      "line": 503,
+      "evidence": "D2 checks the content plan hash and command count, then checks preparation currentness, but never checks each ProcessGrant against its Prepared. D1 assigns a fresh private prepared id on every prepare; identical inspect DTOs hash to the same D2 identity. Approval from preparation A passes D2 preflight for equivalent preparation B. C3 files.execute runs at line 802, and only subsequent D1 execute rejects the wrong prepared id.",
+      "fix": "Expose a read-only D1 exact grant validation port that preserves its existing host/prepared/currentness checks, use it for every command in D2 complete preflight before file effects, and retain the execution recheck.",
+      "regression": "Prepare identical command/file plans twice without state changes; approve first, execute second with that approval; assert typed NeedsAuthority and zero file/command effects. Then execute with a fresh matching grant successfully."
+    },
+    {
+      "id": "R2",
+      "priority": "P2",
+      "title": "Preserve original C3 operation subject across repeated recovery",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/journal.rs",
+      "line": 19,
+      "evidence": "save writes file_subject from Files::identity on every save. Initial Apply identity equals the C3 binding grant_subject; a retained recovery plan identity is a different hash. C3 execute_retained_inner preserves grant_subject when plan.recovery is true (generic/inverse.rs 394-400). After the first recovery saves, a second prepare_recovery_with_files compares the new recovery identity to the original binding subject and refuses at client_deploy.rs 420. Even cooperative cancellation before dispatch invokes save and causes this mismatch.",
+      "fix": "Keep the original C3 operation subject immutable in D2 retained state and separate it from the fresh retained-plan approval identity; validate target/resource/subject joins on every continuation. Do not weaken the C3 equality check.",
+      "regression": "Combined file+command apply stops after a command effect; cold recover with fresh C3/D1 admission, cancel at a durable boundary, then cold recover again with fresh admission. Same run resumes, original C3 subject remains, landed effects execute once, foreign state survives."
+    },
+    {
+      "id": "R3",
+      "priority": "P1",
+      "title": "Reconcile the receipt publication boundary within the retained run",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/journal.rs",
+      "line": 291,
+      "evidence": "Receipt is published before sidecar promotion, intent retirement and final client record save. The durable client record still contains the previous receipt_digest until that final save. Crash or publication error in this interval leaves an owned completed/partial prefix, but execute refuses its own new receipt as changed at client_deploy.rs 734-737. Fresh D1/C3 authority cannot repair this journal join.",
+      "fix": "Retain a durable exact finalization intent/basis before receipt publication and reconcile a matching own receipt/sidecar/intent during recovery using existing DeployState/Transaction ownership. Refuse foreign joins; do not merely ignore receipt mismatch or create a new run.",
+      "regression": "Deterministically stop after receipt publication and before final client-record publication (also cover sidecar/intent finalization stages). Cold inspect/recover with fresh authority must complete the same operation without repeating landed commands and must reject a genuinely foreign receipt."
+    },
+    {
+      "id": "R4",
+      "priority": "P2",
+      "title": "Connect trusted host injection to the real CLI entry path",
+      "path": "crates/vibe-cli/src/commands/machine_session.rs",
+      "line": 133,
+      "evidence": "The production --client-deploy branch always calls client_deploy::exchange with None. The helper immediately errors on None and is in a private module; its only Some(route) caller is a unit test with empty input. Lifecycle CLI tests subsequently drive ClientDeployMachineSessionRunner directly. Thus the declared CLI mode cannot execute any lifecycle verb through a reachable trusted composition path.",
+      "fix": "Thread an explicitly supplied trusted client host through an actual callable CLI composition/dispatch entry, preserving default ungranted refusal and using the same frame runner. Do not create ambient grants or vendor discovery.",
+      "regression": "Drive the real CLI dispatch entry with an injected controlled host and actual framed plan/apply/verify/update/remove/recover input; compare typed owner outcomes. Also assert ordinary ungranted startup refuses."
+    }
+  ],
+  "evidence_gap": {
+    "kind": "tested-source-closure incomplete",
+    "missing_paths": [
+      "crates/vibe-cli/src/commands/machine_session/client_deploy.rs",
+      "crates/vibe-cli/src/commands/machine_session/client_deploy/m_08_d_2_cases.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/journal.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs",
+      "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+      "crates/vibe-mcp/src/machine_session/client_deploy.rs",
+      "crates/vibe-mcp/src/machine_session/state.rs",
+      "crates/vibe-mcp/src/tools/client_deploy_operation.rs",
+      "crates/vibe-mcp/src/tools/client_deploy_operation/m_08_d_2_cases.rs",
+      "crates/vibe-orchestrator/src/machine_operation/client_deploy.rs",
+      "crates/vibe-orchestrator/src/machine_operation/client_deploy/m_08_d_2_cases.rs",
+      "crates/vibe-orchestrator/src/machine_submission/client_deploy.rs",
+      "crates/vibe-wire/src/behaviour/client_deploy.rs",
+      "crates/vibe-wire/src/behaviour/client_deploy/m_08_d_2_cases.rs",
+      "crates/vibe-wire/src/generated/client_deploy/e1/error/mod.rs",
+      "crates/vibe-wire/src/generated/client_deploy/e1/mod.rs",
+      "crates/vibe-wire/src/generated/client_deploy/e1/reply/mod.rs",
+      "crates/vibe-wire/src/generated/client_deploy/e1/request/mod.rs",
+      "crates/vibe-wire/src/generated/client_deploy/mod.rs",
+      "crates/vibe-wire/src/generated/deploy_client_state/mod.rs",
+      "fixtures/next/adapters/m-08-d2/foreign.json",
+      "fixtures/next/adapters/m-08-d2/initial.json",
+      "fixtures/next/adapters/m-08-d2/update.json",
+      "formats/corpora/client-deploy/e1/invalid/foreign-operation.json",
+      "formats/corpora/client-deploy/e1/valid/apply.json",
+      "formats/corpora/client-deploy/e1/valid/authority-required.json",
+      "formats/corpora/client-deploy/e1/valid/partial.json",
+      "formats/corpora/client-deploy/e1/valid/plan.json",
+      "formats/corpora/client-deploy/e1/valid/recover.json",
+      "formats/corpora/deploy-client-state/e1/invalid/changed-subject.json",
+      "formats/corpora/deploy-client-state/e1/valid/retained-prefix.json",
+      "schemas/client_deploy/e1/error.jtd.json",
+      "schemas/client_deploy/e1/reply.jtd.json",
+      "schemas/client_deploy/e1/request.jtd.json",
+      "schemas/deploy_client_state.jtd.json"
+    ],
+    "explanation": "All 471 recorded V1-V7 subjects match current bytes, and final 114-file SOURCE-CLOSURE matches current bytes. Per-test manifests omit new implementation and tests plus two approved owner extensions. Therefore final changed-file hashes alone cannot establish that every current body was the tested body. Bind the full consumed new/extended closure before and after correction checks."
+  },
+  "observed_receipts": {
+    "V1_V5": [
+      4,
+      3,
+      2,
+      2,
+      2
+    ],
+    "V6": 5,
+    "V7_exits": [
+      0,
+      1,
+      0
+    ],
+    "V8": "frozen wrapper AssertionError; supplemental rustfmt and whitespace exit 0; Root repair and formal V8 pending",
+    "bootstrap_codegen_exits": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "preservation": {
+    "generated_baseline_files": 238,
+    "old_generated_exact_header_only": 57,
+    "registration_files": 3,
+    "unexpected_old_generated_changes": 0,
+    "PROP054_XML_parses": true,
+    "PROP054_exact_old_text_preserved": true
+  },
+  "limits": [
+    "Findings are source-proven control/data-flow defects; no new executable reproductions were run by this reviewer.",
+    "13 new and 5 existing tests are observed in producer logs, not newly run; provenance caveat above remains.",
+    "V7 preindex failure is not relabelled green; Root owns later staged gate. V8 wrapper scope failure is private harness ceremony, not a product finding.",
+    "Controlled fixtures do not qualify real vendors, platforms or a production PodBay adapter.",
+    "No blanket clearance of unrelated unchanged owners or full campaign acceptance."
+  ]
+}

@@ -1,0 +1,642 @@
+{
+  "approved": false,
+  "approval_token": "Root approves FULL M08D2 eight proofs after source integration and actual codegen gate",
+  "summary": "Root review of full M08D2 corrected controlled deployment lifecycle; four defects closed,22 focused functions and separate integrated codegen gate",
+  "scope": "Full original M08D2 three steps, two positive/two negative cases, both criteria and controlled-fixture safe stop",
+  "limitations": [
+    "Producer V7 check-codegen exit1 is retained; separate actual Root staged integration gate0 supplies current integration proof.",
+    "17 focused new-family functions plus five exact owner regressions; repeats and table rows are not additional functions.",
+    "Controlled trusted CLI embedding only; default absent host refuses, no standalone vendor/production PodBay adapter qualification.",
+    "Prior original471-source test manifests omitted36 paths; current correction manifests bind all2655 and do not rewrite historical evidence."
+  ],
+  "observations": [
+    {
+      "group": "V1",
+      "verification_id": "verification.m08d2-correction",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V1"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V1"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-16-m08d2-correction/V1-result.json",
+      "result_sha256": "dc2afdc885f50bd352b816dcf254843e4efe904758f23f5eb62083b446fcf929",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::client_deploy::m_08_d_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "7",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V1-1.log",
+          "seconds": 25.516301919997204,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "0bedcd19e4cefead6e0399061eda8857e41cb4b2ba8baea72de9d75e238f043e"
+        }
+      ],
+      "fresh_case_count": 7,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::full_apply_verify_update_remove_preserves_foreign_state",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::interrupted_command_prefix_recovers_with_fresh_authority",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::changed_executable_descriptor_and_expanded_plan_refuse_stale_grant",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::cancel_boundaries_and_post_effect_error_retain_owned_prefix",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::identical_dto_foreign_prepared_grant_refuses_before_files",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::repeated_cold_combined_recovery_preserves_original_c3_subject",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::receipt_publication_crash_recovers_same_run_and_refuses_foreign_join"
+      ]
+    },
+    {
+      "group": "V2",
+      "verification_id": "verification.m08d2-correction.1",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V2"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V2"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-16-m08d2-correction/V2-result.json",
+      "result_sha256": "44207e872294f2f34f76ef07ab3909b9a46a45d07b6ad4083c6e6b8d964ebda8",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::client_deploy::m_08_d_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "3",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V2-1.log",
+          "seconds": 17.576184260018636,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "3430726cafcc881160b9d43eb16a06223f1bd25bdf7bff46dec0cefcd6e0d301"
+        }
+      ],
+      "fresh_case_count": 3,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "machine_operation::client_deploy::m_08_d_2_cases::response_loss_reconnects_same_operation_without_duplicate_effect",
+        "machine_operation::client_deploy::m_08_d_2_cases::changed_payload_same_key_and_foreign_scope_refuse",
+        "machine_operation::client_deploy::m_08_d_2_cases::all_verbs_publish_exact_owner_resource_authority_and_partial_status"
+      ]
+    },
+    {
+      "group": "V3",
+      "verification_id": "verification.m08d2-correction.2",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V3"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V3"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-16-m08d2-correction/V3-result.json",
+      "result_sha256": "f94bbc6c21c86ba645fd79c02d409efc4da7a907b99695c6e32ff8243d858258",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-mcp",
+            "--lib",
+            "tools::client_deploy_operation::m_08_d_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "2",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V3-1.log",
+          "seconds": 4.0398828169563785,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "e56290f07a33e95d74bf436f21e273786956a0b71685793670566bb9b02fad44"
+        }
+      ],
+      "fresh_case_count": 2,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "tools::client_deploy_operation::m_08_d_2_cases::mcp_and_api_all_verbs_have_equal_typed_outcomes",
+        "tools::client_deploy_operation::m_08_d_2_cases::ungranted_and_post_effect_refusals_keep_distinct_boundaries"
+      ]
+    },
+    {
+      "group": "V4",
+      "verification_id": "verification.m08d2-correction.3",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V4"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V4"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-16-m08d2-correction/V4-result.json",
+      "result_sha256": "f607d9cf15b1964efaa21c559e1317572b34ba788269601e558c6303c359bcb5",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-cli",
+            "--bin",
+            "vibe",
+            "commands::machine_session::client_deploy::m_08_d_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "3",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V4-1.log",
+          "seconds": 23.68797809694661,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "d08f99a1ac8124f83c51044b858b57d3886d2e635d576b5476ffbf077131a87d"
+        }
+      ],
+      "fresh_case_count": 3,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "commands::machine_session::client_deploy::m_08_d_2_cases::cli_frames_and_api_match_full_fixture_lifecycle",
+        "commands::machine_session::client_deploy::m_08_d_2_cases::lost_output_reattaches_same_run_and_preserves_partial_reply",
+        "commands::machine_session::client_deploy::m_08_d_2_cases::real_cli_dispatch_injected_host_executes_full_lifecycle_and_ungranted_refuses"
+      ]
+    },
+    {
+      "group": "V5",
+      "verification_id": "verification.m08d2-correction.4",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V5"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V5"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-16-m08d2-correction/V5-result.json",
+      "result_sha256": "bc033304062c0a7ab6ca94818177dbbbc33cbe6e841a91dbd8860c30f95d3a24",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-wire",
+            "--lib",
+            "behaviour::client_deploy::m_08_d_2_cases"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "2",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V5-1.log",
+          "seconds": 9.98170189600205,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "316664c25ba4a84499e2feb5e853b270a9e6c5a4143d864336ed289502c48ed3"
+        }
+      ],
+      "fresh_case_count": 2,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "behaviour::client_deploy::m_08_d_2_cases::strict_action_reply_and_retained_prefix_corpus",
+        "behaviour::client_deploy::m_08_d_2_cases::unknown_identity_and_forged_completed_partial_refuse"
+      ]
+    },
+    {
+      "group": "V6",
+      "verification_id": "verification.m08d2-correction.5",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V6"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V6"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-result.json",
+      "result_sha256": "af39ef90108467c0645bba33509e2470da815c6bb5ea8d2b520fb2f27e72106d",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::client_commands::m_08_d_1_cases::stale_control_version_environment_cwd_roots_and_revocation_refuse",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-1.log",
+          "seconds": 0.41740524396300316,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "d740331494e271db66c40372bea72f0f621ddf9342d7385eb5dd73803be7f139"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-lifecycle",
+            "--lib",
+            "mechanism::deploy::generic::m_08_c_3_cases::initial_phase_classes_recover_with_exact_fresh_authority",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-2.log",
+          "seconds": 1.491501517011784,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "6238297027bc6ab0ef54b1653aab0835f99e81f0b81d6596637686986a5a4d60"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_operation::fixed_deploy::tests::partial_and_post_effect_error_keep_run_scope_and_uncertainty",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-3.log",
+          "seconds": 0.39407262403983623,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "3591f1dacc4b75a36503a9dc216600f536b669fcee80bcc533c12628d4eadf7e"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_submission::tests::different_payload_refuses_and_lost_response_replays_journal",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-4.log",
+          "seconds": 0.4421232839813456,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "fbf51ad0aa535b3d850bcee0ad3c40a0da128c854153fbd9ac17c9dd604c403c"
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-orchestrator",
+            "--lib",
+            "machine_submission::tests::invoke_error_after_counted_effect_keeps_recovery_or_uncertain_run",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V6-5.log",
+          "seconds": 0.48149894300149754,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "0a3d6993284804aa6140c7a69041241a4636e42a44fd48a0cdbe4ad530eb79bd"
+        }
+      ],
+      "fresh_case_count": 5,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "V6 exact logged commands"
+      ]
+    },
+    {
+      "group": "V7",
+      "verification_id": "verification.m08d2-correction.6",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V7"
+      ],
+      "actual_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "xtask",
+        "check-codegen"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-result.json",
+      "result_sha256": "25f449aab190da190eda3d7d5cefccdd053a1ccdf603835444fedc3c3fe713bf",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "codegen"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-1.log",
+          "seconds": 9.193506864015944,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "7f6619b8971d2849e3d30f14d0d324146df73508935cc5f024b90928d5c12066"
+        },
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "check-codegen"
+          ],
+          "exit": 1,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-2.log",
+          "seconds": 18.101013349019922,
+          "passed": false,
+          "source_drift": [],
+          "log_sha256": "b78141020cb5c131d05a29bcd30375271b08067141f31b5cd61a32251d23e95b"
+        },
+        {
+          "argv": [
+            "cargo",
+            "xtask",
+            "wire-diff"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V7-3.log",
+          "seconds": 13.356938059034292,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "2ac61a33802642686403156d6532295089287cb8a78be38f4e505343170e1894"
+        }
+      ],
+      "fresh_case_count": 0,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "V7 exact logged commands"
+      ],
+      "producer_failed_check_retained": true,
+      "integrated_gate": {
+        "path": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/ROOT-GATE-BINDING.json",
+        "sha256": "90801aea215119562882bc321769275c8e138840b1ef2b9737ba8d816ad6ce64",
+        "command": [
+          "/home/olegchir/.cargo/bin/cargo",
+          "xtask",
+          "check-codegen"
+        ],
+        "log": "/fast/git/v/research/2026-10-16-m08d2-acceptance-prepare/root-check-codegen.log",
+        "log_sha256": "8af5061645ee699ec021cf5f94b1d5896d63855d95b8d18ccf733229b6a46210"
+      }
+    },
+    {
+      "group": "V8",
+      "verification_id": "verification.m08d2-correction.7",
+      "captured_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V8"
+      ],
+      "actual_argv": [
+        "python3",
+        "/fast/zap-managed/2026-10-16-m08d2-correction/verify-group.py",
+        "V8"
+      ],
+      "result_path": "/fast/zap-managed/2026-10-16-m08d2-correction/V8-result.json",
+      "result_sha256": "4e3e29f4e4cbb3d1b88fe1b795d4ff44bf11b57862f3f954f3c6da3820904636",
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-cli/src/commands/machine_session.rs",
+            "crates/vibe-cli/src/commands/machine_session/client_deploy/m_08_d_2_cases.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/journal.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs",
+            "crates/vibe-wire/src/behaviour/client_deploy.rs",
+            "crates/vibe-wire/src/behaviour/client_deploy/m_08_d_2_cases.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V8-1.log",
+          "seconds": 0.223372710053809,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m08d2-correction/V8-2.log",
+          "seconds": 0.17843047599308193,
+          "passed": true,
+          "source_drift": [],
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "fresh_case_count": 0,
+      "selected_for_acceptance": true,
+      "observed_result": "observed_pass",
+      "cases": [
+        "V8 exact logged commands"
+      ]
+    }
+  ],
+  "supplementary_subjects": {
+    "full_closure": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/final-source-hashes.json",
+    "sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+  },
+  "fresh_distinct_cases": 22,
+  "reused_distinct_cases": 0,
+  "actual_environment": "Existing exclusive Vibe warm target; offline/locked focused Rust tests, injected fixture process/state ports; no real vendors/platform or production adapter qualification; Root integrated gate: {\"CARGO_NET_OFFLINE\": \"true\", \"CARGO_TARGET_DIR\": \"/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target\", \"RUSTUP_AUTO_INSTALL\": \"0\"}",
+  "evidence_files": {
+    "/fast/zap-managed/2026-10-16-m08d2-correction/REPORT.json": {
+      "path": "/fast/zap-managed/2026-10-16-m08d2-correction/REPORT.json",
+      "sha256": "e6d30e796d08856413f9b62a10fe961f2cb9761ff88ea58e874aa519f71cada9"
+    },
+    "/fast/zap-managed/2026-10-16-m08d2-correction/candidate-result.json": {
+      "path": "/fast/zap-managed/2026-10-16-m08d2-correction/candidate-result.json",
+      "sha256": "da847062523dc0aca76bc5591e81517d0826b57a9a713d6f45efcf000ed722f8"
+    },
+    "/fast/zap-managed/2026-10-16-m08d2-correction/actual-runtime-binding.json": {
+      "path": "/fast/zap-managed/2026-10-16-m08d2-correction/actual-runtime-binding.json",
+      "sha256": "3088826bcd0924a80acd8700a28f2c9d159bffca368147bfe9d28066965c5546"
+    },
+    "/fast/git/v/research/2026-10-16-m08d2-correction-review/REPORT.json": {
+      "path": "/fast/git/v/research/2026-10-16-m08d2-correction-review/REPORT.json",
+      "sha256": "b514ccc26d870fefa5237777eee8dbee84cb500c573494ac8a9528bab5683c0d"
+    },
+    "/fast/git/v/research/2026-10-16-m08d2-acceptance-prepare/ROOT-INTEGRATED-GATE.json": {
+      "path": "/fast/git/v/research/2026-10-16-m08d2-acceptance-prepare/ROOT-INTEGRATED-GATE.json",
+      "sha256": "6a162f8a41b35e97e913334f9990df7c835d909989c0e220bf19110f43971eed"
+    },
+    "/fast/git/v/research/2026-10-16-m08d2-acceptance-prepare/root-check-codegen.log": {
+      "path": "/fast/git/v/research/2026-10-16-m08d2-acceptance-prepare/root-check-codegen.log",
+      "sha256": "8af5061645ee699ec021cf5f94b1d5896d63855d95b8d18ccf733229b6a46210"
+    },
+    "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/final-source-hashes.json": {
+      "path": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/final-source-hashes.json",
+      "sha256": "6ee3242f8b8af8328e945b3643de2ef6a0a8582377303cbb36f0d2015be1772c"
+    },
+    "retirement": {
+      "path": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/ROOT-QUIESCENCE.json",
+      "sha256": "2f07b7083599f4855f79c4adedd643e1770bbfec7b94c0e69a31bac4e2d4f132"
+    },
+    "ROOT-GATE-BINDING.json": {
+      "path": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/ROOT-GATE-BINDING.json",
+      "sha256": "90801aea215119562882bc321769275c8e138840b1ef2b9737ba8d816ad6ce64"
+    },
+    "ROOT-SOURCE-INTEGRATION.json": {
+      "path": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/ROOT-SOURCE-INTEGRATION.json",
+      "sha256": "3438fcdf661a2cc1713ecf70c4e1d654ee08070fc1420f633aafeba462fefb9e"
+    }
+  },
+  "criterion_assessments": [
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#SOURCE-VERSUS-PLAN",
+      "statement": "External surfaces agree on exact resources, authority decision and terminal/partial status.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "PENDING_ROOT_JUDGMENT",
+      "rationale": "PENDING_ROOT_JUDGMENT"
+    },
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#VIBEVM-OWNER",
+      "statement": "All lifecycle verbs have executable behavior; plan-only is not acceptance.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "PENDING_ROOT_JUDGMENT",
+      "rationale": "PENDING_ROOT_JUDGMENT"
+    }
+  ],
+  "main_integration": {
+    "path": "/fast/zap-managed/2026-10-16-m08d2-correction/acceptance-preparation/ROOT-SOURCE-INTEGRATION.json",
+    "sha256": "3438fcdf661a2cc1713ecf70c4e1d654ee08070fc1420f633aafeba462fefb9e",
+    "status": "integrated"
+  }
+}

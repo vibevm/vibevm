@@ -1,0 +1,274 @@
+[
+  {
+    "id": "V1",
+    "status": "TO CREATE; bind actual definitions before compile",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases"
+    ],
+    "expected_nonignored": 7,
+    "case_names": [
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::full_apply_verify_update_remove_preserves_foreign_state",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::interrupted_command_prefix_recovers_with_fresh_authority",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::changed_executable_descriptor_and_expanded_plan_refuse_stale_grant",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::cancel_boundaries_and_post_effect_error_retain_owned_prefix",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::identical_dto_foreign_prepared_grant_refuses_before_files",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::repeated_cold_combined_recovery_preserves_original_c3_subject",
+      "mechanism::deploy::client_deploy::m_08_d_2_cases::receipt_publication_crash_recovers_same_run_and_refuses_foreign_join"
+    ],
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V2",
+    "status": "TO CREATE; bind actual definitions before compile",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-orchestrator",
+      "--lib",
+      "machine_operation::client_deploy::m_08_d_2_cases"
+    ],
+    "expected_nonignored": 3,
+    "case_names": [
+      "machine_operation::client_deploy::m_08_d_2_cases::response_loss_reconnects_same_operation_without_duplicate_effect",
+      "machine_operation::client_deploy::m_08_d_2_cases::changed_payload_same_key_and_foreign_scope_refuse",
+      "machine_operation::client_deploy::m_08_d_2_cases::all_verbs_publish_exact_owner_resource_authority_and_partial_status"
+    ],
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::client_deploy::m_08_d_2_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V3",
+    "status": "TO CREATE; bind actual definitions before compile",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-mcp",
+      "--lib",
+      "tools::client_deploy_operation::m_08_d_2_cases"
+    ],
+    "expected_nonignored": 2,
+    "case_names": [
+      "tools::client_deploy_operation::m_08_d_2_cases::mcp_and_api_all_verbs_have_equal_typed_outcomes",
+      "tools::client_deploy_operation::m_08_d_2_cases::ungranted_and_post_effect_refusals_keep_distinct_boundaries"
+    ],
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "tools::client_deploy_operation::m_08_d_2_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V4",
+    "status": "TO CREATE; bind actual definitions before compile",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-cli",
+      "--bin",
+      "vibe",
+      "commands::machine_session::client_deploy::m_08_d_2_cases"
+    ],
+    "expected_nonignored": 3,
+    "case_names": [
+      "commands::machine_session::client_deploy::m_08_d_2_cases::cli_frames_and_api_match_full_fixture_lifecycle",
+      "commands::machine_session::client_deploy::m_08_d_2_cases::lost_output_reattaches_same_run_and_preserves_partial_reply",
+      "commands::machine_session::client_deploy::m_08_d_2_cases::real_cli_dispatch_injected_host_executes_full_lifecycle_and_ungranted_refuses"
+    ],
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "commands::machine_session::client_deploy::m_08_d_2_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V5",
+    "status": "TO CREATE; bind actual definitions before compile",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-wire",
+      "--lib",
+      "behaviour::client_deploy::m_08_d_2_cases"
+    ],
+    "expected_nonignored": 2,
+    "case_names": [
+      "behaviour::client_deploy::m_08_d_2_cases::strict_action_reply_and_retained_prefix_corpus",
+      "behaviour::client_deploy::m_08_d_2_cases::unknown_identity_and_forged_completed_partial_refuse"
+    ],
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "behaviour::client_deploy::m_08_d_2_cases"
+      ]
+    ],
+    "new_family": true
+  },
+  {
+    "id": "V6",
+    "status": "Existing exact owner checks only if consumed owner changes; otherwise honest matching-hash reuse",
+    "cases": [
+      "vibe-orchestrator --lib machine_submission::tests::different_payload_refuses_and_lost_response_replays_journal -- --exact",
+      "vibe-orchestrator --lib machine_submission::tests::invoke_error_after_counted_effect_keeps_recovery_or_uncertain_run -- --exact",
+      "vibe-orchestrator --lib machine_operation::fixed_deploy::tests::partial_and_post_effect_error_keep_run_scope_and_uncertainty -- --exact"
+    ],
+    "D1_C3_preservation": "Select exact impacted cases only, no full family replay from status labels.",
+    "commands": [],
+    "existing_conditional_commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_submission::tests::different_payload_refuses_and_lost_response_replays_journal",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_submission::tests::invoke_error_after_counted_effect_keeps_recovery_or_uncertain_run",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "machine_operation::fixed_deploy::tests::partial_and_post_effect_error_keep_run_scope_and_uncertainty",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::client_commands::m_08_d_1_cases::stale_control_version_environment_cwd_roots_and_revocation_refuse",
+        "--",
+        "--exact"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::generic::m_08_c_3_cases::initial_phase_classes_recover_with_exact_fresh_authority",
+        "--",
+        "--exact"
+      ]
+    ]
+  },
+  {
+    "id": "V7",
+    "commands": [
+      [
+        "cargo",
+        "xtask",
+        "codegen"
+      ],
+      [
+        "cargo",
+        "xtask",
+        "check-codegen"
+      ],
+      [
+        "cargo",
+        "xtask",
+        "wire-diff"
+      ]
+    ],
+    "trigger": "Actual new registered durable/action inputs; separate exits and Root index-aware gate; old failures retained"
+  },
+  {
+    "id": "V8",
+    "checks": [
+      "scoped authored edition2024 skip_children rustfmt and whitespace",
+      "PROP054 XML/additive prior-law preservation",
+      "old schema/readers/semantic generated body preservation; only separately approved exact new-directory header insertion"
+    ],
+    "commands": []
+  }
+]
