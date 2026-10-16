@@ -113,7 +113,16 @@
         "crates/vibe-workspace/src/extension_world/epoch.rs",
         "crates/vibe-resolver/src/features/configuration.rs",
         "crates/vibe-orchestrator/Cargo.toml",
-        "crates/vibe-orchestrator/src/lib.rs"
+        "crates/vibe-orchestrator/src/lib.rs",
+        "crates/vibe-core/src/manifest/subskill.rs",
+        "crates/vibe-core/src/manifest/package/skill.rs",
+        "crates/vibe-index/src/scanner/manifest/subskills.rs",
+        "crates/vibe-workspace/src/install/bootgen.rs",
+        "crates/vibe-workspace/src/install/bootgen/node_dependency.rs",
+        "crates/vibe-workspace/src/install/bootgen/captured.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml"
       ],
       "write_paths": [
         "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
@@ -137,7 +146,17 @@
         "crates/vibe-resolver/src/features/configuration.rs",
         "crates/vibe-workspace/src/extension_world/m_05_d_2_cases.rs",
         "crates/vibe-resolver/src/features/m_05_d_2_cases.rs",
-        "crates/vibe-orchestrator/src/world/m_05_d_2_cases.rs"
+        "crates/vibe-orchestrator/src/world/m_05_d_2_cases.rs",
+        "crates/vibe-workspace/src/install/bootgen.rs",
+        "crates/vibe-workspace/src/install/bootgen/node_dependency.rs",
+        "crates/vibe-workspace/src/install/bootgen/captured.rs",
+        "crates/vibe-workspace/src/install/bootgen/effective_subskills.rs",
+        "crates/vibe-workspace/src/install/bootgen/m_05_d_2_cases.rs",
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/subskills.rs",
+        "crates/vibe-mcp/src/tools/m_05_d_2_cases.rs",
+        "crates/vibe-mcp/src/lib.rs",
+        "crates/vibe-mcp/Cargo.toml"
       ],
       "steps": [
         "Carry active feature/subskill exports into effective contribution selection and owning projection consumers.",
@@ -174,7 +193,8 @@
         "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
         "TO CREATE: m_05_d_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
         "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
-        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+        "Root clarification 2026-10-16: subskills use their own captured SubskillManifest path/content/delivery in effective loading, visibility and context delivery. They are distinct from independent Agent Skills ([[skill]]). No export-to-SkillDecl mapping or new authored grammar is required. Full slots remain intact under PROP-009; do not revive legacy install-time copying. All original steps, criteria and delivery semantics remain required."
       ]
     }
   ]
