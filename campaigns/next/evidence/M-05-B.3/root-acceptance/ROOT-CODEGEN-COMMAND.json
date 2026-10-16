@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "xtask",
+    "check-codegen"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "source": "df629cfa8efca701b2d58a0bccafc891dabc2fef",
+  "target": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target"
+}
