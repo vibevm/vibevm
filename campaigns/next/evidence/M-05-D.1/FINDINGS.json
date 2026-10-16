@@ -1,0 +1,19 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "The existing exact flag means manifest pinning; Root supplied the bounded replay/regeneration policy in m05d1-replay-policy-001.",
+    "Existing codegen regenerates schema-home comments across generated module registrations; these are generated changes within the admitted wire subtree.",
+    "An initial fixture selected one target through two declarations and hit the incumbent workspace duplicate-edge guard; final fixture exercises distinct dependency and capability targets."
+  ],
+  "unresolved": [
+    "Required postcommit check-codegen remains pending Root review/checkpoint; the recorded precommit run failed.",
+    "Global rustfmt remains at the declared eight-file baseline; only scoped formatting passed.",
+    "Root semantic review and final integration judgment remain pending."
+  ],
+  "proposed_follow_up": "Root review candidate.patch and all retained verification receipts, checkpoint reviewed source, run the required existing postcommit codegen gate, and complete semantic/integration judgment. No campaign count or runtime acceptance is claimed."
+}

@@ -1,0 +1,18 @@
+{
+  "acceptance": [
+    "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+    "Every induced edge explains its source declaration and consumer intent."
+  ],
+  "active_job": "job.runtime.packet.vibevm-m05d1",
+  "depends_on": [],
+  "kind": "atom",
+  "order": 1,
+  "parent_id": "work.m05d1",
+  "required_stage": "functional",
+  "revision": 3,
+  "state": "active",
+  "title": "Persist requested intent separately from resolved configuration",
+  "validation_generation": 0,
+  "work_id": "work.m05d1.prepare-plan",
+  "work_type": "change"
+}

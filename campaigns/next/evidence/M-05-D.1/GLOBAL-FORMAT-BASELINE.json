@@ -1,0 +1,21 @@
+{
+  "source": "Accepted C1 Root disposition; historical global failure, not rerun or global pass",
+  "references": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c1/V5-result.json",
+      "sha256": "32f7938a385921237995154e8c5942c8bc05d27e60715be7adafc55e9095b073"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c1/V5-1.log",
+      "sha256": "8b9a5238a41550559d75d9c6a780879f7a3cde4ec98d9aeccf9a7e96164af0fd"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c1/FORMAT-ANALYSIS.json",
+      "sha256": "5dad58a1eb8512a945c3bbd0b764e93f4a225d947256bb26ad69c9390f6b6aba"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c1/ROOT-INTEGRATION-REVIEW.json",
+      "sha256": "53519a70ffb221958de71ed9b0a18e84b5214f807702fa7ebaaa9c1a38087b8f"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+[
+  {
+    "id": "V1",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--lib",
+        "record::m_05_d_1_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "production_apply_records_requested_and_resolved_separately",
+      "exact_replay_rejects_changed_definition_or_lost_request",
+      "induced_edges_retain_declaration_and_consumer_intent"
+    ]
+  },
+  {
+    "id": "V2",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-core",
+        "--lib",
+        "manifest::lockfile::m_05_d_1_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "lock_roundtrip_preserves_active_dormant_and_feature_closure",
+      "legacy_lock_is_recognized_and_unknown_epoch_refuses",
+      "derived_selection_cannot_supply_authored_authority"
+    ]
+  },
+  {
+    "id": "V3",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-wire",
+        "--lib",
+        "m_05_d_1_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "generated_configuration_record_roundtrips_canonically",
+      "unknown_epoch_or_missing_exact_identity_refuses"
+    ]
+  },
+  {
+    "id": "V4",
+    "kind": "conditional_affected_and_format",
+    "commands": [],
+    "rule": "Producer binds only exact affected compatibility and actual schema/format/generator impact. Existing check-codegen and wire-diff are conditional. No format selector exists in current CLI; global command only for concrete impact and no adequate narrower existing oracle. Precommit generated HEAD diff remains failed/incomplete, never relabeled pass; Root may checkpoint reviewed source and finish postcommit gate before acceptance."
+  },
+  {
+    "id": "V5",
+    "kind": "task_format",
+    "commands": [],
+    "rule": "Actual scoped rustfmt --check; retain excluded historical8-file global failure, no global pass."
+  },
+  {
+    "id": "V6",
+    "kind": "diff",
+    "commands": [
+      [
+        "git",
+        "diff",
+        "--check"
+      ]
+    ]
+  },
+  {
+    "id": "V7",
+    "kind": "spec_preservation",
+    "commands": [],
+    "rule": "Parse PROP003 and PROP044; preserve/replace semantics explicitly. Structural pass is not Root semantic acceptance."
+  }
+]

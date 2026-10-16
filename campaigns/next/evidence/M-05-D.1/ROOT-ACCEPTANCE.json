@@ -1,0 +1,31 @@
+{
+  "task": "M-05-D.1",
+  "accepted": true,
+  "canonical_revision": 537,
+  "canonical_work_state": "accepted",
+  "work_id": "work.m05d1.prepare-plan",
+  "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+  "source_commit": "cecd8552725a3fc17dd9139b1eabf0c5910db4ef",
+  "source_base": "c9cd87ebd7500fb0e6c4831244a3459a95d52179",
+  "observed_passing_cases": 10,
+  "case_groups": [
+    3,
+    3,
+    2,
+    2
+  ],
+  "source_scope": "V1 final-source; V2\u2013V4 directly consumed owners unchanged despite reviewed later apply/record/test differences. No identical-full-source claim.",
+  "producer_V4_passed": false,
+  "producer_V4_sha256": "4c676ca189baece8c139b0afcaf95960287cf513f8a19dfc6b0f064a31ae1d3d",
+  "root_postcommit_codegen_exit": 0,
+  "root_postcommit_seconds": 17.4786890960022,
+  "root_postcommit_result_sha256": "6ff6bccf096d56446f52be8e89ecbbb9be3ddd719756034827ebe62291d77319",
+  "runtime_job_acceptance_projection": "unreviewed",
+  "safe": "safe",
+  "accepted_task_contracts": 93,
+  "total_task_contracts": 222,
+  "scope": "Full original D1 requested/resolved lock semantics and induced-edge provenance in admitted production reader/writer boundary; E2 CLI routing stays separate.",
+  "global_formatter": "Scoped check and exact Root unchanged generated-line exception retained; no global or all-generated-file pass.",
+  "retirement_status": "Normal managed stop542 delivered; RootExec3617 exit0; all four original identities absent; manager children empty before service stop.",
+  "count_rule": "D1 counted once after WorkAccepted537; checkpoint commit, archive and RuntimeJob projection do not increment count."
+}

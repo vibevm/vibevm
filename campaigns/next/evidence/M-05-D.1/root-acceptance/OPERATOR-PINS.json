@@ -1,0 +1,18 @@
+{
+  "wire": {
+    "path": "/fast/zap-managed/r20/wire",
+    "sha256": "a4382b58c67b8cfb4dbb9f2b274df8036bafb3c94b82aedbb02c4f2ed4bf9f84"
+  },
+  "payloads": {
+    "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/STATIC-PAYLOADS.json",
+    "sha256": "4c5bd8f87dbbc6deec14b2e6c99690bcaef3d942534b28e799ca66e297ce3c44"
+  },
+  "evidence_payloads": {
+    "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/EVIDENCE-PAYLOADS.json",
+    "sha256": "8bfeb87d8bc0ed0e52aadb104f5c72cf893c90a2d8ece77ec69d4b1bbb39b5ed"
+  },
+  "validation": {
+    "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/validate-review.py",
+    "sha256": "6b68b8d657c2a11a59b507fc40e94e5dc9835c80bdc16f765bd4ce3289db92ec"
+  }
+}

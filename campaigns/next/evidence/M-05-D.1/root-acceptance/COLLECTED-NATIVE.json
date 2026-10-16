@@ -1,0 +1,34 @@
+{
+  "operation": "managed.0e598f81679d088149cc5c424861671a9f8d25f157096eb10e8aeeb8f5e2fe4f",
+  "state": "candidate_collected",
+  "source_sequence": 1547,
+  "collected": true,
+  "unknown_tail": false,
+  "failed": false,
+  "process_stopped": false,
+  "accounting_pending": false,
+  "result": {
+    "disposition": "reported_unverified",
+    "id": "managed.0e598f81679d088149cc5c424861671a9f8d25f157096eb10e8aeeb8f5e2fe4f",
+    "input_digest": "91cc1cc8b6ffff1cbed75e6d269220f5602eb259dbbc02da45ea78eb3882b3cc",
+    "native_turn": {
+      "command_id": "command.pb04.6c1635757490d6fed153ea29f7984facf3cddeed9c8902db8d8e44e6aa8c8ba4",
+      "thread_id": "01a145d6-f7a2-7310-b21b-fbc39d7bbdc4",
+      "turn_id": "01a145d6-f7d5-7e41-9b3d-8ceb7f44217d"
+    },
+    "protocol": "content_only_v2",
+    "raw_reply_digest": "e572690ae64c1195622e2f50cc8c63f80a1b4d7e5fe6311568c834a4fa6561ea",
+    "revision": 523,
+    "source_sequence": 1547,
+    "status": {
+      "candidate_digest": "6b4060becec9c2f1da0d796d76d57fd9e0154773bd64b84b766d7e7a588b4d68",
+      "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+      "kind": "bound"
+    },
+    "target": {
+      "dispatch_id": "dispatch.runtime.packet.vibevm-m05d1",
+      "job_id": "job.runtime.packet.vibevm-m05d1",
+      "kind": "job"
+    }
+  }
+}

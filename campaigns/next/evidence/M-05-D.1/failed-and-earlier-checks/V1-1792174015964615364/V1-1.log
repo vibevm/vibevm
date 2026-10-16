@@ -1,0 +1,650 @@
+warning: unused field `description` in `workspace.package`
+  --> Cargo.toml:91:1
+   |
+91 | description = "The disciplined runtime for spec-driven vibecoding"
+   | ^^^^^^^^^^^
+   |
+   = note: `cargo::unused_workspace_package_fields` is set to `warn` by default
+help: consider removing the field `workspace.package.description`
+warning: unused field `keywords` in `workspace.package`
+  --> Cargo.toml:92:1
+   |
+92 | keywords = ["spec-driven", "ai", "cli", "package-manager"]
+   | ^^^^^^^^
+   |
+help: consider removing the field `workspace.package.keywords`
+warning: unused field `categories` in `workspace.package`
+  --> Cargo.toml:93:1
+   |
+93 | categories = ["command-line-utilities", "development-tools"]
+   | ^^^^^^^^^^
+   |
+help: consider removing the field `workspace.package.categories`
+warning: workspace (manifest) generated 3 warnings
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-test-support/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-test-support` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/progress-core/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `progress-core` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-package-source/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-package-source` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> xtask/Cargo.toml:11:1
+   |
+10 | repository.workspace = true
+   | ----------
+11 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `xtask` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-spec/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-spec` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-lifecycle/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-lifecycle` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-actions/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-actions` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-orchestrator/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-orchestrator` (manifest) generated 1 warning
+warning: crates/vibe-cli/Cargo.toml: unused manifest key: build
+help: build is a valid .cargo/config.toml key
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-cli/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-cli` (manifest) generated 2 warnings
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-safefs/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-safefs` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-facts/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-facts` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-mcp/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-mcp` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-registry/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-registry` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-check/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-check` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-install/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-install` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-trace/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-trace` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-publish/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-publish` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-core/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-core` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-ext/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-ext` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-specdoc/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-specdoc` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-workspace/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-workspace` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-extension-registry/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-extension-registry` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-native-loader/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-native-loader` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-requirements/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-requirements` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-wire/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-wire` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-resolver/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-resolver` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-agent-projection/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-agent-projection` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc-server/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc-server` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc-shell/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc-shell` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-doc/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-doc` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-graph/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-graph` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-scrape/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-scrape` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-llm/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-llm` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-index/Cargo.toml:10:12
+   |
+10 | homepage = "https://gitverse.ru/vibevm/vibevm"
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 | repository = "https://gitverse.ru/vibevm/vibevm"
+   |              -----------------------------------
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-index` (manifest) generated 1 warning
+warning: `package.homepage` is redundant with `package.repository`
+  --> crates/vibe-settings/Cargo.toml:10:1
+   |
+ 9 | repository.workspace = true
+   | ----------
+10 | homepage.workspace = true
+   | ^^^^^^^^
+   |
+   = note: `cargo::redundant_homepage` is set to `warn` by default
+help: consider removing `package.homepage`
+warning: `vibe-settings` (manifest) generated 1 warning
+warning: function `during` is never used
+   --> crates/vibe-safefs/src/transaction.rs:262:12
+    |
+262 |     pub fn during(_: &crate::Pinned, _: &str) {}
+    |            ^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variants `Occupied`, `SourceChanged`, `SourceReappeared`, `CrossFilesystem`, and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:10:5
+   |
+ 9 | pub(super) enum NoReplaceError {
+   |                 -------------- variants in this enum
+10 |     Occupied,
+   |     ^^^^^^^^
+11 |     SourceChanged,
+   |     ^^^^^^^^^^^^^
+12 |     SourceReappeared,
+   |     ^^^^^^^^^^^^^^^^
+13 |     CrossFilesystem,
+   |     ^^^^^^^^^^^^^^^
+14 |     Unsupported,
+15 |     Io(std::io::Error),
+   |     ^^
+   |
+   = note: `NoReplaceError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: variants `NotCreated` and `CreatedButUnsealed` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:19:5
+   |
+18 | pub(super) enum NativeCreateError {
+   |                 ----------------- variants in this enum
+19 |     NotCreated(std::io::Error),
+   |     ^^^^^^^^^^
+20 |     CreatedButUnsealed(std::io::Error),
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: variants `Changed` and `Io` are never constructed
+  --> crates/vibe-safefs/src/transaction/platform.rs:26:5
+   |
+25 | pub(super) enum NativeRemoveError {
+   |                 ----------------- variants in this enum
+26 |     Changed(String),
+   |     ^^^^^^^
+27 |     Io(std::io::Error),
+   |     ^^
+
+warning: `vibe-safefs` (lib) generated 4 warnings
+warning: fields `host`, `resolution_identity`, and `visible` are never read
+   --> crates/vibe-workspace/src/source_query/capture.rs:164:16
+    |
+163 | pub struct BoundSourceInputs {
+    |            ----------------- fields in this struct
+164 |     pub(super) host: HostExtensionSource,
+    |                ^^^^
+165 |     pub(super) node_root: PathBuf,
+166 |     pub(super) resolution_identity: OrderedResolutionIdentity,
+    |                ^^^^^^^^^^^^^^^^^^^
+167 |     pub(super) visible: BTreeSet<NodeId>,
+    |                ^^^^^^^
+    |
+    = note: `BoundSourceInputs` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `selected_root` is never used
+   --> crates/vibe-workspace/src/source_query/capture.rs:273:19
+    |
+172 | impl BoundSourceInputs {
+    | ---------------------- method in this implementation
+...
+273 |     pub(crate) fn selected_root(&self, group: &str, name: &str) -> Option<&Path> {
+    |                   ^^^^^^^^^^^^^
+
+warning: method `revalidate_with` is never used
+   --> crates/vibe-workspace/src/source_query/capture/continuity.rs:185:8
+    |
+ 82 | impl WitnessedSourceWorld {
+    | ------------------------- method in this implementation
+...
+185 |     fn revalidate_with(
+    |        ^^^^^^^^^^^^^^^
+
+warning: `vibe-workspace` (lib) generated 3 warnings
+warning: fields `run_id`, `reservation_ref`, and `pre_effect_plan_sha256` are never read
+  --> crates/vibe-lifecycle/src/state/install_stage.rs:54:16
+   |
+53 | pub struct InstallEnteredStage {
+   |            ------------------- fields in this struct
+54 |     pub(crate) run_id: String,
+   |                ^^^^^^
+55 |     pub(crate) reservation_ref: String,
+   |                ^^^^^^^^^^^^^^^
+56 |     pub(crate) pre_effect_plan_sha256: String,
+   |                ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `InstallEnteredStage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `execute_host_admitted_bound_vibe_bin` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy.rs:112:15
+    |
+112 | pub(crate) fn execute_host_admitted_bound_vibe_bin(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `CoordinatedDeploy` is never constructed
+   --> crates/vibe-lifecycle/src/mechanism/deploy.rs:881:12
+    |
+881 | pub struct CoordinatedDeploy {
+    |            ^^^^^^^^^^^^^^^^^
+
+warning: associated items `new`, `current_arena`, `lock`, `apply`, and `undeploy` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy.rs:886:12
+    |
+885 | impl CoordinatedDeploy {
+    | ---------------------- associated items in this implementation
+886 |     pub fn new(arena: vibe_safefs::Project) -> Result<Self, DeployError> {
+    |            ^^^
+...
+895 |     fn current_arena(&self) -> Result<(), DeployError> {
+    |        ^^^^^^^^^^^^^
+...
+910 |     fn lock(&self) -> Result<vibe_safefs::LockGuard, DeployError> {
+    |        ^^^^
+...
+922 |     pub fn apply(
+    |            ^^^^^
+...
+929 |     pub fn undeploy(
+    |            ^^^^^^^^
+
+warning: struct `ClientExecutableMap` is never constructed
+ --> crates/vibe-lifecycle/src/mechanism/deploy/client_capabilities.rs:6:12
+  |
+6 | pub struct ClientExecutableMap(BTreeMap<String, ClientExecutable>);
+  |            ^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `from_legacy3`, `legacy3`, `observed`, `native_legacy3`, and `rows` are never used
+  --> crates/vibe-lifecycle/src/mechanism/deploy/client_capabilities.rs:8:12
+   |
+ 7 | impl ClientExecutableMap {
+   | ------------------------ associated items in this implementation
+ 8 |     pub fn from_legacy3(old: &ClientExecutables) -> Self {
+   |            ^^^^^^^^^^^^
+...
+15 |     pub fn legacy3(&self) -> Result<ClientExecutables, String> {
+   |            ^^^^^^^
+...
+32 |     pub fn observed(rows: BTreeMap<String, ClientExecutable>) -> Result<Self, String> {
+   |            ^^^^^^^^
+...
+51 |     pub fn native_legacy3(
+   |            ^^^^^^^^^^^^^^
+...
+73 |     pub fn rows(&self) -> &BTreeMap<String, ClientExecutable> {
+   |            ^^^^
+
+warning: method `alias_warnings` is never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:389:19
+    |
+246 | impl AdmittedLocalDeployBinding {
+    | ------------------------------- method in this implementation
+...
+389 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: field `alias_note` is never read
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:510:5
+    |
+505 | struct NamedRootWitness {
+    |        ---------------- field in this struct
+...
+510 |     alias_note: Option<String>,
+    |     ^^^^^^^^^^
+
+warning: methods `user_home` and `alias_warnings` are never used
+   --> crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:538:19
+    |
+528 | impl LockedLocalDeployBinding {
+    | ----------------------------- methods in this implementation
+...
+538 |     pub(crate) fn user_home(&self) -> &Project {
+    |                   ^^^^^^^^^
+...
+544 |     pub(crate) fn alias_warnings(&self) -> Vec<&str> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: fields `compatibility` and `activation` are never read
+  --> crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs:35:9
+   |
+34 | pub(crate) struct DerivativeDecision {
+   |                   ------------------ fields in this struct
+35 |     pub compatibility: CompatibilityReport,
+   |         ^^^^^^^^^^^^^
+36 |     pub activation: ActivationState,
+   |         ^^^^^^^^^^
+   |
+   = note: `DerivativeDecision` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `begin` is never used
+   --> crates/vibe-lifecycle/src/state/source_stage.rs:115:19
+    |
+ 73 | impl ScriptSourceStage {
+    | ---------------------- method in this implementation
+...
+115 |     pub(crate) fn begin<'a>(
+    |                   ^^^^^
+
+warning: method `remove_resource` is never used
+   --> crates/vibe-lifecycle/src/mechanism/vibebin/bound.rs:471:19
+    |
+316 | impl<'a> BoundVibeBinStore<'a> {
+    | ------------------------------ method in this implementation
+...
+471 |     pub(crate) fn remove_resource(&self, relative: &str) -> Result<bool, BoundVibeBinError> {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: `vibe-lifecycle` (lib) generated 12 warnings
+   Compiling vibe-install v1.1.0 (/fast/git/v/vibevm-next/crates/vibe-install)
+warning: field `selected_hash` is never read
+  --> crates/vibe-install/src/slot_verify/m_01_c_2_cases.rs:53:5
+   |
+46 | struct Fixture {
+   |        ------- field in this struct
+...
+53 |     selected_hash: ContentHash,
+   |     ^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `vibe-install` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.79s
+     Running unittests src/lib.rs (/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/build/vibe-install/b56ff8533cdc91eb/out/vibe_install-b56ff8533cdc91eb)
+
+running 3 tests
+test record::m_05_d_1_cases::exact_replay_rejects_changed_definition_or_lost_request ... ok
+test record::m_05_d_1_cases::induced_edges_retain_declaration_and_consumer_intent ... ok
+test record::m_05_d_1_cases::production_apply_records_requested_and_resolved_separately ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 0.20s
+

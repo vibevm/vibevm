@@ -1,0 +1,941 @@
+{
+  "approved": true,
+  "approval_token": "Root approves full M05D1 both criteria and 10 observed passing cases and separate Root postcommit codegen pass, with reviewed safe boundary and no physical stop claim",
+  "task": "M-05-D.1",
+  "job_id": "job.runtime.packet.vibevm-m05d1",
+  "candidate_id": "managed-result.01a583c9cdba8ad2059106b07a55054e591cb4b22d2f03f29dd7b518b4a4538c",
+  "work_id": "work.m05d1.prepare-plan",
+  "source_head_at_review": "cecd8552725a3fc17dd9139b1eabf0c5910db4ef",
+  "source_commit": "cecd8552725a3fc17dd9139b1eabf0c5910db4ef",
+  "summary": "Root accepts full D1: separate requested/resolved semantics and induced-edge provenance, reviewed source cecd855 and actual successful postcommit codegen. Original failed producer V4 remains retained with earlier-owner scope qualifications.",
+  "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+  "limitations": [
+    "Full admitted D1 semantics; no E2 full CLI exact-reinstall/update routing or new authored grammar.",
+    "V1 is3 final-source cases; V2/V3/V4 are3/2/2 actual passing cases on directly consumed unchanged owners, with reviewed later apply/record/test differences; no identical-full-source claim.",
+    "Producer V4 precommit group remains false with check-codegen exit1. Root postcommit COMMAND/RESULT/log independently establish check-codegen exit0 on cecd855 with no source drift/clean tree; no old log or report rewritten.",
+    "Scoped formatter --check passed; historical global formatter failure remains excluded and failed. V7 structural evidence is distinct from semantic review.",
+    "Safe concerns reviewed completed reversible code effects at actual candidate boundary, not physical retirement.",
+    "The existing candidate Report remains the witnessed artifact; Root approval hash binds the additional postcommit evidence through protected command reasons."
+  ],
+  "independent_review": {
+    "path": "/fast/git/v/research/2026-10-16-m05d1-review/REPORT.md",
+    "sha256": "684b668771ab15b43551b9dd03bb1d24b50d6ecd38354bd59d0fee8a36a0d53a"
+  },
+  "independent_review_reviewed_by_root": true,
+  "safe_boundary_attestation": {
+    "approved": true,
+    "boundary": "Keep an old lock recognizable; do not silently reinterpret unknown epochs.",
+    "basis": "Collected known-tail/no-failure completed code-effects candidate; Root checkpointed reviewed source and observed postcommit generation0. Root must attest old locks remain recognizable and unknown epochs are not silently reinterpreted. No physical-stop claim."
+  },
+  "criterion_assessments": [
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#SOURCE-VERSUS-PLAN",
+      "statement": "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "draft_requires_root_approval": false,
+      "rationale": "V1 production apply/read/current-supplied replay; active a+closure distinct from authored a and dormant later; default receipt loss refusal V2 storage roundtrip, old lock recognition and unknown epoch/authority refusal V3 generated roundtrip/canonical payload and missing identity refusal Independent review found no blocking semantic defect; its required postcommit gate now has actual exit0. Root final approval remains required."
+    },
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#VIBEVM-OWNER",
+      "statement": "Every induced edge explains its source declaration and consumer intent.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "draft_requires_root_approval": false,
+      "rationale": "V1 actual incumbent solver capability provider and configured dependency declarations survive apply/read with exact C1 identities and shared authored request digest Full requested consumer/domain/target and normalized definition retained; no first-alternative inference Independent review found no blocking semantic defect; its required postcommit gate now has actual exit0. Root final approval remains required."
+    }
+  ],
+  "observations": [
+    {
+      "group": "V1",
+      "verification_id": "verification.m05d1",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05d1/V1-result.json",
+        "sha256": "487a9249d53867d9a2f7b5e13a8cc65493490fe6bd7c2c3cba25c14c52390516"
+      },
+      "producer_group_passed": true,
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V1"
+        ],
+        "cases": [
+          "V1"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-install",
+          "--lib",
+          "record::m_05_d_1_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "record::m_05_d_1_cases::production_apply_records_requested_and_resolved_separately",
+          "record::m_05_d_1_cases::exact_replay_rejects_changed_definition_or_lost_request",
+          "record::m_05_d_1_cases::induced_edges_retain_declaration_and_consumer_intent"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "observed_test_passes": 3,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+      "source_qualification": "Final-source snapshot"
+    },
+    {
+      "group": "V2",
+      "verification_id": "verification.m05d1.1",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05d1/V2-result.json",
+        "sha256": "3944e38149a6bc4c2ada70c7e1ff51bb1f112b6314ade123020c6a5dadfec60d"
+      },
+      "producer_group_passed": true,
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V2"
+        ],
+        "cases": [
+          "V2"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::lockfile::m_05_d_1_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "manifest::lockfile::m_05_d_1_cases::lock_roundtrip_preserves_active_dormant_and_feature_closure",
+          "manifest::lockfile::m_05_d_1_cases::legacy_lock_is_recognized_and_unknown_epoch_refuses",
+          "manifest::lockfile::m_05_d_1_cases::derived_selection_cannot_supply_authored_authority"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "observed_test_passes": 3,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+      "source_qualification": "Earlier snapshot: directly consumed owners unchanged; later install apply/record/test differences explicitly reviewed, not identical-full-source claim."
+    },
+    {
+      "group": "V3",
+      "verification_id": "verification.m05d1.2",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05d1/V3-result.json",
+        "sha256": "73cfe8fe5bbd9f8a8434d5d29d377e3ca9c1cb382b5dac7a67734fa56044f24a"
+      },
+      "producer_group_passed": true,
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V3"
+        ],
+        "cases": [
+          "V3"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-wire",
+          "--lib",
+          "m_05_d_1_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "m_05_d_1_cases::generated_configuration_record_roundtrips_canonically",
+          "m_05_d_1_cases::unknown_epoch_or_missing_exact_identity_refuses"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "observed_test_passes": 2,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+      "source_qualification": "Earlier snapshot: directly consumed owners unchanged; later install apply/record/test differences explicitly reviewed, not identical-full-source claim."
+    },
+    {
+      "group": "V4",
+      "verification_id": "verification.m05d1.3",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05d1/V4-result.json",
+        "sha256": "4c676ca189baece8c139b0afcaf95960287cf513f8a19dfc6b0f064a31ae1d3d"
+      },
+      "producer_group_passed": false,
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "V4"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V4: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "/home/olegchir/.cargo/bin/cargo",
+          "xtask",
+          "check-codegen"
+        ],
+        "cases": [
+          "fetched::lock_regeneration_tests::unsupported_schema_lock_reads_as_empty",
+          "manifest::lockfile::tests::read_rejects_non_current_version",
+          "Producer wire-diff exit0",
+          "Distinct Root postcommit check-codegen exit0; producer V4 group remains failed"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "D1 V4 combined evidence: two actual compatibility passes and wire-diff0, plus separate successful Root postcommit generation gate",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "observed_test_passes": 2,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+      "source_qualification": "Earlier snapshot: directly consumed owners unchanged; later install apply/record/test differences explicitly reviewed, not identical-full-source claim.",
+      "separate_root_postcommit_evidence": {
+        "COMMAND.json": {
+          "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/COMMAND.json",
+          "sha256": "39a5b251e94997984e539235251ff32e7bc97b2c251531181dfa7052adef5750"
+        },
+        "RESULT.json": {
+          "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/RESULT.json",
+          "sha256": "6ff6bccf096d56446f52be8e89ecbbb9be3ddd719756034827ebe62291d77319"
+        },
+        "check-codegen.log": {
+          "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/check-codegen.log",
+          "sha256": "7a8e99156888630dd96bbb371cf9963ba659fac7738a384f07b704f60d7f619f"
+        }
+      },
+      "producer_failure_unchanged": {
+        "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/producer-V4-original.json",
+        "sha256": "4c676ca189baece8c139b0afcaf95960287cf513f8a19dfc6b0f064a31ae1d3d"
+      }
+    },
+    {
+      "group": "V5",
+      "verification_id": "verification.m05d1.4",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05d1/V5-result.json",
+        "sha256": "b78132451af24387f50aa7ba45326f90fa1326d9b0ae121e32e4fc7a9e0e9987"
+      },
+      "producer_group_passed": true,
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V5"
+        ],
+        "cases": [
+          "V5"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--config",
+          "skip_children=true",
+          "--check",
+          "crates/vibe-core/src/manifest/lockfile.rs",
+          "crates/vibe-core/src/manifest/lockfile/m_05_d_1_cases.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-install/src/apply.rs",
+          "crates/vibe-install/src/fetched.rs",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/record.rs",
+          "crates/vibe-install/src/record/m_05_d_1_cases.rs",
+          "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+          "crates/vibe-wire/src/behaviour/lock_configuration.rs",
+          "crates/vibe-wire/src/behaviour/mod.rs",
+          "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+          "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+          "crates/vibe-wire/src/generated/application/e1/mod.rs",
+          "crates/vibe-wire/src/generated/application/mod.rs",
+          "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+          "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+          "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+          "crates/vibe-wire/src/generated/capability/mod.rs",
+          "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+          "crates/vibe-wire/src/generated/change_query/mod.rs",
+          "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+          "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+          "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+          "crates/vibe-wire/src/generated/client_capability/mod.rs",
+          "crates/vibe-wire/src/generated/client_command/e1/mod.rs",
+          "crates/vibe-wire/src/generated/client_command/mod.rs",
+          "crates/vibe-wire/src/generated/client_deploy/e1/mod.rs",
+          "crates/vibe-wire/src/generated/client_deploy/mod.rs",
+          "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+          "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+          "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+          "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+          "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+          "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+          "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+          "crates/vibe-wire/src/generated/distribution/mod.rs",
+          "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+          "crates/vibe-wire/src/generated/environment/mod.rs",
+          "crates/vibe-wire/src/generated/format_id/mod.rs",
+          "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+          "crates/vibe-wire/src/generated/hello/mod.rs",
+          "crates/vibe-wire/src/generated/index/e1/mod.rs",
+          "crates/vibe-wire/src/generated/index/mod.rs",
+          "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+          "crates/vibe-wire/src/generated/index_cli/mod.rs",
+          "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+          "crates/vibe-wire/src/generated/index_http/mod.rs",
+          "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+          "crates/vibe-wire/src/generated/journal/mod.rs",
+          "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+          "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+          "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+          "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+          "crates/vibe-wire/src/generated/llm/mod.rs",
+          "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+          "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+          "crates/vibe-wire/src/generated/lock_configuration/e1/mod.rs",
+          "crates/vibe-wire/src/generated/lock_configuration/e1/requested/mod.rs",
+          "crates/vibe-wire/src/generated/lock_configuration/e1/resolved/mod.rs",
+          "crates/vibe-wire/src/generated/lock_configuration/mod.rs",
+          "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+          "crates/vibe-wire/src/generated/machine/mod.rs",
+          "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+          "crates/vibe-wire/src/generated/migration/e2/mod.rs",
+          "crates/vibe-wire/src/generated/migration/mod.rs",
+          "crates/vibe-wire/src/generated/mod.rs",
+          "crates/vibe-wire/src/generated/native/e1/mod.rs",
+          "crates/vibe-wire/src/generated/native/mod.rs",
+          "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+          "crates/vibe-wire/src/generated/preview/mod.rs",
+          "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+          "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+          "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+          "crates/vibe-wire/src/generated/scrape/mod.rs",
+          "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+          "crates/vibe-wire/src/generated/source_query/mod.rs",
+          "crates/vibe-wire/src/lib.rs",
+          "crates/vibe-wire/src/m_05_d_1_cases.rs"
+        ],
+        "cases": [
+          "Task-owned scoped formatter --check"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "observed_test_passes": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+      "source_qualification": "Final-source snapshot"
+    },
+    {
+      "group": "V6",
+      "verification_id": "verification.m05d1.5",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05d1/V6-result.json",
+        "sha256": "9f94cdccc349365648b4231edf9ef2dfd23fcf2108a48fcd8a6002b339eacf0f"
+      },
+      "producer_group_passed": true,
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V6"
+        ],
+        "cases": [
+          "V6"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "Actual git diff --check"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "observed_test_passes": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+      "source_qualification": "Final-source snapshot"
+    },
+    {
+      "group": "V7",
+      "verification_id": "verification.m05d1.6",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05d1/V7-result.json",
+        "sha256": "ee2a6bcdc3dfd70b598fc9d3c4550a862cf79a3fd0beee0f6c276aecf6c59eb9"
+      },
+      "producer_group_passed": true,
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "V7"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d1/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "Structural PROP003/PROP044 preservation plus separate independent source review"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d1.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D1 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "observed_test_passes": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-D.1 admitted production lock record/read/current-authored-intent replay boundary; requested and resolved remain separate, with exact induced-edge provenance and explicit epoch/refusal policy. Later E2 CLI routing remains separate.",
+      "source_qualification": "Final-source snapshot"
+    }
+  ],
+  "observed_passing_cases": 10,
+  "test_groups": [
+    3,
+    3,
+    2,
+    2
+  ],
+  "producer_V4_passed": false,
+  "root_postcommit_codegen": {
+    "COMMAND.json": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/COMMAND.json",
+      "sha256": "39a5b251e94997984e539235251ff32e7bc97b2c251531181dfa7052adef5750"
+    },
+    "RESULT.json": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/RESULT.json",
+      "sha256": "6ff6bccf096d56446f52be8e89ecbbb9be3ddd719756034827ebe62291d77319"
+    },
+    "check-codegen.log": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/check-codegen.log",
+      "sha256": "7a8e99156888630dd96bbb371cf9963ba659fac7738a384f07b704f60d7f619f"
+    }
+  },
+  "actual_environment": "Linux; existing repository nightly and Root-granted warm target. Producer cargo --offline --locked; Root postcommit exact environment recorded in COMMAND.json. No test/build by acceptance preparer.",
+  "evidence_files": {
+    "0": {
+      "path": "/fast/git/v/research/2026-10-16-m05d1-review/REPORT.json",
+      "sha256": "2e0fdd88af3a7ba5fda2e04791e206780f74381984be699259d27dd8b415fa53"
+    },
+    "1": {
+      "path": "/fast/git/v/research/2026-10-16-m05d1-review/REPORT.md",
+      "sha256": "684b668771ab15b43551b9dd03bb1d24b50d6ecd38354bd59d0fee8a36a0d53a"
+    },
+    "2": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/CASE-BINDINGS.json",
+      "sha256": "763e749a1d4e5aae2dd7af672f68548381dab9432b3eacc270fed35c783b110e"
+    },
+    "3": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/FINDINGS.json",
+      "sha256": "308fba7c2fe85f38e0db0d8d09a53292374699ed28963259e9c41e552cb94ce3"
+    },
+    "4": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/GLOBAL-FORMAT-BASELINE.json",
+      "sha256": "68f33c06dab332f254d461e09f9c1ee3846824474e392162489acbb1c0e90ae5"
+    },
+    "5": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/REPORT.json",
+      "sha256": "068313ba90aebbdd0772e6452d9c09b78effac97e298b914ccb40891a8e19594"
+    },
+    "6": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/ROOT-ANSWER.json",
+      "sha256": "2ae244388cdd3414d23f251722e621e46e465a86b252844318672cf7058423c1"
+    },
+    "7": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/ROOT-CHECKPOINT-COMMIT.json",
+      "sha256": "b944a3dddbe225ff0b428948d5db885c99b6a48019b7edb8455ec41fdd7e7c36"
+    },
+    "8": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/SEMANTICS-MAP.json",
+      "sha256": "109331e64d7f27aabf24f58cf760094e07de10f4816e4124f1a5dedcd7becd3f"
+    },
+    "9": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V1-1.log",
+      "sha256": "155eda99a1d3fa544fb389ca9c1d6ad4d6572b1c147b26934b194b374b42384f"
+    },
+    "10": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V1-result.json",
+      "sha256": "487a9249d53867d9a2f7b5e13a8cc65493490fe6bd7c2c3cba25c14c52390516"
+    },
+    "11": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V1-subjects-after.json",
+      "sha256": "97e7fe795cf40d00c66182632d2fa94463a33433484b8210ebf697175d7966f4"
+    },
+    "12": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V1-subjects-before.json",
+      "sha256": "97e7fe795cf40d00c66182632d2fa94463a33433484b8210ebf697175d7966f4"
+    },
+    "13": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V2-1.log",
+      "sha256": "b68ba28e2f64c03bd60a10882cfb6c772068d9e50fbac76daa5372756691db5c"
+    },
+    "14": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V2-result.json",
+      "sha256": "3944e38149a6bc4c2ada70c7e1ff51bb1f112b6314ade123020c6a5dadfec60d"
+    },
+    "15": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V2-subjects-after.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "16": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V2-subjects-before.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "17": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V3-1.log",
+      "sha256": "0e4f17abd61a893bcadcd14d85b70869bf064319e1fde204b651a6055f1bc426"
+    },
+    "18": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V3-result.json",
+      "sha256": "73cfe8fe5bbd9f8a8434d5d29d377e3ca9c1cb382b5dac7a67734fa56044f24a"
+    },
+    "19": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V3-subjects-after.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "20": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V3-subjects-before.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "21": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V4-1.log",
+      "sha256": "20986288d18fa5397fff9d5ac843fa963995a42004327a853e2649e6cfce6aa7"
+    },
+    "22": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V4-2.log",
+      "sha256": "b1961de39ee1a0b75d7675be6e21c67ecd7489c3cc2de60bc10e2cace22117d5"
+    },
+    "23": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V4-3.log",
+      "sha256": "2cd5000b423330e6f521d8a2d271000f7be9dbee8d331d9a0204035eed3eb0f3"
+    },
+    "24": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V4-4.log",
+      "sha256": "6edacaf30866fd4d72430b740766a94afda3ccd74b3a6b343b92b55d37323c83"
+    },
+    "25": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V4-result.json",
+      "sha256": "4c676ca189baece8c139b0afcaf95960287cf513f8a19dfc6b0f064a31ae1d3d"
+    },
+    "26": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V4-subjects-after.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "27": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V4-subjects-before.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "28": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V5-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "29": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V5-result.json",
+      "sha256": "b78132451af24387f50aa7ba45326f90fa1326d9b0ae121e32e4fc7a9e0e9987"
+    },
+    "30": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V5-subjects-after.json",
+      "sha256": "97e7fe795cf40d00c66182632d2fa94463a33433484b8210ebf697175d7966f4"
+    },
+    "31": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V5-subjects-before.json",
+      "sha256": "97e7fe795cf40d00c66182632d2fa94463a33433484b8210ebf697175d7966f4"
+    },
+    "32": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V6-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "33": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V6-result.json",
+      "sha256": "9f94cdccc349365648b4231edf9ef2dfd23fcf2108a48fcd8a6002b339eacf0f"
+    },
+    "34": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V6-subjects-after.json",
+      "sha256": "97e7fe795cf40d00c66182632d2fa94463a33433484b8210ebf697175d7966f4"
+    },
+    "35": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V6-subjects-before.json",
+      "sha256": "97e7fe795cf40d00c66182632d2fa94463a33433484b8210ebf697175d7966f4"
+    },
+    "36": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V7-result.json",
+      "sha256": "ee2a6bcdc3dfd70b598fc9d3c4550a862cf79a3fd0beee0f6c276aecf6c59eb9"
+    },
+    "37": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V7-subjects-after.json",
+      "sha256": "97e7fe795cf40d00c66182632d2fa94463a33433484b8210ebf697175d7966f4"
+    },
+    "38": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/V7-subjects-before.json",
+      "sha256": "97e7fe795cf40d00c66182632d2fa94463a33433484b8210ebf697175d7966f4"
+    },
+    "39": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/COLLECTED-NATIVE.json",
+      "sha256": "12f2c3497923e72e0f7be5a246da58074202b68e9c1157c5ddcf8048718e288f"
+    },
+    "40": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/CURRENT-CONTRACT.json",
+      "sha256": "0be985b2f6d092c8021b1815981967b9b64940033257ce455285c98a1a95633b"
+    },
+    "41": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/CURRENT-JOB.json",
+      "sha256": "8c9891d0c289ee162a3f039e2c37ddf9d5af3ca745708de7297b87578d489e47"
+    },
+    "42": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/CURRENT-SOURCE.json",
+      "sha256": "20070ec1a31b69c34150fe0a212f476991ea5a52c55cda3359beb8fd2265b42e"
+    },
+    "43": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/CURRENT-WORK.json",
+      "sha256": "8d22d4da05258112fcad99441c00aa73416b078bad570c1fd68007427225aecc"
+    },
+    "44": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/FINAL-SOURCE-HASHES.json",
+      "sha256": "6b5285acb258da739875614c7be22f0c721e23af71f3e80157c37e0536f0666d"
+    },
+    "45": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/producer-V4-original.json",
+      "sha256": "4c676ca189baece8c139b0afcaf95960287cf513f8a19dfc6b0f064a31ae1d3d"
+    },
+    "46": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/acceptance-preparation/validate-review.py",
+      "sha256": "6b68b8d657c2a11a59b507fc40e94e5dc9835c80bdc16f765bd4ce3289db92ec"
+    },
+    "47": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/candidate.patch",
+      "sha256": "9d9cf420a38e84fee4369bc12dafedd2c1b46d850b7489e1654447c7b9293b3e"
+    },
+    "48": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/codegen-2.log",
+      "sha256": "65cf15dd789ef22385c3739f81007d52f348f52bd39e6bacfa649c7a105fe645"
+    },
+    "49": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/codegen-3.log",
+      "sha256": "b4a57ce25aa42be6b08f58c5454be728f2da51722d039e90519246a7ebca5897"
+    },
+    "50": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/codegen-4.log",
+      "sha256": "c3ff1b85aa326f6739f46a420ef088c3e530132262d59b08667679028aeb24b6"
+    },
+    "51": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/codegen.log",
+      "sha256": "dec89b77e392cd9affb91e3acf66e482c6cc25835e134b2c625e8ccbe235d8f8"
+    },
+    "52": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/content-result.json",
+      "sha256": "e572690ae64c1195622e2f50cc8c63f80a1b4d7e5fe6311568c834a4fa6561ea"
+    },
+    "53": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/COMMAND.json",
+      "sha256": "39a5b251e94997984e539235251ff32e7bc97b2c251531181dfa7052adef5750"
+    },
+    "54": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/RESULT.json",
+      "sha256": "6ff6bccf096d56446f52be8e89ecbbb9be3ddd719756034827ebe62291d77319"
+    },
+    "55": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/root-postcommit/check-codegen.log",
+      "sha256": "7a8e99156888630dd96bbb371cf9963ba659fac7738a384f07b704f60d7f619f"
+    },
+    "56": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173689099896776/V1-1.log",
+      "sha256": "7b3247784fbefc89782077c84a2aea9fe731034f9b4b5cb39734c9569e0f9718"
+    },
+    "57": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173689099896776/V1-result.json",
+      "sha256": "a9c714015e6c2b05bd869332face1f55a20ae0f5915fba712ac51ca275405c7c"
+    },
+    "58": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173689099896776/V1-subjects-after.json",
+      "sha256": "c9c47722b803df9a4801064971ae535903feb16ad0785203a068c103a306f4ed"
+    },
+    "59": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173689099896776/V1-subjects-before.json",
+      "sha256": "c9c47722b803df9a4801064971ae535903feb16ad0785203a068c103a306f4ed"
+    },
+    "60": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173728592961658/V1-1.log",
+      "sha256": "51c29acdd7073bb6edbdb2fab27f59e799872eb708e0cc595d5fd56ddf4117ad"
+    },
+    "61": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173728592961658/V1-result.json",
+      "sha256": "5d2f426ffd51588e337d90f1c646e52ba8dbab3bf3d0d3e58f022082f7cc6683"
+    },
+    "62": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173728592961658/V1-subjects-after.json",
+      "sha256": "de40d7e5e6c31345c6556c18046b010442501bbc9c4c6409c1883bf22060247c"
+    },
+    "63": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173728592961658/V1-subjects-before.json",
+      "sha256": "de40d7e5e6c31345c6556c18046b010442501bbc9c4c6409c1883bf22060247c"
+    },
+    "64": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173763692829481/V1-1.log",
+      "sha256": "78656406ddf78ddb9895755f864c1b4400d12397afa7ce393b559f164b805632"
+    },
+    "65": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173763692829481/V1-result.json",
+      "sha256": "6198f6da8e930ac57127a45ef4cc5a05a533b0816689ce7828fa664222a23f1a"
+    },
+    "66": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173763692829481/V1-subjects-after.json",
+      "sha256": "e95a19dec4c98ee5473bf83fc33e90c20312eccb5dfe49d544764356bd71f395"
+    },
+    "67": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173763692829481/V1-subjects-before.json",
+      "sha256": "e95a19dec4c98ee5473bf83fc33e90c20312eccb5dfe49d544764356bd71f395"
+    },
+    "68": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173821824340107/V1-1.log",
+      "sha256": "07d97cca3d09360ae82af45ebddbbca8eaaf4bd1e08f688ea676e5741eb10476"
+    },
+    "69": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173821824340107/V1-result.json",
+      "sha256": "d5896ef973e91c8d3cde3a0a650f8c880a8c0192cf4d99ecfc750070277bfd18"
+    },
+    "70": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173821824340107/V1-subjects-after.json",
+      "sha256": "482821bb821689c2371571ee4def22a0c575f50b8c1823e59dbe08772d11f3a4"
+    },
+    "71": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792173821824340107/V1-subjects-before.json",
+      "sha256": "482821bb821689c2371571ee4def22a0c575f50b8c1823e59dbe08772d11f3a4"
+    },
+    "72": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792174015964615364/V1-1.log",
+      "sha256": "60b2ac8ce8ca1c244e5167c4c47958e0fdfb617af33d760d7aff4655c3790688"
+    },
+    "73": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792174015964615364/V1-result.json",
+      "sha256": "e39515ea6c61fe883263fab53cd3dc4c89e08fd31bf5a890ddf53db185cd0151"
+    },
+    "74": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792174015964615364/V1-subjects-after.json",
+      "sha256": "7f67b219072b99fc9c104cba9ea8982d0c3f5baf5a5efc9ff27f44f35cffda5d"
+    },
+    "75": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792174015964615364/V1-subjects-before.json",
+      "sha256": "7f67b219072b99fc9c104cba9ea8982d0c3f5baf5a5efc9ff27f44f35cffda5d"
+    },
+    "76": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792174050970876253/V1-1.log",
+      "sha256": "e10561caddc71e90df0963cde67e155427faaa6648e4c973ef48deee3ccb9206"
+    },
+    "77": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792174050970876253/V1-result.json",
+      "sha256": "fd8c7a8c54e0bc120393e29579102caff5ecb88139df168311d2a5ef99dbcd53"
+    },
+    "78": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792174050970876253/V1-subjects-after.json",
+      "sha256": "b93bb6a70d42d52af67c655a76d9a24397ac1f4db6d8237c15d584d541c00162"
+    },
+    "79": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V1-1792174050970876253/V1-subjects-before.json",
+      "sha256": "b93bb6a70d42d52af67c655a76d9a24397ac1f4db6d8237c15d584d541c00162"
+    },
+    "80": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V4-1792173926939917267/V4-1.log",
+      "sha256": "9481ede85bab5dc8425c867ccc2be48b8bdfb69620805c38fd536d9b786e695f"
+    },
+    "81": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V4-1792173926939917267/V4-result.json",
+      "sha256": "bd9b2a34dce601e7be299c53f33919d68b7fe1121871aac4d7b9b99463f5af57"
+    },
+    "82": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V4-1792173926939917267/V4-subjects-after.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "83": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V4-1792173926939917267/V4-subjects-before.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "84": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V5-1792174067624699713/V5-1.log",
+      "sha256": "1349a09e89459139f52265397347b0c1e3933a6095c810366ec70b72568f604f"
+    },
+    "85": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V5-1792174067624699713/V5-result.json",
+      "sha256": "04094b477c180baa4feb877d634075bfe2f13cfd382d8e9fff9eb621028595a6"
+    },
+    "86": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V5-1792174067624699713/V5-subjects-after.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "87": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V5-1792174067624699713/V5-subjects-before.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "88": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V6-1792174067622782264/V6-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "89": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V6-1792174067622782264/V6-result.json",
+      "sha256": "72891f9eaea7b059e85b63b5ee0b35d930b2db48a3dba360e55480e1740190b0"
+    },
+    "90": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V6-1792174067622782264/V6-subjects-after.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "91": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V6-1792174067622782264/V6-subjects-before.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "92": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V7-1792174067624693211/V7-result.json",
+      "sha256": "ee2a6bcdc3dfd70b598fc9d3c4550a862cf79a3fd0beee0f6c276aecf6c59eb9"
+    },
+    "93": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V7-1792174067624693211/V7-subjects-after.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    },
+    "94": {
+      "path": "/fast/zap-managed/2026-10-16-m05d1/verification-history/V7-1792174067624693211/V7-subjects-before.json",
+      "sha256": "0ce2811a57d705dd1082e52ea17e78025b2ea1046cc7a642cc693c5560c96f5e"
+    }
+  }
+}

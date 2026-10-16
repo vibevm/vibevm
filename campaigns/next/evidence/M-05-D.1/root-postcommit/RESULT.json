@@ -1,0 +1,9 @@
+{
+  "exit_code": 0,
+  "seconds": 17.4786890960022,
+  "source_head": "cecd8552725a3fc17dd9139b1eabf0c5910db4ef",
+  "source_drift": [],
+  "git_status": "",
+  "log_sha256": "7a8e99156888630dd96bbb371cf9963ba659fac7738a384f07b704f60d7f619f",
+  "work_accepted": false
+}
