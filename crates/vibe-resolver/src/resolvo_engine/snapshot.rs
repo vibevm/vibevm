@@ -55,6 +55,15 @@ impl<P: VersionEnumerator> DepProvider for MetadataSnapshot<'_, P> {
 }
 
 impl<P: VersionEnumerator> VersionEnumerator for MetadataSnapshot<'_, P> {
+    fn candidate_rejection(
+        &self,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Option<String> {
+        self.provider.candidate_rejection(group, name, version)
+    }
+
     fn cached_capabilities(&self) -> Option<&super::CapIndex> {
         self.provider.cached_capabilities()
     }

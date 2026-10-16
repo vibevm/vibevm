@@ -261,6 +261,9 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p, 
                 self.pool.intern_string("internal: unresolvable solvable"),
             );
         };
+        if let Some(reason) = self.provider.candidate_rejection(&group, &name, &version) {
+            return Dependencies::Unknown(self.pool.intern_string(reason));
+        }
         let manifest = match self.provider.fetch_manifest(&group, &name, &version) {
             Ok(m) => m,
             Err(e) => {
