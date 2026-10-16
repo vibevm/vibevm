@@ -1,0 +1,13 @@
+{
+  "id": "M08E1-CLAUDE-RESOURCE-013",
+  "question_id": "M08E1-CLAUDE-RESOURCE-013",
+  "status": "pending",
+  "question": "Bind exact installed Claude2.1.299 credential-free local observation route for standalone skill/config loading. Qualified plugin/list/details and mcp/list do not establish those obligations. No model/login call proposed; continue independent MCP/Codex/owner work. If missing, preserve exact pending obligations; do not infer unsupported from absent command help alone.",
+  "rows": [
+    "claude_code.skill.project",
+    "claude_code.skill.user",
+    "claude_code.config.project",
+    "claude_code.config.user"
+  ],
+  "basis": "Root owns missing runtime/physical boundary decision; no wildcard invocation"
+}

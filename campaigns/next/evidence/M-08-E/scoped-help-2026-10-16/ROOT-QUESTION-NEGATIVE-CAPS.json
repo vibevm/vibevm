@@ -1,0 +1,20 @@
+{
+  "id": "M08E1-NEGATIVE-CAPS-SEAL-011",
+  "question_id": "M08E1-NEGATIVE-CAPS-SEAL-011",
+  "status": "pending",
+  "question": "Seal/start the corrected three-step actual negative fixture with Root-proposed fixture-only stderrLimit128/stdoutLimit16384 and bounded512-character option under plugin list. Supersedes negative halves008/010, which must remain not launched; leaves MCP010 unchanged. Return actual flag/EOF/exit/authority refusal observations, not prelaunch failure as client evidence.",
+  "proposal": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/DRIVER-PROPOSAL-NEGATIVE-CAPS.json",
+    "sha256": "19a27e87c2be3b0522fe74783d1a49db6b4f73b75a871de2e3b95a58162b19c9"
+  },
+  "driver": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/driver-negative-caps-1",
+    "sha256": "95416f0059f6eb57ef94a0c80ce83f55943e7f8e909b6634f5c1af86d89fb858"
+  },
+  "capture_limits": {
+    "stdout": 16384,
+    "stderr": 128
+  },
+  "step_count": 3,
+  "timeout_seconds": 900
+}

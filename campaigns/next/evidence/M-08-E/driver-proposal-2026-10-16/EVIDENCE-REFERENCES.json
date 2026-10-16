@@ -1,0 +1,1469 @@
+{
+  "kind": "private retained unaccepted records; no client commissioning",
+  "artifacts": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/ACTUAL-RUNTIME-EVIDENCE.json",
+      "sha256": "7b72eb5fe9bb3f13cb3db939651d97be2768412a3d056db7100c2c54daa932d1",
+      "bytes": 16272,
+      "record": "ACTUAL-RUNTIME-EVIDENCE.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/CASE-BINDINGS.json",
+      "sha256": "774fabaa1b2f9f30090642aea4686366561bb4a58d6429fb57c114c5824d6e43",
+      "bytes": 756,
+      "record": "CASE-BINDINGS.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/DRIVER-PROPOSAL.json",
+      "sha256": "36ca0b892d099bbfde94dfd7323c21b9ba025650cdde701182595823c7ed533a",
+      "bytes": 9463,
+      "record": "DRIVER-PROPOSAL.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/ROOT-QUESTION.json",
+      "sha256": "07c22723b037ca21e41bdfbe0e1896f9fdbdbf99af216a6489c0521cd913639f",
+      "bytes": 988,
+      "record": "ROOT-QUESTION.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/SOURCE-READ-INVENTORY.json",
+      "sha256": "acad88ff1eca9b4d91191cac5773adffce141ee54ebbd0166fb14ab4bdae25bb",
+      "bytes": 23314,
+      "record": "SOURCE-READ-INVENTORY.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/STATUS.json",
+      "sha256": "aa84b067f41695df250ce7644a56676cf1bedbff9b78c60edd6b006f23e245da",
+      "bytes": 1157,
+      "record": "STATUS.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-1-subjects-after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V1-1-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-1-subjects-before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V1-1-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-1.log",
+      "sha256": "6abc3dc0e8557ced47976559cf2304e5a22fb89f2350d9484bb537b074d853a7",
+      "bytes": 18302,
+      "record": "V1-1.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-2-subjects-after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V1-2-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-2-subjects-before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V1-2-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-2.log",
+      "sha256": "c864d434f51351fef43645e3214b4f575a7c74099185a9c8fc200be42bdf38d5",
+      "bytes": 17899,
+      "record": "V1-2.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-SELECTION.json",
+      "sha256": "37b7683669d7afe3d2050d0da58653e6f5f92b7983473f7d1fddfe0622558137",
+      "bytes": 3157,
+      "record": "V1-SELECTION.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-result.json",
+      "sha256": "3708f03e1c110ec0275b21361bd49148059c477a0252cfd5e6754731587661bb",
+      "bytes": 4811,
+      "record": "V1-result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-subjects-after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V1-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V1-subjects-before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V1-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V2-1-subjects-after.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V2-1-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V2-1-subjects-before.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V2-1-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V2-1.log",
+      "sha256": "f1556909615e945b450ee81b2cf18139930ed48c8c2407e1d8e73afded10e5ab",
+      "bytes": 24775,
+      "record": "V2-1.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V2-result.json",
+      "sha256": "f6441652d97fa8e806c649bf4b74e60ca4df62d0e8d07f4a6f4a3fa80fb42432",
+      "bytes": 1494,
+      "record": "V2-result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V2-subjects-after.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V2-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V2-subjects-before.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V2-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-1-subjects-after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-1-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-1-subjects-before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-1-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-1.log",
+      "sha256": "ecf7b63d17d47ebce89c2be92292d2db0dedb140f9125122e627e28894a09eb6",
+      "bytes": 18749,
+      "record": "V3-1.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-2-subjects-after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-2-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-2-subjects-before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-2-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-2.log",
+      "sha256": "00cd51b1534cadd6d5f26436f3419505698a618beb3b320ed5804a4ecb57562a",
+      "bytes": 18757,
+      "record": "V3-2.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-3-subjects-after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-3-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-3-subjects-before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-3-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-3.log",
+      "sha256": "696637634d7be1ea253c22d6522f0950fabc3b2c1e7cb037f72f8e4ed204ee0a",
+      "bytes": 18748,
+      "record": "V3-3.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-4-subjects-after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-4-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-4-subjects-before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-4-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-4.log",
+      "sha256": "b4443f7d7e70bfb6182c8ba53f6bbced06e4ff52cc9aacbbf760028748e9ad52",
+      "bytes": 18745,
+      "record": "V3-4.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-SELECTION.json",
+      "sha256": "d5e0747efa8970f158c95168fd58c85dfcedcb507943f6c90cc8807724a996f2",
+      "bytes": 5233,
+      "record": "V3-SELECTION.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-result.json",
+      "sha256": "eb95050012ee7c6fd2638cb690971f9c260991ea6f97ef7fa074caf97fd99cf4",
+      "bytes": 8331,
+      "record": "V3-result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-subjects-after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V3-subjects-before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "V3-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V4-result.json",
+      "sha256": "bb6edfbea4395efe1e971fd2ad303d26c07cf23c7e0ac4210ff385f8d018ec5f",
+      "bytes": 1167,
+      "record": "V4-result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V4-subjects-after.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V4-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V4-subjects-before.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V4-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V5-1-subjects-after.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V5-1-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V5-1-subjects-before.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V5-1-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V5-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "record": "V5-1.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V5-PATHS.json",
+      "sha256": "6a1d87b1b8aad303916d741c4bed1557d3bd5b27a7ec92ae986464ffbf353724",
+      "bytes": 222,
+      "record": "V5-PATHS.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V5-REGISTRATION-NOTE.json",
+      "sha256": "c75a625ad4c6710824f63d83d7f8e102ebab36f1b9ff35a9a5341c66fe60c15d",
+      "bytes": 240,
+      "record": "V5-REGISTRATION-NOTE.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V5-result.json",
+      "sha256": "0ddc770d148b6b0207d2c0898ec9d4cdd9f2ca8b4495933b2da8d1961df58b54",
+      "bytes": 896,
+      "record": "V5-result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V5-subjects-after.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V5-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V5-subjects-before.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V5-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V6-1-subjects-after.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V6-1-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V6-1-subjects-before.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V6-1-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V6-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "record": "V6-1.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V6-result.json",
+      "sha256": "c3af83b585b6d4fa7e7987fd343d287449240372a2386ce1c5c8a690ebb4fbd6",
+      "bytes": 709,
+      "record": "V6-result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V6-subjects-after.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V6-subjects-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/V6-subjects-before.json",
+      "sha256": "7517732e54fccf68a95d3b4de6d2881febd0cd864fb906855ab81d895bedeb55",
+      "bytes": 271526,
+      "record": "V6-subjects-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-2/after.json",
+      "sha256": "7a9cf2cc7875c7e38be60f1b22c10f76201e43b565970514151fbfe2e62d2275",
+      "bytes": 271526,
+      "record": "attempts/receipt-2/after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-2/argv.json",
+      "sha256": "66ee847e9ac2aea68ca0d6d7d13902f637873379958769c51bf7daee570ed78c",
+      "bytes": 201,
+      "record": "attempts/receipt-2/argv.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-2/before.json",
+      "sha256": "7a9cf2cc7875c7e38be60f1b22c10f76201e43b565970514151fbfe2e62d2275",
+      "bytes": 271526,
+      "record": "attempts/receipt-2/before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-2/output.log",
+      "sha256": "384deb43aa717411676fb91af75229cfc629d5a2df2eba44f8d54ca9720b0d71",
+      "bytes": 19664,
+      "record": "attempts/receipt-2/output.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-2/result.json",
+      "sha256": "49837e5da76763ce77dbb43be8ffedd1af9f8fd2a74391b3435957f6f316cbb7",
+      "bytes": 325,
+      "record": "attempts/receipt-2/result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-3/after.json",
+      "sha256": "4adc10f6d6a3dde6da376a18469e688ade72730fde6c5b15939bbe5072c4332d",
+      "bytes": 271526,
+      "record": "attempts/receipt-3/after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-3/argv.json",
+      "sha256": "66ee847e9ac2aea68ca0d6d7d13902f637873379958769c51bf7daee570ed78c",
+      "bytes": 201,
+      "record": "attempts/receipt-3/argv.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-3/before.json",
+      "sha256": "4adc10f6d6a3dde6da376a18469e688ade72730fde6c5b15939bbe5072c4332d",
+      "bytes": 271526,
+      "record": "attempts/receipt-3/before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-3/output.log",
+      "sha256": "fef215728d59e8b94b6fa6d55fdab247408173b5302895311ac7f4f7ccd9ea23",
+      "bytes": 20467,
+      "record": "attempts/receipt-3/output.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-3/result.json",
+      "sha256": "ec1ef60ded50d446d3b1c5d316136d37d463e6d050aba8fa54bb9de9679627cf",
+      "bytes": 325,
+      "record": "attempts/receipt-3/result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-4/after.json",
+      "sha256": "f65d10ce398dddc75910dfb88a57e1db7898a68fe696b845e3e9249bc8c09c04",
+      "bytes": 271526,
+      "record": "attempts/receipt-4/after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-4/argv.json",
+      "sha256": "66ee847e9ac2aea68ca0d6d7d13902f637873379958769c51bf7daee570ed78c",
+      "bytes": 201,
+      "record": "attempts/receipt-4/argv.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-4/before.json",
+      "sha256": "f65d10ce398dddc75910dfb88a57e1db7898a68fe696b845e3e9249bc8c09c04",
+      "bytes": 271526,
+      "record": "attempts/receipt-4/before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-4/output.log",
+      "sha256": "1d5537e4449a568848d3aae04538fe5bbc694d544a05434280d93519646d82fd",
+      "bytes": 21304,
+      "record": "attempts/receipt-4/output.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-4/result.json",
+      "sha256": "f99e621dce5751d7b2a54a156d6b510e0328e8591d8641979947e15011344d23",
+      "bytes": 325,
+      "record": "attempts/receipt-4/result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-5/after.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "attempts/receipt-5/after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-5/argv.json",
+      "sha256": "66ee847e9ac2aea68ca0d6d7d13902f637873379958769c51bf7daee570ed78c",
+      "bytes": 201,
+      "record": "attempts/receipt-5/argv.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-5/before.json",
+      "sha256": "207876e420bef9cd227063a9f9373fe5d738c86b3d84932e2b32c6b887e385a1",
+      "bytes": 271526,
+      "record": "attempts/receipt-5/before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-5/output.log",
+      "sha256": "a9eaeb72c8c776a4171364452c44329bd559af0baa178004e873b50dcf17c8ad",
+      "bytes": 21068,
+      "record": "attempts/receipt-5/output.log"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/attempts/receipt-5/result.json",
+      "sha256": "074c806a05667c4c29f8dc865f149546c0929de7d4a0c02502ab44cc41f208ca",
+      "bytes": 325,
+      "record": "attempts/receipt-5/result.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/capture.json",
+      "sha256": "be094ad44af3cdfe2f0bd2ac538b1bbaf9454eb7a97c2772cf9258118b3d7d82",
+      "bytes": 753,
+      "record": "file-owner-only/claude_code.config.project/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/removed-after.json",
+      "sha256": "e4be9038f5f0f0df9465d4fec798501243ec6304a0de1350039d63d15b0603a8",
+      "bytes": 96065,
+      "record": "file-owner-only/claude_code.config.project/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/removed-before.json",
+      "sha256": "f61f56f14400f38364dbc41a46de2a3db2638e956e7316b43b97fd6b94c31bb3",
+      "bytes": 84670,
+      "record": "file-owner-only/claude_code.config.project/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/removed-reply.json",
+      "sha256": "81095e1f4d2d97b3c84711761ba9abd45affd0d6c4a15be4673147835b0f79f9",
+      "bytes": 975,
+      "record": "file-owner-only/claude_code.config.project/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/request.json",
+      "sha256": "032f2e2acbc66f572cad1299c758a2ae24755848c9e7f28d278d533d73342fdb",
+      "bytes": 366,
+      "record": "file-owner-only/claude_code.config.project/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/v1-after.json",
+      "sha256": "b31537d84cdd7ef6dfd6612b8668c0395c843ac687067d5c7579d0a806371054",
+      "bytes": 65924,
+      "record": "file-owner-only/claude_code.config.project/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/v1-before.json",
+      "sha256": "ce30cce0589ae016fd6f94316beeb4277fc339480e6ef836c88c5bc9410f478b",
+      "bytes": 821,
+      "record": "file-owner-only/claude_code.config.project/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/v1-payload.json",
+      "sha256": "1e763c7f99892d3620ca8633f66489d368a667fd622c62f2ca99fa5f66d79e17",
+      "bytes": 50,
+      "record": "file-owner-only/claude_code.config.project/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/v1-reply.json",
+      "sha256": "916c6c735869927f5f12d43e86d8f239bcb539ecbacdcb0a148d3254f55e34d1",
+      "bytes": 1032,
+      "record": "file-owner-only/claude_code.config.project/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/v2-after.json",
+      "sha256": "f61f56f14400f38364dbc41a46de2a3db2638e956e7316b43b97fd6b94c31bb3",
+      "bytes": 84670,
+      "record": "file-owner-only/claude_code.config.project/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/v2-before.json",
+      "sha256": "b31537d84cdd7ef6dfd6612b8668c0395c843ac687067d5c7579d0a806371054",
+      "bytes": 65924,
+      "record": "file-owner-only/claude_code.config.project/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/v2-payload.json",
+      "sha256": "9cf850d150e6a1b44a533871dbe52e232adca8e94456cd07087de8c1628e93d6",
+      "bytes": 65,
+      "record": "file-owner-only/claude_code.config.project/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.project/v2-reply.json",
+      "sha256": "b0cd3803137dc7bc0e9ea5ff8b9deb0deb179e628ce78de0023f27e8a7653070",
+      "bytes": 1091,
+      "record": "file-owner-only/claude_code.config.project/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/capture.json",
+      "sha256": "1a041b3d454999b2b28358ab07b066605a6739ba684e6a5dfc7bdfc32d4a839d",
+      "bytes": 747,
+      "record": "file-owner-only/claude_code.config.user/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/removed-after.json",
+      "sha256": "5155b6d5fd942872cf34a317f757fa77968145ed6f9a5fef0b436f6fb73e39cd",
+      "bytes": 96191,
+      "record": "file-owner-only/claude_code.config.user/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/removed-before.json",
+      "sha256": "bc1558d1d59e95ac2bef2cf6b5f3b6be54c3d27a91a3910a5346c332295db95f",
+      "bytes": 84865,
+      "record": "file-owner-only/claude_code.config.user/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/removed-reply.json",
+      "sha256": "ee6c6ae2cae7f9ed7dc23f1c5a2cc7fe97f089fd4cb985c99ba38c7b0d8b8647",
+      "bytes": 969,
+      "record": "file-owner-only/claude_code.config.user/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/request.json",
+      "sha256": "920f209f6ae4a9537e3014cec1c0ce096715b454f7815197eeaf9b23c54fb6fe",
+      "bytes": 360,
+      "record": "file-owner-only/claude_code.config.user/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/v1-after.json",
+      "sha256": "7683c9ce08432d9749279f0545fd59f9f4af4956cc48f94e9f811b75fbc97001",
+      "bytes": 66249,
+      "record": "file-owner-only/claude_code.config.user/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/v1-before.json",
+      "sha256": "3f182118a02ef4e8cc26c5fcf4a35b12102c9fa8a3588805a1f9e2348501c2ee",
+      "bytes": 818,
+      "record": "file-owner-only/claude_code.config.user/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/v1-payload.json",
+      "sha256": "1e763c7f99892d3620ca8633f66489d368a667fd622c62f2ca99fa5f66d79e17",
+      "bytes": 50,
+      "record": "file-owner-only/claude_code.config.user/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/v1-reply.json",
+      "sha256": "94b3bc9b0f1cd982b368b4a85b93b1ae77601fb008fb32398c91a46707d83f7b",
+      "bytes": 1026,
+      "record": "file-owner-only/claude_code.config.user/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/v2-after.json",
+      "sha256": "bc1558d1d59e95ac2bef2cf6b5f3b6be54c3d27a91a3910a5346c332295db95f",
+      "bytes": 84865,
+      "record": "file-owner-only/claude_code.config.user/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/v2-before.json",
+      "sha256": "7683c9ce08432d9749279f0545fd59f9f4af4956cc48f94e9f811b75fbc97001",
+      "bytes": 66249,
+      "record": "file-owner-only/claude_code.config.user/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/v2-payload.json",
+      "sha256": "9cf850d150e6a1b44a533871dbe52e232adca8e94456cd07087de8c1628e93d6",
+      "bytes": 65,
+      "record": "file-owner-only/claude_code.config.user/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.config.user/v2-reply.json",
+      "sha256": "a0510659a1f6f7ffe9c22444437676b359f7e895665430f622541ccb86309842",
+      "bytes": 1085,
+      "record": "file-owner-only/claude_code.config.user/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/capture.json",
+      "sha256": "8e0175af9b08a274470f9534e010d8e9ffd704f7b6180134ae95a27f72c05aab",
+      "bytes": 747,
+      "record": "file-owner-only/claude_code.mcp.project/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/removed-after.json",
+      "sha256": "b425ce9b03b61bbb8ebbc0bfa4fb50886bb5bb9761a5b478244c4484558eb19f",
+      "bytes": 96346,
+      "record": "file-owner-only/claude_code.mcp.project/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/removed-before.json",
+      "sha256": "eaba544496bef9663e43b67be47fb78dae43891dfe09f808df05732798007229",
+      "bytes": 85827,
+      "record": "file-owner-only/claude_code.mcp.project/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/removed-reply.json",
+      "sha256": "5abe981f5bf0ba9a5002361407550766df501ed8a1bb04a9a9ee42b192b757b6",
+      "bytes": 961,
+      "record": "file-owner-only/claude_code.mcp.project/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/request.json",
+      "sha256": "5d032efbdc105d3360f8e953843ba5f1e45f06dfd4383804ec85898c830daacc",
+      "bytes": 356,
+      "record": "file-owner-only/claude_code.mcp.project/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/v1-after.json",
+      "sha256": "94262b3e23039f90041e2641b2b5e4de15d3da16859fc7a96ce23c6d9edb2e35",
+      "bytes": 66821,
+      "record": "file-owner-only/claude_code.mcp.project/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/v1-before.json",
+      "sha256": "6488a3e824fa8699b15ff80c47f79f437faa6c689a3fc84ba9b69b5754ec7b85",
+      "bytes": 807,
+      "record": "file-owner-only/claude_code.mcp.project/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/v1-payload.json",
+      "sha256": "84ffd9947ba65e4b8aa1dd05286a33774a58fa9bcc1454f939908e72d3f0df40",
+      "bytes": 135,
+      "record": "file-owner-only/claude_code.mcp.project/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/v1-reply.json",
+      "sha256": "e388246aac1f513badd996230029072aa568d01e08b3c5dd967dfef170c73ef1",
+      "bytes": 1018,
+      "record": "file-owner-only/claude_code.mcp.project/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/v2-after.json",
+      "sha256": "eaba544496bef9663e43b67be47fb78dae43891dfe09f808df05732798007229",
+      "bytes": 85827,
+      "record": "file-owner-only/claude_code.mcp.project/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/v2-before.json",
+      "sha256": "94262b3e23039f90041e2641b2b5e4de15d3da16859fc7a96ce23c6d9edb2e35",
+      "bytes": 66821,
+      "record": "file-owner-only/claude_code.mcp.project/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/v2-payload.json",
+      "sha256": "c2fd856d3f14d90c4e4881092506b89c0ab68943fb959cca210b1282f91faebc",
+      "bytes": 135,
+      "record": "file-owner-only/claude_code.mcp.project/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.project/v2-reply.json",
+      "sha256": "1c690713a7dedebe41a520cca3df1ea1372233679ab2136db5955245491bbb7c",
+      "bytes": 1077,
+      "record": "file-owner-only/claude_code.mcp.project/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/capture.json",
+      "sha256": "6053c1d14e774880e7592afaf264ee01ede732f23ab7dc1dec96fdb7705c8379",
+      "bytes": 741,
+      "record": "file-owner-only/claude_code.mcp.user/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/removed-after.json",
+      "sha256": "d65fd2667e41901b2fe49b7a58cc13c3fe53569bb1a3ee3409ab4484abbe1591",
+      "bytes": 96779,
+      "record": "file-owner-only/claude_code.mcp.user/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/removed-before.json",
+      "sha256": "c4207a993d1658276ac8c8040f294ec503cb742bad5cd5556eddc3914fc4dafd",
+      "bytes": 86244,
+      "record": "file-owner-only/claude_code.mcp.user/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/removed-reply.json",
+      "sha256": "05293cbe8fde75a3501597b365a968f397d7a04f04faf5b2d69ba48da2de8263",
+      "bytes": 961,
+      "record": "file-owner-only/claude_code.mcp.user/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/request.json",
+      "sha256": "9483caf91602b521f0d3528a4c824093c0e0072d3339efb62dc602dae2bb3054",
+      "bytes": 353,
+      "record": "file-owner-only/claude_code.mcp.user/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/v1-after.json",
+      "sha256": "84e9d6f2940ad5f1eade59b0f96c90afc63a946c3c99d2cc491f218b17dcf18b",
+      "bytes": 67250,
+      "record": "file-owner-only/claude_code.mcp.user/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/v1-before.json",
+      "sha256": "6e965d53d058216bc2b0218efa9698f0e3e120e1f381d6928819fac9640db4fa",
+      "bytes": 809,
+      "record": "file-owner-only/claude_code.mcp.user/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/v1-payload.json",
+      "sha256": "84ffd9947ba65e4b8aa1dd05286a33774a58fa9bcc1454f939908e72d3f0df40",
+      "bytes": 135,
+      "record": "file-owner-only/claude_code.mcp.user/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/v1-reply.json",
+      "sha256": "5ad06f64fd176e8b7d92458022e25ae2bdf4340e9ba08aa2c39bd3c2f3432df9",
+      "bytes": 1018,
+      "record": "file-owner-only/claude_code.mcp.user/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/v2-after.json",
+      "sha256": "c4207a993d1658276ac8c8040f294ec503cb742bad5cd5556eddc3914fc4dafd",
+      "bytes": 86244,
+      "record": "file-owner-only/claude_code.mcp.user/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/v2-before.json",
+      "sha256": "84e9d6f2940ad5f1eade59b0f96c90afc63a946c3c99d2cc491f218b17dcf18b",
+      "bytes": 67250,
+      "record": "file-owner-only/claude_code.mcp.user/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/v2-payload.json",
+      "sha256": "c2fd856d3f14d90c4e4881092506b89c0ab68943fb959cca210b1282f91faebc",
+      "bytes": 135,
+      "record": "file-owner-only/claude_code.mcp.user/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.mcp.user/v2-reply.json",
+      "sha256": "dfeb5ba46475b262d1ef2ff8cd21d80fd1f6af9c19d18450916659a8090476cb",
+      "bytes": 1077,
+      "record": "file-owner-only/claude_code.mcp.user/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/capture.json",
+      "sha256": "c4fc1963ca2d3025e84191d1b724f686f4ca01026db9ab6a79ebde466d88f461",
+      "bytes": 751,
+      "record": "file-owner-only/claude_code.skill.project/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/removed-after.json",
+      "sha256": "85c519d64fae3389c49ff77ee7665ad4d64ac423cb5214b6470c8c7511c17ce1",
+      "bytes": 119633,
+      "record": "file-owner-only/claude_code.skill.project/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/removed-before.json",
+      "sha256": "e605097f19b4b7fbc1d18ceb01595bc04664385646e77be301758cdffb56fbf8",
+      "bytes": 105514,
+      "record": "file-owner-only/claude_code.skill.project/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/removed-reply.json",
+      "sha256": "0b10c841badd56531a573464079fef5948ac2dd97e4de9d5e970426582d5c83c",
+      "bytes": 1517,
+      "record": "file-owner-only/claude_code.skill.project/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/request.json",
+      "sha256": "ef342f196b2357aa783fdd69a570d35a4622200d52e5550c27cad65837b00970",
+      "bytes": 308,
+      "record": "file-owner-only/claude_code.skill.project/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/v1-after.json",
+      "sha256": "9a984941c9c4d8bb9614ad5e199f209bd5767ebefd9f3e939660ebeeaa2b611f",
+      "bytes": 83959,
+      "record": "file-owner-only/claude_code.skill.project/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/v1-before.json",
+      "sha256": "adf882e00d51f3c3c837bb361a2485aa52bc22a28e949247167390b6db420a33",
+      "bytes": 328,
+      "record": "file-owner-only/claude_code.skill.project/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/v1-payload.json",
+      "sha256": "7741aaa086b5e100f37c6d8cbda850b92c81e7ceafcbbd15fab5d2b3c7207677",
+      "bytes": 2415,
+      "record": "file-owner-only/claude_code.skill.project/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/v1-reply.json",
+      "sha256": "58a6dc3c0837893429c0daf424da47438218390b7931cb3297a223ea26f29b0a",
+      "bytes": 1690,
+      "record": "file-owner-only/claude_code.skill.project/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/v2-after.json",
+      "sha256": "e605097f19b4b7fbc1d18ceb01595bc04664385646e77be301758cdffb56fbf8",
+      "bytes": 105514,
+      "record": "file-owner-only/claude_code.skill.project/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/v2-before.json",
+      "sha256": "9a984941c9c4d8bb9614ad5e199f209bd5767ebefd9f3e939660ebeeaa2b611f",
+      "bytes": 83959,
+      "record": "file-owner-only/claude_code.skill.project/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/v2-payload.json",
+      "sha256": "1da919879a4173f9588113ba2a28f4dddf1ac7caea7321cf301e12933ad4a48e",
+      "bytes": 1585,
+      "record": "file-owner-only/claude_code.skill.project/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.project/v2-reply.json",
+      "sha256": "37573005d54f74dce7949ca00365c76b71eba76c2c4afa899c9f23944347e5d6",
+      "bytes": 1691,
+      "record": "file-owner-only/claude_code.skill.project/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/capture.json",
+      "sha256": "4b793f5db9a5f80b6b8d5122f80e6b0c11ff2dad0199b0c4c647f66b9a80943d",
+      "bytes": 745,
+      "record": "file-owner-only/claude_code.skill.user/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/removed-after.json",
+      "sha256": "ef3922ed2dce4cb6c55ed4b04f8ae57c33cc5feb426ba126f1ecddb60929220e",
+      "bytes": 120519,
+      "record": "file-owner-only/claude_code.skill.user/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/removed-before.json",
+      "sha256": "2bfe482f72b0f5897749c2ff7cc816bdbfcc1ec3145ff291951677c4e203bddb",
+      "bytes": 106519,
+      "record": "file-owner-only/claude_code.skill.user/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/removed-reply.json",
+      "sha256": "f7ac7a8d7cff55efe9bfff80fc6d9d9c86e376d1c2802134a1004bd2858fb855",
+      "bytes": 1505,
+      "record": "file-owner-only/claude_code.skill.user/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/request.json",
+      "sha256": "910299c505a68c3825d6fbb3c2d9761ac0dd24be9e1cd9d618ac9f8b9f25024e",
+      "bytes": 302,
+      "record": "file-owner-only/claude_code.skill.user/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/v1-after.json",
+      "sha256": "83266fddae767a26eebdcdd9092042f1e63e9a5d77313edd7b1944f9ea9df8b4",
+      "bytes": 85148,
+      "record": "file-owner-only/claude_code.skill.user/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/v1-before.json",
+      "sha256": "81f5c803d6c11a7a2d44ed2bbb08bca3f9c3349835a455819138adb5b9a9ef17",
+      "bytes": 329,
+      "record": "file-owner-only/claude_code.skill.user/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/v1-payload.json",
+      "sha256": "7741aaa086b5e100f37c6d8cbda850b92c81e7ceafcbbd15fab5d2b3c7207677",
+      "bytes": 2415,
+      "record": "file-owner-only/claude_code.skill.user/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/v1-reply.json",
+      "sha256": "556c27691085f6cd262556c271a70d5791f010f0eafcb29cd3170c2bb5e15bc1",
+      "bytes": 1678,
+      "record": "file-owner-only/claude_code.skill.user/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/v2-after.json",
+      "sha256": "2bfe482f72b0f5897749c2ff7cc816bdbfcc1ec3145ff291951677c4e203bddb",
+      "bytes": 106519,
+      "record": "file-owner-only/claude_code.skill.user/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/v2-before.json",
+      "sha256": "83266fddae767a26eebdcdd9092042f1e63e9a5d77313edd7b1944f9ea9df8b4",
+      "bytes": 85148,
+      "record": "file-owner-only/claude_code.skill.user/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/v2-payload.json",
+      "sha256": "1da919879a4173f9588113ba2a28f4dddf1ac7caea7321cf301e12933ad4a48e",
+      "bytes": 1585,
+      "record": "file-owner-only/claude_code.skill.user/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/claude_code.skill.user/v2-reply.json",
+      "sha256": "ebddadc947340c0f2ae86334d7128c48692eb7a59d10979e4edf23156376158b",
+      "bytes": 1679,
+      "record": "file-owner-only/claude_code.skill.user/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/capture.json",
+      "sha256": "84975c32e4cf21b6f866aad716c04e83fb949237ba3e13b497211d426af49f6b",
+      "bytes": 741,
+      "record": "file-owner-only/codex.config.project/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/removed-after.json",
+      "sha256": "c17f9427fb2adc2b92ac3d5e2b11364a639f0eec670ea03b0545b8e3f5a624fb",
+      "bytes": 95040,
+      "record": "file-owner-only/codex.config.project/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/removed-before.json",
+      "sha256": "0460ae070e2f5d9bd36fe4b897fa8bf8a1ba937068cf8d76460c7686a78d5b42",
+      "bytes": 83470,
+      "record": "file-owner-only/codex.config.project/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/removed-reply.json",
+      "sha256": "2167f5a6a53bff0c0b655e82be19696b93792b09ee1e61867c5b8f7ac6d70852",
+      "bytes": 959,
+      "record": "file-owner-only/codex.config.project/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/request.json",
+      "sha256": "54cad4b17ecdee635ca7f5ff261ceeef32d0f2c5e06f3834261197552a8050bc",
+      "bytes": 345,
+      "record": "file-owner-only/codex.config.project/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/v1-after.json",
+      "sha256": "a988dc9b4cb7bd39100a99208fd845fd8e4f0a1a4d6464a647deb1db0f1e721e",
+      "bytes": 65125,
+      "record": "file-owner-only/codex.config.project/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/v1-before.json",
+      "sha256": "3c65832f2168506c055bb1047f6085d97e46c33516445fea4c850cac6465c2c7",
+      "bytes": 806,
+      "record": "file-owner-only/codex.config.project/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/v1-payload.json",
+      "sha256": "98136ef934c59277013ca96dd98345fd68468b4aa397878d447f115c22957f66",
+      "bytes": 42,
+      "record": "file-owner-only/codex.config.project/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/v1-reply.json",
+      "sha256": "189430f03b92575f0324a17df9e1d5be77842efc302be1818f5d9b13573bef3c",
+      "bytes": 1016,
+      "record": "file-owner-only/codex.config.project/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/v2-after.json",
+      "sha256": "0460ae070e2f5d9bd36fe4b897fa8bf8a1ba937068cf8d76460c7686a78d5b42",
+      "bytes": 83470,
+      "record": "file-owner-only/codex.config.project/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/v2-before.json",
+      "sha256": "a988dc9b4cb7bd39100a99208fd845fd8e4f0a1a4d6464a647deb1db0f1e721e",
+      "bytes": 65125,
+      "record": "file-owner-only/codex.config.project/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/v2-payload.json",
+      "sha256": "c01a7e9d3d25cd4a8a3b03606faa8bea1fc4d9f1cd13ffd4beeebc0be9b053ec",
+      "bytes": 37,
+      "record": "file-owner-only/codex.config.project/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.project/v2-reply.json",
+      "sha256": "bb75f3e831ea51a5d3a875f8afd276065f90b5e42ed4f823243e3b4da9576ee7",
+      "bytes": 1075,
+      "record": "file-owner-only/codex.config.project/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/capture.json",
+      "sha256": "a8dcfa9c17230ec42c80153cffe4c75f5c557cd0826c8703a710361c7fa3967d",
+      "bytes": 735,
+      "record": "file-owner-only/codex.config.user/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/removed-after.json",
+      "sha256": "206f5c0724dedddcd0b2e70fc602d6ae0bdfb44a0c6a2f3ea6d7479804f52063",
+      "bytes": 95264,
+      "record": "file-owner-only/codex.config.user/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/removed-before.json",
+      "sha256": "0ee24e74592681699a6e379b040154791e5d0dabf533f29dd9572e7b8047813c",
+      "bytes": 83725,
+      "record": "file-owner-only/codex.config.user/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/removed-reply.json",
+      "sha256": "58b446be73c66eada051f01ef0c40334ddf67cd6fef1aaeac23647234164e14b",
+      "bytes": 953,
+      "record": "file-owner-only/codex.config.user/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/request.json",
+      "sha256": "cbd38fbfddf156a5a4448dbd39bceec27db2095ec2af1139fdcddf25f8304a87",
+      "bytes": 339,
+      "record": "file-owner-only/codex.config.user/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/v1-after.json",
+      "sha256": "a232af1771e25dc9e86a18b3234feb09e56d0e0b9753178d61253c0ae1632d21",
+      "bytes": 65439,
+      "record": "file-owner-only/codex.config.user/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/v1-before.json",
+      "sha256": "23471c01535d25c5adab6ba6cac2e40428b5e22eae7b2caf0becd9748a875eed",
+      "bytes": 802,
+      "record": "file-owner-only/codex.config.user/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/v1-payload.json",
+      "sha256": "98136ef934c59277013ca96dd98345fd68468b4aa397878d447f115c22957f66",
+      "bytes": 42,
+      "record": "file-owner-only/codex.config.user/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/v1-reply.json",
+      "sha256": "9cf74df4c2166d80734191d7a1136a02d5c1d4205f9a9f56e9e5ca15d61690f9",
+      "bytes": 1010,
+      "record": "file-owner-only/codex.config.user/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/v2-after.json",
+      "sha256": "0ee24e74592681699a6e379b040154791e5d0dabf533f29dd9572e7b8047813c",
+      "bytes": 83725,
+      "record": "file-owner-only/codex.config.user/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/v2-before.json",
+      "sha256": "a232af1771e25dc9e86a18b3234feb09e56d0e0b9753178d61253c0ae1632d21",
+      "bytes": 65439,
+      "record": "file-owner-only/codex.config.user/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/v2-payload.json",
+      "sha256": "c01a7e9d3d25cd4a8a3b03606faa8bea1fc4d9f1cd13ffd4beeebc0be9b053ec",
+      "bytes": 37,
+      "record": "file-owner-only/codex.config.user/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.config.user/v2-reply.json",
+      "sha256": "42e9593dc31f88bc54a400f4d9b618db051f31e0eeb83b04e931f251c9ff729d",
+      "bytes": 1069,
+      "record": "file-owner-only/codex.config.user/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/capture.json",
+      "sha256": "9b8c4c42586f3396ff6e68ec4b40797e1c4cc7aa014972f3e47220be1897c17d",
+      "bytes": 735,
+      "record": "file-owner-only/codex.mcp.project/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/removed-after.json",
+      "sha256": "ee40c0417606e67277158ef1865b42537203ce0e65f0d3d31097ef03fd66b36c",
+      "bytes": 97526,
+      "record": "file-owner-only/codex.mcp.project/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/removed-before.json",
+      "sha256": "22ab466296aa375b9311a0be0889d6057ea2f6e14a728dbfd16a833d801e30e2",
+      "bytes": 86558,
+      "record": "file-owner-only/codex.mcp.project/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/removed-reply.json",
+      "sha256": "4fc348f412da59a7fec0f62b03a7eca6cb9db823f985a066ecee3cff0b4e681a",
+      "bytes": 981,
+      "record": "file-owner-only/codex.mcp.project/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/request.json",
+      "sha256": "a641ca7a98301db9d4af63651bcc7cc400a37d3e1791bd166e746629cdebb579",
+      "bytes": 360,
+      "record": "file-owner-only/codex.mcp.project/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/v1-after.json",
+      "sha256": "9158ef636f6282fedf875d7f48c57a399265be415ce3e1f83214f6b21c5784cb",
+      "bytes": 67156,
+      "record": "file-owner-only/codex.mcp.project/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/v1-before.json",
+      "sha256": "273d2149004a9f6345b8d56f161ca3270c55a49139c5cced88e561edf6c2a4bf",
+      "bytes": 806,
+      "record": "file-owner-only/codex.mcp.project/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/v1-payload.json",
+      "sha256": "487a322fc8e70e25c597967a477a6757cfd54195fb02e4e0a319623537be4a7d",
+      "bytes": 159,
+      "record": "file-owner-only/codex.mcp.project/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/v1-reply.json",
+      "sha256": "5eda3388bcbc48b176145a90636ba351c0ede8e4c41d45011a4e0b4e5b0fba66",
+      "bytes": 1038,
+      "record": "file-owner-only/codex.mcp.project/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/v2-after.json",
+      "sha256": "22ab466296aa375b9311a0be0889d6057ea2f6e14a728dbfd16a833d801e30e2",
+      "bytes": 86558,
+      "record": "file-owner-only/codex.mcp.project/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/v2-before.json",
+      "sha256": "9158ef636f6282fedf875d7f48c57a399265be415ce3e1f83214f6b21c5784cb",
+      "bytes": 67156,
+      "record": "file-owner-only/codex.mcp.project/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/v2-payload.json",
+      "sha256": "566dbad38a9008362db0304b6b3646d2af24781dcbb5b10ed5a70927b19e800b",
+      "bytes": 159,
+      "record": "file-owner-only/codex.mcp.project/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.project/v2-reply.json",
+      "sha256": "d0a8d2afd9dc06676d7b18b06547762c67e80428a0d166c22c541d1f19d7cb3e",
+      "bytes": 1097,
+      "record": "file-owner-only/codex.mcp.project/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/capture.json",
+      "sha256": "905a3ee7f0d92743b291baa74f9c796f5a36ae170a762b12c38b24a58dab7d9f",
+      "bytes": 729,
+      "record": "file-owner-only/codex.mcp.user/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/removed-after.json",
+      "sha256": "c9062614d514d9a316484d50435adf6ceb07f49b12da8fa8f415e46d75de266d",
+      "bytes": 97661,
+      "record": "file-owner-only/codex.mcp.user/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/removed-before.json",
+      "sha256": "44ea6f699cd22d8d373343936d15bbc93f4ca97eea81bbbfcf8313813b1d5e03",
+      "bytes": 86765,
+      "record": "file-owner-only/codex.mcp.user/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/removed-reply.json",
+      "sha256": "6b5d2191f2547d9b976c6ce8671fe282fcc1d2fb1ac09756f2d2f991b3990c28",
+      "bytes": 975,
+      "record": "file-owner-only/codex.mcp.user/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/request.json",
+      "sha256": "6147b61c8e72b8bc1d372ba4072e29964081c9a933f584640e638709e4818da8",
+      "bytes": 354,
+      "record": "file-owner-only/codex.mcp.user/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/v1-after.json",
+      "sha256": "0109a6d6493bcfd2e7f7e53e670941a2cdd95af30d32e18a9e20dcf7a89844b1",
+      "bytes": 67425,
+      "record": "file-owner-only/codex.mcp.user/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/v1-before.json",
+      "sha256": "e5c008fbfc23905035e441ded176f58e45342b64ab4bab8cc55f34e99a9c7505",
+      "bytes": 803,
+      "record": "file-owner-only/codex.mcp.user/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/v1-payload.json",
+      "sha256": "487a322fc8e70e25c597967a477a6757cfd54195fb02e4e0a319623537be4a7d",
+      "bytes": 159,
+      "record": "file-owner-only/codex.mcp.user/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/v1-reply.json",
+      "sha256": "889395530e8c0ea751d7d39cfb12daaa36bf21d997588f5c00f69da779d41f06",
+      "bytes": 1032,
+      "record": "file-owner-only/codex.mcp.user/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/v2-after.json",
+      "sha256": "44ea6f699cd22d8d373343936d15bbc93f4ca97eea81bbbfcf8313813b1d5e03",
+      "bytes": 86765,
+      "record": "file-owner-only/codex.mcp.user/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/v2-before.json",
+      "sha256": "0109a6d6493bcfd2e7f7e53e670941a2cdd95af30d32e18a9e20dcf7a89844b1",
+      "bytes": 67425,
+      "record": "file-owner-only/codex.mcp.user/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/v2-payload.json",
+      "sha256": "566dbad38a9008362db0304b6b3646d2af24781dcbb5b10ed5a70927b19e800b",
+      "bytes": 159,
+      "record": "file-owner-only/codex.mcp.user/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.mcp.user/v2-reply.json",
+      "sha256": "f742b1995308b5e294b9ce47e4a718e909479433d51ff860fb81c12a44dfe123",
+      "bytes": 1091,
+      "record": "file-owner-only/codex.mcp.user/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/capture.json",
+      "sha256": "0609b0bf1fba774748668887e0a2bd657b8e7d63c40ff20df976f6e24edaceab",
+      "bytes": 739,
+      "record": "file-owner-only/codex.skill.project/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/removed-after.json",
+      "sha256": "da343cd7daab752326566a407ab120fbbed53d840f4cbf37f5bdea3965fe2166",
+      "bytes": 119390,
+      "record": "file-owner-only/codex.skill.project/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/removed-before.json",
+      "sha256": "086b84de435d615f1f99805ce5563961bb8c8aa8964f1bdea153ae3fc787fbae",
+      "bytes": 105262,
+      "record": "file-owner-only/codex.skill.project/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/removed-reply.json",
+      "sha256": "f6d629ee733c2900d4850c07e860cea5b4f94a572442266ec2e9660c4c0fd158",
+      "bytes": 1517,
+      "record": "file-owner-only/codex.skill.project/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/request.json",
+      "sha256": "1cb922ce1c4a3b2b68f28992de72e5acd522e5cadb44fb1e83294bedff3a8a89",
+      "bytes": 302,
+      "record": "file-owner-only/codex.skill.project/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/v1-after.json",
+      "sha256": "c3870fcdc7bf5aaa5b6a256ce1936c0edf936f70238c5b117b642f4151646194",
+      "bytes": 83763,
+      "record": "file-owner-only/codex.skill.project/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/v1-before.json",
+      "sha256": "8b0473a90dbd43511641a679c0e199f94612d96668f6c2aa225775877fed11fa",
+      "bytes": 328,
+      "record": "file-owner-only/codex.skill.project/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/v1-payload.json",
+      "sha256": "7741aaa086b5e100f37c6d8cbda850b92c81e7ceafcbbd15fab5d2b3c7207677",
+      "bytes": 2415,
+      "record": "file-owner-only/codex.skill.project/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/v1-reply.json",
+      "sha256": "3fd13917d8a05e00a151c9935fb9d8207300e4966c61b8c5730520bba8b09855",
+      "bytes": 1690,
+      "record": "file-owner-only/codex.skill.project/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/v2-after.json",
+      "sha256": "086b84de435d615f1f99805ce5563961bb8c8aa8964f1bdea153ae3fc787fbae",
+      "bytes": 105262,
+      "record": "file-owner-only/codex.skill.project/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/v2-before.json",
+      "sha256": "c3870fcdc7bf5aaa5b6a256ce1936c0edf936f70238c5b117b642f4151646194",
+      "bytes": 83763,
+      "record": "file-owner-only/codex.skill.project/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/v2-payload.json",
+      "sha256": "1da919879a4173f9588113ba2a28f4dddf1ac7caea7321cf301e12933ad4a48e",
+      "bytes": 1585,
+      "record": "file-owner-only/codex.skill.project/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.project/v2-reply.json",
+      "sha256": "0f602c9b3be1ea6ad547bd2082fdb9ced7e35f66aa91851e37ad0b8232a4cda4",
+      "bytes": 1691,
+      "record": "file-owner-only/codex.skill.project/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/capture.json",
+      "sha256": "dbf4ea46866fde84e15e338f71445f0257d6ad285363b1907826caaeaa0e125a",
+      "bytes": 733,
+      "record": "file-owner-only/codex.skill.user/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/removed-after.json",
+      "sha256": "71325676292f760cf63106fc0c74312985036e2fedccb25c8e21af7ed80d3d7e",
+      "bytes": 120350,
+      "record": "file-owner-only/codex.skill.user/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/removed-before.json",
+      "sha256": "8933a44940f7921ac9f337ded4a1094d803dc6eb95327e632780079f471c248b",
+      "bytes": 106398,
+      "record": "file-owner-only/codex.skill.user/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/removed-reply.json",
+      "sha256": "44ed2279ebab47fc2d87346a92a498f06ea68562a52ebc9d52342c1edd734eb9",
+      "bytes": 1505,
+      "record": "file-owner-only/codex.skill.user/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/request.json",
+      "sha256": "93955e32429bd0b569fc6fede0484a6b836d6857d7397e14ed2a56e61751f26b",
+      "bytes": 296,
+      "record": "file-owner-only/codex.skill.user/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/v1-after.json",
+      "sha256": "22b72923593f24d163d246e69509ab1b656d9544f3a88c9c915eefb65fa9f45c",
+      "bytes": 84940,
+      "record": "file-owner-only/codex.skill.user/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/v1-before.json",
+      "sha256": "aa0411c1b75c0676b145d576e58c4314ea431a0cb134d6d0a3810c3350a501d4",
+      "bytes": 328,
+      "record": "file-owner-only/codex.skill.user/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/v1-payload.json",
+      "sha256": "7741aaa086b5e100f37c6d8cbda850b92c81e7ceafcbbd15fab5d2b3c7207677",
+      "bytes": 2415,
+      "record": "file-owner-only/codex.skill.user/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/v1-reply.json",
+      "sha256": "0dd0688ee5c5ccca4cd6d5d488166b6e8d5b6ecacfd033d8647109590542eb2b",
+      "bytes": 1678,
+      "record": "file-owner-only/codex.skill.user/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/v2-after.json",
+      "sha256": "8933a44940f7921ac9f337ded4a1094d803dc6eb95327e632780079f471c248b",
+      "bytes": 106398,
+      "record": "file-owner-only/codex.skill.user/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/v2-before.json",
+      "sha256": "22b72923593f24d163d246e69509ab1b656d9544f3a88c9c915eefb65fa9f45c",
+      "bytes": 84940,
+      "record": "file-owner-only/codex.skill.user/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/v2-payload.json",
+      "sha256": "1da919879a4173f9588113ba2a28f4dddf1ac7caea7321cf301e12933ad4a48e",
+      "bytes": 1585,
+      "record": "file-owner-only/codex.skill.user/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/codex.skill.user/v2-reply.json",
+      "sha256": "ad1f543685364d9aa457a4a11a49c5b1427bf39a03a81046d8c06d2cbfe15384",
+      "bytes": 1679,
+      "record": "file-owner-only/codex.skill.user/v2-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/capture.json",
+      "sha256": "3e2c231293103707f1f4aee92ba7268de2a9969afdb358a48ce19ffda3dd9d9d",
+      "bytes": 709,
+      "record": "file-owner-only/external-addition.skill.project/capture.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/removed-after.json",
+      "sha256": "258bd870c9ed8cc0bc48d006bce5cc8628168c206dc37f6e63ddd8d0b0731078",
+      "bytes": 119416,
+      "record": "file-owner-only/external-addition.skill.project/removed-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/removed-before.json",
+      "sha256": "b0a6483918334b759bb662497a6882a4183dc39ab539581e55b1780c36b33469",
+      "bytes": 105338,
+      "record": "file-owner-only/external-addition.skill.project/removed-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/removed-reply.json",
+      "sha256": "b86c73c9f9e59d78b3e80fa0a102a13a4a0c45a73582c8a14d2c30e5a6952fb5",
+      "bytes": 1521,
+      "record": "file-owner-only/external-addition.skill.project/removed-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/request.json",
+      "sha256": "0a52128862b066fb1fe513b1fa0f346af1e09279a8e2e4dee1e7effbb7f2c7f8",
+      "bytes": 304,
+      "record": "file-owner-only/external-addition.skill.project/request.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/v1-after.json",
+      "sha256": "0cfd3a4719907b636c861284be0c371ae2ac539853cc0e01401e01ab5036e06c",
+      "bytes": 83730,
+      "record": "file-owner-only/external-addition.skill.project/v1-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/v1-before.json",
+      "sha256": "50f1474ffaa7b6a95e9c3f194ff1df22046101a8ce132558cead0cba4542318d",
+      "bytes": 328,
+      "record": "file-owner-only/external-addition.skill.project/v1-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/v1-payload.json",
+      "sha256": "7741aaa086b5e100f37c6d8cbda850b92c81e7ceafcbbd15fab5d2b3c7207677",
+      "bytes": 2415,
+      "record": "file-owner-only/external-addition.skill.project/v1-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/v1-reply.json",
+      "sha256": "f5db3b6d08e3ba5204d3d460bd2c1981e96f7cb1b2be2e2182ce2bbf0caafbdf",
+      "bytes": 1694,
+      "record": "file-owner-only/external-addition.skill.project/v1-reply.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/v2-after.json",
+      "sha256": "b0a6483918334b759bb662497a6882a4183dc39ab539581e55b1780c36b33469",
+      "bytes": 105338,
+      "record": "file-owner-only/external-addition.skill.project/v2-after.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/v2-before.json",
+      "sha256": "0cfd3a4719907b636c861284be0c371ae2ac539853cc0e01401e01ab5036e06c",
+      "bytes": 83730,
+      "record": "file-owner-only/external-addition.skill.project/v2-before.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/v2-payload.json",
+      "sha256": "1da919879a4173f9588113ba2a28f4dddf1ac7caea7321cf301e12933ad4a48e",
+      "bytes": 1585,
+      "record": "file-owner-only/external-addition.skill.project/v2-payload.json"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-driver/evidence-preparation/full-records/file-owner-only/external-addition.skill.project/v2-reply.json",
+      "sha256": "11befc29bcb330bbadff0476d151d1dcdf3a25cbbbfbc6b8b0bfa8b950f2a195",
+      "bytes": 1695,
+      "record": "file-owner-only/external-addition.skill.project/v2-reply.json"
+    }
+  ]
+}

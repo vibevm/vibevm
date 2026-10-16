@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "client_id": "org.vibevm.fixture/claude-code-config-project",
+  "version": "=2.1.299",
+  "bindings": [
+    {
+      "scope": "project",
+      "shape": "json-member",
+      "destination": ".claude/settings.json",
+      "key": [
+        "permissions",
+        "deny"
+      ],
+      "operations": [
+        "reconcile-json-member"
+      ]
+    }
+  ]
+}

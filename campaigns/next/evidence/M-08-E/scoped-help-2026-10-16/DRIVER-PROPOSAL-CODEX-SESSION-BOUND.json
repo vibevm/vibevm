@@ -1,0 +1,233 @@
+{
+  "schema": "m08e1.driver-proposal/1",
+  "status": "awaiting_root_session_seal",
+  "original_host_path": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/build/vibe-lifecycle/c347c18951b96dad/out/vibe_lifecycle-c347c18951b96dad",
+  "private_elf": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/driver-codex-session-4",
+  "sha256": "06c094f52fa8d4f227ad8260eba331943a556b2d365c01ef5a71681fe089d23f",
+  "runtime_closure": [
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+      "sha256": "9d339ecb409578d6a5d587e6c537a8f9589b8a13fefba30d167433a4b5758bee"
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+      "sha256": "1c488db6f4fe8cecb72456bc018de000b7a9b539c2994864b0416b5e8371b3d8"
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+      "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+    },
+    {
+      "path": "/lib64/ld-linux-x86-64.so.2",
+      "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+    }
+  ],
+  "elf_headers": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/elf-codex-session-4.txt",
+  "driver_environment": {
+    "HOME": "/home/olegchir",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "TEMP": "/tmp",
+    "TMP": "/tmp",
+    "TMPDIR": "/tmp"
+  },
+  "clear_other_environment": true,
+  "cwd": "/case/project",
+  "timeout_seconds": 180,
+  "per_step_timeout_seconds": 90,
+  "selected_test_argv": [
+    [
+      "/runtime/driver/driver",
+      "mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix",
+      "--exact",
+      "--nocapture",
+      "--test-threads=1"
+    ]
+  ],
+  "expected_test_outcome": "nonzero pending after discovery; no commissioning success claimed",
+  "steps": [],
+  "fixture_inputs": [
+    {
+      "host_path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/driver-seal-session-bound.PROPOSED.json",
+      "namespace_path": "/fixture-input/driver-seal.json",
+      "sha256": "3edb5f372a6bec60e946358028d7347f1327cfce68efe222e2f6bf8fbace1e4c"
+    }
+  ],
+  "local_peer": {
+    "kind": "installed Codex app-server Unix WebSocket",
+    "requested_socket": "/case/arena/codex.sock",
+    "handshake_url": "ws://localhost/",
+    "opens_tcp": false,
+    "maximum_rpc_message_bytes": 65536,
+    "maximum_transcript_bytes": 262144,
+    "maximum_frames": 128,
+    "rpc_deadline_seconds": 45,
+    "readiness_deadline_seconds": 10,
+    "sequence": [
+      "initialize id1 -> actual result",
+      "initialized notification",
+      "skills/list id2 -> actual result",
+      "config/read id3 -> actual result",
+      "close WebSocket",
+      "retain PodBay output",
+      "guarded PodBay stop"
+    ]
+  },
+  "matrix_status": "all 16 rows and 192 proof IDs remain pending; three contract functions still have explicit pending gates; full bodies under implementation",
+  "stage": "codex-session",
+  "namespace_cases": [
+    {
+      "case_id": "codex.session-006",
+      "fresh_private_roots": [
+        "home",
+        "project",
+        "settings",
+        "arena",
+        "cache",
+        "xdg-config",
+        "xdg-data",
+        "tmp",
+        "evidence"
+      ],
+      "home_spelling": "/home/olegchir",
+      "driver_argv": [
+        "/runtime/driver/driver",
+        "mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix",
+        "--exact",
+        "--nocapture",
+        "--test-threads=1"
+      ]
+    }
+  ],
+  "required_isolation": "Root-sealed fresh private home/project/settings/arena/cache/config/data/tmp/evidence, HOME unchanged /home/olegchir, same private /tmp and arena for driver and server (Codex canonical socket redirects to /tmp/codex-daemon-euid); same euid, no realhome/hosttmp/RootContext/credentials. Network isolation retained; Unix WebSocket only.",
+  "pinmanifest": {
+    "/fast/zap-managed/2026-10-16-m08e1-scoped-help/RUNTIME-PINS.json": "8557c2e34f418723b2e5294664a42dc671c3f87e87fe9cff52d46b60289628dd",
+    "/fast/zap-managed/2026-10-16-m08e1-scoped-help/PHYSICAL-PORT-SOURCE-PINS.json": "19c061a50002f4d5207b452891b1940798a84198113af4c204b3281ece664783",
+    "/fast/zap-managed/2026-10-16-m08e1-scoped-help/actual-runtime-binding.json": "3241f321ca7cedcf786423626dafc5c6da3dbc23a6da8ff45d1ec2c931c4903a",
+    "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-TARGET-HANDOVER.json": "dd2037b8beb5bf78e9e45f5b6646c6e88510373e289184f525b65fe5d5309ad6"
+  },
+  "source_hashes": {
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/podbay_runner.rs": "08ccdb1a30b05da4652dccfd90148653c24531b909daf71c7f1316eebb2b1f6b",
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/driver.rs": "948f258bb7d3e7256ab87c6f0b60e8235373ed599891b1e56eb127d95ac6a2d0",
+    "crates/vibe-lifecycle/Cargo.toml": "27260ae995da59d9c0e3b4541cad70092454b76286146d70434922f320fa8b25",
+    "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca"
+  },
+  "historical_partial_evidence": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/PRIOR-ROOT-ANSWER.raw.json",
+    "sha256": "4cd460f780ab7ce3e5dc6ead50f1b6adddb410048ebc8a951192a4b8a4870e18",
+    "claim": "Claude version successes and stdout truncation refusal/driver101 only; retired endpoint not reused"
+  },
+  "file_effects": [
+    "Private Codex startup state and socket only; read-only schema-qualified RPCs; no thread/turn/login/model calls",
+    "Evidence transcript and retained generic lifecycle receipts; deliberate stop not exit0"
+  ],
+  "schema_basis": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/case/evidence/codex-schema/ClientRequest.json",
+      "sha256": "4a6fc883c2e84c4721bfabd6756ca5bb6e99675a8938768d8bc9cc67ff984700"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/case/evidence/codex-schema/v1/InitializeParams.json",
+      "sha256": "b55124e7c0f36a1789396daa5578217a92be67f053903696236686e59f6f212e"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/case/evidence/codex-schema/v2/SkillsListParams.json",
+      "sha256": "1d245374e64c5acc9739dfc68a4fe5114c6c9147af04c480886f1846d2ca6239"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/case/evidence/codex-schema/v2/ConfigReadParams.json",
+      "sha256": "257c54a423b47c1d209ff1076765a1564d82322fd5161670fd489a2874de1bac"
+    }
+  ],
+  "session_start": {
+    "protocol": "m08e1.podbay-session/1",
+    "case_id": "codex.session-006",
+    "step_id": "start",
+    "action": {
+      "kind": "start",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "app-server",
+          "--listen",
+          "unix:///case/arena/codex.sock"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": [],
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    }
+  },
+  "session_followups": {
+    "binding": "Exact opaque session_id returned from this start only; no replacement launch",
+    "wire_step_id": "start",
+    "inspect_evidence_labels": [
+      "readiness-001",
+      "readiness-002",
+      "readiness-003",
+      "readiness-004",
+      "readiness-005",
+      "readiness-006",
+      "readiness-007",
+      "readiness-008",
+      "readiness-009",
+      "readiness-010",
+      "readiness-011",
+      "readiness-012",
+      "readiness-013",
+      "readiness-014",
+      "readiness-015",
+      "readiness-016",
+      "readiness-017",
+      "readiness-018",
+      "readiness-019",
+      "readiness-020",
+      "readiness-021",
+      "readiness-022",
+      "readiness-023",
+      "readiness-024",
+      "readiness-025",
+      "readiness-026",
+      "readiness-027",
+      "readiness-028",
+      "readiness-029",
+      "readiness-030",
+      "readiness-031",
+      "readiness-032",
+      "final-output"
+    ],
+    "stop_evidence_label": "stop",
+    "max_inspect_calls": 33,
+    "max_stop_calls": 1,
+    "protocol": "m08e1.podbay-session/1",
+    "case_id": "codex.session-006",
+    "endpoint": "/fixture-ipc/process-runner.sock",
+    "request_bytes": 65536,
+    "response_bytes": 196608,
+    "exchange_timeout_seconds": 30
+  },
+  "session_source_pins": {
+    "/fast/zap-managed/2026-10-16-m08e1-session-port/src/session_protocol.rs": "3ca2b2dbf02db3444a02d0e476f733c9e58505f9edbbebcd357efaec7eae465d",
+    "/fast/zap-managed/2026-10-16-m08e1-session-port/src/session_client.rs": "d697570ae222ad53803ef820f863932c17c1b81b7297cdb430b7ca3c91d57e6f",
+    "/fast/zap-managed/2026-10-16-m08e1-session-port/src/protocol.rs": "1946feb34de93818bc6bd31da1976dc52c68430edc89c36194f82b69b3817e4d",
+    "/fast/zap-managed/2026-10-16-m08e1-session-port/CAPABILITIES.json": "28f8cdf14360d7a5a0e43e386469ac5e6d1ec4355750d6f18db1546da619acac"
+  },
+  "broker_source_pins": {
+    "/fast/zap-managed/2026-10-16-m08e1-session-port/src/session_host.rs": "b008e83d80cb0bf732b968190c503557f8e3b9335d481169eee1cb8921f8b833",
+    "/fast/zap-managed/2026-10-16-m08e1-session-port/CONFIG-CONTRACT.md": "931f2dc3798b7af2eeb1fa6e993f2f14dd0e57cd1df764b36fa077780b99364a",
+    "/fast/zap-managed/2026-10-16-m08e1-session-port/BROKER-READY.json": "7eb76708daac1cb8d2df781266b5619f5c406b338dfbda53bb89a8fa0866557c",
+    "/fast/zap-managed/2026-10-16-m08e1-session-port/SOURCE-PINS.json": "f6d292af20b65528e02b2459b3588f3e6668b74c445def41e1e371b06569a337"
+  },
+  "response_semantics": "Inspect/Stop always same original wire case/step/token. snapshot_is_retained is preserved verbatim; false can mean fresh output (Root broker source). Driver saves raw replies durably before decoding; requires Observed + output and separate Stopped + output + stop receipt. No fabricated terminal flags."
+}

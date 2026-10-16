@@ -1,0 +1,75 @@
+{
+  "schema": "root-partial-source-checkpoint/1",
+  "utc": "2026-10-16T11:28:13.870433+00:00",
+  "task": "M-08-E.1",
+  "source_checkpoint_only": true,
+  "whole_task_accepted": false,
+  "accepted_tasks": 88,
+  "total_tasks": 222,
+  "review": {
+    "schema": "e1-final-scoped-review/1",
+    "verdict": "ready_for_root_partial_commit",
+    "scope": "successor delta plus evidence joins; supplements earlier review",
+    "blocking_findings": [],
+    "whole_E1_accepted": false,
+    "count_change": false,
+    "independent_work_may_proceed": true,
+    "condition": "Root selects work not dependent on missing inverse/repeat/revoked-cleanup semantics; preserve original obligations",
+    "law_unique_files_hash_checked": 20,
+    "law_hash_mismatches": [],
+    "C3_named_successes_confirmed": 13,
+    "proof_ids": 192,
+    "remaining": [
+      {
+        "id": "codex.plugin.user.later_failure_inverse",
+        "kind": "implementation_gap",
+        "state": "unsupported_unfulfilled"
+      },
+      {
+        "id": "seven_codex_repeat_noop",
+        "kind": "evidence_or_behavior_gap",
+        "state": "required_remaining"
+      },
+      {
+        "id": "codex.plugin.user.uninstall_revocation",
+        "kind": "evidence_or_behavior_gap",
+        "state": "required_remaining"
+      },
+      {
+        "id": "codex.plugin.project",
+        "kind": "unsupported_current_contract",
+        "proof_ids": 12
+      },
+      {
+        "id": "claude_all",
+        "kind": "owner_deferred",
+        "proof_ids": 96
+      }
+    ],
+    "tests_or_builds_run": false,
+    "runtime_controls_used": false,
+    "report": "final-review.md"
+  },
+  "actual_cases": [
+    "Codex skill/config both supported scopes",
+    "Codex MCP inventory/resource v1/v2/removal both supported scopes",
+    "Codex user-plugin install/update/remove",
+    "Codex wrong-version/revocation/truncated-output refusals",
+    "Codex same-run cooperative-boundary recovery without install replay and foreign equal-state refusal"
+  ],
+  "proof_dispositions": {
+    "owner_deferred": 96,
+    "reused": 45,
+    "observed": 30,
+    "unsupported": 13,
+    "required_remaining": 8
+  },
+  "limits": [
+    "No whole E1 or full matrix pass. Unsupported obligations also remain unfulfilled.",
+    "Actual runtime tests deliberately remain failing/pending outside their required physical namespace or while full commissioning is incomplete; no full-suite pass claimed.",
+    "Current source combines preserved predecessor work and later additive successors; actual ELF observations stay attributed to frozen source snapshots.",
+    "Claude tests deferred by owner and not a gate on independent supported work."
+  ],
+  "source_review_report": "/fast/git/v/research/2026-10-16-e1-acceptance-boundary/final-review.md",
+  "source_review_sha256": "b27541911b5864cf27db92ef744e7f5a2048feb3f0464564a20023fd70dcefc8"
+}

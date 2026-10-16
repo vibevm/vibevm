@@ -1,0 +1,9 @@
+{
+  "log": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/V2-1.log",
+  "sha256": "89808663b6730339315e998cf39c45bc4f3778220662c89fc14e5d86cab77bb5",
+  "passed": 0,
+  "failed": 5,
+  "ignored": 0,
+  "filtered_out": 941,
+  "reason": "Five nonzero selected tests executed; namespace-required pending failures, not compilation failure. Exact FAILED result line retained; group parser counts array is empty."
+}

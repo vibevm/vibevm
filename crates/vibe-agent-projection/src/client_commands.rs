@@ -28,6 +28,11 @@ impl Operation {
     }
 }
 pub fn supported_version(client: Client, version: &str) -> bool {
+    // Add only the isolated installed release observed by M-08-E.1.
+    // Legacy 0.148.x recipes remain unchanged; no 0.159.x family inference.
+    if client == Client::Codex && version == "0.159.3" {
+        return true;
+    }
     let parts: Vec<_> = version.split('.').collect();
     let pair = match client {
         Client::Claude => ("2", "1"),

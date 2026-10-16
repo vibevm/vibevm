@@ -1,0 +1,7 @@
+{
+  "wrong_version": "actual version mismatch refused",
+  "revocation": "refused without dispatch",
+  "stderr_truncated": true,
+  "exit": 1,
+  "executable_drift": "pending; no fabricated identity mutation"
+}

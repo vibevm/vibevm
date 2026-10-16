@@ -1,0 +1,28 @@
+{
+  "status": "waiting_for_matching_Root_observations_no_vendor_effects_authorized_by_elapsed_time",
+  "questions": [
+    {
+      "id": "M08E1-PEER-FALLBACK-SEAL-010",
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-QUESTION-PEER-FALLBACK.json",
+      "scope": "MCP half only; negative half withdrawn"
+    },
+    {
+      "id": "M08E1-NEGATIVE-CAPS-SEAL-011",
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-QUESTION-NEGATIVE-CAPS.json"
+    },
+    {
+      "id": "M08E1-CODEX-SESSION-SEAL-014",
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-QUESTION-CODEX-SESSION-BOUND.json"
+    },
+    {
+      "id": "M08E1-CLAUDE-RESOURCE-013",
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-QUESTION-CLAUDE-RESOURCE.json"
+    }
+  ],
+  "withdrawn": [
+    "negative008",
+    "negative half010",
+    "session012"
+  ],
+  "all_original_rows_remain_pending": true
+}

@@ -1,0 +1,32 @@
+{
+  "id": "codex.plugin.user",
+  "status": "inert_source_only_pending_release_qualification",
+  "client_version": "0.159.3",
+  "coordinate": "m08a2-demo@m08a2-fixture",
+  "scope": "user",
+  "files": {
+    "v1/.codex-plugin/plugin.json": "358a4a4388d15d59b9c84760903aa0baffc368a94b19796e0a5697cc252b1cac",
+    "v1/skills/m08a2-demo/SKILL.md": "923e37917b8b23fae04b766cef1ec267927b5bf1418e938ea2113c3d7d612976",
+    "v2/.codex-plugin/plugin.json": "8687656d98769fd77af4583a5155e2a8148c5e74277de0dfcde329c425778dc1",
+    "v2/skills/m08a2-demo/SKILL.md": "6ebb97fcd0c821bcbe9821f492eda5e311fe11e3360744fbda2203c7842388df",
+    "v1/skills/m08a2-demo/reference.txt": "4c208149e800ed0bac168582741e95a935264fd2f65ff984d3449fc8b5d45b8c"
+  },
+  "proof_ids": [
+    "codex.plugin.user.prepare_plan",
+    "codex.plugin.user.permission_trust",
+    "codex.plugin.user.apply_install",
+    "codex.plugin.user.repeat_noop",
+    "codex.plugin.user.owned_update",
+    "codex.plugin.user.verify",
+    "codex.plugin.user.interrupted_recovery",
+    "codex.plugin.user.later_failure_inverse",
+    "codex.plugin.user.uninstall_revocation",
+    "codex.plugin.user.foreign_ownership",
+    "codex.plugin.user.unsupported_version_platform",
+    "codex.plugin.user.client_discovery"
+  ],
+  "source_contract_sha256": "2423fc75eb5ece6f435fc7a16f9a58d9d815490de7d77c07e5a40df405f86cc5",
+  "runtime_qualified": false,
+  "authority": "none; no destination or process grant",
+  "pending": "Exact local marketplace schema, admitted command grammar, finite client-state closure and actual loading must be qualified before effects"
+}

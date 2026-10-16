@@ -1,0 +1,337 @@
+{
+  "schema": "m08e1.driver-proposal/1",
+  "status": "awaiting_root_seal_scoped_help_only",
+  "original_host_path": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/build/vibe-lifecycle/9462f54ebc6ed9a3/out/vibe_lifecycle-9462f54ebc6ed9a3",
+  "private_elf": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/driver-scoped-help-1",
+  "sha256": "3cc5981c82759dabdde2c45ccbee15d32d72d1f36cedd461d472d44d748a7b7e",
+  "runtime_closure": [
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+      "sha256": "9d339ecb409578d6a5d587e6c537a8f9589b8a13fefba30d167433a4b5758bee"
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+      "sha256": "1c488db6f4fe8cecb72456bc018de000b7a9b539c2994864b0416b5e8371b3d8"
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+      "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+    },
+    {
+      "path": "/lib64/ld-linux-x86-64.so.2",
+      "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+    }
+  ],
+  "elf_headers": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/elf-scoped-help-1.txt",
+  "driver_environment": {
+    "HOME": "/home/olegchir",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "TEMP": "/tmp",
+    "TMP": "/tmp",
+    "TMPDIR": "/tmp"
+  },
+  "clear_other_environment": true,
+  "cwd": "/case/project",
+  "timeout_seconds": 900,
+  "per_step_timeout_seconds": 90,
+  "selected_test_argv": [
+    [
+      "/runtime/driver/driver",
+      "mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix",
+      "--exact",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    [
+      "/runtime/driver/driver",
+      "mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix",
+      "--exact",
+      "--nocapture",
+      "--test-threads=1"
+    ]
+  ],
+  "expected_test_outcome": "nonzero pending after discovery; no commissioning success claimed",
+  "steps": [
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.scoped-help-002",
+      "step_id": "prepare-version",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "--version"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/project"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.scoped-help-002",
+      "step_id": "execute-version",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "--version"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/project"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.scoped-help-002",
+      "step_id": "plugin-help",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "plugin",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.scoped-help-002",
+      "step_id": "mcp-help",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "mcp",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.scoped-help-001",
+      "step_id": "version",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "--version"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.scoped-help-001",
+      "step_id": "plugin-help",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "plugin",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.scoped-help-001",
+      "step_id": "mcp-help",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "mcp",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.scoped-help-001",
+      "step_id": "app-server-help",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "app-server",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    }
+  ],
+  "fixture_inputs": [
+    {
+      "host_path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/driver-seal.PROPOSED.json",
+      "namespace_path": "/fixture-input/driver-seal.json",
+      "sha256": "745dbe700c44a03a9f00e58dff39dd7e8ab7357a0ba8ac88bdef4dc6ca478089"
+    }
+  ],
+  "local_peer": {
+    "status": "not launched in discovery; exact supported credential-free local protocol must be qualified from release help before additional manifest",
+    "intent": "deterministic local MCP JSON-RPC peer with initialize/tools/list/resource response, no model request"
+  },
+  "matrix_status": "all 16 rows and 192 proof IDs remain pending; three contract functions still have explicit pending gates; full bodies under implementation",
+  "stage": "scoped-help",
+  "namespace_cases": [
+    {
+      "case_id": "claude_code.scoped-help-002",
+      "fresh_private_roots": [
+        "home",
+        "project",
+        "settings",
+        "arena",
+        "cache",
+        "xdg-config",
+        "xdg-data",
+        "tmp",
+        "evidence"
+      ],
+      "home_spelling": "/home/olegchir",
+      "driver_argv": [
+        "/runtime/driver/driver",
+        "mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix",
+        "--exact",
+        "--nocapture",
+        "--test-threads=1"
+      ]
+    },
+    {
+      "case_id": "codex.scoped-help-001",
+      "fresh_private_roots": [
+        "home",
+        "project",
+        "settings",
+        "arena",
+        "cache",
+        "xdg-config",
+        "xdg-data",
+        "tmp",
+        "evidence"
+      ],
+      "home_spelling": "/home/olegchir",
+      "driver_argv": [
+        "/runtime/driver/driver",
+        "mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix",
+        "--exact",
+        "--nocapture",
+        "--test-threads=1"
+      ]
+    }
+  ],
+  "required_isolation": "Distinct fresh namespace per case; unchanged HOME spelling mounted to fresh case/home inode; driver and vendor same namespace identity; no realhome/RootContext or credentials; closed stdin and no network/model calls. Root must capture exact identity including getpwuid if claiming it.",
+  "pinmanifest": {
+    "/fast/zap-managed/2026-10-16-m08e1-scoped-help/RUNTIME-PINS.json": "8557c2e34f418723b2e5294664a42dc671c3f87e87fe9cff52d46b60289628dd",
+    "/fast/zap-managed/2026-10-16-m08e1-scoped-help/PHYSICAL-PORT-SOURCE-PINS.json": "19c061a50002f4d5207b452891b1940798a84198113af4c204b3281ece664783",
+    "/fast/zap-managed/2026-10-16-m08e1-scoped-help/actual-runtime-binding.json": "3241f321ca7cedcf786423626dafc5c6da3dbc23a6da8ff45d1ec2c931c4903a",
+    "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-TARGET-HANDOVER.json": "dd2037b8beb5bf78e9e45f5b6646c6e88510373e289184f525b65fe5d5309ad6"
+  },
+  "source_hashes": {
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/podbay_runner.rs": "e619e3bf2516fbdb92bc9559c82b040a62e6f48b881ff6d1104772f33b4dea2e",
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/driver.rs": "0c4df959327751a07c08310cb6e2b828d9dcfbb7a3b12b150665c615a6d8a333"
+  },
+  "historical_partial_evidence": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/PRIOR-ROOT-ANSWER.raw.json",
+    "sha256": "4cd460f780ab7ce3e5dc6ead50f1b6adddb410048ebc8a951192a4b8a4870e18",
+    "claim": "Claude version successes and stdout truncation refusal/driver101 only; retired endpoint not reused"
+  }
+}

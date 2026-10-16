@@ -1,0 +1,46 @@
+{
+  "group": "V2",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::m_08_e_1_cases",
+        "--",
+        "--test-threads=1"
+      ],
+      "exit": 101,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-16-m08e1-driver/V2-1.log",
+      "log_sha256": "f1556909615e945b450ee81b2cf18139930ed48c8c2407e1d8e73afded10e5ab",
+      "seconds": 16.017930957023054,
+      "passed": false
+    }
+  ],
+  "case_binding": {
+    "names": [
+      "mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix",
+      "mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix",
+      "mechanism::deploy::m_08_e_1_cases::current_version_profiles_preserve_legacy_and_wrong_version_refusal",
+      "mechanism::deploy::m_08_e_1_cases::receipt_owned_update_recovery_remove_preserves_foreign",
+      "mechanism::deploy::m_08_e_1_cases::same_core_binary_accepts_external_package_data"
+    ],
+    "expected": 5,
+    "source_paths": [
+      "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs"
+    ],
+    "status": "definitions created; discovery driver compiled before Root seal; full commissioning bodies remain pending qualification"
+  },
+  "conditional_selection": null,
+  "extra": {},
+  "full_closure_subject_count": 1991,
+  "full_closure_drift": [],
+  "passed": false,
+  "no_fresh_commands": false
+}

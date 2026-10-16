@@ -1,0 +1,1150 @@
+{
+  "schema": 1,
+  "rows": [
+    {
+      "id": "claude_code.skill.project",
+      "proof_ids": [
+        "claude_code.skill.project.prepare_plan",
+        "claude_code.skill.project.permission_trust",
+        "claude_code.skill.project.apply_install",
+        "claude_code.skill.project.repeat_noop",
+        "claude_code.skill.project.owned_update",
+        "claude_code.skill.project.verify",
+        "claude_code.skill.project.interrupted_recovery",
+        "claude_code.skill.project.later_failure_inverse",
+        "claude_code.skill.project.uninstall_revocation",
+        "claude_code.skill.project.foreign_ownership",
+        "claude_code.skill.project.unsupported_version_platform",
+        "claude_code.skill.project.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "File-owner effects verified independently; exact credential-free actual loaded-resource observation route remains unqualified (Root question M08E1-CLAUDE-RESOURCE-013). All original scenario obligations remain pending.",
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.mcp.project",
+      "proof_ids": [
+        "claude_code.mcp.project.prepare_plan",
+        "claude_code.mcp.project.permission_trust",
+        "claude_code.mcp.project.apply_install",
+        "claude_code.mcp.project.repeat_noop",
+        "claude_code.mcp.project.owned_update",
+        "claude_code.mcp.project.verify",
+        "claude_code.mcp.project.interrupted_recovery",
+        "claude_code.mcp.project.later_failure_inverse",
+        "claude_code.mcp.project.uninstall_revocation",
+        "claude_code.mcp.project.foreign_ownership",
+        "claude_code.mcp.project.unsupported_version_platform",
+        "claude_code.mcp.project.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending.",
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.config.project",
+      "proof_ids": [
+        "claude_code.config.project.prepare_plan",
+        "claude_code.config.project.permission_trust",
+        "claude_code.config.project.apply_install",
+        "claude_code.config.project.repeat_noop",
+        "claude_code.config.project.owned_update",
+        "claude_code.config.project.verify",
+        "claude_code.config.project.interrupted_recovery",
+        "claude_code.config.project.later_failure_inverse",
+        "claude_code.config.project.uninstall_revocation",
+        "claude_code.config.project.foreign_ownership",
+        "claude_code.config.project.unsupported_version_platform",
+        "claude_code.config.project.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "File-owner effects verified independently; exact credential-free actual loaded-resource observation route remains unqualified (Root question M08E1-CLAUDE-RESOURCE-013). All original scenario obligations remain pending.",
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.plugin.project",
+      "proof_ids": [
+        "claude_code.plugin.project.prepare_plan",
+        "claude_code.plugin.project.permission_trust",
+        "claude_code.plugin.project.apply_install",
+        "claude_code.plugin.project.repeat_noop",
+        "claude_code.plugin.project.owned_update",
+        "claude_code.plugin.project.verify",
+        "claude_code.plugin.project.interrupted_recovery",
+        "claude_code.plugin.project.later_failure_inverse",
+        "claude_code.plugin.project.uninstall_revocation",
+        "claude_code.plugin.project.foreign_ownership",
+        "claude_code.plugin.project.unsupported_version_platform",
+        "claude_code.plugin.project.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending.",
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.skill.user",
+      "proof_ids": [
+        "claude_code.skill.user.prepare_plan",
+        "claude_code.skill.user.permission_trust",
+        "claude_code.skill.user.apply_install",
+        "claude_code.skill.user.repeat_noop",
+        "claude_code.skill.user.owned_update",
+        "claude_code.skill.user.verify",
+        "claude_code.skill.user.interrupted_recovery",
+        "claude_code.skill.user.later_failure_inverse",
+        "claude_code.skill.user.uninstall_revocation",
+        "claude_code.skill.user.foreign_ownership",
+        "claude_code.skill.user.unsupported_version_platform",
+        "claude_code.skill.user.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "File-owner effects verified independently; exact credential-free actual loaded-resource observation route remains unqualified (Root question M08E1-CLAUDE-RESOURCE-013). All original scenario obligations remain pending.",
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.mcp.user",
+      "proof_ids": [
+        "claude_code.mcp.user.prepare_plan",
+        "claude_code.mcp.user.permission_trust",
+        "claude_code.mcp.user.apply_install",
+        "claude_code.mcp.user.repeat_noop",
+        "claude_code.mcp.user.owned_update",
+        "claude_code.mcp.user.verify",
+        "claude_code.mcp.user.interrupted_recovery",
+        "claude_code.mcp.user.later_failure_inverse",
+        "claude_code.mcp.user.uninstall_revocation",
+        "claude_code.mcp.user.foreign_ownership",
+        "claude_code.mcp.user.unsupported_version_platform",
+        "claude_code.mcp.user.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Actual lifecycle007 absence/v1 effect reached real initialize2025-11-25 then peer negotiation refusal; v2/remove not run. Trace replay and fresh explicit implemented-version proposal in progress. Full row/scenarios pending.",
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.config.user",
+      "proof_ids": [
+        "claude_code.config.user.prepare_plan",
+        "claude_code.config.user.permission_trust",
+        "claude_code.config.user.apply_install",
+        "claude_code.config.user.repeat_noop",
+        "claude_code.config.user.owned_update",
+        "claude_code.config.user.verify",
+        "claude_code.config.user.interrupted_recovery",
+        "claude_code.config.user.later_failure_inverse",
+        "claude_code.config.user.uninstall_revocation",
+        "claude_code.config.user.foreign_ownership",
+        "claude_code.config.user.unsupported_version_platform",
+        "claude_code.config.user.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "File-owner effects verified independently; exact credential-free actual loaded-resource observation route remains unqualified (Root question M08E1-CLAUDE-RESOURCE-013). All original scenario obligations remain pending.",
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.plugin.user",
+      "proof_ids": [
+        "claude_code.plugin.user.prepare_plan",
+        "claude_code.plugin.user.permission_trust",
+        "claude_code.plugin.user.apply_install",
+        "claude_code.plugin.user.repeat_noop",
+        "claude_code.plugin.user.owned_update",
+        "claude_code.plugin.user.verify",
+        "claude_code.plugin.user.interrupted_recovery",
+        "claude_code.plugin.user.later_failure_inverse",
+        "claude_code.plugin.user.uninstall_revocation",
+        "claude_code.plugin.user.foreign_ownership",
+        "claude_code.plugin.user.unsupported_version_platform",
+        "claude_code.plugin.user.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending.",
+      "artifacts": []
+    },
+    {
+      "id": "codex.skill.project",
+      "proof_ids": [
+        "codex.skill.project.prepare_plan",
+        "codex.skill.project.permission_trust",
+        "codex.skill.project.apply_install",
+        "codex.skill.project.repeat_noop",
+        "codex.skill.project.owned_update",
+        "codex.skill.project.verify",
+        "codex.skill.project.interrupted_recovery",
+        "codex.skill.project.later_failure_inverse",
+        "codex.skill.project.uninstall_revocation",
+        "codex.skill.project.foreign_ownership",
+        "codex.skill.project.unsupported_version_platform",
+        "codex.skill.project.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending. Actual app-server initialization observed, but id2 skills/list reply missing after EOF; config query not dispatched. Interactive generic PodBay binding requested.",
+      "artifacts": []
+    },
+    {
+      "id": "codex.mcp.project",
+      "proof_ids": [
+        "codex.mcp.project.prepare_plan",
+        "codex.mcp.project.permission_trust",
+        "codex.mcp.project.apply_install",
+        "codex.mcp.project.repeat_noop",
+        "codex.mcp.project.owned_update",
+        "codex.mcp.project.verify",
+        "codex.mcp.project.interrupted_recovery",
+        "codex.mcp.project.later_failure_inverse",
+        "codex.mcp.project.uninstall_revocation",
+        "codex.mcp.project.foreign_ownership",
+        "codex.mcp.project.unsupported_version_platform",
+        "codex.mcp.project.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending. Actual app-server initialization observed, but id2 skills/list reply missing after EOF; config query not dispatched. Interactive generic PodBay binding requested.",
+      "artifacts": []
+    },
+    {
+      "id": "codex.config.project",
+      "proof_ids": [
+        "codex.config.project.prepare_plan",
+        "codex.config.project.permission_trust",
+        "codex.config.project.apply_install",
+        "codex.config.project.repeat_noop",
+        "codex.config.project.owned_update",
+        "codex.config.project.verify",
+        "codex.config.project.interrupted_recovery",
+        "codex.config.project.later_failure_inverse",
+        "codex.config.project.uninstall_revocation",
+        "codex.config.project.foreign_ownership",
+        "codex.config.project.unsupported_version_platform",
+        "codex.config.project.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending. Actual app-server initialization observed, but id2 skills/list reply missing after EOF; config query not dispatched. Interactive generic PodBay binding requested.",
+      "artifacts": []
+    },
+    {
+      "id": "codex.plugin.project",
+      "proof_ids": [
+        "codex.plugin.project.prepare_plan",
+        "codex.plugin.project.permission_trust",
+        "codex.plugin.project.apply_install",
+        "codex.plugin.project.repeat_noop",
+        "codex.plugin.project.owned_update",
+        "codex.plugin.project.verify",
+        "codex.plugin.project.interrupted_recovery",
+        "codex.plugin.project.later_failure_inverse",
+        "codex.plugin.project.uninstall_revocation",
+        "codex.plugin.project.foreign_ownership",
+        "codex.plugin.project.unsupported_version_platform",
+        "codex.plugin.project.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Explicit unsupported project-plugin contract retained; actual isolated refusal pending; no plugin authority granted. Actual app-server initialization observed, but id2 skills/list reply missing after EOF; config query not dispatched. Interactive generic PodBay binding requested.",
+      "artifacts": []
+    },
+    {
+      "id": "codex.skill.user",
+      "proof_ids": [
+        "codex.skill.user.prepare_plan",
+        "codex.skill.user.permission_trust",
+        "codex.skill.user.apply_install",
+        "codex.skill.user.repeat_noop",
+        "codex.skill.user.owned_update",
+        "codex.skill.user.verify",
+        "codex.skill.user.interrupted_recovery",
+        "codex.skill.user.later_failure_inverse",
+        "codex.skill.user.uninstall_revocation",
+        "codex.skill.user.foreign_ownership",
+        "codex.skill.user.unsupported_version_platform",
+        "codex.skill.user.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending. Actual app-server initialization observed, but id2 skills/list reply missing after EOF; config query not dispatched. Interactive generic PodBay binding requested.",
+      "artifacts": []
+    },
+    {
+      "id": "codex.mcp.user",
+      "proof_ids": [
+        "codex.mcp.user.prepare_plan",
+        "codex.mcp.user.permission_trust",
+        "codex.mcp.user.apply_install",
+        "codex.mcp.user.repeat_noop",
+        "codex.mcp.user.owned_update",
+        "codex.mcp.user.verify",
+        "codex.mcp.user.interrupted_recovery",
+        "codex.mcp.user.later_failure_inverse",
+        "codex.mcp.user.uninstall_revocation",
+        "codex.mcp.user.foreign_ownership",
+        "codex.mcp.user.unsupported_version_platform",
+        "codex.mcp.user.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending. Actual app-server initialization observed, but id2 skills/list reply missing after EOF; config query not dispatched. Interactive generic PodBay binding requested.",
+      "artifacts": []
+    },
+    {
+      "id": "codex.config.user",
+      "proof_ids": [
+        "codex.config.user.prepare_plan",
+        "codex.config.user.permission_trust",
+        "codex.config.user.apply_install",
+        "codex.config.user.repeat_noop",
+        "codex.config.user.owned_update",
+        "codex.config.user.verify",
+        "codex.config.user.interrupted_recovery",
+        "codex.config.user.later_failure_inverse",
+        "codex.config.user.uninstall_revocation",
+        "codex.config.user.foreign_ownership",
+        "codex.config.user.unsupported_version_platform",
+        "codex.config.user.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending. Actual app-server initialization observed, but id2 skills/list reply missing after EOF; config query not dispatched. Interactive generic PodBay binding requested.",
+      "artifacts": []
+    },
+    {
+      "id": "codex.plugin.user",
+      "proof_ids": [
+        "codex.plugin.user.prepare_plan",
+        "codex.plugin.user.permission_trust",
+        "codex.plugin.user.apply_install",
+        "codex.plugin.user.repeat_noop",
+        "codex.plugin.user.owned_update",
+        "codex.plugin.user.verify",
+        "codex.plugin.user.interrupted_recovery",
+        "codex.plugin.user.later_failure_inverse",
+        "codex.plugin.user.uninstall_revocation",
+        "codex.plugin.user.foreign_ownership",
+        "codex.plugin.user.unsupported_version_platform",
+        "codex.plugin.user.client_discovery"
+      ],
+      "status": "pending",
+      "reason": "Exact version and scoped help observed complete/untruncated via PodBay; actual lifecycle, complete state closure, resource loading and local-peer response remain pending. Actual app-server initialization observed, but id2 skills/list reply missing after EOF; config query not dispatched. Interactive generic PodBay binding requested.",
+      "artifacts": []
+    }
+  ],
+  "historical_partial_discovery": {
+    "id": "M08E1-DRIVER-SEAL-001",
+    "question_id": "M08E1-DRIVER-SEAL-001",
+    "status": "answered",
+    "utc": "2026-10-16T04:14:18.818678+00:00",
+    "answer": "Root sealed and executed ONLY the Claude discovery case via the actual PodBay broker in a fresh namespace. Real Claude2.1.299 prepare-version and execute-version returned full exit0 output. Root --help returned exit0 but stdout_truncated=true at16384; driver correctly refused completeness and exited101 before plugin/mcp help. Broker RootExec completed0 and owned-stop-errors0/manager-cleanuptrue. Codex has not run. Endpoint is now shut down; do not retry old physical keys. Use these exact observations as partial discovery and actual truncation-refusal evidence, not commissioned matrix success. Continue source work and submit next bounded manifest using scoped plugin/mcp help (omit unnecessary root --help) and separate fresh Codex case. FullE1 matrix remains pending.",
+    "identity": {
+      "view": "new case/home inode mounted at unchanged /home/olegchir; realhome not mounted; RootContext excluded",
+      "driver_namespace_checks": "HOME/cwd/currentELF digest checks passed before the observed actual ProcessRunner calls",
+      "guest_getpwuid_observation": "not separately captured; do not label fully observed identity census",
+      "metadata": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/IDENTITY-METADATA.json"
+    },
+    "observed_steps": [
+      {
+        "file": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/case/evidence/claude_code.discovery--execute-version.response.json",
+        "status": "complete",
+        "exit": 0,
+        "stdout_bytes": 22,
+        "stderr_bytes": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false
+      },
+      {
+        "file": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/case/evidence/claude_code.discovery--help.response.json",
+        "status": "complete",
+        "exit": 0,
+        "stdout_bytes": 16384,
+        "stderr_bytes": 0,
+        "stdout_truncated": true,
+        "stderr_truncated": false
+      },
+      {
+        "file": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/case/evidence/claude_code.discovery--prepare-version.response.json",
+        "status": "complete",
+        "exit": 0,
+        "stdout_bytes": 22,
+        "stderr_bytes": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false
+      }
+    ],
+    "references": [
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/SEALED-PREPARATION.json",
+        "sha256": "2e9f2ab28a75c5b348e979ecc845c4c30ddbcdc9ea5f85525932e4bb94fb432b"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/IDENTITY-METADATA.json",
+        "sha256": "64d76fa8c8bff8af5f82f96e70235d4aa2a4a5db07faab7bca3c0f4b1d6cd83f"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/evidence/host-cleanup.json",
+        "sha256": "a9490617fe5bffb40155ed59e7f8e896c5661006039c4fb2deef3a7ae404c236"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/evidence/driver-output.json",
+        "sha256": "c96c759ad4cfca746c1c77ffa64e4a6848bb22bfee860e204c1e909f9a462c30"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/case/evidence/claude_code.discovery--execute-version.response.json",
+        "sha256": "7d20140c699eb0bb307cf20bcd5a5f144726fc81a330001bcea716fc459d4b8a"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/case/evidence/claude_code.discovery--help.response.json",
+        "sha256": "492a4bcb1fe265b1c875e0c92636de2cc5a5cfa8d4c9800057bf455983907e00"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-physical-port-2/case/evidence/claude_code.discovery--prepare-version.response.json",
+        "sha256": "bd2a6c9fc1914609033aabb40bbdbafad96c24662848d3d1727ac7069f4ab250"
+      }
+    ]
+  },
+  "semantic_acceptance": "unaccepted; Root review required; 16 rows/192 proofs pending",
+  "operation_computation": "configured by Root; no invocation/result/application receipt observed in this producer",
+  "actual_scoped_help": {
+    "question_id": "M08E1-SCOPED-HELP-SEAL-002",
+    "id": "M08E1-SCOPED-HELP-SEAL-002",
+    "status": "answered",
+    "utc": "2026-10-16T04:53:53.665014+00:00",
+    "proposal_sha256": "a149defeb475956ca0fae0b1358d326339647f4bcaceb8f47da544bdcf1298bb",
+    "driver_sha256": "3cc5981c82759dabdde2c45ccbee15d32d72d1f36cedd461d472d44d748a7b7e",
+    "approval": {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-APPROVED-SCOPED-HELP.json",
+      "sha256": "d2706374b2b2148a4725381e5a9ac323eb6cae0f5d5c28e4dcbd3a036919f8ca"
+    },
+    "actual_steps_completed": 8,
+    "all_client_steps_exit0_complete_untruncated": true,
+    "cases": [
+      {
+        "realm": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude",
+        "root_exec_session": 92873,
+        "root_exec_exit": 0,
+        "driver_exit": 101,
+        "driver_outcome": "Expected incomplete discovery stage; NOT full E1 acceptance",
+        "endpoint_live": false,
+        "responses": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/case/evidence/claude_code.scoped-help-002--execute-version.response.json",
+            "sha256": "58300a1e8a568a91196860718d11e9c97119ecc74ca994bfbbf705cfe30190b8",
+            "case_id": "claude_code.scoped-help-002",
+            "step_id": "execute-version",
+            "exit": 0,
+            "stdout_bytes": 22,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "573c40a4a62147095eacd275e170060f8da81eb40ce0ac5f4b56f2e5f88e4994"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/case/evidence/claude_code.scoped-help-002--mcp-help.response.json",
+            "sha256": "864428c5a37394327e5d63732968d0973b1921e920bfc61b598e2d276d5b1412",
+            "case_id": "claude_code.scoped-help-002",
+            "step_id": "mcp-help",
+            "exit": 0,
+            "stdout_bytes": 2474,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "3f96ff5f37db618a74b3e3626fdb242751d50b9f6acdb871578e39b1429b0501"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/case/evidence/claude_code.scoped-help-002--plugin-help.response.json",
+            "sha256": "f52bc3db85c7fa1807dc1ab216d65f354794432476f2b4b372879c8c219e4ea6",
+            "case_id": "claude_code.scoped-help-002",
+            "step_id": "plugin-help",
+            "exit": 0,
+            "stdout_bytes": 3703,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "ce2c611c9940f599922c93a6fbe9ff9bbee38d59f134c033653d2a208cd7d496"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/case/evidence/claude_code.scoped-help-002--prepare-version.response.json",
+            "sha256": "803b0620908aa04c0bd1c273a46c41c155e19a7ad3c67f84fe8a25bf2ef6ca79",
+            "case_id": "claude_code.scoped-help-002",
+            "step_id": "prepare-version",
+            "exit": 0,
+            "stdout_bytes": 22,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "573c40a4a62147095eacd275e170060f8da81eb40ce0ac5f4b56f2e5f88e4994"
+          }
+        ],
+        "cleanup_receipt": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/evidence/host-cleanup.json",
+          "sha256": "976771766da6d5d1d198c63cbecb280dfbf412113634ca67b94e706880beeb2a",
+          "manager_cleanup_ok": true,
+          "manager_pid": 2570229,
+          "owned_stop_errors": 0,
+          "owner_pid": 2570227,
+          "result_ok": true
+        },
+        "identity_absence": [
+          {
+            "kind": "owner",
+            "pid": 2570227,
+            "original_identity_absent": true
+          },
+          {
+            "kind": "manager",
+            "pid": 2570229,
+            "original_identity_absent": true
+          }
+        ],
+        "driver_output": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/evidence/driver-output.json",
+          "sha256": "35ccd6a85707eaad9912aa66889869fdbcdc964081029d7c104fb8b4f482de34"
+        }
+      },
+      {
+        "realm": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex",
+        "root_exec_session": 56861,
+        "root_exec_exit": 0,
+        "driver_exit": 101,
+        "driver_outcome": "Expected incomplete discovery stage; NOT full E1 acceptance",
+        "endpoint_live": false,
+        "responses": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/case/evidence/codex.scoped-help-001--app-server-help.response.json",
+            "sha256": "b6fbcd4df1afe20951f154d0f4a9ce66d2e0813256273dfbb5d11f132363d266",
+            "case_id": "codex.scoped-help-001",
+            "step_id": "app-server-help",
+            "exit": 0,
+            "stdout_bytes": 3214,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "86eac42a1e39446c8c506ef707739125849f6ef9d5ac35cbdfa507c7362397e3"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/case/evidence/codex.scoped-help-001--mcp-help.response.json",
+            "sha256": "83ff6949361debf5eed859b3a4e8ec30e05e385844e237e6717a0011f18ee4f9",
+            "case_id": "codex.scoped-help-001",
+            "step_id": "mcp-help",
+            "exit": 0,
+            "stdout_bytes": 982,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "d7c416bdd76fd1fbafa427a638d992662029181ac51615557eaf901ca9f12cfc"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/case/evidence/codex.scoped-help-001--plugin-help.response.json",
+            "sha256": "0ffde006f6c3576624af6a0bce2a9db3feaaf34c0fcf3224084abfd8e39e2eec",
+            "case_id": "codex.scoped-help-001",
+            "step_id": "plugin-help",
+            "exit": 0,
+            "stdout_bytes": 1194,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "146be7bd930970a18fa35c8999f1736ed6ec3ad23dd522e3651841a8ba9b22ed"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/case/evidence/codex.scoped-help-001--version.response.json",
+            "sha256": "b5cfaaeb6b720d25a3a291de99ca5147919c20cae3ae55cba503e8e964a9a3ca",
+            "case_id": "codex.scoped-help-001",
+            "step_id": "version",
+            "exit": 0,
+            "stdout_bytes": 18,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "3da075303bd9f4c702ac348693a166f2439b992039e59b4e91822e46d4b4a03e"
+          }
+        ],
+        "cleanup_receipt": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/evidence/host-cleanup.json",
+          "sha256": "81168eab4d008b07d6ff85a705823996ddbe9bd26713846fc520261d437a960e",
+          "manager_cleanup_ok": true,
+          "manager_pid": 2570228,
+          "owned_stop_errors": 0,
+          "owner_pid": 2570226,
+          "result_ok": true
+        },
+        "identity_absence": [
+          {
+            "kind": "owner",
+            "pid": 2570226,
+            "original_identity_absent": true
+          },
+          {
+            "kind": "manager",
+            "pid": 2570228,
+            "original_identity_absent": true
+          }
+        ],
+        "driver_output": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/evidence/driver-output.json",
+          "sha256": "4463395ddf93d233eaa875df6870bd7425bac34296646067a02a730eda76ac7c"
+        }
+      }
+    ],
+    "namespace_qualification": "Fresh separate case namespaces and pinned driver/client paths as sealed. Actual driver reached all eight Runner calls after its HOME/cwd/executable checks. No real HOME credential state exposed; getpwuid observation not separately captured and remains unqualified.",
+    "instruction": "Read these ACTUAL retained eight responses now. Both endpoints are stopped and old keys must not be reused. Continue full original E1 sixteen rows/192 proof IDs; successful help/version discovery is not lifecycle/resource/local-peer qualification or acceptance. Use actual help grammar to implement full commissioning and propose a fresh exact bounded next lifecycle manifest/ELF with required fixture resources and write effects. No login/install/download/model calls or real user home mutation. Do not finish source-only because discovery driver intentionally exited101. Full campaign count88/222 unchanged."
+  },
+  "actual_command_help": {
+    "question_id": "M08E1-COMMAND-HELP-SEAL-003",
+    "id": "M08E1-COMMAND-HELP-SEAL-003",
+    "status": "answered",
+    "utc": "2026-10-16T05:02:06.165140+00:00",
+    "proposal_sha256": "112537d44681d50ebc92db031e2ff247213f60ab053307bef546bb8dafbd6a2f",
+    "driver_sha256": "c97c87c7adbde24074fa16f22195f191c3cd0854113307dc3d0e1056cd762c30",
+    "actual_steps_completed": 14,
+    "getpwuid_probes_completed": 2,
+    "all_requested_commands_exit0_complete_untruncated": true,
+    "cases": [
+      {
+        "realm": "/fast/zap-managed/2026-10-16-m08e1-command-claude",
+        "root_exec_session": 39923,
+        "root_exec_exit": 0,
+        "endpoint_live": false,
+        "responses": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--marketplace-add-help.response.json",
+            "sha256": "e37d67d57b4debb7f35198f63c1da4033a5e8d7b8445c74c85680be1071c52c5",
+            "step_id": "marketplace-add-help",
+            "exit": 0,
+            "stdout_bytes": 807,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "3855bd2204cac87a68766949a9891dd42590d5b7b2bf2a5ef10da5d657fde976"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--mcp-add-json-help.response.json",
+            "sha256": "b07a7481f191b47e69be0ac16cc2942e7af66efeba8dd800ec0bbf6fde4d2401",
+            "step_id": "mcp-add-json-help",
+            "exit": 0,
+            "stdout_bytes": 403,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "8192cf04a87a7d30347c452f2fef55fa682c23db8a7d620791871b37f18a71a8"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--mcp-list-help.response.json",
+            "sha256": "15790de9e27b83e1afb24140f506d8b12f2b979b2b5298d8e3ae8ceb408cefc5",
+            "step_id": "mcp-list-help",
+            "exit": 0,
+            "stdout_bytes": 267,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "d74f2a42f8a53095401ac89884f6a84068ae998fceab1608be47061300f69b0d"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-details-help.response.json",
+            "sha256": "982d624d7ea72a313d8669bfd8ec9922172827d7af89cddc4b07106dde6ce99f",
+            "step_id": "plugin-details-help",
+            "exit": 0,
+            "stdout_bytes": 157,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "d7132dda6234764d5075a8d7611b75e06fab3a481bf4fcc6d2fc18506662e0d5"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-install-help.response.json",
+            "sha256": "919df37ae02b455cae6304f245cea6b406fe9fff0ae68138fb210d6bc5bf5787",
+            "step_id": "plugin-install-help",
+            "exit": 0,
+            "stdout_bytes": 2807,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "07ebd5b2d07a2bc80156e5e29b5447fd124a6b6faef1a4cfef6c068df4740e09"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-list-help.response.json",
+            "sha256": "9e1a74ed2f2083e7911b6dfb277200fa83b73e62de22d44397051c7ec2481ef7",
+            "step_id": "plugin-list-help",
+            "exit": 0,
+            "stdout_bytes": 415,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "823274ef67e7cabb9f7ffedf8481fab52a059176877f980031883b2a7508b3dd"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-uninstall-help.response.json",
+            "sha256": "3ed6cb85e12e608f21ef4e238255236e42e356892ed650fa45f6c5f6beb2eb9f",
+            "step_id": "plugin-uninstall-help",
+            "exit": 0,
+            "stdout_bytes": 823,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "2f690004638014b86d4cba21054142c8814c7153801864b42abf04999c1cfd28"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-update-help.response.json",
+            "sha256": "daa04172c5afe4b374627659a564cf1e0caedf59397d6d4d7b24bf3d40fba124",
+            "step_id": "plugin-update-help",
+            "exit": 0,
+            "stdout_bytes": 1659,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "321e8883b665dfcc04ca4dac1a5b31c538c0e259c42999ad3be8f6541518b62f"
+          }
+        ],
+        "getpwuid": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/evidence/identity-probe.json",
+          "sha256": "1813bcbcaf59fc687a1f5af6a6bf941259a43f890e6a71826b9313d1e5c5aea8",
+          "observation": {
+            "gid": 1000,
+            "home": "/home/olegchir",
+            "uid": 1000,
+            "user": "olegchir"
+          },
+          "mechanism": "PodBay-owned /usr/bin/python3 pwd.getpwuid(os.getuid()), same case private passwd/HOME/mount construction, before driver; distinct namespace instance, not a shared live namespace inode",
+          "exit": 0,
+          "complete": true,
+          "truncated": false
+        },
+        "cleanup": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/evidence/host-cleanup.json",
+          "sha256": "50585e2fb64f936fb8e647f0d4d8d8c5f020920bac18154e13ab249549172616",
+          "result_ok": true,
+          "manager_cleanup_ok": true,
+          "owned_stop_errors": 0
+        },
+        "identity_absence": [
+          {
+            "kind": "owner",
+            "pid": 2582727,
+            "original_identity_absent": true
+          },
+          {
+            "kind": "manager",
+            "pid": 2582731,
+            "original_identity_absent": true
+          }
+        ],
+        "driver_output": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/evidence/driver-output.json",
+          "sha256": "7a1bc7efe674dd929a9d77e0c2d966b75e1f9f70c05b7ddf2c33d4d0b1ded1ad",
+          "exit": 101,
+          "meaning": "Expected discovery pending, not full matrix qualification"
+        }
+      },
+      {
+        "realm": "/fast/zap-managed/2026-10-16-m08e1-command-codex",
+        "root_exec_session": 46426,
+        "root_exec_exit": 0,
+        "endpoint_live": false,
+        "responses": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--marketplace-add-help.response.json",
+            "sha256": "c6adda6097c3e9aa92e1145847e9270269bfddef8b897fb259eaf8309ee3a22a",
+            "step_id": "marketplace-add-help",
+            "exit": 0,
+            "stdout_bytes": 1423,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "7cba326a359366b560ae5b3b4a0a6d5442fcc8be29dbc218a71349afe91e06c3"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--mcp-list-help.response.json",
+            "sha256": "fe4892aa71418459ce948c284da4400e9c35137f54aceef797c149ffcdc5844e",
+            "step_id": "mcp-list-help",
+            "exit": 0,
+            "stdout_bytes": 855,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "d7fa37fd6d3a927364f01cb686d256eee687eae231274b484cbdc34ef6335cb4"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--plugin-add-help.response.json",
+            "sha256": "b4908eb2fcb2587294567ce149478b03edacc3cf59f01bc1f0be1dc30e456722",
+            "step_id": "plugin-add-help",
+            "exit": 0,
+            "stdout_bytes": 1346,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "917cbc895e17657ed2cd28e118163ccea45ec2b29aa8b8c121aac576d3d52732"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--plugin-list-help.response.json",
+            "sha256": "c6ba5ffd4ccf097d2f503517e88c9f82c1e714f57785fdb401edd131f6479f13",
+            "step_id": "plugin-list-help",
+            "exit": 0,
+            "stdout_bytes": 1226,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "78a122880df19090bee3e7cc70135246f9cfdff8ca0836e74371174ee2a0fb6a"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--plugin-remove-help.response.json",
+            "sha256": "8bf4bb2615067a9aea9580a08d31f1813e3b61dc3c1e985fd797b78c621dedf2",
+            "step_id": "plugin-remove-help",
+            "exit": 0,
+            "stdout_bytes": 1342,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "1f92daf617ed814e16c01927b74614143429e10dd20327cc6fe4fcadf9278673"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--schema-help.response.json",
+            "sha256": "3cb8407cc2c63b92fe63c2f7635ac720ed6664d2dc5aa8759973fa98670a2a64",
+            "step_id": "schema-help",
+            "exit": 0,
+            "stdout_bytes": 1075,
+            "stderr_bytes": 0,
+            "complete": true,
+            "truncated": false,
+            "spec_sha256": "433358e6c8511aeba2958d9697c7d55f385d54683390e8636e6c4e215b6fa6d2"
+          }
+        ],
+        "getpwuid": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/evidence/identity-probe.json",
+          "sha256": "fd67fc5213e058ce7e0655f8a353ebfeb15e7c3e5b75cac82ee8163d2862f0db",
+          "observation": {
+            "gid": 1000,
+            "home": "/home/olegchir",
+            "uid": 1000,
+            "user": "olegchir"
+          },
+          "mechanism": "PodBay-owned /usr/bin/python3 pwd.getpwuid(os.getuid()), same case private passwd/HOME/mount construction, before driver; distinct namespace instance, not a shared live namespace inode",
+          "exit": 0,
+          "complete": true,
+          "truncated": false
+        },
+        "cleanup": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/evidence/host-cleanup.json",
+          "sha256": "45f00f0202eab3258e2ef03a2ddc4c63e30ebecd4c54ca71ae3cba7d085796bc",
+          "result_ok": true,
+          "manager_cleanup_ok": true,
+          "owned_stop_errors": 0
+        },
+        "identity_absence": [
+          {
+            "kind": "owner",
+            "pid": 2582728,
+            "original_identity_absent": true
+          },
+          {
+            "kind": "manager",
+            "pid": 2582730,
+            "original_identity_absent": true
+          }
+        ],
+        "driver_output": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/evidence/driver-output.json",
+          "sha256": "50e5fc7a307fbe93dd22bb5437496ad99d5ed8f6f9a869e0466538e519981249",
+          "exit": 101,
+          "meaning": "Expected discovery pending, not full matrix qualification"
+        }
+      }
+    ],
+    "peer_answer": {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-PEER.json",
+      "sha256": "2ce5af6fc58d4edb46e3a8ca43b9d2307edec5b2e6037cf616a228ff16e7d3e8",
+      "question_id": "M08E1-LOCAL-PEER-004"
+    },
+    "instruction": "Read actual fourteen help outputs and both uid/home observations. Proceed full E1 lifecycle/install/uninstall/update/resource/local-peer proof on exact installed versions. Root authorized next local-peer development fixture shared loopback contract in separate004 answer, not yet an endpoint. Produce full next bounded manifest and fixture resources; source-only/discovery success does not satisfy full16rows192proofs. No login/provider/model/real-home operations. These two helper endpoints are stopped and keys must not be reused. Preserve actual complete response evidence; no need more generic help unless an exact remaining grammar dependency blocks a real action."
+  },
+  "namespace_identity_note": "getpwuid observed in same private mount construction, distinct namespace instances; do not claim shared namespace inode census",
+  "actual_lifecycle_006": {
+    "question_id": "M08E1-LIFECYCLE-SEAL-006",
+    "id": "M08E1-LIFECYCLE-SEAL-006",
+    "status": "answered",
+    "utc": "2026-10-16T05:12:20.028658+00:00",
+    "cases": [
+      {
+        "realm": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle",
+        "root_exec_session": 88657,
+        "root_exec_exit": 0,
+        "driver_exit": 101,
+        "driver_error": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:8:39:\ncalled `Result::unwrap()` on an `Err` value: \"claude_code.mcp.user.lifecycle-004/v1: actual client did not report connected resource; retain effect/step, no retry\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+        "responses": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/claude_code.mcp.user.lifecycle-004--absence.response.json",
+            "sha256": "db4c4f966905a617fdfc1be1d705d7d9497b953a2414ab8344c5779d5dba4b05",
+            "step_id": "absence",
+            "exit": 0,
+            "status": "complete",
+            "stdout_bytes": 65,
+            "stderr_bytes": 0,
+            "truncated": false,
+            "complete": true
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/claude_code.mcp.user.lifecycle-004--v1.response.json",
+            "sha256": "7ce6b67d9f2e50484fcda3a7dc40fde0bb88ed91ced22f22630ae0f760149396",
+            "step_id": "v1",
+            "exit": 0,
+            "status": "complete",
+            "stdout_bytes": 65,
+            "stderr_bytes": 0,
+            "truncated": false,
+            "complete": true
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/claude_code.mcp.user.lifecycle-004--version.response.json",
+            "sha256": "ac14d7b3dd4660ae3eec96dad3f37c285b2abda6a50819f778b1543aaf4ac2a3",
+            "step_id": "version",
+            "exit": 0,
+            "status": "complete",
+            "stdout_bytes": 22,
+            "stderr_bytes": 0,
+            "truncated": false,
+            "complete": true
+          }
+        ],
+        "cleanup_receipt": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/evidence/host-cleanup.json",
+          "sha256": "95e41eaf296cd1ee0fb40675b8afecf1f3eefced6ad24e6f31ccd010abe7f34c"
+        },
+        "identity_absence": [
+          {
+            "kind": "owner",
+            "pid": 2596049,
+            "original_identity_absent": true
+          },
+          {
+            "kind": "manager",
+            "pid": 2596053,
+            "original_identity_absent": true
+          }
+        ],
+        "endpoint_live": false
+      },
+      {
+        "realm": "/fast/zap-managed/2026-10-16-m08e1-codex-schema",
+        "root_exec_session": 40247,
+        "root_exec_exit": 0,
+        "driver_exit": 101,
+        "driver_error": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:13:33:\ncalled `Result::unwrap()` on an `Err` value: \"pending: codex discovery retained; actual absence/v1/v2/removal, resource loading and local peer not yet qualified\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+        "responses": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/case/evidence/codex.schema-003--schema.response.json",
+            "sha256": "1e0bd2d4e6980986afbd7c3a15bf714cfe0801297dd2719f09a3c6e9338b961c",
+            "step_id": "schema",
+            "exit": 0,
+            "status": "complete",
+            "stdout_bytes": 0,
+            "stderr_bytes": 0,
+            "truncated": false,
+            "complete": true
+          }
+        ],
+        "cleanup_receipt": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/evidence/host-cleanup.json",
+          "sha256": "888bcb8d20a070ba855235e952510f8763f490e07e6c7e545becc2c33929ff8f"
+        },
+        "identity_absence": [
+          {
+            "kind": "owner",
+            "pid": 2596050,
+            "original_identity_absent": true
+          },
+          {
+            "kind": "manager",
+            "pid": 2596052,
+            "original_identity_absent": true
+          }
+        ],
+        "endpoint_live": false
+      }
+    ],
+    "outcome": "Actual MCP row FAILED at v1: installed Claude exited0 but said No MCP servers configured. v2/removal did NOT run. Codex schema command succeeded, driver remains expected discovery-pending. Neither driver101 is full task acceptance.",
+    "observed_configuration": "actual-mcp-v1-after.json shows C3/D2 wrote mcpServers.m08a2-demo at /home/olegchir/.claude.json. The same actual client independently created /home/olegchir/.claude/.claude.json with startup fields. The sealed guest env explicitly included CLAUDE_CONFIG_DIR=/home/olegchir/.claude.",
+    "inference": "Strong evidence the fixture combines default HOME/.claude.json target with an explicit config-directory override that sends this release elsewhere. This is not yet proof of a generic C3/D2 bug. Do not change generic JSON semantics merely to accommodate an incorrect fixture.",
+    "recommended_fast_next_step": "For the standard user-scope row, omit unnecessary CLAUDE_CONFIG_DIR in a new managed-owner exact proposal and retain private HOME/getpwuid. Alternatively capture and use this exact release configuration override as declared context consistently. Choose from actual specification and update relevant spec/descriptor/test when needed. Preserve unrelated client-owned fields and old failed C3 receipt; do not claim a connected resource from file-only success or silently rerun old effect/step. New case may requalify the complete row. Retain peer evidence also on early failure if applicable. Continue remaining full16rows192proofs.",
+    "mcp_evidence": [
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-absence-after.json",
+        "sha256": "cdcfc5de21f72acaebd42544ceccd62e53a93fd19cb92643d6f484e4a1e659b0"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-absence-before.json",
+        "sha256": "9961c84dc6348a34ef764f2fdc129ca90284e8402b7c667d4280211459e5374d"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-capture.json",
+        "sha256": "d887d8c69cbb474039df5716a4bd783e95a253675eb10348cf2dc3b44fbebdd2"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-v1-after.json",
+        "sha256": "62d119525bb5e8a45959ccf5e0fb11348799c687bd63b31dda30f1e41677b02f"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-v1-before.json",
+        "sha256": "cdcfc5de21f72acaebd42544ceccd62e53a93fd19cb92643d6f484e4a1e659b0"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-v1-receipt-reply.json",
+        "sha256": "cf5e369572bcb123a64f6075eb1ae526dbee5feee550b6403af1680a74f1985b"
+      }
+    ],
+    "schema_manifest": {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/case/evidence/ROOT-SCHEMA-MANIFEST.json",
+      "sha256": "a9a1473ffb40d2d8c8ab996e61d5a4bd93d0186766ee1d0ba3a343005f8902d4",
+      "files": 440,
+      "bytes": 4286533
+    },
+    "peer_status": "Both physical fixtures stopped and original owner/manager identities absent. No current listener or old endpoint reuse is authorized; next fresh row must bind its declared address normally.",
+    "count": "88/222 unchanged"
+  },
+  "actual_standard_home_007": {
+    "question_id": "M08E1-STANDARD-HOME-SEAL-007",
+    "id": "M08E1-STANDARD-HOME-SEAL-007",
+    "status": "answered",
+    "utc": "2026-10-16T05:24:03.611433+00:00",
+    "cases": [
+      {
+        "realm": "/fast/zap-managed/2026-10-16-m08e1-mcp-default",
+        "root_exec_session": 91949,
+        "root_exec_exit": 0,
+        "responses": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/case/evidence/claude_code.mcp.user.lifecycle-005--absence.response.json",
+            "sha256": "e79106beca9984d158c93531a669f8f2643b77c28043192459dfb5b56c078ba3",
+            "step_id": "absence",
+            "exit": 0,
+            "status": "complete",
+            "complete": true,
+            "truncated": false
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/case/evidence/claude_code.mcp.user.lifecycle-005--v1.response.json",
+            "sha256": "4d249bf9c318c85db47bb13c5a5f87432695a0c3d93dbdfe2c36c25c23d1831e",
+            "step_id": "v1",
+            "exit": 0,
+            "status": "complete",
+            "complete": true,
+            "truncated": false
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/case/evidence/claude_code.mcp.user.lifecycle-005--version.response.json",
+            "sha256": "650159c3fa207682b26e08930fc45e907e838dcea54ddbf0828e899fba609096",
+            "step_id": "version",
+            "exit": 0,
+            "status": "complete",
+            "complete": true,
+            "truncated": false
+          }
+        ],
+        "driver_exit": 101,
+        "driver_stderr": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:8:39:\ncalled `Result::unwrap()` on an `Err` value: \"unqualified local peer method: server/discover\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+        "driver_output": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/evidence/driver-output.json",
+          "sha256": "279333aa4103082ed4be3bdfc8e735faa12b26d5701ad05398ce706ef9702b32"
+        },
+        "cleanup": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/evidence/host-cleanup.json",
+          "sha256": "8a54117203953e890c34cda5da995a9a809eae6db38fe5d91d3e0ce5173cbe90"
+        },
+        "identities": [
+          {
+            "kind": "owner",
+            "pid": 2609014,
+            "original_identity_absent": true
+          },
+          {
+            "kind": "manager",
+            "pid": 2609016,
+            "original_identity_absent": true
+          }
+        ],
+        "endpoint_live": false
+      },
+      {
+        "realm": "/fast/zap-managed/2026-10-16-m08e1-codex-observation",
+        "root_exec_session": 50244,
+        "root_exec_exit": 0,
+        "responses": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m08e1-codex-observation/case/evidence/codex.observation-004--skills.response.json",
+            "sha256": "ec4f3ec9daba1351772eb37e3968cf45c8644ca7b7d7462b8ddf2719bc4f032a",
+            "step_id": "skills",
+            "exit": 0,
+            "status": "complete",
+            "complete": true,
+            "truncated": false
+          }
+        ],
+        "driver_exit": 101,
+        "driver_stderr": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:13:33:\ncalled `Result::unwrap()` on an `Err` value: \"codex.observation-004/skills: missing/duplicate/error app-server reply 2; retain exact step\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+        "driver_output": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-codex-observation/evidence/driver-output.json",
+          "sha256": "805bfbb2f14a1c3174d7fad23c9f12a6d1505204ea0e396a8ce2f23615cf3aa6"
+        },
+        "cleanup": {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-codex-observation/evidence/host-cleanup.json",
+          "sha256": "253857878fabcc41af34d96fe05d4d15b6e8aeec8cee2a3d87c858e0c0f2d492"
+        },
+        "identities": [
+          {
+            "kind": "owner",
+            "pid": 2609015,
+            "original_identity_absent": true
+          },
+          {
+            "kind": "manager",
+            "pid": 2609017,
+            "original_identity_absent": true
+          }
+        ],
+        "endpoint_live": false
+      }
+    ],
+    "actual_MCP": "Version/absence/v1 vendor calls exited0 with complete output. Claude now discovers m08a2-demo at /mcp/v1, confirming the previous default-home/override fixture mismatch was removed. But output reports Failed to connect/ECONNREFUSED. Driver fails unqualified local peer method: server/discover. v2/removal were not run. No peer exchange artifact found on failure. This is not a completed row.",
+    "MCP_next": "Actual private peer implementation must handle unexpected extension requests without destroying required diagnostic evidence. Record every bounded request before dispatch, including on failure; implement correct response/fallback from actual client behavior, not a fabricated Connected result. Keep generic C3/D2 unchanged unless separate evidence requires it. New full-row proposal/fresh keys required; old applied-v1 case retained.",
+    "actual_Codex": "Only skills step invoked. Codexappserver exit0/full output includes id1 initialize result and configWarning/remoteControl notifications, but no id2 response. Config step notrun. Supplied three-line stdin was delivered and closed; this may require actual interactive request/reply sequencing or another supported transport. Closed-input output is not proof of id2 success. Do not fake replies or loop blind retries.",
+    "Codex_next": "Use retained actual schema and existing PodBay capabilities to propose smallest correct read-only request/reply path. Root is checking physical input support; no ad-hoc sleep or native child launcher is preapproved. Protocol semantics belong in VibeVM; PodBay must remain a generic process/byte-stream owner.",
+    "count": "88/222 unchanged; full16rows192proofs and original task remain."
+  },
+  "session_transport": {
+    "status": "compiled_not_launched",
+    "question_id": "M08E1-CODEX-SESSION-SEAL-014",
+    "proposal": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/DRIVER-PROPOSAL-CODEX-SESSION-BOUND.json",
+    "proposal_sha256": "23c651559236157bc76dd1b3192fb0c91c9a2139c87a12875eb6652ef94be78a",
+    "scope_authority": {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-CODEX-IO.json",
+      "sha256": "4b15a58e5a30148dbd114c364c990195995b799c8e0b08dc82ab7a87cb4c438e"
+    },
+    "runtime_observation": null,
+    "meaning": "WebSocket Unix proposal; finite-stdin missing id2 remains failure, no RPC response synthesized",
+    "withdrawn_prior": "012 prelaunch wire step binding mismatch; retained immutable prior proposal"
+  },
+  "negative_pending": {
+    "question_id": "M08E1-NEGATIVE-CAPS-SEAL-011",
+    "supersedes": "008 and negative half010 not launched; argument rejected before vendor so not actual stderr truncation",
+    "runtime_observation": "ROOT-ANSWER-NEGATIVE-CAPS.json"
+  },
+  "file_owner_checkpoint": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/FILE-OWNER-CHECKPOINT-EVIDENCE.json",
+    "sha256": "74103285ecb1a0562d11f903c465f43cc3bfd1075d8eff5e4cee341a4608ea98",
+    "matrix_file_rows": 12,
+    "extra_external_addition": 1,
+    "vendor_calls": 0,
+    "claim": "C3 checkpoint interruption -> D2 Partial -> fresh authority -> same-run completed recovery plus update/remove/foreign preservation; no vendor loading claim"
+  },
+  "negative_actual": {
+    "root_answer": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-NEGATIVE-CAPS.json",
+    "sha256": "11db9832a903f5314350d9b621c94d2d29444a4800ae33815d9eadff7022d4f2",
+    "observed": [
+      "real wrong-version mismatch refusal",
+      "revocation refusal without dispatch",
+      "stderr truncated128 with exit1"
+    ],
+    "pending": [
+      "executable identity drift",
+      "all full row criteria"
+    ],
+    "driver_exit": 101,
+    "old_keys_retired": true
+  },
+  "mcp_actual_fallback": {
+    "root_answer": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-PEER-FALLBACK.json",
+    "sha256": "c7af52980b1cb2d222c02056aafe408aa9323fc1a3b0579898498858964c9bcb",
+    "observed": "actual server/discover method-not-found then initialize2025-11-25; peer rejected unsupported version; v2/remove not dispatched",
+    "driver_exit": 101,
+    "old_keys_retired": true
+  }
+}

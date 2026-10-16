@@ -1,0 +1,16 @@
+{
+  "V2": {
+    "names": [
+      "mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix",
+      "mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix",
+      "mechanism::deploy::m_08_e_1_cases::current_version_profiles_preserve_legacy_and_wrong_version_refusal",
+      "mechanism::deploy::m_08_e_1_cases::receipt_owned_update_recovery_remove_preserves_foreign",
+      "mechanism::deploy::m_08_e_1_cases::same_core_binary_accepts_external_package_data"
+    ],
+    "expected": 5,
+    "source_paths": [
+      "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs"
+    ],
+    "status": "Five existing definitions bound before compile; scoped-help and pending matrix gates, no claimed commissioning pass"
+  }
+}

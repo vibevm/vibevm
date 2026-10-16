@@ -1,0 +1,142 @@
+{
+  "run": [
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::plugin::lifecycle_tests::wrong_minor_version_refuses_through_the_injected_process_seam",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::m_08_b_1_cases::missing_client_capture_refuses_without_process_and_prepared_query_is_pure",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::exact_approval_runs_only_inspected_spec_and_query_is_pure",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-lifecycle",
+      "--lib",
+      "mechanism::deploy::client_commands::m_08_d_1_cases::stale_control_version_environment_cwd_roots_and_revocation_refuse",
+      "--",
+      "--exact"
+    ]
+  ],
+  "reused": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::full_apply_verify_update_remove_preserves_foreign_state",
+        "--",
+        "--exact"
+      ],
+      "rationale": "Owner and test bytes unchanged against accepted source; E1 adds separate test-only adapter and registration. This reuses only existing owner proof, never actual-client commissioning.",
+      "source_hashes": {
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs": "71b0e08bc360833d9a5aab16810b38f5815962e3ba038fbc77901bc458ed9e5a",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs": "799834f0f6fc4ed77654f65f80e26963d8331209722cd989ffd0f647fc53fc0a"
+      },
+      "prior_evidence": [
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D2-2026-10-16/candidate/checks/V1-1.log",
+          "sha256": "0bedcd19e4cefead6e0399061eda8857e41cb4b2ba8baea72de9d75e238f043e"
+        },
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D2-2026-10-16/candidate/checks/V1-result.json",
+          "sha256": "dc2afdc885f50bd352b816dcf254843e4efe904758f23f5eb62083b446fcf929"
+        }
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::interrupted_command_prefix_recovers_with_fresh_authority",
+        "--",
+        "--exact"
+      ],
+      "rationale": "Owner and test bytes unchanged against accepted source; E1 adds separate test-only adapter and registration. This reuses only existing owner proof, never actual-client commissioning.",
+      "source_hashes": {
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs": "71b0e08bc360833d9a5aab16810b38f5815962e3ba038fbc77901bc458ed9e5a",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs": "799834f0f6fc4ed77654f65f80e26963d8331209722cd989ffd0f647fc53fc0a"
+      },
+      "prior_evidence": [
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D2-2026-10-16/candidate/checks/V1-1.log",
+          "sha256": "0bedcd19e4cefead6e0399061eda8857e41cb4b2ba8baea72de9d75e238f043e"
+        },
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D2-2026-10-16/candidate/checks/V1-result.json",
+          "sha256": "dc2afdc885f50bd352b816dcf254843e4efe904758f23f5eb62083b446fcf929"
+        }
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-lifecycle",
+        "--lib",
+        "mechanism::deploy::client_deploy::m_08_d_2_cases::changed_executable_descriptor_and_expanded_plan_refuse_stale_grant",
+        "--",
+        "--exact"
+      ],
+      "rationale": "Owner and test bytes unchanged against accepted source; E1 adds separate test-only adapter and registration. This reuses only existing owner proof, never actual-client commissioning.",
+      "source_hashes": {
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs": "71b0e08bc360833d9a5aab16810b38f5815962e3ba038fbc77901bc458ed9e5a",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy/m_08_d_2_cases.rs": "799834f0f6fc4ed77654f65f80e26963d8331209722cd989ffd0f647fc53fc0a"
+      },
+      "prior_evidence": [
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D2-2026-10-16/candidate/checks/V1-1.log",
+          "sha256": "0bedcd19e4cefead6e0399061eda8857e41cb4b2ba8baea72de9d75e238f043e"
+        },
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D2-2026-10-16/candidate/checks/V1-result.json",
+          "sha256": "dc2afdc885f50bd352b816dcf254843e4efe904758f23f5eb62083b446fcf929"
+        }
+      ]
+    }
+  ],
+  "run_reason": "Bounded inherited affected-case selection for external file-owner composition and real CLI injection; accepted D1/D2 unchanged cases reused separately. No broad suite."
+}

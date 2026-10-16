@@ -1,0 +1,267 @@
+{
+  "question_id": "M08E1-COMMAND-HELP-SEAL-003",
+  "id": "M08E1-COMMAND-HELP-SEAL-003",
+  "status": "answered",
+  "utc": "2026-10-16T05:02:06.165140+00:00",
+  "proposal_sha256": "112537d44681d50ebc92db031e2ff247213f60ab053307bef546bb8dafbd6a2f",
+  "driver_sha256": "c97c87c7adbde24074fa16f22195f191c3cd0854113307dc3d0e1056cd762c30",
+  "actual_steps_completed": 14,
+  "getpwuid_probes_completed": 2,
+  "all_requested_commands_exit0_complete_untruncated": true,
+  "cases": [
+    {
+      "realm": "/fast/zap-managed/2026-10-16-m08e1-command-claude",
+      "root_exec_session": 39923,
+      "root_exec_exit": 0,
+      "endpoint_live": false,
+      "responses": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--marketplace-add-help.response.json",
+          "sha256": "e37d67d57b4debb7f35198f63c1da4033a5e8d7b8445c74c85680be1071c52c5",
+          "step_id": "marketplace-add-help",
+          "exit": 0,
+          "stdout_bytes": 807,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "3855bd2204cac87a68766949a9891dd42590d5b7b2bf2a5ef10da5d657fde976"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--mcp-add-json-help.response.json",
+          "sha256": "b07a7481f191b47e69be0ac16cc2942e7af66efeba8dd800ec0bbf6fde4d2401",
+          "step_id": "mcp-add-json-help",
+          "exit": 0,
+          "stdout_bytes": 403,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "8192cf04a87a7d30347c452f2fef55fa682c23db8a7d620791871b37f18a71a8"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--mcp-list-help.response.json",
+          "sha256": "15790de9e27b83e1afb24140f506d8b12f2b979b2b5298d8e3ae8ceb408cefc5",
+          "step_id": "mcp-list-help",
+          "exit": 0,
+          "stdout_bytes": 267,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "d74f2a42f8a53095401ac89884f6a84068ae998fceab1608be47061300f69b0d"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-details-help.response.json",
+          "sha256": "982d624d7ea72a313d8669bfd8ec9922172827d7af89cddc4b07106dde6ce99f",
+          "step_id": "plugin-details-help",
+          "exit": 0,
+          "stdout_bytes": 157,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "d7132dda6234764d5075a8d7611b75e06fab3a481bf4fcc6d2fc18506662e0d5"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-install-help.response.json",
+          "sha256": "919df37ae02b455cae6304f245cea6b406fe9fff0ae68138fb210d6bc5bf5787",
+          "step_id": "plugin-install-help",
+          "exit": 0,
+          "stdout_bytes": 2807,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "07ebd5b2d07a2bc80156e5e29b5447fd124a6b6faef1a4cfef6c068df4740e09"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-list-help.response.json",
+          "sha256": "9e1a74ed2f2083e7911b6dfb277200fa83b73e62de22d44397051c7ec2481ef7",
+          "step_id": "plugin-list-help",
+          "exit": 0,
+          "stdout_bytes": 415,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "823274ef67e7cabb9f7ffedf8481fab52a059176877f980031883b2a7508b3dd"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-uninstall-help.response.json",
+          "sha256": "3ed6cb85e12e608f21ef4e238255236e42e356892ed650fa45f6c5f6beb2eb9f",
+          "step_id": "plugin-uninstall-help",
+          "exit": 0,
+          "stdout_bytes": 823,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "2f690004638014b86d4cba21054142c8814c7153801864b42abf04999c1cfd28"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/case/evidence/claude_code.command-help-003--plugin-update-help.response.json",
+          "sha256": "daa04172c5afe4b374627659a564cf1e0caedf59397d6d4d7b24bf3d40fba124",
+          "step_id": "plugin-update-help",
+          "exit": 0,
+          "stdout_bytes": 1659,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "321e8883b665dfcc04ca4dac1a5b31c538c0e259c42999ad3be8f6541518b62f"
+        }
+      ],
+      "getpwuid": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/evidence/identity-probe.json",
+        "sha256": "1813bcbcaf59fc687a1f5af6a6bf941259a43f890e6a71826b9313d1e5c5aea8",
+        "observation": {
+          "gid": 1000,
+          "home": "/home/olegchir",
+          "uid": 1000,
+          "user": "olegchir"
+        },
+        "mechanism": "PodBay-owned /usr/bin/python3 pwd.getpwuid(os.getuid()), same case private passwd/HOME/mount construction, before driver; distinct namespace instance, not a shared live namespace inode",
+        "exit": 0,
+        "complete": true,
+        "truncated": false
+      },
+      "cleanup": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/evidence/host-cleanup.json",
+        "sha256": "50585e2fb64f936fb8e647f0d4d8d8c5f020920bac18154e13ab249549172616",
+        "result_ok": true,
+        "manager_cleanup_ok": true,
+        "owned_stop_errors": 0
+      },
+      "identity_absence": [
+        {
+          "kind": "owner",
+          "pid": 2582727,
+          "original_identity_absent": true
+        },
+        {
+          "kind": "manager",
+          "pid": 2582731,
+          "original_identity_absent": true
+        }
+      ],
+      "driver_output": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-command-claude/evidence/driver-output.json",
+        "sha256": "7a1bc7efe674dd929a9d77e0c2d966b75e1f9f70c05b7ddf2c33d4d0b1ded1ad",
+        "exit": 101,
+        "meaning": "Expected discovery pending, not full matrix qualification"
+      }
+    },
+    {
+      "realm": "/fast/zap-managed/2026-10-16-m08e1-command-codex",
+      "root_exec_session": 46426,
+      "root_exec_exit": 0,
+      "endpoint_live": false,
+      "responses": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--marketplace-add-help.response.json",
+          "sha256": "c6adda6097c3e9aa92e1145847e9270269bfddef8b897fb259eaf8309ee3a22a",
+          "step_id": "marketplace-add-help",
+          "exit": 0,
+          "stdout_bytes": 1423,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "7cba326a359366b560ae5b3b4a0a6d5442fcc8be29dbc218a71349afe91e06c3"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--mcp-list-help.response.json",
+          "sha256": "fe4892aa71418459ce948c284da4400e9c35137f54aceef797c149ffcdc5844e",
+          "step_id": "mcp-list-help",
+          "exit": 0,
+          "stdout_bytes": 855,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "d7fa37fd6d3a927364f01cb686d256eee687eae231274b484cbdc34ef6335cb4"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--plugin-add-help.response.json",
+          "sha256": "b4908eb2fcb2587294567ce149478b03edacc3cf59f01bc1f0be1dc30e456722",
+          "step_id": "plugin-add-help",
+          "exit": 0,
+          "stdout_bytes": 1346,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "917cbc895e17657ed2cd28e118163ccea45ec2b29aa8b8c121aac576d3d52732"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--plugin-list-help.response.json",
+          "sha256": "c6ba5ffd4ccf097d2f503517e88c9f82c1e714f57785fdb401edd131f6479f13",
+          "step_id": "plugin-list-help",
+          "exit": 0,
+          "stdout_bytes": 1226,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "78a122880df19090bee3e7cc70135246f9cfdff8ca0836e74371174ee2a0fb6a"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--plugin-remove-help.response.json",
+          "sha256": "8bf4bb2615067a9aea9580a08d31f1813e3b61dc3c1e985fd797b78c621dedf2",
+          "step_id": "plugin-remove-help",
+          "exit": 0,
+          "stdout_bytes": 1342,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "1f92daf617ed814e16c01927b74614143429e10dd20327cc6fe4fcadf9278673"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/case/evidence/codex.command-help-002--schema-help.response.json",
+          "sha256": "3cb8407cc2c63b92fe63c2f7635ac720ed6664d2dc5aa8759973fa98670a2a64",
+          "step_id": "schema-help",
+          "exit": 0,
+          "stdout_bytes": 1075,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "433358e6c8511aeba2958d9697c7d55f385d54683390e8636e6c4e215b6fa6d2"
+        }
+      ],
+      "getpwuid": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/evidence/identity-probe.json",
+        "sha256": "fd67fc5213e058ce7e0655f8a353ebfeb15e7c3e5b75cac82ee8163d2862f0db",
+        "observation": {
+          "gid": 1000,
+          "home": "/home/olegchir",
+          "uid": 1000,
+          "user": "olegchir"
+        },
+        "mechanism": "PodBay-owned /usr/bin/python3 pwd.getpwuid(os.getuid()), same case private passwd/HOME/mount construction, before driver; distinct namespace instance, not a shared live namespace inode",
+        "exit": 0,
+        "complete": true,
+        "truncated": false
+      },
+      "cleanup": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/evidence/host-cleanup.json",
+        "sha256": "45f00f0202eab3258e2ef03a2ddc4c63e30ebecd4c54ca71ae3cba7d085796bc",
+        "result_ok": true,
+        "manager_cleanup_ok": true,
+        "owned_stop_errors": 0
+      },
+      "identity_absence": [
+        {
+          "kind": "owner",
+          "pid": 2582728,
+          "original_identity_absent": true
+        },
+        {
+          "kind": "manager",
+          "pid": 2582730,
+          "original_identity_absent": true
+        }
+      ],
+      "driver_output": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-command-codex/evidence/driver-output.json",
+        "sha256": "50e5fc7a307fbe93dd22bb5437496ad99d5ed8f6f9a869e0466538e519981249",
+        "exit": 101,
+        "meaning": "Expected discovery pending, not full matrix qualification"
+      }
+    }
+  ],
+  "peer_answer": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-PEER.json",
+    "sha256": "2ce5af6fc58d4edb46e3a8ca43b9d2307edec5b2e6037cf616a228ff16e7d3e8",
+    "question_id": "M08E1-LOCAL-PEER-004"
+  },
+  "instruction": "Read actual fourteen help outputs and both uid/home observations. Proceed full E1 lifecycle/install/uninstall/update/resource/local-peer proof on exact installed versions. Root authorized next local-peer development fixture shared loopback contract in separate004 answer, not yet an endpoint. Produce full next bounded manifest and fixture resources; source-only/discovery success does not satisfy full16rows192proofs. No login/provider/model/real-home operations. These two helper endpoints are stopped and keys must not be reused. Preserve actual complete response evidence; no need more generic help unless an exact remaining grammar dependency blocks a real action."
+}

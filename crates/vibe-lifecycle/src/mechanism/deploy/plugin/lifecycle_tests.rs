@@ -608,3 +608,129 @@ fn opencode_remove_rejects_a_foreign_receipt_listed_resource() {
         "keep\n"
     );
 }
+
+#[test]
+fn finite_client_state_membership_detects_added_version_and_absence_change() {
+    use super::client_state::{ClientStateBinding, ClientStateWitness};
+    let home = tempfile::tempdir().unwrap();
+    let root = vibe_safefs::Project::open(home.path()).unwrap();
+    root.write_atomic("registry.json", b"{}").unwrap();
+    root.write_atomic("cache/1.0.0/plugin.json", b"{}").unwrap();
+    let binding = ClientStateBinding {
+        client: "fixture".into(),
+        coordinate: "demo@local".into(),
+        scope: "user".into(),
+        user_home: home.path().into(),
+    };
+    let observe = || {
+        ClientStateWitness::observe_closure(
+            "finite-fixture",
+            &binding,
+            home.path(),
+            &["registry.json", "higher-priority.json"],
+            &["cache", "absent"],
+        )
+        .unwrap()
+    };
+    let initial = observe();
+    assert_eq!(initial, observe());
+    root.write_atomic("cache/2.0.0/plugin.json", b"{}").unwrap();
+    assert_ne!(
+        initial,
+        observe(),
+        "new cache version changes membership without changing named files"
+    );
+    let before_absence = observe();
+    root.dir(&["absent"], true).unwrap();
+    assert_ne!(
+        before_absence,
+        observe(),
+        "absent and empty directory differ"
+    );
+    let before_replacement = observe();
+    std::fs::rename(home.path().join("cache"), home.path().join("old-cache")).unwrap();
+    root.write_atomic("cache/1.0.0/plugin.json", b"{}").unwrap();
+    root.write_atomic("cache/2.0.0/plugin.json", b"{}").unwrap();
+    assert_ne!(
+        before_replacement,
+        observe(),
+        "equal membership at a replaced directory has different identity"
+    );
+}
+
+#[test]
+fn finite_client_state_membership_refuses_overflow_links_and_duplicate_paths() {
+    use super::client_state::{ClientStateBinding, ClientStateWitness};
+    let home = tempfile::tempdir().unwrap();
+    let root = vibe_safefs::Project::open(home.path()).unwrap();
+    root.write_atomic("registry.json", b"{}").unwrap();
+    let binding = ClientStateBinding {
+        client: "fixture".into(),
+        coordinate: "demo@local".into(),
+        scope: "user".into(),
+        user_home: home.path().into(),
+    };
+    let observe = |directories: &[&str]| {
+        ClientStateWitness::observe_closure(
+            "finite-fixture",
+            &binding,
+            home.path(),
+            &["registry.json"],
+            directories,
+        )
+    };
+    assert!(observe(&["cache", "cache"]).is_err());
+    assert!(observe(&["../outside"]).is_err());
+    for i in 0..65 {
+        root.write_atomic(&format!("cache/{i}"), b"x").unwrap();
+    }
+    assert!(
+        observe(&["cache"]).is_err(),
+        "never retain a truncated membership list"
+    );
+    #[cfg(unix)]
+    {
+        root.dir(&["linked"], true).unwrap();
+        std::os::unix::fs::symlink("../registry.json", home.path().join("linked/alias")).unwrap();
+        assert!(
+            observe(&["linked"]).is_err(),
+            "child links do not become ordinary members"
+        );
+    }
+}
+
+#[test]
+fn codex_local_http_probes_preserve_following_initialize() {
+    crate::mechanism::deploy::m_08_e_1_cases::driver::peer_http_trace_checks().unwrap();
+}
+
+#[test]
+fn codex_project_plugin_scope_is_not_an_admitted_config_field() {
+    let config = vibe_core::manifest::ExtensionConfig::from_table(
+        "name = 'm08e1-demo'\nscope = 'project'\n".parse().unwrap(),
+    );
+    let error = PluginDeployConfig::parse("codex-plugin-project", Some(&config)).unwrap_err();
+    match error {
+        DeployProviderError::Config { member, reason, .. } => {
+            assert_eq!(member, "scope");
+            assert!(reason.contains("unknown member"));
+        }
+        other => panic!("unexpected refusal: {other:?}"),
+    }
+    // Config admission has no ProcessRunner or native grant to fall through to.
+}
+
+#[test]
+fn codex_plugin_removal_requires_inventory_and_skill_absence() {
+    crate::mechanism::deploy::m_08_e_1_cases::driver::plugin_removal_observation_checks().unwrap();
+}
+
+#[test]
+fn codex_plugin_update_requires_exact_revision_and_finite_tree() {
+    crate::mechanism::deploy::m_08_e_1_cases::driver::plugin_update_observation_checks().unwrap();
+}
+
+#[test]
+fn codex_plugin_config_preserves_foreign_coordinates() {
+    crate::mechanism::deploy::m_08_e_1_cases::driver::plugin_foreign_config_checks().unwrap();
+}

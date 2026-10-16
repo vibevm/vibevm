@@ -1,0 +1,89 @@
+{
+  "run": [
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-agent-projection",
+      "--lib",
+      "m_08_a_1_cases::injected_paths_and_mcp_flags_are_separate_from_skill_support",
+      "--",
+      "--exact"
+    ],
+    [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "-p",
+      "vibe-agent-projection",
+      "--lib",
+      "m_08_a_1_cases::standalone_project_file_and_tree_install_update_remove_exact_bytes",
+      "--",
+      "--exact"
+    ]
+  ],
+  "reused": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "client_commands::m_08_d_1_cases::fixed_recipes_are_deterministic",
+        "--",
+        "--exact"
+      ],
+      "rationale": "Owner and test bytes unchanged against accepted source; E1 adds separate test-only adapter and registration. This reuses only existing owner proof, never actual-client commissioning.",
+      "source_hashes": {
+        "crates/vibe-agent-projection/src/client_commands.rs": "3976b29af04afafe06e02e3d37e89de672faee5d56f281dad7323974fbdfc08e",
+        "crates/vibe-agent-projection/src/client_commands/m_08_d_1_cases.rs": "8259c8439d25f4d6f135735353ba96f3b39154cd1ca1a58cb0510e127ee8f6cc"
+      },
+      "prior_evidence": [
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D1-2026-10-15/candidate/checks/V1-1.log",
+          "sha256": "a1266360ef2914f9618d274efea4d6fc2c84ba7b77ff6771552c283f98c08a5e"
+        },
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D1-2026-10-15/candidate/checks/V1-result.json",
+          "sha256": "5d1be408807e3f31817cba996a32615066e3a802c7135d25c8bca148e679b27c"
+        }
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-agent-projection",
+        "--lib",
+        "client_commands::m_08_d_1_cases::unsupported_contracts_refuse",
+        "--",
+        "--exact"
+      ],
+      "rationale": "Owner and test bytes unchanged against accepted source; E1 adds separate test-only adapter and registration. This reuses only existing owner proof, never actual-client commissioning.",
+      "source_hashes": {
+        "crates/vibe-agent-projection/src/client_commands.rs": "3976b29af04afafe06e02e3d37e89de672faee5d56f281dad7323974fbdfc08e",
+        "crates/vibe-agent-projection/src/client_commands/m_08_d_1_cases.rs": "8259c8439d25f4d6f135735353ba96f3b39154cd1ca1a58cb0510e127ee8f6cc"
+      },
+      "prior_evidence": [
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D1-2026-10-15/candidate/checks/V1-1.log",
+          "sha256": "a1266360ef2914f9618d274efea4d6fc2c84ba7b77ff6771552c283f98c08a5e"
+        },
+        {
+          "path": "/fast/git/v/vibevm-next/campaigns/next/evidence/M-08-D/acceptance-D1-2026-10-15/candidate/checks/V1-result.json",
+          "sha256": "5d1be408807e3f31817cba996a32615066e3a802c7135d25c8bca148e679b27c"
+        }
+      ]
+    }
+  ],
+  "run_reason": "Bounded inherited affected-case selection for external file-owner composition and real CLI injection; accepted D1/D2 unchanged cases reused separately. No broad suite."
+}

@@ -1,0 +1,82 @@
+{
+  "question_id": "M08E1-PEER-FALLBACK-SEAL-010",
+  "id": "M08E1-PEER-FALLBACK-SEAL-010",
+  "status": "answered",
+  "utc": "2026-10-16T05:48:52.222874+00:00",
+  "realm": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback",
+  "root_exec_session": 15139,
+  "root_exec_exit": 0,
+  "driver_exit": 101,
+  "driver_stderr": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:8:39:\ncalled `Result::unwrap()` on an `Err` value: \"unqualified MCP protocol version\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+  "responses": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/claude_code.mcp.user.lifecycle-007--absence.response.json",
+      "sha256": "1243ff735e6e0a74a7bad5e2ecb3513f6332fcb7214697732769ef1985a8e571",
+      "step_id": "absence",
+      "exit": 0,
+      "complete": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout_bytes": 65,
+      "stderr_bytes": 0
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/claude_code.mcp.user.lifecycle-007--v1.response.json",
+      "sha256": "9b625b9f957135489051669e2d80899a13f92bc947329bce4555bc6dc090f81a",
+      "step_id": "v1",
+      "exit": 0,
+      "complete": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout_bytes": 256,
+      "stderr_bytes": 0
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/claude_code.mcp.user.lifecycle-007--version.response.json",
+      "sha256": "21d7f21917659c9db100073c5d0a11676c505df9b59dd6c29ac9a29e35a5d404",
+      "step_id": "version",
+      "exit": 0,
+      "complete": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout_bytes": 22,
+      "stderr_bytes": 0
+    }
+  ],
+  "cleanup": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/evidence/host-cleanup.json",
+    "sha256": "e12af244fa863409d30b524253cb557846ee5acb963b1789292beaa90d87e14b",
+    "owner_manager_original_identities_absent": true
+  },
+  "endpoint_live": false,
+  "full_task": "88/222 unchanged; no full row/matrix acceptance inferred from exit0 or partial assertions.",
+  "outcome": "Method-not-found fallback ran and client proceeded to initialize. Peer failed unqualified MCP protocol version; v2/removal not run. No retry of old step.",
+  "actual_protocol": {
+    "discovery_meta_version": "2026-07-28",
+    "initialize_version": "2025-11-25",
+    "initialize_id": 0
+  },
+  "peer_trace": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/peer-v1-001.json",
+      "sha256": "3749a7828e74880152c31c6b1c32469db8c945c47cdce4ef8284262e74011b84"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/peer-v1-001.request.json",
+      "sha256": "8675500e3320893a04e3fb3c9daefbc4caba314af77e9d6c8a8c562a26f47c87"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/peer-v1-001.route.json",
+      "sha256": "92f088f3d4aa415e241ad0367cb3c1481210bdbcb9a5d22383700a619e43b12c"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/peer-v1-002.request.json",
+      "sha256": "237e8a9706208b316ec56ea35d50fb9b1be8edc0a0daec19b1886fc3c7ad018b"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/peer-v1-002.route.json",
+      "sha256": "92f088f3d4aa415e241ad0367cb3c1481210bdbcb9a5d22383700a619e43b12c"
+    }
+  ],
+  "next": "Use actual retained initialize request, not guessed protocol dates. This remains a fixture peer issue; do not change generic C3/D2. Make negotiation an explicit fixture capability consistent with the actual supported protocol, not arbitrary version echo. Before next real client run, replay the retained discovery/initialize trace deterministically against the peer handler with semantic expectations (method-not-found preserves id; initialize negotiates an implemented version and honest capabilities; notification/control handling must not kill server). This is a small meaningful simulator regression, no full suite/new verification engine. Retain every request before response even on errors. Then propose a fresh full row with frozen inputs/ELF. Negative010 half was superseded011 and NOT launched."
+}

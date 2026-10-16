@@ -936,3 +936,6 @@ impl CoordinatedDeploy {
 }
 
 pub mod client_deploy;
+
+#[cfg(all(test, unix))]
+mod m_08_e_1_cases;

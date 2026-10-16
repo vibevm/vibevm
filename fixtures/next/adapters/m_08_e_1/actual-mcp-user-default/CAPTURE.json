@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "candidate default-HOME context; previous override mismatch retained",
+  "core_baseline": "2ee3486d8e04da85c245894e719ae1418082a4dd8a1910f12b843908a2d186e1",
+  "endpoint_answer_sha256": "bb2ef6629c7423e906e931c860bb8d1ecb399002219f9aa0d3d30626081a8b24",
+  "resources": [
+    {
+      "host_path": "/fast/git/v/vibevm-next/fixtures/next/adapters/m_08_e_1/actual-mcp-user-default/request.json",
+      "namespace_path": "/fixture-input/mcp-package/request.json",
+      "sha256": "9483caf91602b521f0d3528a4c824093c0e0072d3339efb62dc602dae2bb3054"
+    },
+    {
+      "host_path": "/fast/git/v/vibevm-next/fixtures/next/adapters/m_08_e_1/actual-mcp-user-default/v1/value.json",
+      "namespace_path": "/fixture-input/mcp-package/v1/value.json",
+      "sha256": "d0fa310893a9a2ecf26354ac0ab534c6dc0d5969854a4833c6815da0f01b7fa2"
+    },
+    {
+      "host_path": "/fast/git/v/vibevm-next/fixtures/next/adapters/m_08_e_1/actual-mcp-user-default/v2/value.json",
+      "namespace_path": "/fixture-input/mcp-package/v2/value.json",
+      "sha256": "09d8257cd61ac2904750ab147b20f84439421931d57048e84c84e99e96908db8"
+    }
+  ],
+  "authority": "none; requires matching Root physical seal and fresh C3/D2 grants",
+  "qualification_basis": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-LIFECYCLE.json"
+}

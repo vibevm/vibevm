@@ -1,0 +1,15 @@
+{
+  "question_id": "M08E1-PEER-ENDPOINT-005",
+  "id": "M08E1-PEER-ENDPOINT-005",
+  "status": "answered",
+  "utc": "2026-10-16T05:03:43.888234+00:00",
+  "stage": "claude-mcp-lifecycle",
+  "row_id": "claude_code.mcp.user",
+  "peer_address": "127.0.0.1:48591",
+  "peer_url": "http://127.0.0.1:48591/mcp",
+  "selection": "Root bound ephemeral loopback port0 and closed it after reading the selected port. This selects fixture data; it is not a retained reservation or live listener. Actual driver must bind and report any collision honestly.",
+  "endpoint_live": false,
+  "approved_next_proposal": "Implement the bounded Rust-driver local MCP thread with90s/64connections/64KiBbody bounds and close/join. Return exact compiled ELF/ProcessSpec/full resource manifests for normal Root seal/start. Five vendor version/list absence/v1/v2/removed observations are authorized in next fresh private case only after exact manifest pinning. Use shared host loopback for this explicitly scoped development fixture; all physical processes remain PodBay-owned.",
+  "write_boundary": "C3/D2 owned lifecycle writes only private fixture HOME/.claude.json m08a2-demo member, preserving unrelated fixture state. No realHOME, credentials, login/model/provider/remote endpoint. No actual write/client call is asserted yet.",
+  "full_task": "This one row does not replace remaining E1 full16rows192proofs."
+}

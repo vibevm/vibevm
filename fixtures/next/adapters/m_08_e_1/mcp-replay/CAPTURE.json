@@ -1,0 +1,21 @@
+{
+  "sources": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/peer-v1-001.request.json",
+      "sha256": "8675500e3320893a04e3fb3c9daefbc4caba314af77e9d6c8a8c562a26f47c87",
+      "decoded_file": "discover.json",
+      "decoded_sha256": "e4d734c3ab10c9541864e90465e93ddd4e570366d74241d5ffb3f3fec4774f2e"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-fallback/case/evidence/peer-v1-002.request.json",
+      "sha256": "237e8a9706208b316ec56ea35d50fb9b1be8edc0a0daec19b1886fc3c7ad018b",
+      "decoded_file": "initialize.json",
+      "decoded_sha256": "8571d09f82004b5cdb926aaa7be2d27bdae87412b3aaa41d5279a8f17ce2328f"
+    }
+  ],
+  "actual_vendor_observation": "Claude2.1.299 fallback fixture007; discovery then initialize2025-11-25",
+  "replay_claim": "pure finite handler regression only; not a vendor invocation",
+  "negotiation_basis": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle#version-negotiation",
+  "implemented_protocol": "2025-06-18",
+  "rule": "Respond with implemented version for unsupported requested version; never echo arbitrary version"
+}

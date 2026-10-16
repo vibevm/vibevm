@@ -1,0 +1,60 @@
+{
+  "question_id": "M08E1-CODEX-IO-009",
+  "id": "M08E1-CODEX-IO-009",
+  "status": "answered",
+  "utc": "2026-10-16T05:34:12.881741+00:00",
+  "finding": "Existing PodBay ToolStdioInput is finite stdin String, no stdin-write port was found. Root will not fabricate the requested existing interactive API. Use the actual Codex Unix WebSocket transport and the existing PodBay Launch/OutputRead/RunStop via this explicit bounded private session contract.",
+  "research": {
+    "path": "/fast/git/v/research/2026-10-16-codex-rpc-transport/REPORT.md",
+    "sha256": "c658d0d2987a4d7ef1f9c905c3bf6eb472f51f9182779013faf25811f173246c"
+  },
+  "session_port": {
+    "protocol": "m08e1.podbay-session/1",
+    "source_pins": {
+      "/fast/zap-managed/2026-10-16-m08e1-session-port/src/session_protocol.rs": "3ca2b2dbf02db3444a02d0e476f733c9e58505f9edbbebcd357efaec7eae465d",
+      "/fast/zap-managed/2026-10-16-m08e1-session-port/src/session_client.rs": "d697570ae222ad53803ef820f863932c17c1b81b7297cdb430b7ca3c91d57e6f",
+      "/fast/zap-managed/2026-10-16-m08e1-session-port/src/protocol.rs": "1946feb34de93818bc6bd31da1976dc52c68430edc89c36194f82b69b3817e4d",
+      "/fast/zap-managed/2026-10-16-m08e1-session-port/CAPABILITIES.json": "28f8cdf14360d7a5a0e43e386469ac5e6d1ec4355750d6f18db1546da619acac"
+    },
+    "operations": [
+      "start",
+      "inspect",
+      "stop"
+    ],
+    "status": "contract_source_bound; broker implementation in progress; no live endpoint until Root seals/starts exact new driver/server manifest",
+    "credentials": "No RootOwnerContext/credentials/PIDs are exposed. All server/driver processes remain SDK PodBay-owned. Stop uses exact retained physical binding and output snapshot before release."
+  },
+  "actual_Codex_transport": "Exacttag rust-v0.159.3/installedhelp: app-server --listen unix:///case/arena/codex.sock uses HTTP WebSocket upgrade over UnixStream, JSON Text frames, not raw JSON lines. The requested socket is symlinked to protected canonical /tmp/codex-daemon-{euid}; Root fixture ALREADY binds same per-case private tmp to /tmp for driver/server plus arena. No real hosttmp or hostdaemon socket. DirectLinux appserver has no daemon-shutdown endpoint; use guarded PodBayStop, never invent exit0.",
+  "Vibe_implementation": "Managed Vibe driver owns bounded Unix connection readiness, WebSocket initialize id1 -> actual successful response -> initialized -> skills/list id2 -> actual response -> config/read id3 -> actual response, notifications and transcript. Root private fixture contains no Codex RPC semantics. Retain actual responses before close/snapshot/stop and distinguish deliberate server termination from query success. No sleeps/padding/fake replies/native child launchers.",
+  "authorized_dev_dependency": {
+    "manifest": "crates/vibe-lifecycle/Cargo.toml",
+    "entry": "[dev-dependencies] tungstenite = { version = \"=0.28.0\", default-features = false, features = [\"handshake\"] }",
+    "lock": "Cargo.lock may add only this existing package edge for vibe-lifecycle; no dependency version/source/checksum upgrades",
+    "basis": "Already present in current Cargo.lock and local cache, local package metadata license MIT OR Apache-2.0. Offline only, no install/download. Root grants these two exact additional write paths for this test-only transport; production/context engine dependencies unchanged."
+  },
+  "next": "Read the exact frozen session source/client now. Implement owned test transport with existing cached tungstenite, produce next exact driver/server ProcessSpec/full fixture manifest. Root prepares and starts real fixture after that; this answer alone is not Ready/actual RPC success. MCP peer correction and approved negative-fixture revision may continue independently. Full original16rows192proofs.",
+  "broker_implementation": {
+    "readiness": "/fast/zap-managed/2026-10-16-m08e1-session-port/BROKER-READY.json",
+    "sha256": "7eb76708daac1cb8d2df781266b5619f5c406b338dfbda53bb89a8fa0866557c",
+    "configuration_contract": "/fast/zap-managed/2026-10-16-m08e1-session-port/CONFIG-CONTRACT.md",
+    "configuration_contract_sha256": "931f2dc3798b7af2eeb1fa6e993f2f14dd0e57cd1df764b36fa077780b99364a",
+    "status": "compiled prototype, not actual Unix session qualified; no live endpoint until Root starts the next exact driver/server fixture",
+    "source_pins": "/fast/zap-managed/2026-10-16-m08e1-session-port/SOURCE-PINS.json",
+    "source_pins_sha256": "f6d292af20b65528e02b2459b3588f3e6668b74c445def41e1e371b06569a337"
+  },
+  "prior_actual_answers": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-STANDARD-HOME.json",
+      "sha256": "68c83f33f968c9a941bff2b325d8e488495ec23e68763925a870f7d1307a8a62"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-NEGATIVE.json",
+      "sha256": "e7dcb03abed83427741b7e52379d1465960b103c1e688d270ac9963e66807fa9"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-LIFECYCLE.json",
+      "sha256": "44e00e0dd818964dc4f5e9386bad076e80531ee87729936c25ae3756b50bbccc"
+    }
+  ],
+  "execution_efficiency": "After actual grammar is known, batch independent remaining full-matrix steps into bounded per-vendor proposals where practical. Do not request one new discovery fixture per already-known flag or weaken actual loading/ownership/negative requirements. Current fixture prototype can expose multiple exact sealed session steps; all client protocol logic remains Vibe-owned."
+}

@@ -116,3 +116,20 @@ fn native_paths_are_lossless() {
         );
     }
 }
+
+#[test]
+fn exact_codex_01593_profile_preserves_legacy_and_refuses_neighbors() {
+    assert!(supported_version(Client::Codex, "0.148.2"));
+    assert!(supported_version(Client::Codex, "0.159.3"));
+    for version in [
+        "0.159.2",
+        "0.159.4",
+        "0.159.03",
+        "0.159.3+local",
+        "0.159.3-rc1",
+        "0.160.0",
+    ] {
+        assert!(!supported_version(Client::Codex, version), "{version}");
+    }
+    assert!(!supported_version(Client::Claude, "0.159.3"));
+}

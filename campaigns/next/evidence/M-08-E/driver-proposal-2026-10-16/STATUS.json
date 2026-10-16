@@ -1,0 +1,26 @@
+{
+  "status": "unaccepted; actual commissioning pending",
+  "physical_vendor_launches": 0,
+  "matrix_rows": 16,
+  "proof_ids": 192,
+  "file_owner_rows_checked": 12,
+  "synthetic_external_data_rows_checked": 1,
+  "file_owner_evidence": "file-owner-only (not client commissioning)",
+  "tests": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true,
+    "V6": true
+  },
+  "pending_question": "M08E1-DRIVER-SEAL-001",
+  "source_contract": "producer-only implementation; Root owns physical seal, launch and acceptance",
+  "limitations": [
+    "Two actual-client functions currently execute only sealed initial discovery, then fail pending. Full runtime matrix execution and local peer require release qualification.",
+    "All 12 scenario identities are retained as obligations; file-owner subcases do not execute all actual-client scenarios.",
+    "The three aggregate cases retain pending runtime gates after independent checks.",
+    "No Codex 0.159.3 production applicability added before runtime qualification.",
+    "The synthetic unchanged-core run is file-owner-only and cannot close actual client/core extensibility."
+  ]
+}

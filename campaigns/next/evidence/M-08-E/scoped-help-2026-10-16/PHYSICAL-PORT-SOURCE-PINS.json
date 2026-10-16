@@ -1,0 +1,6 @@
+{
+  "/fast/zap-managed/2026-10-16-m08e1-physical-port/port-descriptor.PROPOSED.json": "ffec2350cd6e6b7c2c53431e6ebefd57355e055f33419b1146528f56a3edc19b",
+  "/fast/zap-managed/2026-10-16-m08e1-physical-port/src/protocol.rs": "1946feb34de93818bc6bd31da1976dc52c68430edc89c36194f82b69b3817e4d",
+  "/fast/zap-managed/2026-10-16-m08e1-physical-port/src/client_transport.rs": "f7e0e5085317ebf0f343a9c1acf95325f85cb5a3912ba4d8b9761d5cd12e61f0",
+  "/fast/zap-managed/2026-10-16-m08e1-physical-port/allowlist.TEMPLATE.json": "93f019e3d269a485d7aea9690c0fb0054c26a6dc5c2d4ea9e515b2e9c43291e4"
+}

@@ -1,0 +1,38 @@
+{
+  "group": "V4",
+  "executed": true,
+  "commands": [],
+  "case_binding": null,
+  "conditional_selection": null,
+  "extra": {
+    "runtime_evidence": "/fast/zap-managed/2026-10-16-m08e1-driver/ACTUAL-RUNTIME-EVIDENCE.json",
+    "sha256": "7b72eb5fe9bb3f13cb3db939651d97be2768412a3d056db7100c2c54daa932d1",
+    "rows": 16,
+    "proof_ids": 192,
+    "pending_rows": [
+      "claude_code.skill.project",
+      "claude_code.mcp.project",
+      "claude_code.config.project",
+      "claude_code.plugin.project",
+      "claude_code.skill.user",
+      "claude_code.mcp.user",
+      "claude_code.config.user",
+      "claude_code.plugin.user",
+      "codex.skill.project",
+      "codex.mcp.project",
+      "codex.config.project",
+      "codex.plugin.project",
+      "codex.skill.user",
+      "codex.mcp.user",
+      "codex.config.user",
+      "codex.plugin.user"
+    ],
+    "bound_artifacts": 0,
+    "structural_only": true,
+    "semantic_acceptance": "Root must inspect actual PodBay/client evidence; declarations and hashes alone do not prove execution"
+  },
+  "full_closure_subject_count": 1991,
+  "full_closure_drift": [],
+  "passed": false,
+  "no_fresh_commands": true
+}
