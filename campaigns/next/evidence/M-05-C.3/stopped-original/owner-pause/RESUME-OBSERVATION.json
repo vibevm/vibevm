@@ -1,0 +1,30 @@
+{
+  "head": 569,
+  "job": {
+    "job_id": "job.runtime.packet.vibevm-m05c3",
+    "work_id": "work.m05c3.prepare-plan",
+    "dispatch_id": "dispatch.runtime.packet.vibevm-m05c3",
+    "effect_id": "effect.runtime.packet.vibevm-m05c3",
+    "attempt_id": "attempt.runtime.packet.vibevm-m05c3",
+    "revision": 569,
+    "execution": "stopping",
+    "effect": "started",
+    "safe": "unknown",
+    "acceptance": "unreviewed",
+    "candidate_id": null,
+    "stop_receipt": {
+      "delivery": "delivered",
+      "effect_id": "effect.runtime.packet.vibevm-m05c3",
+      "observation": "observation.vibevm-m05c3"
+    }
+  },
+  "native": {
+    "state": "process_stopped",
+    "source_sequence": 1112,
+    "collected": false,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": true,
+    "accounting_pending": false
+  }
+}

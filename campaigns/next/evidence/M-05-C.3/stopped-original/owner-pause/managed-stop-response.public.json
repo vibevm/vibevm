@@ -1,0 +1,28 @@
+{
+  "origin": "/fast/zap-managed/2026-10-16-m05c3/owner-pause/managed-stop-response.json",
+  "origin_sha256": "ca2073f43b49d531aec450e12c3c44b297012ed679a38f37e34814feda7b1a07",
+  "projection": "Whitelisted native lifecycle metadata; raw stored-prefix bytes intentionally excluded",
+  "store": {
+    "store_id": "store.vibevm-m05c3.live",
+    "campaign_id": "campaign.vibevm-m05c3.live",
+    "base_id": "base.vibevm-m05c3.live",
+    "store_epoch": "zap/2",
+    "codec_epoch": 2,
+    "reducer_epoch": 1
+  },
+  "revision": 564,
+  "state": "collecting",
+  "job_ids": [
+    "job.runtime.packet.vibevm-m05c3"
+  ],
+  "native": {
+    "operation": "managed.85e0cfc15d80596894d96542843e247357d12f087d9a2ef41f07caefe9d2f048",
+    "state": "collecting",
+    "source_sequence": 1112,
+    "collected": false,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": false,
+    "accounting_pending": false
+  }
+}

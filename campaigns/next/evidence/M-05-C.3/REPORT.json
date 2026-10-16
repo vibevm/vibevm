@@ -1,0 +1,850 @@
+{
+  "task": "M-05-C.3",
+  "source_head": "905332d46f629ed1d2b2b08117da0f9d5a226343",
+  "scope": "Full original C3; carried dirty source preserved and completed in admitted owners. No Git mutation, new crates, Cargo changes, lock schema or runtime control.",
+  "changes": [
+    "One source-bound NormalizedRequest and C1 catalog pass through PlanningSource, solve, selected manifest metadata, masked solving, conditional expansion and visibility retry.",
+    "Workspace roots retain every incoming declaration. Explicit coordinates replace only exact selected-node declarations; other-member original ranges survive and unnamed coordinates retain hold pins.",
+    "Incumbent resolvo choice witnesses retain actual OR and capability providers. Naive/SAT retain their actual selected choices and backend identity. Ordinary retained dependency versions also survive route masks.",
+    "Configured graph provenance binds exact active declaration slots, including multiple declarations targeting one coordinate, and retains source/content/definition receipts.",
+    "Plans carry normalized request/provenance across confirmation. Apply checks fetched graph, normalized roots and selected edge evidence before writes. Admitted intent bypasses legacy empty/fresh shortcuts.",
+    "Conditional additions stay in plan/fetch.rs; active constraints are reapplied even for existing nodes, with candidate-bound edge provenance. Unsupported configured/conditional or unstable combinations refuse explicitly.",
+    "Governing PROP003 and semantic map preserve C1/C2 contracts, exact defaults and known implications."
+  ],
+  "criteria": [
+    {
+      "slot": 0,
+      "disposition": "satisfied",
+      "evidence": "V1 production source/planner configured metadata, real visibility retry, conditional parity and typed backend conflicts; V2 forwarding/root-union fixtures; V3 selected graph cases. Worker claim only."
+    },
+    {
+      "slot": 1,
+      "disposition": "satisfied",
+      "evidence": "Recorded solver witnesses bind every final graph edge to declaration/provider identities; production configured/ordinary/conditional tests compare retained provenance; apply rejects altered graph. Worker claim only."
+    }
+  ],
+  "checks": [
+    {
+      "slot": 0,
+      "group": "V1",
+      "claim": "scoped checks completed successfully; not host-verified acceptance",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V1-result.json",
+        "sha256": "a00003abf1cf75638ac539346cbec13f8313d70b414f1bea92f01511d39e7869",
+        "byte_len": 9525
+      },
+      "fresh_tests": 4,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-package-source",
+            "--lib",
+            "source::m_05_c_3_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "4",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V1-1.log",
+          "log_sha256": "333879889d439d38ce279de770923259f52af0e6977c08b089453d79ebbb4487",
+          "seconds": 6.823543081001844,
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 1,
+      "group": "V2",
+      "claim": "scoped checks completed successfully; not host-verified acceptance",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V2-result.json",
+        "sha256": "5454e5fee02b1303782c6e2a2d685603ac30bb6e029bb4738dcc9eab568f014d",
+        "byte_len": 9447
+      },
+      "fresh_tests": 4,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::m_05_c_3_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "4",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V2-1.log",
+          "log_sha256": "271eb902ac421a84507f4e1bc7d353e77416f12121232963dc6f39f35b413232",
+          "seconds": 2.339119688003848,
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "group": "V3",
+      "claim": "scoped checks completed successfully; not host-verified acceptance",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V3-result.json",
+        "sha256": "89123a75f59193a002faad07b643868e85e56900f7a6a958824731f8e915979e",
+        "byte_len": 9366
+      },
+      "fresh_tests": 2,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_3_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "2",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V3-1.log",
+          "log_sha256": "08a7f6c95991da095d15828b4938d7473892152cb23b2c0c694862747f430d66",
+          "seconds": 1.7558655649991124,
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 3,
+      "group": "V4",
+      "claim": "scoped checks completed successfully; not host-verified acceptance",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-result.json",
+        "sha256": "4072020d28edea6c08c878bd589a458e6bfa9c0392a052969ca57be9fcc47409",
+        "byte_len": 115711
+      },
+      "fresh_tests": 13,
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-1.log",
+          "log_sha256": "6044c525df8ff2c6a2930393e7b5c17ab12c7d8960074d43c77a07fe57949bf9",
+          "seconds": 0.19531119799648877,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-2.log",
+          "log_sha256": "70b8b45cb91224b580520042d117b4c4f1fdcc8d32b1df52e2adb478d071c9a5",
+          "seconds": 0.19349320699984673,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-3.log",
+          "log_sha256": "572b422ffbf549efd48bb79ae67b6ff43c6e9fd6c87d8baecddcd8f12acc786b",
+          "seconds": 0.18976073199883103,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-4.log",
+          "log_sha256": "27efaa72d9f86ec6b58beb5b9388844402214665270e6176b9cf77d92dba8c8e",
+          "seconds": 0.19070530899625737,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-5.log",
+          "log_sha256": "ffb00fff58169d7ebc84d423514684ac13c4947c4d6c6bb0993f8c03004e10ac",
+          "seconds": 0.19080032799683977,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_disjunction_backtracks_past_conflicting_alternative",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-6.log",
+          "log_sha256": "5f218f1db568acf780e581c4403f29b0c1e2ba3f2441e3b7feded3ab4d6c0108",
+          "seconds": 0.1847558419976849,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_drops_obsoleted_packages",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-7.log",
+          "log_sha256": "edd3b810a3cfb767afa050d58105612d717338cc33e15f8d1ecb332a39591a67",
+          "seconds": 0.1863107579993084,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "naive::tests::capability_requires_self_satisfaction",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-8.log",
+          "log_sha256": "a780e3c4e82c504e5baa67a675e257d83b2d9634c4b8bb44b02f7e065fced92e",
+          "seconds": 0.18232632899889722,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-package-source",
+            "--lib",
+            "source::m_05_c_1_cases::same_version_replacement_keeps_frozen_snapshot",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-9.log",
+          "log_sha256": "62f2b0be398a64ca5f1c9b629aa7bfefcfe25c3379c6f972c91d290c193fe14b",
+          "seconds": 0.22346867600572295,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-package-source",
+            "--lib",
+            "source::m_05_c_1_cases::missing_and_corrupt_catalog_differ_from_missing_option",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-10.log",
+          "log_sha256": "32806ffa656cb9bdf71e57e437c4a0fe5862ce27f55e98ea7daec03e82e2cfe9",
+          "seconds": 0.20022723200236214,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-package-source",
+            "--lib",
+            "fence_tests::cell_constructors_live_only_in_cells_rs",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-11.log",
+          "log_sha256": "f42646575b81d53e8ac1975fdcfbaf01eea96cb49f73c672006ec9c630345cf6",
+          "seconds": 0.20769798200490186,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::m_05_c_1_cases::catalog_identity_is_inspected_through_eto_before_effects",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-12.log",
+          "log_sha256": "c9a2e913695536c00b5d6c8fa943f900d94e3249218b3ab444ecd0caab0fa6c8",
+          "seconds": 0.19554493800387718,
+          "source_drift": []
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-install",
+            "--lib",
+            "plan::m_05_c_1_cases::unavailable_or_corrupt_catalog_prevents_install_effects",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V4-13.log",
+          "log_sha256": "24dbda30d27060473b8e1802d1a72747e6991dc8fa32f79a655558d474b38c66",
+          "seconds": 0.19785689000127604,
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 4,
+      "group": "V5",
+      "claim": "scoped checks completed successfully; not host-verified acceptance",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V5-result.json",
+        "sha256": "1aa7f081461988a697d5429da04b94bb17c031fae7f12ad3e476e470df2a5d99",
+        "byte_len": 10702
+      },
+      "fresh_tests": 0,
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-resolver/src/lib.rs",
+            "crates/vibe-resolver/src/error.rs",
+            "crates/vibe-resolver/src/naive.rs",
+            "crates/vibe-resolver/src/sat.rs",
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+            "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+            "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+            "crates/vibe-resolver/src/resolvo_engine/request.rs",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs",
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-package-source/src/source/transaction.rs",
+            "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+            "crates/vibe-package-source/src/cells.rs",
+            "crates/vibe-package-source/src/qualified.rs",
+            "crates/vibe-install/src/lib.rs",
+            "crates/vibe-install/src/plan.rs",
+            "crates/vibe-install/src/plan/fetch.rs",
+            "crates/vibe-install/src/plan/transaction.rs",
+            "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+            "crates/vibe-install/src/visibility_projection.rs",
+            "crates/vibe-install/src/apply.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V5-1.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "seconds": 0.13528684299672022,
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 5,
+      "group": "V6",
+      "claim": "scoped checks completed successfully; not host-verified acceptance",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V6-result.json",
+        "sha256": "191d456fae0f0a4c97df32f14073e459c95536ec6d9754d14ebdd2671657da6f",
+        "byte_len": 8497
+      },
+      "fresh_tests": 0,
+      "commands": [
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m05c3r/V6-1.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "seconds": 0.022640934002993163,
+          "source_drift": []
+        }
+      ]
+    },
+    {
+      "slot": 6,
+      "group": "V7",
+      "claim": "scoped checks completed successfully; not host-verified acceptance",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V7-result.json",
+        "sha256": "81e81540589c2a95b68640911a974fe559406db7e16bf280abdad5c973474ae8",
+        "byte_len": 455
+      },
+      "fresh_tests": 0,
+      "commands": []
+    }
+  ],
+  "final_source_tests": 23,
+  "fresh_failed_attempts": [
+    {
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V1-1792171836029830657/V1-result.json",
+        "sha256": "15e59126cf976c7a7f193354938bdec68c562a326d7a3f09c1635a22471d086b",
+        "byte_len": 9279
+      },
+      "commands": [
+        {
+          "log": {
+            "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V1-1792171836029830657/V1-1.log",
+            "sha256": "1360de9308d525b2956705cbcc40465a71d8c8562149822f956750041db9ae2d",
+            "byte_len": 29373
+          },
+          "exit": 101,
+          "partial_test_counts": [
+            [
+              "1",
+              "1",
+              "0"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V1-1792171855005621472/V1-result.json",
+        "sha256": "d8472ea91fbadd0bca423326f0a3f5746f12a4f2ea0be1d584aab7d945799009",
+        "byte_len": 9459
+      },
+      "commands": [
+        {
+          "log": {
+            "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V1-1792171855005621472/V1-1.log",
+            "sha256": "a3f786798c8882b472e73357cc4fccbeb65cb96b26e51572f460017b6e226a26",
+            "byte_len": 29313
+          },
+          "exit": 101,
+          "partial_test_counts": [
+            [
+              "3",
+              "1",
+              "0"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V2-1792171925186573053/V2-result.json",
+        "sha256": "1f714fb59acfed25fec5a11e6e0e87f80fbad3f97cf7eba027c8057d29065925",
+        "byte_len": 9322
+      },
+      "commands": [
+        {
+          "log": {
+            "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V2-1792171925186573053/V2-1.log",
+            "sha256": "90f2b04c3a1ede8342f4bbc278f60c9071b13e0bd0d0dfcbb68b0e6d9347e979",
+            "byte_len": 24106
+          },
+          "exit": 101,
+          "partial_test_counts": [
+            [
+              "2",
+              "1",
+              "0"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V2-1792172002112859044/V2-result.json",
+        "sha256": "8fc695d130fbdbc7d9db2053ebce6ab2ea9ed0489ff541bb66b4aa448e8b8dea",
+        "byte_len": 9381
+      },
+      "commands": [
+        {
+          "log": {
+            "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V2-1792172002112859044/V2-1.log",
+            "sha256": "9fe9cb0f0d492627649665bed780772ee95e22474b11d8de5f93de6e095abcce",
+            "byte_len": 24135
+          },
+          "exit": 101,
+          "partial_test_counts": [
+            [
+              "3",
+              "1",
+              "0"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "historical_checkpoint": {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/CHECKPOINT-CHECKS.json",
+    "sha256": "b2f3203d706d8a00ca38f5724f20e3ff5888fb1572b58a7d4d411e7fa805cd3b",
+    "byte_len": 18149
+  },
+  "verification_limits": [
+    "Only selected families and 13 exact affected compatibility cases; no full suite or broad test discovery.",
+    "V5 is scoped rustfmt, not a global formatter pass; historical eight-file global formatter baseline remains failed/excluded.",
+    "V7 is structural evidence, not semantic acceptance.",
+    "No WorkAccepted or campaign recount; Root reviews and accepts."
+  ],
+  "retained_boundaries": [
+    "Native/multiple configuration instances/cross-package feature forwarding/non-registry configured dependencies and incomplete conditional/configuration combinations remain explicitly unsupported under C2/C3.",
+    "No persistence schema or D/E work. No automatic-planning B completion claim."
+  ],
+  "semantics_map": {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/SEMANTICS-MAP.json",
+    "sha256": "6657fc90790b7e83a91ad08994eb2c0b51ca8bebd4ea618f209ebbe819a58045",
+    "byte_len": 1594
+  },
+  "spec_preservation": {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/SPEC-PRESERVATION.json",
+    "sha256": "f10d4ec4fe24059f3fe09b1646c7d874e280d5d8ef7b5279af9ad3e05aa0da25",
+    "byte_len": 408
+  },
+  "case_bindings": {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/CASE-BINDINGS.json",
+    "sha256": "5de5a5982ac7ec5da3d01607e7a6e422d131d07f353750a608f6f0fa2fbf4da7",
+    "byte_len": 2223
+  },
+  "compatibility_bindings": {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-CASE-BINDINGS.json",
+    "sha256": "f0b323add9e14bb28286f7400402135477cda54ffb1822804e79971584ff094f",
+    "byte_len": 4073
+  },
+  "format_paths": {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/SCOPED-FORMAT-PATHS.json",
+    "sha256": "73753a712f3f1195ae20933fc4d2792d82d189222039a517332c64fc4fd573a8",
+    "byte_len": 1070
+  },
+  "files": [
+    {
+      "path": "crates/vibe-install/src/apply.rs",
+      "sha256": "767645329033b49d188a367c7e66dfe8bb602172f99752b175e29d7bb2cc1625",
+      "byte_len": 23307
+    },
+    {
+      "path": "crates/vibe-install/src/lib.rs",
+      "sha256": "9defb07a798c23b22dc01ec519ee40f749704d57e6c090f45cad4777eaa42137",
+      "byte_len": 18734
+    },
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "sha256": "b5aba63bf5ae4628f3c2ea67980f5c7e73631a17be8fb2375233a273d139374f",
+      "byte_len": 27530
+    },
+    {
+      "path": "crates/vibe-install/src/plan/fetch.rs",
+      "sha256": "a4bab3732f64d68eede122c3089e53cb2510f821ccabb6081f9bb4cc9ef0939b",
+      "byte_len": 20937
+    },
+    {
+      "path": "crates/vibe-install/src/plan/transaction.rs",
+      "sha256": "b2b6f7162a7e85bc9998e5dc303e4aa8e2dc76e22d46b364a1b31da991ec870b",
+      "byte_len": 3484
+    },
+    {
+      "path": "crates/vibe-install/src/visibility_projection.rs",
+      "sha256": "a5471b916d06b4ad0ba8beabb0c165fbd28c9f572aee62a723fa93ea55a407b0",
+      "byte_len": 25075
+    },
+    {
+      "path": "crates/vibe-package-source/src/cells.rs",
+      "sha256": "fb0c6de0c3bf7c63de69b8318cb02538bf398cbb61f5c5e0e0f551c49aa3bc1e",
+      "byte_len": 13701
+    },
+    {
+      "path": "crates/vibe-package-source/src/qualified.rs",
+      "sha256": "8277592aed4cede4311789fa844572e96e1c7cc29916f1637df370d74d562f6b",
+      "byte_len": 13274
+    },
+    {
+      "path": "crates/vibe-package-source/src/source.rs",
+      "sha256": "dac92aa4e9c1201240cf524f6d9f90d4e2a987e960a897ad6b845dc91bdf6d6c",
+      "byte_len": 22461
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/transaction.rs",
+      "sha256": "d9d9c621ec76c6541e37973071c82040a37f0752afaa748fe561bd4bab996d83",
+      "byte_len": 18095
+    },
+    {
+      "path": "crates/vibe-resolver/src/error.rs",
+      "sha256": "faffa0245e3959b4750f1d9f3325dabaeec05026fa9bd6bdf0446c57535f3549",
+      "byte_len": 5289
+    },
+    {
+      "path": "crates/vibe-resolver/src/lib.rs",
+      "sha256": "106f8fa6cc793eb919edd177f3830fd8a0d8ddb08ab62f0c80ed4b88333a84a7",
+      "byte_len": 22441
+    },
+    {
+      "path": "crates/vibe-resolver/src/naive.rs",
+      "sha256": "3001831bb331ef1c97c16f82ad2da59b93d74a57b57701cd0a0f5bc550d944da",
+      "byte_len": 16919
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "sha256": "e17847976d66a93f1d145f0f4d4c27c48fefe473dcf95d7d5e20239377c2e56f",
+      "byte_len": 29351
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+      "sha256": "0b1e705616d5a3d4f21f235e643395aa0b653362ced3ded25f63c9f4d05b7760",
+      "byte_len": 21671
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+      "sha256": "4b59d1d26bbe3e04046a0cd2830810d0e1b273c6f918729dcc8f5f2569b06f7c",
+      "byte_len": 23411
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+      "sha256": "2b61425e834947d3a6f5d33fa45e0221129c274536b1871b2fe2bbd0246a3459",
+      "byte_len": 4404
+    },
+    {
+      "path": "crates/vibe-resolver/src/sat.rs",
+      "sha256": "45ef394abd6928eedb20245b9ac0f8ee2f1ca83bd6dc2fe5ec7b62adb983ced4",
+      "byte_len": 18827
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "361de652bdfb1d0fb0b8f116cb48de6e7fef54bb8a1d6dca774b96144ae08b02",
+      "byte_len": 141928
+    },
+    {
+      "path": "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+      "sha256": "c00d4cb75a08d3c4247d91df2de7bd2b9eb9a9480db540cc9f76215770b7f7fa",
+      "byte_len": 12726
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+      "sha256": "fc897302dbfddcd89faaedbf9d35e0d8a55667b2292dd38378a918c329bb2c01",
+      "byte_len": 17158
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs",
+      "sha256": "1f2198a21db7fa1a273d2ba60d939c97f037479db78191d0bc447563db1867c4",
+      "byte_len": 4042
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/request.rs",
+      "sha256": "675b0d1271144108f9802a19514a6c091ff4837ea5d240d4fb03b374298a7c24",
+      "byte_len": 15045
+    }
+  ],
+  "patch": {
+    "path": "/fast/zap-managed/2026-10-16-m05c3r/candidate.patch",
+    "sha256": "fae4fba0b84170b0468b82b0627be9ff9f6a989e8604a6dff7ce1f90e77d9273",
+    "byte_len": 174676
+  },
+  "effect_state": "completed",
+  "effect_meaning": "Completed reversible code and test edits; not accepted Work.",
+  "unresolved": [],
+  "proposed_follow_up": "Root independently reviews the patch, semantic claims, preserved failures and source-bound verification before acceptance and any commit."
+}

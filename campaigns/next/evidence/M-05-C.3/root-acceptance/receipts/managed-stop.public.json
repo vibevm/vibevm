@@ -1,0 +1,28 @@
+{
+  "origin": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/receipts/managed-stop.json",
+  "origin_sha256": "4802db5b4f68ee4c791e490c6899a630f41ad0271cbbc376bb201bcc20e4bd31",
+  "projection": "Whitelisted native lifecycle metadata; raw stored-prefix bytes intentionally excluded",
+  "store": {
+    "store_id": "store.vibevm-m05c3r.live",
+    "campaign_id": "campaign.vibevm-m05c3r.live",
+    "base_id": "base.vibevm-m05c3r.live",
+    "store_epoch": "zap/2",
+    "codec_epoch": 2,
+    "reducer_epoch": 1
+  },
+  "revision": 320,
+  "state": "candidate_collected",
+  "job_ids": [
+    "job.runtime.packet.vibevm-m05c3r"
+  ],
+  "native": {
+    "operation": "managed.ecf57b8cdf291f352cbb547b9ce0e67938e9f38840f7ec200996c9c4c59633fa",
+    "state": "candidate_collected",
+    "source_sequence": 1121,
+    "collected": true,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": false,
+    "accounting_pending": false
+  }
+}

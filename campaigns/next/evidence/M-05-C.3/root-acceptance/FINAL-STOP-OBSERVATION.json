@@ -1,0 +1,51 @@
+{
+  "revision": 324,
+  "job": {
+    "job_id": "job.runtime.packet.vibevm-m05c3r",
+    "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+    "revision": 324,
+    "execution": "succeeded",
+    "effect": "completed",
+    "safe": "safe",
+    "acceptance": "unreviewed",
+    "stop_receipt": {
+      "delivery": "delivered",
+      "effect_id": "effect.runtime.packet.vibevm-m05c3r",
+      "observation": "observation.vibevm-m05c3r"
+    }
+  },
+  "native": {
+    "operation": "managed.ecf57b8cdf291f352cbb547b9ce0e67938e9f38840f7ec200996c9c4c59633fa",
+    "state": "process_stopped",
+    "source_sequence": 1121,
+    "collected": true,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": true,
+    "accounting_pending": false,
+    "result": {
+      "disposition": "reported_unverified",
+      "id": "managed.ecf57b8cdf291f352cbb547b9ce0e67938e9f38840f7ec200996c9c4c59633fa",
+      "input_digest": "4a7bd477f9e0ac96f07d8676834419612c953a6f9efb817a53b232104b9f6630",
+      "native_turn": {
+        "command_id": "command.pb04.0a90208b4af00553c230e34ba4a437e23d6c4fc378122e32c46f54ab03d61f3f",
+        "thread_id": "01a145c0-57ff-7c73-b5db-defe20ff7615",
+        "turn_id": "01a145c0-582e-7900-83c9-69514aac71ec"
+      },
+      "protocol": "content_only_v2",
+      "raw_reply_digest": "cb466b03186df511c737a854c37996ef62a3b374e992718057278a4c57273b5f",
+      "revision": 305,
+      "source_sequence": 1121,
+      "status": {
+        "candidate_digest": "e8370dbd03da770613c8254c6546bcac7f93894e1ad1f18034b16ccc25e8349c",
+        "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+        "kind": "bound"
+      },
+      "target": {
+        "dispatch_id": "dispatch.runtime.packet.vibevm-m05c3r",
+        "job_id": "job.runtime.packet.vibevm-m05c3r",
+        "kind": "job"
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "m05c3-root-union-20261016-02",
+  "question_id": "m05c3-root-union-20261016-02",
+  "question": "Found additional first-wins root loss in plan.rs workspace union (lines 232-282), before transaction capture. Bare install deduplicates all member declarations by coordinate; explicit install also omits every manifest constraint on a CLI-named coordinate. I propose retaining all member constraints in bare install, and retaining all other-member constraints in explicit install while replacing only the selected project node declaration for a CLI-named coordinate (the existing explicit install/update intent). Is that replacement rule authorized, or must C3 enforce even the selected node previous declaration alongside explicit CLI roots? Please choose the intended semantic boundary; blindly preserving the old selected-node constraint would prevent normal explicit version upgrades.",
+  "evidence": [
+    "plan.rs workspace union uses HashSet<(Option<Group>,String)> before capture",
+    "plan.rs explicit root comments state named refs are re-resolved fresh and only untouched roots are held",
+    "canonical C3 requires every incoming root constraint and removal of first-wins loss"
+  ],
+  "independent_work": "Completing recorded witnesses, metadata/visibility wiring, and exact scoped verification; initial V1/V2/V3 passed 2/3/2 before strengthening fixtures."
+}

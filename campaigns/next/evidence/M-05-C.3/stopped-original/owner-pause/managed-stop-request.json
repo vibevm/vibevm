@@ -1,0 +1,14 @@
+{
+  "kind": "native_driver",
+  "request": {
+    "kind": "managed_stop",
+    "request": {
+      "request_id": "root.m05c3.owner-pause.20261016",
+      "job_id": "job.runtime.packet.vibevm-m05c3",
+      "dispatch_id": "dispatch.runtime.packet.vibevm-m05c3",
+      "effect_id": "effect.runtime.packet.vibevm-m05c3",
+      "expected_revision": 56,
+      "reason": "Explicit owner request: reach safe recoverable checkpoint and stop both VibeVM and Zap campaigns. Preserve incomplete C3 source/evidence; no acceptance, fabricated Safe or new attempt. No compiler active at checkpoint."
+    }
+  }
+}

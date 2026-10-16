@@ -1,0 +1,3946 @@
+diff --git a/crates/vibe-install/src/apply.rs b/crates/vibe-install/src/apply.rs
+index 28d8bad70..e6266a90e 100644
+--- a/crates/vibe-install/src/apply.rs
++++ b/crates/vibe-install/src/apply.rs
+@@ -307,6 +307,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
+     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
+     native: Option<NativeApplyPreparation<'_>>,
+ ) -> Result<PreparedApplyReport> {
++    planned.validate_selected_routes()?;
+     let PlannedInstall {
+         strict_conversion,
+         project_root,
+@@ -317,6 +318,10 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
+         roots,
+         mut fetched,
+         mut resolution,
++        // Checked against the fetched graph before any apply effects. These
++        // are transaction evidence, not a new lockfile persistence schema.
++        normalized_request: _normalized_request,
++        selected_provenance: _selected_provenance,
+         // The plan's pre-apply tree. Step 7 below replaces it with the
+         // post-write epoch, so it is deliberately not read between here and
+         // there — a value that is about to be stale must not be consulted.
+diff --git a/crates/vibe-install/src/lib.rs b/crates/vibe-install/src/lib.rs
+index ba244047b..938219869 100644
+--- a/crates/vibe-install/src/lib.rs
++++ b/crates/vibe-install/src/lib.rs
+@@ -310,6 +310,36 @@ fn check_member_graph(
+ /// }
+ /// ```
+ pub trait InstallSource {
++    fn begin_normalized_transaction(
++        &self,
++        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
++    ) -> Result<Option<Box<dyn InstallSource + '_>>, SolveError> {
++        self.begin_transaction(&request.roots)
++    }
++    fn solve_conditional(
++        &self,
++        roots: &[PackageRef],
++        edges: &[vibe_resolver::resolvo_engine::request::ConditionalEdge],
++    ) -> Result<ResolvedGraph, SolveError> {
++        let mut combined = roots.to_vec();
++        combined.extend(edges.iter().map(|e| e.dependency.clone()));
++        self.solve(&combined)
++    }
++    fn normalized_request(
++        &self,
++    ) -> Option<&vibe_resolver::resolvo_engine::request::NormalizedRequest> {
++        None
++    }
++    fn route_resolution(&self) -> Option<vibe_resolver::resolvo_engine::request::RouteResolution> {
++        None
++    }
++    fn finish_route_projection(&self, _graph: &ResolvedGraph) -> Result<(), SolveError> {
++        Ok(())
++    }
++    fn catalog_manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
++        self.manifest_of(pkg)
++    }
++
+     /// Capture an exact catalog when this source supports transaction binding.
+     /// None preserves legacy embeddings without claiming an exact catalog.
+     fn begin_transaction(
+diff --git a/crates/vibe-install/src/plan.rs b/crates/vibe-install/src/plan.rs
+index cdd16123e..b50adb892 100644
+--- a/crates/vibe-install/src/plan.rs
++++ b/crates/vibe-install/src/plan.rs
+@@ -13,14 +13,12 @@ use vibe_core::visibility::{Analysis, ProvenanceRule};
+ use vibe_core::{ContentHash, Group, PackageRef, VersionSpec};
+ use vibe_registry::store;
+ use vibe_registry::{CachedPackage, ResolvedPackage};
+-use vibe_resolver::{
+-    FeatureRequest, ResolvedNode, conditional::ConditionalPredicate, expand_features,
+-};
++use vibe_resolver::{FeatureRequest, ResolvedNode, conditional::ConditionalPredicate};
+ use vibe_workspace::Workspace;
+ use vibe_workspace::freshness::is_in_workspace_file_source;
+ use vibe_workspace::install::ResolvedDep;
+ 
+-use crate::error::{Error, Result};
++use crate::error::Result;
+ use crate::events::{PlanEvent, PlanObserver};
+ use crate::fetched::{
+     Fetched, NodeInstallMeta, build_activation_context, build_language_chain,
+@@ -87,6 +85,9 @@ pub struct PlannedInstall {
+     /// The packages to materialise, in resolution order — the shape
+     /// the caller presents for confirmation.
+     pub resolution: Vec<ResolvedDep>,
++    /// Immutable admitted intent and selected declaration/provider evidence.
++    pub normalized_request: Option<vibe_resolver::resolvo_engine::request::NormalizedRequest>,
++    pub selected_provenance: Vec<vibe_resolver::resolvo_engine::request::EdgeProvenance>,
+     /// The workspace this plan was computed over, carried by value.
+     ///
+     /// Apply and the slot lifecycle need the same tree the plan reasoned
+@@ -98,6 +99,71 @@ pub struct PlannedInstall {
+ }
+ 
+ impl PlannedInstall {
++    /// Recheck the confirmation boundary before apply can write anything.
++    pub(crate) fn validate_selected_routes(&self) -> Result<()> {
++        let Some(request) = &self.normalized_request else {
++            return Ok(());
++        };
++        let inconsistent = || {
++            vibe_resolver::SolveError::UnsupportedRoute(
++                "planned graph differs from normalized request or selected edge provenance".into(),
++            )
++        };
++        let selected = |p: &PackageRef| {
++            self.fetched.iter().any(|f| {
++                p.group.as_ref() == Some(&f.cached.resolved.group)
++                    && p.name == f.cached.resolved.name
++                    && p.version.matches(&f.cached.resolved.version)
++            })
++        };
++        if request.roots.iter().any(|p| !selected(p)) || self.resolution.len() != self.fetched.len()
++        {
++            return Err(inconsistent().into());
++        }
++        for f in &self.fetched {
++            let node = &f.cached.resolved;
++            let Some(row) = self.resolution.iter().find(|r| {
++                r.group == node.group && r.name == node.name && r.version == node.version
++            }) else {
++                return Err(inconsistent().into());
++            };
++            let dependencies: Vec<_> = f
++                .meta
++                .dependencies
++                .iter()
++                .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
++                .collect();
++            if row.requires != dependencies
++                || f.meta.dependencies.iter().any(|dep| {
++                    !selected(dep)
++                        || !self.selected_provenance.iter().any(|proof| {
++                            let edge = &proof.selected;
++                            edge.parent.group.as_ref() == Some(&node.group)
++                                && edge.parent.name == node.name
++                                && edge.parent.version.matches(&node.version)
++                                && edge.provider == *dep
++                        })
++                })
++            {
++                return Err(inconsistent().into());
++            }
++        }
++        for proof in &self.selected_provenance {
++            let edge = &proof.selected;
++            if !selected(&edge.provider)
++                || !self.fetched.iter().any(|f| {
++                    edge.parent.group.as_ref() == Some(&f.cached.resolved.group)
++                        && edge.parent.name == f.cached.resolved.name
++                        && edge.parent.version.matches(&f.cached.resolved.version)
++                        && f.meta.dependencies.contains(&edge.provider)
++                })
++            {
++                return Err(inconsistent().into());
++            }
++        }
++        Ok(())
++    }
++
+     /// The outer owner sets this after planning, before any apply write.
+     /// A Fresh plan is checked separately against its retained slot records.
+     pub fn set_strict_conversion(&mut self, strict: bool) {
+@@ -197,7 +263,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+     //    Anything else (no caller roots, no manifest entries, no
+     //    lockfile snapshot) is an error — there is nothing to install.
+     let mut migration_pending = false;
+-    let roots: Vec<PackageRef> = if request.roots.is_empty() {
++    if request.roots.is_empty() {
+         if manifest.requires.packages.is_empty()
+             && manifest.requires.git_packages.is_empty()
+             && !lockfile.meta.root_dependencies.is_empty()
+@@ -218,80 +284,17 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+             // already-expanded entries survive.
+             migrate_selected_node(workspace, project_root, &lockfile.meta.root_dependencies);
+         }
+-        // Unified resolution (PROP-009 §2.7): the root set is the union
+-        // of every workspace node's `[requires]`. The supplied tree
+-        // reflects the migration above, an earlier `--git` declaration,
+-        // and any `[workspace.versions]` placeholders; a standalone
+-        // project is a one-node workspace, so this degenerates to "just
+-        // the entry node". The source dispatches each pkgref through the
+-        // right path internally (override > git > registry).
+-        let discovered = &*workspace;
+-        let mut all: Vec<PackageRef> = Vec::new();
+-        // De-duplicate on the `(group, name)` identity (PROP-008 §2.3).
+-        // A manifest pkgref is group-qualified, so `group` is present.
+-        let mut seen: std::collections::HashSet<(Option<Group>, String)> =
+-            std::collections::HashSet::new();
+-        for (_, node) in discovered.iter_nodes() {
+-            for p in &node.requires.packages {
+-                if seen.insert((p.group.clone(), p.name.to_string())) {
+-                    all.push(p.clone());
+-                }
+-            }
+-            for g in &node.requires.git_packages {
+-                if seen.insert((Some(g.group.clone()), g.name.clone())) {
+-                    all.push(PackageRef::new(
+-                        g.kind,
+-                        Some(g.group.clone()),
+-                        g.name.clone(),
+-                        VersionSpec::Latest,
+-                    )?);
+-                }
+-            }
+-        }
+-        all
+-    } else {
+-        // ##EXPLICIT-PKGREF-FULL-SOLVE (PROP-011, the 2026-08-24 ruling):
+-        // the named packages JOIN the full manifest union — never replace
+-        // it. The apply phase treats any resolution as the whole world
+-        // (its prune drops every slot outside it), so a partial solve
+-        // must never reach apply: `vibe install X --offline` used to
+-        // erase every other slot and rewrite the lock to X's closure.
+-        // The named refs stay as written (re-resolved fresh); every
+-        // untouched manifest root is held to its locked pin below.
+-        let discovered = &*workspace;
+-        let mut all: Vec<PackageRef> = request.roots.clone();
+-        let mut seen: std::collections::HashSet<(Option<Group>, String)> = all
+-            .iter()
+-            .map(|p| (p.group.clone(), p.name.to_string()))
+-            .collect();
+-        let mut rest: Vec<PackageRef> = Vec::new();
+-        for (_, node) in discovered.iter_nodes() {
+-            for p in &node.requires.packages {
+-                if seen.insert((p.group.clone(), p.name.to_string())) {
+-                    rest.push(p.clone());
+-                }
+-            }
+-            for g in &node.requires.git_packages {
+-                if seen.insert((Some(g.group.clone()), g.name.clone())) {
+-                    rest.push(PackageRef::new(
+-                        g.kind,
+-                        Some(g.group.clone()),
+-                        g.name.clone(),
+-                        VersionSpec::Latest,
+-                    )?);
+-                }
+-            }
+-        }
+-        // §5.3 minimum churn: the untouched roots move nothing — each one
+-        // the lock still satisfies is pinned to its locked version.
+-        all.extend(vibe_workspace::freshness::hold_pins(&rest, &lockfile));
+-        all
+-    };
++    }
++    let (roots, preferred_roots, root_origins) =
++        effective_root_constraints(workspace, project_root, &request.roots, &lockfile)?;
+ 
+     // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
+     // dependencies is a fresh project, not an error — regenerate the boot
+     // artifacts of the empty world and report the fresh shape.
+-    if roots.is_empty() {
++    // Admitted transaction intent is not represented by the legacy lockfile.
++    // Neither an empty manifest nor its freshness can discharge that request.
++    let admitted_request = source.normalized_request().is_some();
++    if roots.is_empty() && !admitted_request {
+         return Ok(Plan::Fresh);
+     }
+ 
+@@ -307,7 +310,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+     // explicit-pkgref install it is the named refs plus the pin-held
+     // remainder above; for a stale bare install PROP-011 §5.3 replaces it
+     // with the pin-held set below.
+-    let mut solve_roots = roots.clone();
++    let mut solve_roots = preferred_roots;
+ 
+     // PROP-011 §2.2 — the freshness fast path. When no explicit pkgref
+     // was given (the install-from-manifest shape) and `vibe.lock` is
+@@ -319,7 +322,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+     // lockfile-respecting: a fresh lock is honoured verbatim, with no
+     // version drift inside a constraint. An explicit
+     // `vibe install <pkgref>` always runs the full pipeline.
+-    if request.roots.is_empty() {
++    if request.roots.is_empty() && !admitted_request {
+         let ws = &*workspace;
+         match vibe_workspace::freshness::check(ws, &lockfile) {
+             vibe_workspace::freshness::Freshness::Fresh
+@@ -353,7 +356,12 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+         }
+     }
+ 
+-    let transaction = transaction::PlanningSource::capture(source, &roots)?;
++    let mut normalized = vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
++        &roots,
++        &request.features,
++    );
++    normalized.root_origins = root_origins;
++    let transaction = transaction::PlanningSource::capture_request(source, &normalized)?;
+     let source = &transaction;
+     if let Some(catalog) = source.catalog_inspection() {
+         observer.catalog(catalog);
+@@ -480,7 +488,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+     // 4. Conditional dependency expansion — fixed-point loop.
+     expand_conditional_deps(
+         source,
+-        &roots,
++        &strict_roots,
+         &lockfile,
+         &store_root,
+         project_root,
+@@ -551,6 +559,11 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+         roots,
+         fetched,
+         resolution,
++        normalized_request: source.normalized_request().cloned(),
++        selected_provenance: source
++            .route_resolution()
++            .map(|r| r.provenance)
++            .unwrap_or_default(),
+         // A value, not a rediscovery: apply and the slot lifecycle work on the
+         // exact tree that produced this plan.
+         workspace: workspace.clone(),
+@@ -573,3 +586,73 @@ mod transaction;
+ 
+ #[cfg(test)]
+ mod m_05_c_1_cases;
++
++#[cfg(test)]
++mod m_05_c_3_cases;
++
++/// Preserve each workspace declaration. Explicit roots supersede only the
++/// exact selected node's named declaration, never another member's constraint.
++fn effective_root_constraints(
++    workspace: &Workspace,
++    project_root: &Path,
++    explicit: &[PackageRef],
++    lockfile: &Lockfile,
++) -> Result<(
++    Vec<PackageRef>,
++    Vec<PackageRef>,
++    Vec<vibe_resolver::resolvo_engine::request::RootConstraint>,
++)> {
++    use vibe_resolver::resolvo_engine::request::RootConstraint;
++    let mut roots = explicit.to_vec();
++    let mut preferred = roots.clone();
++    let mut origins: Vec<_> = explicit
++        .iter()
++        .enumerate()
++        .map(|(index, p)| RootConstraint {
++            constraint: p.clone(),
++            consumer: project_root.display().to_string(),
++            declaration: format!("cli.roots[{index}]"),
++        })
++        .collect();
++    for (relative, node) in workspace.iter_nodes() {
++        let selected = workspace.node_abs_path(relative) == project_root;
++        let consumer = workspace.node_abs_path(relative).display().to_string();
++        let mut add = |reference: PackageRef, declaration: String| {
++            let named = explicit
++                .iter()
++                .any(|p| p.group == reference.group && p.name == reference.name);
++            if named && selected {
++                return;
++            }
++            if !explicit.is_empty() && !named {
++                preferred.extend(vibe_workspace::freshness::hold_pins(
++                    std::slice::from_ref(&reference),
++                    lockfile,
++                ));
++            } else {
++                preferred.push(reference.clone());
++            }
++            origins.push(RootConstraint {
++                constraint: reference.clone(),
++                consumer: consumer.clone(),
++                declaration,
++            });
++            roots.push(reference);
++        };
++        for (index, p) in node.requires.packages.iter().enumerate() {
++            add(p.clone(), format!("requires.packages[{index}]"));
++        }
++        for (index, g) in node.requires.git_packages.iter().enumerate() {
++            add(
++                PackageRef::new(
++                    g.kind,
++                    Some(g.group.clone()),
++                    g.name.clone(),
++                    VersionSpec::Latest,
++                )?,
++                format!("requires.git_packages[{index}]"),
++            );
++        }
++    }
++    Ok((roots, preferred, origins))
++}
+diff --git a/crates/vibe-install/src/plan/fetch.rs b/crates/vibe-install/src/plan/fetch.rs
+index b09334ef6..0f4d47301 100644
+--- a/crates/vibe-install/src/plan/fetch.rs
++++ b/crates/vibe-install/src/plan/fetch.rs
+@@ -35,8 +35,14 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
+     } else {
+         FeatureRequest::default()
+     };
+-    let feature_expansion =
+-        vibe_resolver::features::expand_manifest_features(&cached.manifest, &req)?;
++    let feature_expansion = match source.route_resolution().and_then(|r| {
++        r.effects
++            .get(&format!("{}/{}@{}", node.group, node.name, node.version))
++            .cloned()
++    }) {
++        Some(expansion) => expansion,
++        None => vibe_resolver::features::expand_manifest_features(&cached.manifest, &req)?,
++    };
+     let embedded_sources =
+         vibe_registry::lock_embedded_sources_with(&cached.manifest.embedded_sources, offline)?;
+     Ok(Fetched {
+@@ -72,9 +78,10 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
+ ) -> Result<Fetched> {
+     source.validate_catalog_candidate(&exact_pinned_pkgref(node))?;
+     match try_in_place_incremental(node, lockfile, workspace_root, root_features)? {
+-        Some(fetched) => {
++        Some(mut fetched) => {
+             if source.catalog_inspection().is_some()
+-                && fetched.cached.manifest != source.manifest_of(&exact_pinned_pkgref(node))?
++                && fetched.cached.manifest
++                    != source.catalog_manifest_of(&exact_pinned_pkgref(node))?
+             {
+                 return Err(vibe_resolver::SolveError::Provider(
+                     vibe_resolver::DepProviderError::Other(
+@@ -83,6 +90,13 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
+                 )
+                 .into());
+             }
++            if let Some(expansion) = source.route_resolution().and_then(|r| {
++                r.effects
++                    .get(&format!("{}/{}@{}", node.group, node.name, node.version))
++                    .cloned()
++            }) {
++                fetched.feature_expansion = expansion;
++            }
+             Ok(fetched)
+         }
+         None => fetch_node(
+@@ -184,24 +198,10 @@ pub(super) fn try_in_place_incremental(
+     }))
+ }
+ 
+-/// The PROP-003 §2.6.1 conditional-dependency loop. Each pass: build
+-/// the activation context from currently-fetched packages; walk every
+-/// package's `[target."context(...)".dependencies]`; if any predicate
+-/// matches and its targets aren't already in the graph, add them as
+-/// extra roots; re-solve and fetch. Repeat until no new extras emerge,
+-/// or until the iteration cap is hit.
+-///
+-/// Convergence: extras only ADD packages to the fetched set
+-/// (monotonic), and the predicate evaluation is a pure function of
+-/// `present` + `provides`, which only grow. So either a pass produces
+-/// no extras (terminates), or every pass adds at least one package —
+-/// bounded by the registry's size.
+-///
+-/// The cap (5 iterations) catches authoring-bug cases where a chain of
+-/// conditional deps re-triggers on each iteration without converging.
+-/// The conservative cap surfaces as a loud error so the operator can
+-/// either fix the chain or bump the limit explicitly. No realistic
+-/// graph reaches the cap.
++/// Evaluate active conditional declarations against the selected context and
++/// resubmit every constraint, including those targeting an existing node.
++/// Bounded orchestration is not complete candidate-conditioned solving:
++/// changed declaring candidates and unstable combinations refuse explicitly.
+ #[expect(
+     clippy::too_many_arguments,
+     reason = "the fixpoint reads the whole planning context; bundling \
+@@ -229,6 +229,7 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
+ ) -> Result<()> {
+     const COND_DEP_MAX_ITER: usize = 5;
+     let mut iteration: usize = 0;
++    let mut previous = Vec::new();
+     loop {
+         iteration += 1;
+         let preliminary_ctx = build_activation_context(
+@@ -236,46 +237,40 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
+             project_root,
+             language_chain,
+         )?;
+-        let mut extra: Vec<PackageRef> = Vec::new();
++        let mut extra = Vec::new();
+         for f in fetched.iter() {
+             for (pred_str, target) in &f.cached.manifest.conditional_deps {
+-                match ConditionalPredicate::parse(pred_str) {
+-                    Ok(pred) => {
+-                        if pred.evaluate(&preliminary_ctx) {
+-                            for r in &target.dependencies.packages {
+-                                let already = fetched.iter().any(|g| {
+-                                    Some(&g.cached.resolved.group) == r.group.as_ref()
+-                                        && g.cached.resolved.name == r.name
+-                                }) || extra
+-                                    .iter()
+-                                    .any(|x| x.group == r.group && x.name == r.name);
+-                                if !already {
+-                                    extra.push(r.clone());
+-                                }
+-                            }
+-                        }
+-                    }
+-                    Err(e) => {
+-                        tracing::warn!(
+-                            target: "vibe_install",
+-                            package = %format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name),
+-                            predicate = %pred_str,
+-                            error = %e,
+-                            "conditional-dep predicate could not be parsed; skipping"
+-                        );
++                let pred = ConditionalPredicate::parse(pred_str).map_err(|e| {
++                    vibe_resolver::SolveError::UnsupportedRoute(format!(
++                        "invalid conditional predicate: {e}"
++                    ))
++                })?;
++                if pred.evaluate(&preliminary_ctx) {
++                    for (index, dependency) in target.dependencies.packages.iter().enumerate() {
++                        extra.push(vibe_resolver::resolvo_engine::request::ConditionalEdge {
++                            parent: PackageRef::parse(&format!(
++                                "{}/{}@={}",
++                                f.cached.resolved.group,
++                                f.cached.resolved.name,
++                                f.cached.resolved.version
++                            ))
++                            .expect("selected coordinate"),
++                            declaration: format!(
++                                "target[{pred_str}].dependencies.packages[{index}]"
++                            ),
++                            dependency: dependency.clone(),
++                        });
+                     }
+                 }
+             }
+         }
+-        if extra.is_empty() {
++        if extra == previous {
+             return Ok(());
+         }
+         if iteration > COND_DEP_MAX_ITER {
+-            return Err(Error::ConditionalDepRunaway {
+-                iterations: COND_DEP_MAX_ITER,
+-                pending: extra.iter().map(|r| r.qualified_name()).collect(),
+-            });
++            return Err(vibe_resolver::SolveError::UnsupportedRoute(format!("conditional route did not stabilize in {COND_DEP_MAX_ITER} iterations; bounded retry is not complete conditional solving")).into());
+         }
++        previous = extra.clone();
+         observer.on(events::PlanEvent::ConditionalIteration {
+             iteration,
+             extras: extra.len(),
+@@ -285,25 +280,10 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
+             extra.len(),
+             if extra.len() == 1 { "" } else { "s" }
+         ));
+-        let mut combined = roots.to_vec();
+-        combined.extend(fetched.iter().filter(|f| f.meta.is_root).map(|f| {
+-            exact_pinned_pkgref(&ResolvedNode {
+-                group: f.cached.resolved.group.clone(),
+-                name: f.cached.resolved.name.clone(),
+-                version: f.cached.resolved.version.clone(),
+-                dependencies: Vec::new(),
+-                is_root: true,
+-            })
+-        }));
+-        combined.extend(extra.iter().cloned());
+-        // De-duplicate by the `(group, name)` identity (PROP-008 §2.3).
+-        let mut seen: std::collections::HashSet<(Option<Group>, String)> =
+-            std::collections::HashSet::new();
+-        combined.retain(|r| seen.insert((r.group.clone(), r.name.to_string())));
+-        let new_graph = source.solve(&combined)?;
++        let new_graph = source.solve_conditional(roots, &extra)?;
+         let effective = crate::visibility_projection::resolve_effective(
+             source,
+-            &combined,
++            roots,
+             root_manifest,
+             root_id,
+             new_graph,
+diff --git a/crates/vibe-install/src/plan/transaction.rs b/crates/vibe-install/src/plan/transaction.rs
+index 6d290740e..9c44dec6c 100644
+--- a/crates/vibe-install/src/plan/transaction.rs
++++ b/crates/vibe-install/src/plan/transaction.rs
+@@ -7,13 +7,13 @@ pub(super) struct PlanningSource<'a, S: ?Sized> {
+     frozen: Option<Box<dyn InstallSource + 'a>>,
+ }
+ impl<'a, S: InstallSource + ?Sized> PlanningSource<'a, S> {
+-    pub(super) fn capture(
++    pub(super) fn capture_request(
+         original: &'a S,
+-        roots: &[PackageRef],
++        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+     ) -> std::result::Result<Self, SolveError> {
+         Ok(Self {
+             original,
+-            frozen: original.begin_transaction(roots)?,
++            frozen: original.begin_normalized_transaction(request)?,
+         })
+     }
+ }
+@@ -23,6 +23,30 @@ macro_rules! forward {
+     };
+ }
+ impl<S: InstallSource + ?Sized> InstallSource for PlanningSource<'_, S> {
++    fn solve_conditional(
++        &self,
++        roots: &[PackageRef],
++        edges: &[vibe_resolver::resolvo_engine::request::ConditionalEdge],
++    ) -> std::result::Result<ResolvedGraph, SolveError> {
++        forward!(self, solve_conditional(roots, edges))
++    }
++    fn normalized_request(
++        &self,
++    ) -> Option<&vibe_resolver::resolvo_engine::request::NormalizedRequest> {
++        forward!(self, normalized_request())
++    }
++    fn route_resolution(&self) -> Option<vibe_resolver::resolvo_engine::request::RouteResolution> {
++        forward!(self, route_resolution())
++    }
++    fn finish_route_projection(
++        &self,
++        graph: &ResolvedGraph,
++    ) -> std::result::Result<(), SolveError> {
++        forward!(self, finish_route_projection(graph))
++    }
++    fn catalog_manifest_of(&self, pkg: &PackageRef) -> std::result::Result<Manifest, SolveError> {
++        forward!(self, catalog_manifest_of(pkg))
++    }
+     fn catalog_inspection(&self) -> Option<&CatalogInspection> {
+         forward!(self, catalog_inspection())
+     }
+diff --git a/crates/vibe-install/src/visibility_projection.rs b/crates/vibe-install/src/visibility_projection.rs
+index 88255601b..d36f59625 100644
+--- a/crates/vibe-install/src/visibility_projection.rs
++++ b/crates/vibe-install/src/visibility_projection.rs
+@@ -214,6 +214,12 @@ pub(crate) struct EffectiveResolution {
+ /// assert!(result.analysis.effective.is_empty());
+ /// ```
+ pub fn project(input: &ProjectionInput<'_>) -> Result<Projection> {
++    project_selected(input, None)
++}
++fn project_selected(
++    input: &ProjectionInput<'_>,
++    provenance: Option<&[vibe_resolver::resolvo_engine::request::EdgeProvenance]>,
++) -> Result<Projection> {
+     let mut graph = VisibilityGraph::default();
+     let mut root_decl = declaration_from_manifest(input.root_manifest)?;
+ 
+@@ -234,10 +240,79 @@ pub fn project(input: &ProjectionInput<'_>) -> Result<Projection> {
+     for node in input.graph.iter() {
+         let pkgref = exact_pinned_pkgref(node);
+         let manifest = (input.manifest_of)(&pkgref)?;
+-        graph.nodes.insert(
+-            node_id(&node.group, &node.name),
+-            declaration_from_manifest(&manifest)?,
+-        );
++        let mut declaration = declaration_from_manifest(&manifest)?;
++        // The solver's selected edges are authoritative. The manifest supplies
++        // access attributes, never an inferred union of possible providers.
++        declaration.edges = if let Some(provenance) = provenance {
++            let mut edges = Vec::new();
++            for proof in provenance.iter().filter(|e| {
++                e.selected.parent.group.as_ref() == Some(&node.group)
++                    && e.selected.parent.name == node.name
++                    && e.selected.parent.version.matches(&node.version)
++            }) {
++                let selected = &proof.selected;
++                if !node
++                    .dependencies
++                    .iter()
++                    .any(|d| d.group == selected.provider.group && d.name == selected.provider.name)
++                {
++                    continue;
++                }
++                let requires = if let Some(rest) = selected.declaration.strip_prefix("target[") {
++                    let (predicate, _) =
++                        rest.rsplit_once("].dependencies.packages[")
++                            .ok_or_else(|| {
++                                visibility_error(
++                                    "invalid selected conditional declaration provenance".into(),
++                                )
++                            })?;
++                    &manifest.conditional_deps.get(predicate).ok_or_else(||visibility_error("selected conditional declaration is absent from the immutable manifest".into()))?.dependencies
++                } else {
++                    &manifest.requires
++                };
++                let group = selected
++                    .provider
++                    .group
++                    .as_ref()
++                    .expect("qualified selected provider");
++                let name = selected.provider.name.as_str();
++                edges.push(EdgeDecl {
++                    to: selected.provider.qualified_name(),
++                    access: requires.declared_access(group, name),
++                    friend: requires.declared_friend(group, name),
++                    exclude: requires.excludes_for(group, name).to_vec(),
++                });
++            }
++            if node
++                .dependencies
++                .iter()
++                .any(|d| !edges.iter().any(|e| e.to == d.qualified_name()))
++            {
++                return Err(visibility_error(
++                    "selected dependency lacks declaration provenance".into(),
++                ));
++            }
++            edges
++        } else {
++            node.dependencies
++                .iter()
++                .map(|dep| {
++                    let target = dep.qualified_name();
++                    declaration
++                        .edges
++                        .iter()
++                        .find(|e| e.to == target)
++                        .cloned()
++                        .unwrap_or(EdgeDecl {
++                            to: target,
++                            ..EdgeDecl::default()
++                        })
++                })
++                .collect()
++        };
++        graph
++            .nodes
++            .insert(node_id(&node.group, &node.name), declaration);
+     }
+ 
+     let analysis = analyze(&graph, &input.root_id);
+@@ -283,16 +358,28 @@ pub(crate) fn resolve_effective<S: InstallSource + ?Sized>(
+ ) -> Result<EffectiveResolution> {
+     const MAX_ITERATIONS: usize = 4;
+ 
++    if let Some(resolution) = source.route_resolution() {
++        if resolution.recorded.graph != initial_graph {
++            return Err(SolveError::UnsupportedRoute(
++                "visibility input differs from the source selected resolution".into(),
++            )
++            .into());
++        }
++    }
+     let mut graph = initial_graph;
+     let mut blocked = BTreeSet::new();
+     for iteration in 1..=MAX_ITERATIONS {
+         let manifest_of = |pkgref: &PackageRef| source.manifest_of(pkgref);
+-        let projection = project(&ProjectionInput {
+-            root_manifest,
+-            root_id: root_id.to_string(),
+-            graph: &graph,
+-            manifest_of: &manifest_of,
+-        })?;
++        let selected = source.route_resolution();
++        let projection = project_selected(
++            &ProjectionInput {
++                root_manifest,
++                root_id: root_id.to_string(),
++                graph: &graph,
++                manifest_of: &manifest_of,
++            },
++            selected.as_ref().map(|r| r.provenance.as_slice()),
++        )?;
+         let newly_blocked: BTreeSet<_> = projection
+             .blocked_edges
+             .difference(&blocked)
+@@ -300,6 +387,7 @@ pub(crate) fn resolve_effective<S: InstallSource + ?Sized>(
+             .collect();
+         if newly_blocked.is_empty() {
+             prune_graph(&mut graph, &projection.analysis);
++            source.finish_route_projection(&graph)?;
+             return Ok(EffectiveResolution {
+                 graph,
+                 analysis: projection.analysis,
+diff --git a/crates/vibe-package-source/src/cells.rs b/crates/vibe-package-source/src/cells.rs
+index 1bacc3eee..96b2d5764 100644
+--- a/crates/vibe-package-source/src/cells.rs
++++ b/crates/vibe-package-source/src/cells.rs
+@@ -23,8 +23,8 @@ use std::path::PathBuf;
+ use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
+ use vibe_resolver::sat::SatDepSolver;
+ use vibe_resolver::{
+-    DepSolver, EmbeddedDepProvider, EmbeddedPrecedence, LocalCompositeDepProvider,
+-    LocalRegistryDepProvider, MultiRegistryDepProvider, NaiveDepSolver, ResolvoDepSolver,
++    EmbeddedDepProvider, EmbeddedPrecedence, LocalCompositeDepProvider, LocalRegistryDepProvider,
++    MultiRegistryDepProvider, NaiveDepSolver, ResolvoDepSolver,
+ };
+ 
+ /// Where a selected value came from. The full chain is
+@@ -173,103 +173,8 @@ pub(crate) fn local_registry(root: PathBuf) -> Result<LocalRegistry, RegistryErr
+     LocalRegistry::new(root)
+ }
+ 
+-/// Construct the selected `DepSolver` cell over the selected
+-/// `DepProvider` cell — the single seam-construction point.
+-pub(crate) fn dep_solver<'a>(
+-    flags: &SelectionFlags,
+-    resource: ProviderResource<'a>,
+-) -> Box<dyn DepSolver + 'a> {
+-    // recorded provenance: flags.solver / flags.provider carry it.
+-    match (flags.solver.value, flags.provider.value, resource) {
+-        ("resolvo", "local-registry", ProviderResource::Local(r)) => {
+-            Box::new(ResolvoDepSolver::new(LocalRegistryDepProvider::new(r)))
+-        }
+-        ("resolvo", "multi-registry", ProviderResource::Multi(m)) => {
+-            Box::new(ResolvoDepSolver::new(MultiRegistryDepProvider::new(m)))
+-        }
+-        ("naive", "local-registry", ProviderResource::Local(r)) => {
+-            Box::new(NaiveDepSolver::new(LocalRegistryDepProvider::new(r)))
+-        }
+-        ("naive", "multi-registry", ProviderResource::Multi(m)) => {
+-            Box::new(NaiveDepSolver::new(MultiRegistryDepProvider::new(m)))
+-        }
+-        ("sat", "local-registry", ProviderResource::Local(r)) => {
+-            Box::new(SatDepSolver::new(LocalRegistryDepProvider::new(r)))
+-        }
+-        ("sat", "multi-registry", ProviderResource::Multi(m)) => {
+-            Box::new(SatDepSolver::new(MultiRegistryDepProvider::new(m)))
+-        }
+-        (
+-            "resolvo",
+-            "embedded",
+-            ProviderResource::Embedded {
+-                locals,
+-                declared,
+-                precedence,
+-                short_circuit,
+-            },
+-        ) => Box::new(ResolvoDepSolver::new(EmbeddedDepProvider::new(
+-            LocalCompositeDepProvider::new(
+-                locals
+-                    .into_iter()
+-                    .map(LocalRegistryDepProvider::new)
+-                    .collect(),
+-            ),
+-            declared.map(MultiRegistryDepProvider::new),
+-            precedence,
+-            short_circuit,
+-        ))),
+-        (
+-            "naive",
+-            "embedded",
+-            ProviderResource::Embedded {
+-                locals,
+-                declared,
+-                precedence,
+-                short_circuit,
+-            },
+-        ) => Box::new(NaiveDepSolver::new(EmbeddedDepProvider::new(
+-            LocalCompositeDepProvider::new(
+-                locals
+-                    .into_iter()
+-                    .map(LocalRegistryDepProvider::new)
+-                    .collect(),
+-            ),
+-            declared.map(MultiRegistryDepProvider::new),
+-            precedence,
+-            short_circuit,
+-        ))),
+-        (
+-            "sat",
+-            "embedded",
+-            ProviderResource::Embedded {
+-                locals,
+-                declared,
+-                precedence,
+-                short_circuit,
+-            },
+-        ) => Box::new(SatDepSolver::new(EmbeddedDepProvider::new(
+-            LocalCompositeDepProvider::new(
+-                locals
+-                    .into_iter()
+-                    .map(LocalRegistryDepProvider::new)
+-                    .collect(),
+-            ),
+-            declared.map(MultiRegistryDepProvider::new),
+-            precedence,
+-            short_circuit,
+-        ))),
+-        (solver, provider, _) => unreachable!(
+-            "selection_flags is the only producer of flag values and never \
+-             emits solver `{solver}` / provider `{provider}` with a \
+-             mismatched resource"
+-        ),
+-    }
+-}
+-
+ /// The embedded DepProvider composite — one construction site (R-001) for
+-/// the local-family + optional-declared shape three `dep_solver` arms and
+-/// the visibility surfaces below all share.
++/// the local-family + optional-declared shape all catalog routes share.
+ fn embedded_dep_provider<'a>(
+     locals: Vec<&'a LocalRegistry>,
+     declared: Option<&'a MultiRegistryResolver>,
+@@ -289,69 +194,6 @@ fn embedded_dep_provider<'a>(
+     )
+ }
+ 
+-/// Metadata-only manifest read through the selected `DepProvider` cell —
+-/// the `InstallSource::manifest_of` construction site (R-001). Never
+-/// fetches package content.
+-pub(crate) fn metadata_manifest_cell(
+-    resource: ProviderResource<'_>,
+-    pkg: &vibe_core::PackageRef,
+-) -> Result<vibe_core::manifest::Manifest, vibe_resolver::SolveError> {
+-    match resource {
+-        ProviderResource::Local(r) => {
+-            vibe_install::metadata_manifest(&LocalRegistryDepProvider::new(r), pkg)
+-        }
+-        ProviderResource::Multi(m) => {
+-            vibe_install::metadata_manifest(&MultiRegistryDepProvider::new(m), pkg)
+-        }
+-        ProviderResource::Embedded {
+-            locals,
+-            declared,
+-            precedence,
+-            short_circuit,
+-        } => vibe_install::metadata_manifest(
+-            &embedded_dep_provider(locals, declared, precedence, short_circuit),
+-            pkg,
+-        ),
+-    }
+-}
+-
+-/// The masked re-solve through the selected provider and solver cells —
+-/// the `InstallSource::solve_masked` construction site (R-001). The same
+-/// selection the ordinary solve made, wrapped in the visibility mask.
+-pub(crate) fn solve_masked_cell(
+-    flags: &SelectionFlags,
+-    resource: ProviderResource<'_>,
+-    roots: &[vibe_core::PackageRef],
+-    blocked: &std::collections::BTreeSet<(String, String)>,
+-) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+-    let solver = Some(flags.solver.value);
+-    match resource {
+-        ProviderResource::Local(r) => vibe_install::solve_with_visibility_mask(
+-            LocalRegistryDepProvider::new(r),
+-            solver,
+-            roots,
+-            blocked,
+-        ),
+-        ProviderResource::Multi(m) => vibe_install::solve_with_visibility_mask(
+-            MultiRegistryDepProvider::new(m),
+-            solver,
+-            roots,
+-            blocked,
+-        ),
+-        ProviderResource::Embedded {
+-            locals,
+-            declared,
+-            precedence,
+-            short_circuit,
+-        } => vibe_install::solve_with_visibility_mask(
+-            embedded_dep_provider(locals, declared, precedence, short_circuit),
+-            solver,
+-            roots,
+-            blocked,
+-        ),
+-    }
+-}
+-
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+@@ -392,7 +234,100 @@ mod tests {
+     }
+ }
+ 
+-// Candidate capture uses the incumbent provider selection and its enumeration.
++/// All transaction routes retain the same backend selection and admitted intent.
++pub(crate) fn solve_catalog_request(
++    flags: &SelectionFlags,
++    catalog: &vibe_resolver::resolvo_engine::TransactionCatalog,
++    request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
++    roots: &[vibe_core::PackageRef],
++    blocked: &std::collections::BTreeSet<(String, String)>,
++    retained: &[vibe_resolver::resolvo_engine::SelectedChoice],
++) -> Result<vibe_resolver::resolvo_engine::request::RouteResolution, vibe_resolver::SolveError> {
++    use vibe_resolver::resolvo_engine::{
++        RecordedResolution,
++        request::{RouteProvider, RouteResolution},
++    };
++    use vibe_resolver::{DepProvider, SolveError};
++    let roots = request.all_roots(roots);
++    if let Some(configuration) = &request.configuration {
++        if flags.solver.value != "resolvo" {
++            return Err(SolveError::BackendCapability {
++                backend: flags.solver.value.into(),
++                capability: "candidate-conditioned consumer configuration".into(),
++            });
++        }
++        let result = ResolvoDepSolver::new(catalog)
++            .solve_configuration_routes(
++                &roots,
++                &configuration.request,
++                &configuration.definitions,
++                &configuration.defaults,
++                blocked,
++                retained,
++            )
++            .map_err(|error| SolveError::Configuration(Box::new(error)))?;
++        return RouteResolution::bind(
++            catalog,
++            request,
++            RecordedResolution {
++                graph: result.graph,
++                choices: result.choices,
++            },
++            result.manifests,
++            result.effects,
++        );
++    }
++    let provider = RouteProvider {
++        catalog,
++        blocked,
++        retained,
++    };
++    let filtered = vibe_resolver::resolvo_engine::request::LegacyRouteProvider(
++        vibe_resolver::resolvo_engine::request::RouteProvider {
++            catalog,
++            blocked,
++            retained,
++        },
++    );
++    let mut recorded = match flags.solver.value {
++        "resolvo" => ResolvoDepSolver::new(provider).solve_recorded(&roots)?,
++        "naive" => NaiveDepSolver::new(&filtered).solve_recorded(&roots)?,
++        "sat" => SatDepSolver::new(&filtered).solve_recorded(&roots)?,
++        _ => unreachable!("validated solver selection"),
++    };
++    if flags.solver.value != "resolvo" {
++        filtered.restore_provenance(&mut recorded)?;
++    }
++    let mut manifests = std::collections::BTreeMap::new();
++    let mut effects = std::collections::BTreeMap::new();
++    for node in recorded.graph.iter() {
++        let manifest = catalog.fetch_manifest(&node.group, &node.name, &node.version)?;
++        let feature_request = if node.is_root {
++            vibe_resolver::FeatureRequest {
++                explicit: request
++                    .features
++                    .explicit
++                    .iter()
++                    .filter(|name| manifest.features.features.contains_key(name.as_str()))
++                    .cloned()
++                    .collect(),
++                no_defaults: request.features.no_defaults,
++                all: request.features.all,
++            }
++        } else {
++            Default::default()
++        };
++        let expansion =
++            vibe_resolver::features::expand_manifest_features(&manifest, &feature_request)
++                .map_err(|e| vibe_resolver::DepProviderError::Other(e.to_string()))?;
++        let coordinate = format!("{}/{}@{}", node.group, node.name, node.version);
++        manifests.insert(coordinate.clone(), manifest);
++        effects.insert(coordinate, expansion);
++    }
++    RouteResolution::bind(catalog, request, recorded, manifests, effects)
++}
++
++// Candidate capture uses the incumbent provider selection and enumeration.
+ pub(crate) fn catalog_provider(
+     resource: ProviderResource<'_>,
+ ) -> Box<dyn vibe_resolver::VersionEnumerator + '_> {
+@@ -412,14 +347,3 @@ pub(crate) fn catalog_provider(
+         )),
+     }
+ }
+-pub(crate) fn catalog_solver<'a>(
+-    flags: &SelectionFlags,
+-    catalog: &'a vibe_resolver::resolvo_engine::TransactionCatalog,
+-) -> Box<dyn DepSolver + 'a> {
+-    match flags.solver.value {
+-        "resolvo" => Box::new(ResolvoDepSolver::new(catalog)),
+-        "naive" => Box::new(NaiveDepSolver::new(catalog)),
+-        "sat" => Box::new(SatDepSolver::new(catalog)),
+-        _ => unreachable!("validated solver selection"),
+-    }
+-}
+diff --git a/crates/vibe-package-source/src/qualified.rs b/crates/vibe-package-source/src/qualified.rs
+index 0a2b5f6b0..42bee8475 100644
+--- a/crates/vibe-package-source/src/qualified.rs
++++ b/crates/vibe-package-source/src/qualified.rs
+@@ -158,6 +158,12 @@ impl RegistryPackageSource {
+ }
+ 
+ impl InstallSource for RegistryPackageSource {
++    fn begin_normalized_transaction(
++        &self,
++        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
++    ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
++        self.resolver.begin_normalized_transaction(request)
++    }
+     fn begin_transaction(
+         &self,
+         roots: &[PackageRef],
+diff --git a/crates/vibe-package-source/src/source.rs b/crates/vibe-package-source/src/source.rs
+index 27bc95bdf..95b2b555f 100644
+--- a/crates/vibe-package-source/src/source.rs
++++ b/crates/vibe-package-source/src/source.rs
+@@ -16,10 +16,7 @@ use vibe_registry::{
+     CachedPackage, LocalRegistry, MultiRegistryResolver, RegistryError, ResolutionPurpose,
+ };
+ 
+-use crate::cells::{
+-    ProviderCell, ProviderResource, dep_solver, metadata_manifest_cell, selection_flags,
+-    solve_masked_cell,
+-};
++use crate::cells::{ProviderCell, ProviderResource, selection_flags};
+ 
+ /// Either a M0-shape local-directory registry (used by an explicit registry
+ /// path and the in-tree fixture path) or a full PROP-002 multi-registry
+@@ -84,15 +81,18 @@ impl InstallSource for InstallResolver {
+         &self,
+         roots: &[PackageRef],
+     ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
+-        let provider = transaction::CaptureProvider {
+-            source: self,
+-            provider: crate::cells::catalog_provider(self.provider_resource()),
+-        };
+-        let catalog = vibe_resolver::resolvo_engine::TransactionCatalog::capture(&provider, roots)?;
+-        Ok(Some(Box::new(transaction::FrozenSource {
+-            source: self,
+-            catalog,
+-        })))
++        self.begin_normalized_transaction(
++            &vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
++                roots,
++                &Default::default(),
++            ),
++        )
++    }
++    fn begin_normalized_transaction(
++        &self,
++        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
++    ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
++        Ok(Some(Box::new(self.bind_request(request.clone())?)))
+     }
+ 
+     /// Resolve `pkgref` and insert its content into the machine-global
+@@ -156,20 +156,26 @@ impl InstallSource for InstallResolver {
+         &self,
+         roots: &[PackageRef],
+     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+-        // Cell selection lives in the cells module (R-001); this
+-        // match only routes the resource the caller already owns.
+-        let (provider_cell, solver_override) = self.cell_selection();
+-        let flags = selection_flags(provider_cell, solver_override);
+-        dep_solver(&flags, self.provider_resource()).solve(roots)
++        self.bind_request(
++            vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
++                roots,
++                &Default::default(),
++            ),
++        )?
++        .solve(roots)
+     }
+ 
+     fn manifest_of(
+         &self,
+         pkg: &PackageRef,
+     ) -> Result<vibe_core::manifest::Manifest, vibe_resolver::SolveError> {
+-        // Cell selection lives in the cells module (R-001); this method
+-        // only routes the resource the resolver already owns.
+-        metadata_manifest_cell(self.provider_resource(), pkg)
++        self.bind_request(
++            vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
++                std::slice::from_ref(pkg),
++                &Default::default(),
++            ),
++        )?
++        .manifest_of(pkg)
+     }
+ 
+     fn solve_masked(
+@@ -177,9 +183,13 @@ impl InstallSource for InstallResolver {
+         roots: &[PackageRef],
+         blocked: &BTreeSet<(String, String)>,
+     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+-        let (provider_cell, solver_override) = self.cell_selection();
+-        let flags = selection_flags(provider_cell, solver_override);
+-        solve_masked_cell(&flags, self.provider_resource(), roots, blocked)
++        self.bind_request(
++            vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
++                roots,
++                &Default::default(),
++            ),
++        )?
++        .solve_masked(roots, blocked)
+     }
+ 
+     fn materialise_in_place(
+@@ -240,6 +250,29 @@ impl InstallSource for InstallResolver {
+ }
+ 
+ impl InstallResolver {
++    /// Admit explicit intent once; all existing InstallSource routes on the
++    /// returned source consume this same request and captured catalog.
++    pub fn bind_request(
++        &self,
++        request: vibe_resolver::resolvo_engine::request::NormalizedRequest,
++    ) -> Result<impl InstallSource + '_, vibe_resolver::SolveError> {
++        let provider = transaction::CaptureProvider {
++            source: self,
++            provider: crate::cells::catalog_provider(self.provider_resource()),
++        };
++        let catalog = vibe_resolver::resolvo_engine::TransactionCatalog::capture(
++            &provider,
++            &request.catalog_roots(),
++        )?;
++        Ok(transaction::FrozenSource {
++            source: self,
++            catalog,
++            request,
++            resolution: std::cell::RefCell::new(None),
++            conditional: std::cell::RefCell::new(Vec::new()),
++            commitments: std::cell::RefCell::new(Vec::new()),
++        })
++    }
+     fn resolve_and_fetch_inner(
+         &self,
+         pkgref: &PackageRef,
+@@ -478,3 +511,7 @@ mod transaction;
+ #[cfg(test)]
+ #[path = "source/m_05_c_1_cases_tests.rs"]
+ mod m_05_c_1_cases;
++
++#[cfg(test)]
++#[path = "source/m_05_c_3_cases.rs"]
++mod m_05_c_3_cases;
+diff --git a/crates/vibe-package-source/src/source/transaction.rs b/crates/vibe-package-source/src/source/transaction.rs
+index b66394610..8f06cc534 100644
+--- a/crates/vibe-package-source/src/source/transaction.rs
++++ b/crates/vibe-package-source/src/source/transaction.rs
+@@ -140,6 +140,12 @@ impl InstallResolver {
+ pub(super) struct FrozenSource<'a> {
+     pub source: &'a InstallResolver,
+     pub catalog: TransactionCatalog,
++    pub request: vibe_resolver::resolvo_engine::request::NormalizedRequest,
++    pub resolution:
++        std::cell::RefCell<Option<vibe_resolver::resolvo_engine::request::RouteResolution>>,
++    pub commitments: std::cell::RefCell<Vec<vibe_resolver::resolvo_engine::SelectedChoice>>,
++    pub conditional:
++        std::cell::RefCell<Vec<vibe_resolver::resolvo_engine::request::ConditionalEdge>>,
+ }
+ impl FrozenSource<'_> {
+     fn metadata(&self, pkg: &PackageRef) -> Result<&CandidateMetadata, SolveError> {
+@@ -152,6 +158,113 @@ impl FrozenSource<'_> {
+     }
+ }
+ impl InstallSource for FrozenSource<'_> {
++    fn begin_normalized_transaction(
++        &self,
++        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
++    ) -> Result<Option<Box<dyn InstallSource + '_>>, SolveError> {
++        if request.features.explicit != self.request.features.explicit
++            || request.features.no_defaults != self.request.features.no_defaults
++            || request.features.all != self.request.features.all
++        {
++            return Err(SolveError::UnsupportedRoute(
++                "planner feature intent differs from the admitted transaction".into(),
++            ));
++        }
++        if request
++            .roots
++            .iter()
++            .any(|r| !self.request.roots.contains(r))
++        {
++            return Err(SolveError::UnsupportedRoute(
++                "planner roots differ from the admitted transaction".into(),
++            ));
++        }
++        Ok(None)
++    }
++    fn solve_conditional(
++        &self,
++        roots: &[PackageRef],
++        edges: &[vibe_resolver::resolvo_engine::request::ConditionalEdge],
++    ) -> Result<ResolvedGraph, SolveError> {
++        if self.request.configuration.is_some() && !edges.is_empty() {
++            return Err(SolveError::UnsupportedRoute(
++                "conditional consumer configuration is not complete".into(),
++            ));
++        }
++        *self.conditional.borrow_mut() = edges.to_vec();
++        self.solve(roots)
++    }
++    fn normalized_request(
++        &self,
++    ) -> Option<&vibe_resolver::resolvo_engine::request::NormalizedRequest> {
++        Some(&self.request)
++    }
++    fn route_resolution(&self) -> Option<vibe_resolver::resolvo_engine::request::RouteResolution> {
++        self.resolution.borrow().clone()
++    }
++    fn finish_route_projection(&self, graph: &ResolvedGraph) -> Result<(), SolveError> {
++        let mut state = self.resolution.borrow_mut();
++        let resolution = state
++            .as_mut()
++            .ok_or_else(|| SolveError::UnsupportedRoute("no selected route to project".into()))?;
++        for node in graph.iter() {
++            let original = resolution
++                .recorded
++                .graph
++                .find(&node.group, &node.name)
++                .ok_or_else(|| {
++                    SolveError::UnsupportedRoute("projection introduced a package".into())
++                })?;
++            if node.version != original.version
++                || node.is_root != original.is_root
++                || node
++                    .dependencies
++                    .iter()
++                    .any(|d| !original.dependencies.contains(d))
++            {
++                return Err(SolveError::UnsupportedRoute(
++                    "projection introduced an inconsistent selected edge".into(),
++                ));
++            }
++        }
++        if self.request.roots.iter().any(|r| {
++            r.group
++                .as_ref()
++                .and_then(|g| graph.find(g, r.name.as_str()))
++                .is_none()
++        }) {
++            return Err(SolveError::UnsupportedRoute(
++                "projection removed an original consumer root".into(),
++            ));
++        }
++        let retained = |e: &vibe_resolver::resolvo_engine::SelectedChoice| {
++            graph.iter().any(|n| {
++                e.parent.group.as_ref() == Some(&n.group)
++                    && e.parent.name == n.name
++                    && n.dependencies.iter().any(|d| {
++                        d.group == e.provider.group
++                            && d.name == e.provider.name
++                            && d.version == e.provider.version
++                    })
++            })
++        };
++        resolution.recorded.choices.retain(retained);
++        resolution.provenance.retain(|e| retained(&e.selected));
++        resolution.manifests.retain(|key, _| {
++            graph
++                .iter()
++                .any(|n| *key == format!("{}/{}@{}", n.group, n.name, n.version))
++        });
++        resolution
++            .effects
++            .retain(|key, _| resolution.manifests.contains_key(key));
++        resolution.recorded.graph = graph.clone();
++        Ok(())
++    }
++    fn catalog_manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
++        Ok(self.metadata(pkg)?.manifest.clone())
++    }
++
+     fn catalog_inspection(&self) -> Option<&CatalogInspection> {
+         Some(self.catalog.inspect())
+     }
+@@ -175,19 +288,93 @@ impl InstallSource for FrozenSource<'_> {
+         Ok(())
+     }
+     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+-        let (provider, solver) = self.source.cell_selection();
+-        crate::cells::catalog_solver(&selection_flags(provider, solver), &self.catalog).solve(roots)
++        self.solve_masked(roots, &BTreeSet::new())
+     }
+     fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
+-        Ok(self.metadata(pkg)?.manifest.clone())
++        // Metadata is part of this exact resolution, including configured
++        // induced requirements. Never replace it with a legacy reconstruction.
++        if self.resolution.borrow().is_none() {
++            self.solve(&self.request.roots)?;
++        }
++        let resolution = self.resolution.borrow();
++        let resolution = resolution.as_ref().expect("successful solve recorded");
++        let node = pkg
++            .group
++            .as_ref()
++            .and_then(|g| resolution.recorded.graph.find(g, pkg.name.as_str()))
++            .filter(|n| pkg.version.matches(&n.version))
++            .ok_or_else(|| {
++                SolveError::UnsupportedRoute(
++                    "metadata request is not in the selected resolution".into(),
++                )
++            })?;
++        Ok(resolution.manifests[&format!("{}/{}@{}", node.group, node.name, node.version)].clone())
+     }
+     fn solve_masked(
+         &self,
+         roots: &[PackageRef],
+         blocked: &BTreeSet<(String, String)>,
+     ) -> Result<ResolvedGraph, SolveError> {
+-        let (_, solver) = self.source.cell_selection();
+-        vibe_install::solve_with_visibility_mask(&self.catalog, solver, roots, blocked)
++        if self.resolution.borrow().is_none() && !blocked.is_empty() {
++            self.solve(roots)?;
++        }
++        let retained = self.commitments.borrow().clone();
++        let (provider, solver) = self.source.cell_selection();
++        let mut combined = roots.to_vec();
++        let conditional = self.conditional.borrow();
++        combined.extend(
++            conditional
++                .iter()
++                .filter(|e| {
++                    !blocked.contains(&(e.parent.qualified_name(), e.dependency.qualified_name()))
++                })
++                .map(|e| e.dependency.clone()),
++        );
++        let result = crate::cells::solve_catalog_request(&selection_flags(provider,solver), &self.catalog, &self.request, &combined, blocked, &retained)
++            .and_then(|mut resolution| {
++                for node in &mut resolution.recorded.graph.packages {
++                    node.is_root = self.request.roots.iter().chain(roots).any(|r| r.group.as_ref() == Some(&node.group) && r.name == node.name);
++                }
++                for edge in conditional.iter().filter(|e| !blocked.contains(&(e.parent.qualified_name(), e.dependency.qualified_name()))) {
++                    let parent = resolution.recorded.graph.iter().find(|n| edge.parent.group.as_ref() == Some(&n.group) && edge.parent.name == n.name && edge.parent.version.matches(&n.version));
++                    if parent.is_none() { return Err(SolveError::UnsupportedRoute("conditional declaration candidate changed; complete conditional candidate search is unsupported".into())); }
++                    let target = resolution.recorded.graph.iter().find(|n| edge.dependency.group.as_ref() == Some(&n.group) && edge.dependency.name == n.name && edge.dependency.version.matches(&n.version))
++                        .ok_or_else(|| SolveError::UnsupportedRoute("conditional constraint was not preserved".into()))?;
++                    let provider = PackageRef::parse(&format!("{}/{}@={}", target.group,target.name,target.version)).expect("selected coordinate");
++                    let parent = resolution.recorded.graph.packages.iter_mut().find(|n| edge.parent.group.as_ref() == Some(&n.group) && edge.parent.name == n.name).expect("checked parent");
++                    if !parent.dependencies.contains(&provider) { parent.dependencies.push(provider.clone()); }
++                    resolution.recorded.choices.push(vibe_resolver::resolvo_engine::SelectedChoice { parent: edge.parent.clone(), declaration: edge.declaration.clone(), alternative: 0, provider });
++                }
++                vibe_resolver::resolvo_engine::request::RouteResolution::bind(&self.catalog, &self.request, resolution.recorded, resolution.manifests, resolution.effects)
++            });
++        match result {
++            Ok(resolution) => {
++                let graph = resolution.recorded.graph.clone();
++                let mut commitments = self.commitments.borrow_mut();
++                for edge in &resolution.recorded.choices {
++                    if !commitments
++                        .iter()
++                        .any(|e| e.parent == edge.parent && e.declaration == edge.declaration)
++                    {
++                        commitments.push(edge.clone());
++                    }
++                }
++                *self.resolution.borrow_mut() = Some(resolution);
++                Ok(graph)
++            }
++            Err(error) => {
++                *self.resolution.borrow_mut() = None;
++                match error {
++                    SolveError::Unsatisfiable { .. }
++                    | SolveError::VersionConflict { .. }
++                    | SolveError::KindMismatch { .. } => Err(SolveError::RootConstraints {
++                        origins: self.request.root_origins.clone(),
++                        conflict: Box::new(error),
++                    }),
++                    error => Err(error),
++                }
++            }
++        }
+     }
+     fn resolve_and_fetch(
+         &self,
+diff --git a/crates/vibe-resolver/src/error.rs b/crates/vibe-resolver/src/error.rs
+index 60cf0b6d0..3ea9515b9 100644
+--- a/crates/vibe-resolver/src/error.rs
++++ b/crates/vibe-resolver/src/error.rs
+@@ -30,6 +30,18 @@ use crate::DepProviderError;
+ #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
+ #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable")]
+ pub enum SolveError {
++    #[error("root constraints {origins:?}: {conflict}")]
++    RootConstraints {
++        origins: Vec<crate::resolvo_engine::request::RootConstraint>,
++        conflict: Box<SolveError>,
++    },
++    #[error("selected backend `{backend}` does not support {capability}")]
++    BackendCapability { backend: String, capability: String },
++    #[error(transparent)]
++    Configuration(Box<crate::resolvo_engine::configuration::ConfigurationSolveError>),
++    #[error("unsupported solve route: {0}")]
++    UnsupportedRoute(String),
++
+     #[error(transparent)]
+     Provider(#[from] DepProviderError),
+ 
+diff --git a/crates/vibe-resolver/src/lib.rs b/crates/vibe-resolver/src/lib.rs
+index 1260eb12e..17a6c1bec 100644
+--- a/crates/vibe-resolver/src/lib.rs
++++ b/crates/vibe-resolver/src/lib.rs
+@@ -111,7 +111,7 @@ pub(crate) use kind_check::assert_kind_matches;
+ /// assert_eq!(node.group.as_str(), "org.vibevm");
+ /// assert!(node.is_root);
+ /// ```
+-#[derive(Debug, Clone)]
++#[derive(Debug, Clone, PartialEq, Eq)]
+ #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
+ #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
+ pub struct ResolvedNode {
+@@ -151,7 +151,7 @@ pub struct ResolvedNode {
+ /// assert!(graph.find(&org, "wal").is_some());
+ /// assert_eq!(graph.roots().count(), 1);
+ /// ```
+-#[derive(Debug, Clone, Default)]
++#[derive(Debug, Clone, Default, PartialEq, Eq)]
+ #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
+ pub struct ResolvedGraph {
+     pub packages: Vec<ResolvedNode>,
+@@ -279,6 +279,13 @@ pub trait DepProvider {
+     implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
+ )]
+ pub trait VersionEnumerator: DepProvider {
++    fn edge_blocked(&self, _parent: &str, _target: &str) -> bool {
++        false
++    }
++    fn retained_choices(&self) -> &[resolvo_engine::SelectedChoice] {
++        &[]
++    }
++
+     /// A valid candidate incompatible with the admitted consumer intent.
+     /// Source failures must be returned by the provider, never placed here.
+     fn candidate_rejection(
+@@ -440,6 +447,7 @@ pub enum DepProviderError {
+ /// rather than module-private so the multiple solver impls in this crate
+ /// share one definition.
+ pub(crate) struct SolverState {
++    pub choices: Vec<resolvo_engine::SelectedChoice>,
+     pub chosen: HashMap<(Group, String), ChosenEntry>,
+     pub providers_index: HashMap<String, Vec<(Group, String, semver::Version)>>,
+     pub declared_conflicts: HashSet<(Group, String)>,
+@@ -463,6 +471,7 @@ pub(crate) struct EnqueuedPkg {
+ impl SolverState {
+     pub(crate) fn new() -> Self {
+         SolverState {
++            choices: Vec::new(),
+             chosen: HashMap::new(),
+             providers_index: HashMap::new(),
+             declared_conflicts: HashSet::new(),
+@@ -522,6 +531,11 @@ pub(crate) fn build_resolved_graph(
+         .map(|n| ((n.group.clone(), n.name.clone()), n.version.clone()))
+         .collect();
+     for node in packages.iter_mut() {
++        node.dependencies.retain(|dep| {
++            !dep.group
++                .as_ref()
++                .is_some_and(|group| obsolete.contains(&(group.clone(), dep.name.to_string())))
++        });
+         for dep in node.dependencies.iter_mut() {
+             if let Some(group) = dep.group.clone()
+                 && let Some(version) = resolved_versions.get(&(group, dep.name.to_string()))
+diff --git a/crates/vibe-resolver/src/naive.rs b/crates/vibe-resolver/src/naive.rs
+index ce5aadfab..792d45c0c 100644
+--- a/crates/vibe-resolver/src/naive.rs
++++ b/crates/vibe-resolver/src/naive.rs
+@@ -61,6 +61,14 @@ impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
+     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
+     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#determinism")]
+     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
++        Ok(self.solve_recorded(roots)?.graph)
++    }
++}
++impl<P: DepProvider> NaiveDepSolver<P> {
++    pub fn solve_recorded(
++        &self,
++        roots: &[PackageRef],
++    ) -> Result<crate::resolvo_engine::RecordedResolution, SolveError> {
+         let mut state = SolverState::new();
+         let root_keys: Vec<(Group, String)> = roots
+             .iter()
+@@ -108,11 +116,41 @@ impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
+                 )
+             })
+             .collect();
+-        Ok(crate::build_resolved_graph(
+-            &root_keys,
+-            chosen,
+-            &state.declared_obsolete,
+-        ))
++        let graph = crate::build_resolved_graph(&root_keys, chosen, &state.declared_obsolete);
++        state.choices.retain(|e| {
++            e.parent
++                .group
++                .as_ref()
++                .and_then(|g| graph.find(g, e.parent.name.as_str()))
++                .is_some()
++                && !e.provider.group.as_ref().is_some_and(|g| {
++                    state
++                        .declared_obsolete
++                        .contains(&(g.clone(), e.provider.name.to_string()))
++                })
++        });
++        for edge in &mut state.choices {
++            let target = edge
++                .provider
++                .group
++                .as_ref()
++                .and_then(|g| graph.find(g, edge.provider.name.as_str()))
++                .ok_or_else(|| {
++                    DepProviderError::Other("graph projection removed a selected provider".into())
++                })?;
++            edge.provider = PackageRef::parse(&format!(
++                "{}/{}@={}",
++                target.group, target.name, target.version
++            ))
++            .expect("selected coordinate");
++        }
++        state
++            .choices
++            .sort_by_key(|e| (e.parent.to_string(), e.declaration.clone(), e.alternative));
++        Ok(crate::resolvo_engine::RecordedResolution {
++            graph,
++            choices: state.choices,
++        })
+     }
+ }
+ 
+@@ -159,6 +197,9 @@ impl<P: DepProvider> NaiveDepSolver<P> {
+                     new_constraint: format!("{}", pkgref.version),
+                 });
+             }
++            if let Some(actual) = existing.manifest.package.as_ref().map(|p| p.kind) {
++                assert_kind_matches(pkgref.kind, actual, &pkgref.qualified_name())?;
++            }
+             // Mark root if this re-discovery came in as a root.
+             if is_root && let Some(e) = state.chosen.get_mut(&key) {
+                 e.is_root = true;
+@@ -223,20 +264,52 @@ impl<P: DepProvider> NaiveDepSolver<P> {
+ 
+         // Capture direct package deps verbatim — they go straight into the
+         // resolved node (used by lockfile `dependencies`).
+-        let direct_deps: Vec<PackageRef> = manifest.requires.packages.clone();
++        let mut direct_deps: Vec<PackageRef> = manifest.requires.packages.clone();
++        let parent = PackageRef::parse(&format!("{group}/{}@={version}", pkgref.name))
++            .expect("selected coordinate");
++        for (index, dep) in direct_deps.iter().enumerate() {
++            state.choices.push(crate::resolvo_engine::SelectedChoice {
++                parent: parent.clone(),
++                declaration: format!("requires.packages[{index}]"),
++                alternative: 0,
++                provider: dep.clone(),
++            });
++        }
+ 
+         // Resolve capability requires against the already-known provider
+         // index (which now includes this package's own provides).
+         verify_capability_requires(state, &pkgref, &manifest)?;
++        for (index, cap) in manifest.requires.capabilities.iter().enumerate() {
++            let (pg, pn, _) = state.providers_index[&cap.qualified()]
++                .iter()
++                .find(|(_, _, v)| cap.version.matches(v))
++                .expect("verified capability");
++            let provider = PackageRef::parse(&format!("{pg}/{pn}")).expect("provider coordinate");
++            direct_deps.push(provider.clone());
++            state.choices.push(crate::resolvo_engine::SelectedChoice {
++                parent: parent.clone(),
++                declaration: format!("requires.capabilities[{index}]:{cap}"),
++                alternative: 0,
++                provider,
++            });
++        }
+ 
+         // Resolve disjunctions: pick first option not already in conflict
+         // and that has a registered provider OR enqueue it.
+-        for disj in &manifest.requires_any {
+-            handle_disjunction(state, &pkgref, disj)?;
++        for (index, disj) in manifest.requires_any.iter().enumerate() {
++            let alternative = handle_disjunction(state, &pkgref, disj)?;
++            let provider = disj.one_of[alternative].clone();
++            direct_deps.push(provider.clone());
++            state.choices.push(crate::resolvo_engine::SelectedChoice {
++                parent: parent.clone(),
++                declaration: format!("requires_any[{index}]"),
++                alternative,
++                provider,
++            });
+         }
+ 
+         // Enqueue concrete deps for the next iteration.
+-        for d in &direct_deps {
++        for d in &manifest.requires.packages {
+             state.queue.push_back(EnqueuedPkg {
+                 pkgref: d.clone(),
+                 via: Some(pkgref.qualified_name()),
+@@ -312,7 +385,7 @@ fn handle_disjunction(
+     state: &mut SolverState,
+     requirer: &PackageRef,
+     disj: &vibe_core::manifest::RequiresAny,
+-) -> Result<(), SolveError> {
++) -> Result<usize, SolveError> {
+     // Binding the first alternative IS the emptiness check — the
+     // compiler carries the invariant from here to the enqueue below.
+     let Some(first) = disj.one_of.first() else {
+@@ -322,13 +395,14 @@ fn handle_disjunction(
+         });
+     };
+     // If any alternative is already chosen, satisfied.
+-    for opt in &disj.one_of {
++    for (index, opt) in disj.one_of.iter().enumerate() {
+         let og = require_group(opt)?;
+         if state
+             .chosen
+-            .contains_key(&(og.clone(), opt.name.to_string()))
++            .get(&(og.clone(), opt.name.to_string()))
++            .is_some_and(|chosen| opt.version.matches(&chosen.version))
+         {
+-            return Ok(());
++            return Ok(index);
+         }
+     }
+     // Otherwise: enqueue the first alternative. Naive — no backtracking
+@@ -338,7 +412,7 @@ fn handle_disjunction(
+         via: Some(format!("[[requires_any]] of {}", requirer.qualified_name())),
+         is_root: false,
+     });
+-    Ok(())
++    Ok(0)
+ }
+ 
+ #[cfg(test)]
+diff --git a/crates/vibe-resolver/src/resolvo_engine/configuration.rs b/crates/vibe-resolver/src/resolvo_engine/configuration.rs
+index 9f0fee7fa..37b521f94 100644
+--- a/crates/vibe-resolver/src/resolvo_engine/configuration.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/configuration.rs
+@@ -18,6 +18,7 @@ use vibe_wire::generated::consumer_configuration::e1::{request::Request, result:
+ type Coordinate = (Group, String, semver::Version);
+ 
+ /// Admitted normalized definition and the actual catalog receipt it interprets.
++#[derive(Debug, Clone)]
+ pub struct CandidateConfiguration {
+     pub package: PackageRef,
+     pub version: semver::Version,
+@@ -91,6 +92,8 @@ pub struct ConfiguredResolution {
+     pub effects: BTreeMap<String, FeatureExpansion>,
+     pub providers: BTreeMap<String, Vec<String>>,
+     pub rejected: Vec<CandidateReason>,
++    pub choices: Vec<super::SelectedChoice>,
++    pub manifests: BTreeMap<String, Manifest>,
+ }
+ 
+ enum Activation {
+@@ -107,6 +110,8 @@ struct Candidate {
+ struct ConfiguredCatalog<'a> {
+     catalog: &'a TransactionCatalog,
+     candidates: BTreeMap<Coordinate, Candidate>,
++    blocked: &'a BTreeSet<(String, String)>,
++    retained: &'a [super::SelectedChoice],
+ }
+ 
+ impl ResolvoDepSolver<&TransactionCatalog> {
+@@ -122,10 +127,29 @@ impl ResolvoDepSolver<&TransactionCatalog> {
+         request: &Request,
+         definitions: &[CandidateConfiguration],
+         defaults: &[DefaultBinding],
++    ) -> Result<ConfiguredResolution, ConfigurationSolveError> {
++        self.solve_configuration_routes(
++            roots,
++            request,
++            definitions,
++            defaults,
++            &BTreeSet::new(),
++            &[],
++        )
++    }
++
++    pub fn solve_configuration_routes(
++        &self,
++        roots: &[PackageRef],
++        request: &Request,
++        definitions: &[CandidateConfiguration],
++        defaults: &[DefaultBinding],
++        blocked: &BTreeSet<(String, String)>,
++        retained: &[super::SelectedChoice],
+     ) -> Result<ConfiguredResolution, ConfigurationSolveError> {
+         let edges = codec::admit_request(request).map_err(ConfigurationSolveError::Unsupported)?;
+-        // The legacy graph projection does not retain disjunction edges or
+-        // activation support through obsoletes/conditional targets. Refuse
++        // The graph projection does not retain complete activation support
++        // through obsoletes/conditional targets. Refuse
+         // those combinations explicitly at this complete-effects entrypoint.
+         // Ordinary DepSolver routes keep their existing behavior.
+         for (coordinate, _) in &self.provider.inspect().candidates {
+@@ -141,14 +165,13 @@ impl ResolvoDepSolver<&TransactionCatalog> {
+                 )?
+                 .manifest;
+             if !manifest.conditional_deps.is_empty()
+-                || !manifest.requires_any.is_empty()
+                 || !manifest.obsoletes.packages.is_empty()
+                 || !manifest.requires.git_packages.is_empty()
+                 || !manifest.requires.path_packages.is_empty()
+                 || !manifest.requires.var_packages.is_empty()
+             {
+                 return Err(ConfigurationSolveError::Unsupported(format!(
+-                    "{coordinate}: configured solve requires registry package edges without conditional targets, disjunctions or obsoletes"
++                    "{coordinate}: configured solve requires registry package edges without conditional targets or obsoletes"
+                 )));
+             }
+         }
+@@ -180,6 +203,8 @@ impl ResolvoDepSolver<&TransactionCatalog> {
+         let mut provider = ConfiguredCatalog {
+             catalog: self.provider,
+             candidates: BTreeMap::new(),
++            blocked,
++            retained,
+         };
+         // Validate all admitted definitions before classifying incompatibility.
+         // Malformed/dangling source data must never become a SAT rejection.
+@@ -487,7 +512,7 @@ impl ResolvoDepSolver<&TransactionCatalog> {
+             .map(|c| c.reason.clone())
+             .collect();
+         let solver = ResolvoDepSolver::new(provider);
+-        let graph = match solver.solve_transaction(roots) {
++        let recorded = match solver.solve_recorded_transaction(roots) {
+             Ok(graph) => graph,
+             Err(SolveError::Provider(error)) => return Err(error.into()),
+             Err(solver) => {
+@@ -498,7 +523,9 @@ impl ResolvoDepSolver<&TransactionCatalog> {
+                 });
+             }
+         };
++        let graph = recorded.graph;
+         let provider = solver.into_inner();
++        let mut manifests = BTreeMap::new();
+         let mut needs = Vec::new();
+         let mut rediscovery = Vec::new();
+         let mut effects = BTreeMap::new();
+@@ -519,6 +546,10 @@ impl ResolvoDepSolver<&TransactionCatalog> {
+                     .map(ToString::to_string)
+                     .collect(),
+             );
++            manifests.insert(
++                coordinate.clone(),
++                provider.fetch_manifest(&node.group, &node.name, &node.version)?,
++            );
+             let expansion = if let Some(candidate) = provider.candidates.get(&key) {
+                 match &candidate.activation {
+                     Activation::Ready(expansion) => expansion.clone(),
+@@ -569,6 +600,8 @@ impl ResolvoDepSolver<&TransactionCatalog> {
+             effects,
+             providers,
+             rejected,
++            choices: recorded.choices,
++            manifests,
+         })
+     }
+ }
+@@ -593,6 +626,13 @@ impl DepProvider for ConfiguredCatalog<'_> {
+     }
+ }
+ impl VersionEnumerator for ConfiguredCatalog<'_> {
++    fn edge_blocked(&self, parent: &str, target: &str) -> bool {
++        self.blocked.contains(&(parent.into(), target.into()))
++    }
++    fn retained_choices(&self) -> &[super::SelectedChoice] {
++        self.retained
++    }
++
+     fn cached_capabilities(&self) -> Option<&super::CapIndex> {
+         self.catalog.cached_capabilities()
+     }
+diff --git a/crates/vibe-resolver/src/resolvo_engine/mod.rs b/crates/vibe-resolver/src/resolvo_engine/mod.rs
+index a23ca36d9..48b084d1d 100644
+--- a/crates/vibe-resolver/src/resolvo_engine/mod.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/mod.rs
+@@ -15,6 +15,7 @@
+ mod capabilities;
+ mod catalog;
+ pub mod configuration;
++pub mod request;
+ mod snapshot;
+ pub use capabilities::{CapIndex, CapProvider};
+ pub use catalog::{CatalogInspection, TransactionCatalog};
+@@ -31,8 +32,17 @@ use crate::{
+     Chosen, DepProviderError, DepSolver, ResolvedGraph, SolveError, VersionEnumerator,
+     assert_kind_matches, build_resolved_graph,
+ };
++pub use provider::SelectedChoice;
+ use provider::VibevmResolvoProvider;
+ 
++/// Selected SAT witnesses accompany the package projection. They are captured
++/// during the solve, never guessed from package presence afterward.
++#[derive(Debug, Clone)]
++pub struct RecordedResolution {
++    pub graph: ResolvedGraph,
++    pub choices: Vec<SelectedChoice>,
++}
++
+ /// The resolvo-backed `DepSolver`. Construct it the way the other solver
+ /// cells are constructed and call [`DepSolver::solve`]:
+ ///
+@@ -93,6 +103,18 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
+ 
+ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+     fn solve_transaction(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
++        Ok(self.solve_recorded_transaction(roots)?.graph)
++    }
++
++    pub fn solve_recorded(&self, roots: &[PackageRef]) -> Result<RecordedResolution, SolveError> {
++        let transaction = ResolvoDepSolver::new(snapshot::MetadataSnapshot::new(&self.provider));
++        transaction.solve_recorded_transaction(roots)
++    }
++
++    fn solve_recorded_transaction(
++        &self,
++        roots: &[PackageRef],
++    ) -> Result<RecordedResolution, SolveError> {
+         // Hard solve, then a best-effort greedy expansion over
+         // `[recommends]` (PROP-003 §2.3.3): each recommended package is
+         // tried via a re-solve and kept only if the graph stays
+@@ -102,11 +124,12 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+         // per-package recommends ride this re-solve loop — batching them
+         // as soft is a future optimisation.
+         let mut extra: Vec<PackageRef> = Vec::new();
++        let mut recommendation_edges: Vec<SelectedChoice> = Vec::new();
+         let mut tried: HashSet<(Group, String)> = HashSet::new();
+         let mut graph = self.solve_hard(roots, &extra)?;
+         loop {
+-            let recommends = self.collect_recommends(&graph, &tried)?;
+-            let Some(rec) = recommends.into_iter().next() else {
++            let recommends = self.collect_recommends(&graph.graph, &tried)?;
++            let Some((rec, witness)) = recommends.into_iter().next() else {
+                 break;
+             };
+             if let Some(group) = rec.group.clone() {
+@@ -116,13 +139,57 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+             trial.push(rec);
+             match self.solve_hard(roots, &trial) {
+                 Ok(extended) => {
+-                    extra = trial;
+-                    graph = extended;
++                    // A recommendation belongs to its declaring candidate.
++                    // Do not carry it across a trial that discards that candidate.
++                    if recommendation_edges
++                        .iter()
++                        .chain(std::iter::once(&witness))
++                        .all(|e| {
++                            extended.graph.iter().any(|n| {
++                                e.parent.group.as_ref() == Some(&n.group)
++                                    && e.parent.name == n.name
++                                    && e.parent.version.matches(&n.version)
++                            })
++                        })
++                    {
++                        recommendation_edges.push(witness);
++                        extra = trial;
++                        graph = extended;
++                    }
+                 }
+                 Err(SolveError::Provider(error)) => return Err(error.into()),
+                 Err(_) => {}
+             }
+         }
++        for mut edge in recommendation_edges {
++            let target = graph
++                .graph
++                .iter()
++                .find(|n| {
++                    edge.provider.group.as_ref() == Some(&n.group) && edge.provider.name == n.name
++                })
++                .expect("accepted recommendation");
++            edge.provider = PackageRef::parse(&format!(
++                "{}/{}@={}",
++                target.group, target.name, target.version
++            ))
++            .expect("selected coordinate");
++            let parent = graph
++                .graph
++                .packages
++                .iter_mut()
++                .find(|n| {
++                    edge.parent.group.as_ref() == Some(&n.group) && edge.parent.name == n.name
++                })
++                .expect("retained recommending candidate");
++            if !parent.dependencies.contains(&edge.provider) {
++                parent.dependencies.push(edge.provider.clone());
++            }
++            graph.choices.push(edge);
++        }
++        graph
++            .choices
++            .sort_by_key(|e| (e.parent.to_string(), e.declaration.clone(), e.alternative));
+         Ok(graph)
+     }
+ }
+@@ -137,7 +204,7 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+         &self,
+         roots: &[PackageRef],
+         extra: &[PackageRef],
+-    ) -> Result<ResolvedGraph, SolveError> {
++    ) -> Result<RecordedResolution, SolveError> {
+         // Pre-scan the package closure (roots + extra) for capability
+         // providers (PROP-017 §3) before building the resolvo provider.
+         let scan_roots: Vec<PackageRef> = roots.iter().chain(extra.iter()).cloned().collect();
+@@ -196,7 +263,11 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+                 let mut chosen: HashMap<(Group, String), Chosen> = HashMap::new();
+                 let mut obsolete: HashSet<(Group, String)> = HashSet::new();
+                 let mut selected = Vec::new();
++                let mut choices = rp.selected_choices(&solvables)?;
+                 for id in solvables {
++                    if rp.is_choice(id) {
++                        continue;
++                    }
+                     let Some((group, name, version)) = rp.solvable_parts(id) else {
+                         return Err(SolveError::Provider(DepProviderError::Other(
+                             "internal: a chosen solvable did not resolve".to_string(),
+@@ -215,15 +286,32 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+                     // with `sat`) additionally checks transitive prefixes
+                     // via the pkgref it carries through `process_one`.
+                     if is_root && let Some(actual) = manifest.package.as_ref().map(|p| p.kind) {
+-                        let requested = roots
++                        for root in roots
+                             .iter()
+-                            .find(|r| {
+-                                r.group.as_ref().is_some_and(|g| g == &group) && r.name == name
+-                            })
+-                            .and_then(|r| r.kind);
+-                        assert_kind_matches(requested, actual, &format!("{group}/{name}"))?;
++                            .filter(|r| r.group.as_ref() == Some(&group) && r.name == name)
++                        {
++                            assert_kind_matches(root.kind, actual, &format!("{group}/{name}"))?;
++                        }
+                     }
+-                    let direct_deps = manifest.requires.packages.clone();
++                    let mut direct_deps: Vec<_> = manifest
++                        .requires
++                        .packages
++                        .iter()
++                        .filter(|dep| {
++                            !self
++                                .provider
++                                .edge_blocked(&format!("{group}/{name}"), &dep.qualified_name())
++                        })
++                        .cloned()
++                        .collect();
++                    for edge in choices.iter().filter(|e| {
++                        e.parent.group.as_ref() == Some(&group) && e.parent.name == name
++                    }) {
++                        if !direct_deps.contains(&edge.provider) {
++                            direct_deps.push(edge.provider.clone());
++                        }
++                    }
++
+                     // `[obsoletes]` → drop the superseded node from the
+                     // output, mirroring the naive cell (PROP-017 §3).
+                     for ob in &manifest.obsoletes.packages {
+@@ -244,8 +332,91 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+                 // Capability requirements of the selected packages are
+                 // verified against the selected set — the clean
+                 // CapabilityUnmet verdict (PROP-017 §3).
++                // Masked capability declarations have already been discharged
++                // by the route mask; unmasked ones still require a witness.
++                for (parent, _, manifest) in &mut selected {
++                    let mut index = 0;
++                    manifest.requires.capabilities.retain(|cap| {
++                        let declaration = format!("requires.capabilities[{index}]:{cap}");
++                        index += 1;
++                        !self.provider.retained_choices().iter().any(|e| {
++                            e.parent.qualified_name() == *parent
++                                && e.declaration == declaration
++                                && self
++                                    .provider
++                                    .edge_blocked(parent, &e.provider.qualified_name())
++                        })
++                    });
++                }
+                 capabilities::verify(&selected)?;
+-                Ok(build_resolved_graph(&root_order, chosen, &obsolete))
++                let graph = build_resolved_graph(&root_order, chosen, &obsolete);
++                for edge in &choices {
++                    if graph
++                        .find(
++                            edge.parent.group.as_ref().expect("qualified witness"),
++                            edge.parent.name.as_str(),
++                        )
++                        .is_some()
++                        && graph
++                            .find(
++                                edge.provider.group.as_ref().expect("qualified witness"),
++                                edge.provider.name.as_str(),
++                            )
++                            .is_none()
++                    {
++                        return Err(DepProviderError::Other(
++                            "obsolete projection removed a selected choice provider".into(),
++                        )
++                        .into());
++                    }
++                }
++                for node in graph.iter() {
++                    let manifest =
++                        self.provider
++                            .fetch_manifest(&node.group, &node.name, &node.version)?;
++                    for (index, dep) in manifest.requires.packages.iter().enumerate() {
++                        if self.provider.edge_blocked(
++                            &format!("{}/{}", node.group, node.name),
++                            &dep.qualified_name(),
++                        ) {
++                            continue;
++                        }
++                        if dep
++                            .group
++                            .as_ref()
++                            .is_some_and(|g| obsolete.contains(&(g.clone(), dep.name.to_string())))
++                        {
++                            continue;
++                        }
++                        let Some(target) = dep
++                            .group
++                            .as_ref()
++                            .and_then(|g| graph.find(g, dep.name.as_str()))
++                        else {
++                            return Err(DepProviderError::Other(
++                                "graph projection lost a selected dependency".into(),
++                            )
++                            .into());
++                        };
++                        choices.push(SelectedChoice {
++                            parent: PackageRef::parse(&format!(
++                                "{}/{}@={}",
++                                node.group, node.name, node.version
++                            ))
++                            .expect("selected coordinate"),
++                            declaration: format!("requires.packages[{index}]"),
++                            alternative: 0,
++                            provider: PackageRef::parse(&format!(
++                                "{}/{}@={}",
++                                target.group, target.name, target.version
++                            ))
++                            .expect("selected coordinate"),
++                        });
++                    }
++                }
++                choices
++                    .sort_by_key(|e| (e.parent.to_string(), e.declaration.clone(), e.alternative));
++                Ok(RecordedResolution { graph, choices })
+             }
+             Err(UnsolvableOrCancelled::Unsolvable(conflict)) => Err(SolveError::Unsatisfiable {
+                 explanation: conflict.display_user_friendly(&solver).to_string(),
+@@ -263,7 +434,7 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+         &self,
+         graph: &ResolvedGraph,
+         tried: &HashSet<(Group, String)>,
+-    ) -> Result<Vec<PackageRef>, SolveError> {
++    ) -> Result<Vec<(PackageRef, SelectedChoice)>, SolveError> {
+         let mut out = Vec::new();
+         let mut seen: HashSet<(Group, String)> = HashSet::new();
+         for node in graph.iter() {
+@@ -271,7 +442,13 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+                 .provider
+                 .fetch_manifest(&node.group, &node.name, &node.version)
+                 .map_err(SolveError::Provider)?;
+-            for rec in &manifest.recommends.packages {
++            for (index, rec) in manifest.recommends.packages.iter().enumerate() {
++                if self.provider.edge_blocked(
++                    &format!("{}/{}", node.group, node.name),
++                    &rec.qualified_name(),
++                ) {
++                    continue;
++                }
+                 let Some(group) = rec.group.clone() else {
+                     continue;
+                 };
+@@ -280,7 +457,19 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+                     continue;
+                 }
+                 if seen.insert(key) {
+-                    out.push(rec.clone());
++                    out.push((
++                        rec.clone(),
++                        SelectedChoice {
++                            parent: PackageRef::parse(&format!(
++                                "{}/{}@={}",
++                                node.group, node.name, node.version
++                            ))
++                            .expect("selected coordinate"),
++                            declaration: format!("recommends.packages[{index}]"),
++                            alternative: 0,
++                            provider: rec.clone(),
++                        },
++                    ));
+                 }
+             }
+         }
+@@ -299,3 +488,6 @@ mod m_05_c_1_cases;
+ mod m_05_c_2_cases;
+ 
+ pub use semver::Version as CandidateVersion;
++
++#[cfg(test)]
++mod m_05_c_3_cases;
+diff --git a/crates/vibe-resolver/src/resolvo_engine/provider.rs b/crates/vibe-resolver/src/resolvo_engine/provider.rs
+index c2d240a27..de72b5d6d 100644
+--- a/crates/vibe-resolver/src/resolvo_engine/provider.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/provider.rs
+@@ -19,7 +19,7 @@ use resolvo::{
+     StringId, VersionSetId, VersionSetUnionId,
+ };
+ use vibe_core::manifest::Manifest;
+-use vibe_core::{Group, VersionSpec};
++use vibe_core::{Group, PackageRef, VersionSpec};
+ 
+ use super::capabilities::CapIndex;
+ use super::version_set::SemverVersionSet;
+@@ -28,6 +28,24 @@ use crate::{DepProviderError, VersionEnumerator};
+ /// The qualified `"group/name"` string resolvo interns as a package name.
+ type PkgName = String;
+ 
++/// A solver-selected witness for one disjunction declaration. Its target is
++/// a real version set; the witness is an internal literal, never a package.
++#[derive(Clone)]
++struct Choice {
++    parent: SolvableId,
++    declaration: String,
++    alternative: usize,
++    target: VersionSetId,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct SelectedChoice {
++    pub parent: PackageRef,
++    pub declaration: String,
++    pub alternative: usize,
++    pub provider: PackageRef,
++}
++
+ /// resolvo adapter over a vibevm `VersionEnumerator`.
+ pub(crate) struct VibevmResolvoProvider<'p, P: VersionEnumerator> {
+     provider: &'p P,
+@@ -40,6 +58,7 @@ pub(crate) struct VibevmResolvoProvider<'p, P: VersionEnumerator> {
+     manifests: RefCell<HashMap<SolvableId, Manifest>>,
+     /// First provider error seen mid-solve (callbacks can't return one).
+     error: RefCell<Option<DepProviderError>>,
++    choices: RefCell<HashMap<SolvableId, Choice>>,
+ }
+ 
+ impl<'p, P: VersionEnumerator> VibevmResolvoProvider<'p, P> {
+@@ -51,7 +70,151 @@ impl<'p, P: VersionEnumerator> VibevmResolvoProvider<'p, P> {
+             candidates: RefCell::new(HashMap::new()),
+             manifests: RefCell::new(HashMap::new()),
+             error: RefCell::new(None),
++            choices: RefCell::new(HashMap::new()),
++        }
++    }
++
++    fn choice_requirement(
++        &self,
++        parent: SolvableId,
++        declaration: String,
++        targets: Vec<VersionSetId>,
++    ) -> VersionSetId {
++        // NUL cannot occur in an admitted package coordinate. The name is
++        // local to this provider/solve and cannot escape into the graph.
++        let name = self
++            .pool
++            .intern_package_name(format!("\0choice:{parent:?}:{declaration}"));
++        let mut candidates = Vec::new();
++        let (group, package, version) = self.solvable_parts(parent).expect("choice parent is real");
++        let retained = self.provider.retained_choices().iter().find(|e| {
++            e.parent.group.as_ref() == Some(&group)
++                && e.parent.name == package
++                && e.parent.version.matches(&version)
++                && e.declaration == declaration
++        });
++        for (alternative, target) in targets.into_iter().enumerate() {
++            let target_name = self.pool.resolve_version_set_package_name(target);
++            let Some((target_group, target_package)) = self.name_parts(target_name) else {
++                continue;
++            };
++            if self.provider.edge_blocked(
++                &format!("{group}/{package}"),
++                &format!("{target_group}/{target_package}"),
++            ) {
++                continue;
++            }
++            if retained.is_some_and(|e| {
++                e.provider.group.as_ref() != Some(&target_group)
++                    || e.provider.name != target_package
++            }) {
++                continue;
++            }
++            let target = if let Some(edge) = retained {
++                let pinned = match &edge.provider.version {
++                    VersionSpec::Req(req) => req.comparators.first().map(|c| {
++                        let mut version = semver::Version::new(
++                            c.major,
++                            c.minor.unwrap_or(0),
++                            c.patch.unwrap_or(0),
++                        );
++                        version.pre = c.pre.clone();
++                        version
++                    }),
++                    _ => None,
++                };
++                let Some(pinned) =
++                    pinned.filter(|v| self.pool.resolve_version_set(target).contains(v))
++                else {
++                    continue;
++                };
++                self.intern_explicit(&target_group, &target_package, BTreeSet::from([pinned]))
++            } else {
++                target
++            };
++            let id = self
++                .pool
++                .intern_solvable(name, semver::Version::new(0, 0, alternative as u64));
++            self.choices.borrow_mut().insert(
++                id,
++                Choice {
++                    parent,
++                    declaration: declaration.clone(),
++                    alternative,
++                    target,
++                },
++            );
++            candidates.push(id);
++        }
++        self.candidates.borrow_mut().insert(name, candidates);
++        self.pool
++            .intern_version_set(name, SemverVersionSet::from_spec(&VersionSpec::Latest))
++    }
++
++    fn choice_blocked(&self, parent: SolvableId, declaration: &str) -> bool {
++        let Some((group, name, version)) = self.solvable_parts(parent) else {
++            return false;
++        };
++        self.provider.retained_choices().iter().any(|e| {
++            e.parent.group.as_ref() == Some(&group)
++                && e.parent.name == name
++                && e.parent.version.matches(&version)
++                && e.declaration == declaration
++                && self
++                    .provider
++                    .edge_blocked(&format!("{group}/{name}"), &e.provider.qualified_name())
++        })
++    }
++
++    pub(crate) fn is_choice(&self, id: SolvableId) -> bool {
++        self.choices.borrow().contains_key(&id)
++    }
++
++    pub(crate) fn selected_choices(
++        &self,
++        selected: &[SolvableId],
++    ) -> Result<Vec<SelectedChoice>, DepProviderError> {
++        let pin = |id| {
++            let (group, name, version) = self.solvable_parts(id).ok_or_else(|| {
++                DepProviderError::Other("selected choice has no package coordinate".into())
++            })?;
++            PackageRef::parse(&format!("{group}/{name}@={version}"))
++                .map_err(|e| DepProviderError::Other(e.to_string()))
++        };
++        let mut edges = Vec::new();
++        for id in selected {
++            let Some(choice) = self.choices.borrow().get(id).cloned() else {
++                continue;
++            };
++            if !selected.contains(&choice.parent) {
++                return Err(DepProviderError::Other(
++                    "selected witness lost its declaring candidate".into(),
++                ));
++            }
++            let target_name = self.pool.resolve_version_set_package_name(choice.target);
++            let target_set = self.pool.resolve_version_set(choice.target);
++            let targets: Vec<_> = selected
++                .iter()
++                .copied()
++                .filter(|id| {
++                    let solvable = self.pool.resolve_solvable(*id);
++                    solvable.name == target_name && target_set.contains(&solvable.record)
++                })
++                .collect();
++            if targets.len() != 1 {
++                return Err(DepProviderError::Other(
++                    "selected witness has no unique selected provider".into(),
++                ));
++            }
++            edges.push(SelectedChoice {
++                parent: pin(choice.parent)?,
++                declaration: choice.declaration,
++                alternative: choice.alternative,
++                provider: pin(targets[0])?,
++            });
+         }
++        edges.sort_by_key(|e| (e.parent.to_string(), e.declaration.clone(), e.alternative));
++        Ok(edges)
+     }
+ 
+     /// Intern (or look up) the `NameId` for a qualified package.
+@@ -245,6 +408,11 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+     }
+ 
+     async fn sort_candidates(&self, _cache: &SolverCache<Self>, solvables: &mut [SolvableId]) {
++        if solvables.first().is_some_and(|id| self.is_choice(*id)) {
++            // Preserve authored alternative order as a preference only; SAT
++            // may backtrack and the returned witness records the actual choice.
++            return;
++        }
+         // Highest version first → resolvo's first found solution is the
+         // newest-feasible one (PROP-017 §3, §7 — "prefer newest" for a
+         // sort, not a separate optimisation pass).
+@@ -256,6 +424,17 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+     }
+ 
+     async fn get_dependencies(&self, solvable: SolvableId) -> Dependencies {
++        if let Some(choice) = self.choices.borrow().get(&solvable).cloned() {
++            let parent = self.pool.resolve_solvable(choice.parent);
++            let parent_set = self.pool.intern_version_set(
++                parent.name,
++                SemverVersionSet::Explicit(BTreeSet::from([parent.record.clone()])),
++            );
++            return Dependencies::Known(KnownDependencies {
++                requirements: vec![choice.target.into(), parent_set.into()],
++                constrains: Vec::new(),
++            });
++        }
+         let Some((group, name, version)) = self.solvable_parts(solvable) else {
+             return Dependencies::Unknown(
+                 self.pool.intern_string("internal: unresolvable solvable"),
+@@ -273,7 +452,13 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+         };
+ 
+         let mut requirements = Vec::new();
+-        for dep in &manifest.requires.packages {
++        for (index, dep) in manifest.requires.packages.iter().enumerate() {
++            if self
++                .provider
++                .edge_blocked(&format!("{group}/{name}"), &dep.qualified_name())
++            {
++                continue;
++            }
+             let Some(dep_group) = dep.group.clone() else {
+                 self.record_error(DepProviderError::Other(format!(
+                     "dependency `{}` of `{group}/{name}` is not group-qualified",
+@@ -281,6 +466,18 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+                 )));
+                 continue;
+             };
++            let retained = self.provider.retained_choices().iter().find(|e| {
++                e.parent.group.as_ref() == Some(&group)
++                    && e.parent.name == name
++                    && e.parent.version.matches(&version)
++                    && e.declaration == format!("requires.packages[{index}]")
++            });
++            if let Some(edge) = retained {
++                requirements.push(
++                    self.intern_version_set(&dep_group, dep.name.as_str(), &edge.provider.version)
++                        .into(),
++                );
++            }
+             let vs = self.intern_version_set(&dep_group, dep.name.as_str(), &dep.version);
+             requirements.push(vs.into());
+         }
+@@ -288,7 +485,10 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+         // `[[requires_any]]` → a resolvo Union requirement: native OR
+         // with backtracking (PROP-017 §3). naive takes the first option
+         // and cannot reconsider; resolvo explores the alternatives.
+-        for disj in &manifest.requires_any {
++        for (index, disj) in manifest.requires_any.iter().enumerate() {
++            if self.choice_blocked(solvable, &format!("requires_any[{index}]")) {
++                continue;
++            }
+             let mut alts = Vec::with_capacity(disj.one_of.len());
+             for alt in &disj.one_of {
+                 let Some(alt_group) = alt.group.clone() else {
+@@ -301,16 +501,15 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+                 };
+                 alts.push(self.intern_version_set(&alt_group, alt.name.as_str(), &alt.version));
+             }
+-            let mut it = alts.into_iter();
+-            match it.next() {
+-                Some(first) => {
+-                    let union = self.pool.intern_version_set_union(first, it);
+-                    requirements.push(union.into());
+-                }
+-                None => self.record_error(DepProviderError::Other(format!(
+-                    "`[[requires_any]]` declared by `{group}/{name}` has no \
+-                     group-qualified alternative"
+-                ))),
++            if alts.is_empty() {
++                self.record_error(DepProviderError::Other(format!(
++                    "`[[requires_any]]` declared by `{group}/{name}` has no group-qualified alternative"
++                )));
++            } else {
++                requirements.push(
++                    self.choice_requirement(solvable, format!("requires_any[{index}]"), alts)
++                        .into(),
++                );
+             }
+         }
+ 
+@@ -320,7 +519,13 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+         // §3). naive can only satisfy a capability from packages already
+         // pulled in; this pulls a provider in. No match → no requirement
+         // here; `capabilities::verify` yields CapabilityUnmet post-solve.
+-        for cap_req in &manifest.requires.capabilities {
++        for (index, cap_req) in manifest.requires.capabilities.iter().enumerate() {
++            if self.choice_blocked(
++                solvable,
++                &format!("requires.capabilities[{index}]:{cap_req}"),
++            ) {
++                continue;
++            }
+             let mut by_provider: HashMap<(Group, String), BTreeSet<semver::Version>> =
+                 HashMap::new();
+             if let Some(providers) = self.cap_providers.get(&cap_req.qualified()) {
+@@ -342,10 +547,15 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+                 .into_iter()
+                 .map(|((pg, pn), versions)| self.intern_explicit(&pg, &pn, versions))
+                 .collect();
+-            let mut it = vs_ids.into_iter();
+-            if let Some(first) = it.next() {
+-                let union = self.pool.intern_version_set_union(first, it);
+-                requirements.push(union.into());
++            if !vs_ids.is_empty() {
++                requirements.push(
++                    self.choice_requirement(
++                        solvable,
++                        format!("requires.capabilities[{index}]:{cap_req}"),
++                        vs_ids,
++                    )
++                    .into(),
++                );
+             }
+         }
+ 
+diff --git a/crates/vibe-resolver/src/resolvo_engine/snapshot.rs b/crates/vibe-resolver/src/resolvo_engine/snapshot.rs
+index f01c389f9..c6f695bfb 100644
+--- a/crates/vibe-resolver/src/resolvo_engine/snapshot.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/snapshot.rs
+@@ -55,6 +55,13 @@ impl<P: VersionEnumerator> DepProvider for MetadataSnapshot<'_, P> {
+ }
+ 
+ impl<P: VersionEnumerator> VersionEnumerator for MetadataSnapshot<'_, P> {
++    fn edge_blocked(&self, parent: &str, target: &str) -> bool {
++        self.provider.edge_blocked(parent, target)
++    }
++    fn retained_choices(&self) -> &[super::SelectedChoice] {
++        self.provider.retained_choices()
++    }
++
+     fn candidate_rejection(
+         &self,
+         group: &Group,
+diff --git a/crates/vibe-resolver/src/sat.rs b/crates/vibe-resolver/src/sat.rs
+index 08fd2339c..e21da4173 100644
+--- a/crates/vibe-resolver/src/sat.rs
++++ b/crates/vibe-resolver/src/sat.rs
+@@ -182,6 +182,14 @@ fn conflict_key(package: &str) -> Result<(Group, String), SolveError> {
+ #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
+ impl<P: DepProvider> DepSolver for SatDepSolver<P> {
+     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
++        Ok(self.solve_recorded(roots)?.graph)
++    }
++}
++impl<P: DepProvider> SatDepSolver<P> {
++    pub fn solve_recorded(
++        &self,
++        roots: &[PackageRef],
++    ) -> Result<crate::resolvo_engine::RecordedResolution, SolveError> {
+         // The choice stack: each entry excludes `>= bound` for its
+         // package. The effective bound per package is the LOWEST entry
+         // (entries for one package only ever descend).
+@@ -200,7 +208,7 @@ impl<P: DepProvider> DepSolver for SatDepSolver<P> {
+                 inner: &self.provider,
+                 bounds: &bounds,
+             };
+-            let attempt = NaiveDepSolver::new(bounded).solve(roots);
++            let attempt = NaiveDepSolver::new(bounded).solve_recorded(roots);
+             match attempt {
+                 Ok(graph) => return Ok(graph),
+                 Err(SolveError::VersionConflict {
+diff --git a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+index 7b00a1178..1a778b279 100644
+--- a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
++++ b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+@@ -371,7 +371,7 @@ flow:migration-discipline = "^0.1"</fence>
+       </design-conditional-when-to-use>
+       <req-conditional-fixpoint title="Conditional dependencies resolve to a fixed point">
+         <p><conditional-fixpoint-req fact="true" status="impl/done">`req r1`</conditional-fixpoint-req></p>
+-        <p><CONDITIONAL-FIXPOINT fact="true" status="impl/done">**Solver impact.** Conditional deps are evaluated **after** the static SAT solve has run on unconditional deps (otherwise the solver doesn't know which probes will fire). The flow: solve unconditional → evaluate `[target.&lt;...&gt;.dependencies]` predicates → add new requirements → re-solve. Convergence guaranteed in finite steps because each pass only adds requirements, never relaxes them; libsolv handles the incremental rule addition cleanly.</CONDITIONAL-FIXPOINT></p>
++        <p><CONDITIONAL-FIXPOINT fact="true" status="spec/done">Conditional dependencies are evaluated after static solving against the selected project context. Each active declaration adds its complete constraint, even when its target is already selected. The existing conditional owner re-solves against the same immutable request/catalog, retaining declaration/provider provenance. A changed declaring candidate or an unstable bounded retry is explicitly unsupported, not a completeness claim. Conditional/configuration combinations without complete candidate support refuse; no inconsistent graph reaches apply.</CONDITIONAL-FIXPOINT></p>
+       </req-conditional-fixpoint>
+       <req-conditional-host-invariance title="Predicate evaluation is host-invariant">
+         <p><conditional-host-invariance-req fact="true" status="impl/done">`req r1`</conditional-host-invariance-req></p>
+@@ -899,6 +899,14 @@ files_written = [
+     <p><M05C2-CONSUMERS status="spec/done">Every original incoming consumer edge, selection intent, version constraint and provenance survives candidate rejection unchanged. Evaluate all consumers of one configuration together through the B2 evaluator. A valid older candidate may satisfy the same authorized intent. Conflict evidence retains original consumer reasons alongside the candidate coordinate and exact C1 identity; source errors remain operational errors, never candidate exclusions.</M05C2-CONSUMERS></p>
+     <p><M05C2-DEFAULTS status="spec/done">Permission to use a declared default binds the exact shown candidate source/content/definition identity. Choosing another definition does not authorize its defaults, even if it is older or the member spelling happens to match. A selected candidate without that exact binding requires rediscovery before effects are returned. The comparison covers default-governed omitted intent even when the current definition removes the shown default or group and therefore reports no defaults used. Explicit selections retain their original meaning and are not replaced by defaults.</M05C2-DEFAULTS></p>
+     <p><M05C2-BOUNDARY status="spec/done">The configured resolver consumes admitted, source-bound B1/B2 definitions and immutable C1 metadata. Unsupported combinations refuse before returning mutation effects. Completeness is the existing solver's finite candidate search, never a fixed retry limit. Legacy DepSolver routes, ordinary manifest parsing, B3 opt-in profiles and C1 operational-error propagation remain intact; universal caller-route parity is separate C3 work. Counterexamples compare the entire selected graph and all derived effects, including provider contributions.</M05C2-BOUNDARY></p>
+-    <p><M05C2-ADMITTED-SURFACE status="spec/done">The configured Rust entry accepts fixed explicit incoming Vibe consumer requests, one configuration instance per package, and normalized definitions supplied by the admitting caller with exact C1 receipts. It preserves the full request rather than inferring edges from installed state. Default authorization retains that request and the full shown normalized definition as well as its source/content/definition receipt. Native candidate selection, multiple instances of one package, cross-package feature forwarding and non-registry dependency sources refuse. Conditional targets, requires_any and obsoletes also refuse on this entry because the incumbent graph projection does not retain their complete activation support. These refusals are explicit unsupported outcomes, not unsatisfiability claims or a substitute resolver. The ordinary resolver routes and B1/B2 standalone APIs retain their existing semantics.</M05C2-ADMITTED-SURFACE></p>
++    <p><M05C2-ADMITTED-SURFACE status="spec/done">The configured Rust entry accepts fixed explicit incoming Vibe consumer requests, one configuration instance per package, and normalized definitions supplied by the admitting caller with exact C1 receipts. It preserves the full request rather than inferring edges from installed state. Default authorization retains that request and the full shown normalized definition as well as its source/content/definition receipt. Native candidate selection, multiple instances of one package, cross-package feature forwarding and non-registry dependency sources refuse. Conditional targets and obsoletes refuse on this entry because their complete activation support remains unavailable. C3 admits technical disjunctions through the incumbent solver with selected declaration/provider witnesses retained; no first-alternative inference supplies their edges. These refusals are explicit unsupported outcomes, not unsatisfiability claims or a substitute resolver. The ordinary resolver routes and B1/B2 standalone APIs retain their existing semantics.</M05C2-ADMITTED-SURFACE></p>
++  </section>
++  <section title="16. Normalized production route contract (M-05-C.3)">
++    <p><M05C3-REQUEST status="spec/done">Every supported solve, metadata, masked, conditional and visibility route consumes the same immutable normalized request and candidate catalog. Preserve every incoming root constraint and consumer intent, including repeated coordinates, exact selections and candidate-bound default permission. Route-specific masks and additional conditional requirements never replace or weaken the original request. Metadata must expose the selected candidate's requested effects rather than reconstructing an older unconfigured manifest.</M05C3-REQUEST></p>
++    <p><M05C3-ROOT-UNION status="spec/done">Bare install preserves every workspace member declaration and its constraint origin. Explicit CLI install/update preserves every supplied CLI root, superseding a named coordinate's old declaration only on the exact selected project node being edited. Other members' original constraints remain active; for CLI-named coordinates their ranges are not converted to old lock pins. Unnamed coordinates retain minimum-churn hold-pins behavior. Incompatible active constraints produce a typed conflict with origins, never first-wins loss. Plans retain normalized intent and selected declaration/provider provenance through the confirmation boundary.</M05C3-ROOT-UNION></p>
++    <p><M05C3-EDGES status="spec/done">The final graph retains the actual selected dependency edges, including capability providers and technical disjunction alternatives. Each edge carries its selected declaration and provider provenance. A set of all possible providers, the first authored alternative, or an inference from coincidental package presence is not evidence of the solver's selected edge. Visibility retry preserves consumer requests and exact choices on retained edges.</M05C3-EDGES></p>
++    <p><M05C3-REFUSAL status="spec/done">A backend unable to honor a requested capability returns a typed refusal retaining the selected backend; it never falls back to another backend. Ordinary supported disjunction and capability routes must retain their choices rather than being blanket-refused. Genuinely incomplete conditional/configuration combinations remain explicitly unsupported. A bounded retry does not establish complete conditional solving. Never apply a graph assembled from inconsistent routes.</M05C3-REFUSAL></p>
++    <p><M05C3-ADMISSION status="spec/done">The existing Rust source seam may bind explicitly admitted consumer requests, candidate definitions and exact default receipts to the immutable catalog and forward them through the existing planner. Legacy roots and FeatureRequest flags remain lossless legacy intent; they do not authorize fabricated B2 identities. New CLI, authored grammar, schema and persistence are outside this admission. Configured OR routes may use the retained solver witnesses; incomplete conditional/configuration combinations still refuse explicitly.</M05C3-ADMISSION></p>
++    <p><M05C3-PARITY status="spec/done">Fixtures exercise the actual production source and planner forwarding paths. Supported routes produce identical selected graphs with selected declaration/provider provenance, or equivalent typed conflicts. Structural inspection alone does not establish semantic acceptance. This contract preserves the C1 immutable catalog and C2 candidate-conditioned semantics, defaults and known implications; it does not publish new authored grammar or infer normalized consumer identities from installed state.</M05C3-PARITY></p>
+   </section>
+ </spec>
+diff --git a/crates/vibe-install/src/plan/m_05_c_3_cases.rs b/crates/vibe-install/src/plan/m_05_c_3_cases.rs
+new file mode 100644
+index 000000000..efa77047d
+--- /dev/null
++++ b/crates/vibe-install/src/plan/m_05_c_3_cases.rs
+@@ -0,0 +1,356 @@
++use super::*;
++use std::{cell::RefCell, sync::Arc};
++use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError, ResolvedPackage};
++use vibe_resolver::resolvo_engine::request::NormalizedRequest;
++use vibe_resolver::{
++    DepProvider, DepProviderError, DepSolver, ResolvedGraph, ResolvoDepSolver, SolveError,
++    VersionEnumerator,
++};
++fn p(n: &str) -> PackageRef {
++    PackageRef::parse(&format!("org.example/{n}")).unwrap()
++}
++fn m(n: &str, body: &str) -> Manifest {
++    Manifest::parse_str(&format!(
++        "[package]\ngroup='org.example'\nname='{n}'\nkind='flow'\nversion='1.0.0'\n{body}"
++    ))
++    .unwrap()
++}
++#[derive(Clone)]
++struct Source {
++    manifests: Arc<Vec<Manifest>>,
++    intent: Arc<NormalizedRequest>,
++    calls: Arc<RefCell<Vec<Vec<PackageRef>>>>,
++    bound: bool,
++}
++impl Source {
++    fn new(manifests: Vec<Manifest>, roots: Vec<PackageRef>) -> Self {
++        Self {
++            manifests: Arc::new(manifests),
++            intent: Arc::new(NormalizedRequest::legacy(
++                &roots,
++                &FeatureRequest {
++                    explicit: vec!["kept".into()],
++                    no_defaults: true,
++                    all: false,
++                },
++            )),
++            calls: Default::default(),
++            bound: false,
++        }
++    }
++}
++impl DepProvider for Source {
++    fn resolve_version(
++        &self,
++        p: &PackageRef,
++    ) -> std::result::Result<semver::Version, DepProviderError> {
++        self.list_versions(p.group.as_ref().unwrap(), p.name.as_str())?
++            .into_iter()
++            .filter(|v| p.version.matches(v))
++            .max()
++            .ok_or_else(|| DepProviderError::NoMatchingVersion {
++                group: p.group.clone().unwrap(),
++                name: p.name.to_string(),
++                constraint: p.version.to_string(),
++            })
++    }
++    fn fetch_manifest(
++        &self,
++        _: &Group,
++        n: &str,
++        _v: &semver::Version,
++    ) -> std::result::Result<Manifest, DepProviderError> {
++        self.manifests
++            .iter()
++            .find(|m| {
++                m.require_package().unwrap().name == n
++                    && m.require_package().unwrap().version == *_v
++            })
++            .cloned()
++            .ok_or_else(|| DepProviderError::Other("missing fixture".into()))
++    }
++}
++impl VersionEnumerator for Source {
++    fn list_versions(
++        &self,
++        g: &Group,
++        n: &str,
++    ) -> std::result::Result<Vec<semver::Version>, DepProviderError> {
++        let versions: Vec<_> = self
++            .manifests
++            .iter()
++            .filter_map(|m| {
++                let p = m.require_package().unwrap();
++                (p.name == n).then(|| p.version.clone())
++            })
++            .collect();
++        if versions.is_empty() {
++            Err(DepProviderError::UnknownPackage {
++                group: g.clone(),
++                name: n.into(),
++            })
++        } else {
++            Ok(versions)
++        }
++    }
++}
++impl InstallSource for Source {
++    fn begin_normalized_transaction(
++        &self,
++        r: &NormalizedRequest,
++    ) -> std::result::Result<Option<Box<dyn InstallSource + '_>>, SolveError> {
++        assert_eq!(r.roots, self.intent.roots);
++        assert_eq!(r.features.explicit, self.intent.features.explicit);
++        assert!(r.features.no_defaults);
++        let mut bound = self.clone();
++        bound.bound = true;
++        Ok(Some(Box::new(bound)))
++    }
++    fn normalized_request(&self) -> Option<&NormalizedRequest> {
++        assert!(self.bound);
++        Some(&self.intent)
++    }
++    fn solve(&self, roots: &[PackageRef]) -> std::result::Result<ResolvedGraph, SolveError> {
++        assert!(self.bound);
++        self.calls.borrow_mut().push(roots.to_vec());
++        ResolvoDepSolver::new(self.clone()).solve(roots)
++    }
++    fn manifest_of(&self, p: &PackageRef) -> std::result::Result<Manifest, SolveError> {
++        assert!(self.bound);
++        Ok(self.fetch_manifest(
++            p.group.as_ref().unwrap(),
++            p.name.as_str(),
++            &self.resolve_version(p)?,
++        )?)
++    }
++    fn solve_masked(
++        &self,
++        roots: &[PackageRef],
++        blocked: &BTreeSet<(String, String)>,
++    ) -> std::result::Result<ResolvedGraph, SolveError> {
++        assert!(self.bound);
++        self.calls.borrow_mut().push(roots.to_vec());
++        crate::solve_with_visibility_mask(self.clone(), None, roots, blocked)
++    }
++    fn resolve_and_fetch(
++        &self,
++        _: &PackageRef,
++        _: &Path,
++        _: Option<&str>,
++    ) -> std::result::Result<CachedPackage, RegistryError> {
++        panic!("no fetch before consistent resolution")
++    }
++    fn materialise_in_place(
++        &self,
++        _: &PackageRef,
++        _: &Path,
++    ) -> std::result::Result<InPlaceMaterialised, RegistryError> {
++        panic!("no install effects")
++    }
++}
++#[test]
++fn visibility_retry_preserves_requests_and_exact_choices() {
++    let source = Source::new(
++        vec![
++            m(
++                "app",
++                "[requires.packages]\n'org.example/a'='*'\n'org.example/b'='*'\n[[requires_any]]\none_of=['org.example/missing','org.example/b']\n",
++            ),
++            m(
++                "a",
++                "[requires.packages]\n'org.example/hidden'={version='*',access='private'}\n",
++            ),
++            m("b", ""),
++            m("hidden", ""),
++        ],
++        vec![p("app@=1.0.0"), p("app@^1")],
++    );
++    let planning = transaction::PlanningSource::capture_request(&source, &source.intent).unwrap();
++    let initial = planning.solve(&source.intent.roots).unwrap();
++    let root = Manifest::parse_str("[project]\nname='fixture'\nversion='1.0.0'\n").unwrap();
++    let effective = resolve_effective(
++        &planning,
++        &source.intent.roots,
++        &root,
++        "org.example/root",
++        initial,
++    )
++    .unwrap();
++    assert!(effective.iterations > 1);
++    assert!(
++        effective
++            .graph
++            .find(p("hidden").group.as_ref().unwrap(), "hidden")
++            .is_none()
++    );
++    assert_eq!(
++        effective.graph.packages[0].dependencies,
++        vec![p("a@=1.0.0"), p("b@=1.0.0"), p("b@=1.0.0")]
++    );
++    assert!(
++        source
++            .calls
++            .borrow()
++            .iter()
++            .all(|r| *r == source.intent.roots)
++    );
++    assert!(std::ptr::eq(
++        planning.normalized_request().unwrap(),
++        source.intent.as_ref()
++    ));
++    let again = planning
++        .solve_masked(
++            &source.intent.roots,
++            &[("org.example/a".into(), "org.example/hidden".into())].into(),
++        )
++        .unwrap();
++    assert_eq!(format!("{:?}", effective.graph), format!("{again:?}"));
++}
++#[test]
++fn conditional_route_retains_all_root_constraints() {
++    let source = Source::new(
++        vec![m(
++            "app",
++            "[provides]\ncapabilities=['stack:rust']\n[target.'context(stack:rust)'.dependencies.packages]\n'org.example/app'='=2.0.0'\n",
++        )],
++        vec![p("app@=1.0.0"), p("app@^1")],
++    );
++    let planning = transaction::PlanningSource::capture_request(&source, &source.intent).unwrap();
++    let manifest = source.manifests[0].clone();
++    let meta = manifest.require_package().unwrap().clone();
++    let dir = tempfile::tempdir().unwrap();
++    let cached = CachedPackage {
++        resolved: ResolvedPackage {
++            group: meta.group,
++            name: meta.name,
++            version: meta.version,
++            source_dir: dir.path().into(),
++        },
++        cache_dir: dir.path().into(),
++        manifest,
++        content_hash: "fixture".into(),
++        source_uri: "fixture".into(),
++        registry_name: None,
++        source_ref: None,
++        resolved_commit: None,
++        overridden: false,
++        is_git_source: false,
++        is_path_source: false,
++        is_embedded: false,
++        is_local: true,
++        via_redirect: None,
++    };
++    let mut fetched = vec![Fetched {
++        cached,
++        feature_expansion: Default::default(),
++        meta: NodeInstallMeta {
++            dependencies: vec![],
++            is_root: true,
++        },
++        embedded_sources: vec![],
++        in_place_incremental: false,
++    }];
++    let progress = vibe_core::progress::Progress::default();
++    let task = progress.task("conditional fixture");
++    let error = expand_conditional_deps(
++        &planning,
++        &source.intent.roots,
++        &Lockfile::empty("fixture", "now"),
++        dir.path(),
++        dir.path(),
++        dir.path(),
++        &[],
++        &source.intent.features,
++        true,
++        &Manifest::parse_str("[project]\nname='fixture'\nversion='1.0.0'\n").unwrap(),
++        "org.example/root",
++        &mut fetched,
++        &mut Analysis::default(),
++        &crate::NullObserver,
++        &task,
++    )
++    .unwrap_err();
++    assert!(matches!(
++        error,
++        crate::Error::Solve(SolveError::Unsatisfiable { .. })
++    ));
++    let calls = source.calls.borrow();
++    let roots = calls.last().unwrap();
++    assert_eq!(&roots[..2], source.intent.roots.as_slice());
++    assert_eq!(roots[2], p("app@=2.0.0"));
++    assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 0);
++}
++#[test]
++fn inconsistent_or_unsupported_route_refuses_before_effects() {
++    let source = Source::new(vec![m("app", "")], vec![p("app@=1.0.0"), p("app@=2.0.0")]);
++    let planning = transaction::PlanningSource::capture_request(&source, &source.intent).unwrap();
++    assert!(matches!(
++        planning.solve(&source.intent.roots),
++        Err(SolveError::Unsatisfiable { .. })
++    ));
++    assert!(matches!(
++        planning.solve_masked(&source.intent.roots, &Default::default()),
++        Err(SolveError::Unsatisfiable { .. })
++    ));
++    assert_eq!(source.calls.borrow().len(), 2);
++}
++
++#[test]
++fn workspace_root_constraints() {
++    let dir = tempfile::tempdir().unwrap();
++    std::fs::create_dir(dir.path().join("member")).unwrap();
++    std::fs::write(dir.path().join("vibe.toml"),"[project]\nname='root'\nversion='1.0.0'\n[workspace]\nmembers=['member']\n[requires.packages]\n'org.example/app'='=1.0.0'\n'org.example/unrelated'='*'\n").unwrap();
++    std::fs::write(dir.path().join("member/vibe.toml"),"[package]\ngroup='org.example'\nname='member'\nkind='flow'\nversion='1.0.0'\n[requires.packages]\n'org.example/app'='>=1'\n").unwrap();
++    let mut workspace = Workspace::discover(dir.path()).unwrap();
++    let lock_path = dir.path().join("vibe.lock");
++    let packages: String = ["app", "unrelated"].iter().map(|name| format!(
++        "[[package]]\nkind='flow'\ngroup='org.example'\nname='{name}'\nversion='1.0.0'\nsource_url='fixture'\nsource_kind='registry'\ncontent_hash='sha256:{}'\n", "a".repeat(64)
++    )).collect();
++    std::fs::write(
++        &lock_path,
++        format!(
++            "[meta]\ngenerated_by='C3'\ngenerated_at='now'\nschema_version={}\n{packages}",
++            vibe_core::manifest::CURRENT_SCHEMA_VERSION
++        ),
++    )
++    .unwrap();
++    let lock = Lockfile::read(lock_path).unwrap();
++    let (bare, _, origins) =
++        effective_root_constraints(&workspace, &workspace.root, &[], &lock).unwrap();
++    assert_eq!(bare.iter().filter(|p| p.name == "app").count(), 2);
++    assert_eq!(origins.len(), 3);
++    let (explicit, preferred, _) =
++        effective_root_constraints(&workspace, &workspace.root, &[p("app@=2.0.0")], &lock).unwrap();
++    assert!(explicit.contains(&p("app@>=1")));
++    assert!(!explicit.contains(&p("app@=1.0.0")));
++    assert!(explicit.contains(&p("unrelated@*")));
++    assert!(preferred.contains(&p("app@>=1")));
++    assert!(!preferred.contains(&p("app@=1.0.0")));
++    assert!(preferred.contains(&p("unrelated@=1.0.0")));
++    let mut v2 = m("app", "");
++    v2.package.as_mut().unwrap().version = semver::Version::new(2, 0, 0);
++    let source = Source::new(vec![m("app", ""), v2, m("unrelated", "")], vec![]);
++    let selected = ResolvoDepSolver::new(source.clone())
++        .solve(&preferred)
++        .unwrap();
++    assert_eq!(
++        selected
++            .find(p("app").group.as_ref().unwrap(), "app")
++            .unwrap()
++            .version,
++        semver::Version::new(2, 0, 0)
++    );
++    workspace.members[0].manifest.requires.packages = vec![p("app@=1.0.0")];
++    let (conflicting, _, _) =
++        effective_root_constraints(&workspace, &workspace.root, &[p("app@=2.0.0")], &lock).unwrap();
++    assert!(matches!(
++        ResolvoDepSolver::new(source.clone()).solve(&conflicting),
++        Err(SolveError::Unsatisfiable { .. })
++    ));
++    workspace.members[0].manifest.requires.packages = vec![p("app@=2.0.0")];
++    let (bare, _, _) = effective_root_constraints(&workspace, &workspace.root, &[], &lock).unwrap();
++    assert!(matches!(
++        ResolvoDepSolver::new(source).solve(&bare),
++        Err(SolveError::Unsatisfiable { .. })
++    ));
++}
+diff --git a/crates/vibe-package-source/src/source/m_05_c_3_cases.rs b/crates/vibe-package-source/src/source/m_05_c_3_cases.rs
+new file mode 100644
+index 000000000..7e75195b7
+--- /dev/null
++++ b/crates/vibe-package-source/src/source/m_05_c_3_cases.rs
+@@ -0,0 +1,468 @@
++use super::*;
++// Production planning uses the process-local test store; fixtures reuse coordinates.
++static STORE: std::sync::Mutex<()> = std::sync::Mutex::new(());
++use vibe_core::manifest::{feature_constraints::*, feature_effects::*};
++use vibe_resolver::features::configuration::ConfigurationDefinition;
++use vibe_resolver::resolvo_engine::{configuration::CandidateConfiguration, request::*};
++fn p(n: &str) -> PackageRef {
++    PackageRef::parse(&format!("org.example/{n}")).unwrap()
++}
++fn fixture(
++    solver: Option<&'static str>,
++) -> (tempfile::TempDir, InstallResolver, NormalizedRequest) {
++    let dir = tempfile::tempdir().unwrap();
++    for (name, body) in [
++        (
++            "app",
++            "[requires.packages]\n'org.example/dep'='*'\n[[requires_any]]\none_of=['org.example/missing','org.example/provider']\n[requires]\ncapabilities=['capability:engine@1.0.0']\n",
++        ),
++        ("dep", ""),
++        (
++            "provider",
++            "[provides]\ncapabilities=['capability:engine@1.0.0']\n",
++        ),
++    ] {
++        let path = dir.path().join(format!("org.example/{name}/v1.0.0"));
++        std::fs::create_dir_all(&path).unwrap();
++        std::fs::write(path.join("vibe.toml"),format!("[package]\ngroup='org.example'\nname='{name}'\nkind='flow'\nversion='1.0.0'\n{body}")).unwrap();
++    }
++    let source = InstallResolver::Local(
++        crate::cells::local_registry(dir.path().into()).unwrap(),
++        solver,
++    );
++    let metadata = vibe_registry::CandidateMetadata::read_local_registry(
++        &dir.path().join("org.example/app/v1.0.0"),
++    )
++    .unwrap();
++    let mut wire = consumer_codec::decode_request(include_bytes!(
++        "../../../../formats/corpora/consumer-configuration-request/e1/valid/omitted.json"
++    ))
++    .unwrap();
++    wire.edges[0].package = consumer_wire::Package::Vibe(Box::new(consumer_wire::PackageVibe {
++        reference: "org.example/app".into(),
++    }));
++    wire.edges[0].features = vec!["off".into()];
++    wire.edges[0].selections.clear();
++    let declarations = FeatureDeclarations::from_requires(
++        &metadata.manifest.requires,
++        &[DependencyDeclarationId::new("org.example/dep").unwrap()].into(),
++    )
++    .unwrap();
++    let definition = CandidateConfiguration {
++        package: p("app"),
++        version: metadata.manifest.require_package().unwrap().version.clone(),
++        identity: metadata.identity,
++        definition: ConfigurationDefinition {
++            instance: consumer_codec::admit_request(&wire).unwrap()[0]
++                .instance
++                .clone(),
++            program: FeatureProgram {
++                features: [
++                    (LocalFeatureRef::new("off").unwrap(), Default::default()),
++                    (
++                        LocalFeatureRef::new("on").unwrap(),
++                        [FeatureEffect::ActivateDependency(
++                            DependencyDeclarationId::new("org.example/dep").unwrap(),
++                        )]
++                        .into(),
++                    ),
++                ]
++                .into(),
++                exclusive: Default::default(),
++            },
++            declarations,
++            constraints: Constraints::default(),
++        },
++    };
++    let mut request = NormalizedRequest::legacy(&[p("app")], &Default::default());
++    request.configuration = Some(ConfigurationInput {
++        request: wire,
++        definitions: vec![definition],
++        defaults: vec![],
++    });
++    (dir, source, request)
++}
++#[test]
++fn same_request_catalog_across_solve_metadata_and_masked_routes() {
++    let _store = STORE.lock().unwrap_or_else(|e| e.into_inner());
++    let (_dir, source, request) = fixture(None);
++    let frozen = source.bind_request(request.clone()).unwrap();
++    let before = frozen.catalog_inspection().unwrap().clone();
++    let graph = frozen.solve(&request.roots).unwrap();
++    assert_eq!(graph.packages.len(), 2);
++    assert!(
++        frozen
++            .manifest_of(&p("app@=1.0.0"))
++            .unwrap()
++            .requires
++            .packages
++            .is_empty()
++    );
++    assert_eq!(
++        frozen
++            .catalog_manifest_of(&p("app@=1.0.0"))
++            .unwrap()
++            .requires
++            .packages
++            .len(),
++        1
++    );
++    let first = frozen.route_resolution().unwrap();
++    assert_eq!(first.provenance.len(), 2);
++    assert!(
++        first
++            .provenance
++            .iter()
++            .all(|e| e.selected.provider == p("provider@=1.0.0")
++                && e.configured_definition.is_some())
++    );
++    let retried = frozen
++        .solve_masked(&request.roots, &Default::default())
++        .unwrap();
++    assert_eq!(format!("{graph:?}"), format!("{retried:?}"));
++    let second = frozen.route_resolution().unwrap();
++    assert_eq!(first.provenance, second.provenance);
++    assert_eq!(first.effects, second.effects);
++    assert_eq!(&before, frozen.catalog_inspection().unwrap());
++    assert_eq!(
++        request.configuration.as_ref().unwrap().request,
++        frozen
++            .normalized_request()
++            .unwrap()
++            .configuration
++            .as_ref()
++            .unwrap()
++            .request
++    );
++    // Exercise the public production planner with this exact configured source.
++    // The returned plan retains both normalized intent and selected provenance.
++    let project = tempfile::tempdir().unwrap();
++    std::fs::write(
++        project.path().join("vibe.toml"),
++        "[project]\nname='configured'\nversion='1.0.0'\n",
++    )
++    .unwrap();
++    let planned = vibe_install::plan(
++        &frozen,
++        project.path(),
++        vibe_install::InstallRequest {
++            roots: request.roots.clone(),
++            features: Default::default(),
++            language: None,
++            exact: false,
++            generated_by: "C3 fixture".into(),
++            offline: true,
++        },
++        &vibe_install::NullObserver,
++    )
++    .unwrap();
++    let vibe_install::Plan::Ready(mut planned) = planned else {
++        panic!("configured request must plan")
++    };
++    assert_eq!(planned.selected_provenance, first.provenance);
++    // Empty legacy roots cannot fast-path away explicitly admitted intent.
++    let bare = vibe_install::plan(
++        &frozen,
++        project.path(),
++        vibe_install::InstallRequest {
++            roots: vec![],
++            features: Default::default(),
++            language: None,
++            exact: false,
++            generated_by: "C3 bare".into(),
++            offline: true,
++        },
++        &vibe_install::NullObserver,
++    )
++    .unwrap();
++    let vibe_install::Plan::Ready(bare) = bare else {
++        panic!("admitted intent was discarded");
++    };
++    assert_eq!(bare.selected_provenance, first.provenance);
++    assert_eq!(bare.resolution.len(), planned.resolution.len());
++
++    assert_eq!(
++        planned
++            .normalized_request
++            .as_ref()
++            .unwrap()
++            .configuration
++            .as_ref()
++            .unwrap()
++            .request,
++        request.configuration.as_ref().unwrap().request
++    );
++    // A graph changed after confirmation must refuse before any project write.
++    planned.resolution[0].requires.clear();
++    let before_manifest = std::fs::read(project.path().join("vibe.toml")).unwrap();
++    assert!(matches!(
++        vibe_install::apply(&frozen, *planned, Default::default(), &Default::default()),
++        Err(vibe_install::Error::Solve(
++            vibe_resolver::SolveError::UnsupportedRoute(_)
++        ))
++    ));
++    assert_eq!(
++        std::fs::read(project.path().join("vibe.toml")).unwrap(),
++        before_manifest
++    );
++    assert!(!project.path().join("vibe.lock").exists());
++    let mut on = request.clone();
++    on.configuration.as_mut().unwrap().request.edges[0].features = vec!["on".into()];
++    let activated = source.bind_request(on.clone()).unwrap();
++    let active = activated.solve(&on.roots).unwrap();
++    assert_eq!(active.packages.len(), 3);
++    assert!(activated.route_resolution().unwrap().provenance.iter().any(
++        |e| e.selected.declaration == "configuration.dependencies[org.example/dep]"
++            && e.selected.provider == p("dep@=1.0.0")
++    ));
++    let mask = [("org.example/app".into(), "org.example/dep".into())].into();
++    let masked = activated.solve_masked(&on.roots, &mask).unwrap();
++    assert_eq!(masked.packages.len(), 2);
++    assert_eq!(
++        activated
++            .manifest_of(&p("app@=1.0.0"))
++            .unwrap()
++            .requires
++            .packages,
++        vec![p("dep@*")]
++    );
++    assert_eq!(
++        activated
++            .route_resolution()
++            .unwrap()
++            .provenance
++            .iter()
++            .filter(|e| e.selected.declaration.starts_with("requires_any")
++                || e.selected.declaration.starts_with("requires.capabilities"))
++            .cloned()
++            .collect::<Vec<_>>(),
++        first.provenance
++    );
++    let mut duplicate = on.clone();
++    let definition = &mut duplicate.configuration.as_mut().unwrap().definitions[0].definition;
++    let alias = DependencyDeclarationId::new("alias").unwrap();
++    definition.declarations.dependencies.insert(
++        alias.clone(),
++        definition.declarations.dependencies
++            [&DependencyDeclarationId::new("org.example/dep").unwrap()]
++            .clone(),
++    );
++    definition
++        .program
++        .features
++        .get_mut(&LocalFeatureRef::new("on").unwrap())
++        .unwrap()
++        .insert(FeatureEffect::ActivateDependency(alias));
++    let duplicate = source.bind_request(duplicate).unwrap();
++    duplicate.solve(&request.roots).unwrap();
++    let declared: std::collections::BTreeSet<_> = duplicate
++        .route_resolution()
++        .unwrap()
++        .provenance
++        .into_iter()
++        .filter(|e| e.selected.provider.name == "dep")
++        .map(|e| e.selected.declaration)
++        .collect();
++    assert_eq!(
++        declared,
++        [
++            "configuration.dependencies[alias]".into(),
++            "configuration.dependencies[org.example/dep]".into()
++        ]
++        .into()
++    );
++    let conflict = [p("app@=2.0.0")];
++    assert!(matches!(
++        frozen.solve(&conflict),
++        Err(vibe_resolver::SolveError::Configuration(_))
++    ));
++    assert!(matches!(
++        frozen.solve_masked(&conflict, &Default::default()),
++        Err(vibe_resolver::SolveError::Configuration(_))
++    ));
++}
++#[test]
++fn unsupported_backend_refuses_without_fallback() {
++    let _store = STORE.lock().unwrap_or_else(|e| e.into_inner());
++    for backend in ["naive", "sat"] {
++        let (_dir, source, request) = fixture(Some(backend));
++        let frozen = source.bind_request(request.clone()).unwrap();
++        for result in [
++            frozen.solve(&request.roots),
++            frozen.solve_masked(&request.roots, &Default::default()),
++        ] {
++            assert!(
++                matches!(result,Err(vibe_resolver::SolveError::BackendCapability{backend:ref selected,..}) if selected==backend)
++            );
++        }
++        assert!(
++            matches!(frozen.manifest_of(&p("app")),Err(vibe_resolver::SolveError::BackendCapability{backend:ref selected,..}) if selected==backend)
++        );
++        assert!(frozen.route_resolution().is_none());
++    }
++    for backend in ["resolvo", "naive", "sat"] {
++        let (dir, source, mut request) = fixture(Some(backend));
++        let newer = dir.path().join("org.example/dep/v2.0.0");
++        std::fs::create_dir_all(&newer).unwrap();
++        std::fs::write(
++            newer.join("vibe.toml"),
++            "[package]\ngroup='org.example'\nname='dep'\nkind='flow'\nversion='2.0.0'\n",
++        )
++        .unwrap();
++        let provider = dir.path().join("org.example/provider/v1.0.0/vibe.toml");
++        let mut text = std::fs::read_to_string(&provider).unwrap();
++        text.push_str("[requires.packages]\n'org.example/dep'='=1.0.0'\n");
++        std::fs::write(provider, text).unwrap();
++        request.configuration = None;
++        request.roots = vec![p("provider"), p("app")];
++        let frozen = source.bind_request(request.clone()).unwrap();
++        frozen.solve(&request.roots).unwrap();
++        let before = frozen.route_resolution().unwrap();
++        let blocked = [("org.example/provider".into(), "org.example/dep".into())].into();
++        let graph = frozen.solve_masked(&request.roots, &blocked).unwrap();
++        let after = frozen.route_resolution().unwrap();
++        assert_eq!(
++            graph
++                .find(p("dep").group.as_ref().unwrap(), "dep")
++                .unwrap()
++                .version
++                .to_string(),
++            "1.0.0"
++        );
++        assert_eq!(
++            after.provenance,
++            before
++                .provenance
++                .iter()
++                .filter(|e| !(e.selected.parent.name == "provider"
++                    && e.selected.provider.name == "dep"))
++                .cloned()
++                .collect::<Vec<_>>()
++        );
++        assert_eq!(
++            graph,
++            frozen.solve_masked(&request.roots, &blocked).unwrap()
++        );
++        let direct = source.bind_request(request.clone()).unwrap();
++        assert_eq!(
++            graph,
++            direct.solve_masked(&request.roots, &blocked).unwrap()
++        );
++    }
++}
++
++#[test]
++fn production_visibility_retry_retains_configured_choices() {
++    let _store = STORE.lock().unwrap_or_else(|e| e.into_inner());
++    let (dir, source, request) = fixture(None);
++    let path = dir.path().join("org.example/provider/v1.0.0/vibe.toml");
++    let mut text = std::fs::read_to_string(&path).unwrap();
++    text.push_str("[requires.packages]\n'org.example/dep'={version='*',access='private'}\n");
++    std::fs::write(path, text).unwrap();
++    let frozen = source.bind_request(request.clone()).unwrap();
++    frozen.solve(&request.roots).unwrap();
++    let before = frozen.route_resolution().unwrap();
++    assert_eq!(before.recorded.graph.packages.len(), 3);
++    let project = tempfile::tempdir().unwrap();
++    std::fs::write(
++        project.path().join("vibe.toml"),
++        "[project]\nname='retry'\nversion='1.0.0'\n",
++    )
++    .unwrap();
++    let vibe_install::Plan::Ready(plan) = vibe_install::plan(
++        &frozen,
++        project.path(),
++        vibe_install::InstallRequest {
++            roots: request.roots.clone(),
++            features: Default::default(),
++            language: None,
++            exact: false,
++            generated_by: "C3".into(),
++            offline: true,
++        },
++        &vibe_install::NullObserver,
++    )
++    .unwrap() else {
++        panic!("expected selected plan");
++    };
++    assert_eq!(plan.resolution.len(), 2);
++    assert_eq!(
++        plan.selected_provenance,
++        before
++            .provenance
++            .into_iter()
++            .filter(|p| p.selected.provider.name != "dep")
++            .collect::<Vec<_>>()
++    );
++    assert_eq!(
++        plan.normalized_request
++            .unwrap()
++            .configuration
++            .unwrap()
++            .request,
++        request.configuration.unwrap().request
++    );
++    assert_eq!(
++        frozen
++            .route_resolution()
++            .unwrap()
++            .recorded
++            .graph
++            .packages
++            .len(),
++        2
++    );
++}
++
++#[test]
++fn production_conditional_route_retains_selected_declaration() {
++    let _store = STORE.lock().unwrap_or_else(|e| e.into_inner());
++    let (dir, source, mut request) = fixture(None);
++    std::fs::write(dir.path().join("org.example/app/v1.0.0/vibe.toml"),
++        "[package]\ngroup='org.example'\nname='app'\nkind='flow'\nversion='1.0.0'\n[provides]\ncapabilities=['stack:rust']\n[target.'context(stack:rust)'.dependencies.packages]\n'org.example/dep'='^1'\n").unwrap();
++    request.configuration = None;
++    let frozen = source.bind_request(request.clone()).unwrap();
++    let project = tempfile::tempdir().unwrap();
++    std::fs::write(
++        project.path().join("vibe.toml"),
++        "[project]\nname='conditional'\nversion='1.0.0'\n",
++    )
++    .unwrap();
++    let vibe_install::Plan::Ready(plan) = vibe_install::plan(
++        &frozen,
++        project.path(),
++        vibe_install::InstallRequest {
++            roots: request.roots.clone(),
++            features: Default::default(),
++            language: None,
++            exact: false,
++            generated_by: "C3".into(),
++            offline: true,
++        },
++        &vibe_install::NullObserver,
++    )
++    .unwrap() else {
++        panic!("expected selected plan");
++    };
++    assert_eq!(plan.resolution.len(), 2);
++    assert_eq!(plan.selected_provenance.len(), 1);
++    let edge = &plan.selected_provenance[0].selected;
++    assert_eq!(
++        edge.declaration,
++        "target[context(stack:rust)].dependencies.packages[0]"
++    );
++    assert_eq!(edge.parent, p("app@=1.0.0"));
++    assert_eq!(edge.provider, p("dep@=1.0.0"));
++    assert_eq!(plan.normalized_request.unwrap().roots, request.roots);
++    let first = frozen.route_resolution().unwrap();
++    assert_eq!(
++        first.recorded.graph,
++        frozen
++            .solve_masked(&request.roots, &Default::default())
++            .unwrap()
++    );
++    assert_eq!(
++        first.provenance,
++        frozen.route_resolution().unwrap().provenance
++    );
++}
+diff --git a/crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs b/crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs
+new file mode 100644
+index 000000000..348640397
+--- /dev/null
++++ b/crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs
+@@ -0,0 +1,126 @@
++use super::*;
++use crate::{DepProvider, DepSolver};
++use vibe_core::manifest::Manifest;
++
++struct Source(Vec<Manifest>);
++impl DepProvider for Source {
++    fn resolve_version(&self, p: &PackageRef) -> Result<semver::Version, DepProviderError> {
++        self.list_versions(p.group.as_ref().unwrap(), p.name.as_str())?
++            .into_iter()
++            .filter(|v| p.version.matches(v))
++            .max()
++            .ok_or_else(|| DepProviderError::Other("no match".into()))
++    }
++    fn fetch_manifest(
++        &self,
++        _: &Group,
++        n: &str,
++        v: &semver::Version,
++    ) -> Result<Manifest, DepProviderError> {
++        self.0
++            .iter()
++            .find(|m| {
++                m.require_package().unwrap().name == n && m.require_package().unwrap().version == *v
++            })
++            .cloned()
++            .ok_or_else(|| DepProviderError::Other("missing manifest".into()))
++    }
++}
++impl VersionEnumerator for Source {
++    fn list_versions(&self, g: &Group, n: &str) -> Result<Vec<semver::Version>, DepProviderError> {
++        let versions: Vec<_> = self
++            .0
++            .iter()
++            .filter_map(|m| {
++                let p = m.require_package().unwrap();
++                (p.name == n).then(|| p.version.clone())
++            })
++            .collect();
++        if versions.is_empty() {
++            Err(DepProviderError::UnknownPackage {
++                group: g.clone(),
++                name: n.into(),
++            })
++        } else {
++            Ok(versions)
++        }
++    }
++}
++fn p(n: &str) -> PackageRef {
++    PackageRef::parse(&format!("org.example/{n}")).unwrap()
++}
++fn m(n: &str, v: u64, body: &str) -> Manifest {
++    Manifest::parse_str(&format!(
++        "[package]\ngroup='org.example'\nname='{n}'\nkind='flow'\nversion='{v}.0.0'\n{body}"
++    ))
++    .unwrap()
++}
++#[test]
++fn selected_capability_and_or_edges_keep_exact_provenance() {
++    let source = Source(vec![
++        m(
++            "app",
++            1,
++            "[[requires_any]]\none_of=['org.example/missing','org.example/provider']\n[requires]\ncapabilities=['capability:engine@1.0.0']\n",
++        ),
++        m(
++            "provider",
++            1,
++            "[provides]\ncapabilities=['capability:engine@1.0.0']\n",
++        ),
++    ]);
++    let result = ResolvoDepSolver::new(source)
++        .solve_recorded(&[p("app")])
++        .unwrap();
++    let app = result
++        .graph
++        .find(p("app").group.as_ref().unwrap(), "app")
++        .unwrap();
++    assert_eq!(app.dependencies, vec![p("provider@=1.0.0")]);
++    assert_eq!(result.choices.len(), 2);
++    let or = result
++        .choices
++        .iter()
++        .find(|e| e.declaration == "requires_any[0]")
++        .unwrap();
++    assert_eq!(or.alternative, 1);
++    assert!(
++        result
++            .choices
++            .iter()
++            .all(|e| e.parent == p("app@=1.0.0") && e.provider == p("provider@=1.0.0"))
++    );
++    // Both alternatives may be selected independently; exactly one witness
++    // belongs to the OR declaration, never an inferred all-provider edge set.
++    let source = Source(vec![
++        m(
++            "app",
++            1,
++            "[[requires_any]]\none_of=['org.example/a','org.example/b']\n",
++        ),
++        m("a", 1, ""),
++        m("b", 1, ""),
++    ]);
++    let result = ResolvoDepSolver::new(source)
++        .solve_recorded(&[p("app"), p("a"), p("b")])
++        .unwrap();
++    assert_eq!(result.choices.len(), 1);
++    assert_eq!(
++        result.graph.packages[0].dependencies,
++        vec![result.choices[0].provider.clone()]
++    );
++}
++#[test]
++fn duplicate_root_constraints_are_not_first_wins() {
++    let solver = ResolvoDepSolver::new(Source(vec![m("app", 1, ""), m("app", 2, "")]));
++    assert!(matches!(
++        solver.solve(&[p("app@=1.0.0"), p("app@=2.0.0")]),
++        Err(SolveError::Unsatisfiable { .. })
++    ));
++    let mut kind = p("app@=1.0.0");
++    kind.kind = Some(vibe_core::PackageKind::Tool);
++    assert!(matches!(
++        solver.solve(&[p("app@=1.0.0"), kind]),
++        Err(SolveError::KindMismatch { .. })
++    ));
++}
+diff --git a/crates/vibe-resolver/src/resolvo_engine/request.rs b/crates/vibe-resolver/src/resolvo_engine/request.rs
+new file mode 100644
+index 000000000..b21d82ebb
+--- /dev/null
++++ b/crates/vibe-resolver/src/resolvo_engine/request.rs
+@@ -0,0 +1,377 @@
++//! Immutable admitted intent shared by production transaction routes.
++use super::configuration::{CandidateConfiguration, DefaultBinding};
++use super::{RecordedResolution, SelectedChoice, TransactionCatalog};
++use crate::{
++    DepProvider, DepProviderError, FeatureExpansion, FeatureRequest, SolveError, VersionEnumerator,
++};
++use std::collections::{BTreeMap, BTreeSet};
++use vibe_core::{Group, PackageRef, manifest::Manifest};
++use vibe_registry::CandidateIdentity;
++
++#[derive(Debug, Clone)]
++pub struct ConfigurationInput {
++    pub request: vibe_wire::generated::consumer_configuration::e1::request::Request,
++    pub definitions: Vec<CandidateConfiguration>,
++    pub defaults: Vec<DefaultBinding>,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct RootConstraint {
++    pub constraint: PackageRef,
++    pub consumer: String,
++    pub declaration: String,
++}
++#[derive(Debug, Clone)]
++pub struct NormalizedRequest {
++    pub roots: Vec<PackageRef>,
++    pub root_origins: Vec<RootConstraint>,
++    pub features: FeatureRequest,
++    pub configuration: Option<ConfigurationInput>,
++}
++impl NormalizedRequest {
++    pub fn legacy(roots: &[PackageRef], features: &FeatureRequest) -> Self {
++        Self {
++            roots: roots.to_vec(),
++            root_origins: roots
++                .iter()
++                .enumerate()
++                .map(|(index, p)| RootConstraint {
++                    constraint: p.clone(),
++                    consumer: "caller".into(),
++                    declaration: format!("roots[{index}]"),
++                })
++                .collect(),
++            features: features.clone(),
++            configuration: None,
++        }
++    }
++    pub fn catalog_roots(&self) -> Vec<PackageRef> {
++        let mut roots = self.roots.clone();
++        if let Some(configuration) = &self.configuration {
++            for definition in &configuration.definitions {
++                roots.push(definition.package.clone());
++                for declaration in definition.definition.declarations.dependencies.values() {
++                    if let vibe_core::manifest::feature_effects::DependencySource::Registry(p) =
++                        &declaration.source
++                    {
++                        roots.push(p.clone());
++                    }
++                }
++            }
++        }
++        roots
++    }
++    /// Add route constraints; never deduplicate or substitute a coordinate.
++    pub fn all_roots(&self, route: &[PackageRef]) -> Vec<PackageRef> {
++        let mut roots = self.roots.clone();
++        roots.extend_from_slice(route);
++        roots
++    }
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct EdgeProvenance {
++    pub selected: SelectedChoice,
++    pub declaration_identity: CandidateIdentity,
++    pub provider_identity: CandidateIdentity,
++    pub configured_definition: Option<crate::features::configuration::ConfigurationDefinition>,
++}
++#[derive(Debug, Clone)]
++pub struct RouteResolution {
++    pub recorded: RecordedResolution,
++    pub provenance: Vec<EdgeProvenance>,
++    pub manifests: BTreeMap<String, Manifest>,
++    pub effects: BTreeMap<String, FeatureExpansion>,
++}
++impl RouteResolution {
++    pub fn bind(
++        catalog: &TransactionCatalog,
++        request: &NormalizedRequest,
++        recorded: RecordedResolution,
++        manifests: BTreeMap<String, Manifest>,
++        effects: BTreeMap<String, FeatureExpansion>,
++    ) -> Result<Self, SolveError> {
++        let identity = |p: &PackageRef| -> Result<CandidateIdentity, SolveError> {
++            let version = catalog.resolve_version(p)?;
++            Ok(catalog
++                .metadata(
++                    p.group.as_ref().ok_or_else(|| {
++                        DepProviderError::Other("unqualified selected edge".into())
++                    })?,
++                    p.name.as_str(),
++                    &version,
++                )?
++                .identity
++                .clone())
++        };
++        let mut provenance = Vec::new();
++        for selected in &recorded.choices {
++            let definition = request.configuration.as_ref().and_then(|c| {
++                c.definitions.iter().find(|d| {
++                    d.package.group == selected.parent.group
++                        && d.package.name == selected.parent.name
++                        && selected.parent.version.matches(&d.version)
++                })
++            });
++            let mut selected = selected.clone();
++            if selected.declaration.starts_with("requires.packages[") {
++                if let Some(definition) = definition {
++                    // ConfiguredCatalog emits requirements in active declaration
++                    // order. Bind that exact slot, even when two declarations
++                    // intentionally target the same package coordinate.
++                    let index = selected
++                        .declaration
++                        .strip_prefix("requires.packages[")
++                        .and_then(|s| s.strip_suffix(']'))
++                        .and_then(|s| s.parse::<usize>().ok());
++                    let key = format!(
++                        "{}@{}",
++                        selected.parent.qualified_name(),
++                        catalog.resolve_version(&selected.parent)?
++                    );
++                    let id = index.and_then(|i| effects.get(&key)?.active_deps.iter().nth(i));
++                    let declaration = id.and_then(|id| {
++                        definition
++                            .definition
++                            .declarations
++                            .dependencies
++                            .iter()
++                            .find(|(key, _)| key.as_str() == id)
++                    });
++                    let Some((id, declaration)) = declaration else {
++                        return Err(SolveError::UnsupportedRoute(
++                            "selected configured dependency lost its declaration slot".into(),
++                        ));
++                    };
++                    if !matches!(&declaration.source,
++                        vibe_core::manifest::feature_effects::DependencySource::Registry(p)
++                            if p.group == selected.provider.group && p.name == selected.provider.name)
++                    {
++                        return Err(SolveError::UnsupportedRoute(
++                            "selected configured dependency differs from its declaration".into(),
++                        ));
++                    }
++                    selected.declaration = format!("configuration.dependencies[{}]", id.as_str());
++                }
++            }
++            provenance.push(EdgeProvenance {
++                selected: selected.clone(),
++                declaration_identity: identity(&selected.parent)?,
++                provider_identity: identity(&selected.provider)?,
++                configured_definition: definition.map(|d| d.definition.clone()),
++            });
++        }
++        for node in recorded.graph.iter() {
++            for dep in &node.dependencies {
++                if !recorded.choices.iter().any(|e| {
++                    e.parent.group.as_ref() == Some(&node.group)
++                        && e.parent.name == node.name
++                        && e.parent.version.matches(&node.version)
++                        && e.provider.group == dep.group
++                        && e.provider.name == dep.name
++                        && recorded
++                            .graph
++                            .find(
++                                dep.group.as_ref().expect("qualified graph edge"),
++                                dep.name.as_str(),
++                            )
++                            .is_some_and(|n| {
++                                e.provider.version.matches(&n.version)
++                                    && dep.version.matches(&n.version)
++                            })
++                }) {
++                    return Err(SolveError::UnsupportedRoute(
++                        "selected graph edge has no declaration/provider witness".into(),
++                    ));
++                }
++            }
++        }
++        Ok(Self {
++            recorded,
++            provenance,
++            manifests,
++            effects,
++        })
++    }
++}
++
++pub struct RouteProvider<'a> {
++    pub catalog: &'a TransactionCatalog,
++    pub blocked: &'a BTreeSet<(String, String)>,
++    pub retained: &'a [SelectedChoice],
++}
++impl DepProvider for RouteProvider<'_> {
++    fn resolve_version(&self, p: &PackageRef) -> Result<semver::Version, DepProviderError> {
++        self.catalog.resolve_version(p)
++    }
++    fn fetch_manifest(
++        &self,
++        g: &Group,
++        n: &str,
++        v: &semver::Version,
++    ) -> Result<Manifest, DepProviderError> {
++        self.catalog.fetch_manifest(g, n, v)
++    }
++}
++impl VersionEnumerator for RouteProvider<'_> {
++    fn list_versions(&self, g: &Group, n: &str) -> Result<Vec<semver::Version>, DepProviderError> {
++        self.catalog.list_versions(g, n)
++    }
++    fn cached_capabilities(&self) -> Option<&super::CapIndex> {
++        self.catalog.cached_capabilities()
++    }
++    fn edge_blocked(&self, p: &str, t: &str) -> bool {
++        self.blocked.contains(&(p.into(), t.into()))
++    }
++    fn retained_choices(&self) -> &[SelectedChoice] {
++        self.retained
++    }
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct ConditionalEdge {
++    pub parent: PackageRef,
++    pub declaration: String,
++    pub dependency: PackageRef,
++}
++
++pub use vibe_wire::behaviour::consumer_configuration as consumer_codec;
++pub use vibe_wire::generated::consumer_configuration::e1::request as consumer_wire;
++
++/// Metadata projection for the incumbent naive/SAT cells. Previously selected
++/// witnesses become exact requirements; no alternative is chosen here.
++pub struct LegacyRouteProvider<'a>(pub RouteProvider<'a>);
++impl LegacyRouteProvider<'_> {
++    fn project(
++        &self,
++        g: &Group,
++        n: &str,
++        v: &semver::Version,
++    ) -> Result<(Manifest, BTreeMap<String, (String, Vec<usize>)>), DepProviderError> {
++        let mut manifest = self.0.catalog.fetch_manifest(g, n, v)?;
++        let parent = format!("{g}/{n}");
++        let retained = |declaration: &str| {
++            self.0.retained.iter().find(|e| {
++                e.parent.group.as_ref() == Some(g)
++                    && e.parent.name == n
++                    && e.parent.version.matches(v)
++                    && e.declaration == declaration
++            })
++        };
++        let mut map = BTreeMap::new();
++        let mut packages = Vec::new();
++        for (index, dep) in manifest.requires.packages.iter().enumerate() {
++            if self.0.edge_blocked(&parent, &dep.qualified_name()) {
++                continue;
++            }
++            map.insert(
++                format!("requires.packages[{}]", packages.len()),
++                (format!("requires.packages[{index}]"), vec![0]),
++            );
++            let mut dep = dep.clone();
++            if let Some(edge) = retained(&format!("requires.packages[{index}]")) {
++                dep.version = edge.provider.version.clone();
++            }
++            packages.push(dep);
++        }
++        let mut capabilities = Vec::new();
++        for (index, cap) in manifest.requires.capabilities.iter().enumerate() {
++            let declaration = format!("requires.capabilities[{index}]:{cap}");
++            if let Some(edge) = retained(&declaration) {
++                if self
++                    .0
++                    .edge_blocked(&parent, &edge.provider.qualified_name())
++                {
++                    continue;
++                }
++                map.insert(
++                    format!("requires.packages[{}]", packages.len()),
++                    (declaration, vec![edge.alternative]),
++                );
++                packages.push(edge.provider.clone());
++            } else {
++                map.insert(
++                    format!("requires.capabilities[{}]:{cap}", capabilities.len()),
++                    (declaration, vec![0]),
++                );
++                capabilities.push(cap.clone());
++            }
++        }
++        manifest.requires.packages = packages;
++        manifest.requires.capabilities = capabilities;
++        let mut disjunctions = Vec::new();
++        for (index, original) in manifest.requires_any.iter().enumerate() {
++            let declaration = format!("requires_any[{index}]");
++            let mut disjunction = original.clone();
++            let indices = if let Some(edge) = retained(&declaration) {
++                if self
++                    .0
++                    .edge_blocked(&parent, &edge.provider.qualified_name())
++                {
++                    continue;
++                }
++                disjunction.one_of = vec![edge.provider.clone()];
++                vec![edge.alternative]
++            } else {
++                let mut indices = Vec::new();
++                let mut alternatives = Vec::new();
++                for (i, alt) in original.one_of.iter().enumerate() {
++                    if !self.0.edge_blocked(&parent, &alt.qualified_name()) {
++                        indices.push(i);
++                        alternatives.push(alt.clone());
++                    }
++                }
++                disjunction.one_of = alternatives;
++                indices
++            };
++            if disjunction.one_of.is_empty() {
++                continue;
++            }
++            map.insert(
++                format!("requires_any[{}]", disjunctions.len()),
++                (declaration, indices),
++            );
++            disjunctions.push(disjunction);
++        }
++        manifest.requires_any = disjunctions;
++        Ok((manifest, map))
++    }
++    pub fn restore_provenance(&self, result: &mut RecordedResolution) -> Result<(), SolveError> {
++        for edge in &mut result.choices {
++            let version = self.0.catalog.resolve_version(&edge.parent)?;
++            let (_, map) = self.project(
++                edge.parent.group.as_ref().expect("qualified selected edge"),
++                edge.parent.name.as_str(),
++                &version,
++            )?;
++            let (declaration, indices) = map.get(&edge.declaration).ok_or_else(|| {
++                SolveError::UnsupportedRoute(
++                    "legacy route lost selected declaration mapping".into(),
++                )
++            })?;
++            edge.alternative = *indices.get(edge.alternative).ok_or_else(|| {
++                SolveError::UnsupportedRoute(
++                    "legacy route lost selected alternative mapping".into(),
++                )
++            })?;
++            edge.declaration = declaration.clone();
++        }
++        result
++            .choices
++            .sort_by_key(|e| (e.parent.to_string(), e.declaration.clone(), e.alternative));
++        Ok(())
++    }
++}
++impl DepProvider for &LegacyRouteProvider<'_> {
++    fn resolve_version(&self, p: &PackageRef) -> Result<semver::Version, DepProviderError> {
++        self.0.catalog.resolve_version(p)
++    }
++    fn fetch_manifest(
++        &self,
++        g: &Group,
++        n: &str,
++        v: &semver::Version,
++    ) -> Result<Manifest, DepProviderError> {
++        Ok(self.project(g, n, v)?.0)
++    }
++}

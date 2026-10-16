@@ -1,0 +1,16 @@
+{
+  "unix": 1792171350.3945522,
+  "root_exec": 1027,
+  "exit_code": 0,
+  "all_original_identities_absent": true,
+  "identities": {
+    "797075": 3752824,
+    "797078": 3752847,
+    "797183": 3753567,
+    "797194": 3753624
+  },
+  "native_stop_delivered_revision": 569,
+  "candidate_id": null,
+  "accepted": false,
+  "owner_resume_after_stop": true
+}

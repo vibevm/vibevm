@@ -1,0 +1,758 @@
+{
+  "approved": true,
+  "approval_token": "Root approves full M05C3 both criteria and 23 fresh cases, with reviewed safe boundary and no physical stop claim",
+  "task": "M-05-C.3",
+  "job_id": "job.runtime.packet.vibevm-m05c3r",
+  "candidate_id": "managed-result.dc00d52268990eccb9c404a55b2279883918b76777b9e144a4f991ce4fe4a0ea",
+  "work_id": "work.m05c3r.prepare-plan",
+  "source_head_at_review": "905332d46f629ed1d2b2b08117da0f9d5a226343",
+  "source_commit": null,
+  "source_commit_note": "Root owns final commit; exact source hashes bind observed receipts, no invented commit.",
+  "summary": "Root accepts full original C3 on the admitted production source/planning/resolver/apply routes after source review, independent review and 23 fresh final-source cases; retained unsupported combinations and predecessor failures remain explicit.",
+  "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers.",
+  "limitations": [
+    "Full admitted C3 production route scope, with explicitly unsupported configuration/conditional combinations preserved; no new persistence schema or D/E scope.",
+    "V1/V2/V3/V4 are 4/4/2/13 fresh final-source cases. Four fresh failed fixture attempts and the earlier stopped attempt/compiler failures remain historical evidence, not current passes.",
+    "Scoped formatter --check passed; excluded historical eight-file global formatter failure remains separate, never global pass.",
+    "V7 is structural evidence; Root independent semantic review remains required.",
+    "Safe verification concerns reviewed completed reversible code effects at the exact attempt boundary; it does not claim worker/process retirement.",
+    "Old C3 Work has no candidate and remains unaccepted. New operational C3r Work represents the same logical task; Root counts C3 once only after canonical WorkAccepted."
+  ],
+  "independent_review": {
+    "path": "/fast/git/v/research/2026-10-16-m05c3-review/REPORT.md",
+    "sha256": "a5d37bbd2fe1ce4aa8b4cd35498702e88d8b4f74f26d64900b127ca662bbe7ca"
+  },
+  "independent_review_reviewed_by_root": true,
+  "safe_boundary_attestation": {
+    "approved": true,
+    "boundary": "Do not apply a graph assembled from inconsistent solve routes.",
+    "basis": "Exact candidate collected304/native1121 known tail/no failure; Root read source and agrees independent full C3 review. Proposed safe boundary concerns completed reversible code effects and no inconsistent graph applied, never physical stop."
+  },
+  "criterion_assessments": [
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#SOURCE-VERSUS-PLAN",
+      "statement": "Route parity fixtures produce identical selected graph or equivalent typed conflicts.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "draft_requires_root_approval": false,
+      "rationale": "V1 production source/planner configured metadata, real visibility retry, conditional parity and typed backend conflicts; V2 forwarding/root-union fixtures; V3 selected graph cases. Worker claim only. Proposed assessment only; Root must confirm after independent review. Independent source review recommends acceptance; Root reports agreement. Final application remains gated on explicit Root approval.",
+      "root_review": "Confirmed by Root reading normalized intent, effective-root union, exact edge provenance, FrozenSource and apply guard plus independent full-source review and bound final receipts."
+    },
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#VIBEVM-OWNER",
+      "statement": "Every graph edge has a selected declaration/provider provenance.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "draft_requires_root_approval": false,
+      "rationale": "Recorded solver witnesses bind every final graph edge to declaration/provider identities; production configured/ordinary/conditional tests compare retained provenance; apply rejects altered graph. Worker claim only. Proposed assessment only; Root must confirm after independent review. Independent source review recommends acceptance; Root reports agreement. Final application remains gated on explicit Root approval.",
+      "root_review": "Confirmed by Root reading normalized intent, effective-root union, exact edge provenance, FrozenSource and apply guard plus independent full-source review and bound final receipts."
+    }
+  ],
+  "observations": [
+    {
+      "group": "V1",
+      "verification_id": "verification.m05c3r",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V1-result.json",
+        "sha256": "a00003abf1cf75638ac539346cbec13f8313d70b414f1bea92f01511d39e7869"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V1"
+        ],
+        "cases": [
+          "V1"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-package-source",
+          "--lib",
+          "source::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "source::m_05_c_3_cases::same_request_catalog_across_solve_metadata_and_masked_routes",
+          "source::m_05_c_3_cases::unsupported_backend_refuses_without_fallback",
+          "source::m_05_c_3_cases::production_visibility_retry_retains_configured_choices",
+          "source::m_05_c_3_cases::production_conditional_route_retains_selected_declaration"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 4,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+    },
+    {
+      "group": "V2",
+      "verification_id": "verification.m05c3r.1",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V2-result.json",
+        "sha256": "5454e5fee02b1303782c6e2a2d685603ac30bb6e029bb4738dcc9eab568f014d"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V2"
+        ],
+        "cases": [
+          "V2"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-install",
+          "--lib",
+          "plan::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "plan::m_05_c_3_cases::visibility_retry_preserves_requests_and_exact_choices",
+          "plan::m_05_c_3_cases::conditional_route_retains_all_root_constraints",
+          "plan::m_05_c_3_cases::inconsistent_or_unsupported_route_refuses_before_effects",
+          "plan::m_05_c_3_cases::workspace_root_constraints"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 4,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+    },
+    {
+      "group": "V3",
+      "verification_id": "verification.m05c3r.2",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V3-result.json",
+        "sha256": "89123a75f59193a002faad07b643868e85e56900f7a6a958824731f8e915979e"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V3"
+        ],
+        "cases": [
+          "V3"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_3_cases",
+          "--",
+          "--nocapture"
+        ],
+        "cases": [
+          "resolvo_engine::m_05_c_3_cases::selected_capability_and_or_edges_keep_exact_provenance",
+          "resolvo_engine::m_05_c_3_cases::duplicate_root_constraints_are_not_first_wins"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 2,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+    },
+    {
+      "group": "V4",
+      "verification_id": "verification.m05c3r.3",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-result.json",
+        "sha256": "4072020d28edea6c08c878bd589a458e6bfa9c0392a052969ca57be9fcc47409"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "V4"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V4: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+          "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+          "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+          "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+          "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+          "resolvo_engine::tests::resolvo_disjunction_backtracks_past_conflicting_alternative",
+          "resolvo_engine::tests::resolvo_drops_obsoleted_packages",
+          "naive::tests::capability_requires_self_satisfaction",
+          "source::m_05_c_1_cases::same_version_replacement_keeps_frozen_snapshot",
+          "source::m_05_c_1_cases::missing_and_corrupt_catalog_differ_from_missing_option",
+          "fence_tests::cell_constructors_live_only_in_cells_rs",
+          "plan::m_05_c_1_cases::catalog_identity_is_inspected_through_eto_before_effects",
+          "plan::m_05_c_1_cases::unavailable_or_corrupt_catalog_prevents_install_effects"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V4: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 13,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+    },
+    {
+      "group": "V5",
+      "verification_id": "verification.m05c3r.4",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V5-result.json",
+        "sha256": "1aa7f081461988a697d5429da04b94bb17c031fae7f12ad3e476e470df2a5d99"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V5"
+        ],
+        "cases": [
+          "V5"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--config",
+          "skip_children=true",
+          "--check",
+          "crates/vibe-resolver/src/lib.rs",
+          "crates/vibe-resolver/src/error.rs",
+          "crates/vibe-resolver/src/naive.rs",
+          "crates/vibe-resolver/src/sat.rs",
+          "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+          "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+          "crates/vibe-resolver/src/resolvo_engine/request.rs",
+          "crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/source.rs",
+          "crates/vibe-package-source/src/source/transaction.rs",
+          "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+          "crates/vibe-package-source/src/cells.rs",
+          "crates/vibe-package-source/src/qualified.rs",
+          "crates/vibe-install/src/lib.rs",
+          "crates/vibe-install/src/plan.rs",
+          "crates/vibe-install/src/plan/fetch.rs",
+          "crates/vibe-install/src/plan/transaction.rs",
+          "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+          "crates/vibe-install/src/visibility_projection.rs",
+          "crates/vibe-install/src/apply.rs"
+        ],
+        "cases": [
+          "Task-owned scoped formatter --check"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+    },
+    {
+      "group": "V6",
+      "verification_id": "verification.m05c3r.5",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V6-result.json",
+        "sha256": "191d456fae0f0a4c97df32f14073e459c95536ec6d9754d14ebdd2671657da6f"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V6"
+        ],
+        "cases": [
+          "V6"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "Actual git diff --check"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+    },
+    {
+      "group": "V7",
+      "verification_id": "verification.m05c3r.6",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c3r/V7-result.json",
+        "sha256": "81e81540589c2a95b68640911a974fe559406db7e16bf280abdad5c973474ae8"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "V7"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c3r/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "Structural PROP003 preservation; semantic disposition awaits separate Root review"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c3r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C3 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Full original M-05-C.3 on admitted existing production source/planning/resolver/apply routes; preserve explicit unsupported combinations and both Root semantic answers."
+    }
+  ],
+  "fresh_distinct_cases": 23,
+  "fresh_failed_attempts_retained": 4,
+  "qualified_reused_cases": 0,
+  "actual_environment": "Linux; repository nightly; exclusive Root-bound warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+  "evidence_files": {
+    "0": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/CASE-BINDINGS.json",
+      "sha256": "5de5a5982ac7ec5da3d01607e7a6e422d131d07f353750a608f6f0fa2fbf4da7"
+    },
+    "1": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/CHECKPOINT-CHECKS.json",
+      "sha256": "b2f3203d706d8a00ca38f5724f20e3ff5888fb1572b58a7d4d411e7fa805cd3b"
+    },
+    "2": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/CONTINUATION-LINEAGE.json",
+      "sha256": "ec8edf3fea96ad52f1a152be0701acec80964289807e5eceabe083af6a3e1c4f"
+    },
+    "3": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/FINDINGS.json",
+      "sha256": "ee8bea07b54eaef61d1c468c045909991ed7edcbb470bf9570acc4401b955450"
+    },
+    "4": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/GLOBAL-FORMAT-BASELINE.json",
+      "sha256": "68f33c06dab332f254d461e09f9c1ee3846824474e392162489acbb1c0e90ae5"
+    },
+    "5": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/REPORT.json",
+      "sha256": "4c13a5d70ab36f6d17d6abfff34d528f0ecbe201d804b9cd98343d2151660a70"
+    },
+    "6": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/ROOT-SEMANTIC-ANSWERS.json",
+      "sha256": "d6049ebf4dcaecb1a459a5e4669ea9330486bc583d0658d31e0e57fc14719c34"
+    },
+    "7": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/SEMANTICS-MAP.json",
+      "sha256": "6657fc90790b7e83a91ad08994eb2c0b51ca8bebd4ea618f209ebbe819a58045"
+    },
+    "8": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/SPEC-PRESERVATION.json",
+      "sha256": "f10d4ec4fe24059f3fe09b1646c7d874e280d5d8ef7b5279af9ad3e05aa0da25"
+    },
+    "9": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V1-1.log",
+      "sha256": "333879889d439d38ce279de770923259f52af0e6977c08b089453d79ebbb4487"
+    },
+    "10": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V1-result.json",
+      "sha256": "a00003abf1cf75638ac539346cbec13f8313d70b414f1bea92f01511d39e7869"
+    },
+    "11": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V1-subjects-after.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "12": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V1-subjects-before.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "13": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V2-1.log",
+      "sha256": "271eb902ac421a84507f4e1bc7d353e77416f12121232963dc6f39f35b413232"
+    },
+    "14": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V2-result.json",
+      "sha256": "5454e5fee02b1303782c6e2a2d685603ac30bb6e029bb4738dcc9eab568f014d"
+    },
+    "15": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V2-subjects-after.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "16": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V2-subjects-before.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "17": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V3-1.log",
+      "sha256": "08a7f6c95991da095d15828b4938d7473892152cb23b2c0c694862747f430d66"
+    },
+    "18": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V3-result.json",
+      "sha256": "89123a75f59193a002faad07b643868e85e56900f7a6a958824731f8e915979e"
+    },
+    "19": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V3-subjects-after.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "20": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V3-subjects-before.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "21": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-1.log",
+      "sha256": "6044c525df8ff2c6a2930393e7b5c17ab12c7d8960074d43c77a07fe57949bf9"
+    },
+    "22": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-10.log",
+      "sha256": "32806ffa656cb9bdf71e57e437c4a0fe5862ce27f55e98ea7daec03e82e2cfe9"
+    },
+    "23": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-11.log",
+      "sha256": "f42646575b81d53e8ac1975fdcfbaf01eea96cb49f73c672006ec9c630345cf6"
+    },
+    "24": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-12.log",
+      "sha256": "c9a2e913695536c00b5d6c8fa943f900d94e3249218b3ab444ecd0caab0fa6c8"
+    },
+    "25": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-13.log",
+      "sha256": "24dbda30d27060473b8e1802d1a72747e6991dc8fa32f79a655558d474b38c66"
+    },
+    "26": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-2.log",
+      "sha256": "70b8b45cb91224b580520042d117b4c4f1fdcc8d32b1df52e2adb478d071c9a5"
+    },
+    "27": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-3.log",
+      "sha256": "572b422ffbf549efd48bb79ae67b6ff43c6e9fd6c87d8baecddcd8f12acc786b"
+    },
+    "28": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-4.log",
+      "sha256": "27efaa72d9f86ec6b58beb5b9388844402214665270e6176b9cf77d92dba8c8e"
+    },
+    "29": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-5.log",
+      "sha256": "ffb00fff58169d7ebc84d423514684ac13c4947c4d6c6bb0993f8c03004e10ac"
+    },
+    "30": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-6.log",
+      "sha256": "5f218f1db568acf780e581c4403f29b0c1e2ba3f2441e3b7feded3ab4d6c0108"
+    },
+    "31": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-7.log",
+      "sha256": "edd3b810a3cfb767afa050d58105612d717338cc33e15f8d1ecb332a39591a67"
+    },
+    "32": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-8.log",
+      "sha256": "a780e3c4e82c504e5baa67a675e257d83b2d9634c4b8bb44b02f7e065fced92e"
+    },
+    "33": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-9.log",
+      "sha256": "62f2b0be398a64ca5f1c9b629aa7bfefcfe25c3379c6f972c91d290c193fe14b"
+    },
+    "34": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-CASE-BINDINGS.json",
+      "sha256": "f0b323add9e14bb28286f7400402135477cda54ffb1822804e79971584ff094f"
+    },
+    "35": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-result.json",
+      "sha256": "4072020d28edea6c08c878bd589a458e6bfa9c0392a052969ca57be9fcc47409"
+    },
+    "36": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-subjects-after.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "37": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V4-subjects-before.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "38": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V5-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "39": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V5-result.json",
+      "sha256": "1aa7f081461988a697d5429da04b94bb17c031fae7f12ad3e476e470df2a5d99"
+    },
+    "40": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V5-subjects-after.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "41": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V5-subjects-before.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "42": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V6-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "43": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V6-result.json",
+      "sha256": "191d456fae0f0a4c97df32f14073e459c95536ec6d9754d14ebdd2671657da6f"
+    },
+    "44": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V6-subjects-after.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "45": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V6-subjects-before.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "46": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V7-result.json",
+      "sha256": "81e81540589c2a95b68640911a974fe559406db7e16bf280abdad5c973474ae8"
+    },
+    "47": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V7-subjects-after.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "48": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/V7-subjects-before.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "49": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/COLLECTED-NATIVE.json",
+      "sha256": "07e4c6d7d1baaf7f0629311d69df161b13d369d7ed0fd5e4dc9faae3c3a4995c"
+    },
+    "50": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/CURRENT-CONTRACT.json",
+      "sha256": "6d5d79778b92eabab064ed44f909deeada18440c56911388aebabf0c616ca505"
+    },
+    "51": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/CURRENT-JOB.json",
+      "sha256": "c123bc9f442616e9369a3f603383bfb41e665072b88737e2357bbfb0d1692e23"
+    },
+    "52": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/CURRENT-SOURCE.json",
+      "sha256": "dcfe7a3d4051e591c82064cb277712376e140b8f68b7cedd2ace7d64795a3ed0"
+    },
+    "53": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/CURRENT-WORK.json",
+      "sha256": "41b8a4007fa444b5cfb13eba11353a0c54308a752e99ec7d520e6a790bed224e"
+    },
+    "54": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/FINAL-SOURCE-HASHES.json",
+      "sha256": "890811b3a98f8bdaa0ac072c65c493b207720f68f5073bfccc6bfd8869518e37"
+    },
+    "55": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/acceptance-preparation/validate-review.py",
+      "sha256": "246285f70242dfd1e0dfc613f92b02e244d1e5cb46393e26453ff6e7709e3bc5"
+    },
+    "56": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/candidate.patch",
+      "sha256": "fae4fba0b84170b0468b82b0627be9ff9f6a989e8604a6dff7ce1f90e77d9273"
+    },
+    "57": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/content-result.json",
+      "sha256": "cb466b03186df511c737a854c37996ef62a3b374e992718057278a4c57273b5f"
+    },
+    "58": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/previous-attempt/questions/m05c3-admission-20261016-01-ROOT-ANSWER.json",
+      "sha256": "368c1e4962f2ee2d6fdd8efc851b61bc2440510ba51ba5e53fec2339c11c362b"
+    },
+    "59": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/previous-attempt/questions/m05c3-admission-20261016-01-ROOT-QUESTION.json",
+      "sha256": "6401506430952b4359957cfadc08b7c28091f4e23efbea5b5629713342809a03"
+    },
+    "60": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/previous-attempt/questions/m05c3-root-union-20261016-02-ROOT-ANSWER.json",
+      "sha256": "baac7974a2dc25753a7e4bd0effa893989a92ed4bfc45a82937bc7f2833e604e"
+    },
+    "61": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/previous-attempt/questions/m05c3-root-union-20261016-02-ROOT-QUESTION.json",
+      "sha256": "2b9d0d7b7e97c4edb0298633fd2cd219397321352f3bee5b0787afdfbf9428bd"
+    },
+    "62": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V1-1792171836029830657/V1-1.log",
+      "sha256": "1360de9308d525b2956705cbcc40465a71d8c8562149822f956750041db9ae2d"
+    },
+    "63": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V1-1792171836029830657/V1-result.json",
+      "sha256": "15e59126cf976c7a7f193354938bdec68c562a326d7a3f09c1635a22471d086b"
+    },
+    "64": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V1-1792171855005621472/V1-1.log",
+      "sha256": "a3f786798c8882b472e73357cc4fccbeb65cb96b26e51572f460017b6e226a26"
+    },
+    "65": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V1-1792171855005621472/V1-result.json",
+      "sha256": "d8472ea91fbadd0bca423326f0a3f5746f12a4f2ea0be1d584aab7d945799009"
+    },
+    "66": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V2-1792171925186573053/V2-1.log",
+      "sha256": "90f2b04c3a1ede8342f4bbc278f60c9071b13e0bd0d0dfcbb68b0e6d9347e979"
+    },
+    "67": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V2-1792171925186573053/V2-result.json",
+      "sha256": "1f714fb59acfed25fec5a11e6e0e87f80fbad3f97cf7eba027c8057d29065925"
+    },
+    "68": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V2-1792172002112859044/V2-1.log",
+      "sha256": "9fe9cb0f0d492627649665bed780772ee95e22474b11d8de5f93de6e095abcce"
+    },
+    "69": {
+      "path": "/fast/zap-managed/2026-10-16-m05c3r/verification-history/V2-1792172002112859044/V2-result.json",
+      "sha256": "8fc695d130fbdbc7d9db2053ebce6ab2ea9ed0489ff541bb66b4aa448e8b8dea"
+    },
+    "independent_review": {
+      "path": "/fast/git/v/research/2026-10-16-m05c3-review/REPORT.md",
+      "sha256": "a5d37bbd2fe1ce4aa8b4cd35498702e88d8b4f74f26d64900b127ca662bbe7ca"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "structural_only": true,
+  "preserved_leaf_count": 398,
+  "changed_rules": [
+    "CONDITIONAL-FIXPOINT",
+    "M05C2-ADMITTED-SURFACE"
+  ],
+  "new_rules": [
+    "M05C3-REQUEST",
+    "M05C3-ROOT-UNION",
+    "M05C3-EDGES",
+    "M05C3-REFUSAL",
+    "M05C3-ADMISSION",
+    "M05C3-PARITY"
+  ],
+  "sha256": "361de652bdfb1d0fb0b8f116cb48de6e7fef54bb8a1d6dca774b96144ae08b02",
+  "semantic_review": "Root-owned"
+}

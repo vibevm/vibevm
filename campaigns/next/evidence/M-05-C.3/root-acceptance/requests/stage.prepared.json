@@ -1,0 +1,79 @@
+{
+  "store": {
+    "store_id": "store.vibevm-m05c3r.live",
+    "campaign_id": "campaign.vibevm-m05c3r.live",
+    "base_id": "base.vibevm-m05c3r.live",
+    "store_epoch": "zap/2",
+    "codec_epoch": 2,
+    "reducer_epoch": 1
+  },
+  "observed_revision": 317,
+  "request": {
+    "alternative_id": "alternative.root-review.m05c3r.stage",
+    "committed_prefix": [],
+    "initial_basis": "db2838aa260062ca3e637fe0946ade84b6463a22fa74b1ec035dacdd010e09d6",
+    "effects": [],
+    "no_op_basis": {
+      "purpose": {
+        "kind": "mutation",
+        "subject": "domain.stage-accepted"
+      },
+      "roots": [
+        {
+          "kind": "outcome",
+          "id": "outcome.m05c3r"
+        },
+        {
+          "kind": "obligation",
+          "id": "obligation.m05c3r"
+        },
+        {
+          "kind": "work",
+          "id": "work.m05c3r.prepare-plan"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c3r.1.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c3r.2.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c3r.3.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c3r.4.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c3r.5.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c3r.6.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c3r.root-review"
+        }
+      ],
+      "policy": "not_applicable",
+      "capacity": "not_applicable",
+      "closure": "known_graph"
+    },
+    "request_digest": "48815354ab98788f0844d95f8d27e59b5b8f11fdef4a1dc409c7cc061d5a90db"
+  },
+  "preflight": {
+    "alternative_id": "alternative.root-review.m05c3r.stage",
+    "request_digest": "48815354ab98788f0844d95f8d27e59b5b8f11fdef4a1dc409c7cc061d5a90db",
+    "committed_prefix": [],
+    "effects": [],
+    "initial_basis": "db2838aa260062ca3e637fe0946ade84b6463a22fa74b1ec035dacdd010e09d6",
+    "final_basis": "db2838aa260062ca3e637fe0946ade84b6463a22fa74b1ec035dacdd010e09d6",
+    "digest": "86d2a238778ea4da6b0ecfd99d80214cf9561e93c93f8142e33b53bada3087e2"
+  },
+  "affected_scopes": []
+}

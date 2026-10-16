@@ -1,0 +1,22 @@
+{
+  "capture_status": "current",
+  "current": {
+    "byte_len": 96293,
+    "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d",
+    "observation": "observation.vibevm-m05c3r"
+  },
+  "locator": "/fast/zap-managed/2026-10-16-m05c3r/owner-input.json",
+  "revision": 1,
+  "scope": {
+    "kind": "project"
+  },
+  "source_id": "source.vibevm-m05c3r.owner-input",
+  "source_kind": "file",
+  "versions": [
+    {
+      "byte_len": 96293,
+      "digest": "1a2b3a28bfaec1a00c5d746bcead832dc40f6e3ec6ec260ffbe85883b3b1cb1d",
+      "observation": "observation.vibevm-m05c3r"
+    }
+  ]
+}

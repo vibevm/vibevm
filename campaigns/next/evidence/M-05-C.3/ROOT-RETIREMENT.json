@@ -1,0 +1,15 @@
+{
+  "unix": 1792172512.5821152,
+  "root_exec": 62970,
+  "exit_code": 0,
+  "all_original_identities_absent": true,
+  "identities": {
+    "852257": 3972154,
+    "852260": 3972177,
+    "852382": 3972886,
+    "852385": 3972908
+  },
+  "accepted_work_revision": 319,
+  "normal_managed_stop_revision": 324,
+  "manager_children_before_service_stop": []
+}

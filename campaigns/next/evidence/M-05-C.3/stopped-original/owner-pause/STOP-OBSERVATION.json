@@ -1,0 +1,26 @@
+{
+  "unix": 1792171122.3926551,
+  "job": {
+    "job_id": "job.runtime.packet.vibevm-m05c3",
+    "revision": 569,
+    "execution": "stopping",
+    "effect": "started",
+    "safe": "unknown",
+    "acceptance": "unreviewed",
+    "candidate_id": null,
+    "stop_receipt": {
+      "delivery": "delivered",
+      "effect_id": "effect.runtime.packet.vibevm-m05c3",
+      "observation": "observation.vibevm-m05c3"
+    }
+  },
+  "native": {
+    "state": "process_stopped",
+    "source_sequence": 1112,
+    "collected": false,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": true,
+    "accounting_pending": false
+  }
+}

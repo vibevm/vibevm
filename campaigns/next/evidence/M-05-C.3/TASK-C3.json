@@ -1,0 +1,73 @@
+{
+  "id": "M-05-C.3",
+  "title": "Use normalized requests across every solve route",
+  "goal": "Prevent visibility retry and metadata paths from losing constraints or selected edges.",
+  "read_paths": [
+    "crates/vibe-package-source/src/source.rs",
+    "crates/vibe-install/src/visibility_projection.rs",
+    "crates/vibe-install/src/plan.rs",
+    "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+    "crates/vibe-resolver/src/lib.rs",
+    "crates/vibe-package-source/Cargo.toml",
+    "crates/vibe-package-source/src/lib.rs",
+    "crates/vibe-install/Cargo.toml",
+    "crates/vibe-install/src/lib.rs",
+    "crates/vibe-resolver/Cargo.toml",
+    "crates/vibe-install/src/plan/fetch.rs",
+    "crates/vibe-install/src/plan/transaction.rs",
+    "crates/vibe-install/src/apply.rs"
+  ],
+  "write_paths": [
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+    "crates/vibe-package-source/src/",
+    "crates/vibe-install/src/visibility_projection.rs",
+    "crates/vibe-install/src/plan.rs",
+    "crates/vibe-resolver/src/",
+    "crates/vibe-package-source/Cargo.toml",
+    "crates/vibe-package-source/src/lib.rs",
+    "crates/vibe-install/Cargo.toml",
+    "crates/vibe-install/src/lib.rs",
+    "crates/vibe-resolver/Cargo.toml",
+    "crates/vibe-resolver/src/lib.rs",
+    "crates/vibe-install/src/plan/fetch.rs",
+    "crates/vibe-install/src/plan/transaction.rs",
+    "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+    "crates/vibe-install/src/apply.rs"
+  ],
+  "steps": [
+    "Thread the same immutable request/catalog through solve, manifest_of, solve_masked and conditional/visibility routes.",
+    "Retain all root constraints and actual capability/OR-provider choices in the final graph.",
+    "Expose backend capability refusal without fallback; keep incomplete conditional combinations explicitly unsupported."
+  ],
+  "positive_cases": [
+    "Visibility retry preserves the same consumer requests and exact choices as initial solving."
+  ],
+  "negative_cases": [
+    "First-wins dedup, reconstructed old manifest or unsupported backend cannot silently drop requested effects."
+  ],
+  "checks": [
+    "SELECT BEFORE DISPATCH: vibe-package-source target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+    "RUN BOUND CHECKS: after binding, use cargo test -p vibe-package-source <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+    "SELECT BEFORE DISPATCH: vibe-install target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+    "RUN BOUND CHECKS: after binding, use cargo test -p vibe-install <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+    "SELECT BEFORE DISPATCH: vibe-resolver target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+    "RUN BOUND CHECKS: after binding, use cargo test -p vibe-resolver <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+    "cargo fmt --all -- --check",
+    "git diff --check"
+  ],
+  "acceptance": [
+    "Route parity fixtures produce identical selected graph or equivalent typed conflicts.",
+    "Every graph edge has a selected declaration/provider provenance."
+  ],
+  "safe_stop": "Do not apply a graph assembled from inconsistent solve routes.",
+  "commit_subject": "fix(resolver): preserve requests across visibility retries",
+  "notes": [
+    "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+    "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+    "TO CREATE: m_05_c_3_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+    "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+    "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+    "C3 dispatch perimeter clarification 2026-10-16: conditional re-solving and first-wins root dedup live in existing plan/fetch.rs; PlanningSource forwarding lives in plan/transaction.rs. These exact owners and proposed plan/m_05_c_3_cases.rs are authorized for the original route-parity goal; no scope reduction or extra product requirement.",
+    "C3 continuation perimeter clarification 2026-10-16: existing apply.rs destructures PlannedInstall and must explicitly handle newly retained normalized_request/selected_provenance fields. This exact owner is admitted for compile/integration and preserving the C3 no-inconsistent-graph apply boundary; no new persistence schema or later D/E task scope is introduced."
+  ]
+}
