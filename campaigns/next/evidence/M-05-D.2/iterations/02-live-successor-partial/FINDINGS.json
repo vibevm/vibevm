@@ -1,0 +1,22 @@
+{
+  "dispositions": [
+    "unsatisfied",
+    "unsatisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "pending",
+  "discoveries": [
+    "Exact handover authorized the continuation job and designated warm target; all four user-supplied SHA256 values matched.",
+    "Prior partial source preserved. Added three spec/plan contract anchors for actual captured SubskillManifest declarations, delivery consumers and complete slots; no runtime implementation claimed.",
+    "V4 freshly executed both dormant-selection regressions successfully. V6 scoped rustfmt and git diff checks exited separately with success. V7 XML structure passed; semantic acceptance is not implied.",
+    "Production boot selection requires fallible validation: node_dependency_boot callers in analyze.rs (three) and native_managed.rs (one) lie outside the current write roster.",
+    "Install applies materialization and boot generation before writing the new D1 lock, so re-reading the durable lock inside install-time boot would consume stale selection. Explicit current-view handoff requires the hook_output.rs/install.rs composition boundary."
+  ],
+  "unresolved": [
+    "Full D2 remains incomplete: no captured subskill catalogue/contribution consumer implementation or deciding end-to-end fixture was added; both original criteria remain unsatisfied.",
+    "Pending private ROOT-QUESTION.json m05d2-boot-error-propagation-perimeter-20261016-2 requests four precisely named workspace composition files. No matching Root answer exists; the earlier mapping answer is not reused as a grant.",
+    "V1, V2, V3 including MCP supplement, and V5 were reviewed but not executed: proposed test definitions remain absent. No Passed evidence is claimed for these slots.",
+    "Global cargo fmt baseline remains failed/excluded; scoped formatting success is not a global-format waiver."
+  ],
+  "proposed_follow_up": "Root supplies corrected write scope for the four named boot composition files, then continue the unchanged full contract with explicit current selection handoff, captured declaration validation, eager loading and lazy MCP delivery/read fixtures. Preserve prior candidate and this WIP; no acceptance, replay or reset."
+}

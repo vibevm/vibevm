@@ -1,0 +1,17 @@
+{
+  "preserved": [
+    "M05B1-EFFECTS",
+    "M05B1-LOWERING",
+    "M05B1-MANIFEST-CALLERS",
+    "M05B2-SELECTION",
+    "M05D1-REQUEST",
+    "M05D2-DORMANT"
+  ],
+  "additive_contract": [
+    "M05D2-CAPTURED-DECLARATIONS",
+    "M05D2-DELIVERY-CONSUMERS",
+    "M05D2-FULL-SLOTS"
+  ],
+  "implementation_status": "Not established; consumer wiring pending boot caller write-perimeter correction.",
+  "history": "Prior partial regressions preserved; no acceptance inferred."
+}

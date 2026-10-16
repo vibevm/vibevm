@@ -1,0 +1,107 @@
+{
+  "representation": "Readable projection only: listed byte vectors decoded without changing their semantic JSON/string values. Not a replay request. Original remains immutable at origin.",
+  "origin": "/fast/zap-managed/2026-10-16-m05d2/acceptance/requests/evidence.5.json",
+  "original_sha256": "cacf09d8fab0232cacf80c7b4c3aa8d66256bdc9cafa596f95a5ad0f8d31d98b",
+  "decoded_byte_vectors": [
+    {
+      "path": "$.command.frame.payload.canonical_json",
+      "byte_length": 1988,
+      "sha256": "5545c2a37ec36885ce298fcc1e13c06642946fbeb553b2a63f28e46942c844ff",
+      "decoded_as": "JSON"
+    }
+  ],
+  "value": {
+    "command": {
+      "frame": {
+        "header": {
+          "base_id": "base.vibevm-m05d2.live",
+          "basis": {
+            "digest": "5277798fc9299bdd5134fa7d92b9eb5fc0287cdef2f44b0a2f51477ef8dace79",
+            "kind": "exact"
+          },
+          "campaign_id": "campaign.vibevm-m05d2.live",
+          "causes": [],
+          "command_id": "review.118790715dcd52de03f39534.evidence.5",
+          "event_id": "event:review.118790715dcd52de03f39534.evidence.5",
+          "expected_revision": 825,
+          "kind": "domain.evidence-adjudicated",
+          "protocol": 2,
+          "store_id": "store.vibevm-m05d2.live"
+        },
+        "payload": {
+          "canonical_json": {
+            "applies_to": {
+              "obligation_ids": [
+                "obligation.m05d2"
+              ],
+              "outcome_id": "outcome.m05d2",
+              "scope": "Full original M-05-D.2: selected captured SubskillManifest contributions in actual ordinary/native boot loading, INDEX offer and MCP query/read/materialise, independent Agent Skills preserved, dormant drift retained and complete captured package bytes unchanged.",
+              "stage": "functional",
+              "work_ids": [
+                "work.m05d2.prepare-plan"
+              ]
+            },
+            "candidate_id": "managed-result.667c8cd42a6c7ecce5c1d4aeb18d9b53a9d0007176f482cd0123f3a5cf21d6c5",
+            "disposition": "accepted",
+            "evidence_id": "evidence.review.118790715dcd52de03f39534.5",
+            "expected_revision": 0,
+            "limitations": [
+              "Root does not rerun the suite; actual produced command receipts and independent source review are used.",
+              "Four earlier nonzero checks remain historical failures.",
+              "No full suite/global-format/crossplatform/external-native-model claim.",
+              "Lazy-push qualifies INDEX context offer and MCP delivery, not automatic model task matching."
+            ],
+            "method": {
+              "argv": [
+                "git",
+                "diff",
+                "--check"
+              ],
+              "cases": [
+                "Touched Rust rustfmt check and git diff --check exit 0; global cargo fmt was not dispatched under current scoped-format instruction",
+                "format-check",
+                "diff-check"
+              ],
+              "environment": "Linux, project toolchain, offline warm target; actual producer receipts independently reviewed, no Root rerun.",
+              "subjects": [
+                {
+                  "id": "work.m05d2.prepare-plan",
+                  "kind": "work"
+                }
+              ],
+              "target": "Actual D2 consumer/byte-preservation group 5",
+              "toolchain": "effective repository nightly; edition2024 scoped fmt"
+            },
+            "observation": {
+              "artifact": "29f2b09a22187ef5de6c34d004423862617c6aac3fad4f18519636bf3573c3d2",
+              "evidence_id": "evidence.review.118790715dcd52de03f39534.5",
+              "result": "observed_pass",
+              "source_ids": [
+                "source.vibevm-m05d2.owner-input"
+              ],
+              "work_ids": [
+                "work.m05d2.prepare-plan"
+              ]
+            },
+            "schema": "zap-domain/evidence-adjudicated/1",
+            "source_captures": [
+              {
+                "digest": "f6dd5fde1b7b5908a5279d9e277e0f3c66c4d91692d5f3463ee4fa6459b9b62f",
+                "source_id": "source.vibevm-m05d2.owner-input"
+              }
+            ],
+            "verification_id": "verification.m05d2.5"
+          },
+          "codec": 2
+        },
+        "reason": {
+          "change": null,
+          "decision": null,
+          "evidence": [],
+          "summary": "Root reviewed actual D2 code/receipts and independent semantic review; decision ec69b8deaeaaa78b371798e51dd60fe79380d2b74a4b73cb37ce83bb8a79f9f5"
+        }
+      }
+    },
+    "kind": "command"
+  }
+}

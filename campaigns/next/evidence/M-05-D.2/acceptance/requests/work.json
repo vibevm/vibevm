@@ -1,0 +1,66 @@
+{
+  "representation": "Readable projection only: listed byte vectors decoded without changing their semantic JSON/string values. Not a replay request. Original remains immutable at origin.",
+  "origin": "/fast/zap-managed/2026-10-16-m05d2/acceptance/requests/work.json",
+  "original_sha256": "3fca3ef041a5551e4bca57a9267b55ad682c0564609e6c073ae6fecd4fba7c58",
+  "decoded_byte_vectors": [
+    {
+      "path": "$.command.frame.payload.canonical_json",
+      "byte_length": 1029,
+      "sha256": "917c1200158db6e0d637b5b21c3367e7c12ec6d13ac60c7638f23b88d5bc1219",
+      "decoded_as": "JSON"
+    }
+  ],
+  "value": {
+    "command": {
+      "frame": {
+        "header": {
+          "base_id": "base.vibevm-m05d2.live",
+          "basis": {
+            "digest": "19c31e35f2bae58a2f4299214025b13722791c5f640e5ddc0842cc2b87cca8f4",
+            "kind": "exact"
+          },
+          "campaign_id": "campaign.vibevm-m05d2.live",
+          "causes": [],
+          "command_id": "review.118790715dcd52de03f39534.work",
+          "event_id": "event:review.118790715dcd52de03f39534.work",
+          "expected_revision": 828,
+          "kind": "domain.work-accepted",
+          "protocol": 2,
+          "store_id": "store.vibevm-m05d2.live"
+        },
+        "payload": {
+          "canonical_json": {
+            "acceptance_id": "acceptance.review.118790715dcd52de03f39534",
+            "candidate_id": "managed-result.667c8cd42a6c7ecce5c1d4aeb18d9b53a9d0007176f482cd0123f3a5cf21d6c5",
+            "evidence_ids": [
+              "evidence.review.118790715dcd52de03f39534.0",
+              "evidence.review.118790715dcd52de03f39534.1",
+              "evidence.review.118790715dcd52de03f39534.2",
+              "evidence.review.118790715dcd52de03f39534.3",
+              "evidence.review.118790715dcd52de03f39534.4",
+              "evidence.review.118790715dcd52de03f39534.5",
+              "evidence.review.118790715dcd52de03f39534.6"
+            ],
+            "integration_acceptance_ids": [],
+            "obligation_ids": [
+              "obligation.m05d2"
+            ],
+            "outcome_id": "outcome.m05d2",
+            "schema": "zap-domain/work-accepted/1",
+            "stage_acceptance_id": "stage.review.118790715dcd52de03f39534",
+            "summary": "Root reviewed the complete producer report and independent code/test review. Both original criteria are supported by consumed production code and14 distinct successful focused cases. All30 reviewed source files remained stable and were committed unchanged. Prior red checks remain retained.",
+            "work_id": "work.m05d2.prepare-plan"
+          },
+          "codec": 2
+        },
+        "reason": {
+          "change": null,
+          "decision": null,
+          "evidence": [],
+          "summary": "Root reviewed actual D2 code/receipts and independent semantic review; decision ec69b8deaeaaa78b371798e51dd60fe79380d2b74a4b73cb37ce83bb8a79f9f5"
+        }
+      }
+    },
+    "kind": "command"
+  }
+}

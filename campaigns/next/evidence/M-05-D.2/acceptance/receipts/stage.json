@@ -1,0 +1,32 @@
+{
+  "representation": "Readable projection only: listed byte vectors decoded without changing their semantic JSON/string values. Not a replay request. Original remains immutable at origin.",
+  "origin": "/fast/zap-managed/2026-10-16-m05d2/acceptance/receipts/stage.json",
+  "original_sha256": "e0783349c127be58aa5bdcc4248908b7210cc995b98f86031e407af53ca81b7b",
+  "decoded_byte_vectors": [
+    {
+      "path": "$.output",
+      "byte_length": 16,
+      "sha256": "fc3d07dff4729310ab1464a3eab5c21ae26acf980e607c572cffcf90d2cb595d",
+      "decoded_as": "JSON"
+    }
+  ],
+  "value": {
+    "command_id": "review.118790715dcd52de03f39534.stage",
+    "disposition": "committed",
+    "event_digest": "49878467b94f291dd5a7a4e09d1cd336e051aeb96a1cb32dda281a528852f708",
+    "event_id": "event:review.118790715dcd52de03f39534.stage",
+    "output": {
+      "revision": 828
+    },
+    "revision": 828,
+    "store": {
+      "base_id": "base.vibevm-m05d2.live",
+      "campaign_id": "campaign.vibevm-m05d2.live",
+      "codec_epoch": 2,
+      "reducer_epoch": 1,
+      "store_epoch": "zap/2",
+      "store_id": "store.vibevm-m05d2.live"
+    },
+    "transaction_id": "tx:review.118790715dcd52de03f39534.stage"
+  }
+}

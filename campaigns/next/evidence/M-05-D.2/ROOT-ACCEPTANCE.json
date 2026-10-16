@@ -1,0 +1,31 @@
+{
+  "task": "M-05-D.2",
+  "work_id": "work.m05d2.prepare-plan",
+  "canonical_work_state": "accepted",
+  "work_record_revision": 11,
+  "canonical_acceptance_revision": 829,
+  "candidate_id": "managed-result.667c8cd42a6c7ecce5c1d4aeb18d9b53a9d0007176f482cd0123f3a5cf21d6c5",
+  "source_commit": "79d3441e92fe73b4519beead249cebd6cd9da25f",
+  "accepted_contracts": 94,
+  "campaign_total": 222,
+  "count_rule": "One original D2 Work; four iterative runs do not create four accepted tasks.",
+  "runtime_job_acceptance_at_review": "unreviewed",
+  "safe_commands": [
+    817,
+    818,
+    819
+  ],
+  "open_revision": 820,
+  "evidence_revisions": [
+    821,
+    822,
+    823,
+    824,
+    825,
+    826,
+    827
+  ],
+  "stage_revision": 828,
+  "root_decision": "acceptance/ROOT-DECISION.json",
+  "cleanup": "pending Root observed stop/retirement receipt; collection and Safe do not prove physical stop"
+}

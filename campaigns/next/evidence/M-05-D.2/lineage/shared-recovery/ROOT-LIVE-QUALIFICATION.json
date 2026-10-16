@@ -1,0 +1,34 @@
+{
+  "root_exec_handle": 15699,
+  "at": "2026-10-16T20:59:47.422301+00:00",
+  "root_owner_pid": 1343445,
+  "manager_pid": 1343448,
+  "identities": [
+    {
+      "pid": 1343445,
+      "birth": "5212007",
+      "exe": "/fast/zap-managed/2026-10-16-m05d2/shared-recovery-install/pins/zap"
+    },
+    {
+      "pid": 1343448,
+      "birth": "5212032",
+      "exe": "/fast/zap-managed/2026-10-16-m05d2/pins/podbay"
+    },
+    {
+      "pid": 1344723,
+      "birth": "5219419",
+      "exe": "/fast/zap-managed/2026-10-16-m05d2/pins/podbay-pod"
+    },
+    {
+      "pid": 1344727,
+      "birth": "5219441",
+      "exe": "/home/olegchir/.codex/packages/standalone/releases/0.159.3-x86_64-unknown-linux-musl/bin/codex"
+    }
+  ],
+  "binary_sha256": "09281e19b5c1eb4f9e27ac599f3f1c5d2af724039f82d7f92d9e6ba12b853f99",
+  "same_store": true,
+  "normal_work_resume": "RESUME-REQUEST.json",
+  "next_job": "CURRENT-RECOVERY-JOB.json",
+  "actual_observation": "PROGRESS-01.json",
+  "status": "normal_controller_created_and_dispatched_third_attempt; task not accepted; salvage quality not yet judged"
+}

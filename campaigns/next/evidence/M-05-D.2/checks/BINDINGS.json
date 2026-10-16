@@ -1,0 +1,45 @@
+{
+  "cases": [
+    {
+      "package": "vibe-install",
+      "target": "--lib",
+      "filter": "record::m_05_d_1_cases::m_05_d_2_",
+      "expected": 2,
+      "obligations": [
+        "preflight rejection",
+        "actual loading and lock provenance",
+        "full slot bytes invariant"
+      ]
+    },
+    {
+      "package": "vibe-workspace",
+      "target": "--lib",
+      "filter": "install::bootgen::effective_subskills::m_05_d_2_cases",
+      "expected": 2,
+      "obligations": [
+        "captured validation",
+        "selection bytes"
+      ]
+    },
+    {
+      "package": "vibe-resolver",
+      "target": "--lib",
+      "filter": "features::m_05_d_2_cases",
+      "expected": 2,
+      "obligations": [
+        "dormant intent",
+        "removed dormant drift"
+      ]
+    },
+    {
+      "package": "vibe-agent-projection",
+      "target": "--lib",
+      "filter": "pkgskill::projection::tests::package_binding_defaults_to_every_project_skill_loader_and_hashes_selected_source",
+      "exact": true,
+      "expected": 1,
+      "obligations": [
+        "independent Agent Skill regression"
+      ]
+    }
+  ]
+}

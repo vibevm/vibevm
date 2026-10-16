@@ -1,0 +1,60 @@
+{
+  "distinct_final_passes": 14,
+  "groups": {
+    "install": 2,
+    "workspace": 2,
+    "resolver": 2,
+    "projection": 1,
+    "MCP": 1,
+    "native_selected_group": 4,
+    "orchestrator": 1,
+    "descriptor": 1
+  },
+  "deduplication": "native-2 is contained in native-regression; repeated install/MCP runs not added again. Four iterations are useful partial/final progress, not four failed attempts.",
+  "nonzero_final_iteration_checks": [
+    {
+      "check": "install-1",
+      "exit": 101,
+      "test_summaries": [],
+      "record": "checks/install-1.json",
+      "log": "checks/install-1.log"
+    },
+    {
+      "check": "install-2",
+      "exit": 101,
+      "test_summaries": [
+        "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.12s"
+      ],
+      "record": "checks/install-2.json",
+      "log": "checks/install-2.log"
+    },
+    {
+      "check": "install-4",
+      "exit": 101,
+      "test_summaries": [
+        "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.12s"
+      ],
+      "record": "checks/install-4.json",
+      "log": "checks/install-4.log"
+    },
+    {
+      "check": "native-1",
+      "exit": 101,
+      "test_summaries": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 739 filtered out; finished in 0.03s"
+      ],
+      "record": "checks/native-1.json",
+      "log": "checks/native-1.log"
+    }
+  ],
+  "format": "Scoped rustfmt --check exit0; no global formatting pass claimed.",
+  "diff": "git diff --check exit0",
+  "spec": "Structural preservation exit0; governing semantic judgment is independent/Root review.",
+  "limits": [
+    "No full test suite, global formatting, toolchain installation, models, nested delegation or Git mutation.",
+    "Focused fixtures exercise native boot composition without launching an external native provider process.",
+    "Captured source files are compared separately from generated boot files in materialized slots.",
+    "Checks retain source SHA-256 at dispatch; final formatting is recorded separately and final source hashes follow."
+  ],
+  "context_offer": "Actual INDEX offer plus MCP delivery; no live automatic task-matcher qualification."
+}

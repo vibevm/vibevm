@@ -1,0 +1,23 @@
+{
+  "origin": "/fast/zap-managed/2026-10-16-m05d2/acceptance/JOB.json",
+  "origin_sha256": "f2900464e0326b63f09165d2ce82ecf0bdd7761c05e51c1d601d3497dbcb6cf4",
+  "projection": "Canonical saved job metadata only; no raw native/output/configuration records",
+  "job": {
+    "job_id": "job.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+    "work_id": "work.m05d2.prepare-plan",
+    "revision": 814,
+    "candidate_id": "managed-result.667c8cd42a6c7ecce5c1d4aeb18d9b53a9d0007176f482cd0123f3a5cf21d6c5",
+    "contract_id": "contract.m05d2",
+    "contract_version": 1,
+    "contract_digest": "5139ad0220fe3d46b580554689c0c6137f9b84fdf445a67f09996f74b3aba5dc",
+    "packet_id": "packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+    "packet_digest": "d9b09a5bf7f2858844db15a4013a4bd5768da914f879974b3b49891dbdffda2e",
+    "dispatch_id": "dispatch.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+    "attempt_id": "attempt.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+    "effect_id": "effect.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+    "execution": "succeeded",
+    "effect": "completed",
+    "safe": "unknown",
+    "acceptance": "unreviewed"
+  }
+}

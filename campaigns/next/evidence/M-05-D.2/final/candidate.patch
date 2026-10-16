@@ -1,0 +1,1976 @@
+diff --git a/crates/vibe-install/src/apply.rs b/crates/vibe-install/src/apply.rs
+index b5c00d1d2..92454109b 100644
+--- a/crates/vibe-install/src/apply.rs
++++ b/crates/vibe-install/src/apply.rs
+@@ -28,8 +28,7 @@ use vibe_resolver::{DepProviderError, ResolvedNode};
+ use vibe_workspace::Workspace;
+ use vibe_workspace::hooks::{HookOutput, HookPolicy, HookReport};
+ use vibe_workspace::install::{
+-    InstallOutcome, ResolvedDep, SlotLifecycleMode,
+-    apply_resolution_with_spec_format_and_slot_lifecycle_traced, run_post_install_slot_lifecycle,
++    InstallOutcome, ResolvedDep, SlotLifecycleMode, run_post_install_slot_lifecycle,
+ };
+ use vibe_workspace::vibedeps;
+ 
+@@ -449,24 +448,24 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
+                     platform, policies,
+                 ))
+             };
+-            let prepared =
+-                vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress(
+-                    &workspace,
+-                    &resolution,
+-                    slot_integrity,
+-                    spec_format,
+-                    Some(&slot_verifier),
+-                    lifecycle,
+-                    trace,
+-                    &mut prepare,
+-                    run,
+-                    &mut make_provider,
+-                    &progress,
+-                )?;
++            let prepared = vibe_workspace::install::apply_resolution_native_with_configuration(
++                &workspace,
++                &resolution,
++                slot_integrity,
++                spec_format,
++                Some(&slot_verifier),
++                lifecycle,
++                trace,
++                &mut prepare,
++                run,
++                &mut make_provider,
++                &progress,
++                preflight_configuration.as_ref(),
++            )?;
+             (prepared.outcome, Some(prepared.carriage))
+         }
+         None => (
+-            apply_resolution_with_spec_format_and_slot_lifecycle_traced(
++            vibe_workspace::install::apply_resolution_with_configuration(
+                 &workspace,
+                 &resolution,
+                 slot_integrity,
+@@ -474,6 +473,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
+                 Some(&slot_verifier),
+                 lifecycle,
+                 trace,
++                preflight_configuration.as_ref(),
+             )?,
+             None,
+         ),
+diff --git a/crates/vibe-install/src/record.rs b/crates/vibe-install/src/record.rs
+index 04d2c89a6..2740e02a2 100644
+--- a/crates/vibe-install/src/record.rs
++++ b/crates/vibe-install/src/record.rs
+@@ -381,6 +381,15 @@ pub(crate) fn configuration_record(
+     fetched: &[Fetched],
+ ) -> crate::error::Result<Option<vibe_core::manifest::LockedConfiguration>> {
+     use serde_json::json;
++    // Validate real child declarations before publishing selection provenance.
++    // This never filters the complete source tree or fills legacy copy rows.
++    for package in fetched {
++        vibe_workspace::install::effective_subskills::capture_selected_subskills(
++            &package.cached.cache_dir,
++            &package.feature_expansion.active_subskills,
++        )
++        .map_err(lock_error)?;
++    }
+     let Some(request) = request else {
+         return Ok(None);
+     };
+diff --git a/crates/vibe-install/src/record/m_05_d_1_cases.rs b/crates/vibe-install/src/record/m_05_d_1_cases.rs
+index e810dcfc2..a00c82d5c 100644
+--- a/crates/vibe-install/src/record/m_05_d_1_cases.rs
++++ b/crates/vibe-install/src/record/m_05_d_1_cases.rs
+@@ -405,6 +405,246 @@ fn production_apply_records_requested_and_resolved_separately() {
+         Plan::Ready(_)
+     ));
+ }
++
++#[test]
++fn m_05_d_2_preflight_rejects_selected_directory_without_declaration() {
++    let fixture = Fixture::new();
++    let cached = fixture
++        .source
++        .resolve_and_fetch(&p("owner"), &fixture.root, None)
++        .unwrap();
++    std::fs::create_dir_all(cached.cache_dir.join("subskills/stack/rust")).unwrap();
++    let mut fetched = crate::Fetched {
++        cached,
++        feature_expansion: Default::default(),
++        meta: crate::NodeInstallMeta {
++            dependencies: vec![],
++            is_root: true,
++        },
++        embedded_sources: vec![],
++        in_place_incremental: false,
++    };
++    fetched
++        .feature_expansion
++        .active_subskills
++        .insert("stack/rust".into());
++    let error = super::configuration_record(None, &[], std::slice::from_ref(&fetched)).unwrap_err();
++    assert!(error.to_string().contains("missing captured declaration"));
++    assert!(!fixture.root.join(Lockfile::FILENAME).exists());
++
++    let root = fetched.cached.cache_dir.clone();
++    std::fs::write(
++        root.join("subskills/stack/rust/vibe-subskill.toml"),
++        "[subskill]\npath='stack/rust'\n[content]\nfiles_written=['guide.md']\n",
++    )
++    .unwrap();
++    std::fs::write(
++        root.join("subskills/stack/rust/guide.md"),
++        "Captured guide\n",
++    )
++    .unwrap();
++    std::fs::write(
++        root.join("unselected.txt"),
++        "Unselected source stays intact\n",
++    )
++    .unwrap();
++    fetched.cached = fixture
++        .source
++        .resolve_and_fetch(&p("owner"), &fixture.root, None)
++        .unwrap();
++    let before = vibe_registry::compute_content_hash(&root).unwrap();
++    assert!(
++        super::configuration_record(None, &[], std::slice::from_ref(&fetched))
++            .unwrap()
++            .is_none()
++    );
++    fetched.feature_expansion.active_subskills.clear();
++    assert!(
++        super::configuration_record(None, &[], &[fetched])
++            .unwrap()
++            .is_none()
++    );
++    assert_eq!(before, vibe_registry::compute_content_hash(&root).unwrap());
++    assert_eq!(
++        std::fs::read_to_string(root.join("unselected.txt")).unwrap(),
++        "Unselected source stays intact\n"
++    );
++}
++
++#[test]
++fn m_05_d_2_install_loading_keeps_complete_slots_and_provenance() {
++    let mut hashes = Vec::new();
++    for active in [true, false] {
++        let mut fixture = Fixture::new();
++        let source = fixture.source.provider.0.join("owner");
++        for (name, mode) in [
++            ("eager", "eager"),
++            ("push", "lazy-push"),
++            ("pull", "lazy-pull"),
++        ] {
++            let dir = source.join("subskills").join(name);
++            std::fs::create_dir_all(&dir).unwrap();
++            std::fs::write(dir.join("vibe-subskill.toml"), format!("[subskill]\npath='{name}'\ndelivery='{mode}'\ndescription='Use for {name} work'\n[content]\nfiles_written=['guide.md']\n")).unwrap();
++            std::fs::write(dir.join("guide.md"), format!("# {name} selected content\n")).unwrap();
++        }
++        std::fs::write(source.join("unselected.txt"), "complete source\n").unwrap();
++        let mut manifest = Manifest::read(source.join("vibe.toml")).unwrap();
++        // Independent Agent Skill declaration deliberately has a different name/path.
++        let skill: Manifest = Manifest::parse_str("[package]\ngroup='org.example'\nname='owner'\nkind='flow'\nversion='1.0.0'\n[[skill]]\nname='independent'\npath='skills/unrelated'\n").unwrap();
++        manifest.skills = skill.skills;
++        manifest.write(source.join("vibe.toml")).unwrap();
++        std::fs::create_dir_all(source.join("skills/unrelated")).unwrap();
++        std::fs::write(source.join("skills/unrelated/SKILL.md"), "---\nname: independent\ndescription: Independent guidance\n---\nIndependent skill bytes\n").unwrap();
++        let before = vibe_registry::compute_content_hash(&source).unwrap();
++        let intent = fixture.source.intent.as_mut().unwrap();
++        let config = intent.configuration.as_mut().unwrap();
++        let definition = &mut config.definitions[0];
++        definition.identity = fixture
++            .source
++            .provider
++            .candidate_metadata(
++                &p("owner").group.unwrap(),
++                "owner",
++                &semver::Version::new(1, 0, 0),
++            )
++            .unwrap()
++            .identity;
++        definition.definition.declarations.exported_subskills =
++            ["eager".into(), "push".into(), "pull".into()].into();
++        definition.definition.program.features.insert(
++            f("a"),
++            ["eager", "push", "pull"]
++                .into_iter()
++                .map(|p| FeatureEffect::ExportedSubskill(p.into()))
++                .collect(),
++        );
++        if !active {
++            config.request.edges[0]
++                .selections
++                .get_mut("choice")
++                .unwrap()
++                .members = Some(vec!["gate".into()]);
++        }
++        let catalog =
++            TransactionCatalog::capture(&fixture.source.provider, &intent.catalog_roots()).unwrap();
++        let config = intent.configuration.as_ref().unwrap();
++        let solved = vibe_resolver::ResolvoDepSolver::new(&catalog)
++            .solve_configuration(
++                &intent.roots,
++                &config.request,
++                &config.definitions,
++                &config.defaults,
++            )
++            .unwrap();
++        fixture.source.route = RouteResolution::bind(
++            &catalog,
++            intent,
++            RecordedResolution {
++                graph: solved.graph,
++                choices: solved.choices,
++            },
++            solved.manifests,
++            solved.effects,
++        )
++        .unwrap();
++        fixture.source.catalog = catalog.inspect().clone();
++        let lock = fixture.apply();
++        let owner = lock.find(&p("owner").group.unwrap(), "owner").unwrap();
++        assert!(owner.subskills_active.is_empty());
++        let slot = vibe_workspace::vibedeps::slot_abs_path(
++            &fixture.root,
++            &owner.group,
++            &owner.name,
++            &owner.version,
++        );
++        assert_eq!(
++            before,
++            vibe_registry::compute_content_hash(&source).unwrap()
++        );
++        fn assert_full_source(source: &Path, slot: &Path) {
++            for entry in std::fs::read_dir(source).unwrap() {
++                let entry = entry.unwrap();
++                let target = slot.join(entry.file_name());
++                if entry.file_type().unwrap().is_dir() {
++                    assert_full_source(&entry.path(), &target);
++                } else {
++                    assert_eq!(
++                        std::fs::read(entry.path()).unwrap(),
++                        std::fs::read(&target).unwrap(),
++                        "{}",
++                        target.display()
++                    );
++                }
++            }
++        }
++        assert_full_source(&source, &slot);
++        hashes.push(before);
++        assert_eq!(
++            std::fs::read(slot.join("unselected.txt")).unwrap(),
++            b"complete source\n"
++        );
++        let selected = vibe_workspace::install::effective_subskills::from_locked_package(
++            &fixture.root,
++            &lock,
++            owner,
++        )
++        .unwrap();
++        assert_eq!(selected.len(), if active { 3 } else { 0 });
++        let boot_dir = fixture.root.join(vibe_core::layout::current_boot_dir());
++        let static_text = std::fs::read_to_string(boot_dir.join("STATIC.md")).unwrap_or_default();
++        let index = std::fs::read_to_string(boot_dir.join("INDEX.md")).unwrap();
++        assert_eq!(
++            static_text.contains("eager selected content"),
++            active,
++            "{static_text}"
++        );
++        assert!(!static_text.contains("push selected content"));
++        assert!(!static_text.contains("pull selected content"));
++        assert_eq!(
++            index.contains("subskills/push/vibe-subskill.toml"),
++            active,
++            "{index}"
++        );
++        assert!(!index.contains("subskills/pull/guide.md"));
++        if active {
++            assert!(index.contains("Use for push work"));
++            assert!(index.contains("read_subskill"));
++        }
++        let workspace = vibe_workspace::Workspace::load(&fixture.root).unwrap();
++        vibe_workspace::install::regenerate_boot(&workspace).unwrap();
++        assert_eq!(
++            std::fs::read_to_string(boot_dir.join("STATIC.md")).unwrap_or_default(),
++            static_text
++        );
++        let analyzed = vibe_workspace::install::analyze_node_lane(&workspace, ".", None).unwrap();
++        assert_eq!(analyzed.is_some(), active);
++        if let Some(analyzed) = analyzed {
++            assert!(
++                String::from_utf8_lossy(analyzed.artifact.bytes())
++                    .contains("eager selected content")
++            );
++        }
++        assert!(!fixture.root.join("guide.md").exists());
++        let (_, resolved) = vibe_wire::behaviour::lock_configuration::decode(
++            lock.meta.configuration.as_ref().unwrap(),
++        )
++        .unwrap();
++        let row = resolved
++            .packages
++            .iter()
++            .find(|row| row.package == "org.example/owner@1.0.0")
++            .unwrap();
++        assert_eq!(row.content, owner.content_hash.to_string());
++        assert_eq!(
++            serde_json::from_str::<serde_json::Value>(&row.effects).unwrap()["subskills"]
++                .as_array()
++                .unwrap()
++                .len(),
++            if active { 3 } else { 0 }
++        );
++    }
++    assert_eq!(hashes[0], hashes[1]);
++}
+ #[test]
+ fn exact_replay_rejects_changed_definition_or_lost_request() {
+     let mut fixture = Fixture::new();
+diff --git a/crates/vibe-mcp/src/tools.rs b/crates/vibe-mcp/src/tools.rs
+index 9d8475037..97d79ec81 100644
+--- a/crates/vibe-mcp/src/tools.rs
++++ b/crates/vibe-mcp/src/tools.rs
+@@ -18,7 +18,10 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
+ 
+ pub mod adapter_plan;
+ pub mod boot_debugger;
++#[cfg(test)]
++mod m_05_d_2_cases;
+ pub mod output;
++mod subskills;
+ pub use boot_debugger::BootDebuggerMcpTool;
+ pub use output::ToolOutput;
+ 
+@@ -181,19 +184,26 @@ impl McpTool for QueryPackageMcpTool {
+             .find(&group, &pname)
+             .ok_or_else(|| ToolError::NotFound(format!("package `{name}` not in lockfile")))?;
+ 
+-        let subskills: Vec<Value> = entry
+-            .subskills_active
+-            .iter()
+-            .map(|s| {
+-                let mut obj = serde_json::Map::new();
+-                obj.insert("path".into(), Value::String(s.path.clone()));
+-                obj.insert("delivery".into(), Value::String(s.delivery.clone()));
+-                if let Some(d) = &s.describes {
+-                    obj.insert("describes".into(), Value::String(d.clone()));
+-                }
+-                Value::Object(obj)
+-            })
+-            .collect();
++        let subskills: Vec<Value> = if lockfile.meta.configuration.is_some() {
++            subskills::selected(ctx, &lockfile, entry)?
++                .iter()
++                .map(subskills::visible)
++                .collect()
++        } else {
++            entry
++                .subskills_active
++                .iter()
++                .map(|s| {
++                    let mut obj = serde_json::Map::new();
++                    obj.insert("path".into(), Value::String(s.path.clone()));
++                    obj.insert("delivery".into(), Value::String(s.delivery.clone()));
++                    if let Some(d) = &s.describes {
++                        obj.insert("describes".into(), Value::String(d.clone()));
++                    }
++                    Value::Object(obj)
++                })
++                .collect()
++        };
+         let files: Vec<Value> = entry
+             .files_written
+             .iter()
+@@ -223,8 +233,8 @@ impl McpTool for QueryPackageMcpTool {
+ // read_subskill
+ // ---------------------------------------------------------------------------
+ 
+-/// Read the materialised content of an active subskill — project tree
+-/// for eager / lazy-push, package cache for lazy-pull. Read-only.
++/// Read selected captured subskill content from its admitted package slot.
++/// Legacy locks retain their project/cache compatibility reader. Read-only.
+ ///
+ /// ```
+ /// use vibe_mcp::tools::{McpTool, ReadSubskillMcpTool};
+@@ -239,7 +249,7 @@ impl McpTool for ReadSubskillMcpTool {
+         ToolDescriptor {
+             name: "read_subskill".to_string(),
+             description:
+-                "Read the materialised content of a subskill that activated for an installed package. The agent gets back the concatenated text of every file the subskill's `[content].files_written` recorded, prefixed with each file's project-relative path. Use when an active subskill is mentioned by `query_package` and the agent wants the actual content. Subskills with `delivery = lazy-pull` are also visible through this tool — that's their primary access path."
++                "Read an active subskill's captured content from its installed package slot. Returns declared content files with package-relative paths and declaration provenance. Use after query_package discovery or when a lazy-push boot offer's description matches the current task. This is also the content-delivery path for lazy-pull subskills."
+                     .to_string(),
+             input_schema: json!({
+                 "type": "object",
+@@ -277,6 +287,18 @@ impl McpTool for ReadSubskillMcpTool {
+         let entry = lockfile
+             .find(&group, &pname)
+             .ok_or_else(|| ToolError::NotFound(format!("package `{package}` not in lockfile")))?;
++        if lockfile.meta.configuration.is_some() {
++            let selected = subskills::selected(ctx, &lockfile, entry)?;
++            let sub = selected
++                .iter()
++                .find(|sub| sub.declaration.subskill.path == subskill_path)
++                .ok_or_else(|| {
++                    ToolError::NotFound(format!(
++                        "subskill `{subskill_path}` is not active on `{package}`"
++                    ))
++                })?;
++            return Ok(subskills::read(package, sub));
++        }
+         let sub = entry
+             .subskills_active
+             .iter()
+@@ -356,9 +378,8 @@ impl McpTool for ReadSubskillMcpTool {
+ // materialise_subskill
+ // ---------------------------------------------------------------------------
+ 
+-/// Copy a `lazy-pull` subskill's content into the project tree. No-op for
+-/// eager / lazy-push; refuses to overwrite without `force`. The one
+-/// writing tool.
++/// Full-slot selections are already materialized and require no project copy.
++/// Legacy locks retain their explicit lazy-pull copying compatibility path.
+ ///
+ /// ```
+ /// use vibe_mcp::tools::{McpTool, MaterialiseSubskillMcpTool};
+@@ -416,6 +437,23 @@ impl McpTool for MaterialiseSubskillMcpTool {
+         let entry = lockfile
+             .find(&group, &pname)
+             .ok_or_else(|| ToolError::NotFound(format!("package `{package}` not in lockfile")))?;
++        if lockfile.meta.configuration.is_some() {
++            let selected = subskills::selected(ctx, &lockfile, entry)?;
++            let sub = selected
++                .iter()
++                .find(|sub| sub.declaration.subskill.path == subskill_path)
++                .ok_or_else(|| {
++                    ToolError::NotFound(format!(
++                        "subskill `{subskill_path}` is not active on `{package}`"
++                    ))
++                })?;
++            return Ok(ToolOutput::ok(
++                json!({"package": package, "subskill_path": subskill_path,
++                "delivery": sub.declaration.subskill.delivery, "status": "no-op",
++                "note": "Full package slot already materialized; use read_subskill for context delivery.",
++                "written": []}),
++            ));
++        }
+         let sub = entry
+             .subskills_active
+             .iter()
+diff --git a/crates/vibe-resolver/src/features.rs b/crates/vibe-resolver/src/features.rs
+index fa59f016f..5f5a2fbf0 100644
+--- a/crates/vibe-resolver/src/features.rs
++++ b/crates/vibe-resolver/src/features.rs
+@@ -14,6 +14,9 @@
+ use std::collections::{BTreeMap, BTreeSet};
+ pub mod configuration;
+ 
++#[cfg(test)]
++mod m_05_d_2_cases;
++
+ use specmark::spec;
+ use thiserror::Error;
+ use vibe_core::manifest::FeaturesTable;
+diff --git a/crates/vibe-workspace/src/boot.rs b/crates/vibe-workspace/src/boot.rs
+index 587c35f81..e526255f4 100644
+--- a/crates/vibe-workspace/src/boot.rs
++++ b/crates/vibe-workspace/src/boot.rs
+@@ -176,6 +176,14 @@ pub enum BootProvenance {
+     /// A dependency package, by the `(group, name)` pair the resolution
+     /// records for it.
+     Dependency { group: Group, name: String },
++    /// A selected lazy-push declaration offered to agent context. The offer
++    /// carries an explicit MCP read reference, not eagerly delivered content.
++    SubskillOffer {
++        group: Group,
++        name: String,
++        subskill: String,
++        description: String,
++    },
+ }
+ 
+ /// One entry in a node's computed effective boot sequence.
+diff --git a/crates/vibe-workspace/src/boot_artifacts.rs b/crates/vibe-workspace/src/boot_artifacts.rs
+index 2b641ab78..a3daf1fd9 100644
+--- a/crates/vibe-workspace/src/boot_artifacts.rs
++++ b/crates/vibe-workspace/src/boot_artifacts.rs
+@@ -203,9 +203,29 @@ pub(super) fn prepare_index_body(
+             })
+             .collect(),
+     };
+-    let body = toml::to_string_pretty(&manifest).map_err(|e| WorkspaceError::IndexRender {
++    let mut body = toml::to_string_pretty(&manifest).map_err(|e| WorkspaceError::IndexRender {
+         reason: e.to_string(),
+     })?;
++    // Comments keep the existing INDEX schema intact while offering selected
++    // lazy-push descriptions and an explicit delivery request to the agent.
++    for entry in boot.dynamic_entries() {
++        if let crate::boot::BootProvenance::SubskillOffer {
++            group,
++            name,
++            subskill,
++            description,
++        } = &entry.provenance
++        {
++            body.push_str("\n# Context offer: ");
++            body.push_str(&description.replace(['\r', '\n'], " "));
++            body.push_str("\n# When relevant, call read_subskill with ");
++            body.push_str(
++                &serde_json::json!({"package":format!("{group}/{name}"), "subskill_path":subskill})
++                    .to_string(),
++            );
++            body.push('\n');
++        }
++    }
+     Ok(body)
+ }
+ 
+diff --git a/crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs b/crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs
+index f316d2b79..2cc014050 100644
+--- a/crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs
++++ b/crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs
+@@ -18,6 +18,9 @@ use super::{compile_artifact, compile_static_artifact_with_plans};
+ /// refuse rather than treating their own record as an independent pin.
+ #[derive(Debug, Clone)]
+ pub(crate) struct SelectedSlotWitness {
++    /// Independently declared selected subskill content, never inferred from
++    /// a directory or promoted into the package.sources catalogue.
++    pub subskills: Vec<crate::install::effective_subskills::CapturedSubskill>,
+     pub group: Group,
+     pub name: String,
+     pub version: semver::Version,
+diff --git a/crates/vibe-workspace/src/boot_artifacts/descriptor_reader/tests.rs b/crates/vibe-workspace/src/boot_artifacts/descriptor_reader/tests.rs
+index 58f4e8f0e..8b6c5016b 100644
+--- a/crates/vibe-workspace/src/boot_artifacts/descriptor_reader/tests.rs
++++ b/crates/vibe-workspace/src/boot_artifacts/descriptor_reader/tests.rs
+@@ -64,6 +64,7 @@ fn fixture() -> (TempDir, SelectedSlotWitness, EffectiveBoot, String) {
+     .unwrap();
+     let slot = vibedeps::slot_rel_path(&group, name, &version);
+     let witness = SelectedSlotWitness {
++        subskills: Vec::new(),
+         group: group.clone(),
+         name: name.into(),
+         version,
+@@ -201,6 +202,7 @@ fn install_reader_without_descriptors_keeps_legacy_pair_collision() {
+     fs::write(specs.join("pair.md"), b"# Pair\n").unwrap();
+     fs::write(specs.join("pair.xml"), b"<data/>\n").unwrap();
+     let witness = SelectedSlotWitness {
++        subskills: Vec::new(),
+         group,
+         name: "legacy".into(),
+         version,
+diff --git a/crates/vibe-workspace/src/boot_artifacts/inputs.rs b/crates/vibe-workspace/src/boot_artifacts/inputs.rs
+index f0fdfd29f..e4d196b88 100644
+--- a/crates/vibe-workspace/src/boot_artifacts/inputs.rs
++++ b/crates/vibe-workspace/src/boot_artifacts/inputs.rs
+@@ -194,6 +194,43 @@ fn selected_simple_markdown(
+         .map_err(|_| boot_refusal("simple boot entry is outside its selected slot"))?
+         .to_string_lossy()
+         .replace('\\', "/");
++    // SubskillManifest content is a separate explicit declaration authority.
++    // Only a selected eager capture may supply bytes here. Directory presence
++    // and a matching suffix cannot bypass the package.sources descriptor path.
++    if let Some((sub, bytes)) = witness
++        .subskills
++        .iter()
++        .filter(|sub| sub.declaration.subskill.delivery == vibe_core::manifest::DeliveryMode::Eager)
++        .find_map(|sub| sub.content.get(&relative).map(|bytes| (sub, bytes)))
++    {
++        let pinned = Project::open(&witness.root).map_err(|e| boot_refusal(&e.to_string()))?;
++        let definition = pinned
++            .read_file_snapshot_bounded(&sub.definition_path, 1024 * 1024)
++            .map_err(|e| boot_refusal(&e.to_string()))?
++            .ok_or_else(|| boot_refusal("selected subskill declaration is absent"))?;
++        if definition.sha256 != sub.definition_digest {
++            return Err(boot_refusal(
++                "selected subskill declaration changed after capture",
++            ));
++        }
++        let current = pinned
++            .read_file_snapshot_bounded(&relative, 64 * 1024 * 1024)
++            .map_err(|e| boot_refusal(&e.to_string()))?
++            .ok_or_else(|| boot_refusal("selected subskill content is absent"))?;
++        if current.bytes != *bytes
++            || overlay
++                .and_then(|o| o.get(absolute))
++                .is_some_and(|b| b.as_ref() != bytes)
++        {
++            return Err(boot_refusal(
++                "selected subskill content differs from captured declaration witness",
++            ));
++        }
++        let raw = std::str::from_utf8(bytes).map_err(|e| boot_refusal(&e.to_string()))?;
++        return vibe_specdoc::project_spec_text(absolute, raw)
++            .map(|(markdown, _)| Some(markdown))
++            .map_err(|e| boot_refusal(&e.to_string()));
++    }
+     let map = vibedeps::read_validated_descriptor_map_optional_hash(
+         &witness.root,
+         &witness.group,
+@@ -279,7 +316,8 @@ fn document_provider(
+     self_coord: &SelfCoordinate,
+ ) -> Result<DocumentProvider, WorkspaceError> {
+     match &entry.provenance {
+-        BootProvenance::Dependency { group, name } => Ok(DocumentProvider::Dependency {
++        BootProvenance::Dependency { group, name }
++        | BootProvenance::SubskillOffer { group, name, .. } => Ok(DocumentProvider::Dependency {
+             group: group.clone(),
+             name: typed_name(&entry.origin, "dependency name", name)?,
+         }),
+diff --git a/crates/vibe-workspace/src/boot_artifacts/inputs_tests.rs b/crates/vibe-workspace/src/boot_artifacts/inputs_tests.rs
+index e56833ee6..ea495ee91 100644
+--- a/crates/vibe-workspace/src/boot_artifacts/inputs_tests.rs
++++ b/crates/vibe-workspace/src/boot_artifacts/inputs_tests.rs
+@@ -279,6 +279,7 @@ fn bound_simple_boot_projects_only_selected_vibe_and_refuses_raw_same_stem() {
+     .unwrap();
+     let slot = crate::vibedeps::slot_rel_path(&group, "simple", &version);
+     let witness = SelectedSlotWitness {
++        subskills: Vec::new(),
+         group: group.clone(),
+         name: "simple".into(),
+         version,
+diff --git a/crates/vibe-workspace/src/boot_artifacts/native_managed_unit_parity_tests.rs b/crates/vibe-workspace/src/boot_artifacts/native_managed_unit_parity_tests.rs
+index 6a456917d..54fcdfeb6 100644
+--- a/crates/vibe-workspace/src/boot_artifacts/native_managed_unit_parity_tests.rs
++++ b/crates/vibe-workspace/src/boot_artifacts/native_managed_unit_parity_tests.rs
+@@ -326,6 +326,7 @@ fn selected_native_managed_builtin_reads_vibe_xml_beside_raw_pair_and_refuses_dr
+         }],
+     };
+     let witness = crate::boot_artifacts::SelectedSlotWitness {
++        subskills: Vec::new(),
+         group,
+         name: "selected".into(),
+         version,
+diff --git a/crates/vibe-workspace/src/install.rs b/crates/vibe-workspace/src/install.rs
+index ee522db3e..3f651f977 100644
+--- a/crates/vibe-workspace/src/install.rs
++++ b/crates/vibe-workspace/src/install.rs
+@@ -55,8 +55,12 @@ pub(crate) mod bootgen;
+ /// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
+ /// the once-each topology is exercisable at the unit level (no full install).
+ pub use bootgen::desubstitute_covered_units;
++pub use bootgen::effective_subskills;
+ pub(crate) use bootgen::node_own_boot;
+ use bootgen::validate_redirect_blocks;
++pub use hook_output::{
++    apply_resolution_native_with_configuration, apply_resolution_with_configuration,
++};
+ /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
+ pub use model::{
+     AppliedConversionCounts, AppliedConversionFailure, InstallOutcome, PostInstallPlan,
+diff --git a/crates/vibe-workspace/src/install/bootgen.rs b/crates/vibe-workspace/src/install/bootgen.rs
+index 8035b7500..acc166d8d 100644
+--- a/crates/vibe-workspace/src/install/bootgen.rs
++++ b/crates/vibe-workspace/src/install/bootgen.rs
+@@ -49,6 +49,7 @@ mod materialised_read;
+ pub(super) use materialised_read::read_durable_resolution;
+ pub(crate) mod captured;
+ mod conditions;
++pub mod effective_subskills;
+ mod node_dependency;
+ mod publication;
+ mod snippet_source;
+@@ -121,6 +122,24 @@ pub fn regenerate_boot_from_traced_prepared(
+     spec_format: SpecFormat,
+     trace: Option<&crate::compile_trace::TraceRun>,
+     lowering: OwnerRuntimeLowering,
++) -> Result<BootRegeneration, WorkspaceError> {
++    regenerate_boot_from_traced_prepared_configuration(
++        workspace,
++        resolution,
++        spec_format,
++        trace,
++        lowering,
++        None,
++    )
++}
++
++pub fn regenerate_boot_from_traced_prepared_configuration(
++    workspace: &Workspace,
++    resolution: &[ResolvedDep],
++    spec_format: SpecFormat,
++    trace: Option<&crate::compile_trace::TraceRun>,
++    lowering: OwnerRuntimeLowering,
++    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+ ) -> Result<BootRegeneration, WorkspaceError> {
+     // B-031 self is always the workspace root coordinate.
+     let self_coord = root_self_coordinate(&workspace.root_manifest);
+@@ -203,6 +222,13 @@ pub fn regenerate_boot_from_traced_prepared(
+         }
+         // Collapse covered unit zones after hoisting, before artifact writes.
+         desubstitute_covered_units(&mut effective, &table);
++        effective_subskills::append_loading(
++            &workspace.root,
++            resolution,
++            &deps,
++            configuration,
++            &mut effective,
++        )?;
+         // Each node receives its own retained owner plan.
+         boot_artifacts::write_boot_artifacts_traced(
+             &node_dir,
+@@ -232,6 +258,7 @@ pub(super) fn regenerate_boot_from_traced_native_prepared<F, P>(
+     lowering: OwnerRuntimeLowering,
+     run: crate::extension_world::OwnerRuntimeRunFacts,
+     make_provider: &mut F,
++    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+ ) -> Result<(Vec<String>, super::NativeInstallCarriage), WorkspaceError>
+ where
+     F: FnMut(
+@@ -263,13 +290,14 @@ where
+         }))
+         .collect();
+     let mut provider = make_provider(policies)?;
+-    let regenerated = native_managed::regenerate_boot_from_bound_native(
++    let regenerated = native_managed::regenerate_boot_from_bound_native_configuration(
+         workspace,
+         resolution,
+         spec_format,
+         trace,
+         &epoch,
+         Some(&mut provider),
++        configuration,
+     )?;
+     let nodes = regenerated.nodes.clone();
+     let replay = regenerated.into_replay_set(&epoch)?;
+@@ -301,7 +329,16 @@ pub fn regenerate_boot_traced(
+     // any boot-artifact write.
+     let resolution = read_durable_resolution(&workspace.root)?;
+     validate_redirect_blocks(workspace, &resolution)?;
+-    regenerate_boot_from_traced(workspace, &resolution, spec_format, trace)
++    let configuration = effective_subskills::durable_configuration(&workspace.root)?;
++    regenerate_boot_from_traced_prepared_configuration(
++        workspace,
++        &resolution,
++        spec_format,
++        trace,
++        OwnerRuntimeLowering::compatibility_root_without_presets(),
++        configuration.as_ref(),
++    )
++    .map(|prepared| prepared.nodes)
+ }
+ 
+ /// Return package units whose durable boot fingerprints are stale.
+diff --git a/crates/vibe-workspace/src/install/bootgen/analyze.rs b/crates/vibe-workspace/src/install/bootgen/analyze.rs
+index 12bbe0572..2c566984b 100644
+--- a/crates/vibe-workspace/src/install/bootgen/analyze.rs
++++ b/crates/vibe-workspace/src/install/bootgen/analyze.rs
+@@ -85,6 +85,7 @@ fn selected_slot_witnesses(
+                 vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
+             };
+             boot_artifacts::SelectedSlotWitness {
++                subskills: Vec::new(),
+                 group: dep.group.clone(),
+                 name: dep.name.clone(),
+                 version: dep.version.clone(),
+@@ -184,6 +185,15 @@ pub fn analyze_node_lane(
+     }
+     desubstitute_covered_units(&mut effective, &table);
+ 
++    let configuration = super::effective_subskills::durable_configuration(&root)?;
++    super::effective_subskills::append_loading(
++        &root,
++        &resolution,
++        &dependencies,
++        configuration.as_ref(),
++        &mut effective,
++    )?;
++
+     let identities: Vec<(String, String)> = effective
+         .static_entries()
+         .map(|entry| (entry.origin.clone(), entry.path.clone()))
+@@ -193,7 +203,8 @@ pub fn analyze_node_lane(
+     // host seats over this same exact parsed package epoch.
+     let transforms = runtimes.node(node_rel)?.transform_plan().clone();
+ 
+-    let selected = selected_slot_witnesses(&root, &resolution, spec_format);
++    let mut selected = selected_slot_witnesses(&root, &resolution, spec_format);
++    super::effective_subskills::bind_selected_slots(&mut selected, configuration.as_ref())?;
+     let compiled = boot_artifacts::compile_static_analyzed_selected(
+         &effective,
+         &root,
+@@ -278,7 +289,16 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
+         append_hoisted(&mut effective, &shared, &table, &pulls);
+     }
+     desubstitute_covered_units(&mut effective, &table);
+-    let selected = selected_slot_witnesses(&root, resolution, spec_format);
++    let mut selected = selected_slot_witnesses(&root, resolution, spec_format);
++    let configuration = super::effective_subskills::durable_configuration(&root)?;
++    super::effective_subskills::bind_selected_slots(&mut selected, configuration.as_ref())?;
++    super::effective_subskills::append_loading(
++        &root,
++        resolution,
++        &dependencies,
++        configuration.as_ref(),
++        &mut effective,
++    )?;
+     analyze_effective_bound_native(
+         &effective,
+         &root,
+@@ -360,7 +380,16 @@ pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
+         append_hoisted(&mut effective, &shared, &table, &pulls);
+     }
+     desubstitute_covered_units(&mut effective, &table);
+-    let selected = selected_slot_witnesses(&root, &resolution, spec_format);
++    let mut selected = selected_slot_witnesses(&root, &resolution, spec_format);
++    let configuration = super::effective_subskills::durable_configuration(&root)?;
++    super::effective_subskills::bind_selected_slots(&mut selected, configuration.as_ref())?;
++    super::effective_subskills::append_loading(
++        &root,
++        &resolution,
++        &dependencies,
++        configuration.as_ref(),
++        &mut effective,
++    )?;
+     boot_artifacts::native_managed::compile_backend_owner_managed_selected(
+         &effective,
+         &root,
+diff --git a/crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs b/crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs
+index e9c1bee46..6f4d61e67 100644
+--- a/crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs
++++ b/crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs
+@@ -178,6 +178,7 @@ pub(super) fn emit_package_units(
+     let selected_slots = resolution
+         .iter()
+         .map(|dep| boot_artifacts::SelectedSlotWitness {
++            subskills: Vec::new(),
+             group: dep.group.clone(),
+             name: dep.name.clone(),
+             version: dep.version.clone(),
+diff --git a/crates/vibe-workspace/src/install/bootgen/hybrid_emit/native_managed.rs b/crates/vibe-workspace/src/install/bootgen/hybrid_emit/native_managed.rs
+index fcfb7503c..789a00340 100644
+--- a/crates/vibe-workspace/src/install/bootgen/hybrid_emit/native_managed.rs
++++ b/crates/vibe-workspace/src/install/bootgen/hybrid_emit/native_managed.rs
+@@ -54,6 +54,7 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
+     let selected_slots = resolution
+         .iter()
+         .map(|dep| boot_artifacts::SelectedSlotWitness {
++            subskills: Vec::new(),
+             group: dep.group.clone(),
+             name: dep.name.clone(),
+             version: dep.version.clone(),
+diff --git a/crates/vibe-workspace/src/install/bootgen/materialised_read.rs b/crates/vibe-workspace/src/install/bootgen/materialised_read.rs
+index d03447d7f..7edc27232 100644
+--- a/crates/vibe-workspace/src/install/bootgen/materialised_read.rs
++++ b/crates/vibe-workspace/src/install/bootgen/materialised_read.rs
+@@ -37,7 +37,7 @@ pub(in crate::install) fn read_durable_resolution(
+         .collect()
+ }
+ 
+-fn durable_row(
++pub(super) fn durable_row(
+     workspace_root: &Path,
+     package: &vibe_core::manifest::LockedPackage,
+ ) -> Result<ResolvedDep, WorkspaceError> {
+diff --git a/crates/vibe-workspace/src/install/bootgen/native_managed.rs b/crates/vibe-workspace/src/install/bootgen/native_managed.rs
+index c02e40933..30cf8621c 100644
+--- a/crates/vibe-workspace/src/install/bootgen/native_managed.rs
++++ b/crates/vibe-workspace/src/install/bootgen/native_managed.rs
+@@ -38,12 +38,32 @@ impl BoundBootRegeneration {
+ }
+ 
+ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
++    workspace: &Workspace,
++    resolution: &[ResolvedDep],
++    spec_format: SpecFormat,
++    trace: Option<&crate::compile_trace::TraceRun>,
++    epoch: &OwnerRuntimeEpoch,
++    provider: Option<&mut P>,
++) -> Result<BoundBootRegeneration, WorkspaceError> {
++    regenerate_boot_from_bound_native_configuration(
++        workspace,
++        resolution,
++        spec_format,
++        trace,
++        epoch,
++        provider,
++        None,
++    )
++}
++
++pub(crate) fn regenerate_boot_from_bound_native_configuration<P: OwnerNativeCompileProvider>(
+     workspace: &Workspace,
+     resolution: &[ResolvedDep],
+     spec_format: SpecFormat,
+     trace: Option<&crate::compile_trace::TraceRun>,
+     epoch: &OwnerRuntimeEpoch,
+     mut provider: Option<&mut P>,
++    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+ ) -> Result<BoundBootRegeneration, WorkspaceError> {
+     if epoch.lowered().workspace_root() != workspace.root.as_path() {
+         return Err(WorkspaceError::NativeCompileProvider {
+@@ -53,7 +73,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
+     }
+     epoch.assert_resolution(&workspace.root, resolution)?;
+     let self_coord = root_self_coordinate(&workspace.root_manifest);
+-    let selected_slots: Vec<boot_artifacts::SelectedSlotWitness> = resolution
++    let mut selected_slots: Vec<boot_artifacts::SelectedSlotWitness> = resolution
+         .iter()
+         .map(|dep| {
+             let in_place = dep
+@@ -67,6 +87,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
+                 vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
+             };
+             boot_artifacts::SelectedSlotWitness {
++                subskills: Vec::new(),
+                 group: dep.group.clone(),
+                 name: dep.name.clone(),
+                 version: dep.version.clone(),
+@@ -76,6 +97,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
+             }
+         })
+         .collect();
++    super::effective_subskills::bind_selected_slots(&mut selected_slots, configuration)?;
+     let mut replay_candidates = BootReplayCandidates::new(
+         workspace.root.clone(),
+         self_coord.clone(),
+@@ -181,6 +203,13 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
+             append_hoisted(&mut effective, &shared, &table, &pulls);
+         }
+         desubstitute_covered_units(&mut effective, &table);
++        super::effective_subskills::append_loading(
++            &workspace.root,
++            resolution,
++            &dependencies,
++            configuration,
++            &mut effective,
++        )?;
+         let owner = OwnerRuntimeId::Node {
+             rel: rel.to_owned(),
+         };
+diff --git a/crates/vibe-workspace/src/install/bootgen/replay_prepare.rs b/crates/vibe-workspace/src/install/bootgen/replay_prepare.rs
+index d20e358af..192617e5a 100644
+--- a/crates/vibe-workspace/src/install/bootgen/replay_prepare.rs
++++ b/crates/vibe-workspace/src/install/bootgen/replay_prepare.rs
+@@ -207,7 +207,8 @@ pub(super) fn node_generated_dependencies(
+         .static_entries()
+         .filter(|entry| entry.unit_substituted)
+         .filter_map(|entry| match &entry.provenance {
+-            BootProvenance::Dependency { group, name } => {
++            BootProvenance::Dependency { group, name }
++            | BootProvenance::SubskillOffer { group, name, .. } => {
+                 let id = (group.clone(), name.clone());
+                 emitted.contains(&id).then_some(id)
+             }
+diff --git a/crates/vibe-workspace/src/install/bootgen/replay_prepare/tests.rs b/crates/vibe-workspace/src/install/bootgen/replay_prepare/tests.rs
+index 7bce30eed..8d254b22d 100644
+--- a/crates/vibe-workspace/src/install/bootgen/replay_prepare/tests.rs
++++ b/crates/vibe-workspace/src/install/bootgen/replay_prepare/tests.rs
+@@ -282,6 +282,7 @@ fn sealed_replay_refuses_descriptor_without_independent_hash_before_factory() {
+     sealed
+         .selected_slots
+         .push(crate::boot_artifacts::SelectedSlotWitness {
++            subskills: Vec::new(),
+             group,
+             name: "descriptor".into(),
+             version,
+diff --git a/crates/vibe-workspace/src/install/bootgen/selected_node_tests.rs b/crates/vibe-workspace/src/install/bootgen/selected_node_tests.rs
+index 4607b7563..b2d4828d0 100644
+--- a/crates/vibe-workspace/src/install/bootgen/selected_node_tests.rs
++++ b/crates/vibe-workspace/src/install/bootgen/selected_node_tests.rs
+@@ -160,6 +160,66 @@ fn bound_node_writer_and_analyzer_use_one_selected_vibe_xml_source() {
+     assert_eq!(fs::read(&world.raw_xml).unwrap(), raw_xml);
+ }
+ 
++#[test]
++fn m_05_d_2_native_writer_loads_current_selection_without_old_lock() {
++    let world = world();
++    write(
++        &world.slot.join("subskills/guide/vibe-subskill.toml"),
++        "[subskill]\npath='guide'\n[content]\nfiles_written=['guide.md']\n",
++    );
++    write(
++        &world.slot.join("subskills/guide/guide.md"),
++        "# Native selected subskill\n",
++    );
++    let (workspace, epoch) = selected_epoch(&world);
++    let request = serde_json::from_value(serde_json::json!({"epoch":"1","roots":["org.example/selected"],"origins":[],"features":["guide"],"no_defaults":true,"all_features":false,"definitions":[],"defaults":[]})).unwrap();
++    let record = vibe_wire::behaviour::lock_configuration::encode(request,
++        serde_json::from_value(serde_json::json!({"epoch":"1","request_digest":"pending","packages":[{"package":"org.example/selected@1.1.0","content":world.resolution[0].source_hash,"feature_closure":["guide"],"effects":"{\"subskills\":[\"guide\"]}"}],"edges":[],"configurations":[]})).unwrap()).unwrap();
++    assert!(!workspace.lockfile_path().exists());
++    super::native_managed::regenerate_boot_from_bound_native_configuration(
++        &workspace,
++        &world.resolution,
++        SpecFormat::Mixed,
++        None,
++        &epoch,
++        None::<&mut FakeProvider>,
++        Some(&record),
++    )
++    .unwrap();
++    let output = fs::read_to_string(
++        world
++            .root
++            .path()
++            .join(vibe_core::layout::current_boot_dir())
++            .join("STATIC.md"),
++    )
++    .unwrap();
++    assert!(output.contains("Native selected subskill"), "{output}");
++    assert_eq!(
++        fs::read(world.slot.join("subskills/guide/guide.md")).unwrap(),
++        b"# Native selected subskill\n"
++    );
++    super::native_managed::regenerate_boot_from_bound_native_configuration(
++        &workspace,
++        &world.resolution,
++        SpecFormat::Mixed,
++        None,
++        &epoch,
++        None::<&mut FakeProvider>,
++        None,
++    )
++    .unwrap();
++    let output = fs::read_to_string(
++        world
++            .root
++            .path()
++            .join(vibe_core::layout::current_boot_dir())
++            .join("STATIC.md"),
++    )
++    .unwrap();
++    assert!(!output.contains("Native selected subskill"));
++}
++
+ #[test]
+ fn bound_node_writer_refuses_changed_selected_output_before_static_publication() {
+     let world = world();
+diff --git a/crates/vibe-workspace/src/install/hook_output.rs b/crates/vibe-workspace/src/install/hook_output.rs
+index eabecdf7f..35baa6584 100644
+--- a/crates/vibe-workspace/src/install/hook_output.rs
++++ b/crates/vibe-workspace/src/install/hook_output.rs
+@@ -4,7 +4,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
+ 
+ use super::*;
+ use crate::hooks::ConfiguredHookRunner;
+-use crate::install::bootgen::regenerate_boot_from_traced;
+ 
+ /// Additive execution-policy seam for callers that must contain hook streams.
+ /// Existing install-family APIs preserve inherited subprocess I/O by routing
+@@ -70,6 +69,30 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+     slot_verifier: Option<&dyn SlotVerifier>,
+     lifecycle: SlotLifecycleMode<'_>,
+     trace: Option<&crate::compile_trace::TraceRun>,
++) -> Result<InstallOutcome, WorkspaceError> {
++    apply_resolution_with_configuration(
++        workspace,
++        resolution,
++        slot_integrity,
++        spec_format,
++        slot_verifier,
++        lifecycle,
++        trace,
++        None,
++    )
++}
++
++/// Install composition with the current preflight record, before durable publication.
++#[allow(clippy::too_many_arguments)]
++pub fn apply_resolution_with_configuration(
++    workspace: &Workspace,
++    resolution: &[ResolvedDep],
++    slot_integrity: SlotIntegrity,
++    spec_format: SpecFormat,
++    slot_verifier: Option<&dyn SlotVerifier>,
++    lifecycle: SlotLifecycleMode<'_>,
++    trace: Option<&crate::compile_trace::TraceRun>,
++    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+ ) -> Result<InstallOutcome, WorkspaceError> {
+     match lifecycle {
+         SlotLifecycleMode::None => apply_with_materialise_lifecycle(
+@@ -80,6 +103,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+             slot_verifier,
+             MaterialiseLifecycle::None,
+             trace,
++            configuration,
+         ),
+         SlotLifecycleMode::Callback(callback) => apply_with_materialise_lifecycle(
+             workspace,
+@@ -89,6 +113,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+             slot_verifier,
+             MaterialiseLifecycle::Callback(callback),
+             trace,
++            configuration,
+         ),
+         SlotLifecycleMode::LegacyHooks { policy, output } => {
+             let runner = ConfiguredHookRunner::new(output);
+@@ -104,6 +129,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+                     runner: &runner,
+                 },
+                 trace,
++                configuration,
+             )
+         }
+     }
+@@ -117,6 +143,7 @@ fn apply_with_materialise_lifecycle(
+     slot_verifier: Option<&dyn SlotVerifier>,
+     lifecycle: MaterialiseLifecycle<'_>,
+     trace: Option<&crate::compile_trace::TraceRun>,
++    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+ ) -> Result<InstallOutcome, WorkspaceError> {
+     // A malformed instruction block aborts before any mutation.
+     validate_redirect_blocks(workspace, resolution)?;
+@@ -143,7 +170,15 @@ fn apply_with_materialise_lifecycle(
+ 
+     let kept: Vec<String> = materialised.iter().chain(&skipped).cloned().collect();
+     let pruned = prune_stale_slots(&workspace.root, &kept)?;
+-    let nodes_regenerated = regenerate_boot_from_traced(workspace, resolution, spec_format, trace)?;
++    let nodes_regenerated = super::bootgen::regenerate_boot_from_traced_prepared_configuration(
++        workspace,
++        resolution,
++        spec_format,
++        trace,
++        crate::extension_world::OwnerRuntimeLowering::compatibility_root_without_presets(),
++        configuration,
++    )?
++    .nodes;
+ 
+     Ok(InstallOutcome {
+         materialised,
+@@ -223,6 +258,57 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progre
+     make_provider: &mut G,
+     progress: &vibe_core::progress::Progress,
+ ) -> Result<NativeInstallOutcome, WorkspaceError>
++where
++    F: FnMut(
++        &Workspace,
++        &[ResolvedDep],
++    ) -> Result<
++        (
++            crate::extension_world::ExtensionWorldEpoch,
++            crate::extension_world::OwnerRuntimeLowering,
++        ),
++        WorkspaceError,
++    >,
++    G: FnMut(
++        std::collections::BTreeMap<
++            crate::extension_world::OwnerRuntimeId,
++            vibe_spec::CompilerNativePolicy,
++        >,
++    ) -> Result<P, WorkspaceError>,
++    P: crate::extension_world::OwnerNativeCompileProvider,
++{
++    apply_resolution_native_with_configuration(
++        workspace,
++        resolution,
++        slot_integrity,
++        spec_format,
++        slot_verifier,
++        lifecycle,
++        trace,
++        prepare,
++        run,
++        make_provider,
++        progress,
++        None,
++    )
++}
++
++/// Native install composition with the current preflight contribution selection.
++#[allow(clippy::too_many_arguments)]
++pub fn apply_resolution_native_with_configuration<F, G, P>(
++    workspace: &Workspace,
++    resolution: &[ResolvedDep],
++    slot_integrity: SlotIntegrity,
++    spec_format: SpecFormat,
++    slot_verifier: Option<&dyn SlotVerifier>,
++    lifecycle: SlotLifecycleMode<'_>,
++    trace: Option<&crate::compile_trace::TraceRun>,
++    prepare: &mut F,
++    run: crate::extension_world::OwnerRuntimeRunFacts,
++    make_provider: &mut G,
++    progress: &vibe_core::progress::Progress,
++    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
++) -> Result<NativeInstallOutcome, WorkspaceError>
+ where
+     F: FnMut(
+         &Workspace,
+@@ -299,6 +385,7 @@ where
+             lowering,
+             run,
+             make_provider,
++            configuration,
+         )?;
+     boot_task.set_progress(
+         nodes_regenerated.len() as u64,
+diff --git a/crates/vibe-workspace/src/install/native.rs b/crates/vibe-workspace/src/install/native.rs
+index 59b1e31ba..c1bbaf411 100644
+--- a/crates/vibe-workspace/src/install/native.rs
++++ b/crates/vibe-workspace/src/install/native.rs
+@@ -141,6 +141,7 @@ where
+     P: crate::extension_world::OwnerNativeCompileProvider,
+ {
+     validate_redirect_blocks(workspace, resolution)?;
++    let configuration = bootgen::effective_subskills::durable_configuration(&workspace.root)?;
+     bootgen::regenerate_boot_from_traced_native_prepared(
+         workspace,
+         resolution,
+@@ -150,5 +151,6 @@ where
+         lowering,
+         run,
+         make_provider,
++        configuration.as_ref(),
+     )
+ }
+diff --git a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+index d146fc9f1..67e7f0369 100644
+--- a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
++++ b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+@@ -915,4 +915,12 @@ files_written = [
+     <p><M05D1-READER status="spec/plan">The actual apply path writes this record and the normal planner reads and validates it. Legacy locks remain recognizable as derived state eligible for intentional regeneration under PROP-044. The registry lockfile epoch and core schema version are independent of the configuration-record epoch. Unknown configuration epochs refuse without silently regenerating or reinterpreting them. Generated schema and ordering machinery remain the wire authority. This addition does not change solver semantics, global discovery, authored grammar or the core-to-wire dependency direction.</M05D1-READER></p>
+     <p><M05D1-INVOCATION status="spec/plan">For a current configured lock, bare-install exact reuse requires current authoritative normalized intent and explicit default receipts from the existing admitted source seam, with matching captures and definitions. Legitimately retained authored decision receipts suffice; repeated human permission is not required. Missing current authority refuses and never strips configuration. Explicit CLI roots permit fresh resolution of named coordinates under current authority, not dropping other configuration, changing other choices or inferring new default permission. InstallRequest.exact remains manifest pinning. Full exact-reinstall/update routing and prompt-free prepared offline reinstall remain E.2; D1 adds no CLI flag.</M05D1-INVOCATION></p>
+   </section>
++  <section title="18. Contribution activation (M-05-D.2)">
++    <p><M05D2-LOADING-COMPOSITION status="spec/plan">Install passes its current preflight configuration record explicitly through ordinary and native boot composition before durable lock publication. Durable regeneration and analysis read the published record. The workspace owner joins each exact package coordinate and content identity to selected exports and validates the captured child declarations through the admitted slot. Eager content enters the node dependency loading lane. Lazy-push uses that lane's existing dynamic INDEX offer: its description, captured declaration reference and read_subskill request reach agent context; the agent requests content when relevant through MCP. Lazy-pull is listed by query_package and delivered only through read_subskill. This connection does not introduce a task-matching engine or another agent launcher. For this derived-view path, full-slot materialization supersedes the historical eager/project-tree and lazy/cache copy descriptions in section 2.5.0; materialise_subskill reports the already materialized slot without copying into the project tree. Legacy lock readers retain their previous compatibility semantics.</M05D2-LOADING-COMPOSITION></p>
++    <p><M05D2-DORMANT status="spec/plan">Dormant selections remain authored intent. Validate requested groups and members against the current exact admitted definition before evaluating guards: a removed dormant option diagnoses drift, even while its branch is inactive. An inactive branch emits no feature, subskill or config effects. Reactivation uses the retained authored selection, never a derived selection promoted to authority or an invented default. This preserves M05B2-SELECTION and M05D1-REQUEST.</M05D2-DORMANT></p>
++    <p><M05D2-CONSUMER-BOUNDARY status="spec/plan">Selected exports must reach real visibility, loading and package projection consumers with declaration identity, delivery mode and provider provenance intact. Full captured and materialized package content and its content identity remain independent of activation; only effective contributions and target projection may change. Do not admit completed subskill semantics until every required consumer works. Export-to-consumer mappings require authoritative declarations, never inference from directory presence. This requirement does not publish new authored grammar or weaken exact request, definition and default receipts.</M05D2-CONSUMER-BOUNDARY></p>
++    <p><M05D2-CAPTURED-DECLARATIONS status="spec/plan">The subskill export catalogue consists of actual SubskillManifest declarations from the exact admitted captured provider. Canonical subskill.path, content.files_written, delivery, description and activation belong to that declaration; validate its path and content membership against the capture and retain provider, capture and definition provenance. A directory or a selector alone is not an export. Independent [[skill]] and extension declarations retain their existing semantics; no relation to a subskill is inferred from names, paths or presence.</M05D2-CAPTURED-DECLARATIONS></p>
++    <p><M05D2-DELIVERY-CONSUMERS status="spec/plan">A derived contribution view joins B1/B2 selected exports and D1 exact requested/resolved selections to captured child declarations. Selected eager content participates in ordinary workspace loading. Selected lazy-pull content is discoverable and read from the admitted captured slot only on request. Selected lazy-push content reaches the actual context-offer/delivery mechanism with its description and content reference, without eager Agent Skill substitution or project-file writes. Every required consumer must work before subskill semantics are admitted; an unused helper or test-only publisher does not discharge this requirement.</M05D2-DELIVERY-CONSUMERS></p>
++    <p><M05D2-FULL-SLOTS status="spec/plan">PROP-009 full-slot materialization remains intact, including unselected files. Activation changes effective loading and generated projection, never captured or materialized package bytes or content identity. Do not repopulate legacy subskills_active rows to restore install-time project-tree copying. The derived view may be recomputed from existing exact lock selections and captured declarations without a new lock epoch. M05B1 identity and declaration laws, M05B2 default and dormant-selection laws, and M05D1 authored-request and exact-replay laws remain unchanged.</M05D2-FULL-SLOTS></p>
++  </section>
+ </spec>
+diff --git a/crates/vibe-mcp/src/tools/m_05_d_2_cases.rs b/crates/vibe-mcp/src/tools/m_05_d_2_cases.rs
+new file mode 100644
+index 000000000..b4ca9a022
+--- /dev/null
++++ b/crates/vibe-mcp/src/tools/m_05_d_2_cases.rs
+@@ -0,0 +1,120 @@
++use super::*;
++use vibe_core::manifest::{LockedPackage, Lockfile};
++
++#[test]
++fn captured_delivery_is_visible_readable_and_inactive_is_hidden() {
++    let dir = tempfile::tempdir().unwrap();
++    std::fs::write(dir.path().join("vibe.toml"), "[project]\ngroup='org.example'\nname='consumer'\nversion='1.0.0'\n[requires]\npackages={'org.example/owner'='*'}\n").unwrap();
++    let ctx = ServerContext::with_store_root(dir.path(), dir.path().join("wrong-store"));
++    let hash = format!("sha256:{}", "1".repeat(64));
++    let package: LockedPackage = toml::from_str(&format!("kind='flow'\ngroup='org.example'\nname='owner'\nversion='1.0.0'\nsource_url='file:///fixture'\ncontent_hash='{hash}'\n")).unwrap();
++    let slot = vibe_workspace::vibedeps::slot_abs_path(
++        dir.path(),
++        &package.group,
++        &package.name,
++        &package.version,
++    );
++    std::fs::create_dir_all(&slot).unwrap();
++    std::fs::write(slot.join("vibe.toml"), "[package]\nkind='flow'\ngroup='org.example'\nname='owner'\nversion='1.0.0'\n[[skill]]\nname='independent'\npath='skills/other'\nagents=['codex']\n").unwrap();
++    std::fs::create_dir_all(slot.join("skills/other")).unwrap();
++    std::fs::write(
++        slot.join("skills/other/SKILL.md"),
++        "Independent Agent Skill bytes\n",
++    )
++    .unwrap();
++    for (name, mode) in [
++        ("eager", "eager"),
++        ("push", "lazy-push"),
++        ("pull", "lazy-pull"),
++        ("inactive", "eager"),
++    ] {
++        let sub = slot.join("subskills").join(name);
++        std::fs::create_dir_all(&sub).unwrap();
++        std::fs::write(sub.join("vibe-subskill.toml"), format!("[subskill]\npath='{name}'\ndelivery='{mode}'\ndescription='Use {name} for task'\n[content]\nfiles_written=['guide.md']\n")).unwrap();
++        std::fs::write(
++            sub.join("guide.md"),
++            format!("{name}: original captured bytes\n"),
++        )
++        .unwrap();
++    }
++    let request: vibe_wire::generated::lock_configuration::e1::requested::Requested = serde_json::from_value(json!({"epoch":"1","roots":["org.example/owner"],"origins":[],"features":["selected"],"no_defaults":true,"all_features":false,"definitions":[],"defaults":[]})).unwrap();
++    let record = |names: Vec<&str>| {
++        vibe_wire::behaviour::lock_configuration::encode(request.clone(),
++        serde_json::from_value(json!({"epoch":"1","request_digest":"pending","packages":[{"package":"org.example/owner@1.0.0","content":hash,"feature_closure":["selected"],"effects":json!({"subskills":names}).to_string()}],"edges":[],"configurations":[]})).unwrap()).unwrap()
++    };
++    let mut lock = Lockfile::empty("fixture", "0");
++    lock.packages.push(package);
++    lock.meta.configuration = Some(record(vec!["eager", "push", "pull"]));
++    lock.write(dir.path().join(Lockfile::FILENAME)).unwrap();
++    use vibe_agent_projection::pkgskill::{
++        DeclaredSkillFilter, project_declared_skills_project_scope,
++    };
++    project_declared_skills_project_scope(dir.path(), &DeclaredSkillFilter::all(), false).unwrap();
++    let projected = dir.path().join(".agents/skills/independent/SKILL.md");
++    assert_eq!(
++        std::fs::read(&projected).unwrap(),
++        b"Independent Agent Skill bytes\n"
++    );
++    assert!(!dir.path().join(".agents/skills/push").exists());
++    let query = QueryPackageMcpTool
++        .run(&json!({"name":"org.example/owner"}), &ctx)
++        .unwrap();
++    assert_eq!(query["subskills_active"].as_array().unwrap().len(), 3);
++    assert!(
++        query["subskills_active"]
++            .as_array()
++            .unwrap()
++            .iter()
++            .any(|sub| sub["description"] == "Use push for task"
++                && sub["read_tool"] == "read_subskill")
++    );
++    for name in ["eager", "push", "pull"] {
++        let args = json!({"package":"org.example/owner", "subskill_path":name});
++        let read = ReadSubskillMcpTool.run(&args, &ctx).unwrap();
++        assert!(
++            read["content"]
++                .as_str()
++                .unwrap()
++                .contains(&format!("{name}: original captured bytes"))
++        );
++        assert!(read["definition_digest"].as_str().unwrap().len() >= 64);
++        assert_eq!(
++            MaterialiseSubskillMcpTool.run(&args, &ctx).unwrap()["written"],
++            json!([])
++        );
++    }
++    assert!(
++        ReadSubskillMcpTool
++            .run(
++                &json!({"package":"org.example/owner","subskill_path":"inactive"}),
++                &ctx
++            )
++            .is_err()
++    );
++    lock.meta.configuration = Some(record(vec![]));
++    lock.write(dir.path().join(Lockfile::FILENAME)).unwrap();
++    project_declared_skills_project_scope(dir.path(), &DeclaredSkillFilter::all(), false).unwrap();
++    assert_eq!(
++        std::fs::read(&projected).unwrap(),
++        b"Independent Agent Skill bytes\n"
++    );
++    assert_eq!(
++        QueryPackageMcpTool
++            .run(&json!({"name":"org.example/owner"}), &ctx)
++            .unwrap()["subskills_active"],
++        json!([])
++    );
++    assert!(
++        ReadSubskillMcpTool
++            .run(
++                &json!({"package":"org.example/owner","subskill_path":"pull"}),
++                &ctx
++            )
++            .is_err()
++    );
++    assert_eq!(
++        std::fs::read(slot.join("subskills/pull/guide.md")).unwrap(),
++        b"pull: original captured bytes\n"
++    );
++    assert!(!dir.path().join("guide.md").exists());
++}
+diff --git a/crates/vibe-mcp/src/tools/subskills.rs b/crates/vibe-mcp/src/tools/subskills.rs
+new file mode 100644
+index 000000000..8485e74ff
+--- /dev/null
++++ b/crates/vibe-mcp/src/tools/subskills.rs
+@@ -0,0 +1,37 @@
++//! MCP delivery of workspace-owned effective captured subskills.
++use super::*;
++use vibe_core::manifest::{LockedPackage, Lockfile};
++use vibe_workspace::install::effective_subskills::{CapturedSubskill, from_locked_package};
++
++pub(super) fn selected(
++    ctx: &ServerContext,
++    lock: &Lockfile,
++    package: &LockedPackage,
++) -> Result<Vec<CapturedSubskill>, ToolError> {
++    from_locked_package(&ctx.project_root, lock, package).map_err(ToolError::Internal)
++}
++
++pub(super) fn visible(sub: &CapturedSubskill) -> Value {
++    let meta = &sub.declaration.subskill;
++    json!({"path": meta.path, "delivery": meta.delivery, "description": meta.description,
++        "describes": meta.describes, "definition_path": sub.definition_path,
++        "definition_digest": sub.definition_digest,
++        "content_paths": sub.content.keys().collect::<Vec<_>>(),
++        "read_tool": "read_subskill"})
++}
++
++pub(super) fn read(package: &str, sub: &CapturedSubskill) -> ToolOutput {
++    let mut content = String::new();
++    for (path, bytes) in &sub.content {
++        content.push_str(&format!(
++            "--- {path}\n{}\n\n",
++            String::from_utf8_lossy(bytes)
++        ));
++    }
++    ToolOutput::ok(
++        json!({"package": package, "subskill_path": sub.declaration.subskill.path,
++        "delivery": sub.declaration.subskill.delivery, "description": sub.declaration.subskill.description,
++        "definition_digest": sub.definition_digest, "definition_path": sub.definition_path,
++        "paths": sub.content.keys().collect::<Vec<_>>(), "content": content}),
++    )
++}
+diff --git a/crates/vibe-resolver/src/features/m_05_d_2_cases.rs b/crates/vibe-resolver/src/features/m_05_d_2_cases.rs
+new file mode 100644
+index 000000000..c202faee8
+--- /dev/null
++++ b/crates/vibe-resolver/src/features/m_05_d_2_cases.rs
+@@ -0,0 +1,125 @@
++use super::configuration::{ConfigurationDefinition, resolve_consumer_configuration};
++use std::collections::{BTreeMap, BTreeSet};
++use vibe_core::manifest::{feature_constraints::*, feature_effects::*};
++use vibe_wire::behaviour::consumer_configuration as codec;
++use vibe_wire::generated::consumer_configuration::e1::request::{Request, SelectionIntent};
++
++fn f(name: &str) -> LocalFeatureRef {
++    LocalFeatureRef::new(name).unwrap()
++}
++
++fn fixture() -> (Request, ConfigurationDefinition) {
++    let mut request = codec::decode_request(include_bytes!(
++        "../../../../formats/corpora/consumer-configuration-request/e1/valid/omitted.json"
++    ))
++    .unwrap();
++    let choice = request.edges[0].selections.get_mut("choice").unwrap();
++    choice.members = Some(vec!["a".into()]);
++    let mut branch = choice.clone();
++    branch.members = Some(vec!["c".into()]);
++    branch.intent = SelectionIntent::Exact;
++    branch.provenance = "authored:dormant".into();
++    request.edges[0].selections.insert("branch".into(), branch);
++    let definition = ConfigurationDefinition {
++        instance: codec::admit_request(&request).unwrap()[0].instance.clone(),
++        program: FeatureProgram {
++            features: [
++                (f("a"), BTreeSet::new()),
++                (f("b"), BTreeSet::new()),
++                (
++                    f("c"),
++                    [
++                        FeatureEffect::ExportedSubskill("stack/rust".into()),
++                        FeatureEffect::ConfigValue(f("flag")),
++                    ]
++                    .into(),
++                ),
++            ]
++            .into(),
++            exclusive: BTreeMap::new(),
++        },
++        declarations: FeatureDeclarations {
++            exported_subskills: ["stack/rust".into()].into(),
++            config_values: [(f("flag"), ConfigValue::Bool(true))].into(),
++            ..Default::default()
++        },
++        constraints: Constraints {
++            groups: [
++                (
++                    f("choice"),
++                    ConstrainedGroup {
++                        cardinality: Cardinality::ExactlyOne,
++                        members: [f("a"), f("b")].into(),
++                        guards: vec![],
++                        defaults: None,
++                    },
++                ),
++                (
++                    f("branch"),
++                    ConstrainedGroup {
++                        cardinality: Cardinality::ExactlyOne,
++                        members: [f("c")].into(),
++                        guards: vec![Guard::Member(f("b"))],
++                        defaults: None,
++                    },
++                ),
++            ]
++            .into(),
++            member_guards: BTreeMap::new(),
++        },
++    };
++    (request, definition)
++}
++
++#[test]
++fn dormant_selection_is_retained_without_effects() {
++    let (mut request, definition) = fixture();
++    let authored = request.clone();
++    let result =
++        resolve_consumer_configuration(&request, std::slice::from_ref(&definition)).unwrap();
++    let effects = result.expansions[0].as_ref().unwrap();
++    assert_eq!(effects.active_features, ["a".into()].into());
++    assert!(effects.active_subskills.is_empty());
++    assert!(effects.config_values.is_empty());
++    assert!(result.result.outcomes[0].defaults_used.is_empty());
++    assert_eq!(
++        result.result.edges[0].selections["branch"].members,
++        Some(vec!["c".into()])
++    );
++    assert_eq!(
++        result.result.edges[0].selections["branch"].provenance,
++        "authored:dormant"
++    );
++    assert_eq!(request, authored);
++
++    request.edges[0]
++        .selections
++        .get_mut("choice")
++        .unwrap()
++        .members = Some(vec!["b".into()]);
++    let result = resolve_consumer_configuration(&request, &[definition]).unwrap();
++    let effects = result.expansions[0].as_ref().unwrap();
++    assert_eq!(effects.active_subskills, ["stack/rust".into()].into());
++    assert_eq!(effects.config_values["flag"], ConfigValue::Bool(true));
++    assert!(result.result.outcomes[0].defaults_used.is_empty());
++}
++
++#[test]
++fn removed_dormant_option_reports_drift() {
++    let (request, mut definition) = fixture();
++    let authored = request.clone();
++    // A coherent current definition replaces c with d while its guard stays off.
++    let effects = definition.program.features.remove(&f("c")).unwrap();
++    definition.program.features.insert(f("d"), effects);
++    definition
++        .constraints
++        .groups
++        .get_mut(&f("branch"))
++        .unwrap()
++        .members = [f("d")].into();
++    let error = resolve_consumer_configuration(&request, &[definition])
++        .err()
++        .unwrap();
++    assert_eq!(error, "unknown requested member");
++    assert_eq!(request, authored);
++}
+diff --git a/crates/vibe-workspace/src/install/bootgen/effective_subskills.rs b/crates/vibe-workspace/src/install/bootgen/effective_subskills.rs
+new file mode 100644
+index 000000000..01e7550a7
+--- /dev/null
++++ b/crates/vibe-workspace/src/install/bootgen/effective_subskills.rs
+@@ -0,0 +1,345 @@
++//! Subskill declarations joined to original captured bytes, independently of
++//! Agent Skills. This value is inert: the caller supplies admitted source
++//! authority and selection; construction does not publish or modify files.
++use std::collections::{BTreeMap, BTreeSet};
++
++use vibe_core::manifest::SubskillManifest;
++
++use crate::source_query::CapturedSourceFile;
++
++/// Durable-only entrypoints may obtain the published selection here. Ready
++/// install passes its preflight record explicitly and never calls this reader.
++pub(crate) fn durable_configuration(
++    root: &std::path::Path,
++) -> Result<Option<vibe_core::manifest::LockedConfiguration>, crate::WorkspaceError> {
++    let path = root.join(vibe_core::manifest::Lockfile::FILENAME);
++    match std::fs::symlink_metadata(&path) {
++        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
++        Err(e) => return Err(super::io_err(&path, e)),
++        Ok(meta) if !meta.file_type().is_file() => {
++            return Err(crate::WorkspaceError::Io {
++                path,
++                reason: "non-regular lock".into(),
++            });
++        }
++        Ok(_) => (),
++    }
++    vibe_core::manifest::Lockfile::read(&path)
++        .map(|lock| lock.meta.configuration)
++        .map_err(|e| crate::WorkspaceError::Manifest {
++            path,
++            source: Box::new(e),
++        })
++}
++
++/// Derive effective exports from the existing exact requested/resolved record.
++/// No legacy copy rows or package-directory names supply activation authority.
++pub fn selected_exports(
++    record: Option<&vibe_core::manifest::LockedConfiguration>,
++    package: &str,
++    content: &str,
++) -> Result<BTreeSet<String>, String> {
++    let Some(record) = record else {
++        return Ok(BTreeSet::new());
++    };
++    let (_, resolved) = vibe_wire::behaviour::lock_configuration::decode(record)?;
++    let mut rows = resolved
++        .packages
++        .iter()
++        .filter(|row| row.package == package);
++    let row = rows
++        .next()
++        .ok_or_else(|| format!("configuration missing selected package {package}"))?;
++    if rows.next().is_some() || row.content != content {
++        return Err(format!(
++            "configuration capture disagrees with selected package {package}"
++        ));
++    }
++    #[derive(serde::Deserialize)]
++    struct Effects {
++        subskills: BTreeSet<String>,
++    }
++    serde_json::from_str::<Effects>(&row.effects)
++        .map(|effects| effects.subskills)
++        .map_err(|error| format!("{package}: invalid selected effects: {error}"))
++}
++
++/// Read a lock-selected provider through the workspace's strict slot admission.
++pub fn from_locked_package(
++    root: &std::path::Path,
++    lock: &vibe_core::manifest::Lockfile,
++    package: &vibe_core::manifest::LockedPackage,
++) -> Result<Vec<CapturedSubskill>, String> {
++    let selected = selected_exports(
++        lock.meta.configuration.as_ref(),
++        &format!("{}/{}@{}", package.group, package.name, package.version),
++        &package.content_hash.to_string(),
++    )?;
++    if selected.is_empty() {
++        return Ok(Vec::new());
++    }
++    let dep = super::materialised_read::durable_row(root, package).map_err(|e| e.to_string())?;
++    capture_selected_subskills(&dep.content_dir, &selected)
++}
++
++/// Add selected content to a node's actual loading lane. Lazy-push exposes
++/// only its captured declaration (description and content references); the
++/// content itself remains behind MCP read_subskill. Lazy-pull has no boot row.
++pub(crate) fn append_loading(
++    root: &std::path::Path,
++    resolution: &[super::ResolvedDep],
++    dependencies: &[crate::boot::DependencyBoot],
++    record: Option<&vibe_core::manifest::LockedConfiguration>,
++    effective: &mut crate::boot::EffectiveBoot,
++) -> Result<(), crate::WorkspaceError> {
++    use crate::boot::{BootBand, BootEntry, BootProvenance};
++    use vibe_core::manifest::{DeliveryMode, LinkType, PackageFormat};
++    for dep in resolution {
++        if !dependencies
++            .iter()
++            .any(|d| d.group == dep.group && d.name == dep.name)
++        {
++            continue;
++        }
++        let package = format!("{}/{}@{}", dep.group, dep.name, dep.version);
++        let fail = |reason| crate::WorkspaceError::SlotLifecycle {
++            phase: "effective-subskills",
++            package: package.clone(),
++            reason,
++        };
++        let selected = selected_exports(
++            record,
++            &package,
++            &dep.source_hash
++                .as_ref()
++                .map(ToString::to_string)
++                .unwrap_or_default(),
++        )
++        .map_err(&fail)?;
++        if selected.is_empty() {
++            continue;
++        }
++        let slot = if dep
++            .manifest
++            .package
++            .as_ref()
++            .is_some_and(|p| p.materialization.is_in_place())
++        {
++            crate::vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
++        } else {
++            crate::vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
++        };
++        for sub in capture_selected_subskills(&root.join(&slot), &selected).map_err(&fail)? {
++            let provenance = if sub.declaration.subskill.delivery == DeliveryMode::LazyPush {
++                BootProvenance::SubskillOffer {
++                    group: dep.group.clone(),
++                    name: dep.name.clone(),
++                    subskill: sub.declaration.subskill.path.clone(),
++                    description: sub
++                        .declaration
++                        .subskill
++                        .description
++                        .clone()
++                        .unwrap_or_default(),
++                }
++            } else {
++                BootProvenance::Dependency {
++                    group: dep.group.clone(),
++                    name: dep.name.clone(),
++                }
++            };
++            let (paths, link) = match sub.declaration.subskill.delivery {
++                DeliveryMode::Eager => (
++                    sub.content.keys().cloned().collect::<Vec<_>>(),
++                    LinkType::Static,
++                ),
++                DeliveryMode::LazyPush => (vec![sub.definition_path], LinkType::Dynamic),
++                DeliveryMode::LazyPull => continue,
++            };
++            for path in paths {
++                effective.entries.push(BootEntry {
++                    path: format!("{slot}/{path}"),
++                    band: BootBand::Dependency,
++                    link,
++                    when: None,
++                    origin: format!("{}/{}", dep.group, dep.name),
++                    provenance: provenance.clone(),
++                    use_ref: false,
++                    format: PackageFormat::Simple,
++                    unit_substituted: false,
++                    elided: false,
++                });
++            }
++        }
++    }
++    effective.entries.sort_by_key(|entry| entry.band);
++    Ok(())
++}
++
++/// Attach explicit declaration evidence to the existing selected-slot carriage.
++pub(crate) fn bind_selected_slots(
++    witnesses: &mut [crate::boot_artifacts::SelectedSlotWitness],
++    record: Option<&vibe_core::manifest::LockedConfiguration>,
++) -> Result<(), crate::WorkspaceError> {
++    for witness in witnesses {
++        let package = format!("{}/{}@{}", witness.group, witness.name, witness.version);
++        let fail = |reason| crate::WorkspaceError::SlotLifecycle {
++            phase: "effective-subskills",
++            package: package.clone(),
++            reason,
++        };
++        let selected = selected_exports(
++            record,
++            &package,
++            &witness
++                .source_hash
++                .as_ref()
++                .map(ToString::to_string)
++                .unwrap_or_default(),
++        )
++        .map_err(&fail)?;
++        witness.subskills = capture_selected_subskills(&witness.root, &selected).map_err(fail)?;
++    }
++    Ok(())
++}
++
++/// Capture selected declarations from the caller's admitted package root.
++/// Path reads use the shared no-follow filesystem capability. The caller
++/// retains responsibility for binding this root to the selected provider.
++pub fn capture_selected_subskills(
++    root: &std::path::Path,
++    selected: &BTreeSet<String>,
++) -> Result<Vec<CapturedSubskill>, String> {
++    if selected.is_empty() {
++        return Ok(Vec::new());
++    }
++    let project = vibe_safefs::Project::open(root).map_err(|e| e.to_string())?;
++    let mut files = BTreeMap::new();
++    for name in selected {
++        vibe_safefs::split_relative(name).map_err(|e| e.to_string())?;
++        let path = format!("subskills/{name}/{}", SubskillManifest::FILENAME);
++        let snapshot = project
++            .read_file_snapshot_bounded(&path, 1024 * 1024)
++            .map_err(|e| e.to_string())?
++            .ok_or_else(|| format!("missing captured declaration: {path}"))?;
++        let declaration: SubskillManifest =
++            toml::from_str(std::str::from_utf8(&snapshot.bytes).map_err(|e| e.to_string())?)
++                .map_err(|e| format!("{path}: {e}"))?;
++        files.insert(
++            path.clone(),
++            CapturedSourceFile::new(path, snapshot).map_err(|e| e.to_string())?,
++        );
++        for relative in &declaration.content.files_written {
++            let relative = relative.to_str().ok_or("non-UTF8 subskill content path")?;
++            vibe_safefs::split_relative(relative).map_err(|e| e.to_string())?;
++            let path = format!("subskills/{name}/{relative}");
++            let snapshot = project
++                .read_file_snapshot_bounded(&path, 16 * 1024 * 1024)
++                .map_err(|e| e.to_string())?
++                .ok_or_else(|| format!("missing captured content: {path}"))?;
++            files.insert(
++                path.clone(),
++                CapturedSourceFile::new(path, snapshot).map_err(|e| e.to_string())?,
++            );
++        }
++    }
++    select_captured_subskills(&files.into_values().collect::<Vec<_>>(), selected)
++}
++
++/// A selected declaration and its exact original content, retained together.
++#[derive(Debug, Clone)]
++pub struct CapturedSubskill {
++    pub declaration: SubskillManifest,
++    pub definition_path: String,
++    pub definition_digest: String,
++    /// Package-relative source paths and captured bytes (never project paths).
++    pub content: BTreeMap<String, Vec<u8>>,
++}
++
++/// Validate the complete child catalogue before selecting contributions.
++/// Provider/content identity remains with the caller's admitted capture.
++pub fn select_captured_subskills(
++    files: &[CapturedSourceFile],
++    selected: &BTreeSet<String>,
++) -> Result<Vec<CapturedSubskill>, String> {
++    let mut inventory = BTreeMap::new();
++    for file in files {
++        if inventory
++            .insert(file.relative_path(), file.snapshot())
++            .is_some()
++        {
++            return Err(format!("duplicate captured path: {}", file.relative_path()));
++        }
++    }
++    let mut catalogue = BTreeMap::new();
++    for (path, snapshot) in &inventory {
++        if !path.starts_with("subskills/")
++            || !path.ends_with(&format!("/{}", SubskillManifest::FILENAME))
++        {
++            continue;
++        }
++        let text = std::str::from_utf8(&snapshot.bytes).map_err(|e| format!("{path}: {e}"))?;
++        let declaration: SubskillManifest =
++            toml::from_str(text).map_err(|e| format!("{path}: {e}"))?;
++        let name = &declaration.subskill.path;
++        vibe_safefs::split_relative(name).map_err(|e| format!("{path}: {e}"))?;
++        if *path != format!("subskills/{name}/{}", SubskillManifest::FILENAME) {
++            return Err(format!(
++                "{path}: declared subskill path disagrees with capture"
++            ));
++        }
++        let findings = declaration.validation_findings();
++        if !findings.is_empty() {
++            return Err(format!("{path}: {}", findings.join("; ")));
++        }
++        if declaration.subskill.delivery.requires_description()
++            && declaration
++                .subskill
++                .description
++                .as_deref()
++                .is_none_or(|s| s.trim().is_empty())
++        {
++            return Err(format!(
++                "{path}: lazy delivery requires a nonempty description"
++            ));
++        }
++        let mut content = BTreeMap::new();
++        for relative in &declaration.content.files_written {
++            let relative = relative
++                .to_str()
++                .ok_or_else(|| format!("{path}: non-UTF8 content path"))?;
++            vibe_safefs::split_relative(relative).map_err(|e| format!("{path}: {e}"))?;
++            let source = format!("subskills/{name}/{relative}");
++            let bytes = inventory
++                .get(source.as_str())
++                .ok_or_else(|| format!("{path}: missing captured content {source}"))?;
++            if content
++                .insert(source.clone(), bytes.bytes.clone())
++                .is_some()
++            {
++                return Err(format!("{path}: duplicate content {source}"));
++            }
++        }
++        let name = name.clone();
++        catalogue.insert(
++            name,
++            CapturedSubskill {
++                declaration,
++                definition_path: (*path).into(),
++                definition_digest: snapshot.sha256.clone(),
++                content,
++            },
++        );
++    }
++    selected
++        .iter()
++        .map(|name| {
++            catalogue
++                .remove(name)
++                .ok_or_else(|| format!("selected subskill has no captured declaration: {name}"))
++        })
++        .collect()
++}
++
++#[cfg(test)]
++mod m_05_d_2_cases;
+diff --git a/crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs b/crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs
+new file mode 100644
+index 000000000..42d822646
+--- /dev/null
++++ b/crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs
+@@ -0,0 +1,84 @@
++use super::*;
++use vibe_safefs::Project;
++
++fn capture(rows: &[(&str, &str)]) -> Vec<CapturedSourceFile> {
++    let root = tempfile::tempdir().unwrap();
++    for (path, text) in rows {
++        let target = root.path().join(path);
++        std::fs::create_dir_all(target.parent().unwrap()).unwrap();
++        std::fs::write(target, text).unwrap();
++    }
++    let project = Project::open(root.path()).unwrap();
++    rows.iter()
++        .map(|(path, _)| {
++            CapturedSourceFile::new(
++                (*path).into(),
++                project
++                    .read_file_snapshot_bounded(path, 4096)
++                    .unwrap()
++                    .unwrap(),
++            )
++            .unwrap()
++        })
++        .collect()
++}
++
++const DECL: &str = "[subskill]\npath='stack/rust'\ndelivery='lazy-push'\ndescription='Rust guidance'\n[content]\nfiles_written=['guide.md']\n";
++
++#[test]
++fn selection_preserves_original_bytes_and_independent_skill() {
++    let files = capture(&[
++        ("subskills/stack/rust/vibe-subskill.toml", DECL),
++        ("subskills/stack/rust/guide.md", "# Captured Rust\n"),
++        ("skills/unrelated/SKILL.md", "Independent skill\n"),
++        ("unselected.txt", "Keep this too\n"),
++    ]);
++    let before: Vec<_> = files.iter().map(|f| f.snapshot().bytes.clone()).collect();
++    assert!(
++        select_captured_subskills(&files, &BTreeSet::new())
++            .unwrap()
++            .is_empty()
++    );
++    let active = select_captured_subskills(&files, &["stack/rust".into()].into()).unwrap();
++    assert_eq!(active.len(), 1);
++    assert_eq!(
++        active[0].declaration.subskill.delivery,
++        vibe_core::manifest::DeliveryMode::LazyPush
++    );
++    assert_eq!(
++        active[0].content["subskills/stack/rust/guide.md"],
++        b"# Captured Rust\n"
++    );
++    assert!(!active[0].definition_digest.is_empty());
++    assert_eq!(
++        before,
++        files
++            .iter()
++            .map(|f| f.snapshot().bytes.clone())
++            .collect::<Vec<_>>()
++    );
++}
++
++#[test]
++fn missing_declaration_content_and_escaping_paths_refuse() {
++    let selected = ["stack/rust".into()].into();
++    assert!(
++        select_captured_subskills(&[], &selected)
++            .unwrap_err()
++            .contains("no captured declaration")
++    );
++    let files = capture(&[("subskills/stack/rust/vibe-subskill.toml", DECL)]);
++    assert!(
++        select_captured_subskills(&files, &selected)
++            .unwrap_err()
++            .contains("missing captured content")
++    );
++    for invalid in [
++        DECL.replace("guide.md", "../outside.md"),
++        DECL.replace("stack/rust", "other"),
++        DECL.replace("Rust guidance", " "),
++    ] {
++        let files = capture(&[("subskills/stack/rust/vibe-subskill.toml", &invalid)]);
++        assert!(select_captured_subskills(&files, &selected).is_err());
++    }
++}

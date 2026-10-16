@@ -1,0 +1,17 @@
+{
+  "dispositions": [
+    "unsatisfied",
+    "unsatisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "pending",
+  "discoveries": [
+    "B2 already validates requested dormant members before guard evaluation; two new regressions pass.",
+    "Admitted export paths have no identified authoritative mapping to named SkillDecl/extension consumer declarations."
+  ],
+  "unresolved": [
+    "ROOT-QUESTION.json m05d2-export-consumer-mapping-20261016-1 requires Root semantic decision; automatic consumer mapping and delivery preservation remain unimplemented.",
+    "V1/V2/V3/V5 and both original acceptance criteria remain unestablished."
+  ],
+  "proposed_follow_up": "Root supplies authoritative export-to-consumer mapping or corrected packet; continue real consumer wiring and remaining bound checks under a valid managed attempt."
+}

@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-16T21:22:33.666501+00:00",
+  "root_exec": 15699,
+  "work": {
+    "work_id": "work.m05d2.prepare-plan",
+    "state": "active",
+    "revision": 9,
+    "active_job": "job.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+    "validation_generation": 0
+  },
+  "active_attempt": {
+    "utc": "2026-10-16T21:22:33.594823+00:00",
+    "job": {
+      "job_id": "job.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+      "work_id": "work.m05d2.prepare-plan",
+      "packet_id": "packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+      "revision": 814,
+      "execution": "succeeded",
+      "effect": "completed",
+      "safe": "unknown",
+      "acceptance": "unreviewed",
+      "candidate_id": "managed-result.667c8cd42a6c7ecce5c1d4aeb18d9b53a9d0007176f482cd0123f3a5cf21d6c5"
+    },
+    "native": {
+      "operation": "managed.14474719b8e0a772ca9b309c01a51a807d1bc97f757c86bc9e42f7f216f77ce6",
+      "state": "candidate_collected",
+      "source_sequence": 1405,
+      "collected": true,
+      "unknown_tail": false,
+      "failed": false,
+      "process_stopped": false,
+      "accounting_pending": false
+    },
+    "native_result_binding": {
+      "kind": "bound",
+      "candidate_id": "managed-result.667c8cd42a6c7ecce5c1d4aeb18d9b53a9d0007176f482cd0123f3a5cf21d6c5",
+      "candidate_digest": "69eb9b31582da49dec3b5335daff0211d1b4787cdc7f60971d073567da5ac61b"
+    }
+  },
+  "pending_question": null,
+  "changed_path_count": 30
+}

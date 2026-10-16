@@ -1,0 +1,526 @@
+diff --git a/crates/vibe-install/src/record.rs b/crates/vibe-install/src/record.rs
+index 04d2c89a6..2740e02a2 100644
+--- a/crates/vibe-install/src/record.rs
++++ b/crates/vibe-install/src/record.rs
+@@ -381,6 +381,15 @@ pub(crate) fn configuration_record(
+     fetched: &[Fetched],
+ ) -> crate::error::Result<Option<vibe_core::manifest::LockedConfiguration>> {
+     use serde_json::json;
++    // Validate real child declarations before publishing selection provenance.
++    // This never filters the complete source tree or fills legacy copy rows.
++    for package in fetched {
++        vibe_workspace::install::effective_subskills::capture_selected_subskills(
++            &package.cached.cache_dir,
++            &package.feature_expansion.active_subskills,
++        )
++        .map_err(lock_error)?;
++    }
+     let Some(request) = request else {
+         return Ok(None);
+     };
+diff --git a/crates/vibe-install/src/record/m_05_d_1_cases.rs b/crates/vibe-install/src/record/m_05_d_1_cases.rs
+index e810dcfc2..d45069535 100644
+--- a/crates/vibe-install/src/record/m_05_d_1_cases.rs
++++ b/crates/vibe-install/src/record/m_05_d_1_cases.rs
+@@ -405,6 +405,71 @@ fn production_apply_records_requested_and_resolved_separately() {
+         Plan::Ready(_)
+     ));
+ }
++
++#[test]
++fn m_05_d_2_preflight_rejects_selected_directory_without_declaration() {
++    let fixture = Fixture::new();
++    let cached = fixture
++        .source
++        .resolve_and_fetch(&p("owner"), &fixture.root, None)
++        .unwrap();
++    std::fs::create_dir_all(cached.cache_dir.join("subskills/stack/rust")).unwrap();
++    let mut fetched = crate::Fetched {
++        cached,
++        feature_expansion: Default::default(),
++        meta: crate::NodeInstallMeta {
++            dependencies: vec![],
++            is_root: true,
++        },
++        embedded_sources: vec![],
++        in_place_incremental: false,
++    };
++    fetched
++        .feature_expansion
++        .active_subskills
++        .insert("stack/rust".into());
++    let error = super::configuration_record(None, &[], std::slice::from_ref(&fetched)).unwrap_err();
++    assert!(error.to_string().contains("missing captured declaration"));
++    assert!(!fixture.root.join(Lockfile::FILENAME).exists());
++
++    let root = fetched.cached.cache_dir.clone();
++    std::fs::write(
++        root.join("subskills/stack/rust/vibe-subskill.toml"),
++        "[subskill]\npath='stack/rust'\n[content]\nfiles_written=['guide.md']\n",
++    )
++    .unwrap();
++    std::fs::write(
++        root.join("subskills/stack/rust/guide.md"),
++        "Captured guide\n",
++    )
++    .unwrap();
++    std::fs::write(
++        root.join("unselected.txt"),
++        "Unselected source stays intact\n",
++    )
++    .unwrap();
++    fetched.cached = fixture
++        .source
++        .resolve_and_fetch(&p("owner"), &fixture.root, None)
++        .unwrap();
++    let before = vibe_registry::compute_content_hash(&root).unwrap();
++    assert!(
++        super::configuration_record(None, &[], std::slice::from_ref(&fetched))
++            .unwrap()
++            .is_none()
++    );
++    fetched.feature_expansion.active_subskills.clear();
++    assert!(
++        super::configuration_record(None, &[], &[fetched])
++            .unwrap()
++            .is_none()
++    );
++    assert_eq!(before, vibe_registry::compute_content_hash(&root).unwrap());
++    assert_eq!(
++        std::fs::read_to_string(root.join("unselected.txt")).unwrap(),
++        "Unselected source stays intact\n"
++    );
++}
+ #[test]
+ fn exact_replay_rejects_changed_definition_or_lost_request() {
+     let mut fixture = Fixture::new();
+diff --git a/crates/vibe-resolver/src/features.rs b/crates/vibe-resolver/src/features.rs
+index fa59f016f..5f5a2fbf0 100644
+--- a/crates/vibe-resolver/src/features.rs
++++ b/crates/vibe-resolver/src/features.rs
+@@ -14,6 +14,9 @@
+ use std::collections::{BTreeMap, BTreeSet};
+ pub mod configuration;
+ 
++#[cfg(test)]
++mod m_05_d_2_cases;
++
+ use specmark::spec;
+ use thiserror::Error;
+ use vibe_core::manifest::FeaturesTable;
+diff --git a/crates/vibe-workspace/src/install.rs b/crates/vibe-workspace/src/install.rs
+index ee522db3e..50b867686 100644
+--- a/crates/vibe-workspace/src/install.rs
++++ b/crates/vibe-workspace/src/install.rs
+@@ -55,6 +55,7 @@ pub(crate) mod bootgen;
+ /// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
+ /// the once-each topology is exercisable at the unit level (no full install).
+ pub use bootgen::desubstitute_covered_units;
++pub use bootgen::effective_subskills;
+ pub(crate) use bootgen::node_own_boot;
+ use bootgen::validate_redirect_blocks;
+ /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
+diff --git a/crates/vibe-workspace/src/install/bootgen.rs b/crates/vibe-workspace/src/install/bootgen.rs
+index 8035b7500..71e4fcbdd 100644
+--- a/crates/vibe-workspace/src/install/bootgen.rs
++++ b/crates/vibe-workspace/src/install/bootgen.rs
+@@ -49,6 +49,7 @@ mod materialised_read;
+ pub(super) use materialised_read::read_durable_resolution;
+ pub(crate) mod captured;
+ mod conditions;
++pub mod effective_subskills;
+ mod node_dependency;
+ mod publication;
+ mod snippet_source;
+diff --git a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+index d146fc9f1..261c145c9 100644
+--- a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
++++ b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+@@ -915,4 +915,11 @@ files_written = [
+     <p><M05D1-READER status="spec/plan">The actual apply path writes this record and the normal planner reads and validates it. Legacy locks remain recognizable as derived state eligible for intentional regeneration under PROP-044. The registry lockfile epoch and core schema version are independent of the configuration-record epoch. Unknown configuration epochs refuse without silently regenerating or reinterpreting them. Generated schema and ordering machinery remain the wire authority. This addition does not change solver semantics, global discovery, authored grammar or the core-to-wire dependency direction.</M05D1-READER></p>
+     <p><M05D1-INVOCATION status="spec/plan">For a current configured lock, bare-install exact reuse requires current authoritative normalized intent and explicit default receipts from the existing admitted source seam, with matching captures and definitions. Legitimately retained authored decision receipts suffice; repeated human permission is not required. Missing current authority refuses and never strips configuration. Explicit CLI roots permit fresh resolution of named coordinates under current authority, not dropping other configuration, changing other choices or inferring new default permission. InstallRequest.exact remains manifest pinning. Full exact-reinstall/update routing and prompt-free prepared offline reinstall remain E.2; D1 adds no CLI flag.</M05D1-INVOCATION></p>
+   </section>
++  <section title="18. Contribution activation (M-05-D.2)">
++    <p><M05D2-DORMANT status="spec/plan">Dormant selections remain authored intent. Validate requested groups and members against the current exact admitted definition before evaluating guards: a removed dormant option diagnoses drift, even while its branch is inactive. An inactive branch emits no feature, subskill or config effects. Reactivation uses the retained authored selection, never a derived selection promoted to authority or an invented default. This preserves M05B2-SELECTION and M05D1-REQUEST.</M05D2-DORMANT></p>
++    <p><M05D2-CONSUMER-BOUNDARY status="spec/plan">Selected exports must reach real visibility, loading and package projection consumers with declaration identity, delivery mode and provider provenance intact. Full captured and materialized package content and its content identity remain independent of activation; only effective contributions and target projection may change. Do not admit completed subskill semantics until every required consumer works. Export-to-consumer mappings require authoritative declarations, never inference from directory presence. This requirement does not publish new authored grammar or weaken exact request, definition and default receipts.</M05D2-CONSUMER-BOUNDARY></p>
++    <p><M05D2-CAPTURED-DECLARATIONS status="spec/plan">The subskill export catalogue consists of actual SubskillManifest declarations from the exact admitted captured provider. Canonical subskill.path, content.files_written, delivery, description and activation belong to that declaration; validate its path and content membership against the capture and retain provider, capture and definition provenance. A directory or a selector alone is not an export. Independent [[skill]] and extension declarations retain their existing semantics; no relation to a subskill is inferred from names, paths or presence.</M05D2-CAPTURED-DECLARATIONS></p>
++    <p><M05D2-DELIVERY-CONSUMERS status="spec/plan">A derived contribution view joins B1/B2 selected exports and D1 exact requested/resolved selections to captured child declarations. Selected eager content participates in ordinary workspace loading. Selected lazy-pull content is discoverable and read from the admitted captured slot only on request. Selected lazy-push content reaches the actual context-offer/delivery mechanism with its description and content reference, without eager Agent Skill substitution or project-file writes. Every required consumer must work before subskill semantics are admitted; an unused helper or test-only publisher does not discharge this requirement.</M05D2-DELIVERY-CONSUMERS></p>
++    <p><M05D2-FULL-SLOTS status="spec/plan">PROP-009 full-slot materialization remains intact, including unselected files. Activation changes effective loading and generated projection, never captured or materialized package bytes or content identity. Do not repopulate legacy subskills_active rows to restore install-time project-tree copying. The derived view may be recomputed from existing exact lock selections and captured declarations without a new lock epoch. M05B1 identity and declaration laws, M05B2 default and dormant-selection laws, and M05D1 authored-request and exact-replay laws remain unchanged.</M05D2-FULL-SLOTS></p>
++  </section>
+ </spec>
+diff --git a/crates/vibe-resolver/src/features/m_05_d_2_cases.rs b/crates/vibe-resolver/src/features/m_05_d_2_cases.rs
+new file mode 100644
+index 000000000..c202faee8
+--- /dev/null
++++ b/crates/vibe-resolver/src/features/m_05_d_2_cases.rs
+@@ -0,0 +1,125 @@
++use super::configuration::{ConfigurationDefinition, resolve_consumer_configuration};
++use std::collections::{BTreeMap, BTreeSet};
++use vibe_core::manifest::{feature_constraints::*, feature_effects::*};
++use vibe_wire::behaviour::consumer_configuration as codec;
++use vibe_wire::generated::consumer_configuration::e1::request::{Request, SelectionIntent};
++
++fn f(name: &str) -> LocalFeatureRef {
++    LocalFeatureRef::new(name).unwrap()
++}
++
++fn fixture() -> (Request, ConfigurationDefinition) {
++    let mut request = codec::decode_request(include_bytes!(
++        "../../../../formats/corpora/consumer-configuration-request/e1/valid/omitted.json"
++    ))
++    .unwrap();
++    let choice = request.edges[0].selections.get_mut("choice").unwrap();
++    choice.members = Some(vec!["a".into()]);
++    let mut branch = choice.clone();
++    branch.members = Some(vec!["c".into()]);
++    branch.intent = SelectionIntent::Exact;
++    branch.provenance = "authored:dormant".into();
++    request.edges[0].selections.insert("branch".into(), branch);
++    let definition = ConfigurationDefinition {
++        instance: codec::admit_request(&request).unwrap()[0].instance.clone(),
++        program: FeatureProgram {
++            features: [
++                (f("a"), BTreeSet::new()),
++                (f("b"), BTreeSet::new()),
++                (
++                    f("c"),
++                    [
++                        FeatureEffect::ExportedSubskill("stack/rust".into()),
++                        FeatureEffect::ConfigValue(f("flag")),
++                    ]
++                    .into(),
++                ),
++            ]
++            .into(),
++            exclusive: BTreeMap::new(),
++        },
++        declarations: FeatureDeclarations {
++            exported_subskills: ["stack/rust".into()].into(),
++            config_values: [(f("flag"), ConfigValue::Bool(true))].into(),
++            ..Default::default()
++        },
++        constraints: Constraints {
++            groups: [
++                (
++                    f("choice"),
++                    ConstrainedGroup {
++                        cardinality: Cardinality::ExactlyOne,
++                        members: [f("a"), f("b")].into(),
++                        guards: vec![],
++                        defaults: None,
++                    },
++                ),
++                (
++                    f("branch"),
++                    ConstrainedGroup {
++                        cardinality: Cardinality::ExactlyOne,
++                        members: [f("c")].into(),
++                        guards: vec![Guard::Member(f("b"))],
++                        defaults: None,
++                    },
++                ),
++            ]
++            .into(),
++            member_guards: BTreeMap::new(),
++        },
++    };
++    (request, definition)
++}
++
++#[test]
++fn dormant_selection_is_retained_without_effects() {
++    let (mut request, definition) = fixture();
++    let authored = request.clone();
++    let result =
++        resolve_consumer_configuration(&request, std::slice::from_ref(&definition)).unwrap();
++    let effects = result.expansions[0].as_ref().unwrap();
++    assert_eq!(effects.active_features, ["a".into()].into());
++    assert!(effects.active_subskills.is_empty());
++    assert!(effects.config_values.is_empty());
++    assert!(result.result.outcomes[0].defaults_used.is_empty());
++    assert_eq!(
++        result.result.edges[0].selections["branch"].members,
++        Some(vec!["c".into()])
++    );
++    assert_eq!(
++        result.result.edges[0].selections["branch"].provenance,
++        "authored:dormant"
++    );
++    assert_eq!(request, authored);
++
++    request.edges[0]
++        .selections
++        .get_mut("choice")
++        .unwrap()
++        .members = Some(vec!["b".into()]);
++    let result = resolve_consumer_configuration(&request, &[definition]).unwrap();
++    let effects = result.expansions[0].as_ref().unwrap();
++    assert_eq!(effects.active_subskills, ["stack/rust".into()].into());
++    assert_eq!(effects.config_values["flag"], ConfigValue::Bool(true));
++    assert!(result.result.outcomes[0].defaults_used.is_empty());
++}
++
++#[test]
++fn removed_dormant_option_reports_drift() {
++    let (request, mut definition) = fixture();
++    let authored = request.clone();
++    // A coherent current definition replaces c with d while its guard stays off.
++    let effects = definition.program.features.remove(&f("c")).unwrap();
++    definition.program.features.insert(f("d"), effects);
++    definition
++        .constraints
++        .groups
++        .get_mut(&f("branch"))
++        .unwrap()
++        .members = [f("d")].into();
++    let error = resolve_consumer_configuration(&request, &[definition])
++        .err()
++        .unwrap();
++    assert_eq!(error, "unknown requested member");
++    assert_eq!(request, authored);
++}
+diff --git a/crates/vibe-workspace/src/install/bootgen/effective_subskills.rs b/crates/vibe-workspace/src/install/bootgen/effective_subskills.rs
+new file mode 100644
+index 000000000..30ae55113
+--- /dev/null
++++ b/crates/vibe-workspace/src/install/bootgen/effective_subskills.rs
+@@ -0,0 +1,149 @@
++//! Subskill declarations joined to original captured bytes, independently of
++//! Agent Skills. This value is inert: the caller supplies admitted source
++//! authority and selection; construction does not publish or modify files.
++use std::collections::{BTreeMap, BTreeSet};
++
++use vibe_core::manifest::SubskillManifest;
++
++use crate::source_query::CapturedSourceFile;
++
++/// Capture selected declarations from the caller's admitted package root.
++/// Path reads use the shared no-follow filesystem capability. The caller
++/// retains responsibility for binding this root to the selected provider.
++pub fn capture_selected_subskills(
++    root: &std::path::Path,
++    selected: &BTreeSet<String>,
++) -> Result<Vec<CapturedSubskill>, String> {
++    if selected.is_empty() {
++        return Ok(Vec::new());
++    }
++    let project = vibe_safefs::Project::open(root).map_err(|e| e.to_string())?;
++    let mut files = BTreeMap::new();
++    for name in selected {
++        vibe_safefs::split_relative(name).map_err(|e| e.to_string())?;
++        let path = format!("subskills/{name}/{}", SubskillManifest::FILENAME);
++        let snapshot = project
++            .read_file_snapshot_bounded(&path, 1024 * 1024)
++            .map_err(|e| e.to_string())?
++            .ok_or_else(|| format!("missing captured declaration: {path}"))?;
++        let declaration: SubskillManifest =
++            toml::from_str(std::str::from_utf8(&snapshot.bytes).map_err(|e| e.to_string())?)
++                .map_err(|e| format!("{path}: {e}"))?;
++        files.insert(
++            path.clone(),
++            CapturedSourceFile::new(path, snapshot).map_err(|e| e.to_string())?,
++        );
++        for relative in &declaration.content.files_written {
++            let relative = relative.to_str().ok_or("non-UTF8 subskill content path")?;
++            vibe_safefs::split_relative(relative).map_err(|e| e.to_string())?;
++            let path = format!("subskills/{name}/{relative}");
++            let snapshot = project
++                .read_file_snapshot_bounded(&path, 16 * 1024 * 1024)
++                .map_err(|e| e.to_string())?
++                .ok_or_else(|| format!("missing captured content: {path}"))?;
++            files.insert(
++                path.clone(),
++                CapturedSourceFile::new(path, snapshot).map_err(|e| e.to_string())?,
++            );
++        }
++    }
++    select_captured_subskills(&files.into_values().collect::<Vec<_>>(), selected)
++}
++
++/// A selected declaration and its exact original content, retained together.
++#[derive(Debug, Clone)]
++pub struct CapturedSubskill {
++    pub declaration: SubskillManifest,
++    pub definition_path: String,
++    pub definition_digest: String,
++    /// Package-relative source paths and captured bytes (never project paths).
++    pub content: BTreeMap<String, Vec<u8>>,
++}
++
++/// Validate the complete child catalogue before selecting contributions.
++/// Provider/content identity remains with the caller's admitted capture.
++pub fn select_captured_subskills(
++    files: &[CapturedSourceFile],
++    selected: &BTreeSet<String>,
++) -> Result<Vec<CapturedSubskill>, String> {
++    let mut inventory = BTreeMap::new();
++    for file in files {
++        if inventory
++            .insert(file.relative_path(), file.snapshot())
++            .is_some()
++        {
++            return Err(format!("duplicate captured path: {}", file.relative_path()));
++        }
++    }
++    let mut catalogue = BTreeMap::new();
++    for (path, snapshot) in &inventory {
++        if !path.starts_with("subskills/")
++            || !path.ends_with(&format!("/{}", SubskillManifest::FILENAME))
++        {
++            continue;
++        }
++        let text = std::str::from_utf8(&snapshot.bytes).map_err(|e| format!("{path}: {e}"))?;
++        let declaration: SubskillManifest =
++            toml::from_str(text).map_err(|e| format!("{path}: {e}"))?;
++        let name = &declaration.subskill.path;
++        vibe_safefs::split_relative(name).map_err(|e| format!("{path}: {e}"))?;
++        if *path != format!("subskills/{name}/{}", SubskillManifest::FILENAME) {
++            return Err(format!(
++                "{path}: declared subskill path disagrees with capture"
++            ));
++        }
++        let findings = declaration.validation_findings();
++        if !findings.is_empty() {
++            return Err(format!("{path}: {}", findings.join("; ")));
++        }
++        if declaration.subskill.delivery.requires_description()
++            && declaration
++                .subskill
++                .description
++                .as_deref()
++                .is_none_or(|s| s.trim().is_empty())
++        {
++            return Err(format!(
++                "{path}: lazy delivery requires a nonempty description"
++            ));
++        }
++        let mut content = BTreeMap::new();
++        for relative in &declaration.content.files_written {
++            let relative = relative
++                .to_str()
++                .ok_or_else(|| format!("{path}: non-UTF8 content path"))?;
++            vibe_safefs::split_relative(relative).map_err(|e| format!("{path}: {e}"))?;
++            let source = format!("subskills/{name}/{relative}");
++            let bytes = inventory
++                .get(source.as_str())
++                .ok_or_else(|| format!("{path}: missing captured content {source}"))?;
++            if content
++                .insert(source.clone(), bytes.bytes.clone())
++                .is_some()
++            {
++                return Err(format!("{path}: duplicate content {source}"));
++            }
++        }
++        let name = name.clone();
++        catalogue.insert(
++            name,
++            CapturedSubskill {
++                declaration,
++                definition_path: (*path).into(),
++                definition_digest: snapshot.sha256.clone(),
++                content,
++            },
++        );
++    }
++    selected
++        .iter()
++        .map(|name| {
++            catalogue
++                .remove(name)
++                .ok_or_else(|| format!("selected subskill has no captured declaration: {name}"))
++        })
++        .collect()
++}
++
++#[cfg(test)]
++mod m_05_d_2_cases;
+diff --git a/crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs b/crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs
+new file mode 100644
+index 000000000..42d822646
+--- /dev/null
++++ b/crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs
+@@ -0,0 +1,84 @@
++use super::*;
++use vibe_safefs::Project;
++
++fn capture(rows: &[(&str, &str)]) -> Vec<CapturedSourceFile> {
++    let root = tempfile::tempdir().unwrap();
++    for (path, text) in rows {
++        let target = root.path().join(path);
++        std::fs::create_dir_all(target.parent().unwrap()).unwrap();
++        std::fs::write(target, text).unwrap();
++    }
++    let project = Project::open(root.path()).unwrap();
++    rows.iter()
++        .map(|(path, _)| {
++            CapturedSourceFile::new(
++                (*path).into(),
++                project
++                    .read_file_snapshot_bounded(path, 4096)
++                    .unwrap()
++                    .unwrap(),
++            )
++            .unwrap()
++        })
++        .collect()
++}
++
++const DECL: &str = "[subskill]\npath='stack/rust'\ndelivery='lazy-push'\ndescription='Rust guidance'\n[content]\nfiles_written=['guide.md']\n";
++
++#[test]
++fn selection_preserves_original_bytes_and_independent_skill() {
++    let files = capture(&[
++        ("subskills/stack/rust/vibe-subskill.toml", DECL),
++        ("subskills/stack/rust/guide.md", "# Captured Rust\n"),
++        ("skills/unrelated/SKILL.md", "Independent skill\n"),
++        ("unselected.txt", "Keep this too\n"),
++    ]);
++    let before: Vec<_> = files.iter().map(|f| f.snapshot().bytes.clone()).collect();
++    assert!(
++        select_captured_subskills(&files, &BTreeSet::new())
++            .unwrap()
++            .is_empty()
++    );
++    let active = select_captured_subskills(&files, &["stack/rust".into()].into()).unwrap();
++    assert_eq!(active.len(), 1);
++    assert_eq!(
++        active[0].declaration.subskill.delivery,
++        vibe_core::manifest::DeliveryMode::LazyPush
++    );
++    assert_eq!(
++        active[0].content["subskills/stack/rust/guide.md"],
++        b"# Captured Rust\n"
++    );
++    assert!(!active[0].definition_digest.is_empty());
++    assert_eq!(
++        before,
++        files
++            .iter()
++            .map(|f| f.snapshot().bytes.clone())
++            .collect::<Vec<_>>()
++    );
++}
++
++#[test]
++fn missing_declaration_content_and_escaping_paths_refuse() {
++    let selected = ["stack/rust".into()].into();
++    assert!(
++        select_captured_subskills(&[], &selected)
++            .unwrap_err()
++            .contains("no captured declaration")
++    );
++    let files = capture(&[("subskills/stack/rust/vibe-subskill.toml", DECL)]);
++    assert!(
++        select_captured_subskills(&files, &selected)
++            .unwrap_err()
++            .contains("missing captured content")
++    );
++    for invalid in [
++        DECL.replace("guide.md", "../outside.md"),
++        DECL.replace("stack/rust", "other"),
++        DECL.replace("Rust guidance", " "),
++    ] {
++        let files = capture(&[("subskills/stack/rust/vibe-subskill.toml", &invalid)]);
++        assert!(select_captured_subskills(&files, &selected).is_err());
++    }
++}

@@ -1,0 +1,42 @@
+{
+  "unix": 1792178167.4606798,
+  "root_exec": 14393,
+  "job": {
+    "job_id": "job.runtime.packet.vibevm-m05d2",
+    "revision": 56,
+    "execution": "starting",
+    "effect": "started",
+    "safe": "unknown",
+    "acceptance": "unreviewed",
+    "candidate_id": null,
+    "dispatch_id": "dispatch.runtime.packet.vibevm-m05d2",
+    "native": {
+      "operation": "managed.b14fd0a7d421398ac8ceb00bdd8b4de9e2becc08265c7b46c977228e7983470a",
+      "state": "collecting",
+      "source_sequence": 39,
+      "collected": false,
+      "unknown_tail": false,
+      "failed": false,
+      "process_stopped": false,
+      "accounting_pending": false
+    }
+  },
+  "processes": [
+    {
+      "pid": 1041739,
+      "birth": 4627198,
+      "name": "zap",
+      "children": [
+        "1041803"
+      ]
+    },
+    {
+      "pid": 1041803,
+      "birth": 4627237,
+      "name": "podbay",
+      "children": [
+        "1041992"
+      ]
+    }
+  ]
+}

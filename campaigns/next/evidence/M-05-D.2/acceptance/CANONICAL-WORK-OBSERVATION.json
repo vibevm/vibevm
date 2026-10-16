@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-10-16T21:40:35.616405+00:00",
+  "method": "ordinary zap.viewer.detail read-only query",
+  "work": {
+    "acceptance": [
+      "End-to-end fixture observes contribution activation, not only a populated field.",
+      "Changing activation leaves captured package bytes unchanged."
+    ],
+    "active_job": null,
+    "depends_on": [],
+    "kind": "atom",
+    "order": 1,
+    "parent_id": "work.m05d2",
+    "required_stage": "functional",
+    "revision": 11,
+    "state": "accepted",
+    "title": "Connect feature and subskill activation to real consumers",
+    "validation_generation": 0,
+    "work_id": "work.m05d2.prepare-plan",
+    "work_type": "change"
+  }
+}

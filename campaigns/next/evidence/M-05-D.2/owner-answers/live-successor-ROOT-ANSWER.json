@@ -1,0 +1,26 @@
+{
+  "question_id": "m05d2-boot-error-propagation-perimeter-20261016-2",
+  "answered_by": "Root owner proxy",
+  "answered_at": "2026-10-16T20:08:25.198099+00:00",
+  "decision": "approved",
+  "scope": "Ordinary source modules and meaningful focused tests within existing VibeVM install/boot/effective-subskill/MCP consumers needed for the full original D2 contract. The private write roster is task metadata, not a fresh permission boundary; ordinary related module changes do not need repeated file-by-file questions. Respect actual project/security boundaries.",
+  "explicit_paths_approved": [
+    "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+    "crates/vibe-workspace/src/install/hook_output.rs",
+    "crates/vibe-workspace/src/install.rs"
+  ],
+  "semantic_answer": "Propagate actual captured-subskill validation errors through ordinary callers. Pass the current preflight configuration/effective contribution view explicitly through install-to-boot composition; do not reread the previous durable lock as current selection. Existing public entrypoints may wrap the explicit path. No thread-local state, premature lock publication or covert Manifest/ResolvedDep mutation. Keep original full criteria and AgentSkill/Subskill distinction from answer1.",
+  "limits": "This answers task scope and semantic composition only; no task acceptance, fabricated candidate, safe checkpoint, process fencing or effect observation. General recovery controller will assemble attempt protocol metadata.",
+  "id": "m05d2-boot-error-propagation-perimeter-20261016-2",
+  "at": "2026-10-16T20:08:25.198099+00:00",
+  "answer": {
+    "scope": "Ordinary source modules and meaningful focused tests within existing VibeVM install/boot/effective-subskill/MCP consumers needed for the full original D2 contract. The private write roster is task metadata, not a fresh permission boundary; ordinary related module changes do not need repeated file-by-file questions. Respect actual project/security boundaries.",
+    "implementation": "Propagate actual captured-subskill validation errors through ordinary callers. Pass the current preflight configuration/effective contribution view explicitly through install-to-boot composition; do not reread the previous durable lock as current selection. Existing public entrypoints may wrap the explicit path. No thread-local state, premature lock publication or covert Manifest/ResolvedDep mutation. Keep original full criteria and AgentSkill/Subskill distinction from answer1.",
+    "limits": "This answers task scope and semantic composition only; no task acceptance, fabricated candidate, safe checkpoint, process fencing or effect observation. General recovery controller will assemble attempt protocol metadata."
+  },
+  "evidence": [
+    "ROOT-D2-ANSWER-2.json",
+    "answer-history/ed10bc178dca26cac5bca710c44056a2df39841eb4983819f7e1bf7f591d6046.json"
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "active": true,
+  "contract": {
+    "acceptance": [
+      "End-to-end fixture observes contribution activation, not only a populated field.",
+      "Changing activation leaves captured package bytes unchanged."
+    ],
+    "checks": [
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d2/verify-group.py",
+          "V1"
+        ],
+        "cases": [
+          "V1"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d2.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D2 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d2/verify-group.py",
+          "V2"
+        ],
+        "cases": [
+          "V2"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d2.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D2 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d2/verify-group.py",
+          "V3"
+        ],
+        "cases": [
+          "V3"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d2.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D2 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d2/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "V4"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d2.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D2 V4: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d2/verify-group.py",
+          "V5"
+        ],
+        "cases": [
+          "V5"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d2.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D2 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d2/verify-group.py",
+          "V6"
+        ],
+        "cases": [
+          "V6"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d2.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D2 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05d2/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "V7"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05d2.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05D2 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      }
+    ],
+    "contract_id": "contract.m05d2",
+    "delivery_route": {
+      "kind": "direct"
+    },
+    "goal": "Make selected contributions reach visibility, loading and projection while preserving source bytes.",
+    "integration_owner": "work.m05d2.prepare-plan",
+    "negative_cases": [
+      "Inactive branch contributes no effects; dormant removed option reports drift.",
+      "Unselected package files are not physically filtered from captured source."
+    ],
+    "obligation_ids": [
+      "obligation.m05d2"
+    ],
+    "positive_cases": [
+      "Activated subskill appears in the real loading/projection result and lock provenance."
+    ],
+    "read_subjects": [
+      {
+        "id": "source.vibevm-m05d2.owner-input",
+        "kind": "source"
+      }
+    ],
+    "required_stage": "functional",
+    "resources": [
+      "resource.workspace"
+    ],
+    "safe_stop": "Do not admit subskill semantics before every required consumer works.",
+    "source_handles": [
+      "source.vibevm-m05d2.owner-input"
+    ],
+    "steps": [
+      "Carry active feature/subskill exports into effective contribution selection and owning projection consumers.",
+      "Preserve full package materialization; activation changes effective contributions only.",
+      "Retain dormant branch selections as authored intent while disabling their effects and diagnose removed dormant options."
+    ],
+    "title": "Connect feature and subskill activation to real consumers",
+    "work_id": "work.m05d2.prepare-plan",
+    "write_subjects": [
+      {
+        "id": "work.m05d2.prepare-plan",
+        "kind": "work"
+      }
+    ]
+  },
+  "contract_digest": "5139ad0220fe3d46b580554689c0c6137f9b84fdf445a67f09996f74b3aba5dc",
+  "contract_id": "contract.m05d2",
+  "version": 1,
+  "work_id": "work.m05d2.prepare-plan"
+}

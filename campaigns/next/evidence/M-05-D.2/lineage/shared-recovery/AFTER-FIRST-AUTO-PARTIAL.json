@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-16T21:04:47.741064+00:00",
+  "work": {
+    "work_id": "work.m05d2.prepare-plan",
+    "state": "active",
+    "revision": 9,
+    "active_job": "job.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475"
+  },
+  "jobs": [
+    {
+      "id": "job.runtime.packet.continuation.bdf8e2d0a732eda365d428eac152d7eb52e7b92f5cc7f284b2e98b71dd0ef595",
+      "execution": "succeeded",
+      "effect": "completed",
+      "retired": true,
+      "candidate": "managed-result.a4cff05de5ecfc6ac9830dfae4faa85afab3f2ea4083e8d6b82efc8e8dcd8c6d"
+    },
+    {
+      "id": "job.runtime.packet.recovery.88d399f515ab31c52c339f76c7bda41f04c6b61a09e9f88cf4e46105e22b1141",
+      "execution": "succeeded",
+      "effect": "completed",
+      "retired": true,
+      "candidate": "managed-result.e10e91fbafbe6480d344cc42b74dd8b64848cbcb033c6190389d01e2f754ea7e"
+    },
+    {
+      "id": "job.runtime.packet.recovery.e8b394b6dc6a499eaa6952e2ceb28842b02fed330d7e6bc9a89ebd26e1dea475",
+      "execution": "starting",
+      "effect": "started",
+      "retired": false,
+      "candidate": null
+    },
+    {
+      "id": "job.runtime.packet.vibevm-m05d2",
+      "execution": "succeeded",
+      "effect": "completed",
+      "retired": false,
+      "candidate": "managed-result.f13942cebcf028ec63b1a194c740247bd7533d1c7a2d245ec1433471233364fb"
+    }
+  ]
+}

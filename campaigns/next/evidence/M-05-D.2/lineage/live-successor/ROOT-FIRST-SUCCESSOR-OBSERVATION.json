@@ -1,0 +1,27 @@
+{
+  "observed_unix": 1792180265.432168,
+  "root_exec": 14393,
+  "successor_jobs": 1,
+  "canonical_revision": 201,
+  "job": {
+    "job_id": "job.runtime.packet.continuation.bdf8e2d0a732eda365d428eac152d7eb52e7b92f5cc7f284b2e98b71dd0ef595",
+    "work_id": "work.m05d2.prepare-plan",
+    "contract_digest": "5139ad0220fe3d46b580554689c0c6137f9b84fdf445a67f09996f74b3aba5dc",
+    "attempt_id": "attempt.runtime.packet.continuation.bdf8e2d0a732eda365d428eac152d7eb52e7b92f5cc7f284b2e98b71dd0ef595",
+    "execution": "starting",
+    "effect": "started",
+    "safe": "unknown",
+    "candidate_id": null,
+    "revision": 186
+  },
+  "native": {
+    "operation": "managed.0d7922fd07d007fc1fe51175b0602fa429a50a9408841e5c4ad616376ddea569",
+    "state": "collecting",
+    "source_sequence": 62,
+    "collected": false,
+    "unknown_tail": false,
+    "failed": false,
+    "process_stopped": false,
+    "accounting_pending": false
+  }
+}
