@@ -106,7 +106,14 @@
         "crates/vibe-agent-projection/src/lib.rs",
         "crates/vibe-agent-projection/src/pkgskill.rs",
         "crates/vibe-resolver/Cargo.toml",
-        "crates/vibe-resolver/src/lib.rs"
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-orchestrator/src/world/mod.rs",
+        "crates/vibe-orchestrator/src/world/dependencies.rs",
+        "crates/vibe-orchestrator/src/world/package_skill.rs",
+        "crates/vibe-workspace/src/extension_world/epoch.rs",
+        "crates/vibe-resolver/src/features/configuration.rs",
+        "crates/vibe-orchestrator/Cargo.toml",
+        "crates/vibe-orchestrator/src/lib.rs"
       ],
       "write_paths": [
         "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
@@ -122,7 +129,15 @@
         "crates/vibe-agent-projection/src/lib.rs",
         "crates/vibe-agent-projection/src/pkgskill.rs",
         "crates/vibe-resolver/Cargo.toml",
-        "crates/vibe-resolver/src/lib.rs"
+        "crates/vibe-resolver/src/lib.rs",
+        "crates/vibe-orchestrator/src/world/mod.rs",
+        "crates/vibe-orchestrator/src/world/dependencies.rs",
+        "crates/vibe-orchestrator/src/world/package_skill.rs",
+        "crates/vibe-workspace/src/extension_world/epoch.rs",
+        "crates/vibe-resolver/src/features/configuration.rs",
+        "crates/vibe-workspace/src/extension_world/m_05_d_2_cases.rs",
+        "crates/vibe-resolver/src/features/m_05_d_2_cases.rs",
+        "crates/vibe-orchestrator/src/world/m_05_d_2_cases.rs"
       ],
       "steps": [
         "Carry active feature/subskill exports into effective contribution selection and owning projection consumers.",
