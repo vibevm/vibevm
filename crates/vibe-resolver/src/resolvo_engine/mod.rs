@@ -14,6 +14,7 @@
 
 mod capabilities;
 mod catalog;
+pub mod configuration;
 mod snapshot;
 pub use capabilities::{CapIndex, CapProvider};
 pub use catalog::{CatalogInspection, TransactionCatalog};
@@ -293,5 +294,8 @@ mod tests;
 
 #[cfg(test)]
 mod m_05_c_1_cases;
+
+#[cfg(test)]
+mod m_05_c_2_cases;
 
 pub use semver::Version as CandidateVersion;

@@ -279,6 +279,17 @@ pub trait DepProvider {
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
 )]
 pub trait VersionEnumerator: DepProvider {
+    /// A valid candidate incompatible with the admitted consumer intent.
+    /// Source failures must be returned by the provider, never placed here.
+    fn candidate_rejection(
+        &self,
+        _group: &Group,
+        _name: &str,
+        _version: &semver::Version,
+    ) -> Option<String> {
+        None
+    }
+
     /// Capability index captured with an immutable transaction catalog.
     fn cached_capabilities(&self) -> Option<&resolvo_engine::CapIndex> {
         None

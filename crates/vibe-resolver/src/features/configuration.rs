@@ -9,6 +9,7 @@ use vibe_wire::generated::consumer_configuration::e1::{
 };
 
 /// Admitted source definitions, supplied by the caller; never looked up globally.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ConfigurationDefinition {
     pub instance: ConfigurationInstance,
     pub program: FeatureProgram,
