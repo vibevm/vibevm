@@ -1,0 +1,31 @@
+{
+  "group": "V6",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-16-m08e1-driver/V6-1.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.12312301696510985,
+      "passed": true
+    }
+  ],
+  "case_binding": null,
+  "conditional_selection": null,
+  "extra": {
+    "xml_parsed": true,
+    "prior_spec_lines_preserved": true,
+    "old_schema_drift": [],
+    "old_generated_drift": []
+  },
+  "full_closure_subject_count": 1991,
+  "full_closure_drift": [],
+  "passed": true,
+  "no_fresh_commands": false
+}

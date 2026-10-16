@@ -1,0 +1,5 @@
+[
+  "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/driver.rs",
+  "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/podbay_runner.rs"
+]

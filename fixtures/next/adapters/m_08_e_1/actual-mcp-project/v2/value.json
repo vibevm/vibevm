@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "m08a2-demo": {
+      "type": "http",
+      "url": "http://127.0.0.1:48591/mcp/v2"
+    }
+  }
+}

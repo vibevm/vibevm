@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "client_id": "org.vibevm.fixture/claude-code-mcp-project",
+  "version": "=2.1.299",
+  "bindings": [
+    {
+      "scope": "project",
+      "shape": "json-member",
+      "destination": ".mcp.json",
+      "key": [
+        "mcpServers",
+        "m08a2-demo"
+      ],
+      "operations": [
+        "reconcile-json-member"
+      ]
+    }
+  ]
+}

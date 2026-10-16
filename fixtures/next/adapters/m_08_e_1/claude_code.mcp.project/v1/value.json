@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "m08a2-demo": {
+      "args": [
+        "fixture-one"
+      ],
+      "command": "/nonexistent/m08a2-inert-server"
+    }
+  }
+}

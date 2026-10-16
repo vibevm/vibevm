@@ -1,0 +1,32 @@
+{
+  "id": "claude_code.plugin.user",
+  "status": "inert_source_only_pending_release_qualification",
+  "client_version": "2.1.299",
+  "coordinate": "m08a2-demo@m08a2-fixture",
+  "scope": "user",
+  "files": {
+    "v1/.claude-plugin/plugin.json": "ed49cf827ebed660440c16d84987edec9d46e14aaf6d2db51c72d74d742d2eea",
+    "v1/skills/m08a2-demo/SKILL.md": "923e37917b8b23fae04b766cef1ec267927b5bf1418e938ea2113c3d7d612976",
+    "v2/.claude-plugin/plugin.json": "cc9e08490bc77648871672766b4111983e8db45c7757e8ed201f40372f5814b0",
+    "v2/skills/m08a2-demo/SKILL.md": "6ebb97fcd0c821bcbe9821f492eda5e311fe11e3360744fbda2203c7842388df",
+    "v1/skills/m08a2-demo/reference.txt": "4c208149e800ed0bac168582741e95a935264fd2f65ff984d3449fc8b5d45b8c"
+  },
+  "proof_ids": [
+    "claude_code.plugin.user.prepare_plan",
+    "claude_code.plugin.user.permission_trust",
+    "claude_code.plugin.user.apply_install",
+    "claude_code.plugin.user.repeat_noop",
+    "claude_code.plugin.user.owned_update",
+    "claude_code.plugin.user.verify",
+    "claude_code.plugin.user.interrupted_recovery",
+    "claude_code.plugin.user.later_failure_inverse",
+    "claude_code.plugin.user.uninstall_revocation",
+    "claude_code.plugin.user.foreign_ownership",
+    "claude_code.plugin.user.unsupported_version_platform",
+    "claude_code.plugin.user.client_discovery"
+  ],
+  "source_contract_sha256": "2423fc75eb5ece6f435fc7a16f9a58d9d815490de7d77c07e5a40df405f86cc5",
+  "runtime_qualified": false,
+  "authority": "none; no destination or process grant",
+  "pending": "Exact local marketplace schema, admitted command grammar, finite client-state closure and actual loading must be qualified before effects"
+}

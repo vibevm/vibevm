@@ -2693,3 +2693,23 @@ structure, and it goes when the file does.
 | @fact:B247-SEVERITY **severity** | P3 — stale test inventory assertion; no new campaign admission gate. |
 | @fact:B247-DISPOSITION **disposition** | deferred until the owning vocabulary or site-inventory test is touched. Reconcile the actual added sites and update a meaningful named inventory expectation; do not blindly weaken the check, skip failures or count the inherited module as passed. |
 | @fact:B247-FILED **filed by** | First Agent M10B1 acceptance, 2026-10-14. |
+
+## B-248 — command-backed plugin inverse is not implemented {#b-248}
+
+| field | value |
+|---|---|
+| @fact:B248-WHAT **what** | The admitted command lifecycle has no inverse or before-image restore command. Its receipt is reversible:false with no prior_state_handle. A later failure therefore cannot restore both selected plugin cache and enabled configuration through this API. Ordinary removal is not inverse evidence. |
+| @fact:B248-EVIDENCE **evidence** | PROP-054#ADMITTED-CLIENT-DEPLOYMENT-LIFECYCLE; M-08-E.1; actual Codex031 retained before-images, same-run recovery, receipt and installed residue. campaigns/next/evidence/M-08-E/ROOT-PARTIAL-CHECKPOINT-2026-10-16.json; /fast/zap-managed/2026-10-16-e1cr31/RESULT.json. |
+| @fact:B248-SEVERITY **severity** | P2 — explicit unfulfilled capability, with no claim of successful rollback. |
+| @fact:B248-DISPOSITION **disposition** | open; preserve the original inverse obligation and establish a bounded supported inverse design before claiming it. Independent tasks not relying on command inverse may proceed. No generic vendor-state engine or blind command retry is implied. |
+| @fact:B248-FILED **filed by** | First Agent scoped M08E1 review, 2026-10-16. |
+
+## B-249 — retained Codex commissioning proof gaps {#b-249}
+
+| field | value |
+|---|---|
+| @fact:B249-WHAT **what** | Seven fresh-repeat/no-op/generation-preservation obligations and user-plugin cleanup after provider revocation remain unproven. Same-run recovery skip does not prove fresh repeat; normal removal does not prove revoked-provider cleanup. No implementation defect is inferred solely from absent evidence. |
+| @fact:B249-EVIDENCE **evidence** | PROP-054#FOUR-CLIENT-LIFECYCLE-GATES; current M08E1 PROOF-REUSE-MAP and ROOT-PARTIAL-CHECKPOINT-2026-10-16.json. The map preserves192 IDs:96 deferred,45 reused,30 observed,13 unsupported,8 required_remaining. Unsupported inverse and project-plugin positives must also remain visible. |
+| @fact:B249-SEVERITY **severity** | P2 — missing qualification, not a green gate. |
+| @fact:B249-DISPOSITION **disposition** | open; begin with existing owner-law receipts and run only missing selected cases. No seven-vendor-run requirement follows. Claude coverage stays separately owner-deferred. Full E1 remains unaccepted while independent work proceeds. |
+| @fact:B249-FILED **filed by** | First Agent scoped M08E1 review, 2026-10-16. |

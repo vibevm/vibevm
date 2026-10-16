@@ -1,0 +1,11 @@
+{
+  "basis": "M08E1-CODEX-IO-009",
+  "only_lock_delta": "existing tungstenite edge in vibe-lifecycle dependency list",
+  "locked_version": "0.28.0",
+  "production_dependencies_changed": false,
+  "offline_builds": [
+    "compile-codex-session-1",
+    "compile-codex-session-2"
+  ],
+  "no_version_source_checksum_changes": true
+}

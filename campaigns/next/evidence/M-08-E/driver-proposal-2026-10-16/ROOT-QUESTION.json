@@ -1,0 +1,10 @@
+{
+  "id": "M08E1-DRIVER-SEAL-001",
+  "question_id": "M08E1-DRIVER-SEAL-001",
+  "status": "pending",
+  "question": "Seal and start the bounded initial discovery batch in DRIVER-PROPOSAL.json, with this exact ELF digest, steps, clean environment, private HOME inode and namespace mounts; return matching answer plus endpoint identity and isolation receipt. Both exact tests intentionally exit pending after capturing discovery. No lifecycle effects or local-peer launch are requested by this initial batch. Please bind the pinned runtime paths /runtime/claude/claude and /runtime/codex/codex and confirm private user discovery identity.",
+  "proposal": "/fast/zap-managed/2026-10-16-m08e1-driver/DRIVER-PROPOSAL.json",
+  "proposal_sha256": "36ca0b892d099bbfde94dfd7323c21b9ba025650cdde701182595823c7ed533a",
+  "driver_path": "/fast/zap-managed/2026-10-16-m08e1-driver/driver-build/driver-discovery-1",
+  "driver_sha256": "9b642d6b65a57586e25f15f497d3a714cb16975d67ed81c7f9a0cd57435f9216"
+}

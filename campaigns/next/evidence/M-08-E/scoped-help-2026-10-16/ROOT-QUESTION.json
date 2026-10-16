@@ -1,0 +1,37 @@
+{
+  "id": "M08E1-SCOPED-HELP-SEAL-002",
+  "question_id": "M08E1-SCOPED-HELP-SEAL-002",
+  "status": "pending",
+  "question": "Please seal/start only the eight exact ProcessSpecs in DRIVER-PROPOSAL.json using distinct fresh Claude and Codex cases, and return matching question_id with sealed manifest, endpoint identity, actual observations and cleanup receipts. No retired discovery keys or endpoint. Confirm private namespace identity, including getpwuid observation if available. If a logical prerequisite blocks preparation, use registered OperationPreparationRequest Inspect/Ensure/Resume/Apply through Root; configured operation_computation alone is not invocation evidence.",
+  "proposal": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/DRIVER-PROPOSAL.json",
+    "sha256": "a149defeb475956ca0fae0b1358d326339647f4bcaceb8f47da544bdcf1298bb"
+  },
+  "driver": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/driver-scoped-help-1",
+    "sha256": "3cc5981c82759dabdde2c45ccbee15d32d72d1f36cedd461d472d44d748a7b7e"
+  },
+  "step_count": 8,
+  "case_ids": [
+    "claude_code.scoped-help-002",
+    "codex.scoped-help-001"
+  ],
+  "argv": [
+    [
+      "/runtime/driver/driver",
+      "mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix",
+      "--exact",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    [
+      "/runtime/driver/driver",
+      "mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix",
+      "--exact",
+      "--nocapture",
+      "--test-threads=1"
+    ]
+  ],
+  "timeout_seconds": 900,
+  "effects": "pending; no new vendor invocation"
+}

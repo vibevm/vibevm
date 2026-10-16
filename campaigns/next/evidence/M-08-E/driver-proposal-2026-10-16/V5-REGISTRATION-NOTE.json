@@ -1,0 +1,5 @@
+{
+  "path": "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+  "change": "append cfg-gated test module only",
+  "reason": "Do not rewrite inherited formatting; authored registration is three conventional lines, covered by V6 whitespace."
+}

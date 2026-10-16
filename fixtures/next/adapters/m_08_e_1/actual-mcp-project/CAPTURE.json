@@ -1,0 +1,11 @@
+{
+  "status": "candidate_pending_actual_project_observation",
+  "files": {
+    "fixtures/next/adapters/m_08_e_1/actual-mcp-project/request.json": "5d032efbdc105d3360f8e953843ba5f1e45f06dfd4383804ec85898c830daacc",
+    "fixtures/next/adapters/m_08_e_1/actual-mcp-project/v1/value.json": "d0fa310893a9a2ecf26354ac0ab534c6dc0d5969854a4833c6815da0f01b7fa2",
+    "fixtures/next/adapters/m_08_e_1/actual-mcp-project/v2/value.json": "09d8257cd61ac2904750ab147b20f84439421931d57048e84c84e99e96908db8"
+  },
+  "root_peer": "127.0.0.1:48591",
+  "grammar_basis": "actual mcp scoped help; existing external descriptor shape, no client config cache closure inferred",
+  "original_user_attempts": "retained, no keys reused"
+}

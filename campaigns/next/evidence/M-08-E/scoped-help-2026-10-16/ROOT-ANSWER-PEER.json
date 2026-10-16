@@ -1,0 +1,11 @@
+{
+  "question_id": "M08E1-LOCAL-PEER-004",
+  "id": "M08E1-LOCAL-PEER-004",
+  "status": "answered",
+  "utc": "2026-10-16T04:58:15.800206+00:00",
+  "observed_topology": "Existing help fixtures use separate bwrap --unshare-net for each driver/vendor invocation. They do NOT share loopback; no reachable peer endpoint is currently running.",
+  "decision": "For the NEXT explicitly scoped local-peer fixture, Root authorizes shared host loopback networking for the driver and vendor instead of per-invocation --unshare-net. Retain private HOME/passwd/case roots, read-only system mounts, exact executable/ProcessSpec approval and PodBay process ownership. This is a local development MVP fixture and is not claimed as network-isolated or a hostile-client security boundary. No real credentials/provider/model/login/remote server is allowed in the test contract.",
+  "peer_contract": "Implement the bounded deterministic HTTP MCP peer inside the actual managed Rust driver as a thread, not a client-spawned subprocess. Root will allocate one explicit 127.0.0.1 port for the fresh fixture and put its exact endpoint in the sealed fixture input before launch; no live endpoint/address is asserted by this answer. Bind only that loopback address; bounded expected MCP initialize/list/resources/tool responses and retained request observations should prove the actual local health/resource path. Close/join the peer on test completion. All physical driver/vendor processes remain PodBay-owned.",
+  "next_output": "Prepare your full next exact lifecycle/resource/local-peer manifest and required endpoint fixture schema using a root-supplied address input. Request one concrete next-stage fixture rather than starting a native child launcher or assuming old endpoints/ports. Complete independent full E1 implementation while Root runs the fourteen requested command-help calls.",
+  "getpwuid": "Root will additionally observe actual getpwuid lookup in the same private case identity via a tiny fixture-only probe; no real user discovery state is assumed. This is fixture evidence, not an invitation for native VibeVM source changes."
+}

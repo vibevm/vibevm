@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "client_id": "org.vibevm.fixture/codex-skill-project",
+  "version": "=0.159.3",
+  "bindings": [
+    {
+      "scope": "project",
+      "shape": "tree",
+      "destination": ".agents/skills/m08a2-demo",
+      "key": [],
+      "operations": [
+        "project-tree"
+      ]
+    }
+  ]
+}

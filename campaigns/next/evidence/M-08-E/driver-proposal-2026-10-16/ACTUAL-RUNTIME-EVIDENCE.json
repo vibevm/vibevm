@@ -1,0 +1,327 @@
+{
+  "schema": 1,
+  "rows": [
+    {
+      "id": "claude_code.skill.project",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "claude_code.skill.project.prepare_plan",
+        "claude_code.skill.project.permission_trust",
+        "claude_code.skill.project.apply_install",
+        "claude_code.skill.project.repeat_noop",
+        "claude_code.skill.project.owned_update",
+        "claude_code.skill.project.verify",
+        "claude_code.skill.project.interrupted_recovery",
+        "claude_code.skill.project.later_failure_inverse",
+        "claude_code.skill.project.uninstall_revocation",
+        "claude_code.skill.project.foreign_ownership",
+        "claude_code.skill.project.unsupported_version_platform",
+        "claude_code.skill.project.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.mcp.project",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "claude_code.mcp.project.prepare_plan",
+        "claude_code.mcp.project.permission_trust",
+        "claude_code.mcp.project.apply_install",
+        "claude_code.mcp.project.repeat_noop",
+        "claude_code.mcp.project.owned_update",
+        "claude_code.mcp.project.verify",
+        "claude_code.mcp.project.interrupted_recovery",
+        "claude_code.mcp.project.later_failure_inverse",
+        "claude_code.mcp.project.uninstall_revocation",
+        "claude_code.mcp.project.foreign_ownership",
+        "claude_code.mcp.project.unsupported_version_platform",
+        "claude_code.mcp.project.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.config.project",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "claude_code.config.project.prepare_plan",
+        "claude_code.config.project.permission_trust",
+        "claude_code.config.project.apply_install",
+        "claude_code.config.project.repeat_noop",
+        "claude_code.config.project.owned_update",
+        "claude_code.config.project.verify",
+        "claude_code.config.project.interrupted_recovery",
+        "claude_code.config.project.later_failure_inverse",
+        "claude_code.config.project.uninstall_revocation",
+        "claude_code.config.project.foreign_ownership",
+        "claude_code.config.project.unsupported_version_platform",
+        "claude_code.config.project.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.plugin.project",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. Release-specific CLI grammar and finite scoped ClientStateOwner closure are not qualified.",
+      "proof_ids": [
+        "claude_code.plugin.project.prepare_plan",
+        "claude_code.plugin.project.permission_trust",
+        "claude_code.plugin.project.apply_install",
+        "claude_code.plugin.project.repeat_noop",
+        "claude_code.plugin.project.owned_update",
+        "claude_code.plugin.project.verify",
+        "claude_code.plugin.project.interrupted_recovery",
+        "claude_code.plugin.project.later_failure_inverse",
+        "claude_code.plugin.project.uninstall_revocation",
+        "claude_code.plugin.project.foreign_ownership",
+        "claude_code.plugin.project.unsupported_version_platform",
+        "claude_code.plugin.project.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.skill.user",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "claude_code.skill.user.prepare_plan",
+        "claude_code.skill.user.permission_trust",
+        "claude_code.skill.user.apply_install",
+        "claude_code.skill.user.repeat_noop",
+        "claude_code.skill.user.owned_update",
+        "claude_code.skill.user.verify",
+        "claude_code.skill.user.interrupted_recovery",
+        "claude_code.skill.user.later_failure_inverse",
+        "claude_code.skill.user.uninstall_revocation",
+        "claude_code.skill.user.foreign_ownership",
+        "claude_code.skill.user.unsupported_version_platform",
+        "claude_code.skill.user.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.mcp.user",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "claude_code.mcp.user.prepare_plan",
+        "claude_code.mcp.user.permission_trust",
+        "claude_code.mcp.user.apply_install",
+        "claude_code.mcp.user.repeat_noop",
+        "claude_code.mcp.user.owned_update",
+        "claude_code.mcp.user.verify",
+        "claude_code.mcp.user.interrupted_recovery",
+        "claude_code.mcp.user.later_failure_inverse",
+        "claude_code.mcp.user.uninstall_revocation",
+        "claude_code.mcp.user.foreign_ownership",
+        "claude_code.mcp.user.unsupported_version_platform",
+        "claude_code.mcp.user.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.config.user",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "claude_code.config.user.prepare_plan",
+        "claude_code.config.user.permission_trust",
+        "claude_code.config.user.apply_install",
+        "claude_code.config.user.repeat_noop",
+        "claude_code.config.user.owned_update",
+        "claude_code.config.user.verify",
+        "claude_code.config.user.interrupted_recovery",
+        "claude_code.config.user.later_failure_inverse",
+        "claude_code.config.user.uninstall_revocation",
+        "claude_code.config.user.foreign_ownership",
+        "claude_code.config.user.unsupported_version_platform",
+        "claude_code.config.user.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "claude_code.plugin.user",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. Release-specific CLI grammar and finite scoped ClientStateOwner closure are not qualified.",
+      "proof_ids": [
+        "claude_code.plugin.user.prepare_plan",
+        "claude_code.plugin.user.permission_trust",
+        "claude_code.plugin.user.apply_install",
+        "claude_code.plugin.user.repeat_noop",
+        "claude_code.plugin.user.owned_update",
+        "claude_code.plugin.user.verify",
+        "claude_code.plugin.user.interrupted_recovery",
+        "claude_code.plugin.user.later_failure_inverse",
+        "claude_code.plugin.user.uninstall_revocation",
+        "claude_code.plugin.user.foreign_ownership",
+        "claude_code.plugin.user.unsupported_version_platform",
+        "claude_code.plugin.user.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "codex.skill.project",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "codex.skill.project.prepare_plan",
+        "codex.skill.project.permission_trust",
+        "codex.skill.project.apply_install",
+        "codex.skill.project.repeat_noop",
+        "codex.skill.project.owned_update",
+        "codex.skill.project.verify",
+        "codex.skill.project.interrupted_recovery",
+        "codex.skill.project.later_failure_inverse",
+        "codex.skill.project.uninstall_revocation",
+        "codex.skill.project.foreign_ownership",
+        "codex.skill.project.unsupported_version_platform",
+        "codex.skill.project.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "codex.mcp.project",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "codex.mcp.project.prepare_plan",
+        "codex.mcp.project.permission_trust",
+        "codex.mcp.project.apply_install",
+        "codex.mcp.project.repeat_noop",
+        "codex.mcp.project.owned_update",
+        "codex.mcp.project.verify",
+        "codex.mcp.project.interrupted_recovery",
+        "codex.mcp.project.later_failure_inverse",
+        "codex.mcp.project.uninstall_revocation",
+        "codex.mcp.project.foreign_ownership",
+        "codex.mcp.project.unsupported_version_platform",
+        "codex.mcp.project.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "codex.config.project",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "codex.config.project.prepare_plan",
+        "codex.config.project.permission_trust",
+        "codex.config.project.apply_install",
+        "codex.config.project.repeat_noop",
+        "codex.config.project.owned_update",
+        "codex.config.project.verify",
+        "codex.config.project.interrupted_recovery",
+        "codex.config.project.later_failure_inverse",
+        "codex.config.project.uninstall_revocation",
+        "codex.config.project.foreign_ownership",
+        "codex.config.project.unsupported_version_platform",
+        "codex.config.project.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "codex.plugin.project",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. Release-specific CLI grammar and finite scoped ClientStateOwner closure are not qualified. Existing explicit project-plugin unsupported boundary is retained, not converted into plugin authority; required actual refusal still pending.",
+      "proof_ids": [
+        "codex.plugin.project.prepare_plan",
+        "codex.plugin.project.permission_trust",
+        "codex.plugin.project.apply_install",
+        "codex.plugin.project.repeat_noop",
+        "codex.plugin.project.owned_update",
+        "codex.plugin.project.verify",
+        "codex.plugin.project.interrupted_recovery",
+        "codex.plugin.project.later_failure_inverse",
+        "codex.plugin.project.uninstall_revocation",
+        "codex.plugin.project.foreign_ownership",
+        "codex.plugin.project.unsupported_version_platform",
+        "codex.plugin.project.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "codex.skill.user",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "codex.skill.user.prepare_plan",
+        "codex.skill.user.permission_trust",
+        "codex.skill.user.apply_install",
+        "codex.skill.user.repeat_noop",
+        "codex.skill.user.owned_update",
+        "codex.skill.user.verify",
+        "codex.skill.user.interrupted_recovery",
+        "codex.skill.user.later_failure_inverse",
+        "codex.skill.user.uninstall_revocation",
+        "codex.skill.user.foreign_ownership",
+        "codex.skill.user.unsupported_version_platform",
+        "codex.skill.user.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "codex.mcp.user",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "codex.mcp.user.prepare_plan",
+        "codex.mcp.user.permission_trust",
+        "codex.mcp.user.apply_install",
+        "codex.mcp.user.repeat_noop",
+        "codex.mcp.user.owned_update",
+        "codex.mcp.user.verify",
+        "codex.mcp.user.interrupted_recovery",
+        "codex.mcp.user.later_failure_inverse",
+        "codex.mcp.user.uninstall_revocation",
+        "codex.mcp.user.foreign_ownership",
+        "codex.mcp.user.unsupported_version_platform",
+        "codex.mcp.user.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "codex.config.user",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. External candidate and file-owner tests exist, but actual resource loading, local peer, and absence/v1/v2/removed client-state observations remain unqualified.",
+      "proof_ids": [
+        "codex.config.user.prepare_plan",
+        "codex.config.user.permission_trust",
+        "codex.config.user.apply_install",
+        "codex.config.user.repeat_noop",
+        "codex.config.user.owned_update",
+        "codex.config.user.verify",
+        "codex.config.user.interrupted_recovery",
+        "codex.config.user.later_failure_inverse",
+        "codex.config.user.uninstall_revocation",
+        "codex.config.user.foreign_ownership",
+        "codex.config.user.unsupported_version_platform",
+        "codex.config.user.client_discovery"
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "codex.plugin.user",
+      "status": "pending",
+      "reason": "Root physical seal and endpoint for M08E1-DRIVER-SEAL-001 are pending; no actual isolated client observation has run. Release-specific CLI grammar and finite scoped ClientStateOwner closure are not qualified.",
+      "proof_ids": [
+        "codex.plugin.user.prepare_plan",
+        "codex.plugin.user.permission_trust",
+        "codex.plugin.user.apply_install",
+        "codex.plugin.user.repeat_noop",
+        "codex.plugin.user.owned_update",
+        "codex.plugin.user.verify",
+        "codex.plugin.user.interrupted_recovery",
+        "codex.plugin.user.later_failure_inverse",
+        "codex.plugin.user.uninstall_revocation",
+        "codex.plugin.user.foreign_ownership",
+        "codex.plugin.user.unsupported_version_platform",
+        "codex.plugin.user.client_discovery"
+      ],
+      "artifacts": []
+    }
+  ],
+  "physical_effects": "not_started",
+  "semantic_acceptance": "Root only"
+}

@@ -1,0 +1,15 @@
+{
+  "private_elf": "/fast/zap-managed/2026-10-16-m08e1-driver/driver-build/driver-current-2",
+  "sha256": "473f405544a1ae28850288e516a854c10d463af57e77e2f84285656ef21fffb5",
+  "source_hashes": {
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs": "24dd077f4195b1f00087506d42d785b0d625eaf694fc27b740cf5db8b925fab0",
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs": "305969ec73b25587f48898cd498221775004f5507ac508c96500396d90dd6b78",
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/driver.rs": "c5778c25ba858e3d4459779cd0802b5be07cd1ef9304d8c7288acfe7aea94d5f",
+    "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/podbay_runner.rs": "e619e3bf2516fbdb92bc9559c82b040a62e6f48b881ff6d1104772f33b4dea2e"
+  },
+  "source_archive": "/fast/zap-managed/2026-10-16-m08e1-driver/driver-build/current-source",
+  "initial_discovery_proposal": "DRIVER-PROPOSAL.json continues to identify immutable driver-discovery-1, not this newer binary",
+  "authority": "not sealed; do not substitute for an approved ELF",
+  "tests": "V2 latest exact family: 5 failed on absent physical seal after independent owner checks",
+  "core_experiment": "The synthetic external-data-only digest is this ELF; no real client matrix proof."
+}

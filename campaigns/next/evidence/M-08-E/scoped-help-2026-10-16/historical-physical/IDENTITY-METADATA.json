@@ -1,0 +1,14 @@
+{
+  "HOME_spelling": "/home/olegchir",
+  "host_home_metadata_only": {
+    "device": 2052,
+    "inode": 28180482
+  },
+  "fresh_home": {
+    "device": 66304,
+    "inode": 810166163
+  },
+  "uid": 1000,
+  "gid": 1000,
+  "getpwuid_guest_not_yet_observed": true
+}

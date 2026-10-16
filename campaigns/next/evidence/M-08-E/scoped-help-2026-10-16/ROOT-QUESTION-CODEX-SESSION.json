@@ -1,0 +1,16 @@
+{
+  "id": "M08E1-CODEX-SESSION-SEAL-012",
+  "question_id": "M08E1-CODEX-SESSION-SEAL-012",
+  "status": "pending",
+  "question": "Seal/start this one fresh codex.session-005 with the frozen session protocol: one exact app-server ProcessSpec, bounded inspect keys under its returned session binding, then retained snapshot and guarded stop. Driver owns WebSocket initialize/skills/config sequencing. Return actual replies and cleanup independently; no model/login/network request authorized. All matrix rows remain pending.",
+  "proposal": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/DRIVER-PROPOSAL-CODEX-SESSION.json",
+    "sha256": "3d9b59b213c4cb845beb1bd0b171efe6034a42f7f33e492bd579d20f8cec0d6d"
+  },
+  "driver": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/driver-build/driver-codex-session-2",
+    "sha256": "8a7c73953b78e1c6f0412a9484fc26fb06b00a4dad1c05f7672e29f0cdabf602"
+  },
+  "scope_basis": "M08E1-CODEX-IO-009",
+  "timeout_seconds": 180
+}

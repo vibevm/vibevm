@@ -1,0 +1,12 @@
+{
+  "driver": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-driver/driver-build/driver-discovery-1",
+    "sha256": "9b642d6b65a57586e25f15f497d3a714cb16975d67ed81c7f9a0cd57435f9216"
+  },
+  "case_id": "claude_code.discovery",
+  "steps": 5,
+  "config_sha256": "973f5557ea09bb84aa9b54f4fd26916c7fca274f928db7dacf694e1fd75268f3",
+  "rootexec_sha256": "56182f0a6eda7159e8724be229cc795a950b1c261942d1b39e7d444e0987d5e3",
+  "physical_execution_started": false,
+  "runtime_resource_closure": "Unqualified until actual isolated client observation; ELF pins alone are insufficient"
+}

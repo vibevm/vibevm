@@ -1,0 +1,27 @@
+{
+  "action": "apply",
+  "authority": "admitted",
+  "cancel_pending": false,
+  "message": "",
+  "plan_id": "c0a937220a3f24b500afdde1cf43319d2b9e91942afc1e490a506d4fbd105069",
+  "resources": [
+    {
+      "desired": "cc4bbc133bbf2108e44a892e35284fc176faefb7fa8771158e92fb3dca4f91c4",
+      "observed": "cc4bbc133bbf2108e44a892e35284fc176faefb7fa8771158e92fb3dca4f91c4",
+      "prior": "absent",
+      "resource": "generic:[\"/home/olegchir\",\".claude.json\",[\"mcpServers\",\"m08a2-demo\"]]",
+      "state": "desired"
+    }
+  ],
+  "run_id": "client-094cff1a86374bcad34976e2f0b3f7b1655e7240279b1c01af816686b4ad07b0",
+  "schema": 1,
+  "status": "completed",
+  "steps": [
+    {
+      "resource": "generic:[\"/home/olegchir\",\".claude.json\",[\"mcpServers\",\"m08a2-demo\"]]",
+      "retry_safe": true,
+      "status": "completed",
+      "subject": "72819e6c38335287027c12ccb8df08db796edd4c7578523f155ff0d6db6fcd4e"
+    }
+  ]
+}

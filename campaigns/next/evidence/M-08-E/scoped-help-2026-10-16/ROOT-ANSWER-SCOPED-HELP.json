@@ -1,0 +1,184 @@
+{
+  "question_id": "M08E1-SCOPED-HELP-SEAL-002",
+  "id": "M08E1-SCOPED-HELP-SEAL-002",
+  "status": "answered",
+  "utc": "2026-10-16T04:53:53.665014+00:00",
+  "proposal_sha256": "a149defeb475956ca0fae0b1358d326339647f4bcaceb8f47da544bdcf1298bb",
+  "driver_sha256": "3cc5981c82759dabdde2c45ccbee15d32d72d1f36cedd461d472d44d748a7b7e",
+  "approval": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-APPROVED-SCOPED-HELP.json",
+    "sha256": "d2706374b2b2148a4725381e5a9ac323eb6cae0f5d5c28e4dcbd3a036919f8ca"
+  },
+  "actual_steps_completed": 8,
+  "all_client_steps_exit0_complete_untruncated": true,
+  "cases": [
+    {
+      "realm": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude",
+      "root_exec_session": 92873,
+      "root_exec_exit": 0,
+      "driver_exit": 101,
+      "driver_outcome": "Expected incomplete discovery stage; NOT full E1 acceptance",
+      "endpoint_live": false,
+      "responses": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/case/evidence/claude_code.scoped-help-002--execute-version.response.json",
+          "sha256": "58300a1e8a568a91196860718d11e9c97119ecc74ca994bfbbf705cfe30190b8",
+          "case_id": "claude_code.scoped-help-002",
+          "step_id": "execute-version",
+          "exit": 0,
+          "stdout_bytes": 22,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "573c40a4a62147095eacd275e170060f8da81eb40ce0ac5f4b56f2e5f88e4994"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/case/evidence/claude_code.scoped-help-002--mcp-help.response.json",
+          "sha256": "864428c5a37394327e5d63732968d0973b1921e920bfc61b598e2d276d5b1412",
+          "case_id": "claude_code.scoped-help-002",
+          "step_id": "mcp-help",
+          "exit": 0,
+          "stdout_bytes": 2474,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "3f96ff5f37db618a74b3e3626fdb242751d50b9f6acdb871578e39b1429b0501"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/case/evidence/claude_code.scoped-help-002--plugin-help.response.json",
+          "sha256": "f52bc3db85c7fa1807dc1ab216d65f354794432476f2b4b372879c8c219e4ea6",
+          "case_id": "claude_code.scoped-help-002",
+          "step_id": "plugin-help",
+          "exit": 0,
+          "stdout_bytes": 3703,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "ce2c611c9940f599922c93a6fbe9ff9bbee38d59f134c033653d2a208cd7d496"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/case/evidence/claude_code.scoped-help-002--prepare-version.response.json",
+          "sha256": "803b0620908aa04c0bd1c273a46c41c155e19a7ad3c67f84fe8a25bf2ef6ca79",
+          "case_id": "claude_code.scoped-help-002",
+          "step_id": "prepare-version",
+          "exit": 0,
+          "stdout_bytes": 22,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "573c40a4a62147095eacd275e170060f8da81eb40ce0ac5f4b56f2e5f88e4994"
+        }
+      ],
+      "cleanup_receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/evidence/host-cleanup.json",
+        "sha256": "976771766da6d5d1d198c63cbecb280dfbf412113634ca67b94e706880beeb2a",
+        "manager_cleanup_ok": true,
+        "manager_pid": 2570229,
+        "owned_stop_errors": 0,
+        "owner_pid": 2570227,
+        "result_ok": true
+      },
+      "identity_absence": [
+        {
+          "kind": "owner",
+          "pid": 2570227,
+          "original_identity_absent": true
+        },
+        {
+          "kind": "manager",
+          "pid": 2570229,
+          "original_identity_absent": true
+        }
+      ],
+      "driver_output": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-claude/evidence/driver-output.json",
+        "sha256": "35ccd6a85707eaad9912aa66889869fdbcdc964081029d7c104fb8b4f482de34"
+      }
+    },
+    {
+      "realm": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex",
+      "root_exec_session": 56861,
+      "root_exec_exit": 0,
+      "driver_exit": 101,
+      "driver_outcome": "Expected incomplete discovery stage; NOT full E1 acceptance",
+      "endpoint_live": false,
+      "responses": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/case/evidence/codex.scoped-help-001--app-server-help.response.json",
+          "sha256": "b6fbcd4df1afe20951f154d0f4a9ce66d2e0813256273dfbb5d11f132363d266",
+          "case_id": "codex.scoped-help-001",
+          "step_id": "app-server-help",
+          "exit": 0,
+          "stdout_bytes": 3214,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "86eac42a1e39446c8c506ef707739125849f6ef9d5ac35cbdfa507c7362397e3"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/case/evidence/codex.scoped-help-001--mcp-help.response.json",
+          "sha256": "83ff6949361debf5eed859b3a4e8ec30e05e385844e237e6717a0011f18ee4f9",
+          "case_id": "codex.scoped-help-001",
+          "step_id": "mcp-help",
+          "exit": 0,
+          "stdout_bytes": 982,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "d7c416bdd76fd1fbafa427a638d992662029181ac51615557eaf901ca9f12cfc"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/case/evidence/codex.scoped-help-001--plugin-help.response.json",
+          "sha256": "0ffde006f6c3576624af6a0bce2a9db3feaaf34c0fcf3224084abfd8e39e2eec",
+          "case_id": "codex.scoped-help-001",
+          "step_id": "plugin-help",
+          "exit": 0,
+          "stdout_bytes": 1194,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "146be7bd930970a18fa35c8999f1736ed6ec3ad23dd522e3651841a8ba9b22ed"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/case/evidence/codex.scoped-help-001--version.response.json",
+          "sha256": "b5cfaaeb6b720d25a3a291de99ca5147919c20cae3ae55cba503e8e964a9a3ca",
+          "case_id": "codex.scoped-help-001",
+          "step_id": "version",
+          "exit": 0,
+          "stdout_bytes": 18,
+          "stderr_bytes": 0,
+          "complete": true,
+          "truncated": false,
+          "spec_sha256": "3da075303bd9f4c702ac348693a166f2439b992039e59b4e91822e46d4b4a03e"
+        }
+      ],
+      "cleanup_receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/evidence/host-cleanup.json",
+        "sha256": "81168eab4d008b07d6ff85a705823996ddbe9bd26713846fc520261d437a960e",
+        "manager_cleanup_ok": true,
+        "manager_pid": 2570228,
+        "owned_stop_errors": 0,
+        "owner_pid": 2570226,
+        "result_ok": true
+      },
+      "identity_absence": [
+        {
+          "kind": "owner",
+          "pid": 2570226,
+          "original_identity_absent": true
+        },
+        {
+          "kind": "manager",
+          "pid": 2570228,
+          "original_identity_absent": true
+        }
+      ],
+      "driver_output": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-codex/evidence/driver-output.json",
+        "sha256": "4463395ddf93d233eaa875df6870bd7425bac34296646067a02a730eda76ac7c"
+      }
+    }
+  ],
+  "namespace_qualification": "Fresh separate case namespaces and pinned driver/client paths as sealed. Actual driver reached all eight Runner calls after its HOME/cwd/executable checks. No real HOME credential state exposed; getpwuid observation not separately captured and remains unqualified.",
+  "instruction": "Read these ACTUAL retained eight responses now. Both endpoints are stopped and old keys must not be reused. Continue full original E1 sixteen rows/192 proof IDs; successful help/version discovery is not lifecycle/resource/local-peer qualification or acceptance. Use actual help grammar to implement full commissioning and propose a fresh exact bounded next lifecycle manifest/ELF with required fixture resources and write effects. No login/install/download/model calls or real user home mutation. Do not finish source-only because discovery driver intentionally exited101. Full campaign count88/222 unchanged."
+}

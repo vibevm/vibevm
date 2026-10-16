@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "client_id": "org.vibevm.fixture/codex-config-user",
+  "version": "=0.159.3",
+  "bindings": [
+    {
+      "scope": "user",
+      "shape": "toml-member",
+      "destination": ".codex/config.toml",
+      "key": [
+        "approval_policy"
+      ],
+      "operations": [
+        "reconcile-toml-member"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,322 @@
+{
+  "schema": 1,
+  "status": "unqualified external data; no client state or authority",
+  "packages": [
+    {
+      "id": "claude_code.skill.project",
+      "client": "claude_code",
+      "resource": "skill",
+      "scope": "project",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "ef342f196b2357aa783fdd69a570d35a4622200d52e5550c27cad65837b00970",
+        "v1/SKILL.md": "9ad36d9a01addf9510d530b46712b57898289e68ebbb5b9a22af7d01298bbabe",
+        "v1/reference.txt": "2caf8e20d3fa531f1786232fadb521f9806abef187bf46ede242e6bda225fbbe",
+        "v2/SKILL.md": "74e1f9149f33fda941a68defd6b49e2d9f5895e52c958acbffd420892d7f9233"
+      },
+      "proof_ids": [
+        "claude_code.skill.project.prepare_plan",
+        "claude_code.skill.project.permission_trust",
+        "claude_code.skill.project.apply_install",
+        "claude_code.skill.project.repeat_noop",
+        "claude_code.skill.project.owned_update",
+        "claude_code.skill.project.verify",
+        "claude_code.skill.project.interrupted_recovery",
+        "claude_code.skill.project.later_failure_inverse",
+        "claude_code.skill.project.uninstall_revocation",
+        "claude_code.skill.project.foreign_ownership",
+        "claude_code.skill.project.unsupported_version_platform",
+        "claude_code.skill.project.client_discovery"
+      ]
+    },
+    {
+      "id": "claude_code.mcp.project",
+      "client": "claude_code",
+      "resource": "mcp",
+      "scope": "project",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "5d032efbdc105d3360f8e953843ba5f1e45f06dfd4383804ec85898c830daacc",
+        "v1/value.json": "f10a1093d92f28968bbf02f229eff3b150fd656626ca28fc2188ccab7389a8b9",
+        "v2/value.json": "bd51d3d36fd0f2997e5ffc8b932c18a3c926dc6b6030401ee5295d8af2a4fb3e"
+      },
+      "proof_ids": [
+        "claude_code.mcp.project.prepare_plan",
+        "claude_code.mcp.project.permission_trust",
+        "claude_code.mcp.project.apply_install",
+        "claude_code.mcp.project.repeat_noop",
+        "claude_code.mcp.project.owned_update",
+        "claude_code.mcp.project.verify",
+        "claude_code.mcp.project.interrupted_recovery",
+        "claude_code.mcp.project.later_failure_inverse",
+        "claude_code.mcp.project.uninstall_revocation",
+        "claude_code.mcp.project.foreign_ownership",
+        "claude_code.mcp.project.unsupported_version_platform",
+        "claude_code.mcp.project.client_discovery"
+      ]
+    },
+    {
+      "id": "claude_code.config.project",
+      "client": "claude_code",
+      "resource": "config",
+      "scope": "project",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "032f2e2acbc66f572cad1299c758a2ae24755848c9e7f28d278d533d73342fdb",
+        "v1/value.json": "596b77998b9891d189ec0358cd56ae074f955253225bd8f57cc23e4187ab8a79",
+        "v2/value.json": "185f995d560f70e7e7786086514d2d56125fe1489f4db342630e4c50cbc7e1fd"
+      },
+      "proof_ids": [
+        "claude_code.config.project.prepare_plan",
+        "claude_code.config.project.permission_trust",
+        "claude_code.config.project.apply_install",
+        "claude_code.config.project.repeat_noop",
+        "claude_code.config.project.owned_update",
+        "claude_code.config.project.verify",
+        "claude_code.config.project.interrupted_recovery",
+        "claude_code.config.project.later_failure_inverse",
+        "claude_code.config.project.uninstall_revocation",
+        "claude_code.config.project.foreign_ownership",
+        "claude_code.config.project.unsupported_version_platform",
+        "claude_code.config.project.client_discovery"
+      ]
+    },
+    {
+      "id": "claude_code.skill.user",
+      "client": "claude_code",
+      "resource": "skill",
+      "scope": "user",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "910299c505a68c3825d6fbb3c2d9761ac0dd24be9e1cd9d618ac9f8b9f25024e",
+        "v1/SKILL.md": "9ad36d9a01addf9510d530b46712b57898289e68ebbb5b9a22af7d01298bbabe",
+        "v1/reference.txt": "2caf8e20d3fa531f1786232fadb521f9806abef187bf46ede242e6bda225fbbe",
+        "v2/SKILL.md": "74e1f9149f33fda941a68defd6b49e2d9f5895e52c958acbffd420892d7f9233"
+      },
+      "proof_ids": [
+        "claude_code.skill.user.prepare_plan",
+        "claude_code.skill.user.permission_trust",
+        "claude_code.skill.user.apply_install",
+        "claude_code.skill.user.repeat_noop",
+        "claude_code.skill.user.owned_update",
+        "claude_code.skill.user.verify",
+        "claude_code.skill.user.interrupted_recovery",
+        "claude_code.skill.user.later_failure_inverse",
+        "claude_code.skill.user.uninstall_revocation",
+        "claude_code.skill.user.foreign_ownership",
+        "claude_code.skill.user.unsupported_version_platform",
+        "claude_code.skill.user.client_discovery"
+      ]
+    },
+    {
+      "id": "claude_code.mcp.user",
+      "client": "claude_code",
+      "resource": "mcp",
+      "scope": "user",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "9483caf91602b521f0d3528a4c824093c0e0072d3339efb62dc602dae2bb3054",
+        "v1/value.json": "f10a1093d92f28968bbf02f229eff3b150fd656626ca28fc2188ccab7389a8b9",
+        "v2/value.json": "bd51d3d36fd0f2997e5ffc8b932c18a3c926dc6b6030401ee5295d8af2a4fb3e"
+      },
+      "proof_ids": [
+        "claude_code.mcp.user.prepare_plan",
+        "claude_code.mcp.user.permission_trust",
+        "claude_code.mcp.user.apply_install",
+        "claude_code.mcp.user.repeat_noop",
+        "claude_code.mcp.user.owned_update",
+        "claude_code.mcp.user.verify",
+        "claude_code.mcp.user.interrupted_recovery",
+        "claude_code.mcp.user.later_failure_inverse",
+        "claude_code.mcp.user.uninstall_revocation",
+        "claude_code.mcp.user.foreign_ownership",
+        "claude_code.mcp.user.unsupported_version_platform",
+        "claude_code.mcp.user.client_discovery"
+      ]
+    },
+    {
+      "id": "claude_code.config.user",
+      "client": "claude_code",
+      "resource": "config",
+      "scope": "user",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "920f209f6ae4a9537e3014cec1c0ce096715b454f7815197eeaf9b23c54fb6fe",
+        "v1/value.json": "596b77998b9891d189ec0358cd56ae074f955253225bd8f57cc23e4187ab8a79",
+        "v2/value.json": "185f995d560f70e7e7786086514d2d56125fe1489f4db342630e4c50cbc7e1fd"
+      },
+      "proof_ids": [
+        "claude_code.config.user.prepare_plan",
+        "claude_code.config.user.permission_trust",
+        "claude_code.config.user.apply_install",
+        "claude_code.config.user.repeat_noop",
+        "claude_code.config.user.owned_update",
+        "claude_code.config.user.verify",
+        "claude_code.config.user.interrupted_recovery",
+        "claude_code.config.user.later_failure_inverse",
+        "claude_code.config.user.uninstall_revocation",
+        "claude_code.config.user.foreign_ownership",
+        "claude_code.config.user.unsupported_version_platform",
+        "claude_code.config.user.client_discovery"
+      ]
+    },
+    {
+      "id": "codex.skill.project",
+      "client": "codex",
+      "resource": "skill",
+      "scope": "project",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "1cb922ce1c4a3b2b68f28992de72e5acd522e5cadb44fb1e83294bedff3a8a89",
+        "v1/SKILL.md": "9ad36d9a01addf9510d530b46712b57898289e68ebbb5b9a22af7d01298bbabe",
+        "v1/reference.txt": "2caf8e20d3fa531f1786232fadb521f9806abef187bf46ede242e6bda225fbbe",
+        "v2/SKILL.md": "74e1f9149f33fda941a68defd6b49e2d9f5895e52c958acbffd420892d7f9233"
+      },
+      "proof_ids": [
+        "codex.skill.project.prepare_plan",
+        "codex.skill.project.permission_trust",
+        "codex.skill.project.apply_install",
+        "codex.skill.project.repeat_noop",
+        "codex.skill.project.owned_update",
+        "codex.skill.project.verify",
+        "codex.skill.project.interrupted_recovery",
+        "codex.skill.project.later_failure_inverse",
+        "codex.skill.project.uninstall_revocation",
+        "codex.skill.project.foreign_ownership",
+        "codex.skill.project.unsupported_version_platform",
+        "codex.skill.project.client_discovery"
+      ]
+    },
+    {
+      "id": "codex.mcp.project",
+      "client": "codex",
+      "resource": "mcp",
+      "scope": "project",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "a641ca7a98301db9d4af63651bcc7cc400a37d3e1791bd166e746629cdebb579",
+        "v1/value.toml": "b132e5ffc3c39d905250b56a57b0ec801b9f19c8474f97f77194096950dd60c2",
+        "v2/value.toml": "612ed48f3a8d99e32c7c46abd24386f390940587b014605b06ef1d4d68db880d"
+      },
+      "proof_ids": [
+        "codex.mcp.project.prepare_plan",
+        "codex.mcp.project.permission_trust",
+        "codex.mcp.project.apply_install",
+        "codex.mcp.project.repeat_noop",
+        "codex.mcp.project.owned_update",
+        "codex.mcp.project.verify",
+        "codex.mcp.project.interrupted_recovery",
+        "codex.mcp.project.later_failure_inverse",
+        "codex.mcp.project.uninstall_revocation",
+        "codex.mcp.project.foreign_ownership",
+        "codex.mcp.project.unsupported_version_platform",
+        "codex.mcp.project.client_discovery"
+      ]
+    },
+    {
+      "id": "codex.config.project",
+      "client": "codex",
+      "resource": "config",
+      "scope": "project",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "54cad4b17ecdee635ca7f5ff261ceeef32d0f2c5e06f3834261197552a8050bc",
+        "v1/value.toml": "8d1ffe02f4801554265c48d6846c71149afe9db9543dcb1653f4c7733b2d3651",
+        "v2/value.toml": "4763820f0f4fea674a6f013d12b19010d58ba69ba80caf002b19a4c65d545187"
+      },
+      "proof_ids": [
+        "codex.config.project.prepare_plan",
+        "codex.config.project.permission_trust",
+        "codex.config.project.apply_install",
+        "codex.config.project.repeat_noop",
+        "codex.config.project.owned_update",
+        "codex.config.project.verify",
+        "codex.config.project.interrupted_recovery",
+        "codex.config.project.later_failure_inverse",
+        "codex.config.project.uninstall_revocation",
+        "codex.config.project.foreign_ownership",
+        "codex.config.project.unsupported_version_platform",
+        "codex.config.project.client_discovery"
+      ]
+    },
+    {
+      "id": "codex.skill.user",
+      "client": "codex",
+      "resource": "skill",
+      "scope": "user",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "93955e32429bd0b569fc6fede0484a6b836d6857d7397e14ed2a56e61751f26b",
+        "v1/SKILL.md": "9ad36d9a01addf9510d530b46712b57898289e68ebbb5b9a22af7d01298bbabe",
+        "v1/reference.txt": "2caf8e20d3fa531f1786232fadb521f9806abef187bf46ede242e6bda225fbbe",
+        "v2/SKILL.md": "74e1f9149f33fda941a68defd6b49e2d9f5895e52c958acbffd420892d7f9233"
+      },
+      "proof_ids": [
+        "codex.skill.user.prepare_plan",
+        "codex.skill.user.permission_trust",
+        "codex.skill.user.apply_install",
+        "codex.skill.user.repeat_noop",
+        "codex.skill.user.owned_update",
+        "codex.skill.user.verify",
+        "codex.skill.user.interrupted_recovery",
+        "codex.skill.user.later_failure_inverse",
+        "codex.skill.user.uninstall_revocation",
+        "codex.skill.user.foreign_ownership",
+        "codex.skill.user.unsupported_version_platform",
+        "codex.skill.user.client_discovery"
+      ]
+    },
+    {
+      "id": "codex.mcp.user",
+      "client": "codex",
+      "resource": "mcp",
+      "scope": "user",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "6147b61c8e72b8bc1d372ba4072e29964081c9a933f584640e638709e4818da8",
+        "v1/value.toml": "b132e5ffc3c39d905250b56a57b0ec801b9f19c8474f97f77194096950dd60c2",
+        "v2/value.toml": "612ed48f3a8d99e32c7c46abd24386f390940587b014605b06ef1d4d68db880d"
+      },
+      "proof_ids": [
+        "codex.mcp.user.prepare_plan",
+        "codex.mcp.user.permission_trust",
+        "codex.mcp.user.apply_install",
+        "codex.mcp.user.repeat_noop",
+        "codex.mcp.user.owned_update",
+        "codex.mcp.user.verify",
+        "codex.mcp.user.interrupted_recovery",
+        "codex.mcp.user.later_failure_inverse",
+        "codex.mcp.user.uninstall_revocation",
+        "codex.mcp.user.foreign_ownership",
+        "codex.mcp.user.unsupported_version_platform",
+        "codex.mcp.user.client_discovery"
+      ]
+    },
+    {
+      "id": "codex.config.user",
+      "client": "codex",
+      "resource": "config",
+      "scope": "user",
+      "status": "candidate_data_not_runtime_qualified",
+      "files": {
+        "request.json": "cbd38fbfddf156a5a4448dbd39bceec27db2095ec2af1139fdcddf25f8304a87",
+        "v1/value.toml": "8d1ffe02f4801554265c48d6846c71149afe9db9543dcb1653f4c7733b2d3651",
+        "v2/value.toml": "4763820f0f4fea674a6f013d12b19010d58ba69ba80caf002b19a4c65d545187"
+      },
+      "proof_ids": [
+        "codex.config.user.prepare_plan",
+        "codex.config.user.permission_trust",
+        "codex.config.user.apply_install",
+        "codex.config.user.repeat_noop",
+        "codex.config.user.owned_update",
+        "codex.config.user.verify",
+        "codex.config.user.interrupted_recovery",
+        "codex.config.user.later_failure_inverse",
+        "codex.config.user.uninstall_revocation",
+        "codex.config.user.foreign_ownership",
+        "codex.config.user.unsupported_version_platform",
+        "codex.config.user.client_discovery"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "question_id": "M08E1-NEGATIVE-SEAL-008",
+  "id": "M08E1-NEGATIVE-SEAL-008",
+  "status": "answered",
+  "utc": "2026-10-16T05:29:53.736138+00:00",
+  "outcome": "not_launched_manifest_exceeds_existing_physical_argument_bound",
+  "reason": "stderr-truncated spec contains one20016-byte argument, exceeding the existing PodBay per-argument16384-byte limit. This would refuse before client execution, so it cannot qualify real stderr truncation. Root did not launch the proposed batch.",
+  "smallest_fix": "Use an ordinary invalid option with bounded argument length (for example a few hundred bytes) and declare a smaller capture cap for ONLY the negative fixture, such as stderrLimit128 while stdout stays16384. ToolStdio supports caps up to16384; lowering a test cap produces actual physical truncation without relaxing any global limit. Include intended cap in the new sealed fixture input, keep exact installed ELF, preserve actual stdout/stderr/EOF/truncation and prior authority-revocation-before-dispatch checks. Do not fabricate a truncated DTO or count prelaunch WireError as vendor truncation.",
+  "next": "Return revised exact manifest/compiled driver only if needed. Full original E1 remains. Old rejected negative proposal/keys preserved; no client effects occurred."
+}

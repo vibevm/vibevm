@@ -47,6 +47,7 @@ vibe-workspace.workspace = true
 walkdir.workspace = true
 
 [dev-dependencies]
+tungstenite = { version = "=0.28.0", default-features = false, features = ["handshake"] }
 tempfile.workspace = true
 vibe-ext.workspace = true
 vibe-spec = { workspace = true, features = ["test-support"] }

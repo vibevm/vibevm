@@ -1,0 +1,32 @@
+{
+  "group": "V5",
+  "executed": true,
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/driver.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/podbay_runner.rs"
+      ],
+      "exit": 0,
+      "counts": [],
+      "log": "/fast/zap-managed/2026-10-16-m08e1-driver/V5-1.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.15542217704933137,
+      "passed": true
+    }
+  ],
+  "case_binding": null,
+  "conditional_selection": null,
+  "extra": {},
+  "full_closure_subject_count": 1991,
+  "full_closure_drift": [],
+  "passed": true,
+  "no_fresh_commands": false
+}

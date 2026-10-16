@@ -1,0 +1,433 @@
+{
+  "schema": "m08e1.continuation-evidence/1",
+  "scope": "Codex and shared Vibe implementation; bounded actual observations, no full matrix completion",
+  "historical_denominator": {
+    "rows": 16,
+    "proof_ids": 192,
+    "count_unchanged": "88/222"
+  },
+  "owner_deferral": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-restored/OWNER-PRIORITY-CLAUDE-CHECKS.json",
+    "sha256": "4ff25e5cc60d85b4ce334dd3cddeab8ecad3bd6a904ddfe5fdfe275f37d45b3e"
+  },
+  "rows": [
+    {
+      "id": "claude_code.skill.project",
+      "proof_ids": [
+        "claude_code.skill.project.prepare_plan",
+        "claude_code.skill.project.permission_trust",
+        "claude_code.skill.project.apply_install",
+        "claude_code.skill.project.repeat_noop",
+        "claude_code.skill.project.owned_update",
+        "claude_code.skill.project.verify",
+        "claude_code.skill.project.interrupted_recovery",
+        "claude_code.skill.project.later_failure_inverse",
+        "claude_code.skill.project.uninstall_revocation",
+        "claude_code.skill.project.foreign_ownership",
+        "claude_code.skill.project.unsupported_version_platform",
+        "claude_code.skill.project.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "owner_deferred",
+      "reason": "No fresh Claude invocation or simulator check; preserved prior observations do not close original row."
+    },
+    {
+      "id": "claude_code.mcp.project",
+      "proof_ids": [
+        "claude_code.mcp.project.prepare_plan",
+        "claude_code.mcp.project.permission_trust",
+        "claude_code.mcp.project.apply_install",
+        "claude_code.mcp.project.repeat_noop",
+        "claude_code.mcp.project.owned_update",
+        "claude_code.mcp.project.verify",
+        "claude_code.mcp.project.interrupted_recovery",
+        "claude_code.mcp.project.later_failure_inverse",
+        "claude_code.mcp.project.uninstall_revocation",
+        "claude_code.mcp.project.foreign_ownership",
+        "claude_code.mcp.project.unsupported_version_platform",
+        "claude_code.mcp.project.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "owner_deferred",
+      "reason": "No fresh Claude invocation or simulator check; preserved prior observations do not close original row."
+    },
+    {
+      "id": "claude_code.config.project",
+      "proof_ids": [
+        "claude_code.config.project.prepare_plan",
+        "claude_code.config.project.permission_trust",
+        "claude_code.config.project.apply_install",
+        "claude_code.config.project.repeat_noop",
+        "claude_code.config.project.owned_update",
+        "claude_code.config.project.verify",
+        "claude_code.config.project.interrupted_recovery",
+        "claude_code.config.project.later_failure_inverse",
+        "claude_code.config.project.uninstall_revocation",
+        "claude_code.config.project.foreign_ownership",
+        "claude_code.config.project.unsupported_version_platform",
+        "claude_code.config.project.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "owner_deferred",
+      "reason": "No fresh Claude invocation or simulator check; preserved prior observations do not close original row."
+    },
+    {
+      "id": "claude_code.plugin.project",
+      "proof_ids": [
+        "claude_code.plugin.project.prepare_plan",
+        "claude_code.plugin.project.permission_trust",
+        "claude_code.plugin.project.apply_install",
+        "claude_code.plugin.project.repeat_noop",
+        "claude_code.plugin.project.owned_update",
+        "claude_code.plugin.project.verify",
+        "claude_code.plugin.project.interrupted_recovery",
+        "claude_code.plugin.project.later_failure_inverse",
+        "claude_code.plugin.project.uninstall_revocation",
+        "claude_code.plugin.project.foreign_ownership",
+        "claude_code.plugin.project.unsupported_version_platform",
+        "claude_code.plugin.project.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "owner_deferred",
+      "reason": "No fresh Claude invocation or simulator check; preserved prior observations do not close original row."
+    },
+    {
+      "id": "claude_code.skill.user",
+      "proof_ids": [
+        "claude_code.skill.user.prepare_plan",
+        "claude_code.skill.user.permission_trust",
+        "claude_code.skill.user.apply_install",
+        "claude_code.skill.user.repeat_noop",
+        "claude_code.skill.user.owned_update",
+        "claude_code.skill.user.verify",
+        "claude_code.skill.user.interrupted_recovery",
+        "claude_code.skill.user.later_failure_inverse",
+        "claude_code.skill.user.uninstall_revocation",
+        "claude_code.skill.user.foreign_ownership",
+        "claude_code.skill.user.unsupported_version_platform",
+        "claude_code.skill.user.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "owner_deferred",
+      "reason": "No fresh Claude invocation or simulator check; preserved prior observations do not close original row."
+    },
+    {
+      "id": "claude_code.mcp.user",
+      "proof_ids": [
+        "claude_code.mcp.user.prepare_plan",
+        "claude_code.mcp.user.permission_trust",
+        "claude_code.mcp.user.apply_install",
+        "claude_code.mcp.user.repeat_noop",
+        "claude_code.mcp.user.owned_update",
+        "claude_code.mcp.user.verify",
+        "claude_code.mcp.user.interrupted_recovery",
+        "claude_code.mcp.user.later_failure_inverse",
+        "claude_code.mcp.user.uninstall_revocation",
+        "claude_code.mcp.user.foreign_ownership",
+        "claude_code.mcp.user.unsupported_version_platform",
+        "claude_code.mcp.user.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "owner_deferred",
+      "reason": "No fresh Claude invocation or simulator check; preserved prior observations do not close original row."
+    },
+    {
+      "id": "claude_code.config.user",
+      "proof_ids": [
+        "claude_code.config.user.prepare_plan",
+        "claude_code.config.user.permission_trust",
+        "claude_code.config.user.apply_install",
+        "claude_code.config.user.repeat_noop",
+        "claude_code.config.user.owned_update",
+        "claude_code.config.user.verify",
+        "claude_code.config.user.interrupted_recovery",
+        "claude_code.config.user.later_failure_inverse",
+        "claude_code.config.user.uninstall_revocation",
+        "claude_code.config.user.foreign_ownership",
+        "claude_code.config.user.unsupported_version_platform",
+        "claude_code.config.user.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "owner_deferred",
+      "reason": "No fresh Claude invocation or simulator check; preserved prior observations do not close original row."
+    },
+    {
+      "id": "claude_code.plugin.user",
+      "proof_ids": [
+        "claude_code.plugin.user.prepare_plan",
+        "claude_code.plugin.user.permission_trust",
+        "claude_code.plugin.user.apply_install",
+        "claude_code.plugin.user.repeat_noop",
+        "claude_code.plugin.user.owned_update",
+        "claude_code.plugin.user.verify",
+        "claude_code.plugin.user.interrupted_recovery",
+        "claude_code.plugin.user.later_failure_inverse",
+        "claude_code.plugin.user.uninstall_revocation",
+        "claude_code.plugin.user.foreign_ownership",
+        "claude_code.plugin.user.unsupported_version_platform",
+        "claude_code.plugin.user.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "owner_deferred",
+      "reason": "No fresh Claude invocation or simulator check; preserved prior observations do not close original row."
+    },
+    {
+      "id": "codex.skill.project",
+      "proof_ids": [
+        "codex.skill.project.prepare_plan",
+        "codex.skill.project.permission_trust",
+        "codex.skill.project.apply_install",
+        "codex.skill.project.repeat_noop",
+        "codex.skill.project.owned_update",
+        "codex.skill.project.verify",
+        "codex.skill.project.interrupted_recovery",
+        "codex.skill.project.later_failure_inverse",
+        "codex.skill.project.uninstall_revocation",
+        "codex.skill.project.foreign_ownership",
+        "codex.skill.project.unsupported_version_platform",
+        "codex.skill.project.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "basic_actual_lifecycle_reused_and_shared_semantics_checked",
+      "reason": "Root017/021 skills/config or Root026 MCP basics reused; six Codex file-owner C3/D2 recovery/inverse/update/remove cases pass independently, not substituted for missing actual vendor scenarios."
+    },
+    {
+      "id": "codex.mcp.project",
+      "proof_ids": [
+        "codex.mcp.project.prepare_plan",
+        "codex.mcp.project.permission_trust",
+        "codex.mcp.project.apply_install",
+        "codex.mcp.project.repeat_noop",
+        "codex.mcp.project.owned_update",
+        "codex.mcp.project.verify",
+        "codex.mcp.project.interrupted_recovery",
+        "codex.mcp.project.later_failure_inverse",
+        "codex.mcp.project.uninstall_revocation",
+        "codex.mcp.project.foreign_ownership",
+        "codex.mcp.project.unsupported_version_platform",
+        "codex.mcp.project.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "basic_actual_lifecycle_reused_and_shared_semantics_checked",
+      "reason": "Root017/021 skills/config or Root026 MCP basics reused; six Codex file-owner C3/D2 recovery/inverse/update/remove cases pass independently, not substituted for missing actual vendor scenarios."
+    },
+    {
+      "id": "codex.config.project",
+      "proof_ids": [
+        "codex.config.project.prepare_plan",
+        "codex.config.project.permission_trust",
+        "codex.config.project.apply_install",
+        "codex.config.project.repeat_noop",
+        "codex.config.project.owned_update",
+        "codex.config.project.verify",
+        "codex.config.project.interrupted_recovery",
+        "codex.config.project.later_failure_inverse",
+        "codex.config.project.uninstall_revocation",
+        "codex.config.project.foreign_ownership",
+        "codex.config.project.unsupported_version_platform",
+        "codex.config.project.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "basic_actual_lifecycle_reused_and_shared_semantics_checked",
+      "reason": "Root017/021 skills/config or Root026 MCP basics reused; six Codex file-owner C3/D2 recovery/inverse/update/remove cases pass independently, not substituted for missing actual vendor scenarios."
+    },
+    {
+      "id": "codex.plugin.project",
+      "proof_ids": [
+        "codex.plugin.project.prepare_plan",
+        "codex.plugin.project.permission_trust",
+        "codex.plugin.project.apply_install",
+        "codex.plugin.project.repeat_noop",
+        "codex.plugin.project.owned_update",
+        "codex.plugin.project.verify",
+        "codex.plugin.project.interrupted_recovery",
+        "codex.plugin.project.later_failure_inverse",
+        "codex.plugin.project.uninstall_revocation",
+        "codex.plugin.project.foreign_ownership",
+        "codex.plugin.project.unsupported_version_platform",
+        "codex.plugin.project.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "explicit_unsupported_refusal",
+      "reason": "Config admission refusal grants no process/plugin authority and cannot count as successful lifecycle."
+    },
+    {
+      "id": "codex.skill.user",
+      "proof_ids": [
+        "codex.skill.user.prepare_plan",
+        "codex.skill.user.permission_trust",
+        "codex.skill.user.apply_install",
+        "codex.skill.user.repeat_noop",
+        "codex.skill.user.owned_update",
+        "codex.skill.user.verify",
+        "codex.skill.user.interrupted_recovery",
+        "codex.skill.user.later_failure_inverse",
+        "codex.skill.user.uninstall_revocation",
+        "codex.skill.user.foreign_ownership",
+        "codex.skill.user.unsupported_version_platform",
+        "codex.skill.user.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "basic_actual_lifecycle_reused_and_shared_semantics_checked",
+      "reason": "Root017/021 skills/config or Root026 MCP basics reused; six Codex file-owner C3/D2 recovery/inverse/update/remove cases pass independently, not substituted for missing actual vendor scenarios."
+    },
+    {
+      "id": "codex.mcp.user",
+      "proof_ids": [
+        "codex.mcp.user.prepare_plan",
+        "codex.mcp.user.permission_trust",
+        "codex.mcp.user.apply_install",
+        "codex.mcp.user.repeat_noop",
+        "codex.mcp.user.owned_update",
+        "codex.mcp.user.verify",
+        "codex.mcp.user.interrupted_recovery",
+        "codex.mcp.user.later_failure_inverse",
+        "codex.mcp.user.uninstall_revocation",
+        "codex.mcp.user.foreign_ownership",
+        "codex.mcp.user.unsupported_version_platform",
+        "codex.mcp.user.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "basic_actual_lifecycle_reused_and_shared_semantics_checked",
+      "reason": "Root017/021 skills/config or Root026 MCP basics reused; six Codex file-owner C3/D2 recovery/inverse/update/remove cases pass independently, not substituted for missing actual vendor scenarios."
+    },
+    {
+      "id": "codex.config.user",
+      "proof_ids": [
+        "codex.config.user.prepare_plan",
+        "codex.config.user.permission_trust",
+        "codex.config.user.apply_install",
+        "codex.config.user.repeat_noop",
+        "codex.config.user.owned_update",
+        "codex.config.user.verify",
+        "codex.config.user.interrupted_recovery",
+        "codex.config.user.later_failure_inverse",
+        "codex.config.user.uninstall_revocation",
+        "codex.config.user.foreign_ownership",
+        "codex.config.user.unsupported_version_platform",
+        "codex.config.user.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "basic_actual_lifecycle_reused_and_shared_semantics_checked",
+      "reason": "Root017/021 skills/config or Root026 MCP basics reused; six Codex file-owner C3/D2 recovery/inverse/update/remove cases pass independently, not substituted for missing actual vendor scenarios."
+    },
+    {
+      "id": "codex.plugin.user",
+      "proof_ids": [
+        "codex.plugin.user.prepare_plan",
+        "codex.plugin.user.permission_trust",
+        "codex.plugin.user.apply_install",
+        "codex.plugin.user.repeat_noop",
+        "codex.plugin.user.owned_update",
+        "codex.plugin.user.verify",
+        "codex.plugin.user.interrupted_recovery",
+        "codex.plugin.user.later_failure_inverse",
+        "codex.plugin.user.uninstall_revocation",
+        "codex.plugin.user.foreign_ownership",
+        "codex.plugin.user.unsupported_version_platform",
+        "codex.plugin.user.client_discovery"
+      ],
+      "full_row_status": "unsatisfied",
+      "current_lane": "basic_actual_lifecycle_observed",
+      "reason": "Root027 initial install, Root028 remove, Root029 v1/v2/remove and actual namespaced cache skills; full scenario set not inferred."
+    }
+  ],
+  "checks": [
+    {
+      "slot": 0,
+      "group": "V1",
+      "status": "reused",
+      "detail": "Four exact historical selected checks and source dependencies reviewed; no fresh Claude simulator execution.",
+      "evidence": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/REUSE-REVIEW.json",
+        "sha256": "5481f0f3c5e35c69ffdb13574094520190193f4df695bb39eff57586136ef891"
+      }
+    },
+    {
+      "slot": 1,
+      "group": "V2",
+      "status": "unsatisfied",
+      "deferred_part": "All Claude tests owner-deferred; broad family not executed.",
+      "historical_failures_preserved": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-restored/V2-result.json",
+        "sha256": "faf8eea7ca4d3f51b5b459b80446baf1a5ec444ae5ea45c43493bca0a545e696"
+      },
+      "fresh_selected_shared": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/inverse-results.json",
+        "sha256": "3782b98a310174ec1abdb0e85b2c077731820d1b091e51e3ef1c7a230cedf0c6"
+      },
+      "detail": "Two selected Codex/shared file-owner tests each passed1, including recovery/inverse. Actual drivers intentionally101 while original matrix pending; no full V2 success claim."
+    },
+    {
+      "slot": 2,
+      "group": "V3",
+      "status": "reused_with_fresh_affected_checks",
+      "reuse": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/REUSE-REVIEW.json",
+        "sha256": "5481f0f3c5e35c69ffdb13574094520190193f4df695bb39eff57586136ef891"
+      },
+      "fresh": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/FINAL-SELECTED-RESULTS.json",
+        "sha256": "b06b6f99dc86e40835dbef63a421f8144ec74cdf7c60e2e032db74fe2ac8fe43"
+      },
+      "detail": "Seven historical selected regressions reviewed. Three fresh plugin predicate/finite-tree/config law tests pass. These are model-free, not actual-client commissioning."
+    },
+    {
+      "slot": 3,
+      "group": "V4",
+      "status": "unsatisfied",
+      "detail": "Original16rows/192proof IDs retained. Actual028/029 (and030 if reviewed) are bounded observations only. No full row closed from hashes/exit0/fixture-only laws."
+    },
+    {
+      "slot": 4,
+      "group": "V5",
+      "status": "fresh",
+      "detail": "Scoped edition2024 skip_children rustfmt check of three authored Rust files, exit0; no broad fmt gate.",
+      "evidence": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/FINAL-SELECTED-RESULTS.json",
+        "sha256": "b06b6f99dc86e40835dbef63a421f8144ec74cdf7c60e2e032db74fe2ac8fe43"
+      }
+    },
+    {
+      "slot": 5,
+      "group": "V6",
+      "status": "fresh",
+      "detail": "git diff --check exit0; no Git mutation. Source closures before/after selected checks unchanged; only three allowed Rust sources differ from successor baseline.",
+      "evidence": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/FINAL-SELECTED-RESULTS.json",
+        "sha256": "b06b6f99dc86e40835dbef63a421f8144ec74cdf7c60e2e032db74fe2ac8fe43"
+      }
+    }
+  ],
+  "actual_evidence": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/CURRENT-ANSWERS-REVIEW.json",
+      "sha256": "9659251e4922e7fd4c01f140fb56947817250cfbe6994bda1cde325e8f16a3ac"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/ACTUAL-028-REVIEW.json",
+      "sha256": "9d0d6758db8efa22bebe2a381e977c13aecb1cab0f015dfae06910c77410d5bf"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/ACTUAL-029-REVIEW.json",
+      "sha256": "2adeccbb91e1707eaa9291cadd47d913d6c0c8fbeab617736c0683ebbf5c1f66"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-restored/continuation-026027/ACTUAL-030-REVIEW.json",
+      "sha256": "8e6f96d7c5ee1c98303b403721f004100a8a438846e9340cb62fe42d05afe05b"
+    }
+  ],
+  "discoveries": [
+    "Consumed exact late Root026 MCP inventory/resource-read v1/v2/removal in both scopes and Root027 initial plugin installation/loading; 24 pinned current-answer artifacts checked without mismatch.",
+    "Actual Root028 plugin removal and Root029 v1-to-v2 update/removal observed through existing D1/D2 and PodBay; complete finite outputs, exact scoped RPC replies, cache digest/absence and foreign config verified.",
+    "Six Codex file-owner scopes plus one newly introduced synthetic package pass C3/D2 checkpoint recovery, fresh retained inverse, reapply/update/remove and independent foreign-state checks. Same test executable before/after external data introduction; no vendor substitution.",
+    "Three focused plugin checks pass: exact scope/error-aware removal, installed v2 and bounded nested tree, and preservation of foreign plugin coordinates. Unknown members, stale revision, scan errors and lost foreign configuration refuse.",
+    "Actual Codex030 wrong-version, revocation and truncated-stderr result reviewed.",
+    "No recursive agents, new dependencies, duplicate process launcher or native vendor execution. Exact0.159.3 applicability and legacy0.148 remain unchanged; Root retains physical lifecycle and final accounting."
+  ],
+  "unresolved": [
+    "Owner-deferred: remaining Claude commissioning/testing, including simulator checks. Separately deferred, neither passed nor failed, and not a Codex/shared next-stage blocker by owner direction.",
+    "Original16row/192proof matrix remains incomplete; actual installed-plugin interruption/recovery/inverse and remaining per-row negative/foreign scenarios are not closed by shared file-owner tests. Codex project-plugin remains explicitly unsupported.",
+    "Finite selected cache/config and namespace evidence does not establish a generic production ClientStateOwner or complete arbitrary vendor state semantics. No broader0.159.x applicability or E2 four-client runtime completion is claimed."
+  ]
+}

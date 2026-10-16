@@ -1,0 +1,76 @@
+{
+  "question_id": "M08E1-NEGATIVE-CAPS-SEAL-011",
+  "id": "M08E1-NEGATIVE-CAPS-SEAL-011",
+  "status": "answered",
+  "utc": "2026-10-16T05:48:52.223652+00:00",
+  "realm": "/fast/zap-managed/2026-10-16-m08e1-negative-caps",
+  "root_exec_session": 3733,
+  "root_exec_exit": 0,
+  "driver_exit": 101,
+  "driver_stderr": "adapter-only conformance: binding, partial I/O, timeout/signal, None exit, both truncation flags, UTF8 and durable no-retry checked; no vendor qualification\n\nthread 'mechanism::deploy::m_08_e_1_cases::current_version_profiles_preserve_legacy_and_wrong_version_refusal' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:18:32:\ncalled `Result::unwrap()` on an `Err` value: \"pending: exact 0.159.3 qualification and actual wrong-version/truncation observations\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+  "responses": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-negative-caps/case/evidence/claude_code.negative-009--prepare-revocation.response.json",
+      "sha256": "bcefa8e299c5592e43f57f62cea16da1dd01d8eb164b9ad61103724f9b1a927a",
+      "step_id": "prepare-revocation",
+      "exit": 0,
+      "complete": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout_bytes": 22,
+      "stderr_bytes": 0
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-negative-caps/case/evidence/claude_code.negative-009--stderr-truncated.response.json",
+      "sha256": "1ffe2d20fe7f11477c40b0c4940f36a652d98097e2431000fd78952192f4d54a",
+      "step_id": "stderr-truncated",
+      "exit": 1,
+      "complete": true,
+      "stdout_truncated": false,
+      "stderr_truncated": true,
+      "stdout_bytes": 0,
+      "stderr_bytes": 128
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-negative-caps/case/evidence/claude_code.negative-009--wrong-version.response.json",
+      "sha256": "591fd42a19142ec5965f6b9649e0aff06152c759428c5baf471979ec2a3a7008",
+      "step_id": "wrong-version",
+      "exit": 0,
+      "complete": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout_bytes": 22,
+      "stderr_bytes": 0
+    }
+  ],
+  "cleanup": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-negative-caps/evidence/host-cleanup.json",
+    "sha256": "957337902a6e932eaf6591811e4f216a4ccceb87530a36b2f9d31eea4e6a6363",
+    "owner_manager_original_identities_absent": true
+  },
+  "endpoint_live": false,
+  "full_task": "88/222 unchanged; no full row/matrix acceptance inferred from exit0 or partial assertions.",
+  "outcome": "All3 physical commands observed; wrong-version/refusal and no-dispatch revocation asserted by managed driver, actual invalid plugin-list option exited1 with real stderr truncation at128bytes. Driver still exits101 because full matrix/identity-drift remain pending.",
+  "negative_result": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-negative-caps/case/evidence/actual-negative-result.json",
+    "sha256": "7045f6c1ba19bdf2acbc9a437e8f6ac0e747a6c2c1af9ecd33ff3612b45500a4",
+    "observations": {
+      "wrong_version": "actual version mismatch refused",
+      "revocation": "refused without dispatch",
+      "stderr_truncated": true,
+      "exit": 1,
+      "executable_drift": "pending; no fabricated identity mutation"
+    }
+  },
+  "next": "Use these actual cases as retained negative evidence; do not repeat old effects or claim executable-drift proof. Continue remaining full matrix. Old008/010negative proposals stay unlaunched. Actual full task acceptance requires rest of original scope.",
+  "parallel_answers": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-PEER-FALLBACK.json",
+      "sha256": "c7af52980b1cb2d222c02056aafe408aa9323fc1a3b0579898498858964c9bcb"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-scoped-help/ROOT-ANSWER-CODEX-IO.json",
+      "sha256": "4b15a58e5a30148dbd114c364c990195995b799c8e0b08dc82ab7a87cb4c438e"
+    }
+  ]
+}

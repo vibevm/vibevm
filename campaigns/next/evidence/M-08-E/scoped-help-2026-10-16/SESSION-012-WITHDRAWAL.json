@@ -1,0 +1,5 @@
+{
+  "question_id": "M08E1-CODEX-SESSION-SEAL-012",
+  "status": "withdrawn_before_root_launch_observed",
+  "reason": "Root broker requires original case/step for Inspect/Stop;012 incorrectly placed observation labels in step_id. Preserve proposal and compiled ELF; no actual runtime evidence claimed."
+}

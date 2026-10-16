@@ -1,0 +1,142 @@
+{
+  "question_id": "M08E1-LIFECYCLE-SEAL-006",
+  "id": "M08E1-LIFECYCLE-SEAL-006",
+  "status": "answered",
+  "utc": "2026-10-16T05:12:20.028658+00:00",
+  "cases": [
+    {
+      "realm": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle",
+      "root_exec_session": 88657,
+      "root_exec_exit": 0,
+      "driver_exit": 101,
+      "driver_error": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:8:39:\ncalled `Result::unwrap()` on an `Err` value: \"claude_code.mcp.user.lifecycle-004/v1: actual client did not report connected resource; retain effect/step, no retry\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "responses": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/claude_code.mcp.user.lifecycle-004--absence.response.json",
+          "sha256": "db4c4f966905a617fdfc1be1d705d7d9497b953a2414ab8344c5779d5dba4b05",
+          "step_id": "absence",
+          "exit": 0,
+          "status": "complete",
+          "stdout_bytes": 65,
+          "stderr_bytes": 0,
+          "truncated": false,
+          "complete": true
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/claude_code.mcp.user.lifecycle-004--v1.response.json",
+          "sha256": "7ce6b67d9f2e50484fcda3a7dc40fde0bb88ed91ced22f22630ae0f760149396",
+          "step_id": "v1",
+          "exit": 0,
+          "status": "complete",
+          "stdout_bytes": 65,
+          "stderr_bytes": 0,
+          "truncated": false,
+          "complete": true
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/claude_code.mcp.user.lifecycle-004--version.response.json",
+          "sha256": "ac14d7b3dd4660ae3eec96dad3f37c285b2abda6a50819f778b1543aaf4ac2a3",
+          "step_id": "version",
+          "exit": 0,
+          "status": "complete",
+          "stdout_bytes": 22,
+          "stderr_bytes": 0,
+          "truncated": false,
+          "complete": true
+        }
+      ],
+      "cleanup_receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/evidence/host-cleanup.json",
+        "sha256": "95e41eaf296cd1ee0fb40675b8afecf1f3eefced6ad24e6f31ccd010abe7f34c"
+      },
+      "identity_absence": [
+        {
+          "kind": "owner",
+          "pid": 2596049,
+          "original_identity_absent": true
+        },
+        {
+          "kind": "manager",
+          "pid": 2596053,
+          "original_identity_absent": true
+        }
+      ],
+      "endpoint_live": false
+    },
+    {
+      "realm": "/fast/zap-managed/2026-10-16-m08e1-codex-schema",
+      "root_exec_session": 40247,
+      "root_exec_exit": 0,
+      "driver_exit": 101,
+      "driver_error": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:13:33:\ncalled `Result::unwrap()` on an `Err` value: \"pending: codex discovery retained; actual absence/v1/v2/removal, resource loading and local peer not yet qualified\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "responses": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/case/evidence/codex.schema-003--schema.response.json",
+          "sha256": "1e0bd2d4e6980986afbd7c3a15bf714cfe0801297dd2719f09a3c6e9338b961c",
+          "step_id": "schema",
+          "exit": 0,
+          "status": "complete",
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "truncated": false,
+          "complete": true
+        }
+      ],
+      "cleanup_receipt": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/evidence/host-cleanup.json",
+        "sha256": "888bcb8d20a070ba855235e952510f8763f490e07e6c7e545becc2c33929ff8f"
+      },
+      "identity_absence": [
+        {
+          "kind": "owner",
+          "pid": 2596050,
+          "original_identity_absent": true
+        },
+        {
+          "kind": "manager",
+          "pid": 2596052,
+          "original_identity_absent": true
+        }
+      ],
+      "endpoint_live": false
+    }
+  ],
+  "outcome": "Actual MCP row FAILED at v1: installed Claude exited0 but said No MCP servers configured. v2/removal did NOT run. Codex schema command succeeded, driver remains expected discovery-pending. Neither driver101 is full task acceptance.",
+  "observed_configuration": "actual-mcp-v1-after.json shows C3/D2 wrote mcpServers.m08a2-demo at /home/olegchir/.claude.json. The same actual client independently created /home/olegchir/.claude/.claude.json with startup fields. The sealed guest env explicitly included CLAUDE_CONFIG_DIR=/home/olegchir/.claude.",
+  "inference": "Strong evidence the fixture combines default HOME/.claude.json target with an explicit config-directory override that sends this release elsewhere. This is not yet proof of a generic C3/D2 bug. Do not change generic JSON semantics merely to accommodate an incorrect fixture.",
+  "recommended_fast_next_step": "For the standard user-scope row, omit unnecessary CLAUDE_CONFIG_DIR in a new managed-owner exact proposal and retain private HOME/getpwuid. Alternatively capture and use this exact release configuration override as declared context consistently. Choose from actual specification and update relevant spec/descriptor/test when needed. Preserve unrelated client-owned fields and old failed C3 receipt; do not claim a connected resource from file-only success or silently rerun old effect/step. New case may requalify the complete row. Retain peer evidence also on early failure if applicable. Continue remaining full16rows192proofs.",
+  "mcp_evidence": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-absence-after.json",
+      "sha256": "cdcfc5de21f72acaebd42544ceccd62e53a93fd19cb92643d6f484e4a1e659b0"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-absence-before.json",
+      "sha256": "9961c84dc6348a34ef764f2fdc129ca90284e8402b7c667d4280211459e5374d"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-capture.json",
+      "sha256": "d887d8c69cbb474039df5716a4bd783e95a253675eb10348cf2dc3b44fbebdd2"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-v1-after.json",
+      "sha256": "62d119525bb5e8a45959ccf5e0fb11348799c687bd63b31dda30f1e41677b02f"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-v1-before.json",
+      "sha256": "cdcfc5de21f72acaebd42544ceccd62e53a93fd19cb92643d6f484e4a1e659b0"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-lifecycle/case/evidence/actual-mcp-v1-receipt-reply.json",
+      "sha256": "cf5e369572bcb123a64f6075eb1ae526dbee5feee550b6403af1680a74f1985b"
+    }
+  ],
+  "schema_manifest": {
+    "path": "/fast/zap-managed/2026-10-16-m08e1-codex-schema/case/evidence/ROOT-SCHEMA-MANIFEST.json",
+    "sha256": "a9a1473ffb40d2d8c8ab996e61d5a4bd93d0186766ee1d0ba3a343005f8902d4",
+    "files": 440,
+    "bytes": 4286533
+  },
+  "peer_status": "Both physical fixtures stopped and original owner/manager identities absent. No current listener or old endpoint reuse is authorized; next fresh row must bind its declared address normally.",
+  "count": "88/222 unchanged"
+}

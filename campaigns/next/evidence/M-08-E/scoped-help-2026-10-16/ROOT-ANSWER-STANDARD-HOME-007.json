@@ -1,0 +1,109 @@
+{
+  "question_id": "M08E1-STANDARD-HOME-SEAL-007",
+  "id": "M08E1-STANDARD-HOME-SEAL-007",
+  "status": "answered",
+  "utc": "2026-10-16T05:24:03.611433+00:00",
+  "cases": [
+    {
+      "realm": "/fast/zap-managed/2026-10-16-m08e1-mcp-default",
+      "root_exec_session": 91949,
+      "root_exec_exit": 0,
+      "responses": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/case/evidence/claude_code.mcp.user.lifecycle-005--absence.response.json",
+          "sha256": "e79106beca9984d158c93531a669f8f2643b77c28043192459dfb5b56c078ba3",
+          "step_id": "absence",
+          "exit": 0,
+          "status": "complete",
+          "complete": true,
+          "truncated": false
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/case/evidence/claude_code.mcp.user.lifecycle-005--v1.response.json",
+          "sha256": "4d249bf9c318c85db47bb13c5a5f87432695a0c3d93dbdfe2c36c25c23d1831e",
+          "step_id": "v1",
+          "exit": 0,
+          "status": "complete",
+          "complete": true,
+          "truncated": false
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/case/evidence/claude_code.mcp.user.lifecycle-005--version.response.json",
+          "sha256": "650159c3fa207682b26e08930fc45e907e838dcea54ddbf0828e899fba609096",
+          "step_id": "version",
+          "exit": 0,
+          "status": "complete",
+          "complete": true,
+          "truncated": false
+        }
+      ],
+      "driver_exit": 101,
+      "driver_stderr": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:8:39:\ncalled `Result::unwrap()` on an `Err` value: \"unqualified local peer method: server/discover\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "driver_output": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/evidence/driver-output.json",
+        "sha256": "279333aa4103082ed4be3bdfc8e735faa12b26d5701ad05398ce706ef9702b32"
+      },
+      "cleanup": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-mcp-default/evidence/host-cleanup.json",
+        "sha256": "8a54117203953e890c34cda5da995a9a809eae6db38fe5d91d3e0ce5173cbe90"
+      },
+      "identities": [
+        {
+          "kind": "owner",
+          "pid": 2609014,
+          "original_identity_absent": true
+        },
+        {
+          "kind": "manager",
+          "pid": 2609016,
+          "original_identity_absent": true
+        }
+      ],
+      "endpoint_live": false
+    },
+    {
+      "realm": "/fast/zap-managed/2026-10-16-m08e1-codex-observation",
+      "root_exec_session": 50244,
+      "root_exec_exit": 0,
+      "responses": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m08e1-codex-observation/case/evidence/codex.observation-004--skills.response.json",
+          "sha256": "ec4f3ec9daba1351772eb37e3968cf45c8644ca7b7d7462b8ddf2719bc4f032a",
+          "step_id": "skills",
+          "exit": 0,
+          "status": "complete",
+          "complete": true,
+          "truncated": false
+        }
+      ],
+      "driver_exit": 101,
+      "driver_stderr": "\nthread 'mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix' (3) panicked at crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:13:33:\ncalled `Result::unwrap()` on an `Err` value: \"codex.observation-004/skills: missing/duplicate/error app-server reply 2; retain exact step\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "driver_output": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-codex-observation/evidence/driver-output.json",
+        "sha256": "805bfbb2f14a1c3174d7fad23c9f12a6d1505204ea0e396a8ce2f23615cf3aa6"
+      },
+      "cleanup": {
+        "path": "/fast/zap-managed/2026-10-16-m08e1-codex-observation/evidence/host-cleanup.json",
+        "sha256": "253857878fabcc41af34d96fe05d4d15b6e8aeec8cee2a3d87c858e0c0f2d492"
+      },
+      "identities": [
+        {
+          "kind": "owner",
+          "pid": 2609015,
+          "original_identity_absent": true
+        },
+        {
+          "kind": "manager",
+          "pid": 2609017,
+          "original_identity_absent": true
+        }
+      ],
+      "endpoint_live": false
+    }
+  ],
+  "actual_MCP": "Version/absence/v1 vendor calls exited0 with complete output. Claude now discovers m08a2-demo at /mcp/v1, confirming the previous default-home/override fixture mismatch was removed. But output reports Failed to connect/ECONNREFUSED. Driver fails unqualified local peer method: server/discover. v2/removal were not run. No peer exchange artifact found on failure. This is not a completed row.",
+  "MCP_next": "Actual private peer implementation must handle unexpected extension requests without destroying required diagnostic evidence. Record every bounded request before dispatch, including on failure; implement correct response/fallback from actual client behavior, not a fabricated Connected result. Keep generic C3/D2 unchanged unless separate evidence requires it. New full-row proposal/fresh keys required; old applied-v1 case retained.",
+  "actual_Codex": "Only skills step invoked. Codexappserver exit0/full output includes id1 initialize result and configWarning/remoteControl notifications, but no id2 response. Config step notrun. Supplied three-line stdin was delivered and closed; this may require actual interactive request/reply sequencing or another supported transport. Closed-input output is not proof of id2 success. Do not fake replies or loop blind retries.",
+  "Codex_next": "Use retained actual schema and existing PodBay capabilities to propose smallest correct read-only request/reply path. Root is checking physical input support; no ad-hoc sleep or native child launcher is preapproved. Protocol semantics belong in VibeVM; PodBay must remain a generic process/byte-stream owner.",
+  "count": "88/222 unchanged; full16rows192proofs and original task remain."
+}

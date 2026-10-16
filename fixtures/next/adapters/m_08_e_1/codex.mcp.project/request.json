@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "client_id": "org.vibevm.fixture/codex-mcp-project",
+  "version": "=0.159.3",
+  "bindings": [
+    {
+      "scope": "project",
+      "shape": "toml-member",
+      "destination": ".codex/config.toml",
+      "key": [
+        "mcp_servers",
+        "m08a2-demo"
+      ],
+      "operations": [
+        "reconcile-toml-member"
+      ]
+    }
+  ]
+}

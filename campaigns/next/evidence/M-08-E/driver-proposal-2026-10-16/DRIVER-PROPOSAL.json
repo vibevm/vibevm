@@ -1,0 +1,324 @@
+{
+  "schema": "m08e1.driver-proposal/1",
+  "status": "awaiting_root_seal_initial_discovery_only",
+  "original_host_path": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/build/vibe-lifecycle/9462f54ebc6ed9a3/out/vibe_lifecycle-9462f54ebc6ed9a3",
+  "private_elf": "/fast/zap-managed/2026-10-16-m08e1-driver/driver-build/driver-discovery-1",
+  "sha256": "9b642d6b65a57586e25f15f497d3a714cb16975d67ed81c7f9a0cd57435f9216",
+  "runtime_closure": [
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+      "sha256": "9d339ecb409578d6a5d587e6c537a8f9589b8a13fefba30d167433a4b5758bee"
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+      "sha256": "1c488db6f4fe8cecb72456bc018de000b7a9b539c2994864b0416b5e8371b3d8"
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+      "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+    },
+    {
+      "path": "/lib64/ld-linux-x86-64.so.2",
+      "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+    }
+  ],
+  "elf_headers": "/fast/zap-managed/2026-10-16-m08e1-driver/driver-build/elf-1.txt",
+  "driver_environment": {
+    "HOME": "/home/olegchir",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "TEMP": "/tmp",
+    "TMP": "/tmp",
+    "TMPDIR": "/tmp"
+  },
+  "clear_other_environment": true,
+  "cwd": "/case/project",
+  "timeout_seconds": 900,
+  "per_step_timeout_seconds": 90,
+  "selected_test_argv": [
+    [
+      "/runtime/driver/driver",
+      "mechanism::deploy::m_08_e_1_cases::actual_claude_2_1_299_required_matrix",
+      "--exact",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    [
+      "/runtime/driver/driver",
+      "mechanism::deploy::m_08_e_1_cases::actual_codex_0_159_3_required_matrix",
+      "--exact",
+      "--nocapture",
+      "--test-threads=1"
+    ]
+  ],
+  "expected_test_outcome": "nonzero pending after discovery; no commissioning success claimed",
+  "steps": [
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.discovery",
+      "step_id": "prepare-version",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "--version"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/project"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.discovery",
+      "step_id": "execute-version",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "--version"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/project"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.discovery",
+      "step_id": "help",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.discovery",
+      "step_id": "plugin-help",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "plugin",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "claude_code.discovery",
+      "step_id": "mcp-help",
+      "spec": {
+        "program": "/runtime/claude/claude",
+        "args": [
+          "mcp",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CLAUDE_CONFIG_DIR": "/home/olegchir/.claude"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.discovery",
+      "step_id": "version",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "--version"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.discovery",
+      "step_id": "help",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.discovery",
+      "step_id": "plugin-help",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "plugin",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.discovery",
+      "step_id": "mcp-help",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "mcp",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    },
+    {
+      "protocol": "m08e1.podbay-process-runner/1",
+      "case_id": "codex.discovery",
+      "step_id": "app-server-help",
+      "spec": {
+        "program": "/runtime/codex/codex",
+        "args": [
+          "app-server",
+          "--help"
+        ],
+        "cwd": "/case/project",
+        "env": {
+          "HOME": "/home/olegchir",
+          "USERPROFILE": "/home/olegchir",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TEMP": "/tmp",
+          "TMP": "/tmp",
+          "CODEX_HOME": "/home/olegchir/.codex"
+        },
+        "stdin": null,
+        "stdout": "capture",
+        "stderr": "capture",
+        "scratch": "/case/arena"
+      }
+    }
+  ],
+  "fixture_inputs": [
+    {
+      "host_path": "/fast/zap-managed/2026-10-16-m08e1-driver/driver-build/driver-seal.PROPOSED.json",
+      "namespace_path": "/fixture-input/driver-seal.json",
+      "sha256": "126e7fb1e6867ca3c2b1bfafbecd924e7f3bb4417fd9f9ce4ca46f8b4335940b"
+    }
+  ],
+  "local_peer": {
+    "status": "not launched in discovery; exact supported credential-free local protocol must be qualified from release help before additional manifest",
+    "intent": "deterministic local MCP JSON-RPC peer with initialize/tools/list/resource response, no model request"
+  },
+  "matrix_status": "all 16 rows and 192 proof IDs remain pending; three contract functions still have explicit pending gates; full bodies under implementation"
+}

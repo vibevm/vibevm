@@ -1,0 +1,4 @@
+[mcp_servers.m08a2-demo]
+command = "/nonexistent/m08a2-inert-server"
+args = ["fixture-one"]
+enabled = false
