@@ -1,0 +1,1142 @@
+diff --git a/crates/vibe-resolver/src/features/configuration.rs b/crates/vibe-resolver/src/features/configuration.rs
+index 0ba17e57c..03a54c580 100644
+--- a/crates/vibe-resolver/src/features/configuration.rs
++++ b/crates/vibe-resolver/src/features/configuration.rs
+@@ -9,6 +9,7 @@ use vibe_wire::generated::consumer_configuration::e1::{
+ };
+ 
+ /// Admitted source definitions, supplied by the caller; never looked up globally.
++#[derive(Debug, Clone, PartialEq, Eq)]
+ pub struct ConfigurationDefinition {
+     pub instance: ConfigurationInstance,
+     pub program: FeatureProgram,
+diff --git a/crates/vibe-resolver/src/lib.rs b/crates/vibe-resolver/src/lib.rs
+index 20ad2c5c2..1260eb12e 100644
+--- a/crates/vibe-resolver/src/lib.rs
++++ b/crates/vibe-resolver/src/lib.rs
+@@ -279,6 +279,17 @@ pub trait DepProvider {
+     implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
+ )]
+ pub trait VersionEnumerator: DepProvider {
++    /// A valid candidate incompatible with the admitted consumer intent.
++    /// Source failures must be returned by the provider, never placed here.
++    fn candidate_rejection(
++        &self,
++        _group: &Group,
++        _name: &str,
++        _version: &semver::Version,
++    ) -> Option<String> {
++        None
++    }
++
+     /// Capability index captured with an immutable transaction catalog.
+     fn cached_capabilities(&self) -> Option<&resolvo_engine::CapIndex> {
+         None
+diff --git a/crates/vibe-resolver/src/resolvo_engine/mod.rs b/crates/vibe-resolver/src/resolvo_engine/mod.rs
+index 43b07f290..a23ca36d9 100644
+--- a/crates/vibe-resolver/src/resolvo_engine/mod.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/mod.rs
+@@ -14,6 +14,7 @@
+ 
+ mod capabilities;
+ mod catalog;
++pub mod configuration;
+ mod snapshot;
+ pub use capabilities::{CapIndex, CapProvider};
+ pub use catalog::{CatalogInspection, TransactionCatalog};
+@@ -294,4 +295,7 @@ mod tests;
+ #[cfg(test)]
+ mod m_05_c_1_cases;
+ 
++#[cfg(test)]
++mod m_05_c_2_cases;
++
+ pub use semver::Version as CandidateVersion;
+diff --git a/crates/vibe-resolver/src/resolvo_engine/provider.rs b/crates/vibe-resolver/src/resolvo_engine/provider.rs
+index 6ed71b51e..c2d240a27 100644
+--- a/crates/vibe-resolver/src/resolvo_engine/provider.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/provider.rs
+@@ -261,6 +261,9 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p,
+                 self.pool.intern_string("internal: unresolvable solvable"),
+             );
+         };
++        if let Some(reason) = self.provider.candidate_rejection(&group, &name, &version) {
++            return Dependencies::Unknown(self.pool.intern_string(reason));
++        }
+         let manifest = match self.provider.fetch_manifest(&group, &name, &version) {
+             Ok(m) => m,
+             Err(e) => {
+diff --git a/crates/vibe-resolver/src/resolvo_engine/snapshot.rs b/crates/vibe-resolver/src/resolvo_engine/snapshot.rs
+index 8e97957fa..f01c389f9 100644
+--- a/crates/vibe-resolver/src/resolvo_engine/snapshot.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/snapshot.rs
+@@ -55,6 +55,15 @@ impl<P: VersionEnumerator> DepProvider for MetadataSnapshot<'_, P> {
+ }
+ 
+ impl<P: VersionEnumerator> VersionEnumerator for MetadataSnapshot<'_, P> {
++    fn candidate_rejection(
++        &self,
++        group: &Group,
++        name: &str,
++        version: &semver::Version,
++    ) -> Option<String> {
++        self.provider.candidate_rejection(group, name, version)
++    }
++
+     fn cached_capabilities(&self) -> Option<&super::CapIndex> {
+         self.provider.cached_capabilities()
+     }
+diff --git a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+index af59140df..ec67d391d 100644
+--- a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
++++ b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+@@ -894,4 +894,11 @@ files_written = [
+     <p><M05C1-FAILURE status="spec/done">Unavailable or corrupt catalog data is a source failure, distinct from a valid candidate lacking a requested option. Source failure stops before install effects and is not converted to incompatibility, fallback selection, or another definition. Existing published source absence and source precedence rules remain intact.</M05C1-FAILURE></p>
+     <p><M05C1-OBSERVATION status="spec/done">ETO observes the actual reproducible catalog identity and its inspected candidate bindings before install effects. This transaction consistency does not declare candidate-conditioned activation or universal route parity complete; those remain subsequent work.</M05C1-OBSERVATION></p>
+   </section>
++  <section title="15. Candidate-conditioned activation (M-05-C.2)">
++    <p><M05C2-CONDITIONING status="spec/done">Activation belongs to the exact candidate that introduced it. The existing resolvo solver must carry induced requirements on that candidate's literal. Rejecting a candidate discards its features, providers, dependency effects, subskills and config values. Only selected candidates contribute returned effects; inspecting an unreachable candidate with a mandatory unresolved group never requests selection.</M05C2-CONDITIONING></p>
++    <p><M05C2-CONSUMERS status="spec/done">Every original incoming consumer edge, selection intent, version constraint and provenance survives candidate rejection unchanged. Evaluate all consumers of one configuration together through the B2 evaluator. A valid older candidate may satisfy the same authorized intent. Conflict evidence retains original consumer reasons alongside the candidate coordinate and exact C1 identity; source errors remain operational errors, never candidate exclusions.</M05C2-CONSUMERS></p>
++    <p><M05C2-DEFAULTS status="spec/done">Permission to use a declared default binds the exact shown candidate source/content/definition identity. Choosing another definition does not authorize its defaults, even if it is older or the member spelling happens to match. A selected candidate without that exact binding requires rediscovery before effects are returned. Explicit selections retain their original meaning and are not replaced by defaults.</M05C2-DEFAULTS></p>
++    <p><M05C2-BOUNDARY status="spec/done">The configured resolver consumes admitted, source-bound B1/B2 definitions and immutable C1 metadata. Unsupported combinations refuse before returning mutation effects. Completeness is the existing solver's finite candidate search, never a fixed retry limit. Legacy DepSolver routes, ordinary manifest parsing, B3 opt-in profiles and C1 operational-error propagation remain intact; universal caller-route parity is separate C3 work. Counterexamples compare the entire selected graph and all derived effects, including provider contributions.</M05C2-BOUNDARY></p>
++    <p><M05C2-ADMITTED-SURFACE status="spec/done">The configured Rust entry accepts fixed explicit incoming Vibe consumer requests, one configuration instance per package, and normalized definitions supplied by the admitting caller with exact C1 receipts. It preserves the full request rather than inferring edges from installed state. Default authorization retains that request and the full shown normalized definition as well as its source/content/definition receipt. Native candidate selection, multiple instances of one package, cross-package feature forwarding and non-registry dependency sources refuse. Conditional targets, requires_any and obsoletes also refuse on this entry because the incumbent graph projection does not retain their complete activation support. These refusals are explicit unsupported outcomes, not unsatisfiability claims or a substitute resolver. The ordinary resolver routes and B1/B2 standalone APIs retain their existing semantics.</M05C2-ADMITTED-SURFACE></p>
++  </section>
+ </spec>
+diff --git a/crates/vibe-resolver/src/resolvo_engine/configuration.rs b/crates/vibe-resolver/src/resolvo_engine/configuration.rs
+new file mode 100644
+index 000000000..93c7d6273
+--- /dev/null
++++ b/crates/vibe-resolver/src/resolvo_engine/configuration.rs
+@@ -0,0 +1,550 @@
++//! Candidate-local B1/B2 evaluation feeding the incumbent resolvo provider.
++//!
++//! This entry accepts fixed incoming consumer edges for a single resolution
++//! domain. It does not infer consumer edges from installed state. Definitions
++//! are admitted inputs, just as at the B2 seam, but must bind a C1 receipt.
++use super::{ResolvoDepSolver, TransactionCatalog};
++use crate::features::configuration::{ConfigurationDefinition, resolve_consumer_configuration};
++use crate::{
++    DepProvider, DepProviderError, FeatureExpansion, ResolvedGraph, SolveError, VersionEnumerator,
++};
++use std::collections::BTreeMap;
++use vibe_core::manifest::{Manifest, feature_constraints::*, feature_effects::*};
++use vibe_core::{Group, PackageRef};
++use vibe_registry::CandidateIdentity;
++use vibe_wire::behaviour::consumer_configuration as codec;
++use vibe_wire::generated::consumer_configuration::e1::{request::Request, result::OutcomeStatus};
++
++type Coordinate = (Group, String, semver::Version);
++
++/// Admitted normalized definition and the actual catalog receipt it interprets.
++pub struct CandidateConfiguration {
++    pub package: PackageRef,
++    pub version: semver::Version,
++    pub identity: CandidateIdentity,
++    pub definition: ConfigurationDefinition,
++}
++
++/// Explicit authorization of defaults from one shown definition for one edge.
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct DefaultBinding {
++    edge: usize,
++    identity: CandidateIdentity,
++    shown: ConfigurationDefinition,
++    request: Request,
++}
++impl DefaultBinding {
++    /// Bind permission to both the C1 receipt and the full admitted definition
++    /// shown to the consumer, including constraints, defaults and declarations.
++    pub fn shown(edge: usize, request: &Request, candidate: &CandidateConfiguration) -> Self {
++        Self {
++            edge,
++            identity: candidate.identity.clone(),
++            shown: candidate.definition.clone(),
++            request: request.clone(),
++        }
++    }
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct CandidateReason {
++    pub coordinate: String,
++    pub identity: CandidateIdentity,
++    pub edges: Vec<usize>,
++    pub reason: String,
++}
++
++#[derive(Debug, thiserror::Error)]
++pub enum ConfigurationSolveError {
++    #[error(transparent)]
++    Source(DepProviderError),
++    #[error("unsupported configured solve: {0}")]
++    Unsupported(String),
++    #[error("consumer configuration conflict: {solver}; candidate reasons: {candidates:?}")]
++    Conflict {
++        request: Request,
++        candidates: Vec<CandidateReason>,
++        solver: SolveError,
++    },
++    #[error("selected configuration needs consumer selection: {candidates:?}")]
++    NeedsSelection {
++        request: Request,
++        candidates: Vec<CandidateReason>,
++    },
++    #[error("selected definition requires rediscovery: {candidates:?}")]
++    Rediscovery {
++        request: Request,
++        candidates: Vec<CandidateReason>,
++    },
++}
++impl From<DepProviderError> for ConfigurationSolveError {
++    fn from(error: DepProviderError) -> Self {
++        Self::Source(error)
++    }
++}
++
++/// Complete selected graph and every selected candidate's activation effects.
++/// The original request is retained losslessly; no install mutations occur here.
++pub struct ConfiguredResolution {
++    pub graph: ResolvedGraph,
++    pub request: Request,
++    pub effects: BTreeMap<String, FeatureExpansion>,
++    pub providers: BTreeMap<String, Vec<String>>,
++    pub rejected: Vec<CandidateReason>,
++}
++
++enum Activation {
++    Ready(FeatureExpansion),
++    Rejected(String),
++    NeedsSelection(String),
++    Rediscovery(String),
++}
++struct Candidate {
++    manifest: Manifest,
++    activation: Activation,
++    reason: CandidateReason,
++}
++struct ConfiguredCatalog<'a> {
++    catalog: &'a TransactionCatalog,
++    candidates: BTreeMap<Coordinate, Candidate>,
++}
++
++impl ResolvoDepSolver<&TransactionCatalog> {
++    /// Solve fixed, explicit incoming consumers over immutable candidates.
++    /// Unsupported native/multi-domain/forwarding combinations refuse before
++    /// solving. Choice/default needs are observed only in the selected graph.
++    #[specmark::spec(
++        implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#M05C2-CONDITIONING"
++    )]
++    pub fn solve_configuration(
++        &self,
++        roots: &[PackageRef],
++        request: &Request,
++        definitions: &[CandidateConfiguration],
++        defaults: &[DefaultBinding],
++    ) -> Result<ConfiguredResolution, ConfigurationSolveError> {
++        let edges = codec::admit_request(request).map_err(ConfigurationSolveError::Unsupported)?;
++        // The legacy graph projection does not retain disjunction edges or
++        // activation support through obsoletes/conditional targets. Refuse
++        // those combinations explicitly at this complete-effects entrypoint.
++        // Ordinary DepSolver routes keep their existing behavior.
++        for (coordinate, _) in &self.provider.inspect().candidates {
++            let (qualified, version) = coordinate.rsplit_once('@').expect("C1 coordinate");
++            let package = PackageRef::parse(qualified).expect("C1 qualified package");
++            let version = semver::Version::parse(version).expect("C1 version");
++            let manifest = &self
++                .provider
++                .metadata(
++                    package.group.as_ref().expect("C1 group"),
++                    package.name.as_str(),
++                    &version,
++                )?
++                .manifest;
++            if !manifest.conditional_deps.is_empty()
++                || !manifest.requires_any.is_empty()
++                || !manifest.obsoletes.packages.is_empty()
++                || !manifest.requires.git_packages.is_empty()
++                || !manifest.requires.path_packages.is_empty()
++                || !manifest.requires.var_packages.is_empty()
++            {
++                return Err(ConfigurationSolveError::Unsupported(format!(
++                    "{coordinate}: configured solve requires registry package edges without conditional targets, disjunctions or obsoletes"
++                )));
++            }
++        }
++        let mut by_package: BTreeMap<(Group, String), Vec<usize>> = BTreeMap::new();
++        for (i, edge) in edges.iter().enumerate() {
++            let PackageIdentity::Vibe(package) = &edge.instance.package else {
++                return Err(ConfigurationSolveError::Unsupported(
++                    "native candidate selection requires its native backend".into(),
++                ));
++            };
++            let group = package.group.clone().ok_or_else(|| {
++                ConfigurationSolveError::Unsupported("unqualified consumer package".into())
++            })?;
++            let indices = by_package
++                .entry((group, package.name.to_string()))
++                .or_default();
++            if indices.iter().any(|&j| edges[j].instance != edge.instance) {
++                return Err(ConfigurationSolveError::Unsupported("multiple configuration instances of one package require a domain-specific solve".into()));
++            }
++            indices.push(i);
++        }
++        for (i, binding) in defaults.iter().enumerate() {
++            if binding.edge >= edges.len() || defaults[..i].iter().any(|b| b.edge == binding.edge) {
++                return Err(ConfigurationSolveError::Unsupported(
++                    "invalid or duplicate default binding".into(),
++                ));
++            }
++        }
++        let mut provider = ConfiguredCatalog {
++            catalog: self.provider,
++            candidates: BTreeMap::new(),
++        };
++        // Validate all admitted definitions before classifying incompatibility.
++        // Malformed/dangling source data must never become a SAT rejection.
++        for d in definitions {
++            let group = d.package.group.as_ref().ok_or_else(|| {
++                ConfigurationSolveError::Unsupported("unqualified definition".into())
++            })?;
++            let metadata = self
++                .provider
++                .metadata(group, d.package.name.as_str(), &d.version)?;
++            if metadata.identity != d.identity {
++                return Err(DepProviderError::Other(
++                    "configuration definition differs from immutable catalog identity".into(),
++                )
++                .into());
++            }
++            d.definition
++                .constraints
++                .order(&d.definition.program, &d.definition.declarations)
++                .map_err(|e| {
++                    ConfigurationSolveError::Source(DepProviderError::Other(e.to_string()))
++                })?;
++            if d.definition
++                .program
++                .features
++                .values()
++                .flatten()
++                .any(|e| matches!(e, FeatureEffect::TargetFeature { .. }))
++            {
++                return Err(ConfigurationSolveError::Unsupported("cross-package feature forwarding needs explicit candidate-conditioned consumer edges; not supported by this fixed-consumer entry".into()));
++            }
++            if d.definition
++                .declarations
++                .dependencies
++                .values()
++                .any(|d| !matches!(d.source, DependencySource::Registry(_)))
++            {
++                return Err(ConfigurationSolveError::Unsupported(
++                    "configured dependencies must use catalog registry coordinates".into(),
++                ));
++            }
++        }
++        for ((group, name), indices) in &by_package {
++            let local_request = Request {
++                epoch: request.epoch.clone(),
++                edges: indices.iter().map(|&i| request.edges[i].clone()).collect(),
++            };
++            for version in self.provider.list_versions(group, name)? {
++                let matching: Vec<_> = definitions
++                    .iter()
++                    .filter(|d| {
++                        d.package.group.as_ref() == Some(group)
++                            && d.package.name.as_str() == name
++                            && d.version == version
++                    })
++                    .collect();
++                if matching.len() != 1 {
++                    return Err(DepProviderError::Other(format!(
++                        "missing or ambiguous configured definition for {group}/{name}@{version}"
++                    ))
++                    .into());
++                }
++                let d = matching[0];
++                if d.definition.instance != edges[indices[0]].instance {
++                    return Err(DepProviderError::Other(
++                        "configured definition instance disagrees with admitted consumers".into(),
++                    )
++                    .into());
++                }
++                let mut manifest = self
++                    .provider
++                    .metadata(group, name, &version)?
++                    .manifest
++                    .clone();
++                // Every base dependency must have exactly the same declaration;
++                // optionality is an explicit normalized-definition input.
++                let base =
++                    FeatureDeclarations::from_requires(&manifest.requires, &Default::default())
++                        .map_err(|e| {
++                            ConfigurationSolveError::Source(DepProviderError::Other(e.to_string()))
++                        })?;
++                for (id, original) in &base.dependencies {
++                    let Some(declared) = d.definition.declarations.dependencies.get(id) else {
++                        return Err(DepProviderError::Other(format!(
++                            "missing source dependency declaration {}",
++                            id.as_str()
++                        ))
++                        .into());
++                    };
++                    let mut comparable = declared.clone();
++                    comparable.optional = original.optional;
++                    if &comparable != original {
++                        return Err(DepProviderError::Other(format!(
++                            "changed source dependency declaration {}",
++                            id.as_str()
++                        ))
++                        .into());
++                    }
++                }
++                // The entire candidate-local dependency set is rebuilt, never
++                // appended to a previous candidate's expansion.
++                let required: Vec<_> = d
++                    .definition
++                    .declarations
++                    .dependencies
++                    .values()
++                    .filter(|d| !d.optional)
++                    .filter_map(|d| match &d.source {
++                        DependencySource::Registry(p) => Some(p.clone()),
++                        _ => None,
++                    })
++                    .collect();
++                manifest.requires.packages = required;
++                let mut reason = CandidateReason {
++                    coordinate: format!("{group}/{name}@{version}"),
++                    identity: d.identity.clone(),
++                    edges: indices.clone(),
++                    reason: String::new(),
++                };
++                let version_conflict = indices.iter().any(|&i| match &edges[i].instance.package {
++                    PackageIdentity::Vibe(p) => {
++                        !p.version.matches(&version)
++                            || p.kind.is_some_and(|k| {
++                                manifest.package.as_ref().is_some_and(|m| k != m.kind)
++                            })
++                    }
++                    _ => unreachable!(),
++                });
++                let activation = if version_conflict {
++                    Activation::Rejected(
++                        "original incoming consumer version/kind constraint".into(),
++                    )
++                } else {
++                    match resolve_consumer_configuration(
++                        &local_request,
++                        std::slice::from_ref(&d.definition),
++                    ) {
++                        Err(error) => Activation::Rejected(error),
++                        Ok(resolution) => {
++                            let outcome = &resolution.result.outcomes[0];
++                            if outcome.status == OutcomeStatus::Conflict {
++                                Activation::Rejected(format!(
++                                    "conflicting consumer selections: {:?}",
++                                    outcome
++                                        .conflicting_edges
++                                        .iter()
++                                        .map(|&i| indices[i as usize])
++                                        .collect::<Vec<_>>()
++                                ))
++                            } else if outcome.status == OutcomeStatus::NeedsSelection {
++                                Activation::NeedsSelection(format!(
++                                    "mandatory groups: {:?}",
++                                    outcome.needs
++                                ))
++                            } else if outcome.defaults_used.iter().any(|used| {
++                                !defaults.iter().any(|b| {
++                                    b.edge == indices[used.edge as usize]
++                                        && b.identity == d.identity
++                                        && b.shown == d.definition
++                                        && b.request == *request
++                                })
++                            }) {
++                                Activation::Rediscovery(
++                                    "declared default is not bound to this exact shown definition"
++                                        .into(),
++                                )
++                            } else {
++                                let expansion = resolution
++                                    .expansions
++                                    .into_iter()
++                                    .next()
++                                    .flatten()
++                                    .expect("resolved B2 outcome has expansion");
++                                manifest.requires.packages.clear();
++                                for id in &expansion.active_deps {
++                                    let declaration = &d.definition.declarations.dependencies
++                                        [&DependencyDeclarationId::new(id).expect("validated ID")];
++                                    let DependencySource::Registry(dep) = &declaration.source
++                                    else {
++                                        unreachable!()
++                                    };
++                                    let dep_group = dep.group.as_ref().ok_or_else(|| {
++                                        ConfigurationSolveError::Unsupported(
++                                            "unqualified induced dependency".into(),
++                                        )
++                                    })?;
++                                    // Missing catalog closure is an operational
++                                    // error, not a candidate incompatibility.
++                                    match self.provider.list_versions(dep_group, dep.name.as_str())
++                                    {
++                                        Err(error @ DepProviderError::Other(_)) => {
++                                            return Err(error.into());
++                                        }
++                                        _ => {}
++                                    }
++                                    manifest.requires.packages.push(dep.clone());
++                                }
++                                Activation::Ready(expansion)
++                            }
++                        }
++                    }
++                };
++                match &activation {
++                    Activation::Ready(_) => {
++                        reason.reason = format!(
++                            "candidate-local dependencies: {:?}",
++                            manifest.requires.packages
++                        )
++                    }
++                    Activation::Rejected(s)
++                    | Activation::NeedsSelection(s)
++                    | Activation::Rediscovery(s) => reason.reason = s.clone(),
++                }
++                provider.candidates.insert(
++                    (group.clone(), name.clone(), version),
++                    Candidate {
++                        manifest,
++                        activation,
++                        reason,
++                    },
++                );
++            }
++        }
++        let rejected: Vec<_> = provider
++            .candidates
++            .values()
++            .filter(|c| matches!(c.activation, Activation::Rejected(_)))
++            .map(|c| c.reason.clone())
++            .collect();
++        let candidate_reasons = provider
++            .candidates
++            .values()
++            .map(|c| c.reason.clone())
++            .collect();
++        let solver = ResolvoDepSolver::new(provider);
++        let graph = match solver.solve_transaction(roots) {
++            Ok(graph) => graph,
++            Err(SolveError::Provider(error)) => return Err(error.into()),
++            Err(solver) => {
++                return Err(ConfigurationSolveError::Conflict {
++                    request: request.clone(),
++                    candidates: candidate_reasons,
++                    solver,
++                });
++            }
++        };
++        let provider = solver.into_inner();
++        let mut needs = Vec::new();
++        let mut rediscovery = Vec::new();
++        let mut effects = BTreeMap::new();
++        let mut providers = BTreeMap::new();
++        for node in graph.iter() {
++            let key = (node.group.clone(), node.name.clone(), node.version.clone());
++            let coordinate = format!("{}/{}@{}", node.group, node.name, node.version);
++            let metadata = self
++                .provider
++                .metadata(&node.group, &node.name, &node.version)?;
++            providers.insert(
++                coordinate.clone(),
++                metadata
++                    .manifest
++                    .provides
++                    .capabilities
++                    .iter()
++                    .map(ToString::to_string)
++                    .collect(),
++            );
++            let expansion = if let Some(candidate) = provider.candidates.get(&key) {
++                match &candidate.activation {
++                    Activation::Ready(expansion) => expansion.clone(),
++                    Activation::NeedsSelection(_) => {
++                        needs.push(candidate.reason.clone());
++                        FeatureExpansion::default()
++                    }
++                    Activation::Rediscovery(_) => {
++                        rediscovery.push(candidate.reason.clone());
++                        FeatureExpansion::default()
++                    }
++                    Activation::Rejected(_) => {
++                        return Err(DepProviderError::Other(
++                            "solver selected rejected candidate".into(),
++                        )
++                        .into());
++                    }
++                }
++            } else {
++                crate::features::expand_manifest_features(
++                    &metadata.manifest,
++                    &crate::FeatureRequest {
++                        no_defaults: true,
++                        ..Default::default()
++                    },
++                )
++                .map_err(|e| {
++                    ConfigurationSolveError::Source(DepProviderError::Other(e.to_string()))
++                })?
++            };
++            effects.insert(coordinate, expansion);
++        }
++        if !rediscovery.is_empty() {
++            return Err(ConfigurationSolveError::Rediscovery {
++                request: request.clone(),
++                candidates: rediscovery,
++            });
++        }
++        if !needs.is_empty() {
++            return Err(ConfigurationSolveError::NeedsSelection {
++                request: request.clone(),
++                candidates: needs,
++            });
++        }
++        Ok(ConfiguredResolution {
++            graph,
++            request: request.clone(),
++            effects,
++            providers,
++            rejected,
++        })
++    }
++}
++
++impl DepProvider for ConfiguredCatalog<'_> {
++    fn resolve_version(&self, package: &PackageRef) -> Result<semver::Version, DepProviderError> {
++        self.catalog.resolve_version(package)
++    }
++    fn fetch_manifest(
++        &self,
++        group: &Group,
++        name: &str,
++        version: &semver::Version,
++    ) -> Result<Manifest, DepProviderError> {
++        match self
++            .candidates
++            .get(&(group.clone(), name.into(), version.clone()))
++        {
++            Some(candidate) => Ok(candidate.manifest.clone()),
++            None => self.catalog.fetch_manifest(group, name, version),
++        }
++    }
++}
++impl VersionEnumerator for ConfiguredCatalog<'_> {
++    fn cached_capabilities(&self) -> Option<&super::CapIndex> {
++        self.catalog.cached_capabilities()
++    }
++    fn list_versions(
++        &self,
++        group: &Group,
++        name: &str,
++    ) -> Result<Vec<semver::Version>, DepProviderError> {
++        self.catalog.list_versions(group, name)
++    }
++    fn candidate_rejection(
++        &self,
++        group: &Group,
++        name: &str,
++        version: &semver::Version,
++    ) -> Option<String> {
++        self.candidates
++            .get(&(group.clone(), name.into(), version.clone()))
++            .and_then(|c| match &c.activation {
++                Activation::Rejected(reason) => Some(format!(
++                    "{}: {reason}; original consumer edges {:?}; definition {}",
++                    c.reason.coordinate, c.reason.edges, c.reason.identity.definition
++                )),
++                _ => None,
++            })
++    }
++}
+diff --git a/crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs b/crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs
+new file mode 100644
+index 000000000..efaa7e483
+--- /dev/null
++++ b/crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs
+@@ -0,0 +1,476 @@
++use super::configuration::*;
++use super::*;
++use crate::features::configuration::ConfigurationDefinition;
++use crate::{DepProvider, FeatureExpansion};
++use std::collections::{BTreeMap, BTreeSet};
++use vibe_core::manifest::{Manifest, feature_constraints::*, feature_effects::*};
++use vibe_wire::behaviour::consumer_configuration as codec;
++use vibe_wire::generated::consumer_configuration::e1::request as wire;
++
++fn p(name: &str) -> PackageRef {
++    PackageRef::parse(&format!("org.example/{name}")).unwrap()
++}
++fn f(name: &str) -> LocalFeatureRef {
++    LocalFeatureRef::new(name).unwrap()
++}
++fn id(name: &str) -> DependencyDeclarationId {
++    DependencyDeclarationId::new(format!("org.example/{name}")).unwrap()
++}
++struct Source(BTreeMap<(String, semver::Version), vibe_registry::CandidateMetadata>);
++impl DepProvider for Source {
++    fn resolve_version(&self, package: &PackageRef) -> Result<semver::Version, DepProviderError> {
++        Ok(self
++            .list_versions(package.group.as_ref().unwrap(), package.name.as_str())?
++            .into_iter()
++            .filter(|v| package.version.matches(v))
++            .max()
++            .unwrap())
++    }
++    fn fetch_manifest(
++        &self,
++        group: &Group,
++        name: &str,
++        version: &semver::Version,
++    ) -> Result<Manifest, DepProviderError> {
++        Ok(self.candidate_metadata(group, name, version)?.manifest)
++    }
++    fn candidate_metadata(
++        &self,
++        _: &Group,
++        name: &str,
++        version: &semver::Version,
++    ) -> Result<vibe_registry::CandidateMetadata, DepProviderError> {
++        Ok(self.0[&(name.into(), version.clone())].clone())
++    }
++}
++impl VersionEnumerator for Source {
++    fn list_versions(
++        &self,
++        group: &Group,
++        name: &str,
++    ) -> Result<Vec<semver::Version>, DepProviderError> {
++        let versions: Vec<_> = self
++            .0
++            .keys()
++            .filter(|(n, _)| n == name)
++            .map(|(_, v)| v.clone())
++            .collect();
++        if versions.is_empty() {
++            Err(DepProviderError::UnknownPackage {
++                group: group.clone(),
++                name: name.into(),
++            })
++        } else {
++            Ok(versions)
++        }
++    }
++}
++fn catalog() -> TransactionCatalog {
++    let directory = tempfile::tempdir().unwrap();
++    let mut source = Source(BTreeMap::new());
++    for (name, version, body) in [
++        (
++            "app",
++            1,
++            "[requires.packages]\n'org.example/good'='*'\n'org.example/bad'='*'\n",
++        ),
++        (
++            "app",
++            2,
++            "[requires.packages]\n'org.example/good'='*'\n'org.example/bad'='*'\n",
++        ),
++        (
++            "good",
++            1,
++            "[provides]\ncapabilities=['capability:good@1.0.0']\n",
++        ),
++        (
++            "bad",
++            1,
++            "[provides]\ncapabilities=['capability:bad@1.0.0']\n[conflicts]\npackages=['org.example/blocker']\n",
++        ),
++        ("blocker", 1, ""),
++    ] {
++        let path = directory.path().join(format!("{name}-{version}"));
++        std::fs::create_dir(&path).unwrap();
++        std::fs::write(path.join("vibe.toml"), format!("[package]\ngroup='org.example'\nname='{name}'\nkind='flow'\nversion='{version}.0.0'\n{body}")).unwrap();
++        let metadata = vibe_registry::CandidateMetadata::read_local(
++            &path,
++            format!("file://{}", path.display()),
++        )
++        .unwrap();
++        source
++            .0
++            .insert((name.into(), semver::Version::new(version, 0, 0)), metadata);
++    }
++    TransactionCatalog::capture(&source, &[p("app"), p("blocker")]).unwrap()
++}
++fn request() -> wire::Request {
++    let mut request = codec::decode_request(include_bytes!(
++        "../../../../formats/corpora/consumer-configuration-request/e1/valid/omitted.json"
++    ))
++    .unwrap();
++    request.edges[0].package = wire::Package::Vibe(Box::new(wire::PackageVibe {
++        reference: "org.example/app".into(),
++    }));
++    request.edges[0].features = vec!["ordinary".into()];
++    request.edges[0].selections.clear();
++    request
++}
++fn definitions(
++    catalog: &TransactionCatalog,
++    request: &wire::Request,
++) -> Vec<CandidateConfiguration> {
++    (1..=2)
++        .map(|version| {
++            let package = p("app");
++            let version = semver::Version::new(version, 0, 0);
++            let metadata = catalog
++                .metadata(package.group.as_ref().unwrap(), "app", &version)
++                .unwrap();
++            let mut declarations = FeatureDeclarations::from_requires(
++                &metadata.manifest.requires,
++                &[id("good"), id("bad")].into(),
++            )
++            .unwrap();
++            declarations.exported_subskills = ["selected.md".into(), "rejected.md".into()].into();
++            declarations
++                .config_values
++                .insert(f("flag"), ConfigValue::Bool(version.major == 1));
++            let target = if version.major == 1 { "good" } else { "bad" };
++            let subskill = if version.major == 1 {
++                "selected.md"
++            } else {
++                "rejected.md"
++            };
++            CandidateConfiguration {
++                package,
++                version,
++                identity: metadata.identity.clone(),
++                definition: ConfigurationDefinition {
++                    instance: codec::admit_request(request).unwrap()[0].instance.clone(),
++                    program: FeatureProgram {
++                        features: [
++                            (
++                                f("ordinary"),
++                                [
++                                    FeatureEffect::ActivateDependency(id(target)),
++                                    FeatureEffect::ExportedSubskill(subskill.into()),
++                                    FeatureEffect::ConfigValue(f("flag")),
++                                ]
++                                .into(),
++                            ),
++                            (f("a"), BTreeSet::new()),
++                            (f("b"), BTreeSet::new()),
++                        ]
++                        .into(),
++                        exclusive: BTreeMap::new(),
++                    },
++                    declarations,
++                    constraints: Constraints::default(),
++                },
++            }
++        })
++        .collect()
++}
++fn full_graph(graph: &ResolvedGraph) -> Vec<(String, bool, Vec<String>)> {
++    graph
++        .iter()
++        .map(|n| {
++            (
++                format!("{}/{}@{}", n.group, n.name, n.version),
++                n.is_root,
++                n.dependencies.iter().map(ToString::to_string).collect(),
++            )
++        })
++        .collect()
++}
++fn assert_selected(result: &ConfiguredResolution, extra: &[&str]) {
++    let mut expected = FeatureExpansion {
++        active_features: ["ordinary".into()].into(),
++        active_deps: ["org.example/good".into()].into(),
++        active_subskills: ["selected.md".into()].into(),
++        config_values: [("flag".into(), ConfigValue::Bool(true))].into(),
++        ..Default::default()
++    };
++    expected
++        .active_features
++        .extend(extra.iter().map(|s| (*s).into()));
++    assert_eq!(
++        result.effects,
++        [
++            ("org.example/app@1.0.0".into(), expected),
++            (
++                "org.example/blocker@1.0.0".into(),
++                FeatureExpansion::default()
++            ),
++            ("org.example/good@1.0.0".into(), FeatureExpansion::default()),
++        ]
++        .into()
++    );
++    assert_eq!(
++        result.providers,
++        [
++            ("org.example/app@1.0.0".into(), vec![]),
++            ("org.example/blocker@1.0.0".into(), vec![]),
++            (
++                "org.example/good@1.0.0".into(),
++                vec!["capability:good@^1.0.0".into()]
++            ),
++        ]
++        .into()
++    );
++    assert_eq!(
++        full_graph(&result.graph),
++        vec![
++            (
++                "org.example/app@1.0.0".into(),
++                true,
++                vec!["org.example/good@=1.0.0".into()]
++            ),
++            ("org.example/blocker@1.0.0".into(), true, vec![]),
++            ("org.example/good@1.0.0".into(), false, vec![]),
++        ]
++    );
++}
++
++#[test]
++fn compatible_older_candidate_keeps_only_selected_effects() {
++    let catalog = catalog();
++    let request = request();
++    let definitions = definitions(&catalog, &request);
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(&[p("app"), p("blocker")], &request, &definitions, &[])
++        .unwrap();
++    assert_selected(&result, &[]);
++    assert_eq!(result.request, request);
++    let inspection = catalog.inspect().clone();
++    let mut unsupported = self::definitions(&catalog, &request);
++    unsupported[0]
++        .definition
++        .program
++        .features
++        .get_mut(&f("ordinary"))
++        .unwrap()
++        .insert(FeatureEffect::TargetFeature {
++            dependency: id("good"),
++            feature: f("forwarded"),
++            strength: FeatureStrength::Strong,
++        });
++    assert!(matches!(
++        ResolvoDepSolver::new(&catalog).solve_configuration(
++            &[p("app")],
++            &request,
++            &unsupported,
++            &[]
++        ),
++        Err(ConfigurationSolveError::Unsupported(_))
++    ));
++    assert_eq!(*catalog.inspect(), inspection);
++    // Corrupt identity is operational even when that candidate could be rejected.
++    let mut corrupt = definitions;
++    corrupt[1].identity.definition.push_str("-corrupt");
++    assert!(matches!(
++        ResolvoDepSolver::new(&catalog).solve_configuration(
++            &[p("app"), p("blocker")],
++            &request,
++            &corrupt,
++            &[]
++        ),
++        Err(ConfigurationSolveError::Source(_))
++    ));
++}
++
++#[test]
++fn all_incoming_consumers_survive_candidate_rejection() {
++    let catalog = catalog();
++    let mut request = request();
++    request.edges[0].features.push("a".into());
++    let mut second = request.edges[0].clone();
++    second.consumer = "consumer-b".into();
++    second.features = vec!["b".into()];
++    request.edges.push(second);
++    let mut definitions = definitions(&catalog, &request);
++    // Only the second consumer rejects newest; rebuilding from the first
++    // consumer would incorrectly admit it or lose b in the final expansion.
++    definitions[1].definition.program.features.remove(&f("b"));
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(&[p("app"), p("blocker")], &request, &definitions, &[])
++        .unwrap();
++    assert_selected(&result, &["a", "b"]);
++    assert_eq!(result.request, request);
++    assert_eq!(result.rejected[0].edges, vec![0, 1]);
++}
++
++fn mandatory(definition: &mut CandidateConfiguration, default: Option<&str>) {
++    definition.definition.constraints.groups.insert(
++        f("choice"),
++        ConstrainedGroup {
++            cardinality: Cardinality::ExactlyOne,
++            members: [f("a"), f("b")].into(),
++            guards: vec![],
++            defaults: default.map(|s| [f(s)].into()),
++        },
++    );
++}
++
++#[test]
++fn unreachable_mandatory_group_has_no_prompt() {
++    let catalog = catalog();
++    let request = request();
++    let mut definitions = definitions(&catalog, &request);
++    mandatory(&mut definitions[1], None);
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(
++            &[p("app@=1.0.0"), p("blocker")],
++            &request,
++            &definitions,
++            &[],
++        )
++        .unwrap();
++    assert_selected(&result, &[]);
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(&[p("blocker")], &request, &definitions, &[])
++        .unwrap();
++    assert_eq!(
++        full_graph(&result.graph),
++        vec![("org.example/blocker@1.0.0".into(), true, vec![])]
++    );
++    assert_eq!(
++        result.effects,
++        [(
++            "org.example/blocker@1.0.0".into(),
++            FeatureExpansion::default()
++        )]
++        .into()
++    );
++    assert_eq!(
++        result.providers,
++        [("org.example/blocker@1.0.0".into(), vec![])].into()
++    );
++    assert!(matches!(
++        ResolvoDepSolver::new(&catalog).solve_configuration(
++            &[p("app@=2.0.0")],
++            &request,
++            &definitions,
++            &[]
++        ),
++        Err(ConfigurationSolveError::NeedsSelection { .. })
++    ));
++    // Even a reachable newest candidate must not prompt after ordinary SAT
++    // dependencies discard it. Mandatory groups are not discovery-time errors.
++    definitions[1]
++        .definition
++        .declarations
++        .dependencies
++        .get_mut(&id("bad"))
++        .unwrap()
++        .optional = false;
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(&[p("app"), p("blocker")], &request, &definitions, &[])
++        .unwrap();
++    assert_selected(&result, &[]);
++}
++
++#[test]
++fn changed_semantic_default_requires_rediscovery() {
++    let catalog = catalog();
++    let mut request = request();
++    request.edges[0].policy = wire::EdgePolicy::UseDeclaredDefaults;
++    let mut definitions = definitions(&catalog, &request);
++    mandatory(&mut definitions[0], Some("a"));
++    mandatory(&mut definitions[1], Some("b"));
++    let binding = DefaultBinding::shown(0, &request, &definitions[1]);
++    let error = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(
++            &[p("app"), p("blocker")],
++            &request,
++            &definitions,
++            &[binding],
++        )
++        .err()
++        .unwrap();
++    let ConfigurationSolveError::Rediscovery {
++        request: original,
++        candidates,
++    } = error
++    else {
++        panic!("{error:?}")
++    };
++    assert_eq!(original, request);
++    assert_eq!(candidates[0].coordinate, "org.example/app@1.0.0");
++    let binding = DefaultBinding::shown(0, &request, &definitions[0]);
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(
++            &[p("app@=1.0.0"), p("blocker")],
++            &request,
++            &definitions,
++            &[binding.clone()],
++        )
++        .unwrap();
++    assert_selected(&result, &["a"]);
++    definitions[0]
++        .definition
++        .constraints
++        .groups
++        .get_mut(&f("choice"))
++        .unwrap()
++        .defaults = Some([f("b")].into());
++    assert!(matches!(
++        ResolvoDepSolver::new(&catalog).solve_configuration(
++            &[p("app@=1.0.0")],
++            &request,
++            &definitions,
++            &[binding]
++        ),
++        Err(ConfigurationSolveError::Rediscovery { .. })
++    ));
++}
++
++#[test]
++fn conflict_retains_consumer_and_candidate_reasons() {
++    let catalog = catalog();
++    let mut request = request();
++    request.edges[0].selections.insert(
++        "choice".into(),
++        wire::Selection {
++            intent: wire::SelectionIntent::Exact,
++            provenance: "manifest:consumer-a".into(),
++            members: Some(vec!["a".into()]),
++        },
++    );
++    let mut second = request.edges[0].clone();
++    second.consumer = "consumer-b".into();
++    second.selections.get_mut("choice").unwrap().members = Some(vec!["b".into()]);
++    second.selections.get_mut("choice").unwrap().provenance = "manifest:consumer-b".into();
++    request.edges.push(second);
++    let mut definitions = definitions(&catalog, &request);
++    for d in &mut definitions {
++        mandatory(d, None);
++    }
++    let error = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(&[p("app")], &request, &definitions, &[])
++        .err()
++        .unwrap();
++    let ConfigurationSolveError::Conflict {
++        request: original,
++        candidates,
++        solver,
++    } = error
++    else {
++        panic!("{error:?}")
++    };
++    assert_eq!(original, request);
++    assert_eq!(candidates.len(), 2);
++    for (candidate, definition) in candidates.iter().zip(&definitions) {
++        assert_eq!(candidate.identity, definition.identity);
++        assert_eq!(candidate.edges, vec![0, 1]);
++        assert!(
++            candidate
++                .reason
++                .contains("conflicting consumer selections: [0, 1]")
++        );
++    }
++    assert!(solver.to_string().contains("org.example/app"));
++    assert!(solver.to_string().contains("consumer"));
++}

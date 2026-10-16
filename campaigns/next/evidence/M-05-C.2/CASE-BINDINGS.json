@@ -1,0 +1,65 @@
+{
+  "V1": {
+    "crate": "vibe-resolver",
+    "target": "--lib",
+    "filter": "resolvo_engine::m_05_c_2_cases",
+    "expected": 7,
+    "names": [
+      "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+      "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+      "resolvo_engine::m_05_c_2_cases::unreachable_mandatory_group_has_no_prompt",
+      "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+      "resolvo_engine::m_05_c_2_cases::conflict_retains_consumer_and_candidate_reasons",
+      "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+      "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications"
+    ],
+    "source_paths": [
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs"
+    ]
+  },
+  "decisive": {
+    "source_derived_not_executed": true,
+    "cases": [
+      {
+        "finding": "C2-R1",
+        "name": "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+        "obligation": "Optional ZeroOrOne shown Some(a) default, omitted UseDeclaredDefaults, retain old binding and remove default to None: Rediscovery and no successful changed effects."
+      },
+      {
+        "finding": "C2-R2",
+        "name": "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+        "obligation": "Keep bad declaration OPTIONAL; explicit ordinary activates bad for newest, conflicts with blocker while mandatory group unresolved. Reject newest; older good selected without prompt; compare complete graph/providers/dependencies/features/subskills/config."
+      }
+    ],
+    "exact_commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+        "--",
+        "--exact",
+        "--nocapture"
+      ]
+    ],
+    "after_fix": "Run the expanded seven-case V1 family or equivalent exact decisive+directly affected old cases. Reuse other source-matching evidence; no broad rerun."
+  },
+  "red_basis": "Preserved candidate implementation plus decisive fixtures and governing clarifications only"
+}

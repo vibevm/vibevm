@@ -1,0 +1,79 @@
+{
+  "store": {
+    "store_id": "store.vibevm-m05c2r.live",
+    "campaign_id": "campaign.vibevm-m05c2r.live",
+    "base_id": "base.vibevm-m05c2r.live",
+    "store_epoch": "zap/2",
+    "codec_epoch": 2,
+    "reducer_epoch": 1
+  },
+  "observed_revision": 509,
+  "request": {
+    "alternative_id": "alternative.root-review.m05c2r.corrected.work",
+    "committed_prefix": [],
+    "initial_basis": "898d0068e753c6efec400cb1ec711e9f612e9ea36ba95e03d91525006504982c",
+    "effects": [],
+    "no_op_basis": {
+      "purpose": {
+        "kind": "mutation",
+        "subject": "domain.work-accepted"
+      },
+      "roots": [
+        {
+          "kind": "outcome",
+          "id": "outcome.m05c2r"
+        },
+        {
+          "kind": "obligation",
+          "id": "obligation.m05c2r"
+        },
+        {
+          "kind": "work",
+          "id": "work.m05c2r.prepare-plan"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c2r.1.corrected.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c2r.2.corrected.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c2r.3.corrected.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c2r.4.corrected.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c2r.5.corrected.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c2r.6.corrected.root-review"
+        },
+        {
+          "kind": "evidence",
+          "id": "evidence.verification.m05c2r.corrected.root-review"
+        }
+      ],
+      "policy": "not_applicable",
+      "capacity": "not_applicable",
+      "closure": "known_graph"
+    },
+    "request_digest": "58d0e47c924d1c7c087ce3c0c4187158da1dd06eef4a1fa42c0c6298e65e283b"
+  },
+  "preflight": {
+    "alternative_id": "alternative.root-review.m05c2r.corrected.work",
+    "request_digest": "58d0e47c924d1c7c087ce3c0c4187158da1dd06eef4a1fa42c0c6298e65e283b",
+    "committed_prefix": [],
+    "effects": [],
+    "initial_basis": "898d0068e753c6efec400cb1ec711e9f612e9ea36ba95e03d91525006504982c",
+    "final_basis": "898d0068e753c6efec400cb1ec711e9f612e9ea36ba95e03d91525006504982c",
+    "digest": "12e253f3d04c12579a8c7910713a181a93728eecd1e10af298dc16709eb28f53"
+  },
+  "affected_scopes": []
+}

@@ -1,0 +1,147 @@
+{
+  "executed": false,
+  "group": "V3",
+  "commands": [],
+  "binding": null,
+  "extra": {
+    "run": [],
+    "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim.",
+    "reused": [
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-1.log",
+        "sha256": "40aa29ffbda40154a725a2e3d2dfad541e52e12f28817245ed5c3bf54c94ca69",
+        "source_hashes": {
+          "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+          "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+          "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+          "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c"
+        },
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_1_cases::solve_and_manifest_observation_share_catalog_identity",
+          "--",
+          "--exact"
+        ],
+        "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+        "prior_receipt_sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-2.log",
+        "sha256": "f78b6cd7f0871a5f0d3342a80d21689c0d920a2ecee959478b6391c52b81fe3f",
+        "source_hashes": {
+          "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+          "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+          "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+          "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c"
+        },
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_1_cases::discarded_candidate_metadata_never_requests_global_selection",
+          "--",
+          "--exact"
+        ],
+        "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+        "prior_receipt_sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+      }
+    ]
+  },
+  "fresh_tests": 0,
+  "passed": null,
+  "acceptance_implied": false,
+  "selected_for_fresh_verification": false,
+  "reused_evidence": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-1.log",
+      "sha256": "40aa29ffbda40154a725a2e3d2dfad541e52e12f28817245ed5c3bf54c94ca69",
+      "source_hashes": {
+        "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+        "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c"
+      },
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_1_cases::solve_and_manifest_observation_share_catalog_identity",
+        "--",
+        "--exact"
+      ],
+      "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+      "prior_receipt_sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-2.log",
+      "sha256": "f78b6cd7f0871a5f0d3342a80d21689c0d920a2ecee959478b6391c52b81fe3f",
+      "source_hashes": {
+        "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+        "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c"
+      },
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_1_cases::discarded_candidate_metadata_never_requests_global_selection",
+        "--",
+        "--exact"
+      ],
+      "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+      "prior_receipt_sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+    }
+  ],
+  "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim."
+}

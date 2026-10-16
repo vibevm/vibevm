@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "operation_id": "continuation.vibevm-m05c2r.root-review-correction",
+  "job_id": "job.runtime.packet.vibevm-m05c2r",
+  "candidate_id": "managed-result.618a03bed84d8ed1ffb327c781ac112c03e37963de3e666e4f594513722bcea9",
+  "progress": {
+    "kind": "actionable",
+    "rationale": "Root reviewed independent C2-R1/C2-R2 findings and requests correction before acceptance. Existing C2 implementation and13 observed cases provide actionable progress but producer satisfied claims do not discharge Root judgment. Residual: missing optional default must force rediscovery, and unresolved group must retain known ordinary implications. Preserve full original C2 criteria; one bounded additional attempt, no acceptance transfer. Review artifacts: /fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/ROOT-REVIEW.md SHA256 92b559394efacf0b34d6b2106306310bca2ea3cdf0391af5eb19567dd45c9f00",
+    "artifact_digests": [
+      "a036b4407d1f28715fa72152d0f402fc30dd7ef1f28cf7a2b16125ec8526f5d7",
+      "c088dfef4f450536c5979bb68ae4faa28735a6fe0c34569744a2783d61fc47e9"
+    ],
+    "residual_criteria": [
+      "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#SOURCE-VERSUS-PLAN",
+      "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#VIBEVM-OWNER"
+    ]
+  },
+  "additional_attempts": 1
+}

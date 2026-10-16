@@ -1,0 +1,91 @@
+{
+  "status": "READY_NOT_APPLIED",
+  "utc": "2026-10-16T16:23:12.136321+00:00",
+  "current_state": {
+    "status": "READY_NOT_APPLIED",
+    "typed_payloads_encoded": 13,
+    "commands_submitted": 0,
+    "canonical_revision": 497,
+    "job_id": "job.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+    "candidate_id": "managed-result.ad742a0fce0cea44195e93019f745205d7703059ff20031020b8d5d3e65c97be",
+    "safe": "unknown",
+    "runtime_acceptance_projection": "unreviewed",
+    "native_stopped": false,
+    "canonical_work_state": "active"
+  },
+  "root_review_proposal": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/ROOT-REVIEW-PROPOSAL.json",
+  "required_Root_flags": [
+    "approved=true",
+    "safe_boundary_attestation.approved=true"
+  ],
+  "approval_token": "Root approves corrected full M05C2 both criteria, seven fresh green cases and qualified eight-case reuse, with reviewed safe boundary and no physical stop claim",
+  "ordered_commands": [
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/root-accept.py",
+      "safe",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/root-accept.py",
+      "open-review",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/root-accept.py",
+      "evidence",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/root-accept.py",
+      "stage",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/root-accept.py",
+      "work",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/root-accept.py",
+      "inspect"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/root-accept.py",
+      "stop",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/ROOT-REVIEW.json"
+    ],
+    [
+      "python3",
+      "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/root-accept.py",
+      "stop-observe"
+    ]
+  ],
+  "stop_revision": "Read fresh job revision at stop invocation; exact request retained for uncertain-result retry. Not pinned495.",
+  "safe_scope": "Reviewed completed code effects at exact attempt boundary; no physical-stop claim. Candidate Report artifact retained; approved Root-review SHA bound in protected command reasons.",
+  "fresh_green": 7,
+  "historical_red_failures": 2,
+  "qualified_reused": 8,
+  "global_formatter_pass_claim": false,
+  "source_commit": "Root-owned, still pending; no invented SHA. Exact current source hashes validated.",
+  "count": "90/222 until new canonical WorkAccepted; then Root accounts C2 once, not RuntimeJob acceptance projection.",
+  "pins": {
+    "root-accept.py": "bfb36f4f24b6d6c258f2c73eb95eaee25248d1fd26f1b778abbf10f32669173f",
+    "validate-review.py": "ab8e3c835bf378e40ba676204614a2870f20e523b9cbc18c6f1b8d4286263b46",
+    "ROOT-REVIEW-PROPOSAL.json": "e0c42655fbe6abc9b81811e23c75f4d1dbe2bd7af93dfc1a40359f8545e5df77",
+    "EVIDENCE-PAYLOADS.json": "8896df304f09a39daaf70f97c68fd7960d28545117791a38e4d03b3801382b26",
+    "STATIC-PAYLOADS.json": "02d99196e1e0e3190604ac1e8993b5f756428504d09102b3335061f309dc70c8",
+    "OPERATOR-PINS.json": "856b1288a58d8551ceeca6b42b42573384972acd79a99616898d40b58d95b44f",
+    "VALIDATION.json": "862559b623b63fbd5ecef52bac104c8a897794a7a4fc1d48f88ec398ba7ee0b7"
+  },
+  "new_builds_tests_models": 0,
+  "live_DB_opened": false,
+  "commands_submitted": 0,
+  "remaining": "Root writes final approval flags/token and runs ordinary protected phases. Keep service live until acceptance and worker-stop observation; service retirement remains Root-owned."
+}

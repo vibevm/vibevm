@@ -1,0 +1,68 @@
+[
+  {
+    "id": "V1",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_2_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "compatible_older_candidate_keeps_only_selected_effects",
+      "all_incoming_consumers_survive_candidate_rejection",
+      "unreachable_mandatory_group_has_no_prompt",
+      "changed_semantic_default_requires_rediscovery",
+      "conflict_retains_consumer_and_candidate_reasons"
+    ]
+  },
+  {
+    "id": "V2",
+    "kind": "conditional_B1_B2_compatibility",
+    "commands": [],
+    "rule": "Run only exact feature/configuration cases whose consumed owner changes; otherwise retain source-bound accepted evidence with no fresh pass claim."
+  },
+  {
+    "id": "V3",
+    "kind": "conditional_C1_compatibility",
+    "commands": [],
+    "rule": "Only if frozen catalog/snapshot contract is affected, bind exact existing resolver C1 cases; source-bound reuse otherwise."
+  },
+  {
+    "id": "V4",
+    "kind": "conditional_solver_compatibility",
+    "commands": [],
+    "rule": "Bind smallest directly affected root/conflict/capability cases. No whole crate inventory or suite."
+  },
+  {
+    "id": "V5",
+    "kind": "task_format",
+    "commands": [],
+    "rule": "Actual scoped rustfmt --check on all affected Rust files. Retain C1 global formatter baseline exit1 on eight unchanged files; do not repair them or claim whole fmt pass."
+  },
+  {
+    "id": "V6",
+    "kind": "diff",
+    "commands": [
+      [
+        "git",
+        "diff",
+        "--check"
+      ]
+    ]
+  },
+  {
+    "id": "V7",
+    "kind": "spec_preservation",
+    "commands": [],
+    "rule": "Parse governing PROP003 and retain complete semantic preservation/addition/replacement map; Root judges full counterexample/consumer evidence."
+  }
+]

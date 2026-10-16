@@ -1,0 +1,211 @@
+{
+  "executed": false,
+  "group": "V4",
+  "commands": [],
+  "binding": null,
+  "extra": {
+    "run": [],
+    "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim.",
+    "reused": [
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-1.log",
+        "sha256": "e5f499ee34f81ef23d5c966ca1325599280357c293f8a5160c433050b3dc010c",
+        "source_hashes": {
+          "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+          "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+          "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+          "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+        },
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::tests::resolvo_solves_where_naive_first_pick_fails",
+          "--",
+          "--exact"
+        ],
+        "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+        "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-2.log",
+        "sha256": "e0cee9f13824d733e8aa19025c9993569d9bc3d0c58e09269017534845db4680",
+        "source_hashes": {
+          "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+          "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+          "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+          "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+        },
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::tests::resolvo_reports_unsatisfiable_with_explanation",
+          "--",
+          "--exact"
+        ],
+        "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+        "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-3.log",
+        "sha256": "8eac9b269576e82b37dc46c350e795654a6e69190ee6e4f932dfccaba106ab49",
+        "source_hashes": {
+          "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+          "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+          "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+          "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+        },
+        "counts": [
+          [
+            "1",
+            "0",
+            "0"
+          ]
+        ],
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::tests::resolvo_satisfies_capability_via_required_package",
+          "--",
+          "--exact"
+        ],
+        "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+        "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+      }
+    ]
+  },
+  "fresh_tests": 0,
+  "passed": null,
+  "acceptance_implied": false,
+  "selected_for_fresh_verification": false,
+  "reused_evidence": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-1.log",
+      "sha256": "e5f499ee34f81ef23d5c966ca1325599280357c293f8a5160c433050b3dc010c",
+      "source_hashes": {
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+        "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+        "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+      },
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::tests::resolvo_solves_where_naive_first_pick_fails",
+        "--",
+        "--exact"
+      ],
+      "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+      "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-2.log",
+      "sha256": "e0cee9f13824d733e8aa19025c9993569d9bc3d0c58e09269017534845db4680",
+      "source_hashes": {
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+        "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+        "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+      },
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::tests::resolvo_reports_unsatisfiable_with_explanation",
+        "--",
+        "--exact"
+      ],
+      "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+      "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-3.log",
+      "sha256": "8eac9b269576e82b37dc46c350e795654a6e69190ee6e4f932dfccaba106ab49",
+      "source_hashes": {
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+        "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+        "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+      },
+      "counts": [
+        [
+          "1",
+          "0",
+          "0"
+        ]
+      ],
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::tests::resolvo_satisfies_capability_via_required_package",
+        "--",
+        "--exact"
+      ],
+      "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+      "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+    }
+  ],
+  "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim."
+}

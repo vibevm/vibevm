@@ -1,0 +1,9 @@
+{
+  "unix": 1792167815.8721879,
+  "pid": 738754,
+  "birth": 3478414,
+  "signal": "SIGTERM",
+  "manager_children": [],
+  "canonical_work_accepted_revision": 510,
+  "normal_worker_stop_delivered": true
+}

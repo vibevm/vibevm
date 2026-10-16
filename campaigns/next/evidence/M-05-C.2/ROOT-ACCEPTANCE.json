@@ -1,0 +1,26 @@
+{
+  "task": "M-05-C.2",
+  "accepted": true,
+  "canonical_revision": 510,
+  "canonical_work_state": "accepted",
+  "work_id": "work.m05c2r.prepare-plan",
+  "candidate_id": "managed-result.ad742a0fce0cea44195e93019f745205d7703059ff20031020b8d5d3e65c97be",
+  "source_commit": "19ed29697dd84a66dc0af2634459879e1c450f6d",
+  "source_base": "e718f154ebb76d74a44d510f7e9f7075155fd229",
+  "fresh_final_green_cases": 7,
+  "historical_decisive_red_failures": 2,
+  "qualified_reused_cases": 8,
+  "reused_case_groups": [
+    3,
+    2,
+    3
+  ],
+  "runtime_job_acceptance_projection": "unreviewed",
+  "safe": "safe",
+  "accepted_task_contracts": 91,
+  "total_task_contracts": 222,
+  "scope": "Both complete original C2 criteria on admitted fixed-consumer/registry surface; no universal C3 route coverage or unsupported-surface expansion.",
+  "global_formatter": "Historical global failure retained/excluded; only actual scoped formatter --check pass claimed.",
+  "retirement_status": "pending final Root physical receipt",
+  "count_rule": "Counted once after canonical WorkAccepted510; no additional increment from this archive or RuntimeJob projection."
+}

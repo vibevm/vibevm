@@ -1,0 +1,17 @@
+{
+  "commit": "19ed29697dd84a66dc0af2634459879e1c450f6d",
+  "work_accepted_revision": 510,
+  "task": "M-05-C.2",
+  "accepted_count": 91,
+  "campaign_total": 222,
+  "source_files": [
+    "crates/vibe-resolver/src/features/configuration.rs",
+    "crates/vibe-resolver/src/lib.rs",
+    "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+    "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+    "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+    "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+    "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+  ]
+}

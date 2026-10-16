@@ -1,0 +1,303 @@
+--- a/crates/vibe-resolver/src/resolvo_engine/configuration.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/configuration.rs
+@@ -8,7 +8,7 @@
+ use crate::{
+     DepProvider, DepProviderError, FeatureExpansion, ResolvedGraph, SolveError, VersionEnumerator,
+ };
+-use std::collections::BTreeMap;
++use std::collections::{BTreeMap, BTreeSet};
+ use vibe_core::manifest::{Manifest, feature_constraints::*, feature_effects::*};
+ use vibe_core::{Group, PackageRef};
+ use vibe_registry::CandidateIdentity;
+@@ -308,13 +308,53 @@
+                     }
+                     _ => unreachable!(),
+                 });
++                // Authorization is about omitted intent and the shown definition,
++                // not just defaults that happen to exist in today's outcome.
++                let bound = |i: usize| {
++                    defaults.iter().any(|b| {
++                        b.edge == i
++                            && b.identity == d.identity
++                            && b.shown == d.definition
++                            && b.request == *request
++                    })
++                };
++                let default_governed = |i: usize| {
++                    let edge = &edges[i];
++                    let omitted_default = |definition: &ConfigurationDefinition| {
++                        definition.constraints.groups.iter().any(|(name, group)| {
++                            group.defaults.is_some()
++                                && edge
++                                    .selections
++                                    .get(name)
++                                    .is_none_or(|s| matches!(s.selection, Selection::Omitted))
++                        })
++                    };
++                    edge.policy == DefaultPolicy::UseDeclaredDefaults
++                        && (omitted_default(&d.definition)
++                            || defaults
++                                .iter()
++                                .any(|b| b.edge == i && omitted_default(&b.shown)))
++                };
++                let stale_defaults = indices.iter().any(|&i| default_governed(i) && !bound(i));
++                // A changed/unbound default cannot supply even internal solver
++                // implications. Reuse B2 to retain only authorized selections.
++                let mut authorized_request = local_request.clone();
++                if stale_defaults {
++                    for (local, &i) in indices.iter().enumerate() {
++                        if !bound(i) {
++                            authorized_request.edges[local].policy =
++                                vibe_wire::generated::consumer_configuration::e1::request::EdgePolicy::RequireSelection;
++                        }
++                    }
++                }
++                let mut known = None;
+                 let activation = if version_conflict {
+                     Activation::Rejected(
+                         "original incoming consumer version/kind constraint".into(),
+                     )
+                 } else {
+                     match resolve_consumer_configuration(
+-                        &local_request,
++                        &authorized_request,
+                         std::slice::from_ref(&d.definition),
+                     ) {
+                         Err(error) => Activation::Rejected(error),
+@@ -329,23 +369,49 @@
+                                         .map(|&i| indices[i as usize])
+                                         .collect::<Vec<_>>()
+                                 ))
+-                            } else if outcome.status == OutcomeStatus::NeedsSelection {
+-                                Activation::NeedsSelection(format!(
+-                                    "mandatory groups: {:?}",
+-                                    outcome.needs
+-                                ))
+-                            } else if outcome.defaults_used.iter().any(|used| {
+-                                !defaults.iter().any(|b| {
+-                                    b.edge == indices[used.edge as usize]
+-                                        && b.identity == d.identity
+-                                        && b.shown == d.definition
+-                                        && b.request == *request
+-                                })
+-                            }) {
+-                                Activation::Rediscovery(
+-                                    "declared default is not bound to this exact shown definition"
+-                                        .into(),
+-                                )
++                            } else if stale_defaults
++                                || outcome.status == OutcomeStatus::NeedsSelection
++                            {
++                                // B2 intentionally withholds a full expansion for
++                                // unresolved groups. B1 can still derive the known
++                                // monotone closure, without choosing missing members.
++                                let selected: BTreeSet<String> =
++                                    outcome.selected.values().flatten().cloned().collect();
++                                let mut features = selected.clone();
++                                for &i in indices {
++                                    features.extend(
++                                        edges[i].features.iter().map(|f| f.as_str().to_owned()),
++                                    );
++                                    if edges[i].all_features {
++                                        features.extend(
++                                            d.definition
++                                                .program
++                                                .features
++                                                .keys()
++                                                .filter(|f| !f.as_str().starts_with('_'))
++                                                .map(|f| f.as_str().to_owned()),
++                                        );
++                                    }
++                                }
++                                match crate::features::expand_feature_effects(
++                                    &d.definition.program, &d.definition.declarations,
++                                    &crate::FeatureRequest { explicit: features.into_iter().collect(), no_defaults: true, all: false },
++                                    &BTreeSet::new(),
++                                ) {
++                                    Err(error) => Activation::Rejected(error.to_string()),
++                                    Ok(expansion) if d.definition.constraints.members().iter().any(|m|
++                                        expansion.active_features.contains(m.as_str()) && !selected.contains(m.as_str())) => {
++                                        Activation::Rejected("feature closure implicitly selects a constrained member".into())
++                                    }
++                                    Ok(expansion) => {
++                                        known = Some(expansion);
++                                        if stale_defaults {
++                                            Activation::Rediscovery("declared default is not bound to this exact shown definition".into())
++                                        } else {
++                                            Activation::NeedsSelection(format!("mandatory groups: {:?}", outcome.needs))
++                                        }
++                                    }
++                                }
+                             } else {
+                                 let expansion = resolution
+                                     .expansions
+@@ -353,35 +419,41 @@
+                                     .next()
+                                     .flatten()
+                                     .expect("resolved B2 outcome has expansion");
+-                                manifest.requires.packages.clear();
+-                                for id in &expansion.active_deps {
+-                                    let declaration = &d.definition.declarations.dependencies
+-                                        [&DependencyDeclarationId::new(id).expect("validated ID")];
+-                                    let DependencySource::Registry(dep) = &declaration.source
+-                                    else {
+-                                        unreachable!()
+-                                    };
+-                                    let dep_group = dep.group.as_ref().ok_or_else(|| {
+-                                        ConfigurationSolveError::Unsupported(
+-                                            "unqualified induced dependency".into(),
+-                                        )
+-                                    })?;
+-                                    // Missing catalog closure is an operational
+-                                    // error, not a candidate incompatibility.
+-                                    match self.provider.list_versions(dep_group, dep.name.as_str())
+-                                    {
+-                                        Err(error @ DepProviderError::Other(_)) => {
+-                                            return Err(error.into());
+-                                        }
+-                                        _ => {}
+-                                    }
+-                                    manifest.requires.packages.push(dep.clone());
+-                                }
+                                 Activation::Ready(expansion)
+                             }
+                         }
+                     }
+                 };
++                // These requirements remain attached to this candidate even
++                // when its final effects cannot yet be returned to the caller.
++                if let Some(expansion) = match &activation {
++                    Activation::Ready(expansion) => Some(expansion),
++                    Activation::NeedsSelection(_) | Activation::Rediscovery(_) => known.as_ref(),
++                    Activation::Rejected(_) => None,
++                } {
++                    manifest.requires.packages.clear();
++                    for id in &expansion.active_deps {
++                        let declaration = &d.definition.declarations.dependencies
++                            [&DependencyDeclarationId::new(id).expect("validated ID")];
++                        let DependencySource::Registry(dep) = &declaration.source else {
++                            unreachable!()
++                        };
++                        let dep_group = dep.group.as_ref().ok_or_else(|| {
++                            ConfigurationSolveError::Unsupported(
++                                "unqualified induced dependency".into(),
++                            )
++                        })?;
++                        // Missing catalog closure is an operational
++                        // error, not a candidate incompatibility.
++                        match self.provider.list_versions(dep_group, dep.name.as_str()) {
++                            Err(error @ DepProviderError::Other(_)) => {
++                                return Err(error.into());
++                            }
++                            _ => {}
++                        }
++                        manifest.requires.packages.push(dep.clone());
++                    }
++                }
+                 match &activation {
+                     Activation::Ready(_) => {
+                         reason.reason = format!(
+--- a/crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs
++++ b/crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs
+@@ -474,3 +474,87 @@
+     assert!(solver.to_string().contains("org.example/app"));
+     assert!(solver.to_string().contains("consumer"));
+ }
++
++#[test]
++fn removed_optional_default_requires_rediscovery() {
++    let catalog = catalog();
++    let mut request = request();
++    request.edges[0].policy = wire::EdgePolicy::UseDeclaredDefaults;
++    let mut definitions = definitions(&catalog, &request);
++    mandatory(&mut definitions[0], Some("a"));
++    definitions[0]
++        .definition
++        .constraints
++        .groups
++        .get_mut(&f("choice"))
++        .unwrap()
++        .cardinality = Cardinality::ZeroOrOne;
++    let binding = DefaultBinding::shown(0, &request, &definitions[0]);
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(
++            &[p("app@=1.0.0"), p("blocker")],
++            &request,
++            &definitions,
++            &[binding.clone()],
++        )
++        .unwrap();
++    assert_selected(&result, &["a"]);
++    definitions[0]
++        .definition
++        .constraints
++        .groups
++        .get_mut(&f("choice"))
++        .unwrap()
++        .defaults = None;
++    let error = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(
++            &[p("app@=1.0.0"), p("blocker")],
++            &request,
++            &definitions,
++            &[binding.clone()],
++        )
++        .err()
++        .expect("removed shown default must require rediscovery");
++    let ConfigurationSolveError::Rediscovery {
++        request: original,
++        candidates,
++    } = error
++    else {
++        panic!("{error:?}")
++    };
++    assert_eq!(original, request);
++    assert_eq!(candidates[0].identity, definitions[0].identity);
++    assert_eq!(candidates[0].coordinate, "org.example/app@1.0.0");
++    request.edges[0].selections.insert(
++        "choice".into(),
++        wire::Selection {
++            intent: wire::SelectionIntent::Exact,
++            provenance: "manifest:consumer-a".into(),
++            members: Some(vec!["a".into()]),
++        },
++    );
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(
++            &[p("app@=1.0.0"), p("blocker")],
++            &request,
++            &definitions,
++            &[binding],
++        )
++        .unwrap();
++    assert_selected(&result, &["a"]);
++    assert_eq!(result.request, request);
++}
++
++#[test]
++fn unresolved_group_keeps_known_ordinary_implications() {
++    let catalog = catalog();
++    let request = request();
++    let mut definitions = definitions(&catalog, &request);
++    mandatory(&mut definitions[1], None);
++    assert!(definitions[1].definition.declarations.dependencies[&id("bad")].optional);
++    let result = ResolvoDepSolver::new(&catalog)
++        .solve_configuration(&[p("app"), p("blocker")], &request, &definitions, &[])
++        .unwrap();
++    assert_selected(&result, &[]);
++    assert_eq!(result.request, request);
++}
+--- a/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
++++ b/vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+@@ -895,9 +895,9 @@
+     <p><M05C1-OBSERVATION status="spec/done">ETO observes the actual reproducible catalog identity and its inspected candidate bindings before install effects. This transaction consistency does not declare candidate-conditioned activation or universal route parity complete; those remain subsequent work.</M05C1-OBSERVATION></p>
+   </section>
+   <section title="15. Candidate-conditioned activation (M-05-C.2)">
+-    <p><M05C2-CONDITIONING status="spec/done">Activation belongs to the exact candidate that introduced it. The existing resolvo solver must carry induced requirements on that candidate's literal. Rejecting a candidate discards its features, providers, dependency effects, subskills and config values. Only selected candidates contribute returned effects; inspecting an unreachable candidate with a mandatory unresolved group never requests selection.</M05C2-CONDITIONING></p>
++    <p><M05C2-CONDITIONING status="spec/done">Activation belongs to the exact candidate that introduced it. The existing resolvo solver must carry induced requirements on that candidate's literal. Already-authorized ordinary-feature implications remain candidate-local solver requirements while a group is unresolved; unresolved choices neither erase known requirements nor authorize guessed members. B2 continues to expose no full expansion for NeedsSelection. Rejecting a candidate discards its features, providers, dependency effects, subskills and config values. Only selected candidates contribute returned effects; inspecting an unreachable candidate with a mandatory unresolved group never requests selection.</M05C2-CONDITIONING></p>
+     <p><M05C2-CONSUMERS status="spec/done">Every original incoming consumer edge, selection intent, version constraint and provenance survives candidate rejection unchanged. Evaluate all consumers of one configuration together through the B2 evaluator. A valid older candidate may satisfy the same authorized intent. Conflict evidence retains original consumer reasons alongside the candidate coordinate and exact C1 identity; source errors remain operational errors, never candidate exclusions.</M05C2-CONSUMERS></p>
+-    <p><M05C2-DEFAULTS status="spec/done">Permission to use a declared default binds the exact shown candidate source/content/definition identity. Choosing another definition does not authorize its defaults, even if it is older or the member spelling happens to match. A selected candidate without that exact binding requires rediscovery before effects are returned. Explicit selections retain their original meaning and are not replaced by defaults.</M05C2-DEFAULTS></p>
++    <p><M05C2-DEFAULTS status="spec/done">Permission to use a declared default binds the exact shown candidate source/content/definition identity. Choosing another definition does not authorize its defaults, even if it is older or the member spelling happens to match. A selected candidate without that exact binding requires rediscovery before effects are returned. The comparison covers default-governed omitted intent even when the current definition removes the shown default or group and therefore reports no defaults used. Explicit selections retain their original meaning and are not replaced by defaults.</M05C2-DEFAULTS></p>
+     <p><M05C2-BOUNDARY status="spec/done">The configured resolver consumes admitted, source-bound B1/B2 definitions and immutable C1 metadata. Unsupported combinations refuse before returning mutation effects. Completeness is the existing solver's finite candidate search, never a fixed retry limit. Legacy DepSolver routes, ordinary manifest parsing, B3 opt-in profiles and C1 operational-error propagation remain intact; universal caller-route parity is separate C3 work. Counterexamples compare the entire selected graph and all derived effects, including provider contributions.</M05C2-BOUNDARY></p>
+     <p><M05C2-ADMITTED-SURFACE status="spec/done">The configured Rust entry accepts fixed explicit incoming Vibe consumer requests, one configuration instance per package, and normalized definitions supplied by the admitting caller with exact C1 receipts. It preserves the full request rather than inferring edges from installed state. Default authorization retains that request and the full shown normalized definition as well as its source/content/definition receipt. Native candidate selection, multiple instances of one package, cross-package feature forwarding and non-registry dependency sources refuse. Conditional targets, requires_any and obsoletes also refuse on this entry because the incumbent graph projection does not retain their complete activation support. These refusals are explicit unsupported outcomes, not unsatisfiability claims or a substitute resolver. The ordinary resolver routes and B1/B2 standalone APIs retain their existing semantics.</M05C2-ADMITTED-SURFACE></p>
+   </section>

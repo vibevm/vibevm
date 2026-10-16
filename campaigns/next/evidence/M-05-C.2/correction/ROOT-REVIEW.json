@@ -1,0 +1,43 @@
+{
+  "schema": "m05c2-independent-review/1",
+  "recommendation": "request_correction",
+  "acceptance_mutated": false,
+  "count_changed": false,
+  "tests_run_by_reviewer": false,
+  "findings": [
+    {
+      "id": "C2-R1",
+      "priority": 1,
+      "title": "Removed optional-group default bypasses shown-definition binding",
+      "file": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "line": 337,
+      "root_cause": "Binding checked only for current defaults_used; removed default yields empty list and Ready despite stale shown definition",
+      "counterexample": "ZeroOrOne shown default a, omitted UseDeclaredDefaults, retain binding then set default None; pin candidate; success drops a instead of Rediscovery",
+      "evidence_kind": "source-derived not executed"
+    },
+    {
+      "id": "C2-R2",
+      "priority": 1,
+      "title": "Unresolved choice erases known ordinary-feature implications",
+      "file": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "line": 332,
+      "root_cause": "Only required declarations reach solver for NeedsSelection; already explicit ordinary activation dependencies are added only in Ready branch",
+      "counterexample": "Existing unreachable-group fixture before bad.optional=false: newest ordinary activates optional bad conflicting blocker, but returns NeedsSelection instead of older good candidate",
+      "evidence_kind": "source-derived not executed"
+    }
+  ],
+  "verified_receipts": {
+    "V1": 5,
+    "V2": 3,
+    "V3": 2,
+    "V4": 3,
+    "log_hash_mismatches": [],
+    "V1_current_source_match": true,
+    "V2_V3_V4_snapshot_differences": [
+      "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+    ]
+  },
+  "scope": "two supported-surface corrections; no full suite/C3 integration/new engine required",
+  "report": "REPORT.md"
+}

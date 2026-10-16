@@ -1,0 +1,668 @@
+{
+  "approved": false,
+  "approval_token": "",
+  "task": "M-05-C.2",
+  "job_id": "job.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+  "candidate_id": "managed-result.ad742a0fce0cea44195e93019f745205d7703059ff20031020b8d5d3e65c97be",
+  "work_id": "work.m05c2r.prepare-plan",
+  "source_head_at_review": "e718f154ebb76d74a44d510f7e9f7075155fd229",
+  "source_commit": null,
+  "source_commit_note": "Root commit pending; no commit SHA invented. Frozen final source hashes bind these observations. Root records actual implementation/archive commits separately.",
+  "summary": "Root accepts the corrected full original C2 admitted implementation after independent review, red reproduction of both P1s, seven-case fresh green family and qualified unchanged-owner reuse.",
+  "scope": "Complete original C2 on retained admitted fixed-consumer/registry surface; unchanged unsupported boundaries; no C3 universal route claim.",
+  "limitations": [
+    "Original supported fixed-consumer/registry boundary remains; no C3 universal route coverage or unsupported-feature expansion.",
+    "V1 is seven fresh final green cases. RED1/2 are retained failures. V2/V3/V4 reuse3/2/3 only for hash-matching consumed owners; no identical-full-source or fresh-run claim.",
+    "Scoped formatter --check passed; excluded historical global formatting failure remains separate, never global pass.",
+    "Safe verification concerns reviewed completed reversible code effects and captured exact attempt boundary; it does not claim worker/process retirement.",
+    "Candidate Report artifact is the existing witnessed input. Approved Root-review SHA is bound in protected command reasons and archived with requests/receipts; no new artifact publisher or decoder changes."
+  ],
+  "independent_review": {
+    "path": "/fast/git/v/research/2026-10-16-m05c2-correction-review/REPORT.md",
+    "sha256": "dc27bc90b5acacf4d095e845f4b6a14a7ff4753b2174f311e0376d99cb617465"
+  },
+  "safe_boundary_attestation": {
+    "approved": false,
+    "boundary": "Unsupported combinations refuse before mutation; no bounded retry masquerades as completeness.",
+    "basis": "Exact collected known-tail/no-failure completed code-effects candidate; Root-reviewed correction/source/receipts. No outstanding install/apply effects reported. This does not assert physical stop."
+  },
+  "criterion_assessments": [
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#SOURCE-VERSUS-PLAN",
+      "statement": "Counterexample fixtures compare selected graph and all derived activation effects.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "rationale": "V1 seven exact named definitions: assert_selected compares full graph and all activation projections; R1 returns Rediscovery and independently verifies explicit choice with old binding; R2 retains optional bad and selects app@1. Root read the final independent correction review and agrees both original P1 findings are fixed on the admitted C2 surface."
+    },
+    {
+      "requirement": "spec://org.vibevm.core/vibevm/common/PROJECT-BOUNDARIES#VIBEVM-OWNER",
+      "statement": "Conflict evidence retains the consumer and candidate reasons.",
+      "producer_disposition": "satisfied",
+      "review_disposition": "satisfied",
+      "rationale": "V1 conflict_retains_consumer_and_candidate_reasons and all_incoming_consumers_survive_candidate_rejection passed; original request, edge indices, candidate coordinate/identity and solver conflict preserved. Root read the final independent correction review and agrees both original P1 findings are fixed on the admitted C2 surface."
+    }
+  ],
+  "observations": [
+    {
+      "group": "V1",
+      "verification_id": "verification.m05c2r",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V1-result.json",
+        "sha256": "08f0d6ccba7d2466c3ccd9e58fc4b2385434fa733ab6ff8e3e40619381262a7e"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/verify-group.py",
+          "V1"
+        ],
+        "cases": [
+          "V1"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/verify-group.py",
+          "V1"
+        ],
+        "cases": [
+          "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+          "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+          "resolvo_engine::m_05_c_2_cases::unreachable_mandatory_group_has_no_prompt",
+          "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+          "resolvo_engine::m_05_c_2_cases::conflict_retains_consumer_and_candidate_reasons",
+          "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+          "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V1: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 7,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Complete original C2 on retained admitted fixed-consumer/registry surface; unchanged unsupported boundaries; no C3 universal route claim."
+    },
+    {
+      "group": "V2",
+      "verification_id": "verification.m05c2r.1",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V2-result.json",
+        "sha256": "969224e27a612947ac8bc275197ca920d55ce3b5bb4a795aedfbff86a4be57be"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/verify-group.py",
+          "V2"
+        ],
+        "cases": [
+          "V2"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V2: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/verify-group.py",
+          "V2"
+        ],
+        "cases": [
+          "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+          "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+          "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "Qualified retained V2 exact-case evidence on unchanged consumed owners; no fresh execution or identical-full-source claim",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 3,
+      "selected_observation": "observed_pass",
+      "scope": "Complete original C2 on retained admitted fixed-consumer/registry surface; unchanged unsupported boundaries; no C3 universal route claim."
+    },
+    {
+      "group": "V3",
+      "verification_id": "verification.m05c2r.2",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V3-result.json",
+        "sha256": "18d325bf6c27976c8d90e13a317929e804ac3115e8a70a3b15cf3dcd6d9386e2"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/verify-group.py",
+          "V3"
+        ],
+        "cases": [
+          "V3"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V3: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/verify-group.py",
+          "V3"
+        ],
+        "cases": [
+          "resolvo_engine::m_05_c_1_cases::solve_and_manifest_observation_share_catalog_identity",
+          "resolvo_engine::m_05_c_1_cases::discarded_candidate_metadata_never_requests_global_selection"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "Qualified retained V3 exact-case evidence on unchanged consumed owners; no fresh execution or identical-full-source claim",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 2,
+      "selected_observation": "observed_pass",
+      "scope": "Complete original C2 on retained admitted fixed-consumer/registry surface; unchanged unsupported boundaries; no C3 universal route claim."
+    },
+    {
+      "group": "V4",
+      "verification_id": "verification.m05c2r.3",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V4-result.json",
+        "sha256": "39f12b1f76b77abee6f67d6e74d853b60a0925542d93f5099340bb09d0242da7"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "V4"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V4: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/verify-group.py",
+          "V4"
+        ],
+        "cases": [
+          "resolvo_engine::tests::resolvo_solves_where_naive_first_pick_fails",
+          "resolvo_engine::tests::resolvo_reports_unsatisfiable_with_explanation",
+          "resolvo_engine::tests::resolvo_satisfies_capability_via_required_package"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "Qualified retained V4 exact-case evidence on unchanged consumed owners; no fresh execution or identical-full-source claim",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 3,
+      "selected_observation": "observed_pass",
+      "scope": "Complete original C2 on retained admitted fixed-consumer/registry surface; unchanged unsupported boundaries; no C3 universal route claim."
+    },
+    {
+      "group": "V5",
+      "verification_id": "verification.m05c2r.4",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V5-result.json",
+        "sha256": "481c6a12ce718e58a0352d0669b8f1e53e035e421882d6aa7754f459fba24bf7"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/verify-group.py",
+          "V5"
+        ],
+        "cases": [
+          "V5"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "rustfmt",
+          "--edition",
+          "2024",
+          "--config",
+          "skip_children=true",
+          "--check",
+          "crates/vibe-resolver/src/lib.rs",
+          "crates/vibe-resolver/src/features/configuration.rs",
+          "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+          "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+          "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+          "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+          "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs"
+        ],
+        "cases": [
+          "Task-owned scoped formatter --check"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V5: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Complete original C2 on retained admitted fixed-consumer/registry surface; unchanged unsupported boundaries; no C3 universal route claim."
+    },
+    {
+      "group": "V6",
+      "verification_id": "verification.m05c2r.5",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V6-result.json",
+        "sha256": "5b459406f19a0ee95a299d8dfad70a3b2656495f4bbcee65a368281f78111205"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/verify-group.py",
+          "V6"
+        ],
+        "cases": [
+          "V6"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "Actual git diff --check"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V6: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Complete original C2 on retained admitted fixed-consumer/registry surface; unchanged unsupported boundaries; no C3 universal route claim."
+    },
+    {
+      "group": "V7",
+      "verification_id": "verification.m05c2r.6",
+      "result": {
+        "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V7-result.json",
+        "sha256": "e174556c4e4aaf4ddcf596f04f575dd88978a9957ba26f43c05fd989d3a55050"
+      },
+      "original_method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "V7"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/verify-group.py",
+          "V7"
+        ],
+        "cases": [
+          "Structural PROP003 preservation, plus separate final independent semantic review"
+        ],
+        "environment": "Root-bound private warm target and TMPDIR; separate command exits; no broad suite",
+        "subjects": [
+          {
+            "id": "work.m05c2r.prepare-plan",
+            "kind": "work"
+          }
+        ],
+        "target": "M05C2 V7: exact SELECTED-CHECKS group",
+        "toolchain": "effective repository nightly; edition2024 scoped fmt"
+      },
+      "fresh_cases": 0,
+      "qualified_reused_cases": 0,
+      "selected_observation": "observed_pass",
+      "scope": "Complete original C2 on retained admitted fixed-consumer/registry surface; unchanged unsupported boundaries; no C3 universal route claim."
+    }
+  ],
+  "fresh_distinct_cases": 7,
+  "historical_red_failed_cases": 2,
+  "qualified_reused_cases": 8,
+  "actual_environment": "Linux, existing repository nightly and exclusive warm Vibe target; producer cargo --offline --locked. No tests/builds by acceptance preparer.",
+  "evidence_files": {
+    "0": {
+      "path": "/fast/git/v/research/2026-10-16-m05c2-correction-review/REPORT.md",
+      "sha256": "dc27bc90b5acacf4d095e845f4b6a14a7ff4753b2174f311e0376d99cb617465"
+    },
+    "1": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-1.log",
+      "sha256": "bb8619113dfbcd4e7b35e3459d39cb5197c60c16ab71f9a8713ed9f9c4b52561"
+    },
+    "2": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-2.log",
+      "sha256": "2e4607e19fa1de57da3e7638eea6d99d0a3a8769df42188476d1ffc852e1ab1c"
+    },
+    "3": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-3.log",
+      "sha256": "bf72c282841d77b6cb0e31edfed061c62f168dfb52956ba7948f279f8c165f9a"
+    },
+    "4": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+      "sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+    },
+    "5": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-1.log",
+      "sha256": "40aa29ffbda40154a725a2e3d2dfad541e52e12f28817245ed5c3bf54c94ca69"
+    },
+    "6": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-2.log",
+      "sha256": "f78b6cd7f0871a5f0d3342a80d21689c0d920a2ecee959478b6391c52b81fe3f"
+    },
+    "7": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+      "sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+    },
+    "8": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-1.log",
+      "sha256": "e5f499ee34f81ef23d5c966ca1325599280357c293f8a5160c433050b3dc010c"
+    },
+    "9": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-2.log",
+      "sha256": "e0cee9f13824d733e8aa19025c9993569d9bc3d0c58e09269017534845db4680"
+    },
+    "10": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-3.log",
+      "sha256": "8eac9b269576e82b37dc46c350e795654a6e69190ee6e4f932dfccaba106ab49"
+    },
+    "11": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+      "sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+    },
+    "12": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/BUILDER-RECEIPT.json",
+      "sha256": "485b9930ddbe86f1398b3816f6fba53efc97ce3addce561be4e529b801d341b9"
+    },
+    "13": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/CASE-BINDINGS.json",
+      "sha256": "77f0322df04ef1016dbfee36fe4e3baf2bfe0917439bc465c024954037d4a1ee"
+    },
+    "14": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/FINAL-SOURCE-HASHES.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "15": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/FINDINGS.json",
+      "sha256": "565ed0679f296296fe27025ce45d2ddca7d313c4a92b79266e4d96b40292bbf3"
+    },
+    "16": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/GLOBAL-FORMAT-BASELINE.json",
+      "sha256": "68f33c06dab332f254d461e09f9c1ee3846824474e392162489acbb1c0e90ae5"
+    },
+    "17": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/PREPARER-RECEIPT.json",
+      "sha256": "7a432d9db64cd09f171c2be6d9257d96a1a6239d9184128a13d06d6ec260f884"
+    },
+    "18": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/RED-1.log",
+      "sha256": "0f8485cacbadc8621ab119c014b0c82ef4f6465218fe7afddeac6ba589b57f00"
+    },
+    "19": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/RED-2.log",
+      "sha256": "5925c8996b726926ec55428f4a9c9c0e8e89c85deda67d01dd8c36c17d5cdd24"
+    },
+    "20": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/RED-results.json",
+      "sha256": "33d94a21886e84fcd91c27b1fec7aa1546aaf09bf7e07cb1ebea987d395209be"
+    },
+    "21": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/REPORT.json",
+      "sha256": "7789b8522708fc6399f33ceafcaf2c09b240eececa574dbbcfe0e62648852e2e"
+    },
+    "22": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/ROOT-REVIEW.json",
+      "sha256": "d224c949544831c18f9c8905f07b296db83278015223709412aab3cd363ab956"
+    },
+    "23": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/ROOT-REVIEW.md",
+      "sha256": "92b559394efacf0b34d6b2106306310bca2ea3cdf0391af5eb19567dd45c9f00"
+    },
+    "24": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/SEMANTICS-MAP.json",
+      "sha256": "116eeb0c4cfe8de697314aae3a0648215cd7530321648a0bfe618dd42520b496"
+    },
+    "25": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V1-1.log",
+      "sha256": "def744a1e967c12ae4112bfdddcba34802569f25a7493bf9189523e029d33640"
+    },
+    "26": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V1-result.json",
+      "sha256": "08f0d6ccba7d2466c3ccd9e58fc4b2385434fa733ab6ff8e3e40619381262a7e"
+    },
+    "27": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V1-subjects-after.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "28": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V1-subjects-before.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "29": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V2-result.json",
+      "sha256": "969224e27a612947ac8bc275197ca920d55ce3b5bb4a795aedfbff86a4be57be"
+    },
+    "30": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V2-subjects-after.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "31": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V2-subjects-before.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "32": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V3-result.json",
+      "sha256": "18d325bf6c27976c8d90e13a317929e804ac3115e8a70a3b15cf3dcd6d9386e2"
+    },
+    "33": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V3-subjects-after.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "34": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V3-subjects-before.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "35": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V4-result.json",
+      "sha256": "39f12b1f76b77abee6f67d6e74d853b60a0925542d93f5099340bb09d0242da7"
+    },
+    "36": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V4-subjects-after.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "37": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V4-subjects-before.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "38": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V5-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "39": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V5-result.json",
+      "sha256": "481c6a12ce718e58a0352d0669b8f1e53e035e421882d6aa7754f459fba24bf7"
+    },
+    "40": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V5-subjects-after.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "41": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V5-subjects-before.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "42": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V6-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "43": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V6-result.json",
+      "sha256": "5b459406f19a0ee95a299d8dfad70a3b2656495f4bbcee65a368281f78111205"
+    },
+    "44": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V6-subjects-after.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "45": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V6-subjects-before.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "46": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V7-result.json",
+      "sha256": "e174556c4e4aaf4ddcf596f04f575dd88978a9957ba26f43c05fd989d3a55050"
+    },
+    "47": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V7-subjects-after.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "48": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V7-subjects-before.json",
+      "sha256": "8b963c239e94c4087a97da4f9bfe02c6ab36b216e27556737cd30a872bad3eef"
+    },
+    "49": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/COLLECTED-NATIVE.json",
+      "sha256": "4f56454aa1e029c01c66276584c49f2311913d4aaaf9a664af44376c4a847ad7"
+    },
+    "50": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/CURRENT-CONTRACT.json",
+      "sha256": "a71110e56b307b45c3a168bff18332c412a4d34842f139b34bc1c12a320c271b"
+    },
+    "51": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/CURRENT-JOB.json",
+      "sha256": "b7b74ec706e7ccf6cf532c4f5e65f44fe65a1d2dd2c800be1f114de5179ac8b9"
+    },
+    "52": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/CURRENT-SOURCE.json",
+      "sha256": "8cc2609fd24774d24cbb66096e307458b9290da9976a2e16f21acd38d0a7b029"
+    },
+    "53": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/CURRENT-WORK.json",
+      "sha256": "aae0000ab55b5bf717a0634cfc7f93a621e858abf623a2ed9a7cbe72b4cf4fca"
+    },
+    "54": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/acceptance-preparation/validate-review.py",
+      "sha256": "ab8e3c835bf378e40ba676204614a2870f20e523b9cbc18c6f1b8d4286263b46"
+    },
+    "55": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/candidate.patch",
+      "sha256": "6fdc11986e46fa7e372defd096760821a46e03013fb665d7b5482ff042b6b673"
+    },
+    "56": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/content-result.json",
+      "sha256": "f1c7e561ccb63cf5760607e214b6f09572fdfa13d02f3d28a3cbd0bb77204be9"
+    },
+    "57": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/correction.patch",
+      "sha256": "c0af85cfac0a5d2a2444d95fb93a44659186575321f638f61d46c4774f390ab6"
+    },
+    "58": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/decision.json",
+      "sha256": "8cc2e1ccadb21ac5abe0c0b4b899a183447d95cce5ecf5ee40c366709deac747"
+    },
+    "59": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/intent.json",
+      "sha256": "acf241877b8b333e12097435606be1864f7f169d8f560163fb7c573aaf0d453d"
+    },
+    "60": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/successor-binding.json",
+      "sha256": "5b22b8b276099e596c38a37f56eaa64f3ba8a57074830043c247c23588c67836"
+    }
+  }
+}

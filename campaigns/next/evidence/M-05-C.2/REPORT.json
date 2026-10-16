@@ -1,0 +1,1849 @@
+{
+  "schema": "m05c2-root-review-correction-report/1",
+  "scope": "Same original C2 contract; two supported-surface P1 corrections; no scope reduction, C3 integration, separate engine, crate, retry bound or descendants.",
+  "effect_state": "completed",
+  "acceptance": "Not accepted by producer; Root owns review, Git, runtime control, acceptance and count.",
+  "baseline": {
+    "head": "e718f154ebb76d74a44d510f7e9f7075155fd229",
+    "status": " M crates/vibe-resolver/src/features/configuration.rs\n M crates/vibe-resolver/src/lib.rs\n M crates/vibe-resolver/src/resolvo_engine/mod.rs\n M crates/vibe-resolver/src/resolvo_engine/provider.rs\n M crates/vibe-resolver/src/resolvo_engine/snapshot.rs\n M vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml\n?? crates/vibe-resolver/src/resolvo_engine/configuration.rs\n?? crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs\n",
+    "sha256": {
+      ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+      "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+      "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+      "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+      "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+      "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+      "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+      "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+      "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+      "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+      "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+      "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+      "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+      "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+      "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+      "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+      "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+      "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+      "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+      "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+      "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+      "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+      "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+      "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+      "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+      "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+      "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "1a112feaeb9eabfd4eb43abb784b710055c16a7cf81ad44f6ca82fbfae8d43c7",
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "ab5d58f5d6351d05864145b315e97a69be7802cbc4da04ae25fe21c861bc8935",
+      "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+      "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+      "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+      "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+      "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+      "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+      "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+      "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+      "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "178e4762c8578305d41cc8a9dfc362a1cae41ea44478df6499cd4553ec9bb0b8"
+    },
+    "accepted_count": 90,
+    "campaign_total": 222,
+    "basis": "Preserved unaccepted C2 WIP and original candidate; source-derived Root P1 findings are not executed tests."
+  },
+  "baseline_validation": {
+    "all_hashes_match": true,
+    "status_matches": true,
+    "preserved_files": 39
+  },
+  "handover": {
+    "utc": "2026-10-16T16:04:09.175097+00:00",
+    "authorized": true,
+    "target_dir": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "active_target_users": [],
+    "authorized_writer_job_id": "job.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+    "previous_actual_root_exec": 93598,
+    "previous_exit": 0,
+    "purpose": "Same-Work M05C2 Root-requested correction of two P1; sole Vibe writer, current WIP preserved, no Claude/fullsuite."
+  },
+  "successor_binding": {
+    "job_id": "job.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+    "attempt_id": "attempt.runtime.packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+    "packet_id": "packet.continuation.376dd2f88d6a297a21918cd7cda0896b189001fd5bb09075483b74c3ab5c028d",
+    "work_id": "work.m05c2r.prepare-plan",
+    "original_candidate": "managed-result.618a03bed84d8ed1ffb327c781ac112c03e37963de3e666e4f594513722bcea9",
+    "source": "Official normal continuation output; no guessed IDs"
+  },
+  "root_review": {
+    "schema": "m05c2-independent-review/1",
+    "recommendation": "request_correction",
+    "acceptance_mutated": false,
+    "count_changed": false,
+    "tests_run_by_reviewer": false,
+    "findings": [
+      {
+        "id": "C2-R1",
+        "priority": 1,
+        "title": "Removed optional-group default bypasses shown-definition binding",
+        "file": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+        "line": 337,
+        "root_cause": "Binding checked only for current defaults_used; removed default yields empty list and Ready despite stale shown definition",
+        "counterexample": "ZeroOrOne shown default a, omitted UseDeclaredDefaults, retain binding then set default None; pin candidate; success drops a instead of Rediscovery",
+        "evidence_kind": "source-derived not executed"
+      },
+      {
+        "id": "C2-R2",
+        "priority": 1,
+        "title": "Unresolved choice erases known ordinary-feature implications",
+        "file": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+        "line": 332,
+        "root_cause": "Only required declarations reach solver for NeedsSelection; already explicit ordinary activation dependencies are added only in Ready branch",
+        "counterexample": "Existing unreachable-group fixture before bad.optional=false: newest ordinary activates optional bad conflicting blocker, but returns NeedsSelection instead of older good candidate",
+        "evidence_kind": "source-derived not executed"
+      }
+    ],
+    "verified_receipts": {
+      "V1": 5,
+      "V2": 3,
+      "V3": 2,
+      "V4": 3,
+      "log_hash_mismatches": [],
+      "V1_current_source_match": true,
+      "V2_V3_V4_snapshot_differences": [
+        "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+      ]
+    },
+    "scope": "two supported-surface corrections; no full suite/C3 integration/new engine required",
+    "report": "REPORT.md"
+  },
+  "review_hashes": {
+    "ROOT-REVIEW.md": "92b559394efacf0b34d6b2106306310bca2ea3cdf0391af5eb19567dd45c9f00",
+    "ROOT-REVIEW.json": "d224c949544831c18f9c8905f07b296db83278015223709412aab3cd363ab956"
+  },
+  "before_after": {
+    "before": {
+      ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+      "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+      "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+      "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+      "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+      "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+      "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+      "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+      "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+      "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+      "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+      "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+      "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+      "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+      "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+      "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+      "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+      "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+      "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+      "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+      "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+      "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+      "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+      "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+      "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+      "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+      "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "1a112feaeb9eabfd4eb43abb784b710055c16a7cf81ad44f6ca82fbfae8d43c7",
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "ab5d58f5d6351d05864145b315e97a69be7802cbc4da04ae25fe21c861bc8935",
+      "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+      "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+      "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+      "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+      "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+      "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+      "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+      "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+      "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "178e4762c8578305d41cc8a9dfc362a1cae41ea44478df6499cd4553ec9bb0b8"
+    },
+    "after": {
+      ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+      "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+      "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+      "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+      "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+      "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+      "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+      "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+      "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+      "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+      "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+      "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+      "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+      "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+      "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+      "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+      "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+      "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+      "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+      "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+      "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+      "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+      "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+      "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+      "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+      "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+      "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "10525778011a61cae4aa889d9223dcf1b8d0fb32a58519f2d2480b803568be0a",
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+      "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7",
+      "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+      "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+      "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+      "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+      "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+      "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+      "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+      "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+      "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec"
+    }
+  },
+  "case_bindings_before_compilation": {
+    "V1": {
+      "crate": "vibe-resolver",
+      "target": "--lib",
+      "filter": "resolvo_engine::m_05_c_2_cases",
+      "expected": 7,
+      "names": [
+        "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+        "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+        "resolvo_engine::m_05_c_2_cases::unreachable_mandatory_group_has_no_prompt",
+        "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+        "resolvo_engine::m_05_c_2_cases::conflict_retains_consumer_and_candidate_reasons",
+        "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+        "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications"
+      ],
+      "source_paths": [
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs"
+      ]
+    },
+    "decisive": {
+      "source_derived_not_executed": true,
+      "cases": [
+        {
+          "finding": "C2-R1",
+          "name": "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+          "obligation": "Optional ZeroOrOne shown Some(a) default, omitted UseDeclaredDefaults, retain old binding and remove default to None: Rediscovery and no successful changed effects."
+        },
+        {
+          "finding": "C2-R2",
+          "name": "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+          "obligation": "Keep bad declaration OPTIONAL; explicit ordinary activates bad for newest, conflicts with blocker while mandatory group unresolved. Reject newest; older good selected without prompt; compare complete graph/providers/dependencies/features/subskills/config."
+        }
+      ],
+      "exact_commands": [
+        [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+          "--",
+          "--exact",
+          "--nocapture"
+        ],
+        [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "vibe-resolver",
+          "--lib",
+          "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+          "--",
+          "--exact",
+          "--nocapture"
+        ]
+      ],
+      "after_fix": "Run the expanded seven-case V1 family or equivalent exact decisive+directly affected old cases. Reuse other source-matching evidence; no broad rerun."
+    },
+    "red_basis": "Preserved candidate implementation plus decisive fixtures and governing clarifications only"
+  },
+  "red_against_preserved_implementation": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exit": 101,
+      "log": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/RED-1.log",
+      "sha256": "0f8485cacbadc8621ab119c014b0c82ef4f6465218fe7afddeac6ba589b57f00",
+      "source_before": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+        "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+        "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+        "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+        "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+        "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+        "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+        "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+        "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+        "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+        "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+        "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+        "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+        "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+        "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+        "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+        "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+        "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+        "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+        "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+        "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+        "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+        "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "1a112feaeb9eabfd4eb43abb784b710055c16a7cf81ad44f6ca82fbfae8d43c7",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "93099bf90bcf8a6396ff74599110e531b9793e4dc05fb6061fba82ae067c39a8",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+        "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+        "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+        "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+        "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+        "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+        "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec"
+      },
+      "source_after": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+        "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+        "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+        "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+        "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+        "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+        "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+        "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+        "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+        "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+        "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+        "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+        "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+        "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+        "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+        "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+        "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+        "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+        "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+        "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+        "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+        "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+        "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "1a112feaeb9eabfd4eb43abb784b710055c16a7cf81ad44f6ca82fbfae8d43c7",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "93099bf90bcf8a6396ff74599110e531b9793e4dc05fb6061fba82ae067c39a8",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+        "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+        "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+        "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+        "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+        "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+        "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec"
+      },
+      "counts": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 128 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exit": 101,
+      "log": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/RED-2.log",
+      "sha256": "5925c8996b726926ec55428f4a9c9c0e8e89c85deda67d01dd8c36c17d5cdd24",
+      "source_before": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+        "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+        "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+        "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+        "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+        "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+        "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+        "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+        "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+        "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+        "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+        "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+        "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+        "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+        "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+        "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+        "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+        "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+        "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+        "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+        "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+        "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+        "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "1a112feaeb9eabfd4eb43abb784b710055c16a7cf81ad44f6ca82fbfae8d43c7",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "93099bf90bcf8a6396ff74599110e531b9793e4dc05fb6061fba82ae067c39a8",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+        "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+        "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+        "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+        "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+        "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+        "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec"
+      },
+      "source_after": {
+        ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+        "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+        "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+        "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+        "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+        "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+        "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+        "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+        "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+        "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+        "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+        "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+        "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+        "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+        "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+        "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+        "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+        "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+        "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+        "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+        "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+        "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+        "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+        "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+        "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+        "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "1a112feaeb9eabfd4eb43abb784b710055c16a7cf81ad44f6ca82fbfae8d43c7",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "93099bf90bcf8a6396ff74599110e531b9793e4dc05fb6061fba82ae067c39a8",
+        "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+        "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+        "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+        "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+        "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+        "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+        "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec"
+      },
+      "counts": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 128 filtered out; finished in 0.00s"
+      ]
+    }
+  ],
+  "checks": {
+    "V1": {
+      "executed": true,
+      "group": "V1",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_2_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "7",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V1-1.log",
+          "log_sha256": "def744a1e967c12ae4112bfdddcba34802569f25a7493bf9189523e029d33640",
+          "seconds": 1.627483830001438,
+          "source_drift": [],
+          "source_hashes": {
+            ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+            "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+            "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+            "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+            "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+            "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+            "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+            "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+            "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+            "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+            "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+            "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+            "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+            "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+            "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+            "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+            "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+            "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+            "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+            "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+            "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+            "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+            "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+            "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+            "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+            "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+            "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "10525778011a61cae4aa889d9223dcf1b8d0fb32a58519f2d2480b803568be0a",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7",
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+            "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+            "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+            "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+            "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+            "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+            "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+            "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+            "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec"
+          },
+          "passed": true
+        }
+      ],
+      "binding": {
+        "crate": "vibe-resolver",
+        "target": "--lib",
+        "filter": "resolvo_engine::m_05_c_2_cases",
+        "expected": 7,
+        "names": [
+          "resolvo_engine::m_05_c_2_cases::compatible_older_candidate_keeps_only_selected_effects",
+          "resolvo_engine::m_05_c_2_cases::all_incoming_consumers_survive_candidate_rejection",
+          "resolvo_engine::m_05_c_2_cases::unreachable_mandatory_group_has_no_prompt",
+          "resolvo_engine::m_05_c_2_cases::changed_semantic_default_requires_rediscovery",
+          "resolvo_engine::m_05_c_2_cases::conflict_retains_consumer_and_candidate_reasons",
+          "resolvo_engine::m_05_c_2_cases::removed_optional_default_requires_rediscovery",
+          "resolvo_engine::m_05_c_2_cases::unresolved_group_keeps_known_ordinary_implications"
+        ],
+        "source_paths": [
+          "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs"
+        ]
+      },
+      "extra": {},
+      "fresh_tests": 7,
+      "passed": true,
+      "acceptance_implied": false
+    },
+    "V2": {
+      "executed": false,
+      "group": "V2",
+      "commands": [],
+      "binding": null,
+      "extra": {
+        "run": [],
+        "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim.",
+        "reused": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-1.log",
+            "sha256": "bb8619113dfbcd4e7b35e3459d39cb5197c60c16ab71f9a8713ed9f9c4b52561",
+            "source_hashes": {
+              "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+              "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+              "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+              "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+              "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+            },
+            "counts": [
+              [
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            "argv": [
+              "cargo",
+              "test",
+              "--offline",
+              "--locked",
+              "-p",
+              "vibe-resolver",
+              "--lib",
+              "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+              "--",
+              "--exact"
+            ],
+            "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+            "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-2.log",
+            "sha256": "2e4607e19fa1de57da3e7638eea6d99d0a3a8769df42188476d1ffc852e1ab1c",
+            "source_hashes": {
+              "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+              "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+              "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+              "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+              "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+            },
+            "counts": [
+              [
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            "argv": [
+              "cargo",
+              "test",
+              "--offline",
+              "--locked",
+              "-p",
+              "vibe-resolver",
+              "--lib",
+              "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+              "--",
+              "--exact"
+            ],
+            "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+            "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-3.log",
+            "sha256": "bf72c282841d77b6cb0e31edfed061c62f168dfb52956ba7948f279f8c165f9a",
+            "source_hashes": {
+              "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+              "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+              "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+              "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+              "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+            },
+            "counts": [
+              [
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            "argv": [
+              "cargo",
+              "test",
+              "--offline",
+              "--locked",
+              "-p",
+              "vibe-resolver",
+              "--lib",
+              "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator",
+              "--",
+              "--exact"
+            ],
+            "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+            "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+          }
+        ]
+      },
+      "fresh_tests": 0,
+      "passed": null,
+      "acceptance_implied": false,
+      "selected_for_fresh_verification": false,
+      "reused_evidence": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-1.log",
+          "sha256": "bb8619113dfbcd4e7b35e3459d39cb5197c60c16ab71f9a8713ed9f9c4b52561",
+          "source_hashes": {
+            "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+            "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+            "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+            "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+            "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+          },
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::configuration::m_05_b_2_cases::explicit_defaults_and_empty_policy",
+            "--",
+            "--exact"
+          ],
+          "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+          "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-2.log",
+          "sha256": "2e4607e19fa1de57da3e7638eea6d99d0a3a8769df42188476d1ffc852e1ab1c",
+          "source_hashes": {
+            "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+            "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+            "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+            "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+            "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+          },
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::configuration::m_05_b_2_cases::exact_conflicts_name_both_edges_and_additive_must_fit",
+            "--",
+            "--exact"
+          ],
+          "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+          "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-3.log",
+          "sha256": "bf72c282841d77b6cb0e31edfed061c62f168dfb52956ba7948f279f8c165f9a",
+          "source_hashes": {
+            "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+            "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+            "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+            "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+            "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8"
+          },
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "features::configuration::m_05_b_2_cases::shared_additive_union_and_actual_evaluator",
+            "--",
+            "--exact"
+          ],
+          "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+          "prior_receipt_sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+        }
+      ],
+      "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim."
+    },
+    "V3": {
+      "executed": false,
+      "group": "V3",
+      "commands": [],
+      "binding": null,
+      "extra": {
+        "run": [],
+        "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim.",
+        "reused": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-1.log",
+            "sha256": "40aa29ffbda40154a725a2e3d2dfad541e52e12f28817245ed5c3bf54c94ca69",
+            "source_hashes": {
+              "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+              "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+              "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+              "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+              "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c"
+            },
+            "counts": [
+              [
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            "argv": [
+              "cargo",
+              "test",
+              "--offline",
+              "--locked",
+              "-p",
+              "vibe-resolver",
+              "--lib",
+              "resolvo_engine::m_05_c_1_cases::solve_and_manifest_observation_share_catalog_identity",
+              "--",
+              "--exact"
+            ],
+            "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+            "prior_receipt_sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-2.log",
+            "sha256": "f78b6cd7f0871a5f0d3342a80d21689c0d920a2ecee959478b6391c52b81fe3f",
+            "source_hashes": {
+              "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+              "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+              "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+              "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+              "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c"
+            },
+            "counts": [
+              [
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            "argv": [
+              "cargo",
+              "test",
+              "--offline",
+              "--locked",
+              "-p",
+              "vibe-resolver",
+              "--lib",
+              "resolvo_engine::m_05_c_1_cases::discarded_candidate_metadata_never_requests_global_selection",
+              "--",
+              "--exact"
+            ],
+            "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+            "prior_receipt_sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+          }
+        ]
+      },
+      "fresh_tests": 0,
+      "passed": null,
+      "acceptance_implied": false,
+      "selected_for_fresh_verification": false,
+      "reused_evidence": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-1.log",
+          "sha256": "40aa29ffbda40154a725a2e3d2dfad541e52e12f28817245ed5c3bf54c94ca69",
+          "source_hashes": {
+            "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+            "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c"
+          },
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_1_cases::solve_and_manifest_observation_share_catalog_identity",
+            "--",
+            "--exact"
+          ],
+          "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+          "prior_receipt_sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-2.log",
+          "sha256": "f78b6cd7f0871a5f0d3342a80d21689c0d920a2ecee959478b6391c52b81fe3f",
+          "source_hashes": {
+            "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+            "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c"
+          },
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::m_05_c_1_cases::discarded_candidate_metadata_never_requests_global_selection",
+            "--",
+            "--exact"
+          ],
+          "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+          "prior_receipt_sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+        }
+      ],
+      "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim."
+    },
+    "V4": {
+      "executed": false,
+      "group": "V4",
+      "commands": [],
+      "binding": null,
+      "extra": {
+        "run": [],
+        "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim.",
+        "reused": [
+          {
+            "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-1.log",
+            "sha256": "e5f499ee34f81ef23d5c966ca1325599280357c293f8a5160c433050b3dc010c",
+            "source_hashes": {
+              "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+              "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+              "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+              "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+              "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+            },
+            "counts": [
+              [
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            "argv": [
+              "cargo",
+              "test",
+              "--offline",
+              "--locked",
+              "-p",
+              "vibe-resolver",
+              "--lib",
+              "resolvo_engine::tests::resolvo_solves_where_naive_first_pick_fails",
+              "--",
+              "--exact"
+            ],
+            "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+            "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-2.log",
+            "sha256": "e0cee9f13824d733e8aa19025c9993569d9bc3d0c58e09269017534845db4680",
+            "source_hashes": {
+              "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+              "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+              "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+              "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+              "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+            },
+            "counts": [
+              [
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            "argv": [
+              "cargo",
+              "test",
+              "--offline",
+              "--locked",
+              "-p",
+              "vibe-resolver",
+              "--lib",
+              "resolvo_engine::tests::resolvo_reports_unsatisfiable_with_explanation",
+              "--",
+              "--exact"
+            ],
+            "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+            "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+          },
+          {
+            "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-3.log",
+            "sha256": "8eac9b269576e82b37dc46c350e795654a6e69190ee6e4f932dfccaba106ab49",
+            "source_hashes": {
+              "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+              "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+              "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+              "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+              "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+            },
+            "counts": [
+              [
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            "argv": [
+              "cargo",
+              "test",
+              "--offline",
+              "--locked",
+              "-p",
+              "vibe-resolver",
+              "--lib",
+              "resolvo_engine::tests::resolvo_satisfies_capability_via_required_package",
+              "--",
+              "--exact"
+            ],
+            "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+            "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+          }
+        ]
+      },
+      "fresh_tests": 0,
+      "passed": null,
+      "acceptance_implied": false,
+      "selected_for_fresh_verification": false,
+      "reused_evidence": [
+        {
+          "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-1.log",
+          "sha256": "e5f499ee34f81ef23d5c966ca1325599280357c293f8a5160c433050b3dc010c",
+          "source_hashes": {
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+            "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+            "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+            "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+          },
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_solves_where_naive_first_pick_fails",
+            "--",
+            "--exact"
+          ],
+          "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+          "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-2.log",
+          "sha256": "e0cee9f13824d733e8aa19025c9993569d9bc3d0c58e09269017534845db4680",
+          "source_hashes": {
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+            "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+            "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+            "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+          },
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_reports_unsatisfiable_with_explanation",
+            "--",
+            "--exact"
+          ],
+          "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+          "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+        },
+        {
+          "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-3.log",
+          "sha256": "8eac9b269576e82b37dc46c350e795654a6e69190ee6e4f932dfccaba106ab49",
+          "source_hashes": {
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+            "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+            "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+            "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+          },
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-resolver",
+            "--lib",
+            "resolvo_engine::tests::resolvo_satisfies_capability_via_required_package",
+            "--",
+            "--exact"
+          ],
+          "prior_receipt": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+          "prior_receipt_sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+        }
+      ],
+      "reason": "No consumed owner changed in this correction. Reuse prior exact cases only for listed unchanged consumed owners; earlier full snapshots differ in configured resolver and PROP003. No fresh or identical-full-source run claim."
+    },
+    "V5": {
+      "executed": true,
+      "group": "V5",
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-resolver/src/lib.rs",
+            "crates/vibe-resolver/src/features/configuration.rs",
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+            "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+            "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V5-1.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "seconds": 0.05066022100072587,
+          "source_drift": [],
+          "source_hashes": {
+            ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+            "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+            "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+            "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+            "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+            "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+            "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+            "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+            "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+            "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+            "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+            "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+            "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+            "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+            "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+            "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+            "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+            "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+            "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+            "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+            "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+            "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+            "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+            "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+            "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+            "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+            "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "10525778011a61cae4aa889d9223dcf1b8d0fb32a58519f2d2480b803568be0a",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7",
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+            "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+            "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+            "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+            "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+            "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+            "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+            "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+            "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec"
+          },
+          "passed": true
+        }
+      ],
+      "binding": null,
+      "extra": {
+        "global_baseline": {
+          "source": "Accepted C1 Root disposition; historical global failure, not rerun or global pass",
+          "references": [
+            {
+              "path": "/fast/zap-managed/2026-10-16-m05c1/V5-result.json",
+              "sha256": "32f7938a385921237995154e8c5942c8bc05d27e60715be7adafc55e9095b073"
+            },
+            {
+              "path": "/fast/zap-managed/2026-10-16-m05c1/V5-1.log",
+              "sha256": "8b9a5238a41550559d75d9c6a780879f7a3cde4ec98d9aeccf9a7e96164af0fd"
+            },
+            {
+              "path": "/fast/zap-managed/2026-10-16-m05c1/FORMAT-ANALYSIS.json",
+              "sha256": "5dad58a1eb8512a945c3bbd0b764e93f4a225d947256bb26ad69c9390f6b6aba"
+            },
+            {
+              "path": "/fast/zap-managed/2026-10-16-m05c1/ROOT-INTEGRATION-REVIEW.json",
+              "sha256": "53519a70ffb221958de71ed9b0a18e84b5214f807702fa7ebaaa9c1a38087b8f"
+            }
+          ]
+        },
+        "global_formatter_passed": false
+      },
+      "fresh_tests": 0,
+      "passed": true,
+      "acceptance_implied": false
+    },
+    "V6": {
+      "executed": true,
+      "group": "V6",
+      "commands": [
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/V6-1.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "seconds": 0.016646932999719866,
+          "source_drift": [],
+          "source_hashes": {
+            ".cargo/config.toml": "8cbe9a7044c66eab456264077660597b42efadf6da6f904d73d861764b3cf326",
+            "Cargo.lock": "4fd005c19e916f3355d654893e40c1ae8f90a406570b9043cc52d5ae6429c8ca",
+            "Cargo.toml": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+            "campaigns/next/tasks/M-05-C.json": "1956709b051fc0ff9bd94287a9360bc86ecd6ae191bcc0f0dce97f792e4417fd",
+            "crates/vibe-core/src/manifest/package/features/constraints.rs": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+            "crates/vibe-core/src/manifest/package/features/effects.rs": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+            "crates/vibe-resolver/Cargo.toml": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+            "crates/vibe-resolver/src/activation.rs": "97b717c4d3cb128c79d152aa0ce642f4c60575e0df6660113104f3996aa77378",
+            "crates/vibe-resolver/src/conditional.rs": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9",
+            "crates/vibe-resolver/src/embedded_provider.rs": "2e0f9e3dac50e07830583df2bd87725a4a1c7301d4edecba60f6ad6ce4b7b508",
+            "crates/vibe-resolver/src/error.rs": "128e3140bba911b90bdf3d9cddd098283b2994168309865597be7fc1984ef677",
+            "crates/vibe-resolver/src/features.rs": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+            "crates/vibe-resolver/src/features/configuration.rs": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+            "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+            "crates/vibe-resolver/src/features/m_05_b_1_cases.rs": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+            "crates/vibe-resolver/src/fixpoint_model.rs": "0d3015d4beed0c9d2ada135960d40395c26968eaa80257cb1241002ede409764",
+            "crates/vibe-resolver/src/kind_check.rs": "70db6421651fbb259593c168182318d6c48835d387f29c6b2e2fa113efff6f8f",
+            "crates/vibe-resolver/src/lib.rs": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+            "crates/vibe-resolver/src/local_composite_provider.rs": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6",
+            "crates/vibe-resolver/src/local_registry_provider.rs": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79",
+            "crates/vibe-resolver/src/m_05_a_2_cases.rs": "d2f5282cc2b32d777d1430aa9ba379adb06b949e3def805c6c2a7a1070309d46",
+            "crates/vibe-resolver/src/multi_registry_provider.rs": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d",
+            "crates/vibe-resolver/src/naive.rs": "b0f879e9319f7a62475f7113a68e474fdfa2ff3de67fcd12958bbf5f4f224d17",
+            "crates/vibe-resolver/src/naive/tests.rs": "b43aff92e77c96078ed137c0f8bfbce5a5223af1147f34dcf24fa05d942ec876",
+            "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+            "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+            "crates/vibe-resolver/src/resolvo_engine/configuration.rs": "10525778011a61cae4aa889d9223dcf1b8d0fb32a58519f2d2480b803568be0a",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+            "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7",
+            "crates/vibe-resolver/src/resolvo_engine/mod.rs": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+            "crates/vibe-resolver/src/resolvo_engine/provider.rs": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+            "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+            "crates/vibe-resolver/src/resolvo_engine/tests.rs": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997",
+            "crates/vibe-resolver/src/resolvo_engine/version_set.rs": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f",
+            "crates/vibe-resolver/src/sat.rs": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5",
+            "vibevm/vibedeps/org.vibevm.world.fast-rust-compiler/1.1.0/vibevm/vibespecs/boot/fast-rust-compiler.xml": "cac1828b4656861e54c4db1a3b7dd2a3f8b7611efaf65dc41ca1d8441623517c",
+            "vibevm/vibespecs/boot/90-user.xml": "377191548d742bb86f1fdd612814631e48a8de056e16781192da786e1440429d",
+            "vibevm/vibespecs/common/PROJECT-BOUNDARIES.xml": "3ee091653f61cba4c8d39e3482821c9ad3cfe304143b3888fd9b2e843e356bdb",
+            "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec"
+          },
+          "passed": true
+        }
+      ],
+      "binding": null,
+      "extra": {},
+      "fresh_tests": 0,
+      "passed": true,
+      "acceptance_implied": false
+    },
+    "V7": {
+      "executed": false,
+      "group": "V7",
+      "commands": [],
+      "binding": null,
+      "extra": {
+        "xml_parsed": true,
+        "semantics_map_sha256": "116eeb0c4cfe8de697314aae3a0648215cd7530321648a0bfe618dd42520b496",
+        "structural_only": true,
+        "semantic_and_eto_judgment": "Root reviews actual source and V1-V3 evidence; this recorder does not certify meaning or catalog identity"
+      },
+      "fresh_tests": 0,
+      "passed": true,
+      "acceptance_implied": false
+    }
+  },
+  "command_counts": {
+    "red_exact_cargo_commands": 2,
+    "red_executed_tests": 2,
+    "red_failed_tests": 2,
+    "green_cargo_commands": 1,
+    "green_executed_tests": 7,
+    "green_failed_tests": 0,
+    "reused_prior_tests_not_fresh": 8,
+    "fresh_scoped_rustfmt_check_commands": 1,
+    "fresh_diff_check_commands": 1,
+    "structural_xml_parse": 1,
+    "fullsuite_commands": 0,
+    "descendants": 0,
+    "formatter_mutation_commands": 1
+  },
+  "criterion_claims": [
+    {
+      "slot": 0,
+      "disposition": "satisfied",
+      "producer_claim_only": true,
+      "evidence": "V1 seven exact named definitions: assert_selected compares full graph and all activation projections; R1 returns Rediscovery and independently verifies explicit choice with old binding; R2 retains optional bad and selects app@1."
+    },
+    {
+      "slot": 1,
+      "disposition": "satisfied",
+      "producer_claim_only": true,
+      "evidence": "V1 conflict_retains_consumer_and_candidate_reasons and all_incoming_consumers_survive_candidate_rejection passed; original request, edge indices, candidate coordinate/identity and solver conflict preserved."
+    }
+  ],
+  "semantics_map": {
+    "governing_source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+    "baseline_sha256": "443669a7c4de54c9a30b4ff810ca1eb75148d3a71fb7305df399d6732ad85d2d",
+    "updated_sha256": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec",
+    "preserved": [
+      "status-line",
+      "revision-r2",
+      "r2-delivery-modes",
+      "r2-description-field",
+      "r2-broadened-probes",
+      "r2-llm-refactor",
+      "r2-describes-purl",
+      "r2-conditional-deps",
+      "r2-exclusive-groups",
+      "r2-activation-conflict",
+      "r2-inline-note",
+      "scope-lead",
+      "scope-solver",
+      "scope-features",
+      "scope-subskills",
+      "scope-i18n",
+      "why-now",
+      "reading-order",
+      "current-surface",
+      "shortfalls-lead",
+      "SHORTFALL-DISJUNCTION",
+      "SHORTFALL-MONOLITH",
+      "SHORTFALL-LANGUAGE-LOCK",
+      "fourth-dimension-lead",
+      "SHORTFALL-LLM-ACTIVATION",
+      "vision-claim",
+      "SOLVER-TWO-IMPLS",
+      "SOLVER-SELECTOR",
+      "two-impls-why",
+      "TRAIT-PIN-PREFERENCES",
+      "pin-preferences-purpose",
+      "SUPERSEDED-BY-PROP-017",
+      "LIBSOLV-DECISION",
+      "license-audit",
+      "libsolv-why-lead",
+      "alt-resolvo",
+      "alt-pubgrub",
+      "alt-custom",
+      "ffi-surface-lead",
+      "ffi-build-side",
+      "ffi-cargo-feature",
+      "solver-features-lead",
+      "CAP-CDCL",
+      "CAP-WATCHED-LITERALS",
+      "CAP-WEAK-DEPS",
+      "CAP-RECOMMENDS",
+      "CAP-SUGGESTS",
+      "CAP-SUPPLEMENTS",
+      "CAP-ENHANCES",
+      "CAP-WEAK-DEPS-MAPPING",
+      "CAP-WEAK-DEPS-WARNING",
+      "CAP-PROBLEM-REPORTING",
+      "CAP-FAVOR-PIN",
+      "CAP-MULTIARCH-UNUSED",
+      "not-relied-lead",
+      "NOT-RICH-DEPS",
+      "NOT-MODULES",
+      "NOT-REPO-READERS",
+      "FEATURES-TABLE",
+      "features-semantics-lead",
+      "cargo-keep-lead",
+      "KEEP-ADDITIVE",
+      "KEEP-DEFAULT",
+      "KEEP-FEATURE-DEP",
+      "KEEP-OPTIONAL-DEP",
+      "KEEP-WEAK-FEATURE",
+      "KEEP-PER-TARGET",
+      "KEEP-UNIFICATION",
+      "cargo-drop-lead",
+      "DROP-DEV-BUILD",
+      "DROP-RESOLVER-V1",
+      "DROP-CFG-TRIPLE",
+      "vibevm-ext-lead",
+      "EXT-EXCLUSIVE",
+      "EXT-SUBSKILL-MAP",
+      "EXT-VISIBILITY",
+      "REDBOOK-CONTINUITY-SELECTION",
+      "SUBSKILLS-TREE",
+      "SUBSKILL-DEFINITION",
+      "DELIVERY-PRIMARY-AXIS",
+      "MODE-EAGER",
+      "MODE-LAZY-PUSH",
+      "MODE-LAZY-PULL",
+      "modes-tessl-mirror",
+      "MODES-LOCKFILE-IMPACT",
+      "modes-why-day-one",
+      "MANIFEST-STRICT-SUBSET",
+      "DESCRIPTION-REQUIRED",
+      "description-length-policy",
+      "ACTIVATION-ANY-MATCH",
+      "CH-MANUAL-FEATURE",
+      "CH-IF-PRESENT",
+      "CH-IF-PROVIDES",
+      "CH-IF-FILES",
+      "CH-IF-COMMAND",
+      "CH-IF-ENV",
+      "CH-IF-OS",
+      "CH-IF-DESCRIBES-MATCH",
+      "CH-IF-LANGUAGE",
+      "CH-LLM-VIRTUAL",
+      "CHANNELS-OPT-IN",
+      "llm-r1-history",
+      "llm-r2-reformulation",
+      "LLM-STEP-INVOKE",
+      "LLM-STEP-QUESTION",
+      "LLM-STEP-EMIT",
+      "LLM-STEP-GRAFT",
+      "LLM-STEP-AUDIT",
+      "llm-power-identical",
+      "LLM-DIFF-AUDIT-POINT",
+      "LLM-DIFF-STATIC-WINS",
+      "LLM-DIFF-TRANSPARENCY",
+      "LLM-DIFF-OPT-OUT",
+      "split-alternative",
+      "RATIONALE-COHESION",
+      "RATIONALE-DISCOVERY",
+      "cargo-tessl-comparison",
+      "RECURSIVE-SUBSKILLS",
+      "DESCRIBES-ON-SUBSKILLS",
+      "DESCRIBES-FORMAT",
+      "DESCRIBES-LOCKFILE-RECORD",
+      "DESCRIBES-DRIFT-OUTDATED",
+      "INTERFACE-TAGS-DECISION",
+      "iface-differences-lead",
+      "IFACE-ABSTRACTION",
+      "IFACE-DISCOVERY",
+      "IFACE-NAMING",
+      "IFACE-PROVENANCE",
+      "CONDITIONAL-DEPS-DECISION",
+      "conditional-grammar-req",
+      "CONDITIONAL-GRAMMAR",
+      "conditional-when-to-use-design",
+      "conditional-choice-guidance",
+      "conditional-fixpoint-req",
+      "CONDITIONAL-FIXPOINT",
+      "conditional-host-invariance-req",
+      "CONDITIONAL-HOST-INVARIANCE",
+      "conditional-composition-req",
+      "CONDITIONAL-COMPOSITION",
+      "I18N-DECISION",
+      "SIDECAR-PATTERN",
+      "sidecar-why-lead",
+      "ROW-SIDECAR",
+      "ROW-SIDECAR-PRO",
+      "ROW-SIDECAR-CON",
+      "ROW-LANG-DIRECTORY",
+      "ROW-LANG-DIRECTORY-PRO",
+      "ROW-LANG-DIRECTORY-CON",
+      "ROW-UNDERSCORE-SUFFIX",
+      "ROW-UNDERSCORE-SUFFIX-PRO",
+      "ROW-UNDERSCORE-SUFFIX-CON",
+      "ROW-INLINE-TOML",
+      "ROW-INLINE-TOML-PRO",
+      "ROW-INLINE-TOML-CON",
+      "sidecar-wins",
+      "fallback-chain-lead",
+      "FB-EXACT",
+      "FB-REGION",
+      "FB-CANONICAL",
+      "FB-HARD-ERROR",
+      "I18N-CANONICAL-INVARIANT",
+      "i18n-prefs-lead",
+      "PREF-CLI-FLAG",
+      "PREF-ENV",
+      "PREF-PROJECT-MANIFEST",
+      "PREF-PACKAGE-MANIFEST",
+      "PREF-BUILTIN-DEFAULT",
+      "DOTTED-KEY-DECISION",
+      "toml-mixing-correction",
+      "dotted-key-readable-form",
+      "DOTTED-KEY-PARSER",
+      "I18N-LOCKFILE-META",
+      "language-fallback-clearing",
+      "I18N-DOC-PACKAGES",
+      "manifest-consolidated-lead",
+      "SUBSKILL-MANIFEST-PER",
+      "DENY-UNKNOWN-FIELDS",
+      "lockfile-v3-lead",
+      "LF-META-LANGUAGE",
+      "LF-META-ACTIVE-FEATURES",
+      "LF-META-VIRTUAL-CAPS",
+      "LF-PKG-FEATURES-SUBSKILLS",
+      "LF-PKG-LANGUAGE",
+      "LF-DESCRIBES-PURL",
+      "SCHEMA-V3-MIGRATION",
+      "cli-new-lead",
+      "CLI-INSTALL-FEATURES",
+      "CLI-INSTALL-LANGUAGE",
+      "CLI-SHOW-FEATURES",
+      "CLI-SHOW-SUBSKILLS",
+      "CHECK-FOUR-ENTRIES",
+      "CHECK-I18N-COVERAGE",
+      "CHECK-SUBSKILL-STRUCTURE",
+      "CHECK-FEATURE-GRAPH",
+      "CHECK-ACTIVATION-CONFLICT",
+      "cli-existing-lead",
+      "CLI-UPDATE-FEATURES",
+      "CLI-SHOW-CONFIG-LANGUAGE",
+      "CLI-SHOW-EFFECTIVE-LANGUAGE",
+      "migration-lead",
+      "MIG-LIBSOLV-FFI",
+      "MIG-MANIFEST-PARSER",
+      "MIG-FEATURES",
+      "MIG-SUBSKILL-MAT",
+      "MIG-I18N",
+      "MIG-DEFAULT-SAT",
+      "MIG-LOCKFILE-V3",
+      "migration-cadence",
+      "rule-encoding-lead",
+      "ROW-ENC-REQUIRES",
+      "ROW-ENC-REQUIRES-LIBSOLV-RULE",
+      "ROW-ENC-REQUIRES-ANY",
+      "ROW-ENC-REQUIRES-ANY-LIBSOLV-RULE",
+      "ROW-ENC-PROVIDES",
+      "ROW-ENC-PROVIDES-LIBSOLV-RULE",
+      "ROW-ENC-OBSOLETES",
+      "ROW-ENC-OBSOLETES-LIBSOLV-RULE",
+      "ROW-ENC-CONFLICTS",
+      "ROW-ENC-CONFLICTS-LIBSOLV-RULE",
+      "ROW-ENC-RECOMMENDS",
+      "ROW-ENC-RECOMMENDS-LIBSOLV-RULE",
+      "ROW-ENC-SUGGESTS",
+      "ROW-ENC-SUGGESTS-LIBSOLV-RULE",
+      "ROW-ENC-SUPPLEMENTS",
+      "ROW-ENC-SUPPLEMENTS-LIBSOLV-RULE",
+      "ROW-ENC-ENHANCES",
+      "ROW-ENC-ENHANCES-LIBSOLV-RULE",
+      "ROW-ENC-EXCLUSIVE",
+      "ROW-ENC-EXCLUSIVE-LIBSOLV-RULE",
+      "ROW-ENC-FEATURE-DEP",
+      "ROW-ENC-FEATURE-DEP-LIBSOLV-RULE",
+      "ROW-ENC-WEAK-FEATURE",
+      "ROW-ENC-WEAK-FEATURE-LIBSOLV-RULE",
+      "ROW-ENC-SUBSKILL-PRESENT",
+      "ROW-ENC-SUBSKILL-PRESENT-LIBSOLV-RULE",
+      "ROW-ENC-SUBSKILL-PROVIDES",
+      "ROW-ENC-SUBSKILL-PROVIDES-LIBSOLV-RULE",
+      "dnf5-same-encoding",
+      "solver-phases-lead",
+      "PHASE-POOL",
+      "PHASE-JOBS",
+      "PHASE-RULES",
+      "PHASE-SOLVE",
+      "PHASE-DECODE",
+      "PHASE-SUBSKILL-PROJECTION",
+      "PHASE-MATERIALISATION",
+      "libsolv-determinism",
+      "perf-envelope",
+      "ffi-cost",
+      "rejected-lead",
+      "REJ-RESOLVO",
+      "REJ-PUBGRUB",
+      "REJ-PACKAGES-ONLY",
+      "REJ-UNDERSCORE-SUFFIX",
+      "REJ-LANG-DIRECTORY",
+      "REJ-LLM-PROVIDES",
+      "REJ-INLINE-I18N",
+      "REJ-PER-PACKAGE-SOLVER",
+      "OOS-MODULES",
+      "OOS-NON-SEMVER",
+      "OOS-RICH-DEPS",
+      "OOS-TRUST",
+      "OOS-TRANSLATION-TOOLING",
+      "phases-lead",
+      "PA-FFI-CRATE",
+      "PA-SAT-IMPL",
+      "PA-NAIVE-DEFAULT",
+      "PA-ACCEPTANCE",
+      "PB-MANIFEST",
+      "PB-SOLVER-LOCKFILE",
+      "PB-CLI-FLAGS",
+      "PB-ACCEPTANCE",
+      "PC-MANIFEST-FORMAT",
+      "PC-FIELDS",
+      "PC-MANUAL-MAPPING",
+      "PC-CONTEXT-POST-PASS",
+      "PC-EAGER-MATERIALISATION",
+      "PC-SHOW-SUBSKILLS",
+      "PC-ACCEPTANCE",
+      "PD-SIDECAR",
+      "PD-FIELD-TRANSLATIONS",
+      "PD-LANGUAGE-FLAG",
+      "PD-LOCKFILE-LANGUAGE",
+      "PD-ACCEPTANCE",
+      "PE-DEFAULT-FLIP",
+      "PE-NAIVE-DEMOTED",
+      "PE-ACCEPTANCE",
+      "PF-BUILD-LOOP",
+      "PF-EMISSION-REQUEST",
+      "PF-ACTIVATION-CHANNEL",
+      "PF-AUDIT-SURFACE",
+      "PF-POLICY",
+      "PF-ACCEPTANCE",
+      "OPEN-CROSS-PACKAGE-EXCLUSION",
+      "OPEN-SUBSKILL-VERSIONING",
+      "OPEN-TRANSLATION-PROVENANCE",
+      "OPEN-IFACE-NAMESPACING",
+      "OPEN-EMISSION-RATE-LIMIT",
+      "OPEN-WORKSPACE-MONOREPO",
+      "OPEN-DESCRIBES-COVERAGE",
+      "OPEN-CONFLICT-THRESHOLD",
+      "OPEN-ENV-FEATURES",
+      "OPEN-LLM-DENYLIST",
+      "ref-cargo-features",
+      "ref-cargo-resolver-v2",
+      "ref-cargo-source",
+      "ref-libsolv",
+      "ref-libsolv-docs",
+      "ref-dnf5",
+      "ref-dnf-legacy",
+      "ref-bcp47",
+      "ref-toml",
+      "ref-depsolver-trait",
+      "ref-manifest-model",
+      "closing-note",
+      "M05A1-ROOT-UNION",
+      "M05A1-FRESH-REQUESTED-FEATURES",
+      "M05A1-CANDIDATE-BOUNDARY",
+      "M05A2-SYNTAX",
+      "M05A2-CONSTRAINTS",
+      "M05A2-BACKEND-MATRIX",
+      "M05A2-CONDITIONAL",
+      "M05A2-REVIEW-BOUNDARY",
+      "M05B1-DECLARATIONS",
+      "M05B1-EFFECTS",
+      "M05B1-LOWERING",
+      "M05B1-SAFE-STOP",
+      "M05B1-CHARACTERIZATION-SUPERSESSION",
+      "M05B1-MANIFEST-CALLERS",
+      "M05B2-GROUPS",
+      "M05B2-CONSUMERS",
+      "M05B2-SELECTION",
+      "M05B2-COMPOSITION",
+      "M05B3-PROFILES",
+      "M05B3-GRAMMAR",
+      "M05B3-TYPED-SPELLING",
+      "M05B3-AMBIGUITY",
+      "M05B3-PRESERVATION",
+      "M05C1-IDENTITY",
+      "M05C1-TRANSACTION",
+      "M05C1-FAILURE",
+      "M05C1-OBSERVATION"
+    ],
+    "added": {
+      "M05C2-CONDITIONING": "<ns0:M05C2-CONDITIONING xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">Activation belongs to the exact candidate that introduced it. The existing resolvo solver must carry induced requirements on that candidate's literal. Already-authorized ordinary-feature implications remain candidate-local solver requirements while a group is unresolved; unresolved choices neither erase known requirements nor authorize guessed members. B2 continues to expose no full expansion for NeedsSelection. Rejecting a candidate discards its features, providers, dependency effects, subskills and config values. Only selected candidates contribute returned effects; inspecting an unreachable candidate with a mandatory unresolved group never requests selection.</ns0:M05C2-CONDITIONING>",
+      "M05C2-CONSUMERS": "<ns0:M05C2-CONSUMERS xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">Every original incoming consumer edge, selection intent, version constraint and provenance survives candidate rejection unchanged. Evaluate all consumers of one configuration together through the B2 evaluator. A valid older candidate may satisfy the same authorized intent. Conflict evidence retains original consumer reasons alongside the candidate coordinate and exact C1 identity; source errors remain operational errors, never candidate exclusions.</ns0:M05C2-CONSUMERS>",
+      "M05C2-DEFAULTS": "<ns0:M05C2-DEFAULTS xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">Permission to use a declared default binds the exact shown candidate source/content/definition identity. Choosing another definition does not authorize its defaults, even if it is older or the member spelling happens to match. A selected candidate without that exact binding requires rediscovery before effects are returned. The comparison covers default-governed omitted intent even when the current definition removes the shown default or group and therefore reports no defaults used. Explicit selections retain their original meaning and are not replaced by defaults.</ns0:M05C2-DEFAULTS>",
+      "M05C2-BOUNDARY": "<ns0:M05C2-BOUNDARY xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">The configured resolver consumes admitted, source-bound B1/B2 definitions and immutable C1 metadata. Unsupported combinations refuse before returning mutation effects. Completeness is the existing solver's finite candidate search, never a fixed retry limit. Legacy DepSolver routes, ordinary manifest parsing, B3 opt-in profiles and C1 operational-error propagation remain intact; universal caller-route parity is separate C3 work. Counterexamples compare the entire selected graph and all derived effects, including provider contributions.</ns0:M05C2-BOUNDARY>",
+      "M05C2-ADMITTED-SURFACE": "<ns0:M05C2-ADMITTED-SURFACE xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">The configured Rust entry accepts fixed explicit incoming Vibe consumer requests, one configuration instance per package, and normalized definitions supplied by the admitting caller with exact C1 receipts. It preserves the full request rather than inferring edges from installed state. Default authorization retains that request and the full shown normalized definition as well as its source/content/definition receipt. Native candidate selection, multiple instances of one package, cross-package feature forwarding and non-registry dependency sources refuse. Conditional targets, requires_any and obsoletes also refuse on this entry because the incumbent graph projection does not retain their complete activation support. These refusals are explicit unsupported outcomes, not unsatisfiability claims or a substitute resolver. The ordinary resolver routes and B1/B2 standalone APIs retain their existing semantics.</ns0:M05C2-ADMITTED-SURFACE>"
+    },
+    "replacements": [],
+    "reason": "Original semantic inventory retained. Only two C2 anchors clarified: default removal still requires shown binding; unresolved groups retain authorized solver implications. Prior map preserved by reference; no original rule removed or replaced.",
+    "implemented_surface": "Fixed explicit incoming Vibe consumer edges; candidate-local B1/B2 definitions bound to immutable C1 receipts. Native candidates, multiple instances per package and cross-package feature forwarding refuse; C3 route parity not claimed.",
+    "prior_map": {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/SEMANTICS-MAP.json",
+      "sha256": "5affed306e09e6ceb1a162680277d5ac143c2e73e7ed9e543cc3925d0c0d768c"
+    },
+    "correction_baseline_sha256": "178e4762c8578305d41cc8a9dfc362a1cae41ea44478df6499cd4553ec9bb0b8",
+    "clarifications": {
+      "M05C2-CONDITIONING": {
+        "before": "<ns0:M05C2-CONDITIONING xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">Activation belongs to the exact candidate that introduced it. The existing resolvo solver must carry induced requirements on that candidate's literal. Rejecting a candidate discards its features, providers, dependency effects, subskills and config values. Only selected candidates contribute returned effects; inspecting an unreachable candidate with a mandatory unresolved group never requests selection.</ns0:M05C2-CONDITIONING>",
+        "after": "<ns0:M05C2-CONDITIONING xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">Activation belongs to the exact candidate that introduced it. The existing resolvo solver must carry induced requirements on that candidate's literal. Already-authorized ordinary-feature implications remain candidate-local solver requirements while a group is unresolved; unresolved choices neither erase known requirements nor authorize guessed members. B2 continues to expose no full expansion for NeedsSelection. Rejecting a candidate discards its features, providers, dependency effects, subskills and config values. Only selected candidates contribute returned effects; inspecting an unreachable candidate with a mandatory unresolved group never requests selection.</ns0:M05C2-CONDITIONING>"
+      },
+      "M05C2-DEFAULTS": {
+        "before": "<ns0:M05C2-DEFAULTS xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">Permission to use a declared default binds the exact shown candidate source/content/definition identity. Choosing another definition does not authorize its defaults, even if it is older or the member spelling happens to match. A selected candidate without that exact binding requires rediscovery before effects are returned. Explicit selections retain their original meaning and are not replaced by defaults.</ns0:M05C2-DEFAULTS>",
+        "after": "<ns0:M05C2-DEFAULTS xmlns:ns0=\"https://vibevm.org/spec/1\" status=\"spec/done\">Permission to use a declared default binds the exact shown candidate source/content/definition identity. Choosing another definition does not authorize its defaults, even if it is older or the member spelling happens to match. A selected candidate without that exact binding requires rediscovery before effects are returned. The comparison covers default-governed omitted intent even when the current definition removes the shown default or group and therefore reports no defaults used. Explicit selections retain their original meaning and are not replaced by defaults.</ns0:M05C2-DEFAULTS>"
+      }
+    },
+    "unchanged_elements_compared": 345
+  },
+  "global_format_baseline": {
+    "source": "Accepted C1 Root disposition; historical global failure, not rerun or global pass",
+    "references": [
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V5-result.json",
+        "sha256": "32f7938a385921237995154e8c5942c8bc05d27e60715be7adafc55e9095b073"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/V5-1.log",
+        "sha256": "8b9a5238a41550559d75d9c6a780879f7a3cde4ec98d9aeccf9a7e96164af0fd"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/FORMAT-ANALYSIS.json",
+        "sha256": "5dad58a1eb8512a945c3bbd0b764e93f4a225d947256bb26ad69c9390f6b6aba"
+      },
+      {
+        "path": "/fast/zap-managed/2026-10-16-m05c1/ROOT-INTEGRATION-REVIEW.json",
+        "sha256": "53519a70ffb221958de71ed9b0a18e84b5214f807702fa7ebaaa9c1a38087b8f"
+      }
+    ]
+  },
+  "previous_evidence_preserved": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/REPORT.json",
+      "sha256": "a036b4407d1f28715fa72152d0f402fc30dd7ef1f28cf7a2b16125ec8526f5d7"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/FINDINGS.json",
+      "sha256": "c16e782c06055ab0943b6f11f6696f04a4c6465bff641b22c7f70c7b84d5011d"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/content-result.json",
+      "sha256": "4869877f4a79be9efff15ca67200874c0e00cd052ae0577b697ca3f664e6e6c2"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/candidate.patch",
+      "sha256": "c088dfef4f450536c5979bb68ae4faa28735a6fe0c34569744a2783d61fc47e9"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/CASE-BINDINGS.json",
+      "sha256": "03fa7aff528f511313fc377f575c8302f13dd6d0aed19dd6b5c68e48d5acce86"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/SEMANTICS-MAP.json",
+      "sha256": "5affed306e09e6ceb1a162680277d5ac143c2e73e7ed9e543cc3925d0c0d768c"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/ROOT-REVIEW.md",
+      "sha256": "92b559394efacf0b34d6b2106306310bca2ea3cdf0391af5eb19567dd45c9f00"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/continuation-review-correction/ROOT-REVIEW.json",
+      "sha256": "d224c949544831c18f9c8905f07b296db83278015223709412aab3cd363ab956"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V1-result.json",
+      "sha256": "f16ae4b1a62869d01244b5f89f303dfe510ccb3728a6f89b66997cf48be75f2f"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V2-result.json",
+      "sha256": "29ebb19d662cd83f90a44fcc8dca72be40421b5e8cc055307fab0d1cb1ffedd6"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V3-result.json",
+      "sha256": "0b487e8041ee1415350bf97cb5eee219c4ce203386ef0b483f110d3ca4b15ba4"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V4-result.json",
+      "sha256": "26e504994d5c3247d1a4b0f8dec86fad3658feabe7b83659d918665e7b64ffc7"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V5-result.json",
+      "sha256": "c4fcf96fcdb46eddfb0cf2d4a2da0499dccefad525b6ee701aaf618a19fecc41"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V6-result.json",
+      "sha256": "da71cd598bdd5c494071b3fe67dfd3042e609abc575a8984fa6dd9c99b791739"
+    },
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05c2r/V7-result.json",
+      "sha256": "b7d7a07253e5329c6ec4eb9155b82fbcbda7d58d0c3ccb6c398d224233c936b0"
+    }
+  ],
+  "patches": {
+    "candidate.patch": {
+      "sha256": "6fdc11986e46fa7e372defd096760821a46e03013fb665d7b5482ff042b6b673",
+      "byte_len": 56982,
+      "meaning": "Full current WIP relative to existing Git HEAD, including untracked C2 modules, without index mutation."
+    },
+    "correction.patch": {
+      "sha256": "c0af85cfac0a5d2a2444d95fb93a44659186575321f638f61d46c4774f390ab6",
+      "byte_len": 19712,
+      "meaning": "Only this correction relative to preserved current WIP."
+    }
+  },
+  "findings": {
+    "dispositions": [
+      "satisfied",
+      "satisfied"
+    ],
+    "checks_attempted": true,
+    "effect_state": "completed",
+    "discoveries": [
+      "Both Root counterexamples were reproduced against the preserved candidate implementation: two exact tests each failed with exit 101 and one failed test; their logs and source hashes are retained.",
+      "Default-governed omitted intent now checks both current and shown definitions, including a removed optional default; exact identity/definition/request binding remains required and explicit selection remains independent.",
+      "Unresolved candidates retain authorized ordinary and already-determined selection implications through B1 at the candidate-conditioned solver seam. Unbound defaults supply no solver implications; B2 public NeedsSelection still has no full effects.",
+      "Expanded V1 passed all seven cases. The decisive optional-bad fixture compares the entire selected graph, providers, dependencies, features, subskills and config. Existing consumer conflict/identity/refusal cases also passed.",
+      "V2/V3/V4 reuse prior 3/2/3 exact cases only for hash-matching consumed owners, not identical-full-source fresh runs. Scoped formatting and diff checks passed; the semantic inventory is preserved with two governing clarifications."
+    ],
+    "unresolved": [
+      "Root review and acceptance remain outstanding; completed reversible code effects and producer satisfied claims do not accept the Work. Count remains 90/222.",
+      "Existing fixed-consumer/registry support limits remain: native selection, multiple instances, forwarding, non-registry sources, conditional targets, requires_any and obsoletes refuse. C3 universal caller-route parity is outside this unchanged task.",
+      "Global formatting remains excluded with its historical failure retained; only affected Rust scoped --check is claimed."
+    ],
+    "proposed_follow_up": "Root review the two source corrections, preserved red evidence, seven-case green V1 and qualified reuse against the complete original C2 contract before any acceptance or commit."
+  },
+  "verification_limits": "Red observations are newly executed failures, not the earlier source-derived review. V1 is fresh final source. V2/V3/V4 are qualified unchanged-consumer reuse with log and owner hashes. V7 is structural preservation evidence, not semantic acceptance. No global fmt success, Work acceptance or runtime stop is claimed."
+}
