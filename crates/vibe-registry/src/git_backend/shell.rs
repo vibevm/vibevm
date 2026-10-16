@@ -239,6 +239,64 @@ impl ShellGit {
 }
 
 impl GitBackend for ShellGit {
+    fn checkout_file_at_commit(
+        &self,
+        directory: &Path,
+        commit: &str,
+        path: &str,
+    ) -> Result<Vec<u8>, GitError> {
+        self.preflight()?;
+        self.run(&["show", &format!("{commit}:{path}")], Some(directory))
+            .map(|output| output.stdout)
+    }
+
+    fn resolve_metadata_ref(&self, url: &str, refname: &str) -> Result<String, GitError> {
+        if matches!(refname.len(), 40 | 64) && refname.bytes().all(|b| b.is_ascii_hexdigit()) {
+            return Ok(refname.to_ascii_lowercase());
+        }
+        self.preflight()?;
+        let tag = format!("refs/tags/{refname}");
+        let peeled = format!("{tag}^{{}}");
+        let branch = format!("refs/heads/{refname}");
+        let explicit_peeled = format!("{refname}^{{}}");
+        let output = self.run(
+            &[
+                "ls-remote",
+                "--",
+                url,
+                refname,
+                &tag,
+                &peeled,
+                &branch,
+                &explicit_peeled,
+            ],
+            None,
+        )?;
+        let text = String::from_utf8_lossy(&output.stdout);
+        let rows: std::collections::HashMap<_, _> = text
+            .lines()
+            .filter_map(|line| line.split_once('\t'))
+            .map(|(hash, name)| (name, hash))
+            .collect();
+        for name in [
+            &explicit_peeled,
+            &peeled,
+            &refname.to_owned(),
+            &tag,
+            &branch,
+        ] {
+            if let Some(hash) = rows.get(name.as_str()) {
+                if matches!(hash.len(), 40 | 64) && hash.bytes().all(|b| b.is_ascii_hexdigit()) {
+                    return Ok((*hash).to_owned());
+                }
+            }
+        }
+        Err(GitError::RefNotFound {
+            url: without_userinfo(url),
+            refname: refname.into(),
+        })
+    }
+
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
         self.preflight()?;
         checkout::bootstrap(self, url, refname, dest)
@@ -711,7 +769,7 @@ fn classify_stderr_message(combined: &str, url: String, refname: String) -> Opti
 /// scp-style `git@host:org/repo.git` has no `://` and is returned
 /// untouched — that `git` is an ssh account name, not a secret, and
 /// removing it would make the URL wrong rather than safe.
-fn without_userinfo(url: &str) -> String {
+pub(crate) fn without_userinfo(url: &str) -> String {
     let Some((scheme, rest)) = url.split_once("://") else {
         return url.to_string();
     };

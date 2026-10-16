@@ -20,12 +20,12 @@ use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 
 use crate::naive::capability_version_for_provider;
-use crate::{SolveError, VersionEnumerator};
+use crate::{DepProviderError, SolveError, VersionEnumerator};
 
 /// One `(package, version)` that provides a capability, tagged with the
 /// capability version it advertises.
 #[derive(Clone)]
-pub(crate) struct CapProvider {
+pub struct CapProvider {
     pub group: Group,
     pub name: String,
     pub version: semver::Version,
@@ -33,14 +33,17 @@ pub(crate) struct CapProvider {
 }
 
 /// `capability (qualified) → the package versions that provide it`.
-pub(crate) type CapIndex = HashMap<String, Vec<CapProvider>>;
+pub type CapIndex = HashMap<String, Vec<CapProvider>>;
 
 /// Walk the package closure reachable from `roots` (over `[requires.packages]`
 /// and `[[requires_any]]` edges, across every available version) and index
-/// every `[provides]` capability. Per-package errors are skipped — the
-/// main solve surfaces anything genuinely required. This is the eager
+/// every `[provides]` capability. Source absence leaves no candidate; corrupt
+/// or unavailable metadata aborts discovery before solving. This is the eager
 /// step the lazy package path otherwise avoids (PROP-017 §8).
-pub(crate) fn prescan<P: VersionEnumerator>(provider: &P, roots: &[PackageRef]) -> CapIndex {
+pub(crate) fn prescan<P: VersionEnumerator>(
+    provider: &P,
+    roots: &[PackageRef],
+) -> Result<CapIndex, DepProviderError> {
     let mut index: CapIndex = HashMap::new();
     let mut seen: HashSet<(Group, String)> = HashSet::new();
     let mut queue: VecDeque<(Group, String)> = VecDeque::new();
@@ -53,14 +56,30 @@ pub(crate) fn prescan<P: VersionEnumerator>(provider: &P, roots: &[PackageRef]) 
         if !seen.insert((group.clone(), name.clone())) {
             continue;
         }
-        let Ok(versions) = provider.list_versions(&group, &name) else {
-            continue;
+        let versions = match provider.list_versions(&group, &name) {
+            Ok(versions) => versions,
+            Err(
+                DepProviderError::UnknownPackage { .. }
+                | DepProviderError::NoMatchingVersion { .. }
+                | DepProviderError::AggregateNotFound { .. },
+            ) => continue,
+            Err(error) => return Err(error),
         };
         for v in versions {
-            let Ok(manifest) = provider.fetch_manifest(&group, &name, &v) else {
-                continue;
-            };
+            let manifest = provider.fetch_manifest(&group, &name, &v)?;
             for cap in &manifest.provides.capabilities {
+                if let Some(cached) = provider.cached_capabilities() {
+                    let rows = cached
+                        .get(&cap.qualified())
+                        .into_iter()
+                        .flatten()
+                        .filter(|p| p.group == group && p.name == name && p.version == v);
+                    index
+                        .entry(cap.qualified())
+                        .or_default()
+                        .extend(rows.cloned());
+                    continue;
+                }
                 index.entry(cap.qualified()).or_default().push(CapProvider {
                     group: group.clone(),
                     name: name.clone(),
@@ -82,7 +101,7 @@ pub(crate) fn prescan<P: VersionEnumerator>(provider: &P, roots: &[PackageRef]) 
             }
         }
     }
-    index
+    Ok(index)
 }
 
 /// After the solve, verify every selected package's `[requires.capabilities]`

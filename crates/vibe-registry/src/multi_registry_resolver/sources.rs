@@ -180,6 +180,7 @@ impl MultiRegistryResolver {
         resolution: &MultiResolution,
         store_root: &Path,
         _expected_hash: Option<&str>,
+        catalog: Option<&crate::CandidateMetadata>,
     ) -> Result<CachedPackage, RegistryError> {
         let group = &resolution.resolved.group;
         let name = resolution.resolved.name.as_str();
@@ -216,7 +217,15 @@ impl MultiRegistryResolver {
         let credentialed = reg.credentialed_url(&plain_url);
 
         let clone_dir = self.git_source_clone_dir(group, name);
-        ensure_clone_at(self.backend.as_ref(), &credentialed, &refname, &clone_dir)?;
+        let selected_ref = catalog
+            .and_then(|m| m.identity.content.strip_prefix("git:"))
+            .unwrap_or(&refname);
+        ensure_clone_at(
+            self.backend.as_ref(),
+            &credentialed,
+            selected_ref,
+            &clone_dir,
+        )?;
         // Token-discipline (M1.14): scrub any credentialed URL from
         // the freshly-bootstrapped `.git/config` so the token does not
         // persist on disk. Best-effort — if the backend has no
@@ -232,6 +241,14 @@ impl MultiRegistryResolver {
         // Hash the clone directly (the recipe skips `.git`), then
         // insert write-once into the machine store; an already-present
         // entry is returned untouched, its manifest read back.
+        let resolved_commit = if catalog.is_some() {
+            self.backend.head_commit(&clone_dir)?
+        } else {
+            None
+        };
+        if let Some(metadata) = catalog {
+            metadata.verify_checkout(&clone_dir, resolved_commit.as_deref())?;
+        }
         let content_hash = compute_content_hash(&clone_dir)?;
         let dest = store::insert_current_at(
             store_root,
@@ -264,7 +281,7 @@ impl MultiRegistryResolver {
             source_uri: plain_url,
             registry_name: None,
             source_ref: Some(refname),
-            resolved_commit: None,
+            resolved_commit,
             overridden: false,
             is_git_source: true,
             is_path_source: false,

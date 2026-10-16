@@ -86,6 +86,18 @@ pub fn compute_content_hash_with(
     recipe: RecipeId,
     pkg_dir: &Path,
 ) -> Result<String, RegistryError> {
+    compute_content_hash_inner(recipe, pkg_dir, false)
+}
+
+pub(crate) fn compute_content_hash_checked(pkg_dir: &Path) -> Result<String, RegistryError> {
+    compute_content_hash_inner(RecipeId::Legacy0, pkg_dir, true)
+}
+
+fn compute_content_hash_inner(
+    recipe: RecipeId,
+    pkg_dir: &Path,
+    strict: bool,
+) -> Result<String, RegistryError> {
     let excludes: Vec<&str> = match recipe {
         RecipeId::Legacy0 => LEGACY0_EXCLUDES.to_vec(),
         RecipeId::Tree1 => crate::hash_recipe::recipe1_excludes(),
@@ -99,9 +111,20 @@ pub fn compute_content_hash_with(
     for entry in WalkDir::new(pkg_dir)
         .into_iter()
         .filter_entry(|e| is_shippable(e, &excludes))
-        .filter_map(|e| e.ok())
-        .filter(|e| e.file_type().is_file())
     {
+        let entry = match entry {
+            Ok(entry) => entry,
+            Err(error) if strict => {
+                return Err(RegistryError::Io {
+                    path: pkg_dir.into(),
+                    source: std::io::Error::other(error),
+                });
+            }
+            Err(_) => continue,
+        };
+        if !entry.file_type().is_file() {
+            continue;
+        }
         let path = entry.path().to_path_buf();
         let rel = path.strip_prefix(pkg_dir).unwrap_or(&path);
         let raw = match recipe {

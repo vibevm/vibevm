@@ -382,17 +382,28 @@ impl MultiRegistryResolver {
         version: &semver::Version,
     ) -> Result<Manifest, RegistryError> {
         observation::manifest(&self.progress, group, name, version, |task| {
-            self.fetch_manifest_inner(group, name, version, task)
+            self.fetch_manifest_inner::<UnboundMetadata>(group, name, version, task)
         })
     }
 
-    fn fetch_manifest_inner(
+    pub fn fetch_candidate_metadata(
+        &self,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<crate::CandidateMetadata, RegistryError> {
+        observation::manifest(&self.progress, group, name, version, |task| {
+            self.fetch_manifest_inner::<BoundMetadata>(group, name, version, task)
+        })
+    }
+
+    fn fetch_manifest_inner<M: MetadataRead>(
         &self,
         group: &Group,
         name: &str,
         version: &semver::Version,
         task: &vibe_core::progress::ProgressTask,
-    ) -> Result<Manifest, RegistryError> {
+    ) -> Result<M::Output, RegistryError> {
         // Build a pinned pkgref so `resolve` converges on the exact
         // slot the install pipeline committed to (the depsolver pinned
         // the version via `resolve_version` first). For pass-through
@@ -449,7 +460,7 @@ impl MultiRegistryResolver {
             // layout is the index (§2.7) — so transitive-dependency
             // manifests read straight off disk. No network, no clone.
             let manifest_path = resolution.resolved.source_dir.join(Manifest::FILENAME);
-            return Manifest::read(&manifest_path).map_err(RegistryError::from);
+            return M::local(&manifest_path, resolution.source_url.clone());
         }
 
         if resolution.is_path_source {
@@ -467,7 +478,7 @@ impl MultiRegistryResolver {
                     name: name.to_string(),
                 })?;
             let manifest_path = dep.package_dir.join(Manifest::FILENAME);
-            return Manifest::read(&manifest_path).map_err(RegistryError::from);
+            return M::local(&manifest_path, resolution.source_url.clone());
         }
 
         if resolution.via_redirect.is_some() {
@@ -490,7 +501,7 @@ impl MultiRegistryResolver {
                 resolution.redirect_target_auth,
                 resolution.redirect_target_token_env.as_deref(),
             )?;
-            return target_reg.fetch_manifest_at_ref(group, name, &target_ref);
+            return M::git(&target_reg, group, name, &target_ref);
         }
 
         if resolution.is_git_source {
@@ -525,7 +536,25 @@ impl MultiRegistryResolver {
                 dep.auth,
                 dep.token_env.as_deref(),
             )?;
-            return reg.fetch_manifest_at_ref(group, name, &source_ref);
+            return M::git(&reg, group, name, &source_ref);
+        }
+
+        if M::BOUND && resolution.overridden {
+            let reference = resolution
+                .source_ref
+                .as_deref()
+                .unwrap_or(DEFAULT_OVERRIDE_REF);
+            let registry = GitPerPackageRegistry::open_single_package(
+                "catalog-override",
+                &resolution.source_url,
+                reference,
+                &self.cache_root,
+                Arc::clone(&self.backend),
+                DEFAULT_FRESHNESS_SECS,
+                vibe_core::manifest::AuthKind::None,
+                None,
+            )?;
+            return M::git(&registry, group, name, reference);
         }
 
         // Override or registry: walk in priority order, preferring the
@@ -541,15 +570,15 @@ impl MultiRegistryResolver {
         {
             task.detail(format!("reading metadata from registry {name_filter}"));
             return match src {
-                RegistrySource::Git(reg) => reg.fetch_dep_manifest(group, name, version),
-                RegistrySource::Local(ls) => read_local_dep_manifest(ls, group, name, version),
+                RegistrySource::Git(reg) => M::registry_git(reg, group, name, version),
+                RegistrySource::Local(ls) => M::registry_local(ls, group, name, version),
             };
         }
         let mut last_err: Option<RegistryError> = None;
         for src in &self.sources {
             let tried = match src {
-                RegistrySource::Git(reg) => reg.fetch_dep_manifest(group, name, version),
-                RegistrySource::Local(ls) => read_local_dep_manifest(ls, group, name, version),
+                RegistrySource::Git(reg) => M::registry_git(reg, group, name, version),
+                RegistrySource::Local(ls) => M::registry_local(ls, group, name, version),
             };
             match tried {
                 Ok(m) => return Ok(m),
@@ -580,3 +609,103 @@ impl MultiRegistryResolver {
 #[cfg(test)]
 #[path = "walk/tests.rs"]
 mod tests;
+
+trait MetadataRead {
+    const BOUND: bool;
+    type Output;
+    fn local(path: &Path, source: String) -> Result<Self::Output, RegistryError>;
+    fn git(
+        reg: &GitPerPackageRegistry,
+        group: &Group,
+        name: &str,
+        reference: &str,
+    ) -> Result<Self::Output, RegistryError>;
+    fn registry_git(
+        reg: &GitPerPackageRegistry,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<Self::Output, RegistryError>;
+    fn registry_local(
+        reg: &LocalRegistrySource,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<Self::Output, RegistryError>;
+}
+struct UnboundMetadata;
+impl MetadataRead for UnboundMetadata {
+    const BOUND: bool = false;
+    type Output = Manifest;
+    fn local(path: &Path, _: String) -> Result<Manifest, RegistryError> {
+        Manifest::read(path).map_err(Into::into)
+    }
+    fn git(
+        reg: &GitPerPackageRegistry,
+        group: &Group,
+        name: &str,
+        reference: &str,
+    ) -> Result<Manifest, RegistryError> {
+        reg.fetch_manifest_at_ref(group, name, reference)
+    }
+    fn registry_git(
+        reg: &GitPerPackageRegistry,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<Manifest, RegistryError> {
+        reg.fetch_dep_manifest(group, name, version)
+    }
+    fn registry_local(
+        reg: &LocalRegistrySource,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<Manifest, RegistryError> {
+        read_local_dep_manifest(reg, group, name, version)
+    }
+}
+struct BoundMetadata;
+impl MetadataRead for BoundMetadata {
+    const BOUND: bool = true;
+    type Output = crate::CandidateMetadata;
+    fn local(path: &Path, source: String) -> Result<Self::Output, RegistryError> {
+        crate::CandidateMetadata::read_local(path.parent().unwrap_or(path), source)
+    }
+    fn git(
+        reg: &GitPerPackageRegistry,
+        group: &Group,
+        name: &str,
+        reference: &str,
+    ) -> Result<Self::Output, RegistryError> {
+        reg.fetch_candidate_at_ref(group, name, reference)
+    }
+    fn registry_git(
+        reg: &GitPerPackageRegistry,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<Self::Output, RegistryError> {
+        reg.fetch_candidate_at_ref(group, name, &format!("v{version}"))
+    }
+    fn registry_local(
+        reg: &LocalRegistrySource,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<Self::Output, RegistryError> {
+        let dir = reg
+            .registry
+            .root()
+            .join(group.as_str())
+            .join(name)
+            .join(format!("v{version}"));
+        if !dir.is_dir() {
+            return Err(RegistryError::UnknownPackage {
+                group: group.clone(),
+                name: name.into(),
+            });
+        }
+        crate::CandidateMetadata::read_local_registry(&dir)
+    }
+}

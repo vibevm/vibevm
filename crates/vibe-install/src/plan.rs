@@ -108,10 +108,9 @@ impl PlannedInstall {
 /// Plan an install transaction over `source` for the project at
 /// `project_root` (which must already contain a `vibe.toml`).
 ///
-/// Read-mostly: the single deliberate write is the case-c migration
-/// (an empty entry manifest seeded from `vibe.lock`'s
-/// `meta.root_dependencies` and persisted before solving, so a panic
-/// mid-solve cannot lose it — PROP-002 §2.7).
+/// Read-mostly: case-c migration still seeds the entry manifest from
+/// `vibe.lock`'s `meta.root_dependencies`. Its disk write follows successful
+/// planning so a failed catalog cannot leave install effects (M05C1-FAILURE).
 pub fn plan<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
@@ -197,6 +196,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     //
     //    Anything else (no caller roots, no manifest entries, no
     //    lockfile snapshot) is an error — there is nothing to install.
+    let mut migration_pending = false;
     let roots: Vec<PackageRef> = if request.roots.is_empty() {
         if manifest.requires.packages.is_empty()
             && manifest.requires.git_packages.is_empty()
@@ -209,7 +209,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
                 .requires
                 .packages
                 .clone_from(&lockfile.meta.root_dependencies);
-            manifest.write(project_root.join(Manifest::FILENAME))?;
+            migration_pending = true;
             // The finalised tree below is what the root union reads, so the
             // migration has to reach it too. The wrapper used to get this by
             // re-discovering; here the SAME concrete entries are appended to
@@ -325,6 +325,9 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
             vibe_workspace::freshness::Freshness::Fresh
                 if slots_match_spec_format(&ws.root, &lockfile, spec_format) =>
             {
+                if migration_pending {
+                    manifest.write(project_root.join(Manifest::FILENAME))?;
+                }
                 resolution_task.skip("vibe.lock is fresh");
                 return Ok(Plan::Fresh);
             }
@@ -350,12 +353,27 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         }
     }
 
+    let transaction = transaction::PlanningSource::capture(source, &roots)?;
+    let source = &transaction;
+    if let Some(catalog) = source.catalog_inspection() {
+        observer.catalog(catalog);
+    }
+
     // 2. Run the depsolver.
     observer.on(PlanEvent::ResolvingRoots { roots: roots.len() });
     let mut strict_roots = solve_roots.clone();
     let graph = match source.solve(&solve_roots) {
         Ok(graph) => graph,
-        Err(e) if solve_roots != roots => {
+        Err(e)
+            if solve_roots != roots
+                && (!matches!(e, vibe_resolver::SolveError::Provider(_))
+                    || matches!(
+                        e,
+                        vibe_resolver::SolveError::Provider(
+                            vibe_resolver::DepProviderError::NoMatchingVersion { .. }
+                        )
+                    )) =>
+        {
             // PROP-011 §5.3 — the pin-held set over-constrained: a
             // changed dependency is incompatible with a held pin. Fall
             // back to a full, free re-resolve.
@@ -407,6 +425,10 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     //    plan, through the settings chokepoint. The project no longer
     //    has a `.vibe/cache/` copy: the store IS the source
     //    `vibedeps/` materialises from.
+    // Validate every selected binding before the first acquisition effect.
+    for node in graph.iter() {
+        source.validate_catalog_candidate(&exact_pinned_pkgref(node))?;
+    }
     let store_root = store::store_root()?;
     let mut fetched: Vec<Fetched> = Vec::with_capacity(graph.packages.len());
     let fetch_task = progress.task("Fetching package content");
@@ -516,6 +538,9 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         })
         .collect();
 
+    if migration_pending {
+        manifest.write(project_root.join(Manifest::FILENAME))?;
+    }
     Ok(Plan::Ready(Box::new(PlannedInstall {
         strict_conversion: false,
         project_root: project_root.to_path_buf(),
@@ -543,3 +568,8 @@ mod selection;
 use selection::{
     migrate_selected_node, refuse_read_only_kinds, slots_match_spec_format, visibility_root_id,
 };
+
+mod transaction;
+
+#[cfg(test)]
+mod m_05_c_1_cases;

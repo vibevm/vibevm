@@ -158,6 +158,13 @@ impl RegistryPackageSource {
 }
 
 impl InstallSource for RegistryPackageSource {
+    fn begin_transaction(
+        &self,
+        roots: &[PackageRef],
+    ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
+        self.resolver.begin_transaction(roots)
+    }
+
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,

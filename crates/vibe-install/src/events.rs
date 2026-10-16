@@ -52,6 +52,9 @@ pub enum PlanEvent {
 /// );
 /// ```
 pub trait PlanObserver {
+    /// Inspect the actual source/content/definition bindings before install effects.
+    fn catalog(&self, _catalog: &vibe_resolver::resolvo_engine::CatalogInspection) {}
+
     fn on(&self, event: PlanEvent);
 
     /// Invocation-owned progress tree for long-running plan work.

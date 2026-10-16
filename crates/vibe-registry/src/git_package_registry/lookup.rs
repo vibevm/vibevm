@@ -10,6 +10,62 @@ use super::*;
 use crate::index_client::IndexVersion;
 
 impl GitPerPackageRegistry {
+    /// Read the candidate from an immutable commit at the actual serving URL.
+    pub fn fetch_candidate_at_ref(
+        &self,
+        group: &Group,
+        name: &str,
+        refname: &str,
+    ) -> Result<crate::CandidateMetadata, RegistryError> {
+        self.ensure_token_loaded()?;
+        self.try_lookup(group, name, |url| {
+            let fetch_url = self.credentialed_url(url);
+            let commit = self.backend.resolve_metadata_ref(&fetch_url, refname)?;
+            if !matches!(commit.len(), 40 | 64) || !commit.bytes().all(|b| b.is_ascii_hexdigit()) {
+                return Err(RegistryError::MalformedMeta {
+                    path: crate::git_backend::shell::without_userinfo(url).into(),
+                    reason: "metadata backend returned an invalid immutable object identity".into(),
+                });
+            }
+            let mut served_by = url.to_owned();
+            let bytes =
+                match self
+                    .backend
+                    .fetch_file_at_ref(&fetch_url, &commit, Manifest::FILENAME)
+                {
+                    Ok(bytes) => bytes,
+                    Err(GitError::ArchiveUnsupported { .. }) => {
+                        // The existing clone fallback is metadata cache I/O, never
+                        // an install-store insertion. Pin it to the captured commit.
+                        served_by = self.metadata_checkout(group, name, &commit)?;
+                        let directory = self.package_clone_dir(group, name);
+                        if self.backend.head_commit(&directory)?.as_deref() != Some(commit.as_str())
+                        {
+                            return Err(RegistryError::MalformedMeta {
+                                path: directory,
+                                reason: "metadata checkout differs from captured commit".into(),
+                            });
+                        }
+                        let bytes = self.backend.checkout_file_at_commit(
+                            &directory,
+                            &commit,
+                            Manifest::FILENAME,
+                        )?;
+                        if self.backend.head_commit(&directory)?.as_deref() != Some(commit.as_str())
+                        {
+                            return Err(RegistryError::MalformedMeta {
+                                path: directory,
+                                reason: "metadata checkout changed during read".into(),
+                            });
+                        }
+                        bytes
+                    }
+                    Err(error) => return Err(error.into()),
+                };
+            crate::CandidateMetadata::from_bytes(served_by, format!("git:{commit}"), &bytes)
+        })
+    }
+
     /// Fetch `vibe.toml` at an arbitrary git ref (tag, branch,
     /// or commit SHA) — used by the git-source resolver path
     /// (PROP-002 §2.4.1) where the operator declared `tag = "..."` /

@@ -369,3 +369,6 @@ pub use store::{
     InsertOutcome, entry_dir, insert_from, list_all, list_older_than, list_versions, lookup,
     record_hash, recorded_hash, remove_all, remove_entry, remove_name, store_root,
 };
+
+mod candidate_metadata;
+pub use candidate_metadata::{CandidateIdentity, CandidateMetadata, catalog_digest};

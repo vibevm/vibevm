@@ -193,6 +193,18 @@ impl LocalRegistry {
         resolved: &ResolvedPackage,
         store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
+        self.fetch_with_catalog(resolved, store_root, None)
+    }
+
+    pub fn fetch_with_catalog(
+        &self,
+        resolved: &ResolvedPackage,
+        store_root: &Path,
+        catalog: Option<&crate::CandidateMetadata>,
+    ) -> Result<CachedPackage, RegistryError> {
+        if let Some(metadata) = catalog {
+            metadata.verify_checkout(&resolved.source_dir, None)?;
+        }
         let content_hash = compute_content_hash(&resolved.source_dir)?;
         let cache_dir = store::insert_current_at(
             store_root,
@@ -259,7 +271,7 @@ impl Registry for LocalRegistry {
     }
 }
 
-fn source_uri_for_local(path: &Path) -> String {
+pub(crate) fn source_uri_for_local(path: &Path) -> String {
     let mut s = path.to_string_lossy().replace('\\', "/");
     // Ensure a leading `/` on Windows paths like `C:/Users/…` so the URI has
     // the `file:///C:/Users/...` shape.

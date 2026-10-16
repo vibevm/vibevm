@@ -20,6 +20,7 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     progress: &vibe_core::progress::Progress,
 ) -> Result<Fetched> {
     let pkgref = exact_pinned_pkgref(node);
+    source.validate_catalog_candidate(&pkgref)?;
     let expected = lockfile
         .find(&node.group, &node.name)
         .map(|p| p.content_hash.clone());
@@ -69,8 +70,21 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
     offline: bool,
     progress: &vibe_core::progress::Progress,
 ) -> Result<Fetched> {
+    source.validate_catalog_candidate(&exact_pinned_pkgref(node))?;
     match try_in_place_incremental(node, lockfile, workspace_root, root_features)? {
-        Some(fetched) => Ok(fetched),
+        Some(fetched) => {
+            if source.catalog_inspection().is_some()
+                && fetched.cached.manifest != source.manifest_of(&exact_pinned_pkgref(node))?
+            {
+                return Err(vibe_resolver::SolveError::Provider(
+                    vibe_resolver::DepProviderError::Other(
+                        "in-place definition differs from immutable catalog".into(),
+                    ),
+                )
+                .into());
+            }
+            Ok(fetched)
+        }
         None => fetch_node(
             source,
             node,

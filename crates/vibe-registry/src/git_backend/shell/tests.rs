@@ -123,6 +123,21 @@ fn bootstrap_peels_annotated_and_lightweight_tags_to_detached_commits() {
             &["rev-parse", &format!("refs/tags/{tag}^{{commit}}")],
         );
         assert_eq!(git.head_commit(&dest).unwrap().unwrap(), expected);
+        assert_eq!(
+            git.resolve_metadata_ref(&bare.to_string_lossy(), tag)
+                .unwrap(),
+            expected
+        );
+        let captured = git
+            .checkout_file_at_commit(&dest, &expected, "vibe.toml")
+            .unwrap();
+        fs::write(dest.join("vibe.toml"), "mutable worktree replacement").unwrap();
+        assert_eq!(
+            git.checkout_file_at_commit(&dest, &expected, "vibe.toml")
+                .unwrap(),
+            captured
+        );
+        fs::write(dest.join("vibe.toml"), captured).unwrap();
         assert!(
             !git_succeeds(&dest, &["symbolic-ref", "-q", "HEAD"]),
             "tag checkout must leave HEAD detached"

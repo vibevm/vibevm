@@ -13,6 +13,10 @@
 //! synchronous vibevm provider drives it with no async runtime.
 
 mod capabilities;
+mod catalog;
+mod snapshot;
+pub use capabilities::{CapIndex, CapProvider};
+pub use catalog::{CatalogInspection, TransactionCatalog};
 mod provider;
 mod version_set;
 
@@ -81,6 +85,13 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#dominance")]
     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        let transaction = ResolvoDepSolver::new(snapshot::MetadataSnapshot::new(&self.provider));
+        transaction.solve_transaction(roots)
+    }
+}
+
+impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+    fn solve_transaction(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         // Hard solve, then a best-effort greedy expansion over
         // `[recommends]` (PROP-003 §2.3.3): each recommended package is
         // tried via a re-solve and kept only if the graph stays
@@ -102,9 +113,13 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
             }
             let mut trial = extra.clone();
             trial.push(rec);
-            if let Ok(extended) = self.solve_hard(roots, &trial) {
-                extra = trial;
-                graph = extended;
+            match self.solve_hard(roots, &trial) {
+                Ok(extended) => {
+                    extra = trial;
+                    graph = extended;
+                }
+                Err(SolveError::Provider(error)) => return Err(error.into()),
+                Err(_) => {}
             }
         }
         Ok(graph)
@@ -125,7 +140,7 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
         // Pre-scan the package closure (roots + extra) for capability
         // providers (PROP-017 §3) before building the resolvo provider.
         let scan_roots: Vec<PackageRef> = roots.iter().chain(extra.iter()).cloned().collect();
-        let cap_index = capabilities::prescan(&self.provider, &scan_roots);
+        let cap_index = capabilities::prescan(&self.provider, &scan_roots)?;
         let rp = VibevmResolvoProvider::new(&self.provider, cap_index);
 
         // Root requirements + the (group, name) root order (deduplicated,
@@ -275,3 +290,8 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
 #[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod m_05_c_1_cases;
+
+pub use semver::Version as CandidateVersion;

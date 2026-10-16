@@ -310,6 +310,22 @@ fn check_member_graph(
 /// }
 /// ```
 pub trait InstallSource {
+    /// Capture an exact catalog when this source supports transaction binding.
+    /// None preserves legacy embeddings without claiming an exact catalog.
+    fn begin_transaction(
+        &self,
+        _roots: &[PackageRef],
+    ) -> Result<Option<Box<dyn InstallSource + '_>>, SolveError> {
+        Ok(None)
+    }
+    fn catalog_inspection(&self) -> Option<&vibe_resolver::resolvo_engine::CatalogInspection> {
+        None
+    }
+    /// Validate the selected source before any install acquisition effects.
+    fn validate_catalog_candidate(&self, _pkg: &PackageRef) -> Result<(), SolveError> {
+        Ok(())
+    }
+
     /// Resolve `pkgref` and insert its content into the machine-global
     /// store (`~/.vibe/cache/`, PROP-010 §2.7) under `store_root`.
     /// `expected_hash` (typically the lockfile pin) lets a

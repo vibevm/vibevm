@@ -59,6 +59,17 @@ impl MultiRegistryResolver {
         expected_hash: Option<&str>,
         progress: &vibe_core::progress::Progress,
     ) -> Result<CachedPackage, RegistryError> {
+        self.fetch_with_catalog_progress(resolution, store_root, expected_hash, progress, None)
+    }
+
+    pub fn fetch_with_catalog_progress(
+        &self,
+        resolution: &MultiResolution,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        progress: &vibe_core::progress::Progress,
+        catalog: Option<&crate::CandidateMetadata>,
+    ) -> Result<CachedPackage, RegistryError> {
         let label = format!(
             "Fetching {}/{}@{}",
             resolution.resolved.group, resolution.resolved.name, resolution.resolved.version
@@ -73,7 +84,8 @@ impl MultiRegistryResolver {
         } else if let Some(registry) = resolution.registry_name.as_deref() {
             task.detail(format!("Git fetch from registry {registry}"));
         }
-        let result = self.fetch_with_expected_hash_inner(resolution, store_root, expected_hash);
+        let result =
+            self.fetch_with_expected_hash_inner(resolution, store_root, expected_hash, catalog);
         match &result {
             Ok(_) if resolution.from_store => task.skip("already cached"),
             Ok(_) => task.finish(),
@@ -87,25 +99,34 @@ impl MultiRegistryResolver {
         resolution: &MultiResolution,
         store_root: &Path,
         expected_hash: Option<&str>,
+        catalog: Option<&crate::CandidateMetadata>,
     ) -> Result<CachedPackage, RegistryError> {
         // Store-backed resolution (PROP-010 §2.6): the entry IS the
         // content source — serve its bytes off disk, with no source
         // walk and no network; a pin, when present, is verified with
         // the same entry gate the fetch path applies.
         if resolution.from_store {
-            return self.fetch_from_store(resolution, expected_hash);
+            let cached = self.fetch_from_store(resolution, expected_hash)?;
+            if let Some(metadata) = catalog {
+                metadata.verify_checkout(&cached.cache_dir, cached.resolved_commit.as_deref())?;
+            }
+            return Ok(cached);
         }
         if resolution.overridden {
-            return self.fetch_override(resolution, store_root);
+            return self.fetch_override(resolution, store_root, catalog);
         }
         if resolution.is_path_source {
-            return self.fetch_path_source(resolution, store_root);
+            let cached = self.fetch_path_source(resolution, store_root)?;
+            if let Some(metadata) = catalog {
+                metadata.verify_checkout(&cached.cache_dir, None)?;
+            }
+            return Ok(cached);
         }
         if resolution.is_git_source {
-            return self.fetch_git_source(resolution, store_root, expected_hash);
+            return self.fetch_git_source(resolution, store_root, expected_hash, catalog);
         }
         if resolution.via_redirect.is_some() {
-            return self.fetch_via_redirect(resolution, store_root, expected_hash);
+            return self.fetch_via_redirect(resolution, store_root, expected_hash, catalog);
         }
         let registry_name =
             resolution
@@ -130,9 +151,12 @@ impl MultiRegistryResolver {
         // provenance correctly for a registry-served local source.
         match src {
             RegistrySource::Git(reg) => {
-                reg.fetch_with_expected_hash(&resolution.resolved, store_root, expected_hash)
+                reg.fetch_with_catalog(&resolution.resolved, store_root, expected_hash, catalog)
             }
-            RegistrySource::Local(ls) => ls.registry.fetch(&resolution.resolved, store_root),
+            RegistrySource::Local(ls) => {
+                ls.registry
+                    .fetch_with_catalog(&resolution.resolved, store_root, catalog)
+            }
         }
     }
 
@@ -179,22 +203,34 @@ impl MultiRegistryResolver {
         &self,
         resolution: &MultiResolution,
         store_root: &Path,
+        catalog: Option<&crate::CandidateMetadata>,
     ) -> Result<CachedPackage, RegistryError> {
         let url = &resolution.source_url;
         let refname = resolution
             .source_ref
             .clone()
             .unwrap_or_else(|| DEFAULT_OVERRIDE_REF.to_string());
+        let selected_ref = catalog
+            .and_then(|m| m.identity.content.strip_prefix("git:"))
+            .unwrap_or(&refname);
         let group = &resolution.resolved.group;
         let name = resolution.resolved.name.as_str();
 
         let clone_dir = self.override_clone_dir(group, name);
-        ensure_clone_at(self.backend.as_ref(), url, &refname, &clone_dir)?;
+        ensure_clone_at(self.backend.as_ref(), url, selected_ref, &clone_dir)?;
 
         // Hash the clone directly (the recipe skips `.git`), then insert
         // write-once into the machine store — an already-present entry is
         // returned untouched and its manifest read back, so the
         // `CachedPackage` describes the bytes that will materialise.
+        let resolved_commit = if catalog.is_some() {
+            self.backend.head_commit(&clone_dir)?
+        } else {
+            None
+        };
+        if let Some(metadata) = catalog {
+            metadata.verify_checkout(&clone_dir, resolved_commit.as_deref())?;
+        }
         let content_hash = compute_content_hash(&clone_dir)?;
         let dest = store::insert_current_at(
             store_root,
@@ -228,7 +264,7 @@ impl MultiRegistryResolver {
             source_uri: url.clone(),
             registry_name: None,
             source_ref: Some(refname),
-            resolved_commit: None,
+            resolved_commit,
             overridden: true,
             is_git_source: false,
             is_path_source: false,
