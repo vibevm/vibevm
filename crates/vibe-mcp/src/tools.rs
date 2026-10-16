@@ -31,6 +31,8 @@ pub use fixed_cargo_operation::FixedCargoOperationMcpTool;
 pub mod fixed_package_operation;
 pub use fixed_package_operation::FixedPackageOperationMcpTool;
 
+pub mod client_deploy_operation;
+pub use client_deploy_operation::ClientDeployOperationMcpTool;
 pub mod fixed_deploy_operation;
 pub use fixed_deploy_operation::FixedDeployOperationMcpTool;
 
@@ -118,6 +120,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(FixedCargoOperationMcpTool),
         Box::new(FixedPackageOperationMcpTool),
         Box::new(FixedDeployOperationMcpTool),
+        Box::new(ClientDeployOperationMcpTool),
         Box::new(RequirementsQueryMcpTool),
         Box::new(ReadDocMcpTool),
         Box::new(ReadSpecMcpTool),

@@ -1880,3 +1880,39 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/client-command-plan/e1"
 sunset = "none"
+
+[format.client-deploy-request]
+epoch = 1
+schema = "schemas/client_deploy/e1/request.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/client-deploy/e1"
+sunset = "none"
+
+[format.client-deploy-reply]
+epoch = 1
+schema = "schemas/client_deploy/e1/reply.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/client-deploy/e1"
+sunset = "none"
+
+[format.client-deploy-error]
+epoch = 1
+schema = "schemas/client_deploy/e1/error.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/client-deploy/e1"
+sunset = "none"
+
+[format.deploy-client-state]
+epoch = 1
+schema = "schemas/deploy_client_state.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/deploy-client-state/e1"
+sunset = "none"

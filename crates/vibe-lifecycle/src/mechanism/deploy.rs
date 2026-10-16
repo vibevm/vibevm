@@ -934,3 +934,5 @@ impl CoordinatedDeploy {
         undeploy_targets(execution)
     }
 }
+
+pub mod client_deploy;

@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "action": "apply",
+  "plan_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "run_id": "run-fixture",
+  "status": "needs_authority",
+  "authority": "required",
+  "resources": [
+    {
+      "resource": "a",
+      "prior": "absent",
+      "desired": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "observed": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "state": "desired"
+    },
+    {
+      "resource": "b",
+      "prior": "absent",
+      "desired": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "observed": "absent",
+      "state": "prior"
+    }
+  ],
+  "steps": [
+    {
+      "resource": "a",
+      "subject": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "status": "completed",
+      "retry_safe": false
+    },
+    {
+      "resource": "b",
+      "subject": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "status": "pending",
+      "retry_safe": false
+    }
+  ],
+  "cancel_pending": false,
+  "message": "response loss after first effect"
+}

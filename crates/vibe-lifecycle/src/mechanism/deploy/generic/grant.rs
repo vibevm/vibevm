@@ -8,6 +8,16 @@ pub struct ExactGrant {
     host: u64,
 }
 impl GenericHost {
+    /// Read-only composition port; this never issues or refreshes a grant.
+    pub fn validate_approval(
+        &self,
+        plan: &GenericPlan,
+        grant: Option<&ExactGrant>,
+    ) -> Result<(), GenericError> {
+        self.check_state_identity(plan)?;
+        self.check_grant(plan, grant)
+    }
+
     /// Explicit host approval of this entire inspectable plan. Approval is a
     /// distinct call after payload admission and pure preparation.
     pub fn approve(&self, plan: &GenericPlan) -> Result<ExactGrant, GenericError> {

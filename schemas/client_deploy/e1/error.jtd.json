@@ -1,0 +1,39 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "code": {
+      "enum": [
+        "invalid_request",
+        "unavailable",
+        "foreign_scope",
+        "reservation",
+        "publication"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "message": {
+      "type": "string"
+    },
+    "effect_state": {
+      "enum": [
+        "no_effects",
+        "uncertain"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  },
+  "optionalProperties": {
+    "run_id": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  }
+}

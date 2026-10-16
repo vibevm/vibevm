@@ -48,8 +48,8 @@ pub use exact_local_install_decision::{
 
 pub mod cargo_grant;
 pub mod cli_grant;
-pub mod exact_local_install_grant;
 pub mod deploy_grant;
+pub mod exact_local_install_grant;
 pub mod package_grant;
 
 mod lifecycle_decisions;
@@ -307,3 +307,5 @@ pub fn submit<J: SubmissionJournal>(
 
 #[cfg(test)]
 mod tests;
+
+pub mod client_deploy;

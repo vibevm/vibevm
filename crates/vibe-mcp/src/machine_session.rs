@@ -13,3 +13,5 @@ pub mod package;
 pub mod responsive;
 pub mod runner;
 pub mod state;
+
+pub mod client_deploy;

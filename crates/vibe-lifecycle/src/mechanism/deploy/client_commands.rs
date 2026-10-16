@@ -248,7 +248,7 @@ impl Host {
         self.check(&prepared)?;
         Ok(prepared)
     }
-    fn check(&self, p: &Prepared) -> Result<(), &'static str> {
+    pub(crate) fn check(&self, p: &Prepared) -> Result<(), &'static str> {
         if p.host != self.id {
             return Err("foreign prepared command");
         }
@@ -292,16 +292,24 @@ impl Host {
             prepared: p.id,
         })
     }
+    /// Read-only exact opaque authority validation for composed preflight.
+    pub fn validate_process_grant(
+        &self,
+        p: &Prepared,
+        grant: Option<&ProcessGrant>,
+    ) -> Result<(), &'static str> {
+        let grant = grant.ok_or("missing process grant")?;
+        if grant.host != self.id || grant.prepared != p.id {
+            return Err("wrong or broadened process grant");
+        }
+        self.check(p)
+    }
     pub fn execute(
         &self,
         p: &Prepared,
         grant: Option<&ProcessGrant>,
     ) -> Result<ProcessOutput, &'static str> {
-        let grant = grant.ok_or("missing process grant")?;
-        if grant.host != self.id || grant.prepared != p.id {
-            return Err("wrong or broadened process grant");
-        }
-        self.check(p)?;
+        self.validate_process_grant(p, grant)?;
         self.runner
             .run(&p.spec)
             .map_err(|_| "approved process failed; effects unknown")

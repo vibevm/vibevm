@@ -18,6 +18,10 @@ pub enum MachineSubcommand {
 
 #[derive(Debug, Args)]
 pub struct MachineSessionArgs {
+    /// Typed client deployment frames; requires an injected trusted host.
+    #[arg(long, conflicts_with_all = ["fixed_validate","fixed_package","fixed_cargo","fixed_deploy","fixed_install"])]
+    pub client_deploy: bool,
+
     /// Explicit absolute project directory containing vibe.toml.
     #[arg(long, value_parser = absolute_root, conflicts_with_all = ["json", "quiet", "verbose", "invoked_by"])]
     pub root: PathBuf,

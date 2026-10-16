@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "action": "native",
+  "plan_id": "a",
+  "key": "k",
+  "principal": "untrusted"
+}

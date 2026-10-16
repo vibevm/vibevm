@@ -165,3 +165,14 @@ mod tests {
         );
     }
 }
+
+impl StateRecord for vibe_wire::generated::deploy_client_state::DeployClientState {
+    fn encode(&self) -> Result<Vec<u8>, String> {
+        let bytes = serde_json::to_vec(self).map_err(|e| e.to_string())?;
+        vibe_wire::behaviour::client_deploy::read_state(&bytes).map_err(str::to_owned)?;
+        Ok(bytes)
+    }
+    fn decode(bytes: &[u8]) -> Result<Self, String> {
+        vibe_wire::behaviour::client_deploy::read_state(bytes).map_err(str::to_owned)
+    }
+}

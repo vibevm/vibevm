@@ -1,6 +1,7 @@
 //! Early CLI composition of pure planning or an explicit fixed host.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME");
 
+mod client_deploy;
 mod fixed_deploy;
 pub(crate) use fixed_deploy::{FixedDeployHostMode, context as fixed_deploy_context};
 mod exact_local_install;
@@ -39,12 +40,37 @@ use vibe_orchestrator::machine_submission::{
     r = 1
 )]
 pub(crate) fn run(args: &MachineArgs, cli: &Cli) -> ExitCode {
+    dispatch(
+        args,
+        cli,
+        None,
+        &mut std::io::stdin(),
+        &mut std::io::stdout(),
+    )
+}
+
+/// CLI composition entry: only the embedding host can supply this capability.
+/// Parsed arguments never create client deployment authority.
+pub(crate) fn dispatch<R: std::io::Read, W: std::io::Write>(
+    args: &MachineArgs,
+    cli: &Cli,
+    client_host: Option<
+        Arc<vibe_orchestrator::machine_operation::client_deploy::ClientDeployRoute>,
+    >,
+    reader: &mut R,
+    writer: &mut W,
+) -> ExitCode {
     let MachineSubcommand::Session(args) = &args.command;
     if let Err(error) = validate_output(cli).and_then(|()| validate_mode(args)) {
         eprintln!("vibe machine session: {error}");
         return ExitCode::from(crate::exit_code::USAGE);
     }
-    match exchange(args) {
+    let result = if args.client_deploy {
+        client_deploy::exchange(args, client_host, reader, writer)
+    } else {
+        exchange(args)
+    };
+    match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
             eprintln!("vibe machine session: {error:#}");

@@ -40,6 +40,9 @@ pub struct RetainedPlan {
     pub(super) forward: Option<CapturedClient>,
 }
 impl RetainedPlan {
+    pub fn target(&self) -> &str {
+        &self.target
+    }
     pub fn operation(&self) -> RetainedOperation {
         self.operation
     }
@@ -70,6 +73,18 @@ pub struct RetainedGrant {
 }
 
 impl GenericHost {
+    /// Read-only exact retained admission for composed transactions.
+    pub fn validate_retained_approval(
+        &self,
+        plan: &RetainedPlan,
+        grant: Option<&RetainedGrant>,
+    ) -> Result<(), GenericError> {
+        if grant.is_none_or(|g| g.plan != *plan) {
+            return Err(refuse("fresh exact retained operation grant required"));
+        }
+        self.check_retained(plan)
+    }
+
     /// Resume retained bytes, never re-plan from a changed descriptor. Forward
     /// recovery additionally requires the exact currently selected capture.
     pub fn prepare_recovery(
