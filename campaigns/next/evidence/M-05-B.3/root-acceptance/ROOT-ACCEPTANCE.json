@@ -1,0 +1,30 @@
+{
+  "status": "accepted",
+  "task": "M-05-B.3",
+  "work_id": "work.m05b3.prepare-plan",
+  "candidate_id": "managed-result.9e9ea3d395945d7433b47c48c5ea8381da2758e839d4a14e10a86a1e249fb236",
+  "canonical_revision": 748,
+  "canonical_work_revision": 5,
+  "canonical_work_state": "Accepted",
+  "runtime_acceptance_projection": "Unreviewed; distinct from canonical WorkAccepted",
+  "accepted_task_contracts": 89,
+  "total_task_contracts": 222,
+  "source_commit": "9fdead3bf7fb6126582ef1f39c92f152a88b7c9c",
+  "diagnostic_metadata_commit": "df629cfa8efca701b2d58a0bccafc891dabc2fef",
+  "fresh_case_counts": {
+    "core": 3,
+    "workspace": 2,
+    "affected_compatibility": 5
+  },
+  "post_commit_codegen_exit": 0,
+  "normal_retirement_exit": 0,
+  "limits": [
+    "Explicit finite absent/epoch1 profiles; richer ordinary manifests refuse.",
+    "Unknown catalogues/options remain NeedsInput; no answer API.",
+    "No default installation reader switch or OS crash proof.",
+    "Participating-writer byte-check/barrier guarantee."
+  ],
+  "full_review_private_path": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-REVIEW.json",
+  "full_review_sha256": "f760ad993109f9ef546ee78f54728aa000094561ca9e19a43fc8a245e6d1bb8a",
+  "utc": "2026-10-16T13:31:52.907763+00:00"
+}

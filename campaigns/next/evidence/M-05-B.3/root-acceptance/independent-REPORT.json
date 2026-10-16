@@ -1,0 +1,44 @@
+{
+  "schema": "m05b3-independent-final-review/1",
+  "recommendation": "accept_finite_authorized_B3_implementation",
+  "blockers": [],
+  "acceptance_mutated": false,
+  "count_changed": false,
+  "tests_run_by_reviewer": false,
+  "canonical_projection": "lossless for admitted local/activation/forwarding and zero-or-one grammar; actual typed model retained",
+  "evidence": {
+    "V1": {
+      "passed": 3,
+      "final_log_sha256": "7858608ab5e8c94eb54f0245dda6788850abd136441c6013a2a4a6f8ba13c8b5",
+      "before_after_equal": true,
+      "current_core_drift": false,
+      "later_workspace_differences": 2
+    },
+    "V2": {
+      "passed": 2,
+      "log_sha256": "8fa5469583f883e7b58dfdb7718fd0392365ac642459d9d9d86c34e761c1f83e",
+      "before_after_equal": true,
+      "current_captured_source_drift": false
+    },
+    "V3": {
+      "exact_cases": 5,
+      "log_hashes_matched": true
+    },
+    "unrelated_generated_files_noncomment_compared": 57,
+    "unrelated_generated_body_differences": []
+  },
+  "pending_integration_gate": {
+    "check": "check-codegen Git-baseline cleanliness",
+    "reported_exit": 1,
+    "next": "Root post-commit check; do not label current exit as pass"
+  },
+  "limitations": [
+    "finite root/field grammar only",
+    "missing catalogues/options remain NeedsInput",
+    "no answer API",
+    "no stable-parser switch",
+    "constructed prepared-prefix recovery, not OS crash",
+    "participating-writer CAS qualification"
+  ],
+  "report": "REPORT.md"
+}

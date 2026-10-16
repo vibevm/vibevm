@@ -1,0 +1,52 @@
+[
+  {
+    "source": "/fast/zap-managed/2026-10-16-m05b3/accept-work-receipt.json",
+    "file": "accept-work-receipt.json",
+    "sha256": "a4ada6c0234a4c8bff31cf5f4cf1b0c8b26ce415ca24d9e79242e09c622efda1"
+  },
+  {
+    "source": "/fast/zap-managed/2026-10-16-m05b3/accept-stage-receipt.json",
+    "file": "accept-stage-receipt.json",
+    "sha256": "e1fda0ef4cb17411f08ceed0be68e1fa9160e7e6db92319df934e1182bd71b32"
+  },
+  {
+    "source": "/fast/zap-managed/2026-10-16-m05b3/ROOT-CODEGEN-RESULT.json",
+    "file": "ROOT-CODEGEN-RESULT.json",
+    "sha256": "7a12f27ca1a94b592a74e74eca49d91745b258a355be15dc2e53f10f9636fe89"
+  },
+  {
+    "source": "/fast/zap-managed/2026-10-16-m05b3/ROOT-CODEGEN-COMMAND.json",
+    "file": "ROOT-CODEGEN-COMMAND.json",
+    "sha256": "63443ea2fcf09f4e7c99dde89996252a744906d79859c361004267c58f581c9a"
+  },
+  {
+    "source": "/fast/zap-managed/2026-10-16-m05b3/ROOT-EXIT.json",
+    "file": "ROOT-EXIT.json",
+    "sha256": "f9db21725e023016378a4d50798f175b0ca4f7d6128ff63df36fab8079777815"
+  },
+  {
+    "source": "/fast/zap-managed/2026-10-16-m05b3/ROOT-INTEGRATION-REVIEW.json",
+    "file": "ROOT-INTEGRATION-REVIEW.json",
+    "sha256": "2335710ecb627f03fd3f368e3858012318154f1f08407c9d5cd6fe94c64589cf"
+  },
+  {
+    "source": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-APPLIED-PHASES.json",
+    "file": "ROOT-APPLIED-PHASES.json",
+    "sha256": "d26c8e4e0b517f0c7a39e9a6f8b803056f554097b70ad40959cf4a1a42415608"
+  },
+  {
+    "source": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-inspect.log",
+    "file": "ROOT-inspect.log",
+    "sha256": "143562870534256e713a1913e063b1183287f04b105e638c7af178dfd61812b2"
+  },
+  {
+    "source": "/fast/git/v/research/2026-10-16-m05b3-review/REPORT.md",
+    "file": "independent-REPORT.md",
+    "sha256": "c09e08d0f1cc8ee07d6b780b99e62c613ede9d6855eaf0868a3c222f29064498"
+  },
+  {
+    "source": "/fast/git/v/research/2026-10-16-m05b3-review/REPORT.json",
+    "file": "independent-REPORT.json",
+    "sha256": "781ed96ac6538f7366ce2d12ef0bfa3570441b1d293b217c3cba4874bc8084e7"
+  }
+]

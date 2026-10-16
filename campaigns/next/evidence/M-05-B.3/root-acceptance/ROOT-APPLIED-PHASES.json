@@ -1,0 +1,44 @@
+[
+  {
+    "phase": "safe",
+    "exit": 0,
+    "seconds": 23.50305833799939,
+    "log": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-safe.log",
+    "log_sha256": "48dd6462a434ffad08d37ff4bb06f3e3f21e01ec53473769a5c4fd5e13b8c113"
+  },
+  {
+    "phase": "open-review",
+    "exit": 0,
+    "seconds": 23.593327209000563,
+    "log": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-open-review.log",
+    "log_sha256": "d9afe010bb161dad9250b41a9a21f572a4e63318413d4b07a52e566affa6b1ab"
+  },
+  {
+    "phase": "evidence",
+    "exit": 0,
+    "seconds": 23.993615219002095,
+    "log": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-evidence.log",
+    "log_sha256": "ef5d4dc0047e1795a9dbac8259bde40766cda257a5237f24621ddb4431fead04"
+  },
+  {
+    "phase": "stage",
+    "exit": 0,
+    "seconds": 23.711600880000333,
+    "log": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-stage.log",
+    "log_sha256": "62a6e154eff4b9bf60a22a15e2c63ded8929627f06ad0d3e11fa450979dff137"
+  },
+  {
+    "phase": "work",
+    "exit": 0,
+    "seconds": 23.922610555000574,
+    "log": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-work.log",
+    "log_sha256": "94bfc1f8503695811ebdb34aaa590caf098fd6da8304b680d53605c4956f001c"
+  },
+  {
+    "phase": "inspect",
+    "exit": 0,
+    "seconds": 3.9414941880022525,
+    "log": "/fast/zap-managed/2026-10-16-m05b3/acceptance-preparation/ROOT-inspect.log",
+    "log_sha256": "143562870534256e713a1913e063b1183287f04b105e638c7af178dfd61812b2"
+  }
+]
