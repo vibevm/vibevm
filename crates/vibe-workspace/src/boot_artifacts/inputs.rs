@@ -194,6 +194,43 @@ fn selected_simple_markdown(
         .map_err(|_| boot_refusal("simple boot entry is outside its selected slot"))?
         .to_string_lossy()
         .replace('\\', "/");
+    // SubskillManifest content is a separate explicit declaration authority.
+    // Only a selected eager capture may supply bytes here. Directory presence
+    // and a matching suffix cannot bypass the package.sources descriptor path.
+    if let Some((sub, bytes)) = witness
+        .subskills
+        .iter()
+        .filter(|sub| sub.declaration.subskill.delivery == vibe_core::manifest::DeliveryMode::Eager)
+        .find_map(|sub| sub.content.get(&relative).map(|bytes| (sub, bytes)))
+    {
+        let pinned = Project::open(&witness.root).map_err(|e| boot_refusal(&e.to_string()))?;
+        let definition = pinned
+            .read_file_snapshot_bounded(&sub.definition_path, 1024 * 1024)
+            .map_err(|e| boot_refusal(&e.to_string()))?
+            .ok_or_else(|| boot_refusal("selected subskill declaration is absent"))?;
+        if definition.sha256 != sub.definition_digest {
+            return Err(boot_refusal(
+                "selected subskill declaration changed after capture",
+            ));
+        }
+        let current = pinned
+            .read_file_snapshot_bounded(&relative, 64 * 1024 * 1024)
+            .map_err(|e| boot_refusal(&e.to_string()))?
+            .ok_or_else(|| boot_refusal("selected subskill content is absent"))?;
+        if current.bytes != *bytes
+            || overlay
+                .and_then(|o| o.get(absolute))
+                .is_some_and(|b| b.as_ref() != bytes)
+        {
+            return Err(boot_refusal(
+                "selected subskill content differs from captured declaration witness",
+            ));
+        }
+        let raw = std::str::from_utf8(bytes).map_err(|e| boot_refusal(&e.to_string()))?;
+        return vibe_specdoc::project_spec_text(absolute, raw)
+            .map(|(markdown, _)| Some(markdown))
+            .map_err(|e| boot_refusal(&e.to_string()));
+    }
     let map = vibedeps::read_validated_descriptor_map_optional_hash(
         &witness.root,
         &witness.group,
@@ -279,7 +316,8 @@ fn document_provider(
     self_coord: &SelfCoordinate,
 ) -> Result<DocumentProvider, WorkspaceError> {
     match &entry.provenance {
-        BootProvenance::Dependency { group, name } => Ok(DocumentProvider::Dependency {
+        BootProvenance::Dependency { group, name }
+        | BootProvenance::SubskillOffer { group, name, .. } => Ok(DocumentProvider::Dependency {
             group: group.clone(),
             name: typed_name(&entry.origin, "dependency name", name)?,
         }),

@@ -28,8 +28,7 @@ use vibe_resolver::{DepProviderError, ResolvedNode};
 use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookOutput, HookPolicy, HookReport};
 use vibe_workspace::install::{
-    InstallOutcome, ResolvedDep, SlotLifecycleMode,
-    apply_resolution_with_spec_format_and_slot_lifecycle_traced, run_post_install_slot_lifecycle,
+    InstallOutcome, ResolvedDep, SlotLifecycleMode, run_post_install_slot_lifecycle,
 };
 use vibe_workspace::vibedeps;
 
@@ -449,24 +448,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
                     platform, policies,
                 ))
             };
-            let prepared =
-                vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress(
-                    &workspace,
-                    &resolution,
-                    slot_integrity,
-                    spec_format,
-                    Some(&slot_verifier),
-                    lifecycle,
-                    trace,
-                    &mut prepare,
-                    run,
-                    &mut make_provider,
-                    &progress,
-                )?;
-            (prepared.outcome, Some(prepared.carriage))
-        }
-        None => (
-            apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+            let prepared = vibe_workspace::install::apply_resolution_native_with_configuration(
                 &workspace,
                 &resolution,
                 slot_integrity,
@@ -474,6 +456,24 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
                 Some(&slot_verifier),
                 lifecycle,
                 trace,
+                &mut prepare,
+                run,
+                &mut make_provider,
+                &progress,
+                preflight_configuration.as_ref(),
+            )?;
+            (prepared.outcome, Some(prepared.carriage))
+        }
+        None => (
+            vibe_workspace::install::apply_resolution_with_configuration(
+                &workspace,
+                &resolution,
+                slot_integrity,
+                spec_format,
+                Some(&slot_verifier),
+                lifecycle,
+                trace,
+                preflight_configuration.as_ref(),
             )?,
             None,
         ),

@@ -176,6 +176,14 @@ pub enum BootProvenance {
     /// A dependency package, by the `(group, name)` pair the resolution
     /// records for it.
     Dependency { group: Group, name: String },
+    /// A selected lazy-push declaration offered to agent context. The offer
+    /// carries an explicit MCP read reference, not eagerly delivered content.
+    SubskillOffer {
+        group: Group,
+        name: String,
+        subskill: String,
+        description: String,
+    },
 }
 
 /// One entry in a node's computed effective boot sequence.

@@ -282,6 +282,7 @@ fn sealed_replay_refuses_descriptor_without_independent_hash_before_factory() {
     sealed
         .selected_slots
         .push(crate::boot_artifacts::SelectedSlotWitness {
+            subskills: Vec::new(),
             group,
             name: "descriptor".into(),
             version,

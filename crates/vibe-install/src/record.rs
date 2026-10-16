@@ -381,6 +381,15 @@ pub(crate) fn configuration_record(
     fetched: &[Fetched],
 ) -> crate::error::Result<Option<vibe_core::manifest::LockedConfiguration>> {
     use serde_json::json;
+    // Validate real child declarations before publishing selection provenance.
+    // This never filters the complete source tree or fills legacy copy rows.
+    for package in fetched {
+        vibe_workspace::install::effective_subskills::capture_selected_subskills(
+            &package.cached.cache_dir,
+            &package.feature_expansion.active_subskills,
+        )
+        .map_err(lock_error)?;
+    }
     let Some(request) = request else {
         return Ok(None);
     };

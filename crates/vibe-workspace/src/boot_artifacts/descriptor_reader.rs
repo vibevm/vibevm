@@ -18,6 +18,9 @@ use super::{compile_artifact, compile_static_artifact_with_plans};
 /// refuse rather than treating their own record as an independent pin.
 #[derive(Debug, Clone)]
 pub(crate) struct SelectedSlotWitness {
+    /// Independently declared selected subskill content, never inferred from
+    /// a directory or promoted into the package.sources catalogue.
+    pub subskills: Vec<crate::install::effective_subskills::CapturedSubskill>,
     pub group: Group,
     pub name: String,
     pub version: semver::Version,

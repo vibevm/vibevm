@@ -405,6 +405,246 @@ fn production_apply_records_requested_and_resolved_separately() {
         Plan::Ready(_)
     ));
 }
+
+#[test]
+fn m_05_d_2_preflight_rejects_selected_directory_without_declaration() {
+    let fixture = Fixture::new();
+    let cached = fixture
+        .source
+        .resolve_and_fetch(&p("owner"), &fixture.root, None)
+        .unwrap();
+    std::fs::create_dir_all(cached.cache_dir.join("subskills/stack/rust")).unwrap();
+    let mut fetched = crate::Fetched {
+        cached,
+        feature_expansion: Default::default(),
+        meta: crate::NodeInstallMeta {
+            dependencies: vec![],
+            is_root: true,
+        },
+        embedded_sources: vec![],
+        in_place_incremental: false,
+    };
+    fetched
+        .feature_expansion
+        .active_subskills
+        .insert("stack/rust".into());
+    let error = super::configuration_record(None, &[], std::slice::from_ref(&fetched)).unwrap_err();
+    assert!(error.to_string().contains("missing captured declaration"));
+    assert!(!fixture.root.join(Lockfile::FILENAME).exists());
+
+    let root = fetched.cached.cache_dir.clone();
+    std::fs::write(
+        root.join("subskills/stack/rust/vibe-subskill.toml"),
+        "[subskill]\npath='stack/rust'\n[content]\nfiles_written=['guide.md']\n",
+    )
+    .unwrap();
+    std::fs::write(
+        root.join("subskills/stack/rust/guide.md"),
+        "Captured guide\n",
+    )
+    .unwrap();
+    std::fs::write(
+        root.join("unselected.txt"),
+        "Unselected source stays intact\n",
+    )
+    .unwrap();
+    fetched.cached = fixture
+        .source
+        .resolve_and_fetch(&p("owner"), &fixture.root, None)
+        .unwrap();
+    let before = vibe_registry::compute_content_hash(&root).unwrap();
+    assert!(
+        super::configuration_record(None, &[], std::slice::from_ref(&fetched))
+            .unwrap()
+            .is_none()
+    );
+    fetched.feature_expansion.active_subskills.clear();
+    assert!(
+        super::configuration_record(None, &[], &[fetched])
+            .unwrap()
+            .is_none()
+    );
+    assert_eq!(before, vibe_registry::compute_content_hash(&root).unwrap());
+    assert_eq!(
+        std::fs::read_to_string(root.join("unselected.txt")).unwrap(),
+        "Unselected source stays intact\n"
+    );
+}
+
+#[test]
+fn m_05_d_2_install_loading_keeps_complete_slots_and_provenance() {
+    let mut hashes = Vec::new();
+    for active in [true, false] {
+        let mut fixture = Fixture::new();
+        let source = fixture.source.provider.0.join("owner");
+        for (name, mode) in [
+            ("eager", "eager"),
+            ("push", "lazy-push"),
+            ("pull", "lazy-pull"),
+        ] {
+            let dir = source.join("subskills").join(name);
+            std::fs::create_dir_all(&dir).unwrap();
+            std::fs::write(dir.join("vibe-subskill.toml"), format!("[subskill]\npath='{name}'\ndelivery='{mode}'\ndescription='Use for {name} work'\n[content]\nfiles_written=['guide.md']\n")).unwrap();
+            std::fs::write(dir.join("guide.md"), format!("# {name} selected content\n")).unwrap();
+        }
+        std::fs::write(source.join("unselected.txt"), "complete source\n").unwrap();
+        let mut manifest = Manifest::read(source.join("vibe.toml")).unwrap();
+        // Independent Agent Skill declaration deliberately has a different name/path.
+        let skill: Manifest = Manifest::parse_str("[package]\ngroup='org.example'\nname='owner'\nkind='flow'\nversion='1.0.0'\n[[skill]]\nname='independent'\npath='skills/unrelated'\n").unwrap();
+        manifest.skills = skill.skills;
+        manifest.write(source.join("vibe.toml")).unwrap();
+        std::fs::create_dir_all(source.join("skills/unrelated")).unwrap();
+        std::fs::write(source.join("skills/unrelated/SKILL.md"), "---\nname: independent\ndescription: Independent guidance\n---\nIndependent skill bytes\n").unwrap();
+        let before = vibe_registry::compute_content_hash(&source).unwrap();
+        let intent = fixture.source.intent.as_mut().unwrap();
+        let config = intent.configuration.as_mut().unwrap();
+        let definition = &mut config.definitions[0];
+        definition.identity = fixture
+            .source
+            .provider
+            .candidate_metadata(
+                &p("owner").group.unwrap(),
+                "owner",
+                &semver::Version::new(1, 0, 0),
+            )
+            .unwrap()
+            .identity;
+        definition.definition.declarations.exported_subskills =
+            ["eager".into(), "push".into(), "pull".into()].into();
+        definition.definition.program.features.insert(
+            f("a"),
+            ["eager", "push", "pull"]
+                .into_iter()
+                .map(|p| FeatureEffect::ExportedSubskill(p.into()))
+                .collect(),
+        );
+        if !active {
+            config.request.edges[0]
+                .selections
+                .get_mut("choice")
+                .unwrap()
+                .members = Some(vec!["gate".into()]);
+        }
+        let catalog =
+            TransactionCatalog::capture(&fixture.source.provider, &intent.catalog_roots()).unwrap();
+        let config = intent.configuration.as_ref().unwrap();
+        let solved = vibe_resolver::ResolvoDepSolver::new(&catalog)
+            .solve_configuration(
+                &intent.roots,
+                &config.request,
+                &config.definitions,
+                &config.defaults,
+            )
+            .unwrap();
+        fixture.source.route = RouteResolution::bind(
+            &catalog,
+            intent,
+            RecordedResolution {
+                graph: solved.graph,
+                choices: solved.choices,
+            },
+            solved.manifests,
+            solved.effects,
+        )
+        .unwrap();
+        fixture.source.catalog = catalog.inspect().clone();
+        let lock = fixture.apply();
+        let owner = lock.find(&p("owner").group.unwrap(), "owner").unwrap();
+        assert!(owner.subskills_active.is_empty());
+        let slot = vibe_workspace::vibedeps::slot_abs_path(
+            &fixture.root,
+            &owner.group,
+            &owner.name,
+            &owner.version,
+        );
+        assert_eq!(
+            before,
+            vibe_registry::compute_content_hash(&source).unwrap()
+        );
+        fn assert_full_source(source: &Path, slot: &Path) {
+            for entry in std::fs::read_dir(source).unwrap() {
+                let entry = entry.unwrap();
+                let target = slot.join(entry.file_name());
+                if entry.file_type().unwrap().is_dir() {
+                    assert_full_source(&entry.path(), &target);
+                } else {
+                    assert_eq!(
+                        std::fs::read(entry.path()).unwrap(),
+                        std::fs::read(&target).unwrap(),
+                        "{}",
+                        target.display()
+                    );
+                }
+            }
+        }
+        assert_full_source(&source, &slot);
+        hashes.push(before);
+        assert_eq!(
+            std::fs::read(slot.join("unselected.txt")).unwrap(),
+            b"complete source\n"
+        );
+        let selected = vibe_workspace::install::effective_subskills::from_locked_package(
+            &fixture.root,
+            &lock,
+            owner,
+        )
+        .unwrap();
+        assert_eq!(selected.len(), if active { 3 } else { 0 });
+        let boot_dir = fixture.root.join(vibe_core::layout::current_boot_dir());
+        let static_text = std::fs::read_to_string(boot_dir.join("STATIC.md")).unwrap_or_default();
+        let index = std::fs::read_to_string(boot_dir.join("INDEX.md")).unwrap();
+        assert_eq!(
+            static_text.contains("eager selected content"),
+            active,
+            "{static_text}"
+        );
+        assert!(!static_text.contains("push selected content"));
+        assert!(!static_text.contains("pull selected content"));
+        assert_eq!(
+            index.contains("subskills/push/vibe-subskill.toml"),
+            active,
+            "{index}"
+        );
+        assert!(!index.contains("subskills/pull/guide.md"));
+        if active {
+            assert!(index.contains("Use for push work"));
+            assert!(index.contains("read_subskill"));
+        }
+        let workspace = vibe_workspace::Workspace::load(&fixture.root).unwrap();
+        vibe_workspace::install::regenerate_boot(&workspace).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(boot_dir.join("STATIC.md")).unwrap_or_default(),
+            static_text
+        );
+        let analyzed = vibe_workspace::install::analyze_node_lane(&workspace, ".", None).unwrap();
+        assert_eq!(analyzed.is_some(), active);
+        if let Some(analyzed) = analyzed {
+            assert!(
+                String::from_utf8_lossy(analyzed.artifact.bytes())
+                    .contains("eager selected content")
+            );
+        }
+        assert!(!fixture.root.join("guide.md").exists());
+        let (_, resolved) = vibe_wire::behaviour::lock_configuration::decode(
+            lock.meta.configuration.as_ref().unwrap(),
+        )
+        .unwrap();
+        let row = resolved
+            .packages
+            .iter()
+            .find(|row| row.package == "org.example/owner@1.0.0")
+            .unwrap();
+        assert_eq!(row.content, owner.content_hash.to_string());
+        assert_eq!(
+            serde_json::from_str::<serde_json::Value>(&row.effects).unwrap()["subskills"]
+                .as_array()
+                .unwrap()
+                .len(),
+            if active { 3 } else { 0 }
+        );
+    }
+    assert_eq!(hashes[0], hashes[1]);
+}
 #[test]
 fn exact_replay_rejects_changed_definition_or_lost_request() {
     let mut fixture = Fixture::new();

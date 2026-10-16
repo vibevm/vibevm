@@ -85,6 +85,7 @@ fn selected_slot_witnesses(
                 vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
             };
             boot_artifacts::SelectedSlotWitness {
+                subskills: Vec::new(),
                 group: dep.group.clone(),
                 name: dep.name.clone(),
                 version: dep.version.clone(),
@@ -184,6 +185,15 @@ pub fn analyze_node_lane(
     }
     desubstitute_covered_units(&mut effective, &table);
 
+    let configuration = super::effective_subskills::durable_configuration(&root)?;
+    super::effective_subskills::append_loading(
+        &root,
+        &resolution,
+        &dependencies,
+        configuration.as_ref(),
+        &mut effective,
+    )?;
+
     let identities: Vec<(String, String)> = effective
         .static_entries()
         .map(|entry| (entry.origin.clone(), entry.path.clone()))
@@ -193,7 +203,8 @@ pub fn analyze_node_lane(
     // host seats over this same exact parsed package epoch.
     let transforms = runtimes.node(node_rel)?.transform_plan().clone();
 
-    let selected = selected_slot_witnesses(&root, &resolution, spec_format);
+    let mut selected = selected_slot_witnesses(&root, &resolution, spec_format);
+    super::effective_subskills::bind_selected_slots(&mut selected, configuration.as_ref())?;
     let compiled = boot_artifacts::compile_static_analyzed_selected(
         &effective,
         &root,
@@ -278,7 +289,16 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
         append_hoisted(&mut effective, &shared, &table, &pulls);
     }
     desubstitute_covered_units(&mut effective, &table);
-    let selected = selected_slot_witnesses(&root, resolution, spec_format);
+    let mut selected = selected_slot_witnesses(&root, resolution, spec_format);
+    let configuration = super::effective_subskills::durable_configuration(&root)?;
+    super::effective_subskills::bind_selected_slots(&mut selected, configuration.as_ref())?;
+    super::effective_subskills::append_loading(
+        &root,
+        resolution,
+        &dependencies,
+        configuration.as_ref(),
+        &mut effective,
+    )?;
     analyze_effective_bound_native(
         &effective,
         &root,
@@ -360,7 +380,16 @@ pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
         append_hoisted(&mut effective, &shared, &table, &pulls);
     }
     desubstitute_covered_units(&mut effective, &table);
-    let selected = selected_slot_witnesses(&root, &resolution, spec_format);
+    let mut selected = selected_slot_witnesses(&root, &resolution, spec_format);
+    let configuration = super::effective_subskills::durable_configuration(&root)?;
+    super::effective_subskills::bind_selected_slots(&mut selected, configuration.as_ref())?;
+    super::effective_subskills::append_loading(
+        &root,
+        &resolution,
+        &dependencies,
+        configuration.as_ref(),
+        &mut effective,
+    )?;
     boot_artifacts::native_managed::compile_backend_owner_managed_selected(
         &effective,
         &root,

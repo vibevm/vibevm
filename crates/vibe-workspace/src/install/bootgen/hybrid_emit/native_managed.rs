@@ -54,6 +54,7 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
     let selected_slots = resolution
         .iter()
         .map(|dep| boot_artifacts::SelectedSlotWitness {
+            subskills: Vec::new(),
             group: dep.group.clone(),
             name: dep.name.clone(),
             version: dep.version.clone(),

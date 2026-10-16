@@ -43,7 +43,27 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     spec_format: SpecFormat,
     trace: Option<&crate::compile_trace::TraceRun>,
     epoch: &OwnerRuntimeEpoch,
+    provider: Option<&mut P>,
+) -> Result<BoundBootRegeneration, WorkspaceError> {
+    regenerate_boot_from_bound_native_configuration(
+        workspace,
+        resolution,
+        spec_format,
+        trace,
+        epoch,
+        provider,
+        None,
+    )
+}
+
+pub(crate) fn regenerate_boot_from_bound_native_configuration<P: OwnerNativeCompileProvider>(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    spec_format: SpecFormat,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    epoch: &OwnerRuntimeEpoch,
     mut provider: Option<&mut P>,
+    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
 ) -> Result<BoundBootRegeneration, WorkspaceError> {
     if epoch.lowered().workspace_root() != workspace.root.as_path() {
         return Err(WorkspaceError::NativeCompileProvider {
@@ -53,7 +73,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     }
     epoch.assert_resolution(&workspace.root, resolution)?;
     let self_coord = root_self_coordinate(&workspace.root_manifest);
-    let selected_slots: Vec<boot_artifacts::SelectedSlotWitness> = resolution
+    let mut selected_slots: Vec<boot_artifacts::SelectedSlotWitness> = resolution
         .iter()
         .map(|dep| {
             let in_place = dep
@@ -67,6 +87,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
                 vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
             };
             boot_artifacts::SelectedSlotWitness {
+                subskills: Vec::new(),
                 group: dep.group.clone(),
                 name: dep.name.clone(),
                 version: dep.version.clone(),
@@ -76,6 +97,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             }
         })
         .collect();
+    super::effective_subskills::bind_selected_slots(&mut selected_slots, configuration)?;
     let mut replay_candidates = BootReplayCandidates::new(
         workspace.root.clone(),
         self_coord.clone(),
@@ -181,6 +203,13 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             append_hoisted(&mut effective, &shared, &table, &pulls);
         }
         desubstitute_covered_units(&mut effective, &table);
+        super::effective_subskills::append_loading(
+            &workspace.root,
+            resolution,
+            &dependencies,
+            configuration,
+            &mut effective,
+        )?;
         let owner = OwnerRuntimeId::Node {
             rel: rel.to_owned(),
         };

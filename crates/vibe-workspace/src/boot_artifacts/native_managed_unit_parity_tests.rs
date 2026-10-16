@@ -326,6 +326,7 @@ fn selected_native_managed_builtin_reads_vibe_xml_beside_raw_pair_and_refuses_dr
         }],
     };
     let witness = crate::boot_artifacts::SelectedSlotWitness {
+        subskills: Vec::new(),
         group,
         name: "selected".into(),
         version,

@@ -207,7 +207,8 @@ pub(super) fn node_generated_dependencies(
         .static_entries()
         .filter(|entry| entry.unit_substituted)
         .filter_map(|entry| match &entry.provenance {
-            BootProvenance::Dependency { group, name } => {
+            BootProvenance::Dependency { group, name }
+            | BootProvenance::SubskillOffer { group, name, .. } => {
                 let id = (group.clone(), name.clone());
                 emitted.contains(&id).then_some(id)
             }

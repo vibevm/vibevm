@@ -37,7 +37,7 @@ pub(in crate::install) fn read_durable_resolution(
         .collect()
 }
 
-fn durable_row(
+pub(super) fn durable_row(
     workspace_root: &Path,
     package: &vibe_core::manifest::LockedPackage,
 ) -> Result<ResolvedDep, WorkspaceError> {

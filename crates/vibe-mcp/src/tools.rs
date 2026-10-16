@@ -18,7 +18,10 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 
 pub mod adapter_plan;
 pub mod boot_debugger;
+#[cfg(test)]
+mod m_05_d_2_cases;
 pub mod output;
+mod subskills;
 pub use boot_debugger::BootDebuggerMcpTool;
 pub use output::ToolOutput;
 
@@ -181,19 +184,26 @@ impl McpTool for QueryPackageMcpTool {
             .find(&group, &pname)
             .ok_or_else(|| ToolError::NotFound(format!("package `{name}` not in lockfile")))?;
 
-        let subskills: Vec<Value> = entry
-            .subskills_active
-            .iter()
-            .map(|s| {
-                let mut obj = serde_json::Map::new();
-                obj.insert("path".into(), Value::String(s.path.clone()));
-                obj.insert("delivery".into(), Value::String(s.delivery.clone()));
-                if let Some(d) = &s.describes {
-                    obj.insert("describes".into(), Value::String(d.clone()));
-                }
-                Value::Object(obj)
-            })
-            .collect();
+        let subskills: Vec<Value> = if lockfile.meta.configuration.is_some() {
+            subskills::selected(ctx, &lockfile, entry)?
+                .iter()
+                .map(subskills::visible)
+                .collect()
+        } else {
+            entry
+                .subskills_active
+                .iter()
+                .map(|s| {
+                    let mut obj = serde_json::Map::new();
+                    obj.insert("path".into(), Value::String(s.path.clone()));
+                    obj.insert("delivery".into(), Value::String(s.delivery.clone()));
+                    if let Some(d) = &s.describes {
+                        obj.insert("describes".into(), Value::String(d.clone()));
+                    }
+                    Value::Object(obj)
+                })
+                .collect()
+        };
         let files: Vec<Value> = entry
             .files_written
             .iter()
@@ -223,8 +233,8 @@ impl McpTool for QueryPackageMcpTool {
 // read_subskill
 // ---------------------------------------------------------------------------
 
-/// Read the materialised content of an active subskill — project tree
-/// for eager / lazy-push, package cache for lazy-pull. Read-only.
+/// Read selected captured subskill content from its admitted package slot.
+/// Legacy locks retain their project/cache compatibility reader. Read-only.
 ///
 /// ```
 /// use vibe_mcp::tools::{McpTool, ReadSubskillMcpTool};
@@ -239,7 +249,7 @@ impl McpTool for ReadSubskillMcpTool {
         ToolDescriptor {
             name: "read_subskill".to_string(),
             description:
-                "Read the materialised content of a subskill that activated for an installed package. The agent gets back the concatenated text of every file the subskill's `[content].files_written` recorded, prefixed with each file's project-relative path. Use when an active subskill is mentioned by `query_package` and the agent wants the actual content. Subskills with `delivery = lazy-pull` are also visible through this tool — that's their primary access path."
+                "Read an active subskill's captured content from its installed package slot. Returns declared content files with package-relative paths and declaration provenance. Use after query_package discovery or when a lazy-push boot offer's description matches the current task. This is also the content-delivery path for lazy-pull subskills."
                     .to_string(),
             input_schema: json!({
                 "type": "object",
@@ -277,6 +287,18 @@ impl McpTool for ReadSubskillMcpTool {
         let entry = lockfile
             .find(&group, &pname)
             .ok_or_else(|| ToolError::NotFound(format!("package `{package}` not in lockfile")))?;
+        if lockfile.meta.configuration.is_some() {
+            let selected = subskills::selected(ctx, &lockfile, entry)?;
+            let sub = selected
+                .iter()
+                .find(|sub| sub.declaration.subskill.path == subskill_path)
+                .ok_or_else(|| {
+                    ToolError::NotFound(format!(
+                        "subskill `{subskill_path}` is not active on `{package}`"
+                    ))
+                })?;
+            return Ok(subskills::read(package, sub));
+        }
         let sub = entry
             .subskills_active
             .iter()
@@ -356,9 +378,8 @@ impl McpTool for ReadSubskillMcpTool {
 // materialise_subskill
 // ---------------------------------------------------------------------------
 
-/// Copy a `lazy-pull` subskill's content into the project tree. No-op for
-/// eager / lazy-push; refuses to overwrite without `force`. The one
-/// writing tool.
+/// Full-slot selections are already materialized and require no project copy.
+/// Legacy locks retain their explicit lazy-pull copying compatibility path.
 ///
 /// ```
 /// use vibe_mcp::tools::{McpTool, MaterialiseSubskillMcpTool};
@@ -416,6 +437,23 @@ impl McpTool for MaterialiseSubskillMcpTool {
         let entry = lockfile
             .find(&group, &pname)
             .ok_or_else(|| ToolError::NotFound(format!("package `{package}` not in lockfile")))?;
+        if lockfile.meta.configuration.is_some() {
+            let selected = subskills::selected(ctx, &lockfile, entry)?;
+            let sub = selected
+                .iter()
+                .find(|sub| sub.declaration.subskill.path == subskill_path)
+                .ok_or_else(|| {
+                    ToolError::NotFound(format!(
+                        "subskill `{subskill_path}` is not active on `{package}`"
+                    ))
+                })?;
+            return Ok(ToolOutput::ok(
+                json!({"package": package, "subskill_path": subskill_path,
+                "delivery": sub.declaration.subskill.delivery, "status": "no-op",
+                "note": "Full package slot already materialized; use read_subskill for context delivery.",
+                "written": []}),
+            ));
+        }
         let sub = entry
             .subskills_active
             .iter()
