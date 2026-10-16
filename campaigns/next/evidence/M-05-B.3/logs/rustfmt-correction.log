@@ -1,0 +1,1 @@
+rustfmt exit 1: mismatched closing delimiter at migration_planning.rs:209 after extracting epoch admission helper (duplicate opening bracket). Corrected before compilation; subsequent scoped rustfmt succeeded.

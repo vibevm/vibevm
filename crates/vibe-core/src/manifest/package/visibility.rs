@@ -297,7 +297,7 @@ enum OverrideWire {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub(crate) struct ManifestWire {
+pub(crate) struct ManifestWire<F: super::features::profile::FeatureWire = FeaturesTable> {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     project: Option<ProjectSection>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -385,8 +385,11 @@ pub(crate) struct ManifestWire {
     compatibility: Compatibility,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     boot_snippet: Option<BootSnippet>,
-    #[serde(default, skip_serializing_if = "FeaturesTable::is_empty")]
-    features: FeaturesTable,
+    #[serde(
+        default,
+        skip_serializing_if = "super::features::profile::FeatureWire::is_empty"
+    )]
+    pub(crate) features: F,
     #[serde(default, rename = "target", skip_serializing_if = "BTreeMap::is_empty")]
     conditional_deps: BTreeMap<String, ConditionalTarget>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -413,6 +416,17 @@ impl TryFrom<ManifestWire> for Manifest {
     type Error = String;
 
     fn try_from(wire: ManifestWire) -> Result<Self, Self::Error> {
+        let features = wire.features.clone();
+        wire.into_manifest_with_features(features)
+    }
+}
+
+impl<F: super::features::profile::FeatureWire> ManifestWire<F> {
+    pub(crate) fn into_manifest_with_features(
+        self,
+        features: FeaturesTable,
+    ) -> Result<Manifest, String> {
+        let wire = self;
         if wire.translations.is_some() {
             return Err(
                 "[translations] is not a manifest table — a source stores no list of its \
@@ -447,7 +461,7 @@ impl TryFrom<ManifestWire> for Manifest {
         let mechanism_routes: MechanismRoutes = wire.mechanism_routes.try_into()?;
         let artifacts = wire.artifacts.map(TryInto::try_into).transpose()?;
         let deploy = wire.deploy.map(TryInto::try_into).transpose()?;
-        Ok(Self {
+        Ok(Manifest {
             project: wire.project,
             package: wire.package,
             application: wire.application,
@@ -481,7 +495,7 @@ impl TryFrom<ManifestWire> for Manifest {
             deploy,
             compatibility: wire.compatibility,
             boot_snippet: wire.boot_snippet,
-            features: wire.features,
+            features,
             conditional_deps: wire.conditional_deps,
             active: wire.active,
             llm: wire.llm,

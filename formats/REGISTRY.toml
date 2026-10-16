@@ -1916,3 +1916,30 @@ foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/deploy-client-state/e1"
 sunset = "none"
+
+[format.migration-plan-request-e2]
+epoch = 2
+schema = "schemas/migration/e2/plan_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-plan-request/e2"
+sunset = "none"
+
+[format.migration-plan-report-e2]
+epoch = 2
+schema = "schemas/migration/e2/plan_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-plan-report/e2"
+sunset = "none"
+
+[format.migration-plan-error-e2]
+epoch = 2
+schema = "schemas/migration/e2/plan_error.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-plan-error/e2"
+sunset = "none"

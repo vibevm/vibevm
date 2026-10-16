@@ -1,0 +1,7 @@
+{
+  "schema": 2,
+  "source_text": "[package]\nepoch=1\nname='demo'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n[features]\nmain=['dep:missing']\n",
+  "source_profile": "features-legacy-epoch1-r1",
+  "target_profile": "features-typed-epoch1-r1",
+  "recipe": "features-to-typed-epoch1-r1"
+}

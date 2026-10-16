@@ -1,0 +1,30 @@
+{
+  "test_failures": [
+    {
+      "path": "/fast/zap-managed/2026-10-16-m05b3/verification-history/1792154077829820688/V1-1.log",
+      "sha256": "5e3b101d3a43090c92eca0039e0ee1631e81aa520fd88fd2612a582b45770d92",
+      "observed_counts": {
+        "passed": 2,
+        "failed": 1
+      },
+      "reason": "Duplicate normalized dependency was refused by Requires decoder before a structured question; fixed by declared-coordinate collision admission before decoding."
+    }
+  ],
+  "tool_failures": [
+    {
+      "log": "codegen-first.log",
+      "exit": 101,
+      "reason": "Generator compilation bootstrap cycle: new workspace e2 references precede generated module."
+    },
+    {
+      "log": "codegen-bootstrap.log",
+      "exit": 1,
+      "reason": "Direct incumbent xtask requires CARGO_MANIFEST_DIR; supplied on next invocation."
+    },
+    {
+      "log": "check-codegen.log",
+      "exit": 1,
+      "reason": "Intentional uncommitted generated diff against Git baseline; repeat generation byte-identical, no clean check-codegen claim."
+    }
+  ]
+}

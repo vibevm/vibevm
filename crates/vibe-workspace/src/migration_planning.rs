@@ -178,6 +178,13 @@ pub fn plan_migration_request(request: PlanRequest) -> MigrationPlanningResponse
     if let Err(error) = validate_source_decisions(&request) {
         return MigrationPlanningResponse::Preflight(error);
     }
+    if selects_feature_profile(&request) {
+        return MigrationPlanningResponse::Preflight(preflight(
+            Code::UnsupportedSchema,
+            "schema",
+            "feature profiles require the opt-in epoch-2 planning reader",
+        ));
+    }
     let report = match project_core(&request).and_then(|report| {
         validate_report(&report)?;
         Ok(report)
@@ -198,7 +205,28 @@ pub fn plan_migration_request(request: PlanRequest) -> MigrationPlanningResponse
     MigrationPlanningResponse::Report(report)
 }
 
-fn project_core(request: &PlanRequest) -> Validated<PlanReport> {
+fn selects_feature_profile(request: &PlanRequest) -> bool {
+    [
+        &request.source_profile,
+        &request.target_profile,
+        &request.recipe,
+    ]
+    .into_iter()
+    .flatten()
+    .any(|s| {
+        matches!(
+            s.as_str(),
+            "features-legacy-absent-r1"
+                | "features-legacy-epoch1-r1"
+                | "features-typed-absent-r1"
+                | "features-typed-epoch1-r1"
+                | "features-to-typed-r1"
+                | "features-to-typed-epoch1-r1"
+        )
+    })
+}
+
+fn core_outcome(request: &PlanRequest) -> Validated<ManifestMigrationOutcome> {
     let decisions = request
         .source_decisions
         .iter()
@@ -222,6 +250,11 @@ fn project_core(request: &PlanRequest) -> Validated<PlanReport> {
             source_decisions: &decisions,
         },
     );
+    Ok(outcome)
+}
+
+fn project_core(request: &PlanRequest) -> Validated<PlanReport> {
+    let outcome = core_outcome(request)?;
     let outcome = match outcome {
         ManifestMigrationOutcome::Planned(plan) => Outcome::Planned(Box::new(OutcomePlanned {
             plan: project_plan(plan)?,
@@ -244,7 +277,7 @@ fn project_core(request: &PlanRequest) -> Validated<PlanReport> {
                 };
                 questions.push(Question {
                     field,
-                    choices: requirement.choices.into_iter().map(str::to_owned).collect(),
+                    choices: requirement.choices,
                     resource_path: requirement.resource_path,
                 });
             }
@@ -551,6 +584,12 @@ pub fn validate_report_for_request(request: &PlanRequest, report: &PlanReport) -
     if request.schema != 1 {
         return Err(invalid("request.schema", "unsupported request schema"));
     }
+    if selects_feature_profile(request) {
+        return Err(invalid(
+            "request.schema",
+            "feature profiles require epoch 2",
+        ));
+    }
     validate_report(report)?;
     let expected = project_core(request)?;
     validate_report(&expected)?;
@@ -566,3 +605,5 @@ pub fn validate_report_for_request(request: &PlanRequest, report: &PlanReport) -
 #[cfg(test)]
 #[path = "migration_planning/tests.rs"]
 mod tests;
+
+pub mod feature;

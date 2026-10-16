@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "description": "Epoch-2 exact-text pure migration planning request. The owning adapter requires schema exactly 2; JTD uint32 alone does not enforce that value.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#M05B3-QUESTION-WIRE",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::migration::e2::plan_request"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "source_text": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "source_profile": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "target_profile": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "recipe": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "source_decisions": {
+      "elements": {
+        "ref": "source_decision"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Explicit exact-file source answers. The owning planner validates paths and refuses to ignore rows until a source producer consumes them."
+      }
+    }
+  },
+  "definitions": {
+    "source_decision": {
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "media": {
+          "type": "string"
+        },
+        "interpretation": {
+          "enum": [
+            "vibe-spec",
+            "vibe-doc",
+            "commonmark",
+            "xml-data",
+            "opaque"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "role": {
+          "enum": [
+            "spec",
+            "documentation",
+            "resource"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "loading": {
+          "enum": [
+            "scan",
+            "explicit"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1977 @@
+{
+  "preserved": [
+    {
+      "anchor": "status-line",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "revision-r2",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-delivery-modes",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-description-field",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-broadened-probes",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-llm-refactor",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-describes-purl",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-conditional-deps",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-exclusive-groups",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-activation-conflict",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "r2-inline-note",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "scope-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "scope-solver",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "scope-features",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "scope-subskills",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "scope-i18n",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "why-now",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "reading-order",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "current-surface",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "shortfalls-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SHORTFALL-DISJUNCTION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SHORTFALL-MONOLITH",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SHORTFALL-LANGUAGE-LOCK",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "fourth-dimension-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SHORTFALL-LLM-ACTIVATION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "vision-claim",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SOLVER-TWO-IMPLS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SOLVER-SELECTOR",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "two-impls-why",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "TRAIT-PIN-PREFERENCES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "pin-preferences-purpose",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SUPERSEDED-BY-PROP-017",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LIBSOLV-DECISION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "license-audit",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "libsolv-why-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "alt-resolvo",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "alt-pubgrub",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "alt-custom",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ffi-surface-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ffi-build-side",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ffi-cargo-feature",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "solver-features-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-CDCL",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-WATCHED-LITERALS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-WEAK-DEPS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-RECOMMENDS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-SUGGESTS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-SUPPLEMENTS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-ENHANCES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-WEAK-DEPS-MAPPING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-WEAK-DEPS-WARNING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-PROBLEM-REPORTING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-FAVOR-PIN",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CAP-MULTIARCH-UNUSED",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "not-relied-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "NOT-RICH-DEPS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "NOT-MODULES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "NOT-REPO-READERS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FEATURES-TABLE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "features-semantics-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "cargo-keep-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "KEEP-ADDITIVE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "KEEP-DEFAULT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "KEEP-FEATURE-DEP",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "KEEP-OPTIONAL-DEP",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "KEEP-WEAK-FEATURE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "KEEP-PER-TARGET",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "KEEP-UNIFICATION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "cargo-drop-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DROP-DEV-BUILD",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DROP-RESOLVER-V1",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DROP-CFG-TRIPLE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "vibevm-ext-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "EXT-EXCLUSIVE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "EXT-SUBSKILL-MAP",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "EXT-VISIBILITY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REDBOOK-CONTINUITY-SELECTION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SUBSKILLS-TREE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SUBSKILL-DEFINITION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DELIVERY-PRIMARY-AXIS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MODE-EAGER",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MODE-LAZY-PUSH",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MODE-LAZY-PULL",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "modes-tessl-mirror",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MODES-LOCKFILE-IMPACT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "modes-why-day-one",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MANIFEST-STRICT-SUBSET",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DESCRIPTION-REQUIRED",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "description-length-policy",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ACTIVATION-ANY-MATCH",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-MANUAL-FEATURE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-IF-PRESENT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-IF-PROVIDES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-IF-FILES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-IF-COMMAND",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-IF-ENV",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-IF-OS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-IF-DESCRIBES-MATCH",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-IF-LANGUAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CH-LLM-VIRTUAL",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CHANNELS-OPT-IN",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "llm-r1-history",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "llm-r2-reformulation",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-STEP-INVOKE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-STEP-QUESTION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-STEP-EMIT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-STEP-GRAFT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-STEP-AUDIT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "llm-power-identical",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-DIFF-AUDIT-POINT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-DIFF-STATIC-WINS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-DIFF-TRANSPARENCY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LLM-DIFF-OPT-OUT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "split-alternative",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "RATIONALE-COHESION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "RATIONALE-DISCOVERY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "cargo-tessl-comparison",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "RECURSIVE-SUBSKILLS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DESCRIBES-ON-SUBSKILLS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DESCRIBES-FORMAT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DESCRIBES-LOCKFILE-RECORD",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DESCRIBES-DRIFT-OUTDATED",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "INTERFACE-TAGS-DECISION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "iface-differences-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "IFACE-ABSTRACTION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "IFACE-DISCOVERY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "IFACE-NAMING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "IFACE-PROVENANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CONDITIONAL-DEPS-DECISION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "conditional-grammar-req",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CONDITIONAL-GRAMMAR",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "conditional-when-to-use-design",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "conditional-choice-guidance",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "conditional-fixpoint-req",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CONDITIONAL-FIXPOINT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "conditional-host-invariance-req",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CONDITIONAL-HOST-INVARIANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "conditional-composition-req",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CONDITIONAL-COMPOSITION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "I18N-DECISION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SIDECAR-PATTERN",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "sidecar-why-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-SIDECAR",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-SIDECAR-PRO",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-SIDECAR-CON",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-LANG-DIRECTORY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-LANG-DIRECTORY-PRO",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-LANG-DIRECTORY-CON",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-UNDERSCORE-SUFFIX",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-UNDERSCORE-SUFFIX-PRO",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-UNDERSCORE-SUFFIX-CON",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-INLINE-TOML",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-INLINE-TOML-PRO",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-INLINE-TOML-CON",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "sidecar-wins",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "fallback-chain-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FB-EXACT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FB-REGION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FB-CANONICAL",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FB-HARD-ERROR",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "I18N-CANONICAL-INVARIANT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "i18n-prefs-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PREF-CLI-FLAG",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PREF-ENV",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PREF-PROJECT-MANIFEST",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PREF-PACKAGE-MANIFEST",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PREF-BUILTIN-DEFAULT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DOTTED-KEY-DECISION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "toml-mixing-correction",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "dotted-key-readable-form",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DOTTED-KEY-PARSER",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "I18N-LOCKFILE-META",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "language-fallback-clearing",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "I18N-DOC-PACKAGES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "manifest-consolidated-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SUBSKILL-MANIFEST-PER",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DENY-UNKNOWN-FIELDS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "lockfile-v3-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LF-META-LANGUAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LF-META-ACTIVE-FEATURES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LF-META-VIRTUAL-CAPS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LF-PKG-FEATURES-SUBSKILLS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LF-PKG-LANGUAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LF-DESCRIBES-PURL",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SCHEMA-V3-MIGRATION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "cli-new-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CLI-INSTALL-FEATURES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CLI-INSTALL-LANGUAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CLI-SHOW-FEATURES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CLI-SHOW-SUBSKILLS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CHECK-FOUR-ENTRIES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CHECK-I18N-COVERAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CHECK-SUBSKILL-STRUCTURE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CHECK-FEATURE-GRAPH",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CHECK-ACTIVATION-CONFLICT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "cli-existing-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CLI-UPDATE-FEATURES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CLI-SHOW-CONFIG-LANGUAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "CLI-SHOW-EFFECTIVE-LANGUAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "migration-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIG-LIBSOLV-FFI",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIG-MANIFEST-PARSER",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIG-FEATURES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIG-SUBSKILL-MAT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIG-I18N",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIG-DEFAULT-SAT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIG-LOCKFILE-V3",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "migration-cadence",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "rule-encoding-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-REQUIRES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-REQUIRES-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-REQUIRES-ANY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-REQUIRES-ANY-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-PROVIDES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-PROVIDES-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-OBSOLETES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-OBSOLETES-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-CONFLICTS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-CONFLICTS-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-RECOMMENDS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-RECOMMENDS-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-SUGGESTS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-SUGGESTS-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-SUPPLEMENTS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-SUPPLEMENTS-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-ENHANCES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-ENHANCES-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-EXCLUSIVE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-EXCLUSIVE-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-FEATURE-DEP",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-FEATURE-DEP-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-WEAK-FEATURE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-WEAK-FEATURE-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-SUBSKILL-PRESENT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-SUBSKILL-PRESENT-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-SUBSKILL-PROVIDES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ROW-ENC-SUBSKILL-PROVIDES-LIBSOLV-RULE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "dnf5-same-encoding",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "solver-phases-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PHASE-POOL",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PHASE-JOBS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PHASE-RULES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PHASE-SOLVE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PHASE-DECODE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PHASE-SUBSKILL-PROJECTION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PHASE-MATERIALISATION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "libsolv-determinism",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "perf-envelope",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ffi-cost",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "rejected-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REJ-RESOLVO",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REJ-PUBGRUB",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REJ-PACKAGES-ONLY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REJ-UNDERSCORE-SUFFIX",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REJ-LANG-DIRECTORY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REJ-LLM-PROVIDES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REJ-INLINE-I18N",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "REJ-PER-PACKAGE-SOLVER",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OOS-MODULES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OOS-NON-SEMVER",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OOS-RICH-DEPS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OOS-TRUST",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OOS-TRANSLATION-TOOLING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "phases-lead",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PA-FFI-CRATE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PA-SAT-IMPL",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PA-NAIVE-DEFAULT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PA-ACCEPTANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PB-MANIFEST",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PB-SOLVER-LOCKFILE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PB-CLI-FLAGS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PB-ACCEPTANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PC-MANIFEST-FORMAT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PC-FIELDS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PC-MANUAL-MAPPING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PC-CONTEXT-POST-PASS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PC-EAGER-MATERIALISATION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PC-SHOW-SUBSKILLS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PC-ACCEPTANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PD-SIDECAR",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PD-FIELD-TRANSLATIONS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PD-LANGUAGE-FLAG",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PD-LOCKFILE-LANGUAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PD-ACCEPTANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PE-DEFAULT-FLIP",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PE-NAIVE-DEMOTED",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PE-ACCEPTANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PF-BUILD-LOOP",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PF-EMISSION-REQUEST",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PF-ACTIVATION-CHANNEL",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PF-AUDIT-SURFACE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PF-POLICY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PF-ACCEPTANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-CROSS-PACKAGE-EXCLUSION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-SUBSKILL-VERSIONING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-TRANSLATION-PROVENANCE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-IFACE-NAMESPACING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-EMISSION-RATE-LIMIT",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-WORKSPACE-MONOREPO",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-DESCRIBES-COVERAGE",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-CONFLICT-THRESHOLD",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-ENV-FEATURES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OPEN-LLM-DENYLIST",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-cargo-features",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-cargo-resolver-v2",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-cargo-source",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-libsolv",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-libsolv-docs",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-dnf5",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-dnf-legacy",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-bcp47",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-toml",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-depsolver-trait",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ref-manifest-model",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "closing-note",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B1-DECLARATIONS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B1-EFFECTS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B1-LOWERING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B1-SAFE-STOP",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B1-CHARACTERIZATION-SUPERSESSION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B1-MANIFEST-CALLERS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B2-GROUPS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B2-CONSUMERS",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B2-SELECTION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M05B2-COMPOSITION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PURPOSE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MANDATE-VERBATIM",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "THE-INVERSION",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "TWO-CLOCKS",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LAW-NO-LYING",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "LAW-NO-UNRECOVERABLE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "forbidden-lead",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FORBID-IDENTIFIER-REUSE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FORBID-BYTE-MUTATION",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FORBID-SILENCE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FORBID-SECRET-TRUTH",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FORBID-HANDWRITTEN-WIRE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "THE-FREEZE-MODEL",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "TERMS-SNAPSHOT-FROZEN-CHANNEL",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "TRUTH-KERNEL",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "THE-JOURNAL-STAYS-APPEND-ONLY-AND-THAT-HAS-A-PRICE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "JOURNAL-REDACTION-IS-A-SEPARATE-MECHANISM-NOT-BUILT",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "DERIVED-IS-DISPOSABLE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MANIFEST-IS-THE-CENTRE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MEMBERSHIP-IS-TESTED",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PROVIDER-NEUTRALITY",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "ONE-ETERNAL-FILE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MACHINERY-LEAD",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-FORMAT-REGISTRY",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-SCHEMA-DESCRIBES-FORM",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-WIRE-FIELD-ORDER",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-OPEN-ENUM-FROM-CLOSED",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-WIDE-INTEGERS-AS-STRINGS",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "WIDE-INTEGERS-CLASS-BOUNDARY",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-CANONICAL-BYTES",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-JOURNAL-NOT-RMW",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-MUST-UNDERSTAND",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-EPOCHS",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "M-BREAK-WINDOW",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "PLACEMENT-LADDER",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "POLICY-IS-COMPUTED",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIGRATION-TAXONOMY",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIGRATION-PLAN-LAW",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIGRATION-TRANSPORT-LAW",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIGRATION-APPLY-LAW",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIGRATION-APPLICATION-WIRE-LAW",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "MIGRATION-SURFACE-LAW",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FMT-CATALOG",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FMT-CATALOG-VERSION",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FMT-MANIFEST",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FMT-LOCKFILE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FMT-CONFIGS",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "FMT-UNINVENTORIED",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OBLIGATION-TYPES",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "OBLIGATION-PROCEDURE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "STABILITY-IS-A-FLAG",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "THE-PUBLIC-SWITCH",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "AGENT-PROSE-IS-BROKEN",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "AGENT-GATES",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "AGENT-MESSAGES",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "WIRE-DECISION-PATH",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "RISK-RECOVERABILITY",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "RISK-RMW-VOLUME",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "RISK-RAW-PARSERS",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "RISK-OVERENGINEERING",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "RISK-SECURITY-PARKED",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    },
+    {
+      "anchor": "SOURCES",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Existing normative statement retained verbatim in normalized XML text; B3 adds opt-in profiles without widening it."
+    }
+  ],
+  "new": [
+    {
+      "anchor": "M05B3-AMBIGUITY",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Finite opt-in feature profiles, typed spelling, ambiguity transport and selected-reader admission for B3."
+    },
+    {
+      "anchor": "M05B3-GRAMMAR",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Finite opt-in feature profiles, typed spelling, ambiguity transport and selected-reader admission for B3."
+    },
+    {
+      "anchor": "M05B3-PRESERVATION",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Finite opt-in feature profiles, typed spelling, ambiguity transport and selected-reader admission for B3."
+    },
+    {
+      "anchor": "M05B3-PROFILES",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Finite opt-in feature profiles, typed spelling, ambiguity transport and selected-reader admission for B3."
+    },
+    {
+      "anchor": "M05B3-QUESTION-WIRE",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Finite opt-in feature profiles, typed spelling, ambiguity transport and selected-reader admission for B3."
+    },
+    {
+      "anchor": "M05B3-SELECTED-READER",
+      "source": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "reason": "Finite opt-in feature profiles, typed spelling, ambiguity transport and selected-reader admission for B3."
+    },
+    {
+      "anchor": "M05B3-TYPED-SPELLING",
+      "source": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "reason": "Finite opt-in feature profiles, typed spelling, ambiguity transport and selected-reader admission for B3."
+    }
+  ],
+  "replaced": []
+}
