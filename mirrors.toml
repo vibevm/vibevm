@@ -25,12 +25,12 @@ schema = 1
 name = "gitverse"
 url = "git@gitverse.ru:vibevm/vibevm.git"
 mode = "push"
-refs = ["main", "next", "1.0.0", "tags"]
+refs = ["main", "1.1.0", "1.0.0", "tags"]
 region = "ru"
 
 [[target]]
 name = "github"
 url = "git@github.com:vibevm/vibevm.git"
 mode = "push"
-refs = ["main", "next", "1.0.0", "tags"]
+refs = ["main", "1.1.0", "1.0.0", "tags"]
 region = "us"
