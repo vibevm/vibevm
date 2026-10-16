@@ -140,6 +140,12 @@ impl InstallResolver {
 pub(super) struct FrozenSource<'a> {
     pub source: &'a InstallResolver,
     pub catalog: TransactionCatalog,
+    pub request: vibe_resolver::resolvo_engine::request::NormalizedRequest,
+    pub resolution:
+        std::cell::RefCell<Option<vibe_resolver::resolvo_engine::request::RouteResolution>>,
+    pub commitments: std::cell::RefCell<Vec<vibe_resolver::resolvo_engine::SelectedChoice>>,
+    pub conditional:
+        std::cell::RefCell<Vec<vibe_resolver::resolvo_engine::request::ConditionalEdge>>,
 }
 impl FrozenSource<'_> {
     fn metadata(&self, pkg: &PackageRef) -> Result<&CandidateMetadata, SolveError> {
@@ -152,6 +158,113 @@ impl FrozenSource<'_> {
     }
 }
 impl InstallSource for FrozenSource<'_> {
+    fn begin_normalized_transaction(
+        &self,
+        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+    ) -> Result<Option<Box<dyn InstallSource + '_>>, SolveError> {
+        if request.features.explicit != self.request.features.explicit
+            || request.features.no_defaults != self.request.features.no_defaults
+            || request.features.all != self.request.features.all
+        {
+            return Err(SolveError::UnsupportedRoute(
+                "planner feature intent differs from the admitted transaction".into(),
+            ));
+        }
+        if request
+            .roots
+            .iter()
+            .any(|r| !self.request.roots.contains(r))
+        {
+            return Err(SolveError::UnsupportedRoute(
+                "planner roots differ from the admitted transaction".into(),
+            ));
+        }
+        Ok(None)
+    }
+    fn solve_conditional(
+        &self,
+        roots: &[PackageRef],
+        edges: &[vibe_resolver::resolvo_engine::request::ConditionalEdge],
+    ) -> Result<ResolvedGraph, SolveError> {
+        if self.request.configuration.is_some() && !edges.is_empty() {
+            return Err(SolveError::UnsupportedRoute(
+                "conditional consumer configuration is not complete".into(),
+            ));
+        }
+        *self.conditional.borrow_mut() = edges.to_vec();
+        self.solve(roots)
+    }
+    fn normalized_request(
+        &self,
+    ) -> Option<&vibe_resolver::resolvo_engine::request::NormalizedRequest> {
+        Some(&self.request)
+    }
+    fn route_resolution(&self) -> Option<vibe_resolver::resolvo_engine::request::RouteResolution> {
+        self.resolution.borrow().clone()
+    }
+    fn finish_route_projection(&self, graph: &ResolvedGraph) -> Result<(), SolveError> {
+        let mut state = self.resolution.borrow_mut();
+        let resolution = state
+            .as_mut()
+            .ok_or_else(|| SolveError::UnsupportedRoute("no selected route to project".into()))?;
+        for node in graph.iter() {
+            let original = resolution
+                .recorded
+                .graph
+                .find(&node.group, &node.name)
+                .ok_or_else(|| {
+                    SolveError::UnsupportedRoute("projection introduced a package".into())
+                })?;
+            if node.version != original.version
+                || node.is_root != original.is_root
+                || node
+                    .dependencies
+                    .iter()
+                    .any(|d| !original.dependencies.contains(d))
+            {
+                return Err(SolveError::UnsupportedRoute(
+                    "projection introduced an inconsistent selected edge".into(),
+                ));
+            }
+        }
+        if self.request.roots.iter().any(|r| {
+            r.group
+                .as_ref()
+                .and_then(|g| graph.find(g, r.name.as_str()))
+                .is_none()
+        }) {
+            return Err(SolveError::UnsupportedRoute(
+                "projection removed an original consumer root".into(),
+            ));
+        }
+        let retained = |e: &vibe_resolver::resolvo_engine::SelectedChoice| {
+            graph.iter().any(|n| {
+                e.parent.group.as_ref() == Some(&n.group)
+                    && e.parent.name == n.name
+                    && n.dependencies.iter().any(|d| {
+                        d.group == e.provider.group
+                            && d.name == e.provider.name
+                            && d.version == e.provider.version
+                    })
+            })
+        };
+        resolution.recorded.choices.retain(retained);
+        resolution.provenance.retain(|e| retained(&e.selected));
+        resolution.manifests.retain(|key, _| {
+            graph
+                .iter()
+                .any(|n| *key == format!("{}/{}@{}", n.group, n.name, n.version))
+        });
+        resolution
+            .effects
+            .retain(|key, _| resolution.manifests.contains_key(key));
+        resolution.recorded.graph = graph.clone();
+        Ok(())
+    }
+    fn catalog_manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
+        Ok(self.metadata(pkg)?.manifest.clone())
+    }
+
     fn catalog_inspection(&self) -> Option<&CatalogInspection> {
         Some(self.catalog.inspect())
     }
@@ -175,19 +288,93 @@ impl InstallSource for FrozenSource<'_> {
         Ok(())
     }
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
-        let (provider, solver) = self.source.cell_selection();
-        crate::cells::catalog_solver(&selection_flags(provider, solver), &self.catalog).solve(roots)
+        self.solve_masked(roots, &BTreeSet::new())
     }
     fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
-        Ok(self.metadata(pkg)?.manifest.clone())
+        // Metadata is part of this exact resolution, including configured
+        // induced requirements. Never replace it with a legacy reconstruction.
+        if self.resolution.borrow().is_none() {
+            self.solve(&self.request.roots)?;
+        }
+        let resolution = self.resolution.borrow();
+        let resolution = resolution.as_ref().expect("successful solve recorded");
+        let node = pkg
+            .group
+            .as_ref()
+            .and_then(|g| resolution.recorded.graph.find(g, pkg.name.as_str()))
+            .filter(|n| pkg.version.matches(&n.version))
+            .ok_or_else(|| {
+                SolveError::UnsupportedRoute(
+                    "metadata request is not in the selected resolution".into(),
+                )
+            })?;
+        Ok(resolution.manifests[&format!("{}/{}@{}", node.group, node.name, node.version)].clone())
     }
     fn solve_masked(
         &self,
         roots: &[PackageRef],
         blocked: &BTreeSet<(String, String)>,
     ) -> Result<ResolvedGraph, SolveError> {
-        let (_, solver) = self.source.cell_selection();
-        vibe_install::solve_with_visibility_mask(&self.catalog, solver, roots, blocked)
+        if self.resolution.borrow().is_none() && !blocked.is_empty() {
+            self.solve(roots)?;
+        }
+        let retained = self.commitments.borrow().clone();
+        let (provider, solver) = self.source.cell_selection();
+        let mut combined = roots.to_vec();
+        let conditional = self.conditional.borrow();
+        combined.extend(
+            conditional
+                .iter()
+                .filter(|e| {
+                    !blocked.contains(&(e.parent.qualified_name(), e.dependency.qualified_name()))
+                })
+                .map(|e| e.dependency.clone()),
+        );
+        let result = crate::cells::solve_catalog_request(&selection_flags(provider,solver), &self.catalog, &self.request, &combined, blocked, &retained)
+            .and_then(|mut resolution| {
+                for node in &mut resolution.recorded.graph.packages {
+                    node.is_root = self.request.roots.iter().chain(roots).any(|r| r.group.as_ref() == Some(&node.group) && r.name == node.name);
+                }
+                for edge in conditional.iter().filter(|e| !blocked.contains(&(e.parent.qualified_name(), e.dependency.qualified_name()))) {
+                    let parent = resolution.recorded.graph.iter().find(|n| edge.parent.group.as_ref() == Some(&n.group) && edge.parent.name == n.name && edge.parent.version.matches(&n.version));
+                    if parent.is_none() { return Err(SolveError::UnsupportedRoute("conditional declaration candidate changed; complete conditional candidate search is unsupported".into())); }
+                    let target = resolution.recorded.graph.iter().find(|n| edge.dependency.group.as_ref() == Some(&n.group) && edge.dependency.name == n.name && edge.dependency.version.matches(&n.version))
+                        .ok_or_else(|| SolveError::UnsupportedRoute("conditional constraint was not preserved".into()))?;
+                    let provider = PackageRef::parse(&format!("{}/{}@={}", target.group,target.name,target.version)).expect("selected coordinate");
+                    let parent = resolution.recorded.graph.packages.iter_mut().find(|n| edge.parent.group.as_ref() == Some(&n.group) && edge.parent.name == n.name).expect("checked parent");
+                    if !parent.dependencies.contains(&provider) { parent.dependencies.push(provider.clone()); }
+                    resolution.recorded.choices.push(vibe_resolver::resolvo_engine::SelectedChoice { parent: edge.parent.clone(), declaration: edge.declaration.clone(), alternative: 0, provider });
+                }
+                vibe_resolver::resolvo_engine::request::RouteResolution::bind(&self.catalog, &self.request, resolution.recorded, resolution.manifests, resolution.effects)
+            });
+        match result {
+            Ok(resolution) => {
+                let graph = resolution.recorded.graph.clone();
+                let mut commitments = self.commitments.borrow_mut();
+                for edge in &resolution.recorded.choices {
+                    if !commitments
+                        .iter()
+                        .any(|e| e.parent == edge.parent && e.declaration == edge.declaration)
+                    {
+                        commitments.push(edge.clone());
+                    }
+                }
+                *self.resolution.borrow_mut() = Some(resolution);
+                Ok(graph)
+            }
+            Err(error) => {
+                *self.resolution.borrow_mut() = None;
+                match error {
+                    SolveError::Unsatisfiable { .. }
+                    | SolveError::VersionConflict { .. }
+                    | SolveError::KindMismatch { .. } => Err(SolveError::RootConstraints {
+                        origins: self.request.root_origins.clone(),
+                        conflict: Box::new(error),
+                    }),
+                    error => Err(error),
+                }
+            }
+        }
     }
     fn resolve_and_fetch(
         &self,

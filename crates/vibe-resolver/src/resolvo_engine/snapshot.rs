@@ -55,6 +55,13 @@ impl<P: VersionEnumerator> DepProvider for MetadataSnapshot<'_, P> {
 }
 
 impl<P: VersionEnumerator> VersionEnumerator for MetadataSnapshot<'_, P> {
+    fn edge_blocked(&self, parent: &str, target: &str) -> bool {
+        self.provider.edge_blocked(parent, target)
+    }
+    fn retained_choices(&self) -> &[super::SelectedChoice] {
+        self.provider.retained_choices()
+    }
+
     fn candidate_rejection(
         &self,
         group: &Group,

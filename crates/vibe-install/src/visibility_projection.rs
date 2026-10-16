@@ -214,6 +214,12 @@ pub(crate) struct EffectiveResolution {
 /// assert!(result.analysis.effective.is_empty());
 /// ```
 pub fn project(input: &ProjectionInput<'_>) -> Result<Projection> {
+    project_selected(input, None)
+}
+fn project_selected(
+    input: &ProjectionInput<'_>,
+    provenance: Option<&[vibe_resolver::resolvo_engine::request::EdgeProvenance]>,
+) -> Result<Projection> {
     let mut graph = VisibilityGraph::default();
     let mut root_decl = declaration_from_manifest(input.root_manifest)?;
 
@@ -234,10 +240,79 @@ pub fn project(input: &ProjectionInput<'_>) -> Result<Projection> {
     for node in input.graph.iter() {
         let pkgref = exact_pinned_pkgref(node);
         let manifest = (input.manifest_of)(&pkgref)?;
-        graph.nodes.insert(
-            node_id(&node.group, &node.name),
-            declaration_from_manifest(&manifest)?,
-        );
+        let mut declaration = declaration_from_manifest(&manifest)?;
+        // The solver's selected edges are authoritative. The manifest supplies
+        // access attributes, never an inferred union of possible providers.
+        declaration.edges = if let Some(provenance) = provenance {
+            let mut edges = Vec::new();
+            for proof in provenance.iter().filter(|e| {
+                e.selected.parent.group.as_ref() == Some(&node.group)
+                    && e.selected.parent.name == node.name
+                    && e.selected.parent.version.matches(&node.version)
+            }) {
+                let selected = &proof.selected;
+                if !node
+                    .dependencies
+                    .iter()
+                    .any(|d| d.group == selected.provider.group && d.name == selected.provider.name)
+                {
+                    continue;
+                }
+                let requires = if let Some(rest) = selected.declaration.strip_prefix("target[") {
+                    let (predicate, _) =
+                        rest.rsplit_once("].dependencies.packages[")
+                            .ok_or_else(|| {
+                                visibility_error(
+                                    "invalid selected conditional declaration provenance".into(),
+                                )
+                            })?;
+                    &manifest.conditional_deps.get(predicate).ok_or_else(||visibility_error("selected conditional declaration is absent from the immutable manifest".into()))?.dependencies
+                } else {
+                    &manifest.requires
+                };
+                let group = selected
+                    .provider
+                    .group
+                    .as_ref()
+                    .expect("qualified selected provider");
+                let name = selected.provider.name.as_str();
+                edges.push(EdgeDecl {
+                    to: selected.provider.qualified_name(),
+                    access: requires.declared_access(group, name),
+                    friend: requires.declared_friend(group, name),
+                    exclude: requires.excludes_for(group, name).to_vec(),
+                });
+            }
+            if node
+                .dependencies
+                .iter()
+                .any(|d| !edges.iter().any(|e| e.to == d.qualified_name()))
+            {
+                return Err(visibility_error(
+                    "selected dependency lacks declaration provenance".into(),
+                ));
+            }
+            edges
+        } else {
+            node.dependencies
+                .iter()
+                .map(|dep| {
+                    let target = dep.qualified_name();
+                    declaration
+                        .edges
+                        .iter()
+                        .find(|e| e.to == target)
+                        .cloned()
+                        .unwrap_or(EdgeDecl {
+                            to: target,
+                            ..EdgeDecl::default()
+                        })
+                })
+                .collect()
+        };
+        graph
+            .nodes
+            .insert(node_id(&node.group, &node.name), declaration);
     }
 
     let analysis = analyze(&graph, &input.root_id);
@@ -283,16 +358,28 @@ pub(crate) fn resolve_effective<S: InstallSource + ?Sized>(
 ) -> Result<EffectiveResolution> {
     const MAX_ITERATIONS: usize = 4;
 
+    if let Some(resolution) = source.route_resolution() {
+        if resolution.recorded.graph != initial_graph {
+            return Err(SolveError::UnsupportedRoute(
+                "visibility input differs from the source selected resolution".into(),
+            )
+            .into());
+        }
+    }
     let mut graph = initial_graph;
     let mut blocked = BTreeSet::new();
     for iteration in 1..=MAX_ITERATIONS {
         let manifest_of = |pkgref: &PackageRef| source.manifest_of(pkgref);
-        let projection = project(&ProjectionInput {
-            root_manifest,
-            root_id: root_id.to_string(),
-            graph: &graph,
-            manifest_of: &manifest_of,
-        })?;
+        let selected = source.route_resolution();
+        let projection = project_selected(
+            &ProjectionInput {
+                root_manifest,
+                root_id: root_id.to_string(),
+                graph: &graph,
+                manifest_of: &manifest_of,
+            },
+            selected.as_ref().map(|r| r.provenance.as_slice()),
+        )?;
         let newly_blocked: BTreeSet<_> = projection
             .blocked_edges
             .difference(&blocked)
@@ -300,6 +387,7 @@ pub(crate) fn resolve_effective<S: InstallSource + ?Sized>(
             .collect();
         if newly_blocked.is_empty() {
             prune_graph(&mut graph, &projection.analysis);
+            source.finish_route_projection(&graph)?;
             return Ok(EffectiveResolution {
                 graph,
                 analysis: projection.analysis,

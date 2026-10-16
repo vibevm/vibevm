@@ -13,14 +13,12 @@ use vibe_core::visibility::{Analysis, ProvenanceRule};
 use vibe_core::{ContentHash, Group, PackageRef, VersionSpec};
 use vibe_registry::store;
 use vibe_registry::{CachedPackage, ResolvedPackage};
-use vibe_resolver::{
-    FeatureRequest, ResolvedNode, conditional::ConditionalPredicate, expand_features,
-};
+use vibe_resolver::{FeatureRequest, ResolvedNode, conditional::ConditionalPredicate};
 use vibe_workspace::Workspace;
 use vibe_workspace::freshness::is_in_workspace_file_source;
 use vibe_workspace::install::ResolvedDep;
 
-use crate::error::{Error, Result};
+use crate::error::Result;
 use crate::events::{PlanEvent, PlanObserver};
 use crate::fetched::{
     Fetched, NodeInstallMeta, build_activation_context, build_language_chain,
@@ -87,6 +85,9 @@ pub struct PlannedInstall {
     /// The packages to materialise, in resolution order — the shape
     /// the caller presents for confirmation.
     pub resolution: Vec<ResolvedDep>,
+    /// Immutable admitted intent and selected declaration/provider evidence.
+    pub normalized_request: Option<vibe_resolver::resolvo_engine::request::NormalizedRequest>,
+    pub selected_provenance: Vec<vibe_resolver::resolvo_engine::request::EdgeProvenance>,
     /// The workspace this plan was computed over, carried by value.
     ///
     /// Apply and the slot lifecycle need the same tree the plan reasoned
@@ -98,6 +99,71 @@ pub struct PlannedInstall {
 }
 
 impl PlannedInstall {
+    /// Recheck the confirmation boundary before apply can write anything.
+    pub(crate) fn validate_selected_routes(&self) -> Result<()> {
+        let Some(request) = &self.normalized_request else {
+            return Ok(());
+        };
+        let inconsistent = || {
+            vibe_resolver::SolveError::UnsupportedRoute(
+                "planned graph differs from normalized request or selected edge provenance".into(),
+            )
+        };
+        let selected = |p: &PackageRef| {
+            self.fetched.iter().any(|f| {
+                p.group.as_ref() == Some(&f.cached.resolved.group)
+                    && p.name == f.cached.resolved.name
+                    && p.version.matches(&f.cached.resolved.version)
+            })
+        };
+        if request.roots.iter().any(|p| !selected(p)) || self.resolution.len() != self.fetched.len()
+        {
+            return Err(inconsistent().into());
+        }
+        for f in &self.fetched {
+            let node = &f.cached.resolved;
+            let Some(row) = self.resolution.iter().find(|r| {
+                r.group == node.group && r.name == node.name && r.version == node.version
+            }) else {
+                return Err(inconsistent().into());
+            };
+            let dependencies: Vec<_> = f
+                .meta
+                .dependencies
+                .iter()
+                .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
+                .collect();
+            if row.requires != dependencies
+                || f.meta.dependencies.iter().any(|dep| {
+                    !selected(dep)
+                        || !self.selected_provenance.iter().any(|proof| {
+                            let edge = &proof.selected;
+                            edge.parent.group.as_ref() == Some(&node.group)
+                                && edge.parent.name == node.name
+                                && edge.parent.version.matches(&node.version)
+                                && edge.provider == *dep
+                        })
+                })
+            {
+                return Err(inconsistent().into());
+            }
+        }
+        for proof in &self.selected_provenance {
+            let edge = &proof.selected;
+            if !selected(&edge.provider)
+                || !self.fetched.iter().any(|f| {
+                    edge.parent.group.as_ref() == Some(&f.cached.resolved.group)
+                        && edge.parent.name == f.cached.resolved.name
+                        && edge.parent.version.matches(&f.cached.resolved.version)
+                        && f.meta.dependencies.contains(&edge.provider)
+                })
+            {
+                return Err(inconsistent().into());
+            }
+        }
+        Ok(())
+    }
+
     /// The outer owner sets this after planning, before any apply write.
     /// A Fresh plan is checked separately against its retained slot records.
     pub fn set_strict_conversion(&mut self, strict: bool) {
@@ -197,7 +263,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     //    Anything else (no caller roots, no manifest entries, no
     //    lockfile snapshot) is an error — there is nothing to install.
     let mut migration_pending = false;
-    let roots: Vec<PackageRef> = if request.roots.is_empty() {
+    if request.roots.is_empty() {
         if manifest.requires.packages.is_empty()
             && manifest.requires.git_packages.is_empty()
             && !lockfile.meta.root_dependencies.is_empty()
@@ -218,80 +284,17 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
             // already-expanded entries survive.
             migrate_selected_node(workspace, project_root, &lockfile.meta.root_dependencies);
         }
-        // Unified resolution (PROP-009 §2.7): the root set is the union
-        // of every workspace node's `[requires]`. The supplied tree
-        // reflects the migration above, an earlier `--git` declaration,
-        // and any `[workspace.versions]` placeholders; a standalone
-        // project is a one-node workspace, so this degenerates to "just
-        // the entry node". The source dispatches each pkgref through the
-        // right path internally (override > git > registry).
-        let discovered = &*workspace;
-        let mut all: Vec<PackageRef> = Vec::new();
-        // De-duplicate on the `(group, name)` identity (PROP-008 §2.3).
-        // A manifest pkgref is group-qualified, so `group` is present.
-        let mut seen: std::collections::HashSet<(Option<Group>, String)> =
-            std::collections::HashSet::new();
-        for (_, node) in discovered.iter_nodes() {
-            for p in &node.requires.packages {
-                if seen.insert((p.group.clone(), p.name.to_string())) {
-                    all.push(p.clone());
-                }
-            }
-            for g in &node.requires.git_packages {
-                if seen.insert((Some(g.group.clone()), g.name.clone())) {
-                    all.push(PackageRef::new(
-                        g.kind,
-                        Some(g.group.clone()),
-                        g.name.clone(),
-                        VersionSpec::Latest,
-                    )?);
-                }
-            }
-        }
-        all
-    } else {
-        // ##EXPLICIT-PKGREF-FULL-SOLVE (PROP-011, the 2026-08-24 ruling):
-        // the named packages JOIN the full manifest union — never replace
-        // it. The apply phase treats any resolution as the whole world
-        // (its prune drops every slot outside it), so a partial solve
-        // must never reach apply: `vibe install X --offline` used to
-        // erase every other slot and rewrite the lock to X's closure.
-        // The named refs stay as written (re-resolved fresh); every
-        // untouched manifest root is held to its locked pin below.
-        let discovered = &*workspace;
-        let mut all: Vec<PackageRef> = request.roots.clone();
-        let mut seen: std::collections::HashSet<(Option<Group>, String)> = all
-            .iter()
-            .map(|p| (p.group.clone(), p.name.to_string()))
-            .collect();
-        let mut rest: Vec<PackageRef> = Vec::new();
-        for (_, node) in discovered.iter_nodes() {
-            for p in &node.requires.packages {
-                if seen.insert((p.group.clone(), p.name.to_string())) {
-                    rest.push(p.clone());
-                }
-            }
-            for g in &node.requires.git_packages {
-                if seen.insert((Some(g.group.clone()), g.name.clone())) {
-                    rest.push(PackageRef::new(
-                        g.kind,
-                        Some(g.group.clone()),
-                        g.name.clone(),
-                        VersionSpec::Latest,
-                    )?);
-                }
-            }
-        }
-        // §5.3 minimum churn: the untouched roots move nothing — each one
-        // the lock still satisfies is pinned to its locked version.
-        all.extend(vibe_workspace::freshness::hold_pins(&rest, &lockfile));
-        all
-    };
+    }
+    let (roots, preferred_roots, root_origins) =
+        effective_root_constraints(workspace, project_root, &request.roots, &lockfile)?;
 
     // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
     // dependencies is a fresh project, not an error — regenerate the boot
     // artifacts of the empty world and report the fresh shape.
-    if roots.is_empty() {
+    // Admitted transaction intent is not represented by the legacy lockfile.
+    // Neither an empty manifest nor its freshness can discharge that request.
+    let admitted_request = source.normalized_request().is_some();
+    if roots.is_empty() && !admitted_request {
         return Ok(Plan::Fresh);
     }
 
@@ -307,7 +310,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     // explicit-pkgref install it is the named refs plus the pin-held
     // remainder above; for a stale bare install PROP-011 §5.3 replaces it
     // with the pin-held set below.
-    let mut solve_roots = roots.clone();
+    let mut solve_roots = preferred_roots;
 
     // PROP-011 §2.2 — the freshness fast path. When no explicit pkgref
     // was given (the install-from-manifest shape) and `vibe.lock` is
@@ -319,7 +322,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     // lockfile-respecting: a fresh lock is honoured verbatim, with no
     // version drift inside a constraint. An explicit
     // `vibe install <pkgref>` always runs the full pipeline.
-    if request.roots.is_empty() {
+    if request.roots.is_empty() && !admitted_request {
         let ws = &*workspace;
         match vibe_workspace::freshness::check(ws, &lockfile) {
             vibe_workspace::freshness::Freshness::Fresh
@@ -353,7 +356,12 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         }
     }
 
-    let transaction = transaction::PlanningSource::capture(source, &roots)?;
+    let mut normalized = vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
+        &roots,
+        &request.features,
+    );
+    normalized.root_origins = root_origins;
+    let transaction = transaction::PlanningSource::capture_request(source, &normalized)?;
     let source = &transaction;
     if let Some(catalog) = source.catalog_inspection() {
         observer.catalog(catalog);
@@ -480,7 +488,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     // 4. Conditional dependency expansion — fixed-point loop.
     expand_conditional_deps(
         source,
-        &roots,
+        &strict_roots,
         &lockfile,
         &store_root,
         project_root,
@@ -551,6 +559,11 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         roots,
         fetched,
         resolution,
+        normalized_request: source.normalized_request().cloned(),
+        selected_provenance: source
+            .route_resolution()
+            .map(|r| r.provenance)
+            .unwrap_or_default(),
         // A value, not a rediscovery: apply and the slot lifecycle work on the
         // exact tree that produced this plan.
         workspace: workspace.clone(),
@@ -573,3 +586,73 @@ mod transaction;
 
 #[cfg(test)]
 mod m_05_c_1_cases;
+
+#[cfg(test)]
+mod m_05_c_3_cases;
+
+/// Preserve each workspace declaration. Explicit roots supersede only the
+/// exact selected node's named declaration, never another member's constraint.
+fn effective_root_constraints(
+    workspace: &Workspace,
+    project_root: &Path,
+    explicit: &[PackageRef],
+    lockfile: &Lockfile,
+) -> Result<(
+    Vec<PackageRef>,
+    Vec<PackageRef>,
+    Vec<vibe_resolver::resolvo_engine::request::RootConstraint>,
+)> {
+    use vibe_resolver::resolvo_engine::request::RootConstraint;
+    let mut roots = explicit.to_vec();
+    let mut preferred = roots.clone();
+    let mut origins: Vec<_> = explicit
+        .iter()
+        .enumerate()
+        .map(|(index, p)| RootConstraint {
+            constraint: p.clone(),
+            consumer: project_root.display().to_string(),
+            declaration: format!("cli.roots[{index}]"),
+        })
+        .collect();
+    for (relative, node) in workspace.iter_nodes() {
+        let selected = workspace.node_abs_path(relative) == project_root;
+        let consumer = workspace.node_abs_path(relative).display().to_string();
+        let mut add = |reference: PackageRef, declaration: String| {
+            let named = explicit
+                .iter()
+                .any(|p| p.group == reference.group && p.name == reference.name);
+            if named && selected {
+                return;
+            }
+            if !explicit.is_empty() && !named {
+                preferred.extend(vibe_workspace::freshness::hold_pins(
+                    std::slice::from_ref(&reference),
+                    lockfile,
+                ));
+            } else {
+                preferred.push(reference.clone());
+            }
+            origins.push(RootConstraint {
+                constraint: reference.clone(),
+                consumer: consumer.clone(),
+                declaration,
+            });
+            roots.push(reference);
+        };
+        for (index, p) in node.requires.packages.iter().enumerate() {
+            add(p.clone(), format!("requires.packages[{index}]"));
+        }
+        for (index, g) in node.requires.git_packages.iter().enumerate() {
+            add(
+                PackageRef::new(
+                    g.kind,
+                    Some(g.group.clone()),
+                    g.name.clone(),
+                    VersionSpec::Latest,
+                )?,
+                format!("requires.git_packages[{index}]"),
+            );
+        }
+    }
+    Ok((roots, preferred, origins))
+}

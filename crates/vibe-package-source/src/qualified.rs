@@ -158,6 +158,12 @@ impl RegistryPackageSource {
 }
 
 impl InstallSource for RegistryPackageSource {
+    fn begin_normalized_transaction(
+        &self,
+        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+    ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
+        self.resolver.begin_normalized_transaction(request)
+    }
     fn begin_transaction(
         &self,
         roots: &[PackageRef],

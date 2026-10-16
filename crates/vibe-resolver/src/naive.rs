@@ -61,6 +61,14 @@ impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#determinism")]
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        Ok(self.solve_recorded(roots)?.graph)
+    }
+}
+impl<P: DepProvider> NaiveDepSolver<P> {
+    pub fn solve_recorded(
+        &self,
+        roots: &[PackageRef],
+    ) -> Result<crate::resolvo_engine::RecordedResolution, SolveError> {
         let mut state = SolverState::new();
         let root_keys: Vec<(Group, String)> = roots
             .iter()
@@ -108,11 +116,41 @@ impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
                 )
             })
             .collect();
-        Ok(crate::build_resolved_graph(
-            &root_keys,
-            chosen,
-            &state.declared_obsolete,
-        ))
+        let graph = crate::build_resolved_graph(&root_keys, chosen, &state.declared_obsolete);
+        state.choices.retain(|e| {
+            e.parent
+                .group
+                .as_ref()
+                .and_then(|g| graph.find(g, e.parent.name.as_str()))
+                .is_some()
+                && !e.provider.group.as_ref().is_some_and(|g| {
+                    state
+                        .declared_obsolete
+                        .contains(&(g.clone(), e.provider.name.to_string()))
+                })
+        });
+        for edge in &mut state.choices {
+            let target = edge
+                .provider
+                .group
+                .as_ref()
+                .and_then(|g| graph.find(g, edge.provider.name.as_str()))
+                .ok_or_else(|| {
+                    DepProviderError::Other("graph projection removed a selected provider".into())
+                })?;
+            edge.provider = PackageRef::parse(&format!(
+                "{}/{}@={}",
+                target.group, target.name, target.version
+            ))
+            .expect("selected coordinate");
+        }
+        state
+            .choices
+            .sort_by_key(|e| (e.parent.to_string(), e.declaration.clone(), e.alternative));
+        Ok(crate::resolvo_engine::RecordedResolution {
+            graph,
+            choices: state.choices,
+        })
     }
 }
 
@@ -158,6 +196,9 @@ impl<P: DepProvider> NaiveDepSolver<P> {
                     existing: existing.version.to_string(),
                     new_constraint: format!("{}", pkgref.version),
                 });
+            }
+            if let Some(actual) = existing.manifest.package.as_ref().map(|p| p.kind) {
+                assert_kind_matches(pkgref.kind, actual, &pkgref.qualified_name())?;
             }
             // Mark root if this re-discovery came in as a root.
             if is_root && let Some(e) = state.chosen.get_mut(&key) {
@@ -223,20 +264,52 @@ impl<P: DepProvider> NaiveDepSolver<P> {
 
         // Capture direct package deps verbatim — they go straight into the
         // resolved node (used by lockfile `dependencies`).
-        let direct_deps: Vec<PackageRef> = manifest.requires.packages.clone();
+        let mut direct_deps: Vec<PackageRef> = manifest.requires.packages.clone();
+        let parent = PackageRef::parse(&format!("{group}/{}@={version}", pkgref.name))
+            .expect("selected coordinate");
+        for (index, dep) in direct_deps.iter().enumerate() {
+            state.choices.push(crate::resolvo_engine::SelectedChoice {
+                parent: parent.clone(),
+                declaration: format!("requires.packages[{index}]"),
+                alternative: 0,
+                provider: dep.clone(),
+            });
+        }
 
         // Resolve capability requires against the already-known provider
         // index (which now includes this package's own provides).
         verify_capability_requires(state, &pkgref, &manifest)?;
+        for (index, cap) in manifest.requires.capabilities.iter().enumerate() {
+            let (pg, pn, _) = state.providers_index[&cap.qualified()]
+                .iter()
+                .find(|(_, _, v)| cap.version.matches(v))
+                .expect("verified capability");
+            let provider = PackageRef::parse(&format!("{pg}/{pn}")).expect("provider coordinate");
+            direct_deps.push(provider.clone());
+            state.choices.push(crate::resolvo_engine::SelectedChoice {
+                parent: parent.clone(),
+                declaration: format!("requires.capabilities[{index}]:{cap}"),
+                alternative: 0,
+                provider,
+            });
+        }
 
         // Resolve disjunctions: pick first option not already in conflict
         // and that has a registered provider OR enqueue it.
-        for disj in &manifest.requires_any {
-            handle_disjunction(state, &pkgref, disj)?;
+        for (index, disj) in manifest.requires_any.iter().enumerate() {
+            let alternative = handle_disjunction(state, &pkgref, disj)?;
+            let provider = disj.one_of[alternative].clone();
+            direct_deps.push(provider.clone());
+            state.choices.push(crate::resolvo_engine::SelectedChoice {
+                parent: parent.clone(),
+                declaration: format!("requires_any[{index}]"),
+                alternative,
+                provider,
+            });
         }
 
         // Enqueue concrete deps for the next iteration.
-        for d in &direct_deps {
+        for d in &manifest.requires.packages {
             state.queue.push_back(EnqueuedPkg {
                 pkgref: d.clone(),
                 via: Some(pkgref.qualified_name()),
@@ -312,7 +385,7 @@ fn handle_disjunction(
     state: &mut SolverState,
     requirer: &PackageRef,
     disj: &vibe_core::manifest::RequiresAny,
-) -> Result<(), SolveError> {
+) -> Result<usize, SolveError> {
     // Binding the first alternative IS the emptiness check — the
     // compiler carries the invariant from here to the enqueue below.
     let Some(first) = disj.one_of.first() else {
@@ -322,13 +395,14 @@ fn handle_disjunction(
         });
     };
     // If any alternative is already chosen, satisfied.
-    for opt in &disj.one_of {
+    for (index, opt) in disj.one_of.iter().enumerate() {
         let og = require_group(opt)?;
         if state
             .chosen
-            .contains_key(&(og.clone(), opt.name.to_string()))
+            .get(&(og.clone(), opt.name.to_string()))
+            .is_some_and(|chosen| opt.version.matches(&chosen.version))
         {
-            return Ok(());
+            return Ok(index);
         }
     }
     // Otherwise: enqueue the first alternative. Naive — no backtracking
@@ -338,7 +412,7 @@ fn handle_disjunction(
         via: Some(format!("[[requires_any]] of {}", requirer.qualified_name())),
         is_root: false,
     });
-    Ok(())
+    Ok(0)
 }
 
 #[cfg(test)]
