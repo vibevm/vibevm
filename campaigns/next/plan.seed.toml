@@ -3104,7 +3104,7 @@ mandates = ["D-004","D-005","D-017","F-008","F-007","F-009","F-022","F-024"]
 acceptance = ["Meet baseline work-package scope: Ratify typed activation/consumer/group grammar, environment resolution domains and dependency roles from M-14; comment-preserving migration","All required child acceptance reviewed; preserve parent-level compatibility and ETO obligations."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-05-B.json"
-contract_sha256 = "4c60de9842e06902829919fcb03d32c36cbc093a3bb524c1076bc7c4afbcec46"
+contract_sha256 = "56b98edca74ecf8e16cf525a5b5fbec69365487f5c7f41de1afa4f5211be67a0"
 
 [[node]]
 id = "M-05-B.1"
@@ -3119,7 +3119,7 @@ mandates = ["D-004","D-005","D-017","F-008","F-007","F-009","F-022","F-024"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-05-B.json#M-05-B.1","Normalized algebra has no duplicated choices.requires dependency engine.","Legacy syntax lowers through one typed representation."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-05-B.json#M-05-B.1"
-contract_sha256 = "4c60de9842e06902829919fcb03d32c36cbc093a3bb524c1076bc7c4afbcec46"
+contract_sha256 = "56b98edca74ecf8e16cf525a5b5fbec69365487f5c7f41de1afa4f5211be67a0"
 
 [[node]]
 id = "M-05-B.2"
@@ -3134,7 +3134,7 @@ mandates = ["D-004","D-005","D-017","F-008","F-007","F-009","F-022","F-024"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-05-B.json#M-05-B.2","Generated requests retain owner edge/domain/target and choice provenance.","Defaults are explicit consumer policy inputs, never solver preferences."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-05-B.json#M-05-B.2"
-contract_sha256 = "4c60de9842e06902829919fcb03d32c36cbc093a3bb524c1076bc7c4afbcec46"
+contract_sha256 = "56b98edca74ecf8e16cf525a5b5fbec69365487f5c7f41de1afa4f5211be67a0"
 
 [[node]]
 id = "M-05-B.3"
@@ -3149,7 +3149,7 @@ mandates = ["D-004","D-005","D-017","F-008","F-007","F-009","F-022","F-024"]
 acceptance = ["Read complete task contract campaigns/next/tasks/M-05-B.json#M-05-B.3","Migration code and fixtures demonstrate preserved syntax/intent rather than prose instructions.","Running a completed conversion again makes no change."]
 evidence = []
 contract = "repo:campaigns/next/tasks/M-05-B.json#M-05-B.3"
-contract_sha256 = "4c60de9842e06902829919fcb03d32c36cbc093a3bb524c1076bc7c4afbcec46"
+contract_sha256 = "56b98edca74ecf8e16cf525a5b5fbec69365487f5c7f41de1afa4f5211be67a0"
 
 [[node]]
 id = "M-05-C"

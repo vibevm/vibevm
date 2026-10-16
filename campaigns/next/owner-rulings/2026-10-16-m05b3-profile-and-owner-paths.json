@@ -1,0 +1,11 @@
+{
+  "schema": "owner-execution-decision/1",
+  "date": "2026-10-16",
+  "task": "M-05-B.3",
+  "authority": "First Agent acting under owner delegation to resolve ordinary technical input decisions",
+  "decision": "Proceed through managed Zap/PodBay with explicit opt-in feature profiles/reader and incumbent core/workspace migration engine. Task metadata corrected to actual owners; original acceptance and negative cases unchanged.",
+  "known_cohort": "Absent epoch and recognized epoch1 remain distinct and preserved; unknown epoch refuses.",
+  "boundary": "No implementation by this metadata change; no default-parser or existing-profile reinterpretation; no new migration engine.",
+  "research": "/fast/git/v/research/2026-10-16-m05b3-preparation/REPORT.md",
+  "E1": "Partial source checkpoint e3174c622 does not complete E1. B3 consumes independent accepted prerequisites; Claude and remaining E1 obligations stay retained."
+}
