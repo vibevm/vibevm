@@ -1,0 +1,171 @@
+Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs:571:
+             .count(),
+         1
+     );
+-    assert!(fixture
+-        .dir
+-        .path()
+-        .join("settings/bin/local-helper")
+-        .exists());
++    assert!(
++        fixture
++            .dir
++            .path()
++            .join("settings/bin/local-helper")
++            .exists()
++    );
+ }
+ 
+Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:3:
+ use std::sync::Arc;
+ use vibe_core::manifest::Manifest;
+ use vibe_lifecycle::{
+-    process::SelectedFileWitness, ClientExecutable, ClientExecutables, SubmissionScope,
++    ClientExecutable, ClientExecutables, SubmissionScope, process::SelectedFileWitness,
+ };
+ use vibe_orchestrator::{
+     machine_operation::fixed_deploy::FixedDeployRoute,
+Diff in /fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs:10:
+     machine_submission::{
+-        deploy_grant::{DeployGrantAttachment, DeployGrantService},
+         TrustedPolicySource,
++        deploy_grant::{DeployGrantAttachment, DeployGrantService},
+     },
+ };
+ use vibe_safefs::Project;
+Diff in /fast/git/v/vibevm-next/crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs:188:
+     assert_eq!(record["schema"].as_str(), Some("none"));
+     assert_eq!(record["unknown_fields"].as_str(), Some("deny"));
+     let corpus = root.join(record["corpus"].as_str().unwrap());
+-    assert!(ChangeManifest::parse_str(
+-        &std::fs::read_to_string(corpus.join("valid/representative.toml")).unwrap(),
+-        &c,
+-        &dir
+-    )
+-    .is_ok());
++    assert!(
++        ChangeManifest::parse_str(
++            &std::fs::read_to_string(corpus.join("valid/representative.toml")).unwrap(),
++            &c,
++            &dir
++        )
++        .is_ok()
++    );
+     for (file, kind) in [
+         (
+             "semantic-gap/unknown-epoch.toml",
+Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:3:
+ //! implementations can block. Only TcpFramePort establishes nonblocking mode here.
+ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-LOCAL-FRAME");
+ 
+-use super::framing::{decode_body, FrameCodecError, FRAME_EPOCH};
++use super::framing::{FRAME_EPOCH, FrameCodecError, decode_body};
+ use std::io::{self, Read, Write};
+ use std::net::TcpStream;
+ use vibe_wire::generated::machine::e1::session_frame::SessionFrame;
+Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:83:
+                         FrameCodecError::TruncatedPrefix
+                     } else {
+                         FrameCodecError::TruncatedBody
+-                    })
++                    });
+                 }
+                 Ok(count) => count,
+                 Err(e)
+Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:92:
+                         io::ErrorKind::WouldBlock | io::ErrorKind::Interrupted
+                     ) =>
+                 {
+-                    return Ok(ReadPoll::Pending)
++                    return Ok(ReadPoll::Pending);
+                 }
+                 Err(e) => return Err(FrameCodecError::Io(e)),
+             };
+Diff in /fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs:234:
+                         io::ErrorKind::WouldBlock | io::ErrorKind::Interrupted
+                     ) =>
+                 {
+-                    return Ok(WritePoll::Pending)
++                    return Ok(WritePoll::Pending);
+                 }
+                 Err(e) => return Err(FrameCodecError::Io(e)),
+             }
+Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs:100:
+     let host = host(root.clone(), policy, source);
+     let question = host.prepare_requested_options(no_options()).unwrap();
+     assert_eq!(question.operation_id.as_deref(), Some(OPERATION));
+-    assert!(question.source_id.as_deref().unwrap().starts_with("sha256:"));
+-    assert!(!question.source_id.as_deref().unwrap().starts_with("sha256:sha256:"));
++    assert!(
++        question
++            .source_id
++            .as_deref()
++            .unwrap()
++            .starts_with("sha256:")
++    );
++    assert!(
++        !question
++            .source_id
++            .as_deref()
++            .unwrap()
++            .starts_with("sha256:sha256:")
++    );
+     assert_eq!(question.policy_generation.is_some(), true);
+     assert!(matches!(question.body, Body::ApprovalQuestion(_)));
+     let refusal = host.answer_typed(&answer(&question, false)).err().unwrap();
+Diff in /fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs:2:
+ //! Requested is only a bounded host-memory latch, never durable stop evidence.
+ use super::*;
+ use crate::machine_operation::stream_message::{self as validation};
+-use vibe_wire::generated::lifecycle_outcome_marker::ReportEvidence;
+-use vibe_wire::generated::machine::e1::operation_stream_message::*;
+ use BodyControlReplyOperationEffectState as Effect;
+ use BodyControlReplyStatus as Status;
++use vibe_wire::generated::lifecycle_outcome_marker::ReportEvidence;
++use vibe_wire::generated::machine::e1::operation_stream_message::*;
+ 
+ #[derive(Clone)]
+ pub(super) enum Gate {
+Diff in /fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs:34:
+     fs::write(source.path().join(".gitmodules"), b"[submodule \"x\"]\n").unwrap();
+     let complete = stage_local_payload(&input, &output, limits()).unwrap();
+     assert_eq!(
+-        inspect_local_payload(&output, limits(), &complete.source_root_token, &complete.tree_sha256),
++        inspect_local_payload(
++            &output,
++            limits(),
++            &complete.source_root_token,
++            &complete.tree_sha256
++        ),
+         LocalPayloadInspection::Complete(complete.clone())
+     );
+     assert_eq!(complete.format, FORMAT);
+Diff in /fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs:184:
+     let (_source, destination, input, output) = projects();
+     let complete = stage_local_payload(&input, &output, limits()).unwrap();
+     fs::write(destination.path().join("payload/vibe.toml"), b"tampered").unwrap();
+-    assert!(matches!(inspect_local_payload(&output, limits(), &complete.source_root_token,
+-        &complete.tree_sha256), LocalPayloadInspection::Uncertain(_)));
++    assert!(matches!(
++        inspect_local_payload(
++            &output,
++            limits(),
++            &complete.source_root_token,
++            &complete.tree_sha256
++        ),
++        LocalPayloadInspection::Uncertain(_)
++    ));
+ }
+ 
+ #[test]
+Diff in /fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs:336:
+             FormatId::MachineOperationDescriptor => "machine-operation-descriptor",
+             FormatId::MachineOperationEnvelope => "machine-operation-envelope",
+             FormatId::MachineOperationStreamMessage => "machine-operation-stream-message",
+-            FormatId::MachineProfiledDeployActionRequest => "machine-profiled-deploy-action-request",
++            FormatId::MachineProfiledDeployActionRequest => {
++                "machine-profiled-deploy-action-request"
++            }
+             FormatId::MachineSessionFrame => "machine-session-frame",
+             FormatId::MachineSourceLocation => "machine-source-location",
+             FormatId::Manifest => "manifest",

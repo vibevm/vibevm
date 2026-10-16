@@ -1,0 +1,7 @@
+{
+  "commit": "f5a9dc9873e22989db4a54dde0e372dff85dcc64",
+  "source_files": 32,
+  "review": "/fast/zap-managed/2026-10-16-m05c1/ROOT-INTEGRATION-REVIEW.json",
+  "fresh_tests": 19,
+  "canonical_acceptance": "pending"
+}

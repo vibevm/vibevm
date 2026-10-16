@@ -1,0 +1,105 @@
+[
+  {
+    "id": "V1",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-package-source",
+        "--lib",
+        "source::m_05_c_1_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "repeated_metadata_preserves_definition_and_capability_identity",
+      "same_version_replacement_keeps_frozen_snapshot",
+      "missing_and_corrupt_catalog_differ_from_missing_option"
+    ]
+  },
+  {
+    "id": "V2",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-resolver",
+        "--lib",
+        "resolvo_engine::m_05_c_1_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "discarded_candidate_metadata_never_requests_global_selection",
+      "solve_and_manifest_observation_share_catalog_identity"
+    ]
+  },
+  {
+    "id": "V3",
+    "kind": "new_family",
+    "commands": [
+      [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--lib",
+        "plan::m_05_c_1_cases",
+        "--",
+        "--nocapture"
+      ]
+    ],
+    "obligations": [
+      "catalog_identity_is_inspected_through_eto_before_effects",
+      "unavailable_or_corrupt_catalog_prevents_install_effects"
+    ]
+  },
+  {
+    "id": "V4",
+    "kind": "affected_compatibility",
+    "commands": [],
+    "selection_rule": "Bind only existing exact cases consuming changed owners. Reuse unchanged evidence by exact subject hash; no whole crate discovery."
+  },
+  {
+    "id": "V5",
+    "kind": "format",
+    "commands": [
+      [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ]
+    ]
+  },
+  {
+    "id": "V6",
+    "kind": "diff",
+    "commands": [
+      [
+        "git",
+        "diff",
+        "--check"
+      ]
+    ]
+  },
+  {
+    "id": "V7",
+    "kind": "preservation_and_eto",
+    "commands": [],
+    "selection_rule": "Parse changed PROP003; map preserved/additive/replaced semantics explicitly; inspect reproducible catalog ETO identity from actual V1-V3 fixtures. This is not an additional broad suite."
+  }
+]

@@ -1,0 +1,85 @@
+{
+  "approved": true,
+  "reviewed_unix": 1792161510.0531728,
+  "candidate_id": "managed-result.5d073615700285a7a2d9c2121a104cd4710fc8f6aa5f04b67d111552a29b3610",
+  "base": "35787c131ef8eb6af38bc7c6563617cbd7601d94",
+  "source_files": 32,
+  "source_hashes": {
+    "crates/vibe-install/src/events.rs": "1cb1bd84ced2093f35faa9341c3a96f3c22dc8fe94d7d6ac339ef265b5d70049",
+    "crates/vibe-install/src/lib.rs": "0a3800e64894d547fbbe0ff64e51c46c590567ae91091cb59471ef11220a958f",
+    "crates/vibe-install/src/plan.rs": "9acc2a9da70a10784eb1c22d881684758970a01015c11ba91365d661e1c50438",
+    "crates/vibe-install/src/plan/fetch.rs": "438cb36f8f8f3dc71118ae4962d80283646eb407a19843320ba3348546f6d35a",
+    "crates/vibe-package-source/src/cells.rs": "d8bdc3c88bf94bdb1640bc38bc6b0ed7074458aa04ad138a904aadf8f23e757f",
+    "crates/vibe-package-source/src/qualified.rs": "2d14e2849a45ddd7a7b5029ad51e58b3e756e3edd214a3f4191971b29c99efc2",
+    "crates/vibe-package-source/src/source.rs": "33d345622f10e0499e8f53fd1a6c123559c6ff07f508b066fa38e3b709060d86",
+    "crates/vibe-registry/src/git_backend/mod.rs": "9f8dd73554c1713e148cff713fa70088d0568ea5804b4124f1d733b8bbdb092d",
+    "crates/vibe-registry/src/git_backend/shell.rs": "200521f4056cf68da6b53c823bf30810f62b402291c7707826fc83cb2eeb5c07",
+    "crates/vibe-registry/src/git_backend/shell/tests.rs": "0b7a82cfecfaacdbe42520ce10991183d1742953c28ec5cba5b404fa8892dcdf",
+    "crates/vibe-registry/src/git_package_registry/fetch.rs": "2fa9162d9ee20a55ce8021942d47114049b6085064cf0ed297d2b8cc2bdd2c73",
+    "crates/vibe-registry/src/git_package_registry/lookup.rs": "92e4f6e2fde705ad74b9ca5c21682c2a22ea8aa14b509a113b7b8ac0ddf6511b",
+    "crates/vibe-registry/src/lib.rs": "db247bbf5467611aa9c2b3131fa28b0c32d586c0c2b2b7543c5998065d3d2004",
+    "crates/vibe-registry/src/local_registry.rs": "eb7acf079804d9e54e10946bfba28545079a1f025a455c2dae43b5e803202333",
+    "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs": "420968c45bd333b00a821fd27919296ae98f469955d9bb2d2c04fbf12b9e24a2",
+    "crates/vibe-registry/src/multi_registry_resolver/redirect_follow.rs": "2c2562253fb1a6c4a1b845aa73cd965ba31f68ce36a1e7b56fe22dfc2ee59543",
+    "crates/vibe-registry/src/multi_registry_resolver/sources.rs": "7cdddb4bce0b88a568366d739779571cf29a5cbf57d470fa567e2441388a9233",
+    "crates/vibe-registry/src/multi_registry_resolver/walk.rs": "b8ef7f85aefbe2b483f5a40cb6ada5a76bcd39e5e56d05dfe67632d44f649d88",
+    "crates/vibe-registry/src/multi_registry_resolver/walk/observation.rs": "591dd5d9506e4f382004d22dea636097ae946dde857312422fc08569d93de49d",
+    "crates/vibe-registry/src/shippable.rs": "8f851360bbd2a0329d5c0d1ee97fb4303d27b8bd3c0245b90f296a449fca061a",
+    "crates/vibe-resolver/src/lib.rs": "bcd1b8a704ef0ab966ed873ba67abdc8b8ee255027111bf66503146c90740a0e",
+    "crates/vibe-resolver/src/resolvo_engine/capabilities.rs": "caa6207c5743c9e1d46b658ad716787720ad42eec742cf95706b8b1f63d6196d",
+    "crates/vibe-resolver/src/resolvo_engine/mod.rs": "af0afaaeec32885171948c028809d8f439589c4371010902495e0c7da9063056",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml": "443669a7c4de54c9a30b4ff810ca1eb75148d3a71fb7305df399d6732ad85d2d",
+    "crates/vibe-install/src/plan/m_05_c_1_cases.rs": "b47f508c42344248e3b6564295d3a47609fa6fe855e32fcc106d11e3116b9cdd",
+    "crates/vibe-install/src/plan/transaction.rs": "fad5ddc881795375e00481edba6a120e399409b1c1054db5a06366395eb780f7",
+    "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs": "4394c7eec0715cd24008baff7332bf9070036108b717c4e707a58da13bc2128a",
+    "crates/vibe-package-source/src/source/transaction.rs": "0bcfefaabf14dba8a5ace7e1c7b53c83c1e80aa083f02296890df3a95d806764",
+    "crates/vibe-registry/src/candidate_metadata.rs": "3a194a9a8452240078f363c532d5cfce9393c0d5f540d572f549fc0c91b8da15",
+    "crates/vibe-resolver/src/resolvo_engine/catalog.rs": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+    "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+    "crates/vibe-resolver/src/resolvo_engine/snapshot.rs": "5a00d047cf2a0854c7f1b907e77edf0ceae7b9ee4f5f1977677c8d6878346f0c"
+  },
+  "fresh_final_tests": 19,
+  "independent_review": "/fast/git/v/research/2026-10-16-m05c1-review/REPORT.json",
+  "scope": "Full original two C1 criteria; existing source/provider/registry/observer seams and necessary plan-entry transaction wiring/migration ordering reviewed. No C2/C3 completion.",
+  "format_disposition": {
+    "global_exit": 1,
+    "unchanged_baseline_files": [
+      {
+        "path": "crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+        "sha256": "ad0a9f196c9d1d98526aa459330c3a491137dcfd17fc31aaba494d4f48ae6ae1"
+      },
+      {
+        "path": "crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+        "sha256": "8846206a2507282e1e1136313951a65680eaef4973ebfd4c4e00d1e9e5ad3c01"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+        "sha256": "6a3f45f1bcca237688b61f36b50be507625c9e69e887b070b2dd9f57f5a4a7fe"
+      },
+      {
+        "path": "crates/vibe-mcp/src/machine_session/incremental.rs",
+        "sha256": "092ca216e0ff322e678f417541f6ac3dcece1595ccbd43df9524afb2381a343d"
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+        "sha256": "0ec1f9647c6da11be5ca59a82b01a207fdd8ad294177d40b421557530d0f8e64"
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+        "sha256": "916d0e3de07e867da8ac75f321a4067aab73fb659093ca10191a0c35de899d16"
+      },
+      {
+        "path": "crates/vibe-publish/src/package_git_payload/tests.rs",
+        "sha256": "5844bd05784847cf4f9b12c44cb81dd7757a2cfb80fd946f9011646fea7f3636"
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "sha256": "e79557f7e7e5dabbcf0bce6a014ac3b425a83e109a93a8128d909a4c6eec5a70"
+      }
+    ],
+    "changed_files_in_actual_format_diagnostics": [],
+    "acceptance": "Accept task-owned formatting scope from actual full-command diagnostic projection and unchanged baseline comparison; retain global failure as observed fail, never assert global formatter pass.",
+    "scoped_formatter_was_write_mode": true
+  },
+  "stop": "Normal exact worker stop requested, original Codex/Pod births absent; service retained for ordinary canonical acceptance."
+}

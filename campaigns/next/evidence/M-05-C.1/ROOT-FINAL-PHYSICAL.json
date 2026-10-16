@@ -1,0 +1,26 @@
+{
+  "unix": 1792162745.0798845,
+  "known_identities": [
+    {
+      "pid": 558001,
+      "birth": 2677921,
+      "original_identity_absent": true
+    },
+    {
+      "pid": 558003,
+      "birth": 2677945,
+      "original_identity_absent": true
+    },
+    {
+      "pid": 558117,
+      "birth": 2678683,
+      "original_identity_absent": true
+    },
+    {
+      "pid": 558129,
+      "birth": 2678741,
+      "original_identity_absent": true
+    }
+  ],
+  "root_exec_exit": 0
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "m05c1-independent-review/1",
+  "recommendation": "accept_implementation_with_root_format_baseline_disposition",
+  "blockers": [],
+  "acceptance_mutated": false,
+  "count_changed": false,
+  "tests_run_by_reviewer": false,
+  "verified_evidence": {
+    "V1": 3,
+    "V2": 2,
+    "V3": 2,
+    "V4": 12,
+    "total": 19,
+    "log_source_hash_mismatches": [],
+    "all_group_before_after_equal": true
+  },
+  "format": {
+    "global_exit": 1,
+    "unchanged_HEAD_files": 8,
+    "changed_files_with_format_diff": [],
+    "scoped_formatter": "exit0 write-mode, not check-pass",
+    "disposition_owner": "Root"
+  },
+  "V6": "reported diff check exit0",
+  "V7": "structural recorder plus separate independently recomputed actual ETO fixture identities; semantic source reviewed",
+  "limits": [
+    "legacy InstallSource may lack transaction inspection explicitly",
+    "no hostile writer CAS",
+    "remote evidence controlled backend plus local Git; no upstream qualification",
+    "C2 activation and C3 universal route parity remain later"
+  ],
+  "report": "REPORT.md"
+}

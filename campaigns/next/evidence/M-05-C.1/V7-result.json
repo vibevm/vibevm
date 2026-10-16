@@ -1,0 +1,14 @@
+{
+  "group": "V7",
+  "commands": [],
+  "binding": null,
+  "extra": {
+    "xml_parsed": true,
+    "semantics_map_sha256": "7eb1c25e5f1ec32b547ae2cb632cd5f4b7e8a2c25db9c8fd62a7d538b93415fc",
+    "structural_only": true,
+    "semantic_and_eto_judgment": "Root reviews actual source and V1-V3 evidence; this recorder does not certify meaning or catalog identity"
+  },
+  "fresh_tests": 0,
+  "passed": true,
+  "acceptance_implied": false
+}

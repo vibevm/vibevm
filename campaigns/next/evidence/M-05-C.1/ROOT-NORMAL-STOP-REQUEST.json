@@ -1,0 +1,14 @@
+{
+  "kind": "native_driver",
+  "request": {
+    "kind": "managed_stop",
+    "request": {
+      "request_id": "root.m05c1.stop.collected",
+      "job_id": "job.runtime.packet.vibevm-m05c1",
+      "dispatch_id": "dispatch.runtime.packet.vibevm-m05c1",
+      "effect_id": "effect.runtime.packet.vibevm-m05c1",
+      "expected_revision": 609,
+      "reason": "Normal retirement of completed independently reviewed C1 candidate; keep application service for ordinary Safe, evidence and acceptance"
+    }
+  }
+}

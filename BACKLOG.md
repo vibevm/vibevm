@@ -2713,3 +2713,13 @@ structure, and it goes when the file does.
 | @fact:B249-SEVERITY **severity** | P2 — missing qualification, not a green gate. |
 | @fact:B249-DISPOSITION **disposition** | open; begin with existing owner-law receipts and run only missing selected cases. No seven-vendor-run requirement follows. Claude coverage stays separately owner-deferred. Full E1 remains unaccepted while independent work proceeds. |
 | @fact:B249-FILED **filed by** | First Agent scoped M08E1 review, 2026-10-16. |
+
+## B-250 — unchanged repository formatting baseline outside M05C1 {#b-250}
+
+| field | value |
+|---|---|
+| @fact:B250-WHAT **what** | Global cargo fmt --all -- --check exits1 on eight existing files unchanged by M05C1. The task files do not appear in its diagnostics; the failed global command remains failed. |
+| @fact:B250-EVIDENCE **evidence** | campaigns/next/evidence/M-05-C.1/FORMAT-ANALYSIS.json and ROOT-INTEGRATION-REVIEW.json contain exact paths and baseline hashes; independent review compared each with HEAD. |
+| @fact:B250-SEVERITY **severity** | P3 — existing formatting debt; no new functional campaign gate. |
+| @fact:B250-DISPOSITION **disposition** | Defer to an owning-file or formatting maintenance change. Preserve generated-file ownership for vibe-wire/src/generated/format_id/properties.rs; do not hand-edit generated output or call the global command passed. |
+| @fact:B250-FILED **filed by** | First Agent M05C1 acceptance, 2026-10-16. |
