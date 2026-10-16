@@ -35,6 +35,18 @@ pub struct DefaultBinding {
     request: Request,
 }
 impl DefaultBinding {
+    /// Read-only persistence receipt; this cannot create default authorization.
+    pub fn receipt(
+        &self,
+    ) -> (
+        usize,
+        &CandidateIdentity,
+        &ConfigurationDefinition,
+        &Request,
+    ) {
+        (self.edge, &self.identity, &self.shown, &self.request)
+    }
+
     /// Bind permission to both the C1 receipt and the full admitted definition
     /// shown to the consumer, including constraints, defaults and declarations.
     pub fn shown(edge: usize, request: &Request, candidate: &CandidateConfiguration) -> Self {

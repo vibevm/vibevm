@@ -1,0 +1,162 @@
+{
+  "properties": {
+    "epoch": {
+      "enum": [
+        "1"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "request_digest": {
+      "type": "string"
+    },
+    "packages": {
+      "elements": {
+        "ref": "Packages"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "edges": {
+      "elements": {
+        "ref": "Edges"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "configurations": {
+      "elements": {
+        "ref": "Configurations"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "metadata": {
+    "description": "D1 resolved lock provenance; separate authored authority and derived choices.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#M05D1-REQUEST",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lock_configuration::e1::resolved"
+    }
+  },
+  "definitions": {
+    "Packages": {
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "feature_closure": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "effects": {
+          "type": "string"
+        }
+      }
+    },
+    "EdgesOwnerIdentity": {
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        }
+      }
+    },
+    "EdgesProviderIdentity": {
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        }
+      }
+    },
+    "Edges": {
+      "properties": {
+        "parent": {
+          "type": "string"
+        },
+        "declaration": {
+          "type": "string"
+        },
+        "alternative": {
+          "type": "uint32"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "owner_identity": {
+          "ref": "EdgesOwnerIdentity"
+        },
+        "provider_identity": {
+          "ref": "EdgesProviderIdentity"
+        },
+        "definition": {
+          "type": "string"
+        },
+        "request_digest": {
+          "type": "string"
+        }
+      }
+    },
+    "ConfigurationsDormant": {
+      "properties": {
+        "edge": {
+          "type": "uint32"
+        },
+        "group": {
+          "type": "string"
+        },
+        "members": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "Configurations": {
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string"
+        },
+        "dormant": {
+          "elements": {
+            "ref": "ConfigurationsDormant"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  }
+}

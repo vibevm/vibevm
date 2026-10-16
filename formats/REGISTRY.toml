@@ -1943,3 +1943,21 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/migration-plan-error/e2"
 sunset = "none"
+
+[format.lock-configuration-requested]
+epoch = 1
+schema = "schemas/lock_configuration/e1/requested.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/lock-configuration/e1"
+sunset = "none"
+
+[format.lock-configuration-resolved]
+epoch = 1
+schema = "schemas/lock_configuration/e1/resolved.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/lock-configuration/e1"
+sunset = "none"

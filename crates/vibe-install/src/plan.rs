@@ -239,6 +239,18 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
+    let configured_lock = crate::record::read_configuration(&lockfile)?;
+    if configured_lock
+        && source
+            .normalized_request()
+            .and_then(|r| r.configuration.as_ref())
+            .is_none()
+    {
+        return Err(vibe_resolver::SolveError::UnsupportedRoute(
+            "current authored configuration authority unavailable; exact replay refused".into(),
+        )
+        .into());
+    }
 
     // PROP-003 §2.7 language chain (caller override > project [i18n]).
     let language_chain = build_language_chain(request.language.as_deref(), manifest);
@@ -363,6 +375,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     normalized.root_origins = root_origins;
     let transaction = transaction::PlanningSource::capture_request(source, &normalized)?;
     let source = &transaction;
+    crate::record::validate_replay(&lockfile, source, &request.roots)?;
     if let Some(catalog) = source.catalog_inspection() {
         observer.catalog(catalog);
     }
@@ -546,6 +559,15 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         })
         .collect();
 
+    let current_record = crate::record::configuration_record(
+        source.normalized_request(),
+        &source
+            .route_resolution()
+            .map(|r| r.provenance)
+            .unwrap_or_default(),
+        &fetched,
+    )?;
+    crate::record::validate_replayed_result(&lockfile, current_record.as_ref(), &request.roots)?;
     if migration_pending {
         manifest.write(project_root.join(Manifest::FILENAME))?;
     }

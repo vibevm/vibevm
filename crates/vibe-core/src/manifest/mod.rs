@@ -54,8 +54,8 @@ pub use extension::{
     ExtensionUse, ExtensionWhen, ExtensionsControl, MachineOperationSchemaDecl,
 };
 pub use lockfile::{
-    CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedSubskill, Lockfile,
-    LockfileMeta, SourceKind, VirtualCapabilityRecord,
+    CURRENT_SCHEMA_VERSION, LockedConfiguration, LockedEmbeddedSource, LockedPackage,
+    LockedSubskill, Lockfile, LockfileMeta, SourceKind, VirtualCapabilityRecord,
 };
 pub use mechanism::{
     ClientBinding, ClientOperation, ClientRequest, ClientScope, ClientShape, HOST_OWNER,

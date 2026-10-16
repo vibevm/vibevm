@@ -134,6 +134,8 @@ pub enum FormatId {
     LlmOpenaiCompatibleChatRequest,
     LlmOpenaiCompatibleChatResponse,
     Llms,
+    LockConfigurationRequested,
+    LockConfigurationResolved,
     Lockfile,
     MachineBoundPage,
     MachineCompositeSnapshot,
