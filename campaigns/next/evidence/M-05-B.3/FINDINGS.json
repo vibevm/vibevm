@@ -1,0 +1,15 @@
+{
+  "dispositions": [
+    "satisfied",
+    "satisfied"
+  ],
+  "checks_attempted": true,
+  "effect_state": "completed",
+  "discoveries": [
+    "Real opt-in typed reader, ordered feature token migration and saved-state application/replay implemented for both absent and epoch1 cohorts.",
+    "Three core, two workspace and five exact compatibility cases pass. Repeated generation is byte-identical across 72 generated paths; e1 schemas/bodies and runtime/storage/identity remain unchanged.",
+    "check-codegen exits 1 only on intentional uncommitted generated diff; this is retained, not claimed as a clean check. wire-diff exits 0 and reports registry shift. Root authorized the exact ManifestWire seam and generated schema-home header-only changes."
+  ],
+  "unresolved": [],
+  "proposed_follow_up": "Root reviews and accepts the diff, owns commits, and reruns codegen Git-baseline cleanliness after integration."
+}

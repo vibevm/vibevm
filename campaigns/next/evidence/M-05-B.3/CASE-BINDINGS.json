@@ -1,0 +1,29 @@
+{
+  "V1": {
+    "status": "Bound to authored definitions before first compilation",
+    "crate": "vibe-core",
+    "filter": "manifest::migration::m_05_b_3_cases",
+    "names": [
+      "manifest::migration::m_05_b_3_cases::commented_features_preserve_meaning_and_epoch_coordinates",
+      "manifest::migration::m_05_b_3_cases::ambiguous_feature_references_and_unknown_profiles_have_zero_edits",
+      "manifest::migration::m_05_b_3_cases::typed_target_identity_and_repeated_planning_are_noop"
+    ],
+    "expected": 3,
+    "source_paths": [
+      "crates/vibe-core/src/manifest/migration/m_05_b_3_cases.rs"
+    ]
+  },
+  "V2": {
+    "status": "Bound to authored definitions before first compilation",
+    "crate": "vibe-workspace",
+    "filter": "migration_application::m_05_b_3_cases",
+    "names": [
+      "migration_application::m_05_b_3_cases::selected_profile_saved_apply_recovery_and_completed_replay",
+      "migration_application::m_05_b_3_cases::needs_input_and_concurrent_authored_edit_make_no_partial_changes"
+    ],
+    "expected": 2,
+    "source_paths": [
+      "crates/vibe-workspace/src/migration_application/m_05_b_3_cases.rs"
+    ]
+  }
+}

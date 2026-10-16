@@ -100,7 +100,8 @@ pub(super) fn source_insert_edit(
     if decisions.is_empty() {
         return Ok(Err(MigrationInputRequirement {
             field: "source_media",
-            choices: vec!["application/xml", "text/markdown"],
+            choices: vec!["application/xml".into(), "text/markdown".into()],
+            authored_reference: None,
             resource_path: Some(path.to_owned()),
         }));
     }

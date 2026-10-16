@@ -1,0 +1,88 @@
+{
+  "task": "M-05-B.3",
+  "summary": "Implemented finite syntax-preserving feature migration for separate absent and recognized epoch1 cohorts, with a real opt-in B1/B2 core reader and incumbent saved-state apply/recovery.",
+  "implementation": [
+    "PROP003/PROP044 declared seven new anchors before implementation; 387 existing normative statements retained, none replaced. SEMANTICS-MAP names them.",
+    "ManifestWire retains legacy FeaturesTable by default. The opt-in typed reader parses closed typed effects/groups, converts all fields through the incumbent complete Manifest conversion with an equivalent feature projection, and retains validated FeatureDeclarations, FeatureProgram, Constraints and Selection::Omitted.",
+    "Ordered token edits replace individual activation literals and wrap exclusive member arrays; unchanged spans, comments, quoting, CRLF, metadata and epoch marker bytes survive. Required declarations remain required; exclusive cardinality is zero-or-one; technical OR and explicit default definitions survive.",
+    "Declared captured dependency context resolves unique short names algorithmically. Ambiguous/missing references, duplicate coordinates, unavailable catalogues, unsupported options and unresolved group membership produce authored-reference NeedsInput before a plan. Caller editing source and replanning is the only promised answer flow.",
+    "Separate generated migration e2 request/report/error and registry entries carry feature-reference questions; e1 schema bodies and decoder semantics remain intact. E1 entry and report validator reject feature-profile admission, requiring the explicit e2 entry.",
+    "Workspace approved-request replay, frozen-coordinate admission and post-publication/recovery use the same selected core reader. Runtime/storage/identity retain their existing before-image, intent, participating-writer barrier and approved-byte checks."
+  ],
+  "criteria_evidence": [
+    {
+      "slot": 0,
+      "claim": "satisfied",
+      "evidence": "V1: exact typed-model equivalence and byte-span preservation for both cohorts, defaults, technical OR, registry/path/git/version.var metadata; V2: real strict dry-run and saved-state application/recovery, zero authored writes on ambiguity and detected conflict."
+    },
+    {
+      "slot": 1,
+      "claim": "satisfied",
+      "evidence": "V1 typed-target identity is NoOp with exact bytes and identities. V2 completed apply/recovery/restore replay snapshots are byte-identical for both cohorts."
+    }
+  ],
+  "check_claims": [
+    {
+      "slot": 0,
+      "group": "V1",
+      "exit": 0,
+      "cases": 3
+    },
+    {
+      "slot": 1,
+      "group": "V2",
+      "exit": 0,
+      "cases": 2
+    },
+    {
+      "slot": 2,
+      "group": "V3",
+      "exit": 0,
+      "cases": 5
+    },
+    {
+      "slot": 3,
+      "group": "V4",
+      "wire_diff_exit": 0,
+      "check_codegen_exit": 1,
+      "regeneration_compared_paths": 72,
+      "regeneration_drift": [],
+      "note": "No clean check-codegen claim: its final Git-baseline comparison sees intentional uncommitted generated changes. Incumbent generation itself completed and repeated byte-identically. wire-diff reports tracked registry shift; V2 directly exercises new untracked e2 corpora through generated codecs."
+    },
+    {
+      "slot": 4,
+      "group": "V5",
+      "exit": 0,
+      "scope": "Scoped authored rustfmt, plus Root-admitted visibility.rs seam."
+    },
+    {
+      "slot": 5,
+      "group": "V6",
+      "exit": 0
+    },
+    {
+      "slot": 6,
+      "group": "V7",
+      "exit": 0,
+      "note": "Structural XML/preservation check, not a semantic acceptance event."
+    }
+  ],
+  "failures_retained": "FAILURE-HISTORY and logs retain the 2-pass/1-fail duplicate-coordinate regression, codegen bootstrap exits 101 and 1, the intentional check-codegen exit 1, and a corrected rustfmt delimiter error. No failure was reclassified as a pass.",
+  "effects": {
+    "repository": "Authored source, tests, contracts, e2 schemas/corpora/generated outputs and evidence written. All writes satisfy original ceilings or matching Root scope answers.",
+    "runtime_owners": "Unchanged. Tests exercised actual incumbent application/recovery only in isolated temporary owned files.",
+    "git": "No staging, commits, history mutation, publication or acceptance performed."
+  },
+  "limitations": [
+    "Finite opt-in profiles, not a default install parser switch or a broad historical corpus claim.",
+    "No authoritative export/config catalogue exists in this finite source grammar; such references remain structured unresolved input, never guessed.",
+    "Participating-writer barrier and approved-byte checks do not exclude hostile/uncooperating OS writers.",
+    "Full evaluator/publication suites were not rerun. Existing B1/B2 models are consumed directly; no fresh-pass claim is made for unchanged evaluator tests.",
+    "Root must review/accept/commit. check-codegen Git-baseline cleanliness remains an integration check after those generated changes are committed."
+  ],
+  "evidence_directory": "campaigns/next/evidence/M-05-B.3",
+  "private_evidence_directory": "/fast/zap-managed/2026-10-16-m05b3",
+  "suggested_commit_subject": "feat(core): migrate feature requests without losing intent",
+  "unresolved_inputs": [],
+  "proposed_follow_up": "Root review the exact diff and retained check claims, perform acceptance/commit, then run the Git-baseline codegen cleanliness check on the integrated tree."
+}

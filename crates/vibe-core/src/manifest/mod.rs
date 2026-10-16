@@ -74,17 +74,20 @@ pub(crate) fn replay_authored_tokens(
     migration::replay_edits(text, edits)
 }
 pub use migration::{
-    BOOT_SOURCE_INSERT, CURRENT_ABSENT, CURRENT_EPOCH1, IDENTITY, LEGACY_ABSENT,
-    ManifestMigrationEpoch, ManifestMigrationOutcome, ManifestMigrationPlan,
-    MigrationInputRequirement, MigrationRefusal, MigrationRefusalKind, MigrationSelection,
-    MigrationTokenEdit, SNAPSHOT_TO_COPY, SOURCE_BOOT_CURRENT, SOURCE_BOOT_LEGACY,
-    manifest_migration_profile_epoch, plan_manifest_migration,
+    BOOT_SOURCE_INSERT, CURRENT_ABSENT, CURRENT_EPOCH1, FEATURES_LEGACY_ABSENT,
+    FEATURES_LEGACY_EPOCH1, FEATURES_TO_TYPED, FEATURES_TO_TYPED_EPOCH1, FEATURES_TYPED_ABSENT,
+    FEATURES_TYPED_EPOCH1, IDENTITY, LEGACY_ABSENT, ManifestMigrationEpoch,
+    ManifestMigrationOutcome, ManifestMigrationPlan, MigrationInputRequirement, MigrationRefusal,
+    MigrationRefusalKind, MigrationSelection, MigrationTokenEdit, SNAPSHOT_TO_COPY,
+    SOURCE_BOOT_CURRENT, SOURCE_BOOT_LEGACY, manifest_migration_profile_epoch,
+    plan_manifest_migration, read_feature_manifest, read_migration_target,
 };
 pub use package::application::{
     ApplicationDistributionDecl, ApplicationSourceDecl, ApplicationSourceKind,
 };
 pub use package::feature_constraints;
 pub use package::feature_effects;
+pub use package::feature_profile;
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, ApplicationRuntime,
     Authorship, BinaryDecl, BootCategory, BootSnippet, BootSnippetFragment, Compatibility,

@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "description": "Epoch-2 typed preflight migration planning error. The owning adapter requires schema exactly 2 and a preflight code.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#M05B3-QUESTION-WIRE",
+      "r": 1
+    },
+    "rustOptions": {
+      "package": "vibe_wire::migration::e2::plan_error"
+    },
+    "x-vocabularies": [
+      "migration_planning_error"
+    ]
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "stage": {
+      "enum": [
+        "preflight"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "error": {
+      "ref": "migration_planning_error"
+    }
+  }
+}

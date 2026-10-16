@@ -485,13 +485,15 @@ fn target_write(
         ));
     }
     if matches!(action, StageAction::Apply) {
-        vibe_core::manifest::Manifest::parse_str(&plan.after).map_err(|_| {
-            fault(
-                ApplicationErrorCode::PlanRefused,
-                "target",
-                "verified after document is not admitted by the current reader",
-            )
-        })?;
+        vibe_core::manifest::read_migration_target(&plan.after, &plan.target_profile).map_err(
+            |_| {
+                fault(
+                    ApplicationErrorCode::PlanRefused,
+                    "target",
+                    "verified after document is not admitted by the current reader",
+                )
+            },
+        )?;
     }
     Ok(())
 }

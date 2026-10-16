@@ -62,6 +62,7 @@ pub use embedded_source::{EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSource
 pub use features::FeaturesTable;
 pub use features::constraints as feature_constraints;
 pub use features::effects as feature_effects;
+pub use features::profile as feature_profile;
 pub use hooks::HooksDecl;
 pub use mcp_server::{MCP_ARG_VARS, McpServerDecl};
 pub use meta::PackageMeta;

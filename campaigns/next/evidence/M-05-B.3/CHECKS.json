@@ -1,0 +1,471 @@
+[
+  {
+    "slot": 0,
+    "group": "V1",
+    "reported_result": {
+      "group": "V1",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::migration::m_05_b_3_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "3",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V1-1.log",
+          "log_sha256": "7858608ab5e8c94eb54f0245dda6788850abd136441c6013a2a4a6f8ba13c8b5",
+          "seconds": 3.2661732500018843,
+          "source_drift": [],
+          "passed": true
+        }
+      ],
+      "binding": {
+        "status": "Bound to authored definitions before first compilation",
+        "crate": "vibe-core",
+        "filter": "manifest::migration::m_05_b_3_cases",
+        "names": [
+          "manifest::migration::m_05_b_3_cases::commented_features_preserve_meaning_and_epoch_coordinates",
+          "manifest::migration::m_05_b_3_cases::ambiguous_feature_references_and_unknown_profiles_have_zero_edits",
+          "manifest::migration::m_05_b_3_cases::typed_target_identity_and_repeated_planning_are_noop"
+        ],
+        "expected": 3,
+        "source_paths": [
+          "crates/vibe-core/src/manifest/migration/m_05_b_3_cases.rs"
+        ]
+      },
+      "extra": {},
+      "passed": true,
+      "fresh_tests": 3,
+      "acceptance_implied": false
+    }
+  },
+  {
+    "slot": 1,
+    "group": "V2",
+    "reported_result": {
+      "group": "V2",
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-workspace",
+            "--lib",
+            "migration_application::m_05_b_3_cases",
+            "--",
+            "--nocapture"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "2",
+              "0",
+              "0"
+            ]
+          ],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V2-1.log",
+          "log_sha256": "8fa5469583f883e7b58dfdb7718fd0392365ac642459d9d9d86c34e761c1f83e",
+          "seconds": 3.426414941997791,
+          "source_drift": [],
+          "passed": true
+        }
+      ],
+      "binding": {
+        "status": "Bound to authored definitions before first compilation",
+        "crate": "vibe-workspace",
+        "filter": "migration_application::m_05_b_3_cases",
+        "names": [
+          "migration_application::m_05_b_3_cases::selected_profile_saved_apply_recovery_and_completed_replay",
+          "migration_application::m_05_b_3_cases::needs_input_and_concurrent_authored_edit_make_no_partial_changes"
+        ],
+        "expected": 2,
+        "source_paths": [
+          "crates/vibe-workspace/src/migration_application/m_05_b_3_cases.rs"
+        ]
+      },
+      "extra": {},
+      "passed": true,
+      "fresh_tests": 2,
+      "acceptance_implied": false
+    }
+  },
+  {
+    "slot": 2,
+    "group": "V3",
+    "reported_result": {
+      "group": "V3",
+      "selection": {
+        "run": [
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::migration::tests::transforms_one_token_preserving_choices_and_unrelated_bytes",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::migration::tests::explicit_epoch_one_has_separate_identity_without_epoch_insertion",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-workspace",
+            "--lib",
+            "migration_planning::tests::no_op_and_epoch_one_preserve_separate_profile_provenance",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-workspace",
+            "--lib",
+            "migration_planning::tests::malformed_unknown_wrong_types_and_null_are_preflight",
+            "--",
+            "--exact"
+          ],
+          [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-workspace",
+            "--lib",
+            "migration_application::runtime::runtime_tests::apply_reader_mode_restore_and_terminal_replay_preserve_exact_bytes",
+            "--",
+            "--exact"
+          ]
+        ],
+        "reused": [],
+        "reason": "Shared core planner dispatch, full ManifestWire conversion, epoch metadata and apply/recovery validation changed; all five directly affected compatibility cases run exactly.",
+        "name_correction_authority": "questions/m05b3-reader-seam-02/ROOT-ANSWER.json"
+      },
+      "commands": [
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::migration::tests::transforms_one_token_preserving_choices_and_unrelated_bytes",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "seconds": 0.14506459600306698,
+          "source_drift": [],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V3-1.log",
+          "log_sha256": "adf951d2b5ff4457ee952b0d88a835ab43101d83b1781537ba56226fb46886ef",
+          "passed": true
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-core",
+            "--lib",
+            "manifest::migration::tests::explicit_epoch_one_has_separate_identity_without_epoch_insertion",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "seconds": 0.14225004800027818,
+          "source_drift": [],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V3-2.log",
+          "log_sha256": "b8edc2d15f1a0f4e75f7bd98a1c618249fd726a05557f694df143a8b6660111b",
+          "passed": true
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-workspace",
+            "--lib",
+            "migration_planning::tests::no_op_and_epoch_one_preserve_separate_profile_provenance",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "seconds": 0.1611777029975201,
+          "source_drift": [],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V3-3.log",
+          "log_sha256": "eb4fea3eb75bb0c1d7dcf4bf51441cefffc93cc18e7ebbde2b23fd73fa07dc1b",
+          "passed": true
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-workspace",
+            "--lib",
+            "migration_planning::tests::malformed_unknown_wrong_types_and_null_are_preflight",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "seconds": 0.16386802700071712,
+          "source_drift": [],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V3-4.log",
+          "log_sha256": "6cd182aaabaa5cb029d3612f76d5ae03a7c842fe1e009d18420e8d9b9058fa06",
+          "passed": true
+        },
+        {
+          "argv": [
+            "cargo",
+            "test",
+            "--offline",
+            "--locked",
+            "-p",
+            "vibe-workspace",
+            "--lib",
+            "migration_application::runtime::runtime_tests::apply_reader_mode_restore_and_terminal_replay_preserve_exact_bytes",
+            "--",
+            "--exact"
+          ],
+          "exit": 0,
+          "counts": [
+            [
+              "1",
+              "0",
+              "0"
+            ]
+          ],
+          "seconds": 0.2800459040008718,
+          "source_drift": [],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V3-5.log",
+          "log_sha256": "085902b788f867ab06139d99b570b2a09164bb8d2163b3a40c06be162ad22c15",
+          "passed": true
+        }
+      ],
+      "fresh_tests": 5,
+      "passed": true,
+      "acceptance_implied": false
+    }
+  },
+  {
+    "slot": 3,
+    "group": "V4",
+    "reported_result": {
+      "normal_check_codegen_exit": 1,
+      "cause": "check-codegen runs codegen successfully, then compares generated output against uncommitted Git baseline; intentional new e2 and generated header/registry changes make this diff nonempty. No clean check-codegen claim.",
+      "repeat_generation_source_snapshot": "V3-result.json commands[0].source_hashes",
+      "generated_paths_compared": 72,
+      "repeat_generation_drift": [],
+      "outside_ceiling_header_rule_violations": [],
+      "initial_cargo_codegen_exit": 101,
+      "initial_cargo_codegen_log": "codegen-first.log",
+      "warm_codegen_first_exit": 1,
+      "warm_codegen_first_reason": "CARGO_MANIFEST_DIR not set",
+      "warm_codegen_with_manifest_dir_exit": 0,
+      "wire_diff_exit": 0,
+      "wire_diff_limitation": "Tracked registry shift was reported. New untracked e2 schemas/corpora are included in explicit source closures and exercised through generated codec cases in V2; wire-diff alone does not prove these new files.",
+      "commands": {
+        "required": true,
+        "reason": "New migration e2 request/report/error schemas and registry entries; closed feature-reference question cannot be represented by e1. Root answer02 admits schema-home header-only updates outside normal output ceiling. Incumbent generator has no narrower command. Generation and subsequent check retain all exits; byte stability and protected body hashes are checked independently. Closed e2 questions and new matching corpora also justify wire-diff; main.rs exposes no narrower wire-diff argument. Exact e2 corpus decoding is additionally covered by V2.",
+        "commands": [
+          [
+            "cargo",
+            "xtask",
+            "check-codegen"
+          ],
+          [
+            "cargo",
+            "xtask",
+            "wire-diff"
+          ]
+        ],
+        "bootstrap_argv": [
+          "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target/debug/xtask",
+          "codegen"
+        ],
+        "bootstrap_binary_sha256": "e588ec4de5f16e108863276dd44053483aed057ddea92fa8d9ab97ceb07839a9",
+        "bootstrap_reason": "cargo xtask codegen exit 101: xtask depends on workspace, whose new opt-in module references not-yet-generated e2. Use incumbent warm-target xtask to generate bindings; then rebuild normal cargo xtask for the subsequent check. No generator source changed."
+      },
+      "acceptance_implied": false
+    }
+  },
+  {
+    "slot": 4,
+    "group": "V5",
+    "reported_result": {
+      "group": "V5",
+      "commands": [
+        {
+          "argv": [
+            "rustfmt",
+            "--edition",
+            "2024",
+            "--config",
+            "skip_children=true",
+            "--check",
+            "crates/vibe-core/src/manifest/migration.rs",
+            "crates/vibe-core/src/manifest/migration/features.rs",
+            "crates/vibe-core/src/manifest/migration/m_05_b_3_cases.rs",
+            "crates/vibe-core/src/manifest/migration/source.rs",
+            "crates/vibe-core/src/manifest/mod.rs",
+            "crates/vibe-core/src/manifest/package.rs",
+            "crates/vibe-core/src/manifest/package/features.rs",
+            "crates/vibe-core/src/manifest/package/features/profile.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/m_05_b_3_cases.rs",
+            "crates/vibe-workspace/src/migration_application/recovery.rs",
+            "crates/vibe-workspace/src/migration_application/validation.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-workspace/src/migration_planning/feature.rs"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V5-1.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "seconds": 0.06245760599995265,
+          "source_drift": [],
+          "passed": true
+        }
+      ],
+      "binding": null,
+      "extra": {},
+      "passed": true,
+      "fresh_tests": 0,
+      "acceptance_implied": false
+    },
+    "extra_visibility_check": {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "crates/vibe-core/src/manifest/package/visibility.rs"
+      ],
+      "exit": 0,
+      "scope_authority": "questions/m05b3-reader-seam-02/ROOT-ANSWER.json"
+    }
+  },
+  {
+    "slot": 5,
+    "group": "V6",
+    "reported_result": {
+      "group": "V6",
+      "commands": [
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "counts": [],
+          "log": "/fast/zap-managed/2026-10-16-m05b3/V6-1.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "seconds": 0.0333713309992163,
+          "source_drift": [],
+          "passed": true
+        }
+      ],
+      "binding": null,
+      "extra": {},
+      "passed": true,
+      "fresh_tests": 0,
+      "acceptance_implied": false
+    }
+  },
+  {
+    "slot": 6,
+    "group": "V7",
+    "reported_result": {
+      "group": "V7",
+      "commands": [],
+      "binding": null,
+      "extra": {
+        "structural_only": true,
+        "xml_parsed": true,
+        "mapped_semantic_changes": [],
+        "old_e1_schema_drift": [],
+        "old_e1_generated_body_drift": [],
+        "semantic_review": "Root reviews actual contract/model/diff; this recorder cannot certify meaning"
+      },
+      "passed": true,
+      "fresh_tests": 0,
+      "acceptance_implied": false
+    }
+  }
+]

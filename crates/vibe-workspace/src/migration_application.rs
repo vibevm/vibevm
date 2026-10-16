@@ -217,3 +217,7 @@ pub enum ValidatedOperation {
 #[cfg(test)]
 #[path = "migration_application/validation_tests.rs"]
 mod validation_tests;
+
+#[cfg(test)]
+#[path = "migration_application/m_05_b_3_cases.rs"]
+mod m_05_b_3_cases;

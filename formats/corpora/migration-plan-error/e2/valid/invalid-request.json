@@ -1,0 +1,9 @@
+{
+  "schema": 2,
+  "stage": "preflight",
+  "error": {
+    "code": "invalid_request",
+    "field": "request",
+    "reason": "invalid JSON"
+  }
+}

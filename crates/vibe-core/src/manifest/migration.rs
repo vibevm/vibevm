@@ -12,7 +12,12 @@ use toml_edit::{Document, Item, TableLike, Value};
 
 use super::{Manifest, SourceDescriptor};
 
+mod features;
 mod source;
+pub use features::{
+    FEATURES_LEGACY_ABSENT, FEATURES_LEGACY_EPOCH1, FEATURES_TO_TYPED, FEATURES_TO_TYPED_EPOCH1,
+    FEATURES_TYPED_ABSENT, FEATURES_TYPED_EPOCH1, read_feature_manifest,
+};
 
 pub const LEGACY_ABSENT: &str = "materialization-legacy-absent-r1";
 pub const CURRENT_ABSENT: &str = "materialization-current-absent-r1";
@@ -38,10 +43,15 @@ pub enum ManifestMigrationEpoch {
 )]
 pub fn manifest_migration_profile_epoch(profile: &str) -> Option<ManifestMigrationEpoch> {
     match profile {
-        LEGACY_ABSENT | CURRENT_ABSENT | SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT => {
-            Some(ManifestMigrationEpoch::Absent)
+        LEGACY_ABSENT
+        | CURRENT_ABSENT
+        | SOURCE_BOOT_LEGACY
+        | SOURCE_BOOT_CURRENT
+        | FEATURES_LEGACY_ABSENT
+        | FEATURES_TYPED_ABSENT => Some(ManifestMigrationEpoch::Absent),
+        CURRENT_EPOCH1 | FEATURES_LEGACY_EPOCH1 | FEATURES_TYPED_EPOCH1 => {
+            Some(ManifestMigrationEpoch::Epoch1)
         }
-        CURRENT_EPOCH1 => Some(ManifestMigrationEpoch::Epoch1),
         _ => None,
     }
 }
@@ -58,7 +68,8 @@ pub struct MigrationSelection<'a> {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MigrationInputRequirement {
     pub field: &'static str,
-    pub choices: Vec<&'static str>,
+    pub choices: Vec<String>,
+    pub authored_reference: Option<String>,
     pub resource_path: Option<String>,
 }
 
@@ -102,6 +113,7 @@ pub struct ManifestMigrationPlan {
     pub after_identity: String,
     pub diff_identity: String,
     pub checked_manifest: Manifest,
+    pub checked_features: Option<super::feature_profile::CheckedFeatureManifest>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -154,6 +166,7 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
         selection.recipe,
     ];
     let fields = ["source_profile", "target_profile", "recipe"];
+    let feature_lane = selected.iter().flatten().any(|v| features::known(v));
     let source_lane = !selection.source_decisions.is_empty()
         || selected.iter().flatten().any(|value| {
             matches!(
@@ -164,7 +177,14 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
     for (index, value) in selected.iter().enumerate() {
         if let Some(value) = value {
             let known = if index == 2 {
-                matches!(*value, SNAPSHOT_TO_COPY | IDENTITY | BOOT_SOURCE_INSERT)
+                matches!(
+                    *value,
+                    SNAPSHOT_TO_COPY
+                        | IDENTITY
+                        | BOOT_SOURCE_INSERT
+                        | FEATURES_TO_TYPED
+                        | FEATURES_TO_TYPED_EPOCH1
+                )
             } else {
                 matches!(
                     *value,
@@ -173,6 +193,10 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
                         | CURRENT_EPOCH1
                         | SOURCE_BOOT_LEGACY
                         | SOURCE_BOOT_CURRENT
+                        | FEATURES_LEGACY_ABSENT
+                        | FEATURES_LEGACY_EPOCH1
+                        | FEATURES_TYPED_ABSENT
+                        | FEATURES_TYPED_EPOCH1
                 )
             };
             if !known {
@@ -184,7 +208,9 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
             }
         }
     }
-    let edges: Vec<_> = (if source_lane {
+    let edges: Vec<_> = (if feature_lane {
+        &features::EDGES[..]
+    } else if source_lane {
         &SOURCE_EDGES[..]
     } else {
         &EDGES[..]
@@ -218,7 +244,8 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
                 }
                 requirements.push(MigrationInputRequirement {
                     field: fields[index],
-                    choices,
+                    choices: choices.into_iter().map(str::to_owned).collect(),
+                    authored_reference: None,
                     resource_path: None,
                 });
             }
@@ -237,7 +264,12 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
     if recipe != BOOT_SOURCE_INSERT && !selection.source_decisions.is_empty() {
         return Err(shape("source_decisions"));
     }
-    let edits = if recipe == SNAPSHOT_TO_COPY {
+    let edits = if matches!(recipe, FEATURES_TO_TYPED | FEATURES_TO_TYPED_EPOCH1) {
+        match features::edits(text, &input)? {
+            Ok(edits) => edits,
+            Err(questions) => return Ok(ManifestMigrationOutcome::NeedsInput(questions)),
+        }
+    } else if recipe == SNAPSHOT_TO_COPY {
         vec![materialization_edit(text, &input)?]
     } else if recipe == BOOT_SOURCE_INSERT {
         match source::source_insert_edit(text, &input, selection.source_decisions)? {
@@ -250,13 +282,22 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
     let after = replay_edits(text, &edits)?;
     let output = Document::parse(after.as_str()).map_err(|_| unprovable())?;
     check_shape(&output, target)?;
-    let checked_manifest = Manifest::parse_str(&after).map_err(|_| {
-        refusal(
-            MigrationRefusalKind::InvalidCurrentManifest,
-            "document",
-            "recognized output refused by current Manifest owner",
-        )
-    })?;
+    let checked_features = if features::typed(target) {
+        Some(read_feature_manifest(&after, target)?)
+    } else {
+        None
+    };
+    let checked_manifest = checked_features
+        .as_ref()
+        .map(|checked| Ok(checked.manifest.clone()))
+        .unwrap_or_else(|| Manifest::parse_str(&after))
+        .map_err(|_| {
+            refusal(
+                MigrationRefusalKind::InvalidCurrentManifest,
+                "document",
+                "recognized output refused by current Manifest owner",
+            )
+        })?;
     let before_identity = identity(b"vibe-manifest-content-r1", &[text.as_bytes()]);
     let after_identity = identity(b"vibe-manifest-content-r1", &[after.as_bytes()]);
     let mut digest = Sha256::new();
@@ -283,6 +324,7 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
         after_identity,
         diff_identity: format!("{:x}", digest.finalize()),
         checked_manifest,
+        checked_features,
     };
     Ok(if result.edits.is_empty() {
         ManifestMigrationOutcome::NoOp(result)
@@ -335,6 +377,9 @@ fn only(table: &dyn TableLike, keys: &[&str], field: &str) -> Checked<()> {
 }
 
 fn check_shape(document: &Document<&str>, profile: &str) -> Checked<()> {
+    if features::known(profile) {
+        return features::check_shape(document, profile);
+    }
     if matches!(profile, SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT) {
         return source::check_source_shape(document, profile);
     }
@@ -538,3 +583,24 @@ fn materialization_edit(text: &str, document: &Document<&str>) -> Checked<Migrat
 #[cfg(test)]
 #[path = "migration/tests.rs"]
 mod tests;
+
+/// The selected migration output owner, shared by apply and recovery.
+pub fn read_migration_target(text: &str, profile: &str) -> Checked<Manifest> {
+    if features::typed(profile) {
+        return read_feature_manifest(text, profile).map(|checked| checked.manifest);
+    }
+    if manifest_migration_profile_epoch(profile).is_none() {
+        return Err(shape("target_profile"));
+    }
+    Manifest::parse_str(text).map_err(|_| {
+        refusal(
+            MigrationRefusalKind::InvalidCurrentManifest,
+            "document",
+            "selected output reader refused document",
+        )
+    })
+}
+
+#[cfg(test)]
+#[path = "migration/m_05_b_3_cases.rs"]
+mod m_05_b_3_cases;

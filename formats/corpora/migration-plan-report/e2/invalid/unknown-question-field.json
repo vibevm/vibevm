@@ -1,0 +1,18 @@
+{
+  "schema": 2,
+  "stage": "planner",
+  "outcome": {
+    "status": "needs_input",
+    "questions": [
+      {
+        "field": "feature_reference",
+        "authored_reference": "features[main][0]:dep:missing",
+        "choices": [
+          "declare_dependency",
+          "qualify_reference"
+        ],
+        "guessed_mapping": true
+      }
+    ]
+  }
+}

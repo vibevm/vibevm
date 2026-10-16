@@ -1,0 +1,377 @@
+{
+  "changes": [
+    {
+      "path": "crates/vibe-wire/src/generated/mod.rs",
+      "before": "13447eed37dff375fb8b98f0c2f86cd9cfdd54f03059766149261e842e6ac21f",
+      "after": "5e17d81a38e02c911c0c62e00e7b3d2bfebd07740fa87bbe73f38ee70053a987",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_capability/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_command/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_deploy/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+      "before": "c8b3a87160b035d7d8cf84ffba265a531294dee1b709e6e28040cd8df1f5ca88",
+      "after": "b550699648bf4221f80ff2bfe889b0811e594c388ddd162ffaa6648bafd090e8",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+      "before": "49b35285fefc8fde6c5780b7b1e14fc11e9c3ca748e46e82871f3473bc11dd2d",
+      "after": "42c4e6eed148ed967cd0341521998384d375cd339528d87ba75b17d31d6df9a5",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "366a127356d27ebffd05f8653f1cea716738dd661e9bdfe188dcbf6680b201d9",
+      "body_equal": false
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+      "before": "f8a0d7fab54f503f3493107b4bf49b0a3a506e05a7698e4dc9a8b22c7dbad03e",
+      "after": "4693d56b9fe629b09d0846fce93131423821821123c433c1a95483d764293dc4",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+      "before": "6da514da3d18783ea9ef7a05f73550f0d10cf6bdd2cda04b2a21393ae6222f2b",
+      "after": "6e65f0fb13dd2c619667c11edfab823b84ee738d653c1d6bf8d8ea2b059d1253",
+      "body_equal": false
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "before": "30d9ed020a41ce7731ce6531d7ca0f30d9e161497ef5c28483b648407ed63adc",
+      "after": "e79557f7e7e5dabbcf0bce6a014ac3b425a83e109a93a8128d909a4c6eec5a70",
+      "body_equal": false
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+      "before": "a18000cb58b33e5f7ac398236a50e58dcc9f4bd1c5628e94acbd88543102730a",
+      "after": "ecf3ffc5445a3998be10e6ce336ae1167de47e65725e5ebb11e2cb76fa1b011a",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+      "before": "c0c0013ed0e3b04fb2b8b858bd66965c92dca1cccccf3ff115dd5542a3506719",
+      "after": "56f94603746d03998fab15ba7e7aa483cc53f6af65e8dd09b19f456dd3d52750",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+      "before": "6cbf0479e2c326d55f93570f04202a460308decb3f5c3534c0e42145aca5be33",
+      "after": "3921cafab2615a09f80fa260233bb5ae1d78cadb6065984e3487d96f093a0b2a",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+      "before": "2753b3dc6f465db3c33423d1e1dcde226ff6268954065011c0a7b2a5b99dd3ef",
+      "after": "e0160c8088d1c0e0f9908bc44bd047fefe44c71aed048ef23da90a60bc86dfae",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+      "before": "97a1f46e5a5e4c45bfa44840bb58b86b4ebd4c064c2fbc20d0bc649888379c16",
+      "after": "34990df306156b5320ef8b9acd0a812af41dbf3038d5549fbc09110571427355",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+      "before": "f9ccdca52f75dc88d04637f24a73f14bb88fe0b0736f54e36704aab48597f05a",
+      "after": "83a5b939b929fc4db9d56e6c40cd6e043eb7aced681024d6284efaa9fc944dd3",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+      "before": "ad109ac92bb13682dad7f11cd9053a0b3c4c1c371d6265663a034a53ed0e3566",
+      "after": "40faeb8a7587dd46123e386e5bf8d37a1bbf825fd101efb50352252884d09609",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+      "before": "c043a72f5f9ebbcd26b6aa74899867a186fbefef33a81e1397919ced8a61c831",
+      "after": "bb45f0f331da574022e215667dae5c6f8182f6bb7ac0dc5e07cb4ab5e218dd21",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+      "before": "c54074916ac123b5e6844ff76935a82fb9af8328ddb1d31d35404d6a3bd6f26b",
+      "after": "2714b751e8565bd104ed90843ff5660ae77ce6b2bd915ae259ca5d4e695f5fa2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+      "before": "30db7ca7fd00affbccdf4d12f20a533512d6b8192eb24e523959518966f82d66",
+      "after": "6b49993cccb94f04c55ee6c120764affda2db380c287f0da6299d34fc0753294",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+      "before": "2672f8e63f2b98f42973acca1ead3b3e4f1ffc42ab13e600d72008e394cdaf7b",
+      "after": "838a3a1af29bd9922f5333ac05b00eb5be9c02cf735269d58e58b8b19bb63f4f",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+      "before": "199631ec896663cfc8b788ff666a1a720d040a7e392267e30c81843c69aa4618",
+      "after": "1d25083fdd291e60a2c5ff4aa2ac31e6240d63ba3c060e7db8f26faf40de1a13",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+      "before": "36d219b6836aad276f417fe0e515d31a201b65456c5a9d10af54b47d64026d02",
+      "after": "3297a3c9f1cef48ea51140bd543654b9ced33ff3eeadefa975aeeacd268681cf",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+      "before": "57ed86514f0656818d67c64e4506b24e6ab78276a9582f2d652dceaa00198d9a",
+      "after": "8f1f0944ef3f6adcc45a7f93414b9110d45999c2656a709276edd79b5ebde63e",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+      "before": "2398ffccee8cbe139838a75e355247b5c604063c832cab5bd6f293d2caa81c73",
+      "after": "d7aac1fd5b243e2318a5638663d0ad7c70760b51224234b64df103bb8df5b010",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+      "before": "1c8dd492e934f6b2ddd871b2321a39d51e63c702723ccb1262ab67ead401a792",
+      "after": "5458f3c7ee5af75784fe04a21955f4b4869a63c7ee5ed98f8e8a304b8976c7b7",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+      "before": "dcd24d86243099940a983ffe5c14fd8a75b8d75871d84984978c8eeb791904e5",
+      "after": "1e6a7d2e3fd40826e240e21a4ece39991c8d8382f0896fc88c2f289017b48cc2",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+      "before": "5e16581d3bc079cb99dc454e8270e2674a8922a0d60ab40289a004d7a58bb84c",
+      "after": "02539565698c3e721cc362e9b7ae90b5686fd11be8dae948273484ffa63eb785",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+      "before": "ea7c6d2181db791e12cbba2f3e609c5e039928dae19e5c7b62576094d46df91a",
+      "after": "9eacf2473aa731109a9a6998b1be9beaed36d411dc0edacf0384330d61dc0414",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+      "before": "c7892e0e2008f5cd081c6aad6aa274210940dc22d35c54396e05c60f3d6cf9bb",
+      "after": "dd76970f41be3e00df8e4be225208fe91a9f675bde3d0e770d258a6e8ecb470b",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+      "before": "f155d778afed94a1c3f0078288e3cefb80cffe26336742d3b9add444a9d80062",
+      "after": "443b244e7bba3c8f3c83f9fb10908e851726e49f3450883f2d0b71b26086c813",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+      "before": "7de2119a5e26c015170b20cd6e9ab26c43b1e3ba1a9c68c4590525c14e0223ad",
+      "after": "982d9c7279e1784d2ba6b0b6c3c91d2ebb8b6fecf1a1b37f27321b8d029310f5",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_deploy/e1/mod.rs",
+      "before": "097645ac3863863c3f4b5a5ef22e7e8c5c095aebaecb331e299eb42713e3a92f",
+      "after": "c4ff7280184e2717d932c50f642e62e420753e3a57ef0e9ec2ec60bc6d0afef3",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_command/e1/mod.rs",
+      "before": "1cb0616973a427d147aea43823f230c73a40d102d96a315c2080cefe51b7c9e5",
+      "after": "adc64d73c72d3f6aeed6abfeda682af27f716f86d61628996a07b7bfed3b6173",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+      "before": "f4acbeb4d2c437804ee0d220bc2126f8d0893c1e0a6e4cd913732d1e2c07a750",
+      "after": "99d07d392edc18fd6689e30347a1c78ca86d1a2c4182c664c1a5a91bafa635eb",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+      "before": "60c0c64d7a24c479efa8aa366e871daaf94a21706920fd6ab24a8c7bb0f36a2b",
+      "after": "0b85e018d5299e313d407f4b759ac66363ef54cc4e44df5ae53b7702615e60d7",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+      "before": "8a050fbcfa319939ff49700860fd746d4f8e36595843c935aeda23889856f2e7",
+      "after": "3896226a46a3807879f41306bbe295d5af70f98e52c9dc0f5151473de271f952",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+      "before": "c08af12679fbfb56f30020dd121eeb1cc1efcc214dad0d549bba73eaec10191e",
+      "after": "231913d1939123f78701c1bc9d4c83eb32dfc7694ced311f189a7976fee0d71e",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+      "before": "1eadf90e23d947653137b0906a879a64a351f57f7cc8827135936ef4ac9400c3",
+      "after": "1d3d111032f5d7798800186747b7116d92c5c6c38173c1bf0d8724e4882742ef",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+      "before": "7ff264971160f48b133c4cd06b8f449f094bbdf9df4219da7bb1942676032d4c",
+      "after": "c227f51a9017e3bed661f9a9072d3e5c4a2d906971c7349e96c1e967a301c239",
+      "body_equal": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+      "before": "f4acbeb4d2c437804ee0d220bc2126f8d0893c1e0a6e4cd913732d1e2c07a750",
+      "after": "99d07d392edc18fd6689e30347a1c78ca86d1a2c4182c664c1a5a91bafa635eb",
+      "body_equal": true
+    }
+  ],
+  "unexpected_body_changes": []
+}

@@ -10,7 +10,7 @@ use super::{
 };
 use crate::migration_planning::{MigrationPlanningResponse, plan_migration_json};
 use serde_json::Value;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::read_migration_target;
 use vibe_wire::generated::migration::e1::{
     application_journal::ApplicationJournal,
     operation_report::{ApplicationErrorCode as Code, OperationReportOperation as Operation},
@@ -94,6 +94,19 @@ fn authority(
 }
 
 fn replay(text: &str) -> Checked<(Plan, bool)> {
+    if serde_json::from_str::<Value>(text)
+        .ok()
+        .and_then(|v| v.get("schema").and_then(Value::as_u64))
+        == Some(2)
+    {
+        return crate::migration_planning::feature::application_plan(text).map_err(|_| {
+            invalid(
+                Code::PlanRefused,
+                "approved_request_json",
+                "epoch-2 approved request did not produce a checked plan",
+            )
+        });
+    }
     match plan_migration_json(text) {
         MigrationPlanningResponse::Report(report) => match report.outcome {
             Outcome::Planned(p) => Ok((p.plan, false)),
@@ -112,7 +125,7 @@ fn replay(text: &str) -> Checked<(Plan, bool)> {
     }
 }
 fn frozen(plan: &Plan, is_no_op: bool) -> Checked<()> {
-    let manifest = Manifest::parse_str(&plan.after).map_err(|_| {
+    let manifest = read_migration_target(&plan.after, &plan.target_profile).map_err(|_| {
         invalid(
             Code::PlanRefused,
             "plan.after",

@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/fast/zap-managed/2026-10-16-m05b3/codegen-first.log",
+    "sha256": "915eabdeed48c2b814f71a23bb0fdc4bda0360347a301d049d81a7a52b5b21b2",
+    "byte_len": 32853
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-16-m05b3/codegen-bootstrap.log",
+    "sha256": "f7b913d5e0568b40b3b606f4d88699677d7c55e03af81b6db4f74a4b0d8722a7",
+    "byte_len": 112
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-16-m05b3/codegen-bootstrap-2.log",
+    "sha256": "5b53dafe676f6243e079ef3ffa6ce94549b0a65ca00c4212fe4cd0c586707253",
+    "byte_len": 163669
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-16-m05b3/check-codegen.log",
+    "sha256": "53a7f963585b2d30b7332f18b91a957f865130712c7dcb3eea6ffa66e3c25efa",
+    "byte_len": 440902
+  },
+  {
+    "path": "/fast/zap-managed/2026-10-16-m05b3/wire-diff.log",
+    "sha256": "1e4b8d3f9b0d9983a498823c2ee07cd109106cbe4aeb83d629ef61f9de657b92",
+    "byte_len": 131423
+  }
+]
