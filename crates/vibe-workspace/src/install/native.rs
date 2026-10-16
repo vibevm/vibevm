@@ -141,6 +141,7 @@ where
     P: crate::extension_world::OwnerNativeCompileProvider,
 {
     validate_redirect_blocks(workspace, resolution)?;
+    let configuration = bootgen::effective_subskills::durable_configuration(&workspace.root)?;
     bootgen::regenerate_boot_from_traced_native_prepared(
         workspace,
         resolution,
@@ -150,5 +151,6 @@ where
         lowering,
         run,
         make_provider,
+        configuration.as_ref(),
     )
 }

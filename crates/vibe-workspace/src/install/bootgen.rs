@@ -49,6 +49,7 @@ mod materialised_read;
 pub(super) use materialised_read::read_durable_resolution;
 pub(crate) mod captured;
 mod conditions;
+pub mod effective_subskills;
 mod node_dependency;
 mod publication;
 mod snippet_source;
@@ -121,6 +122,24 @@ pub fn regenerate_boot_from_traced_prepared(
     spec_format: SpecFormat,
     trace: Option<&crate::compile_trace::TraceRun>,
     lowering: OwnerRuntimeLowering,
+) -> Result<BootRegeneration, WorkspaceError> {
+    regenerate_boot_from_traced_prepared_configuration(
+        workspace,
+        resolution,
+        spec_format,
+        trace,
+        lowering,
+        None,
+    )
+}
+
+pub fn regenerate_boot_from_traced_prepared_configuration(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    spec_format: SpecFormat,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    lowering: OwnerRuntimeLowering,
+    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
 ) -> Result<BootRegeneration, WorkspaceError> {
     // B-031 self is always the workspace root coordinate.
     let self_coord = root_self_coordinate(&workspace.root_manifest);
@@ -203,6 +222,13 @@ pub fn regenerate_boot_from_traced_prepared(
         }
         // Collapse covered unit zones after hoisting, before artifact writes.
         desubstitute_covered_units(&mut effective, &table);
+        effective_subskills::append_loading(
+            &workspace.root,
+            resolution,
+            &deps,
+            configuration,
+            &mut effective,
+        )?;
         // Each node receives its own retained owner plan.
         boot_artifacts::write_boot_artifacts_traced(
             &node_dir,
@@ -232,6 +258,7 @@ pub(super) fn regenerate_boot_from_traced_native_prepared<F, P>(
     lowering: OwnerRuntimeLowering,
     run: crate::extension_world::OwnerRuntimeRunFacts,
     make_provider: &mut F,
+    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
 ) -> Result<(Vec<String>, super::NativeInstallCarriage), WorkspaceError>
 where
     F: FnMut(
@@ -263,13 +290,14 @@ where
         }))
         .collect();
     let mut provider = make_provider(policies)?;
-    let regenerated = native_managed::regenerate_boot_from_bound_native(
+    let regenerated = native_managed::regenerate_boot_from_bound_native_configuration(
         workspace,
         resolution,
         spec_format,
         trace,
         &epoch,
         Some(&mut provider),
+        configuration,
     )?;
     let nodes = regenerated.nodes.clone();
     let replay = regenerated.into_replay_set(&epoch)?;
@@ -301,7 +329,16 @@ pub fn regenerate_boot_traced(
     // any boot-artifact write.
     let resolution = read_durable_resolution(&workspace.root)?;
     validate_redirect_blocks(workspace, &resolution)?;
-    regenerate_boot_from_traced(workspace, &resolution, spec_format, trace)
+    let configuration = effective_subskills::durable_configuration(&workspace.root)?;
+    regenerate_boot_from_traced_prepared_configuration(
+        workspace,
+        &resolution,
+        spec_format,
+        trace,
+        OwnerRuntimeLowering::compatibility_root_without_presets(),
+        configuration.as_ref(),
+    )
+    .map(|prepared| prepared.nodes)
 }
 
 /// Return package units whose durable boot fingerprints are stale.

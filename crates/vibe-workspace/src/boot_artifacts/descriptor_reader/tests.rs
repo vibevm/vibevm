@@ -64,6 +64,7 @@ fn fixture() -> (TempDir, SelectedSlotWitness, EffectiveBoot, String) {
     .unwrap();
     let slot = vibedeps::slot_rel_path(&group, name, &version);
     let witness = SelectedSlotWitness {
+        subskills: Vec::new(),
         group: group.clone(),
         name: name.into(),
         version,
@@ -201,6 +202,7 @@ fn install_reader_without_descriptors_keeps_legacy_pair_collision() {
     fs::write(specs.join("pair.md"), b"# Pair\n").unwrap();
     fs::write(specs.join("pair.xml"), b"<data/>\n").unwrap();
     let witness = SelectedSlotWitness {
+        subskills: Vec::new(),
         group,
         name: "legacy".into(),
         version,

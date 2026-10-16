@@ -161,6 +161,66 @@ fn bound_node_writer_and_analyzer_use_one_selected_vibe_xml_source() {
 }
 
 #[test]
+fn m_05_d_2_native_writer_loads_current_selection_without_old_lock() {
+    let world = world();
+    write(
+        &world.slot.join("subskills/guide/vibe-subskill.toml"),
+        "[subskill]\npath='guide'\n[content]\nfiles_written=['guide.md']\n",
+    );
+    write(
+        &world.slot.join("subskills/guide/guide.md"),
+        "# Native selected subskill\n",
+    );
+    let (workspace, epoch) = selected_epoch(&world);
+    let request = serde_json::from_value(serde_json::json!({"epoch":"1","roots":["org.example/selected"],"origins":[],"features":["guide"],"no_defaults":true,"all_features":false,"definitions":[],"defaults":[]})).unwrap();
+    let record = vibe_wire::behaviour::lock_configuration::encode(request,
+        serde_json::from_value(serde_json::json!({"epoch":"1","request_digest":"pending","packages":[{"package":"org.example/selected@1.1.0","content":world.resolution[0].source_hash,"feature_closure":["guide"],"effects":"{\"subskills\":[\"guide\"]}"}],"edges":[],"configurations":[]})).unwrap()).unwrap();
+    assert!(!workspace.lockfile_path().exists());
+    super::native_managed::regenerate_boot_from_bound_native_configuration(
+        &workspace,
+        &world.resolution,
+        SpecFormat::Mixed,
+        None,
+        &epoch,
+        None::<&mut FakeProvider>,
+        Some(&record),
+    )
+    .unwrap();
+    let output = fs::read_to_string(
+        world
+            .root
+            .path()
+            .join(vibe_core::layout::current_boot_dir())
+            .join("STATIC.md"),
+    )
+    .unwrap();
+    assert!(output.contains("Native selected subskill"), "{output}");
+    assert_eq!(
+        fs::read(world.slot.join("subskills/guide/guide.md")).unwrap(),
+        b"# Native selected subskill\n"
+    );
+    super::native_managed::regenerate_boot_from_bound_native_configuration(
+        &workspace,
+        &world.resolution,
+        SpecFormat::Mixed,
+        None,
+        &epoch,
+        None::<&mut FakeProvider>,
+        None,
+    )
+    .unwrap();
+    let output = fs::read_to_string(
+        world
+            .root
+            .path()
+            .join(vibe_core::layout::current_boot_dir())
+            .join("STATIC.md"),
+    )
+    .unwrap();
+    assert!(!output.contains("Native selected subskill"));
+}
+
+#[test]
 fn bound_node_writer_refuses_changed_selected_output_before_static_publication() {
     let world = world();
     fs::write(&world.rule, b"changed XML\n").unwrap();

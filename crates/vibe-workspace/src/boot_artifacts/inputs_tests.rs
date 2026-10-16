@@ -279,6 +279,7 @@ fn bound_simple_boot_projects_only_selected_vibe_and_refuses_raw_same_stem() {
     .unwrap();
     let slot = crate::vibedeps::slot_rel_path(&group, "simple", &version);
     let witness = SelectedSlotWitness {
+        subskills: Vec::new(),
         group: group.clone(),
         name: "simple".into(),
         version,

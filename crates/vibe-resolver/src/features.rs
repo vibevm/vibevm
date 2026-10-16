@@ -14,6 +14,9 @@
 use std::collections::{BTreeMap, BTreeSet};
 pub mod configuration;
 
+#[cfg(test)]
+mod m_05_d_2_cases;
+
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::FeaturesTable;

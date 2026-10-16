@@ -203,9 +203,29 @@ pub(super) fn prepare_index_body(
             })
             .collect(),
     };
-    let body = toml::to_string_pretty(&manifest).map_err(|e| WorkspaceError::IndexRender {
+    let mut body = toml::to_string_pretty(&manifest).map_err(|e| WorkspaceError::IndexRender {
         reason: e.to_string(),
     })?;
+    // Comments keep the existing INDEX schema intact while offering selected
+    // lazy-push descriptions and an explicit delivery request to the agent.
+    for entry in boot.dynamic_entries() {
+        if let crate::boot::BootProvenance::SubskillOffer {
+            group,
+            name,
+            subskill,
+            description,
+        } = &entry.provenance
+        {
+            body.push_str("\n# Context offer: ");
+            body.push_str(&description.replace(['\r', '\n'], " "));
+            body.push_str("\n# When relevant, call read_subskill with ");
+            body.push_str(
+                &serde_json::json!({"package":format!("{group}/{name}"), "subskill_path":subskill})
+                    .to_string(),
+            );
+            body.push('\n');
+        }
+    }
     Ok(body)
 }
 

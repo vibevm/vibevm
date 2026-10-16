@@ -55,8 +55,12 @@ pub(crate) mod bootgen;
 /// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
 /// the once-each topology is exercisable at the unit level (no full install).
 pub use bootgen::desubstitute_covered_units;
+pub use bootgen::effective_subskills;
 pub(crate) use bootgen::node_own_boot;
 use bootgen::validate_redirect_blocks;
+pub use hook_output::{
+    apply_resolution_native_with_configuration, apply_resolution_with_configuration,
+};
 /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
 pub use model::{
     AppliedConversionCounts, AppliedConversionFailure, InstallOutcome, PostInstallPlan,
