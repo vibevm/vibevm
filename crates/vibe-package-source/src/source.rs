@@ -16,10 +16,7 @@ use vibe_registry::{
     CachedPackage, LocalRegistry, MultiRegistryResolver, RegistryError, ResolutionPurpose,
 };
 
-use crate::cells::{
-    ProviderCell, ProviderResource, dep_solver, metadata_manifest_cell, selection_flags,
-    solve_masked_cell,
-};
+use crate::cells::{ProviderCell, ProviderResource, selection_flags};
 
 /// Either a M0-shape local-directory registry (used by an explicit registry
 /// path and the in-tree fixture path) or a full PROP-002 multi-registry
@@ -84,15 +81,18 @@ impl InstallSource for InstallResolver {
         &self,
         roots: &[PackageRef],
     ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
-        let provider = transaction::CaptureProvider {
-            source: self,
-            provider: crate::cells::catalog_provider(self.provider_resource()),
-        };
-        let catalog = vibe_resolver::resolvo_engine::TransactionCatalog::capture(&provider, roots)?;
-        Ok(Some(Box::new(transaction::FrozenSource {
-            source: self,
-            catalog,
-        })))
+        self.begin_normalized_transaction(
+            &vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
+                roots,
+                &Default::default(),
+            ),
+        )
+    }
+    fn begin_normalized_transaction(
+        &self,
+        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+    ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
+        Ok(Some(Box::new(self.bind_request(request.clone())?)))
     }
 
     /// Resolve `pkgref` and insert its content into the machine-global
@@ -156,20 +156,26 @@ impl InstallSource for InstallResolver {
         &self,
         roots: &[PackageRef],
     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
-        // Cell selection lives in the cells module (R-001); this
-        // match only routes the resource the caller already owns.
-        let (provider_cell, solver_override) = self.cell_selection();
-        let flags = selection_flags(provider_cell, solver_override);
-        dep_solver(&flags, self.provider_resource()).solve(roots)
+        self.bind_request(
+            vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
+                roots,
+                &Default::default(),
+            ),
+        )?
+        .solve(roots)
     }
 
     fn manifest_of(
         &self,
         pkg: &PackageRef,
     ) -> Result<vibe_core::manifest::Manifest, vibe_resolver::SolveError> {
-        // Cell selection lives in the cells module (R-001); this method
-        // only routes the resource the resolver already owns.
-        metadata_manifest_cell(self.provider_resource(), pkg)
+        self.bind_request(
+            vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
+                std::slice::from_ref(pkg),
+                &Default::default(),
+            ),
+        )?
+        .manifest_of(pkg)
     }
 
     fn solve_masked(
@@ -177,9 +183,13 @@ impl InstallSource for InstallResolver {
         roots: &[PackageRef],
         blocked: &BTreeSet<(String, String)>,
     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
-        let (provider_cell, solver_override) = self.cell_selection();
-        let flags = selection_flags(provider_cell, solver_override);
-        solve_masked_cell(&flags, self.provider_resource(), roots, blocked)
+        self.bind_request(
+            vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
+                roots,
+                &Default::default(),
+            ),
+        )?
+        .solve_masked(roots, blocked)
     }
 
     fn materialise_in_place(
@@ -240,6 +250,29 @@ impl InstallSource for InstallResolver {
 }
 
 impl InstallResolver {
+    /// Admit explicit intent once; all existing InstallSource routes on the
+    /// returned source consume this same request and captured catalog.
+    pub fn bind_request(
+        &self,
+        request: vibe_resolver::resolvo_engine::request::NormalizedRequest,
+    ) -> Result<impl InstallSource + '_, vibe_resolver::SolveError> {
+        let provider = transaction::CaptureProvider {
+            source: self,
+            provider: crate::cells::catalog_provider(self.provider_resource()),
+        };
+        let catalog = vibe_resolver::resolvo_engine::TransactionCatalog::capture(
+            &provider,
+            &request.catalog_roots(),
+        )?;
+        Ok(transaction::FrozenSource {
+            source: self,
+            catalog,
+            request,
+            resolution: std::cell::RefCell::new(None),
+            conditional: std::cell::RefCell::new(Vec::new()),
+            commitments: std::cell::RefCell::new(Vec::new()),
+        })
+    }
     fn resolve_and_fetch_inner(
         &self,
         pkgref: &PackageRef,
@@ -478,3 +511,7 @@ mod transaction;
 #[cfg(test)]
 #[path = "source/m_05_c_1_cases_tests.rs"]
 mod m_05_c_1_cases;
+
+#[cfg(test)]
+#[path = "source/m_05_c_3_cases.rs"]
+mod m_05_c_3_cases;

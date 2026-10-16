@@ -18,6 +18,7 @@ use vibe_wire::generated::consumer_configuration::e1::{request::Request, result:
 type Coordinate = (Group, String, semver::Version);
 
 /// Admitted normalized definition and the actual catalog receipt it interprets.
+#[derive(Debug, Clone)]
 pub struct CandidateConfiguration {
     pub package: PackageRef,
     pub version: semver::Version,
@@ -91,6 +92,8 @@ pub struct ConfiguredResolution {
     pub effects: BTreeMap<String, FeatureExpansion>,
     pub providers: BTreeMap<String, Vec<String>>,
     pub rejected: Vec<CandidateReason>,
+    pub choices: Vec<super::SelectedChoice>,
+    pub manifests: BTreeMap<String, Manifest>,
 }
 
 enum Activation {
@@ -107,6 +110,8 @@ struct Candidate {
 struct ConfiguredCatalog<'a> {
     catalog: &'a TransactionCatalog,
     candidates: BTreeMap<Coordinate, Candidate>,
+    blocked: &'a BTreeSet<(String, String)>,
+    retained: &'a [super::SelectedChoice],
 }
 
 impl ResolvoDepSolver<&TransactionCatalog> {
@@ -123,9 +128,28 @@ impl ResolvoDepSolver<&TransactionCatalog> {
         definitions: &[CandidateConfiguration],
         defaults: &[DefaultBinding],
     ) -> Result<ConfiguredResolution, ConfigurationSolveError> {
+        self.solve_configuration_routes(
+            roots,
+            request,
+            definitions,
+            defaults,
+            &BTreeSet::new(),
+            &[],
+        )
+    }
+
+    pub fn solve_configuration_routes(
+        &self,
+        roots: &[PackageRef],
+        request: &Request,
+        definitions: &[CandidateConfiguration],
+        defaults: &[DefaultBinding],
+        blocked: &BTreeSet<(String, String)>,
+        retained: &[super::SelectedChoice],
+    ) -> Result<ConfiguredResolution, ConfigurationSolveError> {
         let edges = codec::admit_request(request).map_err(ConfigurationSolveError::Unsupported)?;
-        // The legacy graph projection does not retain disjunction edges or
-        // activation support through obsoletes/conditional targets. Refuse
+        // The graph projection does not retain complete activation support
+        // through obsoletes/conditional targets. Refuse
         // those combinations explicitly at this complete-effects entrypoint.
         // Ordinary DepSolver routes keep their existing behavior.
         for (coordinate, _) in &self.provider.inspect().candidates {
@@ -141,14 +165,13 @@ impl ResolvoDepSolver<&TransactionCatalog> {
                 )?
                 .manifest;
             if !manifest.conditional_deps.is_empty()
-                || !manifest.requires_any.is_empty()
                 || !manifest.obsoletes.packages.is_empty()
                 || !manifest.requires.git_packages.is_empty()
                 || !manifest.requires.path_packages.is_empty()
                 || !manifest.requires.var_packages.is_empty()
             {
                 return Err(ConfigurationSolveError::Unsupported(format!(
-                    "{coordinate}: configured solve requires registry package edges without conditional targets, disjunctions or obsoletes"
+                    "{coordinate}: configured solve requires registry package edges without conditional targets or obsoletes"
                 )));
             }
         }
@@ -180,6 +203,8 @@ impl ResolvoDepSolver<&TransactionCatalog> {
         let mut provider = ConfiguredCatalog {
             catalog: self.provider,
             candidates: BTreeMap::new(),
+            blocked,
+            retained,
         };
         // Validate all admitted definitions before classifying incompatibility.
         // Malformed/dangling source data must never become a SAT rejection.
@@ -487,7 +512,7 @@ impl ResolvoDepSolver<&TransactionCatalog> {
             .map(|c| c.reason.clone())
             .collect();
         let solver = ResolvoDepSolver::new(provider);
-        let graph = match solver.solve_transaction(roots) {
+        let recorded = match solver.solve_recorded_transaction(roots) {
             Ok(graph) => graph,
             Err(SolveError::Provider(error)) => return Err(error.into()),
             Err(solver) => {
@@ -498,7 +523,9 @@ impl ResolvoDepSolver<&TransactionCatalog> {
                 });
             }
         };
+        let graph = recorded.graph;
         let provider = solver.into_inner();
+        let mut manifests = BTreeMap::new();
         let mut needs = Vec::new();
         let mut rediscovery = Vec::new();
         let mut effects = BTreeMap::new();
@@ -518,6 +545,10 @@ impl ResolvoDepSolver<&TransactionCatalog> {
                     .iter()
                     .map(ToString::to_string)
                     .collect(),
+            );
+            manifests.insert(
+                coordinate.clone(),
+                provider.fetch_manifest(&node.group, &node.name, &node.version)?,
             );
             let expansion = if let Some(candidate) = provider.candidates.get(&key) {
                 match &candidate.activation {
@@ -569,6 +600,8 @@ impl ResolvoDepSolver<&TransactionCatalog> {
             effects,
             providers,
             rejected,
+            choices: recorded.choices,
+            manifests,
         })
     }
 }
@@ -593,6 +626,13 @@ impl DepProvider for ConfiguredCatalog<'_> {
     }
 }
 impl VersionEnumerator for ConfiguredCatalog<'_> {
+    fn edge_blocked(&self, parent: &str, target: &str) -> bool {
+        self.blocked.contains(&(parent.into(), target.into()))
+    }
+    fn retained_choices(&self) -> &[super::SelectedChoice] {
+        self.retained
+    }
+
     fn cached_capabilities(&self) -> Option<&super::CapIndex> {
         self.catalog.cached_capabilities()
     }

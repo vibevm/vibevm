@@ -30,6 +30,18 @@ use crate::DepProviderError;
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable")]
 pub enum SolveError {
+    #[error("root constraints {origins:?}: {conflict}")]
+    RootConstraints {
+        origins: Vec<crate::resolvo_engine::request::RootConstraint>,
+        conflict: Box<SolveError>,
+    },
+    #[error("selected backend `{backend}` does not support {capability}")]
+    BackendCapability { backend: String, capability: String },
+    #[error(transparent)]
+    Configuration(Box<crate::resolvo_engine::configuration::ConfigurationSolveError>),
+    #[error("unsupported solve route: {0}")]
+    UnsupportedRoute(String),
+
     #[error(transparent)]
     Provider(#[from] DepProviderError),
 

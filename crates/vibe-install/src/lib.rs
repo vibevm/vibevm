@@ -310,6 +310,36 @@ fn check_member_graph(
 /// }
 /// ```
 pub trait InstallSource {
+    fn begin_normalized_transaction(
+        &self,
+        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+    ) -> Result<Option<Box<dyn InstallSource + '_>>, SolveError> {
+        self.begin_transaction(&request.roots)
+    }
+    fn solve_conditional(
+        &self,
+        roots: &[PackageRef],
+        edges: &[vibe_resolver::resolvo_engine::request::ConditionalEdge],
+    ) -> Result<ResolvedGraph, SolveError> {
+        let mut combined = roots.to_vec();
+        combined.extend(edges.iter().map(|e| e.dependency.clone()));
+        self.solve(&combined)
+    }
+    fn normalized_request(
+        &self,
+    ) -> Option<&vibe_resolver::resolvo_engine::request::NormalizedRequest> {
+        None
+    }
+    fn route_resolution(&self) -> Option<vibe_resolver::resolvo_engine::request::RouteResolution> {
+        None
+    }
+    fn finish_route_projection(&self, _graph: &ResolvedGraph) -> Result<(), SolveError> {
+        Ok(())
+    }
+    fn catalog_manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
+        self.manifest_of(pkg)
+    }
+
     /// Capture an exact catalog when this source supports transaction binding.
     /// None preserves legacy embeddings without claiming an exact catalog.
     fn begin_transaction(

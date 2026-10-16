@@ -23,8 +23,8 @@ use std::path::PathBuf;
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
 use vibe_resolver::sat::SatDepSolver;
 use vibe_resolver::{
-    DepSolver, EmbeddedDepProvider, EmbeddedPrecedence, LocalCompositeDepProvider,
-    LocalRegistryDepProvider, MultiRegistryDepProvider, NaiveDepSolver, ResolvoDepSolver,
+    EmbeddedDepProvider, EmbeddedPrecedence, LocalCompositeDepProvider, LocalRegistryDepProvider,
+    MultiRegistryDepProvider, NaiveDepSolver, ResolvoDepSolver,
 };
 
 /// Where a selected value came from. The full chain is
@@ -173,103 +173,8 @@ pub(crate) fn local_registry(root: PathBuf) -> Result<LocalRegistry, RegistryErr
     LocalRegistry::new(root)
 }
 
-/// Construct the selected `DepSolver` cell over the selected
-/// `DepProvider` cell — the single seam-construction point.
-pub(crate) fn dep_solver<'a>(
-    flags: &SelectionFlags,
-    resource: ProviderResource<'a>,
-) -> Box<dyn DepSolver + 'a> {
-    // recorded provenance: flags.solver / flags.provider carry it.
-    match (flags.solver.value, flags.provider.value, resource) {
-        ("resolvo", "local-registry", ProviderResource::Local(r)) => {
-            Box::new(ResolvoDepSolver::new(LocalRegistryDepProvider::new(r)))
-        }
-        ("resolvo", "multi-registry", ProviderResource::Multi(m)) => {
-            Box::new(ResolvoDepSolver::new(MultiRegistryDepProvider::new(m)))
-        }
-        ("naive", "local-registry", ProviderResource::Local(r)) => {
-            Box::new(NaiveDepSolver::new(LocalRegistryDepProvider::new(r)))
-        }
-        ("naive", "multi-registry", ProviderResource::Multi(m)) => {
-            Box::new(NaiveDepSolver::new(MultiRegistryDepProvider::new(m)))
-        }
-        ("sat", "local-registry", ProviderResource::Local(r)) => {
-            Box::new(SatDepSolver::new(LocalRegistryDepProvider::new(r)))
-        }
-        ("sat", "multi-registry", ProviderResource::Multi(m)) => {
-            Box::new(SatDepSolver::new(MultiRegistryDepProvider::new(m)))
-        }
-        (
-            "resolvo",
-            "embedded",
-            ProviderResource::Embedded {
-                locals,
-                declared,
-                precedence,
-                short_circuit,
-            },
-        ) => Box::new(ResolvoDepSolver::new(EmbeddedDepProvider::new(
-            LocalCompositeDepProvider::new(
-                locals
-                    .into_iter()
-                    .map(LocalRegistryDepProvider::new)
-                    .collect(),
-            ),
-            declared.map(MultiRegistryDepProvider::new),
-            precedence,
-            short_circuit,
-        ))),
-        (
-            "naive",
-            "embedded",
-            ProviderResource::Embedded {
-                locals,
-                declared,
-                precedence,
-                short_circuit,
-            },
-        ) => Box::new(NaiveDepSolver::new(EmbeddedDepProvider::new(
-            LocalCompositeDepProvider::new(
-                locals
-                    .into_iter()
-                    .map(LocalRegistryDepProvider::new)
-                    .collect(),
-            ),
-            declared.map(MultiRegistryDepProvider::new),
-            precedence,
-            short_circuit,
-        ))),
-        (
-            "sat",
-            "embedded",
-            ProviderResource::Embedded {
-                locals,
-                declared,
-                precedence,
-                short_circuit,
-            },
-        ) => Box::new(SatDepSolver::new(EmbeddedDepProvider::new(
-            LocalCompositeDepProvider::new(
-                locals
-                    .into_iter()
-                    .map(LocalRegistryDepProvider::new)
-                    .collect(),
-            ),
-            declared.map(MultiRegistryDepProvider::new),
-            precedence,
-            short_circuit,
-        ))),
-        (solver, provider, _) => unreachable!(
-            "selection_flags is the only producer of flag values and never \
-             emits solver `{solver}` / provider `{provider}` with a \
-             mismatched resource"
-        ),
-    }
-}
-
 /// The embedded DepProvider composite — one construction site (R-001) for
-/// the local-family + optional-declared shape three `dep_solver` arms and
-/// the visibility surfaces below all share.
+/// the local-family + optional-declared shape all catalog routes share.
 fn embedded_dep_provider<'a>(
     locals: Vec<&'a LocalRegistry>,
     declared: Option<&'a MultiRegistryResolver>,
@@ -287,69 +192,6 @@ fn embedded_dep_provider<'a>(
         precedence,
         short_circuit,
     )
-}
-
-/// Metadata-only manifest read through the selected `DepProvider` cell —
-/// the `InstallSource::manifest_of` construction site (R-001). Never
-/// fetches package content.
-pub(crate) fn metadata_manifest_cell(
-    resource: ProviderResource<'_>,
-    pkg: &vibe_core::PackageRef,
-) -> Result<vibe_core::manifest::Manifest, vibe_resolver::SolveError> {
-    match resource {
-        ProviderResource::Local(r) => {
-            vibe_install::metadata_manifest(&LocalRegistryDepProvider::new(r), pkg)
-        }
-        ProviderResource::Multi(m) => {
-            vibe_install::metadata_manifest(&MultiRegistryDepProvider::new(m), pkg)
-        }
-        ProviderResource::Embedded {
-            locals,
-            declared,
-            precedence,
-            short_circuit,
-        } => vibe_install::metadata_manifest(
-            &embedded_dep_provider(locals, declared, precedence, short_circuit),
-            pkg,
-        ),
-    }
-}
-
-/// The masked re-solve through the selected provider and solver cells —
-/// the `InstallSource::solve_masked` construction site (R-001). The same
-/// selection the ordinary solve made, wrapped in the visibility mask.
-pub(crate) fn solve_masked_cell(
-    flags: &SelectionFlags,
-    resource: ProviderResource<'_>,
-    roots: &[vibe_core::PackageRef],
-    blocked: &std::collections::BTreeSet<(String, String)>,
-) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
-    let solver = Some(flags.solver.value);
-    match resource {
-        ProviderResource::Local(r) => vibe_install::solve_with_visibility_mask(
-            LocalRegistryDepProvider::new(r),
-            solver,
-            roots,
-            blocked,
-        ),
-        ProviderResource::Multi(m) => vibe_install::solve_with_visibility_mask(
-            MultiRegistryDepProvider::new(m),
-            solver,
-            roots,
-            blocked,
-        ),
-        ProviderResource::Embedded {
-            locals,
-            declared,
-            precedence,
-            short_circuit,
-        } => vibe_install::solve_with_visibility_mask(
-            embedded_dep_provider(locals, declared, precedence, short_circuit),
-            solver,
-            roots,
-            blocked,
-        ),
-    }
 }
 
 #[cfg(test)]
@@ -392,7 +234,100 @@ mod tests {
     }
 }
 
-// Candidate capture uses the incumbent provider selection and its enumeration.
+/// All transaction routes retain the same backend selection and admitted intent.
+pub(crate) fn solve_catalog_request(
+    flags: &SelectionFlags,
+    catalog: &vibe_resolver::resolvo_engine::TransactionCatalog,
+    request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+    roots: &[vibe_core::PackageRef],
+    blocked: &std::collections::BTreeSet<(String, String)>,
+    retained: &[vibe_resolver::resolvo_engine::SelectedChoice],
+) -> Result<vibe_resolver::resolvo_engine::request::RouteResolution, vibe_resolver::SolveError> {
+    use vibe_resolver::resolvo_engine::{
+        RecordedResolution,
+        request::{RouteProvider, RouteResolution},
+    };
+    use vibe_resolver::{DepProvider, SolveError};
+    let roots = request.all_roots(roots);
+    if let Some(configuration) = &request.configuration {
+        if flags.solver.value != "resolvo" {
+            return Err(SolveError::BackendCapability {
+                backend: flags.solver.value.into(),
+                capability: "candidate-conditioned consumer configuration".into(),
+            });
+        }
+        let result = ResolvoDepSolver::new(catalog)
+            .solve_configuration_routes(
+                &roots,
+                &configuration.request,
+                &configuration.definitions,
+                &configuration.defaults,
+                blocked,
+                retained,
+            )
+            .map_err(|error| SolveError::Configuration(Box::new(error)))?;
+        return RouteResolution::bind(
+            catalog,
+            request,
+            RecordedResolution {
+                graph: result.graph,
+                choices: result.choices,
+            },
+            result.manifests,
+            result.effects,
+        );
+    }
+    let provider = RouteProvider {
+        catalog,
+        blocked,
+        retained,
+    };
+    let filtered = vibe_resolver::resolvo_engine::request::LegacyRouteProvider(
+        vibe_resolver::resolvo_engine::request::RouteProvider {
+            catalog,
+            blocked,
+            retained,
+        },
+    );
+    let mut recorded = match flags.solver.value {
+        "resolvo" => ResolvoDepSolver::new(provider).solve_recorded(&roots)?,
+        "naive" => NaiveDepSolver::new(&filtered).solve_recorded(&roots)?,
+        "sat" => SatDepSolver::new(&filtered).solve_recorded(&roots)?,
+        _ => unreachable!("validated solver selection"),
+    };
+    if flags.solver.value != "resolvo" {
+        filtered.restore_provenance(&mut recorded)?;
+    }
+    let mut manifests = std::collections::BTreeMap::new();
+    let mut effects = std::collections::BTreeMap::new();
+    for node in recorded.graph.iter() {
+        let manifest = catalog.fetch_manifest(&node.group, &node.name, &node.version)?;
+        let feature_request = if node.is_root {
+            vibe_resolver::FeatureRequest {
+                explicit: request
+                    .features
+                    .explicit
+                    .iter()
+                    .filter(|name| manifest.features.features.contains_key(name.as_str()))
+                    .cloned()
+                    .collect(),
+                no_defaults: request.features.no_defaults,
+                all: request.features.all,
+            }
+        } else {
+            Default::default()
+        };
+        let expansion =
+            vibe_resolver::features::expand_manifest_features(&manifest, &feature_request)
+                .map_err(|e| vibe_resolver::DepProviderError::Other(e.to_string()))?;
+        let coordinate = format!("{}/{}@{}", node.group, node.name, node.version);
+        manifests.insert(coordinate.clone(), manifest);
+        effects.insert(coordinate, expansion);
+    }
+    RouteResolution::bind(catalog, request, recorded, manifests, effects)
+}
+
+// Candidate capture uses the incumbent provider selection and enumeration.
 pub(crate) fn catalog_provider(
     resource: ProviderResource<'_>,
 ) -> Box<dyn vibe_resolver::VersionEnumerator + '_> {
@@ -410,16 +345,5 @@ pub(crate) fn catalog_provider(
             precedence,
             short_circuit,
         )),
-    }
-}
-pub(crate) fn catalog_solver<'a>(
-    flags: &SelectionFlags,
-    catalog: &'a vibe_resolver::resolvo_engine::TransactionCatalog,
-) -> Box<dyn DepSolver + 'a> {
-    match flags.solver.value {
-        "resolvo" => Box::new(ResolvoDepSolver::new(catalog)),
-        "naive" => Box::new(NaiveDepSolver::new(catalog)),
-        "sat" => Box::new(SatDepSolver::new(catalog)),
-        _ => unreachable!("validated solver selection"),
     }
 }

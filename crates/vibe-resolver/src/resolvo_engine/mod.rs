@@ -15,6 +15,7 @@
 mod capabilities;
 mod catalog;
 pub mod configuration;
+pub mod request;
 mod snapshot;
 pub use capabilities::{CapIndex, CapProvider};
 pub use catalog::{CatalogInspection, TransactionCatalog};
@@ -31,7 +32,16 @@ use crate::{
     Chosen, DepProviderError, DepSolver, ResolvedGraph, SolveError, VersionEnumerator,
     assert_kind_matches, build_resolved_graph,
 };
+pub use provider::SelectedChoice;
 use provider::VibevmResolvoProvider;
+
+/// Selected SAT witnesses accompany the package projection. They are captured
+/// during the solve, never guessed from package presence afterward.
+#[derive(Debug, Clone)]
+pub struct RecordedResolution {
+    pub graph: ResolvedGraph,
+    pub choices: Vec<SelectedChoice>,
+}
 
 /// The resolvo-backed `DepSolver`. Construct it the way the other solver
 /// cells are constructed and call [`DepSolver::solve`]:
@@ -93,6 +103,18 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
 
 impl<P: VersionEnumerator> ResolvoDepSolver<P> {
     fn solve_transaction(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        Ok(self.solve_recorded_transaction(roots)?.graph)
+    }
+
+    pub fn solve_recorded(&self, roots: &[PackageRef]) -> Result<RecordedResolution, SolveError> {
+        let transaction = ResolvoDepSolver::new(snapshot::MetadataSnapshot::new(&self.provider));
+        transaction.solve_recorded_transaction(roots)
+    }
+
+    fn solve_recorded_transaction(
+        &self,
+        roots: &[PackageRef],
+    ) -> Result<RecordedResolution, SolveError> {
         // Hard solve, then a best-effort greedy expansion over
         // `[recommends]` (PROP-003 §2.3.3): each recommended package is
         // tried via a re-solve and kept only if the graph stays
@@ -102,11 +124,12 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
         // per-package recommends ride this re-solve loop — batching them
         // as soft is a future optimisation.
         let mut extra: Vec<PackageRef> = Vec::new();
+        let mut recommendation_edges: Vec<SelectedChoice> = Vec::new();
         let mut tried: HashSet<(Group, String)> = HashSet::new();
         let mut graph = self.solve_hard(roots, &extra)?;
         loop {
-            let recommends = self.collect_recommends(&graph, &tried)?;
-            let Some(rec) = recommends.into_iter().next() else {
+            let recommends = self.collect_recommends(&graph.graph, &tried)?;
+            let Some((rec, witness)) = recommends.into_iter().next() else {
                 break;
             };
             if let Some(group) = rec.group.clone() {
@@ -116,13 +139,57 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
             trial.push(rec);
             match self.solve_hard(roots, &trial) {
                 Ok(extended) => {
-                    extra = trial;
-                    graph = extended;
+                    // A recommendation belongs to its declaring candidate.
+                    // Do not carry it across a trial that discards that candidate.
+                    if recommendation_edges
+                        .iter()
+                        .chain(std::iter::once(&witness))
+                        .all(|e| {
+                            extended.graph.iter().any(|n| {
+                                e.parent.group.as_ref() == Some(&n.group)
+                                    && e.parent.name == n.name
+                                    && e.parent.version.matches(&n.version)
+                            })
+                        })
+                    {
+                        recommendation_edges.push(witness);
+                        extra = trial;
+                        graph = extended;
+                    }
                 }
                 Err(SolveError::Provider(error)) => return Err(error.into()),
                 Err(_) => {}
             }
         }
+        for mut edge in recommendation_edges {
+            let target = graph
+                .graph
+                .iter()
+                .find(|n| {
+                    edge.provider.group.as_ref() == Some(&n.group) && edge.provider.name == n.name
+                })
+                .expect("accepted recommendation");
+            edge.provider = PackageRef::parse(&format!(
+                "{}/{}@={}",
+                target.group, target.name, target.version
+            ))
+            .expect("selected coordinate");
+            let parent = graph
+                .graph
+                .packages
+                .iter_mut()
+                .find(|n| {
+                    edge.parent.group.as_ref() == Some(&n.group) && edge.parent.name == n.name
+                })
+                .expect("retained recommending candidate");
+            if !parent.dependencies.contains(&edge.provider) {
+                parent.dependencies.push(edge.provider.clone());
+            }
+            graph.choices.push(edge);
+        }
+        graph
+            .choices
+            .sort_by_key(|e| (e.parent.to_string(), e.declaration.clone(), e.alternative));
         Ok(graph)
     }
 }
@@ -137,7 +204,7 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
         &self,
         roots: &[PackageRef],
         extra: &[PackageRef],
-    ) -> Result<ResolvedGraph, SolveError> {
+    ) -> Result<RecordedResolution, SolveError> {
         // Pre-scan the package closure (roots + extra) for capability
         // providers (PROP-017 §3) before building the resolvo provider.
         let scan_roots: Vec<PackageRef> = roots.iter().chain(extra.iter()).cloned().collect();
@@ -196,7 +263,11 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                 let mut chosen: HashMap<(Group, String), Chosen> = HashMap::new();
                 let mut obsolete: HashSet<(Group, String)> = HashSet::new();
                 let mut selected = Vec::new();
+                let mut choices = rp.selected_choices(&solvables)?;
                 for id in solvables {
+                    if rp.is_choice(id) {
+                        continue;
+                    }
                     let Some((group, name, version)) = rp.solvable_parts(id) else {
                         return Err(SolveError::Provider(DepProviderError::Other(
                             "internal: a chosen solvable did not resolve".to_string(),
@@ -215,15 +286,32 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                     // with `sat`) additionally checks transitive prefixes
                     // via the pkgref it carries through `process_one`.
                     if is_root && let Some(actual) = manifest.package.as_ref().map(|p| p.kind) {
-                        let requested = roots
+                        for root in roots
                             .iter()
-                            .find(|r| {
-                                r.group.as_ref().is_some_and(|g| g == &group) && r.name == name
-                            })
-                            .and_then(|r| r.kind);
-                        assert_kind_matches(requested, actual, &format!("{group}/{name}"))?;
+                            .filter(|r| r.group.as_ref() == Some(&group) && r.name == name)
+                        {
+                            assert_kind_matches(root.kind, actual, &format!("{group}/{name}"))?;
+                        }
                     }
-                    let direct_deps = manifest.requires.packages.clone();
+                    let mut direct_deps: Vec<_> = manifest
+                        .requires
+                        .packages
+                        .iter()
+                        .filter(|dep| {
+                            !self
+                                .provider
+                                .edge_blocked(&format!("{group}/{name}"), &dep.qualified_name())
+                        })
+                        .cloned()
+                        .collect();
+                    for edge in choices.iter().filter(|e| {
+                        e.parent.group.as_ref() == Some(&group) && e.parent.name == name
+                    }) {
+                        if !direct_deps.contains(&edge.provider) {
+                            direct_deps.push(edge.provider.clone());
+                        }
+                    }
+
                     // `[obsoletes]` → drop the superseded node from the
                     // output, mirroring the naive cell (PROP-017 §3).
                     for ob in &manifest.obsoletes.packages {
@@ -244,8 +332,91 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                 // Capability requirements of the selected packages are
                 // verified against the selected set — the clean
                 // CapabilityUnmet verdict (PROP-017 §3).
+                // Masked capability declarations have already been discharged
+                // by the route mask; unmasked ones still require a witness.
+                for (parent, _, manifest) in &mut selected {
+                    let mut index = 0;
+                    manifest.requires.capabilities.retain(|cap| {
+                        let declaration = format!("requires.capabilities[{index}]:{cap}");
+                        index += 1;
+                        !self.provider.retained_choices().iter().any(|e| {
+                            e.parent.qualified_name() == *parent
+                                && e.declaration == declaration
+                                && self
+                                    .provider
+                                    .edge_blocked(parent, &e.provider.qualified_name())
+                        })
+                    });
+                }
                 capabilities::verify(&selected)?;
-                Ok(build_resolved_graph(&root_order, chosen, &obsolete))
+                let graph = build_resolved_graph(&root_order, chosen, &obsolete);
+                for edge in &choices {
+                    if graph
+                        .find(
+                            edge.parent.group.as_ref().expect("qualified witness"),
+                            edge.parent.name.as_str(),
+                        )
+                        .is_some()
+                        && graph
+                            .find(
+                                edge.provider.group.as_ref().expect("qualified witness"),
+                                edge.provider.name.as_str(),
+                            )
+                            .is_none()
+                    {
+                        return Err(DepProviderError::Other(
+                            "obsolete projection removed a selected choice provider".into(),
+                        )
+                        .into());
+                    }
+                }
+                for node in graph.iter() {
+                    let manifest =
+                        self.provider
+                            .fetch_manifest(&node.group, &node.name, &node.version)?;
+                    for (index, dep) in manifest.requires.packages.iter().enumerate() {
+                        if self.provider.edge_blocked(
+                            &format!("{}/{}", node.group, node.name),
+                            &dep.qualified_name(),
+                        ) {
+                            continue;
+                        }
+                        if dep
+                            .group
+                            .as_ref()
+                            .is_some_and(|g| obsolete.contains(&(g.clone(), dep.name.to_string())))
+                        {
+                            continue;
+                        }
+                        let Some(target) = dep
+                            .group
+                            .as_ref()
+                            .and_then(|g| graph.find(g, dep.name.as_str()))
+                        else {
+                            return Err(DepProviderError::Other(
+                                "graph projection lost a selected dependency".into(),
+                            )
+                            .into());
+                        };
+                        choices.push(SelectedChoice {
+                            parent: PackageRef::parse(&format!(
+                                "{}/{}@={}",
+                                node.group, node.name, node.version
+                            ))
+                            .expect("selected coordinate"),
+                            declaration: format!("requires.packages[{index}]"),
+                            alternative: 0,
+                            provider: PackageRef::parse(&format!(
+                                "{}/{}@={}",
+                                target.group, target.name, target.version
+                            ))
+                            .expect("selected coordinate"),
+                        });
+                    }
+                }
+                choices
+                    .sort_by_key(|e| (e.parent.to_string(), e.declaration.clone(), e.alternative));
+                Ok(RecordedResolution { graph, choices })
             }
             Err(UnsolvableOrCancelled::Unsolvable(conflict)) => Err(SolveError::Unsatisfiable {
                 explanation: conflict.display_user_friendly(&solver).to_string(),
@@ -263,7 +434,7 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
         &self,
         graph: &ResolvedGraph,
         tried: &HashSet<(Group, String)>,
-    ) -> Result<Vec<PackageRef>, SolveError> {
+    ) -> Result<Vec<(PackageRef, SelectedChoice)>, SolveError> {
         let mut out = Vec::new();
         let mut seen: HashSet<(Group, String)> = HashSet::new();
         for node in graph.iter() {
@@ -271,7 +442,13 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                 .provider
                 .fetch_manifest(&node.group, &node.name, &node.version)
                 .map_err(SolveError::Provider)?;
-            for rec in &manifest.recommends.packages {
+            for (index, rec) in manifest.recommends.packages.iter().enumerate() {
+                if self.provider.edge_blocked(
+                    &format!("{}/{}", node.group, node.name),
+                    &rec.qualified_name(),
+                ) {
+                    continue;
+                }
                 let Some(group) = rec.group.clone() else {
                     continue;
                 };
@@ -280,7 +457,19 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                     continue;
                 }
                 if seen.insert(key) {
-                    out.push(rec.clone());
+                    out.push((
+                        rec.clone(),
+                        SelectedChoice {
+                            parent: PackageRef::parse(&format!(
+                                "{}/{}@={}",
+                                node.group, node.name, node.version
+                            ))
+                            .expect("selected coordinate"),
+                            declaration: format!("recommends.packages[{index}]"),
+                            alternative: 0,
+                            provider: rec.clone(),
+                        },
+                    ));
                 }
             }
         }
@@ -299,3 +488,6 @@ mod m_05_c_1_cases;
 mod m_05_c_2_cases;
 
 pub use semver::Version as CandidateVersion;
+
+#[cfg(test)]
+mod m_05_c_3_cases;

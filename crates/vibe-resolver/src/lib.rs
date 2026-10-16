@@ -111,7 +111,7 @@ pub(crate) use kind_check::assert_kind_matches;
 /// assert_eq!(node.group.as_str(), "org.vibevm");
 /// assert!(node.is_root);
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
 pub struct ResolvedNode {
@@ -151,7 +151,7 @@ pub struct ResolvedNode {
 /// assert!(graph.find(&org, "wal").is_some());
 /// assert_eq!(graph.roots().count(), 1);
 /// ```
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
 pub struct ResolvedGraph {
     pub packages: Vec<ResolvedNode>,
@@ -279,6 +279,13 @@ pub trait DepProvider {
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
 )]
 pub trait VersionEnumerator: DepProvider {
+    fn edge_blocked(&self, _parent: &str, _target: &str) -> bool {
+        false
+    }
+    fn retained_choices(&self) -> &[resolvo_engine::SelectedChoice] {
+        &[]
+    }
+
     /// A valid candidate incompatible with the admitted consumer intent.
     /// Source failures must be returned by the provider, never placed here.
     fn candidate_rejection(
@@ -440,6 +447,7 @@ pub enum DepProviderError {
 /// rather than module-private so the multiple solver impls in this crate
 /// share one definition.
 pub(crate) struct SolverState {
+    pub choices: Vec<resolvo_engine::SelectedChoice>,
     pub chosen: HashMap<(Group, String), ChosenEntry>,
     pub providers_index: HashMap<String, Vec<(Group, String, semver::Version)>>,
     pub declared_conflicts: HashSet<(Group, String)>,
@@ -463,6 +471,7 @@ pub(crate) struct EnqueuedPkg {
 impl SolverState {
     pub(crate) fn new() -> Self {
         SolverState {
+            choices: Vec::new(),
             chosen: HashMap::new(),
             providers_index: HashMap::new(),
             declared_conflicts: HashSet::new(),
@@ -522,6 +531,11 @@ pub(crate) fn build_resolved_graph(
         .map(|n| ((n.group.clone(), n.name.clone()), n.version.clone()))
         .collect();
     for node in packages.iter_mut() {
+        node.dependencies.retain(|dep| {
+            !dep.group
+                .as_ref()
+                .is_some_and(|group| obsolete.contains(&(group.clone(), dep.name.to_string())))
+        });
         for dep in node.dependencies.iter_mut() {
             if let Some(group) = dep.group.clone()
                 && let Some(version) = resolved_versions.get(&(group, dep.name.to_string()))

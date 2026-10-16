@@ -182,6 +182,14 @@ fn conflict_key(package: &str) -> Result<(Group, String), SolveError> {
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 impl<P: DepProvider> DepSolver for SatDepSolver<P> {
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        Ok(self.solve_recorded(roots)?.graph)
+    }
+}
+impl<P: DepProvider> SatDepSolver<P> {
+    pub fn solve_recorded(
+        &self,
+        roots: &[PackageRef],
+    ) -> Result<crate::resolvo_engine::RecordedResolution, SolveError> {
         // The choice stack: each entry excludes `>= bound` for its
         // package. The effective bound per package is the LOWEST entry
         // (entries for one package only ever descend).
@@ -200,7 +208,7 @@ impl<P: DepProvider> DepSolver for SatDepSolver<P> {
                 inner: &self.provider,
                 bounds: &bounds,
             };
-            let attempt = NaiveDepSolver::new(bounded).solve(roots);
+            let attempt = NaiveDepSolver::new(bounded).solve_recorded(roots);
             match attempt {
                 Ok(graph) => return Ok(graph),
                 Err(SolveError::VersionConflict {

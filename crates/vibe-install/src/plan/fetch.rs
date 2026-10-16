@@ -35,8 +35,14 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     } else {
         FeatureRequest::default()
     };
-    let feature_expansion =
-        vibe_resolver::features::expand_manifest_features(&cached.manifest, &req)?;
+    let feature_expansion = match source.route_resolution().and_then(|r| {
+        r.effects
+            .get(&format!("{}/{}@{}", node.group, node.name, node.version))
+            .cloned()
+    }) {
+        Some(expansion) => expansion,
+        None => vibe_resolver::features::expand_manifest_features(&cached.manifest, &req)?,
+    };
     let embedded_sources =
         vibe_registry::lock_embedded_sources_with(&cached.manifest.embedded_sources, offline)?;
     Ok(Fetched {
@@ -72,9 +78,10 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
 ) -> Result<Fetched> {
     source.validate_catalog_candidate(&exact_pinned_pkgref(node))?;
     match try_in_place_incremental(node, lockfile, workspace_root, root_features)? {
-        Some(fetched) => {
+        Some(mut fetched) => {
             if source.catalog_inspection().is_some()
-                && fetched.cached.manifest != source.manifest_of(&exact_pinned_pkgref(node))?
+                && fetched.cached.manifest
+                    != source.catalog_manifest_of(&exact_pinned_pkgref(node))?
             {
                 return Err(vibe_resolver::SolveError::Provider(
                     vibe_resolver::DepProviderError::Other(
@@ -82,6 +89,13 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
                     ),
                 )
                 .into());
+            }
+            if let Some(expansion) = source.route_resolution().and_then(|r| {
+                r.effects
+                    .get(&format!("{}/{}@{}", node.group, node.name, node.version))
+                    .cloned()
+            }) {
+                fetched.feature_expansion = expansion;
             }
             Ok(fetched)
         }
@@ -184,24 +198,10 @@ pub(super) fn try_in_place_incremental(
     }))
 }
 
-/// The PROP-003 §2.6.1 conditional-dependency loop. Each pass: build
-/// the activation context from currently-fetched packages; walk every
-/// package's `[target."context(...)".dependencies]`; if any predicate
-/// matches and its targets aren't already in the graph, add them as
-/// extra roots; re-solve and fetch. Repeat until no new extras emerge,
-/// or until the iteration cap is hit.
-///
-/// Convergence: extras only ADD packages to the fetched set
-/// (monotonic), and the predicate evaluation is a pure function of
-/// `present` + `provides`, which only grow. So either a pass produces
-/// no extras (terminates), or every pass adds at least one package —
-/// bounded by the registry's size.
-///
-/// The cap (5 iterations) catches authoring-bug cases where a chain of
-/// conditional deps re-triggers on each iteration without converging.
-/// The conservative cap surfaces as a loud error so the operator can
-/// either fix the chain or bump the limit explicitly. No realistic
-/// graph reaches the cap.
+/// Evaluate active conditional declarations against the selected context and
+/// resubmit every constraint, including those targeting an existing node.
+/// Bounded orchestration is not complete candidate-conditioned solving:
+/// changed declaring candidates and unstable combinations refuse explicitly.
 #[expect(
     clippy::too_many_arguments,
     reason = "the fixpoint reads the whole planning context; bundling \
@@ -229,6 +229,7 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
 ) -> Result<()> {
     const COND_DEP_MAX_ITER: usize = 5;
     let mut iteration: usize = 0;
+    let mut previous = Vec::new();
     loop {
         iteration += 1;
         let preliminary_ctx = build_activation_context(
@@ -236,46 +237,40 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
             project_root,
             language_chain,
         )?;
-        let mut extra: Vec<PackageRef> = Vec::new();
+        let mut extra = Vec::new();
         for f in fetched.iter() {
             for (pred_str, target) in &f.cached.manifest.conditional_deps {
-                match ConditionalPredicate::parse(pred_str) {
-                    Ok(pred) => {
-                        if pred.evaluate(&preliminary_ctx) {
-                            for r in &target.dependencies.packages {
-                                let already = fetched.iter().any(|g| {
-                                    Some(&g.cached.resolved.group) == r.group.as_ref()
-                                        && g.cached.resolved.name == r.name
-                                }) || extra
-                                    .iter()
-                                    .any(|x| x.group == r.group && x.name == r.name);
-                                if !already {
-                                    extra.push(r.clone());
-                                }
-                            }
-                        }
-                    }
-                    Err(e) => {
-                        tracing::warn!(
-                            target: "vibe_install",
-                            package = %format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name),
-                            predicate = %pred_str,
-                            error = %e,
-                            "conditional-dep predicate could not be parsed; skipping"
-                        );
+                let pred = ConditionalPredicate::parse(pred_str).map_err(|e| {
+                    vibe_resolver::SolveError::UnsupportedRoute(format!(
+                        "invalid conditional predicate: {e}"
+                    ))
+                })?;
+                if pred.evaluate(&preliminary_ctx) {
+                    for (index, dependency) in target.dependencies.packages.iter().enumerate() {
+                        extra.push(vibe_resolver::resolvo_engine::request::ConditionalEdge {
+                            parent: PackageRef::parse(&format!(
+                                "{}/{}@={}",
+                                f.cached.resolved.group,
+                                f.cached.resolved.name,
+                                f.cached.resolved.version
+                            ))
+                            .expect("selected coordinate"),
+                            declaration: format!(
+                                "target[{pred_str}].dependencies.packages[{index}]"
+                            ),
+                            dependency: dependency.clone(),
+                        });
                     }
                 }
             }
         }
-        if extra.is_empty() {
+        if extra == previous {
             return Ok(());
         }
         if iteration > COND_DEP_MAX_ITER {
-            return Err(Error::ConditionalDepRunaway {
-                iterations: COND_DEP_MAX_ITER,
-                pending: extra.iter().map(|r| r.qualified_name()).collect(),
-            });
+            return Err(vibe_resolver::SolveError::UnsupportedRoute(format!("conditional route did not stabilize in {COND_DEP_MAX_ITER} iterations; bounded retry is not complete conditional solving")).into());
         }
+        previous = extra.clone();
         observer.on(events::PlanEvent::ConditionalIteration {
             iteration,
             extras: extra.len(),
@@ -285,25 +280,10 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
             extra.len(),
             if extra.len() == 1 { "" } else { "s" }
         ));
-        let mut combined = roots.to_vec();
-        combined.extend(fetched.iter().filter(|f| f.meta.is_root).map(|f| {
-            exact_pinned_pkgref(&ResolvedNode {
-                group: f.cached.resolved.group.clone(),
-                name: f.cached.resolved.name.clone(),
-                version: f.cached.resolved.version.clone(),
-                dependencies: Vec::new(),
-                is_root: true,
-            })
-        }));
-        combined.extend(extra.iter().cloned());
-        // De-duplicate by the `(group, name)` identity (PROP-008 §2.3).
-        let mut seen: std::collections::HashSet<(Option<Group>, String)> =
-            std::collections::HashSet::new();
-        combined.retain(|r| seen.insert((r.group.clone(), r.name.to_string())));
-        let new_graph = source.solve(&combined)?;
+        let new_graph = source.solve_conditional(roots, &extra)?;
         let effective = crate::visibility_projection::resolve_effective(
             source,
-            &combined,
+            roots,
             root_manifest,
             root_id,
             new_graph,

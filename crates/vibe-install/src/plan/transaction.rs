@@ -7,13 +7,13 @@ pub(super) struct PlanningSource<'a, S: ?Sized> {
     frozen: Option<Box<dyn InstallSource + 'a>>,
 }
 impl<'a, S: InstallSource + ?Sized> PlanningSource<'a, S> {
-    pub(super) fn capture(
+    pub(super) fn capture_request(
         original: &'a S,
-        roots: &[PackageRef],
+        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
     ) -> std::result::Result<Self, SolveError> {
         Ok(Self {
             original,
-            frozen: original.begin_transaction(roots)?,
+            frozen: original.begin_normalized_transaction(request)?,
         })
     }
 }
@@ -23,6 +23,30 @@ macro_rules! forward {
     };
 }
 impl<S: InstallSource + ?Sized> InstallSource for PlanningSource<'_, S> {
+    fn solve_conditional(
+        &self,
+        roots: &[PackageRef],
+        edges: &[vibe_resolver::resolvo_engine::request::ConditionalEdge],
+    ) -> std::result::Result<ResolvedGraph, SolveError> {
+        forward!(self, solve_conditional(roots, edges))
+    }
+    fn normalized_request(
+        &self,
+    ) -> Option<&vibe_resolver::resolvo_engine::request::NormalizedRequest> {
+        forward!(self, normalized_request())
+    }
+    fn route_resolution(&self) -> Option<vibe_resolver::resolvo_engine::request::RouteResolution> {
+        forward!(self, route_resolution())
+    }
+    fn finish_route_projection(
+        &self,
+        graph: &ResolvedGraph,
+    ) -> std::result::Result<(), SolveError> {
+        forward!(self, finish_route_projection(graph))
+    }
+    fn catalog_manifest_of(&self, pkg: &PackageRef) -> std::result::Result<Manifest, SolveError> {
+        forward!(self, catalog_manifest_of(pkg))
+    }
     fn catalog_inspection(&self) -> Option<&CatalogInspection> {
         forward!(self, catalog_inspection())
     }
