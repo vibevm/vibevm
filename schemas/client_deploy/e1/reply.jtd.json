@@ -1,0 +1,129 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "action": {
+      "enum": [
+        "plan",
+        "apply",
+        "verify",
+        "update",
+        "recover",
+        "remove",
+        "inspect",
+        "cancel"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "plan_id": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "completed",
+        "partial",
+        "unknown",
+        "cancelled",
+        "needs_preparation",
+        "needs_authority",
+        "refused"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "authority": {
+      "enum": [
+        "required",
+        "admitted",
+        "stale",
+        "unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "resources": {
+      "elements": {
+        "ref": "resource"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "steps": {
+      "elements": {
+        "ref": "step"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "cancel_pending": {
+      "type": "boolean"
+    },
+    "message": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "resource": {
+      "properties": {
+        "resource": {
+          "type": "string"
+        },
+        "prior": {
+          "type": "string"
+        },
+        "desired": {
+          "type": "string"
+        },
+        "observed": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "prior",
+            "desired",
+            "third",
+            "unavailable"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "step": {
+      "properties": {
+        "resource": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "attempted",
+            "completed",
+            "uncertain"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "retry_safe": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

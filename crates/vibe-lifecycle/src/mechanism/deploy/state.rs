@@ -804,6 +804,31 @@ impl DeployState {
         Ok(rows)
     }
 
+    pub(crate) fn read_client(
+        &self,
+        home: &DeploymentHome,
+        run: &str,
+    ) -> Result<Option<vibe_wire::generated::deploy_client_state::DeployClientState>, DeployError>
+    {
+        self.read(&home.member(&format!(
+            "client-runs/{}.json",
+            super::client_deploy::digest(run.as_bytes())
+        )))
+    }
+    pub(crate) fn write_client(
+        &self,
+        home: &DeploymentHome,
+        value: &vibe_wire::generated::deploy_client_state::DeployClientState,
+    ) -> Result<(), DeployError> {
+        self.publish(
+            &home.member(&format!(
+                "client-runs/{}.json",
+                super::client_deploy::digest(value.run_id.as_bytes())
+            )),
+            value,
+        )
+    }
+
     /// Encode and publish one JSON record atomically.
     fn publish<T: StateRecord>(&self, relative: &str, value: &T) -> Result<(), DeployError> {
         let bytes = value.encode().map_err(|error| DeployError::StateWrite {

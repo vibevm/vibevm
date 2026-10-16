@@ -1098,3 +1098,21 @@ pub(crate) fn bound_plan_hash(
     }
     format!("{:x}", hash.finalize())
 }
+
+impl Transaction<'_> {
+    /// Client commands retain attempted and observed prefixes under the same
+    /// deployment locks, checkpoints, intent and receipt publication owner.
+    pub(crate) fn client(
+        host: &super::client_deploy::Host,
+        state: &DeployState,
+        home: &DeploymentHome,
+        plan: &super::client_deploy::Prepared,
+        grant: &super::client_deploy::Approval,
+        reply: vibe_wire::generated::client_deploy::e1::reply::Reply,
+        recovery: bool,
+        cancel: &super::client_deploy::Cancellation,
+        clock: &str,
+    ) -> Result<vibe_wire::generated::client_deploy::e1::reply::Reply, String> {
+        host.transact(state, home, plan, grant, reply, recovery, cancel, clock)
+    }
+}

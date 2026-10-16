@@ -1,0 +1,36 @@
+{
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "action": {
+      "enum": [
+        "plan",
+        "apply",
+        "verify",
+        "update",
+        "recover",
+        "remove",
+        "inspect",
+        "cancel"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "plan_id": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "run_id": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  }
+}

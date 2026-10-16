@@ -87,6 +87,9 @@ pub struct ServerContext {
     >,
     fixed_cargo_bridge:
         Option<std::sync::Arc<vibe_orchestrator::machine_operation::fixed_cargo::FixedCargoRoute>>,
+    client_deploy_bridge: Option<
+        std::sync::Arc<vibe_orchestrator::machine_operation::client_deploy::ClientDeployRoute>,
+    >,
     fixed_deploy_bridge: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::fixed_deploy::FixedDeployRoute>,
     >,
@@ -101,6 +104,24 @@ pub struct ServerContext {
 }
 
 impl ServerContext {
+    pub fn with_client_deploy_route(
+        mut self,
+        route: std::sync::Arc<
+            vibe_orchestrator::machine_operation::client_deploy::ClientDeployRoute,
+        >,
+    ) -> Result<Self, String> {
+        route.compare_context_root(&self.project_root)?;
+        self.client_deploy_bridge = Some(route);
+        Ok(self)
+    }
+    pub fn client_deploy_route(
+        &self,
+    ) -> Option<
+        &std::sync::Arc<vibe_orchestrator::machine_operation::client_deploy::ClientDeployRoute>,
+    > {
+        self.client_deploy_bridge.as_ref()
+    }
+
     pub fn with_adapter_plan_route(
         mut self,
         route: std::sync::Arc<vibe_orchestrator::machine_operation::adapter_plan::AdapterPlanRoute>,
@@ -333,6 +354,7 @@ impl ServerContext {
             exact_local_install_bridge: None,
             fixed_package_bridge: None,
             fixed_cargo_bridge: None,
+            client_deploy_bridge: None,
             fixed_deploy_bridge: None,
         }
     }
@@ -359,6 +381,7 @@ impl ServerContext {
             exact_local_install_bridge: None,
             fixed_package_bridge: None,
             fixed_cargo_bridge: None,
+            client_deploy_bridge: None,
             fixed_deploy_bridge: None,
         }
     }
@@ -471,6 +494,7 @@ mod tests {
                 exact_local_install_bridge,
                 fixed_package_bridge,
                 fixed_cargo_bridge,
+                client_deploy_bridge,
                 fixed_deploy_bridge,
             } = context;
             let _ = (
@@ -488,6 +512,7 @@ mod tests {
                 exact_local_install_bridge,
                 fixed_package_bridge,
                 fixed_cargo_bridge,
+                client_deploy_bridge,
                 fixed_deploy_bridge,
             );
         }

@@ -558,3 +558,5 @@ pub(crate) const BUILTIN_OPENCODE_PLUGIN_NAME: &str = "opencode-plugin";
 pub use deploy::generic;
 
 pub use deploy::client_commands;
+
+pub use deploy::client_deploy;

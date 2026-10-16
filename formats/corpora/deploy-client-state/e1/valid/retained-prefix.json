@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "deployment": "deployment-fixture",
+  "scope": "fixture",
+  "plan_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "run_id": "run-fixture",
+  "subject": "descriptor-1",
+  "reply": {
+    "schema": 1,
+    "action": "apply",
+    "plan_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "run_id": "run-fixture",
+    "status": "partial",
+    "authority": "admitted",
+    "resources": [
+      {
+        "resource": "a",
+        "prior": "absent",
+        "desired": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "observed": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "state": "desired"
+      },
+      {
+        "resource": "b",
+        "prior": "absent",
+        "desired": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "observed": "absent",
+        "state": "prior"
+      }
+    ],
+    "steps": [
+      {
+        "resource": "a",
+        "subject": "51a4c6209f1c275c85b11e3be99cb2f481b8e4baa513ab73eff3a0e5f61543b2",
+        "status": "completed",
+        "retry_safe": false
+      },
+      {
+        "resource": "b",
+        "subject": "51a4c6209f1c275c85b11e3be99cb2f481b8e4baa513ab73eff3a0e5f61543b2",
+        "status": "pending",
+        "retry_safe": false
+      }
+    ],
+    "cancel_pending": false,
+    "message": "response loss after first effect"
+  },
+  "published": true,
+  "commands": [
+    {
+      "resource": "a",
+      "plan": {
+        "schema": 1,
+        "request": {
+          "schema": 1,
+          "client": "claude",
+          "contract_version": 1,
+          "version": "2.1.7",
+          "operation": "install",
+          "coordinate": "plug@market"
+        },
+        "executable": "/fixture/client",
+        "resolved": "/fixture/client",
+        "executable_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "executable_identity": "fixture-object",
+        "version_reply": "2.1.7",
+        "argv": [
+          "plugin",
+          "install",
+          "--scope",
+          "user",
+          "plug@market"
+        ],
+        "cwd": "/fixture",
+        "environment_ref": "fixture-env",
+        "environment": {
+          "HOME": "/fixture/home"
+        },
+        "roots": [
+          "/fixture"
+        ],
+        "principal": "fixture",
+        "policy": "1",
+        "evidence": "1",
+        "effects": [
+          "process execution",
+          "client user state mutation"
+        ]
+      }
+    },
+    {
+      "resource": "b",
+      "plan": {
+        "schema": 1,
+        "request": {
+          "schema": 1,
+          "client": "claude",
+          "contract_version": 1,
+          "version": "2.1.7",
+          "operation": "install",
+          "coordinate": "plug@market"
+        },
+        "executable": "/fixture/client",
+        "resolved": "/fixture/client",
+        "executable_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "executable_identity": "fixture-object",
+        "version_reply": "2.1.7",
+        "argv": [
+          "plugin",
+          "install",
+          "--scope",
+          "user",
+          "plug@market"
+        ],
+        "cwd": "/fixture",
+        "environment_ref": "fixture-env",
+        "environment": {
+          "HOME": "/fixture/home"
+        },
+        "roots": [
+          "/fixture"
+        ],
+        "principal": "fixture",
+        "policy": "1",
+        "evidence": "1",
+        "effects": [
+          "process execution",
+          "client user state mutation"
+        ]
+      }
+    }
+  ]
+}
