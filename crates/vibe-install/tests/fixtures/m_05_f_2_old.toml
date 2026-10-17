@@ -1,0 +1,21 @@
+[project]
+name = "consumer-a"
+group = "org.example"
+version = "1.1.0"
+authors = ["Human author"]
+
+# Independent MUP root must survive switching the Redbook branch.
+[requires.packages."flow:org.vibevm.world/multi-user-planning"]
+version = "^1.1.0"
+link = "static-transitive"
+
+[requires.packages."org.vibevm.world/redbook"]
+version = "^1.1.0"
+link = "static-transitive"
+access = "public"
+friend = false
+exclude = [
+  # Old manual continuity workaround, retained as explanatory history.
+  "org.vibevm.world/wal",
+  "org.vibevm.world/wal-specspaces",
+]

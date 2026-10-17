@@ -14,6 +14,7 @@ mod artifact;
 pub mod change;
 mod compile;
 mod consumer;
+mod consumer_configuration;
 mod declarant_path;
 mod decor;
 mod deploy;
@@ -40,6 +41,9 @@ pub use artifact::{
 };
 pub use compile::CompileSection;
 pub use consumer::{ConsumerNode, NodeRole};
+pub use consumer_configuration::{
+    ConsumerConfiguration, ConsumerSelection, ConsumerSelectionIntent,
+};
 pub use declarant_path::{
     DeclarantPathFault, DeclarantPathMode, declarant_path, declarant_path_component,
     declarant_path_pattern, is_windows_device_name, is_windows_unsafe_component,
@@ -73,6 +77,7 @@ pub(crate) fn replay_authored_tokens(
 ) -> std::result::Result<String, MigrationRefusal> {
     migration::replay_edits(text, edits)
 }
+pub use migration::redbook;
 pub use migration::{
     BOOT_SOURCE_INSERT, CURRENT_ABSENT, CURRENT_EPOCH1, FEATURES_LEGACY_ABSENT,
     FEATURES_LEGACY_EPOCH1, FEATURES_TO_TYPED, FEATURES_TO_TYPED_EPOCH1, FEATURES_TYPED_ABSENT,

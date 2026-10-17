@@ -118,7 +118,7 @@ pub(super) fn read_descriptor_package(
     }
     let text = std::str::from_utf8(&bytes)
         .map_err(|_| source_error(&path, "source manifest is not UTF-8"))?;
-    let manifest = Manifest::parse_str(text)
+    let manifest = Manifest::parse_package_source(text)
         .map_err(|error| source_error(&path, format!("descriptor manifest is invalid: {error}")))?;
     let meta = manifest
         .package

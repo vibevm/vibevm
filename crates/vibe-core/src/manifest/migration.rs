@@ -13,6 +13,7 @@ use toml_edit::{Document, Item, TableLike, Value};
 use super::{Manifest, SourceDescriptor};
 
 mod features;
+pub mod redbook;
 mod source;
 pub use features::{
     FEATURES_LEGACY_ABSENT, FEATURES_LEGACY_EPOCH1, FEATURES_TO_TYPED, FEATURES_TO_TYPED_EPOCH1,
@@ -49,6 +50,7 @@ pub fn manifest_migration_profile_epoch(profile: &str) -> Option<ManifestMigrati
         | SOURCE_BOOT_CURRENT
         | FEATURES_LEGACY_ABSENT
         | FEATURES_TYPED_ABSENT => Some(ManifestMigrationEpoch::Absent),
+        redbook::LEGACY | redbook::SELECTED => Some(ManifestMigrationEpoch::Absent),
         CURRENT_EPOCH1 | FEATURES_LEGACY_EPOCH1 | FEATURES_TYPED_EPOCH1 => {
             Some(ManifestMigrationEpoch::Epoch1)
         }
@@ -160,6 +162,17 @@ fn refusal(kind: MigrationRefusalKind, field: &str, reason: &'static str) -> Mig
 }
 
 fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrationOutcome> {
+    if [
+        selection.source_profile,
+        selection.target_profile,
+        selection.recipe,
+    ]
+    .iter()
+    .flatten()
+    .any(|v| redbook::known(v))
+    {
+        return redbook::plan(text, selection);
+    }
     let selected = [
         selection.source_profile,
         selection.target_profile,
@@ -336,6 +349,30 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
 fn frame(digest: &mut Sha256, bytes: &[u8]) {
     digest.update((bytes.len() as u64).to_be_bytes());
     digest.update(bytes);
+}
+
+fn diff_identity(
+    source: &str,
+    target: &str,
+    recipe: &str,
+    text: &str,
+    after: &str,
+    edits: &[MigrationTokenEdit],
+) -> String {
+    let mut digest = Sha256::new();
+    frame(&mut digest, b"vibe-manifest-migration-diff-r1");
+    for value in [source, target, recipe, text, after] {
+        frame(&mut digest, value.as_bytes());
+    }
+    frame(&mut digest, &(edits.len() as u64).to_be_bytes());
+    for edit in edits {
+        frame(&mut digest, edit.field.as_bytes());
+        frame(&mut digest, &(edit.before_span.start as u64).to_be_bytes());
+        frame(&mut digest, &(edit.before_span.end as u64).to_be_bytes());
+        frame(&mut digest, edit.before_token.as_bytes());
+        frame(&mut digest, edit.after_token.as_bytes());
+    }
+    format!("{:x}", digest.finalize())
 }
 
 fn identity(domain: &[u8], values: &[&[u8]]) -> String {

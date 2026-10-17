@@ -77,6 +77,8 @@ use super::{read_toml, write_toml};
 #[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
 #[serde(try_from = "ManifestWire")]
 pub struct Manifest {
+    /// Authored consumer intent; never reconstructed from resolved lock choices.
+    pub consumer_configuration: Vec<super::ConsumerConfiguration>,
     /// `[project]` — identity of a non-publishable consumer node. Mutually
     /// exclusive with `package`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -424,6 +426,27 @@ impl BootSection {
 
 impl Manifest {
     pub const FILENAME: &'static str = "vibe.toml";
+
+    /// Read package-source metadata, including an explicitly authored F1
+    /// profile. This admits no selections or default consent. The ordinary
+    /// legacy parser and immutable migration profiles remain unchanged.
+    pub fn parse_package_source(text: &str) -> Result<Self> {
+        match super::feature_profile::constrained::read(text)
+            .map_err(|reason| Error::InvalidManifest { reason })?
+        {
+            Some(checked) => Ok(checked.manifest),
+            None => Self::parse_str(text),
+        }
+    }
+
+    pub fn read_package_source(path: impl AsRef<Path>) -> Result<Self> {
+        let path = path.as_ref();
+        let text = std::fs::read_to_string(path).map_err(|source| Error::Read {
+            path: path.to_path_buf(),
+            source,
+        })?;
+        Self::parse_package_source(&text)
+    }
 
     /// Read and validate a `vibe.toml` from disk.
     pub fn read(path: impl AsRef<Path>) -> Result<Self> {

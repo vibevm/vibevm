@@ -298,6 +298,8 @@ enum OverrideWire {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct ManifestWire<F: super::features::profile::FeatureWire = FeaturesTable> {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    consumer_configuration: Vec<crate::manifest::ConsumerConfiguration>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     project: Option<ProjectSection>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -462,6 +464,7 @@ impl<F: super::features::profile::FeatureWire> ManifestWire<F> {
         let artifacts = wire.artifacts.map(TryInto::try_into).transpose()?;
         let deploy = wire.deploy.map(TryInto::try_into).transpose()?;
         Ok(Manifest {
+            consumer_configuration: wire.consumer_configuration,
             project: wire.project,
             package: wire.package,
             application: wire.application,
@@ -546,6 +549,7 @@ impl TryFrom<Manifest> for ManifestWire {
             manifest.deploy.map(TryInto::try_into).transpose()?;
         Ok(Self {
             project: manifest.project,
+            consumer_configuration: manifest.consumer_configuration,
             package: manifest.package,
             application: manifest.application,
             application_source: manifest.application_source,

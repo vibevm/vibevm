@@ -36,6 +36,8 @@ use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
 use vibe_resolver::{ResolvedGraph, SolveError};
 
 mod apply;
+mod authored_configuration;
+pub use authored_configuration::{authored_configuration, bind_authored_request};
 mod error;
 mod events;
 pub mod evolution;
@@ -43,6 +45,8 @@ mod fetched;
 mod lifecycle;
 #[cfg(test)]
 mod m_05_f_1_cases;
+#[cfg(test)]
+mod m_05_f_2_cases;
 mod plan;
 mod preconditions;
 mod record;

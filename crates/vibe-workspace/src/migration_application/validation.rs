@@ -132,6 +132,11 @@ fn frozen(plan: &Plan, is_no_op: bool) -> Checked<()> {
             "checked output could not be validated",
         )
     })?;
+    // This scoped consumer recipe also migrates owned project manifests.
+    // Existing profiles still require a package; frozen packages still refuse.
+    if plan.target_profile == vibe_core::manifest::redbook::SELECTED && manifest.project.is_some() {
+        return Ok(());
+    }
     if !is_no_op
         && manifest
             .require_package()

@@ -1,0 +1,47 @@
+{
+  "representation": "Lossless decoded-output projection of actual normal committed receipt; original integer byte array omitted",
+  "source": {
+    "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/receipts/m05.f2.accept.safety.record.json",
+    "sha256": "bc7f735c400b34248bd30269d8719e3f4fa47094048a80f6ebc93e2845194d30",
+    "bytes": 2542
+  },
+  "status": "committed",
+  "receipt": {
+    "command_id": "campaign.remaining.m05.f2.accept.safety.record",
+    "disposition": "committed",
+    "event_digest": "e0264f2cb35957189a90e83c13b233d706abb00715e1a5a22aab1b8fc6859e1b",
+    "event_id": "event:campaign.remaining.m05.f2.accept.safety.record",
+    "revision": 12644,
+    "store": {
+      "base_id": "base.vibevm-campaign.remaining",
+      "campaign_id": "campaign.vibevm-campaign.remaining",
+      "codec_epoch": 2,
+      "reducer_epoch": 1,
+      "store_epoch": "zap/2",
+      "store_id": "store.vibevm-campaign.remaining"
+    },
+    "transaction_id": "tx:campaign.remaining.m05.f2.accept.safety.record"
+  },
+  "decoded_output": {
+    "attempt_id": "attempt.runtime.packet.known:cfadb4868f41619ffedaadfec2502b95a632f06a99396278d5be8033079ac813",
+    "contract_digest": "94055cb791c8e828a0e88b2b0a9aa7e7777c2c91bb806fd05e1003ee4bd74e87",
+    "contract_id": "contract.m05.f2",
+    "effect": "completed",
+    "execution": "succeeded",
+    "job_id": "job.runtime.packet.known:cfadb4868f41619ffedaadfec2502b95a632f06a99396278d5be8033079ac813",
+    "revision": 12644,
+    "safe_state": "completed",
+    "subjects": [
+      {
+        "id": "work.m05.f2",
+        "kind": "work"
+      },
+      {
+        "id": "source.vibevm-next.current-state",
+        "kind": "source"
+      }
+    ],
+    "validation_generation": 0,
+    "work_id": "work.m05.f2"
+  }
+}

@@ -7,6 +7,7 @@ development practices, each installed as its own flow with its own
 boot snippet and protocol documents.</PROJECT-FOLLOWS-THE-REDBOOK></p>
   <p><THIS-SNIPPET-ONLY-NAMES-THE-COLLECTION fact="true" status="impl/done">This snippet only names the
 collection; the members carry the actual rules.</THIS-SNIPPET-ONLY-NAMES-THE-COLLECTION></p>
+  <p><REDBOOK-CURRENT-COMPOSITION fact="true" status="spec/done">The mutable 1.1.0 manifest declares exactly-one continuity: MUP (declared default) or WAL. Defaults require explicit consent bound to the shown definition. Global additions are independent; MUP research and WAL specspaces additions are guarded by their selected branch. Dormant additions contribute no effects. The historical roster below is reference context; the manifest and explicit consumer request determine the current closure. This package declares no global MUP/WAL conflict.</REDBOOK-CURRENT-COMPOSITION></p>
   <spirit-source title="The source of the spirit">
     <p><practices-distilled-from-the-book fact="true" status="spec/done">The practices are distilled from the book *AI-native development*.</practices-distilled-from-the-book></p>
     <p><THE-BOOK-SHIPS-IN-THIS-PACKAGE fact="true" status="impl/done">The book itself ships in this package at `spec/book/ru/` (currently
@@ -27,7 +28,6 @@ not standing instructions.</DO-NOT-READ-THE-BOOK-AT-SESSION-BOOT></p>
 actually arises; the members' boot snippets carry everything a
 session needs.</OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES></p>
   </spirit-source>
-  <p><REDBOOK-CURRENT-COMPOSITION fact="true" status="spec/done">The mutable 1.1.0 manifest declares exactly-one continuity: MUP (declared default) or WAL. Defaults require explicit consent bound to the shown definition. Global additions are independent; MUP research and WAL specspaces additions are guarded by their selected branch. Dormant additions contribute no effects. The historical roster below is reference context; the manifest and explicit consumer request determine the current closure. This package declares no global MUP/WAL conflict.</REDBOOK-CURRENT-COMPOSITION></p>
   <member-list title="Historical members (edition 1.0.0)">
     <p><books-core-list-lead fact="true" status="impl/done">The book's core — the four IPC requirements and the memory model:</books-core-list-lead></p>
     <facts ordered="false">
