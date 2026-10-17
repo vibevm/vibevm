@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "inventory_id": "bind2-selected-envelope-projection-machine-operation-baseline-77f6767f3",
+  "baseline_capture_id": "machine-operation-baseline-77f6767f3",
+  "observation_capture_id": "machine-operation-baseline-77f6767f3",
+  "sources": [
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "path": "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "sha256": "45f3dada918da9f832e45828aa85a8830534faeb9d61105cf3662414227beb1c"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools.rs",
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "0d3de9ba20dd7af68ee244b81959a80573cd8f368a407b0d8a6a674f0d929095"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/migration_plan.rs",
+      "path": "crates/vibe-mcp/src/tools/migration_plan.rs",
+      "sha256": "5845a87b9d53eb7a4421099e98e2b522638e8c1e79c1aae3f570bcffe19ac3b3"
+    },
+    {
+      "source_id": "source:crates/vibe-workspace/src/migration_planning.rs",
+      "path": "crates/vibe-workspace/src/migration_planning.rs",
+      "sha256": "bc10bcb79e05dcaaff91430523c5a6b7098995827d0aafaec532cdb93976c3ff"
+    }
+  ],
+  "surfaces": [
+    {
+      "surface_id": "surface.mcp.plan_manifest_migration",
+      "kind": "mcp",
+      "registered": true,
+      "name": "plan_manifest_migration",
+      "aliases": [],
+      "owner": "Current registered mcp adapter: crates/vibe-mcp/src/tools/migration_plan.rs",
+      "target": "Registered mcp local route plan_manifest_migration; contextual admission is separate.",
+      "effects": [
+        "mcp:plan_manifest_migration; capability strict-text-only-migration-planning"
+      ],
+      "authority": "Pure text request ignores ServerContext; no root/store grant.",
+      "carrier": "Owning structured preflight and executed generated plan report/error.",
+      "schema_ref": "generated migration e1 request/report/error owner frames",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Finite BIND.2 endpoint source-bound projection of existing canonical identities; source metadata only, not whole-product or historical runtime observation.",
+      "retention": "Existing canonical declarations projected onto explicitly selected immutable endpoint bytes; current native replay is separate.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/tools/migration_plan.rs",
+        "source:crates/vibe-workspace/src/migration_planning.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root-selected finite envelope relationship; direct planner row is supporting context only. No independent production-registration authentication is claimed.",
+      "operation_id": "operation.mcp.plan_manifest_migration"
+    }
+  ],
+  "models": [
+    {
+      "model_id": "model.manifest-migration-plan",
+      "name": "Manifest migration plan",
+      "owner": "crates/vibe-workspace/src/migration_planning.rs",
+      "carrier": "generated migration/e1 plan request/report/error roots",
+      "schema_ref": "generated migration/e1 plan request/report/error roots",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Pure text-only migration decisions and exact generated report/question/error carriage, not file execution."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Finite BIND.2 endpoint source-bound projection of existing canonical identities; source metadata only, not whole-product or historical runtime observation.",
+      "retention": "Existing canonical declarations projected onto explicitly selected immutable endpoint bytes; current native replay is separate.",
+      "source_ids": [
+        "source:crates/vibe-workspace/src/migration_planning.rs",
+        "source:crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+        "source:crates/vibe-mcp/src/tools/migration_plan.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    }
+  ],
+  "planned_families": []
+}

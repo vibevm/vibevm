@@ -5,6 +5,7 @@ mod bindings;
 mod capture;
 mod contribution;
 mod documentation;
+mod domain_bindings;
 mod git_entry;
 mod readiness;
 
@@ -267,3 +268,6 @@ fn emit(report: CheckReport) {
 
 #[cfg(test)]
 mod bindings_roles_tests;
+
+#[cfg(test)]
+mod domain_bindings_tests;

@@ -75,14 +75,14 @@ diagnostics. They distinguish absent capture/map/base/guide selections from
 selected declarations that this stage has not verified. Bindings and release
 predecessors also distinguish missing permanent record/contribution-scope selection
 from supplied but unverified bindings; an empty list or absent scope is not proof.
-Bindings explicitly report unsupported authoritative native role/identity and
-domain-join adapters.
+The declaration-only readiness branch reports unavailable owner adapters;
+the bindings entrypoint runs native roles and the selected domain joins described below.
 Each stage retains its full due predicate and keeps predecessor proof separate
 from later obligations: reviewed guidance does not prove rehearsal, and candidate
 eligibility does not establish later narrow final attestation. Producer flags,
 checked/updated/reviewed/verified labels, equal declared hashes or an unrelated
 successful claim cannot turn these prerequisite reports into a stage pass.
-Actual owner adapters remain with the later domain/documentation/release work;
+Unconnected domain/documentation/release predicates remain explicit gaps;
 the checker adds no native parser, hash engine or generic evidence trust authority.
 
 Documentation `--mode documentation --stage intake` checks explicitly retained
@@ -154,3 +154,124 @@ Run the focused tests with `cargo test -p xtask --bin preview-transition-check`,
 preview-transition-assemble` and `python3 -B -m unittest discover -s
 tools/preview-transition/tests -p 'test_*.py'`. The Python integration suite
 builds its binary once, or reuses `PREVIEW_TRANSITION_ASSEMBLER_BIN` when supplied.
+
+Bindings `linked` now consumes the optional registered `domain_bindings`
+supplement in `transition`. Historical release-impact bytes are retained.
+The supplement names exact contribution capture IDs, two retained capability
+inventory source/SHA256 references (relative to the transition directory), and
+per-effect surface joins. An effect is identified by change, interface,
+capability, audience and platform. Each join names its canonical surface,
+documentation topic, reason, action (`none`, `manual`, `automated`, `rebuild`,
+`unsupported`), data class (`authored`, `derived`, `none`), captured break-note
+references and optional captured machine-operation descriptor. Captured
+references use capture ID, repository-relative path and SHA256, never a journal
+or copied operation event stream. Unknown fields refuse through generated I/O.
+
+The checker compares all surfaces in the selected before/after inventories,
+requires an impact for every added, changed or removed row, and joins every
+selected release effect back to a surface. Changed surfaces require an explicit
+documentation obligation even without a break note. Every linked surface's
+source rows are checked against regular immutable blobs at its selected endpoint;
+unrelated historical source rows are not remeasured. A mixed-age inventory that
+cannot supply matching relevant source bytes is stale, rather than implicitly
+rebound to current sources. Select a separately retained, reviewed inventory
+observation for that endpoint; do not rewrite historical proof or infer global
+freshness from the inventory's observation label.
+
+Descriptors use the existing registered machine descriptor reader and the existing
+`vibe-orchestrator::machine_operation::validate_descriptor_metadata` owner.
+The pure validator checks semantic metadata and recognized route identities;
+it grants no invocation admission. Their exact
+captured bytes, operation, capability, source and registered format IDs must join
+the same canonical surface. This proves reference consistency only. Source/schema
+metadata never counts as operational coverage. Automatic authored conversion
+remains `unsupported` when the supplement selects no exact native migration
+request/report, source/target profiles, recipe or application prerequisites; a planner descriptor, prose recipe or
+producer `validated` label cannot establish a converter. Derived outputs require
+rebuild classification rather than authored conversion. Manual, no-action and
+unsupported conclusions retain their reasons. Final migration recipes, runtime
+rehearsal and independently supplied documentation remain later obligations.
+
+The original four-record bootstrap transition intentionally has no invented
+canonical inventory selection: `linked` reports
+`bindings-domain-selection-missing` and exits 2. The bounded
+`domain_bindings_tests` Rust family exercises the format/descriptor/capability
+join, additions without break notes, all five action classes, stale and dangling
+links, missing new surfaces, schema-only exposure and journal/prose refusal.
+Those fixtures are finite reference-consistency checks, not production migration
+or callable-coverage evidence.
+
+The capability `Surface` has no capability/interface/audience/platform fields.
+Those keys belong to the explicitly selected supplemental mapping, checked
+against the release effect; inventory membership does not authenticate that
+mapping or a production registration. Break-note digests establish exact bytes,
+not a semantic recipe or migration source/target relationship.
+
+The owner-correction cases call `MachineOperationService::pure_text_planner`
+with explicit controlled test admission, invoke its existing text-only planner,
+and validate the actual response with `validate_report_for_request`. They
+exercise a real snapshot-to-copy text plan, exact-request and recipe tampering
+refusal, identity/no-op, unknown-recipe refusal and unavailable admission. The
+actual response is retained as selected evidence on a controlled native saved
+release-impact role and joined through the same descriptor metadata owner.
+The supplemental inventory and capture mapping in this isolated test are
+controlled declarations, not independently authenticated production records.
+Manual and derived-rebuild classifications remain reasoned release conclusions,
+not invented planner outcomes. No workspace migration is applied and no new
+converter or journal is introduced. Automatic application in the controlled descriptor-only fixture remains unsupported
+because planning alone supplies no application command or prerequisites.
+The four historical bootstrap records and their proof selection are unchanged.
+
+
+The production linked path also consumes `native_planning` references. Each
+selection names `rust:vibe-workspace:migration_planning`, the registered
+`migration-plan-request/e1` and `migration-plan-report/e1` formats, the after
+capture, and two relative source/SHA256 references. Reads retain no-follow
+snapshots with a 4 MiB ceiling per file. The existing presence-aware decoder,
+`validate_report_for_request`, and `MachineOperationService` replay own the
+request grammar, source text, profiles, recipe, identities and result. The
+checker reports `planned`, `no-op`, `needs-input` and `refused` separately.
+These are current pure text results on explicitly selected controlled inputs,
+not a workspace migration or historical execution attestation.
+
+`bind2-envelope-transition.json` is the Root-selected finite linked subject:
+
+```sh
+python3 -B tools/preview-transition/check.py --transition docs/releases/developer-preview-1-to-2/bind2-envelope-transition.json --mode bindings --stage linked --format json
+```
+
+It retains the wider machine-operation contribution accounting and narrows
+`domain_bindings.selected_changes` to `pure-machine-service-and-envelope-tool`.
+Both retained effects are due: `mcp:plan_manifest_migration_envelope` /
+`pure-machine-planner-transport`, and `rust:vibe-orchestrator:machine_operation` /
+`pure-machine-planner-service`. The incumbent `MachineCoverageRegistry` reviewed
+adapter binds `operation.mcp.plan_manifest_migration_envelope` and its real
+surface to `rust:vibe-workspace:migration_planning`, source
+`pure-migration-transport-adapter`, capability `strict-text-only-migration-planning`.
+The service relationship explicitly accounts for the underlying service using
+that same owner, without inventing a second coverage surface. These permanent
+identity axes stay distinct. Missing native selection is pending; contradictory
+owner, format, capture, mapping, request or report refuses.
+
+The two retained inventories are finite source-bound projections of the existing
+canonical row identities at `machine-operation-baseline-77f6767f3` and
+`machine-operation-b1-after-2292501f3`. They are newly selected projections,
+not fresh observations of the historical mixed-age whole inventory. Every
+projected source hash is independently checked against its exact immutable
+endpoint blob. The existing direct MCP planner row and manifest plan model are
+supporting context only; the direct route is not promoted to the envelope
+adapter's Bound result. The other seven changes in the wider contribution
+remain covered by existing native/contribution checks and are outside this
+explicit domain-link selection. No whole-product capability census is claimed.
+
+The retained native request and golden report come from the existing migration
+owner corpus (`legacy-selection.json` and `planned-golden.json`). Production
+exact replay verifies that the selected report equals the actual API result;
+it is not a hand-authored DTO substitute for behavior. The release effects keep
+`migration_action: none`: pure planning is checked while automatic file
+application is explicitly unsupported. No unrelated format-break note is
+attached. The controlled break/descriptor fixture continues to cover the
+separate original break linkage case. All historical impact bytes, four-record
+bootstrap transition and proof flags remain unchanged. Documentation topic
+obligations are checked; documentation verification, final guidance, rehearsal,
+release closure and platform qualification remain later work.

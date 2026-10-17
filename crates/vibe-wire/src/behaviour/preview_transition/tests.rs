@@ -524,3 +524,56 @@ fn duplicate_change_ids_and_parent_paths_are_refused() {
         "dp1.source"
     );
 }
+
+#[test]
+fn canonical_domain_binding_shape_and_scope_are_strict() {
+    let value = include_str!(
+        "../../../../../formats/corpora/preview-transition/e1/valid/domain-bindings.json"
+    );
+    let transition: Transition = serde_json::from_str(value).unwrap();
+    transition.validate_preview().unwrap();
+    assert_eq!(
+        transition,
+        serde_json::from_str(&serde_json::to_string(&transition).unwrap()).unwrap()
+    );
+    assert!(
+        serde_json::from_str::<Transition>(include_str!(
+            "../../../../../formats/corpora/preview-transition/e1/invalid/domain-journal.json"
+        ))
+        .is_err()
+    );
+    let mut other = transition.clone();
+    other.domain_bindings.as_mut().unwrap().after_capture_id = "foreign".into();
+    assert_eq!(
+        other.validate_preview().unwrap_err().field,
+        "domain_bindings"
+    );
+    let mut other = transition.clone();
+    let row = other.domain_bindings.as_ref().unwrap().effects[0].clone();
+    other.domain_bindings.as_mut().unwrap().effects.push(row);
+    assert_eq!(
+        other.validate_preview().unwrap_err().field,
+        "domain_bindings.effects"
+    );
+    for path in ["../outside", "a\0b", "/outside", "a\\b"] {
+        let mut other = transition.clone();
+        other
+            .domain_bindings
+            .as_mut()
+            .unwrap()
+            .before_inventory
+            .source = path.into();
+        assert_eq!(
+            other.validate_preview().unwrap_err().field,
+            "domain_bindings"
+        );
+    }
+    let mut other = transition;
+    other.domain_bindings.as_mut().unwrap().effects[0]
+        .topic_id
+        .clear();
+    assert_eq!(
+        other.validate_preview().unwrap_err().field,
+        "domain_bindings.effects"
+    );
+}

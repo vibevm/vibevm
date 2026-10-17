@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "inventory_id": "bind2-selected-envelope-projection-machine-operation-b1-after-2292501f3",
+  "baseline_capture_id": "machine-operation-baseline-77f6767f3",
+  "observation_capture_id": "machine-operation-b1-after-2292501f3",
+  "sources": [
+    {
+      "source_id": "source:crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "path": "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "sha256": "45f3dada918da9f832e45828aa85a8830534faeb9d61105cf3662414227beb1c"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools.rs",
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "a1f3ecde6be3de1c6871fb98a3d484805fb60684f833f04e7db30bf63abb3f05"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/machine_operation.rs",
+      "path": "crates/vibe-mcp/src/tools/machine_operation.rs",
+      "sha256": "4c3f9fed8bed7775e4bdd97a6c08f284e6d34d63eb806e4065ed4348ae1137bc"
+    },
+    {
+      "source_id": "source:crates/vibe-mcp/src/tools/migration_plan.rs",
+      "path": "crates/vibe-mcp/src/tools/migration_plan.rs",
+      "sha256": "5845a87b9d53eb7a4421099e98e2b522638e8c1e79c1aae3f570bcffe19ac3b3"
+    },
+    {
+      "source_id": "source:crates/vibe-orchestrator/src/machine_operation.rs",
+      "path": "crates/vibe-orchestrator/src/machine_operation.rs",
+      "sha256": "1a186d63bd41d1e741f97f55d9b7028e1527d2c1468638fff36e04edd977b2f7"
+    },
+    {
+      "source_id": "source:crates/vibe-workspace/src/migration_planning.rs",
+      "path": "crates/vibe-workspace/src/migration_planning.rs",
+      "sha256": "bc10bcb79e05dcaaff91430523c5a6b7098995827d0aafaec532cdb93976c3ff"
+    },
+    {
+      "source_id": "source:schemas/machine/e1/operation_envelope.jtd.json",
+      "path": "schemas/machine/e1/operation_envelope.jtd.json",
+      "sha256": "e8a4b8a53643f65803adaa75e9e607a492540cf3fa528bc6f0189379d56b30bf"
+    }
+  ],
+  "surfaces": [
+    {
+      "surface_id": "surface.mcp.plan_manifest_migration",
+      "kind": "mcp",
+      "registered": true,
+      "name": "plan_manifest_migration",
+      "aliases": [],
+      "owner": "Current registered mcp adapter: crates/vibe-mcp/src/tools/migration_plan.rs",
+      "target": "Registered mcp local route plan_manifest_migration; contextual admission is separate.",
+      "effects": [
+        "mcp:plan_manifest_migration; capability strict-text-only-migration-planning"
+      ],
+      "authority": "Pure text request ignores ServerContext; no root/store grant.",
+      "carrier": "Owning structured preflight and executed generated plan report/error.",
+      "schema_ref": "generated migration e1 request/report/error owner frames",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Finite BIND.2 endpoint source-bound projection of existing canonical identities; source metadata only, not whole-product or historical runtime observation.",
+      "retention": "Existing canonical declarations projected onto explicitly selected immutable endpoint bytes; current native replay is separate.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/tools/migration_plan.rs",
+        "source:crates/vibe-workspace/src/migration_planning.rs"
+      ],
+      "disposition": "operation",
+      "reason": "Root-selected finite envelope relationship; direct planner row is supporting context only. No independent production-registration authentication is claimed.",
+      "operation_id": "operation.mcp.plan_manifest_migration"
+    },
+    {
+      "surface_id": "surface.mcp.plan_manifest_migration_envelope",
+      "kind": "mcp",
+      "registered": true,
+      "name": "plan_manifest_migration_envelope",
+      "aliases": [],
+      "owner": "Current registered mcp adapter: crates/vibe-mcp/src/tools/machine_operation.rs",
+      "target": "Registered mcp local route plan_manifest_migration_envelope; contextual admission is separate.",
+      "effects": [
+        "specific pure-planner machine envelope route; distinct from accepted interface IDs and general service"
+      ],
+      "authority": "Explicit admitted pure planner only; descriptor data and envelope input do not grant a general handler.",
+      "carrier": "Generated machine-envelope Result/Error for the one validated text planner; no provider or filesystem effect.",
+      "schema_ref": "schemas/machine/e1/operation_envelope.jtd.json",
+      "implementation": "source-observed",
+      "external_access": "structured",
+      "completeness": "Finite BIND.2 endpoint source-bound projection of existing canonical identities; source metadata only, not whole-product or historical runtime observation.",
+      "retention": "Existing canonical declarations projected onto explicitly selected immutable endpoint bytes; current native replay is separate.",
+      "conformance_cases": [
+        "proposed:current-native-registration",
+        "proposed:owning-adapter-carriage"
+      ],
+      "source_ids": [
+        "source:crates/vibe-mcp/src/tools.rs",
+        "source:crates/vibe-mcp/src/tools/machine_operation.rs",
+        "source:crates/vibe-orchestrator/src/machine_operation.rs",
+        "source:schemas/machine/e1/operation_envelope.jtd.json"
+      ],
+      "disposition": "operation",
+      "reason": "Root-selected finite envelope relationship; direct planner row is supporting context only. No independent production-registration authentication is claimed.",
+      "operation_id": "operation.mcp.plan_manifest_migration_envelope"
+    }
+  ],
+  "models": [
+    {
+      "model_id": "model.manifest-migration-plan",
+      "name": "Manifest migration plan",
+      "owner": "crates/vibe-workspace/src/migration_planning.rs",
+      "carrier": "generated migration/e1 plan request/report/error roots",
+      "schema_ref": "generated migration/e1 plan request/report/error roots",
+      "target": "Finite authored/current source family; contextual selected-world binding remains separate.",
+      "effects": [
+        "Pure text-only migration decisions and exact generated report/question/error carriage, not file execution."
+      ],
+      "authority": "Source/model declaration is not caller authorization, authenticated physical source, or effect grant.",
+      "completeness": "Finite BIND.2 endpoint source-bound projection of existing canonical identities; source metadata only, not whole-product or historical runtime observation.",
+      "retention": "Existing canonical declarations projected onto explicitly selected immutable endpoint bytes; current native replay is separate.",
+      "source_ids": [
+        "source:crates/vibe-workspace/src/migration_planning.rs",
+        "source:crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+        "source:crates/vibe-mcp/src/tools/migration_plan.rs"
+      ],
+      "conformance_cases": [
+        "proposed:owning-source-and-shape",
+        "proposed:selected-runtime-if-applicable"
+      ],
+      "implementation": "source-observed",
+      "external_access": "structured"
+    }
+  ],
+  "planned_families": []
+}

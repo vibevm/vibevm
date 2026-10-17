@@ -51,6 +51,11 @@ pub struct Transition {
     /// not adopt an input source.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub documentation_map: Option<SourceDigestRef>,
+
+    /// Exact scoped canonical domain joins; declarations are not callable
+    /// coverage or migration authority.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub domain_bindings: Option<DomainBindings>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -65,6 +70,16 @@ pub struct CaptureRef {
     pub git_tree_sha1: String,
 
     pub source: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CapturedSource {
+    pub capture_id: String,
+
+    pub path: String,
+
+    pub sha256: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -90,6 +105,112 @@ pub struct DocumentationCaptureRef {
     pub capture_id: String,
 
     pub source: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DomainBindings {
+    pub after_capture_id: String,
+
+    pub after_inventory: SourceDigestRef,
+
+    pub before_capture_id: String,
+
+    pub before_inventory: SourceDigestRef,
+
+    pub effects: Vec<DomainEffect>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_changes: Option<Vec<String>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DomainEffectAction {
+    #[serde(rename = "automated")]
+    Automated,
+
+    #[serde(rename = "manual")]
+    Manual,
+
+    #[serde(rename = "none")]
+    None,
+
+    #[serde(rename = "rebuild")]
+    Rebuild,
+
+    #[serde(rename = "unsupported")]
+    Unsupported,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DomainEffectDataClass {
+    #[serde(rename = "authored")]
+    Authored,
+
+    #[serde(rename = "derived")]
+    Derived,
+
+    #[serde(rename = "none")]
+    None,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DomainEffect {
+    pub action: DomainEffectAction,
+
+    pub audience: String,
+
+    pub capability_id: String,
+
+    pub change_id: String,
+
+    pub data_class: DomainEffectDataClass,
+
+    pub format_breaks: Vec<CapturedSource>,
+
+    pub interface_id: String,
+
+    pub platform: String,
+
+    pub reason: String,
+
+    pub surface_id: String,
+
+    pub topic_id: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub migration_descriptor: Option<CapturedSource>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub native_planning: Option<NativePlanning>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum NativePlanningRelationship {
+    #[serde(rename = "reviewed-envelope")]
+    ReviewedEnvelope,
+
+    #[serde(rename = "reviewed-service")]
+    ReviewedService,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NativePlanning {
+    pub capture_id: String,
+
+    pub domain_owner: String,
+
+    pub relationship: NativePlanningRelationship,
+
+    pub report: SourceDigestRef,
+
+    pub report_format: String,
+
+    pub request: SourceDigestRef,
+
+    pub request_format: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

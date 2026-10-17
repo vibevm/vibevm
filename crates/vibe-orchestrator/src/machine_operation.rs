@@ -173,6 +173,37 @@ fn validate_descriptor(row: &OperationDescriptor) -> Result<(), MachineOperation
     Ok(())
 }
 
+/// Validate one retained descriptor using the same metadata and route-identity
+/// laws as discovery. This pure check grants no invocation admission, host
+/// authority or source authentication; callers retain those independent duties.
+pub fn validate_descriptor_metadata(
+    row: &OperationDescriptor,
+) -> Result<(), MachineOperationError> {
+    validate_descriptor(row)?;
+    validate_route_metadata(row)
+}
+
+fn validate_route_metadata(row: &OperationDescriptor) -> Result<(), MachineOperationError> {
+    if row.operation_id.as_deref() != Some(PLANNER_ID)
+        && (row.implementation == Implementation::Validated
+            || row.availability == Availability::Available
+            || row.authorization == Authorization::Admitted)
+    {
+        return Err(MachineOperationError::InvalidDescriptor(
+            "no shared domain route owns a validated or available foreign operation",
+        ));
+    }
+    if row.operation_id.as_deref() == Some(PLANNER_ID)
+        && row.implementation == Implementation::Validated
+        && !recognized_planner_identity(row)
+    {
+        return Err(MachineOperationError::InvalidDescriptor(
+            "planner route does not match its accepted source and formats",
+        ));
+    }
+    Ok(())
+}
+
 fn recognized_planner_identity(row: &OperationDescriptor) -> bool {
     row.operation_id.as_deref() == Some(PLANNER_ID)
         && row.domain_owner == PLANNER_ID
@@ -260,23 +291,7 @@ impl MachineOperationService {
                     return Err(MachineOperationError::DuplicateIdentity(id.clone()));
                 }
             }
-            if row.operation_id.as_deref() != Some(PLANNER_ID)
-                && (row.implementation == Implementation::Validated
-                    || row.availability == Availability::Available
-                    || row.authorization == Authorization::Admitted)
-            {
-                return Err(MachineOperationError::InvalidDescriptor(
-                    "no shared domain route owns a validated or available foreign operation",
-                ));
-            }
-            if row.operation_id.as_deref() == Some(PLANNER_ID)
-                && row.implementation == Implementation::Validated
-                && !recognized_planner_identity(row)
-            {
-                return Err(MachineOperationError::InvalidDescriptor(
-                    "planner route does not match its accepted source and formats",
-                ));
-            }
+            validate_route_metadata(row)?;
         }
         Ok(Self {
             descriptors,

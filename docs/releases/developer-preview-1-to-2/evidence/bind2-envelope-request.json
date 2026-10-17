@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "source_text": "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nmaterialization=\"snapshot\"\n",
+  "source_profile": "materialization-legacy-absent-r1",
+  "target_profile": "materialization-current-absent-r1",
+  "recipe": "snapshot-to-copy-r1"
+}

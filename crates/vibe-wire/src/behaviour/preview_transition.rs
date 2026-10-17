@@ -180,6 +180,126 @@ impl Transition {
             return Err(fault("schema_status", "empty status"));
         }
         self.capture_references()?;
+        if let Some(bindings) = &self.domain_bindings {
+            let Some(scope) = &self.contribution_scope else {
+                return Err(fault("domain_bindings", "contribution scope is required"));
+            };
+            if bindings.before_capture_id != scope.before_capture_id
+                || bindings.after_capture_id != scope.after_capture_id
+            {
+                return Err(fault(
+                    "domain_bindings",
+                    "capture scope differs from contribution",
+                ));
+            }
+            for reference in [&bindings.before_inventory, &bindings.after_inventory] {
+                if !relative_path(&reference.source)
+                    || reference.source.contains('\0')
+                    || !digest(&reference.sha256, 64)
+                {
+                    return Err(fault("domain_bindings", "invalid inventory reference"));
+                }
+            }
+            if let Some(selected) = &bindings.selected_changes {
+                let unique: std::collections::BTreeSet<_> = selected.iter().collect();
+                if selected.is_empty()
+                    || unique.len() != selected.len()
+                    || selected.iter().any(|id| !self.change_records.contains(id))
+                {
+                    return Err(fault("domain_bindings", "invalid selected changes"));
+                }
+            }
+            let mut keys = std::collections::BTreeSet::new();
+            for effect in &bindings.effects {
+                let key = (
+                    &effect.change_id,
+                    &effect.interface_id,
+                    &effect.capability_id,
+                    &effect.audience,
+                    &effect.platform,
+                );
+                if !self.change_records.contains(&effect.change_id)
+                    || !keys.insert(key)
+                    || [
+                        &effect.interface_id,
+                        &effect.capability_id,
+                        &effect.audience,
+                        &effect.platform,
+                        &effect.surface_id,
+                        &effect.topic_id,
+                        &effect.reason,
+                    ]
+                    .iter()
+                    .any(|value| value.trim().is_empty())
+                {
+                    return Err(fault(
+                        "domain_bindings.effects",
+                        "missing, duplicate or unselected effect identity",
+                    ));
+                }
+                if bindings
+                    .selected_changes
+                    .as_ref()
+                    .is_some_and(|ids| !ids.contains(&effect.change_id))
+                {
+                    return Err(fault(
+                        "domain_bindings.effects",
+                        "effect outside selected changes",
+                    ));
+                }
+                if let Some(plan) = &effect.native_planning {
+                    if plan.capture_id != bindings.after_capture_id
+                        || plan.domain_owner != "rust:vibe-workspace:migration_planning"
+                        || plan.request_format != "migration-plan-request/e1"
+                        || plan.report_format != "migration-plan-report/e1"
+                    {
+                        return Err(fault(
+                            "domain_bindings.effects",
+                            "foreign native planner owner, formats or capture",
+                        ));
+                    }
+                    for reference in [&plan.request, &plan.report] {
+                        if !relative_path(&reference.source)
+                            || reference.source.contains('\0')
+                            || !digest(&reference.sha256, 64)
+                        {
+                            return Err(fault(
+                                "domain_bindings.effects",
+                                "invalid native planning reference",
+                            ));
+                        }
+                    }
+                }
+                let mut paths = std::collections::BTreeSet::new();
+                for source in effect
+                    .format_breaks
+                    .iter()
+                    .chain(effect.migration_descriptor.iter())
+                {
+                    if !relative_path(&source.path)
+                        || source.path.contains('\0')
+                        || !digest(&source.sha256, 64)
+                        || ![&bindings.before_capture_id, &bindings.after_capture_id]
+                            .contains(&&source.capture_id)
+                        || !paths.insert((&source.capture_id, &source.path))
+                    {
+                        return Err(fault(
+                            "domain_bindings.effects",
+                            "invalid or repeated captured reference",
+                        ));
+                    }
+                }
+                if effect.format_breaks.iter().any(|source| {
+                    !source.path.starts_with("formats/breaks/") || !source.path.ends_with(".md")
+                }) {
+                    return Err(fault(
+                        "domain_bindings.effects",
+                        "break reference is outside its domain",
+                    ));
+                }
+            }
+        }
+
         if let Some(base) = &self.documentation_base
             && (base.capture_id.trim().is_empty()
                 || !super::preview_capture::safe_relative_path(&base.source)
