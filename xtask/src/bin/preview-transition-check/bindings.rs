@@ -70,27 +70,37 @@ pub(super) fn check(
     let root = std::str::from_utf8(&root)
         .map_err(|_| CheckFailure::new("native-root", "bindings", "Invalid root UTF8"))?
         .trim();
+    let mut records = Vec::new();
     for binding in &scope.record_digests {
-        bound_record(Path::new(root), None, &binding.change_id, &binding.sha256)?;
+        let bytes = bound_record(Path::new(root), None, &binding.change_id, &binding.sha256)?;
+        let record = serde_json::from_slice(&bytes).map_err(|_| {
+            CheckFailure::new(
+                "native-shape",
+                &binding.change_id,
+                "Invalid registered impact",
+            )
+        })?;
+        records.push(record);
         report.checked_claims.push(format!(
             "native-release-impact:{}:{}",
             binding.change_id, binding.sha256
         ));
     }
-    report.findings.push(Finding {
-        code: "bindings-linked-proof-later".into(),
-        subject: "bindings".into(),
-        reason: "Native roles confer no capability/migration linkage or release closure proof."
-            .into(),
-        state: FindingState::Pending,
-    });
     if matches!(request.stage, Some(CheckRequestStage::Linked)) {
-        report.verdict = CheckReportVerdict::Pending;
+        super::domain_bindings::check(path, Path::new(root), transition, &records, report)?;
         report.findings.push(Finding {
-            code: "bindings-linked-owner-unavailable".into(),
+            code: "bindings-documentation-release-proof-later".into(),
             subject: "bindings".into(),
-            reason: "Complete canonical capability/migration joins remain unavailable.".into(),
-            state: FindingState::Unsupported,
+            reason: "Linked reference consistency does not verify documentation, guidance, rehearsal or final release closure.".into(),
+            state: FindingState::Pending,
+        });
+    } else {
+        report.findings.push(Finding {
+            code: "bindings-linked-proof-later".into(),
+            subject: "bindings".into(),
+            reason: "Native roles confer no capability/migration linkage or release closure proof."
+                .into(),
+            state: FindingState::Pending,
         });
     }
     Ok(())

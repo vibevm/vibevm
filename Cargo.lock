@@ -6001,6 +6001,7 @@ dependencies = [
  "vibe-doc",
  "vibe-doc-shell",
  "vibe-index",
+ "vibe-orchestrator",
  "vibe-publish",
  "vibe-registry",
  "vibe-requirements",
@@ -6008,6 +6009,7 @@ dependencies = [
  "vibe-spec",
  "vibe-specdoc",
  "vibe-wire",
+ "vibe-workspace",
  "walkdir",
  "zip",
 ]
