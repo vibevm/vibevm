@@ -11,6 +11,8 @@ use vibe_core::manifest::{
 use vibe_safefs::{Project, StableFileSnapshot};
 #[derive(Debug, thiserror::Error)]
 pub enum SavedChangeError {
+    #[error("release evidence refused: {0}")]
+    Evidence(#[from] vibe_wire::behaviour::release_impact::ReleaseImpactError),
     #[error("change declaration refused: {0}")]
     Declaration(#[from] ChangeError),
     #[error("saved change unavailable at {0}")]
@@ -79,6 +81,11 @@ fn inputs(
             .ok_or(SavedChangeError::Unavailable("role byte bound"))?;
         result.push((path, snapshot));
     }
+    let retained: Vec<_> = result
+        .iter()
+        .map(|(path, snapshot)| (path.as_path(), snapshot.bytes.as_slice()))
+        .collect();
+    super::evidence::from_observations(change, &retained)?;
     Ok(result)
 }
 pub fn read_saved_change(
@@ -102,11 +109,12 @@ pub fn read_saved_change(
         .map_err(|_| SavedChangeError::Unavailable("change UTF8"))?;
     let manifest = ChangeManifest::parse_str(text, &context, &directory)?;
     let input_observations = inputs(&project, &manifest)?;
-    Ok(SavedChange {
+    let saved = SavedChange {
         manifest,
         manifest_observation: snapshot,
         input_observations,
-    })
+    };
+    Ok(saved)
 }
 pub fn plan_saved_change_migration(
     node_root: &Path,

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-entity-view-source-contract"
+selected_node = "."
+slug = "machine-entity-view-source-contract"
+title = "machine-entity-view-source-contract"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "migration-generated-provenance-copy"
+selected_node = "."
+slug = "migration-generated-provenance-copy"
+title = "migration-generated-provenance-copy"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "preview-accounting-foundation"
+selected_node = "."
+slug = "preview-accounting-foundation"
+title = "preview-accounting-foundation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "manifest-migration-operation-wire"
+selected_node = "."
+slug = "manifest-migration-operation-wire"
+title = "manifest-migration-operation-wire"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

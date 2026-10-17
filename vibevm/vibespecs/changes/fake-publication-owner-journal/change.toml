@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "fake-publication-owner-journal"
+selected_node = "."
+slug = "fake-publication-owner-journal"
+title = "fake-publication-owner-journal"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

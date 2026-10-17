@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "pure-machine-service-and-envelope-tool"
+selected_node = "."
+slug = "pure-machine-service-and-envelope-tool"
+title = "pure-machine-service-and-envelope-tool"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

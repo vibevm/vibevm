@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "target-aware-environment-layout"
+selected_node = "."
+slug = "target-aware-environment-layout"
+title = "target-aware-environment-layout"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

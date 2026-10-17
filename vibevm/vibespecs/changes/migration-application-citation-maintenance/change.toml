@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "migration-application-citation-maintenance"
+selected_node = "."
+slug = "migration-application-citation-maintenance"
+title = "migration-application-citation-maintenance"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

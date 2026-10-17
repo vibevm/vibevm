@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-operation-contract-source"
+selected_node = "."
+slug = "machine-operation-contract-source"
+title = "machine-operation-contract-source"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

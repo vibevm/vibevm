@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "injected-environment-layout-source"
+selected_node = "."
+slug = "injected-environment-layout-source"
+title = "injected-environment-layout-source"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

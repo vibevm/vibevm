@@ -1,6 +1,7 @@
 //! Read-only checker for the permanent Developer Preview transition records.
 
 mod affected_review;
+mod bindings;
 mod capture;
 mod contribution;
 mod documentation;
@@ -38,6 +39,7 @@ use vibe_wire::generated::preview::e1::check_request::{
 };
 use vibe_wire::generated::preview::e1::transition::Transition;
 
+#[derive(Debug)]
 pub(crate) struct CheckFailure {
     code: &'static str,
     subject: String,
@@ -176,6 +178,11 @@ fn run(request: &CheckRequest) -> CheckReport {
                 fail(&mut report, error);
             }
         }
+        CheckRequestMode::Bindings => {
+            if let Err(error) = bindings::check(request, &transition, &mut report) {
+                fail(&mut report, error);
+            }
+        }
         CheckRequestMode::Documentation
             if matches!(request.stage.as_ref(), Some(CheckRequestStage::Intake)) =>
         {
@@ -257,3 +264,6 @@ fn emit(report: CheckReport) {
     );
     std::process::exit(code);
 }
+
+#[cfg(test)]
+mod bindings_roles_tests;

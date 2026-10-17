@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-entity-view-capability-catalogue"
+selected_node = "."
+slug = "machine-entity-view-capability-catalogue"
+title = "machine-entity-view-capability-catalogue"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

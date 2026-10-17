@@ -466,7 +466,8 @@
             "refinement",
             "acceptance",
             "work",
-            "closure"
+            "closure",
+            "release-impact"
           ],
           "metadata": {
             "x-vocabulary": "closed"

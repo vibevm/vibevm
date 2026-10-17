@@ -164,7 +164,7 @@ pub fn read_response(value: &Value) -> Result<Response, String> {
     Ok(response)
 }
 pub fn request_json_schema() -> Value {
-    json!({"type":"object","additionalProperties":false,"required":["schema","mode","id"],"properties":{"schema":{"type":"integer","const":1},"mode":{"type":"string","enum":["check","show","coverage"]},"id":{"type":"string","minLength":1,"maxLength":1024},"roles":{"type":"array","uniqueItems":true,"items":{"type":"string","enum":["intent","refinement","acceptance","work","closure"]}}}})
+    json!({"type":"object","additionalProperties":false,"required":["schema","mode","id"],"properties":{"schema":{"type":"integer","const":1},"mode":{"type":"string","enum":["check","show","coverage"]},"id":{"type":"string","minLength":1,"maxLength":1024},"roles":{"type":"array","uniqueItems":true,"items":{"type":"string","enum":["intent","refinement","acceptance","work","closure","release-impact"]}}}})
 }
 #[cfg(test)]
 mod m_02_d_2_cases;

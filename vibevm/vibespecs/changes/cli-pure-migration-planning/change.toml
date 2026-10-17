@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "cli-pure-migration-planning"
+selected_node = "."
+slug = "cli-pure-migration-planning"
+title = "cli-pure-migration-planning"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

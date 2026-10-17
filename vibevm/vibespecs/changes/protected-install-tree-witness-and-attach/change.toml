@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "protected-install-tree-witness-and-attach"
+selected_node = "."
+slug = "protected-install-tree-witness-and-attach"
+title = "protected-install-tree-witness-and-attach"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

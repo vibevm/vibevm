@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "pure-environment-role-foundation"
+selected_node = "."
+slug = "pure-environment-role-foundation"
+title = "pure-environment-role-foundation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

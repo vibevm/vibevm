@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "manifest-migration-traceability"
+selected_node = "."
+slug = "manifest-migration-traceability"
+title = "manifest-migration-traceability"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-location-uri-wire-metadata"
+selected_node = "."
+slug = "machine-location-uri-wire-metadata"
+title = "machine-location-uri-wire-metadata"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

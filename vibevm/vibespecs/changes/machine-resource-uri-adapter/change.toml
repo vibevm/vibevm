@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-resource-uri-adapter"
+selected_node = "."
+slug = "machine-resource-uri-adapter"
+title = "machine-resource-uri-adapter"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

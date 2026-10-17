@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "selected-source-consumer-routing"
+selected_node = "."
+slug = "selected-source-consumer-routing"
+title = "selected-source-consumer-routing"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

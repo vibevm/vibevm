@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-entity-view-wire-and-reader"
+selected_node = "."
+slug = "machine-entity-view-wire-and-reader"
+title = "machine-entity-view-wire-and-reader"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

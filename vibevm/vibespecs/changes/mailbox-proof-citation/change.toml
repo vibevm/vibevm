@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "mailbox-proof-citation"
+selected_node = "."
+slug = "mailbox-proof-citation"
+title = "mailbox-proof-citation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

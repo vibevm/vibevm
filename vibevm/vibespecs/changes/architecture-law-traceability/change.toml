@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "architecture-law-traceability"
+selected_node = "."
+slug = "architecture-law-traceability"
+title = "architecture-law-traceability"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

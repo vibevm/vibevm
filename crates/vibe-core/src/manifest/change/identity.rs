@@ -73,6 +73,13 @@ impl ChangeManifest {
         &self,
         inputs: &[NormativeInput<'_>],
     ) -> Result<IntentIdentity, ChangeError> {
+        if self.is_evidence_only() {
+            return Err(invalid(
+                ChangeErrorKind::MissingRole,
+                "intent",
+                "evidence-only registration has no normative subject",
+            ));
+        }
         let mut observed = BTreeMap::new();
         for input in inputs {
             if observed.insert(input.path, input.bytes).is_some() {
@@ -171,21 +178,34 @@ fn items(hash: &mut Framed, items: &[&WorkItem]) {
         }
     }
 }
+fn work_subject(change: &ChangeManifest) -> Result<(), ChangeError> {
+    if change.is_evidence_only() {
+        return Err(invalid(
+            ChangeErrorKind::MissingRole,
+            "work",
+            "evidence-only registration has no work subject",
+        ));
+    }
+    Ok(())
+}
 impl WorkGraph {
-    pub fn identity(&self, change: &ChangeManifest) -> WorkIdentity {
+    /// Evidence-only registrations have no work subject, even for an empty graph.
+    pub fn identity(&self, change: &ChangeManifest) -> Result<WorkIdentity, ChangeError> {
+        work_subject(change)?;
         let mut hash = Framed::new(WORK_RECIPE);
         hash.scope(change);
         items(&mut hash, &self.items().collect::<Vec<_>>());
-        WorkIdentity {
+        Ok(WorkIdentity {
             recipe: WORK_RECIPE,
             digest: hash.finish(),
-        }
+        })
     }
     pub fn contribution_identity(
         &self,
         change: &ChangeManifest,
         selected: &[&str],
     ) -> Result<WorkIdentity, ChangeError> {
+        work_subject(change)?;
         let contribution = self.contribution(selected)?;
         let mut roots = selected.to_vec();
         roots.sort();

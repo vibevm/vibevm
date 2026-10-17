@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-composite-page-projection"
+selected_node = "."
+slug = "machine-composite-page-projection"
+title = "machine-composite-page-projection"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

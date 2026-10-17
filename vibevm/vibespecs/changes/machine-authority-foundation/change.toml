@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-authority-foundation"
+selected_node = "."
+slug = "machine-authority-foundation"
+title = "machine-authority-foundation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

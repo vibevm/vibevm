@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "migration-reader-generation-policy"
+selected_node = "."
+slug = "migration-reader-generation-policy"
+title = "migration-reader-generation-policy"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

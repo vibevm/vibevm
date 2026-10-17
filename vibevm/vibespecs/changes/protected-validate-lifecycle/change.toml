@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "protected-validate-lifecycle"
+selected_node = "."
+slug = "protected-validate-lifecycle"
+title = "protected-validate-lifecycle"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

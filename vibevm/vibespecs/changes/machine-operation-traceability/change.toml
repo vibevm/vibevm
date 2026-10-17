@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-operation-traceability"
+selected_node = "."
+slug = "machine-operation-traceability"
+title = "machine-operation-traceability"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

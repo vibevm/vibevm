@@ -185,7 +185,7 @@ fn saved_rebase_names_old_new_and_prepares_existing_barrier() {
     assert_eq!(prepared.proposal().before, fixture.text);
     assert_ne!(
         prepared.new_intent(),
-        &view.analysis().unwrap().identities.intent
+        &view.analysis().unwrap().identities.as_ref().unwrap().intent
     );
     assert_eq!(
         prepared
@@ -406,7 +406,13 @@ fn initial_legacy_binding_uses_saved_capture_without_circular_acceptance() {
     let view = fixture.view(&capture);
     let authority = fixture.authority();
     assert_eq!(
-        view.analysis().unwrap().identities.intent.recipe(),
+        view.analysis()
+            .unwrap()
+            .identities
+            .as_ref()
+            .unwrap()
+            .intent
+            .recipe(),
         vibe_core::manifest::change::INTENT_RECIPE
     );
     let retained = Arc::new(fixture.old.capture().clone());
@@ -487,7 +493,7 @@ fn uncited_content_rebase_changes_bound_intent_with_empty_fact_delta() {
     );
     assert_ne!(
         plan.new_intent(),
-        &view.analysis().unwrap().identities.intent
+        &view.analysis().unwrap().identities.as_ref().unwrap().intent
     );
     assert_eq!(
         plan.new_intent().recipe(),

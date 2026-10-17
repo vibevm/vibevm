@@ -197,5 +197,12 @@ fn prepare_proposal<'a>(
         }],
     )
     .map_err(ChangeRebaseError::Edit)?;
-    Ok((proposal, checked.identities.intent, prepared))
+    Ok((
+        proposal,
+        checked
+            .identities
+            .ok_or(ChangeRebaseError::InvalidCapturedChange)?
+            .intent,
+        prepared,
+    ))
 }

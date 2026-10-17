@@ -6,7 +6,8 @@ use vibe_core::manifest::change::{ChangeContext, ChangeManifest};
 #[derive(Debug)]
 pub struct ParsedCapturedChange {
     pub manifest: ChangeManifest,
-    pub identities: ChangeIdentityAnalysis,
+    pub identities: Option<ChangeIdentityAnalysis>,
+    pub release_impacts: Vec<vibe_wire::generated::preview::e1::release_impact::ReleaseImpact>,
 }
 pub fn analyze_change_bytes(
     text: &str,
@@ -15,9 +16,17 @@ pub fn analyze_change_bytes(
     inputs: &[(&Path, &[u8])],
 ) -> Result<ParsedCapturedChange, SavedChangeError> {
     let manifest = ChangeManifest::parse_str(text, context, directory)?;
-    let identities = super::identity::identity_from_observations(&manifest, inputs)?;
+    let release_impacts = super::evidence::from_observations(&manifest, inputs)?;
+    let identities = if manifest.is_evidence_only() {
+        None
+    } else {
+        Some(super::identity::identity_from_observations(
+            &manifest, inputs,
+        )?)
+    };
     Ok(ParsedCapturedChange {
         manifest,
         identities,
+        release_impacts,
     })
 }

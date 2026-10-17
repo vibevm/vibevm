@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "portable-manifest-migration-source"
+selected_node = "."
+slug = "portable-manifest-migration-source"
+title = "portable-manifest-migration-source"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

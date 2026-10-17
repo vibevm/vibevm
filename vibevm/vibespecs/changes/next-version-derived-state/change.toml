@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "next-version-derived-state"
+selected_node = "."
+slug = "next-version-derived-state"
+title = "next-version-derived-state"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

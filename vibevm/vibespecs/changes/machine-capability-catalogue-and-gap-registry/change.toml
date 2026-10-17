@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-capability-catalogue-and-gap-registry"
+selected_node = "."
+slug = "machine-capability-catalogue-and-gap-registry"
+title = "machine-capability-catalogue-and-gap-registry"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

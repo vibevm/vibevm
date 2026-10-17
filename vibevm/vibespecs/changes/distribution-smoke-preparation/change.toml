@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "distribution-smoke-preparation"
+selected_node = "."
+slug = "distribution-smoke-preparation"
+title = "distribution-smoke-preparation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

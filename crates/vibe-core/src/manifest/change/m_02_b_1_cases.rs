@@ -65,7 +65,7 @@ fn unknown_epochs_and_duplicate_ids_refuse() {
         ChangeErrorKind::DuplicateId
     );
     for invalid_id in [
-        "mutable-slug",
+        "mutable slug",
         "chg-0123456789abcdef0123456789abcdeF",
         "../outside",
     ] {
@@ -188,12 +188,14 @@ fn registered_authored_corpus_matches_shared_validator() {
     assert_eq!(record["schema"].as_str(), Some("none"));
     assert_eq!(record["unknown_fields"].as_str(), Some("deny"));
     let corpus = root.join(record["corpus"].as_str().unwrap());
-    assert!(ChangeManifest::parse_str(
-        &std::fs::read_to_string(corpus.join("valid/representative.toml")).unwrap(),
-        &c,
-        &dir
-    )
-    .is_ok());
+    assert!(
+        ChangeManifest::parse_str(
+            &std::fs::read_to_string(corpus.join("valid/representative.toml")).unwrap(),
+            &c,
+            &dir
+        )
+        .is_ok()
+    );
     for (file, kind) in [
         (
             "semantic-gap/unknown-epoch.toml",

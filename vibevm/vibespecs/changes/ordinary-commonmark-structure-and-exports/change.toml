@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "ordinary-commonmark-structure-and-exports"
+selected_node = "."
+slug = "ordinary-commonmark-structure-and-exports"
+title = "ordinary-commonmark-structure-and-exports"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -38,7 +38,10 @@ fn pure_retained_bytes_keep_cosmetics_separate_from_normative_intent() {
         &inputs,
     )
     .unwrap();
-    assert_eq!(original.identities.intent, renamed.identities.intent);
+    assert_eq!(
+        original.identities.as_ref().unwrap().intent,
+        renamed.identities.as_ref().unwrap().intent
+    );
     let changed = analyze_change_bytes(
         &text,
         &context,
@@ -49,8 +52,14 @@ fn pure_retained_bytes_keep_cosmetics_separate_from_normative_intent() {
         ],
     )
     .unwrap();
-    assert_ne!(original.identities.intent, changed.identities.intent);
-    assert_eq!(original.identities.work, changed.identities.work);
+    assert_ne!(
+        original.identities.as_ref().unwrap().intent,
+        changed.identities.as_ref().unwrap().intent
+    );
+    assert_eq!(
+        original.identities.as_ref().unwrap().work,
+        changed.identities.as_ref().unwrap().work
+    );
 }
 #[test]
 fn missing_and_duplicate_observations_refuse_exact_boundary() {

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "pure-materialization-migration-planner"
+selected_node = "."
+slug = "pure-materialization-migration-planner"
+title = "pure-materialization-migration-planner"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true
