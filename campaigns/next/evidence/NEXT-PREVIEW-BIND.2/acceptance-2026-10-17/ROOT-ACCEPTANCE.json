@@ -1,0 +1,28 @@
+{
+  "task": "NEXT-PREVIEW-BIND.2",
+  "accepted": true,
+  "canonical_acceptance_revision": 7496,
+  "canonical_work_state": "accepted",
+  "work_record_revision": 9,
+  "work_id": "work.authored.c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f",
+  "candidate_id": "managed-result.9ed0a51dcc20d41242d0ca3e75809340ff8ab9f483f5c4c7e24f7f9ed491840a",
+  "source_commit": "c4294f46d7d0d37b625da582bd2c671e5e0af176",
+  "accepted_contracts": 96,
+  "total_contracts": 222,
+  "selected_linked_exit": 0,
+  "historical_linked_exit": 2,
+  "conditional_codegen_exit": 0,
+  "coverage_owner_failures": 3,
+  "coverage_debt": "B-251",
+  "task_boundary": "Reference consistency and classifications at the original safe-stop; final guidance/rehearsal/release remains later.",
+  "root_scope_clarification": "Slot1 is explicit Root semantic verification of the same linked obligation on real selected envelope subject. The original transition.json command remains literal exit2/Pending; it is not described as exit0.",
+  "runtime_job_acceptance": "Unreviewed remains separate runtime metadata; actual domain WorkAccepted7496 is authoritative task acceptance.",
+  "published_report": {
+    "digest": "7d17b852203b2ff48e369a5ebe3f880589744afbf1a70246936a7c5ddc012bd0",
+    "byte_len": 2415322
+  },
+  "published_patch": {
+    "digest": "03a4b10ff154f1017c3b7c45f734930b288454e64c0e8e51a4d92825b6d6a361",
+    "byte_len": 132689
+  }
+}

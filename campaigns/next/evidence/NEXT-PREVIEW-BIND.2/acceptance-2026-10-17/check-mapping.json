@@ -1,0 +1,172 @@
+{
+  "authority": "Root explicit semantic verification mapping; not producer flags or fabricated process exits",
+  "source_commit": "c4294f46d7d0d37b625da582bd2c671e5e0af176",
+  "candidate_id": "managed-result.9ed0a51dcc20d41242d0ca3e75809340ff8ab9f483f5c4c7e24f7f9ed491840a",
+  "work_id": "work.authored.c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f",
+  "criterion_requirements": [
+    {
+      "requirement": "spec://org.vibevm.zap/zap/authored/c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f#acceptance-0",
+      "statement": "All applicable migration and capability links resolve to their domain-owned permanent records and exact supported behavior."
+    },
+    {
+      "requirement": "spec://org.vibevm.zap/zap/authored/c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f#acceptance-1",
+      "statement": "Release accounting is mechanically readable without a new IDE client, universal operation protocol or duplicated runtime journal."
+    }
+  ],
+  "slots": [
+    {
+      "slot": 0,
+      "verification_id": "verify.authored.c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f.0",
+      "declared_method": {
+        "argv": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/preview-transition/tests",
+          "-p",
+          "test_*.py"
+        ],
+        "cases": [
+          "A format break, its real migration descriptor and affected capability join to one release impact.",
+          "A new capability with no format break still creates an explicit documentation obligation.",
+          "A copied prose recipe cannot masquerade as an implemented automatic converter.",
+          "A dangling or stale migration descriptor, missing new capability or second wire journal blocks binding.",
+          "Schema-only exposure is not counted as operational coverage."
+        ],
+        "environment": "Root authorization for this BIND.2 managed iteration: exclusive warm CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; CARGO_NET_OFFLINE=true; RUSTUP_AUTO_INSTALL=0; umask0077; fresh private0700 TMPDIR. Cargo /home/olegchir/.cargo/bin/cargo --offline --locked. Derived cache reuse only, no old Root/Work/Job authority. Inspect current process/build conflict before compile; no full suite or unrelated model/toolchain probes.",
+        "subjects": [
+          {
+            "id": "work.authored.c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "Original preview-transition transport/checker regression obligation",
+        "toolchain": "Existing configured Rust/Python3/Git toolchain. Original python invocation resolves explicitly to installed python3; no new interpreter/toolchain."
+      },
+      "result_payload_semantics": "trusted Root verification outcome for explicitly mapped original obligation, not an automatic process-exit receipt",
+      "actual_evidence": {
+        "python_passed": 28,
+        "linkage_passed": 16,
+        "wire_passed": 22,
+        "metadata_owner_passed": 5
+      },
+      "literal_declared_argv_exit": 0
+    },
+    {
+      "slot": 1,
+      "verification_id": "verify.authored.c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f.1",
+      "declared_method": {
+        "argv": [
+          "python3",
+          "-B",
+          "tools/preview-transition/check.py",
+          "--transition",
+          "docs/releases/developer-preview-1-to-2/transition.json",
+          "--mode",
+          "bindings",
+          "--stage",
+          "linked",
+          "--format",
+          "json"
+        ],
+        "cases": [
+          "All applicable migration and capability links resolve to their domain-owned permanent records and exact supported behavior.",
+          "Release accounting is mechanically readable without a new IDE client, universal operation protocol or duplicated runtime journal."
+        ],
+        "environment": "Root authorization for this BIND.2 managed iteration: exclusive warm CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; CARGO_NET_OFFLINE=true; RUSTUP_AUTO_INSTALL=0; umask0077; fresh private0700 TMPDIR. Cargo /home/olegchir/.cargo/bin/cargo --offline --locked. Derived cache reuse only, no old Root/Work/Job authority. Inspect current process/build conflict before compile; no full suite or unrelated model/toolchain probes.",
+        "subjects": [
+          {
+            "id": "work.authored.c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "Original linked-stage binding obligation; currently unsupported in inspected WIP",
+        "toolchain": "Existing configured Rust/Python3/Git toolchain. Original python invocation resolves explicitly to installed python3; no new interpreter/toolchain."
+      },
+      "result_payload_semantics": "trusted Root verification outcome for explicitly mapped original obligation, not an automatic process-exit receipt",
+      "literal_declared_argv_exit": 2,
+      "literal_declared_argv_verdict": "pending",
+      "literal_declared_argv_is_green": false,
+      "actual_selected_command": [
+        "python3",
+        "-B",
+        "tools/preview-transition/check.py",
+        "--transition",
+        "docs/releases/developer-preview-1-to-2/bind2-envelope-transition.json",
+        "--mode",
+        "bindings",
+        "--stage",
+        "linked",
+        "--format",
+        "json"
+      ],
+      "actual_selected_exit": 0,
+      "actual_selected_verdict": "passed",
+      "root_scope_clarification": "Root expressly qualifies original LINKED-STAGE OBLIGATION on the admitted finite real envelope contribution, samechecker/grammar with selectedbind2-envelope-transition subject. Its literal run exit0/verdictPassed covers originalcriteria/safe_stop. Historical originalargv transition.json run exit2/Pending retained as missing-selection negative and NEVER described as literalpass. No historicalproof/71record rewrite. Root verifier outcome concerns this explicitly documented semantic obligation/case mapping, not a fabricated exit0 of oldargv.",
+      "new_external_permission_or_scope_waiver": false
+    },
+    {
+      "slot": 2,
+      "verification_id": "verify.authored.c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f.2",
+      "declared_method": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "Changed files have no whitespace errors"
+        ],
+        "environment": "Root authorization for this BIND.2 managed iteration: exclusive warm CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; CARGO_NET_OFFLINE=true; RUSTUP_AUTO_INSTALL=0; umask0077; fresh private0700 TMPDIR. Cargo /home/olegchir/.cargo/bin/cargo --offline --locked. Derived cache reuse only, no old Root/Work/Job authority. Inspect current process/build conflict before compile; no full suite or unrelated model/toolchain probes.",
+        "subjects": [
+          {
+            "id": "work.authored.c5e37cb0d614de1ece70b78727a9dbdee5d3031a9316a4cdc2165f7bb344664f",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "Changed-file whitespace consistency",
+        "toolchain": "Existing configured Rust/Python3/Git toolchain. Original python invocation resolves explicitly to installed python3; no new interpreter/toolchain."
+      },
+      "result_payload_semantics": "trusted Root verification outcome for explicitly mapped original obligation, not an automatic process-exit receipt",
+      "actual_evidence": "Actual git diff --check0 plus Root cached diff --check0 on all20 reviewed files; source now checkpointed.",
+      "literal_declared_argv_exit": 0
+    }
+  ],
+  "supplemental_codegen": {
+    "declared_condition": "Schemas/generated outputs affected",
+    "actual_root_exit": 0,
+    "source_commit": "c4294f46d7d0d37b625da582bd2c671e5e0af176",
+    "not_a_fourth_original_check": true
+  },
+  "retained_failures": {
+    "historical_linked_exit": 2,
+    "historical_linked_verdict": "pending",
+    "coverage_owner": {
+      "exit": 101,
+      "passed": 1,
+      "failed": 3,
+      "classification": "retained baseline stale cardinality debt; not passing"
+    },
+    "initial_selected_linked_exit": 1,
+    "initial_codegen_exit": 1
+  },
+  "artifacts_to_publish": {
+    "$PUBLISHED_ROOT_VERIFICATION_REPORT_DIGEST": "Root reviewed CHECK-MAPPING plus independent review, actual selected-linked/Python/diff/codegen evidence and limitations; Report ArtifactRef from normal artifact publisher.",
+    "$PUBLISHED_ROOT_SAFETY_REPORT_DIGEST": "Independent Root exact attempt/effect boundary observation, delivered stop/no processes and bounded effects; separate SafetyReport artifact, not model report."
+  }
+}

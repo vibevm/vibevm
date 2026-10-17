@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "/home/olegchir/.cargo/bin/cargo",
+    "run",
+    "--offline",
+    "--locked",
+    "-p",
+    "xtask",
+    "--bin",
+    "xtask",
+    "--",
+    "check-codegen"
+  ],
+  "cwd": "/fast/git/v/vibevm-next",
+  "environment": {
+    "CARGO_TARGET_DIR": "/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target",
+    "CARGO_NET_OFFLINE": "true",
+    "RUSTUP_AUTO_INSTALL": "0",
+    "TMPDIR": "/tmp/bind2-root-codegen-8zjgv9wh"
+  },
+  "source_commit": "c4294f46d7d0d37b625da582bd2c671e5e0af176"
+}

@@ -1,0 +1,105 @@
+{
+  "base": "ddc50241797e521ae5c6ee99947cbc61b95fa26b",
+  "files": [
+    {
+      "byte_len": 148362,
+      "path": "Cargo.lock",
+      "sha256": "80befeaf50f6abf4a7f63e83f1175baa6b087b3ae9b05493c17efcfb4864d79f"
+    },
+    {
+      "byte_len": 19823,
+      "path": "crates/vibe-orchestrator/src/machine_operation.rs",
+      "sha256": "e2add33baf9f663931fa5ed7afb7366d89cb4505f8adf6d7ab351368ab6fc5fe"
+    },
+    {
+      "byte_len": 18469,
+      "path": "crates/vibe-wire/src/behaviour/preview_transition.rs",
+      "sha256": "43e03efca1636ba6543302ebff1c3a2c9e17112bb922cdc85f0cc524d49f3760"
+    },
+    {
+      "byte_len": 20191,
+      "path": "crates/vibe-wire/src/behaviour/preview_transition/tests.rs",
+      "sha256": "0dc7e0f0d4925f4113b47855467b67e1812b0de0ade97f151ab1b28a0c962a3c"
+    },
+    {
+      "byte_len": 8780,
+      "path": "crates/vibe-wire/src/generated/preview/e1/transition/mod.rs",
+      "sha256": "ca58f4532308972cec48fbebb32f2a76464db48fd1c44cd13f40cc410798a021"
+    },
+    {
+      "byte_len": 14081,
+      "path": "docs/releases/developer-preview-1-to-2/bind2-envelope-transition.json",
+      "sha256": "efbb34bb0abf2e128f990bad9fa6fbc446fe1d3c4f18ee817f907a36bd008e59"
+    },
+    {
+      "byte_len": 7184,
+      "path": "docs/releases/developer-preview-1-to-2/evidence/bind2-envelope-after-coverage.json",
+      "sha256": "55055a8e978611fac8939b26ba247a02cdc40af90a8cdc353916d4b69c64633c"
+    },
+    {
+      "byte_len": 4495,
+      "path": "docs/releases/developer-preview-1-to-2/evidence/bind2-envelope-before-coverage.json",
+      "sha256": "c60f15f33e64f7346e2bcf52f725b4ddd4e540845b1d352a4eff64c531d76b6a"
+    },
+    {
+      "byte_len": 1149,
+      "path": "docs/releases/developer-preview-1-to-2/evidence/bind2-envelope-report.json",
+      "sha256": "7ec59ca727c5df108ea5ed0066a59d66c4d71484e9052452e20c179a0b3f78f0"
+    },
+    {
+      "byte_len": 300,
+      "path": "docs/releases/developer-preview-1-to-2/evidence/bind2-envelope-request.json",
+      "sha256": "da5e49665af023ae516550e00941ba0c0b47a487e10eb8de503f3b8f8830593b"
+    },
+    {
+      "byte_len": 2026,
+      "path": "formats/corpora/preview-transition/e1/invalid/domain-journal.json",
+      "sha256": "b4bb51f42cb56fbe246eca64deaed49925426babf3b8e5a0553e2447b03b074f"
+    },
+    {
+      "byte_len": 2007,
+      "path": "formats/corpora/preview-transition/e1/valid/domain-bindings.json",
+      "sha256": "52a66bc58a36b17cb1e5fdb4fb1082afe255b882ee0cef8b1c782085a41c6e68"
+    },
+    {
+      "byte_len": 11213,
+      "path": "schemas/preview/e1/transition.jtd.json",
+      "sha256": "518eb57ca499979bf8ee1438fdec111c41e9f24e3c53c5918d080b11dedb92fc"
+    },
+    {
+      "byte_len": 18931,
+      "path": "tools/preview-transition/README.md",
+      "sha256": "65d2ebf6738a97dcb2042e10db68feb980b4ffb0fab130cbddecda00a8cde743"
+    },
+    {
+      "byte_len": 28095,
+      "path": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "sha256": "1d1e7eccfeee1e29cb157b2dabee82981f77ec92876c7eb73ec41aa00bbb9eac"
+    },
+    {
+      "byte_len": 1777,
+      "path": "xtask/Cargo.toml",
+      "sha256": "9af97487ad32c030de2f8716a39db6460d7cb9a93998a8e602a5bd2f6f53b848"
+    },
+    {
+      "byte_len": 3984,
+      "path": "xtask/src/bin/preview-transition-check/bindings.rs",
+      "sha256": "2d0a8f1fcb1fc59e31c39e6865260c2e4df64a5e9c627c5cc31a8e65098751aa"
+    },
+    {
+      "byte_len": 20924,
+      "path": "xtask/src/bin/preview-transition-check/domain_bindings.rs",
+      "sha256": "78264ae5fb4e242bb84e20487fc31a7bf02867c99b57c74dfbbf0829deae4695"
+    },
+    {
+      "byte_len": 33850,
+      "path": "xtask/src/bin/preview-transition-check/domain_bindings_tests.rs",
+      "sha256": "aaf074e9268089699e80a696c9df8da7e8fd537648ebada50a2569114b9bf7dd"
+    },
+    {
+      "byte_len": 8477,
+      "path": "xtask/src/bin/preview-transition-check/main.rs",
+      "sha256": "21e1e00a31929213938a99046cc6bd9123785e3ae2e76dff093e037436ffd9a4"
+    }
+  ]
+}
